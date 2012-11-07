@@ -1,0 +1,15 @@
+<dl class="w65em">
+	<dt>hit ratio</dt>
+	<dd>{{ hit_ratio|floatformat }}%
+		({{ stats.hits }} hit{{ stats.hits|pluralize }}, {{ stats.misses }} miss{{ stats.misses|pluralize:"es" }})
+	</dd>
+</dl>
+<dl class="w65em">
+	<dt>size</dt>
+	<dd>{{ stats.items }} item{{ stats.items|pluralize }},
+		{{ stats.bytes|default:"0"|filesizeformat }}</dd>
+</dl>
+<dl class="w65em">
+	<dt>oldest item</dt>
+	<dd>{{ oldest|timesince }}</dd>
+</dl>

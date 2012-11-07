@@ -1,0 +1,201 @@
+{% load tags i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+	<meta name="verify-v1" content="500ha7MSGCMgwkQG3S+CaeF1KzDLZB3Q9Ly5o+R7g5w="/>
+	<meta name="keywords" content="gae, google appengine, google app engine, django, python, html5, andrejevic"/>
+	{% block meta %}{% endblock %}
+	<title>{% block title %}ANDрејевићи{% endblock %}</title>
+	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
+	<link type="application/rss+xml" rel="alternate" href="/rss/photo.xml" title="{% trans 'photo rss' %}" />
+	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{% trans 'entry rss' %}" />
+	<script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
+	<script src="/static/scripts/common.js"></script>
+	<!--[if gte IE 8]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
+	{% block head %}
+	<script>
+	$(function() {
+		var kind = '{{ kind }}';
+		var path = location.pathname;
+		var crumbs = path.split('/');
+		crumbs.shift();
+		crumbs.shift();
+		
+		if ('ontouchstart' in window) {
+			$(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));
+		}
+		function chartDraw(json) {
+			var options = {fontSize: 11, fontName: 'sans-serif', chartArea: {width: 420, top: 0, left: 0, height: 300}};
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'name');
+			data.addColumn('number', 'count');
+			data.addRows(json.rows.length);
+			$.each(json.rows, function(i, row) {
+				data.setValue(i, 0, row.name);
+				data.setValue(i, 1, row.count);
+			});
+			var chart = new google.visualization.PieChart($('#chart')[0]);
+			if (json.colors) $.extend(options, {colors: json.colors});
+			chart.draw(data, options);
+			$('#graph h4').text(json.title);
+			$('#graph .explain').text(json.info);
+		}
+		$('a.graph').live('click', function() {
+			$('#overlay, #spinner').show();
+			$.getJSON(this.href, function(data) {
+				$('#spinner').hide();
+				$('#graph').show();
+				chartDraw(data);
+			});
+			return false
+		})
+		$('a.confirm').click(function() {
+			$('#confirm').load(this.href, function() {
+				$('#overlay, #confirm').show();
+			});
+			return false
+		});
+		$('#searchForm').submit(function() {
+			$('#overlay, #spinner').show();
+		});
+		
+		if (kind != '') {
+			$('.hide').hide();
+			$('.collapse').each(function() {
+				$(this).plus();
+			});
+			
+			if (crumbs.length == 2) {
+				var field = crumbs[0];
+				if (field == 'hue' || field == 'lum') field = 'colors';
+				$.ajax({
+					url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
+					context: $('#' + field + 'cloud'),
+					success: function(snippet) {
+						$(this).html(snippet).slideDown();
+						$('.' + field).minus();
+					}
+				});
+			}
+		}
+		
+		$('.collapse').click(function() {
+			var cntx = $(this);
+			var url = cntx.attr('href');
+			var key = url.split('/').pop();
+			var field = key.split('_').pop();
+			
+			$('.hide').slideUp();
+			$('.collapse').each(function() {
+				$(this).plus();
+			});
+			
+			$('#overlay, #spinner').show();
+			if (crumbs[0] == field && crumbs[1] != undefined) url += '/' + crumbs[1];
+			$.ajax({
+				url: url,
+				timeout: 20000,
+				context: $('#' + field + 'cloud'),
+				success: function(snippet) {
+					$(this).html(snippet).slideDown();
+					cntx.minus();
+					$('#overlay, #spinner').hide();
+				}
+			});
+			return false
+		});
+	});
+	</script>
+	{% endblock %}
+	{% block ga %}
+		{% if not devel %}
+		<script>
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-8994922-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
+		{% endif %}
+	{% endblock %}
+</head>
+<body>
+	{% block modals %}
+	<div id="overlay" class="hide"></div>
+	<div id="graph" class="modal">
+		<div class="popup">
+			<h4></h4>
+			<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+			<div class="content">
+				<div id="chart"></div>
+				<p class="explain"></p>
+			</div>
+		</div>
+	</div>
+	<div id="confirm" class="modal"></div>
+	<div id="spinner" class="modal">
+		<div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div><div class="bar7"></div><div class="bar8"></div><div class="bar9"></div><div class="bar10"></div><div class="bar11"></div><div class="bar12"></div>
+	</div>
+	{% endblock %}
+	
+	<div id="max">
+		<header id="header">
+			<h1><a href="/" title="{% trans 'Start '%}">ANDрејевићи</a></h1>
+			{% block group %}<nav class="menu">{% endblock %}
+				{% block nav %}
+					<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
+					<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
+					<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
+					<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+					{% if is_admin %}<a href="/admin" title="{% trans 'Administration' %}" class="Admin">{% trans 'Admin.' %}</a>{% endif %}
+					{% if user %}<a href="/sign" class="Logout">{% trans 'Logout' %}</a>
+					{% else %}<a href="/sign" class="Login">{% trans 'Sign in' %}</a>{% endif %}
+				{% endblock %}
+			</nav>
+			<div id="tools">
+				{% block paging %}
+					<nav class="paginator">{% paginator %}</nav>
+				{% endblock %}
+				<p id="footer">© АNDS v.{% version %} 2008-{% now "Y" %}
+					<br>powered by <a href="http://code.google.com/appengine/" title="{% gaesdk_version %}">GAE</a> and
+					<a href="https://www.djangoproject.com/" title="Django {% django_version %}">DJANGO</a>
+					{% if user %}<br><strong>{{ user.nickname }}</strong>{% endif %}
+				</p>
+				{% block tools %}
+				<div id="forms">
+					<form id="langs" action="/i18n/setlang/" method="post">
+						{% for code, lang in LANGUAGES %}
+							<button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
+								type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ code }}</button>
+						{% endfor %}
+					</form>
+					<form id="searchForm" action="/search" method="get">
+						<input type="text" name="find"/>
+						<button type="submit">{% trans 'search' %}</button>
+					</form>
+				</div>
+				{% endblock %}
+			</div>
+		</header>
+		<div id="main">
+			<aside id="aside">
+				<nav class="submenu">{% block subnav %}{% endblock %}</nav>
+				{% block aside %}{% endblock %}
+			</aside>
+			{% block contents %}{% endblock %}
+		</div>
+		{% block filters %}{% endblock %}
+	</div>
+</body>
+</html>

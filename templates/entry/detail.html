@@ -1,0 +1,78 @@
+{% extends "entry/base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {{ object.headline }}{% endblock %}
+{% block meta %}<meta name="date" content="{{ object.date|date:'Y-m-d' }}"/>{% endblock %}
+
+{% block subnav %}
+    {% if user %}
+        <a href="/entries/add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+    {% endif %}
+    {% if object %}
+        {% if is_admin %}
+            <a href="{{ object.get_absolute_url }}/edit" title="{% trans 'Edit' %}">{% trans 'Edit' %}</a>
+            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+        {% else %}
+            {% if user == object.author %}
+                <a href="{{ object.get_absolute_url }}/edit" title="{% trans 'Edit' %}">{% trans 'Edit' %}</a>
+                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+            {% endif %}
+        {% endif %}
+        <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{% trans 'Comment' %}">{% trans 'Comment' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<script src="/static/scripts/jquery.highlight.js"></script>
+<script>
+$(function() {
+	var match = location.search.match(/find=([^&]+)/i);
+	if (match) {
+		$(function(){
+			var options = {exact: "partial", highlight: "#main",
+				keys: decodeURIComponent(match[1])};
+			$(document).SearchHighlight(options);
+		});
+	}
+	$('a.comment_add').click(function() {
+		$('#addcomment').load(this.href, function() {
+			$('#overlay, #addcomment').show();
+		});
+		return false
+	});
+});
+</script>
+{% endblock %}
+
+{% block modals %}
+{{ block.super }}
+<div id="addcomment" class="modal"></div>
+{% endblock %}
+
+{% block contents %}
+<article class="plain">
+	<header>
+		<h2>{{ object.headline }}</h2>
+		<div class="subtitle">
+			<a href="/entries/author/{{ object.author }}"
+				title="{% trans 'author&apos;s blogs' %}">{{ object.author }}</a>,
+				<time datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
+					{{ object.date|date:_("DATETIME_FORMAT") }}</time>
+			{% for tag in object.tags %}
+				{% if forloop.first %}| {% trans 'tagged by' %}:{% endif %}
+				<a href="/entries/tags/{{ tag }}" title="{{ tag }}">
+					{{ tag }}</a>{% if not forloop.last %},{% endif %}
+			{% endfor %}
+			| <a href="date/{{ object.year }}"
+				title="{% trans 'blogs sent same year' %}">{{ object.year }}</a>
+		</div>
+		<div class="pullquote"><p>{{ object.summary|safe }}</p></div>
+	</header>
+	
+	<div class="story twocolumns">{{ object.body|safe }}</div>
+	
+	<aside id="comments">
+		{% include "comment/detail.html" %}
+	</aside>
+</article>
+{% endblock %}

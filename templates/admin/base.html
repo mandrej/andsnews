@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load tags i18n %}
+{% block head %}
+<script>
+$(function() {
+	$('#main button, #sidebar button').click(function() {
+		$('#overlay, #spinner').show();
+	});
+	$('.ff').collapseGroup();
+	$('.fix').colStyle();
+});
+</script>
+{% endblock %}
+{% block tools %}{% endblock %}
+{% block ga %}{% endblock %}
+
+{% block group %}<nav id="Admin" class="menu">{% endblock %}
+{% block subnav %}
+    <a href="/admin/counters">Counters</a>
+    <a href="/mapreduce">Mapreduce</a>
+{% endblock %}

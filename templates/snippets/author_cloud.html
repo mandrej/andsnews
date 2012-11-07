@@ -1,0 +1,6 @@
+<p class="cloud">
+	{% for item in authorcloud|dictsort:"name" %}
+	<a class="t{{ item.size }}{% if item.name == filter.author.nickname %} selected{% endif %}"
+		title="{{ item.count }}" href="{{ link }}/{{ item.name }}">{{ item.name }}</a>
+	{% endfor %}
+</p>

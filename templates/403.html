@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {% trans 'Access denied' %} (403){% endblock %}
+
+{% block subnav %}<a href="/">{% trans 'Start '%}</a>{% endblock %}
+
+{% block contents %}
+<article>
+	{% popup forbidden %}
+		<p><span class="error">{{ message }}</span>,
+			<br/>{% trans 'You don&apos;t have sufficient credentials' %}.</p>
+	{% endpopup %}
+	
+	<h2>{% trans 'Access denied' %} (403)</h2>
+	<p><span class="error">{{ message }}</span>,
+		<br/>{% trans 'You don&apos;t have sufficient credentials' %}.</p>
+</article>
+{% endblock %}
+
+{% block ga %}{% endblock %}

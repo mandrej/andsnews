@@ -1,0 +1,98 @@
+{% extends "photo/base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {{ object.headline }}{% endblock %}
+{% block meta %}<meta name="date" content="{{ object.date|date:'Y-m-d' }}"/>{% endblock %}
+
+{% block subnav %}
+    {% if user %}
+        <a href="/photos/add" class="add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+    {% endif %}
+    {% if is_admin or user == object.author %}
+        <a href="{{ object.get_absolute_url }}/edit" class="change" title="{% trans 'Edit' %}">{% trans 'Edit' %}</a>
+        <a class="confirm del" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+    {% endif %}
+    <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{% trans 'Comment' %}">{% trans 'Comment' %}</a>
+{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<script src="/static/scripts/jquery.highlight.js"></script>
+<script>
+$(function() {
+	var match = location.search.match(/find=([^&]+)/i);
+	if (match) {
+		$(function(){
+			var options = {exact: "partial", highlight: "#main",
+				keys: decodeURIComponent(match[1])};
+			$(document).SearchHighlight(options);
+		});
+	}
+	$('a.comment_add').click(function() {
+		$('#addcomment').load(this.href, function() {
+			$('#overlay, #addcomment').show();
+		});
+		return false
+	});
+});
+</script>
+{% endblock %}
+
+{% block modals %}
+{{ block.super }}
+<div id="addcomment" class="modal"></div>
+{% endblock %}
+
+{% block paging %}
+	{% if previous or next %}
+	<nav class="paginator">
+	    {% if previous %}
+			<a class="prev" href="/photos{{ filter_url }}/{{ previous.key.string_id }}?page={{ numbers.prev.0 }}&pic={{ numbers.prev.1 }}" 
+				title="{{ previous.headline }}">&nbsp;</a>
+	    {% else %}
+	        <span class="prev na">&nbsp;</span>
+	    {% endif %}
+	    {% if next %}
+			<a class="next" href="/photos{{ filter_url }}/{{ next.key.string_id }}?page={{ numbers.next.0 }}&pic={{ numbers.next.1 }}" 
+				title="{{ next.headline }}">&nbsp;</a>
+	    {% else %}
+	        <span class="next na">&nbsp;</span>
+	    {% endif %}
+	</nav>
+	{% endif %}
+{% endblock %}
+
+{% block aside %}
+	{% include "photo/exif.html" %}
+	<div id="comments">{% include "comment/detail.html" %}</div>
+{% endblock %}
+
+{% block contents %}
+<article>
+	<header>
+		<h2>{% if filter %}
+				<a href="/photos{{ filter_url }}?page={{ page }}">{% trans 'Photos' %} {{ filter_title }}</a>
+			{% else %}
+				<a href="/photos?page={{ page }}">{% trans 'Photos' %}</a>
+			{% endif %}
+			/ {{ object.headline }}{% if num %} [{{ num }}]{% endif %}</h2>
+		
+		<div class="subtitle">
+			<a href="/photos/author/{{ object.author }}"
+				title="{% trans 'author&apos;s photos' %}">{{ object.author }}</a>
+			{% for tag in object.tags %}
+				{% if forloop.first %}| {% trans 'tagged by' %}:{% endif %}
+				<a href="/photos/tags/{{ tag }}" title="{{ tag }}">
+					{{ tag }}</a>{% if not forloop.last %},{% endif %}
+			{% endfor %}
+			| <a href="/photos/date/{{ object.year }}"
+				title="{% trans 'photos taken same year' %}">{{ object.year }}</a>
+		</div>
+	</header>
+	
+	<figure id="port">
+		<a href="{{ object.get_absolute_url }}/normal" title="{{ object.headline }}">
+			<img src="{{ object.get_absolute_url }}/normal" alt="{{ object.headline }}"/>
+		</a>
+	</figure>
+</article>
+{% endblock %}

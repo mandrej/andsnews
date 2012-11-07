@@ -1,0 +1,6 @@
+<p class="cloud">
+	{% for item in datecloud|dictsortreversed:"name" %}
+	<a class='t{{ item.size }}{% if item.name == filter.year %} selected{% endif %}'
+		title="{{ item.count }}" href="{{ link }}/{{ item.name }}">{{ item.name }}</a>
+	{% endfor %}
+</p>

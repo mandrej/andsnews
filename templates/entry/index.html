@@ -1,0 +1,49 @@
+{% extends "entry/base.html" %}
+{% load tags i18n %}
+{% block meta %}<meta name="date" content="{{ objects.0.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block title %}{{ block.super }} - {% trans 'Blog' %}{% endblock %}
+
+{% block subnav %}
+    {% if user %}
+        <a href="/entries/add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block filters %}
+<div id="bottom">
+	{% spaceless %}
+	<div class="third">
+	  	<a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="tagscloud" class="hide"></div>
+	    
+		<a href="/visualize/{{ kind }}_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="date collapse" href="/filter/{{ kind }}_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="datecloud" class="hide"></div>
+		
+		<a href="/visualize/{{ kind }}_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="authorcloud" class="hide"></div>
+	</div>
+	{% endspaceless %}
+</div>
+{% endblock %}
+
+{% block contents %}
+	{% if objects %}
+		<h2><a href="/entries">{% trans 'Blog' %}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	{% else %}
+		<h2>{% trans 'No blogs' %}</h2>
+		{% popup noresults %}
+			<p>{% trans 'No blog submitted' %}, {% trans 'or filter has no results' %}.</p>
+		{% endpopup %}
+	{% endif %}
+	
+	{% spaceless %}
+	{% for object in objects %}
+		<section class="third">
+			{% include "entry/short.html" %}
+		</section>
+	{% endfor %}
+	{% endspaceless %}
+{% endblock %}

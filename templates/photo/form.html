@@ -1,0 +1,140 @@
+{% extends "photo/base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {% trans 'Add new / change existing photo' %}{% endblock %}
+
+{% block subnav %}
+    {% if object %}
+        {% if is_admin or user == object.author %}
+			<a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+     		<a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        {% endif %}
+    {% else %}
+        <a href="/photos" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<script src="/static/scripts/urlify.js"></script>
+<script src="/static/scripts/jquery.autocomplete.js"></script>
+<script src="/static/scripts/jquery.filestyle.js"></script>
+<script type="text/javascript" src="/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+<script>
+	$().ready(function() {
+		$('#id_headline').slugify();
+		$('input, select').focusHighlight();
+		var lang = '{{ LANGUAGE_CODE }}';
+		$('input:file').filestyle({
+			image: '/static/images/choose-' + lang + '.png',
+			imageheight : 27,
+			imagewidth : 77,
+			width : 202
+		}).hover(
+				function() {$(this).parent().css({'background-position': '0 -27px'});},
+				function() {$(this).parent().css({'background-position': '0 0'});}
+		);
+		$("#id_tags").autocomplete("/complete/photo/tags", {
+			width: 284,
+			selectFirst: false,
+			multiple: true,
+			matchContains: true
+		});
+        $("#id_lens").autocomplete("/complete/photo/lens", {
+			width: 284,
+			selectFirst: false,
+			multiple: false,
+			matchContains: true
+		});
+		$('#main button').click(function() {
+			$('#overlay, #spinner').show();
+		});
+	});
+</script>
+{% endblock %}
+
+{% block aside %}
+	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
+	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
+	<p>{% trans '<strong>Forward slash</strong> is not allowed in any field. It will be stripped out automatically.' %}</p>
+	<p><strong>{% trans 'Send photo less then' %} 1MB.</strong></p>
+
+	<p>{% trans '<strong>Crop factor</strong> represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)' %}:</p>
+	<table>
+		<tr><th>Senesor size</th><th>Crop factor</th></tr>
+		<tr><td>Full format</td><td>1.0 (Contax 137 MD Quartz)</td></tr>
+		<tr><td>APS-H</td><td>1.3</td></tr>
+		<tr><td>Nikon DX</td><td>1.5 (NIKON D80)</td></tr>
+		<tr><td>Canon APS-C</td><td>1.6 (Canon EOS 400D)</td></tr>
+		<tr><td>Four-thirds</td><td>2.0</td></tr>
+		<tr><td>1/1.7"</td><td>4.6 (Canon PowerShot A80)</td></tr>
+		<tr><td>1/1.8"</td><td>4.8</td></tr>
+		<tr><td>1/2.5"</td><td>5.6 (Canon IXUS 115 HS)</td></tr>
+		<tr><td>1/2.7"</td><td>6.6 (OLYMPUS IR-500)</td></tr>
+	</table>
+	<p><strong>{% trans 'Date format' %} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+{% endblock %}
+
+{% block contents %}
+<article>
+	<h2>{% trans 'Add new / change existing photo' %}</h2>
+	{% if form.errors %}
+		<div class="formerrors">
+			<p>{% trans 'Please correct errors in' %}
+			{{ form.errors|join:", " }}.</p>
+		</div>
+	{% endif %}
+	
+	{% if object %}
+		<form action="{{ object.get_absolute_url }}/edit" enctype="multipart/form-data" method="post">
+			<fieldset>
+				{{ form.headline|form_row }}
+				{% if is_admin %}
+					{{ form.author|form_row }}
+				{% else %}
+					<input type="hidden" name="author" value="{{ object.author.email }}"/>
+				{% endif %}
+				{{ form.slug|form_row }}
+				{{ form.tags|form_row }}
+				{{ form.photo|form_row }}
+			</fieldset>
+			
+			<fieldset>
+				<h3>EXIF {% trans 'data' %}</h3>
+				{{ form.model|form_row }}
+				{{ form.lens|form_row }}
+				{{ form.aperture|form_row }}
+				{{ form.shutter|form_row }}
+				{{ form.focal_length|form_row }}
+				{{ form.crop_factor|form_row }}
+				{{ form.iso|form_row }}
+				{{ form.program|form_row }}
+				{{ form.date|form_row }}
+				<p class="buttons">
+					<span class="required">{% trans 'Required field' %}</span>
+					<button type="submit" name="action:exif" value="1">{% trans 'original exif data' %}</button>
+					<button type="submit" name="action:continue" value="1">{% trans 'continue' %}</button>
+					<button type="submit">{% trans 'done' %}</button>
+				</p>
+			</fieldset>
+		</form>
+	{% else %}
+		<form action="/photos/add" enctype="multipart/form-data" method="post">
+			<fieldset>
+				{{ form.headline|form_row }}
+				{{ form.slug|form_row }}
+				{{ form.tags|form_row }}
+				{{ form.photo|form_row }}
+				<p class="buttons">
+					<span class="required">{% trans 'Required field' %}</span>
+					<button type="submit">{% trans 'upload' %}</button>
+				</p>
+			</fieldset>
+		</form>
+	{% endif %}
+</article>
+{% endblock %}
+
+{% block ga %}{% endblock %}

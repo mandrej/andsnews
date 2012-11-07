@@ -1,0 +1,64 @@
+{% load i18n %}
+<table class="data zebra w100p">
+	<thead>
+		<tr>
+			<th colspan="2"><a href="/photos/model/{{ object.model }}" title="{% trans 'photos taken with same camera model' %}">{{ object.model }}</a>
+				{% if object.lens %}<br/>
+                    <a href="/photos/lens/{{ object.lens }}" title="{% trans 'photos taken with same lens' %}">{{ object.lens }}</a>
+                {% endif %}
+            </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="label">{% trans 'Aperture' %}</td>
+			<td>
+				{% if object.aperture %}F{{ object.aperture }}{% else %}---{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Shutter speed' %}</td>
+			<td>{{ object.shutter }} sec</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Focal length' %}</td>
+			<td>
+				{% if object.focal_length %}
+					{{ object.focal_length }} mm
+					{% if object.eqv %}
+						(~<a href="/photos/eqv/{{ object.eqv }}" title="{% trans 'photos with same equvalent focal length' %}">{{ object.eqv }} {% trans 'eqv' %}</a>.)
+					{% endif %}
+				{% else %}---{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Sensitivity' %} (ISO)</td>
+			<td>{% if object.iso %}<a href="/photos/iso/{{ object.iso }}" title="{% trans 'photos with same iso' %}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Program' %}</td>
+			<td>{{ object.program|default:"---" }}</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Taken' %}</td>
+			<td><time datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
+				{{ object.date|date:_("DATETIME_FORMAT") }}</time></td>
+		</tr>
+		{% with object.picture.get as picture %}
+		<tr>
+			<td class="label">{% trans 'Dimensions' %}</td>
+			<td>{{ picture.width }}x{{ picture.height }}px,
+				{{ picture.size|filesizeformat }}</td>
+		</tr>
+		<tr>
+			<td class="label">{% trans 'Median color' %}</td>
+			<td>
+				{% if picture.rgb %}
+					<a href="{{ object.similar_url }}" title="{% trans 'photos with similar color' %}">HLS: {{ picture.hls }}, RGB: {{ picture.hex }}</a>
+					<span style="float: right; background: {{ picture.hex }}; width: 12px;">&nbsp;</span>
+				{% else %}---{% endif %}
+			</td>
+		</tr>
+		{% endwith %}
+	</tbody>
+</table>

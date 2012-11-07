@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% load tags %}
+
+{% block head %}
+<script>
+$(function() {
+	$('input[type="text"]').change(function() {
+		var id = $(this).attr('id');
+		$('button[name="action:edit"]')
+			.attr({disabled: 'disabled'}).addClass('disabled');
+		$('button[value="' + id + '"]')
+			.removeAttr('disabled').removeClass('disabled');
+	});
+});
+</script>
+{% endblock %}
+
+{% block contents %}
+<article class="plain clear">
+	<h2>Counter administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	<form action="/admin/counters" method="post">
+		<input type="hidden" name="page" value="{{ page }}"/>
+		<table id="data" class="zebra fix">
+			<colgroup>
+				<col style="width: 80px;"/>
+				<col style="width: 80px;"/>
+				<col/>
+				<col style="width: 70px; text-align: right;"/>
+				<col style="width: 130px; text-align: right;"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>kind</th>
+					<th>field</th>
+					<th>value</th>
+					<th>count</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for object in objects %}
+					<tr>
+						<td>{{ object.forkind }}</td>
+						<td>{{ object.field }}</td>
+						<td>{{ object.value }}</td>
+						<td>
+							<input id="{{ object.key.urlsafe }}" name="count.{{ object.key.urlsafe }}"
+								{% if object.count == 0 %}
+									style="width: 58px; text-align: right; border: 1px solid #dc143c;" 
+								{% else %}
+									style="width: 58px; text-align: right;"
+								{% endif%}
+								type="text" value="{{ object.count }}"/>
+						</td>
+						<td class="nowrap">
+							<button class="disabled" type="submit" name="action:edit" 
+								disabled="disabled" value="{{ object.key.urlsafe }}">change</button>
+							<button type="submit" name="action:delete"
+								value="{{ object.key.urlsafe }}">delete</button>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</form>
+</article>
+{% endblock %}

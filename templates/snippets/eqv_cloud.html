@@ -1,0 +1,6 @@
+<p class="cloud">
+	{% for item in eqvcloud|dictsort:"name"  %}
+		<a class="t{{ item.size }}{% if item.name == filter.eqv %} selected{% endif %}"
+			title="{{ item.count }}" href="/photos/eqv/{{ item.name }}">{{ item.name }}</a>
+	{% endfor %}
+</p>

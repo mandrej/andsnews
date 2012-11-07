@@ -1,0 +1,11 @@
+{% load i18n %}
+<p class="cloud">
+	{% for item in forkindcloud|dictsort:"name" %}
+		<a class="t{{ item.size }}{% if item.name == filter.forkind|lower %} selected{% endif %}"
+			title="{{ item.count }}" href="{{ link }}/{{ item.name }}">
+			{% if item.name == "entry" %}{% trans 'for blog' %}{% endif %}
+			{% if item.name == "photo" %}{% trans 'for photos' %}{% endif %}
+			{% if item.name == "application" %}{% trans 'messages' %}{% endif %}
+		</a>
+	{% endfor %}
+</p>

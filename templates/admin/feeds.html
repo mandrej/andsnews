@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% load tags %}
+
+{% block contents %}
+<article class="plain clear">
+	<h2>Feed administration</h2>
+	<form action="/admin/feeds" method="post">
+		<table id="data" class="zebra fix">
+			<colgroup>
+				<col/>
+				<col style="width: 150px; text-align: right;"/>
+				<col style="width: 60px; text-align: center;"/>
+				<col style="width: 60px; text-align: right;"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>headline</th>
+					<th>updated</th>
+					<th>cache</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for object in objects %}
+					<tr>
+						<td><a href="{{ object.get_absolute_url}}/edit">
+							{{ object.headline }}</a></td>
+						<td>{{ object.date|date:"Y-m-d H:i:s" }}</td>
+						<td>
+							{{ object.key.string_id|incache|yesno:"yes,no"|boolimage }}
+						</td>
+						<td>
+							{% if object.key.string_id|incache %}
+								<button type="submit" name="action:feed" 
+									value="{{ object.key.urlsafe }}">delete</button>
+							{% else %}
+								<button type="submit" name="action:feed" 
+									class="disabled" disabled="disabled"
+									value="{{ object.key.urlsafe }}">delete</button>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<p class="buttons">
+			<button type="submit" name="action:feed" value="all">delete all</button>
+		</p>
+	</form>
+</article>
+{% endblock %}

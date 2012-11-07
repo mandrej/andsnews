@@ -1,0 +1,27 @@
+.ac_results {
+	margin-top: -1px;
+	padding: 0px;
+	border: 1px solid #ffcb68;
+	background-color: #ffffff;
+	overflow: hidden;
+}
+.ac_results ul {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	list-style-position: outside;
+	list-style: none;
+}
+.ac_results li {
+	margin: 0;
+	padding: 2px;
+	display: block;
+	font: menu;
+	font-size: 12px;
+	line-height: 16px;
+	cursor: default;
+	overflow: hidden;
+}
+.ac_loading { background: url(/static/images/busy.gif) #ffffff no-repeat right center; }
+.ac_odd { background-color: #d7d7d7; }
+.ac_over { background-color: #ffcb68; }

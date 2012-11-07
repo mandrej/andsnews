@@ -1,0 +1,70 @@
+{% extends "photo/base.html" %}
+{% load tags i18n %}
+{% block meta %}<meta name="date" content="{{ objects.0.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block title %}{{ block.super }} - {% trans 'Photos' %}{% endblock %}
+
+{% block subnav %}
+    {% if user %}
+        <a href="/photos/add" class="add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block filters %}
+<div id="bottom">
+	{% spaceless %}
+	<div class="third">
+	    <a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="tagscloud" class="hide"></div>
+	    
+	    <a href="/visualize/{{ kind }}_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="date collapse" href="/filter/{{ kind }}_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="datecloud" class="hide"></div>
+		
+		<a href="/visualize/{{ kind }}_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="authorcloud" class="hide"></div>
+		
+		<a href="/visualize/Photo_colors" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="colors collapse" href="/filter/{{ kind }}_colors">{% trans 'Median color' %} {% if filter.hue or filter.lum %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="colorscloud" class="hide"></div>
+	</div>
+	<div class="third">                                                  
+		<a href="/visualize/{{ kind }}_model" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+    	<h3><a class="model collapse" href="/filter/{{ kind }}_model">{% trans 'Camera model' %} {% if filter.model %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="modelcloud" class="hide"></div>
+	
+		<a href="/visualize/{{ kind }}_lens" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+    	<h3><a class="lens collapse" href="/filter/{{ kind }}_lens">{% trans 'Lens type' %} {% if filter.lens %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="lenscloud" class="hide"></div>
+		
+		<a href="/visualize/{{ kind }}_eqv" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="eqv collapse" href="/filter/{{ kind }}_eqv">{% trans 'Eqv. focal length' %} {% if filter.eqv %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="eqvcloud" class="hide"></div>
+		
+		<a href="/visualize/{{ kind }}_iso" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <h3><a class="iso collapse" href="/filter/{{ kind }}_iso">{% trans 'Sensitivity' %} (ISO) {% if filter.iso %}[−]{% else %}[+]{% endif %}</a></h3>
+		<div id="isocloud" class="hide"></div>
+	</div>
+	{% endspaceless %}
+</div>
+{% endblock %}
+
+{% block contents %}
+	{% if objects %}
+		<h2><a href="/photos">{% trans 'Photos' %}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	{% else %}
+		<h2>{% trans 'No photos' %}</h2>
+		{% popup noresults %}
+			<p>{% trans 'No photos submitted' %}, {% trans 'or filter has no results' %}.</p>
+		{% endpopup %}
+	{% endif %}
+	
+	{% spaceless %}
+	{% for object in objects %}
+		<figure class="thumbnail">
+			{% include "photo/thumbnail.html" %}
+		</figure>
+	{% endfor %}
+	{% endspaceless %}
+{% endblock %}

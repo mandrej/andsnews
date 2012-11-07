@@ -1,0 +1,172 @@
+{% extends "entry/base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {% trans 'Add new / change existing blog' %}{% endblock %}
+
+{% block subnav %}
+    {% if object %}
+        {% if is_admin %}
+            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+            <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        {% else %}
+            {% if user == object.author %}
+                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+                <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <a href="/entries" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<script src="/static/scripts/urlify.js"></script>
+<script src="/static/scripts/jquery.autocomplete.js"></script>
+<script src="/static/scripts/jquery.filestyle.js"></script>
+<script src="/static/scripts/markitup/jquery.markitup.pack.js"></script>
+<script src="/static/scripts/markitup/sets/blog.set_{{ LANGUAGE_CODE }}.js"></script>
+<script type="text/javascript" src="/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
+<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
+<script>
+$(function() {
+	$('#id_headline').slugify();
+	$('#id_body').markItUp(blogSettings, {nameSpace: 'big'});
+	$('input, textarea').focusHighlight();
+	$('.message img').click(function() {
+		src = $(this).attr('src').replace('small', 'normal');
+		title = $(this).attr('title');
+		tab = '    ';
+		$.markItUp(
+			{replaceWith:'<figure class="left">\n'+tab+'<img src="' + src +
+				'" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
+		);
+		return false;
+	});
+	var lang = '{{ LANGUAGE_CODE }}';
+	$('input:file').filestyle({
+		image: '/static/images/choose-' + lang + '.png',
+		imageheight : 27,
+		imagewidth : 77,
+		width : 120
+	}).hover(
+		function() {$(this).parent().css({'background-position': '0 -27px'});},
+		function() {$(this).parent().css({'background-position': '0 0'});}
+	);
+	$("#id_tags").autocomplete("/complete/entry/tags", {
+		width: 284,
+		selectFirst: false,
+		multiple: true,
+		matchContains: true
+	});
+	$('#main button').click(function() {
+		$('#overlay, #spinner').show();
+	});
+});
+</script>
+{% endblock %}
+
+{% block modals %}
+{{ block.super }}
+<div id="images" class="modal">
+	<div class="popup">
+		<h4>{% trans 'Choose image' %}</h4>
+		<a href="#" class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+		<div class="content">
+		{% for img in object.image_list %}
+			<figure class="left{% if forloop.last %} last{% endif %}">
+				<img src="/entries/image/{{ img.key.name }}/small"
+					alt="{{ img.key.name }}" title="{{ img.name }}"/>
+				<p class="legend">{{ img.name|truncatewords:2 }}</p>
+			</figure>
+		{% empty %}
+			<p>{% trans 'No images' %}</p>
+			<p>{% trans 'To choose images, you must send them first' %}.</p>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block aside %}
+	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
+	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
+	<p><strong>{% trans 'Summary' %}</strong> {% trans 'A brief presentation in a concise form' %}.</p>
+	<p><strong>{% trans 'Send images less then' %} 200KB.</strong></p>
+{% endblock %}
+
+{% block contents %}
+<article class="plain">
+	<h2>{% trans 'Add new / change existing blog' %}</h2>
+	{% if form.errors %}
+		<div class="formerrors">
+			<p>{% trans 'Please correct errors in' %}
+			{{ form.errors|join:", " }}.</p>
+		</div>
+	{% endif %}
+	
+	{% if object %}
+		<form action="{{ object.get_absolute_url }}/edit" enctype="multipart/form-data"  method="post">
+	{% else %}
+		<form action="/entries/add" enctype="multipart/form-data" method="post">
+	{% endif %}
+		{{ formset.management_form }}
+		<fieldset>
+			{{ form.headline|form_row }}
+			{{ form.slug|form_row }}
+			{{ form.tags|form_row }}
+			{{ form.summary|form_row }}
+			{{ form.date|form_row }}
+		</fieldset>
+	
+		<fieldset>
+			<h3>{% trans 'Images used in this blog' %}</h3>
+			<div class="choices">
+				<p><label style="float: none">{% trans 'Pick the image which will represent the entry' %}:</label></p>
+				{{ form.front }}
+				{% if form.front.errors %}<span style="clear: both; width: auto;" class="error">{{ form.front.errors|join:", " }}</span>{% endif %}
+			</div>
+	
+			{% for form in formset.forms %}
+				{% if form.initial %}
+					<p class="upload" style="background-image: url({{ object|image_url_by_num:form.initial.ORDER }}/small);">
+						<label for="id_{{ form.name.html_name }}">{{ form.name.label }}{{ form.initial.ORDER }}</label>
+						{{ form.name }}{{ form.blob }}
+						{{ form.ORDER }}{{ form.DELETE }}{{ form.DELETE.label }}
+						{% if form.name.errors or form.blob.errors %}
+							<span class="error">
+								{{ form.name.errors|join:", " }}
+								{{ form.blob.errors|join:", " }}
+							</span>
+						{% endif %}
+					</p>
+				{% else %}
+					<p class="upload">
+						{{ form.name.label_tag }}{{ form.name }}{{ form.blob }}
+						{% if form.name.errors or form.blob.errors %}
+							<span class="error">
+								{{ form.name.errors|join:", " }}
+								{{ form.blob.errors|join:", " }}
+							</span>
+						{% endif %}
+					</p>
+				{% endif %}
+			{% endfor %}
+		</fieldset>
+	
+		<fieldset style="float: none">
+			{{ form.body|form_row:"editor" }}
+			<p class="buttons">
+				<span class="required">{% trans 'Required field' %}</span>
+				<button type="submit" name="action:continue" value="1">{% trans 'continue' %}</button>
+				<button type="submit">{% trans 'done' %}</button>
+			</p>
+		</fieldset>
+	</form>
+</article>
+{% endblock %}
+
+{% block ga %}{% endblock %}

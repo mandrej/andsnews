@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+{% load tags %}
+
+{% block aside %}
+	<div class="admin white">
+		<h3>Memcache statistics for	v.{% version %}</h3>
+		{% stats %}
+	</div>
+{% endblock %}
+
+{% block head %}
+	<script>
+		$().ready(function() {
+			function build(key, arr) {
+				var tmpl = '', title = key.split('_').pop() + ' cloud';
+				if (arr) {
+					tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
+					tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
+					tmpl += '<div class="hide">';
+					if (key == 'Photo_colors') {
+						$.each(arr, function(i, item) {
+							tmpl += '<dl><dt>' + item.name + '</dt>';
+							tmpl += '<dd>' + item.count + '</dd></dl>';
+						});
+					} else {
+						$.each(arr, function(i, item) {
+							tmpl += '<dl><dt>' + item.name + '</dt>';
+							tmpl += '<dd>' + item.count + ', size ' + item.size + '</dd></dl>';
+						});
+					}
+					tmpl += '</div>';
+				} else {
+					if (key == 'Photo_colors') {
+						tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
+					} else {
+						tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
+						tmpl += '<button type="submit" name="build" value="' + key + '">build</button>';
+					}
+					tmpl += '<h4>' + title + ' [EMPTY]</h4>';
+				}
+				$('#' + key).html(tmpl);
+			}
+			$.getJSON('/admin/memcache', function(data) {
+				$.each(data, build);
+				$('.ff').collapseGroup();			});
+			$('button').live('click', function() {
+				var url, key = $(this).val(), action = $(this).attr('name');
+				switch (action) {
+					case 'clear':
+						url = '/admin/searchcache/clear';
+						break
+					default:
+						url = '/admin/memcache/' + key + '/' + action;
+				}
+				$.post(url, function(data) {
+					build(key, data);
+					$('.ff').unbind().collapseGroup();				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block contents %}
+<article>
+	<h2>Site administration</h2>
+	{% spaceless %}
+	<div class="third">
+		<div class="admin">
+			<h3><a href="/admin/photo/thumbnails">Photo {{ photo_count }}</a></h3>
+			<div id="Photo_tags"></div>
+			<div id="Photo_author"></div>
+			<div id="Photo_date"></div>
+			<div id="Photo_model"></div>
+			<div id="Photo_lens"></div>
+			<div id="Photo_eqv"></div>
+			<div id="Photo_iso"></div>
+			<div id="Photo_colors"></div>
+		</div>
+	</div>
+
+	<div class="third">
+		<div class="admin">
+			<h3><a href="/admin/entry/thumbnails">Entry {{ entry_count }}</a></h3>
+			<div id="Entry_tags"></div>
+			<div id="Entry_author"></div>
+			<div id="Entry_date"></div>
+		</div>
+		
+		<div class="admin">
+			<h3><a href="/admin/feeds">Feeds {{ feeds_count }}</a></h3>
+			<div id="Feed_tags"></div>
+		</div>
+
+		<div class="admin">
+			<h3><a href="/admin/comments">Comment {{ comment_count }}</a></h3>
+			<div id="Comment_forkind"></div>
+			<div id="Comment_author"></div>
+			<div id="Comment_date"></div>
+		</div>
+	</div>
+	{% endspaceless %}
+</article>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% load tags i18n %}
+<div class="popup dummy">
+	<h4>{% trans 'Add comment' %}</h4>
+	<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+	<div class="content">
+		<h6>{% trans 'for' %} {{ refobj.headline }}</h6>
+		<form id="addcommentForm" action="" method="post">
+			<fieldset>
+				{{ form.email|form_row }}
+				{{ form.body|form_row:"editor" }}
+			</fieldset>
+			<p class="buttons">
+				<button type="submit">{% trans 'send' %}</button>
+			</p>
+		</form>
+	</div>
+</div>
+<div class="popup info hide">
+	<h4>{% trans 'Thank you' %}</h4>
+	<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+	<div class="content">
+		<p>{% trans 'Your comment has been sent in deferred manner' %}.
+			{% trans 'It may take some time before site become aware of it' %}.<br/>
+			{% trans 'Thank you for your contribution' %}.</p>
+	</div>
+</div>
+<script src="/static/scripts/markitup/jquery.markitup.pack.js"></script>
+<script src="/static/scripts/markitup/sets/cmnt.set_{{ LANGUAGE_CODE }}.js"></script>
+<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
+<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
+<script>
+$(function() {
+	$('#id_body').markItUp(cmntSettings, {nameSpace: 'small'});
+	$('.content button').click(function() {
+		$.post('/comments/validate', {'safekey': '{{ refobj.key.urlsafe }}',
+									  'email': $('#id_email').val(),
+									  'body': $('#id_body').val()}, 
+			function(data) {
+				if (data.success == true) {
+					$('.dummy').hide();
+					$('.info').show()
+					setTimeout(function() {
+						$('#overlay, #addcomment').hide();
+					}, 5000);
+				} else {
+					$('.error').text('');
+					$.each(data, function(key, err) {
+						$('.error.C_' + key).text(err);
+					});
+				}
+			}, 'json');
+		return false;
+	});
+});
+</script>

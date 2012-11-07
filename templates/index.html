@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load tags i18n %}
+{% block meta %}<meta name="date" content="{{ object.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block head %}
+	<script src="/static/scripts/jquery.backstretch.min.js"></script>
+	<script>
+		$(function() {
+			$.getJSON('/latest', function(data) {
+				var sources = [];
+				var index = 0;
+		        function add_title() {
+		        	$('#title').html('<a href="' + sources[index].href + '">' + sources[index].title + '</a>');
+		        }
+		        
+				$.each(data.objects, function(i, item) {
+					var img_src = item.url + '/normal';
+					$('<img/>')[0].src = img_src;
+					sources.push({src: img_src, href: item.url, title: item.title});
+				});
+		        $.backstretch(sources[index].src, {speed: 2000}, add_title);
+		        setInterval(function() {
+					index = (index >= sources.length - 1)? 0: index + 1;
+					$.backstretch(sources[index].src, {speed: 2000}, add_title);
+				}, 8000);
+			});
+			$('.delete').click(function() {
+				$('#aside').slideUp();
+				return false
+			})
+		})
+	</script>
+{% endblock %}
+
+{% block modals %}
+	<div id="title"></div>
+{% endblock %}
+
+{% block aside %}
+	<div class="white">
+		<header>
+			<a class="delete" href="#" title="{% trans hide %}">−</a>
+			<h2>{% trans 'Welcome to our and YOUR site' %}</h2>
+		</header>
+		{% if LANGUAGE_CODE == 'en' %}
+			<p>Welcome to our site where possible to post your photos, blogs and to comment on all this.
+			To be able to do so, it is necessary to <strong>have an open Google account</strong> (same as for Gmail),
+			or to register and obtain one (all free).</p>
+			<p>Send a message to this site using your jabber client such as <a href="http://www.google.com/talk/">Google Talk</a>
+			or <a href="http://www.pidgin.im/">Pidgin</a>.<br/>
+			Application address is: <strong>ands@appspot.com</strong>.</p>
+			<h4><a href="/" title="Mobile vesion">
+			See this site on your mobile device</a></h4>
+	
+			<div class="pullquote">
+				<p>Site administrator has right to delete offensive blogs, photos or comments
+					according to personal valuation.</p>
+				<p>If you find this appropriate, feel free to contribute to this site.
+					Sent material will not be misused in any way by site administrator.</p>
+				<p class="quote">Your account password is not visible to any other user including administrator.</p>
+			</div>
+		{% endif %}
+		{% if LANGUAGE_CODE == 'sr' %}
+			<p>Добродошли на сајт где је могуће да поставите ваше фотографије, блогове као и да
+			коментаришете све ово. Да би сте били у стању да било шта пошаљете, неопходно је да
+			<strong>имате отворен налог на Google-у</strong> (исто што и налог на Gmail-у) или да се региструјете и
+			добијете један (све бесплатно).</p>
+			<p>Пошаљите поруку на овај сајт користећи ваш jabber клијент као што је <a href="http://www.google.com/talk/">Google Talk</a>
+			или <a href="http://www.pidgin.im/">Pidgin</a>.<br/>
+			Адреса апликације је: <strong>ands@appspot.com</strong>.</p>
+			<h4><a href="/" title="Верзија за мобилни">
+			Видите овај сајт на вашем мобилном уређају</a></h4>
+	
+			<div class="pullquote">
+				<p>Администратор задржава право да може да обрише недоличне написе, слике или
+					коментаре по сопственом нахођењу.</p>
+				<p>Уколико вам све ово одговара, онда слободно пошаљите ваш допринос овом сајту.
+					Послати материјал се неће злоупотребити од стране администратора сајта.</p>
+				<p class="quote">Ваша лозинка за логовање није ником видљива, чак ни администратору сајта.</p>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

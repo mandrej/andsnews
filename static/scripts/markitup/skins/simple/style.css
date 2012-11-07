@@ -1,0 +1,69 @@
+.markItUp * { margin: 0px; padding: 0px; font-size: 11px; outline: none; }
+.markItUp a:link,
+.markItUp a:visited { color: #000000; text-decoration: none; }
+.markItUp { width: 700px; margin: 5px 0 5px 0; }
+/*.markItUpContainer { font: 11px Verdana, Arial, Helvetica, sans-serif; }*/
+.markItUpEditor {
+	padding: 5px;
+	width: 100%;
+	display: block;
+	font: 12px "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
+	line-height: 18px;
+	height: 320px;
+	overflow: auto;
+}
+.markItUpPreviewFrame { width: 819px; margin: 5px 0; padding: 2px; height: 300px; overflow: auto; }
+#comments .markItUpPreviewFrame { height: 100px; }
+.markItUpFooter { width: 100%; }
+.markItUpResizeHandle {
+	width: 22px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url(images/handle.png);
+	overflow: hidden;
+	height: 5px;
+	cursor: n-resize;
+}
+/***************************************************************************************/
+/* first row of buttons */
+.markItUpHeader { margin-bottom: 5px; }
+.markItUpHeader:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
+.markItUpHeader ul li	{ float: left; margin-right: 5px; list-style: none; position: relative; }
+.markItUpHeader ul li:hover > ul{ display: block; }
+.markItUpHeader ul .markItUpDropMenu {
+	padding-right: 10px;
+	background: transparent url(images/menu.png) no-repeat 16px 50%;
+}
+.markItUpHeader ul .markItUpDropMenu li { margin-right: 0px; }
+/* next rows of buttons */
+.markItUpHeader ul ul {
+	display: none;
+	background: #ebe8e6;
+	position: absolute;
+	top: 16px;
+	left: -2px;
+}
+.markItUpHeader ul ul li { float: none; border-bottom: 1px solid #ffffff; }
+.markItUpHeader ul ul .markItUpDropMenu { background: url(images/submenu.png) #ffffff no-repeat 100% 50%; }
+.markItUpHeader ul .markItUpSeparator { width: 1px; background-color: #696969; height: 16px; overflow: hidden; }
+.markItUpHeader ul ul .markItUpSeparator { width: auto; margin: 0px; height: 1px; }
+/* next rows of buttons */
+.markItUpHeader ul ul ul { position: absolute; top: -1px; left: 150px; }
+.markItUpHeader ul ul ul li { float: none; }
+.markItUpHeader ul a {
+	width: 16px;
+	margin: 0px;
+	display: block;
+	background-repeat: no-repeat;
+	text-indent: -10000px;
+	height: 16px;
+}
+.markItUpHeader ul ul a, .markItUpHeader ul ul a:visited {
+	padding-left: 0px;
+	width: 120px;
+	padding: 5px 5px 5px 25px;
+	display: block;
+	background-position: 2px 50%;
+	text-indent: 0;
+}
+.markItUpHeader ul ul a:hover { background-color: #ffcb68; }

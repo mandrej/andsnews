@@ -1,0 +1,21 @@
+{% load i18n %}
+<div id="{{ id }}" class="modal">
+	<div class="popup {{ css_class }}">
+		<h4>{{ title }}</h4>
+		<a href="#" class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+		<div class="content">{{ body }}</div>
+	</div>
+</div>
+<script>
+$(function() {
+	$('#overlay, #{{ id }}').show();
+	function close() {
+		$('#overlay, #{{ id }}').hide();
+	}
+	$('a.close').click(function() {
+		close();
+		return false
+	});
+	setTimeout(function() {close(); }, 5000);
+});
+</script>

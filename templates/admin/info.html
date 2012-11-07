@@ -1,0 +1,16 @@
+<div class="popup info">
+	<h4>Info data</h4>
+	<a class="button close" title="close">close</a>
+	<div class="content">
+		<table class="data zebra w100p">
+			{% with object.picture.get as picture %}
+			<tr><td width="20%">RGB color</td><td>{{ picture.hex }}</td></tr>
+			<tr><td>HLS color</td><td>{{ picture.hls }}</td></tr>
+			<tr><td>HSV color</td><td>{{ picture.hsv }}</td></tr>
+			{% endwith %}
+			<tr><td>Hue</td><td>{{ object.hue }}</td></tr>
+			<tr><td>Lum</td><td>{{ object.lum }}</td></tr>
+			<tr><td>Sat</td><td>{{ object.sat }}</td></tr>
+		</table>
+	</div>
+</div>

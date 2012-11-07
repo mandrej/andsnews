@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {% trans 'Service unavailable' %} (503){% endblock %}
+
+{% block subnav %}<a href="/">{% trans 'Start '%}</a>{% endblock %}
+
+{% block contents %}
+<article>
+	{% popup unavailable %}
+		<p><span class="error">{{ message }}</span>
+			<br/>{% trans 'Thanks for your patience' %}.</p>
+	{% endpopup %}
+	
+	<h2>{% trans 'Service unavailable' %} (503)</h2>
+	<p><span class="error">{{ message }}</span>
+		<br/>{% trans 'Thanks for your patience' %}.</p>
+</article>
+{% endblock %}
+
+{% block ga %}{% endblock %}

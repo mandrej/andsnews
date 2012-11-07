@@ -1,0 +1,77 @@
+{% extends "news/base.html" %}
+{% load tags i18n %}
+{% block title %}{{ block.super }} - {% trans 'Add new / change existing news' %}{% endblock %}
+
+{% block subnav %}
+    {% if object %}
+        {% if is_admin %}
+            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+            <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        {% endif %}
+    {% else %}
+        <a href="/news" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<script src="/static/scripts/urlify.js"></script>
+<script src="/static/scripts/jquery.autocomplete.js"></script>
+<script>
+$(function() {
+	$('#id_headline').slugify();
+	$('input, select').focusHighlight();
+	$("#id_tags").autocomplete("/complete/feed/tags", {
+		width: 284,
+		selectFirst: false,
+		multiple: true,
+		matchContains: true
+	});
+	$('#main button').click(function() {
+		$('#overlay, #spinner').show();
+	});
+});
+</script>
+{% endblock %}
+
+{% block aside %}
+	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
+	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
+	{% if object %}
+		<p><strong>{% trans 'Date' %}</strong> {% trans 'Last modified date' %}.</p>
+	{% endif %}
+{% endblock %}
+
+{% block contents %}
+<article>
+	<h2>{% trans 'Add new / change existing news' %}</h2>
+	{% if form.errors %}
+		<div class="formerrors">
+			<p>{% trans 'Please correct errors in' %}
+			{{ form.errors|join:", " }}.</p>
+		</div>
+	{% endif %}
+	
+	{% if object %}
+		<form action="{{ object.get_absolute_url }}/edit" method="post">
+	{% else %}
+		<form action="/news/add" method="post">
+	{% endif %}
+		<fieldset>
+			{{ form.headline|form_row }}
+			{{ form.slug|form_row }}
+			{{ form.tags|form_row }}
+			{{ form.url|form_row }}
+			{% if object %}
+				{{ form.date|form_row }}
+			{% endif %}
+			<p class="buttons">
+				<span class="required">{% trans 'Required field' %}</span>
+				<button type="submit">{% trans 'done' %}</button>
+			</p>
+		</fieldset>
+	</form>
+</article>
+{% endblock %}
+
+{% block ga %}{% endblock %}

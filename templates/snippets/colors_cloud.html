@@ -1,0 +1,6 @@
+<p>
+	{% for color in colorscloud %}
+		<a href="/photos/{{ color.field }}/{{ color.name }}" title="{{ color.name }} {{ color.count }}"
+			class="dot" style="border-color: {{ color.hex }}"></a>
+	{% endfor %}
+</p>
