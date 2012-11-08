@@ -1,10 +1,9 @@
 # -*- coding: UTF-8 -*-
 from __future__ import division
-import hashlib, datetime
+import hashlib, datetime, time
 from operator import itemgetter
 from google.appengine.api import users, memcache, xmpp
 from django.http import HttpResponse
-from django.utils.dateformat import DateFormat
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.vary import vary_on_headers
 from django.shortcuts import render
@@ -104,7 +103,7 @@ def get_latest_photos():
     if objects is None:
         query = Photo.query().order(-Photo.date)
         objects = [{"url": x.get_absolute_url(),
-                    "date": DateFormat(x.date).format('Y-m-d'), 
+                    "date": time.strftime('%Y-%m-%d', x.date.timetuple()),
                     "title": x.headline} for x in query.iter(limit=NUM_LATEST)]
         memcache.add('Photo_latest', objects, settings.TIMEOUT)
     return objects
