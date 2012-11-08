@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load tags i18n %}
-{% block meta %}<meta name="date" content="{{ object.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
 {% block head %}
 	<script src="/static/scripts/jquery.backstretch.min.js"></script>
 	<script>
@@ -12,7 +12,7 @@
 		        	$('#title').html('<a href="' + sources[index].href + '">' + sources[index].title + '</a>');
 		        }
 		        
-				$.each(data.objects, function(i, item) {
+				$.each(data, function(i, item) {
 					var img_src = item.url + '/normal';
 					$('<img/>')[0].src = img_src;
 					sources.push({src: img_src, href: item.url, title: item.title});

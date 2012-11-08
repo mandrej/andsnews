@@ -2,8 +2,9 @@
 from __future__ import division
 import hashlib, datetime
 from operator import itemgetter
-from google.appengine.api import users, memcache, xmpp, search
+from google.appengine.api import users, memcache, xmpp
 from django.http import HttpResponse
+from django.utils.dateformat import DateFormat
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.vary import vary_on_headers
 from django.shortcuts import render
@@ -99,21 +100,23 @@ def find(request, tmpl='results.html'):
                                   'page': page, 'has_next': has_next, 'has_previous': page > 1})
 
 def get_latest_photos():
-    photos = memcache.get('Photo_latest')
-    if photos is None:
-        photos = Photo.query().order(-Photo.date).fetch(NUM_LATEST)
-        memcache.add('Photo_latest', photos, settings.TIMEOUT)
-    return photos
+    objects = memcache.get('Photo_latest')
+    if objects is None:
+        query = Photo.query().order(-Photo.date)
+        objects = [{"url": x.get_absolute_url(),
+                    "date": DateFormat(x.date).format('Y-m-d'), 
+                    "title": x.headline} for x in query.iter(limit=NUM_LATEST)]
+        memcache.add('Photo_latest', objects, settings.TIMEOUT)
+    return objects
 
 def latest(request):
     if request.is_ajax():
-        photos = get_latest_photos()
-        objects = [{"url": x.get_absolute_url(), "title": x.headline} for x in photos]
-        return json_response({"objects": objects})
+        objects = get_latest_photos()
+        return json_response(objects)
 
 def index(request, tmpl='index.html'):
-    photos = get_latest_photos()
-    return render(request, tmpl, {'object': photos[0]})
+    objects = get_latest_photos()
+    return render(request, tmpl, {'latest': objects})
 
 def chat(request):
     if request.method == 'POST':
