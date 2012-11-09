@@ -1,7 +1,11 @@
+import logging
 from django.conf.urls.defaults import patterns, include, url
 from views import chat, render_cloud, visualize, rss, auto_complete, find, \
     send, sitemap, latest, index
 from lib.comm import sign_helper
+from django.conf import settings
+if settings.DEVEL:
+    logging.getLogger().setLevel(logging.DEBUG)
 
 urlpatterns = patterns('',
     url(r'^photos/?', include('photo.urls')),

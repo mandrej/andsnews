@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 from __future__ import division
-import hashlib, datetime, time
+import hashlib, datetime
 from operator import itemgetter
 from google.appengine.api import users, memcache, xmpp
 from django.http import HttpResponse
@@ -103,7 +103,7 @@ def get_latest_photos():
     if objects is None:
         query = Photo.query().order(-Photo.date)
         objects = [{"url": x.get_absolute_url(),
-                    "date": time.strftime('%Y-%m-%d', x.date.timetuple()),
+                    "date": x.date.strftime('%Y-%m-%d'),
                     "title": x.headline} for x in query.iter(limit=NUM_LATEST)]
         memcache.add('Photo_latest', objects, settings.TIMEOUT)
     return objects
@@ -138,27 +138,14 @@ def send(request):
 def escape(str):
     return str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
-def format_date(dt):
-    """convert a datetime into an RFC 822 formatted date
-
-    Input date must be in GMT.
-    
-    Looks like:
-        Sat, 07 Sep 2002 00:00:01 GMT
-        Can't use strftime because that's locale dependent
-    """
-    return "%s, %02d %s %04d %02d:%02d:%02d GMT" % (
-            ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][dt.weekday()],
-            dt.day,
-            ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dt.month-1],
-            dt.year, dt.hour, dt.minute, dt.second) 
+def rfc822_date(dt):
+    return dt.strftime('%a, %d %b %Y %I:%M:%S %p GMT')
 
 @vary_on_headers('Host')
 def photo_feed():
     query = Photo.query().order(-Photo.date)
     data = query.fetch(RSS_LIMIT)
-    last_modified = format_date(data[0].date)
+    last_modified = rfc822_date(data[0].date)
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
     str = u'<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel>'
     str += u'<title>АNDрејевићи photo album</title>'
@@ -178,7 +165,7 @@ def photo_feed():
         str += u'<enclosure url="http://%s%s/small" length="%s" type="image/jpeg"></enclosure>' % (settings.HOST_NAME, item.get_absolute_url(), len(item.picture.get().small))
         str += u'<link>http://%s%s</link>' % (settings.HOST_NAME, item.get_absolute_url())
         str += u'<author>%s</author>' % item.author.email()
-        str += u'<pubDate>%s</pubDate>' % format_date(item.date)
+        str += u'<pubDate>%s</pubDate>' % rfc822_date(item.date)
         str += u'<guid isPermaLink="true">http://%s%s</guid>' % (settings.HOST_NAME, item.get_absolute_url())
         text = ','.join(item.tags)
         str += u'<category>%s</category>' % escape(text)
@@ -188,7 +175,7 @@ def photo_feed():
     response = HttpResponse(mimetype='application/rss+xml', content_type='application/rss+xml')
     response['Last-Modified'] = last_modified
     response['ETag'] = hashlib.md5(last_modified).hexdigest()
-    response['Expires'] = format_date(expires)
+    response['Expires'] = rfc822_date(expires)
     response['Cache-Control'] = 'max-age=86400'
     response.write(str)
     return response
@@ -197,7 +184,7 @@ def photo_feed():
 def entry_feed():
     query = Entry.query().order(-Entry.date)
     data = query.fetch(RSS_LIMIT)
-    last_modified = format_date(data[0].date)
+    last_modified = rfc822_date(data[0].date)
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
     str = u'<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel>'
     str += u'<title>АNDрејевићи blog</title>'
@@ -210,7 +197,7 @@ def entry_feed():
         str += u'<description>%s</description>' % escape(item.summary)
         str += u'<link>http://%s%s</link>' % (settings.HOST_NAME, item.get_absolute_url())
         str += u'<author>%s</author>' % item.author.email()
-        str += u'<pubDate>%s</pubDate>' % format_date(item.date)
+        str += u'<pubDate>%s</pubDate>' % rfc822_date(item.date)
         str += u'<guid isPermaLink="true">http://%s%s</guid>' % (settings.HOST_NAME, item.get_absolute_url())
         text = ','.join(item.tags)
         str += u'<category>%s</category>' % escape(text)
@@ -220,7 +207,7 @@ def entry_feed():
     response = HttpResponse(mimetype='application/rss+xml', content_type='application/rss+xml')
     response['Last-Modified'] = last_modified
     response['ETag'] = hashlib.md5(last_modified).hexdigest()
-    response['Expires'] = format_date(expires)
+    response['Expires'] = rfc822_date(expires)
     response['Cache-Control'] = 'max-age=86400'
     response.write(str)
     return response
