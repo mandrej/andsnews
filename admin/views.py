@@ -72,12 +72,9 @@ def comment_save(request):
         return json_response({'success': True})
 
 def comment_delete(request):
-    def delete(key):
-        obj = db.get(key)
-        obj.delete()
     if request.is_ajax():
-        key = ndb.Key(request.POST['key'])
-        deferred.defer(delete, key)
+        key = ndb.Key(urlsafe=request.POST['key'])
+        key.delete()
         return json_response({'success': True})
 
 def thumbnail_delete(request):
