@@ -44,7 +44,6 @@
 			{% endfor %}
 		</div>
 		
-		{% spaceless %}
 		{% for entry in news.entries|dictsortreversed:"date" %}
 			<article class="third">
 	            <div class="white">
@@ -61,7 +60,6 @@
 	            </div>
 			</article>
 		{% endfor %}
-		{% endspaceless %}
 	{% else %}
 		<h2>{% blocktrans with object.headline as headline %}No {{ headline }} at the moment{% endblocktrans %}.</h2>
 	{% endif %}

@@ -11,7 +11,6 @@
 
 {% block filters %}
 <div id="bottom">
-	{% spaceless %}
 	<div class="third">
 	    <a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
 	    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
@@ -46,7 +45,6 @@
 	    <h3><a class="iso collapse" href="/filter/{{ kind }}_iso">{% trans 'Sensitivity' %} (ISO) {% if filter.iso %}[−]{% else %}[+]{% endif %}</a></h3>
 		<div id="isocloud" class="hide"></div>
 	</div>
-	{% endspaceless %}
 </div>
 {% endblock %}
 
@@ -60,7 +58,6 @@
 		{% endpopup %}
 	{% endif %}
 	
-	{% spaceless %}
 	{% for object in objects %}
 		<figure class="thumbnail">
 			<a href="/photos{{ filter_url }}/{{ object.key.string_id }}?page={{ page }}&pic={{ forloop.counter }}"
@@ -71,5 +68,4 @@
 			</a>
 		</figure>
 	{% endfor %}
-	{% endspaceless %}
 {% endblock %}

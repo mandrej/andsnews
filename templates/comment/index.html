@@ -8,21 +8,19 @@
 
 {% block filters %}
 	<div id="bottom">
-	{% spaceless %}
-	<div class="third">
-		<a href="/visualize/{{ kind }}_forkind" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-	    <h3><a class="forkind collapse" href="/filter/{{ kind }}_forkind">{% trans 'Type' %} {% if filter.forkind %}[−]{% else %}[+]{% endif %}</a></h3>
-		<div id="forkindcloud" class="hide"></div>
-		
-		<a href="/visualize/{{ kind }}_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-	    <h3><a class="date collapse" href="/filter/{{ kind }}_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a></h3>
-		<div id="datecloud" class="hide"></div>
-		
-		<a href="/visualize/{{ kind }}_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-	    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
-		<div id="authorcloud" class="hide"></div>
-	</div>
-	{% endspaceless %}
+		<div class="third">
+			<a href="/visualize/{{ kind }}_forkind" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		    <h3><a class="forkind collapse" href="/filter/{{ kind }}_forkind">{% trans 'Type' %} {% if filter.forkind %}[−]{% else %}[+]{% endif %}</a></h3>
+			<div id="forkindcloud" class="hide"></div>
+			
+			<a href="/visualize/{{ kind }}_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		    <h3><a class="date collapse" href="/filter/{{ kind }}_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a></h3>
+			<div id="datecloud" class="hide"></div>
+			
+			<a href="/visualize/{{ kind }}_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
+			<div id="authorcloud" class="hide"></div>
+		</div>
 	</div>
 {% endblock %}
 
@@ -38,39 +36,35 @@
 		{% endpopup %}
 	{% endif %}
 	
-	{% spaceless %}
 	{% for object in objects %}
-	    <section class="third">
-	    	{% if object.is_message %}
-	    		<div class="white old">
-	                <h3>{% trans 'message' %}</h3>
-	                <time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
-	                    <span class="day">{{ object.date|date:"d" }}</span>
-	                    <span class="time">{{ object.date|date:"H:i" }}</span>
-	                    <span class="monthyear">{{ object.date|date:"m 'y" }}</span>
-	                </time>
-	                <div class="body">{{ object.body|safe }}</div>
-	                <p class="posted">{{ object.author }},
-	                    {% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
-				</div>
-            {% else %}
-            	<div class="white">
-            		{% with object.key.parent.get as parent %}
-	                <a href="{{ parent.get_absolute_url }}#comments">
-						<h3>{{ parent.headline }}</h3>
-						<time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
-							<span class="day">{{ object.date|date:"d" }}</span>
-							<span class="time">{{ object.date|date:"H:i" }}</span>
-							<span class="monthyear">{{ object.date|date:"m 'y" }}</span>
-						</time>
-						<div class="body">{{ object.body|safe }}</div>
-						<p class="posted">{{ object.author }},
-							{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
-					</a>
-					{% endwith %}
-				</div>
-            {% endif %}
-	    </section>
+    	{% if object.is_message %}
+    		<section class="third white old">
+                <h3>{% trans 'message' %}</h3>
+                <time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
+                    <span class="day">{{ object.date|date:"d" }}</span>
+                    <span class="time">{{ object.date|date:"H:i" }}</span>
+                    <span class="monthyear">{{ object.date|date:"m 'y" }}</span>
+                </time>
+                <div class="body">{{ object.body|safe }}</div>
+                <p class="posted">{{ object.author }},
+                    {% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
+			</section>
+        {% else %}
+    		{% with object.key.parent.get as parent %}
+    		<section class="third">
+                <a class="white" href="{{ parent.get_absolute_url }}#comments">
+					<h3>{{ parent.headline }}</h3>
+					<time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
+						<span class="day">{{ object.date|date:"d" }}</span>
+						<span class="time">{{ object.date|date:"H:i" }}</span>
+						<span class="monthyear">{{ object.date|date:"m 'y" }}</span>
+					</time>
+					<div class="body">{{ object.body|safe }}</div>
+					<p class="posted">{{ object.author }},
+						{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
+				</a>
+			</section>
+			{% endwith %}
+        {% endif %}
 	{% endfor %}
-	{% endspaceless %}
 {% endblock %}

@@ -15,13 +15,11 @@
 
 {% block filters %}
 	<div id="bottom">
-	{% spaceless %}
-	<div class="third">
-	    <a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-	    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
-		<div id="tagscloud" class="hide"></div>
-	</div>
-	{% endspaceless %}
+		<div class="third">
+		    <a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
+			<div id="tagscloud" class="hide"></div>
+		</div>
 	</div>
 {% endblock %}
 
@@ -36,25 +34,21 @@
 		{% endpopup %}
 	{% endif %}
 	
-	{% spaceless %}
 	{% for object in objects %}
 		<section class="third">
-			<div class="white">
+			<a class="white" href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
 				<time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
 					<span class="day">{{ object.date|date:"d" }}</span>
 					<span class="time">{{ object.date|date:"H:i" }}</span>
 					<span class="monthyear">{{ object.date|date:"m 'y" }}</span>
 				</time>
-				<a href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
-					<h3>{{ object.headline }}</h3>
-					<p class="posted">
-						{% if object.date %}{% trans 'updated' %}:
-							{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
-						{% endif %}
-					</p>
-				</a>
-			</div>
+				<h3>{{ object.headline }}</h3>
+				<p class="posted">
+					{% if object.date %}{% trans 'updated' %}:
+						{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+					{% endif %}
+				</p>
+			</a>
 		</section>
 	{% endfor %}
-	{% endspaceless %}
 {% endblock %}

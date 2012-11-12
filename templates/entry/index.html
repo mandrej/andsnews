@@ -11,7 +11,6 @@
 
 {% block filters %}
 <div id="bottom">
-	{% spaceless %}
 	<div class="third">
 	  	<a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
 	    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
@@ -25,7 +24,6 @@
 	    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
 		<div id="authorcloud" class="hide"></div>
 	</div>
-	{% endspaceless %}
 </div>
 {% endblock %}
 
@@ -39,21 +37,17 @@
 		{% endpopup %}
 	{% endif %}
 	
-	{% spaceless %}
 	{% for object in objects %}
 		<section class="third">
-			<div class="white">
-				<a href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
-					<h3>{{ object.headline }}</h3>
-					<p>{% if object.front >= 0 %}
-							<img src="{{ object|image_url_by_num:object.front }}/small" class="left" style="margin-bottom: 5px;"/>
-						{% endif %}{{ object.summary }}</p>
-					<p class="posted">{{ object.author }}, {% trans 'posted' %}
-						{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
-					</p>
-				</a>
-			</div>
+			<a class="white" href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
+				<h3>{{ object.headline }}</h3>
+				<p>{% if object.front >= 0 %}
+						<img src="{{ object|image_url_by_num:object.front }}/small" class="left" style="margin-bottom: 5px;"/>
+					{% endif %}{{ object.summary }}</p>
+				<p class="posted">{{ object.author }}, {% trans 'posted' %}
+					{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+				</p>
+			</a>
 		</section>
 	{% endfor %}
-	{% endspaceless %}
 {% endblock %}
