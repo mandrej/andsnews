@@ -60,12 +60,12 @@
 						<span class="time">{{ object.date|date:"H:i" }}</span>
 						<span class="monthyear">{{ object.date|date:"m 'y" }}</span>
 					</time>
-	                <a class="white" href="{{ parent.get_absolute_url }}#comments">
-						<h3>{{ parent.headline }}</h3>
+					<div class="white">
+						<h3><a href="{{ parent.get_absolute_url }}#comments">{{ parent.headline }}</a></h3>
 						<div class="body">{{ object.body|safe }}</div>
 						<p class="posted">{{ object.author }},
 							{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
-					</a>
+					</div>
 				</section>
 				{% endwith %}
 	        {% endif %}
