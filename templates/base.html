@@ -113,17 +113,20 @@
 		
 		// isotope
 		var $container = $('#container');
-		var options = {
-			itemSelector: '.brick',
-			resizable: true,
-			fitColumns: true,		};
-		
-		$(window).load(function() {
-			$container.isotope(options);
+		function layouting() {
+			$container.isotope({
+				itemSelector: '.brick',
+				resizable: false,
+				fitColumns: true,
+				// onLayout: function($elem, instance) {
+					// console.log(instance);
+				// }			});
+		}
+		$container.imagesLoaded(function() {
+			layouting();
+			$(window).smartresize(layouting);
 		});
-		$(window).smartresize(function() {
-			$container.isotope(options);
-		});		// $container.infinitescroll({
+		// $container.infinitescroll({
 			// navSelector: '.paginator',
 			// nextSelector: '.paginator .next',
 			// itemSelector: '#container',
