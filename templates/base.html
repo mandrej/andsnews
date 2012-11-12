@@ -115,15 +115,17 @@
 		
 		// isotope
 		var $container = $('#container');
-		var options = {itemSelector: '.brick', fitColumns: true};
+		var options = {
+			itemSelector: '.brick',
+			resizable: false,
+			fitColumns: true		};
 		
 		$(window).load(function() {
 			$container.isotope(options);
 		});
 		$(window).smartresize(function() {
 			$container.isotope(options);
-		});
-	});
+		});	});
 	</script>
 	{% endblock %}
 	{% block ga %}

@@ -410,8 +410,8 @@ figure p.legend { padding: 5px; text-align: center; }
 	-moz-border-radius-topleft: 4px;
 	-webkit-border-top-left-radius: 4px;
 }
-.thumbnail .landscape { background-size: auto 100%; }
-.thumbnail .portrait { background-size: 100% auto; }
+/*.thumbnail .landscape { background-size: auto 100%; }
+.thumbnail .portrait { background-size: 100% auto; }*/
 .thumbnail .legend {
 	margin: 0;
 	height: 30px;
