@@ -42,7 +42,17 @@
 	{% spaceless %}
 	{% for object in objects %}
 		<section class="third">
-			{% include "entry/short.html" %}
+			<div class="white">
+				<a href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
+					<h3>{{ object.headline }}</h3>
+					<p>{% if object.front >= 0 %}
+							<img src="{{ object|image_url_by_num:object.front }}/small" class="left" style="margin-bottom: 5px;"/>
+						{% endif %}{{ object.summary }}</p>
+					<p class="posted">{{ object.author }}, {% trans 'posted' %}
+						{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+					</p>
+				</a>
+			</div>
 		</section>
 	{% endfor %}
 	{% endspaceless %}
