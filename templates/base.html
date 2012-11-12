@@ -14,6 +14,7 @@
 	<link type="application/rss+xml" rel="alternate" href="/rss/photo.xml" title="{% trans 'photo rss' %}" />
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{% trans 'entry rss' %}" />
 	<script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
+	<script src="/static/scripts/jquery.isotope.min.js"></script>
 	<script src="/static/scripts/common.js"></script>
 	<!--[if gte IE 8]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -110,6 +111,17 @@
 				}
 			});
 			return false
+		});
+		
+		// isotope
+		var $container = $('#container');
+		var options = {itemSelector: '.brick', fitColumns: true};
+		
+		$(window).load(function() {
+			$container.isotope(options);
+		});
+		$(window).smartresize(function() {
+			$container.isotope(options);
 		});
 	});
 	</script>
