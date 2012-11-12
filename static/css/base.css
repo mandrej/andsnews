@@ -492,7 +492,7 @@ figure p.legend { padding: 5px; text-align: center; }
 #comments a { background-color: transparent; }
 .comment { border-bottom: 1px dashed #666666; margin: 5px 0; display: block; }
 .when {
-	margin: 2px 10px 2px 0;
+	margin: 10px 10px 10px 0;
 	width: 70px;
 	float: left;
 	font-size: 1.6em;
@@ -508,7 +508,7 @@ figure p.legend { padding: 5px; text-align: center; }
 }
 .when .time, .when .monthyear { display: block; font-size: 62%; line-height: 100%; text-align: right; }
 .when .day, .when .time { font-weight: bold; }
-.body { margin: 0 30px 5px 80px; }
+.body { margin: 0 30px 5px 0; }
 .posted { margin: 0; }
 /* misc */
 .details {
@@ -616,7 +616,7 @@ figure p.legend { padding: 5px; text-align: center; }
 }
 .thumbnail:hover, .white:hover { background: orange; }
 #aside .white:hover, #comments .white:hover { background: #fff; }
-.old { background: transparent; }
+.old { background: rgba(0, 0, 0, 0.2); }
 .clear { clear: both; }
 #spinner, #title {
 	margin: -50px 0 0 -50px;
