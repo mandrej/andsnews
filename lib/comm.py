@@ -76,10 +76,10 @@ def count_colors():
         content = []
         for k, d in COLORS.items():
             if d['field'] == 'hue':
-                query = Photo.query(Photo.hue == d['value'], Photo.sat == 'color').order(-Photo.date)
+                query = Photo.query(Photo.hue == d['name'], Photo.sat == 'color').order(-Photo.date)
                 count = query.count(1000)
             elif d['field'] == 'lum':
-                query = Photo.query(Photo.lum == d['value'], Photo.sat == 'monochrome').order(-Photo.date)
+                query = Photo.query(Photo.lum == d['name'], Photo.sat == 'monochrome').order(-Photo.date)
                 count = query.count(1000)
             data = COLORS[k]
             data.update({'count': count})
