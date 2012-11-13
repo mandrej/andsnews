@@ -15,7 +15,7 @@
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{% trans 'entry rss' %}" />
 	<script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
 	<script src="/static/scripts/jquery.isotope.min.js"></script>
-	<script src="/static/scripts/jquery.infinitescroll.min.js"></script>
+<!-- 	<script src="/static/scripts/jquery.infinitescroll.min.js"></script> -->
 	<script src="/static/scripts/common.js"></script>
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
 	{% block head %}
@@ -123,19 +123,17 @@
 		});
 		$(window).smartresize(function() {
 			$container.isotope(options);
-		});
-		$container.infinitescroll({
-			navSelector: '.paginator',
-			nextSelector: '.paginator .next',
-			itemSelector: '#container',
-			animate: true,
-			extraScrollPx: 50,
-			loading: {img: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', msgText: '', finishedMsg: ''}
-			}, function(newElements) {
-				$container.isotope('appended', $(newElements));
-			}
-		);
-	});
+		});		// $container.infinitescroll({
+			// navSelector: '.paginator',
+			// nextSelector: '.paginator .next',
+			// itemSelector: '#container',
+			// animate: true,
+			// extraScrollPx: 50,
+			// loading: {img: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', msgText: '', finishedMsg: ''}
+			// }, function(newElements) {
+				// $container.isotope('appended', $(newElements));
+			// }
+		// );	});
 	</script>
 	{% endblock %}
 	{% block ga %}
