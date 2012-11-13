@@ -15,10 +15,8 @@
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{% trans 'entry rss' %}" />
 	<script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
 	<script src="/static/scripts/jquery.isotope.min.js"></script>
+	<script src="/static/scripts/jquery.infinitescroll.min.js"></script>
 	<script src="/static/scripts/common.js"></script>
-	<!--[if gte IE 8]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
 	{% block head %}
 	<script>
@@ -117,15 +115,27 @@
 		var $container = $('#container');
 		var options = {
 			itemSelector: '.brick',
-			resizable: false,
-			fitColumns: true		};
+			resizable: true,
+			fitColumns: true,		};
 		
 		$(window).load(function() {
 			$container.isotope(options);
 		});
 		$(window).smartresize(function() {
 			$container.isotope(options);
-		});	});
+		});
+		$container.infinitescroll({
+			navSelector: '.paginator',
+			nextSelector: '.paginator .next',
+			itemSelector: '#container',
+			animate: true,
+			extraScrollPx: 50,
+			loading: {img: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', msgText: '', finishedMsg: ''}
+			}, function(newElements) {
+				$container.isotope('appended', $(newElements));
+			}
+		);
+	});
 	</script>
 	{% endblock %}
 	{% block ga %}

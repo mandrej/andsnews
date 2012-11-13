@@ -727,6 +727,31 @@ figure p.legend { padding: 5px; text-align: center; }
 	-moz-transform: rotate(330deg) translate(0, -142%);
 	-moz-animation-delay: -0.0833s;
 }
+
+#infscr-loading { display: none; }
+.isotope,
+.isotope .isotope-item {
+  -webkit-transition-duration: 0.8s;
+     -moz-transition-duration: 0.8s;
+      -ms-transition-duration: 0.8s;
+       -o-transition-duration: 0.8s;
+          transition-duration: 0.8s;
+}
+.isotope {
+  -webkit-transition-property: height, width;
+     -moz-transition-property: height, width;
+      -ms-transition-property: height, width;
+       -o-transition-property: height, width;
+          transition-property: height, width;
+}
+.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+      -ms-transition-property:     -ms-transform, opacity;
+       -o-transition-property:      -o-transform, opacity;
+          transition-property:         transform, opacity;
+}
+
 @-webkit-keyframes fade {
 	from { opacity: 1; }
 	to { opacity: 0; }
