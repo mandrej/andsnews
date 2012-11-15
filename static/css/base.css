@@ -616,7 +616,7 @@ figure p.legend { padding: 5px; text-align: center; }
 }
 .thumbnail:hover, .white:hover { background: orange; }
 #aside .white:hover, #comments .white:hover { background: #fff; }
-.old { background: rgba(0, 0, 0, 0.2); }
+.old { color: #fff; background: rgba(0, 0, 0, 0.3); }
 .clear { clear: both; }
 #spinner, #title {
 	margin: -50px 0 0 -50px;
