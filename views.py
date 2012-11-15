@@ -62,7 +62,7 @@ def visualize(request, key):
         elif key == 'Photo_colors':
             data['title'] = _('Median color')
             data['info'] = _('Based od HLS color model')
-            data['rows'] = [{'name': _(x['value']), 'count': x['count']} for x in items]
+            data['rows'] = [{'name': _(x['name']), 'count': x['count']} for x in items]
             data['colors'] = [x['hex'] for x in items]
         elif key == 'Comment_forkind':
             data['title'] = _('comments and messages').capitalize()
