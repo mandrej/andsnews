@@ -26,9 +26,7 @@
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/comments">{% trans 'Comments' %}</a>
-			{% if filter %}{{ filter_title }}{% endif %}
-			{{ paginator.fromto }}</h2>
+		<h2><a href="/comments">{% trans 'Comments' %}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
 		<h2>{% trans 'No comments' %}</h2>
 		{% popup noresults %}
