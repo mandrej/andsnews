@@ -1,8 +1,8 @@
 .ac_results {
 	margin-top: -1px;
 	padding: 0px;
-	border: 1px solid #ffcb68;
-	background-color: #ffffff;
+	border: 1px solid #ccc;
+	background-color: #fff;
 	overflow: hidden;
 }
 .ac_results ul {
@@ -17,11 +17,13 @@
 	padding: 2px;
 	display: block;
 	font: menu;
+	color: #000;
 	font-size: 12px;
 	line-height: 16px;
 	cursor: default;
 	overflow: hidden;
 }
-.ac_loading { background: url(/static/images/busy.gif) #ffffff no-repeat right center; }
-.ac_odd { background-color: #d7d7d7; }
-.ac_over { background-color: #ffcb68; }
+.ac_results li strong { background: orange; }
+.ac_loading { background: url(/static/images/busy.gif) #fff no-repeat right center; }
+.ac_odd { background-color: #ccc; }
+.ac_over { background-color: #fff; }
