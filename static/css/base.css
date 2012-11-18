@@ -121,7 +121,7 @@ pre {
 .paginator a:hover, a#menu:hover { background-color: rgba(0,0,0,0.5); }
 .menu {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 44%;
@@ -563,7 +563,7 @@ figure p.legend { padding: 5px; text-align: center; }
 #overlay, .modal {
 	width: 100%;
 	background: #000;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	height: 100%;
