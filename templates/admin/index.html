@@ -8,59 +8,58 @@
 	</div>
 {% endblock %}
 
-{% block head %}
-	<script>
-		$().ready(function() {
-			function build(key, arr) {
-				var tmpl = '', title = key.split('_').pop() + ' cloud';
-				if (arr) {
-					tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
-					tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
-					tmpl += '<div class="hide">';
-					if (key == 'Photo_colors') {
-						$.each(arr, function(i, item) {
-							tmpl += '<dl><dt>' + item.name + '</dt>';
-							tmpl += '<dd>' + item.count + '</dd></dl>';
-						});
-					} else {
-						$.each(arr, function(i, item) {
-							tmpl += '<dl><dt>' + item.name + '</dt>';
-							tmpl += '<dd>' + item.count + ', size ' + item.size + '</dd></dl>';
-						});
-					}
-					tmpl += '</div>';
+{% block contents %}
+<script>
+	$().ready(function() {
+		function build(key, arr) {
+			var tmpl = '', title = key.split('_').pop() + ' cloud';
+			if (arr) {
+				tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
+				tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
+				tmpl += '<div class="hide">';
+				if (key == 'Photo_colors') {
+					$.each(arr, function(i, item) {
+						tmpl += '<dl><dt>' + item.name + '</dt>';
+						tmpl += '<dd>' + item.count + '</dd></dl>';
+					});
 				} else {
-					if (key == 'Photo_colors') {
-						tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
-					} else {
-						tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
-						tmpl += '<button type="submit" name="build" value="' + key + '">build</button>';
-					}
-					tmpl += '<h4>' + title + ' [EMPTY]</h4>';
+					$.each(arr, function(i, item) {
+						tmpl += '<dl><dt>' + item.name + '</dt>';
+						tmpl += '<dd>' + item.count + ', size ' + item.size + '</dd></dl>';
+					});
 				}
-				$('#' + key).html(tmpl);
+				tmpl += '</div>';
+			} else {
+				if (key == 'Photo_colors') {
+					tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
+				} else {
+					tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
+					tmpl += '<button type="submit" name="build" value="' + key + '">build</button>';
+				}
+				tmpl += '<h4>' + title + ' [EMPTY]</h4>';
 			}
-			$.getJSON('/admin/memcache', function(data) {
-				$.each(data, build);
-				$('.ff').collapseGroup();			});
-			$('button').live('click', function() {
-				var url, key = $(this).val(), action = $(this).attr('name');
-				switch (action) {
-					case 'clear':
-						url = '/admin/searchcache/clear';
-						break
-					default:
-						url = '/admin/memcache/' + key + '/' + action;
-				}
-				$.post(url, function(data) {
-					build(key, data);
-					$('.ff').unbind().collapseGroup();				});
+			$('#' + key).html(tmpl);
+		}
+		$.getJSON('/admin/memcache', function(data) {
+			$.each(data, build);
+			$('.ff').collapseGroup();
+		});
+		$('button').live('click', function() {
+			var url, key = $(this).val(), action = $(this).attr('name');
+			switch (action) {
+				case 'clear':
+					url = '/admin/searchcache/clear';
+					break
+				default:
+					url = '/admin/memcache/' + key + '/' + action;
+			}
+			$.post(url, function(data) {
+				build(key, data);
+				$('.ff').unbind().collapseGroup();
 			});
 		});
-	</script>
-{% endblock %}
-
-{% block contents %}
+	});
+</script>
 <article>
 	<h2>Site administration</h2>
 	<div class="third">

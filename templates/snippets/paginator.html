@@ -2,20 +2,20 @@
 {% if has_previous or has_next %}
 	{% if has_previous %}
 		{% if phrase %}
-			<a class="prev" href="?find={{ phrase }}&page={{ page|add:'-1' }}" title="{% trans 'previous' %} {% trans 'page' %}">&nbsp;</a>
+			<a class="prev" href="?find={{ phrase }}&page={{ page|add:'-1' }}" title="{% trans 'previous' %} {% trans 'page' %}">◀</a>
 		{% else %}
-			<a class="prev" href="?page={{ page|add:'-1' }}" title="{% trans 'previous' %} {% trans 'page' %}">&nbsp;</a>
+			<a class="prev" href="?page={{ page|add:'-1' }}" title="{% trans 'previous' %} {% trans 'page' %}">◀</a>
 		{% endif %}
 	{% else %}
-	    <span class="prev na">&nbsp;</span>
+	    <span class="prev na">◀</span>
 	{% endif %}
 	{% if has_next %}
 		{% if phrase %}
-			<a class="next" href="?find={{ phrase }}&page={{ page|add:'1' }}" title="{% trans 'next' %} {% trans 'page' %}">&nbsp;</a>
+			<a class="next" href="?find={{ phrase }}&page={{ page|add:'1' }}" title="{% trans 'next' %} {% trans 'page' %}">▶</a>
 		{% else %}
-			<a class="next" href="?page={{ page|add:'1' }}" title="{% trans 'next' %} {% trans 'page' %}">&nbsp;</a>
+			<a class="next" href="?page={{ page|add:'1' }}" title="{% trans 'next' %} {% trans 'page' %}">▶</a>
 		{% endif %}
 	{% else %}
-	    <span class="next na">&nbsp;</span>
+	    <span class="next na">▶</span>
 	{% endif %}
 {% endif %}

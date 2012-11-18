@@ -35,6 +35,13 @@
 	<div id="title"></div>
 {% endblock %}
 
+{% block nav %}
+	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
+	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
+	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
+	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+{% endblock %}
+
 {% block aside %}
 	<div class="white">
 		<header>

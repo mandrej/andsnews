@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 {% load tags %}
 
-{% block head %}
+{% block contents %}
 <script>
 $(function() {
 	$('input[type="text"]').change(function() {
@@ -13,9 +13,6 @@ $(function() {
 	});
 });
 </script>
-{% endblock %}
-
-{% block contents %}
 <article class="plain clear">
 	<h2>Counter administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	<form action="/admin/counters" method="post">

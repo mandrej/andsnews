@@ -30,7 +30,14 @@
 			$(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));
 		}
 		function chartDraw(json) {
-			var options = {fontSize: 11, fontName: 'sans-serif', chartArea: {width: 420, top: 0, left: 0, height: 300}};
+			var options = {
+				backgroundColor: '#333',
+				pieSliceBorderColor: '#333',
+				fontSize: 11,
+				fontName: 'sans-serif', 
+				chartArea: {width: 420, top: 0, left: 0, height: 300},
+				legend: {textStyle: {color: '#ccc'}}
+			};
 			var data = new google.visualization.DataTable();
 			data.addColumn('string', 'name');
 			data.addColumn('number', 'count');
@@ -110,6 +117,10 @@
 			return false
 		});
 		
+		$('#menu').click(function() {
+			$('.menu').toggle('slow');			return false
+		});
+		
 		// isotope
 		var $container = $('#container');
 		function layouting() {
@@ -160,29 +171,9 @@
 	{% endblock %}
 	
 	<div id="max">
-		<header id="header">
+		<nav class="menu">
 			<h1><a href="/" title="{% trans 'Start '%}">ANDрејевићи</a></h1>
-			{% block group %}<nav class="menu">{% endblock %}
-				{% block nav %}
-					<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
-					<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
-					<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
-					<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
-					{% if is_admin %}<a href="/admin" title="{% trans 'Administration' %}" class="Admin">{% trans 'Admin.' %}</a>{% endif %}
-					{% if user %}<a href="/sign" class="Logout">{% trans 'Logout' %}</a>
-					{% else %}<a href="/sign" class="Login">{% trans 'Sign in' %}</a>{% endif %}
-				{% endblock %}
-			</nav>
-			<div id="tools">
-				{% block paging %}
-					<nav class="paginator">{% paginator %}</nav>
-				{% endblock %}
-				<p id="footer">© АNDS v.{% version %} 2008-{% now "Y" %}
-					<br>powered by <a href="http://code.google.com/appengine/" title="{% gaesdk_version %}">GAE</a> and
-					<a href="https://www.djangoproject.com/" title="Django {% django_version %}">DJANGO</a>
-					{% if user %}<br><strong>{{ user.nickname }}</strong>{% endif %}
-				</p>
-				{% block tools %}
+			{% block tools %}
 				<div id="forms">
 					<form id="langs" action="/i18n/setlang/" method="post">
 						{% for code, lang in LANGUAGES %}
@@ -195,7 +186,24 @@
 						<button type="submit">{% trans 'search' %}</button>
 					</form>
 				</div>
-				{% endblock %}
+			{% endblock %}
+			
+			{% block nav %}{% endblock %}
+			
+			{% if is_admin %}<a href="/admin" title="{% trans 'Administration' %}" class="Admin">{% trans 'Administration' %}</a>{% endif %}
+			{% if user %}<a href="/sign" class="Logout">{% trans 'Logout' %}</a>
+			{% else %}<a href="/sign" class="Login">{% trans 'Sign in' %}</a>{% endif %}
+			
+			<p id="footer">© АNDS v.{% version %} 2008-{% now "Y" %}
+				powered by <a href="http://code.google.com/appengine/">Google App Engine {% gaesdk_version %}</a>
+				{% if user %}<br><strong>{{ user.nickname }}</strong>{% endif %}
+			</p>
+		</nav>
+		<header id="header">
+			<h1><a href="/" title="{% trans 'Start '%}">ANDрејевићи</a></h1>
+			<div id="tools">
+				{% block paging %}<nav class="paginator">{% paginator %}</nav>{% endblock %}
+				<a href="#" id="menu" title="{% trans 'Tools' %}">✪</a>
 			</div>
 		</header>
 		<div id="main">
@@ -205,7 +213,6 @@
 			</aside>
 			{% block contents %}{% endblock %}
 		</div>
-		{% block filters %}{% endblock %}
 	</div>
 </body>
 </html>

@@ -1,3 +1,13 @@
 {% extends "base.html" %}
 {% load tags i18n %}
-{% block group %}<nav id="News" class="menu">{% endblock %}
+{% block nav %}
+	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
+	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
+	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
+	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+	<div id="filters">
+		<a href="/visualize/Feed_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+	    <a class="tags collapse" href="/filter/Feed_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a>
+		<div id="tagscloud" class="hide"></div>
+	</div>
+{% endblock %}

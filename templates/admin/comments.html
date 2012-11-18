@@ -1,33 +1,30 @@
 {% extends "admin/base.html" %}
 {% load tags %}
 
-{% block head %}
+{% block contents %}
 <script>
-	$(function() {
-		$('#main button').click(function() {
-			var row = $(this).parents('tr');
-			if ($(this).attr('name') == 'save') {
-				var url = '/admin/comment/save';
-				var params = {'key': row.attr('id'), 'body': $('textarea', row).val()};
-				var done = function() {};
-			}
-			if ($(this).attr('name') == 'delete') {
-				var url = '/admin/comment/delete';
-				var params = {'key': row.attr('id')};
-				var done = function(data) {
-					if (data.success == true) {
-						row.remove();
-					}
+$(function() {
+	$('#main button').click(function() {
+		var row = $(this).parents('tr');
+		if ($(this).attr('name') == 'save') {
+			var url = '/admin/comment/save';
+			var params = {'key': row.attr('id'), 'body': $('textarea', row).val()};
+			var done = function() {};
+		}
+		if ($(this).attr('name') == 'delete') {
+			var url = '/admin/comment/delete';
+			var params = {'key': row.attr('id')};
+			var done = function(data) {
+				if (data.success == true) {
+					row.remove();
 				}
 			}
-			$.post(url, params, done, 'json');
-			return false;
-		});
+		}
+		$.post(url, params, done, 'json');
+		return false;
 	});
+});
 </script>
-{% endblock %}
-
-{% block contents %}
 <article class="plain clear">
 	<h2>Comment &amp; message administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	<form action="" method="post">

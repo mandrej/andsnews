@@ -8,13 +8,22 @@ $(function() {
 	});
 	$('.ff').collapseGroup();
 	$('.fix').colStyle();
+	$('#menu').click(function() {
+		$('.menu').toggle('slow');
+		return false
+	});
 });
 </script>
 {% endblock %}
 {% block tools %}{% endblock %}
 {% block ga %}{% endblock %}
 
-{% block group %}<nav id="Admin" class="menu">{% endblock %}
+{% block nav %}
+	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
+	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
+	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
+	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+{% endblock %}
 {% block subnav %}
     <a href="/admin/counters">Counters</a>
     <a href="/mapreduce">Mapreduce</a>

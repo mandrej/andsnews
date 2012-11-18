@@ -6,24 +6,6 @@
 
 {% block subnav %}&nbsp;{% endblock %}
 
-{% block filters %}
-	<div id="bottom">
-		<div class="third">
-			<a href="/visualize/{{ kind }}_forkind" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-		    <h3><a class="forkind collapse" href="/filter/{{ kind }}_forkind">{% trans 'Type' %} {% if filter.forkind %}[−]{% else %}[+]{% endif %}</a></h3>
-			<div id="forkindcloud" class="hide"></div>
-			
-			<a href="/visualize/{{ kind }}_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-		    <h3><a class="date collapse" href="/filter/{{ kind }}_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a></h3>
-			<div id="datecloud" class="hide"></div>
-			
-			<a href="/visualize/{{ kind }}_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-		    <h3><a class="author collapse" href="/filter/{{ kind }}_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a></h3>
-			<div id="authorcloud" class="hide"></div>
-		</div>
-	</div>
-{% endblock %}
-
 {% block contents %}
 	{% if objects %}
 		<h2><a href="/comments">{% trans 'Comments' %}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>

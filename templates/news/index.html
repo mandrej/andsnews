@@ -13,16 +13,6 @@
     {% endif %}
 {% endblock %}
 
-{% block filters %}
-	<div id="bottom">
-		<div class="third">
-		    <a href="/visualize/{{ kind }}_tags" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
-		    <h3><a class="tags collapse" href="/filter/{{ kind }}_tags">{% trans 'Tags' %} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a></h3>
-			<div id="tagscloud" class="hide"></div>
-		</div>
-	</div>
-{% endblock %}
-
 {% block contents %}
 	{% if objects %}
 		<h2><a href="/news">{% trans 'News' %}{% if page != 1 %} [{{ page }}]{% endif %}</a>
