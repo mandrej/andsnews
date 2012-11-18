@@ -1,7 +1,11 @@
 {% extends "index.html" %}
 {% load tags i18n %}
 
-{% block head %}
+{% block subnav %}{% endblock %}
+{% block aside %}{% endblock %}
+{% block modals %}{% endblock %}
+
+{% block contents %}
 <script src="/static/scripts/jquery.highlight.js"></script>
 <script>
 $(function() {
@@ -9,13 +13,6 @@ $(function() {
 	$(document).SearchHighlight(options);
 });
 </script>
-{% endblock %}
-
-{% block subnav %}{% endblock %}
-{% block aside %}{% endblock %}
-{% block modals %}{% endblock %}
-
-{% block contents %}
 <article class="plain">
 	{% if phrase %}
 		{% if objects %}
