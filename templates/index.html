@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 {% load tags i18n %}
 {% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
-{% block head %}
+
+{% block modals %}
+	<div id="title"></div>
+{% endblock %}
+
+{% block nav %}
+	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
+	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
+	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
+	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+{% endblock %}
+
+{% block aside %}
 	<script src="/static/scripts/jquery.backstretch.min.js"></script>
 	<script>
 		$(function() {
@@ -29,20 +41,6 @@
 			})
 		})
 	</script>
-{% endblock %}
-
-{% block modals %}
-	<div id="title"></div>
-{% endblock %}
-
-{% block nav %}
-	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
-	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
-	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
-	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
-{% endblock %}
-
-{% block aside %}
 	<div class="white">
 		<header>
 			<a class="delete" href="#" title="{% trans hide %}">−</a>

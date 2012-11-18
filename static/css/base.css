@@ -7,7 +7,7 @@ body {
 	background-repeat: no-repeat;
     background-attachment: fixed;
     height: 100%;
-	color: #ccc;
+	color: #999;
 	font: 13px "PT Sans", sans-serif;
 }
 a { color: #fff; outline: none; }
@@ -74,7 +74,7 @@ pre {
 	overflow: auto;
 }
 /* layout */
-#max { margin: 0 auto; max-width: 1680px; min-height: 400px; background: url(../images/front.png) no-repeat 0 -45px; }
+#max { margin: 0 auto; max-width: 1680px; min-height: 400px; background: url(../images/front.png) no-repeat; }
 #header { position: relative; height: 80px; margin: 0 3%; padding-top: 2em; }
 #tools { position: relative; float: right; width: 31.33%; }
 #footer { position: absolute; bottom: 2em; color: #999; }
@@ -102,7 +102,6 @@ pre {
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
-.paginator a:hover { background-color: rgba(0,0,0,0.2); }
 .paginator .na { color: #000; }
 /* menu */
 #menu {
@@ -119,7 +118,7 @@ pre {
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
-a#menu:hover { background-color: rgba(0,0,0,0.2); }
+.paginator a:hover, a#menu:hover { background-color: rgba(0,0,0,0.5); }
 .menu {
 	display: none;
 	position: absolute;
@@ -127,7 +126,7 @@ a#menu:hover { background-color: rgba(0,0,0,0.2); }
 	left: 0;
 	width: 44%;
 	height: 100%;
-	background: rgba(0,0,0,0.5);
+	background: rgba(0,0,0,0.7);
 	padding: 0 3%;
 	z-index: 10;
 }
@@ -282,16 +281,6 @@ fieldset p.upload a.trigger { padding-left: 80px; }
 #searchForm input:focus { outline: none; }
 #addcommentForm input { width: 265px; }
 #addcommentForm .editor .error { margin-left: 0; }
-#rate {
-	float: right;
-	margin: 1em 0;
-	position: relative;
-	overflow: hidden;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-}
-header #rate { margin: 0.2em 1em; }
 .admin button { float: right; width: 5em; margin-left: 0.5em; }
 button[name$=delete], button[name$=feed], button[name$=rating] { box-sizing: border-box; border-left: 4px solid #c00; border-right: 4px solid #c00; }
 /* django date time widget */
@@ -435,8 +424,6 @@ figure p.legend { padding: 5px; text-align: center; }
 	-moz-border-radius-topleft: 4px;
 	-webkit-border-top-left-radius: 4px;
 }
-/*.thumbnail .landscape { background-size: auto 100%; }
-.thumbnail .portrait { background-size: 100% auto; }*/
 .thumbnail .legend {
 	margin: 0;
 	height: 30px;
@@ -797,7 +784,8 @@ figure p.legend { padding: 5px; text-align: center; }
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
-@media screen and (min-device-width : 800px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
+	#footer { display: none; }
 	#aside { width: 37%; }
 	#tools { width: 38.27% }
 	.twocolumns {
@@ -810,47 +798,28 @@ figure p.legend { padding: 5px; text-align: center; }
 	.half { margin: 0 3% 1em 0; width: 37%; }
 	.third { margin: 0 3% 1em 0; width: 47%; }
 }
-@media screen and (min-device-width : 480px) and (max-width: 800px) {
+@media (max-width: 800px) {
 	#aside { width: 47%; }
-	.help, .copyright { display: none; }
-	.menu .Admin, .menu .Login, .menu .Logout { display: none; }
+	#footer, .help, .copyright { display: none; }
+	.menu { width: 76%; }
+	.menu a.Admin, .menu a.Login, .menu a.Logout { display: none; }
 	#aside { width: 47%; }
 	#tools { width: 48.46%; }
 	.thumbnail { margin: 0 3% 1.5em 0; width: 30.33%; }
 	#port { width: 47%; }
 	.half { width: 47%; }
 }
-@media screen and (max-width: 480px) {
+@media (max-width: 480px) {
 	body { font-size: 16px; }
-	#max { background-position: 0 -34px; }
-	h1, #footer, #searchForm, #langs, #aside, #rate, .submenu, .subtitle { display: none; }
+	h1 { font-size: 2em; }
+	#footer, #aside, .submenu, .subtitle, #filters .graph { display: none; }
+	#header { height: 45px; }
 	#main { margin: 1em 0 1em 3%; }
-	#header { height: 72px; padding: 0; }
-	#tools { width: auto; height: 72px; }
+	#tools { position: relative; top: -10px; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
+	.menu { width: 76%; }
 	#port { width: 97%; }
-	.menu a {
-		float: left;
-		display: inline-block;
-		margin-right: 15px;
-		background: rgba(255, 255, 255, 0.2);
-		padding: 0;
-		width: 60px;
-		background-repeat: no-repeat;
-		background-position: center center;
-		text-indent: -800em;
-		height: 60px;
-		border-radius: 4px;
-		-moz-border-radius: 4px;
-		-webkit-border-radius: 4px;
-	}
-	.menu a:hover { background-color: rgba(0, 0, 0, 0.2); }
-	.menu .Comment { background-image: url(../images/comment_big.png); }
-	.menu .Entry { background-image: url(../images/entry_big.png); }
-	.menu .Photo { background-image: url(../images/picture_big.png); }
-	.menu .News { background-image: url(../images/news_big.png); }
 	.when { width: 75px; }
-	.paginator { float: right; margin: 12px 0 0 0; }
 	.half { width: auto; }
 	.third { width: 97%; }
 	.popup { width: 280px; margin-left: -140px; top: 40px; }

@@ -5,15 +5,15 @@
 	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
 	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
 	<div id="filters">
-		<a href="/visualize/Comment_forkind" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		<a href="/visualize/Comment_forkind" class="graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
 	    <a class="forkind collapse" href="/filter/Comment_forkind">{% trans 'Type' %} {% if filter.forkind %}[−]{% else %}[+]{% endif %}</a>
 		<div id="forkindcloud" class="hide"></div>
 		
-		<a href="/visualize/Comment_date" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		<a href="/visualize/Comment_date" class="graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
 	    <a class="date collapse" href="/filter/Comment_date">{% trans 'Dates' %} {% if filter.year %}[−]{% else %}[+]{% endif %}</a>
 		<div id="datecloud" class="hide"></div>
 		
-		<a href="/visualize/Comment_author" class="right graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
+		<a href="/visualize/Comment_author" class="graph" title="{% trans 'see graph' %}">{% trans 'graph' %}</a>
 	    <a class="author collapse" href="/filter/Comment_author">{% trans 'Authors' %} {% if filter.author %}[−]{% else %}[+]{% endif %}</a>
 		<div id="authorcloud" class="hide"></div>
 	</div>
