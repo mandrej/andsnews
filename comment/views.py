@@ -17,8 +17,7 @@ def index(request, field=None, value=None, tmpl='comment/index.html'):
     paginator = Paginator(query, per_page=PER_PAGE)
     objects, has_next = paginator.page(page)
 
-    data = {'kind': 'Comment',
-            'objects': objects,
+    data = {'objects': objects,
             'filter': f.parameters,
             'filter_url': f.url,
             'filter_title': f.title,

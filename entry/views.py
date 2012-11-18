@@ -22,8 +22,7 @@ def index(request, field=None, value=None, tmpl='entry/index.html'):
     paginator = Paginator(query, per_page=PER_PAGE)
     objects, has_next = paginator.page(page)
 
-    data = {'kind': 'Entry',
-            'objects': objects,
+    data = {'objects': objects,
             'filter': f.parameters,
             'filter_url': f.url,
             'filter_title': f.title,
