@@ -629,7 +629,7 @@ figure p.legend { padding: 5px; text-align: center; }
 .thumbnail:hover a, .white:hover a { color: #000; }
 #aside .white:hover { background: rgba(0,0,0,0.5); color: #ccc; }
 #aside .white:hover a { color: #fff; }
-#comments .white:hover { background: #fff; }
+#comments .white:hover { background: #fff; color: #000; }
 .old { color: #fff; background: rgba(0,0,0,0.1); }
 .clear { clear: both; }
 #spinner, #title {
