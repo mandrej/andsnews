@@ -234,10 +234,12 @@ fieldset p.upload a.trigger { padding-left: 80px; }
 .choices input { width: auto; }
 #langs { float: right; }
 #langs button {
+	float: left;
 	display: inline-block;
+	margin-left: 5px;
 	padding: 0 5px;
-	line-height: 26px;
-	height: 26px;
+	line-height: 30px;
+	height: 30px;
 	color: #fff;
 	background: transparent;
 	font-size: 16px;
@@ -252,8 +254,8 @@ fieldset p.upload a.trigger { padding-left: 80px; }
 	top: 0;
 	right: 0;
 	font-size: 14px;
-	line-height: 26px;
-	height: 26px;
+	line-height: 30px;
+	height: 30px;
 	background: orange;
 	border-top-left-radius: 0;
 	-moz-border-radius-topleft: 0;
@@ -270,7 +272,7 @@ fieldset p.upload a.trigger { padding-left: 80px; }
 	background: #fff;
 	color: #000;
 	font-size: 16px;
-	height: 26px;
+	height: 30px;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -628,7 +630,7 @@ figure p.legend { padding: 5px; text-align: center; }
 #aside .white:hover { background: rgba(0,0,0,0.5); color: #ccc; }
 #aside .white:hover a { color: #fff; }
 #comments .white:hover { background: #fff; }
-.old { color: #fff; background: rgba(0,0,0,0.3); }
+.old { color: #fff; background: rgba(0,0,0,0.1); }
 .clear { clear: both; }
 #spinner, #title {
 	margin: -50px 0 0 -50px;
