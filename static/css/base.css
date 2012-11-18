@@ -297,42 +297,41 @@ button[name$=delete], button[name$=feed], button[name$=rating] { box-sizing: bor
 /* django date time widget */
 fieldset p.datetime { clear: none; float: left; }
 .vDateField, .vTimeField { width: 100px; }
-.calendarbox, .clockbox { background: #fff; text-align: center; position: relative; }
+.calendarbox, .clockbox { background: #000; color: #fff; text-align: center; position: relative; }
 .clockbox { width: auto; }
-.clockbox h2 { margin: 0; padding: 4px; background: #ffe657; font-size: 1em; }
+.clockbox h2 { margin: 0; padding: 4px; background: orange; color: #000; font-size: 1em; }
 .calendar { margin: 0; padding: 0; }
 .calendar table {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	background: #fff;
 	border-collapse: collapse;
 }
 .calendar caption, .calendarbox h2 {
 	margin: 0;
 	border-top: none;
 	padding: 4px 0;
-	background: #ffe657;
+	background: orange;
+	color: #000;
 	font-weight: bold;
 	text-align: center;
 }
 .calendar th {
 	padding: 4px !important;
-	border-bottom: 1px solid #dddddd;
-	color: #666666;
-	background: #eee;
+	border-bottom: 1px solid #333;
+	color: #fff;
 	font-size: 1em;
 	text-align: center;
 }
 .calendar td {
 	padding: 0;
-	border-top: 1px solid #eeeeee;
+	border-top: 1px solid #333;
 	border-bottom: none;
 	text-align: center;
 }
 .calendar td.selected a { background: #c9dbed; }
-.calendar td.nonday { background: #eee; }
-.calendar td.today a { background: #ffe657; }
+/*.calendar td.nonday { background: #eee; }*/
+.calendar td.today a { background: orange; }
 .calendar td a, .timelist a {
 	padding: 0.3em 0.5em;
 	display: block;
@@ -344,9 +343,8 @@ fieldset p.datetime { clear: none; float: left; }
 .calendarnav { margin: 0; padding: 1px 3px; color: #ccc; text-align: center; }
 .calendarnav a:link, #calendarnav a:visited, #calendarnav a:hover { color: #999; }
 .calendar-shortcuts {
-	border-top: 1px solid #eeeeee;
+	border-top: 1px solid #333;
 	padding: 4px;
-	background: #fff;
 	color: #ccc;
 	text-align: center;
 	line-height: 100%;
@@ -355,7 +353,6 @@ fieldset p.datetime { clear: none; float: left; }
 	padding: 4px 7px;
 	display: block;
 	color: #000;
-	background: #ffe657;
 	font-weight: bold;
 	position: absolute;
 }
@@ -364,7 +361,7 @@ fieldset p.datetime { clear: none; float: left; }
 .calendarnav-next { top: 0; right: 0; }
 .calendar-cancel {
 	margin: 0 !important;
-	border-top: 1px solid #dddddd;
+	border-top: 1px solid #333;
 	padding: 0.3em;
 	text-align: center;
 }
