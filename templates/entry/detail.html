@@ -18,6 +18,7 @@
             {% endif %}
         {% endif %}
         <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{% trans 'Comment' %}">{% trans 'Comment' %}</a>
+        <a href="/entries" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
     {% endif %}
 {% endblock %}
 

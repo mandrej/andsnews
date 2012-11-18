@@ -12,6 +12,7 @@
         <a class="confirm del" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
     {% endif %}
     <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{% trans 'Comment' %}">{% trans 'Comment' %}</a>
+    <a href="/photos" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
 {% endblock %}
 
 {% block head %}

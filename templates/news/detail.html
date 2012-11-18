@@ -8,6 +8,7 @@
         <a href="{{ object.get_absolute_url }}/edit" title="{% trans 'Edit' %}">{% trans 'Edit' %}</a>
         <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
     {% endif %}
+    <a href="/news" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
 {% endblock %}
 
 {% block contents %}
