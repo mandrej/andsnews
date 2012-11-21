@@ -26,4 +26,4 @@
 .ac_results li strong { background: orange; }
 .ac_loading { background: url(/static/images/busy.gif) #fff no-repeat right center; }
 .ac_odd { background-color: #ccc; }
-.ac_over { background-color: #fff; }
+.ac_over { background-color: orange; }

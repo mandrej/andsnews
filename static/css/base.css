@@ -321,7 +321,7 @@ fieldset p.datetime { clear: none; float: left; }
 	text-align: center;
 }
 .calendar td.selected a { background: #c9dbed; }
-/*.calendar td.nonday { background: #eee; }*/
+.calendar td.nonday { background: #eee; }
 .calendar td.today a { background: orange; }
 .calendar td a, .timelist a {
 	padding: 0.3em 0.5em;
