@@ -2,8 +2,6 @@ User-agent: *
 Disallow: /sign
 Disallow: /search
 Disallow: /latest
-Disallow: /results/
-Disallow: /sendvote
 Disallow: /admin/
 Disallow: /filter/
 Disallow: /visualize/
@@ -14,6 +12,7 @@ Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete
 Disallow: /*validate
+Disallow: /*normal
 # filters
 Disallow: /*tags/
 Disallow: /*date/
