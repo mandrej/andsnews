@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Library to extract EXIF information from digital camera image files
-# http://sourceforge.net/projects/exif-py/
 #
-# VERSION 1.0.10
+# Library to extract EXIF information from digital camera image files.
+# https://github.com/ianare/exif-py
+#
+#
+# VERSION 1.1.0
 #
 # To use this library call with:
 #    f = open(path_name, 'rb')
@@ -21,7 +23,6 @@
 # where TAG is a valid tag name, ex 'DateTimeOriginal'
 #
 # These 2 are useful when you are retrieving a large list of images
-#
 #
 # To return an error on invalid tags,
 # pass the -s or --strict argument, or as
@@ -48,7 +49,7 @@
 # 'EXIF DateTimeOriginal', 'Image Orientation', 'MakerNote FocusMode'
 #
 # Copyright (c) 2002-2007 Gene Cash All rights reserved
-# Copyright (c) 2007-2008 Ianaré Sévi All rights reserved
+# Copyright (c) 2007-2012 Ianaré Sévi All rights reserved
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -102,7 +103,7 @@ def make_string_uc(seq):
     seq = seq[8:]
     # Of course, this is only correct if ASCII, and the standard explicitly
     # allows JIS and Unicode.
-    return make_string(seq)
+    return make_string( make_string(seq) )
 
 # field type descriptions as (length, abbreviation, full name) tuples
 FIELD_TYPES = (
@@ -383,7 +384,7 @@ EXIF_TAGS = {
     0xA40C: ('SubjectDistanceRange', ),
     0xA500: ('Gamma', ),
     0xC4A5: ('PrintIM', ),
-    0xEA1C:	('Padding', ),
+    0xEA1C:    ('Padding', ),
     }
 
 # interoperability tags
@@ -470,7 +471,7 @@ def nikon_ev_bias(seq):
         ret_str = "-"
     else:
         ret_str = "+"
-    b = seq[2]	# Assume third value means the step size
+    b = seq[2]    # Assume third value means the step size
     whole = a / b
     a = a % b
     if whole != 0:
@@ -484,7 +485,7 @@ def nikon_ev_bias(seq):
 
 # Nikon E99x MakerNote Tags
 MAKERNOTE_NIKON_NEWER_TAGS={
-    0x0001: ('MakernoteVersion', make_string),	# Sometimes binary
+    0x0001: ('MakernoteVersion', make_string),    # Sometimes binary
     0x0002: ('ISOSetting', make_string),
     0x0003: ('ColorMode', ),
     0x0004: ('Quality', ),
@@ -508,7 +509,7 @@ MAKERNOTE_NIKON_NEWER_TAGS={
     0x0019: ('AEBracketCompensationApplied', ),
     0x001A: ('ImageProcessing', ),
     0x001B: ('CropHiSpeed', ),
-    0x001D: ('SerialNumber', ),	# Conflict with 0x00A0 ?
+    0x001D: ('SerialNumber', ),    # Conflict with 0x00A0 ?
     0x001E: ('ColorSpace', ),
     0x001F: ('VRInfo', ),
     0x0020: ('ImageAuthentication', ),
@@ -547,11 +548,11 @@ MAKERNOTE_NIKON_NEWER_TAGS={
               0x42: 'Timer, white balance bracketing'}),
     0x008A: ('AutoBracketRelease', ),
     0x008B: ('LensFStops', ),
-    0x008C: ('NEFCurve1', ),	# ExifTool calls this 'ContrastCurve'
+    0x008C: ('NEFCurve1', ),    # ExifTool calls this 'ContrastCurve'
     0x008D: ('ColorMode', ),
     0x008F: ('SceneMode', ),
     0x0090: ('LightingType', ),
-    0x0091: ('ShotInfo', ),	# First 4 bytes are a version number in ASCII
+    0x0091: ('ShotInfo', ),    # First 4 bytes are a version number in ASCII
     0x0092: ('HueAdjustment', ),
     # ExifTool calls this 'NEFCompression', should be 1-4
     0x0093: ('Compression', ),
@@ -563,9 +564,9 @@ MAKERNOTE_NIKON_NEWER_TAGS={
               1: '1',
               2: '2'}),
     0x0095: ('NoiseReduction', ),
-    0x0096: ('NEFCurve2', ),	# ExifTool calls this 'LinearizationTable'
-    0x0097: ('ColorBalance', ),	# First 4 bytes are a version number in ASCII
-    0x0098: ('LensData', ),	# First 4 bytes are a version number in ASCII
+    0x0096: ('NEFCurve2', ),    # ExifTool calls this 'LinearizationTable'
+    0x0097: ('ColorBalance', ),    # First 4 bytes are a version number in ASCII
+    0x0098: ('LensData', ),    # First 4 bytes are a version number in ASCII
     0x0099: ('RawImageCenter', ),
     0x009A: ('SensorPixelSize', ),
     0x009C: ('Scene Assist', ),
@@ -584,7 +585,7 @@ MAKERNOTE_NIKON_NEWER_TAGS={
     0x00AA: ('Saturation', ),
     0x00AB: ('DigitalVariProgram', ),
     0x00AC: ('ImageStabilization', ),
-    0x00AD: ('Responsive AF', ),	# 'AFResponse'
+    0x00AD: ('Responsive AF', ),    # 'AFResponse'
     0x00B0: ('MultiExposure', ),
     0x00B1: ('HighISONoiseReduction', ),
     0x00B7: ('AFInfo', ),
@@ -732,7 +733,7 @@ MAKERNOTE_OLYMPUS_TAGS={
         1: 'Yes'}),
     0x1027: ('ExternalFlashZoom', ),
     0x1028: ('ExternalFlashMode', ),
-    0x1029: ('Contrast 	int16u',
+    0x1029: ('Contrast     int16u',
        {0: 'High',
         1: 'Normal',
         2: 'Low'}),
@@ -1248,10 +1249,17 @@ class IFD_Tag:
         return self.printable
 
     def __repr__(self):
-        return '(0x%04X) %s=%s @ %d' % (self.tag,
+        try:
+            s= '(0x%04X) %s=%s @ %d' % (self.tag,
                                         FIELD_TYPES[self.field_type][2],
                                         self.printable,
                                         self.field_offset)
+        except:
+            s= '(%s) %s=%s @ %s' % (str(self.tag),
+                                        FIELD_TYPES[self.field_type][2],
+                                        self.printable,
+                                        str(self.field_offset))
+        return s
 
 # class that handles an EXIF header
 class EXIF_header:
@@ -1369,14 +1377,15 @@ class EXIF_header:
                     # special case: null-terminated ASCII string
                     # XXX investigate
                     # sometimes gets too big to fit in int value
-                    if count != 0 and count < (2**31):
-                        self.file.seek(self.offset + offset)
-                        values = self.file.read(count)
-                        #print values
-                        # Drop any garbage after a null.
-                        values = values.split('\x00', 1)[0]
-                    else:
-                        values = ''
+                    if count != 0: # and count < (2**31):  # 2E31 is hardware dependant. --gd
+                        try:
+                            self.file.seek(self.offset + offset)
+                            values = self.file.read(count)
+                            #print values
+                            # Drop any garbage after a null.
+                            values = values.split('\x00', 1)[0]
+                        except OverflowError:
+                            values = ''
                 else:
                     values = []
                     signed = (field_type in [6, 8, 9, 10])
@@ -1635,21 +1644,118 @@ def process_file(f, stop_tag='UNDEF', details=True, strict=False, debug=False):
         offset = 0
     elif data[0:2] == '\xFF\xD8':
         # it's a JPEG file
+        if debug: print "JPEG format recognized data[0:2] == '0xFFD8'."
+        base = 2
         while data[2] == '\xFF' and data[6:10] in ('JFIF', 'JFXX', 'OLYM', 'Phot'):
+            if debug: print "data[2] == 0xxFF data[3]==%x and data[6:10] = %s"%(ord(data[3]),data[6:10])
             length = ord(data[4])*256+ord(data[5])
+            if debug: print "Length offset is",length
             f.read(length-8)
             # fake an EXIF beginning of file
+            # I don't think this is used. --gd
             data = '\xFF\x00'+f.read(10)
             fake_exif = 1
-        if data[2] == '\xFF' and data[6:10] == 'Exif':
+            if base>2: 
+                if debug: print "added to base "
+                base = base + length + 4 -2
+            else: 
+                if debug: print "added to zero "
+                base = length + 4
+            if debug: print "Set segment base to",base
+
+        # Big ugly patch to deal with APP2 (or other) data coming before APP1
+        f.seek(0)
+        data = f.read(base+4000) # in theory, this could be insufficient since 64K is the maximum size--gd
+        # base = 2
+        while 1:
+            if debug: print "Segment base 0x%X" % base
+            if data[base:base+2]=='\xFF\xE1':
+                # APP1
+                if debug: print "APP1 at base",hex(base)
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if data[base+4:base+8] == "Exif":
+                    if debug: print "Decrement base by",2,"to get to pre-segment header (for compatibility with later code)"
+                    base = base-2
+                    break
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            elif data[base:base+2]=='\xFF\xE0':
+                # APP0
+                if debug: print "APP0 at base",hex(base)
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            elif data[base:base+2]=='\xFF\xE2':
+                # APP2
+                if debug: print "APP2 at base",hex(base)
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            elif data[base:base+2]=='\xFF\xEE':
+                # APP14
+                if debug: print "APP14 Adobe segment at base",hex(base)
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                print "There is useful EXIF-like data here, but we have no parser for it."
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            elif data[base:base+2]=='\xFF\xDB':
+                if debug: print "JPEG image data at base",hex(base),"No more segments are expected."
+                # sys.exit(0)
+                break
+            elif data[base:base+2]=='\xFF\xD8':
+                # APP12
+                if debug: print "FFD8 segment at base",hex(base)
+                if debug: print "Got",hex(ord(data[base])), hex(ord(data[base+1])),"and", data[4+base:10+base], "instead."
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            elif data[base:base+2]=='\xFF\xEC':
+                # APP12
+                if debug: print "APP12 XMP (Ducky) or Pictureinfo segment at base",hex(base)
+                if debug: print "Got",hex(ord(data[base])), hex(ord(data[base+1])),"and", data[4+base:10+base], "instead."
+                if debug: print "Length",hex(ord(data[base+2])), hex(ord(data[base+3]))
+                if debug: print "Code",data[base+4:base+8]
+                if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                print "There is useful EXIF-like data here (quality, comment, copyright), but we have no parser for it."
+                base=base+ord(data[base+2])*256+ord(data[base+3])+2
+            else: 
+                try:
+                    if debug: print "Unexpected/unhandled segment type or file content."
+                    if debug: print "Got",hex(ord(data[base])), hex(ord(data[base+1])),"and", data[4+base:10+base], "instead."
+                    if debug: print "Increment base by",ord(data[base+2])*256+ord(data[base+3])+2
+                except: pass
+                try: base=base+ord(data[base+2])*256+ord(data[base+3])+2
+                except: pass
+
+        f.seek(base+12)
+        if data[2+base] == '\xFF' and data[6+base:10+base] == 'Exif':
             # detected EXIF header
+            offset = f.tell()
+            endian = f.read(1)
+            #HACK TEST:  endian = 'M'
+        elif data[2+base] == '\xFF' and data[6+base:10+base+1] == 'Ducky':
+            # detected Ducky header.
+            if debug: print "EXIF-like header (normally 0xFF and code):",hex(ord(data[2+base])) , "and", data[6+base:10+base+1]
+            offset = f.tell()
+            endian = f.read(1)
+        elif data[2+base] == '\xFF' and data[6+base:10+base+1] == 'Adobe':
+            # detected APP14 (Adobe)
+            if debug: print "EXIF-like header (normally 0xFF and code):",hex(ord(data[2+base])) , "and", data[6+base:10+base+1]
             offset = f.tell()
             endian = f.read(1)
         else:
             # no EXIF information
+            if debug: print "No EXIF header expected data[2+base]==0xFF and data[6+base:10+base]===Exif (or Duck)"
+            if debug: print " but got",hex(ord(data[2+base])) , "and", data[6+base:10+base+1]
             return {}
     else:
         # file format not recognized
+        if debug: print "file format not recognized"
         return {}
 
     # deal with the EXIF info we found
