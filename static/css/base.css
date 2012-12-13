@@ -3,9 +3,7 @@
 * { margin: 0; padding: 0; }
 header, nav, aside, section, article, footer, figure { display: block; }
 body {
-	background: #333;
-	background-repeat: no-repeat;
-    background-attachment: fixed;
+	background: url(/static/images/bg.jpg) #333;
     height: 100%;
 	color: #999;
 	font: 13px "PT Sans", sans-serif;
