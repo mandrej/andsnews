@@ -118,7 +118,8 @@
 		});
 		
 		$('#menu').click(function() {
-			$('.menu').toggle('slow');			return false
+			$('.menu').toggle('slow');
+			return false
 		});
 		$(document).click(function(event) {
 			var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1, "SELECT": 1, "TEXTAREA": 1};
@@ -127,6 +128,7 @@
 				$('.menu').toggle('slow');
 				return false
 			}
+            return true
 		});
 		
 		// isotope
@@ -135,11 +137,13 @@
 			$container.isotope({
 				itemSelector: '.brick',
 				resizable: false,
-				fitColumns: true			});
+				fitColumns: true
+			});
 		}
 		$container.imagesLoaded(function() {
 			layouting();
-			$(window).smartresize(layouting);		});
+			$(window).smartresize(layouting);
+		});
 	});
 	</script>
 	{% endblock %}
