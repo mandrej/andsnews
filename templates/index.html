@@ -3,7 +3,7 @@
 {% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
 
 {% block modals %}
-	<div id="title"></div>
+{#	<div id="title"></div>#}
 {% endblock %}
 
 {% block nav %}
@@ -19,21 +19,10 @@
 		$(function() {
 			$.getJSON('/latest', function(data) {
 				var sources = [];
-				var index = 0;
-		        function add_title() {
-		        	$('#title').html('<a href="' + sources[index].href + '">' + sources[index].title + '</a>');
-		        }
-		        
 				$.each(data, function(i, item) {
-					var img_src = item.url + '/normal';
-					$('<img/>')[0].src = img_src;
-					sources.push({src: img_src, href: item.url, title: item.title});
+					sources.push(item.url + '/normal');
 				});
-		        $.backstretch(sources[index].src, {speed: 2000}, add_title);
-		        setInterval(function() {
-					index = (index >= sources.length - 1)? 0: index + 1;
-					$.backstretch(sources[index].src, {speed: 2000}, add_title);
-				}, 8000);
+		        $.backstretch(sources, {fade: 1000, duration: 4000});
 			});
 			$('.delete').click(function() {
 				$('#aside').slideUp();
