@@ -36,10 +36,6 @@
 			<td>{% if object.iso %}<a href="/photos/iso/{{ object.iso }}" title="{% trans 'photos with same iso' %}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
-			<td class="label">{% trans 'Program' %}</td>
-			<td>{{ object.program|default:"---" }}</td>
-		</tr>
-		<tr>
 			<td class="label">{% trans 'Taken' %}</td>
 			<td><time datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
 				{{ object.date|date:_("DATETIME_FORMAT") }}</time></td>
