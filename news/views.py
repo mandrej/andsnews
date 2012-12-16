@@ -17,6 +17,7 @@ ADS = (
     re.compile(r'<div class="(feedflare|blogger-post-footer)">.+?</div>', re.DOTALL),
     re.compile(r'<p><a.+(ads|auslieferung|feedads|pheedcontent).*?>.+?</a></p>', re.DOTALL),
     re.compile(r'<img\b[^<]*(ads|blogger|imp|creatives|feeds|pixel|segment|blogsmithmedia).*?>'),
+    re.compile(r'background-color:\s?.+?;?')
 )
 
 def make_date(tt):
