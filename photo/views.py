@@ -12,7 +12,7 @@ from lib.comm import Paginator, Filter, login_required, make_thumbnail
 from django.conf import settings
 
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
-          'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com']
+          'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
 
 def index(request, field=None, value=None, tmpl='photo/index.html'):
     f = Filter(field, value)
