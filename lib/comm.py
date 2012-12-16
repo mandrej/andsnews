@@ -13,8 +13,8 @@ from django.shortcuts import redirect, render
 from django.utils.functional import Promise
 from django.utils.encoding import force_unicode
 from django.utils.translation import gettext_lazy as _
-from models import INDEX, Counter, Photo, HUE, LUM, range_names
-from lib.cloud import calculate_cloud
+from models import INDEX, Counter, Photo, HUE, LUM, range_names, median
+from cloud import calculate_cloud
 from django.conf import settings
 
 COLORS = {}
@@ -87,19 +87,6 @@ def count_colors():
         content = sorted(content, key=itemgetter('order'))
         memcache.set(key, content, settings.TIMEOUT*12)
     return content
-
-def median(buff):
-    triple = []
-    histogram = images.histogram(buff)
-    for band in histogram:
-        suma = 0
-        limit = sum(band)/2
-        for i in xrange(256):
-            suma += band[i]
-            if (suma > limit):
-                triple.append(i)
-                break
-    return triple
 
 def make_thumbnail(kind, slug, size, mime='image/jpeg'):
     if kind == 'Photo':

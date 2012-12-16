@@ -1,7 +1,13 @@
 from __future__ import division
 import colorsys
+import datetime, time
+from cStringIO import StringIO
+import logging
 from google.appengine.ext import ndb, deferred
-from google.appengine.api import images, users, memcache, search
+from google.appengine.api import users, memcache, search, images
+from lib.EXIF import process_file
+from django.conf import settings
+import logging
 
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date', 
@@ -32,15 +38,117 @@ SAT = [
     {'span': xrange(10, 101), 'name': 'color'}
 ]
 
-def range_names(h, l, s):
+def median(buff):
+    triple = []
+    histogram = images.histogram(buff)
+    for band in histogram:
+        suma = 0
+        limit = sum(band)/2
+        for i in xrange(256):
+            suma += band[i]
+            if (suma > limit):
+                triple.append(i)
+                break
+    return triple
+
+def get_exif(buff):
+    data = {}
+    if settings.DEVEL:
+        tags = process_file(StringIO(buff), details=False)
+        if 'Image Make' in tags and 'Image Model' in tags:
+            make = tags['Image Make'].printable.replace('/', '')
+            model = tags['Image Model'].printable.replace('/', '')
+            s1 = set(make.split())
+            s2 = set(model.split())
+            if not s1&s2:
+                data['model'] = ' '.join(list(s1-s2) + list(s2-s1))
+            else:
+                data['model'] = model
+        elif 'Image Model' in tags:
+            data['model'] = tags['Image Model'].printable.replace('/', '')
+
+        if 'EXIF DateTimeOriginal' in tags:
+            dt_tuple = time.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
+            epochsec = time.mktime(dt_tuple)
+            data['date'] = datetime.datetime.fromtimestamp(epochsec)
+        else:
+            data['date'] = datetime.datetime.now()
+
+        if 'EXIF FNumber' in tags:
+            data['aperture'] = round(float(eval('%s.0' % tags['EXIF FNumber'].printable)), 1)
+
+        if 'EXIF ExposureTime' in tags:
+            data['shutter'] = tags['EXIF ExposureTime'].printable
+
+        if 'EXIF FocalLength' in tags:
+            value = float(eval('%s.0' % tags['EXIF FocalLength'].printable))
+            data['focal_length'] = round(value, 1)
+
+        if 'EXIF ISOSpeedRatings' in tags:
+            data['iso'] = int(tags['EXIF ISOSpeedRatings'].printable)
+    else:
+        img = images.Image(buff)
+        img.rotate(0)
+        img.execute_transforms(output_encoding=images.JPEG, parse_source_metadata=True)
+        tags = img.get_original_metadata()
+        if 'Make' in tags and 'Model' in tags:
+            make = tags['Make']
+            make = make.replace('/', '')
+            model = tags['Model']
+            model = model.replace('/', '')
+            s1 = set(make.split())
+            s2 = set(model.split())
+            if not s1&s2:
+                data['model'] = ' '.join(list(s1-s2) + list(s2-s1))
+            else:
+                data['model'] = model
+        elif 'Model' in tags:
+            model = tags['Model']
+            model = model.replace('/', '')
+            data['model'] = model
+
+        elif 'Lens' in tags:
+            lens = tags['Lens']
+            data['lens'] = lens.replace('/', '')
+
+        if 'DateTimeDigitized' in tags:
+            date = tags['DateTimeDigitized']
+            dt_tuple = time.strptime(date, '%Y:%m:%d %H:%M:%S')
+            epochsec = time.mktime(dt_tuple)
+            data['date'] = datetime.datetime.fromtimestamp(epochsec)
+        else:
+            data['date'] = datetime.datetime.now()
+
+        if 'FNumber' in tags:
+            data['aperture'] = round(float(tags['FNumber']), 1)
+
+        if 'ExposureTime' in tags:
+            shutter = tags['ExposureTime']
+            if shutter < 1:
+                shutter = '1/%s' % round(1/shutter)
+                data['shutter'] = shutter
+
+        if 'FocalLength' in tags:
+            data['focal_length'] = round(float(tags['FocalLength']), 1)
+
+        if 'ISOSpeedRatings' in tags:
+            iso = tags['ISOSpeedRatings']
+            data['iso'] = int(iso)
+
+    return data
+
+def range_names(rgb):
     def in_range(value, component):
         for x in component:
             if value in x['span']:
                 return x['name']
-    
-    hue = in_range(h, HUE)
-    lum = in_range(l, LUM)
-    sat = in_range(s, SAT)
+
+    rel_rgb = map(lambda x: x/255, rgb)
+    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
+    H, L, S = int(h*360), int(l*100), int(s*100)
+    hue = in_range(H, HUE)
+    lum = in_range(L, LUM)
+    sat = in_range(S, SAT)
     return hue, lum, sat
 
 def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=None, kind=None):
@@ -112,14 +220,12 @@ class Photo(ndb.Model):
     focal_length = ndb.FloatProperty()
     iso = ndb.IntegerProperty()
     date = ndb.DateTimeProperty()
-    program = ndb.StringProperty()
     # added fields
     lens = ndb.StringProperty()
     crop_factor = ndb.FloatProperty(default=1.6)
     # calculated
     eqv = ndb.IntegerProperty()
     year = ndb.IntegerProperty(default=0)
-    month = ndb.IntegerProperty(default=0)
     # HLS names
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
@@ -153,7 +259,6 @@ class Photo(ndb.Model):
         for field, value in exif.items():
             setattr(self, field, value)
         self.year = self.date.year
-        self.month = self.date.month
 
         self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
         self._put()
@@ -169,29 +274,56 @@ class Photo(ndb.Model):
             if value:
                 incr_count('Photo', field, value)
 
-    def edit(self, data, buff, exif):
+    def edit(self, data):
         old = self.author
         new = data['author']
         if new != old.email():
             self.author = users.User(new)
             decr_count('Photo', 'author', old.nickname())
             incr_count('Photo', 'author', self.author.nickname())
+        del data['author']
 
-        self.headline = data['headline']
+        old_tags = set(self.tags)
+        new_tags = set([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        if old_tags - new_tags:
+            for name in list(old_tags-new_tags):
+                decr_count('Photo', 'tags', name)
+        if new_tags - old_tags:
+            for name in list(new_tags-old_tags):
+                incr_count('Photo', 'tags', name)
+        self.tags = sorted(new_tags)
+        del data['tags']
 
-        if buff:
-            img = images.Image(buff)
-            pic = self.picture.get()
-            pic.blob = buff
-            pic.small = None
-            pic.width, pic.height, pic.size = img.width, img.height, len(buff)
-            self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
-            pic.put()
-        
-        for field, value in exif.items():
+        old = self.date
+        new = data['date']
+        if old != new:
+            decr_count('Photo', 'date', self.year)
+            self.year = new.year
+            incr_count('Photo', 'date', self.year)
+        del data['date']
+
+        if data['focal_length']:
+            old = self.focal_length
+            new = round(data['focal_length'], 1)
+            if old != new:
+                self.focal_length = new
+            del data['focal_length']
+
+        if data['crop_factor']:
+            old = self.crop_factor
+            new = round(data['crop_factor'], 1)
+            if old != new:
+                self.crop_factor = new
+            del data['crop_factor']
+
+        if self.focal_length and self.crop_factor:
+            data['eqv'] = int(10*round(self.focal_length*self.crop_factor/10))
+
+        logging.error(data)
+        for field, value in data.items():
             if field in PHOTO_FIELDS:
                 old = getattr(self, field)
-                new = exif.get(field)
+                new = data.get(field)
                 if old != new:
                     if old:
                         decr_count('Photo', field, old)
@@ -201,24 +333,6 @@ class Photo(ndb.Model):
             else:
                 setattr(self, field, value)
 
-        old_tags = set(self.tags)
-        new_tags = set([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
-        if old_tags-new_tags:
-            for name in list(old_tags-new_tags):
-                decr_count('Photo', 'tags', name)
-        if new_tags-old_tags:
-            for name in list(new_tags-old_tags):
-                incr_count('Photo', 'tags', name)
-        self.tags = sorted(new_tags)
-        
-        old = self.date
-        new = data['date']
-        if old != new:
-            decr_count('Photo', 'date', self.year)
-            self.year = new.year
-            self.month = new.month
-            incr_count('Photo', 'date', self.year)
-        
         self._put()
     
     @ndb.transactional
@@ -263,7 +377,6 @@ class Entry(ndb.Model):
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
     year = ndb.IntegerProperty(default=0)
-    month = ndb.IntegerProperty(default=0)
     front = ndb.IntegerProperty(default=-1)
     
     def index_add(self):
@@ -292,8 +405,7 @@ class Entry(ndb.Model):
         
         self.date = data['date']
         self.year=self.date.year
-        self.month=self.date.month
-        
+
         self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
         self._put()
 
@@ -344,7 +456,6 @@ class Entry(ndb.Model):
         if old != new:
             decr_count('Entry', 'date', self.year)
             self.year = new.year
-            self.month = new.month
             incr_count('Entry', 'date', self.year)
         
         old_tags = set(self.tags)
@@ -386,7 +497,6 @@ class Comment(ndb.Model):
     author = ndb.UserProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
     year = ndb.IntegerProperty(default=0)
-    month = ndb.IntegerProperty(default=0)
     forkind = ndb.StringProperty(default='Application')
     body = ndb.TextProperty(required=True)
     
@@ -421,7 +531,6 @@ class Comment(ndb.Model):
             incr_count('Comment', 'forkind', self.key.parent().kind())
         
         self.year = self.date.year
-        self.month = self.date.month
         incr_count('Comment', 'date', self.year)
         
         self.put()

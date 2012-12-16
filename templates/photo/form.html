@@ -96,9 +96,7 @@
 				{% else %}
 					<input type="hidden" name="author" value="{{ object.author.email }}"/>
 				{% endif %}
-				{{ form.slug|form_row }}
 				{{ form.tags|form_row }}
-				{{ form.photo|form_row }}
 			</fieldset>
 			
 			<fieldset>
@@ -110,12 +108,9 @@
 				{{ form.focal_length|form_row }}
 				{{ form.crop_factor|form_row }}
 				{{ form.iso|form_row }}
-				{{ form.program|form_row }}
 				{{ form.date|form_row }}
 				<p class="buttons">
 					<span class="required">{% trans 'Required field' %}</span>
-					<button type="submit" name="action:exif" value="1">{% trans 'original exif data' %}</button>
-					<button type="submit" name="action:continue" value="1">{% trans 'continue' %}</button>
 					<button type="submit">{% trans 'done' %}</button>
 				</p>
 			</fieldset>

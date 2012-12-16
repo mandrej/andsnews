@@ -204,7 +204,7 @@ fieldset .error {
 .buttons { clear: both; text-align: right; line-height: 32px; }
 .buttons span { float: left; }
 .error, .red { color: #c00; }
-.required { color: #c00; }
+.required { color: #fff; }
 .formerrors {
 	margin: 10px 0;
 	padding: 10px 10px 10px 50px;
