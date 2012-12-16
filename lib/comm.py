@@ -1,4 +1,5 @@
 from __future__ import division
+import colorsys
 import re, math
 import datetime, time
 import json, hashlib, threading
@@ -13,9 +14,29 @@ from django.shortcuts import redirect, render
 from django.utils.functional import Promise
 from django.utils.encoding import force_unicode
 from django.utils.translation import gettext_lazy as _
-from models import INDEX, Counter, Photo, HUE, LUM, range_names, median
+from models import INDEX, Counter, Photo
 from cloud import calculate_cloud
 from django.conf import settings
+
+HUE = [
+    {'span': map(lambda x: x+360 if x<0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'}, # 0
+    {'span': xrange(10, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'}, # 30
+    {'span': xrange(40, 60), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'}, # 60
+    {'span': xrange(60, 150), 'order': '3', 'name': 'green', 'hex': '#00bf00'}, # 120
+    {'span': xrange(150, 190), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'}, # 180
+    {'span': xrange(190, 240), 'order': '5', 'name': 'blue', 'hex': '#005fbf'}, # 210
+    {'span': xrange(240, 290), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'}, # 270
+    {'span': xrange(290, 350), 'order': '7', 'name': 'pink', 'hex': '#bf005f'} # 330
+]
+LUM = [
+    {'span': xrange(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
+    {'span': xrange(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': xrange(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+]
+SAT = [
+    {'span': xrange(0, 10), 'name': 'monochrome'},
+    {'span': xrange(10, 101), 'name': 'color'}
+]
 
 COLORS = {}
 for x in HUE:
@@ -23,6 +44,33 @@ for x in HUE:
 
 for x in LUM:
     COLORS['lum-%s' % x['name']] = {'hex': x['hex'], 'field': 'lum', 'name': x['name'], 'order': x['order']}
+
+def median(buff):
+    triple = []
+    histogram = images.histogram(buff)
+    for band in histogram:
+        suma = 0
+        limit = sum(band)/2
+        for i in xrange(256):
+            suma += band[i]
+            if (suma > limit):
+                triple.append(i)
+                break
+    return triple
+
+def range_names(rgb):
+    def in_range(value, component):
+        for x in component:
+            if value in x['span']:
+                return x['name']
+
+    rel_rgb = map(lambda x: x/255, rgb)
+    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
+    H, L, S = int(h*360), int(l*100), int(s*100)
+    hue = in_range(H, HUE)
+    lum = in_range(L, LUM)
+    sat = in_range(S, SAT)
+    return hue, lum, sat
 
 def make_cloud(kind, field):
     key = '%s_%s' % (kind, field)

@@ -2,9 +2,9 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.api import memcache
 from django.shortcuts import redirect, render
 from django.template.defaultfilters import filesizeformat
-from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
+from models import Photo, Entry, Comment, Feed, Counter, KEYS
 from lib.comm import Filter, Paginator, admin_required, json_response, make_thumbnail, \
-    count_colors, count_property, make_cloud
+    count_colors, count_property, make_cloud, median, range_names
 from django.conf import settings
 
 def memcache_delete(request, key):
