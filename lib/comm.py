@@ -130,7 +130,7 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
                     obj.rgb = median(out)
                     obj.put()
                     photo = obj.key.parent().get()
-                    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
+                    photo.hue, photo.lum, photo.sat = range_names(obj.rgb)
                     photo.put()
                 obj.put()
         return out, mime

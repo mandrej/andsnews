@@ -2,12 +2,10 @@ from __future__ import division
 import colorsys
 import datetime, time
 from cStringIO import StringIO
-import logging
 from google.appengine.ext import ndb, deferred
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
 from django.conf import settings
-import logging
 
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date', 
@@ -196,19 +194,12 @@ class Picture(ndb.Model):
     def hex(self):
         return '#%02x%02x%02x' % tuple(self.rgb)
     
-    def rel_rgb(self):
-        return map(lambda x: x/255, self.rgb)
-
     @property
     def hls(self):
-        h, l, s = colorsys.rgb_to_hls(*self.rel_rgb())
+        rel_rgb = map(lambda x: x/255, self.rgb)
+        h, l, s = colorsys.rgb_to_hls(*rel_rgb)
         return int(h*360), int(l*100), int(s*100)
 
-    @property
-    def hsv(self):
-        h, s, v = colorsys.rgb_to_hsv(*self.rel_rgb())
-        return int(h*360), int(s*100), int(v*100)
-    
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty(auto_current_user_add=True)
@@ -249,8 +240,11 @@ class Photo(ndb.Model):
         super(Photo, self).put()
         self.index_add()
 
-    def _add(self, data, buff, exif):
+    def _add(self, data):
+        buff = data['photo'].read()
+        exif = get_exif(buff)
         img = images.Image(buff)
+
         pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
         pic.width, pic.height, pic.size = img.width, img.height, len(buff)
         self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
@@ -263,14 +257,14 @@ class Photo(ndb.Model):
         self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
         self._put()
 
-    def add(self, data, buff, exif):
-        ndb.transaction(lambda: self._add(data, buff, exif))
+    def add(self, data):
+        ndb.transaction(lambda: self._add(data))
         for name in self.tags:
             incr_count('Photo', 'tags', name)
         incr_count('Photo', 'author', self.author.nickname())
         incr_count('Photo', 'date', self.year)
         for field in PHOTO_FIELDS:
-            value = exif.get(field, None)
+            value = data.get(field, None)
             if value:
                 incr_count('Photo', field, value)
 
@@ -319,7 +313,6 @@ class Photo(ndb.Model):
         if self.focal_length and self.crop_factor:
             data['eqv'] = int(10*round(self.focal_length*self.crop_factor/10))
 
-        logging.error(data)
         for field, value in data.items():
             if field in PHOTO_FIELDS:
                 old = getattr(self, field)

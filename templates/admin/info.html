@@ -6,7 +6,6 @@
 			{% with object.picture.get as picture %}
 			<tr><td width="20%">RGB color</td><td>{{ picture.hex }}</td></tr>
 			<tr><td>HLS color</td><td>{{ picture.hls }}</td></tr>
-			<tr><td>HSV color</td><td>{{ picture.hsv }}</td></tr>
 			{% endwith %}
 			<tr><td>Hue</td><td>{{ object.hue }}</td></tr>
 			<tr><td>Lum</td><td>{{ object.lum }}</td></tr>

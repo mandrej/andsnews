@@ -7,7 +7,7 @@ from django.template import defaultfilters
 from django.contrib.admin.widgets import AdminSplitDateTime
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from models import Photo, get_exif
+from models import Photo
 from lib.comm import Paginator, Filter, login_required, make_thumbnail
 from django.conf import settings
 
@@ -79,11 +79,7 @@ class AddForm(forms.Form):
             raise forms.ValidationError(_('Only JPEG photos allowed'))
         elif data.size > settings.LIMIT:
             raise forms.ValidationError(_('Photo too big, %s' % defaultfilters.filesizeformat(data.size)))
-        buff = data.read()
-        exif = get_exif(buff)
-        if not 'date' in exif:
-            exif['date'] = datetime.datetime.now()
-        return data, buff, exif
+        return data
 
 class EditForm(forms.Form):
     headline = forms.CharField(label=_('Headline'),
@@ -107,9 +103,8 @@ def add(request, tmpl='photo/form.html'):
         form = AddForm(request.POST, request.FILES)
         if form.is_valid():
             data = form.cleaned_data
-            x, buff, exif = data['photo']
             obj = Photo(id=data['slug'], headline=data['headline'])
-            obj.add(data, buff, exif)
+            obj.add(data)
             return redirect('%s/edit' % obj.get_absolute_url())
     else:
         form = AddForm()
