@@ -49,8 +49,8 @@
 			var chart = new google.visualization.PieChart($('#chart')[0]);
 			if (json.colors) $.extend(options, {colors: json.colors});
 			chart.draw(data, options);
-			$('#graph h4').text(json.title);
-			$('#graph .explain').text(json.info);
+			$('#graph').find('h4').text(json.title)
+            $('#graph').find('.explain').text(json.info);
 		}
 		$('a.graph').live('click', function() {
 			$('#overlay, #spinner').show();

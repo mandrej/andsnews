@@ -35,5 +35,6 @@ urlpatterns += patterns('',
     url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog'),
 )
 
+handler403 = 'lib.comm.error403'
 handler404 = 'lib.comm.error404'
 handler500 = 'lib.comm.error500'

@@ -441,13 +441,15 @@ class ListPaginator:
         results = self.objects[offset: offset + self.per_page]
         has_next = num < self.num_pages
         return results, has_next
+
+def error403(request, tmpl='403.html'):
+    return render(request, tmpl, status=404)
     
 def error404(request, tmpl='404.html'):
     path = request.path
     qs = request.META.get('QUERY_STRING', None)
     if qs:
         path += '?%s' % qs
-        
     return render(request, tmpl, {'request_path': path}, status=404)
 
 def error500(request, tmpl='500.html'):
