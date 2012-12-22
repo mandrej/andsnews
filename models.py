@@ -2,10 +2,11 @@ from __future__ import division
 import colorsys
 import datetime, time
 from cStringIO import StringIO
-from google.appengine.ext import ndb, deferred
+from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
 from django.conf import settings
+import logging
 
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date', 
@@ -157,6 +158,7 @@ class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
+    blob_key = ndb.BlobKeyProperty()
     # EXIF data
     model = ndb.StringProperty()
     aperture = ndb.FloatProperty()
@@ -193,15 +195,22 @@ class Photo(ndb.Model):
         super(Photo, self).put()
         self.index_add()
 
-    def _add(self, data):
-        buff = data['photo'].read()
-        exif = get_exif(buff)
-        img = images.Image(buff)
-
-        pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
-        pic.width, pic.height, pic.size = img.width, img.height, len(buff)
-        self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
-        pic.put_async()
+    def add(self, data):
+        if data['blob_key']:
+            blob_info = blobstore.BlobInfo.get(data['blob_key'])
+            logging.error(blob_info.key())
+            self.blob_key = blob_info.key()
+            blob_reader = blob_info.open()
+            buff = blob_reader.read()
+            exif = get_exif(buff)
+        else:
+            buff = data['photo'].read()
+            exif = get_exif(buff)
+            img = images.Image(buff)
+            pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
+            pic.width, pic.height, pic.size = img.width, img.height, len(buff)
+            self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
+            pic.put_async()
 
         for field, value in exif.items():
             setattr(self, field, value)
@@ -210,8 +219,6 @@ class Photo(ndb.Model):
         self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
         self._put()
 
-    def add(self, data):
-        ndb.transaction(lambda: self._add(data))
         for name in self.tags:
             incr_count('Photo', 'tags', name)
         incr_count('Photo', 'author', self.author.nickname())
@@ -284,6 +291,9 @@ class Photo(ndb.Model):
     @ndb.transactional
     def delete(self):
         ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
+        if self.blob_key:
+            blob_info = blobstore.BlobInfo.get(self.blob_key)
+            blob_info.delete()
         self.index_del()
         for name in self.tags:
             decr_count('Photo', 'tags', name)
@@ -297,6 +307,12 @@ class Photo(ndb.Model):
 
     def get_absolute_url(self):
         return '/photos/%s' % self.key.string_id()
+
+    def normal_url(self):
+        return images.get_serving_url(self.blob_key, size=1000, crop=False)
+
+    def small_url(self):
+        return images.get_serving_url(self.blob_key, size=240, crop=False)
     
     def similar_url(self):
         if self.sat == 'color':

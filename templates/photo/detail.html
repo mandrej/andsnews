@@ -91,9 +91,11 @@ $(function() {
 	</header>
 	
 	<figure id="port">
-		<a href="{{ object.get_absolute_url }}/normal" title="{{ object.headline }}">
-			<img src="{{ object.get_absolute_url }}/normal" alt="{{ object.headline }}"/>
-		</a>
+        {% if object.blob_key %}
+	        <img src="{{ object.normal_url }}" alt="{{ object.headline }}"/>
+        {% else %}
+            <img src="{{ object.get_absolute_url }}/normal" alt="{{ object.headline }}"/>
+        {% endif %}
 	</figure>
 </article>
 {% endblock %}
