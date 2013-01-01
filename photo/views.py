@@ -8,7 +8,7 @@ from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 #from django import forms
 from models import Photo
-#from lib.comm import login_required, make_thumbnail
+from lib.comm import make_thumbnail
 from common import TIMEOUT, BaseHandler, Paginator, Filter
 import logging
 
@@ -21,7 +21,7 @@ class Index(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.GET['page']) or 1
+        page = int(self.request.GET.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
@@ -37,7 +37,7 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
-        if 'page' not in self.GET or 'pic' not in self.GET:
+        if 'page' not in self.request.GET or 'pic' not in self.request.GET:
             obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
@@ -48,8 +48,8 @@ class Detail(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.GET.get('page', 1))
-        pic = int(self.GET.get('pic', 1))
+        page = int(self.request.GET.get('page', 1))
+        pic = int(self.request.GET.get('pic', 1))
         paginator = Paginator(query)
         previous, obj, next, numbers = paginator.triple(page, pic)
 
@@ -177,16 +177,13 @@ class Delete(BaseHandler):
         key.delete()
         self.redirect('/photos')
 
-def make_thumbnail(kind, slug, size, mime='image/jpeg'):
-    pass
-
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Photo', slug, size)
     if out:
         response = webapp2.Response(content_type=mime)
-        response['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
         if size == 'normal':
-            response['Content-Disposition'] = 'inline; filename=%s' % slug
+            response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
         response.out.write(out)
         return response
     else:

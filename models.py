@@ -315,7 +315,7 @@ class Photo(ndb.Model):
         if self.blob_key:
             return images.get_serving_url(self.blob_key, size=1000, crop=False)
         else:
-            return '/photos/%s/noraml' % self.key.string_id()
+            return '/photos/%s/normal' % self.key.string_id()
 
     def small_url(self):
         if self.blob_key:

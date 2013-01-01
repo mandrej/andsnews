@@ -1,35 +1,30 @@
 {% extends "photo/base.html" %}
-{#{% load tags i18n %}#}
-{% block meta %}<meta name="date" content="{{ objects.0.date|date:'Y-m-d' }}"/>{% endblock %}
-{% block title %}{{ super() }} - {{ gettext('Photos') }}{% endblock %}
+{#{% block meta %}<meta name="date" content="{{ objects.0.date|format_date('%Y-%m-%d') }}"/>{% endblock %}#}
+{% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 
 {% block subnav %}
     {% if user %}
-        <a href="/photos/add" class="add" title="{{ gettext('Add') }}">{{ gettext('Add') }}</a>
+        <a href="/photos/add" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/photos">{{ gettext('Photos') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+		<h2><a href="/photos">{{ _('Photos') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
-		<h2>{{ gettext('No photos') }}</h2>
-		{% popup noresults %}
-			<p>{{ gettext('No photos submitted') }}, {{ gettext('or filter has no results') }}.</p>
-		{% endpopup %}
+		<h2>{{ _('No photos') }}</h2>
+{#		{% popup noresults %}#}
+{#			<p>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</p>#}
+{#		{% endpopup %}#}
 	{% endif %}
 	
 	<div id="container">
 		{% for object in objects %}
 			<figure class="thumbnail brick">
-				<a href="/photos{{ filter_url }}/{{ object.key.string_id }}?page={{ page }}&pic={{ forloop.counter }}"
+				<a href="/photos{{ filter_url }}/{{ object.key.string_id() }}?page={{ page }}&pic={{ loop.index }}"
 					title="{{ object.headline }}">
-                    {% if object.blob_key %}
-                        <img src="{{ object.small_url }}"/>
-                    {% else %}
-					    <img src="{{ object.get_absolute_url }}/small"/>
-                    {% endif %}
-					<p class="legend">{{ object.headline }}</p>
+                    <img src="{{ object.small_url() }}"/>
+                    <p class="legend">{{ object.headline }}</p>
 				</a>
 			</figure>
 		{% endfor %}

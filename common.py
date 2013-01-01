@@ -408,7 +408,7 @@ class BaseHandler(webapp2.RequestHandler):
         return jinja2.get_jinja2(app=self.app)
 
     def render_template(self, filename, template_values, **template_args):
-        language_code = 'en'
+        language_code = 'en_US'
         i18n.get_i18n().set_locale(language_code)
         template_values['LANGUAGE_CODE'] = language_code
         template_values['LANGUAGES'] = LANGUAGES

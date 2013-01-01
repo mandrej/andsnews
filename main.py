@@ -10,11 +10,10 @@ config = {
 
 app = WSGIApplication([
     PathPrefixRoute('/photos', [
-        Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+)>', 'photo.views.Detail'),
+        Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATED
         Route('/<slug:[-\w]+>/delete', 'photo.views.Delete'),
-        Route('/<slug:[-\w]+)>', 'photo.views.Detail'),
-
+        Route('/<slug:[-\w]+>', 'photo.views.Detail'),
         ]),
     PathPrefixRoute('/entries', [
         ]),

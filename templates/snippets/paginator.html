@@ -1,18 +1,18 @@
 {% if has_previous or has_next %}
 	{% if has_previous %}
 		{% if phrase %}
-			<a class="prev" href="?find={{ phrase }}&page={{ eval(page -1) }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
+			<a class="prev" href="?find={{ phrase }}&page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
 		{% else %}
-			<a class="prev" href="?page={{ eval(page -1) }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
+			<a class="prev" href="?page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
 		{% endif %}
 	{% else %}
 	    <span class="prev na">◀</span>
 	{% endif %}
 	{% if has_next %}
 		{% if phrase %}
-			<a class="next" href="?find={{ phrase }}&page={{ eval(page + 1) }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
+			<a class="next" href="?find={{ phrase }}&page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
 		{% else %}
-			<a class="next" href="?page={{ eval(page + 1) }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
+			<a class="next" href="?page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
 		{% endif %}
 	{% else %}
 	    <span class="next na">▶</span>
