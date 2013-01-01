@@ -1,0 +1,518 @@
+# English (United States) translations for PROJECT.
+# Copyright (C) 2012 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2012-12-31 20:29+0100\n"
+"PO-Revision-Date: 2012-12-31 20:51+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: en_US <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: common.py:14 fake_i18n.py:4
+msgid "english"
+msgstr ""
+
+#: common.py:15 fake_i18n.py:5
+msgid "serbian"
+msgstr ""
+
+#: common.py:214
+msgid "for blogs"
+msgstr ""
+
+#: common.py:216
+msgid "for photos"
+msgstr ""
+
+#: common.py:218
+msgid "messages"
+msgstr ""
+
+#: fake_i18n.py:8
+msgid "Y, F"
+msgstr ""
+
+#: fake_i18n.py:11
+msgid "Monday"
+msgstr ""
+
+#: fake_i18n.py:11
+msgid "Tuesday"
+msgstr ""
+
+#: fake_i18n.py:11
+msgid "Wednesday"
+msgstr ""
+
+#: fake_i18n.py:11
+msgid "Thursday"
+msgstr ""
+
+#: fake_i18n.py:12
+msgid "Friday"
+msgstr ""
+
+#: fake_i18n.py:12
+msgid "Saturday"
+msgstr ""
+
+#: fake_i18n.py:12
+msgid "Sunday"
+msgstr ""
+
+#: fake_i18n.py:15
+msgid "January"
+msgstr ""
+
+#: fake_i18n.py:15
+msgid "February"
+msgstr ""
+
+#: fake_i18n.py:15 fake_i18n.py:27
+msgid "March"
+msgstr ""
+
+#: fake_i18n.py:16 fake_i18n.py:27
+msgid "April"
+msgstr ""
+
+#: fake_i18n.py:16 fake_i18n.py:27
+msgid "May"
+msgstr ""
+
+#: fake_i18n.py:16 fake_i18n.py:27
+msgid "June"
+msgstr ""
+
+#: fake_i18n.py:17 fake_i18n.py:28
+msgid "July"
+msgstr ""
+
+#: fake_i18n.py:17
+msgid "August"
+msgstr ""
+
+#: fake_i18n.py:17
+msgid "September"
+msgstr ""
+
+#: fake_i18n.py:18
+msgid "October"
+msgstr ""
+
+#: fake_i18n.py:18
+msgid "November"
+msgstr ""
+
+#: fake_i18n.py:18
+msgid "December"
+msgstr ""
+
+#: fake_i18n.py:21
+msgid "jan"
+msgstr ""
+
+#: fake_i18n.py:21
+msgid "feb"
+msgstr ""
+
+#: fake_i18n.py:21
+msgid "mar"
+msgstr ""
+
+#: fake_i18n.py:22
+msgid "apr"
+msgstr ""
+
+#: fake_i18n.py:22
+msgid "may"
+msgstr ""
+
+#: fake_i18n.py:22
+msgid "jun"
+msgstr ""
+
+#: fake_i18n.py:23
+msgid "jul"
+msgstr ""
+
+#: fake_i18n.py:23
+msgid "aug"
+msgstr ""
+
+#: fake_i18n.py:23
+msgid "sep"
+msgstr ""
+
+#: fake_i18n.py:24
+msgid "oct"
+msgstr ""
+
+#: fake_i18n.py:24
+msgid "nov"
+msgstr ""
+
+#: fake_i18n.py:24
+msgid "dec"
+msgstr ""
+
+#: fake_i18n.py:27
+msgid "Jan."
+msgstr ""
+
+#: fake_i18n.py:27
+msgid "Feb."
+msgstr ""
+
+#: fake_i18n.py:28
+msgid "Aug."
+msgstr ""
+
+#: fake_i18n.py:28
+msgid "Sept."
+msgstr ""
+
+#: fake_i18n.py:28
+msgid "Oct."
+msgstr ""
+
+#: fake_i18n.py:28
+msgid "Nov."
+msgstr ""
+
+#: fake_i18n.py:28
+msgid "Dec."
+msgstr ""
+
+#: fake_i18n.py:32
+msgid "year"
+msgid_plural "years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:33
+msgid "month"
+msgid_plural "months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:34
+msgid "week"
+msgid_plural "weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:35
+msgid "day"
+msgid_plural "days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:36
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:37
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fake_i18n.py:40
+#, python-format
+msgid "%(number)d %(type)s"
+msgstr ""
+
+#: fake_i18n.py:41
+#, python-format
+msgid ", %(number)d %(type)s"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "red"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "orange"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "yellow"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "green"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "teal"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "blue"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "purple"
+msgstr ""
+
+#: fake_i18n.py:44
+msgid "pink"
+msgstr ""
+
+#: fake_i18n.py:45
+msgid "dark"
+msgstr ""
+
+#: fake_i18n.py:45
+msgid "medium"
+msgstr ""
+
+#: fake_i18n.py:45
+msgid "light"
+msgstr ""
+
+#: views.py:46 entry/views.py:95 entry/views.py:115 news/views.py:124
+#: news/views.py:138 photo/views.py:69 photo/views.py:82
+msgid "Tags"
+msgstr ""
+
+#: views.py:48
+msgid "Authors"
+msgstr ""
+
+#: views.py:50
+msgid "Dates"
+msgstr ""
+
+#: views.py:54 photo/views.py:85
+msgid "Camera model"
+msgstr ""
+
+#: views.py:56 photo/views.py:91
+msgid "Lens type"
+msgstr ""
+
+#: views.py:58
+msgid "Eqv. focal length"
+msgstr ""
+
+#: views.py:59
+msgid ""
+"Equivalent focal lengths are calculated for a full format sensor or 35 mm"
+" film camera, rounded to nearset 10"
+msgstr ""
+
+#: views.py:60
+msgid "eqv"
+msgstr ""
+
+#: views.py:63 photo/views.py:89
+msgid "Sensitivity"
+msgstr ""
+
+#: views.py:67
+msgid "Median color"
+msgstr ""
+
+#: views.py:68
+msgid "Based od HLS color model"
+msgstr ""
+
+#: views.py:69
+msgid "name"
+msgstr ""
+
+#: views.py:72
+msgid "comments and messages"
+msgstr ""
+
+#: entry/views.py:52
+msgid "delete"
+msgstr ""
+
+#: entry/views.py:56 entry/views.py:70
+msgid "Img."
+msgstr ""
+
+#: entry/views.py:58 entry/views.py:84 entry/views.py:93 entry/views.py:94
+#: entry/views.py:98 entry/views.py:102 entry/views.py:112 entry/views.py:118
+#: entry/views.py:122 news/views.py:122 news/views.py:123 news/views.py:125
+#: news/views.py:135 news/views.py:139 photo/views.py:67 photo/views.py:68
+#: photo/views.py:81
+msgid "Required field"
+msgstr ""
+
+#: entry/views.py:59
+msgid "Upload the image"
+msgstr ""
+
+#: entry/views.py:64
+#, python-format
+msgid "Image too big, %s"
+msgstr ""
+
+#: entry/views.py:66 entry/views.py:82
+msgid "Only JPEG/PNG images allowed"
+msgstr ""
+
+#: entry/views.py:80
+#, python-format
+msgid "Photo too big, %s"
+msgstr ""
+
+#: entry/views.py:92 entry/views.py:111 news/views.py:121 news/views.py:134
+#: photo/views.py:66 photo/views.py:80
+msgid "Headline"
+msgstr ""
+
+#: entry/views.py:94 entry/views.py:113 news/views.py:123 news/views.py:136
+#: photo/views.py:68
+msgid "Slug"
+msgstr ""
+
+#: entry/views.py:96 entry/views.py:116
+msgid "Summary"
+msgstr ""
+
+#: entry/views.py:99 entry/views.py:119
+msgid "Posted"
+msgstr ""
+
+#: entry/views.py:100 entry/views.py:120
+msgid "Article"
+msgstr ""
+
+#: entry/views.py:107 news/views.py:130 photo/views.py:76
+msgid "Record with this slug already exist"
+msgstr ""
+
+#: entry/views.py:168
+msgid "None"
+msgstr ""
+
+#: news/views.py:105
+msgid "Feed server timeout"
+msgstr ""
+
+#: news/views.py:114
+msgid "Feed server send no entries"
+msgstr ""
+
+#: news/views.py:116
+#, python-format
+msgid "Feed server returns %s code"
+msgstr ""
+
+#: news/views.py:125 news/views.py:139
+msgid "Url"
+msgstr ""
+
+#: news/views.py:140
+msgid "Date"
+msgstr ""
+
+#: photo/views.py:70 photo/views.py:83 photo/views.py:112 photo/views.py:142
+msgid "Author"
+msgstr ""
+
+#: photo/views.py:71
+msgid "Photo"
+msgstr ""
+
+#: photo/views.py:71
+msgid "Upload the photo"
+msgstr ""
+
+#: photo/views.py:84
+msgid "Taken"
+msgstr ""
+
+#: photo/views.py:86
+msgid "Aperture"
+msgstr ""
+
+#: photo/views.py:87
+msgid "Shutter speed"
+msgstr ""
+
+#: photo/views.py:88
+msgid "Focal length"
+msgstr ""
+
+#: photo/views.py:90
+msgid "Crop factor"
+msgstr ""
+
+#: templates/base.html:13
+msgid "photo rss"
+msgstr ""
+
+#: templates/base.html:14
+msgid "entry rss"
+msgstr ""
+
+#: templates/base.html:171
+msgid "close"
+msgstr ""
+
+#: templates/base.html:186 templates/base.html:214
+msgid "Start"
+msgstr ""
+
+#: templates/base.html:197
+msgid "search"
+msgstr ""
+
+#: templates/base.html:204
+msgid "Administration"
+msgstr ""
+
+#: templates/base.html:205
+msgid "Logout"
+msgstr ""
+
+#: templates/base.html:206
+msgid "Sign in"
+msgstr ""
+
+#: templates/base.html:217
+msgid "Tools"
+msgstr ""
+
+#: templates/index.html:9
+msgid "photo album"
+msgstr ""
+
+#: templates/index.html:10
+msgid "Blog"
+msgstr ""
+
+#: templates/index.html:11
+msgid "Comments"
+msgstr ""
+
+#: templates/index.html:12
+msgid "News"
+msgstr ""
+
+#: templates/index.html:34
+msgid "hide"
+msgstr ""
+
+#: templates/index.html:35
+msgid "Welcome to our and YOUR site"
+msgstr ""
+
