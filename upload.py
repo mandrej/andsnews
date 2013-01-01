@@ -1,14 +1,18 @@
 import webapp2
-from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext import blobstore
+from models import Photo
+import logging
 
-class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
-    # 2 step
+class UploadHandler(webapp2.RequestHandler):
     def post(self):
-        upload_files = self.get_uploads('photo')
-        blob_info = upload_files[0]
-        self.redirect('/photos/%s/bind' % blob_info.key())
+        data = dict(self.request.POST)
+        blob_info = blobstore.parse_blob_info(data['photo'])
+        logging.error(blob_info)
+        obj = Photo(id=data['slug'], headline=data['headline'])
+        data['blob_key'] = blob_info.key()
+        obj.add(data)
+        self.redirect_to('/%s/edit' % obj.get_absolute_url())
 
 app = webapp2.WSGIApplication([
-    ('/upload', UploadHandler),
-#    ('/serve/([^/]+)?', ServeHandler)
+    webapp2.Route(r'/upload', handler=UploadHandler),
     ], debug=True)

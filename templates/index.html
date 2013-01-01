@@ -1,16 +1,13 @@
 {% extends "base.html" %}
-{% load tags i18n %}
 {% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
 
-{% block modals %}
-{#	<div id="title"></div>#}
-{% endblock %}
+{% block modals %}{% endblock %}
 
 {% block nav %}
-	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
-	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
-	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
-	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
+	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
+	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
+	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
 {% endblock %}
 
 {% block aside %}
@@ -20,7 +17,7 @@
 			$.getJSON('/latest', function(data) {
 				var sources = [];
 				$.each(data, function(i, item) {
-					sources.push(item.url + '/normal');
+					sources.push(item.url);
 				});
 		        $.backstretch(sources, {fade: 1000, duration: 4000});
 			});
@@ -32,8 +29,8 @@
 	</script>
 	<div class="white">
 		<header>
-			<a class="delete" href="#" title="{% trans hide %}">−</a>
-			<h2>{% trans 'Welcome to our and YOUR site' %}</h2>
+			<a class="delete" href="#" title="{{ _('hide') }}">−</a>
+			<h2>{{ _('Welcome to our and YOUR site') }}</h2>
 		</header>
 		{% if LANGUAGE_CODE == 'en' %}
 			<p>Welcome to our site where possible to post your photos, blogs and to comment on all this.
@@ -44,7 +41,7 @@
 			Application address is: <strong>ands@appspot.com</strong>.</p>
 			<h4><a href="/" title="Mobile vesion">
 			See this site on your mobile device</a></h4>
-	
+
 			<div class="pullquote">
 				<p>Site administrator has right to delete offensive blogs, photos or comments
 					according to personal valuation.</p>
@@ -63,7 +60,7 @@
 			Адреса апликације је: <strong>ands@appspot.com</strong>.</p>
 			<h4><a href="/" title="Верзија за мобилни">
 			Видите овај сајт на вашем мобилном уређају</a></h4>
-	
+
 			<div class="pullquote">
 				<p>Администратор задржава право да може да обрише недоличне написе, слике или
 					коментаре по сопственом нахођењу.</p>

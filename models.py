@@ -1,13 +1,11 @@
 from __future__ import division
-import colorsys
-import datetime, time
+import os, datetime, time, colorsys
 from cStringIO import StringIO
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
-from django.conf import settings
-import logging
 
+DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date', 
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_colors', 
@@ -19,7 +17,7 @@ ENTRY_IMAGES = 10
 
 def get_exif(buff):
     data = {}
-    if settings.DEVEL:
+    if DEVEL:
         tags = process_file(StringIO(buff), details=False)
         if 'Image Make' in tags and 'Image Model' in tags:
             make = tags['Image Make'].printable.replace('/', '')
@@ -159,6 +157,7 @@ class Photo(ndb.Model):
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
+    size = ndb.IntegerProperty()
     # EXIF data
     model = ndb.StringProperty()
     aperture = ndb.FloatProperty()
@@ -172,6 +171,8 @@ class Photo(ndb.Model):
     # calculated
     eqv = ndb.IntegerProperty()
     year = ndb.IntegerProperty(default=0)
+    # RGB [86, 102, 102]
+#    rgb = ndb.IntegerProperty(repeated=True)
     # HLS names
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
@@ -198,10 +199,12 @@ class Photo(ndb.Model):
     def add(self, data):
         if data['blob_key']:
             blob_info = blobstore.BlobInfo.get(data['blob_key'])
-            logging.error(blob_info.key())
             self.blob_key = blob_info.key()
+            self.size = blob_info.size
             blob_reader = blob_info.open()
+#            blob_reader = blobstore.BlobReader(data['blob_key'], buffer_size=1048576)
             buff = blob_reader.read()
+#            self.rgb = median(buff)
             exif = get_exif(buff)
         else:
             buff = data['photo'].read()
@@ -309,11 +312,17 @@ class Photo(ndb.Model):
         return '/photos/%s' % self.key.string_id()
 
     def normal_url(self):
-        return images.get_serving_url(self.blob_key, size=1000, crop=False)
+        if self.blob_key:
+            return images.get_serving_url(self.blob_key, size=1000, crop=False)
+        else:
+            return '/photos/%s/noraml' % self.key.string_id()
 
     def small_url(self):
-        return images.get_serving_url(self.blob_key, size=240, crop=False)
-    
+        if self.blob_key:
+            return images.get_serving_url(self.blob_key, size=240, crop=False)
+        else:
+            return '/photos/%s/small' % self.key.string_id()
+
     def similar_url(self):
         if self.sat == 'color':
             return '/photos/hue/%s' % self.hue

@@ -3,7 +3,7 @@ import os
 import datetime, time
 print time.strftime('%y%W', datetime.datetime.now().timetuple())
 """
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 ROOT_URLCONF = 'urls'

@@ -40,21 +40,37 @@
 			<td><time datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
 				{{ object.date|date:_("DATETIME_FORMAT") }}</time></td>
 		</tr>
-		{% with object.picture.get as picture %}
-		<tr>
-			<td class="label">{% trans 'Dimensions' %}</td>
-			<td>{{ picture.width }}x{{ picture.height }}px,
-				{{ picture.size|filesizeformat }}</td>
-		</tr>
-		<tr>
-			<td class="label">{% trans 'Median color' %}</td>
-			<td>
-				{% if picture.rgb %}
-					<a href="{{ object.similar_url }}" title="{% trans 'photos with similar color' %}">HLS: {{ picture.hls }}, RGB: {{ picture.hex }}</a>
-					<span style="float: right; background: {{ picture.hex }}; width: 12px;">&nbsp;</span>
-				{% else %}---{% endif %}
-			</td>
-		</tr>
-		{% endwith %}
+        {% if object.blob_key %}
+            <tr>
+                <td class="label">{% trans 'Size' %}</td>
+                <td>{{ picture.size|filesizeformat }}</td>
+            </tr>
+            <tr>
+                <td class="label">{% trans 'Median color' %}</td>
+                <td>
+                    {% if picture.rgb %}
+                        <a href="{{ object.similar_url }}" title="{% trans 'photos with similar color' %}">HLS: {{ picture.hls }}, RGB: {{ picture.hex }}</a>
+                        <span style="float: right; background: {{ picture.hex }}; width: 12px;">&nbsp;</span>
+                    {% else %}---{% endif %}
+                </td>
+            </tr>
+        {% else %}
+            {% with object.picture.get as picture %}
+            <tr>
+                <td class="label">{% trans 'Dimensions' %}</td>
+                <td>{{ picture.width }}x{{ picture.height }}px,
+                    {{ picture.size|filesizeformat }}</td>
+            </tr>
+            <tr>
+                <td class="label">{% trans 'Median color' %}</td>
+                <td>
+                    {% if picture.rgb %}
+                        <a href="{{ object.similar_url }}" title="{% trans 'photos with similar color' %}">HLS: {{ picture.hls }}, RGB: {{ picture.hex }}</a>
+                        <span style="float: right; background: {{ picture.hex }}; width: 12px;">&nbsp;</span>
+                    {% else %}---{% endif %}
+                </td>
+            </tr>
+            {% endwith %}
+        {% endif %}
 	</tbody>
 </table>
