@@ -27,7 +27,7 @@ ADMIN_JID = 'milan.andrejevic@gmail.com'
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
 ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
-    extensions=['jinja2.ext.i18n'],
+    extensions=['jinja2.ext.i18n', 'jinja2.ext.with_'],
     autoescape=True
 )
 ENV.install_gettext_translations(i18n, newstyle=False)
@@ -49,6 +49,9 @@ def now():
     date = datetime.datetime.now()
     return date.strftime('%Y')
 
+def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
+    return value.strftime(format)
+
 ENV.globals.update({
     'now': now,
     'version': version,
@@ -56,10 +59,11 @@ ENV.globals.update({
     'language': language,
 })
 ENV.filters.update({
-    'format_date': i18n.format_date,
-    'format_time': i18n.format_time,
-    'format_datetime': i18n.format_datetime,
-    'format_timedelta': i18n.format_timedelta,
+#    'format_date': i18n.format_date,
+#    'format_time': i18n.format_time,
+#    'format_datetime': i18n.format_datetime,
+    'format_datetime': format_datetime,
+#    'format_timedelta': i18n.format_timedelta,
     })
 
 HUE = [

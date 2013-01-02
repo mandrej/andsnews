@@ -4,7 +4,7 @@ from views import Index, latest, RenderCloud, auto_complete, sitemap, visualize,
 
 config = {
     'webapp2_extras.jinja2' : {'template_path': ['templates'],
-                               'environment_args': {'extensions': ['jinja2.ext.i18n']}},
+                               'environment_args': {'extensions': ['jinja2.ext.i18n', 'jinja2.ext.with_']}},
     'webapp2_extras.i18n': {'translations_path': 'locale'},
     'webapp2_extras.sessions': {'secret_key': 'iasbj*6WZ2'},
 #    'locales' : ['en_US', 'sr_RS']

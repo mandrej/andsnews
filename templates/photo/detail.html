@@ -80,9 +80,9 @@ $(function() {
 			<a href="/photos/author/{{ object.author }}"
 				title="{{ _('author&apos;s photos') }}">{{ object.author }}</a>
 			{% for tag in object.tags %}
-				{% if forloop.first %}| {{ _('tagged by') }}:{% endif %}
+				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
 				<a href="/photos/tags/{{ tag }}" title="{{ tag }}">
-					{{ tag }}</a>{% if not forloop.last %},{% endif %}
+					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
 			| <a href="/photos/date/{{ object.year }}"
 				title="{{ _('photos taken same year') }}">{{ object.year }}</a>
@@ -90,11 +90,7 @@ $(function() {
 	</header>
 	
 	<figure id="port">
-        {% if object.blob_key %}
-	        <img src="{{ object.normal_url }}" alt="{{ object.headline }}"/>
-        {% else %}
-            <img src="{{ object.get_absolute_url }}/normal" alt="{{ object.headline }}"/>
-        {% endif %}
+        <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
 	</figure>
 </article>
 {% endblock %}

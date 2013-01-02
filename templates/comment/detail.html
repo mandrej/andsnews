@@ -1,9 +1,9 @@
-{% for comment in object.comment_list %}
+{% for comment in object.comment_list() %}
 	<div class="white">
-		<time class="when" datetime='{{ comment.date|date:"Y-m-d\TH:i:sO" }}'>
-			<span class="day">{{ comment.date|date:"d" }}</span>
-			<span class="time">{{ comment.date|date:"H:i" }}</span>
-			<span class="monthyear">{{ comment.date|date:"m 'y" }}</span>
+		<time class="when" datetime='{{ comment.date|format_datetime }}'>
+			<span class="day">{{ comment.date|format_datetime("%d") }}</span>
+			<span class="time">{{ comment.date|format_datetime("%H:%M") }}</span>
+			<span class="monthyear">{{ comment.date|format_datetime("%m '%y") }}</span>
 		</time>
 		{% if user == comment.author %}
 			<a class="delete confirm right" href="/comments/{{ comment.key.urlsafe }}/delete"

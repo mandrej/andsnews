@@ -54,11 +54,12 @@
                 </td>
             </tr>
         {% else %}
-            {% with object.picture.get as picture %}
+            {% with picture=object.picture.get %}
             <tr>
                 <td class="label">{{ _('Dimensions') }}</td>
                 <td>{{ picture.width }}x{{ picture.height }}px,
-                    {{ filesizeformat(picture.size, binary=True) }}</td>
+{#                    {{ picture.size|filesizeformat(binary=True) }}#}
+                </td>
             </tr>
             <tr>
                 <td class="label">{{ _('Median color') }}</td>
