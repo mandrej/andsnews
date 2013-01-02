@@ -1,8 +1,7 @@
-{% load i18n %}
 <div id="{{ id }}" class="modal">
 	<div class="popup {{ css_class }}">
 		<h4>{{ title }}</h4>
-		<a href="#" class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+		<a href="#" class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 		<div class="content">{{ body }}</div>
 	</div>
 </div>

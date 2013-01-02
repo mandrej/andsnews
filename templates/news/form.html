@@ -1,20 +1,20 @@
 {% extends "news/base.html" %}
-{% load tags i18n %}
-{% block title %}{{ block.super }} - {% trans 'Add new / change existing news' %}{% endblock %}
+
+{% block title %}{{ super() }} - {{ _('Add new / change existing news') }}{% endblock %}
 
 {% block subnav %}
     {% if object %}
         {% if is_admin %}
-            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
-            <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
-        <a href="/news" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        <a href="/news" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block head %}
-{{ block.super }}
+{{ super() }}
 <script src="/static/scripts/urlify.js"></script>
 <script src="/static/scripts/jquery.autocomplete.js"></script>
 <script>
@@ -35,19 +35,19 @@ $(function() {
 {% endblock %}
 
 {% block aside %}
-	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
-	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
+	<p>{{ _('<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+	<p>{{ _('<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
 	{% if object %}
-		<p><strong>{% trans 'Date' %}</strong> {% trans 'Last modified date' %}.</p>
+		<p><strong>{{ _('Date') }}</strong> {{ _('Last modified date') }}.</p>
 	{% endif %}
 {% endblock %}
 
 {% block contents %}
 <article>
-	<h2>{% trans 'Add new / change existing news' %}</h2>
+	<h2>{{ _('Add new / change existing news') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
-			<p>{% trans 'Please correct errors in' %}
+			<p>{{ _('Please correct errors in') }}
 			{{ form.errors|join:", " }}.</p>
 		</div>
 	{% endif %}
@@ -66,8 +66,8 @@ $(function() {
 				{{ form.date|form_row }}
 			{% endif %}
 			<p class="buttons">
-				<span class="required">{% trans 'Required field' %}</span>
-				<button type="submit">{% trans 'done' %}</button>
+				<span class="required">{{ _('Required field') }}</span>
+				<button type="submit">{{ _('done') }}</button>
 			</p>
 		</fieldset>
 	</form>

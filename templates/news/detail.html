@@ -1,21 +1,21 @@
 {% extends "news/base.html" %}
-{% load tags i18n %}
-{% block title %}{{ block.super }} - {{ object.headline }}{% endblock %}
+
+{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 
 {% block subnav %}
     {% if is_admin %}
-        <a href="/news/add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
-        <a href="{{ object.get_absolute_url }}/edit" title="{% trans 'Edit' %}">{% trans 'Edit' %}</a>
-        <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
+        <a href="/news/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ object.get_absolute_url }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+        <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
-    <a href="/news" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+    <a href="/news" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}
 
 {% block contents %}
 <article class="plain nomargin">
 	{% if error %}
 		{% popup error %}
-			<p>{% trans 'News error' %}.<br/>{{ error }}.</p>
+			<p>{{ _('News error') }}.<br/>{{ error }}.</p>
 		{% endpopup %}
 	{% endif %}
 	
@@ -33,13 +33,13 @@
 		<div class="subtitle">
 			{{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
 	
-			{% if object.date %}{% trans 'updated' %}:
+			{% if object.date %}{{ _('updated') }}:
 				<time datetime="{{ object.date|date:"Y-m-d\TH:i:sO" }}">
-					{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+{#					{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 				</time>
 			{% endif %}
 			{% for tag in object.tags %}
-				{% if forloop.first %}| {% trans 'tagged by' %}:{% endif %}
+				{% if forloop.first %}| {{ _('tagged by') }}:{% endif %}
 				<a href="/news/tags/{{ tag }}" title="{{ tag }}">
 					{{ tag }}</a>{% if not forloop.last %},{% endif %}
 			{% endfor %}
@@ -56,7 +56,7 @@
 		                <p class="details">
 		                    {{ entry.author|striptags }}
 		                    {% if entry.date %}
-		                        {% blocktrans with entry.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+{#		                        {% trans with entry.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 		                    {% endif %}
 		                </p>
 		            </div>
@@ -64,7 +64,7 @@
 			{% endfor %}
 		</div>
 	{% else %}
-		<h2>{% blocktrans with object.headline as headline %}No {{ headline }} at the moment{% endblocktrans %}.</h2>
+		<h2>{% trans with object.headline as headline %}No {{ headline }} at the moment{% endtrans %}.</h2>
 	{% endif %}
 </article>
 {% endblock %}

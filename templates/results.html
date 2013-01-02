@@ -1,5 +1,4 @@
 {% extends "index.html" %}
-{% load tags i18n %}
 
 {% block subnav %}{% endblock %}
 {% block aside %}{% endblock %}
@@ -16,28 +15,28 @@ $(function() {
 <article class="plain">
 	{% if phrase %}
 		{% if objects %}
-			<h2>{% blocktrans count counter=number_found %}{{ counter }} search result for {{ phrase }}{% plural %}{{ counter }} search results for {{ phrase }}{% endblocktrans %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+			<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 		{% else %}
-			<h2>{% trans 'No results' %}</h2>
+			<h2>{{ _('No results') }}</h2>
 			{% popup noresults %}
-				<p>{% trans 'No search results for' %} {{ phrase }}.
-					{% trans 'Please try again' %}.</p>
+				<p>{{ _('No search results for') }} {{ phrase }}.
+					{{ _('Please try again') }}.</p>
 			{% endpopup %}
 		{% endif %}
 	{% else %}
-		<h2>{% trans 'No results' %}</h2>
+		<h2>{{ _('No results') }}</h2>
 			{% popup noresults %}
-				<p>{% trans 'Nothing to search for' %}.
-					{% trans 'Please try something' %}.</p>
+				<p>{{ _('Nothing to search for') }}.
+					{{ _('Please try something') }}.</p>
 			{% endpopup %}
 	{% endif %}
 	
 	{% for object in objects %}
 		{% if object.kind == 'Application' %}
 	        <div class="icon Message">
-                <h3>{% trans 'message' %}
+                <h3>{{ _('message') }}
 	                {% if object.tags %}
-	                	<br>{% trans 'tagged by' %}: {{ object.tags }}
+	                	<br>{{ _('tagged by') }}: {{ object.tags }}
 	                {% endif %}
                 </h3>
                 {{ object.body|snippet:phrase }}
@@ -49,9 +48,9 @@ $(function() {
 		{% if object.kind == 'Comment' %}
 	        <div class="icon Comment">
                 <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}#comments">
-                	{{ object.headline }} ({% trans 'comment' %})</a>
+                	{{ object.headline }} ({{ _('comment') }})</a>
                 	{% if object.tags %}
-	                	<br>{% trans 'tagged by' %}: {{ object.tags }}
+	                	<br>{{ _('tagged by') }}: {{ object.tags }}
 	                {% endif %}
                 </h3>
                 {{ object.body|snippet:phrase }}
@@ -65,7 +64,7 @@ $(function() {
 	            <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}">
 	            	{{ object.headline }}</a>
 	            	{% if object.tags %}
-	                	<br>{% trans 'tagged by' %}: {{ object.tags }}
+	                	<br>{{ _('tagged by') }}: {{ object.tags }}
 	                {% endif %}
 	            </h3>
 	            {{ object.body|snippet:phrase }}
@@ -79,7 +78,7 @@ $(function() {
 	            <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}">
 	            	{{ object.headline }}</a>
 	            	{% if object.tags %}
-	                	<br>{% trans 'tagged by' %}: {{ object.tags }}
+	                	<br>{{ _('tagged by') }}: {{ object.tags }}
 	                {% endif %}
 	            </h3>
 	            {{ object.body|snippet:phrase }}

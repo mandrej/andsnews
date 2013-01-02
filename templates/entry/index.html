@@ -1,21 +1,21 @@
 {% extends "entry/base.html" %}
-{% load tags i18n %}
+
 {% block meta %}<meta name="date" content="{{ objects.0.date|date:'Y-m-d' }}"/>{% endblock %}
-{% block title %}{{ block.super }} - {% trans 'Blog' %}{% endblock %}
+{% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
 {% block subnav %}
     {% if user %}
-        <a href="/entries/add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+        <a href="/entries/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/entries">{% trans 'Blog' %}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+		<h2><a href="/entries">{{ _('Blog') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
-		<h2>{% trans 'No blogs' %}</h2>
+		<h2>{{ _('No blogs') }}</h2>
 		{% popup noresults %}
-			<p>{% trans 'No blog submitted' %}, {% trans 'or filter has no results' %}.</p>
+			<p>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</p>
 		{% endpopup %}
 	{% endif %}
 	
@@ -27,8 +27,8 @@
 					<p>{% if object.front >= 0 %}
 							<img src="{{ object|image_url_by_num:object.front }}/small" class="left" style="margin-bottom: 5px;"/>
 						{% endif %}{{ object.summary }}</p>
-					<p class="posted">{{ object.author }}, {% trans 'posted' %}
-						{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+					<p class="posted">{{ object.author }}, {{ _('posted') }}
+{#						{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 					</p>
 				</a>
 			</section>

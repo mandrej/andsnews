@@ -1,8 +1,7 @@
 {% extends "admin/base.html" %}
-{% load tags %}
 
 {% block head %}
-{{ block.super }}
+{{ super() }}
 <script>
 $(function() {
 	$('.ff').collapseGroup();
@@ -64,7 +63,7 @@ $(function() {
 {% endblock %}
 
 {% block modals %}
-{{ block.super }}
+{{ super() }}
 <div id="info" class="modal"></div>
 {% endblock %}
 

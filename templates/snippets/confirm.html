@@ -1,35 +1,34 @@
-{% load i18n %}
 <div class="popup warning">
-	<h4>{% trans 'Confirm' %}</h4>
-	<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+	<h4>{{ _('Confirm') }}</h4>
+	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 	<div class="content">
 		<form id="deleteForm" action="{{ post_url }}" method="post">
-			<p>{% trans 'Do you really want to delete' %}
+			<p>{{ _('Do you really want to delete') }}
 				{% if object.kind == 'Comment' %}
-					{% trans 'comment submitted by' %}
+					{{ _('comment submitted by') }}
 					<strong>{{ object.author }}</strong>?
 				{% endif %}
 				{% if object.kind == 'Entry' %}
-					{% trans 'Blog' %} &quot;{{ object.headline }}&quot;
-					{% trans 'posted by' %}
+					{{ _('Blog') }} &quot;{{ object.headline }}&quot;
+					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
 				{% endif %}
 				{% if object.kind == 'Img' %}
-					{% trans 'image' %} &quot;{{ object.name }}&quot;
+					{{ _('image') }} &quot;{{ object.name }}&quot;
 				{% endif %}
 				{% if object.kind == 'Photo' %}
-					{% trans 'photo' %} &quot;{{ object.headline }}&quot;
-					{% trans 'posted by' %}
+					{{ _('photo') }} &quot;{{ object.headline }}&quot;
+					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
 				{% endif %}
 				{% if object.kind == 'Feed' %}
-					{% trans 'News' %} &quot;{{ object.headline }}&quot;
-					{% trans 'posted by' %}
+					{{ _('News') }} &quot;{{ object.headline }}&quot;
+					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
 				{% endif %}
 			</p>
 		   	<p class="buttons">
-		   		<button type="submit">{% trans 'Delete' %}</button>
+		   		<button type="submit">{{ _('Delete') }}</button>
 		   	</p>
 		</form>
 	</div>

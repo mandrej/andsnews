@@ -1,23 +1,22 @@
 {% extends "base.html" %}
-{% load tags i18n %}
-{% block title %}{{ block.super }} - {% trans 'Server error' %} (500){% endblock %}
+{% block title %}{{ super() }} - {{ _('Server error') }} (500){% endblock %}
 
-{% block subnav %}<a href="/">{% trans 'Start '%}</a>{% endblock %}
+{% block subnav %}<a href="/">{{ _('Start ') }}</a>{% endblock %}
 
 {% block contents %}
 <article>
 	{% popup servererror %}
 		<p>
-			{% trans 'Unforeseen server error ocurred' %}.
-			{% trans 'It&apos;s been reported to the site administrator and should be fixed shortly' %}.
-			<br/>{% trans 'Thanks for your patience' %}.</p>
+			{{ _('Unforeseen server error ocurred') }}.
+			{{ _('It&apos;s been reported to the site administrator and should be fixed shortly') }}.
+			<br/>{{ _('Thanks for your patience') }}.</p>
 	{% endpopup %}
 	
-	<h2>{% trans 'Server error' %} (500)</h2>
+	<h2>{{ _('Server error') }} (500)</h2>
 	<p>
-		{% trans 'Unforeseen server error ocurred' %}.
-		{% trans 'It&apos;s been reported to the site administrator and should be fixed shortly' %}.
-		<br/>{% trans 'Thanks for your patience' %}.</p>
+		{{ _('Unforeseen server error ocurred') }}.
+		{{ _('It&apos;s been reported to the site administrator and should be fixed shortly') }}.
+		<br/>{{ _('Thanks for your patience') }}.</p>
 </article>
 {% endblock %}
 

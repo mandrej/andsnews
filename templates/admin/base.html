@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load tags i18n %}
+
 {% block head %}
 <script>
 $(function() {
@@ -27,13 +27,13 @@ $(function() {
 {% block ga %}{% endblock %}
 
 {% block nav %}
-	<a href="/photos" title="{% trans 'photo album' %}" class="Photo">{% trans 'photo album' %}</a>
-	<a href="/entries" title="{% trans 'Blog' %}" class="Entry">{% trans 'Blog' %}</a>
-	<a href="/comments" title="{% trans 'Comments' %}" class="Comment">{% trans 'Comments' %}</a>
-	<a href="/news" title="{% trans 'News' %}" class="News">{% trans 'News' %}</a>
+	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
+	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
+	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
+	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
 {% endblock %}
 {% block subnav %}
     <a href="/admin/counters">Counters</a>
     <a href="/mapreduce">Mapreduce</a>
-    <a href="/admin" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+    <a href="/admin" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}

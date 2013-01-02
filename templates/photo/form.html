@@ -1,20 +1,20 @@
 {% extends "photo/base.html" %}
-{% load tags i18n %}
-{% block title %}{{ block.super }} - {% trans 'Add new / change existing photo' %}{% endblock %}
+
+{% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
 {% block subnav %}
     {% if object %}
         {% if is_admin or user == object.author %}
-			<a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
-     		<a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+			<a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+     		<a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
-        <a href="/photos" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        <a href="/photos" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block head %}
-{{ block.super }}
+{{ super() }}
 <script src="/static/scripts/urlify.js"></script>
 <script src="/static/scripts/jquery.autocomplete.js"></script>
 <script src="/static/scripts/jquery.filestyle.js"></script>
@@ -56,12 +56,12 @@
 {% endblock %}
 
 {% block aside %}
-	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
-	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
-	<p>{% trans '<strong>Forward slash</strong> is not allowed in any field. It will be stripped out automatically.' %}</p>
-	<p><strong>{% trans 'Send photo less then' %} 1MB.</strong></p>
+	<p>{{ _('<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+	<p>{{ _('<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+	<p>{{ _('<strong>Forward slash</strong> is not allowed in any field. It will be stripped out automatically.') }}</p>
+	<p><strong>{{ _('Send photo less then') }} 1MB.</strong></p>
 
-	<p>{% trans '<strong>Crop factor</strong> represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)' %}:</p>
+	<p>{{ _('<strong>Crop factor</strong> represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
 	<table>
 		<tr><th>Senesor size</th><th>Crop factor</th></tr>
 		<tr><td>Full format</td><td>1.0 (Contax 137 MD Quartz)</td></tr>
@@ -74,15 +74,15 @@
 		<tr><td>1/2.5"</td><td>5.6 (Canon IXUS 115 HS)</td></tr>
 		<tr><td>1/2.7"</td><td>6.6 (OLYMPUS IR-500)</td></tr>
 	</table>
-	<p><strong>{% trans 'Date format' %} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+	<p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
 {% endblock %}
 
 {% block contents %}
 <article>
-	<h2>{% trans 'Add new / change existing photo' %}</h2>
+	<h2>{{ _('Add new / change existing photo') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
-			<p>{% trans 'Please correct errors in' %}
+			<p>{{ _('Please correct errors in') }}
 			{{ form.errors|join:", " }}.</p>
 		</div>
 	{% endif %}
@@ -90,11 +90,11 @@
     {% if upload_url %}
         <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
             <fieldset>
-                <h3>{% trans 'Step' %} 1/3</h3>
+                <h3>{{ _('Step') }} 1/3</h3>
                 {{ form.photo|form_row }}
 {#                <p class="buttons">#}
-{#                    <span class="required">{% trans 'Required field' %}</span>#}
-{#                    <button type="submit">{% trans 'upload' %}</button>#}
+{#                    <span class="required">{{ _('Required field') }}</span>#}
+{#                    <button type="submit">{{ _('upload') }}</button>#}
 {#                </p>#}
             </fieldset>
 {#        </form>#}
@@ -103,7 +103,7 @@
 {#    {% if blob_key %}#}
 {#        <form action="/photos/{{ blob_key }}/bind" method="post">#}
             <fieldset>
-                <h3>{% trans 'Step' %} 2/3</h3>
+                <h3>{{ _('Step') }} 2/3</h3>
                 {{ form.headline|form_row }}
                 {{ form.slug|form_row }}
                 {{ form.tags|form_row }}
@@ -113,8 +113,8 @@
                     <input type="hidden" name="author" value="{{ object.author.email }}"/>
                 {% endif %}
                 <p class="buttons">
-                    <span class="required">{% trans 'Required field' %}</span>
-                    <button type="submit">{% trans 'continue' %}</button>
+                    <span class="required">{{ _('Required field') }}</span>
+                    <button type="submit">{{ _('continue') }}</button>
                 </p>
             </fieldset>
         </form>
@@ -123,7 +123,7 @@
 	{% if object %}
 	    <form action="{{ object.get_absolute_url }}/edit" method="post">
 			<fieldset>
-                <h3>{% trans 'Step' %} 3/3</h3>
+                <h3>{{ _('Step') }} 3/3</h3>
 				{{ form.headline|form_row }}
                 {{ form.tags|form_row }}
 				{% if is_admin %}
@@ -134,7 +134,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<h3>EXIF {% trans 'data' %}</h3>
+				<h3>EXIF {{ _('data') }}</h3>
 				{{ form.model|form_row }}
 				{{ form.lens|form_row }}
 				{{ form.aperture|form_row }}
@@ -144,8 +144,8 @@
 				{{ form.iso|form_row }}
 				{{ form.date|form_row }}
 				<p class="buttons">
-					<span class="required">{% trans 'Required field' %}</span>
-					<button type="submit">{% trans 'done' %}</button>
+					<span class="required">{{ _('Required field') }}</span>
+					<button type="submit">{{ _('done') }}</button>
 				</p>
 			</fieldset>
 		</form>

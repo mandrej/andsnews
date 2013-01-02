@@ -1,27 +1,26 @@
-{% load tags i18n %}
 <div class="popup dummy">
-	<h4>{% trans 'Add comment' %}</h4>
-	<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+	<h4>{{ _('Add comment') }}</h4>
+	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 	<div class="content">
-		<h6>{% trans 'for' %} {{ refobj.headline }}</h6>
+		<h6>{{ _('for') }} {{ refobj.headline }}</h6>
 		<form id="addcommentForm" action="" method="post">
 			<fieldset>
 				{{ form.email|form_row }}
 				{{ form.body|form_row:"editor" }}
 			</fieldset>
 			<p class="buttons">
-				<button type="submit">{% trans 'send' %}</button>
+				<button type="submit">{{ _('send') }}</button>
 			</p>
 		</form>
 	</div>
 </div>
 <div class="popup info hide">
-	<h4>{% trans 'Thank you' %}</h4>
-	<a class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+	<h4>{{ _('Thank you') }}</h4>
+	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 	<div class="content">
-		<p>{% trans 'Your comment has been sent in deferred manner' %}.
-			{% trans 'It may take some time before site become aware of it' %}.<br/>
-			{% trans 'Thank you for your contribution' %}.</p>
+		<p>{{ _('Your comment has been sent in deferred manner') }}.
+			{{ _('It may take some time before site become aware of it') }}.<br/>
+			{{ _('Thank you for your contribution') }}.</p>
 	</div>
 </div>
 <script src="/static/scripts/markitup/jquery.markitup.pack.js"></script>

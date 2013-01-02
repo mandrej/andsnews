@@ -1,4 +1,3 @@
-{% load i18n %}
 {% for comment in object.comment_list %}
 	<div class="white">
 		<time class="when" datetime='{{ comment.date|date:"Y-m-d\TH:i:sO" }}'>
@@ -8,12 +7,12 @@
 		</time>
 		{% if user == comment.author %}
 			<a class="delete confirm right" href="/comments/{{ comment.key.urlsafe }}/delete"
-				title="{% trans 'Delete' %}"><img src="/static/images/delete.png" alt=""/></a>
+				title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
 		{% endif %}
 		<div class="body">{{ comment.body|safe }}</div>
 		<p class="posted">
 			{{ comment.author }},
-			{% blocktrans with comment.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+{#			{% trans with comment.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 		</p>
 	</div>
 {% endfor %}

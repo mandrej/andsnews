@@ -1,25 +1,25 @@
 {% extends "entry/base.html" %}
-{% load tags i18n %}
-{% block title %}{{ block.super }} - {% trans 'Add new / change existing blog' %}{% endblock %}
+
+{% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block subnav %}
     {% if object %}
         {% if is_admin %}
-            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
-            <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% else %}
             {% if user == object.author %}
-                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{% trans 'Delete' %}">{% trans 'Delete' %}</a>
-                <a href="{{ object.get_absolute_url }}" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
         {% endif %}
     {% else %}
-        <a href="/entries" title="{% trans 'Back' %}">{% trans 'Back' %}</a>
+        <a href="/entries" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block head %}
-{{ block.super }}
+{{ super() }}
 <script src="/static/scripts/urlify.js"></script>
 <script src="/static/scripts/jquery.autocomplete.js"></script>
 <script src="/static/scripts/jquery.filestyle.js"></script>
@@ -70,11 +70,11 @@ $(function() {
 {% endblock %}
 
 {% block modals %}
-{{ block.super }}
+{{ super() }}
 <div id="images" class="modal">
 	<div class="popup">
-		<h4>{% trans 'Choose image' %}</h4>
-		<a href="#" class="button close" title="{% trans 'close' %}">{% trans 'close' %}</a>
+		<h4>{{ _('Choose image') }}</h4>
+		<a href="#" class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 		<div class="content">
 		{% for img in object.image_list %}
 			<figure class="left{% if forloop.last %} last{% endif %}">
@@ -83,8 +83,8 @@ $(function() {
 				<p class="legend">{{ img.name|truncatewords:2 }}</p>
 			</figure>
 		{% empty %}
-			<p>{% trans 'No images' %}</p>
-			<p>{% trans 'To choose images, you must send them first' %}.</p>
+			<p>{{ _('No images') }}</p>
+			<p>{{ _('To choose images, you must send them first') }}.</p>
 		{% endfor %}
 		</div>
 	</div>
@@ -92,18 +92,18 @@ $(function() {
 {% endblock %}
 
 {% block aside %}
-	<p>{% trans '<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.' %}</p>
-	<p>{% trans '<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.' %}</p>
-	<p><strong>{% trans 'Summary' %}</strong> {% trans 'A brief presentation in a concise form' %}.</p>
-	<p><strong>{% trans 'Send images less then' %} 200KB.</strong></p>
+	<p>{{ _('<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+	<p>{{ _('<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+	<p><strong>{{ _('Summary') }}</strong> {{ _('A brief presentation in a concise form') }}.</p>
+	<p><strong>{{ _('Send images less then') }} 200KB.</strong></p>
 {% endblock %}
 
 {% block contents %}
 <article class="plain">
-	<h2>{% trans 'Add new / change existing blog' %}</h2>
+	<h2>{{ _('Add new / change existing blog') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
-			<p>{% trans 'Please correct errors in' %}
+			<p>{{ _('Please correct errors in') }}
 			{{ form.errors|join:", " }}.</p>
 		</div>
 	{% endif %}
@@ -123,9 +123,9 @@ $(function() {
 		</fieldset>
 	
 		<fieldset>
-			<h3>{% trans 'Images used in this blog' %}</h3>
+			<h3>{{ _('Images used in this blog') }}</h3>
 			<div class="choices">
-				<p><label style="float: none">{% trans 'Pick the image which will represent the entry' %}:</label></p>
+				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>
 				{{ form.front }}
 				{% if form.front.errors %}<span style="clear: both; width: auto;" class="error">{{ form.front.errors|join:", " }}</span>{% endif %}
 			</div>
@@ -160,9 +160,9 @@ $(function() {
 		<fieldset style="float: none">
 			{{ form.body|form_row:"editor" }}
 			<p class="buttons">
-				<span class="required">{% trans 'Required field' %}</span>
-				<button type="submit" name="action:continue" value="1">{% trans 'continue' %}</button>
-				<button type="submit">{% trans 'done' %}</button>
+				<span class="required">{{ _('Required field') }}</span>
+				<button type="submit" name="action:continue" value="1">{{ _('continue') }}</button>
+				<button type="submit">{{ _('done') }}</button>
 			</p>
 		</fieldset>
 	</form>

@@ -1,13 +1,12 @@
 {% extends "news/base.html" %}
-{% load tags i18n %}
 
 {% block title %}
-	{{ block.super }} - {% trans 'News' %}
+	{{ super() }} - {{ _('News') }}
 {% endblock %}
 
 {% block subnav %}
     {% if is_admin %}
-        <a href="/news/add" title="{% trans 'Add' %}">{% trans 'Add' %}</a>
+        <a href="/news/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
 	{% else %}
 		&nbsp;
     {% endif %}
@@ -15,12 +14,12 @@
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/news">{% trans 'News' %}{% if page != 1 %} [{{ page }}]{% endif %}</a>
+		<h2><a href="/news">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
 			{{ filter_title }}</h2>
 	{% else %}
-		<h2>{% trans 'No news' %}</h2>
+		<h2>{{ _('No news') }}</h2>
 		{% popup noresults %}
-			<p>{% trans 'No news submitted' %}, {% trans 'or filter has no results' %}.</p>
+			<p>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</p>
 		{% endpopup %}
 	{% endif %}
 	
@@ -36,8 +35,8 @@
 					href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
 					<h3>{{ object.headline }}</h3>
 					<p class="posted">
-						{% if object.date %}{% trans 'updated' %}:
-							{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}
+						{% if object.date %}{{ _('updated') }}:
+{#							{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 						{% endif %}
 					</p>
 				</a>

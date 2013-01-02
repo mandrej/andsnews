@@ -1,18 +1,18 @@
 {% extends "comment/base.html" %}
-{% load tags i18n %}
+
 {% block title %}
-	{{ block.super }} - {% trans 'Comments' %}
+	{{ super() }} - {{ _('Comments') }}
 {% endblock %}
 
 {% block subnav %}&nbsp;{% endblock %}
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/comments">{% trans 'Comments' %}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+		<h2><a href="/comments">{{ _('Comments') }}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
-		<h2>{% trans 'No comments' %}</h2>
+		<h2>{{ _('No comments') }}</h2>
 		{% popup noresults %}
-			<p>{% trans 'No comments sent'%}, {% trans 'or filter has no results' %}.</p>
+			<p>{{ _('No comments sent'%}, {{ _('or filter has no results') }}.</p>
 		{% endpopup %}
 	{% endif %}
 	
@@ -26,10 +26,11 @@
 	                    <span class="monthyear">{{ object.date|date:"m 'y" }}</span>
 	                </time>
 	    			<div class="white old">
-		                <h3>{% trans 'message' %}</h3>
+		                <h3>{{ _('message') }}</h3>
 		                <div class="body">{{ object.body|safe }}</div>
 		                <p class="posted">{{ object.author }},
-		                    {% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
+{#		                    {% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                        </p>
 					</div>
 				</section>
 	        {% else %}
@@ -44,7 +45,8 @@
 						<h3><a href="{{ parent.get_absolute_url }}#comments">{{ parent.headline }}</a></h3>
 						<div class="body">{{ object.body|safe }}</div>
 						<p class="posted">{{ object.author }},
-							{% blocktrans with object.date|timesince as since %}{{ since }} ago{% endblocktrans %}</p>
+{#							{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                        </p>
 					</div>
 				</section>
 				{% endwith %}
