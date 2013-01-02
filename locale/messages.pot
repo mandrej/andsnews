@@ -1,14 +1,14 @@
 # Translations template for PROJECT.
-# Copyright (C) 2012 ORGANIZATION
+# Copyright (C) 2013 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-12-31 20:29+0100\n"
+"POT-Creation-Date: 2013-01-02 20:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: common.py:14 fake_i18n.py:4
+#: common.py:17 fake_i18n.py:4
 msgid "english"
 msgstr ""
 
-#: common.py:15 fake_i18n.py:5
+#: common.py:18 fake_i18n.py:5
 msgid "serbian"
 msgstr ""
 
-#: common.py:214
+#: common.py:264
 msgid "for blogs"
 msgstr ""
 
-#: common.py:216
+#: common.py:266
 msgid "for photos"
 msgstr ""
 
-#: common.py:218
+#: common.py:268
 msgid "messages"
 msgstr ""
 
@@ -284,27 +284,30 @@ msgid "light"
 msgstr ""
 
 #: views.py:46 entry/views.py:95 entry/views.py:115 news/views.py:124
-#: news/views.py:138 photo/views.py:69 photo/views.py:82
+#: news/views.py:138 templates/entry/base.html:8 templates/news/base.html:10
+#: templates/photo/base.html:6
 msgid "Tags"
 msgstr ""
 
-#: views.py:48
+#: views.py:48 templates/comment/base.html:17 templates/entry/base.html:16
+#: templates/photo/base.html:14
 msgid "Authors"
 msgstr ""
 
-#: views.py:50
+#: views.py:50 templates/comment/base.html:13 templates/entry/base.html:12
+#: templates/photo/base.html:10
 msgid "Dates"
 msgstr ""
 
-#: views.py:54 photo/views.py:85
+#: views.py:54 templates/photo/base.html:22
 msgid "Camera model"
 msgstr ""
 
-#: views.py:56 photo/views.py:91
+#: views.py:56 templates/photo/base.html:26
 msgid "Lens type"
 msgstr ""
 
-#: views.py:58
+#: views.py:58 templates/photo/base.html:30
 msgid "Eqv. focal length"
 msgstr ""
 
@@ -318,11 +321,11 @@ msgstr ""
 msgid "eqv"
 msgstr ""
 
-#: views.py:63 photo/views.py:89
+#: views.py:63 templates/photo/base.html:34
 msgid "Sensitivity"
 msgstr ""
 
-#: views.py:67
+#: views.py:67 templates/photo/base.html:18
 msgid "Median color"
 msgstr ""
 
@@ -338,20 +341,28 @@ msgstr ""
 msgid "comments and messages"
 msgstr ""
 
+#: comment/views.py:33 comment/views.py:37 comment/views.py:46
+#: entry/views.py:58 entry/views.py:84 entry/views.py:93 entry/views.py:94
+#: entry/views.py:98 entry/views.py:102 entry/views.py:112 entry/views.py:118
+#: entry/views.py:122 news/views.py:122 news/views.py:123 news/views.py:125
+#: news/views.py:135 news/views.py:139
+msgid "Required field"
+msgstr ""
+
+#: comment/views.py:34
+msgid "Enter a valid e-mail address"
+msgstr ""
+
+#: comment/views.py:35 templates/photo/detail.html:13
+msgid "Comment"
+msgstr ""
+
 #: entry/views.py:52
 msgid "delete"
 msgstr ""
 
 #: entry/views.py:56 entry/views.py:70
 msgid "Img."
-msgstr ""
-
-#: entry/views.py:58 entry/views.py:84 entry/views.py:93 entry/views.py:94
-#: entry/views.py:98 entry/views.py:102 entry/views.py:112 entry/views.py:118
-#: entry/views.py:122 news/views.py:122 news/views.py:123 news/views.py:125
-#: news/views.py:135 news/views.py:139 photo/views.py:67 photo/views.py:68
-#: photo/views.py:81
-msgid "Required field"
 msgstr ""
 
 #: entry/views.py:59
@@ -373,12 +384,10 @@ msgid "Photo too big, %s"
 msgstr ""
 
 #: entry/views.py:92 entry/views.py:111 news/views.py:121 news/views.py:134
-#: photo/views.py:66 photo/views.py:80
 msgid "Headline"
 msgstr ""
 
 #: entry/views.py:94 entry/views.py:113 news/views.py:123 news/views.py:136
-#: photo/views.py:68
 msgid "Slug"
 msgstr ""
 
@@ -394,7 +403,7 @@ msgstr ""
 msgid "Article"
 msgstr ""
 
-#: entry/views.py:107 news/views.py:130 photo/views.py:76
+#: entry/views.py:107 news/views.py:130
 msgid "Record with this slug already exist"
 msgstr ""
 
@@ -423,38 +432,6 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: photo/views.py:70 photo/views.py:83 photo/views.py:112 photo/views.py:142
-msgid "Author"
-msgstr ""
-
-#: photo/views.py:71
-msgid "Photo"
-msgstr ""
-
-#: photo/views.py:71
-msgid "Upload the photo"
-msgstr ""
-
-#: photo/views.py:84
-msgid "Taken"
-msgstr ""
-
-#: photo/views.py:86
-msgid "Aperture"
-msgstr ""
-
-#: photo/views.py:87
-msgid "Shutter speed"
-msgstr ""
-
-#: photo/views.py:88
-msgid "Focal length"
-msgstr ""
-
-#: photo/views.py:90
-msgid "Crop factor"
-msgstr ""
-
 #: templates/base.html:13
 msgid "photo rss"
 msgstr ""
@@ -463,7 +440,8 @@ msgstr ""
 msgid "entry rss"
 msgstr ""
 
-#: templates/base.html:171
+#: templates/base.html:171 templates/snippets/confirm.html:3
+#: templates/snippets/msg.html:4 templates/snippets/starrating.html:3
 msgid "close"
 msgstr ""
 
@@ -491,27 +469,150 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: templates/index.html:9
+#: templates/index.html:7 templates/admin/base.html:30
+#: templates/comment/base.html:4 templates/entry/base.html:4
+#: templates/news/base.html:4 templates/photo/base.html:3
 msgid "photo album"
 msgstr ""
 
-#: templates/index.html:10
+#: templates/index.html:8 templates/admin/base.html:31
+#: templates/comment/base.html:5 templates/entry/base.html:5
+#: templates/news/base.html:5 templates/photo/base.html:37
+#: templates/snippets/confirm.html:12
 msgid "Blog"
 msgstr ""
 
-#: templates/index.html:11
+#: templates/index.html:9 templates/admin/base.html:32
+#: templates/comment/base.html:6 templates/entry/base.html:19
+#: templates/news/base.html:6 templates/photo/base.html:38
 msgid "Comments"
 msgstr ""
 
-#: templates/index.html:12
+#: templates/index.html:10 templates/admin/base.html:33
+#: templates/comment/base.html:20 templates/entry/base.html:20
+#: templates/news/base.html:7 templates/photo/base.html:39
+#: templates/snippets/confirm.html:25
 msgid "News"
 msgstr ""
 
-#: templates/index.html:34
+#: templates/index.html:32
 msgid "hide"
 msgstr ""
 
-#: templates/index.html:35
+#: templates/index.html:33
 msgid "Welcome to our and YOUR site"
+msgstr ""
+
+#: templates/admin/base.html:38 templates/photo/detail.html:14
+msgid "Back"
+msgstr ""
+
+#: templates/comment/base.html:8 templates/comment/base.html:12
+#: templates/comment/base.html:16 templates/entry/base.html:7
+#: templates/entry/base.html:11 templates/entry/base.html:15
+#: templates/news/base.html:9 templates/photo/base.html:5
+#: templates/photo/base.html:9 templates/photo/base.html:13
+#: templates/photo/base.html:17 templates/photo/base.html:21
+#: templates/photo/base.html:25 templates/photo/base.html:29
+#: templates/photo/base.html:33
+msgid "see graph"
+msgstr ""
+
+#: templates/comment/base.html:8 templates/comment/base.html:12
+#: templates/comment/base.html:16 templates/entry/base.html:7
+#: templates/entry/base.html:11 templates/entry/base.html:15
+#: templates/news/base.html:9 templates/photo/base.html:5
+#: templates/photo/base.html:9 templates/photo/base.html:13
+#: templates/photo/base.html:17 templates/photo/base.html:21
+#: templates/photo/base.html:25 templates/photo/base.html:29
+#: templates/photo/base.html:33
+msgid "graph"
+msgstr ""
+
+#: templates/comment/base.html:9
+msgid "Type"
+msgstr ""
+
+#: templates/photo/detail.html:7 templates/photo/index.html:7
+msgid "Add"
+msgstr ""
+
+#: templates/photo/detail.html:10
+msgid "Edit"
+msgstr ""
+
+#: templates/photo/detail.html:11 templates/snippets/confirm.html:31
+msgid "Delete"
+msgstr ""
+
+#: templates/photo/detail.html:73 templates/photo/detail.html:75
+#: templates/photo/index.html:3 templates/photo/index.html:13
+msgid "Photos"
+msgstr ""
+
+#: templates/photo/detail.html:81
+msgid "author&apos;s photos"
+msgstr ""
+
+#: templates/photo/detail.html:83
+msgid "tagged by"
+msgstr ""
+
+#: templates/photo/detail.html:88
+msgid "photos taken same year"
+msgstr ""
+
+#: templates/photo/index.html:15
+msgid "No photos"
+msgstr ""
+
+#: templates/snippets/confirm.html:2
+msgid "Confirm"
+msgstr ""
+
+#: templates/snippets/confirm.html:6
+msgid "Do you really want to delete"
+msgstr ""
+
+#: templates/snippets/confirm.html:8
+msgid "comment submitted by"
+msgstr ""
+
+#: templates/snippets/confirm.html:13 templates/snippets/confirm.html:21
+#: templates/snippets/confirm.html:26
+msgid "posted by"
+msgstr ""
+
+#: templates/snippets/confirm.html:17
+msgid "image"
+msgstr ""
+
+#: templates/snippets/confirm.html:20
+msgid "photo"
+msgstr ""
+
+#: templates/snippets/paginator.html:4 templates/snippets/paginator.html:6
+msgid "previous"
+msgstr ""
+
+#: templates/snippets/paginator.html:4 templates/snippets/paginator.html:6
+#: templates/snippets/paginator.html:13 templates/snippets/paginator.html:15
+msgid "page"
+msgstr ""
+
+#: templates/snippets/paginator.html:13 templates/snippets/paginator.html:15
+msgid "next"
+msgstr ""
+
+#: templates/snippets/starrating.html:2
+msgid "Thank you"
+msgstr ""
+
+#: templates/snippets/starrating.html:5
+msgid "Your rate has been accepted"
+msgstr ""
+
+#: templates/snippets/starrating.html:6
+msgid "Thank you for your contribution"
 msgstr ""
 

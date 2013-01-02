@@ -1,3 +1,4 @@
+from __future__ import division
 import os, re, webapp2, jinja2, colorsys
 import math, hashlib
 import itertools, collections
@@ -13,8 +14,8 @@ from models import Counter, Photo, INDEX
 import logging
 
 LANGUAGES = (
-    ('en', _('english')),
-    ('sr', _('serbian')),
+    ('en_US', _('english')),
+    ('sr_RS', _('serbian')),
 )
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 LANGUAGE_COOKIE_NAME = 'ands_lang'
@@ -41,6 +42,9 @@ def version():
 def gaesdk():
     return os.environ.get('SERVER_SOFTWARE')
 
+def language(code):
+    return code.split('_')[0]
+
 def now():
     date = datetime.datetime.now()
     return date.strftime('%Y')
@@ -49,6 +53,7 @@ ENV.globals.update({
     'now': now,
     'version': version,
     'gaesdk': gaesdk,
+    'language': language,
 })
 ENV.filters.update({
     'format_date': i18n.format_date,
@@ -425,19 +430,14 @@ def sign_helper(request):
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
-        # Get a session store for this request.
         self.session_store = sessions.get_store(request=self.request)
-
         try:
-            # Dispatch the request.
             webapp2.RequestHandler.dispatch(self)
         finally:
-            # Save all sessions.
             self.session_store.save_sessions(self.response)
 
     @webapp2.cached_property
     def session(self):
-        # Returns a session using the default cookie key.
         return self.session_store.get_session()
 
     @webapp2.cached_property
@@ -445,18 +445,10 @@ class BaseHandler(webapp2.RequestHandler):
         return jinja2.get_jinja2(app=self.app)
 
     def render_template(self, filename, template_values, **template_args):
-        lang_code = None
-        if self.session:
-            lang_code = self.session.get(LANGUAGE_COOKIE_NAME)
-            logging.error(lang_code)
-        else:
-            lang_code = self.request.cookies.get(LANGUAGE_COOKIE_NAME)
-            logging.error(lang_code)
-
-        language = lang_code or 'en_US'
-        i18n.get_i18n().set_locale(language)
+        lang_code = self.session.get(LANGUAGE_COOKIE_NAME) or self.request.cookies.get(LANGUAGE_COOKIE_NAME) or 'en_US'
+        i18n.get_i18n().set_locale(lang_code)
         context = {
-            'LANGUAGE_CODE': language,
+            'LANGUAGE_CODE': lang_code,
             'LANGUAGES': LANGUAGES,
             'user': users.get_current_user(),
             'is_admin': users.is_current_user_admin(),
@@ -464,7 +456,6 @@ class BaseHandler(webapp2.RequestHandler):
         }
         template_values.update(context)
 
-#        get_language_from_request(self, self.request)
 #        logging.error(self.request.headers.keys())
         template = ENV.get_template(filename)
         self.response.out.write(template.render(template_values))
@@ -476,10 +467,8 @@ class SetLanguage(BaseHandler):
         lang_code = self.request.POST.get('language', None)
 
         if lang_code:
-            if self.session:
-                logging.error(lang_code)
+            if hasattr(self, 'session'):
                 self.session[LANGUAGE_COOKIE_NAME] = lang_code
             else:
-                logging.error(lang_code)
                 self.request.headers['Cookie'] = '%s=%s' % (LANGUAGE_COOKIE_NAME, lang_code)
         return response

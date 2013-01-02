@@ -189,7 +189,7 @@
 					<form id="langs" action="/setlang" method="post">
 						{% for code, lang in LANGUAGES %}
 							<button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
-								type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ code }}</button>
+								type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ language(code) }}</button>
 						{% endfor %}
 					</form>
 					<form id="searchForm" action="/search" method="get">
