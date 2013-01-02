@@ -34,7 +34,7 @@
 			{{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
 	
 			{% if object.date %}{{ _('updated') }}:
-				<time datetime="{{ object.date|date:"Y-m-d\TH:i:sO" }}">
+				<time datetime="{{ object.date|format_datetime }}">
 {#					{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
 				</time>
 			{% endif %}

@@ -49,6 +49,9 @@ def now():
     date = datetime.datetime.now()
     return date.strftime('%Y')
 
+def format_date(value, format='%Y-%m-%d'):
+    return value.strftime(format)
+
 def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
     return value.strftime(format)
 
@@ -59,12 +62,9 @@ ENV.globals.update({
     'language': language,
 })
 ENV.filters.update({
-#    'format_date': i18n.format_date,
-#    'format_time': i18n.format_time,
-#    'format_datetime': i18n.format_datetime,
+    'format_date': format_date,
     'format_datetime': format_datetime,
-#    'format_timedelta': i18n.format_timedelta,
-    })
+})
 
 HUE = [
     {'span': map(lambda x: x+360 if x<0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'}, # 0

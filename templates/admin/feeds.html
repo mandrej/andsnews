@@ -24,7 +24,7 @@
 					<tr>
 						<td><a href="{{ object.get_absolute_url}}/edit">
 							{{ object.headline }}</a></td>
-						<td>{{ object.date|date:"Y-m-d H:i:s" }}</td>
+						<td>{{ object.date|format_datetime }}</td>
 						<td>
 							{{ object.key.string_id|incache|yesno:"yes,no"|boolimage }}
 						</td>

@@ -1,6 +1,6 @@
 {% extends "entry/base.html" %}
 
-{% block meta %}<meta name="date" content="{{ objects.0.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ objects.0.date|format_date }}"/>{% endblock %}
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
 {% block subnav %}

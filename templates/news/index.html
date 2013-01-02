@@ -26,10 +26,10 @@
 	<div id="container">
 		{% for object in objects %}
 			<section class="third brick">
-				<time class="when" datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
-					<span class="day">{{ object.date|date:"d" }}</span>
-					<span class="time">{{ object.date|date:"H:i" }}</span>
-					<span class="monthyear">{{ object.date|date:"m 'y" }}</span>
+				<time class="when" datetime='{{ object.date|format_datetime }}'>
+					<span class="day">{{ object.date|format_datetime("%d") }}</span>
+					<span class="time">{{ object.date|format_datetime("%H:%M") }}</span>
+					<span class="monthyear">{{ object.date|format_datetime("%m '%y") }}</span>
 				</time>
 				<a class="white{% if object.key.string_id|incache %} old{% endif %}" 
 					href="{{ object.get_absolute_url }}" title="{{ object.headline }}">

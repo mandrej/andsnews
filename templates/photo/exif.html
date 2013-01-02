@@ -36,8 +36,8 @@
 		</tr>
 		<tr>
 			<td class="label">{{ _('Taken') }}</td>
-{#			<td><time datetime='{{ object.date|format_date("%Y-%m-%d\T%H:%i:%sO") }}'>#}
-{#				{{ object.date|format_date("DATETIME_FORMAT") }}</time></td>#}
+			<td><time datetime='{{ object.date|format_datetime }}'>
+				{{ object.date|format_date }}</time></td>
 		</tr>
         {% if object.blob_key %}
             <tr>

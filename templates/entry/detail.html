@@ -1,7 +1,7 @@
 {% extends "entry/base.html" %}
 
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
-{% block meta %}<meta name="date" content="{{ object.date|date:'Y-m-d' }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
 
 {% block subnav %}
     {% if user %}
@@ -57,8 +57,8 @@ $(function() {
 		<div class="subtitle">
 			<a href="/entries/author/{{ object.author }}"
 				title="{{ _('author&apos;s blogs') }}">{{ object.author }}</a>,
-				<time datetime='{{ object.date|date:"Y-m-d\TH:i:sO" }}'>
-					{{ object.date|date:_("DATETIME_FORMAT") }}</time>
+				<time datetime='{{ object.date|format_datetime }}'>
+					{{ object.date|format_date }}</time>
 			{% for tag in object.tags %}
 				{% if forloop.first %}| {{ _('tagged by') }}:{% endif %}
 				<a href="/entries/tags/{{ tag }}" title="{{ tag }}">
