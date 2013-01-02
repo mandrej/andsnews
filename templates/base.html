@@ -186,7 +186,7 @@
 			<h1><a href="/" title="{{ _('Start') }}">ANDрејевићи</a></h1>
 			{% block tools %}
 				<div id="forms">
-					<form id="langs" action="/i18n/setlang/" method="post">
+					<form id="langs" action="/setlang" method="post">
 						{% for code, lang in LANGUAGES %}
 							<button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
 								type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ code }}</button>
@@ -207,7 +207,7 @@
 
 			<p id="footer">© АNDS v.{{ version() }} 2008-{{ now() }}
 				powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
-				{% if user %}<br><strong>{{ user.nickname }}</strong>{% endif %}
+				{% if user %}<br><strong>{{ user.nickname() }}</strong>{% endif %}
 			</p>
 		</nav>
 		<header id="header">

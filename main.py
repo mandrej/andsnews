@@ -36,6 +36,7 @@ app = WSGIApplication([
     Route('/rss/<kind:photo|entry>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
     Route('/latest', handler=latest),
+    Route('/setlang', 'common.SetLanguage'),
     Route('/sign', 'common.sign_helper'),
     Route('/', handler=Index),
     ], config=config, debug=True)

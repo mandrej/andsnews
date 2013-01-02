@@ -413,30 +413,6 @@ class ListPaginator:
         has_next = num < self.num_pages
         return results, has_next
 
-def get_language_from_request(self, request):
-    """
-    Analyzes the request to find what language the user wants the system to
-    show. If the user requests a sublanguage where we have a main language, we send
-    out the main language.
-    """
-    if self.session:
-        lang_code = self.session.get('i18n_language', None)
-        if lang_code:
-            logging.info('language found in session')
-            return lang_code
-
-    lang_code = request.COOKIES.get(LANGUAGE_COOKIE_NAME)
-    if lang_code:
-        logging.info('language found in cookies')
-        return lang_code
-
-    accept = request.META.get('HTTP_ACCEPT_LANGUAGE', '')
-    for accept_lang, unused in self.parse_accept_lang_header(accept):
-        logging.info('accept_lang:'+accept_lang)
-        lang_code = accept_lang
-
-    return lang_code
-
 FORBIDDEN = ('admin', '403', 'addcomment')
 def sign_helper(request):
     referer = request.headers.get('Referer', '/')
@@ -470,18 +446,41 @@ class BaseHandler(webapp2.RequestHandler):
         return jinja2.get_jinja2(app=self.app)
 
     def render_template(self, filename, template_values, **template_args):
-        language_code = 'en_US'
-        i18n.get_i18n().set_locale(language_code)
-        logging.error(template_values)
-        template_values.update({
-            'LANGUAGE_CODE': language_code,
+        lang_code = None
+        if self.session:
+            lang_code = self.session.get(LANGUAGE_COOKIE_NAME)
+            logging.error(lang_code)
+        else:
+            lang_code = self.request.cookies.get(LANGUAGE_COOKIE_NAME)
+            logging.error(lang_code)
+
+        language = lang_code or 'en_US'
+        i18n.get_i18n().set_locale(language)
+        context = {
+            'LANGUAGE_CODE': language,
             'LANGUAGES': LANGUAGES,
             'user': users.get_current_user(),
             'is_admin': users.is_current_user_admin(),
             'devel': DEVEL
-        })
+        }
+        template_values.update(context)
 
 #        get_language_from_request(self, self.request)
 #        logging.error(self.request.headers.keys())
         template = ENV.get_template(filename)
         self.response.out.write(template.render(template_values))
+
+class SetLanguage(BaseHandler):
+    def post(self):
+        next = self.request.headers.get('Referer', '/')
+        response = self.redirect(next)
+        lang_code = self.request.POST.get('language', None)
+
+        if lang_code:
+            if self.session:
+                logging.error(lang_code)
+                self.session[LANGUAGE_COOKIE_NAME] = lang_code
+            else:
+                logging.error(lang_code)
+                self.request.headers['Cookie'] = '%s=%s' % (LANGUAGE_COOKIE_NAME, lang_code)
+        return response
