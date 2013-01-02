@@ -1,16 +1,15 @@
 import os, re, webapp2, jinja2, colorsys
 import math, hashlib
 import itertools, collections
-import datetime, time
+import datetime
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from operator import itemgetter
-from google.appengine.api import images, users, taskqueue, memcache, search
+from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX
-from babel import Locale
 import logging
 
 LANGUAGES = (
