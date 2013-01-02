@@ -1,4 +1,4 @@
-import os, webapp2, jinja2, colorsys
+import os, re, webapp2, jinja2, colorsys
 import math, hashlib
 import itertools, collections
 import datetime, time
@@ -7,14 +7,17 @@ from webapp2_extras.i18n import lazy_gettext as _
 from operator import itemgetter
 from google.appengine.api import images, users, taskqueue, memcache, search
 from google.appengine.ext import ndb, deferred
+from google.appengine.runtime import apiproxy_errors
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX
+from babel import Locale
 import logging
 
 LANGUAGES = (
     ('en', _('english')),
     ('sr', _('serbian')),
 )
+DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 LANGUAGE_COOKIE_NAME = 'ands_lang'
 TIMEOUT = 3600 # 1 hour
 PER_PAGE = 12
@@ -32,7 +35,6 @@ ENV.install_gettext_callables(
     lambda x: i18n.gettext(x),
     lambda s, p, n: i18n.ngettext(s, p, n),
     newstyle=False)
-
 
 def version():
     return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
@@ -173,6 +175,55 @@ def count_colors():
         content = sorted(content, key=itemgetter('order'))
         memcache.set(key, content, TIMEOUT*12)
     return content
+
+def make_thumbnail(kind, slug, size, mime='image/jpeg'):
+    if kind == 'Photo':
+        if size == 'small': _width = 240
+        obj = ndb.Key('Photo', slug, 'Picture', slug).get()
+    elif kind == 'Entry':
+        if size == 'small': _width = 60
+        m = re.match(r'(.+)_\d', slug)
+        obj = ndb.Key('Entry', m.group(1), 'Img', slug).get()
+        mime = obj.mime
+
+    if obj is None:
+        webapp2.abort(404)
+    buff = obj.blob
+    if size == 'normal': return buff, mime
+    if size == 'small' and obj.small is not None: return obj.small, mime
+    img = images.Image(buff)
+
+    aspect = img.width/img.height
+    if aspect < 1:
+        aspect = 1/aspect
+    _thumb = int(math.ceil(_width*aspect))
+
+    if _thumb < img.width or _thumb < img.height:
+        if size == 'small':
+            img.resize(_thumb, _thumb)
+        else:
+            img.resize(_width, _thumb)
+        try:
+            if mime == 'image/png':
+                out = img.execute_transforms(output_encoding=images.PNG)
+            else:
+                out = img.execute_transforms(output_encoding=images.JPEG)
+        except apiproxy_errors.OverQuotaError:
+            deferred.defer(make_thumbnail, kind, slug, size)
+            return None, mime
+        else:
+            if size== 'small' and obj.small is None:
+                obj.small = out
+                if kind == 'Photo':
+                    obj.rgb = median(out)
+                    obj.put()
+                    photo = obj.key.parent().get()
+                    photo.hue, photo.lum, photo.sat = range_names(obj.rgb)
+                    photo.put()
+                obj.put()
+        return out, mime
+    else:
+        return buff, mime
 
 class Filter:
     def __init__(self, field, value):
@@ -386,22 +437,33 @@ def get_language_from_request(self, request):
 
     return lang_code
 
+FORBIDDEN = ('admin', '403', 'addcomment')
+def sign_helper(request):
+    referer = request.headers.get('Referer', '/')
+    if referer.endswith(FORBIDDEN):
+        referer = '/'
+    if users.get_current_user():
+        dest_url = users.create_logout_url(referer)
+    else:
+        dest_url = users.create_login_url(referer)
+    return webapp2.redirect(dest_url)
+
 class BaseHandler(webapp2.RequestHandler):
-#    def dispatch(self):
-#        # Get a session store for this request.
-#        self.session_store = sessions.get_store(request=self.request)
-#
-#        try:
-#            # Dispatch the request.
-#            webapp2.RequestHandler.dispatch(self)
-#        finally:
-#            # Save all sessions.
-#            self.session_store.save_sessions(self.response)
-#
-#    @webapp2.cached_property
-#    def session(self):
-#        # Returns a session using the default cookie key.
-#        return self.session_store.get_session()
+    def dispatch(self):
+        # Get a session store for this request.
+        self.session_store = sessions.get_store(request=self.request)
+
+        try:
+            # Dispatch the request.
+            webapp2.RequestHandler.dispatch(self)
+        finally:
+            # Save all sessions.
+            self.session_store.save_sessions(self.response)
+
+    @webapp2.cached_property
+    def session(self):
+        # Returns a session using the default cookie key.
+        return self.session_store.get_session()
 
     @webapp2.cached_property
     def jinja2(self):
@@ -410,9 +472,16 @@ class BaseHandler(webapp2.RequestHandler):
     def render_template(self, filename, template_values, **template_args):
         language_code = 'en_US'
         i18n.get_i18n().set_locale(language_code)
-        template_values['LANGUAGE_CODE'] = language_code
-        template_values['LANGUAGES'] = LANGUAGES
+        logging.error(template_values)
+        template_values.update({
+            'LANGUAGE_CODE': language_code,
+            'LANGUAGES': LANGUAGES,
+            'user': users.get_current_user(),
+            'is_admin': users.is_current_user_admin(),
+            'devel': DEVEL
+        })
+
 #        get_language_from_request(self, self.request)
-#        logging.error(self.request)
+#        logging.error(self.request.headers.keys())
         template = ENV.get_template(filename)
         self.response.out.write(template.render(template_values))

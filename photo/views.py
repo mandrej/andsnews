@@ -8,8 +8,7 @@ from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 #from django import forms
 from models import Photo
-from lib.comm import make_thumbnail
-from common import TIMEOUT, BaseHandler, Paginator, Filter
+from common import TIMEOUT, BaseHandler, Paginator, Filter, make_thumbnail
 import logging
 
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',

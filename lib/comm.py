@@ -12,56 +12,7 @@ from google.appengine.runtime import apiproxy_errors
 #from django.http import  Http404
 #from django.shortcuts import redirect, render
 #from django.conf import settings
-from common import median, range_names
-
-def make_thumbnail(kind, slug, size, mime='image/jpeg'):
-    if kind == 'Photo':
-        if size == 'small': _width = 240
-        obj = ndb.Key('Photo', slug, 'Picture', slug).get()
-    elif kind == 'Entry':
-        if size == 'small': _width = 60
-        m = re.match(r'(.+)_\d', slug)
-        obj = ndb.Key('Entry', m.group(1), 'Img', slug).get()
-        mime = obj.mime
-    
-    if obj is None:
-        webapp2.abort(404)
-    buff = obj.blob
-    if size == 'normal': return buff, mime
-    if size == 'small' and obj.small is not None: return obj.small, mime
-    img = images.Image(buff)
-
-    aspect = img.width/img.height
-    if aspect < 1:
-        aspect = 1/aspect
-    _thumb = int(math.ceil(_width*aspect))
-
-    if _thumb < img.width or _thumb < img.height:
-        if size == 'small':
-            img.resize(_thumb, _thumb)
-        else:
-            img.resize(_width, _thumb)
-        try:
-            if mime == 'image/png':
-                out = img.execute_transforms(output_encoding=images.PNG)
-            else:
-                out = img.execute_transforms(output_encoding=images.JPEG)
-        except apiproxy_errors.OverQuotaError:
-            deferred.defer(make_thumbnail, kind, slug, size)
-            return None, mime
-        else:
-            if size== 'small' and obj.small is None:
-                obj.small = out
-                if kind == 'Photo':
-                    obj.rgb = median(out)
-                    obj.put()
-                    photo = obj.key.parent().get()
-                    photo.hue, photo.lum, photo.sat = range_names(obj.rgb)
-                    photo.put()
-                obj.put()
-        return out, mime
-    else:
-        return buff, mime
+#from common import median, range_names
 
 #class Cache:
 #    def __init__(self, size=100):

@@ -3,6 +3,8 @@ from webapp2_extras.routes import PathPrefixRoute
 from views import Index, latest, RenderCloud, auto_complete, sitemap, visualize, Find, Chat, Send, rss
 
 config = {
+    'webapp2_extras.jinja2' : {'template_path': ['templates'],
+                               'environment_args': {'extensions': ['jinja2.ext.i18n']}},
     'webapp2_extras.i18n': {'translations_path': 'locale'},
     'webapp2_extras.sessions': {'secret_key': 'iasbj*6WZ2'},
 #    'locales' : ['en_US', 'sr_RS']
@@ -34,5 +36,6 @@ app = WSGIApplication([
     Route('/rss/<kind:photo|entry>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
     Route('/latest', handler=latest),
+    Route('/sign', 'common.sign_helper'),
     Route('/', handler=Index),
     ], config=config, debug=True)
