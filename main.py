@@ -13,19 +13,24 @@ config = {
 app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
-        Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATED
+        Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
         Route('/<slug:[-\w]+>/delete', 'photo.views.Delete'),
         Route('/<slug:[-\w]+>', 'photo.views.Detail'),
         ]),
     PathPrefixRoute('/entries', [
+        Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
+        Route('/<slug:[-\w]+>/delete', 'entry.views.Delete'),
+        Route('/<slug:[-\w]+>', 'entry.views.Detail'),
         ]),
     PathPrefixRoute('/comments', [
+        Route('/<safekey:\w+>/delete', 'comment.views.Delete'),
         ]),
     PathPrefixRoute('/news', [
+        Route('/<slug:[-\w]+>/delete', 'news.views.Delete'),
+        Route('/<slug:[-\w]+>', 'news.views.Detail'),
         ]),
     PathPrefixRoute('/admin', [
         ]),
-    Route('/photos', 'photo.views.Index'),
     Route('/filter/<key:\w+>/<value:.+>', handler=RenderCloud),
     Route('/filter/<key:\w+>', handler=RenderCloud),
     Route('/search', handler=Find),
@@ -35,6 +40,11 @@ app = WSGIApplication([
     Route('/visualize/<key:\w+>', handler=visualize),
     Route('/rss/<kind:photo|entry>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
+
+    Route('/photos', 'photo.views.Index'),
+    Route('/entries', 'entry.views.Index'),
+    Route('/comments', 'comment.views.Index'),
+    Route('/news', 'news.views.Index'),
     Route('/latest', handler=latest),
     Route('/setlang', 'common.SetLanguage'),
     Route('/sign', 'common.sign_helper'),

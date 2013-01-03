@@ -18,9 +18,9 @@
 			{{ filter_title }}</h2>
 	{% else %}
 		<h2>{{ _('No news') }}</h2>
-		{% popup noresults %}
-			<p>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</p>
-		{% endpopup %}
+{#		{% popup noresults %}#}
+{#			<p>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</p>#}
+{#		{% endpopup %}#}
 	{% endif %}
 	
 	<div id="container">
@@ -31,8 +31,8 @@
 					<span class="time">{{ object.date|format_datetime("%H:%M") }}</span>
 					<span class="monthyear">{{ object.date|format_datetime("%m '%y") }}</span>
 				</time>
-				<a class="white{% if object.key.string_id|incache %} old{% endif %}" 
-					href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
+				<a class="white{% if incache(object.key.string_id()) %} old{% endif %}"
+					href="{{ object.get_absolute_url() }}" title="{{ object.headline }}">
 					<h3>{{ object.headline }}</h3>
 					<p class="posted">
 						{% if object.date %}{{ _('updated') }}:

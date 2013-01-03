@@ -9,12 +9,12 @@
     {% endif %}
     {% if object %}
         {% if is_admin %}
-            <a href="{{ object.get_absolute_url }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+            <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
         {% else %}
             {% if user == object.author %}
-                <a href="{{ object.get_absolute_url }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
             {% endif %}
         {% endif %}
         <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
@@ -60,9 +60,9 @@ $(function() {
 				<time datetime='{{ object.date|format_datetime }}'>
 					{{ object.date|format_date }}</time>
 			{% for tag in object.tags %}
-				{% if forloop.first %}| {{ _('tagged by') }}:{% endif %}
+				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
 				<a href="/entries/tags/{{ tag }}" title="{{ tag }}">
-					{{ tag }}</a>{% if not forloop.last %},{% endif %}
+					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
 			| <a href="date/{{ object.year }}"
 				title="{{ _('blogs sent same year') }}">{{ object.year }}</a>

@@ -5,12 +5,12 @@
 {% block subnav %}
     {% if object %}
         {% if is_admin %}
-            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ object.get_absolute_url() }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% else %}
             {% if user == object.author %}
-                <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ object.get_absolute_url() }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
         {% endif %}
     {% else %}
@@ -109,7 +109,7 @@ $(function() {
 	{% endif %}
 	
 	{% if object %}
-		<form action="{{ object.get_absolute_url }}/edit" enctype="multipart/form-data"  method="post">
+		<form action="{{ object.get_absolute_url() }}/edit" enctype="multipart/form-data"  method="post">
 	{% else %}
 		<form action="/entries/add" enctype="multipart/form-data" method="post">
 	{% endif %}

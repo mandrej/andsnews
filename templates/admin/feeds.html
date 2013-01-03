@@ -22,7 +22,7 @@
 			<tbody>
 				{% for object in objects %}
 					<tr>
-						<td><a href="{{ object.get_absolute_url}}/edit">
+						<td><a href="{{ object.get_absolute_url() }}/edit">
 							{{ object.headline }}</a></td>
 						<td>{{ object.date|format_datetime }}</td>
 						<td>

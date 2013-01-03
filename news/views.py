@@ -1,15 +1,13 @@
+import webapp2
 import re, datetime, time
-from google.appengine.api import urlfetch
-from google.appengine.api import memcache
+from google.appengine.api import users, urlfetch, memcache
 from google.appengine.ext import ndb
-from django.http import Http404
-from django.shortcuts import redirect, render
-from django.utils.translation import gettext_lazy as _
-from django import forms
+#from django.shortcuts import redirect, render
+from webapp2_extras.i18n import lazy_gettext as _
+#from django import forms
 from models import Feed
 from lib import feedparser
-from lib.comm import Paginator, Filter, login_required, admin_required
-from django.conf import settings
+from common import  TIMEOUT, BaseHandler, Paginator, Filter
 
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
@@ -71,119 +69,126 @@ def update(result):
                 date = parse_date(result.headers['date'])
     return news, date
 
-def index(request, field=None, value=None, tmpl='news/index.html'):
-    f = Filter(field, value)
-    filters = [Feed._properties[k] == v for k, v in f.parameters.items()]
-    query = Feed.query(*filters).order(-Feed.date)
+class Index(BaseHandler):
+    def get(self, field=None, value=None):
+        f = Filter(field, value)
+        filters = [Feed._properties[k] == v for k, v in f.parameters.items()]
+        query = Feed.query(*filters).order(-Feed.date)
 
-    page = int(request.GET.get('page', 1))
-    paginator = Paginator(query, per_page=PER_PAGE)
-    objects, has_next = paginator.page(page)
-    
-    data = {'kind': 'Feed',
-            'objects': objects,
-            'filter': f.parameters,
-            'filter_url': f.url,
-            'filter_title': f.title,
-            'page': page,
-            'has_next': has_next,
-            'has_previous': page > 1}
-    return render(request, tmpl, data)
+        page = int(self.request.GET.get('page', 1))
+        paginator = Paginator(query, per_page=PER_PAGE)
+        objects, has_next = paginator.page(page)
 
-def detail(request, slug, tmpl='news/detail.html'):
-    error = ''
-    obj = Feed.get_by_id(slug)
-    if obj is None:
-        raise Http404
-    news = memcache.get(slug)
-    if not news:
-        rpc = urlfetch.create_rpc(deadline=20)
-        urlfetch.make_fetch_call(rpc, obj.url)
-        try:
-            result = rpc.get_result()
-        except urlfetch.DownloadError:
-            error = _('Feed server timeout')
-        else:
-            status = result.status_code
-            if status == 200:
-                news, obj.date = update(result)
-                if news.entries:
-                    memcache.add(slug, news, settings.TIMEOUT)
-                    obj.put_async()
-                else:
-                    error = _('Feed server send no entries')
+        data = {'kind': 'Feed',
+                'objects': objects,
+                'filter': f.parameters,
+                'filter_url': f.url,
+                'filter_title': f.title,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1}
+        self.render_template('news/index.html', data)
+
+class Detail(BaseHandler):
+    def get(self, slug):
+        error = ''
+        obj = Feed.get_by_id(slug)
+        if obj is None:
+            webapp2.abort(404)
+        news = memcache.get(slug)
+        if not news:
+            rpc = urlfetch.create_rpc(deadline=20)
+            urlfetch.make_fetch_call(rpc, obj.url)
+            try:
+                result = rpc.get_result()
+            except urlfetch.DownloadError:
+                error = _('Feed server timeout')
             else:
-                error = _('Feed server returns %s code' % status)
-    
-    return render(request, tmpl, {'object': obj, 'news': news, 'error': error})
+                status = result.status_code
+                if status == 200:
+                    news, obj.date = update(result)
+                    if news.entries:
+                        memcache.add(slug, news, TIMEOUT)
+                        obj.put_async()
+                    else:
+                        error = _('Feed server send no entries')
+                else:
+                    error = _('Feed server returns %s code' % status)
 
-class AddForm(forms.Form):
-    headline = forms.CharField(label=_('Headline'),
-                    error_messages={'required': _('Required field')})
-    slug = forms.SlugField(label=_('Slug'), error_messages={'required': _('Required field')})
-    tags = forms.CharField(label=_('Tags'), required=False)
-    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
+        self.render_template('news/detail.html', {'object': obj, 'news': news, 'error': error, 'filter': None})
 
-    def clean_slug(self):
-        data = self.cleaned_data['slug']
-        if Feed.get_by_id(data):
-            raise forms.ValidationError(_('Record with this slug already exist'))
-        return data
+#class AddForm(forms.Form):
+#    headline = forms.CharField(label=_('Headline'),
+#                    error_messages={'required': _('Required field')})
+#    slug = forms.SlugField(label=_('Slug'), error_messages={'required': _('Required field')})
+#    tags = forms.CharField(label=_('Tags'), required=False)
+#    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
+#
+#    def clean_slug(self):
+#        data = self.cleaned_data['slug']
+#        if Feed.get_by_id(data):
+#            raise forms.ValidationError(_('Record with this slug already exist'))
+#        return data
+#
+#class EditForm(forms.Form):
+#    headline = forms.CharField(label=_('Headline'),
+#                error_messages={'required': _('Required field')})
+#    slug = forms.SlugField(label=_('Slug'), required=False,
+#                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
+#    tags = forms.CharField(label=_('Tags'), required=False)
+#    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
+#    date = forms.DateTimeField(label=_('Date'), required=False,
+#                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
+#
+#@login_required
+#def add(request, tmpl='news/form.html'):
+#    data = {}
+#    if request.method == 'POST':
+#        form = AddForm(request.POST)
+#        if form.is_valid():
+#            data = form.cleaned_data
+#            obj = Feed(id=data['slug'],
+#                       headline=data['headline'],
+#                       url = data['url'])
+#            obj.add(data)
+#            return redirect('/news')
+#    else:
+#        form = AddForm()
+#
+#    data['form'] = form
+#    return render(request, tmpl, data)
+#
+#@admin_required
+#def edit(request, slug, tmpl='news/form.html'):
+#    obj = Feed.get_by_id(slug)
+#    data = {'object': obj}
+#    if request.method == 'POST':
+#        form = EditForm(request.POST)
+#        if form.is_valid():
+#            data.update(form.cleaned_data)
+#            obj.edit(data)
+#            return redirect(obj.get_absolute_url())
+#    else:
+#        form = EditForm(initial={'headline': obj.headline,
+#                                 'slug': obj.key.string_id(),
+#                                 'tags': ', '.join(obj.tags),
+#                                 'url': obj.url,
+#                                 'date': obj.date})
+#
+#    data['form'] = form
+#    return render(request, tmpl, data)
 
-class EditForm(forms.Form):
-    headline = forms.CharField(label=_('Headline'),
-                error_messages={'required': _('Required field')})
-    slug = forms.SlugField(label=_('Slug'), required=False,
-                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
-    tags = forms.CharField(label=_('Tags'), required=False)
-    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
-    date = forms.DateTimeField(label=_('Date'), required=False,
-                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
+class Delete(BaseHandler):
+#   @admin_required # TODO
+    def get(self, slug):
+        obj = Feed.get_by_id(slug)
+        user = users.get_current_user()
+        is_admin = users.is_current_user_admin()
+        if not is_admin:
+            webapp2.abort(403)
+        data = {'object': obj, 'post_url': self.path}
+        self.render_template('snippets/confirm.html', data)
 
-@login_required
-def add(request, tmpl='news/form.html'):
-    data = {}
-    if request.method == 'POST':
-        form = AddForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            obj = Feed(id=data['slug'],
-                       headline=data['headline'],
-                       url = data['url'])
-            obj.add(data)
-            return redirect('/news')
-    else:
-        form = AddForm()
-
-    data['form'] = form
-    return render(request, tmpl, data)
-
-@admin_required
-def edit(request, slug, tmpl='news/form.html'):
-    obj = Feed.get_by_id(slug)
-    data = {'object': obj}
-    if request.method == 'POST':
-        form = EditForm(request.POST)
-        if form.is_valid():
-            data.update(form.cleaned_data)
-            obj.edit(data)
-            return redirect(obj.get_absolute_url())
-    else:
-        form = EditForm(initial={'headline': obj.headline,
-                                 'slug': obj.key.string_id(),
-                                 'tags': ', '.join(obj.tags),
-                                 'url': obj.url,
-                                 'date': obj.date})
-
-    data['form'] = form
-    return render(request, tmpl, data)
-
-@admin_required
-def delete(request, slug, tmpl='snippets/confirm.html'):
-    obj = Feed.get_by_id(slug)
-    if request.method == 'POST':
-        obj.delete()
-        return redirect('/news')
-    elif request.is_ajax():
-        data = {'object': obj, 'post_url': request.path}
-        return render(request, tmpl, data)
+    def post(self, key): # TODO get key
+        key.delete()
+        self.redirect('/entries')

@@ -7,8 +7,8 @@
         <a href="/photos/add" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
     {% if is_admin or user == object.author %}
-        <a href="{{ object.get_absolute_url }}/edit" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-        <a class="confirm del" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+        <a href="{{ object.get_absolute_url() }}/edit" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+        <a class="confirm del" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
     <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
     <a href="/photos" title="{{ _('Back') }}">{{ _('Back') }}</a>
@@ -62,7 +62,7 @@ $(function() {
 {% endblock %}
 
 {% block aside %}
-	{% include "photo/exif.html" %}
+{#	{% include "photo/exif.html" %}#}
 	<div id="comments">{% include "comment/detail.html" %}</div>
 {% endblock %}
 

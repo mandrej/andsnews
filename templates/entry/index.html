@@ -1,5 +1,4 @@
 {% extends "entry/base.html" %}
-
 {% block meta %}<meta name="date" content="{{ objects.0.date|format_date }}"/>{% endblock %}
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
@@ -14,18 +13,18 @@
 		<h2><a href="/entries">{{ _('Blog') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
 		<h2>{{ _('No blogs') }}</h2>
-		{% popup noresults %}
-			<p>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</p>
-		{% endpopup %}
+{#		{% popup noresults %}#}
+{#			<p>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</p>#}
+{#		{% endpopup %}#}
 	{% endif %}
 	
 	<div id="container">
 		{% for object in objects %}
 			<section class="third brick">
-				<a class="white" href="{{ object.get_absolute_url }}" title="{{ object.headline }}">
+				<a class="white" href="{{ object.get_absolute_url() }}" title="{{ object.headline }}">
 					<h3>{{ object.headline }}</h3>
 					<p>{% if object.front >= 0 %}
-							<img src="{{ object|image_url_by_num:object.front }}/small" class="left" style="margin-bottom: 5px;"/>
+							<img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
 						{% endif %}{{ object.summary }}</p>
 					<p class="posted">{{ object.author }}, {{ _('posted') }}
 {#						{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}

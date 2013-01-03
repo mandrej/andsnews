@@ -42,7 +42,7 @@
         {% if object.blob_key %}
             <tr>
                 <td class="label">{{ _('Size') }}</td>
-{#                <td>{{ filesizeformat(picture.size, binary=True) }}</td>#}
+                <td>{{ filesizeformat(picture.size, binary=True) }}</td>
             </tr>
             <tr>
                 <td class="label">{{ _('Median color') }}</td>
@@ -54,11 +54,11 @@
                 </td>
             </tr>
         {% else %}
-            {% with picture=object.picture.get %}
+            {% with picture=object.picture.get() %}
             <tr>
                 <td class="label">{{ _('Dimensions') }}</td>
                 <td>{{ picture.width }}x{{ picture.height }}px,
-{#                    {{ picture.size|filesizeformat(binary=True) }}#}
+                    {{ picture.size|filesizeformat(binary=True) }}
                 </td>
             </tr>
             <tr>

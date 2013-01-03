@@ -5,8 +5,8 @@
 {% block subnav %}
     {% if object %}
         {% if is_admin %}
-            <a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            <a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ object.get_absolute_url() }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
         <a href="/news" title="{{ _('Back') }}">{{ _('Back') }}</a>

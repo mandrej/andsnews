@@ -11,9 +11,9 @@
 		<h2><a href="/comments">{{ _('Comments') }}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
 		<h2>{{ _('No comments') }}</h2>
-		{% popup noresults %}
-			<p>{{ _('No comments sent'%}, {{ _('or filter has no results') }}.</p>
-		{% endpopup %}
+{#		{% popup noresults %}#}
+{#			<p>{{ _('No comments sent'%}, {{ _('or filter has no results') }}.</p>#}
+{#		{% endpopup %}#}
 	{% endif %}
 	
 	<div id="container">
@@ -34,7 +34,7 @@
 					</div>
 				</section>
 	        {% else %}
-	    		{% with object.key.parent.get as parent %}
+	    		{% with parent=object.key.parent().get()  %}
 	    		<section class="third brick">
                     <time class="when" datetime='{{ object.date|format_datetime }}'>
                         <span class="day">{{ object.date|format_datetime("%d") }}</span>
@@ -42,7 +42,7 @@
                         <span class="monthyear">{{ object.date|format_datetime("%m '%y") }}</span>
                     </time>
 					<div class="white">
-						<h3><a href="{{ parent.get_absolute_url }}#comments">{{ parent.headline }}</a></h3>
+						<h3><a href="{{ parent.get_absolute_url() }}#comments">{{ parent.headline }}</a></h3>
 						<div class="body">{{ object.body|safe }}</div>
 						<p class="posted">{{ object.author }},
 {#							{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}

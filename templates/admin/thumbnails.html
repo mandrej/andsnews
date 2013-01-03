@@ -105,7 +105,7 @@ $(function() {
 				{% for photo in objects %}
 					{% with photo.picture.get as picture %}
 					<tr id="{{ picture.key.urlsafe }}">
-						<td><a href="{{ photo.get_absolute_url }}/edit">
+						<td><a href="{{ photo.get_absolute_url() }}/edit">
 							{{ photo.headline }}</a></td>
 						<td>{{ picture.width }} x {{ picture.height }} px</td>
 						<td>{{ picture.size|filesizeformat }}</td>
@@ -157,7 +157,7 @@ $(function() {
 			</div>
 			<br clear="all"/>
 			{% for entry in objects %}
-				<h3><a href="{{ entry.get_absolute_url }}/edit">{{ entry.headline }}</a></h3>
+				<h3><a href="{{ entry.get_absolute_url() }}/edit">{{ entry.headline }}</a></h3>
 				<table id="data2" class="zebra fix">
 					<colgroup>
 						<col/>

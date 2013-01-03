@@ -55,16 +55,34 @@ def format_date(value, format='%Y-%m-%d'):
 def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
     return value.strftime(format)
 
+def image_url_by_num(obj, arg):
+    """ {{ object|image_url_by_num:form.initial.ORDER }}/small
+        {{ object|image_url_by_num:object.front }}/small """
+    return obj.image_url(arg)
+
+def incache(key):
+    if memcache.get(key): return True
+    else: return False
+
 ENV.globals.update({
     'now': now,
     'version': version,
     'gaesdk': gaesdk,
     'language': language,
+    'incache': incache,
 })
 ENV.filters.update({
     'format_date': format_date,
     'format_datetime': format_datetime,
+    'image_url_by_num': image_url_by_num
 })
+
+real_handle_exception = ENV.handle_exception
+def handle_exception(self, *args, **kwargs):
+    import logging, traceback
+    logging.error('Template exception:\n%s', traceback.format_exc())
+    real_handle_exception(self, *args, **kwargs)
+ENV.handle_exception = handle_exception
 
 HUE = [
     {'span': map(lambda x: x+360 if x<0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'}, # 0
@@ -192,7 +210,7 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
         if size == 'small': _width = 60
         m = re.match(r'(.+)_\d', slug)
         obj = ndb.Key('Entry', m.group(1), 'Img', slug).get()
-        mime = obj.mime
+        mime = str(obj.mime)
 
     if obj is None:
         webapp2.abort(404)

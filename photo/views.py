@@ -41,7 +41,7 @@ class Detail(BaseHandler):
             if obj is None:
                 webapp2.abort(404)
             self.render_template('photo/detail.html',
-                {'object': obj, 'next': None, 'previous': None, 'page': 1})
+                {'object': obj, 'next': None, 'previous': None, 'page': 0, 'filter': None}) # TODO remove double image
 
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]

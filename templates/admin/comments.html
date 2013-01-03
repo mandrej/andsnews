@@ -49,7 +49,7 @@ $(function() {
 					<tr id="{{ object.key.urlsafe }}">
 						{% if object.is_message %}<td>message</td>{% else%}
 						<td>
-							<a href="{{ object.key.parent.get.get_absolute_url }}#comments">
+							<a href="{{ object.key.parent.get.get_absolute_url() }}#comments">
 								{{ object.key.parent.get.headline }}</a>
 						</td>
 						{% endif %}
