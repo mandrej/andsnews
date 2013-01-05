@@ -28,7 +28,8 @@
 				{% endif %}
 			</p>
 		   	<p class="buttons">
-		   		<button type="submit">{{ _('Delete') }}</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
+                <button type="submit">{{ _('Delete') }}</button>
 		   	</p>
 		</form>
 	</div>

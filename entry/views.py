@@ -200,22 +200,6 @@ class Detail(BaseHandler):
 #    data['formset'] = formset
 #    return render(request, tmpl, data)
 
-class Delete(BaseHandler):
-#    @login_required
-    def get(self, slug):
-        obj = Entry.get_by_id(slug)
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.path}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, key): # TODO get key
-        key.delete()
-        self.redirect('/entries')
-
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)
     if out:

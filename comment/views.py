@@ -82,20 +82,3 @@ class Index(BaseHandler):
 #            form.fields['email'].initial = user.email()
 #        data = {'refobj': refobj, 'form': form}
 #        return render(request, tmpl, data)
-
-class Delete(BaseHandler):
-#    @login_required
-    def get(self, safekey):
-        obj = ndb.Key(urlsafe=safekey).get()
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.path}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, key): # TODO get key
-        key.delete()
-        referer = self.headers.get('Referer', '/')
-        self.redirect(referer)

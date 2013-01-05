@@ -6,7 +6,7 @@
     {% if is_admin %}
         <a href="/news/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
         <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-        <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+        <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
     <a href="/news" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}

@@ -1,13 +1,12 @@
+import cgi
 import datetime
 import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb, blobstore
-#from django.shortcuts import redirect, render
-#from django.core.exceptions import PermissionDenied
 #from django.contrib.admin.widgets import AdminSplitDateTime
 from webapp2_extras.i18n import lazy_gettext as _
-#from django import forms
 from models import Photo
+from wtforms import Form, TextField, SelectField, FileField, DateTimeField, IntegerField, DecimalField, SubmitField, validators
 from common import TIMEOUT, BaseHandler, Paginator, Filter, make_thumbnail
 import logging
 
@@ -63,35 +62,60 @@ class Detail(BaseHandler):
                 'numbers': numbers}
         self.render_template('photo/detail.html', data)
 
-#class AddForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#        error_messages={'required': _('Required field')})
-#    slug = forms.SlugField(label=_('Slug'), error_messages={'required': _('Required field')})
-#    tags = forms.CharField(label=_('Tags'), required=False)
-#    author = forms.CharField(label=_('Author'), required=True)
-#    photo = forms.FileField(label=_('Photo'), error_messages={'required': _('Upload the photo')})
-#
-#    def clean_slug(self):
-#        data = self.cleaned_data['slug']
-#        if Photo.get_by_id(data):
-#            raise forms.ValidationError(_("Record with this slug already exist"))
-#        return data
-#
-#class EditForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#                error_messages={'required': _('Required field')})
-#    tags = forms.CharField(label=_('Tags'), required=False)
-#    author = forms.CharField(label=_('Author'), required=True)
-#    date = forms.DateTimeField(label=_('Taken'), widget=AdminSplitDateTime(), required=True)
-#    model = forms.CharField(label=_('Camera model'), required=False)
-#    aperture = forms.FloatField(label=_('Aperture'), required=False)
-#    shutter = forms.CharField(label=_('Shutter speed'), required=False)
-#    focal_length = forms.FloatField(label=_('Focal length'), required=False)
-#    iso = forms.IntegerField(label='%s (ISO)' % _('Sensitivity'), required=False)
-#    crop_factor = forms.FloatField(label=_('Crop factor'), required=False)
-#    lens = forms.CharField(label=_('Lens type'), required=False)
+class AddForm(Form):
+    headline = TextField(_('Headline'), validators=[validators.DataRequired()])
+    slug = TextField(_('Slug'), validators=[validators.DataRequired()])
+    tags = TextField(_('Tags'), description='Comma separated values')
+    author = SelectField(_('Author'), validators=[validators.DataRequired()])
+    photo = FileField(_('Photo'))
+    submit = SubmitField()
 
-#@login_required
+    def validate_slug(self, field):
+        if Photo.get_by_id(field.data):
+            raise validators.ValidationError(_('Record with this slug already exist'))
+
+    def validate_photo(self, field):
+        if not isinstance(field.data, cgi.FieldStorage):
+            raise validators.ValidationError(_('This field is required.'))
+
+class EditForm(Form):
+    headline = TextField(_('Headline'), validators=[validators.DataRequired()])
+    tags = TextField(_('Tags'), description='Comma separated values')
+    author = TextField(_('Author'), validators=[validators.DataRequired()])
+    date = DateTimeField(_('Taken'), validators=[validators.DataRequired()])
+    model = TextField(_('Camera model'))
+    aperture = DecimalField(_('Aperture'), places=1, rounding=True)
+    shutter = TextField(_('Shutter speed'))
+    focal_length = IntegerField(_('Focal length'))
+    iso = IntegerField('%s (ISO)' % _('Sensitivity'))
+    crop_factor = DecimalField(_('Crop factor'), places=1, rounding=True)
+    lens = TextField(_('Lens type'))
+
+class Add(BaseHandler):
+    #@login_required
+    def get(self, form=None):
+        user = users.get_current_user()
+        upload_url = blobstore.create_upload_url('/photos/add')
+        if form is None:
+            form = AddForm()
+        email = user.email()
+        if not email in FAMILY:
+            FAMILY.append(email)
+        form.author.choices = [(x, x) for x in FAMILY]
+        self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+
+    def post(self):
+        form = AddForm(formdata=self.request.POST)
+        logging.debug(form.data)
+        if form.validate():
+            blob_info = blobstore.parse_blob_info(form.file.data)
+            obj = Photo(id=form.slug.data)
+            obj.add(blob_info, form)
+            self.redirect('/photos')
+        else:
+            upload_url = blobstore.create_upload_url('/photos/add')
+            self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+
 #def add(request, tmpl='photo/form.html'):
 #    user = users.get_current_user()
     # 1 step
@@ -159,22 +183,6 @@ class Detail(BaseHandler):
 #        'form': form,
 #        'object': obj
 #    })
-
-class Delete(BaseHandler):
-#    @login_required
-    def get(self, slug):
-        obj = Photo.get_by_id(slug)
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.path}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, key): # TODO get key
-        key.delete()
-        self.redirect('/photos')
 
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Photo', slug, size)

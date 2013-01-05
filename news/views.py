@@ -177,18 +177,3 @@ class Detail(BaseHandler):
 #
 #    data['form'] = form
 #    return render(request, tmpl, data)
-
-class Delete(BaseHandler):
-#   @admin_required # TODO
-    def get(self, slug):
-        obj = Feed.get_by_id(slug)
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.path}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, key): # TODO get key
-        key.delete()
-        self.redirect('/entries')

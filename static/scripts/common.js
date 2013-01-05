@@ -60,7 +60,7 @@
 		})
 		return this
 	};
-	slugifyDefaults = {max: 50, slug: '#id_slug:enabled'};
+	slugifyDefaults = {max: 50, slug: '#slug:enabled'};
 	/*
 	 * focusHighlight - Highlights paragraph on element focus
 	 * $Version: 2009.02.08

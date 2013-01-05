@@ -172,7 +172,7 @@ class Photo(ndb.Model):
     eqv = ndb.IntegerProperty()
     year = ndb.IntegerProperty(default=0)
     # RGB [86, 102, 102]
-#    rgb = ndb.IntegerProperty(repeated=True)
+    rgb = ndb.IntegerProperty(repeated=True)
     # HLS names
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
@@ -204,7 +204,7 @@ class Photo(ndb.Model):
             blob_reader = blob_info.open()
 #            blob_reader = blobstore.BlobReader(data['blob_key'], buffer_size=1048576)
             buff = blob_reader.read()
-#            self.rgb = median(buff)
+            self.rgb = median(buff)
             exif = get_exif(buff)
         else:
             buff = data['photo'].read()
@@ -291,12 +291,12 @@ class Photo(ndb.Model):
 
         self._put()
     
-    @ndb.transactional
+#    @ndb.transactional
     def delete(self):
-        ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
-        if self.blob_key:
+        if self.blob_key is not None:
             blob_info = blobstore.BlobInfo.get(self.blob_key)
             blob_info.delete()
+        ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
         self.index_del()
         for name in self.tags:
             decr_count('Photo', 'tags', name)

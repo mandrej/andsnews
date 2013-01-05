@@ -4,6 +4,7 @@ import os, json, webapp2
 import hashlib, datetime
 from gettext import gettext as _
 from operator import itemgetter
+from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from common import BaseHandler, Filter, SearchPaginator, TIMEOUT, ADMIN_JID, make_cloud, count_colors
@@ -125,6 +126,30 @@ class Index(BaseHandler):
     def get(self):
         objects = get_latest_photos()
         self.render_template('index.html', {'latest': objects})
+
+class DeleteHandler(BaseHandler):
+#    @login_required
+    def get(self, safekey):
+        key = ndb.Key(urlsafe=safekey)
+        if key.parent():
+            next = self.request.headers.get('Referer', '/')
+        else:
+            next = '/%s' % MAP[key.kind()]
+
+        obj = key.get()
+        user = users.get_current_user()
+        is_admin = users.is_current_user_admin()
+        if not is_admin:
+            if user != obj.author:
+                webapp2.abort(403)
+        data = {'object': obj, 'post_url': self.request.path, 'next': next}
+        self.render_template('snippets/confirm.html', data)
+
+    def post(self, safekey):
+        next = self.request.POST['next']
+        obj = ndb.Key(urlsafe=safekey).get()
+        obj.delete()
+        self.redirect(next)
 
 class Chat(webapp2.RequestHandler):
     def post(self):

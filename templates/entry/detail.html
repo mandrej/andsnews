@@ -10,14 +10,14 @@
     {% if object %}
         {% if is_admin %}
             <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-            <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
         {% else %}
             {% if user == object.author %}
                 <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="{{ object.get_absolute_url() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
             {% endif %}
         {% endif %}
-        <a class="comment_add" href="/comments/{{ object.key.urlsafe }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+        <a class="comment_add" href="/comments/{{ object.key.urlsafe() }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
         <a href="/entries" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
