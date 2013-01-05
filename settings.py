@@ -1,54 +1,44 @@
 import os
 """
-import datetime, time
+import datetime, time, random
 print time.strftime('%y%W', datetime.datetime.now().timetuple())
-"""
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
-ROOT_URLCONF = 'urls'
-ADMIN_JID = 'milan.andrejevic@gmail.com'
 
-DATABASE_ENGINE = ''
-DATABASE_NAME = ''
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT = ''
-"""
-import random
 sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 print ''.join(random.sample(sid, 50))
 """
-SITE_ID = 1
-SECRET_KEY = '5)T\PKrWd}^CB21AsvV9Ox3z!gt6RokXiDc(40eaQ&fG-MF`]$'
-
-TEMPLATE_CONTEXT_PROCESSORS = ('context_processors.auth',
-                               'django.core.context_processors.debug',
-                               'django.core.context_processors.i18n',)
-ROOT_PATH = os.path.dirname(__file__)
-TEMPLATE_DIRS = (ROOT_PATH + '/templates', ROOT_PATH,)
-MIDDLEWARE_CLASSES = (# 'google.appengine.ext.appstats.recording.AppStatsDjangoMiddleware',
-                      'google.appengine.ext.ndb.django_middleware.NdbDjangoMiddleware',
-                      'django.middleware.locale.LocaleMiddleware',
-                      'django.middleware.common.CommonMiddleware',
-                      'django.middleware.http.ConditionalGetMiddleware',
-                      'middleware.GoogleAppEngineErrorMiddleware',)
-INSTALLED_APPS = ('django.contrib.contenttypes', 'django.contrib.sites',
-                  'admin', 'comment', 'entry', 'lib', 'news', 'photo',)
-
+DEBUG = True
+DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
+LANGUAGE_COOKIE_NAME = 'ands_lang'
 TIMEOUT = 3600 # 1 hour
 PER_PAGE = 12
 LIMIT = 1024*1024
+ADMIN_JID = 'milan.andrejevic@gmail.com'
+FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
+          'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
 
-port = os.environ['SERVER_PORT']
-if port and port != '80':
-    HOST_NAME = '%s:%s' % (os.environ['SERVER_NAME'], port)
-else:
-    HOST_NAME = os.environ['SERVER_NAME']
+HUE = [
+    {'span': map(lambda x: x+360 if x<0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'}, # 0
+    {'span': xrange(10, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'}, # 30
+    {'span': xrange(40, 60), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'}, # 60
+    {'span': xrange(60, 150), 'order': '3', 'name': 'green', 'hex': '#00bf00'}, # 120
+    {'span': xrange(150, 190), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'}, # 180
+    {'span': xrange(190, 240), 'order': '5', 'name': 'blue', 'hex': '#005fbf'}, # 210
+    {'span': xrange(240, 290), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'}, # 270
+    {'span': xrange(290, 350), 'order': '7', 'name': 'pink', 'hex': '#bf005f'} # 330
+]
+LUM = [
+    {'span': xrange(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
+    {'span': xrange(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': xrange(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+]
+SAT = [
+    {'span': xrange(0, 10), 'name': 'monochrome'},
+    {'span': xrange(10, 101), 'name': 'color'}
+]
 
-ADMIN_MEDIA_PREFIX = '/static/admin/'
-APPEND_SLASH = False
-TIME_ZONE = 'Europe/Belgrade'
-USE_I18N = True
-from fake_i18n import *
+COLORS = {}
+for x in HUE:
+    COLORS['hue-%s' % x['name']] = {'hex': x['hex'], 'field': 'hue', 'name': x['name'], 'order': x['order']}
+
+for x in LUM:
+    COLORS['lum-%s' % x['name']] = {'hex': x['hex'], 'field': 'lum', 'name': x['name'], 'order': x['order']}

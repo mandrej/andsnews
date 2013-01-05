@@ -10,19 +10,13 @@ from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
 from cloud import calculate_cloud
-from models import Counter, Photo, INDEX
-import logging
+from models import Counter, Photo, INDEX, median, range_names
+from settings import DEVEL, HUE, LUM, SAT, COLORS, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
 
 LANGUAGES = (
     ('en_US', _('english')),
     ('sr_RS', _('serbian')),
 )
-DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
-LANGUAGE_COOKIE_NAME = 'ands_lang'
-TIMEOUT = 3600 # 1 hour
-PER_PAGE = 12
-LIMIT = 1024*1024
-ADMIN_JID = 'milan.andrejevic@gmail.com'
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
 ENV = jinja2.Environment(
@@ -83,60 +77,6 @@ def handle_exception(self, *args, **kwargs):
     logging.error('Template exception:\n%s', traceback.format_exc())
     real_handle_exception(self, *args, **kwargs)
 ENV.handle_exception = handle_exception
-
-HUE = [
-    {'span': map(lambda x: x+360 if x<0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'}, # 0
-    {'span': xrange(10, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'}, # 30
-    {'span': xrange(40, 60), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'}, # 60
-    {'span': xrange(60, 150), 'order': '3', 'name': 'green', 'hex': '#00bf00'}, # 120
-    {'span': xrange(150, 190), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'}, # 180
-    {'span': xrange(190, 240), 'order': '5', 'name': 'blue', 'hex': '#005fbf'}, # 210
-    {'span': xrange(240, 290), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'}, # 270
-    {'span': xrange(290, 350), 'order': '7', 'name': 'pink', 'hex': '#bf005f'} # 330
-]
-LUM = [
-    {'span': xrange(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
-    {'span': xrange(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': xrange(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
-]
-SAT = [
-    {'span': xrange(0, 10), 'name': 'monochrome'},
-    {'span': xrange(10, 101), 'name': 'color'}
-]
-
-COLORS = {}
-for x in HUE:
-    COLORS['hue-%s' % x['name']] = {'hex': x['hex'], 'field': 'hue', 'name': x['name'], 'order': x['order']}
-
-for x in LUM:
-    COLORS['lum-%s' % x['name']] = {'hex': x['hex'], 'field': 'lum', 'name': x['name'], 'order': x['order']}
-
-def median(buff):
-    triple = []
-    histogram = images.histogram(buff)
-    for band in histogram:
-        suma = 0
-        limit = sum(band)/2
-        for i in xrange(256):
-            suma += band[i]
-            if (suma > limit):
-                triple.append(i)
-                break
-    return triple
-
-def range_names(rgb):
-    def in_range(value, component):
-        for x in component:
-            if value in x['span']:
-                return x['name']
-
-    rel_rgb = map(lambda x: x/255, rgb)
-    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    H, L, S = int(h*360), int(l*100), int(s*100)
-    hue = in_range(H, HUE)
-    lum = in_range(L, LUM)
-    sat = in_range(S, SAT)
-    return hue, lum, sat
 
 def make_cloud(kind, field):
     key = '%s_%s' % (kind, field)

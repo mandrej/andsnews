@@ -7,7 +7,8 @@ from operator import itemgetter
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
-from common import BaseHandler, Filter, SearchPaginator, TIMEOUT, ADMIN_JID, make_cloud, count_colors
+from common import BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
+from settings import TIMEOUT, ADMIN_JID
 import logging
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}

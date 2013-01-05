@@ -1,19 +1,33 @@
 from __future__ import division
-import os, datetime, time, colorsys
+import datetime, time, colorsys
 from cStringIO import StringIO
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
+from settings import DEVEL, HUE, LUM, SAT
 
-DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 INDEX = search.Index(name='searchindex')
-KEYS = ['Photo_tags', 'Photo_author', 'Photo_date', 
-        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_colors', 
+
+KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
+        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_colors',
         'Entry_tags', 'Entry_author', 'Entry_date',
         'Feed_tags',
         'Comment_forkind', 'Comment_author', 'Comment_date']
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso',)
 ENTRY_IMAGES = 10
+
+def median(buff):
+    triple = []
+    histogram = images.histogram(buff)
+    for band in histogram:
+        suma = 0
+        limit = sum(band)/2
+        for i in xrange(256):
+            suma += band[i]
+            if (suma > limit):
+                triple.append(i)
+                break
+    return triple
 
 def get_exif(buff):
     data = {}
@@ -100,6 +114,20 @@ def get_exif(buff):
             data['iso'] = int(iso)
 
     return data
+
+def range_names(rgb):
+    def in_range(value, component):
+        for x in component:
+            if value in x['span']:
+                return x['name']
+
+    rel_rgb = map(lambda x: x/255, rgb)
+    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
+    H, L, S = int(h*360), int(l*100), int(s*100)
+    hue = in_range(H, HUE)
+    lum = in_range(L, LUM)
+    sat = in_range(S, SAT)
+    return hue, lum, sat
 
 def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=None, kind=None):
     return search.Document(
@@ -193,32 +221,31 @@ class Photo(ndb.Model):
         return Picture.query(ancestor = self.key)
 
     def _put(self):
-        super(Photo, self).put()
+        self.put()
         self.index_add()
 
     def add(self, data):
-        if data['blob_key']:
-            blob_info = blobstore.BlobInfo.get(data['blob_key'])
-            self.blob_key = blob_info.key()
-            self.size = blob_info.size
-            blob_reader = blob_info.open()
-#            blob_reader = blobstore.BlobReader(data['blob_key'], buffer_size=1048576)
-            buff = blob_reader.read()
-            self.rgb = median(buff)
-            exif = get_exif(buff)
-        else:
-            buff = data['photo'].read()
-            exif = get_exif(buff)
-            img = images.Image(buff)
-            pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
-            pic.width, pic.height, pic.size = img.width, img.height, len(buff)
-            self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
-            pic.put_async()
+        self.headline = data['headline']
+        blob_info = blobstore.parse_blob_info(data['photo'])
+        self.blob_key = blob_info.key()
+        self.size = blob_info.size
+        blob_reader = blob_info.open()
+#        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=25600)
+        buff = blob_reader.read()
+        self.rgb = median(buff)
+        exif = get_exif(buff)
+#        buff = data['photo'].read()
+#        exif = get_exif(buff)
+#        img = images.Image(buff)
+#        pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
+#        pic.width, pic.height, pic.size = img.width, img.height, len(buff)
+#        self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
+#        pic.put_async()
 
         for field, value in exif.items():
             setattr(self, field, value)
         self.year = self.date.year
-
+        self.hue, self.lum, self.sat = range_names(self.rgb)
         self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
         self._put()
 

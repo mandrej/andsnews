@@ -1,4 +1,0 @@
-cron:
-# - description: Renew memcache store
-  # url: /admin/renew
-  # schedule: every 12 hours

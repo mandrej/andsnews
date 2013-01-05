@@ -1,6 +1,7 @@
 from webapp2 import WSGIApplication, Route
 from webapp2_extras.routes import PathPrefixRoute
 from views import Index, DeleteHandler, latest, RenderCloud, auto_complete, sitemap, visualize, Find, Chat, Send, rss
+from settings import DEBUG
 
 config = {
     'webapp2_extras.jinja2' : {'template_path': ['templates'],
@@ -13,10 +14,10 @@ config = {
 app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/add', 'photo.views.Add'),
+        Route('/<slug:[-\w]+>/edit', 'photo.views.Edit'),
+        Route('/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
-        Route('/<slug:[-\w]+>', 'photo.views.Detail'),
-
         ]),
     PathPrefixRoute('/entries', [
         Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
@@ -48,4 +49,4 @@ app = WSGIApplication([
     Route('/setlang', 'common.SetLanguage'),
     Route('/sign', 'common.sign_helper'),
     Route('/', handler=Index),
-    ], config=config, debug=True)
+    ], config=config, debug=DEBUG)

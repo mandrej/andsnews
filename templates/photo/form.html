@@ -80,12 +80,12 @@
 {% block contents %}
 <article>
 	<h2>{{ _('Add new / change existing photo') }}</h2>
-{#	{% if form.errors %}#}
-{#		<div class="formerrors">#}
-{#			<p>{{ _('Please correct errors in') }}#}
-{#			{{ form.errors|join:", " }}.</p>#}
-{#		</div>#}
-{#	{% endif %}#}
+	{% if form.errors %}
+		<div class="formerrors">
+			<p>{{ _('Please correct errors in') }}
+			{{ form.errors|join(", ") }}.</p>
+		</div>
+	{% endif %}
 
     {% if upload_url %}
         <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
@@ -102,7 +102,6 @@
                 <p>{{ form.photo.label }}{{ form.photo() }}</p>
                 <p class="buttons">
                     <span class="required">{{ _('Required field') }}</span>
-{#                    {{ form.submit() }}#}
                     <button type="submit">{{ _('upload') }}</button>
                 </p>
             </fieldset>
@@ -114,6 +113,7 @@
 			<fieldset>
                 <h3>{{ _('Step') }} 2/2</h3>
                 <p>{{ form.headline.label }}{{ form.headline() }}</p>
+                <p>{{ form.slug.label }}{{ form.slug() }}</p>
                 <p>{{ form.tags.label }}{{ form.tags() }}</p>
 				{% if is_admin %}
                     <p>{{ form.author.label }}{{ form.author() }}</p>
