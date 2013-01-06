@@ -121,7 +121,7 @@ class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    url = fields.TextField(_('Url'), validators=[validators.DataRequired()])
+    url = fields.TextField(_('Url'), validators=[validators.DataRequired(), validators.URL()])
 
     def validate_slug(self, field):
         if Feed.get_by_id(field.data):
@@ -130,7 +130,7 @@ class AddForm(Form):
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    url = fields.TextField(_('Url'), validators=[validators.DataRequired()])
+    url = fields.TextField(_('Url'), validators=[validators.DataRequired()], validators.URL())
     date = fields.DateTimeField(_('Taken'))
 
 class Add(BaseHandler):

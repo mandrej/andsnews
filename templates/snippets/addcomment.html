@@ -1,3 +1,4 @@
+{% import "snippets/macros.html" as m %}
 <div class="popup dummy">
 	<h4>{{ _('Add comment') }}</h4>
 	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
@@ -5,8 +6,8 @@
 		<h6>{{ _('for') }} {{ refobj.headline }}</h6>
 		<form id="addcommentForm" action="" method="post">
 			<fieldset>
-				{{ form.email|form_row }}
-				{{ form.body|form_row:"editor" }}
+                {{ m.form_row(form.email) }}
+                {{ m.form_row(form.body, class='editor', rows=6) }}
 			</fieldset>
 			<p class="buttons">
 				<button type="submit">{{ _('send') }}</button>
@@ -29,11 +30,11 @@
 <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
 <script>
 $(function() {
-	$('#id_body').markItUp(cmntSettings, {nameSpace: 'small'});
+	$('#body').markItUp(cmntSettings, {nameSpace: 'small'});
 	$('.content button').click(function() {
-		$.post('/comments/validate', {'safekey': '{{ refobj.key.urlsafe }}',
-									  'email': $('#id_email').val(),
-									  'body': $('#id_body').val()}, 
+		$.post('/comments/validate', {'safekey': '{{ refobj.key.urlsafe() }}',
+									  'email': $('#email').val(),
+									  'body': $('#body').val()},
 			function(data) {
 				if (data.success == true) {
 					$('.dummy').hide();

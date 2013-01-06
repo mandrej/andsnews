@@ -12,6 +12,7 @@ config = {
 }
 
 app = WSGIApplication([
+    Route('/photos', 'photo.views.Index'),
     PathPrefixRoute('/photos', [
         Route('/add', 'photo.views.Add'),
         Route('/<slug:[-\w]+>/edit', 'photo.views.Edit'),
@@ -19,14 +20,19 @@ app = WSGIApplication([
         Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
         ]),
+    Route('/entries', 'entry.views.Index'),
     PathPrefixRoute('/entries', [
 #        Route('/add', 'entry.views.Add'),
 #        Route('/<slug:[-\w]+>/edit', 'entry.views.Edit'),
         Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
         Route('/<slug:[-\w]+>', 'entry.views.Detail'),
         ]),
+    Route('/comments', 'comment.views.Index'),
     PathPrefixRoute('/comments', [
+        Route('/validate', handler='comment.views.Validate'),
+        Route('/<safekey:\w+>/add', handler='comment.views.Add'),
         ]),
+    Route('/news', 'news.views.Index'),
     PathPrefixRoute('/news', [
         Route('/add', 'news.views.Add'),
         Route('/<slug:[-\w]+>/edit', 'news.views.Edit'),
@@ -45,10 +51,6 @@ app = WSGIApplication([
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
     Route('/<safekey:\w+>/delete', handler=DeleteHandler),
-    Route('/photos', 'photo.views.Index'),
-    Route('/entries', 'entry.views.Index'),
-    Route('/comments', 'comment.views.Index'),
-    Route('/news', 'news.views.Index'),
     Route('/latest', handler=latest),
     Route('/setlang', 'common.SetLanguage'),
     Route('/sign', 'common.sign_helper'),

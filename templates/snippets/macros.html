@@ -1,5 +1,5 @@
 {% macro form_row(field) %}
-    <p>
+    <p{{ kwargs|xmlattr }}>
         {{ field.label(class='required' if field.flags.required else '') }}
         {{ field(**kwargs) }}
         {% if field.errors %}
