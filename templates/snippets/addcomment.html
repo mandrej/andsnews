@@ -1,12 +1,13 @@
+{% import "snippets/macros.html" as m %}
 <div class="popup dummy">
 	<h4>{{ _('Add comment') }}</h4>
 	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 	<div class="content">
-		<h6>{{ _('for') }} {{ refobj.headline }}</h6>
+		<h6>{{ _('for') }} {{ headline }}</h6>
 		<form id="addcommentForm" action="" method="post">
 			<fieldset>
-				{{ form.email|form_row }}
-				{{ form.body|form_row:"editor" }}
+                {{ m.form_row(form.email) }}
+                {{ m.form_row(form.body, class='editor', rows=6) }}
 			</fieldset>
 			<p class="buttons">
 				<button type="submit">{{ _('send') }}</button>
@@ -29,26 +30,40 @@
 <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
 <script>
 $(function() {
-	$('#id_body').markItUp(cmntSettings, {nameSpace: 'small'});
+	$('#body').markItUp(cmntSettings, {nameSpace: 'small'});
 	$('.content button').click(function() {
-		$.post('/comments/validate', {'safekey': '{{ refobj.key.urlsafe }}',
-									  'email': $('#id_email').val(),
-									  'body': $('#id_body').val()}, 
-			function(data) {
-				if (data.success == true) {
-					$('.dummy').hide();
-					$('.info').show()
-					setTimeout(function() {
-						$('#overlay, #addcomment').hide();
-					}, 5000);
-				} else {
-					$('.error').text('');
-					$.each(data, function(key, err) {
-						$('.error.C_' + key).text(err);
-					});
-				}
-			}, 'json');
-		return false;
+        $.ajax({
+            type: 'POST',
+            url: '/comments/{{ safekey }}/add',
+            data: {'email': $('#email').val(),
+                   'body': $('#body').val()},
+            dataType: 'json',
+            success: function(data, status, xhr) {
+                console.log(status);
+                console.log(data);
+                console.log(xhr);
+            }
+        });
+        return false
+{#        var url = '/comments/{{ safekey }}/add';#}
+{#		$.post(url, {'email': $('#email').val(),#}
+{#					 'body': $('#body').val()},#}
+{#			function(data) {#}
+{#                console.log(data);#}
+{#				if (data && data.success == true) {#}
+{#					$('.dummy').hide();#}
+{#					$('.info').show()#}
+{#					setTimeout(function() {#}
+{#						$('#overlay, #addcomment').hide();#}
+{#					}, 5000);#}
+{#				} else {#}
+{#					$('.error').text('');#}
+{#					$.each(data, function(key, err) {#}
+{#						$('.C_' + key).text(', '.join(err));#}
+{#					});#}
+{#				}#}
+{#			}, 'json');#}
+{#		return false;#}
 	});
 });
 </script>
