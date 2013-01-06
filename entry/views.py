@@ -6,11 +6,12 @@ from google.appengine.ext import ndb
 #from django.shortcuts import redirect, render
 #from django.core.exceptions import PermissionDenied
 #from django.contrib.admin.widgets import AdminSplitDateTime
-#from django import forms
+
 #from django.forms.formsets import formset_factory, BaseFormSet
 from models import Entry, ENTRY_IMAGES
 #from lib.comm import Paginator, Filter, login_required, make_thumbnail
-from common import  LIMIT, TIMEOUT, BaseHandler, Paginator, Filter, make_thumbnail
+from common import  BaseHandler, Paginator, Filter, make_thumbnail
+from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
 
 class Index(BaseHandler):

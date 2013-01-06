@@ -2,12 +2,12 @@ import webapp2
 import re, datetime, time
 from google.appengine.api import users, urlfetch, memcache
 from google.appengine.ext import ndb
-#from django.shortcuts import redirect, render
 from webapp2_extras.i18n import lazy_gettext as _
-#from django import forms
+from wtforms import Form, widgets, fields, validators
 from models import Feed
 from lib import feedparser
-from common import  TIMEOUT, BaseHandler, Paginator, Filter
+from common import  BaseHandler, Paginator, Filter, TagsField
+from settings import TIMEOUT
 
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
@@ -117,63 +117,51 @@ class Detail(BaseHandler):
 
         self.render_template('news/detail.html', {'object': obj, 'news': news, 'error': error, 'filter': None})
 
-#class AddForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#                    error_messages={'required': _('Required field')})
-#    slug = forms.SlugField(label=_('Slug'), error_messages={'required': _('Required field')})
-#    tags = forms.CharField(label=_('Tags'), required=False)
-#    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
-#
-#    def clean_slug(self):
-#        data = self.cleaned_data['slug']
-#        if Feed.get_by_id(data):
-#            raise forms.ValidationError(_('Record with this slug already exist'))
-#        return data
-#
-#class EditForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#                error_messages={'required': _('Required field')})
-#    slug = forms.SlugField(label=_('Slug'), required=False,
-#                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
-#    tags = forms.CharField(label=_('Tags'), required=False)
-#    url = forms.URLField(label=_('Url'), error_messages={'required': _('Required field')})
-#    date = forms.DateTimeField(label=_('Date'), required=False,
-#                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
-#
-#@login_required
-#def add(request, tmpl='news/form.html'):
-#    data = {}
-#    if request.method == 'POST':
-#        form = AddForm(request.POST)
-#        if form.is_valid():
-#            data = form.cleaned_data
-#            obj = Feed(id=data['slug'],
-#                       headline=data['headline'],
-#                       url = data['url'])
-#            obj.add(data)
-#            return redirect('/news')
-#    else:
-#        form = AddForm()
-#
-#    data['form'] = form
-#    return render(request, tmpl, data)
-#
-#@admin_required
-#def edit(request, slug, tmpl='news/form.html'):
-#    obj = Feed.get_by_id(slug)
-#    data = {'object': obj}
-#    if request.method == 'POST':
-#        form = EditForm(request.POST)
-#        if form.is_valid():
-#            data.update(form.cleaned_data)
-#            obj.edit(data)
-#            return redirect(obj.get_absolute_url())
-#    else:
-#        form = EditForm(initial={'headline': obj.headline,
-#                                 'slug': obj.key.string_id(),
-#                                 'tags': ', '.join(obj.tags),
-#                                 'url': obj.url,
-#                                 'date': obj.date})
-#
-#    data['form'] = form
-#    return render(request, tmpl, data)
+class AddForm(Form):
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
+    url = fields.TextField(_('Url'), validators=[validators.DataRequired()])
+
+    def validate_slug(self, field):
+        if Feed.get_by_id(field.data):
+            raise validators.ValidationError(_('Record with this slug already exist'))
+
+class EditForm(Form):
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
+    url = fields.TextField(_('Url'), validators=[validators.DataRequired()])
+    date = fields.DateTimeField(_('Taken'))
+
+class Add(BaseHandler):
+    #@admin_required
+    def get(self, form=None):
+        if form is None:
+            form = AddForm()
+        self.render_template('news/form.html', {'form': form, 'filter': None})
+
+    def post(self):
+        form = AddForm(formdata=self.request.POST)
+        if form.validate():
+            obj = Feed(id=form.slug.data)
+            obj.add(form.data)
+            self.redirect('/news')
+        else:
+            self.render_template('news/form.html', {'form': form, 'filter': None})
+
+class Edit(BaseHandler):
+    #@admin_required
+    def get(self, slug, form=None):
+        obj = Feed.get_by_id(slug)
+        if form is None:
+            form = EditForm(obj=obj)
+        self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
+
+    def post(self, slug):
+        obj = Feed.get_by_id(slug)
+        form = EditForm(formdata=self.request.POST)
+        if form.validate():
+            obj.edit(form.data)
+            self.redirect('/news')
+        else:
+            self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})

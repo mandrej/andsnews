@@ -1,5 +1,5 @@
 {% extends "news/base.html" %}
-
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing news') }}{% endblock %}
 
 {% block subnav %}
@@ -48,22 +48,24 @@ $(function() {
 	{% if form.errors %}
 		<div class="formerrors">
 			<p>{{ _('Please correct errors in') }}
-			{{ form.errors|join:", " }}.</p>
+			{{ form.errors|join(", ") }}.</p>
 		</div>
 	{% endif %}
 	
 	{% if object %}
-		<form action="{{ object.get_absolute_url }}/edit" method="post">
+		<form action="{{ object.get_absolute_url() }}/edit" method="post">
 	{% else %}
 		<form action="/news/add" method="post">
 	{% endif %}
 		<fieldset>
-			{{ form.headline|form_row }}
-			{{ form.slug|form_row }}
-			{{ form.tags|form_row }}
-			{{ form.url|form_row }}
+            {{ m.form_row(form.headline) }}
+            {% if not object %}
+                {{ m.form_row(form.slug) }}
+            {% endif %}
+            {{ m.form_row(form.tags) }}
+            {{ m.form_row(form.url) }}
 			{% if object %}
-				{{ form.date|form_row }}
+                {{ m.form_row(form.date, disabled='disabled') }}
 			{% endif %}
 			<p class="buttons">
 				<span class="required">{{ _('Required field') }}</span>

@@ -42,14 +42,14 @@
         {% if object.blob_key %}
             <tr>
                 <td class="label">{{ _('Size') }}</td>
-                <td>{{ filesizeformat(picture.size, binary=True) }}</td>
+                <td>{{ object.size|filesizeformat(binary=True) }}</td>
             </tr>
             <tr>
                 <td class="label">{{ _('Median color') }}</td>
                 <td>
-                    {% if picture.rgb %}
-                        <a href="{{ object.similar_url }}" title="{{ _('photos with similar color') }}">HLS: {{ picture.hls }}, RGB: {{ picture.hex }}</a>
-                        <span style="float: right; background: {{ picture.hex }}; width: 12px;">&nbsp;</span>
+                    {% if object.rgb %}
+                        <a href="{{ object.similar_url }}" title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>
+                        <span style="float: right; background: {{ object.hex }}; width: 12px;">&nbsp;</span>
                     {% else %}---{% endif %}
                 </td>
             </tr>

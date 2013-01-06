@@ -6,10 +6,9 @@ from google.appengine.ext import ndb, blobstore
 #from django.contrib.admin.widgets import AdminSplitDateTime
 from webapp2_extras.i18n import lazy_gettext as _
 from models import Photo
-#from wtforms import Form, TextField, SelectField, FileField, DateTimeField, IntegerField, DecimalField, SubmitField, validators
 from wtforms import Form, widgets, fields, validators
-from common import TIMEOUT, BaseHandler, Paginator, Filter, make_thumbnail
-from settings import FAMILY
+from common import BaseHandler, Paginator, Filter, EmailField, TagsField, make_thumbnail
+from settings import TIMEOUT, FAMILY
 import logging
 
 class Index(BaseHandler):
@@ -34,61 +33,39 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
-        if 'page' not in self.request.GET or 'pic' not in self.request.GET:
+        if 'page' in self.request.GET and 'pic' in self.request.GET:
+            f = Filter(field, value)
+            filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+            query = Photo.query(*filters).order(-Photo.date)
+
+            page = int(self.request.GET.get('page', 1))
+            pic = int(self.request.GET.get('pic', 1))
+            paginator = Paginator(query)
+            previous, obj, next, numbers = paginator.triple(page, pic)
+
+            data = {'object': obj,
+                    'next': next,
+                    'previous': previous,
+                    'filter': f.parameters,
+                    'filter_url': f.url,
+                    'filter_title': f.title,
+                    'page': page,
+                    'num': (page - 1)*paginator.per_page + pic,
+                    'numbers': numbers}
+            self.render_template('photo/detail.html', data)
+        else:
             obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
             self.render_template('photo/detail.html',
-                {'object': obj, 'next': None, 'previous': None, 'page': 0, 'filter': None}) # TODO remove double image
-
-        f = Filter(field, value)
-        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
-        query = Photo.query(*filters).order(-Photo.date)
-
-        page = int(self.request.GET.get('page', 1))
-        pic = int(self.request.GET.get('pic', 1))
-        paginator = Paginator(query)
-        previous, obj, next, numbers = paginator.triple(page, pic)
-
-        data = {'object': obj,
-                'next': next,
-                'previous': previous,
-                'filter': f.parameters,
-                'filter_url': f.url,
-                'filter_title': f.title,
-                'page': page,
-                'num': (page - 1)*paginator.per_page + pic,
-                'numbers': numbers}
-        self.render_template('photo/detail.html', data)
-
-class EmailField(fields.SelectField):
-    def __init__(self, *args, **kwargs):
-        super(EmailField, self).__init__(*args, **kwargs)
-        user = users.get_current_user()
-        email = user.email()
-        if not email in FAMILY:
-            FAMILY.append(email)
-        self.choices = [(x, x) for x in FAMILY]
-
-class TagsField(fields.TextField):
-    widget = widgets.TextInput()
-    def _value(self):
-        if self.data:
-            return u', '.join(self.data)
-        else:
-            return u''
-    def process_formdata(self, valuelist):
-        if valuelist:
-            self.data = [x.strip() for x in valuelist[0].split(',')]
-        else:
-            self.data = []
+                {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
 
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    photo = fields.FileField(_('Photo'))
+    photo = fields.FileField(_('Photo'), validators=[validators.DataRequired()])
 
     def validate_slug(self, field):
         if Photo.get_by_id(field.data):
@@ -96,21 +73,20 @@ class AddForm(Form):
 
     def validate_photo(self, field):
         if not isinstance(field.data, cgi.FieldStorage):
-            raise validators.ValidationError(_('This field is required.'))
+            raise validators.ValidationError(_('Not cgi.FieldStorage type.'))
 
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
-    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Taken'), validators=[validators.DataRequired()])
-    model = fields.TextField(_('Camera model'), validators=[validators.Optional()])
-    aperture = fields.DecimalField(_('Aperture'), places=1, rounding=True, validators=[validators.Optional()])
-    shutter = fields.TextField(_('Shutter speed'), validators=[validators.Optional()])
-    focal_length = fields.IntegerField(_('Focal length'), validators=[validators.Optional()])
-    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'), validators=[validators.Optional()])
-    crop_factor = fields.DecimalField(_('Crop factor'), places=1, rounding=True, validators=[validators.Optional()])
-    lens = fields.TextField(_('Lens type'), validators=[validators.Optional()])
+    model = fields.TextField(_('Camera model'))
+    aperture = fields.FloatField(_('Aperture'))
+    shutter = fields.TextField(_('Shutter speed'))
+    focal_length = fields.FloatField(_('Focal length'))
+    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'))
+    crop_factor = fields.FloatField(_('Crop factor'))
+    lens = fields.TextField(_('Lens type'))
 
 class Add(BaseHandler):
     #@login_required
@@ -141,20 +117,7 @@ class Edit(BaseHandler):
             if user != obj.author:
                 webapp2.abort(403)
         if form is None:
-            form = EditForm(obj=obj)#**{
-#                'headline': obj.headline,
-#                'slug': obj.key.string_id(),
-#                'tags': ', '.join(obj.tags),
-#                'author': user.email,
-#                'model': obj.model,
-#                'aperture': obj.aperture,
-#                'shutter': obj.shutter,
-#                'focal_length': obj.focal_length,
-#                'iso': obj.iso,
-#                'date': obj.date or datetime.datetime.now(),
-#                'crop_factor': obj.crop_factor,
-#                'lens': obj.lens
-#            })
+            form = EditForm(obj=obj)
         self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
 
     def post(self, slug):

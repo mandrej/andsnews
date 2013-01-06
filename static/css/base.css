@@ -194,6 +194,7 @@ fieldset textarea { font: 12px "Courier New", Courier, Freemono, "Nimbus Mono L"
 fieldset input[type=file] { padding: 0; border: none; }
 fieldset select { width: 286px; padding: 0; }
 fieldset option { padding: 2px; }
+fieldset input[disabled] { background: #aaa; color: #666; }
 fieldset .error {
 	margin-left: 145px;
 	width: 280px;

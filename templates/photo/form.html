@@ -1,5 +1,5 @@
 {% extends "photo/base.html" %}
-
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
 {% block subnav %}
@@ -56,12 +56,12 @@
 {% endblock %}
 
 {% block aside %}
-	<p>{{ _('<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
-	<p>{{ _('<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
-	<p>{{ _('<strong>Forward slash</strong> is not allowed in any field. It will be stripped out automatically.') }}</p>
+	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+	<p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
 	<p><strong>{{ _('Send photo less then') }} 1MB.</strong></p>
 
-	<p>{{ _('<strong>Crop factor</strong> represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
+	<p>{{ _('Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
 	<table>
 		<tr><th>Senesor size</th><th>Crop factor</th></tr>
 		<tr><td>Full format</td><td>1.0 (Contax 137 MD Quartz)</td></tr>
@@ -90,16 +90,15 @@
     {% if upload_url %}
         <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
             <fieldset>
-                <h3>{{ _('Step') }} 1/2</h3>
-                <p>{{ form.headline.label }}{{ form.headline() }}</p>
-                <p>{{ form.slug.label }}{{ form.slug() }}</p>
-                <p>{{ form.tags.label }}{{ form.tags() }}</p>
+                {{ m.form_row(form.headline) }}
+                {{ m.form_row(form.slug) }}
+                {{ m.form_row(form.tags) }}
                 {% if is_admin %}
-                    <p>{{ form.author.label }}{{ form.author() }}</p>
+                    {{ m.form_row(form.author) }}
                 {% else %}
                     <input type="hidden" name="author" value="{{ object.author.email }}"/>
                 {% endif %}
-                <p>{{ form.photo.label }}{{ form.photo() }}</p>
+                {{ m.form_row(form.photo) }}
                 <p class="buttons">
                     <span class="required">{{ _('Required field') }}</span>
                     <button type="submit">{{ _('upload') }}</button>
@@ -109,14 +108,12 @@
     {% endif %}
 
 	{% if object %}
-	    <form action="{{ object.get_absolute_url }}/edit" method="post">
+	    <form action="{{ object.get_absolute_url() }}/edit" method="post">
 			<fieldset>
-                <h3>{{ _('Step') }} 2/2</h3>
-                <p>{{ form.headline.label }}{{ form.headline() }}</p>
-                <p>{{ form.slug.label }}{{ form.slug() }}</p>
-                <p>{{ form.tags.label }}{{ form.tags() }}</p>
+                {{ m.form_row(form.headline) }}
+                {{ m.form_row(form.tags) }}
 				{% if is_admin %}
-                    <p>{{ form.author.label }}{{ form.author() }}</p>
+                    {{ m.form_row(form.author) }}
 				{% else %}
 					<input type="hidden" name="author" value="{{ object.author.email }}"/>
 				{% endif %}
@@ -124,14 +121,14 @@
 			
 			<fieldset>
 				<h3>EXIF {{ _('data') }}</h3>
-                <p>{{ form.model.label }}{{ form.model() }}</p>
-                <p>{{ form.lens.label }}{{ form.lens() }}</p>
-                <p>{{ form.aperture.label }}{{ form.aperture() }}</p>
-                <p>{{ form.shutter.label }}{{ form.shutter() }}</p>
-                <p>{{ form.focal_length.label }}{{ form.focal_length() }}</p>
-                <p>{{ form.crop_factor.label }}{{ form.crop_factor() }}</p>
-                <p>{{ form.iso.label }}{{ form.iso() }}</p>
-                <p>{{ form.date.label }}{{ form.date() }}</p>
+                {{ m.form_row(form.model) }}
+                {{ m.form_row(form.lens) }}
+                {{ m.form_row(form.aperture) }}
+                {{ m.form_row(form.shutter) }}
+                {{ m.form_row(form.focal_length) }}
+                {{ m.form_row(form.crop_factor) }}
+                {{ m.form_row(form.iso) }}
+                {{ m.form_row(form.date) }}
 				<p class="buttons">
 					<span class="required">{{ _('Required field') }}</span>
 					<button type="submit">{{ _('done') }}</button>

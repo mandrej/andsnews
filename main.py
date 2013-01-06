@@ -20,12 +20,16 @@ app = WSGIApplication([
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
         ]),
     PathPrefixRoute('/entries', [
+#        Route('/add', 'entry.views.Add'),
+#        Route('/<slug:[-\w]+>/edit', 'entry.views.Edit'),
         Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
         Route('/<slug:[-\w]+>', 'entry.views.Detail'),
         ]),
     PathPrefixRoute('/comments', [
         ]),
     PathPrefixRoute('/news', [
+        Route('/add', 'news.views.Add'),
+        Route('/<slug:[-\w]+>/edit', 'news.views.Edit'),
         Route('/<slug:[-\w]+>', 'news.views.Detail'),
         ]),
     PathPrefixRoute('/admin', [

@@ -225,8 +225,8 @@ class Photo(ndb.Model):
         self.index_add()
 
     def add(self, data):
-        self.headline = data['headline']
         blob_info = blobstore.parse_blob_info(data['photo'])
+        self.headline = data['headline']
         self.blob_key = blob_info.key()
         self.size = blob_info.size
         blob_reader = blob_info.open()
@@ -234,19 +234,11 @@ class Photo(ndb.Model):
         buff = blob_reader.read()
         self.rgb = median(buff)
         exif = get_exif(buff)
-#        buff = data['photo'].read()
-#        exif = get_exif(buff)
-#        img = images.Image(buff)
-#        pic = Picture(parent=self.key, id=self.key.string_id(), blob=buff)
-#        pic.width, pic.height, pic.size = img.width, img.height, len(buff)
-#        self.aspect = 'landscape' if (pic.width >= pic.height) else 'portrait'
-#        pic.put_async()
-
         for field, value in exif.items():
             setattr(self, field, value)
         self.year = self.date.year
         self.hue, self.lum, self.sat = range_names(self.rgb)
-        self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        self.tags =data['tags']
         self._put()
 
         for name in self.tags:
@@ -268,7 +260,7 @@ class Photo(ndb.Model):
         del data['author']
 
         old_tags = set(self.tags)
-        new_tags = set([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        new_tags = set(data['tags'])
         if old_tags - new_tags:
             for name in list(old_tags-new_tags):
                 decr_count('Photo', 'tags', name)
@@ -355,6 +347,10 @@ class Photo(ndb.Model):
             return '/photos/hue/%s' % self.hue
         else:
             return '/photos/lum/%s' % self.lum
+
+    @property
+    def hex(self):
+        return '#%02x%02x%02x' % tuple(self.rgb)
     
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
@@ -386,7 +382,7 @@ class Entry(ndb.Model):
         return INDEX.delete('%s' % self.key.urlsafe())
 
     def _put(self):
-        super(Entry, self).put()
+        self.put()
         self.index_add()
 
     def _add(self, data):
@@ -404,7 +400,7 @@ class Entry(ndb.Model):
         self.date = data['date']
         self.year=self.date.year
 
-        self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        self.tags = data['tags']
         self._put()
 
     def add(self, data):
@@ -556,10 +552,10 @@ class Feed(ndb.Model):
     date = ndb.DateTimeProperty()
     
     def _put(self):
-        super(Feed, self).put()
+        self.put()
 
     def _add(self, data):
-        self.tags = sorted([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        self.tags = data['tags']
         self._put()
 
     def add(self, data):
@@ -569,7 +565,7 @@ class Feed(ndb.Model):
 
     def edit(self, data):
         old_tags = set(self.tags)
-        new_tags = set([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        new_tags = set(data['tags'])
         if old_tags-new_tags:
             for name in list(old_tags-new_tags):
                 decr_count('Feed', 'tags', name)

@@ -3,15 +3,18 @@ import os, re, webapp2, jinja2, colorsys
 import math, hashlib
 import itertools, collections
 import datetime
+from jinja2 import evalcontextfilter, contextfunction
+from jinja2.utils import Markup
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
+from wtforms import Form, widgets, fields, validators
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX, median, range_names
-from settings import DEVEL, HUE, LUM, SAT, COLORS, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+from settings import DEVEL, HUE, LUM, SAT, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -378,6 +381,28 @@ class ListPaginator:
         results = self.objects[offset: offset + self.per_page]
         has_next = num < self.num_pages
         return results, has_next
+
+class EmailField(fields.SelectField):
+    def __init__(self, *args, **kwargs):
+        super(EmailField, self).__init__(*args, **kwargs)
+        user = users.get_current_user()
+        email = user.email()
+        if not email in FAMILY:
+            FAMILY.append(email)
+        self.choices = [(x, x) for x in FAMILY]
+
+class TagsField(fields.TextField):
+    widget = widgets.TextInput()
+    def _value(self):
+        if self.data:
+            return u', '.join(self.data)
+        else:
+            return u''
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = sorted([x.strip().lower() for x in valuelist[0].split(',')])
+        else:
+            self.data = []
 
 FORBIDDEN = ('admin', '403', 'addcomment')
 def sign_helper(request):
