@@ -6,7 +6,7 @@
     {% if object %}
         {% if is_admin or user == object.author %}
 			<a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-     		<a href="{{ object.get_absolute_url }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+     		<a href="{{ object.get_absolute_url() }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
         <a href="/photos" title="{{ _('Back') }}">{{ _('Back') }}</a>
@@ -126,12 +126,12 @@
 				<h3>EXIF {{ _('data') }}</h3>
                 <p>{{ form.model.label }}{{ form.model() }}</p>
                 <p>{{ form.lens.label }}{{ form.lens() }}</p>
-                <p>{{ form.aperture.label }}{{ aperture.lens() }}</p>
-                <p>{{ form.shutter.label }}{{ aperture.shutter() }}</p>
-                <p>{{ form.focal_length.label }}{{ aperture.focal_length() }}</p>
-                <p>{{ form.crop_factor.label }}{{ aperture.crop_factor() }}</p>
-                <p>{{ form.iso.label }}{{ aperture.iso() }}</p>
-                <p>{{ form.date.label }}{{ aperture.date() }}</p>
+                <p>{{ form.aperture.label }}{{ form.aperture() }}</p>
+                <p>{{ form.shutter.label }}{{ form.shutter() }}</p>
+                <p>{{ form.focal_length.label }}{{ form.focal_length() }}</p>
+                <p>{{ form.crop_factor.label }}{{ form.crop_factor() }}</p>
+                <p>{{ form.iso.label }}{{ form.iso() }}</p>
+                <p>{{ form.date.label }}{{ form.date() }}</p>
 				<p class="buttons">
 					<span class="required">{{ _('Required field') }}</span>
 					<button type="submit">{{ _('done') }}</button>

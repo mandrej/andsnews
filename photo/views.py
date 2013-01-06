@@ -6,7 +6,8 @@ from google.appengine.ext import ndb, blobstore
 #from django.contrib.admin.widgets import AdminSplitDateTime
 from webapp2_extras.i18n import lazy_gettext as _
 from models import Photo
-from wtforms import Form, TextField, SelectField, FileField, DateTimeField, IntegerField, DecimalField, SubmitField, validators
+#from wtforms import Form, TextField, SelectField, FileField, DateTimeField, IntegerField, DecimalField, SubmitField, validators
+from wtforms import Form, widgets, fields, validators
 from common import TIMEOUT, BaseHandler, Paginator, Filter, make_thumbnail
 from settings import FAMILY
 import logging
@@ -60,7 +61,7 @@ class Detail(BaseHandler):
                 'numbers': numbers}
         self.render_template('photo/detail.html', data)
 
-class EmailField(SelectField):
+class EmailField(fields.SelectField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
         user = users.get_current_user()
@@ -69,12 +70,25 @@ class EmailField(SelectField):
             FAMILY.append(email)
         self.choices = [(x, x) for x in FAMILY]
 
+class TagsField(fields.TextField):
+    widget = widgets.TextInput()
+    def _value(self):
+        if self.data:
+            return u', '.join(self.data)
+        else:
+            return u''
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = [x.strip() for x in valuelist[0].split(',')]
+        else:
+            self.data = []
+
 class AddForm(Form):
-    headline = TextField(_('Headline'), validators=[validators.DataRequired()])
-    slug = TextField(_('Slug'), validators=[validators.DataRequired()])
-    tags = TextField(_('Tags'), description='Comma separated values')
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    photo = FileField(_('Photo'))
+    photo = fields.FileField(_('Photo'))
 
     def validate_slug(self, field):
         if Photo.get_by_id(field.data):
@@ -85,18 +99,18 @@ class AddForm(Form):
             raise validators.ValidationError(_('This field is required.'))
 
 class EditForm(Form):
-    headline = TextField(_('Headline'), validators=[validators.DataRequired()])
-    slug = TextField(_('Slug'), validators=[validators.DataRequired()])
-    tags = TextField(_('Tags'), description='Comma separated values')
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    date = DateTimeField(_('Taken'), validators=[validators.DataRequired()])
-    model = TextField(_('Camera model'))
-    aperture = DecimalField(_('Aperture'), places=1, rounding=True)
-    shutter = TextField(_('Shutter speed'))
-    focal_length = IntegerField(_('Focal length'))
-    iso = IntegerField('%s (ISO)' % _('Sensitivity'))
-    crop_factor = DecimalField(_('Crop factor'), places=1, rounding=True)
-    lens = TextField(_('Lens type'))
+    date = fields.DateTimeField(_('Taken'), validators=[validators.DataRequired()])
+    model = fields.TextField(_('Camera model'), validators=[validators.Optional()])
+    aperture = fields.DecimalField(_('Aperture'), places=1, rounding=True, validators=[validators.Optional()])
+    shutter = fields.TextField(_('Shutter speed'), validators=[validators.Optional()])
+    focal_length = fields.IntegerField(_('Focal length'), validators=[validators.Optional()])
+    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'), validators=[validators.Optional()])
+    crop_factor = fields.DecimalField(_('Crop factor'), places=1, rounding=True, validators=[validators.Optional()])
+    lens = fields.TextField(_('Lens type'), validators=[validators.Optional()])
 
 class Add(BaseHandler):
     #@login_required
@@ -127,21 +141,20 @@ class Edit(BaseHandler):
             if user != obj.author:
                 webapp2.abort(403)
         if form is None:
-            form = EditForm(obj=obj)
-            form.populate_obj({
-                'headline': obj.headline,
-                'slug': obj.key.string_id(),
-                'tags': ', '.join(obj.tags),
-                'author': user.email,
-                'model': obj.model,
-                'aperture': obj.aperture,
-                'shutter': obj.shutter,
-                'focal_length': obj.focal_length,
-                'iso': obj.iso,
-                'date': obj.date or datetime.datetime.now(),
-                'crop_factor': obj.crop_factor,
-                'lens': obj.lens
-            })
+            form = EditForm(obj=obj)#**{
+#                'headline': obj.headline,
+#                'slug': obj.key.string_id(),
+#                'tags': ', '.join(obj.tags),
+#                'author': user.email,
+#                'model': obj.model,
+#                'aperture': obj.aperture,
+#                'shutter': obj.shutter,
+#                'focal_length': obj.focal_length,
+#                'iso': obj.iso,
+#                'date': obj.date or datetime.datetime.now(),
+#                'crop_factor': obj.crop_factor,
+#                'lens': obj.lens
+#            })
         self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
 
     def post(self, slug):
