@@ -15,3 +15,59 @@ indexes:
   properties:
   - name: date
     direction: desc
+
+- kind: Photo
+  properties:
+  - name: author
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: eqv
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: hue
+  - name: sat
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: iso
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: lens
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: lum
+  - name: sat
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: model
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: tags
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: year
+  - name: date
+    direction: desc

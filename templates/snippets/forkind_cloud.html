@@ -1,5 +1,5 @@
 <p class="cloud">
-	{% for item in forkindcloud|dictsort:"name" %}
+	{% for item in forkindcloud|sort(attribute='name') %}
 		<a class="t{{ item.size }}{% if item.name == filter.forkind|lower %} selected{% endif %}"
 			title="{{ item.count }}" href="{{ link }}/{{ item.name }}">
 			{% if item.name == "Entry" %}{{ _('for blog') }}{% endif %}

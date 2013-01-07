@@ -1,5 +1,5 @@
 <p class="cloud">
-	{% for item in lenscloud|dictsort:"name"  %}
+	{% for item in lenscloud|sort(attribute='name')  %}
 		{% if item.count > 1 %}
 			<a class="t{{ item.size }}{% if item.name == filter.lens %} selected{% endif %}"
 				title="{{ item.count }}" href="/photos/lens/{{ item.name }}">{{ item.name }}</a>

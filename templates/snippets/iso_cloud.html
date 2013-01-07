@@ -1,5 +1,5 @@
 <p class="cloud">
-	{% for item in isocloud|dictsort:"name"  %}
+	{% for item in isocloud|sort(attribute='name')  %}
 		<a class="t{{ item.size }}{% if item.name == filter.iso %} selected{% endif %}"
 			title="{{ item.count }}" href="/photos/iso/{{ item.name }}">{{ item.name }}</a>
 	{% endfor %}

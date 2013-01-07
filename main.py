@@ -16,6 +16,7 @@ app = WSGIApplication([
         Route('/<slug:[-\w]+>/edit', 'photo.views.Edit'),
         Route('/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
+        Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>', 'photo.views.Index'),
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
         ]),
     SimpleRoute(r'^/entries/?$', 'entry.views.Index'),

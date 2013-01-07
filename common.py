@@ -13,6 +13,7 @@ from wtforms import Form, widgets, fields, validators
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX, median, range_names
 from settings import DEVEL, HUE, LUM, SAT, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+import logging
 
 LANGUAGES = (
     ('en_US', _('english')),

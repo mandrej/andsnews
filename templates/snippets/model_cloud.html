@@ -1,5 +1,5 @@
 <p class="cloud">
-	{% for item in modelcloud|dictsort:"name" %}
+	{% for item in modelcloud|sort(attribute='name') %}
 		{% if item.count > 1 %}
 		    <a class="t{{ item.size }}{% if item.name == filter.model %} selected{% endif %}"
 				title="{{ item.count }}" href="/photos/model/{{ item.name }}">{{ item.name }}</a>
