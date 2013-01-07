@@ -5,12 +5,12 @@
 
 {% block contents %}
 <article>
-	{% popup notfound %}
-		<p>{% trans request_path=path %}Requested path<br/>{{ path }}<br/>could not be found{% endtrans %}.</p>
-	{% endpopup %}
+{#	{% popup notfound %}#}
+{#		<p>{% trans request_path=path %}Requested path<br/>{{ path }}<br/>could not be found{% endtrans %}.</p>#}
+{#	{% endpopup %}#}
 	
-	<h2>{{ _('Page not found') }} (404)</h2>
-	<p>{% trans request_path=path %}Requested path<br/>{{ path }}<br/>could not be found{% endtrans %}.</p>
+	<h2>404 {{ error }}</h2>
+{#	<p>{% trans request_path=path %}Requested path<br/>{{ request_path }}<br/>could not be found{% endtrans %}.</p>#}
 </article>
 {% endblock %}
 

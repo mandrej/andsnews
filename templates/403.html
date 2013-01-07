@@ -5,14 +5,14 @@
 
 {% block contents %}
 <article>
-	{% popup forbidden %}
-		<p><span class="error">FORBIDDEN</span>,
-			<br/>{{ _('You don&apos;t have sufficient credentials') }}.</p>
-	{% endpopup %}
-	
-	<h2>{{ _('Access denied') }} (403)</h2>
-	<p><span class="error">{{ message }}</span>,
-		<br/>{{ _('You don&apos;t have sufficient credentials') }}.</p>
+{#	{% popup forbidden %}#}
+{#		<p><span class="error">FORBIDDEN</span>,#}
+{#			<br/>{{ _('You don&apos;t have sufficient credentials') }}.</p>#}
+{#	{% endpopup %}#}
+
+    <h2>403 {{ error }}</h2>
+{#	<p><span class="error">{{ message }}</span>,#}
+{#		<br/>{{ _('You don&apos;t have sufficient credentials') }}.</p>#}
 </article>
 {% endblock %}
 

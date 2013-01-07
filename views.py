@@ -1,13 +1,14 @@
 # -*- coding: UTF-8 -*-
 from __future__ import division
-import os, json, webapp2
+import os, json, webapp2, jinja2
+from webapp2_extras import i18n, sessions
 import hashlib, datetime
 from gettext import gettext as _
 from operator import itemgetter
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
-from common import BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
+from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
 from settings import TIMEOUT, ADMIN_JID
 import logging
 
@@ -147,10 +148,28 @@ class DeleteHandler(BaseHandler):
         self.render_template('snippets/confirm.html', data)
 
     def post(self, safekey):
-        next = self.request.POST['next']
+        next = str(self.request.POST['next'])
         obj = ndb.Key(urlsafe=safekey).get()
         obj.delete()
         self.redirect(next)
+
+def handle_403(request, response, exception):
+    template = ENV.get_template('403.html')
+    response.out.write(template.render({'error': exception}))
+    response.set_status(403)
+    return response
+
+def handle_404(request, response, exception):
+    template = ENV.get_template('404.html')
+    response.out.write(template.render({'error': exception}))
+    response.set_status(404)
+    return response
+
+def handle_500(request, response, exception):
+    template = ENV.get_template('500.html')
+    response.out.write(template.render({'error': exception}))
+    response.set_status(500)
+    return response
 
 class Chat(webapp2.RequestHandler):
     def post(self):

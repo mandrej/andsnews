@@ -21,7 +21,7 @@
 $(function() {
 	var match = location.search.match(/find=([^&]+)/i);
 	if (match) {
-		$(function(){
+		$(function() {
 			var options = {exact: "partial", highlight: "#main",
 				keys: decodeURIComponent(match[1])};
 			$(document).SearchHighlight(options);

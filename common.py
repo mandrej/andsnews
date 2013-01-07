@@ -3,8 +3,6 @@ import os, re, webapp2, jinja2, colorsys
 import math, hashlib
 import itertools, collections
 import datetime
-from jinja2 import evalcontextfilter, contextfunction
-from jinja2.utils import Markup
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from operator import itemgetter
@@ -431,7 +429,7 @@ class BaseHandler(webapp2.RequestHandler):
     def jinja2(self):
         return jinja2.get_jinja2(app=self.app)
 
-    def render_template(self, filename, template_values, **template_args):
+    def render_template(self, filename, kwargs):
         lang_code = self.session.get(LANGUAGE_COOKIE_NAME) or self.request.cookies.get(LANGUAGE_COOKIE_NAME) or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
         context = {
@@ -441,11 +439,9 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': users.is_current_user_admin(),
             'devel': DEVEL
         }
-        template_values.update(context)
-
-#        logging.error(self.request.headers.keys())
+        kwargs.update(context)
         template = ENV.get_template(filename)
-        self.response.out.write(template.render(template_values))
+        self.response.out.write(template.render(kwargs))
 
 class SetLanguage(BaseHandler):
     def post(self):
