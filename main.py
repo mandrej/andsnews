@@ -1,5 +1,5 @@
-from webapp2 import WSGIApplication, Route
-from webapp2_extras.routes import PathPrefixRoute
+from webapp2 import WSGIApplication, SimpleRoute, Route
+from webapp2_extras.routes import PathPrefixRoute, MultiRoute
 from views import Index, DeleteHandler, handle_403, handle_404, handle_500,  \
     latest, RenderCloud, auto_complete, sitemap, visualize, Find, Chat, Send, rss
 from settings import DEBUG
@@ -10,7 +10,7 @@ CONFIG = {
 }
 
 app = WSGIApplication([
-    Route('/photos', 'photo.views.Index'),
+    SimpleRoute(r'^/photos/?$', 'photo.views.Index'),
     PathPrefixRoute('/photos', [
         Route('/add', 'photo.views.Add'),
         Route('/<slug:[-\w]+>/edit', 'photo.views.Edit'),
@@ -18,18 +18,18 @@ app = WSGIApplication([
         Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
         Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
         ]),
-    Route('/entries', 'entry.views.Index'),
+    SimpleRoute(r'^/entries/?$', 'entry.views.Index'),
     PathPrefixRoute('/entries', [
 #        Route('/add', 'entry.views.Add'),
 #        Route('/<slug:[-\w]+>/edit', 'entry.views.Edit'),
         Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
         Route('/<slug:[-\w]+>', 'entry.views.Detail'),
         ]),
-    Route('/comments', 'comment.views.Index'),
+    SimpleRoute(r'^/comments/?$', 'comment.views.Index'),
     PathPrefixRoute('/comments', [
         Route('/<safekey:\w+>/add', handler='comment.views.Add'),
         ]),
-    Route('/news', 'news.views.Index'),
+    SimpleRoute(r'^/news/?$', 'news.views.Index'),
     PathPrefixRoute('/news', [
         Route('/add', 'news.views.Add'),
         Route('/<slug:[-\w]+>/edit', 'news.views.Edit'),

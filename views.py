@@ -214,7 +214,7 @@ def rss(request, kind):
             if item.iso: text += u', Sensitivity (ISO): %s ASA' % item.iso
             str += u'<description>%s</description>' % text
 #            TODO small
-            str += u'<enclosure url="http://%s%s/small" length="%s" type="image/jpeg"></enclosure>' % (HOST_NAME, item.get_absolute_url(), len(item.picture.get().small))
+#            str += u'<enclosure url="http://%s%s/small" length="%s" type="image/jpeg"></enclosure>' % (HOST_NAME, item.get_absolute_url(), len(item.picture.get().small))
             str += u'<link>http://%s%s</link>' % (HOST_NAME, item.get_absolute_url())
             str += u'<author>%s</author>' % item.author.email()
             str += u'<pubDate>%s</pubDate>' % rfc822_date(item.date)
