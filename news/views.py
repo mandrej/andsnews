@@ -130,7 +130,7 @@ class AddForm(Form):
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    url = fields.TextField(_('Url'), validators=[validators.DataRequired()], validators.URL())
+    url = fields.TextField(_('Url'), validators=[validators.DataRequired(), validators.URL()])
     date = fields.DateTimeField(_('Taken'))
 
 class Add(BaseHandler):
