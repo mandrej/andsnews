@@ -5,7 +5,6 @@ from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, widgets, fields, validators
 from models import Comment
 from common import  BaseHandler, Paginator, Filter, EmailField
-from settings import LIMIT, TIMEOUT
 PER_PAGE = 10
 import logging
 
@@ -34,28 +33,26 @@ class AddForm(Form):
     body = fields.TextAreaField(_('Comment'), validators=[validators.DataRequired()])
 
 def send(safekey, email, body):
-    key = ndb.Key(urlsafe=safekey)
-    obj = Comment(parent=key,
-                  author = users.User(email),
-                  forkind = key.kind(),
-                  body=body)
+    refkey = ndb.Key(urlsafe=safekey)
+    obj = Comment(parent=refkey,
+        author = users.User(email),
+        forkind = refkey.kind(),
+        body=body)
     obj.add()
 
 class Add(BaseHandler):
     def get(self, safekey, form=None):
         refobj = ndb.Key(urlsafe=safekey).get()
         user = users.get_current_user()
-        if form is None:
-            if user:
-                form = AddForm(**{'email': user.email()})
-            else:
-                form = AddForm()
+        if user:
+            form = AddForm(**{'email': user.email()})
+        else:
+            form = AddForm()
         self.render_template('snippets/addcomment.html', {'form': form, 'safekey': safekey, 'headline': refobj.headline})
 
     def post(self, safekey):
         form = AddForm(formdata=self.request.POST)
-        self.response = webapp2.Response(content_type='application/json')
-        self.response.headers['X-Requested-With'] = 'XMLHttpRequest'
+        self.response.headers['Content-Type'] = 'application/json'
         if form.validate():
             deferred.defer(send, safekey, form.data['email'], form.data['body'])
             self.response.out.write(json.dumps({'success': True}))

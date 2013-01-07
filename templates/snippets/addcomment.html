@@ -39,31 +39,22 @@ $(function() {
                    'body': $('#body').val()},
             dataType: 'json',
             success: function(data, status, xhr) {
-                console.log(status);
                 console.log(data);
-                console.log(xhr);
+                if (data.success == true) {
+                    $('.dummy').hide();
+                    $('.info').show()
+                    setTimeout(function() {
+                        $('#overlay, #addcomment').hide();
+                    }, 5000);
+                } else {
+                    $('.error').text('');
+                    $.each(data, function(key, arr) {
+                        $('.error.C_' + key).text(arr.join(', '));
+                    });
+                }
             }
         });
         return false
-{#        var url = '/comments/{{ safekey }}/add';#}
-{#		$.post(url, {'email': $('#email').val(),#}
-{#					 'body': $('#body').val()},#}
-{#			function(data) {#}
-{#                console.log(data);#}
-{#				if (data && data.success == true) {#}
-{#					$('.dummy').hide();#}
-{#					$('.info').show()#}
-{#					setTimeout(function() {#}
-{#						$('#overlay, #addcomment').hide();#}
-{#					}, 5000);#}
-{#				} else {#}
-{#					$('.error').text('');#}
-{#					$.each(data, function(key, err) {#}
-{#						$('.C_' + key).text(', '.join(err));#}
-{#					});#}
-{#				}#}
-{#			}, 'json');#}
-{#		return false;#}
 	});
 });
 </script>
