@@ -64,7 +64,7 @@ class AddForm(Form):
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    photo = fields.FileField(_('Photo'), validators=[validators.DataRequired()])
+    photo = fields.FileField(_('Photo'))
 
     def validate_slug(self, field):
         if Photo.get_by_id(field.data):

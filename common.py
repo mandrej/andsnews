@@ -5,6 +5,7 @@ import itertools, collections
 import datetime
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
+from jinja2.filters import environmentfilter
 from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
@@ -60,6 +61,10 @@ def incache(key):
     if memcache.get(key): return True
     else: return False
 
+@environmentfilter
+def css_classes(env, classes):
+    return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
+
 ENV.globals.update({
     'now': now,
     'version': version,
@@ -70,7 +75,8 @@ ENV.globals.update({
 ENV.filters.update({
     'format_date': format_date,
     'format_datetime': format_datetime,
-    'image_url_by_num': image_url_by_num
+    'image_url_by_num': image_url_by_num,
+    'css_classes': css_classes
 })
 
 real_handle_exception = ENV.handle_exception

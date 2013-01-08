@@ -1,7 +1,8 @@
 <p class="cloud">
 	{% for item in modelcloud|sort(attribute='name') %}
 		{% if item.count > 1 %}
-		    <a class="t{{ item.size }}{% if item.name == filter.model %} selected{% endif %}"
+            {% set selected = item.name == filter.model %}
+            <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
 				title="{{ item.count }}" href="/photos/model/{{ item.name }}">{{ item.name }}</a>
 		{% endif %}
 	{% endfor %}

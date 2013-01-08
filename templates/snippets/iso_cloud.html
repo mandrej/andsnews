@@ -1,6 +1,7 @@
 <p class="cloud">
-	{% for item in isocloud|sort(attribute='name')  %}
-		<a class="t{{ item.size }}{% if item.name == filter.iso %} selected{% endif %}"
+	{% for item in isocloud|sort(attribute='name') %}
+        {% set selected = item.name == filter.iso %}
+        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
 			title="{{ item.count }}" href="/photos/iso/{{ item.name }}">{{ item.name }}</a>
 	{% endfor %}
 </p>

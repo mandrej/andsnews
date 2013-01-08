@@ -1,6 +1,7 @@
 <p class="cloud">
 	{% for item in forkindcloud|sort(attribute='name') %}
-		<a class="t{{ item.size }}{% if item.name == filter.forkind|lower %} selected{% endif %}"
+        {% set selected = item.name == filter.forkind|lower %}
+        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
 			title="{{ item.count }}" href="{{ link }}/{{ item.name }}">
 			{% if item.name == "Entry" %}{{ _('for blog') }}{% endif %}
 			{% if item.name == "Photo" %}{{ _('for photos') }}{% endif %}
