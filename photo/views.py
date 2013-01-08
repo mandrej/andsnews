@@ -9,7 +9,6 @@ from models import Photo
 from wtforms import Form, widgets, fields, validators
 from common import BaseHandler, Paginator, Filter, EmailField, TagsField, make_thumbnail
 from settings import TIMEOUT, FAMILY
-import logging
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -99,7 +98,6 @@ class Add(BaseHandler):
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
-            logging.error(form.data)
             obj = Photo(id=form.slug.data)
             obj.add(form.data)
             self.redirect('%s/edit' % obj.get_absolute_url())

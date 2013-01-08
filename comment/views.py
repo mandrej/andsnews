@@ -6,7 +6,6 @@ from wtforms import Form, widgets, fields, validators
 from models import Comment
 from common import  BaseHandler, Paginator, Filter, EmailField
 PER_PAGE = 10
-import logging
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):

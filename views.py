@@ -10,7 +10,7 @@ from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
 from settings import TIMEOUT, ADMIN_JID
-import sys, logging, traceback
+import sys, traceback
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -254,7 +254,6 @@ def rss(request, kind):
     return response
 
 def sitemap(request):
-    logging.error(type(request))
     out = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     head = '<url><loc>%s</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>'
     row = '<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>'

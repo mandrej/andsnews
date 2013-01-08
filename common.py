@@ -13,7 +13,7 @@ from wtforms import Form, widgets, fields, validators
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX, median, range_names
 from settings import DEVEL, HUE, LUM, SAT, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
-import logging
+import logging, traceback
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -75,7 +75,6 @@ ENV.filters.update({
 
 real_handle_exception = ENV.handle_exception
 def handle_exception(self, *args, **kwargs):
-    import logging, traceback
     logging.error('Template exception:\n%s', traceback.format_exc())
     real_handle_exception(self, *args, **kwargs)
 ENV.handle_exception = handle_exception
