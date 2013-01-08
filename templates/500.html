@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block title %}{{ super() }} - {{ _('Server error') }} (500){% endblock %}
 
+{% block nav %}
+    <a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
+    <a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
+    <a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
+    <a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
+{% endblock %}
 {% block subnav %}<a href="/">{{ _('Start ') }}</a>{% endblock %}
 
 {% block contents %}
@@ -13,6 +19,7 @@
 {#	{% endpopup %}#}
 
     <h2>500 {{ error }}</h2>
+    <pre>{{ lines }}</pre>
 {#	<p>#}
 {#		{{ _('Unforeseen server error ocurred') }}.#}
 {#		{{ _('It&apos;s been reported to the site administrator and should be fixed shortly') }}.#}

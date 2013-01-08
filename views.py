@@ -10,7 +10,7 @@ from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
 from settings import TIMEOUT, ADMIN_JID
-import logging
+import sys, logging, traceback
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -161,13 +161,14 @@ def handle_403(request, response, exception):
 
 def handle_404(request, response, exception):
     template = ENV.get_template('404.html')
-    response.out.write(template.render({'error': exception}))
+    response.out.write(template.render({'error': exception, 'path': request.path_qs}))
     response.set_status(404)
     return response
 
 def handle_500(request, response, exception):
     template = ENV.get_template('500.html')
-    response.out.write(template.render({'error': exception}))
+    lines = ''.join(traceback.format_exception(*sys.exc_info()))
+    response.out.write(template.render({'error': exception, 'lines': lines}))
     response.set_status(500)
     return response
 

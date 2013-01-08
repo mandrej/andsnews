@@ -1,9 +1,12 @@
 application: andsnews
-version: 1252
+version: 1301
 runtime: python27
 api_version: 1
 threadsafe: true
 default_expiration: "1d"
+
+env_variables:
+  TMP: C:\Users\milan\AppData\Local\Temp
 
 libraries:
 - name: PIL

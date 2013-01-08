@@ -10,49 +10,49 @@ CONFIG = {
 }
 
 app = WSGIApplication([
-    SimpleRoute(r'^/photos/?$', 'photo.views.Index'),
+    SimpleRoute(r'^/photos/?$', handler='photo.views.Index'),
     PathPrefixRoute('/photos', [
-        Route('/add', 'photo.views.Add'),
-        Route('/<slug:[-\w]+>/edit', 'photo.views.Edit'),
-        Route('/<slug:[-\w]+>', 'photo.views.Detail'),
-        Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>/<slug:[-\w]+>', 'photo.views.Detail'),
-        Route('/<field:model|iso|eqv|lens|tags|date|author|hue|lum>/<value:.+>', 'photo.views.Index'),
-        Route('/<slug:[-\w]+>/<size:small|normal>', 'photo.views.thumb'), # TODO DEPRICATE
+        Route(r'/add', handler='photo.views.Add'),
+        Route(r'/<slug>/edit', handler='photo.views.Edit'),
+        Route(r'/<slug>', handler='photo.views.Detail'),
+        Route(r'/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
+        Route(r'/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
+#        Route(r'/<slug>/<size:(small|normal)>', handler='photo.views.thumb'), # TODO DEPRICATE
         ]),
-    SimpleRoute(r'^/entries/?$', 'entry.views.Index'),
+    SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
-#        Route('/add', 'entry.views.Add'),
-#        Route('/<slug:[-\w]+>/edit', 'entry.views.Edit'),
-        Route('/image/<slug:[-\w]+>/<size:small|normal>', 'entry.views.thumb'), # TODO DEPRICATE
-        Route('/<slug:[-\w]+>', 'entry.views.Detail'),
+#        Route(r'/add', handler='entry.views.Add'),
+#        Route(r'/<slug>/edit', handler='entry.views.Edit'),
+        Route(r'/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
+        Route(r'/<slug>', handler='entry.views.Detail'),
         ]),
-    SimpleRoute(r'^/comments/?$', 'comment.views.Index'),
+    SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),
     PathPrefixRoute('/comments', [
-        Route('/<safekey:\w+>/add', handler='comment.views.Add'),
+        Route(r'/<safekey>/add', handler='comment.views.Add'),
         ]),
-    SimpleRoute(r'^/news/?$', 'news.views.Index'),
+    SimpleRoute(r'^/news/?$', handler='news.views.Index'),
     PathPrefixRoute('/news', [
-        Route('/add', 'news.views.Add'),
-        Route('/<slug:[-\w]+>/edit', 'news.views.Edit'),
-        Route('/<slug:[-\w]+>', 'news.views.Detail'),
+        Route(r'/add', handler='news.views.Add'),
+        Route(r'/<slug>/edit', handler='news.views.Edit'),
+        Route(r'/<slug>', handler='news.views.Detail'),
         ]),
     PathPrefixRoute('/admin', [
         ]),
-    Route('/filter/<key:\w+>/<value:.+>', handler=RenderCloud),
-    Route('/filter/<key:\w+>', handler=RenderCloud),
-    Route('/search', handler=Find),
-    Route('/_ah/xmpp/message/chat/', handler=Chat),
-    Route('/send', handler=Send),
-    Route('/sitemap.xml', handler=sitemap),
-    Route('/visualize/<key:\w+>', handler=visualize),
-    Route('/rss/<kind:photo|entry>.xml', handler=rss),
-    Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
+    Route(r'/filter/<key>/<value>', handler=RenderCloud),
+    Route(r'/filter/<key>', handler=RenderCloud),
+    Route(r'/search', handler=Find),
+    Route(r'/_ah/xmpp/message/chat/', handler=Chat),
+    Route(r'/send', handler=Send),
+    Route(r'/sitemap\.xml', handler=sitemap),
+    Route(r'/visualize/<key>', handler=visualize),
+    Route(r'/rss/<kind:(photo|entry)>.xml', handler=rss),
+    Route(r'/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
-    Route('/<safekey:\w+>/delete', handler=DeleteHandler),
-    Route('/latest', handler=latest),
-    Route('/setlang', 'common.SetLanguage'),
-    Route('/sign', 'common.sign_helper'),
-    Route('/', handler=Index),
+    Route(r'/<safekey>/delete', handler=DeleteHandler),
+    Route(r'/latest', handler=latest),
+    Route(r'/setlang', 'common.SetLanguage'),
+    Route(r'/sign', 'common.sign_helper'),
+    Route(r'/', handler=Index),
     ], config=CONFIG, debug=DEBUG)
 
 app.error_handlers[403] = handle_403
