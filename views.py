@@ -109,14 +109,12 @@ class Find(BaseHandler):
              'page': page, 'has_next': has_next, 'has_previous': page > 1})
 
 def get_latest_photos():
-    objects = memcache.get('Photo_latest')
-    if objects is None:
+    results = memcache.get('Photo_latest')
+    if results is None:
         query = Photo.query().order(-Photo.date)
-        objects = [{"url": x.normal_url(),
-                    "date": x.date.strftime('%Y-%m-%d'),
-                    "title": x.headline} for x in query.iter(limit=NUM_LATEST)]
-        memcache.add('Photo_latest', objects, TIMEOUT)
-    return objects
+        results, cursor, has_next = query.fetch_page(NUM_LATEST)
+        memcache.add('Photo_latest', results, TIMEOUT)
+    return results
 
 def latest(request):
     objects = get_latest_photos()

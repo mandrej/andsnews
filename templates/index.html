@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ latest.0.date|format_date }}"/>{% endblock %}
 
 {% block modals %}{% endblock %}
 
@@ -17,7 +17,7 @@
 			$.getJSON('/latest', function(data) {
 				var sources = [];
 				$.each(data, function(i, item) {
-					sources.push(item.url);
+					sources.push(item.normal_url());
 				});
 		        $.backstretch(sources, {fade: 1000, duration: 4000});
 			});

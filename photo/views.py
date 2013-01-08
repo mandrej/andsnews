@@ -20,7 +20,6 @@ class Index(BaseHandler):
         page = int(self.request.GET.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
-        logging.error(f.parameters)
 
         data = {'kind': 'Photo',
                 'objects': objects,
