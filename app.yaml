@@ -5,8 +5,8 @@ api_version: 1
 threadsafe: true
 default_expiration: "1d"
 
-env_variables:
-  TMP: C:\Users\milan\AppData\Local\Temp
+#env_variables:
+#  TMP: C:\Users\milan\AppData\Local\Temp
 
 libraries:
 - name: PIL
