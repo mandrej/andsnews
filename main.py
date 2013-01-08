@@ -36,7 +36,18 @@ app = WSGIApplication([
         Route(r'/<slug>/edit', handler='news.views.Edit'),
         Route(r'/<slug>', handler='news.views.Detail'),
         ]),
+    SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
+        Route(r'/comments', handler='admin.views.Comments'),
+        Route(r'/<kind:(photo)>/thumbnails/', handler='admin.views.Thumbnails'),
+        Route(r'/<kind:(photo)>/thumbnails/<field:(date|hue|lum)>/<value>$', handler='admin.views.Thumbnails'),
+        Route(r'/<kind:(entry)>/thumbnails/', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
+        Route(r'/<kind:(entry)>/thumbnails/<field:(date)>/<value>$', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
+
+        Route(r'/memcache$', handler='admin.views.memcahe_content'),
+        Route(r'/memcache/<key>/build$', handler='admin.views.build'),
+        Route(r'/memcache/<key>/create', handler='admin.views.create'),
+        Route(r'/memcache/<key>/delete$', handler='admin.views.memcache_delete'),
         ]),
     Route(r'/filter/<key>/<value>', handler=RenderCloud),
     Route(r'/filter/<key>', handler=RenderCloud),

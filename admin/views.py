@@ -1,59 +1,65 @@
+import os, json, webapp2, jinja2
 from google.appengine.ext import ndb, deferred
 from google.appengine.api import memcache
-from django.shortcuts import redirect, render
-from django.template.defaultfilters import filesizeformat
-from models import Photo, Entry, Comment, Feed, Counter, KEYS
-from lib.comm import Filter, Paginator, admin_required, json_response, make_thumbnail, \
-    count_colors, count_property, make_cloud, median, range_names
-from django.conf import settings
+#from django.shortcuts import redirect, render
+#from django.template.defaultfilters import filesizeformat
+from models import Photo, Entry, Comment, Feed, Counter, KEYS, median
+#from lib.comm import Filter, Paginator, admin_required, json_response, make_thumbnail, \
+#    count_colors, count_property, make_cloud, median, range_names
+from common import BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail
+from settings import PER_PAGE
 
 def memcache_delete(request, key):
-    if request.is_ajax():
-        memcache.delete(key)
-        return json_response(None)
+    memcache.delete(key)
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps(None))
+    return response
 
 def build(request, key):
-    if request.is_ajax():
-        kind, field = key.split('_')
-        content = count_property(kind, field)
-        return json_response(content)
+    kind, field = key.split('_')
+    content = count_property(kind, field)
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps(content))
+    return response
 
 def create(request, key):
-    if request.is_ajax():
-        kind, field = key.split('_')
-        if field == 'colors':
-            content = count_colors()
-        else:
-            content = make_cloud(kind, field)
-        return json_response(content)
+    kind, field = key.split('_')
+    if field == 'colors':
+        content = count_colors()
+    else:
+        content = make_cloud(kind, field)
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps(content))
+    return response
 
 def memcahe_content(request):
-    if request.is_ajax():
-        data = {}
-        for key in KEYS:
-            data[key] = memcache.get(key)
-        return json_response(data)
+    data = {}
+    for key in KEYS:
+        data[key] = memcache.get(key)
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps(data))
+    return response
 
-@admin_required
-def index(request, tmpl='admin/index.html'):
-    data = {
-        'photo_count': Photo.query().order(-Photo.date).count(), 
-        'entry_count': Entry.query().order(-Entry.date).count(), 
-        'comment_count': Comment.query().order(-Comment.date).count(), 
-        'feeds_count': Feed.query().order(-Feed.date).count()
-    }
-    data.update(memcache.get_multi(KEYS))
-    return render(request, tmpl, data)
+class Index(BaseHandler):
+    def get(self):
+        data = {
+            'photo_count': Photo.query().order(-Photo.date).count(),
+            'entry_count': Entry.query().order(-Entry.date).count(),
+            'comment_count': Comment.query().order(-Comment.date).count(),
+            'feeds_count': Feed.query().order(-Feed.date).count()
+        }
+        self.render_template('admin/index.html', data)
 
-@admin_required
-def comments(request, tmpl='admin/comments.html'):
-    query = Comment.query().order(-Comment.date)
-    page = int(request.GET.get('page', 1))
-    paginator = Paginator(query, 10)
-    objects, has_next = paginator.page(page)
-    
-    data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
-    return render(request, tmpl, data)
+class Comments(BaseHandler):
+#    @admin_required
+    def get(self):
+        query = Comment.query().order(-Comment.date)
+        page = int(self.request.GET.get('page', 1))
+        paginator = Paginator(query, 10)
+        objects, has_next = paginator.page(page)
+        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
+        self.render_template('admin/comments.html', data)
+
 
 def delete_small(parentkind, oldkey):
     """ deferred.defer(delete_small, *args) """
@@ -64,37 +70,39 @@ def delete_small(parentkind, oldkey):
     obj.put()
 
 def comment_save(request):
-    if request.is_ajax():
-        key = ndb.Key(urlsafe=request.POST['key'])
-        obj = key.get()
-        obj.body = request.POST['body']
-        obj.put()
-        return json_response({'success': True})
+    key = ndb.Key(urlsafe=request.POST['key'])
+    obj = key.get()
+    obj.body = request.POST['body']
+    obj.put()
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps({'success': True}))
+    return response
 
 def comment_delete(request):
-    if request.is_ajax():
-        key = ndb.Key(urlsafe=request.POST['key'])
-        key.delete()
-        return json_response({'success': True})
+    key = ndb.Key(urlsafe=request.POST['key'])
+    key.delete()
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps({'success': True}))
+    return response
 
 def thumbnail_delete(request):
-    if request.is_ajax():
-        params = request.POST
-        args = [params['kind'], params['key']]
-        deferred.defer(delete_small, *args)
-        return json_response({'success': True})
+    params = request.POST
+    args = [params['kind'], params['key']]
+    deferred.defer(delete_small, *args)
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps({'success': True}))
+    return response
 
 def thumbnail_make(request):
-    if request.is_ajax():
-        params = request.POST
-        parentkind = params['kind']
-        slug = params['slug']
-        no = small = '---'
-
-        deferred.defer(make_thumbnail, parentkind, slug, 'small')
-
-        if small != no: small = filesizeformat(len(small))
-        return json_response({'success': True, 'small': small})
+    params = request.POST
+    parentkind = params['kind']
+    slug = params['slug']
+    no = small = '---'
+    deferred.defer(make_thumbnail, parentkind, slug, 'small')
+    if small != no: small = 3000 # filesizeformat(len(small)) # TODO
+    response = webapp2.Response(content_type='application/json')
+    response.out.write(json.dumps({'success': True, 'small': small}))
+    return response
 
 def thumbnail_color(request):
     if request.is_ajax():
@@ -110,26 +118,29 @@ def thumbnail_color(request):
         photo.put()
         return json_response({'success': True, 'hex': obj.hex})
 
-@admin_required
-def thumbnails(request, kind, field=None, value=None, per_page=settings.PER_PAGE, tmpl='admin/thumbnails.html'):
-    f = Filter(field, value)
-    model = ndb.Model._kind_map.get(kind)
-    filters = [model._properties[k] == v for k, v in f.parameters.items()]
-    query = model.query(*filters).order(-model.date)
-    
-    page = int(request.GET.get('page', 1))
-    paginator = Paginator(query, per_page=per_page)
-    objects, has_next = paginator.page(page)
-    
-    data = {'objects': objects,
-            'filter': f.parameters,
-            'kind': kind,
-            'page': page,
-            'has_next': has_next,
-            'has_previous': page > 1}
-    data['archive'] = make_cloud(kind, 'date')
-    data['link'] = '/admin/%s/thumbnails/date' % kind.lower()
-    return render(request, tmpl, data)
+class Thumbnails(BaseHandler):
+#    @admin_required
+    def get(self, kind, field=None, value=None, per_page=PER_PAGE):
+        kind =kind.capitalize()
+        f = Filter(field, value)
+        model = ndb.Model._kind_map.get(kind)
+        filters = [model._properties[k] == v for k, v in f.parameters.items()]
+        query = model.query(*filters).order(-model.date)
+
+        page = int(self.request.GET.get('page', 1))
+        paginator = Paginator(query, per_page=per_page)
+        objects, has_next = paginator.page(page)
+
+        data = {'objects': objects,
+                'filter': f.parameters,
+                'kind': kind,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1}
+        data['archive'] = make_cloud(kind, 'date')
+        data['link'] = '/admin/%s/thumbnails/date' % kind.lower()
+        self.render_template('admin/thumbnails.html', data)
+
 
 @admin_required
 def info(request, oldkey, tmpl='admin/info.html'):
