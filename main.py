@@ -12,60 +12,60 @@ CONFIG = {
 app = WSGIApplication([
     SimpleRoute(r'^/photos/?$', handler='photo.views.Index'),
     PathPrefixRoute('/photos', [
-        Route(r'/add', handler='photo.views.Add'),
-        Route(r'/<slug>/edit', handler='photo.views.Edit'),
-        Route(r'/<slug>', handler='photo.views.Detail'),
-        Route(r'/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
-        Route(r'/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
-#        Route(r'/<slug>/<size:(small|normal)>', handler='photo.views.thumb'), # TODO DEPRICATE
+        Route('/add', handler='photo.views.Add'),
+        Route('/<slug>/edit', handler='photo.views.Edit'),
+        Route('/<slug>', handler='photo.views.Detail'),
+        Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
+        Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
+        Route('/<slug>/<size:(small|normal)>', handler='photo.views.thumb'), # TODO DEPRICATE
         ]),
     SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
-#        Route(r'/add', handler='entry.views.Add'),
-#        Route(r'/<slug>/edit', handler='entry.views.Edit'),
-        Route(r'/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
-        Route(r'/<slug>', handler='entry.views.Detail'),
+#        Route('/add', handler='entry.views.Add'),
+#        Route('/<slug>/edit', handler='entry.views.Edit'),
+        Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
+        Route('/<slug>', handler='entry.views.Detail'),
         ]),
     SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),
     PathPrefixRoute('/comments', [
-        Route(r'/<safekey>/add', handler='comment.views.Add'),
+        Route('/<safekey>/add', handler='comment.views.Add'),
         ]),
-    SimpleRoute(r'^/news/?$', handler='news.views.Index'),
+    SimpleRoute('^/news/?$', handler='news.views.Index'),
     PathPrefixRoute('/news', [
-        Route(r'/add', handler='news.views.Add'),
-        Route(r'/<slug>/edit', handler='news.views.Edit'),
-        Route(r'/<slug>', handler='news.views.Detail'),
+        Route('/add', handler='news.views.Add'),
+        Route('/<slug>/edit', handler='news.views.Edit'),
+        Route('/<slug>', handler='news.views.Detail'),
         ]),
     SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
-        Route(r'/comments', handler='admin.views.Comments'),
-        Route(r'/<kind:(photo)>/thumbnails/', handler='admin.views.Thumbnails'),
-        Route(r'/<kind:(photo)>/thumbnails/<field:(date|hue|lum)>/<value>$', handler='admin.views.Thumbnails'),
-        Route(r'/<kind:(entry)>/thumbnails/', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
-        Route(r'/<kind:(entry)>/thumbnails/<field:(date)>/<value>$', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
+        Route('/comments', handler='admin.views.Comments'),
+        Route('/<kind:(photo)>/thumbnails/', handler='admin.views.Thumbnails'),
+        Route('/<kind:(photo)>/thumbnails/<field:(date|hue|lum)>/<value>$', handler='admin.views.Thumbnails'),
+        Route('/<kind:(entry)>/thumbnails/', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
+        Route('/<kind:(entry)>/thumbnails/<field:(date)>/<value>$', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
 
-        Route(r'/memcache$', handler='admin.views.memcahe_content'),
-        Route(r'/memcache/<key>/build$', handler='admin.views.build'),
-        Route(r'/memcache/<key>/create', handler='admin.views.create'),
-        Route(r'/memcache/<key>/delete$', handler='admin.views.memcache_delete'),
+        Route('/memcache$', handler='admin.views.memcahe_content'),
+        Route('/memcache/<key>/build$', handler='admin.views.build'),
+        Route('/memcache/<key>/create', handler='admin.views.create'),
+        Route('/memcache/<key>/delete$', handler='admin.views.memcache_delete'),
         ]),
-    Route(r'/filter/<key>/<value>', handler=RenderCloud),
-    Route(r'/filter/<key>', handler=RenderCloud),
-    Route(r'/search', handler=Find),
-    Route(r'/_ah/xmpp/message/chat/', handler=Chat),
-    Route(r'/send', handler=Send),
-    Route(r'/sitemap\.xml', handler=sitemap),
-    Route(r'/visualize/<key>', handler=visualize),
-    Route(r'/rss/<kind:(photo|entry)>.xml', handler=rss),
-    Route(r'/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
+    Route('/filter/<key>/<value>', handler=RenderCloud),
+    Route('/filter/<key>', handler=RenderCloud),
+    Route('/search', handler=Find),
+    Route('/_ah/xmpp/message/chat/', handler=Chat),
+    Route('/send', handler=Send),
+    Route('/sitemap\.xml', handler=sitemap),
+    Route('/visualize/<key>', handler=visualize),
+    Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
+    Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
-    Route(r'/<safekey>/delete', handler=DeleteHandler),
-    Route(r'/latest', handler=latest),
-    Route(r'/setlang', 'common.SetLanguage'),
-    Route(r'/sign', 'common.sign_helper'),
-    Route(r'/', handler=Index),
+    Route('/<safekey>/delete', handler=DeleteHandler),
+    Route('/latest', handler=latest),
+    Route('/setlang', 'common.SetLanguage'),
+    Route('/sign', 'common.sign_helper'),
+    Route('/', handler=Index),
     ], config=CONFIG, debug=DEBUG)
 
-app.error_handlers[403] = handle_403
-app.error_handlers[404] = handle_404
-app.error_handlers[500] = handle_500
+#app.error_handlers[403] = handle_403
+#app.error_handlers[404] = handle_404
+#app.error_handlers[500] = handle_500

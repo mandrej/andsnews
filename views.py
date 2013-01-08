@@ -11,6 +11,7 @@ from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
 from settings import TIMEOUT, ADMIN_JID
 import sys, traceback
+import logging
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -109,12 +110,15 @@ class Find(BaseHandler):
              'page': page, 'has_next': has_next, 'has_previous': page > 1})
 
 def get_latest_photos():
-    results = memcache.get('Photo_latest')
-    if results is None:
+    objects = memcache.get('Photo_latest')
+    if objects is None:
         query = Photo.query().order(-Photo.date)
         results, cursor, has_next = query.fetch_page(NUM_LATEST)
-        memcache.add('Photo_latest', results, TIMEOUT)
-    return results
+        objects = [{"url": x.normal_url(),
+                    "date": x.date.strftime('%Y-%m-%d'),
+                    "title": x.headline} for x in results]
+        memcache.add('Photo_latest', objects, TIMEOUT)
+    return objects
 
 def latest(request):
     objects = get_latest_photos()
