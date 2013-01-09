@@ -12,14 +12,14 @@ $(function() {
 		$('.menu').toggle('slow');
 		return false
 	});
-	$(document).click(function(event) {
-		var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1, "SELECT": 1};
-		var parnetTagName = $(event.target).parent()[0].tagName;
-		if (!(disallow[event.target.tagName] || disallow[parnetTagName])) {
-			$('.menu').toggle('slow');
-			return false
-		}
-	});
+{#	$(document).click(function(event) {#}
+{#		var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1, "SELECT": 1};#}
+{#		var parnetTagName = $(event.target).parent()[0].tagName;#}
+{#		if (!(disallow[event.target.tagName] || disallow[parnetTagName])) {#}
+{#			$('.menu').toggle('slow');#}
+{#			return false#}
+{#		}#}
+{#	});#}
 });
 </script>
 {% endblock %}

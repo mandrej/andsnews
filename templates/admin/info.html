@@ -3,10 +3,15 @@
 	<a class="button close" title="close">close</a>
 	<div class="content">
 		<table class="data zebra w100p">
-			{% with object.picture.get as picture %}
-			<tr><td width="20%">RGB color</td><td>{{ picture.hex }}</td></tr>
-			<tr><td>HLS color</td><td>{{ picture.hls }}</td></tr>
-			{% endwith %}
+            {% if object.blob_key %}
+                <tr><td width="20%">RGB color</td><td>{{ object.hex }}</td></tr>
+                <tr><td>HLS color</td><td>{{ object.hls }}</td></tr>
+            {% else %}
+                {% with picture=object.picture.get() %}
+                <tr><td width="20%">RGB color</td><td>{{ picture.hex }}</td></tr>
+                <tr><td>HLS color</td><td>{{ picture.hls }}</td></tr>
+                {% endwith %}
+            {% endif %}
 			<tr><td>Hue</td><td>{{ object.hue }}</td></tr>
 			<tr><td>Lum</td><td>{{ object.lum }}</td></tr>
 			<tr><td>Sat</td><td>{{ object.sat }}</td></tr>

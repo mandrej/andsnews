@@ -5,7 +5,7 @@ import itertools, collections
 import datetime
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
-from jinja2.filters import environmentfilter
+from jinja2.filters import environmentfilter, do_mark_safe
 from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
@@ -61,6 +61,13 @@ def incache(key):
     if memcache.get(key): return True
     else: return False
 
+def boolimage(value):
+    """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
+    if value:
+        return do_mark_safe('<img src="/static/images/icon_yes.png" alt="%s"/>' % value)
+    else:
+        return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)
+
 @environmentfilter
 def css_classes(env, classes):
     return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
@@ -99,9 +106,10 @@ ENV.globals.update({
     'version': version,
     'gaesdk': gaesdk,
     'language': language,
-    'incache': incache,
 })
 ENV.filters.update({
+    'incache': incache,
+    'boolimage': boolimage,
     'format_date': format_date,
     'format_datetime': format_datetime,
     'image_url_by_num': image_url_by_num,

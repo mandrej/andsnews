@@ -6,7 +6,7 @@
         <dl class="w65em">
             <dt>hit ratio</dt>
             <dd>
-                {{ hit_ratio|float }}%
+                {{ '%0.1f'|format(hit_ratio) }}%
                 ({{ stats.hits }} hits, {{ stats.misses }} misses)
             </dd>
         </dl>
@@ -18,7 +18,6 @@
         </dl>
         <dl class="w65em">
             <dt>oldest item</dt>
-{#            <dd>{{ oldest|timesince }}</dd>#}
             <dd>{{ stats.oldest_item_age }} min</dd>
         </dl>
 	</div>
@@ -57,6 +56,7 @@
 			$('#' + key).html(tmpl);
 		}
 		$.getJSON('/admin/memcache', function(data) {
+            console.log(data)
 			$.each(data, build);
 			$('.ff').collapseGroup();
 		});

@@ -351,6 +351,12 @@ class Photo(ndb.Model):
     @property
     def hex(self):
         return '#%02x%02x%02x' % tuple(self.rgb)
+
+    @property
+    def hls(self):
+        rel_rgb = map(lambda x: x/255, self.rgb)
+        h, l, s = colorsys.rgb_to_hls(*rel_rgb)
+        return int(h*360), int(l*100), int(s*100)
     
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
