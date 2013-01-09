@@ -21,7 +21,7 @@ app = WSGIApplication([
         ]),
     SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
-#        Route('/add', handler='entry.views.Add'),
+        Route('/add', handler='entry.views.Add'),
 #        Route('/<slug>/edit', handler='entry.views.Edit'),
         Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
         Route('/<slug>', handler='entry.views.Detail'),

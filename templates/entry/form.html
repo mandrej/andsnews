@@ -80,11 +80,11 @@ $(function() {
 			<figure class="left{% if forloop.last %} last{% endif %}">
 				<img src="/entries/image/{{ img.key.name }}/small"
 					alt="{{ img.key.name }}" title="{{ img.name }}"/>
-				<p class="legend">{{ img.name|truncatewords:2 }}</p>
+				<p class="legend">{{ img.name|truncate(20) }}</p>
 			</figure>
-		{% empty %}
-			<p>{{ _('No images') }}</p>
-			<p>{{ _('To choose images, you must send them first') }}.</p>
+{#		{% empty %}#}
+{#			<p>{{ _('No images') }}</p>#}
+{#			<p>{{ _('To choose images, you must send them first') }}.</p>#}
 		{% endfor %}
 		</div>
 	</div>
@@ -92,10 +92,10 @@ $(function() {
 {% endblock %}
 
 {% block aside %}
-	<p>{{ _('<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
-	<p>{{ _('<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
-	<p><strong>{{ _('Summary') }}</strong> {{ _('A brief presentation in a concise form') }}.</p>
-	<p><strong>{{ _('Send images less then') }} 200KB.</strong></p>
+	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+	<p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
+	<p>{{ _('Send images less then') }} 200KB.</p>
 {% endblock %}
 
 {% block contents %}
@@ -104,7 +104,7 @@ $(function() {
 	{% if form.errors %}
 		<div class="formerrors">
 			<p>{{ _('Please correct errors in') }}
-			{{ form.errors|join:", " }}.</p>
+            {{ form.errors|join(", ") }}.</p>
 		</div>
 	{% endif %}
 	
@@ -127,10 +127,10 @@ $(function() {
 			<div class="choices">
 				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>
 				{{ form.front }}
-				{% if form.front.errors %}<span style="clear: both; width: auto;" class="error">{{ form.front.errors|join:", " }}</span>{% endif %}
+				{% if form.front.errors %}<span style="clear: both; width: auto;" class="error">{{ form.front.errors|join(", ") }}</span>{% endif %}
 			</div>
 	
-			{% for form in formset.forms %}
+			{% for form in forms.images %}
 				{% if form.initial %}
 					<p class="upload" style="background-image: url({{ object|image_url_by_num:form.initial.ORDER }}/small);">
 						<label for="id_{{ form.name.html_name }}">{{ form.name.label }}{{ form.initial.ORDER }}</label>
@@ -138,8 +138,8 @@ $(function() {
 						{{ form.ORDER }}{{ form.DELETE }}{{ form.DELETE.label }}
 						{% if form.name.errors or form.blob.errors %}
 							<span class="error">
-								{{ form.name.errors|join:", " }}
-								{{ form.blob.errors|join:", " }}
+								{{ form.name.errors|join(", ") }}
+								{{ form.blob.errors|join(", ") }}
 							</span>
 						{% endif %}
 					</p>
@@ -148,8 +148,8 @@ $(function() {
 						{{ form.name.label_tag }}{{ form.name }}{{ form.blob }}
 						{% if form.name.errors or form.blob.errors %}
 							<span class="error">
-								{{ form.name.errors|join:", " }}
-								{{ form.blob.errors|join:", " }}
+								{{ form.name.errors|join(", ") }}
+								{{ form.blob.errors|join(", ") }}
 							</span>
 						{% endif %}
 					</p>

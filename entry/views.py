@@ -1,16 +1,10 @@
 import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb
-#from django.utils.translation import gettext_lazy as _
-#from django.http import HttpResponse, Http404
-#from django.shortcuts import redirect, render
-#from django.core.exceptions import PermissionDenied
-#from django.contrib.admin.widgets import AdminSplitDateTime
-
-#from django.forms.formsets import formset_factory, BaseFormSet
+from webapp2_extras.i18n import lazy_gettext as _
+from wtforms import Form, widgets, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-#from lib.comm import Paginator, Filter, login_required, make_thumbnail
-from common import  BaseHandler, Paginator, Filter, make_thumbnail
+from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
 from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
 
@@ -55,6 +49,9 @@ class Detail(BaseHandler):
 #            form.fields['DELETE'] = forms.BooleanField(label=_(u'delete'), required=False,
 #                                                widget=forms.CheckboxInput(attrs={'style': 'margin-left: 80px;'}))
 #
+class ImgForm(Form):
+    name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
+    blob = fields.FileField()
 #class AddImgForm(forms.Form):
 #    name = forms.CharField(label=_('Img.'),
 #                    widget=forms.TextInput(attrs={'style': 'width: 250px;'}),
@@ -91,43 +88,47 @@ class Detail(BaseHandler):
 #EditImgFormSet = formset_factory(EditImgForm, formset=BaseImgFormSet,
 #                                 extra=2, can_order=True, can_delete=True, max_num=ENTRY_IMAGES)
 #
+
+class AddForm(Form):
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
+    author = EmailField(_('Author'), validators=[validators.DataRequired()])
+    summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
+    date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
+    body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
+    images = FieldList(FormField(ImgForm), min_entries=0, max_entries=10)
+
+    def validate_slug(self, field):
+        if Entry.get_by_id(field.data):
+            raise validators.ValidationError(_('Record with this slug already exist'))
+
+#    def validate_photo(self, field):
+#        if not isinstance(field.data, cgi.FieldStorage):
+#            raise validators.ValidationError(_('Not cgi.FieldStorage type.'))
+
 #class AddForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#                    error_messages={'required': _('Required field')})
-#    slug = forms.SlugField(label=_('Slug'), error_messages={'required': _('Required field')})
-#    tags = forms.CharField(label=_('Tags'), required=False)
 #    summary = forms.CharField(label=_('Summary'),
 #                    widget=forms.Textarea(attrs={'rows': 4, 'cols': 16}),
 #                    error_messages={'required': _('Required field')})
-#    date = forms.DateTimeField(label=_('Posted'), widget=AdminSplitDateTime())
 #    body = forms.CharField(label=_('Article'),
 #                    widget=forms.Textarea(attrs={'rows': 12, 'cols': 16}),
 #                    error_messages={'required': _('Required field')})
 #
-#    def clean_slug(self):
-#        data = self.cleaned_data['slug']
-#        if Entry.get_by_id(data):
-#            raise forms.ValidationError(_('Record with this slug already exist'))
-#        return data
-#
-#class EditForm(forms.Form):
-#    headline = forms.CharField(label=_('Headline'),
-#                error_messages={'required': _('Required field')})
-#    slug = forms.SlugField(label=_('Slug'), required=False,
-#                widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'disabled'}))
-#    tags = forms.CharField(label=_('Tags'), required=False)
-#    summary = forms.CharField(label=_('Summary'),
-#                    widget=forms.Textarea(attrs={'rows': 4, 'cols': 16}),
-#                    error_messages={'required': _('Required field')})
-#    date = forms.DateTimeField(label=_('Posted'), widget=AdminSplitDateTime())
-#    body = forms.CharField(label=_('Article'),
-#                    widget=forms.Textarea(attrs={'rows': 12, 'cols': 16}),
-#                    error_messages={'required': _('Required field')})
-#
-#    def clean(self):
-#        data = self.cleaned_data
-#        return data
-#
+class EditForm(Form):
+    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    tags = TagsField(_('Tags'), description='Comma separated values')
+    author = EmailField(_('Author'), validators=[validators.DataRequired()])
+    summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
+    date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
+    body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
+    images = FieldList(FormField(ImgForm), min_entries=0, max_entries=10)
+
+class Add(BaseHandler):
+    def get(self):
+        form = AddForm()
+        self.render_template('entry/form.html', {'form': form, 'filter': None})
+
 #@login_required
 #def add(request, tmpl='entry/form.html'):
 #    data = {}

@@ -3,7 +3,6 @@ import datetime
 import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb, blobstore
-#from django.contrib.admin.widgets import AdminSplitDateTime
 from webapp2_extras.i18n import lazy_gettext as _
 from models import Photo
 from wtforms import Form, widgets, fields, validators
