@@ -115,21 +115,6 @@ def form_row(value, arg=None):
         row = template.Template("""<p>%s</p>""" % FORM_ROW)
     return row.render(template.Context({'F': value}))
 
-@register.inclusion_tag('snippets/stats.html', takes_context=True)
-def stats(context):
-    stats = memcache.get_stats()
-    if stats:
-        hits = stats.get('hits', 0)
-        misses = stats.get('misses', 0)
-        all = hits + misses
-        if all > 0:
-            hit_ratio = 100*hits/all
-            delta_t = datetime.timedelta(seconds=stats['oldest_item_age'])
-            oldest = datetime.datetime.now() - delta_t
-            return {'stats': stats,
-                    'hit_ratio': hit_ratio,
-                    'oldest': oldest}
-
 @register.inclusion_tag('snippets/paginator.html', takes_context=True)
 def paginator(context):
     return context

@@ -1,11 +1,5 @@
 import os
-"""
-import datetime, time, random
-print time.strftime('%y%W', datetime.datetime.now().timetuple())
 
-sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-print ''.join(random.sample(sid, 50))
-"""
 DEBUG = True
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 LANGUAGE_COOKIE_NAME = 'ands_lang'
@@ -42,3 +36,11 @@ for x in HUE:
 
 for x in LUM:
     COLORS['lum-%s' % x['name']] = {'hex': x['hex'], 'field': 'lum', 'name': x['name'], 'order': x['order']}
+
+"""
+import datetime, time, random
+print time.strftime('%y%W', datetime.datetime.now().timetuple())
+
+sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+print ''.join(random.sample(sid, 50))
+"""
