@@ -2,7 +2,7 @@
 
 {% block aside %}
 	<div class="admin white">
-		<h3>Memcache statistics for	v.{% version %}</h3>
+		<h3>Memcache statistics for	v.{{ version() }}</h3>
 		{% stats %}
 	</div>
 {% endblock %}

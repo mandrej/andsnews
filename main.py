@@ -39,6 +39,12 @@ app = WSGIApplication([
     SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
         Route('/comments', handler='admin.views.Comments'),
+        Route('/comments/save', 'admin.views.comment_save'),
+        Route('/comments/delete', 'admin.views.comment_delete'),
+
+        Route('/feeds', handler='admin.views.Feeds'),
+        Route('/counters', handler='admin.views.Counters'),
+
         Route('/<kind:(photo)>/thumbnails/', handler='admin.views.Thumbnails'),
         Route('/<kind:(photo)>/thumbnails/<field:(date|hue|lum)>/<value>$', handler='admin.views.Thumbnails'),
         Route('/<kind:(entry)>/thumbnails/', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
@@ -48,6 +54,12 @@ app = WSGIApplication([
         Route('/memcache/<key>/build$', handler='admin.views.build'),
         Route('/memcache/<key>/create', handler='admin.views.create'),
         Route('/memcache/<key>/delete$', handler='admin.views.memcache_delete'),
+
+        Route('/thumbnail/delete', 'admin.views.thumbnail_delete'),
+        Route('/thumbnail/make', 'admin.views.thumbnail_make'),
+        Route('/thumbnail/color', 'admin.views.thumbnail_color'),
+
+        Route('/photo/info/<oldkey>', 'admin.views.info'),
         ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
     Route('/filter/<key>', handler=RenderCloud),
@@ -66,6 +78,6 @@ app = WSGIApplication([
     Route('/', handler=Index),
     ], config=CONFIG, debug=DEBUG)
 
-#app.error_handlers[403] = handle_403
-#app.error_handlers[404] = handle_404
-#app.error_handlers[500] = handle_500
+app.error_handlers[403] = handle_403
+app.error_handlers[404] = handle_404
+app.error_handlers[500] = handle_500
