@@ -72,7 +72,7 @@ $(function() {
 		<a href="#" class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 		<div class="content">
 		{% for img in object.image_list %}
-			<figure class="left{% if forloop.last %} last{% endif %}">
+			<figure class="left{% if loop.last %} last{% endif %}">
 				<img src="/entries/image/{{ img.key.name }}/small"
 					alt="{{ img.key.name }}" title="{{ img.name }}"/>
 				<p class="legend">{{ img.name|truncate(20) }}</p>
@@ -110,7 +110,9 @@ $(function() {
 	{% endif %}
 		<fieldset>
             {{ m.form_row(form.headline) }}
-            {{ m.form_row(form.slug) }}
+            {% if not object %}
+                {{ m.form_row(form.slug) }}
+            {% endif %}
             {{ m.form_row(form.tags) }}
             {{ m.form_row(form.summary) }}
             {{ m.form_row(form.date) }}
@@ -118,6 +120,14 @@ $(function() {
 	
 		<fieldset>
 			<h3>{{ _('Images used in this blog') }}</h3>
+            {{ object.images|pprint }}
+{#            {% for sub in subform %}#}
+{#                <pre>{{ sub|pprint(verbose=True) }}</pre>#}
+{#                <p class="upload" style="background-image: url({{ object.image_url(loop.index0) }}/small);">#}
+{#                    {{ m.form_row(form.name) }}#}
+{#                </p>#}
+
+{#            {% endfor %}#}
 {#			<div class="choices">#}
 {#				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>#}
 {#				{{ form.front }}#}

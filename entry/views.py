@@ -129,6 +129,20 @@ class Add(BaseHandler):
         form = AddForm()
         self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
+class Edit(BaseHandler):
+    def get(self, slug, form=None):
+        obj = Entry.get_by_id(slug)
+        user = users.get_current_user()
+        is_admin = users.is_current_user_admin()
+        if not is_admin:
+            if user != obj.author:
+                webapp2.abort(403)
+        if form is None:
+            form = EditForm(obj=obj)
+#            subform = ImgForm(imgs=obj.image_list)
+#            form.images = obj.image_list
+        self.render_template('entry/form.html', {'form': form, 'subform': None, 'object': obj, 'filter': None})
+
 #@login_required
 #def add(request, tmpl='entry/form.html'):
 #    data = {}
