@@ -31,8 +31,9 @@ $(function() {
 	$('#headline').slugify();
 	$('#body').markItUp(blogSettings, {nameSpace: 'big'});
 	$('input, textarea').focusHighlight();
-	$('.message img').click(function() {
+	$('#images img').click(function() {
 		src = $(this).attr('src').replace('small', 'normal');
+        console.log(src);
 		title = $(this).attr('title');
 		tab = '    ';
 		$.markItUp(
@@ -42,16 +43,16 @@ $(function() {
 		return false;
 	});
 	var lang = '{{ LANGUAGE_CODE }}';
-	$('input:file').filestyle({
-		image: '/static/images/choose-' + lang + '.png',
-		imageheight : 27,
-		imagewidth : 77,
-		width : 120
-	}).hover(
-		function() {$(this).parent().css({'background-position': '0 -27px'});},
-		function() {$(this).parent().css({'background-position': '0 0'});}
-	);
-	$("#id_tags").autocomplete("/complete/entry/tags", {
+{#	$('input:file').filestyle({#}
+{#		image: '/static/images/choose-' + lang + '.png',#}
+{#		imageheight : 27,#}
+{#		imagewidth : 77,#}
+{#		width : 120#}
+{#	}).hover(#}
+{#		function() {$(this).parent().css({'background-position': '0 -27px'});},#}
+{#		function() {$(this).parent().css({'background-position': '0 0'});}#}
+{#	);#}
+	$("#tags").autocomplete("/complete/entry/tags", {
 		width: 284,
 		selectFirst: false,
 		multiple: true,
@@ -73,8 +74,8 @@ $(function() {
 		<div class="content">
 		{% for img in object.image_list %}
 			<figure class="left{% if loop.last %} last{% endif %}">
-				<img src="/entries/image/{{ img.key.name }}/small"
-					alt="{{ img.key.name }}" title="{{ img.name }}"/>
+				<img src="/entries/image/{{ img.key.string_id() }}/small"
+					alt="{{ img.key.string_id() }}" title="{{ img.name }}"/>
 				<p class="legend">{{ img.name|truncate(20) }}</p>
 			</figure>
 {#		{% empty %}#}
@@ -120,17 +121,22 @@ $(function() {
 	
 		<fieldset>
 			<h3>{{ _('Images used in this blog') }}</h3>
-            {% for subform in form.images.entries %}
-                <p class="upload" style="background-image: url({{ object.image_url(loop.index0) }}/small);">
-{#                    images-0-name#}
-                    {% for f in subform %}
-                        {{ f.name }}
-                    {% endfor %}
-{#                    {{ subform.name.label }}#}
-{#                    {{ subform.data.name }}#}
+            {% if object %}
+                {{ m.form_row(form.front, size=1, style='width: auto;') }}
+                {% for field in form.images %}
+                    <p class="upload" style="background-image: url({{ object.image_url(field.form.num.data) }}/small);">
+                        {{ field.form.name.label }} {{ field.form.num(size=1, disabled='disabled') }} {{ field.form.name(size=30) }}
+                        {{ field.form.delete }} {{ field.form.delete.label.text }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+            {% for field in form.newimages %}
+                <p>
+                    {{ field.form.name.label }} {{ field.form.name }}<br/>
+                    {{ field.form.blob(style='width: 285px;') }}
                 </p>
-
             {% endfor %}
+
 {#			<div class="choices">#}
 {#				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>#}
 {#				{{ form.front }}#}

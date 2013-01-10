@@ -3,7 +3,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, widgets, FormField, FieldList, fields, validators
-from models import Entry, ENTRY_IMAGES
+from models import Entry, Img, ENTRY_IMAGES
 from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
 from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
@@ -50,9 +50,14 @@ class Detail(BaseHandler):
 #            form.fields['DELETE'] = forms.BooleanField(label=_(u'delete'), required=False,
 #                                                widget=forms.CheckboxInput(attrs={'style': 'margin-left: 80px;'}))
 #
-class ImgForm(Form):
+class ImgAddForm(Form):
     name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
     blob = fields.FileField()
+
+class ImgEditForm(Form):
+    name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
+    num = fields.IntegerField()
+    delete = fields.BooleanField(_('remove'))
 #class AddImgForm(forms.Form):
 #    name = forms.CharField(label=_('Img.'),
 #                    widget=forms.TextInput(attrs={'style': 'width: 250px;'}),
@@ -98,7 +103,7 @@ class AddForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    images = FieldList(FormField(ImgForm), min_entries=0, max_entries=10)
+    newimages = FieldList(FormField(ImgAddForm), min_entries=0, max_entries=10)
 
     def validate_slug(self, field):
         if Entry.get_by_id(field.data):
@@ -123,11 +128,14 @@ class EditForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    images = FieldList(FormField(ImgForm), min_entries=0, max_entries=10)
+    front = fields.IntegerField(_('Front image'))
+    images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=10)
+    newimages = FieldList(FormField(ImgAddForm), min_entries=0, max_entries=10)
 
 class Add(BaseHandler):
     def get(self):
         form = AddForm()
+        form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
 class Edit(BaseHandler):
@@ -142,7 +150,7 @@ class Edit(BaseHandler):
             form = EditForm(obj=obj)
             for img in obj.image_list:
                 form.images.append_entry(img)
-            logging.error(dir(form.images[0]))
+            form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 #@login_required
