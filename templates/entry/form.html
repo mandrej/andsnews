@@ -17,13 +17,8 @@
 {{ super() }}
 <script src="/static/scripts/urlify.js"></script>
 <script src="/static/scripts/jquery.autocomplete.js"></script>
-<script src="/static/scripts/jquery.filestyle.js"></script>
 <script src="/static/scripts/markitup/jquery.markitup.pack.js"></script>
 <script src="/static/scripts/markitup/sets/blog.set_{{ LANGUAGE_CODE }}.js"></script>
-{#<script src="/jsi18n/"></script>#}
-{#<script src="/static/admin/js/core.js"></script>#}
-{#<script src="/static/admin/js/calendar.js"></script>#}
-{#<script src="/static/admin/js/admin/DateTimeShortcuts.js"></script>#}
 <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
 <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
 <script>
@@ -42,16 +37,6 @@ $(function() {
 		);
 		return false;
 	});
-	var lang = '{{ LANGUAGE_CODE }}';
-{#	$('input:file').filestyle({#}
-{#		image: '/static/images/choose-' + lang + '.png',#}
-{#		imageheight : 27,#}
-{#		imagewidth : 77,#}
-{#		width : 120#}
-{#	}).hover(#}
-{#		function() {$(this).parent().css({'background-position': '0 -27px'});},#}
-{#		function() {$(this).parent().css({'background-position': '0 0'});}#}
-{#	);#}
 	$("#tags").autocomplete("/complete/entry/tags", {
 		width: 284,
 		selectFirst: false,
