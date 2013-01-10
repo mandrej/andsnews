@@ -7,6 +7,7 @@ from models import Entry, ENTRY_IMAGES
 from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
 from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
+import logging
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -139,9 +140,10 @@ class Edit(BaseHandler):
                 webapp2.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-#            subform = ImgForm(imgs=obj.image_list)
-#            form.images = obj.image_list
-        self.render_template('entry/form.html', {'form': form, 'subform': None, 'object': obj, 'filter': None})
+            for img in obj.image_list:
+                form.images.append_entry(img)
+            logging.error(dir(form.images[0]))
+        self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 #@login_required
 #def add(request, tmpl='entry/form.html'):

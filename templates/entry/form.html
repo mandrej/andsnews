@@ -120,14 +120,17 @@ $(function() {
 	
 		<fieldset>
 			<h3>{{ _('Images used in this blog') }}</h3>
-            {{ object.images|pprint }}
-{#            {% for sub in subform %}#}
-{#                <pre>{{ sub|pprint(verbose=True) }}</pre>#}
-{#                <p class="upload" style="background-image: url({{ object.image_url(loop.index0) }}/small);">#}
-{#                    {{ m.form_row(form.name) }}#}
-{#                </p>#}
+            {% for subform in form.images.entries %}
+                <p class="upload" style="background-image: url({{ object.image_url(loop.index0) }}/small);">
+{#                    images-0-name#}
+                    {% for f in subform %}
+                        {{ f.name }}
+                    {% endfor %}
+{#                    {{ subform.name.label }}#}
+{#                    {{ subform.data.name }}#}
+                </p>
 
-{#            {% endfor %}#}
+            {% endfor %}
 {#			<div class="choices">#}
 {#				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>#}
 {#				{{ form.front }}#}
