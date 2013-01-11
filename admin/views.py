@@ -5,7 +5,6 @@ from google.appengine.api import memcache
 from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
 from common import ENV, BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail
 from settings import PER_PAGE
-import logging
 
 def memcache_delete(request, key):
     memcache.delete(key)
@@ -34,7 +33,6 @@ def memcache_content(request):
     data = {}
     for key in KEYS:
         data[key] = memcache.get(key)
-    logging.error(data)
     response = webapp2.Response(content_type='application/json')
     response.out.write(json.dumps(data))
     return response

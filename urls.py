@@ -6,7 +6,7 @@
 #    url(r'^entries/?', include('entry.urls')),
 #    url(r'^comments/?', include('comment.urls')),
 #    url(r'^news/?', include('news.urls')),
-    url(r'^admin/?', include('admin.urls')),
+#    url(r'^admin/?', include('admin.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     
 #    url(r'^sitemap\.xml$', sitemap),
@@ -20,7 +20,7 @@
     url(r'^send$', send),
 #    url(r'^sitemap\.xml$', sitemap),
 #    url(r'^latest$', latest),
-    url(r'^$', index),
+#    url(r'^$', index),
 #)
 #handler403 = 'lib.comm.error403'
 #handler404 = 'lib.comm.error404'
