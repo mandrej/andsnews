@@ -3,6 +3,7 @@ import re, datetime, time
 from google.appengine.api import users, urlfetch, memcache
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.appengine.users import login_required, admin_required
 from wtforms import Form, widgets, fields, validators
 from models import Feed
 from lib import feedparser
@@ -134,7 +135,7 @@ class EditForm(Form):
     date = fields.DateTimeField(_('Taken'))
 
 class Add(BaseHandler):
-    #@admin_required
+    @admin_required
     def get(self, form=None):
         if form is None:
             form = AddForm()
@@ -150,7 +151,7 @@ class Add(BaseHandler):
             self.render_template('news/form.html', {'form': form, 'filter': None})
 
 class Edit(BaseHandler):
-    #@admin_required
+    @admin_required
     def get(self, slug, form=None):
         obj = Feed.get_by_id(slug)
         if form is None:

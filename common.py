@@ -1,8 +1,9 @@
 from __future__ import division
-import os, re, webapp2, jinja2, colorsys
+import os, re, webapp2, jinja2
 import math, hashlib
 import itertools, collections
 import datetime
+import logging, traceback
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
@@ -14,7 +15,6 @@ from wtforms import Form, widgets, fields, validators
 from cloud import calculate_cloud
 from models import Counter, Photo, INDEX, median, range_names
 from settings import DEVEL, HUE, LUM, SAT, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
-import logging, traceback
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -446,10 +446,10 @@ class TagsField(fields.TextField):
         else:
             self.data = []
 
-FORBIDDEN = ('admin', '403', 'addcomment')
 def sign_helper(request):
+    forbidden = ('admin', '403', 'addcomment')
     referer = request.headers.get('Referer', '/')
-    if referer.endswith(FORBIDDEN):
+    if referer.endswith(forbidden):
         referer = '/'
     if users.get_current_user():
         dest_url = users.create_logout_url(referer)

@@ -1,12 +1,12 @@
 import webapp2
 from google.appengine.api import users
 from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.appengine.users import login_required, admin_required
 from wtforms import Form, widgets, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
 from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
 from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
-import logging
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -83,7 +83,7 @@ class EditForm(Form):
     newimages = FieldList(FormField(ImgAddForm))
 
 class Add(BaseHandler):
-    #@login_required
+    @login_required
     def get(self, form=None):
         if form is None:
             form = AddForm()
@@ -105,7 +105,7 @@ def front_choices(obj):
     return choices
 
 class Edit(BaseHandler):
-    #@login_required
+    @login_required
     def get(self, slug, form=None):
         obj = Entry.get_by_id(slug)
         user = users.get_current_user()
@@ -129,7 +129,6 @@ class Edit(BaseHandler):
             obj.edit(form.data)
             self.redirect('/entries')
         else:
-            logging.error(form.errors)
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 def thumb(request, slug, size):

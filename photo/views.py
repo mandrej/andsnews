@@ -4,6 +4,7 @@ import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.appengine.users import login_required, admin_required
 from models import Photo
 from wtforms import Form, widgets, fields, validators
 from common import BaseHandler, Paginator, Filter, EmailField, TagsField, make_thumbnail
@@ -87,7 +88,7 @@ class EditForm(Form):
     lens = fields.TextField(_('Lens type'))
 
 class Add(BaseHandler):
-    #@login_required
+    @login_required
     def get(self, form=None):
         upload_url = blobstore.create_upload_url('/photos/add')
         if form is None:
@@ -105,7 +106,7 @@ class Add(BaseHandler):
             self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
 class Edit(BaseHandler):
-    #@login_required
+    @login_required
     def get(self, slug, form=None):
         obj = Photo.get_by_id(slug)
         user = users.get_current_user()

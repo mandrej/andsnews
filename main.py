@@ -30,12 +30,14 @@ app = WSGIApplication([
     SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),
     PathPrefixRoute('/comments', [
         Route('/<safekey>/add', handler='comment.views.Add'),
+        Route('/<field:(forkind|date|author)>/<value>', handler='comment.views.Index'),
         ]),
     SimpleRoute('^/news/?$', handler='news.views.Index'),
     PathPrefixRoute('/news', [
         Route('/add', handler='news.views.Add'),
         Route('/<slug>/edit', handler='news.views.Edit'),
         Route('/<slug>', handler='news.views.Detail'),
+        Route('/<field:(tags)>/<value>', handler='news.views.Index'),
         ]),
     SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [

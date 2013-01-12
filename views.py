@@ -1,8 +1,10 @@
 # -*- coding: UTF-8 -*-
 from __future__ import division
+import sys, traceback
 import os, json, webapp2, jinja2
-from webapp2_extras import i18n, sessions
 import hashlib, datetime
+from webapp2_extras import i18n, sessions
+from webapp2_extras.appengine.users import login_required, admin_required
 from gettext import gettext as _
 from operator import itemgetter
 from google.appengine.ext import ndb
@@ -10,7 +12,6 @@ from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
 from settings import TIMEOUT, ADMIN_JID
-import sys, traceback
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -33,7 +34,6 @@ def get_or_build(key):
             items = make_cloud(kind, field)
     return items
 
-#TODO if self.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 class RenderCloud(BaseHandler):
     def get(self, key, value=None):
         kind, field = key.split('_')
@@ -131,7 +131,7 @@ class Index(BaseHandler):
         self.render_template('index.html', {'latest': objects})
 
 class DeleteHandler(BaseHandler):
-#    @login_required
+    @login_required
     def get(self, safekey):
         key = ndb.Key(urlsafe=safekey)
         if key.parent():

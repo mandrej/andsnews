@@ -2,6 +2,7 @@ from __future__ import division
 import os, json, webapp2, jinja2
 from google.appengine.ext import ndb, deferred
 from google.appengine.api import memcache
+from webapp2_extras.appengine.users import login_required, admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
 from common import ENV, BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail
 from settings import PER_PAGE
@@ -59,7 +60,7 @@ class Index(BaseHandler):
         self.render_template('admin/index.html', data)
 
 class Comments(BaseHandler):
-#    @admin_required
+    @admin_required
     def get(self):
         query = Comment.query().order(-Comment.date)
         page = int(self.request.GET.get('page', 1))
@@ -128,7 +129,7 @@ def thumbnail_color(request):
     return response
 
 class Thumbnails(BaseHandler):
-#    @admin_required
+    @admin_required
     def get(self, kind, field=None, value=None, per_page=PER_PAGE):
         kind =kind.capitalize()
         f = Filter(field, value)
@@ -145,13 +146,11 @@ class Thumbnails(BaseHandler):
                 'kind': kind,
                 'page': page,
                 'has_next': has_next,
-                'has_previous': page > 1}
-        data['archive'] = make_cloud(kind, 'date')
-        data['link'] = '/admin/%s/thumbnails/date' % kind.lower()
+                'has_previous': page > 1,
+                'archive': make_cloud(kind, 'date'),
+                'link': '/admin/%s/thumbnails/date' % kind.lower()}
         self.render_template('admin/thumbnails.html', data)
 
-
-#@admin_required
 def info(request, safekey):
     key = ndb.Key(urlsafe=safekey)
     template = ENV.get_template('admin/info.html')
@@ -160,7 +159,7 @@ def info(request, safekey):
     return response
 
 class Feeds(BaseHandler):
-    #@admin_required
+    @admin_required
     def get(self):
         query = Feed.query().order(-Feed.date)
         self.render_template('admin/feeds.html', {'objects': query})
@@ -177,7 +176,7 @@ class Feeds(BaseHandler):
         self.redirect('/admin/feeds')
 
 class Counters(BaseHandler):
-    #@admin_required
+    @admin_required
     def get(self, per_page=PER_PAGE):
         query = Counter.query().order(Counter.field)
         page = int(self.request.GET.get('page', 1))

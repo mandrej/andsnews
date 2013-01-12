@@ -1,7 +1,6 @@
 from __future__ import division
 import datetime, time, re, colorsys
 from cStringIO import StringIO
-import logging
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
@@ -575,9 +574,9 @@ class Feed(ndb.Model):
     def delete(self):
         for name in self.tags:
             decr_count('Feed', 'tags', name)
-        slug = self.key().name()
+        slug = self.key.string_id()
         memcache.delete(slug)
-        super(Feed, self).delete()
+        self.key.delete_async()
 
     def get_absolute_url(self):
         return '/news/%s' % self.key.string_id()
