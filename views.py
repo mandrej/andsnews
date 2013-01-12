@@ -155,19 +155,19 @@ class DeleteHandler(BaseHandler):
         self.redirect(next)
 
 def handle_403(request, response, exception):
-    template = ENV.get_template('403.html')
+    template = ENV.get_template('errors/403.html')
     response.out.write(template.render({'error': exception}))
     response.set_status(403)
     return response
 
 def handle_404(request, response, exception):
-    template = ENV.get_template('404.html')
+    template = ENV.get_template('errors/404.html')
     response.out.write(template.render({'error': exception, 'path': request.path_qs}))
     response.set_status(404)
     return response
 
 def handle_500(request, response, exception):
-    template = ENV.get_template('500.html')
+    template = ENV.get_template('errors/500.html')
     lines = ''.join(traceback.format_exception(*sys.exc_info()))
     response.out.write(template.render({'error': exception, 'lines': lines}))
     response.set_status(500)

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-01-02 20:32+0100\n"
-"PO-Revision-Date: 2013-01-02 21:20+0100\n"
+"POT-Creation-Date: 2013-01-12 21:32+0100\n"
+"PO-Revision-Date: 2013-01-12 22:12+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
 "Language-Team: sr_RS <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
@@ -18,25 +18,27 @@ msgstr ""
 "Generated-By: Babel 0.9.6\n"
 "X-Poedit-Basepath: ../../../\n"
 
-#: common.py:17
+#: common.py:20
 #: fake_i18n.py:4
 msgid "english"
 msgstr "енглески"
 
-#: common.py:18
+#: common.py:21
 #: fake_i18n.py:5
 msgid "serbian"
 msgstr "српски"
 
-#: common.py:264
+#: common.py:275
 msgid "for blogs"
 msgstr "за блогове"
 
-#: common.py:266
+#: common.py:277
+#: templates/snippets/forkind_cloud.html:7
 msgid "for photos"
 msgstr "за фотографије"
 
-#: common.py:268
+#: common.py:279
+#: templates/snippets/forkind_cloud.html:8
 msgid "messages"
 msgstr "поруке"
 
@@ -74,174 +76,174 @@ msgstr "Недеља"
 
 #: fake_i18n.py:15
 msgid "January"
-msgstr ""
+msgstr "Јануар"
 
 #: fake_i18n.py:15
 msgid "February"
-msgstr ""
+msgstr "Фебруар"
 
 #: fake_i18n.py:15
 #: fake_i18n.py:27
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #: fake_i18n.py:16
 #: fake_i18n.py:27
 msgid "April"
-msgstr ""
+msgstr "Април"
 
 #: fake_i18n.py:16
 #: fake_i18n.py:27
 msgid "May"
-msgstr ""
+msgstr "Мај"
 
 #: fake_i18n.py:16
 #: fake_i18n.py:27
 msgid "June"
-msgstr ""
+msgstr "Јун"
 
 #: fake_i18n.py:17
 #: fake_i18n.py:28
 msgid "July"
-msgstr ""
+msgstr "Јул"
 
 #: fake_i18n.py:17
 msgid "August"
-msgstr ""
+msgstr "Август"
 
 #: fake_i18n.py:17
 msgid "September"
-msgstr ""
+msgstr "Септембар"
 
 #: fake_i18n.py:18
 msgid "October"
-msgstr ""
+msgstr "Октобар"
 
 #: fake_i18n.py:18
 msgid "November"
-msgstr ""
+msgstr "Новембар"
 
 #: fake_i18n.py:18
 msgid "December"
-msgstr ""
+msgstr "Децембар"
 
 #: fake_i18n.py:21
 msgid "jan"
-msgstr ""
+msgstr "јан"
 
 #: fake_i18n.py:21
 msgid "feb"
-msgstr ""
+msgstr "феб"
 
 #: fake_i18n.py:21
 msgid "mar"
-msgstr ""
+msgstr "мар"
 
 #: fake_i18n.py:22
 msgid "apr"
-msgstr ""
+msgstr "апр"
 
 #: fake_i18n.py:22
 msgid "may"
-msgstr ""
+msgstr "мај"
 
 #: fake_i18n.py:22
 msgid "jun"
-msgstr ""
+msgstr "јун"
 
 #: fake_i18n.py:23
 msgid "jul"
-msgstr ""
+msgstr "јул"
 
 #: fake_i18n.py:23
 msgid "aug"
-msgstr ""
+msgstr "авг"
 
 #: fake_i18n.py:23
 msgid "sep"
-msgstr ""
+msgstr "сеп"
 
 #: fake_i18n.py:24
 msgid "oct"
-msgstr ""
+msgstr "окт"
 
 #: fake_i18n.py:24
 msgid "nov"
-msgstr ""
+msgstr "нов"
 
 #: fake_i18n.py:24
 msgid "dec"
-msgstr ""
+msgstr "дец"
 
 #: fake_i18n.py:27
 msgid "Jan."
-msgstr ""
+msgstr "Јан."
 
 #: fake_i18n.py:27
 msgid "Feb."
-msgstr ""
+msgstr "Феб."
 
 #: fake_i18n.py:28
 msgid "Aug."
-msgstr ""
+msgstr "Авг."
 
 #: fake_i18n.py:28
 msgid "Sept."
-msgstr ""
+msgstr "Септ."
 
 #: fake_i18n.py:28
 msgid "Oct."
-msgstr ""
+msgstr "Окт."
 
 #: fake_i18n.py:28
 msgid "Nov."
-msgstr ""
+msgstr "Нов."
 
 #: fake_i18n.py:28
 msgid "Dec."
-msgstr ""
+msgstr "Дец."
 
 #: fake_i18n.py:32
 msgid "year"
 msgid_plural "years"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "година"
+msgstr[1] "године"
+msgstr[2] "година"
 
 #: fake_i18n.py:33
 msgid "month"
 msgid_plural "months"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "месец"
+msgstr[1] "месеца"
+msgstr[2] "месеци"
 
 #: fake_i18n.py:34
 msgid "week"
 msgid_plural "weeks"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "недеља"
+msgstr[1] "недеље"
+msgstr[2] "недеља"
 
 #: fake_i18n.py:35
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "дан"
+msgstr[1] "дана"
+msgstr[2] "дана"
 
 #: fake_i18n.py:36
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "сат"
+msgstr[1] "сата"
+msgstr[2] "сати"
 
 #: fake_i18n.py:37
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "минут"
+msgstr[1] "минута"
+msgstr[2] "минута"
 
 #: fake_i18n.py:40
 #, python-format
@@ -255,233 +257,316 @@ msgstr ""
 
 #: fake_i18n.py:44
 msgid "red"
-msgstr ""
+msgstr "црвена"
 
 #: fake_i18n.py:44
 msgid "orange"
-msgstr ""
+msgstr "наранџаста"
 
 #: fake_i18n.py:44
 msgid "yellow"
-msgstr ""
+msgstr "жута"
 
 #: fake_i18n.py:44
 msgid "green"
-msgstr ""
+msgstr "зелена"
 
 #: fake_i18n.py:44
 msgid "teal"
-msgstr ""
+msgstr "тиркиз"
 
 #: fake_i18n.py:44
 msgid "blue"
-msgstr ""
+msgstr "плава"
 
 #: fake_i18n.py:44
 msgid "purple"
-msgstr ""
+msgstr "љубичаста"
 
 #: fake_i18n.py:44
 msgid "pink"
-msgstr ""
+msgstr "розе"
 
 #: fake_i18n.py:45
 msgid "dark"
-msgstr ""
+msgstr "тамна"
 
 #: fake_i18n.py:45
 msgid "medium"
-msgstr ""
+msgstr "средња"
 
 #: fake_i18n.py:45
 msgid "light"
-msgstr ""
+msgstr "светла"
 
-#: views.py:46
-#: entry/views.py:95
-#: entry/views.py:115
+#: views.py:49
+#: entry/views.py:63
+#: entry/views.py:76
 #: news/views.py:124
-#: news/views.py:138
+#: news/views.py:133
+#: photo/views.py:65
+#: photo/views.py:79
 #: templates/entry/base.html:8
 #: templates/news/base.html:10
 #: templates/photo/base.html:6
 msgid "Tags"
-msgstr ""
+msgstr "Ознаке"
 
-#: views.py:48
+#: views.py:51
 #: templates/comment/base.html:17
 #: templates/entry/base.html:16
 #: templates/photo/base.html:14
 msgid "Authors"
-msgstr ""
+msgstr "Аутори"
 
-#: views.py:50
+#: views.py:53
 #: templates/comment/base.html:13
 #: templates/entry/base.html:12
 #: templates/photo/base.html:10
 msgid "Dates"
-msgstr ""
+msgstr "Датуми"
 
-#: views.py:54
+#: views.py:57
+#: photo/views.py:82
 #: templates/photo/base.html:22
 msgid "Camera model"
-msgstr ""
-
-#: views.py:56
-#: templates/photo/base.html:26
-msgid "Lens type"
-msgstr ""
-
-#: views.py:58
-#: templates/photo/base.html:30
-msgid "Eqv. focal length"
-msgstr ""
+msgstr "Модел фотоапарата"
 
 #: views.py:59
-msgid "Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10"
-msgstr ""
+#: photo/views.py:88
+#: templates/photo/base.html:26
+msgid "Lens type"
+msgstr "Тип објектива"
 
-#: views.py:60
-msgid "eqv"
-msgstr ""
+#: views.py:61
+#: templates/photo/base.html:30
+msgid "Eqv. focal length"
+msgstr "Екв. жижна даљина"
+
+#: views.py:62
+msgid "Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10"
+msgstr "Еквивалентна жижна даљина је рачуната на основу камере са пуним форматом сензора или 35 mm камере, заокружена на 10"
 
 #: views.py:63
+msgid "eqv"
+msgstr "екв"
+
+#: views.py:66
+#: photo/views.py:86
 #: templates/photo/base.html:34
 msgid "Sensitivity"
-msgstr ""
+msgstr "Осетљивост"
 
-#: views.py:67
+#: views.py:70
 #: templates/photo/base.html:18
 msgid "Median color"
-msgstr ""
+msgstr "Просечна боја"
 
-#: views.py:68
+#: views.py:71
 msgid "Based od HLS color model"
-msgstr ""
-
-#: views.py:69
-msgid "name"
-msgstr ""
+msgstr "Базирано на HSL моделу боја"
 
 #: views.py:72
+msgid "name"
+msgstr "име"
+
+#: views.py:75
 msgid "comments and messages"
+msgstr "коментари и поруке"
+
+#: comment/views.py:31
+msgid "e-mail"
 msgstr ""
 
-#: comment/views.py:33
-#: comment/views.py:37
-#: comment/views.py:46
-#: entry/views.py:58
-#: entry/views.py:84
-#: entry/views.py:93
-#: entry/views.py:94
-#: entry/views.py:98
-#: entry/views.py:102
-#: entry/views.py:112
-#: entry/views.py:118
-#: entry/views.py:122
-#: news/views.py:122
-#: news/views.py:123
-#: news/views.py:125
-#: news/views.py:135
-#: news/views.py:139
-msgid "Required field"
-msgstr ""
-
-#: comment/views.py:34
-msgid "Enter a valid e-mail address"
-msgstr ""
-
-#: comment/views.py:35
+#: comment/views.py:32
+#: templates/entry/detail.html:20
 #: templates/photo/detail.html:13
 msgid "Comment"
-msgstr ""
+msgstr "Кементар"
 
-#: entry/views.py:52
-msgid "delete"
-msgstr ""
+#: entry/views.py:46
+#, python-format
+msgid "This field is required if other \"%s\" present."
+msgstr "Ово поље је неоходно уколико је \"%s\" присутно."
+
+#: entry/views.py:51
+msgid "New Image"
+msgstr "Нова слика"
 
 #: entry/views.py:56
-#: entry/views.py:70
-msgid "Img."
-msgstr ""
+msgid "Image"
+msgstr "Слика"
 
-#: entry/views.py:59
-msgid "Upload the image"
-msgstr ""
+#: entry/views.py:58
+msgid "remove"
+msgstr "обриши"
 
-#: entry/views.py:64
-#, python-format
-msgid "Image too big, %s"
-msgstr ""
-
-#: entry/views.py:66
-#: entry/views.py:82
-msgid "Only JPEG/PNG images allowed"
-msgstr ""
-
-#: entry/views.py:80
-#, python-format
-msgid "Photo too big, %s"
-msgstr ""
-
-#: entry/views.py:92
-#: entry/views.py:111
-#: news/views.py:121
-#: news/views.py:134
+#: entry/views.py:61
+#: entry/views.py:75
+#: news/views.py:122
+#: news/views.py:132
+#: photo/views.py:63
+#: photo/views.py:78
 msgid "Headline"
-msgstr ""
+msgstr "Наслов"
 
-#: entry/views.py:94
-#: entry/views.py:113
+#: entry/views.py:62
 #: news/views.py:123
-#: news/views.py:136
+#: photo/views.py:64
 msgid "Slug"
 msgstr ""
 
-#: entry/views.py:96
-#: entry/views.py:116
+#: entry/views.py:64
+#: entry/views.py:77
+#: photo/views.py:66
+#: photo/views.py:80
+#, fuzzy
+msgid "Author"
+msgstr ""
+
+#: entry/views.py:65
+#: entry/views.py:78
+#: templates/entry/form.html:78
 msgid "Summary"
 msgstr ""
 
-#: entry/views.py:99
-#: entry/views.py:119
+#: entry/views.py:66
+#: entry/views.py:79
 msgid "Posted"
 msgstr ""
 
-#: entry/views.py:100
-#: entry/views.py:120
+#: entry/views.py:67
+#: entry/views.py:80
 msgid "Article"
 msgstr ""
 
-#: entry/views.py:107
-#: news/views.py:130
+#: entry/views.py:72
+#: news/views.py:129
+#: photo/views.py:71
 msgid "Record with this slug already exist"
 msgstr ""
 
-#: entry/views.py:168
-msgid "None"
+#: entry/views.py:81
+msgid "Front image"
 msgstr ""
 
-#: news/views.py:105
+#: news/views.py:106
 msgid "Feed server timeout"
 msgstr ""
 
-#: news/views.py:114
+#: news/views.py:115
 msgid "Feed server send no entries"
 msgstr ""
 
-#: news/views.py:116
+#: news/views.py:117
 #, python-format
 msgid "Feed server returns %s code"
 msgstr ""
 
 #: news/views.py:125
-#: news/views.py:139
+#: news/views.py:134
 msgid "Url"
 msgstr ""
 
-#: news/views.py:140
-msgid "Date"
+#: news/views.py:135
+#: photo/views.py:81
+msgid "Taken"
+msgstr ""
+
+#: photo/views.py:67
+msgid "Photo"
+msgstr "Фотографија"
+
+#: photo/views.py:75
+msgid "Not cgi.FieldStorage type."
+msgstr ""
+
+#: photo/views.py:83
+msgid "Aperture"
+msgstr ""
+
+#: photo/views.py:84
+msgid "Shutter speed"
+msgstr ""
+
+#: photo/views.py:85
+msgid "Focal length"
+msgstr ""
+
+#: photo/views.py:87
+msgid "Crop factor"
+msgstr ""
+
+#: templates/403.html:2
+msgid "Access denied"
+msgstr ""
+
+#: templates/403.html:5
+#: templates/404.html:5
+#: templates/500.html:5
+#: templates/index.html:7
+#: templates/admin/base.html:30
+#: templates/comment/base.html:4
+#: templates/entry/base.html:4
+#: templates/news/base.html:4
+#: templates/photo/base.html:3
+msgid "photo album"
+msgstr ""
+
+#: templates/403.html:6
+#: templates/404.html:6
+#: templates/500.html:6
+#: templates/index.html:8
+#: templates/admin/base.html:31
+#: templates/comment/base.html:5
+#: templates/entry/base.html:5
+#: templates/entry/index.html:3
+#: templates/entry/index.html:13
+#: templates/news/base.html:5
+#: templates/photo/base.html:37
+#: templates/snippets/confirm.html:12
+msgid "Blog"
+msgstr ""
+
+#: templates/403.html:7
+#: templates/404.html:7
+#: templates/500.html:7
+#: templates/index.html:9
+#: templates/admin/base.html:32
+#: templates/comment/base.html:6
+#: templates/entry/base.html:19
+#: templates/news/base.html:6
+#: templates/photo/base.html:38
+msgid "Comments"
+msgstr ""
+
+#: templates/403.html:8
+#: templates/404.html:8
+#: templates/500.html:8
+#: templates/index.html:10
+#: templates/admin/base.html:33
+#: templates/comment/base.html:20
+#: templates/entry/base.html:20
+#: templates/news/base.html:7
+#: templates/news/index.html:4
+#: templates/news/index.html:17
+#: templates/photo/base.html:39
+#: templates/snippets/confirm.html:25
+msgid "News"
+msgstr ""
+
+#: templates/403.html:10
+#: templates/404.html:10
+#: templates/500.html:10
+msgid "Start "
+msgstr ""
+
+#: templates/404.html:2
+msgid "Page not found"
+msgstr ""
+
+#: templates/500.html:2
+msgid "Server error"
 msgstr ""
 
 #: templates/base.html:13
@@ -493,9 +578,11 @@ msgid "entry rss"
 msgstr ""
 
 #: templates/base.html:171
+#: templates/entry/form.html:58
+#: templates/snippets/addcomment.html:4
+#: templates/snippets/addcomment.html:20
 #: templates/snippets/confirm.html:3
 #: templates/snippets/msg.html:4
-#: templates/snippets/starrating.html:3
 msgid "close"
 msgstr ""
 
@@ -524,44 +611,6 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: templates/index.html:7
-#: templates/admin/base.html:30
-#: templates/comment/base.html:4
-#: templates/entry/base.html:4
-#: templates/news/base.html:4
-#: templates/photo/base.html:3
-msgid "photo album"
-msgstr ""
-
-#: templates/index.html:8
-#: templates/admin/base.html:31
-#: templates/comment/base.html:5
-#: templates/entry/base.html:5
-#: templates/news/base.html:5
-#: templates/photo/base.html:37
-#: templates/snippets/confirm.html:12
-msgid "Blog"
-msgstr ""
-
-#: templates/index.html:9
-#: templates/admin/base.html:32
-#: templates/comment/base.html:6
-#: templates/entry/base.html:19
-#: templates/news/base.html:6
-#: templates/photo/base.html:38
-msgid "Comments"
-msgstr ""
-
-#: templates/index.html:10
-#: templates/admin/base.html:33
-#: templates/comment/base.html:20
-#: templates/entry/base.html:20
-#: templates/news/base.html:7
-#: templates/photo/base.html:39
-#: templates/snippets/confirm.html:25
-msgid "News"
-msgstr ""
-
 #: templates/index.html:32
 msgid "hide"
 msgstr ""
@@ -571,7 +620,15 @@ msgid "Welcome to our and YOUR site"
 msgstr ""
 
 #: templates/admin/base.html:38
+#: templates/entry/detail.html:21
+#: templates/entry/form.html:9
+#: templates/entry/form.html:12
+#: templates/news/detail.html:11
+#: templates/news/form.html:9
+#: templates/news/form.html:12
 #: templates/photo/detail.html:14
+#: templates/photo/form.html:9
+#: templates/photo/form.html:12
 msgid "Back"
 msgstr ""
 
@@ -615,18 +672,147 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+#: templates/comment/detail.html:10
+#: templates/entry/detail.html:13
+#: templates/entry/detail.html:17
+#: templates/entry/form.html:8
+#: templates/news/detail.html:9
+#: templates/news/form.html:8
+#: templates/photo/detail.html:11
+#: templates/photo/form.html:8
+#: templates/snippets/confirm.html:32
+msgid "Delete"
+msgstr ""
+
+#: templates/entry/detail.html:8
+#: templates/entry/index.html:7
+#: templates/news/detail.html:7
+#: templates/news/index.html:9
 #: templates/photo/detail.html:7
 #: templates/photo/index.html:7
 msgid "Add"
 msgstr ""
 
+#: templates/entry/detail.html:12
+#: templates/entry/detail.html:16
+#: templates/news/detail.html:8
 #: templates/photo/detail.html:10
 msgid "Edit"
 msgstr ""
 
-#: templates/photo/detail.html:11
-#: templates/snippets/confirm.html:31
-msgid "Delete"
+#: templates/entry/detail.html:59
+msgid "author&apos;s blogs"
+msgstr ""
+
+#: templates/entry/detail.html:63
+#: templates/news/detail.html:42
+#: templates/photo/detail.html:83
+msgid "tagged by"
+msgstr ""
+
+#: templates/entry/detail.html:68
+msgid "blogs sent same year"
+msgstr ""
+
+#: templates/entry/form.html:3
+#: templates/entry/form.html:84
+msgid "Add new / change existing blog"
+msgstr ""
+
+#: templates/entry/form.html:57
+msgid "Choose image"
+msgstr ""
+
+#: templates/entry/form.html:67
+msgid "No images"
+msgstr ""
+
+#: templates/entry/form.html:68
+msgid "To choose images, you must send them first"
+msgstr ""
+
+#: templates/entry/form.html:76
+#: templates/photo/form.html:44
+msgid "Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses."
+msgstr ""
+
+#: templates/entry/form.html:77
+#: templates/photo/form.html:45
+msgid "Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding."
+msgstr ""
+
+#: templates/entry/form.html:78
+msgid "A brief presentation in a concise form"
+msgstr ""
+
+#: templates/entry/form.html:79
+msgid "Send images less then"
+msgstr ""
+
+#: templates/entry/form.html:87
+#: templates/news/form.html:50
+#: templates/photo/form.html:70
+msgid "Please correct errors in"
+msgstr ""
+
+#: templates/entry/form.html:109
+msgid "Images used in this blog"
+msgstr ""
+
+#: templates/entry/form.html:131
+#: templates/news/form.html:71
+#: templates/photo/form.html:88
+#: templates/photo/form.html:118
+msgid "Required field"
+msgstr ""
+
+#: templates/entry/form.html:132
+#: templates/news/form.html:72
+#: templates/photo/form.html:119
+msgid "done"
+msgstr ""
+
+#: templates/entry/index.html:15
+msgid "No blogs"
+msgstr "Нема блогова"
+
+#: templates/entry/index.html:29
+msgid "posted"
+msgstr ""
+
+#: templates/news/detail.html:36
+#: templates/news/index.html:38
+msgid "updated"
+msgstr ""
+
+#: templates/news/detail.html:67
+#, python-format
+msgid "No %(title)s at the moment"
+msgstr ""
+
+#: templates/news/form.html:3
+#: templates/news/form.html:47
+msgid "Add new / change existing news"
+msgstr ""
+
+#: templates/news/form.html:38
+msgid "<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses."
+msgstr ""
+
+#: templates/news/form.html:39
+msgid "<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding."
+msgstr ""
+
+#: templates/news/form.html:41
+msgid "Date"
+msgstr ""
+
+#: templates/news/form.html:41
+msgid "Last modified date"
+msgstr ""
+
+#: templates/news/index.html:20
+msgid "No news"
 msgstr ""
 
 #: templates/photo/detail.html:73
@@ -640,16 +826,69 @@ msgstr "Фотографије"
 msgid "author&apos;s photos"
 msgstr ""
 
-#: templates/photo/detail.html:83
-msgid "tagged by"
-msgstr ""
-
 #: templates/photo/detail.html:88
 msgid "photos taken same year"
 msgstr ""
 
+#: templates/photo/form.html:3
+#: templates/photo/form.html:67
+msgid "Add new / change existing photo"
+msgstr ""
+
+#: templates/photo/form.html:46
+msgid "Forward slash is not allowed in any field. It will be stripped out automatically."
+msgstr ""
+
+#: templates/photo/form.html:47
+msgid "Send photo less then"
+msgstr ""
+
+#: templates/photo/form.html:49
+msgid "Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)"
+msgstr ""
+
+#: templates/photo/form.html:62
+msgid "Date format"
+msgstr ""
+
+#: templates/photo/form.html:89
+msgid "upload"
+msgstr ""
+
+#: templates/photo/form.html:108
+msgid "data"
+msgstr ""
+
 #: templates/photo/index.html:15
 msgid "No photos"
+msgstr ""
+
+#: templates/snippets/addcomment.html:3
+msgid "Add comment"
+msgstr ""
+
+#: templates/snippets/addcomment.html:6
+msgid "for"
+msgstr ""
+
+#: templates/snippets/addcomment.html:13
+msgid "send"
+msgstr ""
+
+#: templates/snippets/addcomment.html:19
+msgid "Thank you"
+msgstr "Хвала"
+
+#: templates/snippets/addcomment.html:22
+msgid "Your comment has been sent in deferred manner"
+msgstr ""
+
+#: templates/snippets/addcomment.html:23
+msgid "It may take some time before site become aware of it"
+msgstr ""
+
+#: templates/snippets/addcomment.html:24
+msgid "Thank you for your contribution"
 msgstr ""
 
 #: templates/snippets/confirm.html:2
@@ -672,11 +911,15 @@ msgstr ""
 
 #: templates/snippets/confirm.html:17
 msgid "image"
-msgstr ""
+msgstr "слика"
 
 #: templates/snippets/confirm.html:20
 msgid "photo"
 msgstr ""
+
+#: templates/snippets/forkind_cloud.html:6
+msgid "for blog"
+msgstr "за блогове"
 
 #: templates/snippets/paginator.html:4
 #: templates/snippets/paginator.html:6
@@ -693,17 +936,5 @@ msgstr "страна"
 #: templates/snippets/paginator.html:13
 #: templates/snippets/paginator.html:15
 msgid "next"
-msgstr ""
-
-#: templates/snippets/starrating.html:2
-msgid "Thank you"
-msgstr "Хвала"
-
-#: templates/snippets/starrating.html:5
-msgid "Your rate has been accepted"
-msgstr ""
-
-#: templates/snippets/starrating.html:6
-msgid "Thank you for your contribution"
 msgstr ""
 

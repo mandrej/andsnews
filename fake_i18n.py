@@ -1,12 +1,6 @@
 ugettext = lambda s: s
 ungettext = lambda s: s
-LANGUAGES = (
-    ('en', ugettext('english')),
-    ('sr', ugettext('serbian')),
-)
-LANGUAGE_CODE = 'en'
-YEAR_MONTH_FORMAT = ugettext('Y, F')
-# django.utils.dates
+
 WEEKDAYS = {
     0:ugettext('Monday'), 1:ugettext('Tuesday'),  2:ugettext('Wednesday'), 3:ugettext('Thursday'),
     4:ugettext('Friday'), 5:ugettext('Saturday'), 6:ugettext('Sunday')
@@ -44,9 +38,3 @@ COLORNAMES = (
     ugettext('red'), ugettext('orange'), ugettext('yellow'), ugettext('green'), ugettext('teal'), ugettext('blue'), ugettext('purple'), ugettext('pink'),
     ugettext('dark'), ugettext('medium'), ugettext('light'),
 )
-"""
-milan@andy6ux:~/work/ands$
-django-admin.py makemessages -l sr
-django-admin.py makemessages -d djangojs -l sr
-django-admin.py compilemessages
-"""

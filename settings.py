@@ -43,4 +43,6 @@ print time.strftime('%y%W', datetime.datetime.now().timetuple())
 
 sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 print ''.join(random.sample(sid, 50))
+
+find . -type f -name "*.pyc" -exec rm -f {} \;
 """

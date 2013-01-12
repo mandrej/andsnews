@@ -18,17 +18,17 @@ $(function() {
 			<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 		{% else %}
 			<h2>{{ _('No results') }}</h2>
-			{% popup noresults %}
-				<p>{{ _('No search results for') }} {{ phrase }}.
-					{{ _('Please try again') }}.</p>
-			{% endpopup %}
+{#			{% popup noresults %}#}
+{#				<p>{{ _('No search results for') }} {{ phrase }}.#}
+{#					{{ _('Please try again') }}.</p>#}
+{#			{% endpopup %}#}
 		{% endif %}
 	{% else %}
 		<h2>{{ _('No results') }}</h2>
-			{% popup noresults %}
-				<p>{{ _('Nothing to search for') }}.
-					{{ _('Please try something') }}.</p>
-			{% endpopup %}
+{#			{% popup noresults %}#}
+{#				<p>{{ _('Nothing to search for') }}.#}
+{#					{{ _('Please try something') }}.</p>#}
+{#			{% endpopup %}#}
 	{% endif %}
 	
 	{% for object in objects %}

@@ -44,13 +44,13 @@ builtins:
 # - appstats: on
 
 error_handlers:
-- file: error.html
+- file: templates/errors/error.html
 
 - error_code: dos_api_denial
-  file: dos_api_denial.html
+  file: templates/errors/dos_api_denial.html
 
 - error_code: over_quota
-  file: over_quota.html
+  file: templates/errors/over_quota.html
 
 - error_code: timeout
-  file: timeout.html
+  file: templates/errors/timeout.html
