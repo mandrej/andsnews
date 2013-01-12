@@ -118,7 +118,7 @@ $(function() {
             {% endif %}
             {% for field in form.newimages %}
                 <p>
-                    {{ field.form.name.label }} {{ field.form.name }}<br/>
+                    {{ field.form.name.label }} {{ field.form.name }}
                     {{ field.form.blob(style='width: 285px;') }}
                     <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
                 </p>

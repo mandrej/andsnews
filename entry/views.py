@@ -48,11 +48,12 @@ class RequiredIf(validators.Required):
             super(RequiredIf, self).__call__(form, field)
 
 class ImgAddForm(Form):
-    name = fields.TextField(_('Img.'), validators=[RequiredIf('blob')])
-    blob = fields.FileField(validators=[RequiredIf('name')])
+    name = fields.TextField(_('New Image'))
+#    blob = fields.FileField(validators=[RequiredIf('name')])
+    blob = fields.FileField()
 
 class ImgEditForm(Form):
-    name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
+    name = fields.TextField(_('Image'))
     num = fields.IntegerField()
     delete = fields.BooleanField(_('remove'))
 
@@ -60,7 +61,7 @@ class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    author = EmailField(_('Author'), validators=[validators.DataRequired()])
+    author = fields.TextField(_('Author'), validators=[validators.DataRequired()])
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
@@ -73,7 +74,7 @@ class AddForm(Form):
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    author = EmailField(_('Author'), validators=[validators.DataRequired()])
+    author = fields.TextField(_('Author'), validators=[validators.DataRequired()])
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
@@ -122,12 +123,13 @@ class Edit(BaseHandler):
 
     def post(self, slug):
         obj = Entry.get_by_id(slug)
-        form = EditForm(formdata=self.request.POST, obj=obj)
+        form = EditForm(formdata=self.request.POST)
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
             self.redirect('/entries')
         else:
+            logging.error(form.errors)
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 def thumb(request, slug, size):
