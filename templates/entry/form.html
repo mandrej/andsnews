@@ -101,7 +101,8 @@ $(function() {
             {% endif %}
             {{ m.form_row(form.tags) }}
             {{ m.form_row(form.summary) }}
-            {{ m.form_row(form.date) }}
+            {{ m.form_row(form.author) }}
+            {{ m.form_row(form.date, placeholder='YYYY-mm-dd HH:MM:SS') }}
 		</fieldset>
 	
 		<fieldset>
@@ -119,40 +120,9 @@ $(function() {
                 <p>
                     {{ field.form.name.label }} {{ field.form.name }}<br/>
                     {{ field.form.blob(style='width: 285px;') }}
+                    <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
                 </p>
             {% endfor %}
-
-{#			<div class="choices">#}
-{#				<p><label style="float: none">{{ _('Pick the image which will represent the entry') }}:</label></p>#}
-{#				{{ form.front }}#}
-{#				{% if form.front.errors %}<span style="clear: both; width: auto;" class="error">{{ form.front.errors|join(", ") }}</span>{% endif %}#}
-{#			</div>#}
-{#	#}
-{#			{% for form in forms.images %}#}
-{#				{% if form.initial %}#}
-{#					<p class="upload" style="background-image: url({{ object|image_url_by_num:form.initial.ORDER }}/small);">#}
-{#						<label for="id_{{ form.name.html_name }}">{{ form.name.label }}{{ form.initial.ORDER }}</label>#}
-{#						{{ form.name }}{{ form.blob }}#}
-{#						{{ form.ORDER }}{{ form.DELETE }}{{ form.DELETE.label }}#}
-{#						{% if form.name.errors or form.blob.errors %}#}
-{#							<span class="error">#}
-{#								{{ form.name.errors|join(", ") }}#}
-{#								{{ form.blob.errors|join(", ") }}#}
-{#							</span>#}
-{#						{% endif %}#}
-{#					</p>#}
-{#				{% else %}#}
-{#					<p class="upload">#}
-{#						{{ form.name.label_tag }}{{ form.name }}{{ form.blob }}#}
-{#						{% if form.name.errors or form.blob.errors %}#}
-{#							<span class="error">#}
-{#								{{ form.name.errors|join(", ") }}#}
-{#								{{ form.blob.errors|join(", ") }}#}
-{#							</span>#}
-{#						{% endif %}#}
-{#					</p>#}
-{#				{% endif %}#}
-{#			{% endfor %}#}
 		</fieldset>
 	
 		<fieldset style="float: none">

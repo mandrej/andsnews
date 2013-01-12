@@ -1,9 +1,8 @@
 import webapp2
 from google.appengine.api import users
-from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, widgets, FormField, FieldList, fields, validators
-from models import Entry, Img, ENTRY_IMAGES
+from models import Entry, ENTRY_IMAGES
 from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
 from settings import LIMIT, TIMEOUT
 PER_PAGE = 6
@@ -36,64 +35,26 @@ class Detail(BaseHandler):
             webapp2.abort(404)
         self.render_template('entry/detail.html', {'object': obj, 'filter': None})
 
-#class BaseImgFormSet(BaseFormSet):
-#    def add_fields(self, form, index):
-#        super(BaseImgFormSet, self).add_fields(form, index)
-#        if self.can_order:
-#            if index < self.initial_forms:
-#                form.fields['ORDER'] = forms.IntegerField(initial=index, required=False,
-#                                                widget=forms.HiddenInput())
-#            else:
-#                form.fields['ORDER'] = forms.IntegerField(required=False,
-#                                                widget=forms.HiddenInput())
-#        if self.can_delete:
-#            form.fields['DELETE'] = forms.BooleanField(label=_(u'delete'), required=False,
-#                                                widget=forms.CheckboxInput(attrs={'style': 'margin-left: 80px;'}))
-#
+class RequiredIf(validators.Required):
+    def __init__(self, other_field_name, *args, **kwargs):
+        self.other_field_name = other_field_name
+        super(RequiredIf, self).__init__(*args, **kwargs)
+
+    def __call__(self, form, field):
+        other_field = form._fields.get(self.other_field_name)
+        if other_field is None:
+            raise Exception(_('This field is required if other "%s" present.') % self.other_field_name)
+        if bool(other_field.data):
+            super(RequiredIf, self).__call__(form, field)
+
 class ImgAddForm(Form):
-    name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
-    blob = fields.FileField()
+    name = fields.TextField(_('Img.'), validators=[RequiredIf('blob')])
+    blob = fields.FileField(validators=[RequiredIf('name')])
 
 class ImgEditForm(Form):
     name = fields.TextField(_('Img.'), validators=[validators.DataRequired()])
     num = fields.IntegerField()
     delete = fields.BooleanField(_('remove'))
-#class AddImgForm(forms.Form):
-#    name = forms.CharField(label=_('Img.'),
-#                    widget=forms.TextInput(attrs={'style': 'width: 250px;'}),
-#                    error_messages={'required': _('Required field')})
-#    blob =  forms.FileField(error_messages={'required': _('Upload the image')})
-#
-#    def clean_blob(self):
-#        data = self.cleaned_data['blob']
-#        if data.size > LIMIT/4:
-#            raise forms.ValidationError(_('Image too big, %s' % defaultfilters.filesizeformat(data.size)))
-#        if data.content_type not in ['image/jpeg', 'image/png']:
-#            raise forms.ValidationError(_('Only JPEG/PNG images allowed'))
-#        return data
-#
-#class EditImgForm(forms.Form):
-#    name = forms.CharField(label=_('Img.'), required=False,
-#                    widget=forms.TextInput(attrs={'style': 'width: 250px;'}))
-#    blob =  forms.FileField(required=False)
-#
-#    def clean(self):
-#        data = self.cleaned_data
-#        blob = data.get('blob', None)
-#
-#        if blob:
-#            if blob.size > LIMIT/4:
-#                self._errors['blob'] = _('Photo too big, %s') % defaultfilters.filesizeformat(blob.size)
-#            if blob.content_type not in ['image/jpeg', 'image/png']:
-#                self._errors['blob'] = _('Only JPEG/PNG images allowed')
-#            if data['name'] == '':
-#                self._errors['name'] = _('Required field')
-#        return data
-#
-#AddImgFormSet = formset_factory(AddImgForm, extra=2, max_num=ENTRY_IMAGES)
-#EditImgFormSet = formset_factory(EditImgForm, formset=BaseImgFormSet,
-#                                 extra=2, can_order=True, can_delete=True, max_num=ENTRY_IMAGES)
-#
 
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
@@ -103,24 +64,12 @@ class AddForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    newimages = FieldList(FormField(ImgAddForm), min_entries=0, max_entries=10)
+    newimages = FieldList(FormField(ImgAddForm))
 
     def validate_slug(self, field):
         if Entry.get_by_id(field.data):
             raise validators.ValidationError(_('Record with this slug already exist'))
 
-#    def validate_photo(self, field):
-#        if not isinstance(field.data, cgi.FieldStorage):
-#            raise validators.ValidationError(_('Not cgi.FieldStorage type.'))
-
-#class AddForm(forms.Form):
-#    summary = forms.CharField(label=_('Summary'),
-#                    widget=forms.Textarea(attrs={'rows': 4, 'cols': 16}),
-#                    error_messages={'required': _('Required field')})
-#    body = forms.CharField(label=_('Article'),
-#                    widget=forms.Textarea(attrs={'rows': 12, 'cols': 16}),
-#                    error_messages={'required': _('Required field')})
-#
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
@@ -128,17 +77,31 @@ class EditForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    front = fields.IntegerField(_('Front image'))
-    images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=10)
-    newimages = FieldList(FormField(ImgAddForm), min_entries=0, max_entries=10)
+#    front = fields.SelectField(_('Front image'), default=-1, coerce=int) # TODO
+    front = fields.IntegerField(_('Front image'), default=-1)
+    images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=ENTRY_IMAGES)
+    newimages = FieldList(FormField(ImgAddForm))
 
 class Add(BaseHandler):
-    def get(self):
-        form = AddForm()
-        form.newimages.append_entry()
+    #@login_required
+    def get(self, form=None):
+        if form is None:
+            form = AddForm()
+            form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
+    def post(self):
+        form = AddForm(formdata=self.request.POST)
+        if form.validate():
+            obj = Entry(id=form.slug.data)
+            obj.add(form.data)
+            self.redirect('/entries')
+        else:
+            self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
+
+
 class Edit(BaseHandler):
+    #@login_required
     def get(self, slug, form=None):
         obj = Entry.get_by_id(slug)
         user = users.get_current_user()
@@ -148,83 +111,21 @@ class Edit(BaseHandler):
                 webapp2.abort(403)
         if form is None:
             form = EditForm(obj=obj)
+#            form.front.choices = [(-1, '---')]
             for img in obj.image_list:
                 form.images.append_entry(img)
+#                form.front.choices.append((img.num, img.name))
             form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
-#@login_required
-#def add(request, tmpl='entry/form.html'):
-#    data = {}
-#    if request.method == 'POST':
-#        form = AddForm(request.POST, request.FILES)
-#        formset = AddImgFormSet(request.POST, request.FILES)
-#        if form.is_valid() and formset.is_valid():
-#            data = form.cleaned_data
-#            data['images'] = formset.cleaned_data
-#            obj = Entry(id=data['slug'],
-#                        headline=data['headline'],
-#                        summary = data['summary'],
-#                        body=data['body'])
-#            obj.add(data)
-#            if request.POST.get('action:continue'):
-#                return redirect('%s/edit' % obj.get_absolute_url())
-#            return redirect('/entries')
-#    else:
-#        form = AddForm()
-#        formset = AddImgFormSet()
-#
-#    form.fields['front'] = forms.TypedChoiceField(required=False, choices=[],
-#                                    coerce=int, empty_value=-1,
-#                                    widget=forms.RadioSelect(choices=[]))
-#    data['form'] = form
-#    data['formset'] = formset
-#    return render(request, tmpl, data)
-#
-#@login_required
-#def edit(request, slug, tmpl='entry/form.html'):
-#    obj = Entry.get_by_id(slug)
-#    user = users.get_current_user()
-#    is_admin = users.is_current_user_admin()
-#    if not is_admin:
-#        if user != obj.author:
-#            raise PermissionDenied
-#
-#    data = {'object': obj}
-#    formset_initial = [{'name': x.name, 'ORDER': x.num} for x in obj.image_list]
-#    front_choices = [(x['ORDER'], x['name']) for x in formset_initial]
-#    front_choices.append((-1, _('None')))
-#
-#    if request.method == 'POST':
-#        form = EditForm(request.POST, request.FILES)
-#        formset = EditImgFormSet(request.POST, request.FILES,
-#                                 initial=formset_initial)
-#        if form.is_valid() and formset.is_valid():
-#            newdata = form.cleaned_data
-#            newdata['front'] = request.POST.get('front')
-#            newdata['images'] = formset.cleaned_data
-#            data.update(newdata)
-#            obj.edit(data)
-#            if request.POST.get('action:continue'):
-#                return redirect('%s/edit' % obj.get_absolute_url())
-#            return redirect(obj.get_absolute_url())
-#    else:
-#        form = EditForm(initial={'headline': obj.headline,
-#                                 'slug': obj.key.string_id(),
-#                                 'tags': ', '.join(obj.tags),
-#                                 'summary': obj.summary,
-#                                 'date': obj.date,
-#                                 'body': obj.body})
-#        formset = EditImgFormSet(initial=formset_initial)
-#
-#    form.fields['front'] = forms.TypedChoiceField(required=False, choices=front_choices,
-#                                    coerce=int, empty_value=-1,
-#                                    widget=forms.RadioSelect(choices=front_choices))
-#    form.fields['front'].initial = obj.front
-#
-#    data['form'] = form
-#    data['formset'] = formset
-#    return render(request, tmpl, data)
+    def post(self, slug):
+        obj = Entry.get_by_id(slug)
+        form = EditForm(formdata=self.request.POST, obj=obj)
+        if form.validate():
+            obj.edit(form.data)
+            self.redirect('/entries')
+        else:
+            self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)

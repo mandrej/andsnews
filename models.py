@@ -1,6 +1,7 @@
 from __future__ import division
-import datetime, time, colorsys
+import datetime, time, re, colorsys
 from cStringIO import StringIO
+import logging
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 from lib.EXIF import process_file
@@ -391,65 +392,74 @@ class Entry(ndb.Model):
         self.put()
         self.index_add()
 
-    def _add(self, data):
-        i = 0
+    def add(self, data):
         keyname = self.key.string_id() + '_%s'
-        for _dict in data.get('images', []):
-            if 'blob' in _dict and 'name' in _dict:
-                buff = _dict['blob'].read()
-                img = Img(parent=self.key, id=keyname % i, num=i,
-                          name=_dict['name'], blob=buff)
-                img.mime = _dict['blob'].content_type
+        for indx, newimage in enumerate(data['newimages']):
+            if newimage['blob'] and newimage['name']:
+                buff = newimage['blob'].value
+                name = newimage['name']
+                img = Img(parent=self.key, id=keyname % indx, num=indx, name=name, blob=buff)
+                img.mime = newimage['blob'].headers['Content-Type']
                 img.put_async()
-            i += 1
-        
-        self.date = data['date']
-        self.year=self.date.year
 
+        self.headline = data['headline']
+        self.summary = data['summary']
+        self.date = data['date']
+        self.body = data['body']
+
+        self.year=self.date.year
         self.tags = data['tags']
         self._put()
 
-    def add(self, data):
-        ndb.transaction(lambda: self._add(data))
         incr_count('Entry', 'author', self.author.nickname())
         incr_count('Entry', 'date', self.year)
         for name in self.tags:
             incr_count('Entry', 'tags', name)
 
     def edit(self, data):
+        keyname = self.key.string_id() + '_%s'
+        for indx, newimage in enumerate(data['newimages']):
+            if newimage['blob'] and newimage['name']:
+                buff = newimage['blob'].value
+                name = newimage['name']
+                img = Img(parent=self.key, id=keyname % indx, num=indx, name=name, blob=buff)
+                img.mime = newimage['blob'].headers['Content-Type']
+                img.put_async()
+
         self.headline = data['headline']
         self.summary = data['summary']
         self.date = data['date']
         self.body = data['body']
+        self.front = data['front']
 
-        i = 0
-        self.front = int(data['front'])
-        keyname = self.key.string_id() + '_%s'
-        for _dict in data.get('images', []):
-            if _dict['ORDER'] is not None:
-                obj = Img.get_by_id(keyname % _dict['ORDER'], self.key)
-                if _dict['DELETE']:
-                    if i == self.front:
-                        self.front = -1
-                    obj.key.delete_async()
-                else:
-                    if _dict['blob'] is not None:
-                        buff = _dict['blob'].read()
-                        obj.mime = _dict['blob'].content_type
-                        obj.blob = buff
-                        obj.small = None
-                    if _dict['name'] is not None:
-                        if obj.name != _dict['name']:
-                            obj.name = _dict['name']
-                    obj.put()
-            else:
-                if _dict['blob'] and _dict['name']:
-                    buff = _dict['blob'].read()
-                    img = Img(parent=self, id=keyname % i, num=i,
-                              name=_dict['name'], blob=buff)
-                    img.mime = _dict['blob'].content_type
-                    img.put()
-            i += 1
+#        i = 0
+#        self.front = int(data['front'])
+#        keyname = self.key.string_id() + '_%s'
+#        for _dict in data.get('images', []):
+#            if _dict['ORDER'] is not None:
+#                obj = Img.get_by_id(keyname % _dict['ORDER'], self.key)
+#                if _dict['DELETE']:
+#                    if i == self.front:
+#                        self.front = -1
+#                    obj.key.delete_async()
+#                else:
+#                    if _dict['blob'] is not None:
+#                        buff = _dict['blob'].read()
+#                        obj.mime = _dict['blob'].content_type
+#                        obj.blob = buff
+#                        obj.small = None
+#                    if _dict['name'] is not None:
+#                        if obj.name != _dict['name']:
+#                            obj.name = _dict['name']
+#                    obj.put()
+#            else:
+#                if _dict['blob'] and _dict['name']:
+#                    buff = _dict['blob'].read()
+#                    img = Img(parent=self, id=keyname % i, num=i,
+#                              name=_dict['name'], blob=buff)
+#                    img.mime = _dict['blob'].content_type
+#                    img.put()
+#            i += 1
         
         old = self.date
         new = data['date']
@@ -459,7 +469,7 @@ class Entry(ndb.Model):
             incr_count('Entry', 'date', self.year)
         
         old_tags = set(self.tags)
-        new_tags = set([x.strip().lower() for x in data['tags'].split(',') if x.strip() != ''])
+        new_tags = set(data['tags'])
         if old_tags-new_tags:
             for name in list(old_tags-new_tags):
                 decr_count('Entry', 'tags', name)
