@@ -23,6 +23,7 @@ app = WSGIApplication([
     PathPrefixRoute('/entries', [
         Route('/add', handler='entry.views.Add'),
         Route('/<slug>/edit', handler='entry.views.Edit'),
+        Route('/<field:(tags|date|author)>/<value>', handler='entry.views.Index'),
         Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
         Route('/<slug>', handler='entry.views.Detail'),
         ]),
