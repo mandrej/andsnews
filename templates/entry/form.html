@@ -108,7 +108,7 @@ $(function() {
 		<fieldset>
 			<h3>{{ _('Images used in this blog') }}</h3>
             {% if object %}
-                {{ m.form_row(form.front, size=1, style='width: auto;') }}
+                {{ m.form_row(form.front) }}
                 {% for field in form.images %}
                     <p class="upload" style="background-image: url({{ object.image_url(field.form.num.data) }}/small);">
                         {{ field.form.name.label }} {{ field.form.num(size=1, disabled='disabled') }} {{ field.form.name(size=30) }}

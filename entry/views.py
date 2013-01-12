@@ -77,8 +77,7 @@ class EditForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-#    front = fields.SelectField(_('Front image'), default=-1, coerce=int) # TODO
-    front = fields.IntegerField(_('Front image'), default=-1)
+    front = fields.SelectField(_('Front image'), coerce=int)
     images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=ENTRY_IMAGES)
     newimages = FieldList(FormField(ImgAddForm))
 
@@ -99,6 +98,10 @@ class Add(BaseHandler):
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
+def front_choices(obj):
+    choices = [(img.num, img.name) for img in obj.image_list]
+    choices.insert(0, (-1, '---'))
+    return choices
 
 class Edit(BaseHandler):
     #@login_required
@@ -111,16 +114,16 @@ class Edit(BaseHandler):
                 webapp2.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-#            form.front.choices = [(-1, '---')]
+            form.front.choices = front_choices(obj)
             for img in obj.image_list:
                 form.images.append_entry(img)
-#                form.front.choices.append((img.num, img.name))
             form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
     def post(self, slug):
         obj = Entry.get_by_id(slug)
         form = EditForm(formdata=self.request.POST, obj=obj)
+        form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
             self.redirect('/entries')
