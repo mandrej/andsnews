@@ -199,38 +199,38 @@ $(function() {
 					</thead>
 					<tbody>
 						{% for image in entry.image_list %}
-						<tr id="{{ image.key.urlsafe() }}">
-							<td>{{ image.name }}</td>
-							<td>{{ image.key.string_id() }}</td>
-							<td>{{ image.mime }}</td>
-							<td>{{ image.blob|length|filesizeformat }}</td>
-							<td class="_small">
-								{% if image.small %}
-									{{ image.small|length|filesizeformat }}
-								{% else %}
-									<img src="/static/images/icon_no.png" alt=""/>
-								{% endif %}
-							</td>
-							<td class="nowrap">
-								{% if image.small %}
-									<button type="submit" name="delete"
-										value="{{ image.key.string_id() }}">delete</button>
-									<button type="submit" name="make"
-										class="disabled" disabled="disabled"
-										value="{{ image.key.string_id() }}">make</button>
-								{% else %}
-									<button type="submit" name="delete"
-										class="disabled" disabled="disabled"
-										value="{{ image.key.string_id() }}">delete</button>
-									<button type="submit" name="make"
-										value="{{ image.key.string_id() }}">make</button>
-								{% endif %}
-							</td>
-						</tr>
-{#						{% empty %}#}
-{#						<tr id="{{ image.key }}">#}
-{#							<td colspan="6">No images</td>#}
-{#						</tr>#}
+                            <tr id="{{ image.key.urlsafe() }}">
+                                <td>{{ image.name }}</td>
+                                <td>{{ image.key.string_id() }}</td>
+                                <td>{{ image.mime }}</td>
+                                <td>{{ image.blob|length|filesizeformat }}</td>
+                                <td class="_small">
+                                    {% if image.small %}
+                                        {{ image.small|length|filesizeformat }}
+                                    {% else %}
+                                        <img src="/static/images/icon_no.png" alt=""/>
+                                    {% endif %}
+                                </td>
+                                <td class="nowrap">
+                                    {% if image.small %}
+                                        <button type="submit" name="delete"
+                                            value="{{ image.key.string_id() }}">delete</button>
+                                        <button type="submit" name="make"
+                                            class="disabled" disabled="disabled"
+                                            value="{{ image.key.string_id() }}">make</button>
+                                    {% else %}
+                                        <button type="submit" name="delete"
+                                            class="disabled" disabled="disabled"
+                                            value="{{ image.key.string_id() }}">delete</button>
+                                        <button type="submit" name="make"
+                                            value="{{ image.key.string_id() }}">make</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+						{% else %}
+                            <tr id="{{ image.key }}">
+                                <td colspan="6">No images</td>
+                            </tr>
 						{% endfor %}
 					</tbody>
 				</table>

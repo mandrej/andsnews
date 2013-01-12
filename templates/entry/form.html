@@ -63,9 +63,9 @@ $(function() {
 					alt="{{ img.key.string_id() }}" title="{{ img.name }}"/>
 				<p class="legend">{{ img.name|truncate(20) }}</p>
 			</figure>
-{#		{% empty %}#}
-{#			<p>{{ _('No images') }}</p>#}
-{#			<p>{{ _('To choose images, you must send them first') }}.</p>#}
+		{% else %}
+			<p>{{ _('No images') }}</p>
+			<p>{{ _('To choose images, you must send them first') }}.</p>
 		{% endfor %}
 		</div>
 	</div>
