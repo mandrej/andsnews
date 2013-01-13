@@ -1,8 +1,8 @@
 from __future__ import division
-import sys, traceback, urllib
+import sys, traceback
 import os, json, webapp2
 import hashlib, datetime
-from jinja2.filters import do_mark_safe
+from jinja2.filters import do_striptags
 from webapp2_extras.appengine.users import login_required
 from gettext import gettext as _
 from operator import itemgetter
@@ -92,7 +92,7 @@ class Find(BaseHandler):
         querystring = self.request.GET['find']
         page = int(self.request.GET.get('page', 1))
         paginator = SearchPaginator(querystring, per_page=RESULTS)
-        results, number_found, has_next = paginator.page(page)
+        results, number_found, has_next, error = paginator.page(page)
 
         objects = []
         for doc in results:
@@ -100,12 +100,12 @@ class Find(BaseHandler):
             for field in doc.fields:
                 f[field.name] = field.value
             for expr in doc.expressions:
-                f[expr.name] = do_mark_safe(expr.value)
+                f[expr.name] = do_striptags(expr.value)
             objects.append(f)
 
         self.render_template('results.html',
             {'objects': objects, 'phrase': querystring, 'number_found': number_found,
-             'page': page, 'has_next': has_next, 'has_previous': page > 1})
+             'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 def get_latest_photos():
     objects = memcache.get('Photo_latest')

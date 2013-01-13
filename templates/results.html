@@ -19,6 +19,9 @@ $(function() {
 		{% else %}
 			<h2>{{ _('No search results for') }} {{ phrase }}.</h2>
 			<p>{{ _('Please try again') }}.</p>
+            {% if error %}
+                <p>{{ _('Error') }}: {{ error }}</p>
+            {% endif %}
 		{% endif %}
 	{% else %}
 		<h2>{{ _('Nothing to search for') }}.</h2>
@@ -26,33 +29,36 @@ $(function() {
 	{% endif %}
 
     {% macro result(object) %}
-        <div class="third icon {{ object.kind }}">
-            <h3>
-                {% if object.link %}
-                    {% if object.kind == 'Comment' %}
-                        <a href="{{ object.link }}?find={{ phrase }}#comments">
-                            {{ object.headline }} ({{ _('comment') }})</a>
+        <div class="third brick">
+            <div class="icon {{ object.kind }}">
+                <h3>
+                    {% if object.link %}
+                        {% if object.kind == 'Comment' %}
+                            <a href="{{ object.link }}?find={{ phrase }}#comments">
+                                {{ object.headline }} ({{ _('comment') }})</a>
+                        {% else %}
+                            <a href="{{ object.link }}?find={{ phrase }}">
+                                {{ object.headline }}</a>
+                        {% endif %}
                     {% else %}
-                        <a href="{{ object.link }}?find={{ phrase }}">
-                            {{ object.headline }}</a>
+                        {{ _('message') }}
                     {% endif %}
-                {% else %}
-                    {{ _('message') }}
-                {% endif %}
-                {% if object.tags %}
-                    <br>{{ _('tagged by') }}: {{ object.tags }}
-                {% endif %}
-            </h3>
-            {{ object.body }}
-            <p class="details">
-                <strong>{{ object.author }}</strong>,
-                <time datetime='{{ object.date|format_datetime }}'>
-                    {{ object.date|format_date }}</time></p>
+                    {% if object.tags %}
+                        <br>{{ _('tagged by') }}: {{ object.tags }}
+                    {% endif %}
+                </h3>
+                {{ object.body }}
+                <p class="details">
+                    <strong>{{ object.author }}</strong>,
+                    <time datetime='{{ object.date|format_datetime }}'>
+                        {{ object.date|format_date }}</time></p>
+            </div>
         </div>
     {% endmacro %}
-	
-	{% for object in objects %}
-        {{ result(object) }}
-    {% endfor %}
+    <div id="container">
+        {% for object in objects %}
+            {{ result(object) }}
+        {% endfor %}
+    </div>
 </article>
 {% endblock %}

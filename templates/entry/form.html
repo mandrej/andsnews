@@ -126,7 +126,9 @@ $(function() {
 		</fieldset>
 	
 		<fieldset style="float: none">
-            {{ m.form_row(form.body, class='editor', rows=10) }}
+            <p class="editor">
+                {{ form.body(rows=10) }}
+            </p>
 			<p class="buttons">
 				<span class="required">{{ _('Required field') }}</span>
 				<button type="submit">{{ _('done') }}</button>

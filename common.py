@@ -368,30 +368,33 @@ class SearchPaginator:
     def __init__(self, querystring, per_page=PER_PAGE):
         self.querystring = querystring #'"{0}"'.format(querystring.replace('"',''))
         self.per_page = per_page
-    #        self.id = hashlib.md5(querystring).hexdigest()
-    #        self.cache = memcache.get(self.id)
-    #
-    #        if self.cache is None:
-    #            self.cache = {1: None}
-    #            memcache.add(self.id, self.cache, self.timeout)
+#        self.id = hashlib.md5(querystring).hexdigest()
+#        self.cache = memcache.get(self.id)
+#
+#        if self.cache is None:
+#            self.cache = {1: None}
+#            memcache.add(self.id, self.cache, self.timeout)
 
     def page(self, num):
+        error = None
+        results = []
+        number_found = 0
         has_next= False
-        #        opts = {
-        #            'limit': self.per_page,
-        #            'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-        #            'returned_expressions': [search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)]
-        #            'snippeted_fields': ['body']
-        #        }
-        #        try:
-        #            cursor = self.cache[num]
-        #        except KeyError:
-        #            cursor = None
-        #
-        #        opts['cursor'] = search.Cursor(web_safe_string=cursor)
-        #        opts['offset'] = (num - 1)*self.per_page
-        #        found = INDEX.search(search.Query(query_string=self.querystring,
-        #                                          options=search.QueryOptions(**opts)))
+#        opts = {
+#            'limit': self.per_page,
+#            'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
+#            'returned_expressions': [search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)]
+#            'snippeted_fields': ['body']
+#        }
+#        try:
+#            cursor = self.cache[num]
+#        except KeyError:
+#            cursor = None
+#
+#        opts['cursor'] = search.Cursor(web_safe_string=cursor)
+#        opts['offset'] = (num - 1)*self.per_page
+#        found = INDEX.search(search.Query(query_string=self.querystring,
+#                                          options=search.QueryOptions(**opts)))
         query = search.Query(
             query_string=self.querystring,
             options=search.QueryOptions(
@@ -400,14 +403,19 @@ class SearchPaginator:
                 returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
                 snippeted_fields= ['body']
             ))
+        try:
+            found = INDEX.search(query)
+            results = found.results
+            number_found = found.number_found
+        except Exception, error:
+            found = []
+        else:
+            if number_found > 0:
+                has_next = number_found > num*self.per_page
+#            self.cache[num + 1] = found.cursor.web_safe_string
+#            memcache.replace(self.id, self.cache, self.timeout)
 
-        found = INDEX.search(query)
-        if found.number_found > 0:
-            has_next = found.number_found > num*self.per_page
-        #            self.cache[num + 1] = found.cursor.web_safe_string
-        #            memcache.replace(self.id, self.cache, self.timeout)
-
-        return found.results, found.number_found, has_next
+        return results, number_found, has_next, error
 
 class ListPaginator:
     def __init__(self, objects, per_page=PER_PAGE):

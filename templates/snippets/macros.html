@@ -1,7 +1,9 @@
 {% macro form_row(field) %}
-    <p{{ kwargs|xmlattr }}>
+    <p>
         {{ field.label(class='required' if field.flags.required else '') }}
         {{ field(**kwargs) }}
-        <span class="error C_{{ field.name }}"><!-- -->{{ field.errors|join(', ') }}</span>
+        {% if field.errors %}
+            <span class="error C_{{ field.name }}">{{ field.errors|join(', ') }}</span>
+        {% endif %}
     </p>
 {% endmacro %}
