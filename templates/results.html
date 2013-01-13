@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 
 {% block subnav %}{% endblock %}
 {% block aside %}{% endblock %}
@@ -17,76 +17,42 @@ $(function() {
 		{% if objects %}
 			<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 		{% else %}
-			<h2>{{ _('No results') }}</h2>
-{#			{% popup noresults %}#}
-{#				<p>{{ _('No search results for') }} {{ phrase }}.#}
-{#					{{ _('Please try again') }}.</p>#}
-{#			{% endpopup %}#}
+			<h2>{{ _('No search results for') }} {{ phrase }}.</h2>
+			<p>{{ _('Please try again') }}.</p>
 		{% endif %}
 	{% else %}
-		<h2>{{ _('No results') }}</h2>
-{#			{% popup noresults %}#}
-{#				<p>{{ _('Nothing to search for') }}.#}
-{#					{{ _('Please try something') }}.</p>#}
-{#			{% endpopup %}#}
+		<h2>{{ _('Nothing to search for') }}.</h2>
+        <p>{{ _('Please try something') }}.</p>
 	{% endif %}
+
+    {% macro result(object) %}
+        <div class="icon {{ object.kind }}">
+            <h3>
+                {% if object.link %}
+                    {% if object.kind == 'Comment' %}
+                        <a href="{{ object.link }}?find={{ phrase }}#comments">
+                            {{ object.headline }} ({{ _('comment') }})</a>
+                    {% else %}
+                        <a href="{{ object.link }}?find={{ phrase }}">
+                            {{ object.headline }}</a>
+                    {% endif %}
+                {% else %}
+                    {{ _('message') }}
+                {% endif %}
+                {% if object.tags %}
+                    <br>{{ _('tagged by') }}: {{ object.tags }}
+                {% endif %}
+            </h3>
+            {{ object.body }}
+            <p class="details">
+                <strong>{{ object.author }}</strong>,
+                <time datetime='{{ object.date|format_datetime }}'>
+                    {{ object.date|format_date }}</time></p>
+        </div>
+    {% endmacro %}
 	
 	{% for object in objects %}
-		{% if object.kind == 'Application' %}
-	        <div class="icon Message">
-                <h3>{{ _('message') }}
-	                {% if object.tags %}
-	                	<br>{{ _('tagged by') }}: {{ object.tags }}
-	                {% endif %}
-                </h3>
-                {{ object.body|snippet:phrase }}
-                <p class="details"><strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|format_datetime }}'>
-                        {{ object.date|format_date }}</time></p>
-            </div>
-		{% endif %}
-		{% if object.kind == 'Comment' %}
-	        <div class="icon Comment">
-                <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}#comments">
-                	{{ object.headline }} ({{ _('comment') }})</a>
-                	{% if object.tags %}
-	                	<br>{{ _('tagged by') }}: {{ object.tags }}
-	                {% endif %}
-                </h3>
-                {{ object.body|snippet:phrase }}
-                <p class="details"><strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|format_datetime }}'>
-                        {{ object.date|format_date }}</time></p>
-            </div>
-		{% endif %}
-		{% if object.kind == 'Entry' %}
-	        <div class="icon Entry">
-	            <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}">
-	            	{{ object.headline }}</a>
-	            	{% if object.tags %}
-	                	<br>{{ _('tagged by') }}: {{ object.tags }}
-	                {% endif %}
-	            </h3>
-	            {{ object.body|snippet:phrase }}
-	            <p class="details"><strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|format_datetime }}'>
-                        {{ object.date|format_date }}</time></p>
-	        </div>
-		{% endif %}
-		{% if object.kind == 'Photo' %}
-	        <div class="icon Photo">
-	            <h3><a href="{{ object.link }}?find={{ phrase|urlencode }}">
-	            	{{ object.headline }}</a>
-	            	{% if object.tags %}
-	                	<br>{{ _('tagged by') }}: {{ object.tags }}
-	                {% endif %}
-	            </h3>
-	            {{ object.body|snippet:phrase }}
-	            <p class="details"><strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|format_datetime }}'>
-                        {{ object.date|format_date }}</time></p>
-	        </div>
-		{% endif %}
-	{% endfor %}
+        {{ result(object) }}
+    {% endfor %}
 </article>
 {% endblock %}

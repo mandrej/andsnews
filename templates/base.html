@@ -199,7 +199,12 @@
 				</div>
 			{% endblock %}
 
-			{% block nav %}{% endblock %}
+            {% block nav %}
+                <a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
+                <a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
+                <a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
+                <a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
+            {% endblock %}
 
 			{% if is_admin %}<a href="/admin" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>{% endif %}
 			{% if user %}<a href="/sign" class="Logout">{{ _('Logout') }}</a>

@@ -491,7 +491,7 @@ figure p.legend { padding: 5px; text-align: center; }
 	background-repeat: no-repeat;
 	background-position: top left;
 }
-#main .Message { background-image: url(../images/message.png); }
+#main .Application { background-image: url(../images/message.png); }
 #main .Comment { background-image: url(../images/comment.png); }
 #main .Entry { background-image: url(../images/entry.png); }
 #main .Photo { background-image: url(../images/picture.png); }

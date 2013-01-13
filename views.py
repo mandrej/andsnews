@@ -1,17 +1,16 @@
-# -*- coding: UTF-8 -*-
 from __future__ import division
-import sys, traceback
-import os, json, webapp2, jinja2
+import sys, traceback, urllib
+import os, json, webapp2
 import hashlib, datetime
-from webapp2_extras import i18n, sessions
-from webapp2_extras.appengine.users import login_required, admin_required
+from webapp2_extras.appengine.users import login_required
 from gettext import gettext as _
 from operator import itemgetter
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
-from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors
-from settings import TIMEOUT, ADMIN_JID
+from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors, format_datetime
+from settings import TIMEOUT, ADMIN_JID, RFC822
+import logging
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -90,7 +89,7 @@ def auto_complete(request, kind, field):
 
 class Find(BaseHandler):
     def get(self):
-        querystring = self.request.GET.get('find')
+        querystring = self.request.GET['find']
         page = int(self.request.GET.get('page', 1))
         paginator = SearchPaginator(querystring, per_page=RESULTS)
         results, number_found, has_next = paginator.page(page)
@@ -191,87 +190,45 @@ class Send(webapp2.RequestHandler):
 def escape(str):
     return str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
-def rfc822_date(dt):
-    return dt.strftime('%a, %d %b %Y %I:%M:%S %p GMT')
-
 def rss(request, kind):
+    template = ENV.get_template('rss.xml')
     if kind == 'photo':
         query = Photo.query().order(-Photo.date)
-        data = query.fetch(RSS_LIMIT)
-        last_modified = rfc822_date(data[0].date)
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        str = u'<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel>'
-        str += u'<title>АNDрејевићи photo album</title>'
-        str += u'<link>http://%s/photos</link>' % HOST_NAME
-        str += u'<lastBuildDate>%s</lastBuildDate>' % last_modified
-        str += u'<description>Latest photos from the site</description>'
-
-        for item in data:
-            str += u'<item><title>%s</title>' % escape(item.headline)
-            text = u'Camera model: %s' % escape(item.model)
-            if item.lens: text += u', Lens type: %s' % escape(item.lens)
-            if item.aperture: text += u', Aperture: F%s' % item.aperture
-            if item.shutter: text += u', Shutter speed: %s sec' % item.shutter
-            if item.focal_length: text += u', Focal length: %s mm (~ %s eqv.)' % (item.focal_length, item.eqv)
-            if item.iso: text += u', Sensitivity (ISO): %s ASA' % item.iso
-            str += u'<description>%s</description>' % text
-#            TODO small
-#            str += u'<enclosure url="http://%s%s/small" length="%s" type="image/jpeg"></enclosure>' % (HOST_NAME, item.get_absolute_url(), len(item.picture.get().small))
-            str += u'<link>http://%s%s</link>' % (HOST_NAME, item.get_absolute_url())
-            str += u'<author>%s</author>' % item.author.email()
-            str += u'<pubDate>%s</pubDate>' % rfc822_date(item.date)
-            str += u'<guid isPermaLink="true">http://%s%s</guid>' % (HOST_NAME, item.get_absolute_url())
-            text = ','.join(item.tags)
-            str += u'<category>%s</category>' % escape(text)
-            str += u'</item>'
-        str += u'</channel></rss>'
+        data = {
+            'title': 'Photos',
+            'link': '/photos',
+            'description': 'Latest photos from the site'
+        }
     elif kind == 'entry':
         query = Entry.query().order(-Entry.date)
-        data = query.fetch(RSS_LIMIT)
-        last_modified = rfc822_date(data[0].date)
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        str = u'<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel>'
-        str += u'<title>АNDрејевићи blog</title>'
-        str += u'<link>http://%s/entries</link>' % HOST_NAME
-        str += u'<lastBuildDate>%s</lastBuildDate>' % last_modified
-        str += u'<description>Latest blog entries from the site</description>'
-
-        for item in data:
-            str += u'<item><title>%s</title>' % escape(item.headline)
-            str += u'<description>%s</description>' % escape(item.summary)
-            str += u'<link>http://%s%s</link>' % (HOST_NAME, item.get_absolute_url())
-            str += u'<author>%s</author>' % item.author.email()
-            str += u'<pubDate>%s</pubDate>' % rfc822_date(item.date)
-            str += u'<guid isPermaLink="true">http://%s%s</guid>' % (HOST_NAME, item.get_absolute_url())
-            text = ','.join(item.tags)
-            str += u'<category>%s</category>' % escape(text)
-            str += u'</item>'
-        str += u'</channel></rss>'
-
+        data = {
+            'title': 'Entries',
+            'link': '/entries',
+            'description': 'Latest entries from the site'
+            }
+    data.update({
+        'kind': kind,
+        'HOST': 'http://%s' % HOST_NAME,
+        'objects': query.fetch(RSS_LIMIT),
+        'format': RFC822
+    })
+    last_modified = format_datetime(data['objects'][0].date, format=RFC822)
+    expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
     response = webapp2.Response(content_type='application/rss+xml')
     response.headers['Last-Modified'] = last_modified
     response.headers['ETag'] = hashlib.md5(last_modified).hexdigest()
-    response.headers['Expires'] = rfc822_date(expires)
+    response.headers['Expires'] = format_datetime(expires, format=RFC822)
     response.headers['Cache-Control'] = 'max-age=86400'
-    response.out.write(str)
+    response.out.write(template.render(data))
     return response
 
 def sitemap(request):
-    out = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-    head = '<url><loc>%s</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>'
-    row = '<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>'
-    loc = 'http://%s%s' % (HOST_NAME, '/photos')
-    out += head % loc
-    for item in Photo.query().order(-Photo.date):
-        loc = 'http://%s%s' % (HOST_NAME, item.get_absolute_url())
-    out += row % (loc, item.date.date())
-    loc = 'http://%s%s' % (HOST_NAME, '/entries')
-    out += head % loc
-
-    for item in Entry.query().order(-Entry.date):
-        loc = 'http://%s%s' % (HOST_NAME, item.get_absolute_url())
-    out += row % (loc, item.date.date())
-    out += '</urlset>'
+    template = ENV.get_template('urlset.xml')
+    data = {
+        'photos': Photo.query().order(-Photo.date),
+        'entries': Entry.query().order(-Entry.date),
+        'HOST': 'http://%s' % HOST_NAME,
+    }
     response = webapp2.Response(content_type='application/xml')
-    response.out.write(out)
+    response.out.write(template.render(data))
     return response

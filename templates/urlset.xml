@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{% macro item(object) %}
+    <url>
+        <loc>{{ HOST }}{{ object.get_absolute_url() }}</loc>
+        <lastmod>{{ object.date|format_date }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+{% endmacro %}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{{ HOST }}/photos</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    {% for object in photos %}
+        {{ item(object) }}
+    {% endfor %}
+    <url>
+        <loc>{{ HOST }}/entries</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    {% for object in entries %}
+        {% for object in photos %}
+            {{ item(object) }}
+        {% endfor %}
+    {% endfor %}
+</urlset>

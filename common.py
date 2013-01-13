@@ -397,7 +397,8 @@ class SearchPaginator:
             options=search.QueryOptions(
                 limit=self.per_page,
                 offset=(num - 1)*self.per_page,
-                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind', 'body'],
+                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
+                snippeted_fields= ['body']
             ))
 
         found = INDEX.search(query)
