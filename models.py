@@ -139,7 +139,7 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=No
             search.DateField(name='date', value=date.date()),
             search.AtomField(name='link', value=url),
             search.AtomField(name='kind', value=kind)
-    ])
+    ], language='en_US')
 
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)

@@ -2,6 +2,7 @@ from __future__ import division
 import sys, traceback, urllib
 import os, json, webapp2
 import hashlib, datetime
+from jinja2.filters import do_mark_safe
 from webapp2_extras.appengine.users import login_required
 from gettext import gettext as _
 from operator import itemgetter
@@ -10,7 +11,6 @@ from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors, format_datetime
 from settings import TIMEOUT, ADMIN_JID, RFC822
-import logging
 
 MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
@@ -100,7 +100,7 @@ class Find(BaseHandler):
             for field in doc.fields:
                 f[field.name] = field.value
             for expr in doc.expressions:
-                f[expr.name] = expr.value
+                f[expr.name] = do_mark_safe(expr.value)
             objects.append(f)
 
         self.render_template('results.html',

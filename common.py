@@ -13,8 +13,8 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
 from wtforms import Form, widgets, fields, validators
 from cloud import calculate_cloud
-from models import Counter, Photo, INDEX, median, range_names
-from settings import DEVEL, HUE, LUM, SAT, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+from models import INDEX, Counter, Photo, median, range_names
+from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -486,6 +486,7 @@ class BaseHandler(webapp2.RequestHandler):
         }
         kwargs.update(context)
         template = ENV.get_template(filename)
+#        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
         self.response.out.write(template.render(kwargs))
 
 class SetLanguage(BaseHandler):
