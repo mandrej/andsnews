@@ -1,39 +1,23 @@
 {% extends "base.html" %}
+{% import "snippets/macros.html" as m %}
+{% set kind='Photo' %}
+{% set filters=[
+    {'field': 'tags', 'title': _('Tags'), 'toggle': filter.tags},
+    {'field': 'date', 'title': _('Dates'), 'toggle': filter.year},
+    {'field': 'author', 'title': _('Authors'), 'toggle': filter.author},
+    {'field': 'colors', 'title': _('Median color'), 'toggle': filter.hue or filter.lum},
+    {'field': 'model', 'title': _('Camera model'), 'toggle': filter.model},
+    {'field': 'lens', 'title': _('Lens type'), 'toggle': filter.lens},
+    {'field': 'eqv', 'title': _('Eqv. focal length'), 'toggle': filter.eqv},
+    {'field': 'iso', 'title': _('Sensitivity'), 'toggle': filter.iso}
+] %}
 {% block nav %}
 	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
-	<div id="filters">
-		<a href="/visualize/Photo_tags" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="tags collapse" href="/filter/Photo_tags">{{ _('Tags') }} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a>
-		<div id="tagscloud" class="hide"></div>
-	    
-	    <a href="/visualize/Photo_date" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="date collapse" href="/filter/Photo_date">{{ _('Dates') }} {% if filter.year %}[−]{% else %}[+]{% endif %}</a>
-		<div id="datecloud" class="hide"></div>
-		
-		<a href="/visualize/Photo_author" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="author collapse" href="/filter/Photo_author">{{ _('Authors') }} {% if filter.author %}[−]{% else %}[+]{% endif %}</a>
-		<div id="authorcloud" class="hide"></div>
-		
-		<a href="/visualize/Photo_colors" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="colors collapse" href="/filter/Photo_colors">{{ _('Median color') }} {% if filter.hue or filter.lum %}[−]{% else %}[+]{% endif %}</a>
-		<div id="colorscloud" class="hide"></div>
-		
-		<a href="/visualize/Photo_model" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-		<a class="model collapse" href="/filter/Photo_model">{{ _('Camera model') }} {% if filter.model %}[−]{% else %}[+]{% endif %}</a>
-		<div id="modelcloud" class="hide"></div>
-	
-		<a href="/visualize/Photo_lens" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-		<a class="lens collapse" href="/filter/Photo_lens">{{ _('Lens type') }} {% if filter.lens %}[−]{% else %}[+]{% endif %}</a>
-		<div id="lenscloud" class="hide"></div>
-		
-		<a href="/visualize/Photo_eqv" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="eqv collapse" href="/filter/Photo_eqv">{{ _('Eqv. focal length') }} {% if filter.eqv %}[−]{% else %}[+]{% endif %}</a>
-		<div id="eqvcloud" class="hide"></div>
-		
-		<a href="/visualize/Photo_iso" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="iso collapse" href="/filter/Photo_iso">{{ _('Sensitivity') }} (ISO) {% if filter.iso %}[−]{% else %}[+]{% endif %}</a>
-		<div id="isocloud" class="hide"></div>
-	</div>
+    <div id="filters">
+        {% for f in filters %}
+            {{ m.build_filter(f, kind) }}
+        {% endfor %}
+    </div>
 	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
 	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
 	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>

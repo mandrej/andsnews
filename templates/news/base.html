@@ -1,12 +1,17 @@
 {% extends "base.html" %}
+{% import "snippets/macros.html" as m %}
+{% set kind='Feed' %}
+{% set filters=[
+    {'field': 'tags', 'title': _('Tags'), 'toggle': filter.tags}
+] %}
 {% block nav %}
 	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
 	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
 	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
 	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
-	<div id="filters">
-		<a href="/visualize/Feed_tags" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="tags collapse" href="/filter/Feed_tags">{{ _('Tags') }} {% if filter.tags %}[−]{% else %}[+]{% endif %}</a>
-		<div id="tagscloud" class="hide"></div>
-	</div>
+    <div id="filters">
+        {% for f in filters %}
+            {{ m.build_filter(f, kind) }}
+        {% endfor %}
+    </div>
 {% endblock %}

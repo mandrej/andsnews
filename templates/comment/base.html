@@ -1,20 +1,19 @@
 {% extends "base.html" %}
+{% import "snippets/macros.html" as m %}
+{% set kind='Comment' %}
+{% set filters=[
+    {'field': 'forkind', 'title': _('Type'), 'toggle': filter.forkind},
+    {'field': 'date', 'title': _('Dates'), 'toggle': filter.year},
+    {'field': 'author', 'title': _('Authors'), 'toggle': filter.author}
+] %}
 {% block nav %}
 	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
 	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
 	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
 	<div id="filters">
-		<a href="/visualize/Comment_forkind" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="forkind collapse" href="/filter/Comment_forkind">{{ _('Type') }} {% if filter.forkind %}[−]{% else %}[+]{% endif %}</a>
-		<div id="forkindcloud" class="hide"></div>
-		
-		<a href="/visualize/Comment_date" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="date collapse" href="/filter/Comment_date">{{ _('Dates') }} {% if filter.year %}[−]{% else %}[+]{% endif %}</a>
-		<div id="datecloud" class="hide"></div>
-		
-		<a href="/visualize/Comment_author" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
-	    <a class="author collapse" href="/filter/Comment_author">{{ _('Authors') }} {% if filter.author %}[−]{% else %}[+]{% endif %}</a>
-		<div id="authorcloud" class="hide"></div>
+        {% for f in filters %}
+            {{ m.build_filter(f, kind) }}
+        {% endfor %}
 	</div>
 	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
 {% endblock %}

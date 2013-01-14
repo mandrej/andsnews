@@ -46,6 +46,12 @@ indexes:
   - name: date
     direction: desc
 
+- kind: Entry
+  properties:
+  - name: year
+  - name: date
+    direction: desc
+
 - kind: Feed
   properties:
   - name: tags

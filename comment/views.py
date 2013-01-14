@@ -17,8 +17,7 @@ class Index(BaseHandler):
         paginator = Paginator(query, per_page=PER_PAGE)
         objects, has_next = paginator.page(page)
 
-        data = {'kind': 'Comment',
-                'objects': objects,
+        data = {'objects': objects,
                 'filter': f.parameters,
                 'filter_url': f.url,
                 'filter_title': f.title,

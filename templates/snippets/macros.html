@@ -7,3 +7,10 @@
         {% endif %}
     </p>
 {% endmacro %}
+
+{% macro build_filter(f, kind) %}
+    <a href="/visualize/{{ kind }}_{{ f.field }}" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
+    <a class="{{ f.field }} collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }}
+        {{ '[−]' if f.toggle else '[+]' }}</a>
+    <div id="{{ f.field }}cloud" class="hide"></div>
+{% endmacro %}
