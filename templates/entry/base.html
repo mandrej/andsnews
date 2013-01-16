@@ -1,19 +1,4 @@
 {% extends "base.html" %}
 {% import "snippets/macros.html" as m %}
 {% set kind='Entry' %}
-{% set filters=[
-    {'field': 'tags', 'title': _('Tags'), 'toggle': filter.tags},
-    {'field': 'date', 'title': _('Dates'), 'toggle': filter.year},
-    {'field': 'author', 'title': _('Authors'), 'toggle': filter.author}
-] %}
-{% block nav %}
-	<a href="/photos" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
-	<a href="/entries" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
-    <div id="filters">
-        {% for f in filters %}
-            {{ m.build_filter(f, kind) }}
-        {% endfor %}
-    </div>
-	<a href="/comments" title="{{ _('Comments') }}" class="Comment">{{ _('Comments') }}</a>
-	<a href="/news" title="{{ _('News') }}" class="News">{{ _('News') }}</a>
-{% endblock %}
+{% block nav %}{{ m.menu(kind) }}{% endblock %}
