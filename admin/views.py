@@ -10,14 +10,14 @@ from settings import PER_PAGE
 def memcache_delete(request, key):
     memcache.delete(key)
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(None))
+    response.write(json.dumps(None))
     return response
 
 def build(request, key):
     kind, field = key.split('_')
     content = count_property(kind, field)
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(content))
+    response.write(json.dumps(content))
     return response
 
 def create(request, key):
@@ -27,7 +27,7 @@ def create(request, key):
     else:
         content = make_cloud(kind, field)
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(content))
+    response.write(json.dumps(content))
     return response
 
 def memcache_content(request):
@@ -35,7 +35,7 @@ def memcache_content(request):
     for key in KEYS:
         data[key] = memcache.get(key)
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(data))
+    response.write(json.dumps(data))
     return response
 
 class Index(BaseHandler):
@@ -84,14 +84,14 @@ def comment_save(request):
     obj.body = request.POST['body']
     obj.put()
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps({'success': True}))
+    response.write(json.dumps({'success': True}))
     return response
 
 def comment_delete(request):
     key = ndb.Key(urlsafe=request.POST['key'])
     key.delete()
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps({'success': True}))
+    response.write(json.dumps({'success': True}))
     return response
 
 def thumbnail_delete(request):
@@ -99,7 +99,7 @@ def thumbnail_delete(request):
     args = [params['kind'], params['key']]
     deferred.defer(delete_small, *args)
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps({'success': True}))
+    response.write(json.dumps({'success': True}))
     return response
 
 def thumbnail_make(request):
@@ -110,7 +110,7 @@ def thumbnail_make(request):
     deferred.defer(make_thumbnail, parentkind, slug, 'small')
     if small != no: small = 3000 # filesizeformat(len(small)) # TODO
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps({'success': True, 'small': small}))
+    response.write(json.dumps({'success': True, 'small': small}))
     return response
 
 def thumbnail_color(request):
@@ -125,7 +125,7 @@ def thumbnail_color(request):
     photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
     photo.put()
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps({'success': True, 'hex': obj.hex}))
+    response.write(json.dumps({'success': True, 'hex': obj.hex}))
     return response
 
 class Thumbnails(BaseHandler):
@@ -155,7 +155,7 @@ def info(request, safekey):
     key = ndb.Key(urlsafe=safekey)
     template = ENV.get_template('admin/info.html')
     response = webapp2.Response(content_type='text/html')
-    response.out.write(template.render({'object': key.get()}))
+    response.write(template.render({'object': key.get()}))
     return response
 
 class Feeds(BaseHandler):

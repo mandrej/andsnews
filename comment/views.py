@@ -53,6 +53,6 @@ class Add(BaseHandler):
         self.response.headers['Content-Type'] = 'application/json'
         if form.validate():
             deferred.defer(send, safekey, form.data['email'], form.data['body'])
-            self.response.out.write(json.dumps({'success': True}))
+            self.response.write(json.dumps({'success': True}))
         else:
-            self.response.out.write(json.dumps(form.errors))
+            self.response.write(json.dumps(form.errors))

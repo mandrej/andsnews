@@ -77,14 +77,14 @@ def visualize(request, key):
         data['rows'] = sorted(items, key=itemgetter('count'), reverse=True)[:10]
 
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(data))
+    response.write(json.dumps(data))
     return response
 
 def auto_complete(request, kind, field):
     words = [x['name'] for x in make_cloud(kind.capitalize(), field)]
     words.sort()
     response = webapp2.Response(content_type='text/plain')
-    response.out.write('\n'.join(words))
+    response.write('\n'.join(words))
     return response
 
 class Find(BaseHandler):
@@ -121,7 +121,7 @@ def get_latest_photos():
 def latest(request):
     objects = get_latest_photos()
     response = webapp2.Response(content_type='application/json')
-    response.out.write(json.dumps(objects))
+    response.write(json.dumps(objects))
     return response
 
 class Index(BaseHandler):
@@ -155,20 +155,20 @@ class DeleteHandler(BaseHandler):
 
 def handle_403(request, response, exception):
     template = ENV.get_template('errors/403.html')
-    response.out.write(template.render({'error': exception}))
+    response.write(template.render({'error': exception}))
     response.set_status(403)
     return response
 
 def handle_404(request, response, exception):
     template = ENV.get_template('errors/404.html')
-    response.out.write(template.render({'error': exception, 'path': request.path_qs}))
+    response.write(template.render({'error': exception, 'path': request.path_qs}))
     response.set_status(404)
     return response
 
 def handle_500(request, response, exception):
     template = ENV.get_template('errors/500.html')
     lines = ''.join(traceback.format_exception(*sys.exc_info()))
-    response.out.write(template.render({'error': exception, 'lines': lines}))
+    response.write(template.render({'error': exception, 'lines': lines}))
     response.set_status(500)
     return response
 
@@ -219,7 +219,7 @@ def rss(request, kind):
     response.headers['ETag'] = hashlib.md5(last_modified).hexdigest()
     response.headers['Expires'] = format_datetime(expires, format=RFC822)
     response.headers['Cache-Control'] = 'max-age=86400'
-    response.out.write(template.render(data))
+    response.write(template.render(data))
     return response
 
 def sitemap(request):
@@ -230,5 +230,5 @@ def sitemap(request):
         'HOST': 'http://%s' % HOST_NAME,
     }
     response = webapp2.Response(content_type='application/xml')
-    response.out.write(template.render(data))
+    response.write(template.render(data))
     return response

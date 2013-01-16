@@ -137,7 +137,7 @@ def thumb(request, slug, size):
         response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
         if size == 'normal':
             response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
-        response.out.write(out)
+        response.write(out)
         return response
     else:
         webapp2.abort(503)

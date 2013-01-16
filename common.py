@@ -495,7 +495,7 @@ class BaseHandler(webapp2.RequestHandler):
         kwargs.update(context)
         template = ENV.get_template(filename)
 #        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
-        self.response.out.write(template.render(kwargs))
+        self.response.write(template.render(kwargs))
 
 class SetLanguage(BaseHandler):
     def post(self):
