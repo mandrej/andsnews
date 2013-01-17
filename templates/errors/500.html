@@ -4,19 +4,8 @@
 
 {% block contents %}
 <article>
-{#	{% popup servererror %}#}
-{#		<p>#}
-{#			{{ _('Unforeseen server error ocurred') }}.#}
-{#			{{ _('It&apos;s been reported to the site administrator and should be fixed shortly') }}.#}
-{#			<br/>{{ _('Thanks for your patience') }}.</p>#}
-{#	{% endpopup %}#}
-
     <h2>500 {{ error }}</h2>
     <pre>{{ lines }}</pre>
-{#	<p>#}
-{#		{{ _('Unforeseen server error ocurred') }}.#}
-{#		{{ _('It&apos;s been reported to the site administrator and should be fixed shortly') }}.#}
-{#		<br/>{{ _('Thanks for your patience') }}.</p>#}
 </article>
 {% endblock %}
 

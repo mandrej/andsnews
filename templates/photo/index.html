@@ -12,10 +12,7 @@
 	{% if objects %}
 		<h2><a href="/photos">{{ _('Photos') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
-		<h2>{{ _('No photos') }}</h2>
-{#		{% popup noresults %}#}
-{#			<p>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</p>#}
-{#		{% endpopup %}#}
+		<h2>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h2>
 	{% endif %}
 	
 	<div id="container">

@@ -17,10 +17,7 @@
 		<h2><a href="/news">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
 			{{ filter_title }}</h2>
 	{% else %}
-		<h2>{{ _('No news') }}</h2>
-{#		{% popup noresults %}#}
-{#			<p>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</p>#}
-{#		{% endpopup %}#}
+		<h2>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</h2>
 	{% endif %}
 	
 	<div id="container">

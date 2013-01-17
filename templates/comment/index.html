@@ -10,10 +10,7 @@
 	{% if objects %}
 		<h2><a href="/comments">{{ _('Comments') }}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
-		<h2>{{ _('No comments') }}</h2>
-{#		{% popup noresults %}#}
-{#			<p>{{ _('No comments sent'%}, {{ _('or filter has no results') }}.</p>#}
-{#		{% endpopup %}#}
+		<h2>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h2>
 	{% endif %}
 	
 	<div id="container">

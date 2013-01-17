@@ -4,14 +4,7 @@
 
 {% block contents %}
 <article>
-	{% popup unavailable %}
-		<p><span class="error">{{ message }}</span>
-			<br/>{{ _('Thanks for your patience') }}.</p>
-	{% endpopup %}
-	
-	<h2>{{ _('Service unavailable') }} (503)</h2>
-	<p><span class="error">{{ message }}</span>
-		<br/>{{ _('Thanks for your patience') }}.</p>
+    <h2>503 {{ error }}</h2>
 </article>
 {% endblock %}
 
