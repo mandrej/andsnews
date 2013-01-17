@@ -1,3 +1,4 @@
+from __future__ import with_statement
 #!/usr/bin/env python
 #
 # Copyright 2010 Google Inc.
@@ -48,11 +49,28 @@ STATIC_RE = r".*/([^/]*\.(?:css|js)|status|detail)$"
 from mapreduce import operation as op
 from mapreduce import control
 from mapreduce.model import MapreduceState
-from google.appengine.ext import ndb
-from models import Photo, Entry, Comment
+from google.appengine.ext import ndb, blobstore
+from google.appengine.api import files
+from models import Photo, Picture, Entry, Comment
+import logging
 
-def fixer(entity):
-    pass
+def fixer(oldkey):
+    key = ndb.Key.from_old_key(oldkey)
+    photo = key.parent().get()
+    if photo.blob_key is None:
+        file_name = files.blobstore.create(mime_type='application/octet-stream',
+            _blobinfo_uploaded_filename=photo.key.string_id())
+        pic = key.get()
+        with files.open(file_name, 'a') as f:
+            f.write(pic.blob)
+        files.finalize(file_name)
+        blob_key = files.blobstore.get_blob_key(file_name)
+        blob_info = blobstore.BlobInfo.get(blob_key)
+
+        photo.blob_key = blob_key
+        photo.size = blob_info.size
+        photo.put()
+
 #    try:
 #        delattr(entity, 'voters')
 #        delattr(entity, 'sum')
@@ -62,12 +80,12 @@ def fixer(entity):
 #    else:
 #        yield op.db.Put(entity)
 
-def indexer(key):
+def indexer(oldkey):
 #    entity is oldkey for DatastoreKeyInputReader
 #    <class 'google.appengine.api.datastore_types.Key'>
-    nkey = ndb.Key.from_old_key(key)
+    key = ndb.Key.from_old_key(oldkey)
 #    <class 'google.appengine.ext.ndb.key.Key'>
-    entity = nkey.get()
+    entity = key.get()
     entity.index_add()
 
 #def process_tags(entity):
