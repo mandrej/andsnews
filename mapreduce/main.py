@@ -55,27 +55,28 @@ from models import Photo, Picture, Entry, Comment, median
 import logging
 
 def fixer(oldkey):
-    key = ndb.Key.from_old_key(oldkey)
-    photo = key.parent().get()
-    if photo.blob_key is None:
-        file_name = files.blobstore.create(mime_type='application/octet-stream',
-            _blobinfo_uploaded_filename=photo.key.string_id())
-        pic = key.get()
-        with files.open(file_name, 'a') as f:
-            f.write(pic.blob)
-        files.finalize(file_name)
-        blob_key = files.blobstore.get_blob_key(file_name)
-        blob_info = blobstore.BlobInfo.get(blob_key)
-
-        photo.blob_key = blob_key
-        photo.size = blob_info.size
-        photo.rgb = pic.rgb
+    pass
+#    key = ndb.Key.from_old_key(oldkey)
+#    photo = key.parent().get()
+#    if photo.blob_key is None:
+#        file_name = files.blobstore.create(mime_type='application/octet-stream',
+#            _blobinfo_uploaded_filename=photo.key.string_id())
+#        pic = key.get()
+#        with files.open(file_name, 'a') as f:
+#            f.write(pic.blob)
+#        files.finalize(file_name)
+#        blob_key = files.blobstore.get_blob_key(file_name)
+#        blob_info = blobstore.BlobInfo.get(blob_key)
+#
+#        photo.blob_key = blob_key
+#        photo.size = blob_info.size
+#        photo.rgb = pic.rgb
 #        if hasattr(photo, 'aspect'):
 #            delattr(photo, 'aspect')
 #        if hasattr(photo, 'score'):
 #            delattr(photo, 'score')
-        photo.put()
-        key.delete()
+#        photo.put()
+#        key.delete()
 
 def indexer(oldkey):
 #    entity is oldkey for DatastoreKeyInputReader

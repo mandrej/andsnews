@@ -105,62 +105,40 @@ $(function() {
 			</thead>
 			<tbody>
 				{% for photo in objects %}
-                    {% if photo.blob_key %}
-                        <tr id="{{ photo.key.urlsafe() }}">
-                            <td><a href="{{ photo.get_absolute_url() }}/edit">
-                                {{ photo.headline }}</a></td>
-                            <td></td>
-                            <td>{{ photo.size|filesizeformat }}</td>
-                            <td class="_small"></td>
-                            <td class="_hex" style="background-color: {{ photo.hex }};">
-                                <a href="/admin/photo/info/{{ photo.key.urlsafe() }}" class="message">
-                                    {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
-                                </a>
-                            </td>
-                            <td class="nowrap">
-                            </td>
-                        </tr>
-                    {% else %}
-                        {% with picture=photo.picture.get() %}
-                        <tr id="{{ picture.key.urlsafe() }}">
-                            <td><a href="{{ photo.get_absolute_url() }}/edit">
-                                {{ photo.headline }}</a></td>
-                            <td>{{ picture.width }} x {{ picture.height }} px</td>
-                            <td>{{ picture.size|filesizeformat }}</td>
-                            <td class="_small">
-                                {% if picture.small %}{{ picture.small|length|filesizeformat }}
-                                {% else %}<img src="/static/images/icon_no.png" alt=""/>{% endif %}</td>
-                            <td class="_hex" style="background-color: {{ picture.hex }};">
-                                {% if picture.rgb %}
-                                    <a href="/admin/photo/info/{{ photo.key.urlsafe() }}" class="message">
-                                        {% for c in picture.hls %}{{ '%03d'|format(c) }} {% endfor %}
-                                    </a>
-                                {% else %}---{% endif %}</td>
-                            <td class="nowrap">
-                                {% if picture.small %}
-                                    <button type="submit" name="delete"
-                                        value="{{ picture.key.urlsafe() }}">delete</button>
-                                    <button type="submit" name="make"
-                                        value="{{ picture.key.urlsafe() }}">make</button>
-                                {% else %}
-                                    <button type="submit" name="delete"
-                                        class="disabled" disabled="disabled"
-                                        value="{{ picture.key.urlsafe() }}">delete</button>
-                                    <button type="submit" name="make"
-                                        value="{{ picture.key.id() }}">make</button>
-                                {% endif %}
-                                {% if picture.small %}
-                                    <button type="submit" name="color"
-                                        value="{{ picture.key.urlsafe() }}">color</button>
-                                {% else %}
-                                    <button type="submit" name="color"
-                                        class="disabled" disabled="disabled"
-                                        value="{{ picture.key.urlsafe() }}">color</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endwith %}
-                    {% endif %}
+                    <tr id="{{ photo.key.urlsafe() }}">
+                        <td><a href="{{ photo.get_absolute_url() }}/edit">
+                            {{ photo.headline }}</a></td>
+                        <td></td>
+                        <td>{{ photo.size|filesizeformat }}</td>
+                        <td class="_small"></td>
+                        <td class="_hex" style="background-color: {{ photo.hex }};">
+                            <a href="/admin/photo/info/{{ photo.key.urlsafe() }}" class="message">
+                                {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                            </a>
+                        </td>
+                        <td class="nowrap">
+{#                            {% if picture.small %}#}
+{#                                <button type="submit" name="delete"#}
+{#                                        value="{{ picture.key.urlsafe() }}">delete</button>#}
+{#                                <button type="submit" name="make"#}
+{#                                        value="{{ picture.key.urlsafe() }}">make</button>#}
+{#                            {% else %}#}
+{#                                <button type="submit" name="delete"#}
+{#                                        class="disabled" disabled="disabled"#}
+{#                                        value="{{ picture.key.urlsafe() }}">delete</button>#}
+{#                                <button type="submit" name="make"#}
+{#                                        value="{{ picture.key.id() }}">make</button>#}
+{#                            {% endif %}#}
+{#                            {% if picture.small %}#}
+{#                                <button type="submit" name="color"#}
+{#                                        value="{{ picture.key.urlsafe() }}">color</button>#}
+{#                            {% else %}#}
+{#                                <button type="submit" name="color"#}
+{#                                        class="disabled" disabled="disabled"#}
+{#                                        value="{{ picture.key.urlsafe() }}">color</button>#}
+{#                            {% endif %}#}
+                        </td>
+                    </tr>
 				{% endfor %}
 			</tbody>
 		</table>

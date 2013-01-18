@@ -160,26 +160,6 @@ def incr_count(*args):
 def decr_count(*args):
     deferred.defer(update_counter, *args, delta=-1)
 
-class Picture(ndb.Model):
-    # parent Photo
-    width = ndb.IntegerProperty()
-    height = ndb.IntegerProperty()
-    size = ndb.IntegerProperty()
-    blob = ndb.BlobProperty(default=None)
-    small = ndb.BlobProperty(default=None)
-    # RGB [86, 102, 102]
-    rgb = ndb.IntegerProperty(repeated=True)
-
-    @property
-    def hex(self):
-        return '#%02x%02x%02x' % tuple(self.rgb)
-    
-    @property
-    def hls(self):
-        rel_rgb = map(lambda x: x/255, self.rgb)
-        h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-        return int(h*360), int(l*100), int(s*100)
-
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty(auto_current_user_add=True)
@@ -213,10 +193,6 @@ class Photo(ndb.Model):
     
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
-
-    @property
-    def picture(self):
-        return Picture.query(ancestor = self.key)
 
     def _put(self):
         self.put()
@@ -310,9 +286,8 @@ class Photo(ndb.Model):
     
 #    @ndb.transactional
     def delete(self):
-        if self.blob_key is not None:
-            blob_info = blobstore.BlobInfo.get(self.blob_key)
-            blob_info.delete()
+        blob_info = blobstore.BlobInfo.get(self.blob_key)
+        blob_info.delete()
         ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
         self.index_del()
         for name in self.tags:
@@ -329,16 +304,10 @@ class Photo(ndb.Model):
         return '/photos/%s' % self.key.string_id()
 
     def normal_url(self):
-        if self.blob_key:
-            return images.get_serving_url(self.blob_key, size=1000, crop=False)
-        else:
-            return '/photos/%s/normal' % self.key.string_id()
+        return images.get_serving_url(self.blob_key, size=1000, crop=False)
 
     def small_url(self):
-        if self.blob_key:
-            return images.get_serving_url(self.blob_key, size=360, crop=False)
-        else:
-            return '/photos/%s/small' % self.key.string_id()
+        return images.get_serving_url(self.blob_key, size=360, crop=False)
 
     @property
     def similar_url(self):
