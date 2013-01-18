@@ -51,7 +51,7 @@ from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
 from google.appengine.api import files
-from models import Photo, Picture, Entry, Comment
+from models import Photo, Picture, Entry, Comment, median
 import logging
 
 def fixer(oldkey):
@@ -69,16 +69,13 @@ def fixer(oldkey):
 
         photo.blob_key = blob_key
         photo.size = blob_info.size
+        photo.rgb = pic.rgb
+#        if hasattr(photo, 'aspect'):
+#            delattr(photo, 'aspect')
+#        if hasattr(photo, 'score'):
+#            delattr(photo, 'score')
         photo.put()
-
-#    try:
-#        delattr(entity, 'voters')
-#        delattr(entity, 'sum')
-#        delattr(entity, 'score')
-#    except AttributeError:
-#        pass
-#    else:
-#        yield op.db.Put(entity)
+        key.delete()
 
 def indexer(oldkey):
 #    entity is oldkey for DatastoreKeyInputReader

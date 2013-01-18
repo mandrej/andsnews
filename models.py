@@ -205,9 +205,7 @@ class Photo(ndb.Model):
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
     sat = ndb.StringProperty()
-    # landscape|portrait
-    aspect = ndb.StringProperty()
-    
+
     def index_add(self):
         return INDEX.put(
             create_doc('%s' % self.key.urlsafe(), 
@@ -338,10 +336,11 @@ class Photo(ndb.Model):
 
     def small_url(self):
         if self.blob_key:
-            return images.get_serving_url(self.blob_key, size=240, crop=False)
+            return images.get_serving_url(self.blob_key, size=360, crop=False)
         else:
             return '/photos/%s/small' % self.key.string_id()
 
+    @property
     def similar_url(self):
         if self.sat == 'color':
             return '/photos/hue/%s' % self.hue
