@@ -1,9 +1,9 @@
 application: andsnews
-version: 1301
+version: 1302
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: "1d"
+default_expiration: "7d"
 
 #env_variables:
 #  TMP: C:\Users\milan\AppData\Local\Temp
