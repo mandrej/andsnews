@@ -25,7 +25,6 @@
 $(function() {
 	$('#headline').slugify();
 	$('#body').markItUp(blogSettings, {nameSpace: 'big'});
-	$('input, textarea').focusHighlight();
 	$('#images img').click(function() {
 		src = $(this).attr('src').replace('small', 'normal');
         console.log(src);

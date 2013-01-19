@@ -19,9 +19,8 @@
 <script src="/static/scripts/jquery.autocomplete.js"></script>
 <script>
 $(function() {
-	$('#id_headline').slugify();
-	$('input, select').focusHighlight();
-	$("#id_tags").autocomplete("/complete/feed/tags", {
+	$('#headline').slugify();
+	$("#tags").autocomplete("/complete/feed/tags", {
 		width: 284,
 		selectFirst: false,
 		multiple: true,
