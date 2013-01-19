@@ -11,9 +11,9 @@ from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
-from wtforms import Form, widgets, fields, validators
+from wtforms import widgets, fields
 from cloud import calculate_cloud
-from models import INDEX, Counter, Photo, median, range_names
+from models import INDEX, Counter, Photo
 from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
 
 LANGUAGES = (
@@ -188,20 +188,21 @@ def count_colors():
     return content
 
 def make_thumbnail(kind, slug, size, mime='image/jpeg'):
-    if kind == 'Photo':
-        if size == 'small': _width = 240
-        obj = ndb.Key('Photo', slug, 'Picture', slug).get()
-    elif kind == 'Entry':
-        if size == 'small': _width = 60
-        m = re.match(r'(.+)_\d', slug)
-        obj = ndb.Key('Entry', m.group(1), 'Img', slug).get()
-        mime = str(obj.mime)
-
+    """
+    for Entry images only
+    """
+    if size == 'small': _width = 60
+    m = re.match(r'(.+)_\d', slug)
+    obj = ndb.Key(kind, m.group(1), 'Img', slug).get()
     if obj is None:
         webapp2.abort(404)
+    mime = str(obj.mime)
+
     buff = obj.blob
-    if size == 'normal': return buff, mime
-    if size == 'small' and obj.small is not None: return obj.small, mime
+    if size == 'normal':
+        return buff, mime
+    if size == 'small' and obj.small is not None:
+        return obj.small, mime
     img = images.Image(buff)
 
     aspect = img.width/img.height
@@ -225,12 +226,6 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
         else:
             if size== 'small' and obj.small is None:
                 obj.small = out
-                if kind == 'Photo':
-                    obj.rgb = median(out)
-                    obj.put()
-                    photo = obj.key.parent().get()
-                    photo.hue, photo.lum, photo.sat = range_names(obj.rgb)
-                    photo.put()
                 obj.put()
         return out, mime
     else:

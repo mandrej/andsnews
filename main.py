@@ -6,7 +6,6 @@ from settings import DEBUG
 
 CONFIG = {
     'webapp2_extras.sessions': {'secret_key': 'iasbj*6WZ2'},
-#    'locales' : ['en_US', 'sr_RS']
 }
 
 app = WSGIApplication([
@@ -17,14 +16,13 @@ app = WSGIApplication([
         Route('/<slug>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
-        Route('/<slug>/<size:(small|normal)>', handler='photo.views.thumb'), # TODO DEPRICATE
         ]),
     SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
         Route('/add', handler='entry.views.Add'),
         Route('/<slug>/edit', handler='entry.views.Edit'),
         Route('/<field:(tags|date|author)>/<value>', handler='entry.views.Index'),
-        Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'), # TODO DEPRICATE
+        Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'),
         Route('/<slug>', handler='entry.views.Detail'),
         ]),
     SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),

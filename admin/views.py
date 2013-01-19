@@ -4,7 +4,7 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
-from common import ENV, BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail
+from common import ENV, BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail, filesizeformat
 from settings import PER_PAGE
 
 def memcache_delete(request, key):
@@ -108,7 +108,7 @@ def thumbnail_make(request):
     slug = params['slug']
     no = small = '---'
     deferred.defer(make_thumbnail, parentkind, slug, 'small')
-    if small != no: small = 3000 # filesizeformat(len(small)) # TODO
+    if small != no: small = filesizeformat(len(small))
     response = webapp2.Response(content_type='application/json')
     response.write(json.dumps({'success': True, 'small': small}))
     return response

@@ -1,14 +1,12 @@
 import cgi
-import datetime
 import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required, admin_required
+from webapp2_extras.appengine.users import login_required
 from models import Photo
 from wtforms import Form, widgets, fields, validators
-from common import BaseHandler, Paginator, Filter, EmailField, TagsField, make_thumbnail
-from settings import TIMEOUT, FAMILY
+from common import BaseHandler, Paginator, Filter, EmailField, TagsField
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -125,15 +123,3 @@ class Edit(BaseHandler):
             self.redirect('/photos')
         else:
             self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
-
-def thumb(request, slug, size):
-    out, mime = make_thumbnail('Photo', slug, size)
-    if out:
-        response = webapp2.Response(content_type=mime)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
-        if size == 'normal':
-            response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
-        response.write(out)
-        return response
-    else:
-        webapp2.abort(503)
