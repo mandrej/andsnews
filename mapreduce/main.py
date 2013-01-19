@@ -51,32 +51,25 @@ from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
 from google.appengine.api import files
-from models import Photo, Picture, Entry, Comment, median
+from models import Photo, Entry, Comment, median
 import logging
 
 def fixer(oldkey):
-    pass
-#    key = ndb.Key.from_old_key(oldkey)
-#    photo = key.parent().get()
-#    if photo.blob_key is None:
-#        file_name = files.blobstore.create(mime_type='application/octet-stream',
-#            _blobinfo_uploaded_filename=photo.key.string_id())
-#        pic = key.get()
-#        with files.open(file_name, 'a') as f:
-#            f.write(pic.blob)
-#        files.finalize(file_name)
-#        blob_key = files.blobstore.get_blob_key(file_name)
-#        blob_info = blobstore.BlobInfo.get(blob_key)
-#
-#        photo.blob_key = blob_key
-#        photo.size = blob_info.size
-#        photo.rgb = pic.rgb
-#        if hasattr(photo, 'aspect'):
-#            delattr(photo, 'aspect')
-#        if hasattr(photo, 'score'):
-#            delattr(photo, 'score')
-#        photo.put()
-#        key.delete()
+    key = ndb.Key.from_old_key(oldkey)
+    obj = key.get()
+    blob_info = blobstore.BlobInfo.get(obj.blob_key)
+    blob_reader = blob_info.open()
+    buff = blob_reader.read()
+
+    file_name = files.blobstore.create(mime_type='image/jpeg',
+        _blobinfo_uploaded_filename='%s.jpg' % obj.key.string_id())
+    with files.open(file_name, 'a') as f:
+        f.write(buff)
+    files.finalize(file_name)
+
+    obj.blob_key = files.blobstore.get_blob_key(file_name)
+    obj.put()
+    blob_info.delete()
 
 def indexer(oldkey):
 #    entity is oldkey for DatastoreKeyInputReader

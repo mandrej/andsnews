@@ -5,7 +5,7 @@ mapreduce:
 #    handler: mapreduce.main.fixer
 #    params:
 #      - name: entity_kind
-#        default: models.Picture
+#        default: models.Photo
 #      - name: processing_rate
 #        default: 50
 #      - name: shard_count
