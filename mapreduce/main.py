@@ -25,16 +25,8 @@ This module should be specified as a handler for mapreduce URLs in app.yaml:
     script: mapreduce/main.py
 """
 
-
-
-import wsgiref.handlers
-
-#from google.appengine.ext import webapp
 from mapreduce import handlers
 from mapreduce import status
-#from google.appengine.ext.webapp import util
-import logging
-
 import webapp2
 
 try:
