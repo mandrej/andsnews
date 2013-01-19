@@ -437,7 +437,7 @@ class EmailField(fields.SelectField):
             FAMILY.append(email)
         self.choices = [(x, x) for x in FAMILY]
 
-class TagsField(fields.TextField):
+class TagsField(fields.Field):
     widget = widgets.TextInput()
     def _value(self):
         if self.data:

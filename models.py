@@ -204,7 +204,6 @@ class Photo(ndb.Model):
         self.blob_key = blob_info.key()
         self.size = blob_info.size
         blob_reader = blob_info.open()
-#        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=25600)
         buff = blob_reader.read()
         self.rgb = median(buff)
         exif = get_exif(buff)
