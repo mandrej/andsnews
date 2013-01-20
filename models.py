@@ -226,8 +226,9 @@ class Photo(ndb.Model):
     def edit(self, data):
         old = self.author
         new = data['author']
-        if new != old.email():
-            self.author = users.User(new)
+        if new != old.nickname():
+#            TODO Not all emails are gmail
+            self.author = users.User(email='%s@gmail.com' % new)
             decr_count('Photo', 'author', old.nickname())
             incr_count('Photo', 'author', self.author.nickname())
         del data['author']
@@ -287,7 +288,6 @@ class Photo(ndb.Model):
     def delete(self):
         blob_info = blobstore.BlobInfo.get(self.blob_key)
         blob_info.delete()
-        ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
         self.index_del()
         for name in self.tags:
             decr_count('Photo', 'tags', name)
@@ -298,6 +298,9 @@ class Photo(ndb.Model):
             value = getattr(self, field)
             if value:
                 decr_count('Photo', field, value)
+
+        ndb.delete_multi([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
+        self.key.delete()
 
     def get_absolute_url(self):
         return '/photos/%s' % self.key.string_id()

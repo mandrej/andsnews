@@ -435,9 +435,9 @@ class EmailField(fields.SelectField):
         email = user.email()
         if not email in FAMILY:
             FAMILY.append(email)
-        self.choices = [(x, x) for x in FAMILY]
+        self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
 
-class TagsField(fields.Field):
+class TagsField(fields.TextField):
     widget = widgets.TextInput()
     def _value(self):
         if self.data:
@@ -446,7 +446,7 @@ class TagsField(fields.Field):
             return u''
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = sorted([x.strip().lower() for x in valuelist[0].split(',')])
+            self.data = sorted([x.strip().lower() for x in valuelist[0].split(',') if x.strip() != ''])
         else:
             self.data = []
 

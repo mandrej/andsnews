@@ -77,9 +77,6 @@
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.slug) }}
                 {{ m.form_row(form.tags) }}
-                {% if is_admin %}
-                    {{ m.form_row(form.author) }}
-                {% endif %}
                 {{ m.form_row(form.photo, style='width: 285px;') }}
                 <p class="buttons">
                     <span class="required">{{ _('Required field') }}</span>
@@ -97,7 +94,7 @@
 				{% if is_admin %}
                     {{ m.form_row(form.author) }}
 				{% else %}
-					<input type="hidden" name="author" value="{{ object.author.email }}"/>
+					<input type="hidden" name="author" value="{{ object.author.nickname() }}"/>
 				{% endif %}
 			</fieldset>
 			
