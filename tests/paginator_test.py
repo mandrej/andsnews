@@ -8,63 +8,76 @@ class Paginator:
     def __init__(self, objects, per_page):
         self.objects = objects
         self.per_page = per_page
+        self.count = len(objects)
+        self.num_pages = int(math.ceil(self.count/self.per_page)) + 1
 
     def page(self, num):
-        count = len(self.objects)
-        num_pages = int(math.ceil(count/self.per_page)) + 1
         offset = (num - 1)*self.per_page
         results = self.objects[offset: offset + self.per_page]
-        has_next = count > len(self.objects[: offset + self.per_page])
-#        print 'num_pages %s' % num_pages
+        has_next = self.count > len(self.objects[: offset + self.per_page])
         return results, has_next
 
-    def triple(self, page, idx):
+    def triple(self, num, idx):
+        """
+        num and idx are 1 base index
+        """
+        collection = []
         rem = idx%self.per_page
-        print 'rem %s' % rem
-        objects, has_next = self.page(page)
+        objects, has_next = self.page(num)
         print objects, has_next
+        print '-------------------------', rem
 
-        if page == 1 and rem == 1:
-            collection = [None] + objects
-            numbers = {'prev': None, 'next': idx + 1}
-        elif page > 1 and rem == 1:
-            other, has_next = self.page(page - 1)
-            collection = (other + objects)[self.per_page + rem - 2:]
-            numbers = {'prev': self.per_page, 'next': idx + 1}
+        if rem == 1:
+#            left edge
+            if num == 1:
+                if self.count == 1:
+                    collection = [None] + objects + [None]
+                    numbers = {'prev': None, 'next': None}
+                else:
+                    collection = [None] + objects
+                    numbers = {'prev': None, 'next': idx + 1}
+            else:
+                if idx == self.count:
+                    other, x = self.page(num - 1)
+                    collection = (other + objects + [None])[idx - (num - 2)*self.per_page - 2:]
+                    numbers = {'prev': idx - 1, 'next': None}
+                else:
+                    other, x = self.page(num - 1)
+                    collection = (other + objects)[idx - (num - 2)*self.per_page - 2:]
+                    numbers = {'prev': idx - 1, 'next': idx + 1}
         elif rem == 0:
+#            right edge
             if has_next:
-                other, has_next = self.page(page + 1)
-                collection = (objects + other)[rem - 2:]
+                other, x = self.page(num + 1)
+                collection = (objects + other)[idx - (num - 1)*self.per_page - 2:]
                 numbers = {'prev': idx - 1, 'next': idx + 1}
             else:
-                collection = objects[rem - 2:] + [None]
+                collection = (objects + [None])[idx - (num - 1)*self.per_page - 2:]
                 numbers = {'prev': idx - 1, 'next': None}
         else:
-            collection = objects[rem - 2:]
-            numbers = {'prev': idx - 1, 'next': idx + 1}
+            if idx == self.count:
+                collection = (objects + [None])[idx - (num - 1)*self.per_page - 2:]
+                numbers = {'prev': idx - 1, 'next': None}
+            else:
+                collection = objects[idx - (num -1)*self.per_page - 2:]
+                numbers = {'prev': idx - 1, 'next': idx + 1}
 
-        try:
-            previous, obj, next = collection[:3]
-        except ValueError:
-            previous, obj = collection[:2]
-            next = None
-
-        return previous, obj, next, numbers
+        return collection[:3], numbers
 
 class PaginatorTest(unittest.TestCase):
 
     def setUp(self):
-        self.paginator = Paginator(range(26), 12)
+        self.paginator = Paginator(range(1, 26), 12)
 
     def tearDown(self):
         self.paginator = None
 
 #    def test_page(self):
-#        objects, has_next = self.paginator.page(3)
-#        print objects, has_next
+#        objects, has_next = self.paginator.page(1)
+#        self.assertEquals(objects, [1,2,3,4,5,6,7,8,9,10,11,12])
 #        self.assertTrue(has_next)
 
     def test_triple(self):
-        previous, obj, next, numbers = self.paginator.triple(1, 3)
-        print previous, obj, next
-        print numbers
+        self.paginator = Paginator(range(1, 2), 12)
+        results, numbers = self.paginator.triple(1, 1)
+        print results, numbers
