@@ -13,11 +13,11 @@ app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/add', handler='photo.views.Add'),
         Route('/<slug>/edit', handler='photo.views.Edit'),
-        Route('/<slug>/<idx:\d+>', handler='photo.views.Detail'),
         Route('/<slug>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>/<idx:\d+>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
+        Route('/<slug>/<idx:\d+>', handler='photo.views.Detail'),
         ]),
     SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
