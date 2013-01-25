@@ -46,13 +46,13 @@ $(function() {
 	{% if previous or next %}
 	<nav class="paginator">
 	    {% if previous %}
-			<a class="prev" href="/photos{{ filter_url }}/{{ previous.key.string_id() }}?page={{ numbers.prev.0 }}&pic={{ numbers.prev.1 }}"
+			<a class="prev" href="/photos{{ filter_url }}/{{ previous.key.string_id() }}/{{ numbers.prev }}"
 				title="{{ previous.headline }}">◀</a>
 	    {% else %}
 	        <span class="prev na">◀</span>
 	    {% endif %}
 	    {% if next %}
-			<a class="next" href="/photos{{ filter_url }}/{{ next.key.string_id() }}?page={{ numbers.next.0 }}&pic={{ numbers.next.1 }}"
+			<a class="next" href="/photos{{ filter_url }}/{{ next.key.string_id() }}/{{ numbers.next }}"
 				title="{{ next.headline }}">▶</a>
 	    {% else %}
 	        <span class="next na">▶</span>

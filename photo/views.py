@@ -23,38 +23,38 @@ class Index(BaseHandler):
                 'filter_url': f.url,
                 'filter_title': f.title,
                 'page': page,
+                'idx': (page - 1)*paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('photo/index.html', data)
 
 class Detail(BaseHandler):
-    def get(self, slug, field=None, value=None):
-        if 'page' in self.request.GET and 'pic' in self.request.GET:
-            f = Filter(field, value)
-            filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
-            query = Photo.query(*filters).order(-Photo.date)
-
-            page = int(self.request.GET.get('page', 1))
-            pic = int(self.request.GET.get('pic', 1))
-            paginator = Paginator(query)
-            previous, obj, next, numbers = paginator.triple(page, pic)
-
-            data = {'object': obj,
-                    'next': next,
-                    'previous': previous,
-                    'filter': f.parameters,
-                    'filter_url': f.url,
-                    'filter_title': f.title,
-                    'page': page,
-                    'num': (page - 1)*paginator.per_page + pic,
-                    'numbers': numbers}
-            self.render_template('photo/detail.html', data)
-        else:
+    def get(self, slug, field=None, value=None, idx=None):
+        if idx is None:
             obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
             self.render_template('photo/detail.html',
                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
+        else:
+            f = Filter(field, value)
+            filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+            query = Photo.query(*filters).order(-Photo.date)
+
+            idx = int(idx)
+            paginator = Paginator(query)
+            page, prev, obj, next, numbers = paginator.triple(idx)
+
+            data = {'object': obj,
+                    'next': next,
+                    'previous': prev,
+                    'filter': f.parameters,
+                    'filter_url': f.url,
+                    'filter_title': f.title,
+                    'page': page,
+                    'num': idx,
+                    'numbers': numbers}
+            self.render_template('photo/detail.html', data)
 
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])

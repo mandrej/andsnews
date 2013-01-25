@@ -17,12 +17,13 @@ class Paginator:
         has_next = self.count > len(self.objects[: offset + self.per_page])
         return results, has_next
 
-    def triple(self, num, idx):
+    def triple(self, idx):
         """
         num and idx are 1 base index
         """
         collection = []
         rem = idx%self.per_page
+        num = int(idx/self.per_page) + (0 if rem == 0 else 1)
         objects, has_next = self.page(num)
         print objects, has_next
         print '-------------------------', rem
@@ -78,6 +79,6 @@ class PaginatorTest(unittest.TestCase):
 #        self.assertTrue(has_next)
 
     def test_triple(self):
-        self.paginator = Paginator(range(1, 2), 12)
-        results, numbers = self.paginator.triple(1, 1)
+        self.paginator = Paginator(range(1, 27), 10)
+        results, numbers = self.paginator.triple(21)
         print results, numbers
