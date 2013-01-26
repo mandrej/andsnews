@@ -309,7 +309,7 @@ class Photo(ndb.Model):
         return images.get_serving_url(self.blob_key, size=1000, crop=False)
 
     def small_url(self):
-        return images.get_serving_url(self.blob_key, size=360, crop=False)
+        return images.get_serving_url(self.blob_key, size=240, crop=True)
 
     @property
     def similar_url(self):
