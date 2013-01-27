@@ -42,8 +42,6 @@ app = WSGIApplication([
     SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
         Route('/comments', handler='admin.views.Comments'),
-        Route('/comments/save', 'admin.views.comment_save'),
-        Route('/comments/delete', 'admin.views.comment_delete'),
 
         Route('/feeds', handler='admin.views.Feeds'),
         Route('/counters', handler='admin.views.Counters'),

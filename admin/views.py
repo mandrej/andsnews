@@ -1,5 +1,5 @@
 from __future__ import division
-import os, json, webapp2, jinja2
+import json, webapp2
 from google.appengine.ext import ndb, deferred
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
@@ -69,6 +69,18 @@ class Comments(BaseHandler):
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
         self.render_template('admin/comments.html', data)
 
+    def post(self):
+        params = dict(self.request.POST)
+        key = ndb.Key(urlsafe=params['safekey'])
+        if 'body' in params:
+            obj = key.get()
+            obj.body = params['body']
+            obj.put()
+        else:
+            key.delete()
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json.dumps({'success': True}))
+        return self.response
 
 def delete_small(parentkind, oldkey):
     """ deferred.defer(delete_small, *args) """
@@ -77,22 +89,6 @@ def delete_small(parentkind, oldkey):
     if parentkind == 'Photo': obj.small = None
     elif parentkind == 'Entry': obj.small = None
     obj.put()
-
-def comment_save(request):
-    key = ndb.Key(urlsafe=request.POST['key'])
-    obj = key.get()
-    obj.body = request.POST['body']
-    obj.put()
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps({'success': True}))
-    return response
-
-def comment_delete(request):
-    key = ndb.Key(urlsafe=request.POST['key'])
-    key.delete()
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps({'success': True}))
-    return response
 
 def thumbnail_delete(request):
     params = request.POST
@@ -165,14 +161,9 @@ class Feeds(BaseHandler):
         self.render_template('admin/feeds.html', {'objects': query})
 
     def post(self):
-        query = Feed.query().order(-Feed.date)
-        feed_slug = self.request.POST.get('action:feed')
-        if feed_slug:
-            if feed_slug == 'all':
-                k = [x.key().name() for x in query]
-                memcache.delete_multi(k)
-            else:
-                memcache.delete(feed_slug)
+        slug = self.request.POST.get('action:feed')
+        if slug:
+            memcache.delete(slug)
         self.redirect('/admin/feeds')
 
 class Counters(BaseHandler):

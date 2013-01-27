@@ -1,73 +1,78 @@
 {% extends "admin/base.html" %}
 
 {% block contents %}
-<script>
-$(function() {
-	$('#main button').click(function() {
-		var row = $(this).parents('tr');
-		if ($(this).attr('name') == 'save') {
-			var url = '/admin/comment/save';
-			var params = {'key': row.attr('id'), 'body': $('textarea', row).val()};
-			var done = function() {};
-		}
-		if ($(this).attr('name') == 'delete') {
-			var url = '/admin/comment/delete';
-			var params = {'key': row.attr('id')};
-			var done = function(data) {
-				if (data.success == true) {
-					row.remove();
-				}
-			}
-		}
-		$.post(url, params, done, 'json');
-		return false;
-	});
-});
-</script>
 <article class="plain clear">
 	<h2>Comment &amp; message administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
-	<form action="" method="post">
-		<table id="data" class="zebra fix">
-			<colgroup>
-				<col style="width: 120px;"/>
-				<col/>
-				<col style="width: 120px;"/>
-				<col style="width: 130px; text-align: right;"/>
-				<col style="width: 120px; text-align: right;"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>for headline</th>
-					<th>body ...</th>
-					<th>author</th>
-					<th>date</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for object in objects %}
-					<tr id="{{ object.key.urlsafe() }}">
-						{% if object.is_message %}<td>message</td>{% else%}
-                            {% with parent=object.key.parent().get() %}
-                                <td>
-                                    <a href="{{ parent.get_absolute_url() }}#comments">
-                                        {{ parent.headline }}</a>
-                                </td>
-                            {% endwith %}
-						{% endif %}
-						<td>
-							<textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
-						</td>
-						<td>{{ object.author }}</td>
-						<td>{{ object.date|format_datetime }}</td>
-						<td class="nowrap">
-							<button type="submit" name="save">save</button>
-							<button type="submit" name="delete">delete</button>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</form>
+    <table id="data" class="zebra fix">
+        <colgroup>
+            <col style="width: 120px;"/>
+            <col/>
+            <col style="width: 120px;"/>
+            <col style="width: 130px; text-align: right;"/>
+            <col style="width: 120px; text-align: right;"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>for headline</th>
+                <th>body ...</th>
+                <th>author</th>
+                <th>date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in objects %}
+                <tr id="{{ object.key.urlsafe() }}">
+                    {% if object.is_message %}<td>message</td>{% else%}
+                        {% with parent=object.key.parent().get() %}
+                            <td>
+                                <a href="{{ parent.get_absolute_url() }}#comments">
+                                    {{ parent.headline }}</a>
+                            </td>
+                        {% endwith %}
+                    {% endif %}
+                    <td>
+                        <textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
+                    </td>
+                    <td>{{ object.author }}</td>
+                    <td>{{ object.date|format_datetime }}</td>
+                    <td class="nowrap">
+                        <button type="submit" name="save">save</button>
+                        <button type="submit" name="delete">delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function() {
+            $('#main button').click(function() {
+                var row = $(this).parents('tr');
+                var url = '/admin/comments';
+                var params = {'safekey': row.attr('id')};
+                if ($(this).attr('name') == 'save') {
+                    params['body'] = $('textarea', row).val();
+                    $.post(url, params, function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                        }
+                    }, 'json');
+                }
+                if ($(this).attr('name') == 'delete') {
+                    $.post(url, params, function(data) {
+                        if (data.success == true) {
+                            row.remove();
+                            $('#overlay, #spinner').hide();
+                        }
+                    }, 'json');
+                }
+                return false;
+            });
+        });
+    </script>
 {% endblock %}
