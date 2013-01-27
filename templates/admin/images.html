@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+
+{% block contents %}
+<article class="plain">
+	<h2>Entry images administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+    <div class="third" style="margin: 0">
+        <h3>Dates</h3>
+        <p class="cloud">
+            {% for item in archive|sort(attribute='name', reverse=True) %}
+                <a class="t{{ item.size }}{% if item.name == filter.year %} selected{% endif %}"
+                    title="{{ item.count }}" href="/admin/images/date/{{ item.name }}">{{ item.name }}</a>
+            {% endfor %}
+        </p>
+    </div>
+    <br clear="all"/>
+    {% for entry in objects %}
+        <h3><a href="{{ entry.get_absolute_url() }}/edit">{{ entry.headline }}</a></h3>
+        <table id="data2" class="zebra fix">
+            <colgroup>
+                <col/>
+                <col style="width: 120px;"/>
+                <col style="width: 80px; text-align: right;"/>
+                <col style="width: 60px; text-align: center;"/>
+                <col style="width: 60px; text-align: center;"/>
+                <col style="width: 122px; text-align: right;"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>keyname</th>
+                    <th>type</th>
+                    <th>normal</th>
+                    <th>small</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in entry.image_list %}
+                    <tr id="{{ image.key.urlsafe() }}">
+                        <td>{{ image.name }}</td>
+                        <td>{{ image.key.string_id() }}</td>
+                        <td>{{ image.mime }}</td>
+                        <td>{{ image.blob|length|filesizeformat }}</td>
+                        <td class="_small">
+                            {% if image.small %}
+                                {{ image.small|length|filesizeformat }}
+                            {% else %}
+                                <img src="/static/images/icon_no.png" alt=""/>
+                            {% endif %}
+                        </td>
+                        <td class="nowrap">
+                            {% if image.small %}
+                                <button type="submit" name="delete">delete</button>
+                                <button type="submit" name="make" class="disabled" disabled="disabled">make</button>
+                            {% else %}
+                                <button type="submit" name="delete" class="disabled" disabled="disabled">delete</button>
+                                <button type="submit" name="make">make</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6">No images</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function() {
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+                var row = $(this).closest('tr');
+                var url = '/admin/images';
+                var params = {'safekey': row.attr('id'), 'action': $(this).attr('name')};
+                console.log(params);
+
+                if (params['action'] == 'delete') {
+                    var done = function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                            row.find('._small').html('<img src="/static/images/icon_no.png" alt=""/>');
+                            row.find('button[name=delete]')
+                                .attr('disabled', 'disabled').addClass('disabled');
+                            row.find('button[name=make]')
+                                .removeAttr('disabled').removeClass('disabled');
+                        }
+                    }
+                } else if (params['action'] == 'make') {
+                    var done = function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                            row.find('._small').html(data.small);
+                            row.find('button[name=make]')
+                                .attr('disabled', 'disabled').addClass('disabled');
+                            row.find('button[name=delete]')
+                                .removeAttr('disabled').removeClass('disabled');
+                        }
+                    }
+                }
+                $.post(url, params, done, 'json');
+                return false
+            });
+        });
+    </script>
+{% endblock %}

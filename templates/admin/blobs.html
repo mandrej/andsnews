@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+
+{% block modals %}
+{{ super() }}
+<div id="info" class="modal"></div>
+{% endblock %}
+
+{% block contents %}
+<article class="plain">
+	<h2>Photo blobs administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+    <div class="third" style="margin: 0">
+        <h3>Dates</h3>
+        <p class="cloud">
+            {% for item in archive|sort(attribute='name', reverse=True) %}
+                {% set selected = item.name == filter.year %}
+                <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                    title="{{ item.count }}" href="/admin/blobs/date/{{ item.name }}">{{ item.name }}</a>
+            {% endfor %}
+        </p>
+    </div>
+    <br clear="all"/>
+    <table id="data1" class="zebra fix">
+        <colgroup>
+            <col style="width: 200px;"/>
+            <col/>
+            <col style="width: 90px; text-align: right;"/>
+            <col style="width: 90px; text-align: right;"/>
+            <col style="width: 170px; text-align: right;"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>headline</th>
+                <th>blob key</th>
+                <th>normal</th>
+                <th>HLS color</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for photo in objects %}
+                <tr id="{{ photo.key.urlsafe() }}">
+                    <td><a href="{{ photo.get_absolute_url() }}/edit">
+                        {{ photo.headline }}</a></td>
+                    <td>{{ photo.blob_key }}</td>
+                    <td>{{ photo.size|filesizeformat }}</td>
+                    <td class="_hex" style="background-color: {{ photo.hex }};">
+                        <a href="/admin/photo/info/{{ photo.key.urlsafe() }}" class="message">
+                            {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                        </a>
+                    </td>
+                    <td class="nowrap">
+{#                            {% if picture.small %}#}
+{#                                <button type="submit" name="color"#}
+{#                                        value="{{ picture.key.urlsafe() }}">color</button>#}
+{#                            {% else %}#}
+{#                                <button type="submit" name="color"#}
+{#                                        class="disabled" disabled="disabled"#}
+{#                                        value="{{ picture.key.urlsafe() }}">color</button>#}
+{#                            {% endif %}#}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function() {
+            $('.ff').collapseGroup();
+            var remove = function() {
+                $('#overlay, #spinner, .hide').hide();
+            };
+{#            $('#main button').click(function() {#}
+{#                $('#overlay, #spinner').show();#}
+{#                var kind = '{{ kind }}';#}
+{#                var row = $(this).parents('tr');#}
+{#                #}
+{#                if ($(this).attr('name') == 'color') {#}
+{#                    var url = '/admin/thumbnail/color';#}
+{#                    var params = {'slug': $(this).val(), 'kind': kind};#}
+{#                    var done = function(data) {#}
+{#                        if (data.success == true) {#}
+{#                            remove();#}
+{#                            $('._hex', row).css({'background-color': data.hex}).html('---');#}
+{#                        }#}
+{#                    }#}
+{#                }#}
+{#                $.post(url, params, done, 'json');#}
+{#                return false;#}
+{#            });#}
+            $('a.message').click(function() {
+                $('#info').load(this.href, function() {
+                    $('#overlay, #info').show();
+                });
+                return false
+            });
+        });
+    </script>
+{% endblock %}

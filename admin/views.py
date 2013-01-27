@@ -82,70 +82,74 @@ class Comments(BaseHandler):
         self.response.write(json.dumps({'success': True}))
         return self.response
 
-def delete_small(parentkind, oldkey):
-    """ deferred.defer(delete_small, *args) """
-    key = ndb.Key.from_old_key(oldkey)
-    obj = key.get()
-    if parentkind == 'Photo': obj.small = None
-    elif parentkind == 'Entry': obj.small = None
-    obj.put()
+#def thumbnail_color(request):
+#    params = request.POST
+#    parentkind = params['kind']
+#    slug = params['slug']
+#
+#    obj = ndb.Key(parentkind, slug, 'Picture', slug).get()
+#    obj.rgb = median(obj.small)
+#    obj.put()
+#    photo = ndb.Key(parentkind, slug).get()
+#    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
+#    photo.put()
+#    response = webapp2.Response(content_type='application/json')
+#    response.write(json.dumps({'success': True, 'hex': obj.hex}))
+#    return response
 
-def thumbnail_delete(request):
-    params = request.POST
-    args = [params['kind'], params['key']]
-    deferred.defer(delete_small, *args)
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps({'success': True}))
-    return response
-
-def thumbnail_make(request):
-    params = request.POST
-    parentkind = params['kind']
-    slug = params['slug']
-    no = small = '---'
-    deferred.defer(make_thumbnail, parentkind, slug, 'small')
-    if small != no: small = filesizeformat(len(small))
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps({'success': True, 'small': small}))
-    return response
-
-def thumbnail_color(request):
-    params = request.POST
-    parentkind = params['kind']
-    slug = params['slug']
-
-    obj = ndb.Key(parentkind, slug, 'Picture', slug).get()
-    obj.rgb = median(obj.small)
-    obj.put()
-    photo = ndb.Key(parentkind, slug).get()
-    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
-    photo.put()
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps({'success': True, 'hex': obj.hex}))
-    return response
-
-class Thumbnails(BaseHandler):
+#model = ndb.Model._kind_map.get(kind)
+class Images(BaseHandler):
     @admin_required
-    def get(self, kind, field=None, value=None, per_page=PER_PAGE):
-        kind =kind.capitalize()
+    def get(self, field=None, value=None):
         f = Filter(field, value)
-        model = ndb.Model._kind_map.get(kind)
-        filters = [model._properties[k] == v for k, v in f.parameters.items()]
-        query = model.query(*filters).order(-model.date)
+        filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
+        query = Entry.query(*filters).order(-Entry.date)
 
         page = int(self.request.GET.get('page', 1))
-        paginator = Paginator(query, per_page=per_page)
+        paginator = Paginator(query, per_page=6)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': f.parameters,
-                'kind': kind,
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': make_cloud(kind, 'date'),
-                'link': '/admin/%s/thumbnails/date' % kind.lower()}
-        self.render_template('admin/thumbnails.html', data)
+                'archive': make_cloud('Entry', 'date')}
+        self.render_template('admin/images.html', data)
+
+    def post(self):
+        params = dict(self.request.POST)
+        key = ndb.Key(urlsafe=params['safekey'])
+        if params['action'] == 'delete':
+            obj = key.get()
+            obj.small = None
+            obj.put()
+            data = {'success': True}
+        elif params['action'] == 'make':
+            buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
+            data = {'success': True, 'small': filesizeformat(len(buff))}
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json.dumps(data))
+        return self.response
+
+class Blobs(BaseHandler):
+    @admin_required
+    def get(self, field=None, value=None):
+        f = Filter(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        query = Photo.query(*filters).order(-Photo.date)
+
+        page = int(self.request.GET.get('page', 1))
+        paginator = Paginator(query)
+        objects, has_next = paginator.page(page)
+
+        data = {'objects': objects,
+                'filter': f.parameters,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1,
+                'archive': make_cloud('Photo', 'date')}
+        self.render_template('admin/blobs.html', data)
 
 def info(request, safekey):
     key = ndb.Key(urlsafe=safekey)

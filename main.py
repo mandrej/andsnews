@@ -45,20 +45,17 @@ app = WSGIApplication([
         Route('/feeds', handler='admin.views.Feeds'),
         Route('/counters', handler='admin.views.Counters'),
 
-        Route('/<kind:photo>/thumbnails', handler='admin.views.Thumbnails'),
-        Route('/<kind:photo>/thumbnails/<field:date>/<value>', handler='admin.views.Thumbnails'),
-        Route('/<kind:entry>/thumbnails', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
-        Route('/<kind:entry>/thumbnails/<field:date>/<value>', handler='admin.views.Thumbnails', defaults={'per_page': 6}),
+        Route('/blobs', handler='admin.views.Blobs'),
+        Route('/blobs/<field:date>/<value>', handler='admin.views.Blobs'),
+        Route('/images', handler='admin.views.Images'),
+        Route('/images/<field:date>/<value>', handler='admin.views.Images'),
 
         Route('/memcache', handler='admin.views.memcache_content'),
         Route('/memcache/<key>/build', handler='admin.views.build'),
         Route('/memcache/<key>/create', handler='admin.views.create'),
         Route('/memcache/<key>/delete', handler='admin.views.memcache_delete'),
 
-        Route('/thumbnail/delete', handler='admin.views.thumbnail_delete'),
-        Route('/thumbnail/make', handler='admin.views.thumbnail_make'),
-        Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
-
+#        Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
         Route('/photo/info/<safekey>', handler='admin.views.info'),
         ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
