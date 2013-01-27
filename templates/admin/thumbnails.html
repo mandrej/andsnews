@@ -13,7 +13,6 @@
 		<div class="third" style="margin: 0">
 			<h3>Dates</h3>
 			<p class="cloud">
-{#				{% for item in archive|dictsortreversed:"name" %}#}
 				{% for item in archive|sort(attribute='name', reverse=True) %}
                     {% set selected = item.name == filter.year %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
