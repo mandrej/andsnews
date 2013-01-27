@@ -63,7 +63,7 @@ def incache(key):
 
 def boolimage(value):
     """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
-    if value:
+    if value == True:
         return do_mark_safe('<img src="/static/images/icon_yes.png" alt="%s"/>' % value)
     else:
         return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)

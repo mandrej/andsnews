@@ -1,17 +1,6 @@
 {% extends "admin/base.html" %}
 
 {% block contents %}
-<script>
-$(function() {
-	$('input[type="text"]').change(function() {
-		var id = $(this).attr('id');
-		$('button[name="action:edit"]')
-			.attr({disabled: 'disabled'}).addClass('disabled');
-		$('button[value="' + id + '"]')
-			.removeAttr('disabled').removeClass('disabled');
-	});
-});
-</script>
 <article class="plain clear">
 	<h2>Counter administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	<form action="/admin/counters" method="post">
@@ -40,7 +29,7 @@ $(function() {
 						<td>{{ object.field }}</td>
 						<td>{{ object.value }}</td>
 						<td>
-							<input id="{{ object.key.urlsafe }}" name="count.{{ object.key.urlsafe }}"
+							<input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
 								{% if object.count == 0 %}
 									style="width: 58px; text-align: right; border: 1px solid #dc143c;" 
 								{% else %}
@@ -50,9 +39,9 @@ $(function() {
 						</td>
 						<td class="nowrap">
 							<button class="disabled" type="submit" name="action:edit" 
-								disabled="disabled" value="{{ object.key.urlsafe }}">change</button>
+								disabled="disabled" value="{{ object.key.urlsafe() }}">change</button>
 							<button type="submit" name="action:delete"
-								value="{{ object.key.urlsafe }}">delete</button>
+								value="{{ object.key.urlsafe() }}">delete</button>
 						</td>
 					</tr>
 				{% endfor %}
@@ -60,4 +49,19 @@ $(function() {
 		</table>
 	</form>
 </article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function() {
+            $('input[type="text"]').change(function() {
+                var id = $(this).attr('id');
+                $('button[name="action:edit"]')
+                        .attr({disabled: 'disabled'}).addClass('disabled');
+                $('button[value="' + id + '"]')
+                        .removeAttr('disabled').removeClass('disabled');
+            });
+        });
+    </script>
 {% endblock %}

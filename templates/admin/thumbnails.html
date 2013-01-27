@@ -1,67 +1,5 @@
 {% extends "admin/base.html" %}
 
-{% block head %}
-{{ super() }}
-<script>
-$(function() {
-	$('.ff').collapseGroup();
-	var remove = function() {
-		$('#overlay, #spinner, .hide').hide();
-	};
-	$('#main button').click(function() {
-		$('#overlay, #spinner').show();
-		var kind = '{{ kind }}';
-		var row = $(this).parents('tr');
-
-		if ($(this).attr('name') == 'delete') {
-			var url = '/admin/thumbnail/delete';
-			var params = {'key': row.attr('id'), 'kind': kind};
-			var done = function(data) {
-				if (data.success == true) {
-					remove();
-					$('._small', row).html('<img src="/static/images/icon_no.png" alt=""/>');
-					$("button[name='delete'], button[name='color']", row)
-						.attr('disabled', 'disabled').addClass('disabled');
-					$("button[name='make']", row)
-						.attr('disabled', '').removeClass('disabled');
-				}
-			}
-		} else if ($(this).attr('name') == 'make') {
-			var url = '/admin/thumbnail/make';
-			var params = {'slug': $(this).val(), 'kind': kind};
-			var done = function(data) {
-				if (data.success == true) {
-					remove();
-					$('._small', row).html(data.small);
-					$("button[name='make']", row)
-						.attr('disabled', 'disabled').addClass('disabled');
-					$("button[name='delete'], button[name='color']", row)
-						.attr('disabled', '').removeClass('disabled');
-				}
-			}
-		} else if ($(this).attr('name') == 'color') {
-			var url = '/admin/thumbnail/color';
-			var params = {'slug': $(this).val(), 'kind': kind};
-			var done = function(data) {
-				if (data.success == true) {
-					remove();
-					$('._hex', row).css({'background-color': data.hex}).html('---');
-				}
-			}
-		}
-		$.post(url, params, done, 'json');
-		return false;
-	});
-	$('a.message').click(function() {
-		$('#info').load(this.href, function() {
-			$('#overlay, #info').show();
-		});
-		return false
-	});
-});
-</script>
-{% endblock %}
-
 {% block modals %}
 {{ super() }}
 <div id="info" class="modal"></div>
@@ -216,4 +154,66 @@ $(function() {
 		{% endif %}
 	</form>
 </article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function() {
+            $('.ff').collapseGroup();
+            var remove = function() {
+                $('#overlay, #spinner, .hide').hide();
+            };
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+                var kind = '{{ kind }}';
+                var row = $(this).parents('tr');
+
+                if ($(this).attr('name') == 'delete') {
+                    var url = '/admin/thumbnail/delete';
+                    var params = {'key': row.attr('id'), 'kind': kind};
+                    var done = function(data) {
+                        if (data.success == true) {
+                            remove();
+                            $('._small', row).html('<img src="/static/images/icon_no.png" alt=""/>');
+                            $("button[name='delete'], button[name='color']", row)
+                                    .attr('disabled', 'disabled').addClass('disabled');
+                            $("button[name='make']", row)
+                                    .attr('disabled', '').removeClass('disabled');
+                        }
+                    }
+                } else if ($(this).attr('name') == 'make') {
+                    var url = '/admin/thumbnail/make';
+                    var params = {'slug': $(this).val(), 'kind': kind};
+                    var done = function(data) {
+                        if (data.success == true) {
+                            remove();
+                            $('._small', row).html(data.small);
+                            $("button[name='make']", row)
+                                    .attr('disabled', 'disabled').addClass('disabled');
+                            $("button[name='delete'], button[name='color']", row)
+                                    .attr('disabled', '').removeClass('disabled');
+                        }
+                    }
+                } else if ($(this).attr('name') == 'color') {
+                    var url = '/admin/thumbnail/color';
+                    var params = {'slug': $(this).val(), 'kind': kind};
+                    var done = function(data) {
+                        if (data.success == true) {
+                            remove();
+                            $('._hex', row).css({'background-color': data.hex}).html('---');
+                        }
+                    }
+                }
+                $.post(url, params, done, 'json');
+                return false;
+            });
+            $('a.message').click(function() {
+                $('#info').load(this.href, function() {
+                    $('#overlay, #info').show();
+                });
+                return false
+            });
+        });
+    </script>
 {% endblock %}

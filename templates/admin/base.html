@@ -1,34 +1,37 @@
 {% extends "base.html" %}
 
-{% block head %}
-<script>
-$(function() {
-	$('#main button, #sidebar button').click(function() {
-		$('#overlay, #spinner').show();
-	});
-	$('.ff').collapseGroup();
-	$('.fix').colStyle();
-    $('#menu').click(function() {
-        $('.menu').toggle('slow');
-        return false
-    });
-    $('.menu').click(function(event) {
-        var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
-        var parnetTagName = $(event.target).parent()[0].tagName;
-        if (!(disallow[event.target.tagName] || disallow[parnetTagName])) {
-            $('.menu').toggle('slow');
-            return false
-        }
-        return true
-    });
-});
-</script>
-{% endblock %}
 {% block tools %}{% endblock %}
-{% block ga %}{% endblock %}
 
 {% block subnav %}
     <a href="/admin/counters">Counters</a>
     <a href="/mapreduce">Mapreduce</a>
     <a href="/admin" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}
+
+{% block scripts %}
+    <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1}]}"></script>
+    <script src="/static/scripts/common.js"></script>
+    <script>
+        $(function() {
+            $('#main button, #sidebar button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+            $('.ff').collapseGroup();
+            $('.fix').colStyle();
+            $('#menu').click(function() {
+                $('.menu').toggle('slow');
+                return false
+            });
+            $('.menu').click(function(event) {
+                var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
+                var parnetTagName = $(event.target).parent()[0].tagName;
+                if (!(disallow[event.target.tagName] || disallow[parnetTagName])) {
+                    $('.menu').toggle('slow');
+                    return false
+                }
+                return true
+            });
+        });
+    </script>
+{% endblock %}
+{% block ga %}{% endblock %}

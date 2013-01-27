@@ -22,29 +22,6 @@
     {% endif %}
 {% endblock %}
 
-{% block head %}
-{{ super() }}
-<script src="/static/scripts/jquery.highlight.js"></script>
-<script>
-$(function() {
-	var match = location.search.match(/find=([^&]+)/i);
-	if (match) {
-		$(function(){
-			var options = {exact: "partial", highlight: "#main",
-				keys: decodeURIComponent(match[1])};
-			$(document).SearchHighlight(options);
-		});
-	}
-	$('a.comment_add').click(function() {
-		$('#addcomment').load(this.href, function() {
-			$('#overlay, #addcomment').show();
-		});
-		return false
-	});
-});
-</script>
-{% endblock %}
-
 {% block modals %}
 {{ super() }}
 <div id="addcomment" class="modal"></div>
@@ -76,4 +53,27 @@ $(function() {
 		{% include "comment/detail.html" %}
 	</aside>
 </article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/jquery.highlight.js"></script>
+    <script>
+        $(function() {
+            var match = location.search.match(/find=([^&]+)/i);
+            if (match) {
+                $(function(){
+                    var options = {exact: "partial", highlight: "#main",
+                        keys: decodeURIComponent(match[1])};
+                    $(document).SearchHighlight(options);
+                });
+            }
+            $('a.comment_add').click(function() {
+                $('#addcomment').load(this.href, function() {
+                    $('#overlay, #addcomment').show();
+                });
+                return false
+            });
+        });
+    </script>
 {% endblock %}

@@ -26,26 +26,22 @@
 							{{ object.headline }}</a></td>
 						<td>{{ object.date|format_datetime }}</td>
 						<td>
-{#							{{ object.key.string_id()|incache|yesno:"yes,no"|boolimage }}#}
 							{{ object.key.string_id()|incache|boolimage }}
 						</td>
 						<td>
 							{% if object.key.string_id()|incache %}
 								<button type="submit" name="action:feed" 
-									value="{{ object.key.urlsafe() }}">delete</button>
+									value="{{ object.key.string_id() }}">delete</button>
 							{% else %}
 								<button type="submit" name="action:feed" 
 									class="disabled" disabled="disabled"
-									value="{{ object.key.urlsafe() }}">delete</button>
+									value="{{ object.key.string_id() }}">delete</button>
 							{% endif %}
 						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
-		<p class="buttons">
-			<button type="submit" name="action:feed" value="all">delete all</button>
-		</p>
 	</form>
 </article>
 {% endblock %}

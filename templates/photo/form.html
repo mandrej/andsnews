@@ -13,32 +13,6 @@
     {% endif %}
 {% endblock %}
 
-{% block head %}
-{{ super() }}
-<script src="/static/scripts/urlify.js"></script>
-<script src="/static/scripts/jquery.autocomplete.js"></script>
-<script>
-	$().ready(function() {
-		$('#headline').slugify();
-		$("#tags").autocomplete("/complete/photo/tags", {
-			width: 284,
-			selectFirst: false,
-			multiple: true,
-			matchContains: true
-		});
-        $("#lens").autocomplete("/complete/photo/lens", {
-			width: 284,
-			selectFirst: false,
-			multiple: false,
-			matchContains: true
-		});
-		$('#main button').click(function() {
-			$('#overlay, #spinner').show();
-		});
-	});
-</script>
-{% endblock %}
-
 {% block aside %}
 	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
 	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
@@ -118,4 +92,29 @@
 </article>
 {% endblock %}
 
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/urlify.js"></script>
+    <script src="/static/scripts/jquery.autocomplete.js"></script>
+    <script>
+        $().ready(function() {
+            $('#headline').slugify();
+            $("#tags").autocomplete("/complete/photo/tags", {
+                width: 284,
+                selectFirst: false,
+                multiple: true,
+                matchContains: true
+            });
+            $("#lens").autocomplete("/complete/photo/lens", {
+                width: 284,
+                selectFirst: false,
+                multiple: false,
+                matchContains: true
+            });
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+        });
+    </script>
+{% endblock %}
 {% block ga %}{% endblock %}

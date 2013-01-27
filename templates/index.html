@@ -3,22 +3,6 @@
 {% block meta %}<meta name="date" content="{{ latest.0.date }}"/>{% endblock %}
 {% block modals %}{% endblock %}
 {% block aside %}
-	<script src="/static/scripts/jquery.backstretch.min.js"></script>
-	<script>
-		$(function() {
-			$.getJSON('/latest', function(data) {
-				var sources = [];
-				$.each(data, function(i, item) {
-					sources.push(item.url);
-				});
-		        $.backstretch(sources, {fade: 1000, duration: 4000});
-			});
-			$('.delete').click(function() {
-				$('#aside').slideUp();
-				return false
-			})
-		})
-	</script>
 	<div class="white">
 		<header>
 			<a class="delete" href="#" title="{{ _('hide') }}">−</a>
@@ -62,4 +46,24 @@
 			</div>
 		{% endif %}
 	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/jquery.backstretch.min.js"></script>
+    <script>
+        $(function() {
+            $.getJSON('/latest', function(data) {
+                var sources = [];
+                $.each(data, function(i, item) {
+                    sources.push(item.url);
+                });
+                $.backstretch(sources, {fade: 1000, duration: 4000});
+            });
+            $('.delete').click(function() {
+                $('#aside').slideUp();
+                return false
+            })
+        })
+    </script>
 {% endblock %}
