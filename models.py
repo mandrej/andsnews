@@ -1,4 +1,5 @@
 from __future__ import division
+import logging
 import datetime, time, re, colorsys
 from cStringIO import StringIO
 from google.appengine.ext import ndb, deferred, blobstore
@@ -113,6 +114,7 @@ def get_exif(buff):
             iso = tags['ISOSpeedRatings']
             data['iso'] = int(iso)
 
+    logging.info(data)
     return data
 
 def range_names(rgb):
