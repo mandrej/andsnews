@@ -18,17 +18,15 @@
         <table id="data2" class="zebra fix">
             <colgroup>
                 <col/>
-                <col style="width: 120px;"/>
+                <col style="width: 240px;"/>
+                <col style="width: 140px; text-align: right;"/>
                 <col style="width: 80px; text-align: right;"/>
-                <col style="width: 60px; text-align: center;"/>
-                <col style="width: 60px; text-align: center;"/>
-                <col style="width: 122px; text-align: right;"/>
+                <col style="width: 130px; text-align: right;"/>
             </colgroup>
             <thead>
                 <tr>
                     <th>name</th>
                     <th>keyname</th>
-                    <th>type</th>
                     <th>normal</th>
                     <th>small</th>
                     <th></th>
@@ -39,8 +37,7 @@
                     <tr id="{{ image.key.urlsafe() }}">
                         <td>{{ image.name }}</td>
                         <td>{{ image.key.string_id() }}</td>
-                        <td>{{ image.mime }}</td>
-                        <td>{{ image.blob|length|filesizeformat }}</td>
+                        <td>{{ image.blob|length|filesizeformat }}, {{ image.mime }}</td>
                         <td class="_small">
                             {% if image.small %}
                                 {{ image.small|length|filesizeformat }}

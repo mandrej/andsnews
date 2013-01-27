@@ -1,6 +1,6 @@
 from __future__ import division
 import json, webapp2
-from google.appengine.ext import ndb, deferred
+from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
@@ -150,13 +150,6 @@ class Blobs(BaseHandler):
                 'has_previous': page > 1,
                 'archive': make_cloud('Photo', 'date')}
         self.render_template('admin/blobs.html', data)
-
-def info(request, safekey):
-    key = ndb.Key(urlsafe=safekey)
-    template = ENV.get_template('admin/info.html')
-    response = webapp2.Response(content_type='text/html')
-    response.write(template.render({'object': key.get()}))
-    return response
 
 class Feeds(BaseHandler):
     @admin_required

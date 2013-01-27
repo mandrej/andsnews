@@ -25,9 +25,7 @@
 						<td><a href="{{ object.get_absolute_url() }}/edit">
 							{{ object.headline }}</a></td>
 						<td>{{ object.date|format_datetime }}</td>
-						<td>
-							{{ object.key.string_id()|incache|boolimage }}
-						</td>
+						<td>{{ object.key.string_id()|incache|boolimage }}</td>
 						<td>
 							{% if object.key.string_id()|incache %}
 								<button type="submit" name="action:feed" 

@@ -9,7 +9,7 @@ from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
 from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
-from google.appengine.ext import ndb, deferred
+from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import apiproxy_errors
 from wtforms import widgets, fields
 from cloud import calculate_cloud
@@ -61,6 +61,9 @@ def incache(key):
     if memcache.get(key): return True
     else: return False
 
+def blobinfo(key):
+    return blobstore.BlobInfo.get(key)
+
 def boolimage(value):
     """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
     if value == True:
@@ -106,6 +109,7 @@ ENV.globals.update({
     'version': version,
     'gaesdk': gaesdk,
     'language': language,
+    'blobinfo': blobinfo,
 })
 ENV.filters.update({
     'incache': incache,
