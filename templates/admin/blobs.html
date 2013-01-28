@@ -36,14 +36,13 @@
         </thead>
         <tbody>
             {% for photo in objects %}
-                {% set blob_info=blobinfo(photo.blob_key) %}
                 <tr id="{{ photo.key.urlsafe() }}">
                     <td><a href="{{ photo.get_absolute_url() }}/edit">
                         {{ photo.headline }}</a></td>
                     <td>
-                        {% if blob_info %}
+                        {% if photo.blob_key %}
                             <img src="/static/images/icon_yes.png" alt=""/>
-                            {{ blob_info.size|filesizeformat }}, {{ blob_info.content_type }}
+                            {{ photo.blob_info.size|filesizeformat }}, {{ photo.blob_info.content_type }}
                         {% else %}
                             <img src="/static/images/icon_no.png" alt=""/>
                         {% endif %}

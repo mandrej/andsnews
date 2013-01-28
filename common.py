@@ -61,9 +61,6 @@ def incache(key):
     if memcache.get(key): return True
     else: return False
 
-def blobinfo(key):
-    return blobstore.BlobInfo.get(key)
-
 def boolimage(value):
     """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
     if value == True:
@@ -109,7 +106,6 @@ ENV.globals.update({
     'version': version,
     'gaesdk': gaesdk,
     'language': language,
-    'blobinfo': blobinfo,
 })
 ENV.filters.update({
     'incache': incache,

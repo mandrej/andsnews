@@ -307,11 +307,24 @@ class Photo(ndb.Model):
     def get_absolute_url(self):
         return '/photos/%s' % self.key.string_id()
 
+    def cached_url(self, size, crop):
+        pattern = '%s=s%s-c' if crop else '%s=s%s'
+        key = pattern % (self.key.string_id(), size)
+        url = memcache.get(key)
+        if url is None:
+            url = images.get_serving_url(self.blob_key, size=size, crop=crop)
+            memcache.add(key, url)
+        return url
+
     def normal_url(self):
-        return images.get_serving_url(self.blob_key, size=1000, crop=False)
+        return self.cached_url(1000, False)
 
     def small_url(self):
-        return images.get_serving_url(self.blob_key, size=240, crop=True)
+        return self.cached_url(240, True)
+
+    @property
+    def blob_info(self):
+        return blobstore.BlobInfo.get(self.blob_key)
 
     @property
     def similar_url(self):
