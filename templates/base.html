@@ -84,6 +84,12 @@
         <script src="/static/scripts/common.js"></script>
         <script>
             $(function() {
+                var $pinner = $('#overlay, #spinner');
+                var kind = '{{ kind }}';
+                var crumbs = location.pathname.split('/');
+                crumbs.shift();
+                crumbs.shift();
+
                 if ('ontouchstart' in window) {
                     $(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));
                 }
@@ -111,7 +117,7 @@
                     $('#graph').find('.explain').text(json.info);
                 }
                 $('a.graph').live('click', function() {
-                    $('#overlay, #spinner').show();
+                    $pinner.show();
                     $.getJSON(this.href, function(data) {
                         $('#spinner').hide();
                         $('#graph').show();
@@ -121,13 +127,33 @@
                 })
                 $('a.confirm').click(function() {
                     $('#confirm').load(this.href, function() {
-                        $('#overlay, #confirm').show();
+                        $pinner.show();
                     });
                     return false
                 });
                 $('#searchForm').submit(function() {
-                    $('#overlay, #spinner').show();
+                    $pinner.show();
                 });
+
+                if (kind != '') {
+                    $('.hide').hide();
+                    $('.collapse').each(function() {
+                        $(this).plus();
+                    });
+
+                    if (crumbs.length >= 2) {
+                        var field = crumbs[0];
+                        if (field == 'hue' || field == 'lum') field = 'colors';
+                        $.ajax({
+                            url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
+                            context: $('#' + field + 'cloud'),
+                            success: function(snippet) {
+                                $(this).html(snippet).slideDown();
+                                $('.' + field).minus();
+                            }
+                        });
+                    }
+                }
 
                 $('.collapse').click(function() {
                     var cntx = $(this);
@@ -140,7 +166,8 @@
                         $(this).plus();
                     });
 
-                    $('#overlay, #spinner').show();
+                    $pinner.show();
+                    if (crumbs[0] == field && crumbs[1] != undefined) url += '/' + crumbs[1];
                     $.ajax({
                         url: url,
                         timeout: 20000,
@@ -148,7 +175,7 @@
                         success: function(snippet) {
                             $(this).html(snippet).slideDown();
                             cntx.minus();
-                            $('#overlay, #spinner').hide();
+                            $pinner.hide();
                         }
                     });
                     return false
