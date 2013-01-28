@@ -84,12 +84,6 @@
         <script src="/static/scripts/common.js"></script>
         <script>
             $(function() {
-                var kind = '{{ kind }}';
-                var path = location.pathname;
-                var crumbs = path.split('/');
-                crumbs.shift();
-                crumbs.shift();
-
                 if ('ontouchstart' in window) {
                     $(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));
                 }
@@ -135,26 +129,6 @@
                     $('#overlay, #spinner').show();
                 });
 
-                if (kind != '') {
-                    $('.hide').hide();
-                    $('.collapse').each(function() {
-                        $(this).plus();
-                    });
-
-                    if (crumbs.length == 2) {
-                        var field = crumbs[0];
-                        if (field == 'hue' || field == 'lum') field = 'colors';
-                        $.ajax({
-                            url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
-                            context: $('#' + field + 'cloud'),
-                            success: function(snippet) {
-                                $(this).html(snippet).slideDown();
-                                $('.' + field).minus();
-                            }
-                        });
-                    }
-                }
-
                 $('.collapse').click(function() {
                     var cntx = $(this);
                     var url = cntx.attr('href');
@@ -167,7 +141,6 @@
                     });
 
                     $('#overlay, #spinner').show();
-                    if (crumbs[0] == field && crumbs[1] != undefined) url += '/' + crumbs[1];
                     $.ajax({
                         url: url,
                         timeout: 20000,
