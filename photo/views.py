@@ -14,7 +14,7 @@ class Index(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.request.GET.get('page', 1))
+        page = int(self.request.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 

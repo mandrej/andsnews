@@ -63,7 +63,7 @@ class Comments(BaseHandler):
     @admin_required
     def get(self):
         query = Comment.query().order(-Comment.date)
-        page = int(self.request.GET.get('page', 1))
+        page = int(self.request.get('page', 1))
         paginator = Paginator(query, 10)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
@@ -105,7 +105,7 @@ class Images(BaseHandler):
         filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
         query = Entry.query(*filters).order(-Entry.date)
 
-        page = int(self.request.GET.get('page', 1))
+        page = int(self.request.get('page', 1))
         paginator = Paginator(query, per_page=6)
         objects, has_next = paginator.page(page)
 
@@ -139,7 +139,7 @@ class Blobs(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.request.GET.get('page', 1))
+        page = int(self.request.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
@@ -158,7 +158,7 @@ class Feeds(BaseHandler):
         self.render_template('admin/feeds.html', {'objects': query})
 
     def post(self):
-        slug = self.request.POST.get('action:feed')
+        slug = self.request.get('action:feed')
         if slug:
             memcache.delete(slug)
         self.redirect('/admin/feeds')
@@ -167,7 +167,7 @@ class Counters(BaseHandler):
     @admin_required
     def get(self, per_page=PER_PAGE):
         query = Counter.query().order(Counter.field)
-        page = int(self.request.GET.get('page', 1))
+        page = int(self.request.get('page', 1))
         paginator = Paginator(query, per_page=per_page)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
@@ -176,14 +176,14 @@ class Counters(BaseHandler):
     def post(self):
         cntx = ndb.get_context()
         cntx.set_cache_policy(False)
-        if self.request.POST.get('action:delete'):
-            key = ndb.Key(urlsafe=self.request.POST.get('action:delete'))
+        if self.request.get('action:delete'):
+            key = ndb.Key(urlsafe=self.request.get('action:delete'))
             key.delete()
-        elif self.request.POST.get('action:edit'):
-            input_id = self.request.POST.get('action:edit')
+        elif self.request.get('action:edit'):
+            input_id = self.request.get('action:edit')
             key = ndb.Key(urlsafe=input_id)
             obj = key.get()
-            obj.count = int(self.request.POST.get('count.%s' % input_id))
+            obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
 
         self.redirect('/admin/counters')

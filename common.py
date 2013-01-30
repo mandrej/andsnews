@@ -509,7 +509,7 @@ class SetLanguage(BaseHandler):
     def post(self):
         next = self.request.headers.get('Referer', '/')
         response = self.redirect(next)
-        lang_code = self.request.POST.get('language', None)
+        lang_code = self.request.get('language', None)
 
         if lang_code:
             if hasattr(self, 'session'):

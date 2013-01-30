@@ -89,8 +89,8 @@ def auto_complete(request, kind, field):
 
 class Find(BaseHandler):
     def get(self):
-        querystring = self.request.GET['find']
-        page = int(self.request.GET.get('page', 1))
+        querystring = self.request.get('find')
+        page = int(self.request.get('page', 1))
         paginator = SearchPaginator(querystring, per_page=RESULTS)
         results, number_found, has_next, error = paginator.page(page)
 
@@ -148,7 +148,7 @@ class DeleteHandler(BaseHandler):
         self.render_template('snippets/confirm.html', data)
 
     def post(self, safekey):
-        next = str(self.request.POST['next'])
+        next = str(self.request.get('next'))
         obj = ndb.Key(urlsafe=safekey).get()
         obj.delete()
         self.redirect(next)
@@ -184,7 +184,7 @@ class Chat(webapp2.RequestHandler):
 
 class Send(webapp2.RequestHandler):
     def post(self):
-        message = self.request.POST.get('msg')
+        message = self.request.get('msg')
         xmpp.send_message(ADMIN_JID, message)
 
 def escape(str):
