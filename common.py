@@ -117,11 +117,11 @@ ENV.filters.update({
     'filesizeformat': filesizeformat
 })
 
-real_handle_exception = ENV.handle_exception
-def handle_exception(self, *args, **kwargs):
-    logging.error('Template exception:\n%s', traceback.format_exc())
-    real_handle_exception(self, *args, **kwargs)
-ENV.handle_exception = handle_exception
+#real_handle_exception = ENV.handle_exception
+#def handle_exception(self, *args, **kwargs):
+#    logging.error('Template exception:\n%s', traceback.format_exc())
+#    real_handle_exception(self, *args, **kwargs)
+#ENV.handle_exception = handle_exception
 
 def make_cloud(kind, field):
     key = '%s_%s' % (kind, field)
