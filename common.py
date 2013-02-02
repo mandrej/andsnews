@@ -328,18 +328,16 @@ class Paginator:
 
         if rem == 1:
             if num == 1:
-                other = [none]
+                collection = [none] + keys + [none]
             else:
                 other, x = self.pagekeys(num - 1)
-            collection = (other + keys + [none])[idx - (num - 2)*self.per_page - 2:]
-        elif rem == 0:
+                collection = (other + keys + [none])[idx - (num - 2)*self.per_page - 2:]
+        else:
             if has_next:
                 other, x = self.pagekeys(num + 1)
             else:
                 other = [none]
             collection = (keys + other)[idx - (num - 1)*self.per_page - 2:]
-        else:
-            collection = (keys + [none])[idx - (num - 1)*self.per_page - 2:]
 
         prev, obj, next = ndb.get_multi(collection[:3])
         return num, prev, obj, next

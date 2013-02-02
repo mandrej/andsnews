@@ -57,18 +57,16 @@ class Paginator:
 
         if rem == 1:
             if num == 1:
-                other = [None]
+                collection = [None] + objects + [None]
             else:
                 other, x = self.page(num - 1)
-            collection = (other + objects + [None])[idx - (num - 2)*self.per_page - 2:]
-        elif rem == 0:
+                collection = (other + objects + [None])[idx - (num - 2)*self.per_page - 2:]
+        else:
             if has_next:
                 other, x = self.page(num + 1)
             else:
                 other = [None]
             collection = (objects + other)[idx - (num - 1)*self.per_page - 2:]
-        else:
-            collection = (objects + [None])[idx - (num - 1)*self.per_page - 2:]
 
         return collection[:3]
 
@@ -80,7 +78,22 @@ class PaginatorTest(unittest.TestCase):
         self.assertEquals(objects, [1,2,3,4,5,6,7,8,9,10,11,12])
         self.assertTrue(has_next)
 
-    def test_triple(self):
+    def test_one(self):
+        paginator = Paginator(range(1, 2), 12)
+        results = paginator.triple(1)
+        self.assertEquals(results, [None,1,None])
+
+    def test_rightedge(self):
+        paginator = Paginator(range(1, 27), 12)
+        results = paginator.triple(12)
+        self.assertEquals(results, [11,12,13])
+
+    def test_leftedge(self):
         paginator = Paginator(range(1, 27), 12)
         results = paginator.triple(13)
         self.assertEquals(results, [12,13,14])
+
+    def test_end(self):
+        paginator = Paginator(range(1, 27), 12)
+        results = paginator.triple(26)
+        self.assertEquals(results, [25,26,None])
