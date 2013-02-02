@@ -29,9 +29,11 @@ class Index(BaseHandler):
         self.render_template('photo/index.html', data)
 
 class Detail(BaseHandler):
-    def get(self, slug, field=None, value=None, idx=None):
-        if idx is None:
-            obj = Photo.get_by_id(slug)
+    def get(self, slug_idx, field=None, value=None):
+        try:
+            idx = int(slug_idx)
+        except ValueError:
+            obj = Photo.get_by_id(slug_idx)
             if obj is None:
                 webapp2.abort(404)
             self.render_template('photo/detail.html',
@@ -41,7 +43,6 @@ class Detail(BaseHandler):
             filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
             query = Photo.query(*filters).order(-Photo.date)
 
-            idx = int(idx)
             paginator = Paginator(query)
             page, prev, obj, next = paginator.triple(idx)
 
