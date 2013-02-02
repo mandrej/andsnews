@@ -43,7 +43,7 @@ class Detail(BaseHandler):
 
             idx = int(idx)
             paginator = Paginator(query)
-            page, prev, obj, next, numbers = paginator.triple(idx)
+            page, prev, obj, next = paginator.triple(idx)
 
             data = {'object': obj,
                     'next': next,
@@ -52,8 +52,7 @@ class Detail(BaseHandler):
                     'filter_url': f.url,
                     'filter_title': f.title,
                     'page': page,
-                    'num': idx,
-                    'numbers': numbers}
+                    'idx': idx}
             self.render_template('photo/detail.html', data)
 
 class AddForm(Form):

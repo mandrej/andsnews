@@ -23,13 +23,13 @@
 	{% if previous or next %}
 	<nav class="paginator">
 	    {% if previous %}
-			<a class="prev" href="/photos{{ filter_url }}/{{ previous.key.string_id() }}/{{ numbers.prev }}"
+			<a class="prev" href="/photos{{ filter_url }}/{{ previous.key.string_id() }}/{{ idx - 1 }}"
 				title="{{ previous.headline }}">◀</a>
 	    {% else %}
 	        <span class="prev na">◀</span>
 	    {% endif %}
 	    {% if next %}
-			<a class="next" href="/photos{{ filter_url }}/{{ next.key.string_id() }}/{{ numbers.next }}"
+			<a class="next" href="/photos{{ filter_url }}/{{ next.key.string_id() }}/{{ idx + 1 }}"
 				title="{{ next.headline }}">▶</a>
 	    {% else %}
 	        <span class="next na">▶</span>
@@ -51,7 +51,7 @@
 			{% else %}
 				<a href="/photos?page={{ page }}">{{ _('Photos') }}</a>
 			{% endif %}
-			/ {{ object.headline }}{% if num %} [{{ num }}]{% endif %}</h2>
+			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}</h2>
 		
 		<div class="subtitle">
 			<a href="/photos/author/{{ object.author }}"

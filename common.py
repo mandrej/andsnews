@@ -295,81 +295,54 @@ class Paginator:
         self.cache = memcache.get(self.id)
 
         if self.cache is None:
-            self.query._keys_only = True
-            self.count = self.query.count(1000)
-            if self.count == 0:
-                self.num_pages = 0
-            else:
-                self.num_pages = int(math.ceil(self.count/self.per_page))
-
-            self.cache = {'count': self.count, 'num_pages': self.num_pages, 0: None}
+            self.cache = {0: None}
             memcache.add(self.id, self.cache, self.timeout)
-        else:
-            self.count = self.cache['count']
-            self.num_pages = self.cache['num_pages']
 
-    def page(self, num):
-        if num < 1:
-            webapp2.abort(404)
-        if num > self.num_pages:
-            if num == 1 and self.count == 0:
-                pass
-            else:
-                webapp2.abort(404)
+    def pagekeys(self, num):
+        if num < 1: webapp2.abort(404)
 
-        self.query._keys_only = False
         try:
             cursor = self.cache[num - 1]
-            results, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
         except KeyError:
             offset = (num - 1)*self.per_page
-            results, cursor, has_next = self.query.fetch_page(self.per_page, offset=offset)
+            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
-        self.cache[num] = cursor
-        memcache.replace(self.id, self.cache, self.timeout)
-        return results, has_next
+        if keys and cursor:
+            self.cache[num] = cursor
+            memcache.replace(self.id, self.cache, self.timeout)
+            return keys, has_next
+        else:
+            webapp2.abort(404)
+
+    def page(self, num):
+        keys, has_next = self.pagekeys(num)
+        return ndb.get_multi(keys), has_next
 
     def triple(self, idx):
         """ num and idx are 1 base index """
+        none = ndb.Key('XXX', 'xxx')
         rem = idx%self.per_page
         num = int(idx/self.per_page) + (0 if rem == 0 else 1)
-        objects, has_next = self.page(num)
+        keys, has_next = self.pagekeys(num)
 
         if rem == 1:
             if num == 1:
-                if self.count == 1:
-                    collection = [None] + objects + [None]
-                    numbers = {'prev': None, 'next': None}
-                else:
-                    collection = [None] + objects
-                    numbers = {'prev': None, 'next': idx + 1}
+                other = [none]
             else:
-                if idx == self.count:
-                    other, x = self.page(num - 1)
-                    collection = (other + objects + [None])[idx - (num - 2)*self.per_page - 2:]
-                    numbers = {'prev': idx - 1, 'next': None}
-                else:
-                    other, x = self.page(num - 1)
-                    collection = (other + objects)[idx - (num - 2)*self.per_page - 2:]
-                    numbers = {'prev': idx - 1, 'next': idx + 1}
+                other, x = self.pagekeys(num - 1)
+            collection = (other + keys + [none])[idx - (num - 2)*self.per_page - 2:]
         elif rem == 0:
             if has_next:
-                other, x = self.page(num + 1)
-                collection = (objects + other)[idx - (num - 1)*self.per_page - 2:]
-                numbers = {'prev': idx - 1, 'next': idx + 1}
+                other, x = self.pagekeys(num + 1)
             else:
-                collection = (objects + [None])[idx - (num - 1)*self.per_page - 2:]
-                numbers = {'prev': idx - 1, 'next': None}
+                other = [none]
+            collection = (keys + other)[idx - (num - 1)*self.per_page - 2:]
         else:
-            if idx == self.count:
-                collection = (objects + [None])[idx - (num - 1)*self.per_page - 2:]
-                numbers = {'prev': idx - 1, 'next': None}
-            else:
-                collection = objects[idx - (num -1)*self.per_page - 2:]
-                numbers = {'prev': idx - 1, 'next': idx + 1}
+            collection = (keys + [none])[idx - (num - 1)*self.per_page - 2:]
 
-        prev, obj, next = collection[:3]
-        return num, prev, obj, next, numbers
+        prev, obj, next = ndb.get_multi(collection[:3])
+        return num, prev, obj, next
 
 class SearchPaginator:
 #    timeout = 60 #TIMEOUT/10
