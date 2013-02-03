@@ -35,7 +35,7 @@
 			<a href="/entries/author/{{ object.author }}"
 				title="{{ _('author&apos;s blogs') }}">{{ object.author }}</a>,
 				<time datetime='{{ object.date|format_datetime }}'>
-					{{ object.date|format_date }}</time>
+					{{ object.date|format_datetime }}</time>
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
 				<a href="/entries/tags/{{ tag }}" title="{{ tag }}">
