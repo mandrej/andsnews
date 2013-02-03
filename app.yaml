@@ -42,8 +42,8 @@ inbound_services:
 
 builtins:
 - deferred: on
-# - remote_api: on
-# - appstats: on
+#- remote_api: on
+#- appstats: on
 
 error_handlers:
 - file: templates/errors/error.html
