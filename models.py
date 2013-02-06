@@ -175,12 +175,12 @@ class Photo(ndb.Model):
     focal_length = ndb.FloatProperty()
     iso = ndb.IntegerProperty()
     date = ndb.DateTimeProperty()
+    year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
     crop_factor = ndb.FloatProperty(default=1.6)
     # calculated
     eqv = ndb.IntegerProperty()
-    year = ndb.IntegerProperty(default=0)
     # RGB [86, 102, 102]
     rgb = ndb.IntegerProperty(repeated=True)
     # HLS names
@@ -212,7 +212,6 @@ class Photo(ndb.Model):
         exif = get_exif(buff)
         for field, value in exif.items():
             setattr(self, field, value)
-        self.year = self.date.year
         self.hue, self.lum, self.sat = range_names(self.rgb)
         self.tags =data['tags']
         self._put()
@@ -251,8 +250,7 @@ class Photo(ndb.Model):
         new = data['date']
         if old != new:
             decr_count('Photo', 'date', self.year)
-            self.year = new.year
-            incr_count('Photo', 'date', self.year)
+            incr_count('Photo', 'date', new.year)
         del data['date']
 
         if data['focal_length']:
@@ -362,7 +360,7 @@ class Entry(ndb.Model):
     body = ndb.TextProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
-    year = ndb.IntegerProperty(default=0)
+    year = ndb.ComputedProperty(lambda self: self.date.year)
     front = ndb.IntegerProperty(default=-1)
     
     def index_add(self):
@@ -393,9 +391,7 @@ class Entry(ndb.Model):
                 img.mime = newimage['blob'].headers['Content-Type']
                 img.put_async()
 
-        self.year=self.date.year
         self._put()
-
         incr_count('Entry', 'author', self.author.nickname())
         incr_count('Entry', 'date', self.year)
         for name in self.tags:
@@ -428,8 +424,7 @@ class Entry(ndb.Model):
         new = data['date']
         if old != new:
             decr_count('Entry', 'date', self.year)
-            self.year = new.year
-            incr_count('Entry', 'date', self.year)
+            incr_count('Entry', 'date', new.year)
         
         old_tags = set(self.tags)
         new_tags = set(data['tags'])
@@ -469,7 +464,7 @@ class Comment(ndb.Model):
     # parent Photo, Entry
     author = ndb.UserProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
-    year = ndb.IntegerProperty(default=0)
+    year = ndb.ComputedProperty(lambda self: self.date.year)
     forkind = ndb.StringProperty(default='Application')
     body = ndb.TextProperty(required=True)
     
@@ -502,8 +497,6 @@ class Comment(ndb.Model):
         else:
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
-
-        self.year = self.date.year
         incr_count('Comment', 'date', self.year)
         
         self.put()
