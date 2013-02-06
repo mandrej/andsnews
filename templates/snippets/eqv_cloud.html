@@ -2,6 +2,6 @@
 	{% for item in eqvcloud|sort(attribute='name')  %}
         {% set selected = item.name == filter.eqv %}
         <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-           title="{{ item.count }}" href="/photos/eqv/{{ item.name }}">{{ item.name }}</a>
+           title="{{ item.count }}" href="{{ uri_for('photos') }}eqv/{{ item.name }}/">{{ item.name }}</a>
 	{% endfor %}
 </p>

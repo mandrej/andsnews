@@ -35,7 +35,7 @@
 
 	<div id="max">
 		<nav class="menu">
-			<h1><a href="/" title="{{ _('Start') }}">ANDрејевићи</a></h1>
+			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
 			{% block tools %}
 				<div id="forms">
 					<form id="langs" action="/setlang" method="post">
@@ -54,7 +54,7 @@
             {% import "snippets/macros.html" as m %}
             {% block nav %}{{ m.menu('') }}{% endblock %}
 
-			{% if is_admin %}<a href="/admin" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>{% endif %}
+			{% if is_admin %}<a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>{% endif %}
 			{% if user %}<a href="/sign" class="Logout">{{ _('Logout') }}</a>
 			{% else %}<a href="/sign" class="Login">{{ _('Sign in') }}</a>{% endif %}
 
@@ -64,7 +64,7 @@
 			</p>
 		</nav>
 		<header id="header">
-			<h1><a href="/" title="{{ _('Start') }}">ANDрејевићи</a></h1>
+			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
 			<div id="tools">
 				{% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
 				<a href="#" id="menu" title="{{ _('Tools') }}">✪</a>
@@ -127,7 +127,7 @@
                 })
                 $('a.confirm').click(function() {
                     $('#confirm').load(this.href, function() {
-                        $pinner.show();
+                        $('#overlay, #confirm').show();
                     });
                     return false
                 });

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ super() }} - {{ _('Access denied') }} (403){% endblock %}
-{% block subnav %}<a href="/">{{ _('Start ') }}</a>{% endblock %}
+{% block subnav %}<a href="{{ uri_for('start') }}">{{ _('Start ') }}</a>{% endblock %}
 
 {% block contents %}
 <article>

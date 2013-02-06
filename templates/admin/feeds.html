@@ -22,7 +22,7 @@
 			<tbody>
 				{% for object in objects %}
 					<tr>
-						<td><a href="{{ object.get_absolute_url() }}/edit">
+						<td><a href="{{ uri_for('feed_edit', slug=object.key.string_id()) }}">
 							{{ object.headline }}</a></td>
 						<td>{{ object.date|format_datetime }}</td>
 						<td>{{ object.key.string_id()|incache|boolimage }}</td>

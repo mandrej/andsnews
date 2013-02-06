@@ -4,14 +4,14 @@
 
 {% block subnav %}
     {% if user %}
-        <a href="/photos/add" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
     {% if is_admin or user == object.author %}
-        <a href="{{ object.get_absolute_url() }}/edit" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-        <a class="confirm del" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+        <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+        <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
-    <a class="comment_add" href="/comments/{{ object.key.urlsafe() }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-    <a href="/photos" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+    <a href="{{ uri_for('photos') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}
 
 {% block modals %}
@@ -23,13 +23,13 @@
 	{% if previous or next %}
 	<nav class="paginator">
 	    {% if previous %}
-			<a class="prev" href="/photos{{ filter_url }}/{{ idx - 1 }}"
+			<a class="prev" href="{{ uri_for('photos') }}{{ filter_url }}{{ idx - 1 }}"
 				title="{{ previous.headline }}">◀</a>
 	    {% else %}
 	        <span class="prev na">◀</span>
 	    {% endif %}
 	    {% if next %}
-			<a class="next" href="/photos{{ filter_url }}/{{ idx + 1 }}"
+			<a class="next" href="{{ uri_for('photos') }}{{ filter_url }}{{ idx + 1 }}"
 				title="{{ next.headline }}">▶</a>
 	    {% else %}
 	        <span class="next na">▶</span>
@@ -47,21 +47,21 @@
 <article>
 	<header>
 		<h2>{% if filter %}
-				<a href="/photos{{ filter_url }}?page={{ page }}">{{ _('Photos') }} {{ filter_title }}</a>
+				<a href="{{ uri_for('photos') }}{{ filter_url }}?page={{ page }}">{{ _('Photos') }} {{ filter_title }}</a>
 			{% else %}
-				<a href="/photos?page={{ page }}">{{ _('Photos') }}</a>
+				<a href="{{ uri_for('photos') }}?page={{ page }}">{{ _('Photos') }}</a>
 			{% endif %}
 			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}</h2>
 		
 		<div class="subtitle">
-			<a href="/photos/author/{{ object.author }}"
+			<a href="{{ uri_for('photos') }}author/{{ object.author }}/"
 				title="{{ _('author&apos;s photos') }}">{{ object.author }}</a>
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
-				<a href="/photos/tags/{{ tag }}" title="{{ tag }}">
+				<a href="{{ uri_for('photos') }}tags/{{ tag }}/" title="{{ tag }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
-			| <a href="/photos/date/{{ object.year }}"
+			| <a href="{{ uri_for('photos') }}date/{{ object.year }}/"
 				title="{{ _('photos taken same year') }}">{{ object.year }}</a>
 		</div>
 	</header>

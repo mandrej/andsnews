@@ -5,20 +5,20 @@
 
 {% block subnav %}
     {% if user %}
-        <a href="/entries/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
     {% if object %}
         {% if is_admin %}
-            <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-            <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+            <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
         {% else %}
             {% if user == object.author %}
-                <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
             {% endif %}
         {% endif %}
-        <a class="comment_add" href="/comments/{{ object.key.urlsafe() }}/add" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-        <a href="/entries" title="{{ _('Back') }}">{{ _('Back') }}</a>
+        <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+        <a href="{{ uri_for('entries') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
@@ -32,16 +32,16 @@
 	<header>
 		<h2>{{ object.headline }}</h2>
 		<div class="subtitle">
-			<a href="/entries/author/{{ object.author }}"
+			<a href="{{ uri_for('entries') }}author/{{ object.author }}/"
 				title="{{ _('author&apos;s blogs') }}">{{ object.author }}</a>,
 				<time datetime='{{ object.date|format_datetime }}'>
 					{{ object.date|format_datetime }}</time>
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
-				<a href="/entries/tags/{{ tag }}" title="{{ tag }}">
+				<a href="{{ uri_for('entries') }}tags/{{ tag }}/" title="{{ tag }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
-			| <a href="date/{{ object.year }}"
+			| <a href="{{ uri_for('entries') }}date/{{ object.year }}/"
 				title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
 		</div>
 		<div class="pullquote"><p>{{ object.summary|safe }}</p></div>

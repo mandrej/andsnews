@@ -1,9 +1,9 @@
 <table class="data zebra w100p">
 	<thead>
 		<tr>
-			<th colspan="2"><a href="/photos/model/{{ object.model }}" title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
+			<th colspan="2"><a href="{{ uri_for('photos') }}model/{{ object.model }}/" title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
 				{% if object.lens %}<br/>
-                    <a href="/photos/lens/{{ object.lens }}" title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
+                    <a href="{{ uri_for('photos') }}lens/{{ object.lens }}/" title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
                 {% endif %}
             </th>
 		</tr>
@@ -25,14 +25,14 @@
 				{% if object.focal_length %}
 					{{ object.focal_length }} mm
 					{% if object.eqv %}
-						(~<a href="/photos/eqv/{{ object.eqv }}" title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
+						(~<a href="{{ uri_for('photos') }}eqv/{{ object.eqv }}/" title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
 					{% endif %}
 				{% else %}---{% endif %}
 			</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Sensitivity') }} (ISO)</td>
-			<td>{% if object.iso %}<a href="/photos/iso/{{ object.iso }}" title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
+			<td>{% if object.iso %}<a href="{{ uri_for('photos') }}iso/{{ object.iso }}/" title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Taken') }}</td>

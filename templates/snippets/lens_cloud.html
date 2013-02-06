@@ -3,7 +3,7 @@
 		{% if item.count > 1 %}
             {% set selected = item.name == filter.lens %}
             <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-				title="{{ item.count }}" href="/photos/lens/{{ item.name }}">{{ item.name }}</a>
+				title="{{ item.count }}" href="{{ uri_for('photos') }}lens/{{ item.name }}/">{{ item.name }}</a>
 		{% endif %}
 	{% endfor %}
 </p>

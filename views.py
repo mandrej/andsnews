@@ -1,10 +1,10 @@
 from __future__ import division
-import sys, traceback
+import sys, traceback, logging
 import os, json, webapp2
 import hashlib, datetime
 from jinja2.filters import do_striptags
 from webapp2_extras.appengine.users import login_required
-from gettext import gettext as _
+from webapp2_extras.i18n import lazy_gettext as _
 from operator import itemgetter
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
@@ -12,7 +12,6 @@ from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors, format_datetime
 from settings import TIMEOUT, ADMIN_JID, RFC822
 
-MAP = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'news'}
 RESULTS = 5
 RSS_LIMIT = 10
 NUM_LATEST = 6
@@ -22,6 +21,10 @@ if PORT and PORT != '80':
     HOST_NAME = '%s:%s' % (os.environ['SERVER_NAME'], PORT)
 else:
     HOST_NAME = os.environ['SERVER_NAME']
+
+def root_url(kind):
+    map = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'feeds'}
+    return webapp2.uri_for(map[kind])
 
 def get_or_build(key):
     kind, field = key.split('_')
@@ -39,7 +42,7 @@ class RenderCloud(BaseHandler):
         items = get_or_build(key)
         f = Filter(field, value)
         self.render_template('snippets/%s_cloud.html' % field,
-            {'%scloud' % field: items, 'kind': kind, 'link': '/%s/%s' % (MAP[kind], field), 'filter': f.parameters})
+            {'%scloud' % field: items, 'kind': kind, 'link': '%s%s' % (root_url(kind), field), 'filter': f.parameters})
 
 def visualize(request, key):
     data = {}
@@ -134,9 +137,9 @@ class DeleteHandler(BaseHandler):
     def get(self, safekey):
         key = ndb.Key(urlsafe=safekey)
         if key.parent():
-            next = self.request.headers.get('Referer', '/')
+            next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
-            next = '/%s' % MAP[key.kind()]
+            next = root_url(key.kind())
 
         obj = key.get()
         user = users.get_current_user()
@@ -149,8 +152,8 @@ class DeleteHandler(BaseHandler):
 
     def post(self, safekey):
         next = str(self.request.get('next'))
-        obj = ndb.Key(urlsafe=safekey).get()
-        obj.delete()
+        key = ndb.Key(urlsafe=safekey)
+        key.delete()
         self.redirect(next)
 
 def handle_403(request, response, exception):
@@ -187,23 +190,20 @@ class Send(webapp2.RequestHandler):
         message = self.request.get('msg')
         xmpp.send_message(ADMIN_JID, message)
 
-def escape(str):
-    return str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
-
 def rss(request, kind):
     template = ENV.get_template('rss.xml')
     if kind == 'photo':
         query = Photo.query().order(-Photo.date)
         data = {
             'title': 'Photos',
-            'link': '/photos',
+            'link': webapp2.uri_for('photos'),
             'description': 'Latest photos from the site'
         }
     elif kind == 'entry':
         query = Entry.query().order(-Entry.date)
         data = {
             'title': 'Entries',
-            'link': '/entries',
+            'link': webapp2.uri_for('entries'),
             'description': 'Latest entries from the site'
             }
     data.update({

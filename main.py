@@ -1,5 +1,5 @@
-from webapp2 import WSGIApplication, SimpleRoute, Route
-from webapp2_extras.routes import PathPrefixRoute, MultiRoute
+from webapp2 import WSGIApplication, Route
+from webapp2_extras.routes import PathPrefixRoute
 from views import Index, DeleteHandler, handle_403, handle_404, handle_500,  \
     latest, RenderCloud, auto_complete, sitemap, visualize, Find, Chat, Send, rss
 from settings import DEBUG
@@ -9,36 +9,36 @@ CONFIG = {
 }
 
 app = WSGIApplication([
-    SimpleRoute(r'^/photos/?$', handler='photo.views.Index'),
     PathPrefixRoute('/photos', [
-        Route('/add', handler='photo.views.Add'),
-        Route('/<slug>/edit', handler='photo.views.Edit'),
-        Route('/<slug_idx>', handler='photo.views.Detail'),
+        Route('/', handler='photo.views.Index', name='photos'),
+        Route('/add', handler='photo.views.Add', name='photo_add'),
+        Route('/<slug>/edit', handler='photo.views.Edit', name='photo_edit'),
+        Route('/<slug_idx>', handler='photo.views.Detail', name='photo'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug_idx>', handler='photo.views.Detail'),
-        Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>', handler='photo.views.Index'),
+        Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/', handler='photo.views.Index'),
         ]),
-    SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
-        Route('/add', handler='entry.views.Add'),
-        Route('/<slug>/edit', handler='entry.views.Edit'),
-        Route('/<field:(tags|date|author)>/<value>', handler='entry.views.Index'),
+        Route('/', handler='entry.views.Index', name='entries'),
+        Route('/add', handler='entry.views.Add', name='entry_add'),
+        Route('/<slug>/edit', handler='entry.views.Edit', name='entry_edit'),
+        Route('/<field:(tags|date|author)>/<value>/', handler='entry.views.Index'),
         Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'),
-        Route('/<slug>', handler='entry.views.Detail'),
+        Route('/<slug>', handler='entry.views.Detail', name='entry'),
         ]),
-    SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),
     PathPrefixRoute('/comments', [
-        Route('/<safekey>/add', handler='comment.views.Add'),
-        Route('/<field:(forkind|date|author)>/<value>', handler='comment.views.Index'),
+        Route('/', handler='comment.views.Index', name='comments'),
+        Route('/<safekey>/add', handler='comment.views.Add', name='comment_add'),
+        Route('/<field:(forkind|date|author)>/<value>/', handler='comment.views.Index'),
         ]),
-    SimpleRoute('^/news/?$', handler='news.views.Index'),
     PathPrefixRoute('/news', [
-        Route('/add', handler='news.views.Add'),
-        Route('/<slug>/edit', handler='news.views.Edit'),
-        Route('/<slug>', handler='news.views.Detail'),
-        Route('/<field:tags>/<value>', handler='news.views.Index'),
+        Route('/', handler='news.views.Index', name='feeds'),
+        Route('/add', handler='news.views.Add', name='feed_add'),
+        Route('/<slug>/edit', handler='news.views.Edit', name='feed_edit'),
+        Route('/<slug>', handler='news.views.Detail', name='feed'),
+        Route('/<field:tags>/<value>/', handler='news.views.Index'),
         ]),
-    SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
+        Route('/', handler='admin.views.Index'),
         Route('/comments', handler='admin.views.Comments'),
         Route('/feeds', handler='admin.views.Feeds'),
         Route('/counters', handler='admin.views.Counters'),
@@ -65,11 +65,11 @@ app = WSGIApplication([
     Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
-    Route('/<safekey>/delete', handler=DeleteHandler),
+    Route('/<safekey>/delete', handler=DeleteHandler, name='delete'),
     Route('/latest', handler=latest),
     Route('/setlang', handler='common.SetLanguage'),
     Route('/sign', handler='common.sign_helper'),
-    Route('/', handler=Index),
+    Route('/', handler=Index, name='start'),
     ], config=CONFIG, debug=DEBUG)
 
 app.error_handlers[403] = handle_403

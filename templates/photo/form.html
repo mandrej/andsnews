@@ -5,11 +5,11 @@
 {% block subnav %}
     {% if object %}
         {% if is_admin or user == object.author %}
-			<a class="confirm" href="{{ object.get_absolute_url }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-     		<a href="{{ object.get_absolute_url() }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+			<a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+     		<a href="{{ uri_for('photo', slug_idx=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
-        <a href="/photos" title="{{ _('Back') }}">{{ _('Back') }}</a>
+        <a href="{{ uri_for('photos') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
@@ -61,7 +61,7 @@
     {% endif %}
 
 	{% if object %}
-	    <form action="{{ object.get_absolute_url() }}/edit" method="post">
+	    <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
 			<fieldset>
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.tags) }}

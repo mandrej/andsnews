@@ -1,10 +1,11 @@
-import webapp2, json
+import json
 from google.appengine.api import users
 from google.appengine.ext import ndb, deferred
 from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, widgets, fields, validators
 from models import Comment
 from common import  BaseHandler, Paginator, Filter, EmailField
+import logging
 PER_PAGE = 10
 
 class Index(BaseHandler):
@@ -30,14 +31,6 @@ class AddForm(Form):
     email = fields.TextField(_('e-mail'), validators=[validators.DataRequired(), validators.Email()])
     body = fields.TextAreaField(_('Comment'), validators=[validators.DataRequired()])
 
-def send(safekey, email, body):
-    refkey = ndb.Key(urlsafe=safekey)
-    obj = Comment(parent=refkey,
-        author = users.User(email),
-        forkind = refkey.kind(),
-        body=body)
-    obj.add()
-
 class Add(BaseHandler):
     def get(self, safekey, form=None):
         refobj = ndb.Key(urlsafe=safekey).get()
@@ -52,7 +45,12 @@ class Add(BaseHandler):
         form = AddForm(formdata=self.request.POST)
         self.response.headers['Content-Type'] = 'application/json'
         if form.validate():
-            deferred.defer(send, safekey, form.data['email'], form.data['body'])
+            refkey = ndb.Key(urlsafe=safekey)
+            obj = Comment(parent=refkey,
+                author = users.User(form.data['email']),
+                forkind = refkey.kind(),
+                body=form.data['body'])
+            obj.add()
             self.response.write(json.dumps({'success': True}))
         else:
             self.response.write(json.dumps(form.errors))

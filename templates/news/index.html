@@ -6,7 +6,7 @@
 
 {% block subnav %}
     {% if is_admin %}
-        <a href="/news/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
 	{% else %}
 		&nbsp;
     {% endif %}
@@ -14,7 +14,7 @@
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/news">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
+		<h2><a href="{{ uri_for('feeds') }}">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
 			{{ filter_title }}</h2>
 	{% else %}
 		<h2>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</h2>
@@ -29,7 +29,7 @@
 					<span class="monthyear">{{ object.date|format_datetime("%m '%y") }}</span>
 				</time>
 				<a class="white{% if object.key.string_id()|incache %} old{% endif %}"
-					href="{{ object.get_absolute_url() }}" title="{{ object.headline }}">
+					href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ object.headline }}">
 					<h3>{{ object.headline }}</h3>
 					<p class="posted">
 						{% if object.date %}{{ _('updated') }}:

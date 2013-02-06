@@ -1,6 +1,6 @@
 from __future__ import division
-import logging
-import datetime, time, re, colorsys
+import webapp2, logging
+import datetime, time, colorsys
 from cStringIO import StringIO
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
@@ -191,7 +191,8 @@ class Photo(ndb.Model):
     def index_add(self):
         return INDEX.put(
             create_doc('%s' % self.key.urlsafe(), 
-                headline=self.headline, author=self.author, body=self.model + ' ' + (self.lens or ''), tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Photo'))
+                headline=self.headline, author=self.author, body=self.model + ' ' + (self.lens or ''),
+                tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Photo'))
     
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
@@ -305,7 +306,7 @@ class Photo(ndb.Model):
         self.key.delete()
 
     def get_absolute_url(self):
-        return '/photos/%s' % self.key.string_id()
+        return webapp2.uri_for('photo', slug_idx=self.key.string_id())
 
     def cached_url(self, size, crop):
         pattern = '%s=s%s-c' if crop else '%s=s%s'
@@ -329,9 +330,9 @@ class Photo(ndb.Model):
     @property
     def similar_url(self):
         if self.sat == 'color':
-            return '/photos/hue/%s' % self.hue
+            return '/photos/hue/%s/' % self.hue
         else:
-            return '/photos/lum/%s' % self.lum
+            return '/photos/lum/%s/' % self.lum
 
     @property
     def hex(self):
@@ -442,7 +443,7 @@ class Entry(ndb.Model):
 
         self._put()
 
-    @ndb.transactional
+#    @ndb.transactional
     def delete(self):
         ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
         self.index_del()
@@ -452,7 +453,7 @@ class Entry(ndb.Model):
             decr_count('Entry', 'tags', name)
 
     def get_absolute_url(self):
-        return '/entries/%s' % self.key.string_id()
+        return webapp2.uri_for('entry', slug=self.key.string_id())
 
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
@@ -501,7 +502,7 @@ class Comment(ndb.Model):
         else:
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
-        
+
         self.year = self.date.year
         incr_count('Comment', 'date', self.year)
         
@@ -520,7 +521,7 @@ class Comment(ndb.Model):
         self.index_del()
     
     def get_absolute_url(self):
-        return '/comments/%s' % self.key.urlsafe()
+        return '%s%s' % (webapp2.uri_for('comments'), self.key.urlsafe())
 
 class Feed(ndb.Model):
     url = ndb.StringProperty(required=True)
@@ -529,15 +530,9 @@ class Feed(ndb.Model):
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
     
-    def _put(self):
-        self.put()
-
-    def _add(self, data):
-        self.tags = data['tags']
-        self._put()
-
     def add(self, data):
-        ndb.transaction(lambda: self._add(data))
+        self.tags = data['tags']
+        self.put()
         for name in self.tags:
             incr_count('Feed', 'tags', name)
 
@@ -554,7 +549,7 @@ class Feed(ndb.Model):
 
         self.url = data['url']
         self.headline = data['headline']
-        self._put()
+        self.put()
 
     def delete(self):
         for name in self.tags:
@@ -564,7 +559,4 @@ class Feed(ndb.Model):
         self.key.delete_async()
 
     def get_absolute_url(self):
-        return '/news/%s' % self.key.string_id()
-
-    def has_cache(self):
-        return memcache.get(self.key.string_id()) is not None
+        return webapp2.uri_for('feed', slug=self.key.string_id())

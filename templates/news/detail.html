@@ -4,11 +4,11 @@
 
 {% block subnav %}
     {% if is_admin %}
-        <a href="/news/add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-        <a href="{{ object.get_absolute_url() }}/edit" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-        <a class="confirm" href="/{{ object.key.urlsafe() }}/delete" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+        <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ uri_for('feed_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+        <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
-    <a href="/news" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <a href="{{ uri_for('feeds') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}
 
 {% block contents %}
@@ -40,7 +40,7 @@
 			{% endif %}
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
-				<a href="/news/tags/{{ tag }}" title="{{ tag }}">
+				<a href="{{ uri_for('feeds') }}tags/{{ tag }}/" title="{{ tag }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
 		</div>

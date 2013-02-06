@@ -4,13 +4,13 @@
 
 {% block subnav %}
     {% if user %}
-        <a href="/photos/add" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
     {% endif %}
 {% endblock %}
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="/photos">{{ _('Photos') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+		<h2><a href="{{ uri_for('photos') }}">{{ _('Photos') }}</a>{{ filter_title }}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	{% else %}
 		<h2>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h2>
 	{% endif %}
@@ -18,7 +18,7 @@
 	<div id="container">
 		{% for object in objects %}
 			<figure class="thumbnail brick">
-				<a href="/photos{{ filter_url }}/{{ idx + loop.index }}"
+				<a href="{{ uri_for('photos') }}{{ filter_url }}{{ idx + loop.index }}"
 					title="{{ object.headline }}">
                     <img src="/static/images/blank.gif" style="background-image: url({{ object.small_url() }});"/>
                     <p class="legend">{{ object.headline }}</p>

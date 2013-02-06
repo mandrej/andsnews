@@ -1,15 +1,13 @@
 from __future__ import division
 import os, re, webapp2, jinja2
-import math, hashlib
+import math, hashlib, datetime
 import itertools, collections
-import datetime
-import logging, traceback
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
 from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
-from google.appengine.ext import ndb, deferred, blobstore
+from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
 from wtforms import widgets, fields
 from cloud import calculate_cloud
@@ -106,6 +104,7 @@ ENV.globals.update({
     'version': version,
     'gaesdk': gaesdk,
     'language': language,
+    'uri_for': webapp2.uri_for,
 })
 ENV.filters.update({
     'incache': incache,
@@ -114,7 +113,7 @@ ENV.filters.update({
     'format_datetime': format_datetime,
     'image_url_by_num': image_url_by_num,
     'css_classes': css_classes,
-    'filesizeformat': filesizeformat
+    'filesizeformat': filesizeformat,
 })
 
 #real_handle_exception = ENV.handle_exception
@@ -284,7 +283,7 @@ class Filter:
     @property
     def url(self):
         if self.empty: return ''
-        return '/%s/%s' % (self.field, self.value)
+        return '%s/%s/' % (self.field, self.value)
 
 class Paginator:
     timeout = TIMEOUT/6
@@ -436,9 +435,9 @@ class TagsField(fields.TextField):
 
 def sign_helper(request):
     forbidden = ('admin', '403', 'addcomment')
-    referer = request.headers.get('Referer', '/')
+    referer = request.headers.get('Referer', webapp2.uri_for('start'))
     if referer.endswith(forbidden):
-        referer = '/'
+        referer = webapp2.uri_for('start')
     if users.get_current_user():
         dest_url = users.create_logout_url(referer)
     else:
@@ -478,7 +477,7 @@ class BaseHandler(webapp2.RequestHandler):
 
 class SetLanguage(BaseHandler):
     def post(self):
-        next = self.request.headers.get('Referer', '/')
+        next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         response = self.redirect(next)
         lang_code = self.request.get('language', None)
 

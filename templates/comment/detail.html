@@ -6,7 +6,7 @@
 			<span class="monthyear">{{ comment.date|format_datetime("%m '%y") }}</span>
 		</time>
 		{% if user == comment.author %}
-			<a class="delete confirm right" href="/{{ comment.key.urlsafe() }}/delete"
+			<a class="delete confirm right" href="{{ uri_for('delete', safekey=comment.key.urlsafe()) }}"
 				title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
 		{% endif %}
 		<div class="body">{{ comment.body|safe }}</div>
