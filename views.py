@@ -1,5 +1,5 @@
 from __future__ import division
-import sys, traceback, logging
+import sys, traceback
 import os, json, webapp2
 import hashlib, datetime
 from jinja2.filters import do_striptags
