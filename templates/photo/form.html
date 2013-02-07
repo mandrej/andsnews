@@ -6,7 +6,7 @@
     {% if object %}
         {% if is_admin or user == object.author %}
 			<a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-     		<a href="{{ uri_for('photo', slug_idx=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+     		<a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
         <a href="{{ uri_for('photos') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>

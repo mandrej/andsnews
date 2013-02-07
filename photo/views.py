@@ -29,11 +29,11 @@ class Index(BaseHandler):
         self.render_template('photo/index.html', data)
 
 class Detail(BaseHandler):
-    def get(self, slug_idx, field=None, value=None):
+    def get(self, slug, field=None, value=None):
         try:
-            idx = int(slug_idx)
+            idx = int(slug)
         except ValueError:
-            obj = Photo.get_by_id(slug_idx)
+            obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
             self.render_template('photo/detail.html',
@@ -119,6 +119,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect(webapp2.uri_for('photos'))
+            self.redirect(self.index_urls['Photo'])
         else:
             self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})

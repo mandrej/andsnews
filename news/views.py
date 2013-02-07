@@ -145,7 +145,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Feed(id=form.slug.data)
             obj.add(form.data)
-            self.redirect(webapp2.uri_for('feeds'))
+            self.redirect(self.index_urls['Feed'])
         else:
             self.render_template('news/form.html', {'form': form, 'filter': None})
 
@@ -162,6 +162,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect(webapp2.uri_for('feeds'))
+            self.redirect(self.index_urls['Feed'])
         else:
             self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
