@@ -24,11 +24,9 @@
             {% for object in objects %}
                 <tr id="{{ object.key.urlsafe() }}">
                     {% if object.is_message %}<td>message</td>{% else%}
-                        {% with parent=object.key.parent().get() %}
-                            <td>
-                                <a href="{{ parent.get_absolute_url() }}#comments">
-                                    {{ parent.headline }}</a>
-                            </td>
+                        {% with refkey=object.key.parent() %}
+                        <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}#comments">
+                            {{ refkey.get().headline }}</a></td>
                         {% endwith %}
                     {% endif %}
                     <td>

@@ -1,5 +1,5 @@
 from __future__ import division
-import sys, traceback, logging
+import sys, traceback
 import os, json, webapp2
 import hashlib, datetime
 from jinja2.filters import do_striptags
@@ -22,10 +22,6 @@ if PORT and PORT != '80':
 else:
     HOST_NAME = os.environ['SERVER_NAME']
 
-def root_url(kind):
-    map = {'Photo': 'photos', 'Entry': 'entries', 'Comment': 'comments', 'Feed': 'feeds'}
-    return webapp2.uri_for(map[kind])
-
 def get_or_build(key):
     kind, field = key.split('_')
     items = memcache.get(key)
@@ -42,7 +38,7 @@ class RenderCloud(BaseHandler):
         items = get_or_build(key)
         f = Filter(field, value)
         self.render_template('snippets/%s_cloud.html' % field,
-            {'%scloud' % field: items, 'kind': kind, 'link': '%s%s' % (root_url(kind), field), 'filter': f.parameters})
+            {'%scloud' % field: items, 'kind': kind, 'link': '%s%s' % (self.index_urls[kind], field), 'filter': f.parameters})
 
 def visualize(request, key):
     data = {}
@@ -139,7 +135,7 @@ class DeleteHandler(BaseHandler):
         if key.parent():
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
-            next = root_url(key.kind())
+            next = self.index_urls[key.kind()]
 
         obj = key.get()
         user = users.get_current_user()

@@ -304,7 +304,7 @@ class Photo(ndb.Model):
         self.key.delete()
 
     def get_absolute_url(self):
-        return webapp2.uri_for('photo', slug_idx=self.key.string_id())
+        return webapp2.uri_for('photo', slug=self.key.string_id())
 
     def cached_url(self, size, crop):
         pattern = '%s=s%s-c' if crop else '%s=s%s'
@@ -366,7 +366,8 @@ class Entry(ndb.Model):
     def index_add(self):
         return INDEX.put(
             create_doc('%s' % self.key.urlsafe(), 
-                headline=self.headline, author=self.author, body=self.summary + ' ' + self.body, tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
+                headline=self.headline, author=self.author, body=self.summary + ' ' + self.body,
+                tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
     
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())

@@ -1,11 +1,10 @@
 import json
 from google.appengine.api import users
-from google.appengine.ext import ndb, deferred
+from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
-from wtforms import Form, widgets, fields, validators
+from wtforms import Form, fields, validators
 from models import Comment
 from common import  BaseHandler, Paginator, Filter, EmailField
-import logging
 PER_PAGE = 10
 
 class Index(BaseHandler):

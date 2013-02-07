@@ -37,7 +37,7 @@
         <tbody>
             {% for photo in objects %}
                 <tr id="{{ photo.key.urlsafe() }}">
-                    <td><a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+                    <td><a href="{{ uri_for('photo_edit', slug=photo.key.string_id()) }}">
                         {{ photo.headline }}</a></td>
                     <td>
                         {% if photo.blob_key %}
