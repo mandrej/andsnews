@@ -368,7 +368,8 @@ class Entry(ndb.Model):
     def index_add(self):
         return INDEX.put(
             create_doc('%s' % self.key.urlsafe(), 
-                headline=self.headline, author=self.author, body=self.summary + ' ' + self.body, tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
+                headline=self.headline, author=self.author, body=self.summary + ' ' + self.body,
+                tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
     
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
