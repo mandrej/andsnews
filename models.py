@@ -300,7 +300,8 @@ class Photo(ndb.Model):
             if value:
                 decr_count('Photo', field, value)
 
-        ndb.delete_multi([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
+        # TODO comments are not deleted
+        ndb.delete_multi([x.key for x in ndb.Query(ancestor=self.key)])
         self.key.delete()
 
     def get_absolute_url(self):
@@ -441,7 +442,7 @@ class Entry(ndb.Model):
 
 #    @ndb.transactional
     def delete(self):
-        ndb.delete_multi_async([x for x in ndb.Query(ancestor=self.key).iter(keys_only=True)])
+        ndb.delete_multi_async([x.key for x in ndb.Query(ancestor=self.key)])
         self.index_del()
         decr_count('Entry', 'author', self.author.nickname())
         decr_count('Entry', 'date', self.year)

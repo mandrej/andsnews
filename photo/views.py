@@ -1,11 +1,11 @@
 import cgi
 import webapp2
 from google.appengine.api import users
-from google.appengine.ext import ndb, blobstore
+from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo
-from wtforms import Form, widgets, fields, validators
+from wtforms import Form, fields, validators
 from common import BaseHandler, Paginator, Filter, EmailField, TagsField
 
 class Index(BaseHandler):
@@ -96,7 +96,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Photo(id=form.slug.data)
             obj.add(form.data)
-            self.redirect(webapp2.uri_for('photo_edit', slug=self.key.string_id()))
+            self.redirect(webapp2.uri_for('photo_edit', slug=obj.key.string_id()))
         else:
             upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
             self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
