@@ -1,8 +1,15 @@
 from __future__ import division
-import os, re, webapp2, jinja2
-import math, hashlib, datetime
-import itertools, collections
-import logging, traceback
+import os
+import re
+import webapp2
+import jinja2
+import math
+import hashlib
+import datetime
+import itertools
+import collections
+import logging
+import traceback
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
@@ -32,37 +39,48 @@ ENV.install_gettext_callables(
     lambda s, p, n: i18n.ngettext(s, p, n),
     newstyle=False)
 
+
 def version():
     return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
+
 
 def gaesdk():
     return os.environ.get('SERVER_SOFTWARE')
 
+
 def language(code):
     return code.split('_')[0]
+
 
 def now():
     date = datetime.datetime.now()
     return date.strftime('%Y')
 
+
 def format_date(value, format='%Y-%m-%d'):
     return value.strftime(format)
 
+
 def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
     return value.strftime(format)
+
 
 def image_url_by_num(obj, arg):
     """ {{ object|image_url_by_num:form.initial.ORDER }}/small
         {{ object|image_url_by_num:object.front }}/small """
     return obj.image_url(arg)
 
+
 def incache(key):
-    if memcache.get(key): return True
-    else: return False
+    if memcache.get(key):
+        return True
+    else:
+        return False
+
 
 def boolimage(value):
     """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
-    if value == True:
+    if value is True:
         return do_mark_safe('<img src="/static/images/icon_yes.png" alt="%s"/>' % value)
     else:
         return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)
@@ -70,6 +88,7 @@ def boolimage(value):
 @environmentfilter
 def css_classes(env, classes):
     return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
+
 
 def filesizeformat(value, binary=False):
     """Format the value like a 'human-readable' file size (i.e. 13 kB,
@@ -118,10 +137,13 @@ ENV.filters.update({
 })
 
 real_handle_exception = ENV.handle_exception
+
+
 def handle_exception(self, *args, **kwargs):
-   logging.error('Template exception:\n%s', traceback.format_exc())
-   real_handle_exception(self, *args, **kwargs)
+    logging.error('Template exception:\n%s', traceback.format_exc())
+    real_handle_exception(self, *args, **kwargs)
 ENV.handle_exception = handle_exception
+
 
 def make_cloud(kind, field):
     key = '%s_%s' % (kind, field)
@@ -140,6 +162,7 @@ def make_cloud(kind, field):
         content = calculate_cloud(coll)
         memcache.set(key, content, TIMEOUT*12)
     return content
+
 
 def count_property(kind, field):
     prop = field
@@ -168,6 +191,7 @@ def count_property(kind, field):
     memcache.set(key, content, TIMEOUT*12)
     return content
 
+
 def count_colors():
     key = 'Photo_colors'
     content = memcache.get(key)
@@ -176,16 +200,15 @@ def count_colors():
         for k, d in COLORS.items():
             if d['field'] == 'hue':
                 query = Photo.query(Photo.hue == d['name'], Photo.sat == 'color').order(-Photo.date)
-                count = query.count(1000)
             elif d['field'] == 'lum':
                 query = Photo.query(Photo.lum == d['name'], Photo.sat == 'monochrome').order(-Photo.date)
-                count = query.count(1000)
             data = COLORS[k]
-            data.update({'count': count})
+            data.update({'count': query.count(1000)})
             content.append(data)
         content = sorted(content, key=itemgetter('order'))
         memcache.set(key, content, TIMEOUT*12)
     return content
+
 
 def make_thumbnail(kind, slug, size, mime='image/jpeg'):
     """
@@ -208,7 +231,7 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
     aspect = img.width/img.height
     if aspect < 1:
         aspect = 1/aspect
-    _thumb = int(math.ceil(_width*aspect))
+    _thumb = int(math.ceil(_width * aspect))
 
     if _thumb < img.width or _thumb < img.height:
         if size == 'small':
@@ -224,12 +247,13 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
             deferred.defer(make_thumbnail, kind, slug, size)
             return None, mime
         else:
-            if size== 'small' and obj.small is None:
+            if size == 'small' and obj.small is None:
                 obj.small = out
                 obj.put()
         return out, mime
     else:
         return buff, mime
+
 
 class Filter:
     def __init__(self, field, value):
@@ -247,7 +271,7 @@ class Filter:
         if self.field == 'date':
             return {'year': int(self.value)}
         elif self.field == 'author':
-#        TODO Not all emails are gmail
+            # TODO Not all emails are gmail
             return {'author': users.User(email='%s@gmail.com' % self.value)}
         elif self.field == 'forkind':
             return {'forkind': self.value.capitalize()}
@@ -286,8 +310,10 @@ class Filter:
         if self.empty: return ''
         return '%s/%s/' % (self.field, self.value)
 
+
 class Paginator:
     timeout = TIMEOUT/6
+
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query
         self.per_page = per_page
@@ -342,10 +368,12 @@ class Paginator:
         prev, obj, next = ndb.get_multi(collection[:3])
         return num, prev, obj, next
 
+
 class SearchPaginator:
 #    timeout = 60 #TIMEOUT/10
     def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring #'"{0}"'.format(querystring.replace('"',''))
+        self.querystring = querystring
+        # '"{0}"'.format(querystring.replace('"',''))
         self.per_page = per_page
 #        self.id = hashlib.md5(querystring).hexdigest()
 #        self.cache = memcache.get(self.id)
@@ -396,6 +424,7 @@ class SearchPaginator:
 
         return results, number_found, has_next, error
 
+
 class ListPaginator:
     def __init__(self, objects, per_page=PER_PAGE):
         self.objects = objects
@@ -412,6 +441,7 @@ class ListPaginator:
         has_next = num < self.num_pages
         return results, has_next
 
+
 class EmailField(fields.SelectField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
@@ -420,6 +450,7 @@ class EmailField(fields.SelectField):
         if not email in FAMILY:
             FAMILY.append(email)
         self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
+
 
 class TagsField(fields.TextField):
     widget = widgets.TextInput()
@@ -434,6 +465,7 @@ class TagsField(fields.TextField):
         else:
             self.data = []
 
+
 def sign_helper(request):
     forbidden = ('admin', '403', 'addcomment')
     referer = request.headers.get('Referer', webapp2.uri_for('start'))
@@ -444,6 +476,7 @@ def sign_helper(request):
     else:
         dest_url = users.create_login_url(referer)
     return webapp2.redirect(dest_url)
+
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -482,6 +515,7 @@ class BaseHandler(webapp2.RequestHandler):
         template = ENV.get_template(filename)
 #        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
         self.response.write(template.render(kwargs))
+
 
 class SetLanguage(BaseHandler):
     def post(self):

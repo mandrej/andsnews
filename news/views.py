@@ -1,13 +1,14 @@
 import webapp2
-import re, datetime, time
+import re
+import datetime
+import time
 from google.appengine.api import users, urlfetch, memcache
-from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required, admin_required
-from wtforms import Form, widgets, fields, validators
+from webapp2_extras.appengine.users import admin_required
+from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from common import  BaseHandler, Paginator, Filter, TagsField
+from common import BaseHandler, Paginator, Filter, TagsField
 from settings import TIMEOUT
 
 PER_PAGE = 12
@@ -19,6 +20,7 @@ ADS = (
     re.compile(r'background-color:\s?.+?;?')
 )
 
+
 def make_date(tt):
     """ Convert tt to datetime.datetime
         (2009, 7, 29, 14, 39, 12, 2, 210, 0) """
@@ -26,6 +28,7 @@ def make_date(tt):
         return datetime.datetime.fromtimestamp(time.mktime(tt))
     except TypeError:
         return None
+
 
 def parse_date(str):
     """ Convert date from string FORMAT to tt
@@ -36,6 +39,7 @@ def parse_date(str):
         return None
     else:
         return make_date(tt)
+
 
 def rewrite(news):
     stripADS = True
@@ -57,6 +61,7 @@ def rewrite(news):
                 stripADS = False
     return news
 
+
 def update(result):
     news = None
     date = datetime.datetime.now()
@@ -69,6 +74,7 @@ def update(result):
             elif 'date' in result.headers:
                 date = parse_date(result.headers['date'])
     return news, date
+
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -88,6 +94,7 @@ class Index(BaseHandler):
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('news/index.html', data)
+
 
 class Detail(BaseHandler):
     def get(self, slug):
@@ -117,6 +124,7 @@ class Detail(BaseHandler):
 
         self.render_template('news/detail.html', {'object': obj, 'news': news, 'error': error, 'filter': None})
 
+
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
@@ -127,11 +135,13 @@ class AddForm(Form):
         if Feed.get_by_id(field.data):
             raise validators.ValidationError(_('Record with this slug already exist'))
 
+
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     url = fields.TextField(_('Url'), validators=[validators.DataRequired(), validators.URL()])
     date = fields.DateTimeField(_('Taken'))
+
 
 class Add(BaseHandler):
     @admin_required
@@ -148,6 +158,7 @@ class Add(BaseHandler):
             self.redirect(self.index_urls['Feed'])
         else:
             self.render_template('news/form.html', {'form': form, 'filter': None})
+
 
 class Edit(BaseHandler):
     @admin_required

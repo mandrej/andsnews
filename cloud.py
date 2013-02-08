@@ -3,9 +3,11 @@ import math
 
 LOGARITHMIC, LINEAR = 1, 2
 
+
 def _calculate_thresholds(min_weight, max_weight, steps):
     delta = (max_weight - min_weight)/steps
     return [min_weight + i * delta for i in range(1, steps + 1)]
+
 
 def _calculate_tag_weight(weight, max_weight, distribution):
     if distribution == LINEAR or max_weight == 1:
@@ -13,6 +15,7 @@ def _calculate_tag_weight(weight, max_weight, distribution):
     elif distribution == LOGARITHMIC:
         return math.log(weight) * max_weight / math.log(max_weight)
     raise ValueError('Invalid distribution algorithm specified: %s.' % distribution)
+
 
 def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
     """

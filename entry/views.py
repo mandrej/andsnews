@@ -1,12 +1,13 @@
 import webapp2
 from google.appengine.api import users
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required, admin_required
-from wtforms import Form, widgets, FormField, FieldList, fields, validators
+from webapp2_extras.appengine.users import login_required
+from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
 from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
-from settings import LIMIT, TIMEOUT
+from settings import TIMEOUT
 PER_PAGE = 6
+
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -27,12 +28,14 @@ class Index(BaseHandler):
                 'has_previous': page > 1}
         self.render_template('entry/index.html', data)
 
+
 class Detail(BaseHandler):
     def get(self, slug):
         obj = Entry.get_by_id(slug)
         if obj is None:
             webapp2.abort(404)
         self.render_template('entry/detail.html', {'object': obj, 'filter': None})
+
 
 class RequiredIf(validators.Required):
     def __init__(self, other_field_name, *args, **kwargs):
@@ -46,15 +49,18 @@ class RequiredIf(validators.Required):
         if bool(other_field.data):
             super(RequiredIf, self).__call__(form, field)
 
+
 class ImgAddForm(Form):
     name = fields.TextField(_('New Image'))
 #    blob = fields.FileField(validators=[RequiredIf('name')])
     blob = fields.FileField()
 
+
 class ImgEditForm(Form):
     name = fields.TextField(_('Image'))
     num = fields.IntegerField()
     delete = fields.BooleanField(_('remove'))
+
 
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
@@ -70,6 +76,7 @@ class AddForm(Form):
         if Entry.get_by_id(field.data):
             raise validators.ValidationError(_('Record with this slug already exist'))
 
+
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
@@ -80,6 +87,7 @@ class EditForm(Form):
     front = fields.SelectField(_('Front image'), coerce=int)
     images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=ENTRY_IMAGES)
     newimages = FieldList(FormField(ImgAddForm))
+
 
 class Add(BaseHandler):
     @login_required
@@ -98,10 +106,12 @@ class Add(BaseHandler):
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
+
 def front_choices(obj):
     choices = [(img.num, img.name) for img in obj.image_list]
     choices.insert(0, (-1, '---'))
     return choices
+
 
 class Edit(BaseHandler):
     @login_required
@@ -129,6 +139,7 @@ class Edit(BaseHandler):
             self.redirect(self.index_urls['Entry'])
         else:
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
+
 
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)

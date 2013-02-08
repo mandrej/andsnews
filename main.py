@@ -16,7 +16,7 @@ app = WSGIApplication([
         Route('/<slug>', handler='photo.views.Detail', name='photo'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/<slug>', handler='photo.views.Detail'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|hue|lum)>/<value>/', handler='photo.views.Index'),
-        ]),
+    ]),
     PathPrefixRoute('/entries', [
         Route('/', handler='entry.views.Index', name='entries'),
         Route('/add', handler='entry.views.Add', name='entry_add'),
@@ -24,19 +24,19 @@ app = WSGIApplication([
         Route('/<field:(tags|date|author)>/<value>/', handler='entry.views.Index'),
         Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb'),
         Route('/<slug>', handler='entry.views.Detail', name='entry'),
-        ]),
+    ]),
     PathPrefixRoute('/comments', [
         Route('/', handler='comment.views.Index', name='comments'),
         Route('/<safekey>/add', handler='comment.views.Add', name='comment_add'),
         Route('/<field:(forkind|date|author)>/<value>/', handler='comment.views.Index'),
-        ]),
+    ]),
     PathPrefixRoute('/news', [
         Route('/', handler='news.views.Index', name='feeds'),
         Route('/add', handler='news.views.Add', name='feed_add'),
         Route('/<slug>/edit', handler='news.views.Edit', name='feed_edit'),
         Route('/<slug>', handler='news.views.Detail', name='feed'),
         Route('/<field:tags>/<value>/', handler='news.views.Index'),
-        ]),
+     ]),
     PathPrefixRoute('/admin', [
         Route('/', handler='admin.views.Index'),
         Route('/comments', handler='admin.views.Comments'),
@@ -52,9 +52,8 @@ app = WSGIApplication([
         Route('/memcache/<key>/build', handler='admin.views.build'),
         Route('/memcache/<key>/create', handler='admin.views.create'),
         Route('/memcache/<key>/delete', handler='admin.views.memcache_delete'),
-
 #        Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
-        ]),
+    ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
     Route('/filter/<key>', handler=RenderCloud),
     Route('/search', handler=Find),
@@ -70,7 +69,7 @@ app = WSGIApplication([
     Route('/setlang', handler='common.SetLanguage'),
     Route('/sign', handler='common.sign_helper'),
     Route('/', handler=Index, name='start'),
-    ], config=CONFIG, debug=DEBUG)
+], config=CONFIG, debug=DEBUG)
 
 app.error_handlers[403] = handle_403
 app.error_handlers[404] = handle_404

@@ -1,6 +1,9 @@
 from __future__ import division
-import webapp2, logging
-import datetime, time, colorsys
+import webapp2
+import logging
+import datetime
+import time
+import colorsys
 from cStringIO import StringIO
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
@@ -17,6 +20,7 @@ KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso',)
 ENTRY_IMAGES = 10
 
+
 def median(buff):
     triple = []
     histogram = images.histogram(buff)
@@ -25,10 +29,11 @@ def median(buff):
         limit = sum(band)/2
         for i in xrange(256):
             suma += band[i]
-            if (suma > limit):
+            if suma > limit:
                 triple.append(i)
                 break
     return triple
+
 
 def get_exif(buff):
     data = {}
@@ -117,6 +122,7 @@ def get_exif(buff):
     logging.info(data)
     return data
 
+
 def range_names(rgb):
     def in_range(value, component):
         for x in component:
@@ -131,6 +137,7 @@ def range_names(rgb):
     sat = in_range(S, SAT)
     return hue, lum, sat
 
+
 def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=None, kind=None):
     return search.Document(
         doc_id=id, fields=[
@@ -141,13 +148,15 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=No
             search.DateField(name='date', value=date.date()),
             search.AtomField(name='link', value=url),
             search.AtomField(name='kind', value=kind)
-    ], language='en_US')
+        ], language='en_US')
+
 
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
     value = ndb.StringProperty(required=True)
     count = ndb.IntegerProperty(default=0)
+
 
 def update_counter(*args, **kwargs):
     key = '%s||%s||%s' % args
@@ -156,11 +165,14 @@ def update_counter(*args, **kwargs):
     obj.count += kwargs.get('delta', 1)
     obj.put()
 
+
 def incr_count(*args):
     deferred.defer(update_counter, *args, delta=1)
 
+
 def decr_count(*args):
     deferred.defer(update_counter, *args, delta=-1)
+
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
@@ -190,7 +202,8 @@ class Photo(ndb.Model):
 
     def index_add(self):
         return INDEX.put(
-            create_doc('%s' % self.key.urlsafe(), 
+            create_doc(
+                '%s' % self.key.urlsafe(),
                 headline=self.headline, author=self.author, body=self.model + ' ' + (self.lens or ''),
                 tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Photo'))
     
@@ -229,7 +242,7 @@ class Photo(ndb.Model):
         old = self.author
         new = data['author']
         if new != old.nickname():
-#            TODO Not all emails are gmail
+            # TODO Not all emails are gmail
             self.author = users.User(email='%s@gmail.com' % new)
             decr_count('Photo', 'author', old.nickname())
             incr_count('Photo', 'author', self.author.nickname())
@@ -343,7 +356,8 @@ class Photo(ndb.Model):
     
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
-    
+
+
 class Img(ndb.Model):
     # parent Entry
     name = ndb.StringProperty()
@@ -351,6 +365,7 @@ class Img(ndb.Model):
     blob = ndb.BlobProperty(default=None)
     small = ndb.BlobProperty(default=None)
     mime = ndb.StringProperty(default='image/jpeg')
+
 
 class Entry(ndb.Model):
     headline = ndb.StringProperty(required=True)
@@ -364,7 +379,8 @@ class Entry(ndb.Model):
     
     def index_add(self):
         return INDEX.put(
-            create_doc('%s' % self.key.urlsafe(), 
+            create_doc(
+                '%s' % self.key.urlsafe(),
                 headline=self.headline, author=self.author, body=self.summary + ' ' + self.body,
                 tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
     
@@ -461,6 +477,7 @@ class Entry(ndb.Model):
     def image_url(self, num):
         return '/entries/image/%s_%s' % (self.key.string_id(), num)
 
+
 class Comment(ndb.Model):
     # parent Photo, Entry
     author = ndb.UserProperty(required=True)
@@ -480,7 +497,8 @@ class Comment(ndb.Model):
             kind = 'Comment'
             headline = parentobj.headline
         return INDEX.put(
-            create_doc('%s' % self.key.urlsafe(), 
+            create_doc(
+                '%s' % self.key.urlsafe(),
                 headline=headline, author=self.author, body=self.body, date=self.date, url=url, kind=kind))
     
     def index_del(self):
@@ -516,6 +534,7 @@ class Comment(ndb.Model):
     
     def get_absolute_url(self):
         return '%s%s' % (webapp2.uri_for('comments'), self.key.urlsafe())
+
 
 class Feed(ndb.Model):
     url = ndb.StringProperty(required=True)

@@ -1,11 +1,13 @@
 from __future__ import division
-import json, webapp2
+import json
+import webapp2
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
-from webapp2_extras.appengine.users import login_required, admin_required
-from models import Photo, Entry, Comment, Feed, Counter, KEYS, median, range_names
-from common import ENV, BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail, filesizeformat
+from webapp2_extras.appengine.users import admin_required
+from models import Photo, Entry, Comment, Feed, Counter, KEYS
+from common import BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail, filesizeformat
 from settings import PER_PAGE
+
 
 def memcache_delete(request, key):
     memcache.delete(key)
@@ -13,12 +15,14 @@ def memcache_delete(request, key):
     response.write(json.dumps(None))
     return response
 
+
 def build(request, key):
     kind, field = key.split('_')
     content = count_property(kind, field)
     response = webapp2.Response(content_type='application/json')
     response.write(json.dumps(content))
     return response
+
 
 def create(request, key):
     kind, field = key.split('_')
@@ -30,6 +34,7 @@ def create(request, key):
     response.write(json.dumps(content))
     return response
 
+
 def memcache_content(request):
     data = {}
     for key in KEYS:
@@ -37,6 +42,7 @@ def memcache_content(request):
     response = webapp2.Response(content_type='application/json')
     response.write(json.dumps(data))
     return response
+
 
 class Index(BaseHandler):
     def get(self):
@@ -58,6 +64,7 @@ class Index(BaseHandler):
         }
 
         self.render_template('admin/index.html', data)
+
 
 class Comments(BaseHandler):
     @admin_required
@@ -82,6 +89,7 @@ class Comments(BaseHandler):
         self.response.write(json.dumps({'success': True}))
         return self.response
 
+
 #def thumbnail_color(request):
 #    params = request.POST
 #    parentkind = params['kind']
@@ -98,6 +106,8 @@ class Comments(BaseHandler):
 #    return response
 
 #model = ndb.Model._kind_map.get(kind)
+
+
 class Images(BaseHandler):
     @admin_required
     def get(self, field=None, value=None):
@@ -132,6 +142,7 @@ class Images(BaseHandler):
         self.response.write(json.dumps(data))
         return self.response
 
+
 class Blobs(BaseHandler):
     @admin_required
     def get(self, field=None, value=None):
@@ -151,6 +162,7 @@ class Blobs(BaseHandler):
                 'archive': make_cloud('Photo', 'date')}
         self.render_template('admin/blobs.html', data)
 
+
 class Feeds(BaseHandler):
     @admin_required
     def get(self):
@@ -162,6 +174,7 @@ class Feeds(BaseHandler):
         if slug:
             memcache.delete(slug)
         self.redirect('/admin/feeds')
+
 
 class Counters(BaseHandler):
     @admin_required

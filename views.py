@@ -1,7 +1,11 @@
 from __future__ import division
-import sys, traceback
-import os, json, webapp2
-import hashlib, datetime
+import sys
+import traceback
+import os
+import json
+import webapp2
+import hashlib
+import datetime
 from jinja2.filters import do_striptags
 from webapp2_extras.appengine.users import login_required
 from webapp2_extras.i18n import lazy_gettext as _
@@ -22,6 +26,7 @@ if PORT and PORT != '80':
 else:
     HOST_NAME = os.environ['SERVER_NAME']
 
+
 def get_or_build(key):
     kind, field = key.split('_')
     items = memcache.get(key)
@@ -32,13 +37,17 @@ def get_or_build(key):
             items = make_cloud(kind, field)
     return items
 
+
 class RenderCloud(BaseHandler):
     def get(self, key, value=None):
         kind, field = key.split('_')
         items = get_or_build(key)
         f = Filter(field, value)
-        self.render_template('snippets/%s_cloud.html' % field,
-            {'%scloud' % field: items, 'kind': kind, 'link': '%s%s' % (self.index_urls[kind], field), 'filter': f.parameters})
+        self.render_template(
+            'snippets/%s_cloud.html' % field,
+            {'%scloud' % field: items, 'kind': kind,
+             'link': '%s%s' % (self.index_urls[kind], field), 'filter': f.parameters})
+
 
 def visualize(request, key):
     data = {}
@@ -79,12 +88,14 @@ def visualize(request, key):
     response.write(json.dumps(data))
     return response
 
+
 def auto_complete(request, kind, field):
     words = [x['name'] for x in make_cloud(kind.capitalize(), field)]
     words.sort()
     response = webapp2.Response(content_type='text/plain')
     response.write('\n'.join(words))
     return response
+
 
 class Find(BaseHandler):
     def get(self):
@@ -106,6 +117,7 @@ class Find(BaseHandler):
             {'objects': objects, 'phrase': querystring, 'number_found': number_found,
              'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
+
 def get_latest_photos():
     objects = memcache.get('Photo_latest')
     if objects is None:
@@ -117,16 +129,19 @@ def get_latest_photos():
         memcache.add('Photo_latest', objects, TIMEOUT)
     return objects
 
+
 def latest(request):
     objects = get_latest_photos()
     response = webapp2.Response(content_type='application/json')
     response.write(json.dumps(objects))
     return response
 
+
 class Index(BaseHandler):
     def get(self):
         objects = get_latest_photos()
         self.render_template('index.html', {'latest': objects})
+
 
 class DeleteHandler(BaseHandler):
     @login_required
@@ -152,11 +167,13 @@ class DeleteHandler(BaseHandler):
         key.delete()
         self.redirect(next)
 
+
 def handle_403(request, response, exception):
     template = ENV.get_template('errors/403.html')
     response.write(template.render({'error': exception}))
     response.set_status(403)
     return response
+
 
 def handle_404(request, response, exception):
     template = ENV.get_template('errors/404.html')
@@ -164,12 +181,14 @@ def handle_404(request, response, exception):
     response.set_status(404)
     return response
 
+
 def handle_500(request, response, exception):
     template = ENV.get_template('errors/500.html')
     lines = ''.join(traceback.format_exception(*sys.exc_info()))
     response.write(template.render({'error': exception, 'lines': lines}))
     response.set_status(500)
     return response
+
 
 class Chat(webapp2.RequestHandler):
     def post(self):
@@ -181,10 +200,12 @@ class Chat(webapp2.RequestHandler):
         obj = Comment(author=user, body=message.body)
         obj.add()
 
+
 class Send(webapp2.RequestHandler):
     def post(self):
         message = self.request.get('msg')
         xmpp.send_message(ADMIN_JID, message)
+
 
 def rss(request, kind):
     template = ENV.get_template('rss.xml')
@@ -201,7 +222,7 @@ def rss(request, kind):
             'title': 'Entries',
             'link': webapp2.uri_for('entries'),
             'description': 'Latest entries from the site'
-            }
+        }
     data.update({
         'kind': kind,
         'HOST': 'http://%s' % HOST_NAME,
@@ -217,6 +238,7 @@ def rss(request, kind):
     response.headers['Cache-Control'] = 'max-age=86400'
     response.write(template.render(data))
     return response
+
 
 def sitemap(request):
     template = ENV.get_template('urlset.xml')

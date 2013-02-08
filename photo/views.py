@@ -8,6 +8,7 @@ from models import Photo
 from wtforms import Form, fields, validators
 from common import BaseHandler, Paginator, Filter, EmailField, TagsField
 
+
 class Index(BaseHandler):
     def get(self, field=None, value=None):
         f = Filter(field, value)
@@ -23,10 +24,11 @@ class Index(BaseHandler):
                 'filter_url': f.url,
                 'filter_title': f.title,
                 'page': page,
-                'idx': (page - 1)*paginator.per_page,
+                'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('photo/index.html', data)
+
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
@@ -36,7 +38,8 @@ class Detail(BaseHandler):
             obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
-            self.render_template('photo/detail.html',
+            self.render_template(
+                'photo/detail.html',
                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
         else:
             f = Filter(field, value)
@@ -56,6 +59,7 @@ class Detail(BaseHandler):
                     'idx': idx}
             self.render_template('photo/detail.html', data)
 
+
 class AddForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
@@ -70,6 +74,7 @@ class AddForm(Form):
         if not isinstance(field.data, cgi.FieldStorage):
             raise validators.ValidationError(_('Not cgi.FieldStorage type.'))
 
+
 class EditForm(Form):
     headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
@@ -82,6 +87,7 @@ class EditForm(Form):
     iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'))
     crop_factor = fields.FloatField(_('Crop factor'))
     lens = fields.TextField(_('Lens type'))
+
 
 class Add(BaseHandler):
     @login_required
@@ -100,6 +106,7 @@ class Add(BaseHandler):
         else:
             upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
             self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+
 
 class Edit(BaseHandler):
     @login_required
