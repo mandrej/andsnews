@@ -195,7 +195,7 @@ class Chat(webapp2.RequestHandler):
         message = xmpp.Message(self.request.POST)
         message.reply("ANDS thank you!")
 
-        email = message.sender.split('/')[0] # node@domain/resource
+        email = message.sender.split('/')[0]  # node@domain/resource
         user = users.User(email)
         obj = Comment(author=user, body=message.body)
         obj.add()

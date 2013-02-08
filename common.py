@@ -160,7 +160,7 @@ def make_cloud(kind, field):
                 except ValueError:
                     coll[counter.value] = count
         content = calculate_cloud(coll)
-        memcache.set(key, content, TIMEOUT*12)
+        memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -188,7 +188,7 @@ def count_property(kind, field):
 
     coll = dict(tally.items())
     content = calculate_cloud(coll)
-    memcache.set(key, content, TIMEOUT*12)
+    memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -206,7 +206,7 @@ def count_colors():
             data.update({'count': query.count(1000)})
             content.append(data)
         content = sorted(content, key=itemgetter('order'))
-        memcache.set(key, content, TIMEOUT*12)
+        memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -312,7 +312,7 @@ class Filter:
 
 
 class Paginator:
-    timeout = TIMEOUT/6
+    timeout = TIMEOUT / 6
 
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query
@@ -454,11 +454,13 @@ class EmailField(fields.SelectField):
 
 class TagsField(fields.TextField):
     widget = widgets.TextInput()
+
     def _value(self):
         if self.data:
             return u', '.join(self.data)
         else:
             return u''
+
     def process_formdata(self, valuelist):
         if valuelist:
             self.data = sorted([x.strip().lower() for x in valuelist[0].split(',') if x.strip() != ''])

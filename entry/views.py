@@ -145,7 +145,7 @@ def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)
     if out:
         response = webapp2.Response(content_type=mime)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
         if size == 'normal':
             response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
         response.write(out)
