@@ -5,7 +5,7 @@ LOGARITHMIC, LINEAR = 1, 2
 
 
 def _calculate_thresholds(min_weight, max_weight, steps):
-    delta = (max_weight - min_weight)/steps
+    delta = (max_weight - min_weight) / steps
     return [min_weight + i * delta for i in range(1, steps + 1)]
 
 
@@ -34,7 +34,7 @@ def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
             tag_weight = _calculate_tag_weight(val, max_weight, distribution)
             for i in range(steps):
                 if not font_set and tag_weight <= thresholds[i]:
-                    data.append({'name': key, 'count': val, 'size': i+1})
+                    data.append({'name': key, 'count': val, 'size': i + 1})
                     font_set = True
                     break
     return data

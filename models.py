@@ -1,14 +1,17 @@
 from __future__ import division
-import webapp2
 import logging
 import datetime
 import time
 import colorsys
 from cStringIO import StringIO
+
+import webapp2
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
+
 from lib.EXIF import process_file
 from settings import DEVEL, HUE, LUM, SAT
+
 
 INDEX = search.Index(name='searchindex')
 
@@ -26,7 +29,7 @@ def median(buff):
     histogram = images.histogram(buff)
     for band in histogram:
         suma = 0
-        limit = sum(band)/2
+        limit = sum(band) / 2
         for i in xrange(256):
             suma += band[i]
             if suma > limit:
@@ -44,8 +47,8 @@ def get_exif(buff):
             model = tags['Image Model'].printable.replace('/', '')
             s1 = set(make.split())
             s2 = set(model.split())
-            if not s1&s2:
-                data['model'] = ' '.join(list(s1-s2) + list(s2-s1))
+            if not s1 & s2:
+                data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
             else:
                 data['model'] = model
         elif 'Image Model' in tags:
@@ -82,8 +85,8 @@ def get_exif(buff):
             model = model.replace('/', '')
             s1 = set(make.split())
             s2 = set(model.split())
-            if not s1&s2:
-                data['model'] = ' '.join(list(s1-s2) + list(s2-s1))
+            if not s1 & s2:
+                data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
             else:
                 data['model'] = model
         elif 'Model' in tags:
@@ -109,7 +112,7 @@ def get_exif(buff):
         if 'ExposureTime' in tags:
             shutter = tags['ExposureTime']
             if shutter < 1:
-                shutter = '1/%s' % round(1/shutter)
+                shutter = '1/%s' % round(1 / shutter)
                 data['shutter'] = shutter
 
         if 'FocalLength' in tags:
@@ -129,9 +132,9 @@ def range_names(rgb):
             if value in x['span']:
                 return x['name']
 
-    rel_rgb = map(lambda x: x/255, rgb)
+    rel_rgb = map(lambda x: x / 255, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    H, L, S = int(h*360), int(l*100), int(s*100)
+    H, L, S = int(h * 360), int(l * 100), int(s * 100)
     hue = in_range(H, HUE)
     lum = in_range(L, LUM)
     sat = in_range(S, SAT)
@@ -206,7 +209,7 @@ class Photo(ndb.Model):
                 '%s' % self.key.urlsafe(),
                 headline=self.headline, author=self.author, body=self.model + ' ' + (self.lens or ''),
                 tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Photo'))
-    
+
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
 
@@ -226,7 +229,7 @@ class Photo(ndb.Model):
         for field, value in exif.items():
             setattr(self, field, value)
         self.hue, self.lum, self.sat = range_names(self.rgb)
-        self.tags =data['tags']
+        self.tags = data['tags']
         self._put()
 
         for name in self.tags:
@@ -251,10 +254,10 @@ class Photo(ndb.Model):
         old_tags = set(self.tags)
         new_tags = set(data['tags'])
         if old_tags - new_tags:
-            for name in list(old_tags-new_tags):
+            for name in list(old_tags - new_tags):
                 decr_count('Photo', 'tags', name)
         if new_tags - old_tags:
-            for name in list(new_tags-old_tags):
+            for name in list(new_tags - old_tags):
                 incr_count('Photo', 'tags', name)
         self.tags = sorted(new_tags)
         del data['tags']
@@ -281,7 +284,7 @@ class Photo(ndb.Model):
             del data['crop_factor']
 
         if self.focal_length and self.crop_factor:
-            data['eqv'] = int(10*round(self.focal_length*self.crop_factor/10))
+            data['eqv'] = int(10 * round(self.focal_length * self.crop_factor / 10))
 
         for field, value in data.items():
             if field in PHOTO_FIELDS:
@@ -297,7 +300,7 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
         self._put()
-    
+
     @ndb.transactional
     def delete(self):
         blob_info = blobstore.BlobInfo.get(self.blob_key)
@@ -350,10 +353,10 @@ class Photo(ndb.Model):
 
     @property
     def hls(self):
-        rel_rgb = map(lambda x: x/255, self.rgb)
+        rel_rgb = map(lambda x: x / 255, self.rgb)
         h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-        return int(h*360), int(l*100), int(s*100)
-    
+        return int(h * 360), int(l * 100), int(s * 100)
+
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
 
@@ -376,14 +379,14 @@ class Entry(ndb.Model):
     date = ndb.DateTimeProperty()
     year = ndb.ComputedProperty(lambda self: self.date.year)
     front = ndb.IntegerProperty(default=-1)
-    
+
     def index_add(self):
         return INDEX.put(
             create_doc(
                 '%s' % self.key.urlsafe(),
                 headline=self.headline, author=self.author, body=self.summary + ' ' + self.body,
                 tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
-    
+
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
 
@@ -441,14 +444,14 @@ class Entry(ndb.Model):
         if old != new:
             decr_count('Entry', 'date', self.year)
             incr_count('Entry', 'date', new.year)
-        
+
         old_tags = set(self.tags)
         new_tags = set(data['tags'])
-        if old_tags-new_tags:
-            for name in list(old_tags-new_tags):
+        if old_tags - new_tags:
+            for name in list(old_tags - new_tags):
                 decr_count('Entry', 'tags', name)
-        if new_tags-old_tags:
-            for name in list(new_tags-old_tags):
+        if new_tags - old_tags:
+            for name in list(new_tags - old_tags):
                 incr_count('Entry', 'tags', name)
         self.tags = sorted(new_tags)
 
@@ -469,11 +472,11 @@ class Entry(ndb.Model):
 
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
-    
+
     @property
     def image_list(self):
         return Img.query(ancestor=self.key).order(Img.num)
-    
+
     def image_url(self, num):
         return '/entries/image/%s_%s' % (self.key.string_id(), num)
 
@@ -485,7 +488,7 @@ class Comment(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     forkind = ndb.StringProperty(default='Application')
     body = ndb.TextProperty(required=True)
-    
+
     def index_add(self):
         if self.is_message:
             url = self.get_absolute_url()
@@ -500,7 +503,7 @@ class Comment(ndb.Model):
             create_doc(
                 '%s' % self.key.urlsafe(),
                 headline=headline, author=self.author, body=self.body, date=self.date, url=url, kind=kind))
-    
+
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
 
@@ -517,10 +520,10 @@ class Comment(ndb.Model):
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
         incr_count('Comment', 'date', self.year)
-        
+
         self.put()
         self.index_add()
-    
+
     def delete(self):
         decr_count('Comment', 'author', self.author.nickname())
         if self.is_message:
@@ -531,7 +534,7 @@ class Comment(ndb.Model):
         decr_count('Comment', 'date', self.year)
         self.key.delete_async()
         self.index_del()
-    
+
     def get_absolute_url(self):
         return '%s%s' % (webapp2.uri_for('comments'), self.key.urlsafe())
 
@@ -542,7 +545,7 @@ class Feed(ndb.Model):
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
-    
+
     def add(self, data):
         self.tags = data['tags']
         self.put()
@@ -552,11 +555,11 @@ class Feed(ndb.Model):
     def edit(self, data):
         old_tags = set(self.tags)
         new_tags = set(data['tags'])
-        if old_tags-new_tags:
-            for name in list(old_tags-new_tags):
+        if old_tags - new_tags:
+            for name in list(old_tags - new_tags):
                 decr_count('Feed', 'tags', name)
-        if new_tags-old_tags:
-            for name in list(new_tags-old_tags):
+        if new_tags - old_tags:
+            for name in list(new_tags - old_tags):
                 incr_count('Feed', 'tags', name)
         self.tags = sorted(new_tags)
 

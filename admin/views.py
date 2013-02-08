@@ -51,7 +51,7 @@ class Index(BaseHandler):
         misses = stats.get('misses', 0)
         all = hits + misses
         try:
-            hit_ratio = 100*hits/all
+            hit_ratio = 100 * hits / all
         except ZeroDivisionError:
             hit_ratio = 0
         data = {

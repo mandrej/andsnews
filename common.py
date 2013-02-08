@@ -1,8 +1,6 @@
 from __future__ import division
 import os
 import re
-import webapp2
-import jinja2
 import math
 import hashlib
 import datetime
@@ -10,17 +8,22 @@ import itertools
 import collections
 import logging
 import traceback
+from operator import itemgetter
+
+import webapp2
+import jinja2
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
-from operator import itemgetter
 from google.appengine.api import images, users, memcache, search
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import apiproxy_errors
+
 from wtforms import widgets, fields
 from cloud import calculate_cloud
 from models import INDEX, Counter, Photo
 from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -85,6 +88,7 @@ def boolimage(value):
     else:
         return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)
 
+
 @environmentfilter
 def css_classes(env, classes):
     return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
@@ -119,6 +123,7 @@ def filesizeformat(value, binary=False):
                 return '%.1f %s' % ((base * bytes / unit), prefix)
         return '%.1f %s' % ((base * bytes / unit), prefix)
 
+
 ENV.globals.update({
     'now': now,
     'version': version,
@@ -142,6 +147,8 @@ real_handle_exception = ENV.handle_exception
 def handle_exception(self, *args, **kwargs):
     logging.error('Template exception:\n%s', traceback.format_exc())
     real_handle_exception(self, *args, **kwargs)
+
+
 ENV.handle_exception = handle_exception
 
 
@@ -160,7 +167,7 @@ def make_cloud(kind, field):
                 except ValueError:
                     coll[counter.value] = count
         content = calculate_cloud(coll)
-        memcache.set(key, content, TIMEOUT*12)
+        memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -188,7 +195,7 @@ def count_property(kind, field):
 
     coll = dict(tally.items())
     content = calculate_cloud(coll)
-    memcache.set(key, content, TIMEOUT*12)
+    memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -206,7 +213,7 @@ def count_colors():
             data.update({'count': query.count(1000)})
             content.append(data)
         content = sorted(content, key=itemgetter('order'))
-        memcache.set(key, content, TIMEOUT*12)
+        memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -228,9 +235,9 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
         return obj.small, mime
     img = images.Image(buff)
 
-    aspect = img.width/img.height
+    aspect = img.width / img.height
     if aspect < 1:
-        aspect = 1/aspect
+        aspect = 1 / aspect
     _thumb = int(math.ceil(_width * aspect))
 
     if _thumb < img.width or _thumb < img.height:
@@ -312,7 +319,7 @@ class Filter:
 
 
 class Paginator:
-    timeout = TIMEOUT/6
+    timeout = TIMEOUT / 6
 
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query
@@ -331,7 +338,7 @@ class Paginator:
             cursor = self.cache[num - 1]
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
         except KeyError:
-            offset = (num - 1)*self.per_page
+            offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
         if keys and cursor:
@@ -348,8 +355,8 @@ class Paginator:
     def triple(self, idx):
         """ num and idx are 1 base index """
         none = ndb.Key('XXX', 'xxx')
-        rem = idx%self.per_page
-        num = int(idx/self.per_page) + (0 if rem == 0 else 1)
+        rem = idx % self.per_page
+        num = int(idx / self.per_page) + (0 if rem == 0 else 1)
         keys, has_next = self.pagekeys(num)
 
         if rem == 1:
@@ -357,13 +364,13 @@ class Paginator:
                 collection = [none] + keys + [none]
             else:
                 other, x = self.pagekeys(num - 1)
-                collection = (other + keys + [none])[idx - (num - 2)*self.per_page - 2:]
+                collection = (other + keys + [none])[idx - (num - 2) * self.per_page - 2:]
         else:
             if has_next:
                 other, x = self.pagekeys(num + 1)
             else:
                 other = [none]
-            collection = (keys + other)[idx - (num - 1)*self.per_page - 2:]
+            collection = (keys + other)[idx - (num - 1) * self.per_page - 2:]
 
         prev, obj, next = ndb.get_multi(collection[:3])
         return num, prev, obj, next
@@ -375,40 +382,41 @@ class SearchPaginator:
         self.querystring = querystring
         # '"{0}"'.format(querystring.replace('"',''))
         self.per_page = per_page
-#        self.id = hashlib.md5(querystring).hexdigest()
-#        self.cache = memcache.get(self.id)
-#
-#        if self.cache is None:
-#            self.cache = {1: None}
-#            memcache.add(self.id, self.cache, self.timeout)
+
+    #        self.id = hashlib.md5(querystring).hexdigest()
+    #        self.cache = memcache.get(self.id)
+    #
+    #        if self.cache is None:
+    #            self.cache = {1: None}
+    #            memcache.add(self.id, self.cache, self.timeout)
 
     def page(self, num):
         error = None
         results = []
         number_found = 0
-        has_next= False
-#        opts = {
-#            'limit': self.per_page,
-#            'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-#            'returned_expressions': [search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)]
-#            'snippeted_fields': ['body']
-#        }
-#        try:
-#            cursor = self.cache[num]
-#        except KeyError:
-#            cursor = None
-#
-#        opts['cursor'] = search.Cursor(web_safe_string=cursor)
-#        opts['offset'] = (num - 1)*self.per_page
-#        found = INDEX.search(search.Query(query_string=self.querystring,
-#                                          options=search.QueryOptions(**opts)))
+        has_next = False
+        #        opts = {
+        #            'limit': self.per_page,
+        #            'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
+        #            'returned_expressions': [search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)]
+        #            'snippeted_fields': ['body']
+        #        }
+        #        try:
+        #            cursor = self.cache[num]
+        #        except KeyError:
+        #            cursor = None
+        #
+        #        opts['cursor'] = search.Cursor(web_safe_string=cursor)
+        #        opts['offset'] = (num - 1)*self.per_page
+        #        found = INDEX.search(search.Query(query_string=self.querystring,
+        #                                          options=search.QueryOptions(**opts)))
         query = search.Query(
             query_string=self.querystring,
             options=search.QueryOptions(
                 limit=self.per_page,
-                offset=(num - 1)*self.per_page,
+                offset=(num - 1) * self.per_page,
                 returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
-                snippeted_fields= ['body']
+                snippeted_fields=['body']
             ))
         try:
             found = INDEX.search(query)
@@ -418,9 +426,9 @@ class SearchPaginator:
             found = []
         else:
             if number_found > 0:
-                has_next = number_found > num*self.per_page
-#            self.cache[num + 1] = found.cursor.web_safe_string
-#            memcache.replace(self.id, self.cache, self.timeout)
+                has_next = number_found > num * self.per_page
+            #            self.cache[num + 1] = found.cursor.web_safe_string
+            #            memcache.replace(self.id, self.cache, self.timeout)
 
         return results, number_found, has_next, error
 
@@ -430,13 +438,13 @@ class ListPaginator:
         self.objects = objects
         self.per_page = per_page
         self.count = len(self.objects)
-        self.num_pages = int(math.ceil(self.count/self.per_page))
+        self.num_pages = int(math.ceil(self.count / self.per_page))
 
     def page(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        offset = (num - 1)*self.per_page
+        offset = (num - 1) * self.per_page
         results = self.objects[offset: offset + self.per_page]
         has_next = num < self.num_pages
         return results, has_next
@@ -454,11 +462,13 @@ class EmailField(fields.SelectField):
 
 class TagsField(fields.TextField):
     widget = widgets.TextInput()
+
     def _value(self):
         if self.data:
             return u', '.join(self.data)
         else:
             return u''
+
     def process_formdata(self, valuelist):
         if valuelist:
             self.data = sorted([x.strip().lower() for x in valuelist[0].split(',') if x.strip() != ''])
@@ -513,7 +523,7 @@ class BaseHandler(webapp2.RequestHandler):
         }
         kwargs.update(context)
         template = ENV.get_template(filename)
-#        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        #        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
         self.response.write(template.render(kwargs))
 
 

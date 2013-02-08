@@ -4,8 +4,9 @@ from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from common import  BaseHandler, Paginator, Filter, TagsField, EmailField, make_thumbnail
+from common import BaseHandler, Paginator, Filter, TagsField, make_thumbnail
 from settings import TIMEOUT
+
 PER_PAGE = 6
 
 
@@ -52,7 +53,7 @@ class RequiredIf(validators.Required):
 
 class ImgAddForm(Form):
     name = fields.TextField(_('New Image'))
-#    blob = fields.FileField(validators=[RequiredIf('name')])
+    #    blob = fields.FileField(validators=[RequiredIf('name')])
     blob = fields.FileField()
 
 
@@ -145,7 +146,7 @@ def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)
     if out:
         response = webapp2.Response(content_type=mime)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT*600)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
         if size == 'normal':
             response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
         response.write(out)

@@ -1,15 +1,18 @@
-import webapp2
 import re
 import datetime
 import time
-from google.appengine.api import users, urlfetch, memcache
+
+import webapp2
+from google.appengine.api import urlfetch, memcache
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import admin_required
+
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
 from common import BaseHandler, Paginator, Filter, TagsField
 from settings import TIMEOUT
+
 
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'

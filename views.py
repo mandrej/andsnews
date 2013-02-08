@@ -3,18 +3,21 @@ import sys
 import traceback
 import os
 import json
-import webapp2
 import hashlib
 import datetime
+from operator import itemgetter
+
+import webapp2
 from jinja2.filters import do_striptags
 from webapp2_extras.appengine.users import login_required
 from webapp2_extras.i18n import lazy_gettext as _
-from operator import itemgetter
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
+
 from models import Photo, Entry, Comment
 from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors, format_datetime
 from settings import TIMEOUT, ADMIN_JID, RFC822
+
 
 RESULTS = 5
 RSS_LIMIT = 10
@@ -66,11 +69,12 @@ def visualize(request, key):
         data['title'] = _('Lens type')
     elif key == 'Photo_eqv':
         data['title'] = _('Eqv. focal length')
-        data['info'] = _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10')
+        data['info'] = _(
+            'Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10')
         tmp = [{'name': '%s mm %s.' % (x['name'], _('eqv')), 'count': x['count']} for x in items]
         data['rows'] = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
     elif key == 'Photo_iso':
-        data['title']= '%s (ISO)' % _('Sensitivity')
+        data['title'] = '%s (ISO)' % _('Sensitivity')
         tmp = [{'name': '%s ASA' % x['name'], 'count': x['count']} for x in items]
         data['rows'] = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
     elif key == 'Photo_colors':
@@ -114,8 +118,8 @@ class Find(BaseHandler):
             objects.append(f)
 
         self.render_template('results.html',
-            {'objects': objects, 'phrase': querystring, 'number_found': number_found,
-             'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
+                             {'objects': objects, 'phrase': querystring, 'number_found': number_found,
+                              'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 
 def get_latest_photos():
@@ -195,7 +199,7 @@ class Chat(webapp2.RequestHandler):
         message = xmpp.Message(self.request.POST)
         message.reply("ANDS thank you!")
 
-        email = message.sender.split('/')[0] # node@domain/resource
+        email = message.sender.split('/')[0]  # node@domain/resource
         user = users.User(email)
         obj = Comment(author=user, body=message.body)
         obj.add()

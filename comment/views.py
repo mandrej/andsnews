@@ -4,7 +4,8 @@ from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, fields, validators
 from models import Comment
-from common import  BaseHandler, Paginator, Filter
+from common import BaseHandler, Paginator, Filter
+
 PER_PAGE = 10
 
 
@@ -41,7 +42,8 @@ class Add(BaseHandler):
             form = AddForm(**{'email': user.email()})
         else:
             form = AddForm()
-        self.render_template('snippets/addcomment.html', {'form': form, 'safekey': safekey, 'headline': refobj.headline})
+        self.render_template('snippets/addcomment.html',
+                             {'form': form, 'safekey': safekey, 'headline': refobj.headline})
 
     def post(self, safekey):
         form = AddForm(formdata=self.request.POST)
@@ -50,8 +52,8 @@ class Add(BaseHandler):
             refkey = ndb.Key(urlsafe=safekey)
             obj = Comment(
                 parent=refkey,
-                author = users.User(form.data['email']),
-                forkind = refkey.kind(),
+                author=users.User(form.data['email']),
+                forkind=refkey.kind(),
                 body=form.data['body'])
             obj.add()
             self.response.write(json.dumps({'success': True}))
