@@ -285,7 +285,7 @@ class Photo(ndb.Model):
 
         self._put()
     
-#    @ndb.transactional
+    @ndb.transactional
     def delete(self):
         blob_info = blobstore.BlobInfo.get(self.blob_key)
         blob_info.delete()
@@ -300,9 +300,7 @@ class Photo(ndb.Model):
             if value:
                 decr_count('Photo', field, value)
 
-        # TODO comments are not deleted
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=self.key)])
-        self.key.delete()
 
     def get_absolute_url(self):
         return webapp2.uri_for('photo', slug=self.key.string_id())
@@ -440,14 +438,15 @@ class Entry(ndb.Model):
 
         self._put()
 
-#    @ndb.transactional
+    @ndb.transactional
     def delete(self):
-        ndb.delete_multi_async([x.key for x in ndb.Query(ancestor=self.key)])
         self.index_del()
         decr_count('Entry', 'author', self.author.nickname())
         decr_count('Entry', 'date', self.year)
         for name in self.tags:
             decr_count('Entry', 'tags', name)
+
+        ndb.delete_multi([x.key for x in ndb.Query(ancestor=self.key)])
 
     def get_absolute_url(self):
         return webapp2.uri_for('entry', slug=self.key.string_id())

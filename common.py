@@ -2,6 +2,7 @@ from __future__ import division
 import os, re, webapp2, jinja2
 import math, hashlib, datetime
 import itertools, collections
+import logging, traceback
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
 from jinja2.filters import environmentfilter, do_mark_safe
@@ -116,11 +117,11 @@ ENV.filters.update({
     'filesizeformat': filesizeformat,
 })
 
-#real_handle_exception = ENV.handle_exception
-#def handle_exception(self, *args, **kwargs):
-#    logging.error('Template exception:\n%s', traceback.format_exc())
-#    real_handle_exception(self, *args, **kwargs)
-#ENV.handle_exception = handle_exception
+real_handle_exception = ENV.handle_exception
+def handle_exception(self, *args, **kwargs):
+   logging.error('Template exception:\n%s', traceback.format_exc())
+   real_handle_exception(self, *args, **kwargs)
+ENV.handle_exception = handle_exception
 
 def make_cloud(kind, field):
     key = '%s_%s' % (kind, field)

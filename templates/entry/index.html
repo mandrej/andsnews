@@ -17,17 +17,19 @@
 	
 	<div id="container">
 		{% for object in objects %}
-			<section class="third brick">
-				<a class="white" href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ object.headline }}">
-					<h3>{{ object.headline }}</h3>
-					<p>{% if object.front >= 0 %}
-							<img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
-						{% endif %}{{ object.summary }}</p>
-					<p class="posted">{{ object.author }}, {{ _('posted') }}
-{#						{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
-					</p>
-				</a>
-			</section>
+            {% if object %}
+                <section class="third brick">
+                    <a class="white" href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ object.headline }}">
+                        <h3>{{ object.headline }}</h3>
+                        <p>{% if object.front >= 0 %}
+                                <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
+                            {% endif %}{{ object.summary }}</p>
+                        <p class="posted">{{ object.author }}, {{ _('posted') }}
+{#    						{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                        </p>
+                    </a>
+                </section>
+            {% endif %}
 		{% endfor %}
 	</div>
 {% endblock %}
