@@ -168,7 +168,8 @@ class DeleteHandler(BaseHandler):
     def post(self, safekey):
         next = str(self.request.get('next'))
         key = ndb.Key(urlsafe=safekey)
-        key.delete()
+        obj = key.get()
+        obj.delete()
         self.redirect(next)
 
 
