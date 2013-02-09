@@ -128,7 +128,6 @@ def get_latest_photos():
         query = Photo.query().order(-Photo.date)
         results, cursor, has_next = query.fetch_page(NUM_LATEST)
         objects = [{"url": x.normal_url(),
-                    "date": x.date.strftime('%Y-%m-%d'),
                     "title": x.headline} for x in results]
         memcache.add('Photo_latest', objects, TIMEOUT)
     return objects
