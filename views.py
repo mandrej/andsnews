@@ -167,8 +167,7 @@ class DeleteHandler(BaseHandler):
     def post(self, safekey):
         next = str(self.request.get('next'))
         key = ndb.Key(urlsafe=safekey)
-        obj = key.get()
-        obj.delete()
+        key.delete()
         self.redirect(next)
 
 
@@ -215,24 +214,19 @@ def rss(request, kind):
     template = ENV.get_template('rss.xml')
     if kind == 'photo':
         query = Photo.query().order(-Photo.date)
-        data = {
-            'title': 'Photos',
-            'link': webapp2.uri_for('photos'),
-            'description': 'Latest photos from the site'
-        }
+        data = {'title': 'Photos',
+                'link': webapp2.uri_for('photos'),
+                'description': 'Latest photos from the site'}
     elif kind == 'entry':
         query = Entry.query().order(-Entry.date)
-        data = {
-            'title': 'Entries',
-            'link': webapp2.uri_for('entries'),
-            'description': 'Latest entries from the site'
-        }
-    data.update({
-        'kind': kind,
-        'HOST': 'http://%s' % HOST_NAME,
-        'objects': query.fetch(RSS_LIMIT),
-        'format': RFC822
-    })
+        data = {'title': 'Entries',
+                'link': webapp2.uri_for('entries'),
+                'description': 'Latest entries from the site'}
+
+    data.update({'kind': kind,
+                 'HOST': 'http://%s' % HOST_NAME,
+                 'objects': query.fetch(RSS_LIMIT),
+                 'format': RFC822})
     last_modified = format_datetime(data['objects'][0].date, format=RFC822)
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
     response = webapp2.Response(content_type='application/rss+xml')
@@ -246,11 +240,9 @@ def rss(request, kind):
 
 def sitemap(request):
     template = ENV.get_template('urlset.xml')
-    data = {
-        'photos': Photo.query().order(-Photo.date),
-        'entries': Entry.query().order(-Entry.date),
-        'HOST': 'http://%s' % HOST_NAME,
-    }
+    data = {'photos': Photo.query().order(-Photo.date),
+            'entries': Entry.query().order(-Entry.date),
+            'HOST': 'http://%s' % HOST_NAME}
     response = webapp2.Response(content_type='application/xml')
     response.write(template.render(data))
     return response

@@ -301,22 +301,23 @@ class Photo(ndb.Model):
 
         self._put()
 
-    @ndb.transactional
-    def delete(self):
-        blob_info = blobstore.BlobInfo.get(self.blob_key)
+    @classmethod
+    def _pre_delete_hook(cls, key):
+        instance = key.get()
+        instance.index_del()
+        blob_info = blobstore.BlobInfo.get(instance.blob_key)
         blob_info.delete()
-        self.index_del()
-        for name in self.tags:
-            decr_count('Photo', 'tags', name)
 
-        decr_count('Photo', 'author', self.author.nickname())
-        decr_count('Photo', 'date', self.year)
+        for name in instance.tags:
+            decr_count('Photo', 'tags', name)
+        decr_count('Photo', 'author', instance.author.nickname())
+        decr_count('Photo', 'date', instance.year)
         for field in PHOTO_FIELDS:
-            value = getattr(self, field)
+            value = getattr(instance, field)
             if value:
                 decr_count('Photo', field, value)
 
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=self.key)])
+        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     def get_absolute_url(self):
         return webapp2.uri_for('photo', slug=self.key.string_id())
@@ -457,15 +458,17 @@ class Entry(ndb.Model):
 
         self._put()
 
-    @ndb.transactional
-    def delete(self):
-        self.index_del()
-        decr_count('Entry', 'author', self.author.nickname())
-        decr_count('Entry', 'date', self.year)
-        for name in self.tags:
+    @classmethod
+    def _pre_delete_hook(cls, key):
+        instance = key.get()
+        instance.index_del()
+
+        decr_count('Entry', 'author', instance.author.nickname())
+        decr_count('Entry', 'date', instance.year)
+        for name in instance.tags:
             decr_count('Entry', 'tags', name)
 
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=self.key)])
+        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     def get_absolute_url(self):
         return webapp2.uri_for('entry', slug=self.key.string_id())
@@ -524,16 +527,18 @@ class Comment(ndb.Model):
         self.put()
         self.index_add()
 
-    def delete(self):
-        decr_count('Comment', 'author', self.author.nickname())
-        if self.is_message:
+    @classmethod
+    def _pre_delete_hook(cls, key):
+        instance = key.get()
+        instance.index_del()
+
+        decr_count('Comment', 'author', instance.author.nickname())
+        if instance.is_message:
             decr_count('Comment', 'forkind', 'Application')
         else:
-            decr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
-            decr_count('Comment', 'forkind', self.key.parent().kind())
-        decr_count('Comment', 'date', self.year)
-        self.key.delete_async()
-        self.index_del()
+            decr_count(key.parent().kind(), 'comment', key.parent().id())
+            decr_count('Comment', 'forkind', key.parent().kind())
+        decr_count('Comment', 'date', instance.year)
 
     def get_absolute_url(self):
         return '%s%s' % (webapp2.uri_for('comments'), self.key.urlsafe())
@@ -567,12 +572,12 @@ class Feed(ndb.Model):
         self.headline = data['headline']
         self.put()
 
-    def delete(self):
-        for name in self.tags:
+    @classmethod
+    def _pre_delete_hook(cls, key):
+        instance = key.get()
+        for name in instance.tags:
             decr_count('Feed', 'tags', name)
-        slug = self.key.string_id()
-        memcache.delete(slug)
-        self.key.delete_async()
+        memcache.delete(key.string_id())
 
     def get_absolute_url(self):
         return webapp2.uri_for('feed', slug=self.key.string_id())
