@@ -341,6 +341,9 @@ class Paginator:
             offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
+        if not keys:
+            return keys, False
+
         if keys and cursor:
             self.cache[num] = cursor
             memcache.replace(self.id, self.cache, self.timeout)
