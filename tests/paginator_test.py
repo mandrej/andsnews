@@ -22,7 +22,7 @@ class Paginator:
         objects, has_next = self.page(num)
 
         if rem == 1:
-#            left edge
+        #            left edge
             if num == 1:
                 if self.count == 1:
                     collection = [None] + objects + [None]
@@ -35,7 +35,7 @@ class Paginator:
                 else:
                     collection = (other + objects)[idx - (num - 2) * self.per_page - 2:]
         elif rem == 0:
-#            right edge
+        #            right edge
             if has_next:
                 other, x = self.page(num + 1)
                 collection = (objects + other)[idx - (num - 1) * self.per_page - 2:]
@@ -72,7 +72,6 @@ class Paginator:
 
 
 class PaginatorTest(unittest.TestCase):
-
     def test_page(self):
         paginator = Paginator(range(1, 27), 12)
         objects, has_next = paginator.page(1)
