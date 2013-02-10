@@ -5,7 +5,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS
-from common import BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, make_thumbnail, filesizeformat
+from entry.views import make_thumbnail
+from common import BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, filesizeformat
 from settings import PER_PAGE
 
 

@@ -1,6 +1,5 @@
 from __future__ import division
 import os
-import re
 import math
 import hashlib
 import datetime
@@ -14,16 +13,15 @@ import webapp2
 import jinja2
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.jinja2 import get_jinja2
 from jinja2.filters import environmentfilter, do_mark_safe
-from google.appengine.api import images, users, memcache, search
-from google.appengine.ext import ndb, deferred
-from google.appengine.runtime import apiproxy_errors
+from google.appengine.api import users, memcache, search
+from google.appengine.ext import ndb
 
 from wtforms import widgets, fields
 from cloud import calculate_cloud
 from models import INDEX, Counter, Photo
 from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
-
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -218,51 +216,6 @@ def count_colors():
     return content
 
 
-def make_thumbnail(kind, slug, size, mime='image/jpeg'):
-    """
-    for Entry images only
-    """
-    if size == 'small': _width = 60
-    m = re.match(r'(.+)_\d', slug)
-    obj = ndb.Key(kind, m.group(1), 'Img', slug).get()
-    if obj is None:
-        webapp2.abort(404)
-    mime = str(obj.mime)
-
-    buff = obj.blob
-    if size == 'normal':
-        return buff, mime
-    if size == 'small' and obj.small is not None:
-        return obj.small, mime
-    img = images.Image(buff)
-
-    aspect = img.width / img.height
-    if aspect < 1:
-        aspect = 1 / aspect
-    _thumb = int(math.ceil(_width * aspect))
-
-    if _thumb < img.width or _thumb < img.height:
-        if size == 'small':
-            img.resize(_thumb, _thumb)
-        else:
-            img.resize(_width, _thumb)
-        try:
-            if mime == 'image/png':
-                out = img.execute_transforms(output_encoding=images.PNG)
-            else:
-                out = img.execute_transforms(output_encoding=images.JPEG)
-        except apiproxy_errors.OverQuotaError:
-            deferred.defer(make_thumbnail, kind, slug, size)
-            return None, mime
-        else:
-            if size == 'small' and obj.small is None:
-                obj.small = out
-                obj.put()
-        return out, mime
-    else:
-        return buff, mime
-
-
 class Filter:
     def __init__(self, field, value):
         self.field, self.value = field, value
@@ -431,8 +384,8 @@ class SearchPaginator:
         else:
             if number_found > 0:
                 has_next = number_found > num * self.per_page
-            #            self.cache[num + 1] = found.cursor.web_safe_string
-            #            memcache.replace(self.id, self.cache, self.timeout)
+                #            self.cache[num + 1] = found.cursor.web_safe_string
+                #            memcache.replace(self.id, self.cache, self.timeout)
 
         return results, number_found, has_next, error
 
@@ -506,7 +459,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     @webapp2.cached_property
     def jinja2(self):
-        return jinja2.get_jinja2(app=self.app)
+        return get_jinja2(app=self.app)
 
     def render_template(self, filename, kwargs):
         lang_code = self.session.get(LANGUAGE_COOKIE_NAME) or self.request.cookies.get(LANGUAGE_COOKIE_NAME) or 'en_US'

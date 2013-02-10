@@ -1,11 +1,19 @@
+from __future__ import division
+import re
+import math
+
 import webapp2
 from google.appengine.api import users
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
+from google.appengine.api import images
+from google.appengine.ext import ndb
+
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from common import BaseHandler, Paginator, Filter, TagsField, make_thumbnail
+from common import BaseHandler, Paginator, Filter, TagsField
 from settings import TIMEOUT
+
 
 PER_PAGE = 6
 
@@ -142,13 +150,46 @@ class Edit(BaseHandler):
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
 
+def make_thumbnail(kind, slug, size, mime='image/jpeg'):
+    m = re.match(r'(.+)_\d', slug)
+    obj = ndb.Key(kind, m.group(1), 'Img', slug).get()
+    if obj is None:
+        webapp2.abort(404)
+
+    buff = obj.blob
+    if size == 'normal':
+        return buff, str(obj.mime)
+    if size == 'small' and obj.small is not None:
+        return obj.small, mime
+
+    img = images.Image(buff)
+    aspect = img.width / img.height
+    if aspect < 1:
+        aspect = 1 / aspect
+    _width = 60
+    _thumb = int(math.ceil(_width * aspect))
+
+    if _thumb < img.width or _thumb < img.height:
+        img.resize(_thumb, _thumb)
+        if str(obj.mime) == 'image/png':
+            obj.small = img.execute_transforms(output_encoding=images.PNG)
+            obj.put()
+            return obj.small, str(obj.mime)
+        else:
+            obj.small = img.execute_transforms(output_encoding=images.JPEG)
+            obj.put()
+            return obj.small, mime
+    else:
+        return buff, str(obj.mime)
+
+
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)
     if out:
         response = webapp2.Response(content_type=mime)
         response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
-        if size == 'normal':
-            response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
+        # if size == 'normal':
+        #     response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
         response.write(out)
         return response
     else:
