@@ -54,15 +54,12 @@ class Index(BaseHandler):
             hit_ratio = 100 * hits / all
         except ZeroDivisionError:
             hit_ratio = 0
-        data = {
-            'photo_count': Photo.query().order(-Photo.date).count(),
-            'entry_count': Entry.query().order(-Entry.date).count(),
-            'comment_count': Comment.query().order(-Comment.date).count(),
-            'feeds_count': Feed.query().order(-Feed.date).count(),
-            'stats': stats,
-            'hit_ratio': hit_ratio
-        }
-
+        data = {'photo_count': Photo.query().order(-Photo.date).count(),
+                'entry_count': Entry.query().order(-Entry.date).count(),
+                'comment_count': Comment.query().order(-Comment.date).count(),
+                'feeds_count': Feed.query().order(-Feed.date).count(),
+                'stats': stats,
+                'hit_ratio': hit_ratio}
         self.render_template('admin/index.html', data)
 
 

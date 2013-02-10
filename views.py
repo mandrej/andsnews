@@ -30,6 +30,13 @@ else:
     HOST_NAME = os.environ['SERVER_NAME']
 
 
+def root_url(kind):
+    urls = {'Photo': webapp2.uri_for('photos'),
+            'Entry': webapp2.uri_for('entries'),
+            'Comment': webapp2.uri_for('comments'),
+            'Feed': webapp2.uri_for('feeds')}
+    return urls[kind]
+
 def get_or_build(key):
     kind, field = key.split('_')
     items = memcache.get(key)
@@ -49,7 +56,7 @@ class RenderCloud(BaseHandler):
         self.render_template(
             'snippets/%s_cloud.html' % field,
             {'%scloud' % field: items, 'kind': kind,
-             'link': '%s%s' % (self.index_urls[kind], field), 'filter': f.parameters})
+             'link': '%s%s' % (root_url(kind), field), 'filter': f.parameters})
 
 
 def visualize(request, key):
@@ -153,7 +160,7 @@ class DeleteHandler(BaseHandler):
         if key.parent():
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
-            next = self.index_urls[key.kind()]
+            next = root_url(key.kind())
 
         obj = key.get()
         user = users.get_current_user()

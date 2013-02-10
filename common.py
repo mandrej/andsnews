@@ -176,6 +176,7 @@ def count_property(kind, field):
     if field == 'date':
         prop = 'year'
     key = '%s_%s' % (kind, field)
+    # TODO REMEMBER
     model = ndb.Model._kind_map.get(kind)
     query = model.query()
     properties = [getattr(x, prop, None) for x in query]
@@ -507,13 +508,6 @@ class BaseHandler(webapp2.RequestHandler):
     def jinja2(self):
         return jinja2.get_jinja2(app=self.app)
 
-    @webapp2.cached_property
-    def index_urls(self):
-        return {'Photo': self.uri_for('photos'),
-                'Entry': self.uri_for('entries'),
-                'Comment': self.uri_for('comments'),
-                'Feed': self.uri_for('feeds')}
-
     def render_template(self, filename, kwargs):
         lang_code = self.session.get(LANGUAGE_COOKIE_NAME) or self.request.cookies.get(LANGUAGE_COOKIE_NAME) or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
@@ -526,7 +520,6 @@ class BaseHandler(webapp2.RequestHandler):
         }
         kwargs.update(context)
         template = ENV.get_template(filename)
-        #        self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
         self.response.write(template.render(kwargs))
 
 

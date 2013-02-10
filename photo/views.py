@@ -102,7 +102,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Photo(id=form.slug.data)
             obj.add(form.data)
-            self.redirect(webapp2.uri_for('photo_edit', slug=obj.key.string_id()))
+            self.redirect_to('photo_edit', slug=obj.key.string_id())
         else:
             upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
             self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
@@ -126,6 +126,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect(self.index_urls['Photo'])
+            self.redirect_to('photos')
         else:
             self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
