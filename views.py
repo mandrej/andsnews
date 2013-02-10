@@ -30,13 +30,6 @@ else:
     HOST_NAME = os.environ['SERVER_NAME']
 
 
-def root_url(kind):
-    urls = {'Photo': webapp2.uri_for('photos'),
-            'Entry': webapp2.uri_for('entries'),
-            'Comment': webapp2.uri_for('comments'),
-            'Feed': webapp2.uri_for('feeds')}
-    return urls[kind]
-
 def get_or_build(key):
     kind, field = key.split('_')
     items = memcache.get(key)
@@ -49,6 +42,13 @@ def get_or_build(key):
 
 
 class RenderCloud(BaseHandler):
+    @webapp2.cached_property
+    def root_urls(self):
+        return {'Photo': webapp2.uri_for('photos'),
+                'Entry': webapp2.uri_for('entries'),
+                'Comment': webapp2.uri_for('comments'),
+                'Feed': webapp2.uri_for('feeds')}
+
     def get(self, key, value=None):
         kind, field = key.split('_')
         items = get_or_build(key)
@@ -56,7 +56,7 @@ class RenderCloud(BaseHandler):
         self.render_template(
             'snippets/%s_cloud.html' % field,
             {'%scloud' % field: items, 'kind': kind,
-             'link': '%s%s' % (root_url(kind), field), 'filter': f.parameters})
+             'link': '%s%s' % (self.root_urls[kind], field), 'filter': f.parameters})
 
 
 def visualize(request, key):
@@ -154,13 +154,20 @@ class Index(BaseHandler):
 
 
 class DeleteHandler(BaseHandler):
+    @webapp2.cached_property
+    def root_urls(self):
+        return {'Photo': webapp2.uri_for('photos'),
+                'Entry': webapp2.uri_for('entries'),
+                'Comment': webapp2.uri_for('comments'),
+                'Feed': webapp2.uri_for('feeds')}
+
     @login_required
     def get(self, safekey):
         key = ndb.Key(urlsafe=safekey)
         if key.parent():
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
-            next = root_url(key.kind())
+            next = self.root_urls[key.kind()]
 
         obj = key.get()
         user = users.get_current_user()
