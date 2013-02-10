@@ -145,14 +145,17 @@
                     if (crumbs.length >= 2) {
                         var field = crumbs[0];
                         if (field == 'hue' || field == 'lum') field = 'colors';
-                        $.ajax({
-                            url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
-                            context: $('#' + field + 'cloud'),
-                            success: function(snippet) {
-                                $(this).html(snippet).slideDown();
-                                $('.' + field).minus();
-                            }
-                        });
+                        var available = ['tags', 'date', 'author', 'colors', 'model', 'lens', 'eqv', 'iso', 'forkind'];
+                        if ($.inArray(field, available) != -1) {
+                            $.ajax({
+                                url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
+                                context: $('#' + field + 'cloud'),
+                                success: function(snippet) {
+                                    $(this).html(snippet).slideDown();
+                                    $('.' + field).minus();
+                                }
+                            });
+                        }
                     }
                 }
 
