@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-11 20:34+0100\n"
+"POT-Creation-Date: 2013-02-11 21:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,262 +25,262 @@ msgstr ""
 msgid "serbian"
 msgstr ""
 
-#: common.py:130
+#: common.py:33
+msgid "Monday"
+msgstr ""
+
+#: common.py:33
+msgid "Tuesday"
+msgstr ""
+
+#: common.py:33
+msgid "Wednesday"
+msgstr ""
+
+#: common.py:33
+msgid "Thursday"
+msgstr ""
+
+#: common.py:34
+msgid "Friday"
+msgstr ""
+
+#: common.py:34
+msgid "Saturday"
+msgstr ""
+
+#: common.py:34
+msgid "Sunday"
+msgstr ""
+
+#: common.py:37
+msgid "January"
+msgstr ""
+
+#: common.py:37
+msgid "February"
+msgstr ""
+
+#: common.py:37 common.py:49
+msgid "March"
+msgstr ""
+
+#: common.py:38 common.py:49
+msgid "April"
+msgstr ""
+
+#: common.py:38 common.py:49
+msgid "May"
+msgstr ""
+
+#: common.py:38 common.py:50
+msgid "June"
+msgstr ""
+
+#: common.py:39 common.py:51
+msgid "July"
+msgstr ""
+
+#: common.py:39
+msgid "August"
+msgstr ""
+
+#: common.py:39
+msgid "September"
+msgstr ""
+
+#: common.py:40
+msgid "October"
+msgstr ""
+
+#: common.py:40
+msgid "November"
+msgstr ""
+
+#: common.py:40
+msgid "December"
+msgstr ""
+
+#: common.py:43
+msgid "jan"
+msgstr ""
+
+#: common.py:43
+msgid "feb"
+msgstr ""
+
+#: common.py:43
+msgid "mar"
+msgstr ""
+
+#: common.py:44
+msgid "apr"
+msgstr ""
+
+#: common.py:44
+msgid "may"
+msgstr ""
+
+#: common.py:44
+msgid "jun"
+msgstr ""
+
+#: common.py:45
+msgid "jul"
+msgstr ""
+
+#: common.py:45
+msgid "aug"
+msgstr ""
+
+#: common.py:45
+msgid "sep"
+msgstr ""
+
+#: common.py:46
+msgid "oct"
+msgstr ""
+
+#: common.py:46
+msgid "nov"
+msgstr ""
+
+#: common.py:46
+msgid "dec"
+msgstr ""
+
+#: common.py:49
+msgid "Jan."
+msgstr ""
+
+#: common.py:49
+msgid "Feb."
+msgstr ""
+
+#: common.py:51
+msgid "Aug."
+msgstr ""
+
+#: common.py:51
+msgid "Sept."
+msgstr ""
+
+#: common.py:51
+msgid "Oct."
+msgstr ""
+
+#: common.py:51
+msgid "Nov."
+msgstr ""
+
+#: common.py:52
+msgid "Dec."
+msgstr ""
+
+#: common.py:55
+msgid "red"
+msgstr ""
+
+#: common.py:55
+msgid "orange"
+msgstr ""
+
+#: common.py:55
+msgid "yellow"
+msgstr ""
+
+#: common.py:55
+msgid "green"
+msgstr ""
+
+#: common.py:55
+msgid "teal"
+msgstr ""
+
+#: common.py:55
+msgid "blue"
+msgstr ""
+
+#: common.py:56
+msgid "purple"
+msgstr ""
+
+#: common.py:56
+msgid "pink"
+msgstr ""
+
+#: common.py:57
+msgid "dark"
+msgstr ""
+
+#: common.py:57
+msgid "medium"
+msgstr ""
+
+#: common.py:57
+msgid "light"
+msgstr ""
+
+#: common.py:157
 msgid "year"
 msgid_plural "years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:131
+#: common.py:158
 msgid "month"
 msgid_plural "months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:132
+#: common.py:159
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:133
+#: common.py:160
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:134
+#: common.py:161
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:135
+#: common.py:162
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: common.py:148
+#: common.py:175
 msgid "minutes"
 msgstr ""
 
-#: common.py:153 fake_i18n.py:27
+#: common.py:180
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr ""
 
-#: common.py:158 fake_i18n.py:28
+#: common.py:185
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ""
 
-#: common.py:293
+#: common.py:320
 msgid "for blogs"
 msgstr ""
 
-#: common.py:295 templates/snippets/forkind_cloud.html:7
+#: common.py:322 templates/snippets/forkind_cloud.html:7
 msgid "for photos"
 msgstr ""
 
-#: common.py:297 templates/snippets/forkind_cloud.html:8
+#: common.py:324 templates/snippets/forkind_cloud.html:8
 msgid "messages"
-msgstr ""
-
-#: fake_i18n.py:5
-msgid "Monday"
-msgstr ""
-
-#: fake_i18n.py:5
-msgid "Tuesday"
-msgstr ""
-
-#: fake_i18n.py:5
-msgid "Wednesday"
-msgstr ""
-
-#: fake_i18n.py:5
-msgid "Thursday"
-msgstr ""
-
-#: fake_i18n.py:6
-msgid "Friday"
-msgstr ""
-
-#: fake_i18n.py:6
-msgid "Saturday"
-msgstr ""
-
-#: fake_i18n.py:6
-msgid "Sunday"
-msgstr ""
-
-#: fake_i18n.py:9
-msgid "January"
-msgstr ""
-
-#: fake_i18n.py:9
-msgid "February"
-msgstr ""
-
-#: fake_i18n.py:9 fake_i18n.py:21
-msgid "March"
-msgstr ""
-
-#: fake_i18n.py:10 fake_i18n.py:21
-msgid "April"
-msgstr ""
-
-#: fake_i18n.py:10 fake_i18n.py:21
-msgid "May"
-msgstr ""
-
-#: fake_i18n.py:10 fake_i18n.py:22
-msgid "June"
-msgstr ""
-
-#: fake_i18n.py:11 fake_i18n.py:23
-msgid "July"
-msgstr ""
-
-#: fake_i18n.py:11
-msgid "August"
-msgstr ""
-
-#: fake_i18n.py:11
-msgid "September"
-msgstr ""
-
-#: fake_i18n.py:12
-msgid "October"
-msgstr ""
-
-#: fake_i18n.py:12
-msgid "November"
-msgstr ""
-
-#: fake_i18n.py:12
-msgid "December"
-msgstr ""
-
-#: fake_i18n.py:15
-msgid "jan"
-msgstr ""
-
-#: fake_i18n.py:15
-msgid "feb"
-msgstr ""
-
-#: fake_i18n.py:15
-msgid "mar"
-msgstr ""
-
-#: fake_i18n.py:16
-msgid "apr"
-msgstr ""
-
-#: fake_i18n.py:16
-msgid "may"
-msgstr ""
-
-#: fake_i18n.py:16
-msgid "jun"
-msgstr ""
-
-#: fake_i18n.py:17
-msgid "jul"
-msgstr ""
-
-#: fake_i18n.py:17
-msgid "aug"
-msgstr ""
-
-#: fake_i18n.py:17
-msgid "sep"
-msgstr ""
-
-#: fake_i18n.py:18
-msgid "oct"
-msgstr ""
-
-#: fake_i18n.py:18
-msgid "nov"
-msgstr ""
-
-#: fake_i18n.py:18
-msgid "dec"
-msgstr ""
-
-#: fake_i18n.py:21
-msgid "Jan."
-msgstr ""
-
-#: fake_i18n.py:21
-msgid "Feb."
-msgstr ""
-
-#: fake_i18n.py:23
-msgid "Aug."
-msgstr ""
-
-#: fake_i18n.py:23
-msgid "Sept."
-msgstr ""
-
-#: fake_i18n.py:23
-msgid "Oct."
-msgstr ""
-
-#: fake_i18n.py:23
-msgid "Nov."
-msgstr ""
-
-#: fake_i18n.py:24
-msgid "Dec."
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "red"
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "orange"
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "yellow"
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "green"
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "teal"
-msgstr ""
-
-#: fake_i18n.py:31
-msgid "blue"
-msgstr ""
-
-#: fake_i18n.py:32
-msgid "purple"
-msgstr ""
-
-#: fake_i18n.py:32
-msgid "pink"
-msgstr ""
-
-#: fake_i18n.py:33
-msgid "dark"
-msgstr ""
-
-#: fake_i18n.py:33
-msgid "medium"
-msgstr ""
-
-#: fake_i18n.py:33
-msgid "light"
 msgstr ""
 
 #: views.py:66 entry/views.py:77 entry/views.py:91 news/views.py:134
