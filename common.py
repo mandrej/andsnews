@@ -46,15 +46,12 @@ MONTHS_3 = {
     10: _('oct'), 11: _('nov'), 12: _('dec')
 }
 MONTHS_AP = {
-    1: _('Jan.'), 2: _('Feb.'), 3: _('March'), 4: _('April'), 5: _('May'),
-    6: _('June'),
-    7: _('July'), 8: _('Aug.'), 9: _('Sept.'), 10: _('Oct.'), 11: _('Nov.'),
-    12: _('Dec.')
+    1: _('Jan.'), 2: _('Feb.'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
+    7: _('July'), 8: _('Aug.'), 9: _('Sept.'), 10: _('Oct.'), 11: _('Nov.'), 12: _('Dec.')
 }
 COLORNAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
-    _('purple'), _('pink'),
-    _('dark'), _('medium'), _('light'),
+    _('purple'), _('pink'), _('dark'), _('medium'), _('light'),
 )
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
