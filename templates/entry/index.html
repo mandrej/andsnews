@@ -24,8 +24,8 @@
                         <p>{% if object.front >= 0 %}
                                 <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
                             {% endif %}{{ object.summary }}</p>
-                        <p class="posted">{{ object.author }}, {{ _('posted') }}
-{#    						{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                        <p class="posted">{{ object.author }},
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                         </p>
                     </a>
                 </section>

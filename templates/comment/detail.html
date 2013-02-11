@@ -10,9 +10,8 @@
 				title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
 		{% endif %}
 		<div class="body">{{ comment.body|safe }}</div>
-		<p class="posted">
-			{{ comment.author }},
-{#			{% trans with comment.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+		<p class="posted">{{ comment.author }},
+            {% trans since=comment.date|timesince %}{{ since }} ago{% endtrans %}
 		</p>
 	</div>
 {% endfor %}

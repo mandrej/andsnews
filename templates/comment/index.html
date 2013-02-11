@@ -26,7 +26,7 @@
 		                <h3>{{ _('message') }}</h3>
 		                <div class="body">{{ object.body|safe }}</div>
 		                <p class="posted">{{ object.author }},
-{#		                    {% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+		                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                         </p>
 					</div>
 				</section>
@@ -43,7 +43,7 @@
                             {{ refkey.get().headline }}</a></h3>
 						<div class="body">{{ object.body|safe }}</div>
 						<p class="posted">{{ object.author }},
-{#							{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                         </p>
                         {% endwith %}
 					</div>

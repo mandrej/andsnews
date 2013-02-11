@@ -8,11 +8,12 @@ import collections
 import logging
 import traceback
 from operator import itemgetter
+from datetime import timedelta
 
 import webapp2
 import jinja2
 from webapp2_extras import i18n, sessions
-from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.i18n import gettext, ngettext, lazy_gettext as _
 from webapp2_extras.jinja2 import get_jinja2
 from jinja2.filters import environmentfilter, do_mark_safe
 from google.appengine.api import users, memcache, search
@@ -22,6 +23,7 @@ from wtforms import widgets, fields
 from cloud import calculate_cloud
 from models import INDEX, Counter, Photo
 from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+
 
 LANGUAGES = (
     ('en_US', _('english')),
@@ -122,6 +124,41 @@ def filesizeformat(value, binary=False):
         return '%.1f %s' % ((base * bytes / unit), prefix)
 
 
+def timesince_jinja(d, now=None):
+    # http://stackoverflow.com/questions/8292477/localized-timesince-filter-for-jinja2-with-gae
+    chunks = (
+        (60 * 60 * 24 * 365, lambda n: ngettext('year', 'years', n)),
+        (60 * 60 * 24 * 30, lambda n: ngettext('month', 'months', n)),
+        (60 * 60 * 24 * 7, lambda n: ngettext('week', 'weeks', n)),
+        (60 * 60 * 24, lambda n: ngettext('day', 'days', n)),
+        (60 * 60, lambda n: ngettext('hour', 'hours', n)),
+        (60, lambda n: ngettext('minute', 'minutes', n))
+    )
+    if not isinstance(d, datetime.datetime):
+        d = datetime.datetime(d.year, d.month, d.day)
+    if now and not isinstance(now, datetime.datetime):
+        now = datetime.datetime(now.year, now.month, now.day)
+
+    if not now:
+        now = datetime.datetime.now()
+
+    delta = now - (d - timedelta(0, 0, d.microsecond))
+    since = delta.days * 24 * 60 * 60 + delta.seconds
+    if since <= 0:
+        return u'0 ' + gettext('minutes')
+    for i, (seconds, name) in enumerate(chunks):
+        count = since // seconds
+        if count != 0:
+            break
+    s = gettext('%(number)d %(type)s') % {'number': count, 'type': name(count)}
+    if i + 1 < len(chunks):
+        seconds2, name2 = chunks[i + 1]
+        count2 = (since - (seconds * count)) // seconds2
+        if count2 != 0:
+            s += gettext(', %(number)d %(type)s') % {'number': count2, 'type': name2(count2)}
+    return s
+
+
 ENV.globals.update({
     'now': now,
     'version': version,
@@ -137,6 +174,7 @@ ENV.filters.update({
     'image_url_by_num': image_url_by_num,
     'css_classes': css_classes,
     'filesizeformat': filesizeformat,
+    'timesince': timesince_jinja,
 })
 
 real_handle_exception = ENV.handle_exception

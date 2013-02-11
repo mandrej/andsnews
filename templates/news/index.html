@@ -34,8 +34,7 @@
                         <h3>{{ object.headline }}</h3>
                         <p class="posted">
                             {% if object.date %}{{ _('updated') }}:
-                                {{ object.date|format_datetime }}
-    {#							{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                             {% endif %}
                         </p>
                     </a>

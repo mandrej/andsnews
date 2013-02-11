@@ -35,7 +35,7 @@
 	
 			{% if object.date %}{{ _('updated') }}:
 				<time datetime="{{ object.date|format_datetime }}">
-{#					{% trans with object.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
 				</time>
 			{% endif %}
 			{% for tag in object.tags %}
@@ -56,7 +56,7 @@
 		                <p class="details">
 		                    {{ entry.author|striptags }}
 		                    {% if entry.date %}
-{#		                        {% trans with entry.date|timesince as since %}{{ since }} ago{% endtrans %}#}
+                                {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
 		                    {% endif %}
 		                </p>
 		            </div>
