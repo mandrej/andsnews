@@ -36,7 +36,7 @@ app = WSGIApplication([
         Route('/<slug>/edit', handler='news.views.Edit', name='feed_edit'),
         Route('/<slug>', handler='news.views.Detail', name='feed'),
         Route('/<field:tags>/<value>/', handler='news.views.Index'),
-     ]),
+    ]),
     PathPrefixRoute('/admin', [
         Route('/', handler='admin.views.Index'),
         Route('/comments', handler='admin.views.Comments'),
@@ -52,7 +52,7 @@ app = WSGIApplication([
         Route('/memcache/<key>/build', handler='admin.views.build'),
         Route('/memcache/<key>/create', handler='admin.views.create'),
         Route('/memcache/<key>/delete', handler='admin.views.memcache_delete'),
-#        Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
+        # Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
     ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
     Route('/filter/<key>', handler=RenderCloud),

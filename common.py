@@ -2,13 +2,12 @@ from __future__ import division
 import os
 import math
 import hashlib
-import datetime
 import itertools
 import collections
 import logging
 import traceback
 from operator import itemgetter
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import webapp2
 import jinja2
@@ -75,7 +74,7 @@ def language(code):
 
 
 def now():
-    date = datetime.datetime.now()
+    date = datetime.now()
     return date.strftime('%Y')
 
 
@@ -153,13 +152,13 @@ def timesince_jinja(d, now=None):
         (60 * 60, lambda n: ngettext('hour', 'hours', n)),
         (60, lambda n: ngettext('minute', 'minutes', n))
     )
-    if not isinstance(d, datetime.datetime):
-        d = datetime.datetime(d.year, d.month, d.day)
-    if now and not isinstance(now, datetime.datetime):
-        now = datetime.datetime(now.year, now.month, now.day)
+    if not isinstance(d, datetime):
+        d = datetime(d.year, d.month, d.day)
+    if now and not isinstance(now, datetime):
+        now = datetime(now.year, now.month, now.day)
 
     if not now:
-        now = datetime.datetime.now()
+        now = datetime.now()
 
     delta = now - (d - timedelta(0, 0, d.microsecond))
     since = delta.days * 24 * 60 * 60 + delta.seconds
@@ -261,10 +260,11 @@ def count_colors():
     if content is None:
         content = []
         for k, d in COLORS.items():
+            query = Photo.query().order(-Photo.date)
             if d['field'] == 'hue':
-                query = Photo.query(Photo.hue == d['name'], Photo.sat == 'color').order(-Photo.date)
+                query = query.filter(Photo.hue == d['name'], Photo.sat == 'color')
             elif d['field'] == 'lum':
-                query = Photo.query(Photo.lum == d['name'], Photo.sat == 'monochrome').order(-Photo.date)
+                query = query.filter(Photo.lum == d['name'], Photo.sat == 'monochrome')
             data = COLORS[k]
             data.update({'count': query.count(1000)})
             content.append(data)
@@ -276,27 +276,27 @@ def count_colors():
 class Filter:
     def __init__(self, field, value):
         self.field, self.value = field, value
+        self.empty = False
         try:
             assert (self.field and self.value)
         except AssertionError:
             self.empty = True
-        else:
-            self.empty = False
 
     @property
     def parameters(self):
-        if self.empty: return {}
+        if self.empty:
+            return {}
         if self.field == 'date':
             return {'year': int(self.value)}
         elif self.field == 'author':
             # TODO Not all emails are gmail
-            return {'author': users.User(email='%s@gmail.com' % self.value)}
+            return {self.field: users.User(email='%s@gmail.com' % self.value)}
         elif self.field == 'forkind':
-            return {'forkind': self.value.capitalize()}
+            return {self.field: self.value.capitalize()}
         elif self.field == 'hue':
-            return {'hue': self.value, 'sat': 'color'}
+            return {self.field: self.value, 'sat': 'color'}
         elif self.field == 'lum':
-            return {'lum': self.value, 'sat': 'monochrome'}
+            return {self.field: self.value, 'sat': 'monochrome'}
         else:
             try:
                 self.value = int(self.value)
@@ -306,7 +306,8 @@ class Filter:
 
     @property
     def title(self):
-        if self.empty: return ''
+        if self.empty:
+            return ''
         if self.field == 'forkind':
             if self.value == 'entry':
                 return '/ %s' % _('for blogs')
@@ -325,7 +326,8 @@ class Filter:
 
     @property
     def url(self):
-        if self.empty: return ''
+        if self.empty:
+            return ''
         return '%s/%s/' % (self.field, self.value)
 
 
