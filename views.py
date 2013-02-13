@@ -64,9 +64,7 @@ class RenderGraph(BaseHandler):
         kind, field = key.split('_')
         tmp = get_or_build(key)
 
-        if field == 'date':
-            items = sorted(tmp, key=itemgetter('name'), reverse=True)[:10]
-        elif field == 'colors':
+        if field == 'colors':
             items = tmp
             colors = [x['hex'] for x in items]
         else:
