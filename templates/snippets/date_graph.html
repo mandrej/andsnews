@@ -7,7 +7,7 @@
     </div>
 </div>
 <div id="chartdata" class="hide">
-    {% for item in items|sort(reverse=True, attribute='name') %}
+    {% for item in items %}
         <p><span>{{ item.name }}</span><span>{{ item.count }}</span></p>
     {% endfor %}
 </div>

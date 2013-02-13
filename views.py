@@ -5,6 +5,7 @@ import os
 import json
 import hashlib
 import datetime
+from operator import itemgetter
 
 import webapp2
 from jinja2.filters import do_striptags
@@ -59,11 +60,18 @@ class RenderCloud(BaseHandler):
 
 class RenderGraph(BaseHandler):
     def get(self, key):
-        kind, field = key.split('_')
-        items = get_or_build(key)
         colors = []
-        if key == 'Photo_colors':
+        kind, field = key.split('_')
+        tmp = get_or_build(key)
+
+        if field == 'date':
+            items = sorted(tmp, key=itemgetter('name'), reverse=True)[:10]
+        elif field == 'colors':
+            items = tmp
             colors = [x['hex'] for x in items]
+        else:
+            items = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
+
         self.render_template(
             'snippets/%s_graph.html' % field, {'items': items, 'kind': kind, 'colors': colors})
 
