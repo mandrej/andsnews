@@ -1,0 +1,26 @@
+<div class="popup">
+    <h4>{{ _('Eqv. focal length') }}</h4>
+    <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+    <div class="content">
+        <div id="chart"></div>
+        <p class="explain">{{ _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10') }}</p>
+    </div>
+</div>
+<div id="chartdata" class="hide">
+    {% for item in items|sort(attribute='name') %}
+        <p><span>{{ item.name }} mm {{ _('eqv') }}.</span><span>{{ item.count }}</span></p>
+    {% endfor %}
+</div>
+<script>
+    $(function() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'count');
+
+        $('#chartdata p').each(function(i, row) {
+            data.addRow([$(row).find('span:eq(0)').text(), parseInt($(row).find('span:eq(1)').text())]);
+        });
+        var chart = new google.visualization.PieChart($('#chart')[0]);
+        chart.draw(data, chartOptions);
+    })
+</script>

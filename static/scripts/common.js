@@ -5,6 +5,15 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  */
+var chartOptions = {
+    backgroundColor: '#222',
+    pieSliceBorderColor: '#222',
+    fontSize: 11,
+    fontName: 'sans-serif',
+    chartArea: {width: 420, top: 0, left: 0, height: 300},
+    legend: {textStyle: {color: '#ccc'}}
+};
+
 (function($) {
 	$.fn.minus = function() {
 		$(this).html($(this).html().replace(/[+]/i, "−"));

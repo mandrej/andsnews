@@ -5,12 +5,10 @@ import os
 import json
 import hashlib
 import datetime
-from operator import itemgetter
 
 import webapp2
 from jinja2.filters import do_striptags
 from webapp2_extras.appengine.users import login_required
-from webapp2_extras.i18n import lazy_gettext as _
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 
@@ -59,45 +57,15 @@ class RenderCloud(BaseHandler):
              'link': '%s%s' % (self.root_urls[kind], field), 'filter': f.parameters})
 
 
-def visualize(request, key):
-    data = {}
-    items = get_or_build(key)
-    if key in ['Photo_tags', 'Entry_tags', 'Feed_tags']:
-        data['title'] = _('Tags')
-    elif key in ['Photo_author', 'Entry_author', 'Comment_author']:
-        data['title'] = _('Authors')
-    elif key in ['Photo_date', 'Entry_date', 'Comment_date']:
-        data['title'] = _('Dates')
-        tmp = [{'name': str(x['name']), 'count': x['count']} for x in items]
-        data['rows'] = sorted(tmp, key=itemgetter('name'), reverse=True)[:10]
-    elif key == 'Photo_model':
-        data['title'] = _('Camera model')
-    elif key == 'Photo_lens':
-        data['title'] = _('Lens type')
-    elif key == 'Photo_eqv':
-        data['title'] = _('Eqv. focal length')
-        data['info'] = _(
-            'Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10')
-        tmp = [{'name': '%s mm %s.' % (x['name'], _('eqv')), 'count': x['count']} for x in items]
-        data['rows'] = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
-    elif key == 'Photo_iso':
-        data['title'] = '%s (ISO)' % _('Sensitivity')
-        tmp = [{'name': '%s ASA' % x['name'], 'count': x['count']} for x in items]
-        data['rows'] = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
-    elif key == 'Photo_colors':
-        data['title'] = _('Median color')
-        data['info'] = _('Based od HLS color model')
-        data['rows'] = [{'name': _(x['name']), 'count': x['count']} for x in items]
-        data['colors'] = [x['hex'] for x in items]
-    elif key == 'Comment_forkind':
-        data['title'] = _('comments and messages').capitalize()
-
-    if not 'rows' in data:
-        data['rows'] = sorted(items, key=itemgetter('count'), reverse=True)[:10]
-
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(data))
-    return response
+class RenderGraph(BaseHandler):
+    def get(self, key):
+        kind, field = key.split('_')
+        items = get_or_build(key)
+        colors = []
+        if key == 'Photo_colors':
+            colors = [x['hex'] for x in items]
+        self.render_template(
+            'snippets/%s_graph.html' % field, {'items': items, 'kind': kind, 'colors': colors})
 
 
 def auto_complete(request, kind, field):

@@ -1,0 +1,37 @@
+<div class="popup">
+    <h4>{{ _('Median color') }}</h4>
+    <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+    <div class="content">
+        <div id="chart"></div>
+        <p class="explain">{{ _('Based od HLS color model') }}</p>
+    </div>
+</div>
+<div id="chartdata" class="hide">
+    {% for item in items %}
+        <p><span>{{ item.name }}</span><span>{{ item.count }}</span></p>
+    {% endfor %}
+</div>
+<div id="chartcolors" class="hide">
+    {% for color in colors %}
+        <p>{{ color }}</p>
+    {% endfor %}
+</div>
+
+<script>
+    $(function() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'count');
+
+        $('#chartdata p').each(function(i, row) {
+            data.addRow([$(row).find('span:eq(0)').text(), parseInt($(row).find('span:eq(1)').text())]);
+        });
+        var chart = new google.visualization.PieChart($('#chart')[0]);
+        var colors = [];
+        $('#chartcolors p').each(function(i, row) {
+            colors.push($(row).text());
+        })
+        $.extend(chartOptions, {colors: colors});
+        chart.draw(data, chartOptions);
+    })
+</script>

@@ -1,7 +1,7 @@
 from webapp2 import WSGIApplication, Route
 from webapp2_extras.routes import PathPrefixRoute
 from views import Index, DeleteHandler, handle_403, handle_404, handle_500,  \
-    latest, RenderCloud, auto_complete, sitemap, visualize, Find, Chat, Send, rss
+    latest, RenderCloud, RenderGraph, auto_complete, sitemap, Find, Chat, Send, rss
 from settings import DEBUG
 
 CONFIG = {
@@ -56,11 +56,11 @@ app = WSGIApplication([
     ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
     Route('/filter/<key>', handler=RenderCloud),
+    Route('/visualize/<key>', handler=RenderGraph),
     Route('/search', handler=Find),
     Route('/_ah/xmpp/message/chat/', handler=Chat),
     Route('/send', handler=Send),
     Route('/sitemap.xml', handler=sitemap),
-    Route('/visualize/<key>', handler=visualize),
     Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 

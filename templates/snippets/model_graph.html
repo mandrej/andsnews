@@ -1,0 +1,26 @@
+<div class="popup">
+    <h4>{{ _('Camera model') }}</h4>
+    <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+    <div class="content">
+        <div id="chart"></div>
+        <p class="explain"></p>
+    </div>
+</div>
+<div id="chartdata" class="hide">
+    {% for item in items|sort(reverse=True, attribute='count') %}
+        <p><span>{{ item.name }}</span><span>{{ item.count }}</span></p>
+    {% endfor %}
+</div>
+<script>
+    $(function() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'count');
+
+        $('#chartdata p').each(function(i, row) {
+            data.addRow([$(row).find('span:eq(0)').text(), parseInt($(row).find('span:eq(1)').text())]);
+        });
+        var chart = new google.visualization.PieChart($('#chart')[0]);
+        chart.draw(data, chartOptions);
+    })
+</script>

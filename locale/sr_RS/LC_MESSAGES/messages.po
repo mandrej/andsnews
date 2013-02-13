@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-11 21:10+0100\n"
-"PO-Revision-Date: 2013-02-11 21:11+0100\n"
+"POT-Creation-Date: 2013-02-13 22:44+0100\n"
+"PO-Revision-Date: 2013-02-13 22:45+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
 "Language-Team: sr_RS <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
@@ -17,356 +17,284 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: common.py:29
+#: common.py:28
 msgid "english"
 msgstr "енглески"
 
-#: common.py:30
+#: common.py:28
 msgid "serbian"
 msgstr "српски"
 
-#: common.py:33
+#: common.py:31
 msgid "Monday"
 msgstr "Понедељак"
 
-#: common.py:33
+#: common.py:31
 msgid "Tuesday"
 msgstr "Уторак"
 
-#: common.py:33
+#: common.py:31
 msgid "Wednesday"
 msgstr "Среда"
 
-#: common.py:33
+#: common.py:31
 msgid "Thursday"
 msgstr "Четвртак"
 
-#: common.py:34
+#: common.py:32
 msgid "Friday"
 msgstr "Петак"
 
-#: common.py:34
+#: common.py:32
 msgid "Saturday"
 msgstr "Субота"
 
-#: common.py:34
+#: common.py:32
 msgid "Sunday"
 msgstr "Недеља"
 
-#: common.py:37
+#: common.py:35
 msgid "January"
 msgstr "Јануар"
 
-#: common.py:37
+#: common.py:35
 msgid "February"
 msgstr "Фебруар"
 
-#: common.py:37
-#: common.py:49
+#: common.py:35
+#: common.py:43
 msgid "March"
 msgstr "Март"
 
-#: common.py:38
-#: common.py:49
+#: common.py:35
+#: common.py:43
 msgid "April"
 msgstr "Април"
 
-#: common.py:38
-#: common.py:49
+#: common.py:35
+#: common.py:43
 msgid "May"
 msgstr "Мај"
 
-#: common.py:38
-#: common.py:50
+#: common.py:35
+#: common.py:43
 msgid "June"
 msgstr "Јун"
 
-#: common.py:39
-#: common.py:51
+#: common.py:36
+#: common.py:44
 msgid "July"
 msgstr "Јул"
 
-#: common.py:39
+#: common.py:36
 msgid "August"
 msgstr "Август"
 
-#: common.py:39
+#: common.py:36
 msgid "September"
 msgstr "Септембар"
 
-#: common.py:40
+#: common.py:36
 msgid "October"
 msgstr "Октобар"
 
-#: common.py:40
+#: common.py:36
 msgid "November"
 msgstr "Новембар"
 
-#: common.py:40
+#: common.py:36
 msgid "December"
 msgstr "Децембар"
 
-#: common.py:43
+#: common.py:39
 msgid "jan"
 msgstr "јан"
 
-#: common.py:43
+#: common.py:39
 msgid "feb"
 msgstr "феб"
 
-#: common.py:43
+#: common.py:39
 msgid "mar"
 msgstr "мар"
 
-#: common.py:44
+#: common.py:39
 msgid "apr"
 msgstr "апр"
 
-#: common.py:44
+#: common.py:39
 msgid "may"
 msgstr "мај"
 
-#: common.py:44
+#: common.py:39
 msgid "jun"
 msgstr "јун"
 
-#: common.py:45
+#: common.py:40
 msgid "jul"
 msgstr "јул"
 
-#: common.py:45
+#: common.py:40
 msgid "aug"
 msgstr "авг"
 
-#: common.py:45
+#: common.py:40
 msgid "sep"
 msgstr "сеп"
 
-#: common.py:46
+#: common.py:40
 msgid "oct"
 msgstr "окт"
 
-#: common.py:46
+#: common.py:40
 msgid "nov"
 msgstr "нов"
 
-#: common.py:46
+#: common.py:40
 msgid "dec"
 msgstr "дец"
 
-#: common.py:49
+#: common.py:43
 msgid "Jan."
 msgstr "Јан."
 
-#: common.py:49
+#: common.py:43
 msgid "Feb."
 msgstr "Феб."
 
-#: common.py:51
+#: common.py:44
 msgid "Aug."
 msgstr "Авг."
 
-#: common.py:51
+#: common.py:44
 msgid "Sept."
 msgstr "Септ."
 
-#: common.py:51
+#: common.py:44
 msgid "Oct."
 msgstr "Окт."
 
-#: common.py:51
+#: common.py:44
 msgid "Nov."
 msgstr "Нов."
 
-#: common.py:52
+#: common.py:44
 msgid "Dec."
 msgstr "Дец."
 
-#: common.py:55
+#: common.py:47
 msgid "red"
 msgstr "црвена"
 
-#: common.py:55
+#: common.py:47
 msgid "orange"
 msgstr "наранџаста"
 
-#: common.py:55
+#: common.py:47
 msgid "yellow"
 msgstr "жута"
 
-#: common.py:55
+#: common.py:47
 msgid "green"
 msgstr "зелена"
 
-#: common.py:55
+#: common.py:47
 msgid "teal"
 msgstr "тиркиз"
 
-#: common.py:55
+#: common.py:47
 msgid "blue"
 msgstr "плава"
 
-#: common.py:56
+#: common.py:48
 msgid "purple"
 msgstr "љубичаста"
 
-#: common.py:56
+#: common.py:48
 msgid "pink"
 msgstr "розе"
 
-#: common.py:57
+#: common.py:48
 msgid "dark"
 msgstr "тамна"
 
-#: common.py:57
+#: common.py:48
 msgid "medium"
 msgstr "средња"
 
-#: common.py:57
+#: common.py:48
 msgid "light"
 msgstr "светла"
 
-#: common.py:157
+#: common.py:148
 msgid "year"
 msgid_plural "years"
 msgstr[0] "године"
 msgstr[1] "године"
 msgstr[2] "године"
 
-#: common.py:158
+#: common.py:149
 msgid "month"
 msgid_plural "months"
 msgstr[0] "месеца"
 msgstr[1] "месеца"
 msgstr[2] "месеци"
 
-#: common.py:159
+#: common.py:150
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "недеље"
 msgstr[1] "недеље"
 msgstr[2] "недеља"
 
-#: common.py:160
+#: common.py:151
 msgid "day"
 msgid_plural "days"
 msgstr[0] "дана"
 msgstr[1] "дана"
 msgstr[2] "дана"
 
-#: common.py:161
+#: common.py:152
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "сата"
 msgstr[1] "сата"
 msgstr[2] "сати"
 
-#: common.py:162
+#: common.py:153
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "минута"
 msgstr[1] "минута"
 msgstr[2] "минута"
 
-#: common.py:175
+#: common.py:166
 msgid "minutes"
 msgstr "минута"
 
-#: common.py:180
+#: common.py:171
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr "%(number)d %(type)s"
 
-#: common.py:185
+#: common.py:176
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ", %(number)d %(type)s"
 
-#: common.py:320
+#: common.py:313
 msgid "for blogs"
 msgstr "за блогове"
 
-#: common.py:322
+#: common.py:315
 #: templates/snippets/forkind_cloud.html:7
 msgid "for photos"
 msgstr "за фотографије"
 
-#: common.py:324
+#: common.py:317
 #: templates/snippets/forkind_cloud.html:8
 msgid "messages"
 msgstr "поруке"
-
-#: views.py:66
-#: entry/views.py:77
-#: entry/views.py:91
-#: news/views.py:134
-#: news/views.py:144
-#: photo/views.py:66
-#: photo/views.py:80
-#: templates/snippets/macros.html:25
-msgid "Tags"
-msgstr "Ознаке"
-
-#: views.py:68
-#: templates/snippets/macros.html:27
-msgid "Authors"
-msgstr "Аутори"
-
-#: views.py:70
-#: templates/snippets/macros.html:26
-msgid "Dates"
-msgstr "Датуми"
-
-#: views.py:74
-#: photo/views.py:83
-#: templates/snippets/macros.html:29
-msgid "Camera model"
-msgstr "Модел фотоапарата"
-
-#: views.py:76
-#: photo/views.py:89
-#: templates/snippets/macros.html:30
-msgid "Lens type"
-msgstr "Тип објектива"
-
-#: views.py:78
-#: templates/snippets/macros.html:31
-msgid "Eqv. focal length"
-msgstr "Екв. жижна даљина"
-
-#: views.py:79
-msgid "Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10"
-msgstr "Еквивалентна жижна даљина је рачуната на основу камере са пуним форматом сензора или 35 mm камере, заокружена на 10"
-
-#: views.py:81
-#: templates/photo/exif.html:28
-msgid "eqv"
-msgstr "екв"
-
-#: views.py:84
-#: photo/views.py:87
-#: templates/photo/exif.html:34
-#: templates/snippets/macros.html:32
-msgid "Sensitivity"
-msgstr "Осетљивост"
-
-#: views.py:88
-#: templates/photo/exif.html:47
-#: templates/snippets/macros.html:28
-msgid "Median color"
-msgstr "Просечна боја"
-
-#: views.py:89
-msgid "Based od HLS color model"
-msgstr "Базирано на HSL моделу боја"
-
-#: views.py:90
-msgid "name"
-msgstr "име"
-
-#: views.py:93
-msgid "comments and messages"
-msgstr "коментари и поруке"
 
 #: comment/views.py:33
 msgid "e-mail"
@@ -409,6 +337,17 @@ msgstr "Наслов"
 #: photo/views.py:65
 msgid "Slug"
 msgstr "Обележје"
+
+#: entry/views.py:77
+#: entry/views.py:91
+#: news/views.py:134
+#: news/views.py:144
+#: photo/views.py:66
+#: photo/views.py:80
+#: templates/snippets/macros.html:25
+#: templates/snippets/tags_graph.html:2
+msgid "Tags"
+msgstr "Ознаке"
 
 #: entry/views.py:78
 #: entry/views.py:92
@@ -474,6 +413,12 @@ msgstr "Фотографија"
 msgid "Not cgi.FieldStorage type."
 msgstr ""
 
+#: photo/views.py:83
+#: templates/snippets/macros.html:29
+#: templates/snippets/model_graph.html:2
+msgid "Camera model"
+msgstr "Модел фотоапарата"
+
 #: photo/views.py:84
 #: templates/photo/exif.html:13
 msgid "Aperture"
@@ -489,9 +434,22 @@ msgstr "Експозиција"
 msgid "Focal length"
 msgstr "Жижна даљина"
 
+#: photo/views.py:87
+#: templates/photo/exif.html:34
+#: templates/snippets/iso_graph.html:2
+#: templates/snippets/macros.html:32
+msgid "Sensitivity"
+msgstr "Осетљивост"
+
 #: photo/views.py:88
 msgid "Crop factor"
 msgstr "Кроп фактор"
+
+#: photo/views.py:89
+#: templates/snippets/lens_graph.html:2
+#: templates/snippets/macros.html:30
+msgid "Lens type"
+msgstr "Тип објектива"
 
 #: templates/base.html:14
 msgid "photo rss"
@@ -501,37 +459,28 @@ msgstr "фото rss"
 msgid "entry rss"
 msgstr "блог rss"
 
-#: templates/base.html:24
-#: templates/entry/form.html:22
-#: templates/snippets/addcomment.html:3
-#: templates/snippets/addcomment.html:26
-#: templates/snippets/confirm.html:3
-#: templates/snippets/msg.html:4
-msgid "close"
-msgstr "затвори"
-
-#: templates/base.html:39
-#: templates/base.html:68
+#: templates/base.html:30
+#: templates/base.html:59
 msgid "Start"
 msgstr "Старт"
 
-#: templates/base.html:50
+#: templates/base.html:41
 msgid "search"
 msgstr "тражи"
 
-#: templates/base.html:58
+#: templates/base.html:49
 msgid "Administration"
 msgstr "Администрација"
 
-#: templates/base.html:59
+#: templates/base.html:50
 msgid "Logout"
 msgstr "Излогујте се"
 
-#: templates/base.html:60
+#: templates/base.html:51
 msgid "Sign in"
 msgstr "Пријави се"
 
-#: templates/base.html:71
+#: templates/base.html:62
 msgid "Tools"
 msgstr "Алати"
 
@@ -586,19 +535,6 @@ msgstr "порука"
 msgid "tagged by"
 msgstr "обележено са"
 
-#: templates/admin/base.html:8
-#: templates/entry/detail.html:21
-#: templates/entry/form.html:10
-#: templates/entry/form.html:13
-#: templates/news/detail.html:11
-#: templates/news/form.html:10
-#: templates/news/form.html:13
-#: templates/photo/detail.html:15
-#: templates/photo/form.html:10
-#: templates/photo/form.html:13
-msgid "Back"
-msgstr "Назад"
-
 #: templates/comment/detail.html:10
 #: templates/entry/detail.html:13
 #: templates/entry/detail.html:17
@@ -636,6 +572,18 @@ msgstr "Додај"
 msgid "Edit"
 msgstr "Промени"
 
+#: templates/entry/detail.html:21
+#: templates/entry/form.html:10
+#: templates/entry/form.html:13
+#: templates/news/detail.html:11
+#: templates/news/form.html:10
+#: templates/news/form.html:13
+#: templates/photo/detail.html:15
+#: templates/photo/form.html:10
+#: templates/photo/form.html:13
+msgid "Back"
+msgstr "Назад"
+
 #: templates/entry/detail.html:36
 msgid "author&apos;s blogs"
 msgstr "ауторове белешке"
@@ -652,6 +600,23 @@ msgstr "Додај нову / измени постојећу белешку"
 #: templates/entry/form.html:21
 msgid "Choose image"
 msgstr "Затвори слику"
+
+#: templates/entry/form.html:22
+#: templates/snippets/addcomment.html:3
+#: templates/snippets/addcomment.html:26
+#: templates/snippets/author_graph.html:3
+#: templates/snippets/colors_graph.html:3
+#: templates/snippets/confirm.html:3
+#: templates/snippets/date_graph.html:3
+#: templates/snippets/eqv_graph.html:3
+#: templates/snippets/forkind_graph.html:3
+#: templates/snippets/iso_graph.html:3
+#: templates/snippets/lens_graph.html:3
+#: templates/snippets/model_graph.html:3
+#: templates/snippets/msg.html:4
+#: templates/snippets/tags_graph.html:3
+msgid "close"
+msgstr "затвори"
 
 #: templates/entry/form.html:31
 msgid "No images"
@@ -811,6 +776,11 @@ msgstr "фотографије снимљене истим објективом"
 msgid "photos with same equvalent focal length"
 msgstr "фотографије са истом жижном даљином"
 
+#: templates/photo/exif.html:28
+#: templates/snippets/eqv_graph.html:11
+msgid "eqv"
+msgstr "екв"
+
 #: templates/photo/exif.html:35
 msgid "photos with same iso"
 msgstr "фотографије са истом осетљивошћу"
@@ -818,6 +788,12 @@ msgstr "фотографије са истом осетљивошћу"
 #: templates/photo/exif.html:43
 msgid "Size"
 msgstr "Величина"
+
+#: templates/photo/exif.html:47
+#: templates/snippets/colors_graph.html:2
+#: templates/snippets/macros.html:28
+msgid "Median color"
+msgstr "Просечна боја"
 
 #: templates/photo/exif.html:50
 msgid "photos with similar color"
@@ -884,6 +860,15 @@ msgstr "Може проћи нешто времена пре него се ко�
 msgid "Thank you for your contribution"
 msgstr "Хвала вам на вашем доприносу"
 
+#: templates/snippets/author_graph.html:2
+#: templates/snippets/macros.html:27
+msgid "Authors"
+msgstr "Аутори"
+
+#: templates/snippets/colors_graph.html:6
+msgid "Based od HLS color model"
+msgstr "Базирано на HSL моделу боја"
+
 #: templates/snippets/confirm.html:2
 msgid "Confirm"
 msgstr "Потврди"
@@ -910,9 +895,27 @@ msgstr "слика"
 msgid "photo"
 msgstr "фотографија"
 
+#: templates/snippets/date_graph.html:2
+#: templates/snippets/macros.html:26
+msgid "Dates"
+msgstr "Датуми"
+
+#: templates/snippets/eqv_graph.html:2
+#: templates/snippets/macros.html:31
+msgid "Eqv. focal length"
+msgstr "Екв. жижна даљина"
+
+#: templates/snippets/eqv_graph.html:6
+msgid "Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10"
+msgstr "Еквивалентна жижна даљина је рачуната на основу камере са пуним форматом сензора или 35 mm камере, заокружена на 10"
+
 #: templates/snippets/forkind_cloud.html:6
 msgid "for blog"
 msgstr "за блогове"
+
+#: templates/snippets/forkind_graph.html:2
+msgid "Comments and messages"
+msgstr "Коментари и поруке"
 
 #: templates/snippets/macros.html:14
 msgid "see graph"
@@ -951,3 +954,5 @@ msgstr "страна"
 msgid "next"
 msgstr "следећа"
 
+#~ msgid "Photo_colors"
+#~ msgstr "фото rss"
