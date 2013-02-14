@@ -8,17 +8,13 @@
 {% block subnav %}&nbsp;{% endblock %}
 
 {% block contents %}
-	{% if objects %}
-		<h2>
-            <a href="{{ uri_for('comments') }}">{{ _('Comments') }}</a>
-            {% if filter and filter.forkind == 'Photo' %}/ {{ _('for photos') }}{% endif %}
-            {% if filter and filter.forkind == 'Entry' %}/ {{ _('for blogs') }}{% endif %}
-            {% if page != 1 %} [{{ page }}]{% endif %}
-        </h2>
-	{% else %}
-		<h2>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h2>
-	{% endif %}
-	
+    <h2>
+        <a href="{{ uri_for('comments') }}">{{ _('Comments') }}</a>
+        {% if filter and filter.forkind == 'Photo' %}/ {{ _('for photos') }}{% endif %}
+        {% if filter and filter.forkind == 'Entry' %}/ {{ _('for blogs') }}{% endif %}
+        {% if page != 1 %} [{{ page }}]{% endif %}
+    </h2>
+
 	<div id="container">
 		{% for object in objects %}
 	    	{% if object.is_message %}
@@ -47,6 +43,12 @@
 					</div>
 				</section>
 	        {% endif %}
+        {% else %}
+            <section class="third brick">
+                <div class="white none">
+                    <h3>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h3>
+                </div>
+            </section>
 		{% endfor %}
 	</div>
 {% endblock %}

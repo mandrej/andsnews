@@ -18,7 +18,7 @@ from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_
 from settings import TIMEOUT, ADMIN_JID, RFC822
 
 
-RESULTS = 5
+RESULTS = 12
 RSS_LIMIT = 10
 NUM_LATEST = 6
 

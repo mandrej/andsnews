@@ -630,6 +630,7 @@ figure p.legend { padding: 5px; text-align: center; }
 #aside .white:hover a { color: #fff; }
 #comments .white:hover { background: #fff; color: #000; }
 .old { color: #fff; background: rgba(0,0,0,0.1); }
+.none { background: orange; color: #000; }
 .clear { clear: both; }
 #spinner, #title {
 	margin: -50px 0 0 -50px;

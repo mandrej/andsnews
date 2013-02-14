@@ -14,15 +14,9 @@ $(function() {
 </script>
 <article class="plain">
 	{% if phrase %}
-		{% if objects %}
-			<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
-		{% else %}
-			<h2>{{ _('No search results for') }} {{ phrase }}.</h2>
-			<p>{{ _('Please try again') }}.</p>
-            {% if error %}
-                <p>{{ _('Error') }}: {{ error }}</p>
-            {% endif %}
-		{% endif %}
+		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}
+            {% if page != 1 %} [{{ page }}]{% endif %}
+        </h2>
 	{% else %}
 		<h2>{{ _('Nothing to search for') }}.</h2>
         <p>{{ _('Please try something') }}.</p>
@@ -58,6 +52,16 @@ $(function() {
     <div id="container">
         {% for object in objects %}
             {{ result(object) }}
+        {% else %}
+            <section class="third brick">
+                <div class="white none">
+                    <h3>{{ _('No search results for') }} {{ phrase }}.</h3>
+                    <p>{{ _('Please try again') }}.</p>
+                    {% if error %}
+                        <p>{{ _('Error') }}: {{ error }}</p>
+                    {% endif %}
+                </div>
+            </section>
         {% endfor %}
     </div>
 </article>

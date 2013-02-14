@@ -9,23 +9,19 @@
 {% endblock %}
 
 {% block contents %}
-	{% if objects %}
-		<h2>
-            <a href="{{ uri_for('photos') }}">{{ _('Photos') }}</a>
-            {% if filter and filter.tags %}/ {{ filter.tags }}{% endif %}
-            {% if filter and filter.year %}/ {{ filter.year }}{% endif %}
-            {% if filter and filter.author %}/ {{ filter.author }}{% endif %}
-            {% if filter and filter.hue %}/ {{ _(filter.hue) }}{% endif %}
-            {% if filter and filter.lum %}/ {{ _(filter.lum) }}{% endif %}
-            {% if filter and filter.model %}/ {{ filter.model }}{% endif %}
-            {% if filter and filter.lens %}/ {{ filter.lens }}{% endif %}
-            {% if filter and filter.eqv %}/ {{ filter.eqv }} mm{% endif %}
-            {% if filter and filter.iso %}/ {{ filter.iso }} ASA{% endif %}
-            {% if page != 1 %} [{{ page }}]{% endif %}
-        </h2>
-	{% else %}
-		<h2>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h2>
-	{% endif %}
+    <h2>
+        <a href="{{ uri_for('photos') }}">{{ _('Photos') }}</a>
+        {% if filter and filter.tags %}/ {{ filter.tags }}{% endif %}
+        {% if filter and filter.year %}/ {{ filter.year }}{% endif %}
+        {% if filter and filter.author %}/ {{ filter.author }}{% endif %}
+        {% if filter and filter.hue %}/ {{ _(filter.hue) }}{% endif %}
+        {% if filter and filter.lum %}/ {{ _(filter.lum) }}{% endif %}
+        {% if filter and filter.model %}/ {{ filter.model }}{% endif %}
+        {% if filter and filter.lens %}/ {{ filter.lens }}{% endif %}
+        {% if filter and filter.eqv %}/ {{ filter.eqv }} mm{% endif %}
+        {% if filter and filter.iso %}/ {{ filter.iso }} ASA{% endif %}
+        {% if page != 1 %} [{{ page }}]{% endif %}
+    </h2>
 
 	<div id="container">
 		{% for object in objects %}
@@ -38,6 +34,12 @@
                     </a>
                 </figure>
             {% endif %}
+        {% else %}
+            <section class="third brick">
+                <div class="white none">
+                    <h3>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h3>
+                </div>
+            </section>
 		{% endfor %}
 	</div>
 {% endblock %}
