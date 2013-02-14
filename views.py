@@ -65,10 +65,16 @@ class RenderGraph(BaseHandler):
         tmp = get_or_build(key)
 
         if field == 'colors':
-            items = tmp
-            colors = [x['hex'] for x in items]
+            colors = [x['hex'] for x in tmp]
         else:
-            items = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
+            tmp = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
+
+        if field == 'date':
+            items = sorted(tmp, key=itemgetter('name'), reverse=True)
+        elif field in ('eqv', 'iso'):
+            items = sorted(tmp, key=itemgetter('name'), reverse=False)
+        else:
+            items = tmp[:10]
 
         self.render_template(
             'snippets/%s_graph.html' % field, {'items': items, 'kind': kind, 'colors': colors})

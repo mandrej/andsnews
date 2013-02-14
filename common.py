@@ -4,6 +4,7 @@ import math
 import hashlib
 import itertools
 import collections
+import json
 import logging
 import traceback
 from operator import itemgetter
@@ -177,6 +178,11 @@ def timesince_jinja(d, now=None):
     return s
 
 
+def to_json(value):
+    # http://stackoverflow.com/questions/8727349/converting-dict-object-to-string-in-django-jinja2-template
+    return do_mark_safe(json.dumps(value))
+
+
 ENV.globals.update({
     'now': now,
     'version': version,
@@ -193,6 +199,7 @@ ENV.filters.update({
     'css_classes': css_classes,
     'filesizeformat': filesizeformat,
     'timesince': timesince_jinja,
+    'to_json': to_json,
 })
 
 real_handle_exception = ENV.handle_exception
