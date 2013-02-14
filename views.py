@@ -67,6 +67,7 @@ class RenderGraph(BaseHandler):
         if field == 'colors':
             colors = [x['hex'] for x in tmp]
         else:
+            # 10 most frequent
             tmp = sorted(tmp, key=itemgetter('count'), reverse=True)[:10]
 
         if field == 'date':
@@ -76,8 +77,7 @@ class RenderGraph(BaseHandler):
         else:
             items = tmp[:10]
 
-        self.render_template(
-            'snippets/%s_graph.html' % field, {'items': items, 'kind': kind, 'colors': colors})
+        self.render_template('snippets/%s_graph.html' % field, {'items': items, 'colors': colors})
 
 
 def auto_complete(request, kind, field):
