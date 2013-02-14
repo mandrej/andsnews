@@ -13,12 +13,6 @@
 
 {% block contents %}
 <article class="plain nomargin">
-	{% if error %}
-{#		{% popup error %}#}
-{#			<p>{{ _('News error') }}.<br/>{{ error }}.</p>#}
-{#		{% endpopup %}#}
-	{% endif %}
-	
 	{% if news %}
 		<h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
 	
@@ -65,6 +59,9 @@
 		</div>
 	{% else %}
 		<h2>{% trans title=object.headline %}No {{ title }} at the moment{% endtrans %}.</h2>
+        {% if error %}
+            <p>{{ _('News error') }}.<br/>{{ error }}.</p>
+        {% endif %}
 	{% endif %}
 </article>
 {% endblock %}

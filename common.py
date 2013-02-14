@@ -436,23 +436,6 @@ class SearchPaginator:
         return results, number_found, has_next, error
 
 
-class ListPaginator:
-    def __init__(self, objects, per_page=PER_PAGE):
-        self.objects = objects
-        self.per_page = per_page
-        self.count = len(self.objects)
-        self.num_pages = int(math.ceil(self.count / self.per_page))
-
-    def page(self, num):
-        if num < 1:
-            webapp2.abort(404)
-
-        offset = (num - 1) * self.per_page
-        results = self.objects[offset: offset + self.per_page]
-        has_next = num < self.num_pages
-        return results, has_next
-
-
 class EmailField(fields.SelectField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
