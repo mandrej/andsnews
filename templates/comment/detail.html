@@ -1,10 +1,7 @@
+{% import "snippets/macros.html" as m %}
 {% for comment in object.comment_list() %}
 	<div class="white">
-		<time class="when" datetime='{{ comment.date|format_datetime }}'>
-			<span class="day">{{ comment.date|format_datetime("%d") }}</span>
-			<span class="time">{{ comment.date|format_datetime("%H:%M") }}</span>
-			<span class="monthyear">{{ comment.date|format_datetime("%m '%y") }}</span>
-		</time>
+        {{ m.time(comment.date) }}
 		{% if user == comment.author %}
 			<a class="delete confirm right" href="{{ uri_for('delete', safekey=comment.key.urlsafe()) }}"
 				title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>

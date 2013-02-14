@@ -49,3 +49,11 @@
         {{ _build([_tags], kind) }}
     {% endif %}
 {% endmacro %}
+
+{% macro time(dt) %}
+    <time class="when" datetime='{{ dt|format_datetime }}'>
+        <span class="day">{{ dt|format_datetime("%d") }}</span>
+        <span class="time">{{ dt|format_datetime("%H:%M") }}</span>
+        <span class="monthyear">{{ dt|format_datetime("%m '%y") }}</span>
+    </time>
+{% endmacro %}
