@@ -312,26 +312,6 @@ class Filter:
             return {'%s' % self.field: self.value}
 
     @property
-    def title(self):
-        if self.empty:
-            return ''
-        if self.field == 'forkind':
-            if self.value == 'entry':
-                return '/ %s' % _('for blogs')
-            elif self.value == 'photo':
-                return '/ %s' % _('for photos')
-            else:
-                return '/ %s' % _('messages')
-        elif self.field == 'eqv':
-            return '/ %s mm' % self.value
-        elif self.field == 'iso':
-            return '/ %s ASA' % self.value
-        elif self.field in ('hue', 'lum'):
-            return '/ %s' % _(self.value)
-        else:
-            return '/ %s' % self.value
-
-    @property
     def url(self):
         if self.empty:
             return ''

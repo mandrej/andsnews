@@ -22,7 +22,6 @@ class Index(BaseHandler):
         data = {'objects': objects,
                 'filter': f.parameters,
                 'filter_url': f.url,
-                'filter_title': f.title,
                 'page': page,
                 'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
@@ -54,7 +53,6 @@ class Detail(BaseHandler):
                     'previous': prev,
                     'filter': f.parameters,
                     'filter_url': f.url,
-                    'filter_title': f.title,
                     'page': page,
                     'idx': idx}
             self.render_template('photo/detail.html', data)

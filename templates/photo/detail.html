@@ -47,12 +47,25 @@
 {% block contents %}
 <article>
 	<header>
-		<h2>{% if filter %}
-				<a href="{{ uri_for('photos') }}{{ filter_url }}?page={{ page }}">{{ _('Photos') }} {{ filter_title }}</a>
+		<h2>
+            {% if filter %}
+				<a href="{{ uri_for('photos') }}{{ filter_url }}?page={{ page }}">
+                    {{ _('Photos') }}
+                    {% if filter.tags %}/ {{ filter.tags }}{% endif %}
+                    {% if filter.year %}/ {{ filter.year }}{% endif %}
+                    {% if filter.author %}/ {{ filter.author }}{% endif %}
+                    {% if filter.hue %}/ {{ _(filter.hue) }}{% endif %}
+                    {% if filter.lum %}/ {{ _(filter.lum) }}{% endif %}
+                    {% if filter.model %}/ {{ filter.model }}{% endif %}
+                    {% if filter.lens %}/ {{ filter.lens }}{% endif %}
+                    {% if filter.eqv %}/ {{ filter.eqv }} mm{% endif %}
+                    {% if filter.iso %}/ {{ filter.iso }} ASA{% endif %}
+                </a>
 			{% else %}
 				<a href="{{ uri_for('photos') }}?page={{ page }}">{{ _('Photos') }}</a>
 			{% endif %}
-			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}</h2>
+			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}
+        </h2>
 		
 		<div class="subtitle">
 			<a href="{{ uri_for('photos') }}author/{{ object.author }}/"

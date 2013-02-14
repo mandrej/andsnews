@@ -8,7 +8,12 @@
 
 {% block contents %}
 	{% if objects %}
-		<h2><a href="{{ uri_for('comments') }}">{{ _('Comments') }}</a>{% if filter %}{{ filter_title }}{% endif %}{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+		<h2>
+            <a href="{{ uri_for('comments') }}">{{ _('Comments') }}</a>
+            {% if filter and filter.forkind == 'Photo' %}/ {{ _('for photos') }}{% endif %}
+            {% if filter and filter.forkind == 'Entry' %}/ {{ _('for blogs') }}{% endif %}
+            {% if page != 1 %} [{{ page }}]{% endif %}
+        </h2>
 	{% else %}
 		<h2>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h2>
 	{% endif %}
