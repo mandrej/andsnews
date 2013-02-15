@@ -21,7 +21,6 @@ class Index(BaseHandler):
 
         data = {'objects': objects,
                 'filter': f.parameters,
-                'filter_url': f.url,
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1}

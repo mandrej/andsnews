@@ -283,39 +283,31 @@ def count_colors():
 class Filter:
     def __init__(self, field, value):
         self.field, self.value = field, value
-        self.empty = False
-        try:
-            assert (self.field and self.value)
-        except AssertionError:
-            self.empty = True
 
     @property
     def parameters(self):
-        if self.empty:
+        try:
+            assert (self.field and self.value)
+        except AssertionError:
             return {}
-        if self.field == 'date':
-            return {'year': int(self.value)}
-        elif self.field == 'author':
-            # TODO Not all emails are gmail
-            return {self.field: users.User(email='%s@gmail.com' % self.value)}
-        elif self.field == 'forkind':
-            return {self.field: self.value.capitalize()}
-        elif self.field == 'hue':
-            return {self.field: self.value, 'sat': 'color'}
-        elif self.field == 'lum':
-            return {self.field: self.value, 'sat': 'monochrome'}
         else:
-            try:
-                self.value = int(self.value)
-            except ValueError:
-                pass
-            return {'%s' % self.field: self.value}
-
-    @property
-    def url(self):
-        if self.empty:
-            return ''
-        return '%s/%s/' % (self.field, self.value)
+            if self.field == 'date':
+                return {'year': int(self.value)}
+            elif self.field == 'author':
+                # TODO Not all emails are gmail
+                return {self.field: users.User(email='%s@gmail.com' % self.value)}
+            elif self.field == 'forkind':
+                return {self.field: self.value.capitalize()}
+            elif self.field == 'hue':
+                return {self.field: self.value, 'sat': 'color'}
+            elif self.field == 'lum':
+                return {self.field: self.value, 'sat': 'monochrome'}
+            else:
+                try:
+                    self.value = int(self.value)
+                except ValueError:
+                    pass
+                return {'%s' % self.field: self.value}
 
 
 class Paginator:
