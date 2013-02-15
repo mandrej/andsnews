@@ -1,7 +1,8 @@
 <p class="cloud">
 	{% for item in isocloud|sort(attribute='name') %}
-        {% set selected = item.name == filter.iso %}
+        {% set selected = item.name == filter.value|int if filter else False %}
         <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-			title="{{ item.count }}" href="{{ uri_for('photos') }}iso/{{ item.name }}/">{{ item.name }}</a>
+			href="{{ uri_for(link, field='iso', value=item.name) }}"
+            title="{{ item.count }}" >{{ item.name }}</a>
 	{% endfor %}
 </p>

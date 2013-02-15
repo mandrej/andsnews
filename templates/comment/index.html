@@ -9,7 +9,7 @@
 
 {% block contents %}
     <h2>
-        <a href="{{ uri_for('comments') }}">{{ _('Comments') }}</a>
+        <a href="{{ uri_for('comment_all') }}">{{ _('Comments') }}</a>
         {% if filter and filter.forkind == 'Photo' %}/ {{ _('for photos') }}{% endif %}
         {% if filter and filter.forkind == 'Entry' %}/ {{ _('for blogs') }}{% endif %}
         {% if page != 1 %} [{{ page }}]{% endif %}

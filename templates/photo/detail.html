@@ -12,7 +12,7 @@
         <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
     {% endif %}
     <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-    <a href="{{ uri_for('photos') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
 {% endblock %}
 
 {% block modals %}
@@ -21,21 +21,29 @@
 {% endblock %}
 
 {% block paging %}
+    {% macro link(obj, index, char) %}
+        {% if filter %}
+            <a class="prev" href="{{ uri_for('photo_filter_triple', field=filter.field, value=filter.value, slug=index) }}"
+               title="{{ obj.headline }}">{{ char }}</a>
+        {% else %}
+            <a href="{{ uri_for('photo_triple', slug=index) }}"
+               title="{{ obj.headline }}">{{ char }}</a>
+        {% endif %}
+    {% endmacro %}
+
 	{% if previous or next %}
-	<nav class="paginator">
-	    {% if previous %}
-			<a class="prev" href="{{ uri_for('photos') }}{{ filter_url }}{{ idx - 1 }}"
-				title="{{ previous.headline }}">◀</a>
-	    {% else %}
-	        <span class="prev na">◀</span>
-	    {% endif %}
-	    {% if next %}
-			<a class="next" href="{{ uri_for('photos') }}{{ filter_url }}{{ idx + 1 }}"
-				title="{{ next.headline }}">▶</a>
-	    {% else %}
-	        <span class="next na">▶</span>
-	    {% endif %}
-	</nav>
+        <nav class="paginator">
+            {% if previous %}
+                {{ link(previous, idx - 1, '◀') }}
+            {% else %}
+                <span class="prev na">◀</span>
+            {% endif %}
+            {% if next %}
+                {{ link(next, idx + 1, '▶') }}
+            {% else %}
+                <span class="next na">▶</span>
+            {% endif %}
+        </nav>
 	{% endif %}
 {% endblock %}
 
@@ -47,36 +55,38 @@
 {% block contents %}
 <article>
 	<header>
-		<h2>
-            {% if filter %}
-				<a href="{{ uri_for('photos') }}{{ filter_url }}?page={{ page }}">
-                    {{ _('Photos') }}
-                    {% if filter.tags %}/ {{ filter.tags }}{% endif %}
-                    {% if filter.year %}/ {{ filter.year }}{% endif %}
-                    {% if filter.author %}/ {{ filter.author }}{% endif %}
-                    {% if filter.hue %}/ {{ _(filter.hue) }}{% endif %}
-                    {% if filter.lum %}/ {{ _(filter.lum) }}{% endif %}
-                    {% if filter.model %}/ {{ filter.model }}{% endif %}
-                    {% if filter.lens %}/ {{ filter.lens }}{% endif %}
-                    {% if filter.eqv %}/ {{ filter.eqv }} mm{% endif %}
-                    {% if filter.iso %}/ {{ filter.iso }} ASA{% endif %}
-                </a>
-			{% else %}
-				<a href="{{ uri_for('photos') }}?page={{ page }}">{{ _('Photos') }}</a>
-			{% endif %}
+        {% if filter %}
+            {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
+        {% else %}
+            {% set url = uri_for('photo_all') %}
+        {% endif %}
+    	<h2>
+            <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
+                {% if filter %}
+                    {% if filter.field =='tags' %}/ {{ filter.value }}{% endif %}
+                    {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
+                    {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
+                    {% if filter.field == 'hue' %}/ {{ _(filter.value) }}{% endif %}
+                    {% if filter.field == 'lum' %}/ {{ _(filter.value) }}{% endif %}
+                    {% if filter.field == 'model' %}/ {{ filter.value }}{% endif %}
+                    {% if filter.field == 'lens' %}/ {{ filter.value }}{% endif %}
+                    {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}
+                    {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
+                {% endif %}
+            </a>
 			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}
         </h2>
 		
 		<div class="subtitle">
-			<a href="{{ uri_for('photos') }}author/{{ object.author }}/"
-				title="{{ _('author&apos;s photos') }}">{{ object.author }}</a>
+			<a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
+				title="{{ _("author's photos") }}">{{ object.author }}</a>
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
-				<a href="{{ uri_for('photos') }}tags/{{ tag }}/" title="{{ tag }}">
+				<a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
-			| <a href="{{ uri_for('photos') }}date/{{ object.year }}/"
-				title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+			<a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
+			    title="{{ _('photos taken same year') }}">{{ object.year }}</a>
 		</div>
 	</header>
 	

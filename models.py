@@ -541,7 +541,7 @@ class Comment(ndb.Model):
         decr_count('Comment', 'date', instance.year)
 
     def get_absolute_url(self):
-        return '%s%s' % (webapp2.uri_for('comments'), self.key.urlsafe())
+        return '%s%s' % (webapp2.uri_for('comment_all'), self.key.urlsafe())
 
 
 class Feed(ndb.Model):

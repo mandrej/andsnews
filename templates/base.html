@@ -141,7 +141,6 @@
                     if (crumbs[0] == field && crumbs[1] != undefined) url += '/' + crumbs[1];
                     $.ajax({
                         url: url,
-                        timeout: 20000,
                         context: $('#' + field + 'cloud'),
                         success: function(snippet) {
                             $(this).html(snippet).slideDown();

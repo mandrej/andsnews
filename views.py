@@ -14,7 +14,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 
 from models import Photo, Entry, Comment
-from common import ENV, BaseHandler, Filter, SearchPaginator, make_cloud, count_colors, format_datetime
+from common import ENV, BaseHandler, SearchPaginator, make_cloud, count_colors, format_datetime
 from settings import TIMEOUT, ADMIN_JID, RFC822
 
 
@@ -41,21 +41,13 @@ def get_or_build(key):
 
 
 class RenderCloud(BaseHandler):
-    @webapp2.cached_property
-    def root_urls(self):
-        return {'Photo': webapp2.uri_for('photos'),
-                'Entry': webapp2.uri_for('entries'),
-                'Comment': webapp2.uri_for('comments'),
-                'Feed': webapp2.uri_for('feeds')}
-
     def get(self, key, value=None):
         kind, field = key.split('_')
         items = get_or_build(key)
-        f = Filter(field, value)
-        self.render_template(
-            'snippets/%s_cloud.html' % field,
-            {'%scloud' % field: items, 'kind': kind,
-             'link': '%s%s' % (self.root_urls[kind], field), 'filter': f.parameters})
+        self.render_template('snippets/%s_cloud.html' % field,
+                             {'%scloud' % field: items,
+                              'link': '%s_filter_all' % kind.lower(),
+                              'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
 class RenderGraph(BaseHandler):
@@ -136,10 +128,10 @@ class Index(BaseHandler):
 class DeleteHandler(BaseHandler):
     @webapp2.cached_property
     def root_urls(self):
-        return {'Photo': webapp2.uri_for('photos'),
-                'Entry': webapp2.uri_for('entries'),
-                'Comment': webapp2.uri_for('comments'),
-                'Feed': webapp2.uri_for('feeds')}
+        return {'Photo': webapp2.uri_for('photo_all'),
+                'Entry': webapp2.uri_for('entry_all'),
+                'Comment': webapp2.uri_for('comment_all'),
+                'Feed': webapp2.uri_for('feed_all')}
 
     @login_required
     def get(self, safekey):
@@ -209,12 +201,12 @@ def rss(request, kind):
     if kind == 'photo':
         query = Photo.query().order(-Photo.date)
         data = {'title': 'Photos',
-                'link': webapp2.uri_for('photos'),
+                'link': webapp2.uri_for('photo_all'),
                 'description': 'Latest photos from the site'}
     elif kind == 'entry':
         query = Entry.query().order(-Entry.date)
         data = {'title': 'Entries',
-                'link': webapp2.uri_for('entries'),
+                'link': webapp2.uri_for('entry_all'),
                 'description': 'Latest entries from the site'}
 
     data.update({'kind': kind,

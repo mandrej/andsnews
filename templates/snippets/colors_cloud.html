@@ -1,8 +1,9 @@
 <p>
 	{% for color in colorscloud %}
 		{% if color.count > 0 %}
-			<a href="{{ uri_for('photos') }}{{ color.field }}/{{ color.name }}/" title="{{ color.name }} {{ color.count }}"
-				class="dot" style="border-color: {{ color.hex }}"></a>
+			<a class="dot" style="border-color: {{ color.hex }}"
+                href="{{ uri_for(link, field=color.field, value=color.name) }}"
+                title="{{ color.name }} {{ color.count }}"></a>
 		{% endif %}
 	{% endfor %}
 </p>

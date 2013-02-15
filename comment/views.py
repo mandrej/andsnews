@@ -20,7 +20,7 @@ class Index(BaseHandler):
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
-                'filter': f.parameters,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1}

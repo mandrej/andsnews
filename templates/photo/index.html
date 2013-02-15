@@ -10,25 +10,31 @@
 
 {% block contents %}
     <h2>
-        <a href="{{ uri_for('photos') }}">{{ _('Photos') }}</a>
-        {% if filter and filter.tags %}/ {{ filter.tags }}{% endif %}
-        {% if filter and filter.year %}/ {{ filter.year }}{% endif %}
-        {% if filter and filter.author %}/ {{ filter.author }}{% endif %}
-        {% if filter and filter.hue %}/ {{ _(filter.hue) }}{% endif %}
-        {% if filter and filter.lum %}/ {{ _(filter.lum) }}{% endif %}
-        {% if filter and filter.model %}/ {{ filter.model }}{% endif %}
-        {% if filter and filter.lens %}/ {{ filter.lens }}{% endif %}
-        {% if filter and filter.eqv %}/ {{ filter.eqv }} mm{% endif %}
-        {% if filter and filter.iso %}/ {{ filter.iso }} ASA{% endif %}
+        <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
+        {% if filter %}
+            {% if filter.field =='tags' %}/ {{ filter.value }}{% endif %}
+            {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
+            {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
+            {% if filter.field == 'hue' %}/ {{ _(filter.value) }}{% endif %}
+            {% if filter.field == 'lum' %}/ {{ _(filter.value) }}{% endif %}
+            {% if filter.field == 'model' %}/ {{ filter.value }}{% endif %}
+            {% if filter.field == 'lens' %}/ {{ filter.value }}{% endif %}
+            {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}
+            {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
+        {% endif %}
         {% if page != 1 %} [{{ page }}]{% endif %}
     </h2>
 
 	<div id="container">
 		{% for object in objects %}
             {% if object %}
+                {% if filter %}
+                    {% set url = uri_for('photo_filter_triple', field = filter.field, value = filter.value, slug = idx + loop.index) %}
+                {% else %}
+                    {% set url = uri_for('photo_triple', slug = idx + loop.index) %}
+                {% endif %}
                 <figure class="thumbnail brick">
-                    <a href="{{ uri_for('photos') }}{{ filter_url }}{{ idx + loop.index }}"
-                        title="{{ object.headline }}">
+                    <a href="{{ url }}" title="{{ object.headline }}" title="{{ object.headline }}">
                         <img src="/static/images/blank.gif" style="background-image: url({{ object.small_url() }});"/>
                         <p class="legend">{{ object.headline }}</p>
                     </a>

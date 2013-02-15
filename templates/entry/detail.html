@@ -18,7 +18,7 @@
             {% endif %}
         {% endif %}
         <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-        <a href="{{ uri_for('entries') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+        <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
@@ -32,16 +32,16 @@
 	<header>
 		<h2>{{ object.headline }}</h2>
 		<div class="subtitle">
-			<a href="{{ uri_for('entries') }}author/{{ object.author }}/"
-				title="{{ _('author&apos;s blogs') }}">{{ object.author }}</a>,
+			<a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
+				title="{{ _("author's blogs") }}">{{ object.author }}</a>,
 				<time datetime='{{ object.date|format_datetime }}'>
 					{{ object.date|format_datetime }}</time>
 			{% for tag in object.tags %}
 				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
-				<a href="{{ uri_for('entries') }}tags/{{ tag }}/" title="{{ tag }}">
+				<a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}" title="{{ tag }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
-			| <a href="{{ uri_for('entries') }}date/{{ object.year }}/"
+			| <a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
 				title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
 		</div>
 		<div class="pullquote"><p>{{ object.summary|safe }}</p></div>

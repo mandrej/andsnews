@@ -10,7 +10,7 @@
             <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     {% else %}
-        <a href="{{ uri_for('entries') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+        <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
     {% endif %}
 {% endblock %}
 
@@ -23,7 +23,7 @@
 		<div class="content">
 		{% for img in object.image_list %}
 			<figure class="left{% if loop.last %} last{% endif %}">
-				<img src="{{ uri_for('entries') }}image/{{ img.key.string_id() }}/small"
+				<img src="{{ uri_for('entry_image', slug=img.key.string_id(), size='small') }}"
 					alt="{{ img.key.string_id() }}" title="{{ img.name }}"/>
 				<p class="legend">{{ img.name|truncate(20) }}</p>
 			</figure>

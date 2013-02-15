@@ -15,7 +15,7 @@
 
 {% block contents %}
     <h2>
-        <a href="{{ uri_for('feeds') }}">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
+        <a href="{{ uri_for('feed_all') }}">{{ _('News') }}{% if page != 1 %} [{{ page }}]{% endif %}</a>
         {% if filter and filter.tags %}/ {{ filter.tags }}{% endif %}
         {% if page != 1 %} [{{ page }}]{% endif %}
     </h2>

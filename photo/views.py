@@ -19,15 +19,8 @@ class Index(BaseHandler):
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
-        try:
-            assert (f.field and f.value)
-            filter_url = '%s/%s/' % (f.field, f.value)
-        except AssertionError:
-            filter_url = ''
-
         data = {'objects': objects,
-                'filter': f.parameters,
-                'filter_url': filter_url,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
                 'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
@@ -43,9 +36,8 @@ class Detail(BaseHandler):
             obj = Photo.get_by_id(slug)
             if obj is None:
                 webapp2.abort(404)
-            self.render_template(
-                'photo/detail.html',
-                {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
+            self.render_template('photo/detail.html',
+                                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
         else:
             f = Filter(field, value)
             filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
@@ -54,17 +46,10 @@ class Detail(BaseHandler):
             paginator = Paginator(query)
             page, prev, obj, next = paginator.triple(idx)
 
-            try:
-                assert (f.field and f.value)
-                filter_url = '%s/%s/' % (f.field, f.value)
-            except AssertionError:
-                filter_url = ''
-
             data = {'object': obj,
                     'next': next,
                     'previous': prev,
-                    'filter': f.parameters,
-                    'filter_url': filter_url,
+                    'filter': {'field': field, 'value': value} if (field and value) else None,
                     'page': page,
                     'idx': idx}
             self.render_template('photo/detail.html', data)
