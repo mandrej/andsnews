@@ -50,10 +50,8 @@ app = WSGIApplication([
         Route('/images', handler='admin.views.Images'),
         Route('/images/<field:date>/<value>', handler='admin.views.Images'),
 
-        Route('/memcache', handler='admin.views.memcache_content'),
-        Route('/memcache/<key>/build', handler='admin.views.build'),
-        Route('/memcache/<key>/create', handler='admin.views.create'),
-        Route('/memcache/<key>/delete', handler='admin.views.memcache_delete'),
+        Route('/memcache/', handler='admin.views.Cache', methods=['GET']),
+        Route('/memcache/<key>', handler='admin.views.Cache', methods=['PUT', 'POST', 'DELETE']),
         # Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
     ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),

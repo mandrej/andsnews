@@ -87,31 +87,29 @@
                     tmpl += '</div>';
                 } else {
                     if (key == 'Photo_colors') {
-                        tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
+                        tmpl += '<button type="submit" name="post" value="' + key + '">create</button>';
                     } else {
-                        tmpl += '<button type="submit" name="create" value="' + key + '">create</button>';
-                        tmpl += '<button type="submit" name="build" value="' + key + '">build</button>';
+                        tmpl += '<button type="submit" name="post" value="' + key + '">create</button>';
+                        tmpl += '<button type="submit" name="put" value="' + key + '">build</button>';
                     }
                     tmpl += '<h4>' + title + ' [EMPTY]</h4>';
                 }
                 $('#' + key).html(tmpl);
             }
-            $.getJSON('/admin/memcache', function(data) {
+            $.getJSON('/admin/memcache/', function(data) {
                 $.each(data, build);
                 $('.ff').collapseGroup();
             });
             $('button').live('click', function() {
-                var url, key = $(this).val(), action = $(this).attr('name');
-                switch (action) {
-                    case 'clear':
-                        url = '/admin/searchcache/clear';
-                        break
-                    default:
-                        url = '/admin/memcache/' + key + '/' + action;
-                }
-                $.post(url, function(data) {
-                    build(key, data);
-                    $('.ff').unbind().collapseGroup();
+                var url, key = $(this).val(), method = $(this).attr('name');
+                $.ajax({
+                    url: '/admin/memcache/' + key,
+                    type: method,
+                    dataType: 'json',
+                    success: function(data) {
+                        build(key, data);
+                        $('.ff').unbind().collapseGroup();
+                    }
                 });
             });
         });

@@ -10,39 +10,32 @@ from common import BaseHandler, Paginator, Filter, count_property, count_colors,
 from settings import PER_PAGE
 
 
-def memcache_delete(request, key):
-    memcache.delete(key)
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(None))
-    return response
+class Cache(webapp2.RequestHandler):
+    def get(self):
+        data = dict(zip(KEYS, [None]*len(KEYS)))
+        data.update(memcache.get_multi(KEYS))
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(data))
 
+    def put(self, key):
+        kind, field = key.split('_')
+        content = count_property(kind, field)
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(content))
 
-def build(request, key):
-    kind, field = key.split('_')
-    content = count_property(kind, field)
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(content))
-    return response
+    def post(self, key):
+        kind, field = key.split('_')
+        if field == 'colors':
+            content = count_colors()
+        else:
+            content = make_cloud(kind, field)
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(content))
 
-
-def create(request, key):
-    kind, field = key.split('_')
-    if field == 'colors':
-        content = count_colors()
-    else:
-        content = make_cloud(kind, field)
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(content))
-    return response
-
-
-def memcache_content(request):
-    data = {}
-    for key in KEYS:
-        data[key] = memcache.get(key)
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(data))
-    return response
+    def delete(self, key):
+        memcache.delete(key)
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(None))
 
 
 class Index(BaseHandler):

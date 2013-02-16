@@ -75,7 +75,6 @@
                 var row = $(this).closest('tr');
                 var url = '/admin/images';
                 var params = {'safekey': row.attr('id'), 'action': $(this).attr('name')};
-                console.log(params);
 
                 if (params['action'] == 'delete') {
                     var done = function(data) {

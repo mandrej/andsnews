@@ -116,7 +116,6 @@
             $('#body').markItUp(blogSettings, {nameSpace: 'big'});
             $('#images img').click(function() {
                 src = $(this).attr('src').replace('small', 'normal');
-                console.log(src);
                 title = $(this).attr('title');
                 tab = '    ';
                 $.markItUp(

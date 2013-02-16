@@ -26,13 +26,13 @@
 				{% for object in objects %}
                     {% if object %}
                         <tr>
-                            <td>{{ object.forkind }}</td>
-                            <td>{{ object.field }}</td>
-                            <td>{{ object.value }}</td>
+                            <td>{{ object.forkind|default('---') }}</td>
+                            <td>{{ object.field|default('---') }}</td>
+                            <td>{{ object.value|default('---') }}</td>
                             <td>
                                 <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
                                     {% if object.count == 0 %}
-                                        style="width: 58px; text-align: right; border: 1px solid #dc143c;"
+                                        style="width: 58px; text-align: right; background: #c00; color: #fff;"
                                     {% else %}
                                         style="width: 58px; text-align: right;"
                                     {% endif%}
