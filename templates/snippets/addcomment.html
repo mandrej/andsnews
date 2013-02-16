@@ -45,7 +45,7 @@ $(function() {
                    'body': $('#body').val()},
             dataType: 'json',
             success: function(data, status, xhr) {
-                console.log(data);
+{#                console.log(data);#}
                 if (data.success == true) {
                     $('.dummy').hide();
                     $('.info').show()

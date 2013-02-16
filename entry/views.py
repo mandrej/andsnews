@@ -109,7 +109,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('entries')
+            self.redirect_to('entry_all')
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
@@ -143,7 +143,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('entries')
+            self.redirect_to('entry_all')
         else:
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
