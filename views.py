@@ -126,20 +126,13 @@ class Index(BaseHandler):
 
 
 class DeleteHandler(BaseHandler):
-    @webapp2.cached_property
-    def root_urls(self):
-        return {'Photo': webapp2.uri_for('photo_all'),
-                'Entry': webapp2.uri_for('entry_all'),
-                'Comment': webapp2.uri_for('comment_all'),
-                'Feed': webapp2.uri_for('feed_all')}
-
     @login_required
     def get(self, safekey):
         key = ndb.Key(urlsafe=safekey)
         if key.parent():
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
-            next = self.root_urls[key.kind()]
+            next = webapp2.uri_for('%s_all' % key.kind().lower())
 
         obj = key.get()
         user = users.get_current_user()

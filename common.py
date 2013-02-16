@@ -1,6 +1,5 @@
 from __future__ import division
 import os
-import math
 import hashlib
 import itertools
 import collections
@@ -455,7 +454,7 @@ class TagsField(fields.TextField):
 
 
 def sign_helper(request):
-    forbidden = ('admin', '403', 'addcomment')
+    forbidden = ('admin/', '403/', 'addcomment/')
     referer = request.headers.get('Referer', webapp2.uri_for('start'))
     if referer.endswith(forbidden):
         referer = webapp2.uri_for('start')
