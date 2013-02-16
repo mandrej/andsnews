@@ -24,26 +24,28 @@
 			</thead>
 			<tbody>
 				{% for object in objects %}
-					<tr>
-						<td>{{ object.forkind }}</td>
-						<td>{{ object.field }}</td>
-						<td>{{ object.value }}</td>
-						<td>
-							<input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
-								{% if object.count == 0 %}
-									style="width: 58px; text-align: right; border: 1px solid #dc143c;" 
-								{% else %}
-									style="width: 58px; text-align: right;"
-								{% endif%}
-								type="text" value="{{ object.count }}"/>
-						</td>
-						<td class="nowrap">
-							<button class="disabled" type="submit" name="action:edit" 
-								disabled="disabled" value="{{ object.key.urlsafe() }}">change</button>
-							<button type="submit" name="action:delete"
-								value="{{ object.key.urlsafe() }}">delete</button>
-						</td>
-					</tr>
+                    {% if object %}
+                        <tr>
+                            <td>{{ object.forkind }}</td>
+                            <td>{{ object.field }}</td>
+                            <td>{{ object.value }}</td>
+                            <td>
+                                <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
+                                    {% if object.count == 0 %}
+                                        style="width: 58px; text-align: right; border: 1px solid #dc143c;"
+                                    {% else %}
+                                        style="width: 58px; text-align: right;"
+                                    {% endif%}
+                                    type="text" value="{{ object.count }}"/>
+                            </td>
+                            <td class="nowrap">
+                                <button class="disabled" type="submit" name="action:edit"
+                                    disabled="disabled" value="{{ object.key.urlsafe() }}">change</button>
+                                <button type="submit" name="action:delete"
+                                    value="{{ object.key.urlsafe() }}">delete</button>
+                            </td>
+                        </tr>
+                    {% endif %}
 				{% endfor %}
 			</tbody>
 		</table>

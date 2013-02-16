@@ -50,10 +50,14 @@
         <tr>
             <td class="label">{{ _('Median color') }}</td>
             <td>
-                {% if object.rgb %}
-                    <a href="{{ object.similar_url }}" title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>
-                    <span style="float: right; background: {{ object.hex }}; width: 12px;">&nbsp;</span>
-                {% else %}---{% endif %}
+                {% if object.sat == 'color' %}
+                    <a href="{{ uri_for('photo_filter_all', field='hue', value=object.hue) }}"
+                       title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>
+                {% else %}
+                    <a href="{{ uri_for('photo_filter_all', field='lum', value=object.lum) }}"
+                       title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>
+                {% endif %}
+                <span style="float: right; background: {{ object.hex }}; width: 12px;">&nbsp;</span>
             </td>
         </tr>
 	</tbody>

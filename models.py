@@ -141,7 +141,7 @@ def range_names(rgb):
     return hue, lum, sat
 
 
-def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=None, kind=None):
+def create_doc(id, headline='', author=None, body='', tags=[], date=None):
     return search.Document(
         doc_id=id, fields=[
             search.TextField(name='headline', value=headline),
@@ -149,9 +149,7 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None, url=No
             search.HtmlField(name='body', value=body),
             search.TextField(name='tags', value=', '.join(tags)),
             search.DateField(name='date', value=date.date()),
-            search.AtomField(name='link', value=url),
-            search.AtomField(name='kind', value=kind)
-        ], language='en_US')
+        ])
 
 
 class Counter(ndb.Model):
@@ -207,8 +205,11 @@ class Photo(ndb.Model):
         return INDEX.put(
             create_doc(
                 '%s' % self.key.urlsafe(),
-                headline=self.headline, author=self.author, body=self.model + ' ' + (self.lens or ''),
-                tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Photo'))
+                headline=self.headline,
+                author=self.author,
+                body='%s %s' % (self.model, self.lens),
+                tags=self.tags,
+                date=self.date))
 
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
@@ -342,13 +343,6 @@ class Photo(ndb.Model):
         return blobstore.BlobInfo.get(self.blob_key)
 
     @property
-    def similar_url(self):
-        if self.sat == 'color':
-            return '/photos/hue/%s/' % self.hue
-        else:
-            return '/photos/lum/%s/' % self.lum
-
-    @property
     def hex(self):
         return '#%02x%02x%02x' % tuple(self.rgb)
 
@@ -385,8 +379,11 @@ class Entry(ndb.Model):
         return INDEX.put(
             create_doc(
                 '%s' % self.key.urlsafe(),
-                headline=self.headline, author=self.author, body=self.summary + ' ' + self.body,
-                tags=self.tags, date=self.date, url=self.get_absolute_url(), kind='Entry'))
+                headline=self.headline,
+                author=self.author,
+                body='%s %s' % (self.summary, self.body),
+                tags=self.tags,
+                date=self.date))
 
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())
@@ -494,18 +491,16 @@ class Comment(ndb.Model):
 
     def index_add(self):
         if self.is_message:
-            url = self.get_absolute_url()
-            kind = 'Application'
             headline = ''
         else:
-            parentobj = self.key.parent().get()
-            url = parentobj.get_absolute_url()
-            kind = 'Comment'
-            headline = parentobj.headline
+            headline = self.key.parent().get().headline
         return INDEX.put(
             create_doc(
                 '%s' % self.key.urlsafe(),
-                headline=headline, author=self.author, body=self.body, date=self.date, url=url, kind=kind))
+                headline=headline,
+                author=self.author,
+                body=self.body,
+                date=self.date))
 
     def index_del(self):
         return INDEX.delete('%s' % self.key.urlsafe())

@@ -89,7 +89,15 @@ class Find(BaseHandler):
 
         objects = []
         for doc in results:
-            f = {}
+            f = dict()
+            key = ndb.Key(urlsafe=doc.doc_id)
+            if key.parent():
+                link = webapp2.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
+            else:
+                link = webapp2.uri_for(key.kind().lower(), slug=key.string_id())
+
+            f['kind'] = key.kind()
+            f['link'] = link
             for field in doc.fields:
                 f[field.name] = field.value
             for expr in doc.expressions:

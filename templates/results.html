@@ -26,7 +26,7 @@ $(function() {
         <div class="third brick">
             <div class="icon {{ object.kind }}">
                 <h3>
-                    {% if object.link %}
+                    {% if object.headline %}
                         {% if object.kind == 'Comment' %}
                             <a href="{{ object.link }}?find={{ phrase }}#comments">
                                 {{ object.headline }} ({{ _('comment') }})</a>
