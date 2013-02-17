@@ -19,16 +19,10 @@ class Cache(webapp2.RequestHandler):
 
     def put(self, key):
         kind, field = key.split('_')
-        content = count_property(kind, field)
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(content))
-
-    def post(self, key):
-        kind, field = key.split('_')
         if field == 'colors':
             content = count_colors()
         else:
-            content = make_cloud(kind, field)
+            content = count_property(kind, field)
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(content))
 

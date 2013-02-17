@@ -86,12 +86,7 @@
                     }
                     tmpl += '</div>';
                 } else {
-                    if (key == 'Photo_colors') {
-                        tmpl += '<button type="submit" name="post" value="' + key + '">create</button>';
-                    } else {
-                        tmpl += '<button type="submit" name="post" value="' + key + '">create</button>';
-                        tmpl += '<button type="submit" name="put" value="' + key + '">build</button>';
-                    }
+                    tmpl += '<button type="submit" name="put" value="' + key + '">create</button>';
                     tmpl += '<h4>' + title + ' [EMPTY]</h4>';
                 }
                 $('#' + key).html(tmpl);
@@ -101,7 +96,7 @@
                 $('.ff').collapseGroup();
             });
             $('button').live('click', function() {
-                var url, key = $(this).val(), method = $(this).attr('name');
+                var key = $(this).val(), method = $(this).attr('name');
                 $.ajax({
                     url: '/admin/memcache/' + key,
                     type: method,
