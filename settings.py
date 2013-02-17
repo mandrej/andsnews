@@ -3,7 +3,6 @@ import os
 DEBUG = True
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
-LANGUAGE_COOKIE_NAME = 'ands_lang'
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
 LIMIT = 1024*1024

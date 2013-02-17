@@ -67,7 +67,7 @@ app = WSGIApplication([
     Route('/<safekey>/delete', handler=DeleteHandler, name='delete'),
     Route('/latest', handler=latest),
     Route('/setlang', handler='common.SetLanguage'),
-    Route('/sign', handler='common.sign_helper'),
+    Route('/sign', handler='common.Sign'),
     Route('/', handler=Index, name='start'),
 ], config=CONFIG, debug=DEBUG)
 

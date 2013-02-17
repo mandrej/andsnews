@@ -33,6 +33,7 @@ class Cache(webapp2.RequestHandler):
 
 
 class Index(BaseHandler):
+    @admin_required
     def get(self):
         stats = memcache.get_stats()
         hits = stats.get('hits', 0)

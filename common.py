@@ -21,7 +21,7 @@ from google.appengine.ext import ndb
 from wtforms import widgets, fields
 from cloud import calculate_cloud
 from models import INDEX, Counter, Photo
-from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT, LANGUAGE_COOKIE_NAME
+from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT
 
 
 LANGUAGES = (
@@ -453,18 +453,6 @@ class TagsField(fields.TextField):
             self.data = []
 
 
-def sign_helper(request):
-    forbidden = ('admin/', '403/', 'addcomment/')
-    referer = request.headers.get('Referer', webapp2.uri_for('start'))
-    if referer.endswith(forbidden):
-        referer = webapp2.uri_for('start')
-    if users.get_current_user():
-        dest_url = users.create_logout_url(referer)
-    else:
-        dest_url = users.create_login_url(referer)
-    return webapp2.redirect(dest_url)
-
-
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
         self.session_store = sessions.get_store(request=self.request)
@@ -482,8 +470,9 @@ class BaseHandler(webapp2.RequestHandler):
         return get_jinja2(app=self.app)
 
     def render_template(self, filename, kwargs):
-        lang_code = self.session.get(LANGUAGE_COOKIE_NAME) or self.request.cookies.get(LANGUAGE_COOKIE_NAME) or 'en_US'
+        lang_code = self.session.get('lang_code') or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
+
         context = {
             'LANGUAGE_CODE': lang_code,
             'LANGUAGES': LANGUAGES,
@@ -499,12 +488,19 @@ class BaseHandler(webapp2.RequestHandler):
 class SetLanguage(BaseHandler):
     def post(self):
         next = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        response = self.redirect(next)
         lang_code = self.request.get('language', None)
-
         if lang_code:
-            if hasattr(self, 'session'):
-                self.session[LANGUAGE_COOKIE_NAME] = lang_code
-            else:
-                self.request.headers['Cookie'] = '%s=%s' % (LANGUAGE_COOKIE_NAME, lang_code)
-        return response
+            self.session['lang_code'] = lang_code
+        self.redirect(next)
+
+
+class Sign(BaseHandler):
+    def get(self):
+        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        if referer.endswith('admin/'):
+            referer = webapp2.uri_for('start')
+        if users.get_current_user():
+            dest_url = users.create_logout_url(referer)
+        else:
+            dest_url = users.create_login_url(referer)
+        self.redirect(dest_url)
