@@ -5,7 +5,6 @@ import time
 import colorsys
 from cStringIO import StringIO
 
-import webapp2
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
@@ -142,14 +141,13 @@ def range_names(rgb):
 
 
 def create_doc(id, headline='', author=None, body='', tags=[], date=None):
-    return search.Document(
-        doc_id=id, fields=[
-            search.TextField(name='headline', value=headline),
-            search.TextField(name='author', value=author.nickname()),
-            search.HtmlField(name='body', value=body),
-            search.TextField(name='tags', value=', '.join(tags)),
-            search.DateField(name='date', value=date.date()),
-        ])
+    return search.Document(doc_id=id, fields=[
+        search.TextField(name='headline', value=headline),
+        search.TextField(name='author', value=author.nickname()),
+        search.HtmlField(name='body', value=body),
+        search.TextField(name='tags', value=', '.join(tags)),
+        search.DateField(name='date', value=date.date()),
+    ])
 
 
 class Counter(ndb.Model):
@@ -320,9 +318,6 @@ class Photo(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def get_absolute_url(self):
-        return webapp2.uri_for('photo', slug=self.key.string_id())
-
     def cached_url(self, size, crop):
         pattern = '%s=s%s-c' if crop else '%s=s%s'
         key = pattern % (self.key.string_id(), size)
@@ -467,9 +462,6 @@ class Entry(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def get_absolute_url(self):
-        return webapp2.uri_for('entry', slug=self.key.string_id())
-
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
 
@@ -535,9 +527,6 @@ class Comment(ndb.Model):
             decr_count('Comment', 'forkind', key.parent().kind())
         decr_count('Comment', 'date', instance.year)
 
-    def get_absolute_url(self):
-        return '%s%s' % (webapp2.uri_for('comment_all'), self.key.urlsafe())
-
 
 class Feed(ndb.Model):
     url = ndb.StringProperty(required=True)
@@ -573,6 +562,3 @@ class Feed(ndb.Model):
         for name in instance.tags:
             decr_count('Feed', 'tags', name)
         memcache.delete(key.string_id())
-
-    def get_absolute_url(self):
-        return webapp2.uri_for('feed', slug=self.key.string_id())
