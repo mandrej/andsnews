@@ -1,6 +1,4 @@
 from __future__ import division
-import sys
-import traceback
 import os
 import json
 import hashlib
