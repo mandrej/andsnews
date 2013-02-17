@@ -13,6 +13,7 @@ import webapp2
 import jinja2
 from webapp2_extras import i18n, sessions
 from webapp2_extras.i18n import gettext, ngettext, lazy_gettext as _
+from webapp2_extras.appengine.users import login_required
 from webapp2_extras.jinja2 import get_jinja2
 from jinja2.filters import environmentfilter, do_mark_safe
 from google.appengine.api import users, memcache, search
@@ -483,6 +484,53 @@ class BaseHandler(webapp2.RequestHandler):
         kwargs.update(context)
         template = ENV.get_template(filename)
         self.response.write(template.render(kwargs))
+
+
+def handle_403(request, response, exception):
+    template = ENV.get_template('errors/403.html')
+    response.write(template.render({'error': exception}))
+    response.set_status(403)
+    return response
+
+
+def handle_404(request, response, exception):
+    template = ENV.get_template('errors/404.html')
+    response.write(template.render({'error': exception, 'path': request.path_qs}))
+    response.set_status(404)
+    return response
+
+
+def handle_500(request, response, exception):
+    template = ENV.get_template('errors/500.html')
+    lines = ''.join(traceback.format_exception(*sys.exc_info()))
+    response.write(template.render({'error': exception, 'lines': lines}))
+    response.set_status(500)
+    return response
+
+
+class DeleteHandler(BaseHandler):
+    @login_required
+    def get(self, safekey):
+        key = ndb.Key(urlsafe=safekey)
+        if key.parent():
+            next = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        else:
+            next = webapp2.uri_for('%s_all' % key.kind().lower())
+
+        obj = key.get()
+        user = users.get_current_user()
+        is_admin = users.is_current_user_admin()
+        if not is_admin:
+            if user != obj.author:
+                webapp2.abort(403)
+        data = {'object': obj, 'post_url': self.request.path, 'next': next}
+        self.render_template('snippets/confirm.html', data)
+
+    def post(self, safekey):
+        next = str(self.request.get('next'))
+        key = ndb.Key(urlsafe=safekey)
+        key.delete()
+        self.redirect(next)
 
 
 class SetLanguage(BaseHandler):

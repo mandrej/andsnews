@@ -1,7 +1,7 @@
 from webapp2 import WSGIApplication, Route
 from webapp2_extras.routes import PathPrefixRoute
-from views import Index, DeleteHandler, handle_403, handle_404, handle_500,  \
-    latest, RenderCloud, RenderGraph, auto_complete, sitemap, Find, Chat, Send, rss
+from views import Index, latest, RenderCloud, RenderGraph, auto_complete, sitemap, Find, Chat, Send, rss
+from common import handle_403, handle_404, handle_500
 from settings import DEBUG
 
 CONFIG = {
@@ -64,7 +64,7 @@ app = WSGIApplication([
     Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
-    Route('/<safekey>/delete', handler=DeleteHandler, name='delete'),
+    Route('/<safekey>/delete', handler='common.DeleteHandler', name='delete'),
     Route('/latest', handler=latest),
     Route('/setlang', handler='common.SetLanguage'),
     Route('/sign', handler='common.Sign'),

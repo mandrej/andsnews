@@ -9,7 +9,6 @@ from operator import itemgetter
 
 import webapp2
 from jinja2.filters import do_striptags
-from webapp2_extras.appengine.users import login_required
 from google.appengine.ext import ndb
 from google.appengine.api import users, memcache, xmpp
 
@@ -131,53 +130,6 @@ class Index(BaseHandler):
     def get(self):
         objects = get_latest_photos()
         self.render_template('index.html', {'latest': objects})
-
-
-class DeleteHandler(BaseHandler):
-    @login_required
-    def get(self, safekey):
-        key = ndb.Key(urlsafe=safekey)
-        if key.parent():
-            next = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        else:
-            next = webapp2.uri_for('%s_all' % key.kind().lower())
-
-        obj = key.get()
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.request.path, 'next': next}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, safekey):
-        next = str(self.request.get('next'))
-        key = ndb.Key(urlsafe=safekey)
-        key.delete()
-        self.redirect(next)
-
-
-def handle_403(request, response, exception):
-    template = ENV.get_template('errors/403.html')
-    response.write(template.render({'error': exception}))
-    response.set_status(403)
-    return response
-
-
-def handle_404(request, response, exception):
-    template = ENV.get_template('errors/404.html')
-    response.write(template.render({'error': exception, 'path': request.path_qs}))
-    response.set_status(404)
-    return response
-
-
-def handle_500(request, response, exception):
-    template = ENV.get_template('errors/500.html')
-    lines = ''.join(traceback.format_exception(*sys.exc_info()))
-    response.write(template.render({'error': exception, 'lines': lines}))
-    response.set_status(500)
-    return response
 
 
 class Chat(webapp2.RequestHandler):
