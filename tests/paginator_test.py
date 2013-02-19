@@ -1,99 +1,47 @@
 __author__ = 'milan'
 
 import unittest
-
-
-class Paginator:
-    def __init__(self, objects, per_page):
-        self.objects = objects
-        self.per_page = per_page
-        self.count = len(objects)
-
-    def page(self, num):
-        offset = (num - 1) * self.per_page
-        results = self.objects[offset: offset + self.per_page]
-        has_next = self.count > len(self.objects[: offset + self.per_page])
-        return results, has_next
-
-    def tripleOLD(self, idx):
-        """ num and idx are 1 base index """
-        rem = idx % self.per_page
-        num = int(idx / self.per_page) + (0 if rem == 0 else 1)
-        objects, has_next = self.page(num)
-
-        if rem == 1:
-        #            left edge
-            if num == 1:
-                if self.count == 1:
-                    collection = [None] + objects + [None]
-                else:
-                    collection = [None] + objects
-            else:
-                other, x = self.page(num - 1)
-                if idx == self.count:
-                    collection = (other + objects + [None])[idx - (num - 2) * self.per_page - 2:]
-                else:
-                    collection = (other + objects)[idx - (num - 2) * self.per_page - 2:]
-        elif rem == 0:
-        #            right edge
-            if has_next:
-                other, x = self.page(num + 1)
-                collection = (objects + other)[idx - (num - 1) * self.per_page - 2:]
-            else:
-                collection = (objects + [None])[idx - (num - 1) * self.per_page - 2:]
-        else:
-            if idx == self.count:
-                collection = (objects + [None])[idx - (num - 1) * self.per_page - 2:]
-            else:
-                collection = objects[idx - (num - 1) * self.per_page - 2:]
-
-        return collection[:3]
-
-    def triple(self, idx):
-        """ num and idx are 1 base index """
-        rem = idx % self.per_page
-        num = int(idx / self.per_page) + (0 if rem == 0 else 1)
-        objects, has_next = self.page(num)
-
-        if rem == 1:
-            if num == 1:
-                collection = [None] + objects + [None]
-            else:
-                other, x = self.page(num - 1)
-                collection = (other + objects + [None])[idx - (num - 2) * self.per_page - 2:]
-        else:
-            if has_next:
-                other, x = self.page(num + 1)
-            else:
-                other = [None]
-            collection = (objects + other)[idx - (num - 1) * self.per_page - 2:]
-
-        return collection[:3]
+from models import Photo
+from common import Paginator
 
 
 class PaginatorTest(unittest.TestCase):
+    def setUp(self):
+        self.query = Photo.query().order(-Photo.date)
+        self.paginator = Paginator(self.query)
+        self.per_page = self.paginator.per_page
+
     def test_page(self):
-        paginator = Paginator(range(1, 27), 12)
-        objects, has_next = paginator.page(1)
-        self.assertEquals(objects, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+        objects, has_next = self.paginator.page(1)
+        self.assertEqual(len(objects), self.per_page)
         self.assertTrue(has_next)
 
-    def test_one(self):
-        paginator = Paginator(range(1, 2), 12)
-        results = paginator.triple(1)
-        self.assertEquals(results, [None, 1, None])
+        objects, has_next = self.paginator.page(5)
+        self.assertEqual(len(objects), 0)
+        self.assertFalse(has_next)
 
-    def test_rightedge(self):
-        paginator = Paginator(range(1, 27), 12)
-        results = paginator.triple(12)
-        self.assertEquals(results, [11, 12, 13])
+    def test_triple(self):
+        page, prev, obj, next = self.paginator.triple(1)
+        self.assertEqual(page, 1)
+        self.assertEqual(prev, None)
+        self.assertIsInstance(obj, Photo)
+        self.assertIsInstance(next, Photo)
 
-    def test_leftedge(self):
-        paginator = Paginator(range(1, 27), 12)
-        results = paginator.triple(13)
-        self.assertEquals(results, [12, 13, 14])
+        page, prev1, obj1, next1 = self.paginator.triple(self.per_page)
+        #            prev2, obj2, next2
+        self.assertEqual(page, 1)
+        self.assertIsInstance(prev1, Photo)
+        self.assertIsInstance(obj1, Photo)
+        self.assertIsInstance(next1, Photo)
 
-    def test_end(self):
-        paginator = Paginator(range(1, 27), 12)
-        results = paginator.triple(26)
-        self.assertEquals(results, [25, 26, None])
+        page, prev2, obj2, next2 = self.paginator.triple(self.per_page + 1)
+        self.assertEqual(page, 2)
+        self.assertEqual(prev2.key.string_id(), obj1.key.string_id())
+        self.assertEqual(obj2.key.string_id(), next1.key.string_id())
+        self.assertIsInstance(next, Photo)
+
+        page, prev, obj, next = self.paginator.triple(self.query.count())
+        self.assertEqual(page, 3)
+        self.assertIsInstance(prev, Photo)
+        self.assertIsInstance(obj, Photo)
+        self.assertEqual(next, None)
