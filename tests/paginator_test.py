@@ -23,7 +23,7 @@ class PaginatorTest(unittest.TestCase):
     def test_triple(self):
         page, prev, obj, next = self.paginator.triple(1)
         self.assertEqual(page, 1)
-        self.assertEqual(prev, None)
+        self.assertIsNone(prev)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
@@ -44,4 +44,4 @@ class PaginatorTest(unittest.TestCase):
         self.assertEqual(page, 3)
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
-        self.assertEqual(next, None)
+        self.assertIsNone(next)
