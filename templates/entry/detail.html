@@ -1,4 +1,5 @@
 {% extends "entry/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
@@ -50,7 +51,9 @@
 	<div class="story twocolumns">{{ object.body|safe }}</div>
 	
 	<aside id="comments">
-		{% include "comment/detail.html" %}
+        {% for comment in object.comment_list() %}
+            {{ m.render_comment(comment, user) }}
+        {% endfor %}
 	</aside>
 </article>
 {% endblock %}

@@ -25,9 +25,7 @@
 	<h4>{{ _('Thank you') }}</h4>
 	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
 	<div class="content">
-		<p>{{ _('Your comment has been sent in deferred manner') }}.
-			{{ _('It may take some time before site become aware of it') }}.<br/>
-			{{ _('Thank you for your contribution') }}.</p>
+		<p>{{ _('Thank you for your contribution') }}.</p>
 	</div>
 </div>
 <script src="/static/scripts/markitup/jquery.markitup.pack.js"></script>
@@ -40,18 +38,23 @@ $(function() {
 	$('.content button').click(function() {
         $.ajax({
             type: 'POST',
-            url: '/comments/{{ safekey }}/add',
+            url: '/{{ safekey }}/add',
             data: {'email': $('#email').val(),
                    'body': $('#body').val()},
-            dataType: 'json',
-            success: function(data, status, xhr) {
-                // console.log(data);
-                if (data.success == true) {
+            success: function(data) {
+                if (typeof(data) == 'string') {
                     $('.dummy').hide();
                     $('.info').show()
+                    $('#comments').prepend(data);
+                    $('a.confirm').click(function() {
+                        $('#confirm').load(this.href, function() {
+                            $('#overlay, #confirm').show();
+                        });
+                        return false
+                    });
                     setTimeout(function() {
                         $('#overlay, #addcomment').hide();
-                    }, 5000);
+                    }, 1000);
                 } else {
                     $('.error').text('');
                     $.each(data, function(key, arr) {

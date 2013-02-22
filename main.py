@@ -29,7 +29,6 @@ app = WSGIApplication([
     ]),
     PathPrefixRoute('/comments', [
         Route('/', handler='comment.views.Index', name='comment_all'),
-        Route('/<safekey>/add', handler='comment.views.Add', name='comment_add'),
         Route('/<field:(forkind|date|author)>/<value>/', handler='comment.views.Index', name='comment_filter_all'),
     ]),
     PathPrefixRoute('/news', [
@@ -65,6 +64,7 @@ app = WSGIApplication([
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
     Route('/<safekey>/delete', handler='common.DeleteHandler', name='delete'),
+    Route('/<safekey>/add', handler='comment.views.Add', name='comment_add'),
     Route('/latest', handler=latest),
     Route('/setlang', handler='common.SetLanguage'),
     Route('/sign', handler='common.Sign'),

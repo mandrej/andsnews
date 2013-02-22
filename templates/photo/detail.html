@@ -1,4 +1,5 @@
 {% extends "photo/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
@@ -49,7 +50,11 @@
 
 {% block aside %}
 	{% include "photo/exif.html" %}
-	<div id="comments">{% include "comment/detail.html" %}</div>
+	<div id="comments">
+        {% for comment in object.comment_list() %}
+            {{ m.render_comment(comment, user) }}
+        {% endfor %}
+    </div>
 {% endblock %}
 
 {% block contents %}

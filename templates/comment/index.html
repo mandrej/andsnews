@@ -33,12 +33,12 @@
                     {{ m.time(object.date) }}
 					<div class="white">
                         {% with refkey=object.key.parent() %}
-						<h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}#comments">
-                            {{ refkey.get().headline }}</a></h3>
-						<div class="body">{{ object.body|safe }}</div>
-						<p class="posted">{{ object.author }},
-                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                        </p>
+                            <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}#comments">
+                                {{ refkey.get().headline }}</a></h3>
+                            <div class="body">{{ object.body|safe }}</div>
+                            <p class="posted">{{ object.author }},
+                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                            </p>
                         {% endwith %}
 					</div>
 				</section>

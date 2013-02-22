@@ -45,7 +45,6 @@ class Add(BaseHandler):
 
     def post(self, safekey):
         form = AddForm(formdata=self.request.POST)
-        self.response.headers['Content-Type'] = 'application/json'
         if form.validate():
             refkey = ndb.Key(urlsafe=safekey)
             obj = Comment(
@@ -54,6 +53,7 @@ class Add(BaseHandler):
                 forkind=refkey.kind(),
                 body=form.data['body'])
             obj.add()
-            self.response.write(json.dumps({'success': True}))
+            self.render_template('snippets/comment.html', {'comment': obj})
         else:
+            self.response.content_type = 'application/json'
             self.response.write(json.dumps(form.errors))

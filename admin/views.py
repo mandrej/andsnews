@@ -71,7 +71,7 @@ class Comments(BaseHandler):
             obj.put()
         else:
             key.delete()
-        self.response.headers['Content-Type'] = 'application/json'
+        self.response.content_type = 'application/json'
         self.response.write(json.dumps({'success': True}))
         return self.response
 
@@ -124,7 +124,7 @@ class Images(BaseHandler):
         elif params['action'] == 'make':
             buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
             data = {'success': True, 'small': filesizeformat(len(buff))}
-        self.response.headers['Content-Type'] = 'application/json'
+        self.response.content_type = 'application/json'
         self.response.write(json.dumps(data))
         return self.response
 
