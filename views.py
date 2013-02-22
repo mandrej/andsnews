@@ -35,34 +35,32 @@ def get_or_build(key):
         else:
             items = make_cloud(kind, field)
 
-    # 10 most frequent
-    top10 = items
     if field != 'colors':
-        top10 = sorted(items, key=itemgetter('count'), reverse=True)[:10]
-
-    # sorting for graph
-    if field == 'date':
-        top10 = sorted(top10, key=itemgetter('name'), reverse=True)
-    elif field in ('eqv', 'iso'):
-        top10 = sorted(top10, key=itemgetter('name'), reverse=False)
-
-    return top10
+        # 10 most frequent
+        items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+    return items
 
 
 class RenderCloud(BaseHandler):
     def get(self, key, value=None):
         kind, field = key.split('_')
         items = get_or_build(key)
-        self.render_template('snippets/x_%s.html' % field,
-                             {'items': items,
-                              'link': '%s_filter_all' % kind.lower(),
-                              'filter': {'field': field, 'value': value} if (field and value) else None})
+        self.render_template(
+            'snippets/x_%s.html' % field, {
+                'items': items,
+                'link': '%s_filter_all' % kind.lower(),
+                'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
 class RenderGraph(BaseHandler):
     def get(self, key):
         kind, field = key.split('_')
         items = get_or_build(key)
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        elif field in ('eqv', 'iso'):
+            items = sorted(items, key=itemgetter('name'), reverse=False)
+
         self.render_template('snippets/x_%s.html' % field, {'items': items, 'graph': True})
 
 
