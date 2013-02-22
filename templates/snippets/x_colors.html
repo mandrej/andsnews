@@ -1,0 +1,38 @@
+{% if graph %}
+    <div class="popup">
+        <h4>{{ _('Median color') }}</h4>
+        <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+        <div class="content">
+            <div id="chart"></div>
+            <p>{{ _('Based od HLS color model') }}</p>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            var items = {{ items|to_json }};
+            var colors = [];
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'name');
+            data.addColumn('number', 'count');
+
+            $.each(items, function(i, item) {
+                data.addRow([item.name, item.count]);
+                colors.push(item.hex);
+            });
+            var chart = new google.visualization.PieChart($('#chart')[0]);
+            $.extend(chartOptions, {colors: colors});
+            chart.draw(data, chartOptions);
+            delete chartOptions['colors'];
+        })
+    </script>
+{% else %}
+    <p>
+        {% for item in items %}
+            {% if item.count > 0 %}
+                <a class="dot" style="border-color: {{ item.hex }}"
+                    href="{{ uri_for(link, field=item.field, value=item.name) }}"
+                    title="{{ item.name }} {{ item.count }}"></a>
+            {% endif %}
+        {% endfor %}
+    </p>
+{% endif %}

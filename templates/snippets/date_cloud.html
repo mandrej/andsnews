@@ -1,8 +1,0 @@
-<p class="cloud">
-	{% for item in datecloud|sort(attribute='name', reverse=True) %}
-        {% set selected = item.name == filter.value|int if filter else False %}
-        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-            href="{{ uri_for(link, field='date', value=item.name) }}"
-            title="{{ item.count }}" >{{ item.name }}</a>
-	{% endfor %}
-</p>

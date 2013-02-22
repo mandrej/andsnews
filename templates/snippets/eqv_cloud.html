@@ -1,8 +1,0 @@
-<p class="cloud">
-	{% for item in eqvcloud|sort(attribute='name')  %}
-        {% set selected = item.name == filter.value|int if filter else False %}
-        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-           href="{{ uri_for('photo_filter_all', field='eqv', value=item.name) }}"
-           title="{{ item.count }}" >{{ item.name }}</a>
-	{% endfor %}
-</p>

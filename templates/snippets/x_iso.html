@@ -1,0 +1,32 @@
+{% if graph %}
+    <div class="popup">
+        <h4>ISO {{ _('Sensitivity') }}</h4>
+        <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+        <div class="content">
+            <div id="chart"></div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            var items = {{ items|to_json }};
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'name');
+            data.addColumn('number', 'count');
+
+            $.each(items, function(i, item) {
+                data.addRow([item.name + ' ASA', item.count]);
+            });
+            var chart = new google.visualization.PieChart($('#chart')[0]);
+            chart.draw(data, chartOptions);
+        })
+    </script>
+{% else %}
+    <p class="cloud">
+        {% for item in items|sort(attribute='name') %}
+            {% set selected = item.name == filter.value|int if filter else False %}
+            <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+               href="{{ uri_for(link, field='iso', value=item.name) }}"
+               title="{{ item.count }}" >{{ item.name }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
