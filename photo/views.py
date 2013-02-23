@@ -6,7 +6,8 @@ from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo
 from wtforms import Form, fields, validators
-from common import BaseHandler, Paginator, Filter, EmailField, TagsField
+from handlers import BaseHandler
+from common import Paginator, Filter, EmailField, TagsField
 
 
 class Index(BaseHandler):

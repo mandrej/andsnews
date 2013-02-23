@@ -4,7 +4,8 @@ from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
 from wtforms import Form, fields, validators
 from models import Comment
-from common import BaseHandler, Paginator, Filter
+from handlers import BaseHandler
+from common import Paginator, Filter
 
 PER_PAGE = 10
 

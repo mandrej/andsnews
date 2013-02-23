@@ -1,14 +1,41 @@
 import os
+from webapp2_extras.i18n import lazy_gettext as _
 
-DEBUG = True
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
+RESULTS = 12
 LIMIT = 1024*1024
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
           'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
+
+TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
+
+LANGUAGES = (
+    ('en_US', _('english')), ('sr_RS', _('serbian')),
+)
+WEEKDAYS = {
+    0: _('Monday'), 1: _('Tuesday'), 2: _('Wednesday'), 3: _('Thursday'),
+    4: _('Friday'), 5: _('Saturday'), 6: _('Sunday')
+}
+MONTHS = {
+    1: _('January'), 2: _('February'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
+    7: _('July'), 8: _('August'), 9: _('September'), 10: _('October'), 11: _('November'), 12: _('December')
+}
+MONTHS_3 = {
+    1: _('jan'), 2: _('feb'), 3: _('mar'), 4: _('apr'), 5: _('may'), 6: _('jun'),
+    7: _('jul'), 8: _('aug'), 9: _('sep'), 10: _('oct'), 11: _('nov'), 12: _('dec')
+}
+MONTHS_AP = {
+    1: _('Jan.'), 2: _('Feb.'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
+    7: _('July'), 8: _('Aug.'), 9: _('Sept.'), 10: _('Oct.'), 11: _('Nov.'), 12: _('Dec.')
+}
+COLORNAMES = (
+    _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
+    _('purple'), _('pink'), _('dark'), _('medium'), _('light'),
+)
 
 HUE = [
     {'span': map(lambda x: x+360 if x < 0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'},  # 0

@@ -10,9 +10,9 @@ from webapp2_extras.appengine.users import admin_required
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from common import BaseHandler, Paginator, Filter, TagsField
+from handlers import BaseHandler
+from common import Paginator, Filter, TagsField
 from settings import TIMEOUT
-
 
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'

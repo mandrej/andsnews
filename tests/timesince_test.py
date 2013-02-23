@@ -2,7 +2,7 @@ __author__ = 'milan'
 
 import unittest
 from datetime import datetime, timedelta
-from common import timesince_jinja
+from handlers import timesince_jinja
 
 
 class TimesinceTest(unittest.TestCase):

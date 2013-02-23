@@ -6,13 +6,14 @@ from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS
 from entry.views import make_thumbnail
-from common import BaseHandler, Paginator, Filter, count_property, count_colors, make_cloud, filesizeformat
+from handlers import BaseHandler, filesizeformat
+from common import Paginator, Filter, count_property, count_colors, make_cloud
 from settings import PER_PAGE
 
 
 class Cache(webapp2.RequestHandler):
     def get(self):
-        data = dict(zip(KEYS, [None]*len(KEYS)))
+        data = dict(zip(KEYS, [None] * len(KEYS)))
         data.update(memcache.get_multi(KEYS))
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(data))

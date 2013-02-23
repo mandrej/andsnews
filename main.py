@@ -1,8 +1,9 @@
+import logging
 from webapp2 import WSGIApplication, Route
 from webapp2_extras.routes import PathPrefixRoute
-from views import Index, latest, RenderCloud, RenderGraph, auto_complete, sitemap, Find, Chat, Send, rss
-from common import handle_403, handle_404, handle_500
-from settings import DEBUG
+from views import Index, latest, auto_complete, sitemap, Chat, Send, rss
+from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find, handle_403, handle_404, handle_500
+from settings import DEVEL
 
 CONFIG = {
     'webapp2_extras.sessions': {'secret_key': 'iasbj*6WZ2'},
@@ -51,7 +52,6 @@ app = WSGIApplication([
 
         Route('/memcache/', handler='admin.views.Cache', methods=['GET']),
         Route('/memcache/<key>', handler='admin.views.Cache', methods=['PUT', 'DELETE']),
-        # Route('/thumbnail/color', handler='admin.views.thumbnail_color'),
     ]),
     Route('/filter/<key>/<value>', handler=RenderCloud),
     Route('/filter/<key>', handler=RenderCloud),
@@ -63,13 +63,16 @@ app = WSGIApplication([
     Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
     Route('/complete/<kind:photo|entry|feed>/<field:tags|lens>', handler=auto_complete),
 
-    Route('/<safekey>/delete', handler='common.DeleteHandler', name='delete'),
+    Route('/<safekey>/delete', handler=DeleteHandler, name='delete'),
     Route('/<safekey>/add', handler='comment.views.Add', name='comment_add'),
     Route('/latest', handler=latest),
-    Route('/setlang', handler='common.SetLanguage'),
-    Route('/sign', handler='common.Sign'),
+    Route('/setlang', handler=SetLanguage),
+    Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),
-], config=CONFIG, debug=DEBUG)
+], config=CONFIG, debug=DEVEL)
+
+if DEVEL:
+    logging.getLogger().setLevel(logging.DEBUG)
 
 app.error_handlers[403] = handle_403
 app.error_handlers[404] = handle_404

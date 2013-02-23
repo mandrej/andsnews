@@ -133,10 +133,9 @@ def range_names(rgb):
 
     rel_rgb = map(lambda x: x / 255, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    H, L, S = int(h * 360), int(l * 100), int(s * 100)
-    hue = in_range(H, HUE)
-    lum = in_range(L, LUM)
-    sat = in_range(S, SAT)
+    hue = in_range(int(h * 360), HUE)
+    lum = in_range(int(l * 100), LUM)
+    sat = in_range(int(s * 100), SAT)
     return hue, lum, sat
 
 
@@ -239,6 +238,10 @@ class Photo(ndb.Model):
             value = data.get(field, None)
             if value:
                 incr_count('Photo', field, value)
+        # if self.sat == 'color':
+        #     incr_count('Photo', 'hue', self.hue)
+        # else:
+        #     incr_count('Photo', 'lum', self.lum)
 
     def edit(self, data):
         old = self.author
@@ -315,6 +318,10 @@ class Photo(ndb.Model):
             value = getattr(instance, field)
             if value:
                 decr_count('Photo', field, value)
+        # if instance.sat == 'color':
+        #     decr_count('Photo', 'hue', instance.hue)
+        # else:
+        #     decr_count('Photo', 'lum', instance.lum)
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 

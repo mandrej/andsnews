@@ -1,217 +1,17 @@
 from __future__ import division
-import os
+
 import hashlib
-import sys
-import traceback
 import itertools
 import collections
-import json
-import logging
 from operator import itemgetter
-from datetime import datetime, timedelta
 
 import webapp2
-import jinja2
-from webapp2_extras import i18n, sessions
-from webapp2_extras.i18n import gettext, ngettext, lazy_gettext as _
-from webapp2_extras.appengine.users import login_required
-from webapp2_extras.jinja2 import get_jinja2
-from jinja2.filters import environmentfilter, do_mark_safe
 from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
-
 from wtforms import widgets, fields
 from cloud import calculate_cloud
 from models import INDEX, Counter, Photo
-from settings import DEVEL, COLORS, FAMILY, PER_PAGE, TIMEOUT
-
-
-LANGUAGES = (
-    ('en_US', _('english')), ('sr_RS', _('serbian')),
-)
-WEEKDAYS = {
-    0: _('Monday'), 1: _('Tuesday'), 2: _('Wednesday'), 3: _('Thursday'),
-    4: _('Friday'), 5: _('Saturday'), 6: _('Sunday')
-}
-MONTHS = {
-    1: _('January'), 2: _('February'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
-    7: _('July'), 8: _('August'), 9: _('September'), 10: _('October'), 11: _('November'), 12: _('December')
-}
-MONTHS_3 = {
-    1: _('jan'), 2: _('feb'), 3: _('mar'), 4: _('apr'), 5: _('may'), 6: _('jun'),
-    7: _('jul'), 8: _('aug'), 9: _('sep'), 10: _('oct'), 11: _('nov'), 12: _('dec')
-}
-MONTHS_AP = {
-    1: _('Jan.'), 2: _('Feb.'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
-    7: _('July'), 8: _('Aug.'), 9: _('Sept.'), 10: _('Oct.'), 11: _('Nov.'), 12: _('Dec.')
-}
-COLORNAMES = (
-    _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
-    _('purple'), _('pink'), _('dark'), _('medium'), _('light'),
-)
-
-TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
-ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
-    extensions=['jinja2.ext.i18n', 'jinja2.ext.with_'],
-    autoescape=True
-)
-ENV.install_gettext_translations(i18n, newstyle=False)
-ENV.install_gettext_callables(
-    lambda x: i18n.gettext(x),
-    lambda s, p, n: i18n.ngettext(s, p, n),
-    newstyle=False)
-
-
-def version():
-    return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
-
-
-def gaesdk():
-    return os.environ.get('SERVER_SOFTWARE')
-
-
-def language(code):
-    return code.split('_')[0]
-
-
-def now():
-    date = datetime.now()
-    return date.strftime('%Y')
-
-
-def format_date(value, format='%Y-%m-%d'):
-    return value.strftime(format)
-
-
-def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
-    return value.strftime(format)
-
-
-def image_url_by_num(obj, arg):
-    """ {{ object|image_url_by_num:form.initial.ORDER }}/small
-        {{ object|image_url_by_num:object.front }}/small """
-    return obj.image_url(arg)
-
-
-def incache(key):
-    if memcache.get(key):
-        return True
-    else:
-        return False
-
-
-def boolimage(value):
-    """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
-    if value is True:
-        return do_mark_safe('<img src="/static/images/icon_yes.png" alt="%s"/>' % value)
-    else:
-        return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)
-
-
-@environmentfilter
-def css_classes(env, classes):
-    return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
-
-
-def filesizeformat(value, binary=False):
-    """Format the value like a 'human-readable' file size (i.e. 13 kB,
-    4.1 MB, 102 Bytes, etc).  Per default decimal prefixes are used (Mega,
-    Giga, etc.), if the second parameter is set to `True` the binary
-    prefixes are used (Mebi, Gibi).
-    """
-    bytes = float(value)
-    base = binary and 1024 or 1000
-    prefixes = [
-        (binary and "KiB" or "kB"),
-        (binary and "MiB" or "MB"),
-        (binary and "GiB" or "GB"),
-        (binary and "TiB" or "TB"),
-        (binary and "PiB" or "PB"),
-        (binary and "EiB" or "EB"),
-        (binary and "ZiB" or "ZB"),
-        (binary and "YiB" or "YB")
-    ]
-    if bytes == 1:
-        return "1 Byte"
-    elif bytes < base:
-        return "%d Bytes" % bytes
-    else:
-        for i, prefix in enumerate(prefixes):
-            unit = base ** (i + 2)
-            if bytes < unit:
-                return '%.1f %s' % ((base * bytes / unit), prefix)
-        return '%.1f %s' % ((base * bytes / unit), prefix)
-
-
-def timesince_jinja(d, now=None):
-    # http://stackoverflow.com/questions/8292477/localized-timesince-filter-for-jinja2-with-gae
-    chunks = (
-        (60 * 60 * 24 * 365, lambda n: ngettext('year', 'years', n)),
-        (60 * 60 * 24 * 30, lambda n: ngettext('month', 'months', n)),
-        (60 * 60 * 24 * 7, lambda n: ngettext('week', 'weeks', n)),
-        (60 * 60 * 24, lambda n: ngettext('day', 'days', n)),
-        (60 * 60, lambda n: ngettext('hour', 'hours', n)),
-        (60, lambda n: ngettext('minute', 'minutes', n))
-    )
-    if not isinstance(d, datetime):
-        d = datetime(d.year, d.month, d.day)
-    if now and not isinstance(now, datetime):
-        now = datetime(now.year, now.month, now.day)
-
-    if not now:
-        now = datetime.now()
-
-    delta = now - (d - timedelta(0, 0, d.microsecond))
-    since = delta.days * 24 * 60 * 60 + delta.seconds
-    if since <= 0:
-        return u'0 ' + gettext('minutes')
-    for i, (seconds, name) in enumerate(chunks):
-        count = since // seconds
-        if count != 0:
-            break
-    s = gettext('%(number)d %(type)s') % {'number': count, 'type': name(count)}
-    if i + 1 < len(chunks):
-        seconds2, name2 = chunks[i + 1]
-        count2 = (since - (seconds * count)) // seconds2
-        if count2 != 0:
-            s += gettext(', %(number)d %(type)s') % {'number': count2, 'type': name2(count2)}
-    return s
-
-
-def to_json(value):
-    # http://stackoverflow.com/questions/8727349/converting-dict-object-to-string-in-django-jinja2-template
-    return do_mark_safe(json.dumps(value))
-
-
-ENV.globals.update({
-    'now': now,
-    'version': version,
-    'gaesdk': gaesdk,
-    'language': language,
-    'uri_for': webapp2.uri_for,
-})
-ENV.filters.update({
-    'incache': incache,
-    'boolimage': boolimage,
-    'format_date': format_date,
-    'format_datetime': format_datetime,
-    'image_url_by_num': image_url_by_num,
-    'css_classes': css_classes,
-    'filesizeformat': filesizeformat,
-    'timesince': timesince_jinja,
-    'to_json': to_json,
-})
-
-real_handle_exception = ENV.handle_exception
-
-
-def handle_exception(self, *args, **kwargs):
-    logging.error('Template exception:\n%s', traceback.format_exc())
-    real_handle_exception(self, *args, **kwargs)
-
-
-ENV.handle_exception = handle_exception
+from settings import COLORS, FAMILY, PER_PAGE, TIMEOUT
 
 
 def make_cloud(kind, field):
@@ -260,6 +60,21 @@ def count_property(kind, field):
     content = calculate_cloud(coll)
     memcache.set(key, content, TIMEOUT * 12)
     return content
+
+
+def get_or_build(key):
+    kind, field = key.split('_')
+    items = memcache.get(key)
+    if items is None:
+        if field == 'colors':
+            items = count_colors()
+        else:
+            items = make_cloud(kind, field)
+
+    if field != 'colors':
+        # 10 most frequent
+        items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+    return items
 
 
 def count_colors():
@@ -453,103 +268,3 @@ class TagsField(fields.TextField):
             self.data = sorted([x.strip().lower() for x in valuelist[0].split(',') if x.strip() != ''])
         else:
             self.data = []
-
-
-class BaseHandler(webapp2.RequestHandler):
-    def dispatch(self):
-        self.session_store = sessions.get_store(request=self.request)
-        try:
-            webapp2.RequestHandler.dispatch(self)
-        finally:
-            self.session_store.save_sessions(self.response)
-
-    @webapp2.cached_property
-    def session(self):
-        return self.session_store.get_session()
-
-    @webapp2.cached_property
-    def jinja2(self):
-        return get_jinja2(app=self.app)
-
-    def render_template(self, filename, kwargs):
-        lang_code = self.session.get('lang_code') or 'en_US'
-        i18n.get_i18n().set_locale(lang_code)
-
-        context = {
-            'LANGUAGE_CODE': lang_code,
-            'LANGUAGES': LANGUAGES,
-            'user': users.get_current_user(),
-            'is_admin': users.is_current_user_admin(),
-            'devel': DEVEL
-        }
-        kwargs.update(context)
-        template = ENV.get_template(filename)
-        self.response.write(template.render(kwargs))
-
-
-def handle_403(request, response, exception):
-    template = ENV.get_template('errors/403.html')
-    response.write(template.render({'error': exception}))
-    response.set_status(403)
-    return response
-
-
-def handle_404(request, response, exception):
-    template = ENV.get_template('errors/404.html')
-    response.write(template.render({'error': exception, 'path': request.path_qs}))
-    response.set_status(404)
-    return response
-
-
-def handle_500(request, response, exception):
-    template = ENV.get_template('errors/500.html')
-    lines = ''.join(traceback.format_exception(*sys.exc_info()))
-    response.write(template.render({'error': exception, 'lines': lines}))
-    response.set_status(500)
-    return response
-
-
-class DeleteHandler(BaseHandler):
-    @login_required
-    def get(self, safekey):
-        key = ndb.Key(urlsafe=safekey)
-        if key.parent():
-            next = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        else:
-            next = webapp2.uri_for('%s_all' % key.kind().lower())
-
-        obj = key.get()
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                webapp2.abort(403)
-        data = {'object': obj, 'post_url': self.request.path, 'next': next}
-        self.render_template('snippets/confirm.html', data)
-
-    def post(self, safekey):
-        next = str(self.request.get('next'))
-        key = ndb.Key(urlsafe=safekey)
-        key.delete()
-        self.redirect(next)
-
-
-class SetLanguage(BaseHandler):
-    def post(self):
-        next = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        lang_code = self.request.get('language', None)
-        if lang_code:
-            self.session['lang_code'] = lang_code
-        self.redirect(next)
-
-
-class Sign(BaseHandler):
-    def get(self):
-        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        if referer.endswith('admin/'):
-            referer = webapp2.uri_for('start')
-        if users.get_current_user():
-            dest_url = users.create_logout_url(referer)
-        else:
-            dest_url = users.create_login_url(referer)
-        self.redirect(dest_url)

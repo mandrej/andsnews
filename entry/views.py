@@ -11,9 +11,9 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from common import BaseHandler, Paginator, Filter, TagsField
+from handlers import BaseHandler
+from common import Paginator, Filter, TagsField
 from settings import TIMEOUT
-
 
 PER_PAGE = 6
 
