@@ -59,10 +59,10 @@ SAT = [
 
 COLORS = {}
 for x in HUE:
-    COLORS['hue-%s' % x['name']] = {'hex': x['hex'], 'field': 'hue', 'name': x['name'], 'order': x['order']}
+    COLORS['color-%s' % x['name']] = {'hex': x['hex'], 'field': 'color', 'name': x['name'], 'order': x['order']}
 
 for x in LUM:
-    COLORS['lum-%s' % x['name']] = {'hex': x['hex'], 'field': 'lum', 'name': x['name'], 'order': x['order']}
+    COLORS['color-%s' % x['name']] = {'hex': x['hex'], 'field': 'color', 'name': x['name'], 'order': x['order']}
 
 """
 import datetime, time, random

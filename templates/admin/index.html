@@ -36,7 +36,7 @@
 			<div id="Photo_lens"></div>
 			<div id="Photo_eqv"></div>
 			<div id="Photo_iso"></div>
-			<div id="Photo_colors"></div>
+			<div id="Photo_color"></div>
 		</div>
 	</div>
 
@@ -73,7 +73,7 @@
                     tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
                     tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                     tmpl += '<div class="hide">';
-                    if (key == 'Photo_colors') {
+                    if (key == 'Photo_color') {
                         $.each(arr, function(i, item) {
                             tmpl += '<dl><dt>' + item.name + '</dt>';
                             tmpl += '<dd>' + item.count + '</dd></dl>';

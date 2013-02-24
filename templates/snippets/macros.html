@@ -22,7 +22,7 @@
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
-    {% set _colors = {'field': 'colors', 'title': _('Median color')} %}
+    {% set _color = {'field': 'color', 'title': _('Median color')} %}
     {% set _model = {'field': 'model', 'title': _('Camera model')} %}
     {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
     {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
@@ -31,7 +31,7 @@
 
     <a href="{{ uri_for('photo_all') }}" title="{{ _('photo album') }}" class="Photo">{{ _('photo album') }}</a>
     {% if kind == 'Photo' %}
-        {{ _build([_tags, _date, _author, _colors, _model, _lens, _eqv, _iso], kind) }}
+        {{ _build([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], kind) }}
     {% endif %}
     <a href="{{ uri_for('entry_all') }}" title="{{ _('Blog') }}" class="Entry">{{ _('Blog') }}</a>
     {% if kind == 'Entry' %}

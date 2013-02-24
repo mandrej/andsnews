@@ -116,8 +116,7 @@
 
                     if (crumbs.length >= 2) {
                         var field = crumbs[0];
-                        if (field == 'hue' || field == 'lum') field = 'colors';
-                        var available = ['tags', 'date', 'author', 'colors', 'model', 'lens', 'eqv', 'iso', 'forkind'];
+                        var available = ['tags', 'date', 'author', 'color', 'model', 'lens', 'eqv', 'iso', 'forkind'];
                         if ($.inArray(field, available) != -1) {
                             $.ajax({
                                 url: '/filter/' + kind + '_' + field + '/' + crumbs[1],

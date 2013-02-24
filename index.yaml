@@ -71,6 +71,12 @@ indexes:
 
 - kind: Photo
   properties:
+  - name: color
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
   - name: eqv
   - name: date
     direction: desc

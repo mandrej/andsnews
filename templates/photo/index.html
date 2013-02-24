@@ -15,8 +15,7 @@
             {% if filter.field =='tags' %}/ {{ filter.value }}{% endif %}
             {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
             {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'hue' %}/ {{ _(filter.value) }}{% endif %}
-            {% if filter.field == 'lum' %}/ {{ _(filter.value) }}{% endif %}
+            {% if filter.field == 'color' %}/ {{ _(filter.value) }}{% endif %}
             {% if filter.field == 'model' %}/ {{ filter.value }}{% endif %}
             {% if filter.field == 'lens' %}/ {{ filter.value }}{% endif %}
             {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}

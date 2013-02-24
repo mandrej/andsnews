@@ -62,38 +62,34 @@ def count_property(kind, field):
     return content
 
 
-def get_or_build(key):
-    kind, field = key.split('_')
-    items = memcache.get(key)
-    if items is None:
-        if field == 'colors':
-            items = count_colors()
-        else:
-            items = make_cloud(kind, field)
-
-    if field != 'colors':
-        # 10 most frequent
-        items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
-    return items
-
-
-def count_colors():
-    key = 'Photo_colors'
+def count_color():
+    key = 'Photo_color'
     content = memcache.get(key)
     if content is None:
         content = []
         for k, d in COLORS.items():
-            query = Photo.query().order(-Photo.date)
-            if d['field'] == 'hue':
-                query = query.filter(Photo.hue == d['name'], Photo.sat == 'color')
-            elif d['field'] == 'lum':
-                query = query.filter(Photo.lum == d['name'], Photo.sat == 'monochrome')
+            query = Photo.query(Photo.color == d['name']).order(-Photo.date)
             data = COLORS[k]
             data.update({'count': query.count(1000)})
             content.append(data)
         content = sorted(content, key=itemgetter('order'))
         memcache.set(key, content, TIMEOUT * 12)
     return content
+
+
+def get_or_build(key):
+    kind, field = key.split('_')
+    items = memcache.get(key)
+    if items is None:
+        if field == 'color':
+            items = count_color()
+        else:
+            items = make_cloud(kind, field)
+
+    if field != 'color':
+        # 10 most frequent
+        items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+    return items
 
 
 class Filter:

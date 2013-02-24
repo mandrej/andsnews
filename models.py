@@ -15,11 +15,11 @@ from settings import DEVEL, HUE, LUM, SAT
 INDEX = search.Index(name='searchindex')
 
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
-        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_colors',
+        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date',
         'Feed_tags',
         'Comment_forkind', 'Comment_author', 'Comment_date']
-PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso',)
+PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 
 
@@ -172,7 +172,7 @@ def decr_count(*args):
     deferred.defer(update_counter, *args, delta=-1)
 
 
-class Photo(ndb.Model):
+class Photo(ndb.Expando):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
@@ -197,6 +197,7 @@ class Photo(ndb.Model):
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
     sat = ndb.StringProperty()
+    color = ndb.ComputedProperty(lambda self: self.hue if self.sat == 'color' else self.lum)
 
     def index_add(self):
         return INDEX.put(
@@ -238,10 +239,6 @@ class Photo(ndb.Model):
             value = data.get(field, None)
             if value:
                 incr_count('Photo', field, value)
-        # if self.sat == 'color':
-        #     incr_count('Photo', 'hue', self.hue)
-        # else:
-        #     incr_count('Photo', 'lum', self.lum)
 
     def edit(self, data):
         old = self.author
@@ -318,10 +315,6 @@ class Photo(ndb.Model):
             value = getattr(instance, field)
             if value:
                 decr_count('Photo', field, value)
-        # if instance.sat == 'color':
-        #     decr_count('Photo', 'hue', instance.hue)
-        # else:
-        #     decr_count('Photo', 'lum', instance.lum)
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
