@@ -61,10 +61,12 @@ def fixer(oldkey):
     # files.finalize(file_name)
     #
     # obj.blob_key = files.blobstore.get_blob_key(file_name)
-    if hasattr(obj, 'aspect'):
-        delattr(obj, 'aspect')
-    if hasattr(obj, 'score'):
-        delattr(obj, 'score')
+    if hasattr(obj, 'rating'):
+        delattr(obj, 'rating')
+    if hasattr(obj, 'sum'):
+        delattr(obj, 'sum')
+    if hasattr(obj, 'month'):
+        delattr(obj, 'month')
     obj.put()
     # blob_info.delete()
 

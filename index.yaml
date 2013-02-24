@@ -83,13 +83,6 @@ indexes:
 
 - kind: Photo
   properties:
-  - name: hue
-  - name: sat
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
   - name: iso
   - name: date
     direction: desc
@@ -97,13 +90,6 @@ indexes:
 - kind: Photo
   properties:
   - name: lens
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
-  - name: lum
-  - name: sat
   - name: date
     direction: desc
 
