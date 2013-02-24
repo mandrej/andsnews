@@ -172,7 +172,7 @@ def decr_count(*args):
     deferred.defer(update_counter, *args, delta=-1)
 
 
-class Photo(ndb.Expando):
+class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
