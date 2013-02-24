@@ -7,7 +7,7 @@ from webapp2_extras.appengine.users import admin_required
 from models import Photo, Entry, Comment, Feed, Counter, KEYS
 from entry.views import make_thumbnail
 from handlers import BaseHandler, filesizeformat
-from common import Paginator, Filter, count_property, count_color, make_cloud
+from common import Paginator, Filter, count_property, make_cloud
 from settings import PER_PAGE
 
 
@@ -20,10 +20,7 @@ class Cache(webapp2.RequestHandler):
 
     def put(self, key):
         kind, field = key.split('_')
-        if field == 'color':
-            content = count_color()
-        else:
-            content = count_property(kind, field)
+        content = count_property(kind, field)
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(content))
 

@@ -38,7 +38,7 @@ COLORNAMES = (
 )
 
 HUE = [
-    {'span': map(lambda x: x+360 if x < 0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'},  # 0
+    {'span': map(lambda x: x + 360 if x < 0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
     {'span': xrange(10, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
     {'span': xrange(40, 60), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
     {'span': xrange(60, 150), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
@@ -59,17 +59,15 @@ SAT = [
 
 COLORS = {}
 for x in HUE:
-    COLORS['color-%s' % x['name']] = {'hex': x['hex'], 'field': 'color', 'name': x['name'], 'order': x['order']}
+    COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
 for x in LUM:
-    COLORS['color-%s' % x['name']] = {'hex': x['hex'], 'field': 'color', 'name': x['name'], 'order': x['order']}
+    COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
-"""
-import datetime, time, random
-print time.strftime('%y%W', datetime.datetime.now().timetuple())
-
-sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-print ''.join(random.sample(sid, 50))
-
-find . -type f -name "*.pyc" -exec rm -f {} \;
-"""
+# import datetime, time, random
+# print time.strftime('%y%W', datetime.datetime.now().timetuple())
+#
+# sid = '~`!@#$%^&*()_-+=|\{[}]abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+# print ''.join(random.sample(sid, 50))
+#
+# find . -type f -name "*.pyc" -exec rm -f {} \;

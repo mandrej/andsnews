@@ -10,7 +10,7 @@ from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
 from wtforms import widgets, fields
 from cloud import calculate_cloud
-from models import INDEX, Counter, Photo
+from models import INDEX, Counter
 from settings import COLORS, FAMILY, PER_PAGE, TIMEOUT
 
 
@@ -28,7 +28,16 @@ def make_cloud(kind, field):
                     coll[int(counter.value)] = count
                 except ValueError:
                     coll[counter.value] = count
-        content = calculate_cloud(coll)
+
+        content = []
+        if field == 'color':
+            for k, count in coll.items():
+                data = COLORS[k]
+                data.update({'count': count, 'field': field})
+                content.append(data)
+            content = sorted(content, key=itemgetter('order'))
+        else:
+            content = calculate_cloud(coll)
         memcache.set(key, content, TIMEOUT * 12)
     return content
 
@@ -41,39 +50,33 @@ def count_property(kind, field):
     # TODO REMEMBER
     model = ndb.Model._kind_map.get(kind)
     query = model.query()
-    properties = [getattr(x, prop, None) for x in query]
+    properties = (getattr(x, prop, None) for x in query)  # generator
     if prop == 'tags':
         properties = list(itertools.chain(*properties))
     elif prop == 'author':
         properties = [x.nickname() for x in properties]
-    tally = collections.Counter(filter(None, properties))
+    tally = collections.Counter(filter(None, properties))  # filter out None
+    coll = dict(tally.items())
 
-    for value, count in tally.items():
+    for value, count in coll.items():
         keyname = '%s||%s||%s' % (kind, field, value)
         params = dict(zip(('forkind', 'field', 'value'), map(str, [kind, field, value])))
         obj = Counter.get_or_insert(keyname, **params)
         if obj.count != count:
             obj.count = count
-            obj.put()
+            obj.put_async()
 
-    coll = dict(tally.items())
-    content = calculate_cloud(coll)
-    memcache.set(key, content, TIMEOUT * 12)
-    return content
-
-
-def count_color():
-    key = 'Photo_color'
-    content = memcache.get(key)
-    if content is None:
-        content = []
-        for k, d in COLORS.items():
-            query = Photo.query(Photo.color == d['name']).order(-Photo.date)
+    content = []
+    if field == 'color':
+        for k, count in coll.items():
             data = COLORS[k]
-            data.update({'count': query.count(1000)})
+            data.update({'count': count, 'field': field})
             content.append(data)
         content = sorted(content, key=itemgetter('order'))
-        memcache.set(key, content, TIMEOUT * 12)
+    else:
+        content = calculate_cloud(coll)
+
+    memcache.set(key, content, TIMEOUT * 12)
     return content
 
 
@@ -81,10 +84,7 @@ def get_or_build(key):
     kind, field = key.split('_')
     items = memcache.get(key)
     if items is None:
-        if field == 'color':
-            items = count_color()
-        else:
-            items = make_cloud(kind, field)
+        items = make_cloud(kind, field)
 
     if field != 'color':
         # 10 most frequent

@@ -602,6 +602,7 @@ figure p.legend { padding: 5px; text-align: center; }
 .popup .buttons { line-height: normal; }
 .popup .content { padding: 10px; min-height: 32px; }
 .popup .content:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
+#chart + p { margin: 0.5em 0 0; }
 .info .content, .warning .content, .error .content {
 	padding-left: 50px;
 	background-position: 10px 10px;
