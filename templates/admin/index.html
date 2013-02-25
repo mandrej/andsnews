@@ -73,17 +73,10 @@
                     tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
                     tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                     tmpl += '<div class="hide">';
-                    if (key == 'Photo_color') {
-                        $.each(arr, function(i, item) {
-                            tmpl += '<dl><dt>' + item.name + '</dt>';
-                            tmpl += '<dd>' + item.count + '</dd></dl>';
-                        });
-                    } else {
-                        $.each(arr, function(i, item) {
-                            tmpl += '<dl><dt>' + item.name + '</dt>';
-                            tmpl += '<dd>' + item.count + ', size ' + item.size + '</dd></dl>';
-                        });
-                    }
+                    $.each(arr, function(i, item) {
+                        tmpl += '<dl><dt>' + item.name + '</dt>';
+                        tmpl += '<dd>' + item.count + '</dd></dl>';
+                    });
                     tmpl += '</div>';
                 } else {
                     tmpl += '<button type="submit" name="put" value="' + key + '">create</button>';

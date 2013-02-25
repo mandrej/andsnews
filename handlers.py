@@ -17,7 +17,7 @@ from webapp2_extras.jinja2 import get_jinja2
 from jinja2.filters import environmentfilter, do_mark_safe, do_striptags
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb
-from common import get_or_build, SearchPaginator
+from common import make_cloud, SearchPaginator
 
 from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS
 
@@ -230,7 +230,18 @@ class BaseHandler(webapp2.RequestHandler):
 class RenderCloud(BaseHandler):
     def get(self, key, value=None):
         kind, field = key.split('_')
-        items = get_or_build(key)
+        items = memcache.get(key) or make_cloud(kind, field)
+
+        if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso', 'forkind',):
+            items = sorted(items, key=itemgetter('name'), reverse=False)
+        elif field == 'color':
+            items = sorted(items, key=itemgetter('order'))
+
         self.render_template(
             'snippets/x_%s.html' % field, {
                 'items': items,
@@ -241,11 +252,17 @@ class RenderCloud(BaseHandler):
 class RenderGraph(BaseHandler):
     def get(self, key):
         kind, field = key.split('_')
-        items = get_or_build(key)
+        items = memcache.get(key) or make_cloud(kind, field)
+
+        if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('eqv', 'iso'):
+        elif field in ('eqv', 'iso', 'forkind',):
             items = sorted(items, key=itemgetter('name'), reverse=False)
+        elif field == 'color':
+            items = sorted(items, key=itemgetter('order'))
 
         self.render_template('snippets/x_%s.html' % field, {'items': items, 'graph': True})
 

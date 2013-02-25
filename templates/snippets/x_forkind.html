@@ -22,7 +22,7 @@
     </script>
 {% else %}
     <p class="cloud">
-        {% for item in items|sort(attribute='name') %}
+        {% for item in items %}
             {% set selected = item.name == filter.value if filter else False %}
             <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                href="{{ uri_for(link, field='forkind', value=item.name) }}"

@@ -3,8 +3,7 @@ from __future__ import division
 import hashlib
 import itertools
 import collections
-from operator import itemgetter
-
+from string import capitalize
 import webapp2
 from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
@@ -35,7 +34,6 @@ def make_cloud(kind, field):
                 data = COLORS[k]
                 data.update({'count': count, 'field': field})
                 content.append(data)
-            content = sorted(content, key=itemgetter('order'))
         else:
             content = calculate_cloud(coll)
         memcache.set(key, content, TIMEOUT * 12)
@@ -72,24 +70,11 @@ def count_property(kind, field):
             data = COLORS[k]
             data.update({'count': count, 'field': field})
             content.append(data)
-        content = sorted(content, key=itemgetter('order'))
     else:
         content = calculate_cloud(coll)
 
     memcache.set(key, content, TIMEOUT * 12)
     return content
-
-
-def get_or_build(key):
-    kind, field = key.split('_')
-    items = memcache.get(key)
-    if items is None:
-        items = make_cloud(kind, field)
-
-    if field != 'color':
-        # 10 most frequent
-        items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
-    return items
 
 
 class Filter:
@@ -109,7 +94,7 @@ class Filter:
                 # TODO Not all emails are gmail
                 return {self.field: users.User(email='%s@gmail.com' % self.value)}
             elif self.field == 'forkind':
-                return {self.field: self.value.capitalize()}
+                return {self.field: capitalize(self.value)}
             elif self.field == 'hue':
                 return {self.field: self.value, 'sat': 'color'}
             elif self.field == 'lum':
@@ -202,21 +187,23 @@ class SearchPaginator:
         results = []
         number_found = 0
         has_next = False
-        #        opts = {
-        #            'limit': self.per_page,
-        #            'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-        #            'returned_expressions': [search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)]
-        #            'snippeted_fields': ['body']
-        #        }
-        #        try:
-        #            cursor = self.cache[num]
-        #        except KeyError:
-        #            cursor = None
+        # opts = {
+        #     'limit': self.per_page,
+        #     'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
+        #     'returned_expressions': [
+        #         search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)
+        #     ],
+        #     'snippeted_fields': ['body']
+        # }
+        # try:
+        #     cursor = self.cache[num]
+        # except KeyError:
+        #     cursor = None
         #
-        #        opts['cursor'] = search.Cursor(web_safe_string=cursor)
-        #        opts['offset'] = (num - 1)*self.per_page
-        #        found = INDEX.search(search.Query(query_string=self.querystring,
-        #                                          options=search.QueryOptions(**opts)))
+        # opts['cursor'] = search.Cursor(web_safe_string=cursor)
+        # opts['offset'] = (num - 1)*self.per_page
+        # found = INDEX.search(search.Query(query_string=self.querystring,
+        #                                   options=search.QueryOptions(**opts)))
         query = search.Query(
             query_string=self.querystring,
             options=search.QueryOptions(
@@ -230,12 +217,12 @@ class SearchPaginator:
             results = found.results
             number_found = found.number_found
         except Exception, error:
-            found = []
+            pass
         else:
             if number_found > 0:
                 has_next = number_found > num * self.per_page
-                #            self.cache[num + 1] = found.cursor.web_safe_string
-                #            memcache.replace(self.id, self.cache, self.timeout)
+                # self.cache[num + 1] = found.cursor.web_safe_string
+                # memcache.replace(self.id, self.cache, self.timeout)
 
         return results, number_found, has_next, error
 
