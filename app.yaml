@@ -17,6 +17,8 @@ libraries:
   version: latest
 - name: webob
   version: latest
+- name: numpy
+  version: latest
 
 handlers:
 - url: /robots\.txt
