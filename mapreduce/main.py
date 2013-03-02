@@ -43,7 +43,7 @@ from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
 from google.appengine.api import files
-from models import Photo, Entry, Comment, median
+from models import Photo, Entry, Comment
 import logging
 
 

@@ -48,7 +48,7 @@
             <td>{{ object.size|filesizeformat(binary=True) }}</td>
         </tr>
         <tr>
-            <td class="label">{{ _('Median color') }}</td>
+            <td class="label">{{ _('Represetative color') }}</td>
             <td>
                 <a href="{{ uri_for('photo_filter_all', field='color', value=object.color) }}"
                    title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>&nbsp;

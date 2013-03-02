@@ -63,7 +63,18 @@
 
 	{% if object %}
 	    <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
-            <img class="right" style="margin-right: 3%" src="{{ object.small_url() }}"/>
+            <div id="palette">
+                <img src="{{ object.small_url() }}"/>
+                <p style="padding: 0.5em 0; text-align: center">
+                    <button type="button">{{ _('Calculate palette') }}</button>
+                </p>
+                <dl class="palette"></dl>
+                <script>
+                    var palette_url = '/photos/' + '{{ object.key.string_id() }}' + '/palette';
+                    var explain = '{{ _('Click - pick color from palette which best represent image') }}';
+                </script>
+            </div>
+
 			<fieldset>
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.tags) }}
@@ -99,7 +110,7 @@
     <script src="/static/scripts/urlify.js"></script>
     <script src="/static/scripts/jquery.autocomplete.js"></script>
     <script>
-        $().ready(function() {
+        $(function() {
             $('#headline').slugify();
             $("#tags").autocomplete("/complete/photo/tags", {
                 width: 284,
@@ -113,9 +124,36 @@
                 multiple: false,
                 matchContains: true
             });
-            $('#main button').click(function() {
+            $('button[type=submit]').click(function() {
                 $('#overlay, #spinner').show();
             });
+
+            var write_palette = function() {
+                $.getJSON(palette_url, function(data) {
+                    $('dl.palette')
+                        .empty()
+                        .append('<dt>active</dt>')
+                        .append('<dd class="first"><span class="dot" data-color="' + data.active_color + '" style="border-color: ' + data.active_hex + '"></span></dd>');
+                        $.each(data.palette, function(i, pal) {
+                            $('dl.palette')
+                                .append('<dt>' + pal.prominence + '</dt>')
+                                .append('<dd><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></dd>');
+                        })
+                    });
+                    $('dl.palette').after('<p>' + explain + '</p>');
+            }
+            $('button[type=button]').click(function() {
+                write_palette();
+                return false
+            });
+            $('.dot').live('click', function() {
+                var rgb = $(this).attr('data-color');
+                $.post(palette_url, {'rgb': rgb}, function(data) {
+                    if (data.success == true) {
+                        write_palette();
+                    }
+                })
+            })
         });
     </script>
 {% endblock %}

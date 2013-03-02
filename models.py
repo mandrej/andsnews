@@ -4,10 +4,12 @@ import datetime
 import time
 import colorsys
 from cStringIO import StringIO
+from PIL import Image
 
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
+from lib import colorific
 from lib.EXIF import process_file
 from settings import DEVEL, HUE, LUM, SAT
 
@@ -23,18 +25,23 @@ PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 
 
-def median(buff):
-    triple = []
-    histogram = images.histogram(buff)
-    for band in histogram:
-        suma = 0
-        limit = sum(band) / 2
-        for i in xrange(256):
-            suma += band[i]
-            if suma > limit:
-                triple.append(i)
-                break
-    return triple
+# def median(buff):
+#     triple = []
+#     histogram = images.histogram(buff)
+#     for band in histogram:
+#         suma = 0
+#         limit = sum(band) / 2
+#         for i in xrange(256):
+#             suma += band[i]
+#             if suma > limit:
+#                 triple.append(i)
+#                 break
+#     return triple
+
+
+def img_palette(buff):
+    img = Image.open(StringIO(buff))
+    return colorific.extract_colors(img.resize((100, 100)))
 
 
 def get_exif(buff):
@@ -223,7 +230,8 @@ class Photo(ndb.Model):
         self.size = blob_info.size
         blob_reader = blob_info.open()
         buff = blob_reader.read()
-        self.rgb = median(buff)
+        palette = img_palette(buff)
+        self.rgb = palette.colors[0].value
         exif = get_exif(buff)
         for field, value in exif.items():
             setattr(self, field, value)

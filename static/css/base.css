@@ -231,6 +231,10 @@ fieldset p.upload a.trigger { padding-left: 80px; }
 .choices label { width: auto; margin: 0; }
 .choices label:after { content: ""; }
 .choices input { width: auto; }
+#palette { float: right; width: 240px; margin: 0 3%; }
+.palette { border: none; }
+.palette dt, .palette dd { padding: 0; border: none; }
+.palette dt { line-height: 24px; }
 #langs { float: right; }
 #langs button {
 	float: left;
