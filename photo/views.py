@@ -65,13 +65,18 @@ class Palette(BaseHandler):
         obj = Photo.get_by_id(slug)
         buf = blobstore.BlobReader(obj.blob_key).read()
         palette = img_palette(buf)
-        data = {'active_color': obj.rgb, 'active_hex': obj.hex,
+        data = {'active': {'color': obj.rgb,
+                           'hex': obj.hex,
+                           'class': range_names(obj.rgb)},
                 'palette': [
                     {'prominence': '%.1f%%' % (100 * c.prominence,),
                      'color': c.value,
-                     'hex': colorific.rgb_to_hex(c.value)} for c in palette.colors]}
+                     'hex': colorific.rgb_to_hex(c.value),
+                     'class': range_names(c.value)} for c in palette.colors]}
         if palette.bgcolor:
-            data['bgcolor'] = {'color': palette.bgcolor, 'hex': colorific.rgb_to_hex(palette.bgcolor)}
+            data['bgcolor'] = {'color': palette.bgcolor,
+                               'hex': colorific.rgb_to_hex(palette.bgcolor),
+                               'class': range_names(palette.bgcolor)}
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(data))
 

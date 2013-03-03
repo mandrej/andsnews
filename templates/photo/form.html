@@ -68,7 +68,7 @@
                 <p style="padding: 0.5em 0; text-align: center">
                     <button type="button">{{ _('Calculate palette') }}</button>
                 </p>
-                <dl class="palette"></dl>
+                <table class="palette zebra"></table>
                 <script>
                     var palette_url = '/photos/' + '{{ object.key.string_id() }}' + '/palette';
                     var explain = '{{ _('Click - pick color from palette which best represent image') }}';
@@ -130,22 +130,25 @@
 
             var write_palette = function() {
                 $.getJSON(palette_url, function(data) {
-                    $('dl.palette')
-                        .empty()
-                        .append('<dt>active</dt>')
-                        .append('<dd class="first"><span class="dot" data-color="' + data.active_color + '" style="border-color: ' + data.active_hex + '"></span></dd>');
-                        $.each(data.palette, function(i, pal) {
-                            $('dl.palette')
-                                .append('<dt>' + pal.prominence + '</dt>')
-                                .append('<dd><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></dd>');
-                        });
-                        if (data.bgcolor){
-                            $('dl.palette')
-                                .append('<dt>background</dt>')
-                                .append('<dd><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></dd>');
-                        }
+                    var cntx = $('table.palette');
+                    cntx.empty()
+                        .append('<tr><th>active</th>' +
+                            '<td><span class="dot" data-color="' + data.active.color + '" style="border-color: ' + data.active.hex + '"></span></td>' +
+                            '<td>' + data.active.class + '</td></tr>');
+                    $.each(data.palette, function(i, pal) {
+                        cntx
+                            .append('<tr><th>' + pal.prominence + '</th>' +
+                                '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
+                                '<td>' + pal.class + '</td></tr>');
                     });
-                    $('dl.palette').after('<p>' + explain + '</p>');
+                    if (data.bgcolor) {
+                        cntx
+                            .append('<tr><th>background</th>' +
+                                '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
+                                '<td>' + data.bgcolor.class + '</td></tr>');
+                    }
+                    cntx.after('<p>' + explain + '</p>');
+                    });
             }
             $('button[type=button]').click(function() {
                 write_palette();
