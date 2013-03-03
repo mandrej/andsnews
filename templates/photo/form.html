@@ -138,7 +138,12 @@
                             $('dl.palette')
                                 .append('<dt>' + pal.prominence + '</dt>')
                                 .append('<dd><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></dd>');
-                        })
+                        });
+                        if (data.bgcolor){
+                            $('dl.palette')
+                                .append('<dt>background</dt>')
+                                .append('<dd><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></dd>');
+                        }
                     });
                     $('dl.palette').after('<p>' + explain + '</p>');
             }

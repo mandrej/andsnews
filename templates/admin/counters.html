@@ -31,7 +31,7 @@
                             <td>{{ object.value|default('---') }}</td>
                             <td>
                                 <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
-                                    {% if object.count == 0 %}
+                                    {% if object.count <= 0 %}
                                         style="width: 58px; text-align: right; background: #c00; color: #fff;"
                                     {% else %}
                                         style="width: 58px; text-align: right;"

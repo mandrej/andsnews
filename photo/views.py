@@ -70,6 +70,8 @@ class Palette(BaseHandler):
                     {'prominence': '%.1f%%' % (100 * c.prominence,),
                      'color': c.value,
                      'hex': colorific.rgb_to_hex(c.value)} for c in palette.colors]}
+        if palette.bgcolor:
+            data['bgcolor'] = {'color': palette.bgcolor, 'hex': colorific.rgb_to_hex(palette.bgcolor)}
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(data))
 
