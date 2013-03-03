@@ -67,7 +67,7 @@ class Palette(BaseHandler):
         palette = img_palette(buf)
         data = {'active': {'color': obj.rgb,
                            'hex': obj.hex,
-                           'class': range_names(obj.rgb)},
+                           'class': obj.color},
                 'palette': [
                     {'prominence': '%.1f%%' % (100 * c.prominence,),
                      'color': c.value,

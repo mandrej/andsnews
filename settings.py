@@ -53,8 +53,8 @@ LUM = [
     {'span': xrange(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
 ]
 SAT = [
-    {'span': xrange(0, 10), 'name': 'monochrome'},
-    {'span': xrange(10, 101), 'name': 'color'}
+    {'span': xrange(0, 20), 'name': 'monochrome'},
+    {'span': xrange(20, 101), 'name': 'color'}
 ]
 
 COLORS = {}
