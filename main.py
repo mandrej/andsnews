@@ -12,6 +12,7 @@ CONFIG = {
 app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/', handler='photo.views.Index', name='photo_all'),
+        Route('/spectra', handler='photo.views.Spectra', name='spectra'),
         Route('/add', handler='photo.views.Add', name='photo_add'),
         Route('/<slug>/edit', handler='photo.views.Edit', name='photo_edit'),
         Route('/<slug>/palette', handler='photo.views.Palette', name='palette'),
