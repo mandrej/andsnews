@@ -6,7 +6,7 @@ RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
 RESULTS = 12
-LIMIT = 1024*1024
+LIMIT = 1024 * 1024
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
           'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
