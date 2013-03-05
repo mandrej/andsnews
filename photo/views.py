@@ -14,8 +14,6 @@ from wtforms import Form, fields, validators
 from handlers import BaseHandler
 from common import Paginator, Filter, EmailField, TagsField
 
-import logging
-
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -184,20 +182,32 @@ class Edit(BaseHandler):
             self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
 
 
+HUE = [
+    {'span': map(lambda x: x + 360 if x < 0 else x, xrange(-10, 10)), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
+    {'span': xrange(10, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
+    {'span': xrange(40, 60), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
+    {'span': xrange(60, 150), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
+    {'span': xrange(150, 190), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'},  # 180
+    {'span': xrange(190, 240), 'order': '5', 'name': 'blue', 'hex': '#005fbf'},  # 210
+    {'span': xrange(240, 290), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'},  # 270
+    {'span': xrange(290, 350), 'order': '7', 'name': 'pink', 'hex': '#bf005f'}  # 330
+]
+
+
 class Spectra(BaseHandler):
     def get(self):
         data = []
-        hue = {'red': 0, 'orange': 30, 'yellow': 60, 'green': 120, 'teal': 180, 'blue': 210, 'purple': 270, 'pink': 330}
-        for name, h in hue.items():
+        for row in HUE:
             coll = []
-            hue = h / 360.0
-            for l in (10, 40,):
-                lum = l / 100.0
-                color = HSLColor(hue, 1, lum)
-                logging.error(color)
-                rgb = color.convert_to('rgb', target_rgb='sRGB').get_rgb_hex()
-                coll.append(rgb)
+            for h in row['span']:
+                for l in (10, 40,):
+                    lum = l / 100.0
+                    for s in (50,):
+                        sat = s / 100.0
+                        color = HSLColor(h, sat, lum)
+                        rgb = color.convert_to('rgb', target_rgb='sRGB').get_rgb_hex()
+                        coll.append(rgb)
 
-            data.append({'name': name, 'colors': coll})
+            data.append({'name': row['name'], 'colors': coll})
 
         self.render_template('photo/spectra.html', {'data': data})
