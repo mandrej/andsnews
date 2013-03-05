@@ -23,15 +23,15 @@
         <colgroup>
             <col/>
             <col style="width: 190px; text-align: right;"/>
-            <col style="width: 210px; text-align: right;"/>
             <col style="width: 170px; text-align: right;"/>
+            <col style="width: 210px; text-align: right;"/>
         </colgroup>
         <thead>
             <tr>
                 <th>headline</th>
                 <th>blob info</th>
-                <th>color</th>
-                <th></th>
+                <th>HLS</th>
+                <th>color classification</th>
             </tr>
         </thead>
         <tbody>
@@ -48,19 +48,11 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                    </td>
+                    <td>
                         {{ photo.hue }}, {{ photo.lum }}, {{ photo.sat }}
                         <span class="_hex" style="display: inline-block; width: 1.5em; background-color: {{ photo.hex }};">&nbsp;</span>
-{#                        {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}#}
-                    </td>
-                    <td class="nowrap">
-{#                        {% if picture.small %}#}
-{#                            <button type="submit" name="color"#}
-{#                                    value="{{ picture.key.urlsafe() }}">color</button>#}
-{#                        {% else %}#}
-{#                            <button type="submit" name="color"#}
-{#                                    class="disabled" disabled="disabled"#}
-{#                                    value="{{ picture.key.urlsafe() }}">color</button>#}
-{#                        {% endif %}#}
                     </td>
                 </tr>
             {% endfor %}

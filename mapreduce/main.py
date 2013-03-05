@@ -42,14 +42,18 @@ from mapreduce import operation as op
 from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
-from google.appengine.api import files
-from models import Photo, Entry, Comment
-import logging
+from models import img_palette, range_names
 
 
 def fixer(oldkey):
     key = ndb.Key.from_old_key(oldkey)
     obj = key.get()
+    buf = blobstore.BlobReader(obj.blob_key).read()
+    palette = img_palette(buf)
+
+    obj.rgb = palette.colors[0].value
+    obj.hue, obj.lum, obj.sat = range_names(obj.rgb)
+
     # blob_info = blobstore.BlobInfo.get(obj.blob_key)
     # blob_reader = blob_info.open()
     # buff = blob_reader.read()
@@ -61,14 +65,9 @@ def fixer(oldkey):
     # files.finalize(file_name)
     #
     # obj.blob_key = files.blobstore.get_blob_key(file_name)
-    if hasattr(obj, 'rating'):
-        delattr(obj, 'rating')
-    if hasattr(obj, 'sum'):
-        delattr(obj, 'sum')
-    if hasattr(obj, 'month'):
-        delattr(obj, 'month')
+    # if hasattr(obj, 'rating'):
+    #     delattr(obj, 'rating')
     obj.put()
-    # blob_info.delete()
 
 
 def indexer(oldkey):
