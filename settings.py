@@ -38,23 +38,23 @@ COLORNAMES = (
 )
 
 HUE = [
-    {'span': map(lambda x: x + 360 if x < 0 else x, xrange(-18, 12)), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
-    {'span': xrange(12, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
-    {'span': xrange(40, 76), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
-    {'span': xrange(76, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
-    {'span': xrange(143, 192), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'},  # 180
-    {'span': xrange(192, 244), 'order': '5', 'name': 'blue', 'hex': '#005fbf'},  # 210
-    {'span': xrange(244, 287), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'},  # 270
-    {'span': xrange(287, 342), 'order': '7', 'name': 'pink', 'hex': '#bf005f'}  # 330
+    {'span': range(342, 360) + range(12), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
+    {'span': range(12, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
+    {'span': range(40, 76), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
+    {'span': range(76, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
+    {'span': range(143, 192), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'},  # 180
+    {'span': range(192, 244), 'order': '5', 'name': 'blue', 'hex': '#005fbf'},  # 210
+    {'span': range(244, 287), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'},  # 270
+    {'span': range(287, 342), 'order': '7', 'name': 'pink', 'hex': '#bf005f'}  # 330
 ]
 LUM = [
-    {'span': xrange(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
-    {'span': xrange(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': xrange(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+    {'span': range(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
+    {'span': range(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': range(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
 ]
 SAT = [
-    {'span': xrange(0, 20), 'name': 'monochrome'},
-    {'span': xrange(20, 101), 'name': 'color'}
+    {'span': range(0, 20), 'name': 'monochrome'},
+    {'span': range(20, 101), 'name': 'color'}
 ]
 
 COLORS = {}
