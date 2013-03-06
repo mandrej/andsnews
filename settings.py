@@ -28,17 +28,13 @@ MONTHS_3 = {
     1: _('jan'), 2: _('feb'), 3: _('mar'), 4: _('apr'), 5: _('may'), 6: _('jun'),
     7: _('jul'), 8: _('aug'), 9: _('sep'), 10: _('oct'), 11: _('nov'), 12: _('dec')
 }
-MONTHS_AP = {
-    1: _('Jan.'), 2: _('Feb.'), 3: _('March'), 4: _('April'), 5: _('May'), 6: _('June'),
-    7: _('July'), 8: _('Aug.'), 9: _('Sept.'), 10: _('Oct.'), 11: _('Nov.'), 12: _('Dec.')
-}
-COLORNAMES = (
+COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
-    _('purple'), _('pink'), _('dark'), _('medium'), _('light'),
+    _('purple'), _('pink'), _('dark'), _('medium'), _('light'), _('bright'),
 )
 
 HUE = [
-    {'span': range(342, 360) + range(12), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
+    {'span': range(342, 360) + range(12), 'order': '0', 'name': 'red', 'hex': '#cc0000'},  # 0
     {'span': range(12, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
     {'span': range(40, 76), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
     {'span': range(76, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
@@ -58,10 +54,7 @@ SAT = [
 ]
 
 COLORS = {}
-for x in HUE:
-    COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
-
-for x in LUM:
+for x in HUE + LUM:
     COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
 # import datetime, time, random
