@@ -67,14 +67,14 @@
                 <dt>Saturation</dt>
                 <dd>
                     <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="sat" value="50" size="2" disabled="disabled"/>
+                    <input type="text" name="sat" value="40" size="2" disabled="disabled"/>
                 </dd>
             </dl>
             <dl class="w65em">
                 <dt>Lightness</dt>
                 <dd>
                     <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="lum" value="50" size="2" disabled="disabled"/>
+                    <input type="text" name="lum" value="40" size="2" disabled="disabled"/>
                 </dd>
             </dl>
         </div>
@@ -138,7 +138,7 @@
                 })
             };
             $('.slider').slider({
-                value: 50,
+                value: 40,
                 min: 0, max: 100, step: 10,
                 slide: function(event, ui) {
                     $('input[name=' + event.target.id + ']').val(ui.value);
