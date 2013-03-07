@@ -6,14 +6,11 @@ from google.appengine.api import users
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
-
-from colormath.color_objects import HSLColor
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
 from handlers import BaseHandler
 from common import Paginator, Filter, EmailField, TagsField
-from settings import HUE
 
 
 class Index(BaseHandler):
@@ -181,22 +178,3 @@ class Edit(BaseHandler):
             self.redirect_to('photo_all')
         else:
             self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
-
-
-class Spectra(BaseHandler):
-    def get(self):
-        data = []
-        for row in HUE:
-            coll = []
-            for h in row['span']:
-                for l in (50,):
-                    lum = l / 100.0
-                    for s in (80,):
-                        sat = s / 100.0
-                        color = HSLColor(h, sat, lum)
-                        rgb = color.convert_to('rgb', target_rgb='sRGB').get_rgb_hex()
-                        coll.append(rgb)
-
-            data.append({'name': row['name'], 'colors': coll})
-
-        self.render_template('photo/spectra.html', {'data': data})

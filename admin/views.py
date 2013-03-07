@@ -1,14 +1,18 @@
 from __future__ import division
 import json
+from collections import defaultdict
+
 import webapp2
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
+
+from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, KEYS
 from entry.views import make_thumbnail
 from handlers import BaseHandler, filesizeformat
 from common import Paginator, Filter, count_property, make_cloud
-from settings import PER_PAGE
+from settings import PER_PAGE, HUE
 
 
 class Cache(webapp2.RequestHandler):
@@ -184,3 +188,19 @@ class Counters(BaseHandler):
             obj.put()
 
         self.redirect('/admin/counters')
+
+
+class Spectra(BaseHandler):
+    def get(self):
+        sat = int(self.request.get('sat', 20))
+        lum = int(self.request.get('lum', 40))
+        spectra = defaultdict(list)
+        for row in HUE:
+            for hue in row['span']:
+                color = HSLColor(hue, sat / 100.0, lum / 100.0)
+                hsl = 'hsl({0}, {1:.0%}, {2:.0%})'.format(*color.get_value_tuple())
+                spectra[row['name']].append(hsl)
+
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(spectra))
+        return self.response

@@ -535,6 +535,7 @@ figure p.legend { padding: 5px; text-align: center; }
 .right { float: right; margin-left: 10px; }
 .collapse, .ff { cursor: pointer; }
 .admin h4 { padding: 2px 0; font-size: 1.1em; }
+#spectra .item { float: left; width: 12px; height: 17px; border-color: #000; border-style: solid; border-width: 0 1px 1px 0; }
 .white {
 	display: block;
 	padding: 10px;

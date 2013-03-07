@@ -12,7 +12,6 @@ CONFIG = {
 app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/', handler='photo.views.Index', name='photo_all'),
-        Route('/spectra', handler='photo.views.Spectra', name='spectra'),
         Route('/add', handler='photo.views.Add', name='photo_add'),
         Route('/<slug>/edit', handler='photo.views.Edit', name='photo_edit'),
         Route('/<slug>/palette', handler='photo.views.Palette', name='palette'),
@@ -46,6 +45,7 @@ app = WSGIApplication([
         Route('/comments', handler='admin.views.Comments'),
         Route('/feeds', handler='admin.views.Feeds'),
         Route('/counters', handler='admin.views.Counters'),
+        Route('/spectra', handler='admin.views.Spectra'),
 
         Route('/blobs', handler='admin.views.Blobs'),
         Route('/blobs/<field:date>/<value>', handler='admin.views.Blobs'),
