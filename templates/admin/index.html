@@ -61,7 +61,21 @@
 		</div>
 	</div>
     <h2 class="ss" style="clear: both">Spectra [+]</h2>
-    <div id="spectra" class="hide"></div>
+    <div class="hide">
+        <dl class="w65em">
+            <dt>Saturation</dt>
+            <dd>
+                <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
+                <input type="text" name="sat" value="70" size="2" disabled="disabled"/>
+            </dd>
+            <dt>Lightness</dt>
+            <dd>
+                <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
+                <input type="text" name="lum" value="50" size="2" disabled="disabled"/>
+            </dd>
+        </dl>
+        <div id="spectra"></div>
+    </div>
 </article>
 {% endblock %}
 
@@ -102,12 +116,14 @@
                     }
                 });
             });
-            $('h2.ss').click(function() {
-                var sat = 70, lum = 50;
+
+            var drawSpectra = function() {
+                var sat = $('input[name=sat]').val();
+                var lum = $('input[name=lum]').val();;
                 $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {
                     $('#spectra').empty();
                     $.each(data, function(name, colors) {
-                        var str = '<div style="clear: both"><span class="item" style="width: 150px;">S:' + sat + ' L:' + lum + ' ' + name + '</span>';
+                        var str = '<div style="clear: both"><span class="item" style="width: 50px;">' + name + '</span>';
                         $.each(colors, function(i, c) {
                             str += '<span class="item" style="background: ' + c + '">&nbsp;</span>';
                         });
@@ -115,6 +131,25 @@
                         $('#spectra').append(str);
                     });
                 })
+            };
+            $('#sat').slider({
+                value: 70,
+                min: 0, max: 100, step: 10,
+                slide: function(evnt, ui) {
+                    $('input[name=sat]').val(ui.value);
+                    drawSpectra();
+                }
+            })
+            $('#lum').slider({
+                value: 50,
+                min: 0, max: 100, step: 10,
+                slide: function(evnt, ui) {
+                    $('input[name=lum]').val(ui.value);
+                    drawSpectra();
+                }
+            })
+            $('h2.ss').click(function() {
+                drawSpectra();
             })
         });
     </script>

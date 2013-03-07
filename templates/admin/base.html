@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7}]}"></script>
+    <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7},{name:'jqueryui',version:1.8}]}"></script>
     <script src="/static/scripts/common.js"></script>
     <script>
         $(function() {
@@ -33,5 +33,6 @@
             });
         });
     </script>
+    <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
 {% endblock %}
 {% block ga %}{% endblock %}
