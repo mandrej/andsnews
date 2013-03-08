@@ -818,6 +818,7 @@ figure p.legend { padding: 5px; text-align: center; }
 }
 @media (max-width: 480px) {
 	h1 { font-size: 2.5em; }
+    .paginator span, .paginator a, #menu { font-size: 3em; }
 	#footer, #aside, .submenu, .subtitle, #filters .graph { display: none; }
 	#header { height: 45px; }
 	#main { margin: 1em 0 1em 3%; }

@@ -3,7 +3,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
 	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 	<meta name="verify-v1" content="500ha7MSGCMgwkQG3S+CaeF1KzDLZB3Q9Ly5o+R7g5w="/>
@@ -64,7 +64,7 @@
 			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
 			<div id="tools">
 				{% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
-				<a href="#" id="menu" title="{{ _('Tools') }}">✪</a>
+				<a href="#" id="menu" title="{{ _('Tools') }}">≡</a>
 			</div>
 		</header>
 		<div id="main">
