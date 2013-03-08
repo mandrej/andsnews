@@ -67,14 +67,14 @@
                 <dt>Saturation</dt>
                 <dd>
                     <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="sat" value="40" size="2" disabled="disabled"/>
+                    <input type="text" name="sat" size="2" disabled="disabled"/>
                 </dd>
             </dl>
             <dl class="w65em">
                 <dt>Lightness</dt>
                 <dd>
                     <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="lum" value="40" size="2" disabled="disabled"/>
+                    <input type="text" name="lum" size="2" disabled="disabled"/>
                 </dd>
             </dl>
         </div>
@@ -122,8 +122,8 @@
             });
 
             var drawSpectra = function() {
-                var sat = $('input[name=sat]').val();
-                var lum = $('input[name=lum]').val();
+                var sat = $('#sat').slider('value');
+                var lum = $('#lum').slider('value');
 
                 $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {
                     $('#spectra').empty();
@@ -138,16 +138,17 @@
                 })
             };
             $('.slider').slider({
-                value: 40,
-                min: 0, max: 100, step: 10,
-                slide: function(event, ui) {
+                min: 0, max: 100, step: 5,
+                change: function(event, ui) {
                     $('input[name=' + event.target.id + ']').val(ui.value);
                     drawSpectra();
                 }
             })
             $('h2.ss').click(function() {
                 drawSpectra();
-            })
+            });
+            $('#sat').slider('value', 35);
+            $('#lum').slider('value', 40);
         });
     </script>
 {% endblock %}
