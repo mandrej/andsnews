@@ -4,14 +4,16 @@
 {% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
 {% block subnav %}
-    {% if object %}
-        {% if is_admin or user == object.author %}
-			<a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-     		<a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <h2>
+        {% if object %}
+            {% if is_admin or user == object.author %}
+                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
-    {% else %}
-        <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-    {% endif %}
+    </h2>
 {% endblock %}
 
 {% block aside %}
@@ -37,7 +39,7 @@
 {% endblock %}
 
 {% block contents %}
-<article>
+<article id="port">
 	<h2>{{ _('Add new / change existing photo') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
@@ -52,7 +54,7 @@
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.slug) }}
                 {{ m.form_row(form.tags) }}
-                {{ m.form_row(form.photo, style='width: 285px;') }}
+                {{ m.form_row(form.photo) }}
                 <p class="buttons">
                     <span class="required">{{ _('Required field') }}</span>
                     <button type="submit">{{ _('upload') }}</button>

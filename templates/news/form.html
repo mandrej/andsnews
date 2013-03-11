@@ -4,14 +4,16 @@
 {% block title %}{{ super() }} - {{ _('Add new / change existing news') }}{% endblock %}
 
 {% block subnav %}
-    {% if object %}
-        {% if is_admin %}
-            <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            <a href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <h2>
+        {% if object %}
+            {% if is_admin %}
+                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ uri_for('feed_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
-    {% else %}
-        <a href="{{ uri_for('feed_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-    {% endif %}
+    </h2>
 {% endblock %}
 
 {% block aside %}

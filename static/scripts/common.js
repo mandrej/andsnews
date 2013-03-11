@@ -8,7 +8,7 @@
 var chartOptions = {
     backgroundColor: '#222',
     pieSliceBorderColor: '#222',
-    fontSize: 11,
+    fontSize: 12,
     fontName: 'sans-serif',
     chartArea: {width: 420, top: 0, left: 0, height: 300},
     legend: {textStyle: {color: '#ccc'}}

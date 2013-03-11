@@ -59,7 +59,7 @@
     <div class="white">
         {{ time(obj.date) }}
         {% if user == obj.author %}
-            <a class="delete confirm right" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
+            <a class="confirm right" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
                title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
         {% endif %}
         <div class="body">{{ obj.body|safe }}</div>

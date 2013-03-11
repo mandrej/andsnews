@@ -4,14 +4,16 @@
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block subnav %}
-    {% if object %}
-        {% if is_admin or user == object.author %}
-            <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <h2>
+        {% if object %}
+            {% if is_admin or user == object.author %}
+                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
-    {% else %}
-        <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-    {% endif %}
+    </h2>
 {% endblock %}
 
 {% block modals %}
@@ -64,7 +66,7 @@
                 {{ m.form_row(form.slug) }}
             {% endif %}
             {{ m.form_row(form.tags) }}
-            {{ m.form_row(form.summary) }}
+            {{ m.form_row(form.summary, rows=4) }}
             {{ m.form_row(form.author) }}
             {{ m.form_row(form.date, placeholder='YYYY-mm-dd HH:MM:SS') }}
 		</fieldset>
@@ -83,7 +85,7 @@
             {% for field in form.newimages %}
                 <p>
                     {{ field.form.name.label }} {{ field.form.name }}
-                    {{ field.form.blob(style='width: 285px;') }}
+                    {{ field.form.blob }}
                     <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
                 </p>
             {% endfor %}
@@ -91,7 +93,7 @@
 	
 		<fieldset style="float: none">
             <p class="editor">
-                {{ form.body(rows=10) }}
+                {{ form.body(rows=20) }}
             </p>
 			<p class="buttons">
 				<span class="required">{{ _('Required field') }}</span>

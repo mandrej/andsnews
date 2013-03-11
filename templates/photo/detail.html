@@ -5,15 +5,17 @@
 {% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
 
 {% block subnav %}
-    {% if user %}
-        <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-    {% endif %}
-    {% if is_admin or user == object.author %}
-        <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-        <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-    {% endif %}
-    <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-    <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    <h2>
+        {% if user %}
+            <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        {% endif %}
+        {% if is_admin or user == object.author %}
+            <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+            <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+        {% endif %}
+        <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+        <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+    </h2>
 {% endblock %}
 
 {% block modals %}
@@ -58,7 +60,7 @@
 {% endblock %}
 
 {% block contents %}
-<article>
+<article id="port">
 	<header>
         {% if filter %}
             {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
@@ -94,7 +96,7 @@
 		</div>
 	</header>
 	
-	<figure id="port">
+	<figure>
         <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
 	</figure>
 </article>

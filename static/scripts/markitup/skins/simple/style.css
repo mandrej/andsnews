@@ -12,7 +12,7 @@
 	height: 320px;
 	overflow: auto;
 }
-.markItUpPreviewFrame { width: 819px; margin: 5px 0; padding: 2px; height: 300px; overflow: auto; }
+.markItUpPreviewFrame { width: 100%; margin: 5px 0; padding: 2px; height: 300px; overflow: auto; }
 #comments .markItUpPreviewFrame { height: 100px; }
 .markItUpFooter { width: 100%; }
 .markItUpResizeHandle {

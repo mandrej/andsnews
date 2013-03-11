@@ -3,9 +3,11 @@
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
 {% block subnav %}
-    {% if user %}
-        <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-    {% endif %}
+    <h2>
+        {% if user %}
+            <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        {% endif %}
+    </h2>
 {% endblock %}
 
 {% block contents %}

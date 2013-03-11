@@ -5,22 +5,24 @@
 {% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
 
 {% block subnav %}
-    {% if user %}
-        <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-    {% endif %}
-    {% if object %}
-        {% if is_admin %}
-            <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-            <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-        {% else %}
-            {% if user == object.author %}
+    <h2>
+        {% if user %}
+            <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        {% endif %}
+        {% if object %}
+            {% if is_admin %}
                 <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
                 <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            {% else %}
+                {% if user == object.author %}
+                    <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                    <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                {% endif %}
             {% endif %}
+            <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+            <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
-        <a class="comment_add" href="{{ uri_for('comment_add', safekey=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-        <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-    {% endif %}
+    </h2>
 {% endblock %}
 
 {% block modals %}

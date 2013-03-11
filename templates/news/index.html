@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block subnav %}
-    {% if is_admin %}
-        <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-	{% else %}
-		&nbsp;
-    {% endif %}
+    <h2>
+        {% if is_admin %}
+            <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+        {% else %}
+            &nbsp;
+        {% endif %}
+    </h2>
 {% endblock %}
 
 {% block contents %}

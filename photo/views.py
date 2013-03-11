@@ -121,7 +121,7 @@ class AddForm(Form):
 
     def validate_photo(self, field):
         if not isinstance(field.data, cgi.FieldStorage):
-            raise validators.ValidationError(_('Not cgi.FieldStorage type.'))
+            raise validators.ValidationError(_('Wrong type.'))
 
 
 class EditForm(Form):
