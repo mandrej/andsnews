@@ -171,16 +171,14 @@
 
                 // isotope
                 var $container = $('#container');
-                function layouting() {
-                    $container.isotope({
-                        itemSelector: '.brick',
-                        resizable: false,
-                        fitColumns: true
-                    });
-                }
+                $container.isotope({
+                    itemSelector: '.brick'
+                });
                 $container.imagesLoaded(function() {
-                    layouting();
-                    $(window).smartresize(layouting);
+                    $container.isotope('reLayout');
+                });
+                $(window).smartresize(function() {
+                    $container.isotope('reLayout');
                 });
             });
         </script>
