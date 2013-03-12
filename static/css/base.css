@@ -7,7 +7,7 @@ body {
     height: 100%;
 	color: #999;
 	font-family: "PT Sans", sans-serif;
-    font-size: 0.8em;
+    font-size: 13px;
 }
 a { color: #fff; outline: none; }
 a img { border: none; vertical-align: middle; }
@@ -712,13 +712,18 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	.half { width: 47%; }
 }
 @media (max-width: 480px) {
-	h1 { font-size: 2.8em; }
-	#footer, #aside, .submenu, .subtitle, #filters .graph { display: none; }
-	#header { height: 4em; }
+    body { font-size: 16px; }
+	h1 { font-size: 2em; }
+    h2 { font-size: 1.4em; }
+	#footer, #aside, #langs, .submenu, .subtitle, #filters .graph, .menu a.Comment { display: none; }
+    #searchForm { margin: 0; }
+	#header { height: 3em; }
 	#main { margin: 1em 0 1em 3%; }
-	#tools { width: 70%; }
+	#tools { width: auto; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
-	.menu { width: 76%; }
+    article .white, article .white:hover, .twocolumns { padding: 0; background: none; color: #999; }
+    article .white:hover a { color: #fff; }
+	.menu { width: 75%; }
 	#port { width: 97%; }
 	.half { width: auto; }
 	.third { width: 97%; }
