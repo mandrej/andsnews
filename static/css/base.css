@@ -716,7 +716,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	#footer, #aside, .submenu, .subtitle, #filters .graph { display: none; }
 	#header { height: 4em; }
 	#main { margin: 1em 0 1em 3%; }
-	#tools { position: relative; }
+	#tools { width: 70%; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
 	.menu { width: 76%; }
 	#port { width: 97%; }
