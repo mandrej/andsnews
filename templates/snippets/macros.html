@@ -56,15 +56,13 @@
 {% endmacro %}
 
 {% macro render_comment(obj, user) %}
-    <div class="white">
-        {{ time(obj.date) }}
-        {% if user == obj.author %}
-            <a class="confirm right" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
-               title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
-        {% endif %}
-        <div class="body">{{ obj.body|safe }}</div>
-        <p class="posted">{{ obj.author }},
-            {% trans since=obj.date|timesince %}{{ since }} ago{% endtrans %}
-        </p>
-    </div>
+    {{ time(obj.date) }}
+    {% if user == obj.author %}
+        <a class="confirm right" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
+           title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
+    {% endif %}
+    <div class="body">{{ obj.body|safe }}</div>
+    <p class="details">{{ obj.author }},
+        {% trans since=obj.date|timesince %}{{ since }} ago{% endtrans %}
+    </p>
 {% endmacro %}

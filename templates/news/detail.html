@@ -44,18 +44,16 @@
 		<div id="container">
 			{% for entry in news.entries %}
 				<article class="third brick">
-		            <div class="white">
-		                <header>
-		                    <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
-		                </header>
-		                <div class="story">{{ entry.content|safe }}</div>
-		                <p class="details">
-		                    {{ entry.author|striptags }}
-		                    {% if entry.date %}
-                                {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
-		                    {% endif %}
-		                </p>
-		            </div>
+                    <header>
+                        <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
+                    </header>
+                    <div class="story">{{ entry.content|safe }}</div>
+                    <p class="details">
+                        {{ entry.author|striptags }}
+                        {% if entry.date %}
+                            {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
+                        {% endif %}
+                    </p>
 				</article>
 			{% endfor %}
 		</div>

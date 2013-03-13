@@ -24,7 +24,7 @@ h1 a { color: #000; text-decoration: none; }
 h2 { font-size: 1.8em; font-weight: normal; color: #fff; text-shadow: 0 0 0.1em rgba(0,0,0,1); }
 h2 a { text-decoration: none; }
 h2 a:hover { text-decoration: underline; }
-h3 { font-size: 1.4em; text-shadow: 0 0 0.2em rgba(0,0,0,0.5); }
+h3 { font-size: 1.4em; }
 h3 a { text-decoration: none; }
 h3 a:hover { text-decoration: underline; }
 h4, h5, h6 { font-size: 1em; }
@@ -275,7 +275,7 @@ fieldset p.upload input { margin-right: 0.5em; width: auto; }
 	-webkit-border-radius: 4px;
 }
 #searchForm input:focus { outline: none; }
-#addcommentForm input { width: 21.5em; }
+#addcommentForm input { width: 21em; }
 #addcommentForm .editor .error { margin-left: 0; }
 .admin button { float: right; width: 5em; margin-left: 0.5em; }
 button[name$=delete], button[name$=feed], button[name$=rating] { box-sizing: border-box; border-left: 4px solid #c00; border-right: 4px solid #c00; }
@@ -386,19 +386,12 @@ figure p.legend { padding: 0.5em; text-align: center; }
 .story blockquote { border-left: 1em solid #fff; }
 .twocolumns {
 	margin-bottom: 1em;
-	padding: 1em;
-	background: rgba(0,0,0,0.5);
-	position: relative;
-	overflow: hidden;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	-moz-column-count: 2;
 	-moz-column-gap: 2em;
 	-webkit-column-count: 2;
-	-webkit-column-gap: empx;
+	-webkit-column-gap: 2em;
 	column-count: 2;
-	column-gap: 30em;
+	column-gap: 2em;
 }
 .twocolumns table { display: inline-block; }
 .icon {
@@ -413,32 +406,28 @@ figure p.legend { padding: 0.5em; text-align: center; }
 #main .News { background-image: url(../images/news.png); }
 /* comments */
 #comments, #exif { clear: both; margin-top: 2em; }
-#comments .white { margin-bottom: 1em; }
-#comments a { background-color: transparent; }
-.comment { border-bottom: 1px dashed #666; margin: 5px 0; display: block; }
 .when {
-	margin: 1em 0.5em 1em 0;
-	width: 3.5em;
+	margin: 0 0.5em 0.2em 0;
+	width: 2.5em;
 	float: left;
-	font-size: 1.6em;
+    color: orange;
+	font-size: 2.2em;
 	position: relative;
 }
 .when .day {
 	position: absolute;
-	top: 0;
+	top: -0.25em;
 	left: 0;
 }
-.when .time, .when .monthyear { display: block; font-size: 72%; line-height: 100%; text-align: right; }
+.when .time, .when .monthyear { display: block; font-size: 42%; line-height: 100%; text-align: right; }
 .when .day, .when .time { font-weight: bold; }
-.white .when { margin: 0.5em 0.5em 0.5em 0; }
 .body { margin: 0 3em 0.5em 0; }
-.posted { margin: 0; }
 /* misc */
 .details {
 	clear: both;
-	margin: 5px 0 0;
-	padding-top: 5px;
-	border-top: 1px dashed #666;
+	margin: 0.5em 0;
+	padding-top: 0.2em;
+	border-top: 1px dashed orange;
 	font-size: 91%;
 	text-align: right;
 }
@@ -539,12 +528,10 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	-moz-border-radius: 1em;
 	-webkit-border-radius: 1em;
 }
-.thumbnail:hover, .white:hover { background: orange; color: #000; }
-.thumbnail:hover a, .white:hover a { color: #000; }
+.thumbnail:hover { background: orange; color: #000; }
+.thumbnail:hover a { color: #000; }
 #aside .white:hover { background: rgba(0,0,0,0.5); color: #ccc; }
 #aside .white:hover a { color: #fff; }
-#comments .white:hover { background: #fff; color: #000; }
-.old { color: #fff; background: rgba(0,0,0,0.1); }
 .none { background: orange; color: #000; }
 .clear { clear: both; }
 #spinner {
@@ -721,8 +708,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	#main { margin: 1em 0 1em 3%; }
 	#tools { width: auto; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
-    article .white, article .white:hover, .twocolumns { padding: 0; background: none; color: #999; }
-    article .white:hover a { color: #fff; }
 	.menu { width: 75%; }
 	#port { width: 97%; }
 	.half { width: auto; }
