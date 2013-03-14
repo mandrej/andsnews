@@ -58,8 +58,8 @@
 {% macro render_comment(obj, user) %}
     {{ time(obj.date) }}
     {% if user == obj.author %}
-        <a class="confirm right" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
-           title="{{ _('Delete') }}"><img src="/static/images/delete.png" alt=""/></a>
+        <a class="confirm delete" href="{{ uri_for('delete', safekey=obj.key.urlsafe()) }}"
+           title="{{ _('Delete') }}">❌</a>
     {% endif %}
     <div class="body">{{ obj.body|safe }}</div>
     <p class="details">{{ obj.author }},

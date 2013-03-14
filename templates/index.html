@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block modals %}{% endblock %}
 {% block aside %}
-	<div class="white">
+	<div class="box dark">
 		<header>
-			<a class="delete" href="#" title="{{ _('hide') }}">−</a>
+			<a class="remove" href="#" title="{{ _('hide') }}">−</a>
 			<h2>{{ _('Welcome to our and YOUR site') }}</h2>
 		</header>
 		{% if LANGUAGE_CODE == 'en_US' %}
@@ -56,7 +56,7 @@
                 });
                 $.backstretch(sources, {fade: 1000, duration: 4000});
             });
-            $('.delete').click(function() {
+            $('.remove').click(function() {
                 $('#aside').slideUp();
                 return false
             });

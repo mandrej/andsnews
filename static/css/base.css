@@ -54,16 +54,12 @@ dl a { text-decoration: none; }
 dl a:hover { text-decoration: underline; }
 dl a:hover, dl a.selected { background: orange; }
 .admin { margin-bottom: 1em; }
-.admin dl { margin-right: 5.5em; }
+.admin dl { margin-right: 5.5em; color: orange; }
 .admin dt { width: 75%; }
 .admin dd { margin-left: 80%; }
 .admin a { text-decoration: underline; }
 .body dt { width: 33%; }
 .body dd { margin-left: 35%; }
-.w35em dt { width: 3.5em; }
-.w35em dd { margin-left: 3.5em; }
-.w50em dt { width: 5em; }
-.w50em dd { margin-left: 5em; }
 .w65em dt { width: 6.5em; }
 .w65em dd { margin-left: 6.5em; }
 pre {
@@ -421,7 +417,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 .when .time, .when .monthyear { display: block; font-size: 42%; line-height: 100%; text-align: right; }
 .when .day, .when .time { font-weight: bold; }
-.body { margin: 0 3em 0.5em 0; }
+.body { margin-bottom: 0.5em; }
 /* misc */
 .details {
 	clear: both;
@@ -433,21 +429,18 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 .left { float: left; margin-right: 1em; }
 .right { float: right; margin-left: 1em; }
-.collapse, .ff { cursor: pointer; }
+.collapse, .ff, .ss { cursor: pointer; }
 .admin h4 { padding: 2px 0; font-size: 1.1em; }
 #spectra .item { float: left; width: 1.2em; height: 1.2em; margin: 0 1px 1px 0; }
 .slider { float: left; width: 20em; }
-.white {
-	display: block;
+.box {
 	padding: 1em;
-	background: rgba(0,0,0,0.5);
-	position: relative;
-	overflow: hidden;
-	text-decoration: none;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
+.dark { background: rgba(0,0,0,0.5); color: #fff; }
+.orange { background: orange; color: #000; }
 .half { margin: 0 3% 2em 0; width: 47%; display: inline-block; vertical-align: top; }
 .third {
 	margin: 0 3% 2em 0;
@@ -530,9 +523,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 .thumbnail:hover { background: orange; color: #000; }
 .thumbnail:hover a { color: #000; }
-#aside .white:hover { background: rgba(0,0,0,0.5); color: #ccc; }
-#aside .white:hover a { color: #fff; }
-.none { background: orange; color: #000; }
 .clear { clear: both; }
 #spinner {
 	margin: -50px 0 0 -50px;
@@ -661,7 +651,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	from { opacity: 1; }
 	to { opacity: 0; }
 }
-.delete {
+.remove {
 	float: right;
     font-size: 1.8em;
 	font-weight: bold;
@@ -675,6 +665,16 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
+.delete {
+    float: right;
+    margin-left: 0.3em;
+    font-size: 1.8em;
+    line-height: 100%;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+}
+.delete:hover { color: #c00; }
 @media (max-width: 1024px) {
 	#footer, #palette { display: none; }
 	#aside { width: 37%; }
