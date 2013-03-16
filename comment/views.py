@@ -34,20 +34,20 @@ class AddForm(Form):
 
 
 class Add(BaseHandler):
-    def get(self, safekey):
-        refobj = ndb.Key(urlsafe=safekey).get()
+    def get(self, safe_key):
+        refobj = ndb.Key(urlsafe=safe_key).get()
         user = users.get_current_user()
         if user:
             form = AddForm(**{'email': user.email()})
         else:
             form = AddForm()
         self.render_template('snippets/addcomment.html',
-                             {'form': form, 'safekey': safekey, 'headline': refobj.headline})
+                             {'form': form, 'safe_key': safe_key, 'headline': refobj.headline})
 
-    def post(self, safekey):
+    def post(self, safe_key):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
-            refkey = ndb.Key(urlsafe=safekey)
+            refkey = ndb.Key(urlsafe=safe_key)
             obj = Comment(
                 parent=refkey,
                 author=users.User(form.data['email']),

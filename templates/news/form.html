@@ -7,7 +7,7 @@
     <h2>
         {% if object %}
             {% if is_admin %}
-                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
                 <a href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
         {% else %}
@@ -65,7 +65,7 @@
     <script>
         $(function() {
             $('#headline').slugify();
-            $("#tags").autocomplete("/complete/feed/tags", {
+            $("#tags").autocomplete("/complete/Feed_tags", {
                 width: 284,
                 selectFirst: false,
                 multiple: true,

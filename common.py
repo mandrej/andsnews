@@ -1,80 +1,13 @@
 from __future__ import division
 
 import hashlib
-import itertools
-import collections
 from string import capitalize
 import webapp2
 from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
 from wtforms import widgets, fields
-from cloud import calculate_cloud
-from models import INDEX, Counter
-from settings import COLORS, FAMILY, PER_PAGE, TIMEOUT
-
-
-def make_cloud(kind, field):
-    key = '%s_%s' % (kind, field)
-    content = memcache.get(key)
-    if content is None:
-        coll = {}
-        query = Counter.query(Counter.forkind == kind, Counter.field == field)
-        for counter in query:
-            count = counter.count
-            if count > 0:
-                try:
-                    # keep sorted date, eqv, iso by int
-                    coll[int(counter.value)] = count
-                except ValueError:
-                    coll[counter.value] = count
-
-        content = []
-        if field == 'color':
-            for k, count in coll.items():
-                data = COLORS[k]
-                data.update({'count': count, 'field': field})
-                content.append(data)
-        else:
-            content = calculate_cloud(coll)
-        memcache.set(key, content, TIMEOUT * 12)
-    return content
-
-
-def count_property(kind, field):
-    prop = field
-    if field == 'date':
-        prop = 'year'
-    key = '%s_%s' % (kind, field)
-    # TODO REMEMBER
-    model = ndb.Model._kind_map.get(kind)
-    query = model.query()
-    properties = (getattr(x, prop, None) for x in query)  # generator
-    if prop == 'tags':
-        properties = list(itertools.chain(*properties))
-    elif prop == 'author':
-        properties = [x.nickname() for x in properties]
-    tally = collections.Counter(filter(None, properties))  # filter out None
-    coll = dict(tally.items())
-
-    for value, count in coll.items():
-        keyname = '%s||%s||%s' % (kind, field, value)
-        params = dict(zip(('forkind', 'field', 'value'), map(str, [kind, field, value])))
-        obj = Counter.get_or_insert(keyname, **params)
-        if obj.count != count:
-            obj.count = count
-            obj.put_async()
-
-    content = []
-    if field == 'color':
-        for k, count in coll.items():
-            data = COLORS[k]
-            data.update({'count': count, 'field': field})
-            content.append(data)
-    else:
-        content = calculate_cloud(coll)
-
-    memcache.set(key, content, TIMEOUT * 12)
-    return content
+from models import INDEX
+from settings import FAMILY, PER_PAGE, TIMEOUT
 
 
 class Filter:

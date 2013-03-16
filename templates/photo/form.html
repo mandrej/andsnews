@@ -7,7 +7,7 @@
     <h2>
         {% if object %}
             {% if is_admin or user == object.author %}
-                <a class="confirm" href="{{ uri_for('delete', safekey=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
                 <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
         {% else %}
@@ -114,13 +114,13 @@
     <script>
         $(function() {
             $('#headline').slugify();
-            $("#tags").autocomplete("/complete/photo/tags", {
+            $("#tags").autocomplete("/complete/Photo_tags", {
                 width: 284,
                 selectFirst: false,
                 multiple: true,
                 matchContains: true
             });
-            $("#lens").autocomplete("/complete/photo/lens", {
+            $("#lens").autocomplete("/complete/Photo_lens", {
                 width: 284,
                 selectFirst: false,
                 multiple: false,

@@ -8,10 +8,10 @@ from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
 
 from colormath.color_objects import HSLColor
-from models import Photo, Entry, Comment, Feed, Counter, KEYS
+from models import Photo, Entry, Comment, Feed, Counter, KEYS, count_property, make_cloud
 from entry.views import make_thumbnail
 from handlers import BaseHandler, filesizeformat
-from common import Paginator, Filter, count_property, make_cloud
+from common import Paginator, Filter
 from settings import PER_PAGE, HUE
 
 
@@ -22,14 +22,13 @@ class Cache(webapp2.RequestHandler):
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(data))
 
-    def put(self, key):
-        kind, field = key.split('_')
-        content = count_property(kind, field)
+    def put(self, mem_key):
+        content = count_property(mem_key)
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(content))
 
-    def delete(self, key):
-        memcache.delete(key)
+    def delete(self, mem_key):
+        memcache.delete(mem_key)
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(None))
 
@@ -66,7 +65,7 @@ class Comments(BaseHandler):
 
     def post(self):
         params = dict(self.request.POST)
-        key = ndb.Key(urlsafe=params['safekey'])
+        key = ndb.Key(urlsafe=params['safe_key'])
         if 'body' in params:
             obj = key.get()
             obj.body = params['body']
@@ -112,12 +111,12 @@ class Images(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': make_cloud('Entry', 'date')}
+                'archive': make_cloud('Entry_date')}
         self.render_template('admin/images.html', data)
 
     def post(self):
         params = dict(self.request.POST)
-        key = ndb.Key(urlsafe=params['safekey'])
+        key = ndb.Key(urlsafe=params['safe_key'])
         if params['action'] == 'delete':
             obj = key.get()
             obj.small = None
@@ -147,7 +146,7 @@ class Blobs(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': make_cloud('Photo', 'date')}
+                'archive': make_cloud('Photo_date')}
         self.render_template('admin/blobs.html', data)
 
 

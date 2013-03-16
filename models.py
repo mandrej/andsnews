@@ -3,6 +3,8 @@ import logging
 import datetime
 import time
 import colorsys
+import itertools
+import collections
 from cStringIO import StringIO
 from PIL import Image
 
@@ -11,7 +13,8 @@ from google.appengine.api import users, memcache, search, images
 
 from lib import colorific
 from lib.EXIF import process_file
-from settings import DEVEL, HUE, LUM, SAT
+from cloud import calculate_cloud
+from settings import DEVEL, COLORS, HUE, LUM, SAT, TIMEOUT
 
 
 INDEX = search.Index(name='searchindex')
@@ -163,12 +166,86 @@ class Counter(ndb.Model):
     count = ndb.IntegerProperty(default=0)
 
 
+def cloud_content(kind, field):
+    coll = {}
+    query = Counter.query(Counter.forkind == kind, Counter.field == field)
+    for counter in query:
+        count = counter.count
+        if count > 0:
+            try:
+                # keep sorted date, eqv, iso by int
+                coll[int(counter.value)] = count
+            except ValueError:
+                coll[counter.value] = count
+
+    content = []
+    if field == 'color':
+        for k, count in coll.items():
+            data = COLORS[k]
+            data.update({'count': count, 'field': field})
+            content.append(data)
+    else:
+        content = calculate_cloud(coll)
+    return content
+
+
+def make_cloud(mem_key):
+    kind, field = mem_key.split('_')
+    content = memcache.get(mem_key)
+    if content is None:
+        content = cloud_content(kind, field)
+        memcache.set(mem_key, content, TIMEOUT * 12)
+    return content
+
+
+def count_property(mem_key):
+    kind, field = mem_key.split('_')
+    prop = field
+    if field == 'date':
+        prop = 'year'
+    # TODO REMEMBER
+    model = ndb.Model._kind_map.get(kind)
+    query = model.query()
+    properties = (getattr(x, prop, None) for x in query)  # generator
+    if prop == 'tags':
+        properties = list(itertools.chain(*properties))
+    elif prop == 'author':
+        properties = [x.nickname() for x in properties]
+    tally = collections.Counter(filter(None, properties))  # filter out None
+    coll = dict(tally.items())
+
+    for value, count in coll.items():
+        key_name = '%s||%s||%s' % (kind, field, value)
+        params = dict(zip(('forkind', 'field', 'value'), map(str, [kind, field, value])))
+        obj = Counter.get_or_insert(key_name, **params)
+        if obj.count != count:
+            obj.count = count
+            obj.put_async()
+
+    content = []
+    if field == 'color':
+        for k, count in coll.items():
+            data = COLORS[k]
+            data.update({'count': count, 'field': field})
+            content.append(data)
+    else:
+        content = calculate_cloud(coll)
+
+    memcache.set(mem_key, content, TIMEOUT * 12)
+    return content
+
+
 def update_counter(*args, **kwargs):
-    key = '%s||%s||%s' % args
+    key_name = '%s||%s||%s' % args
     params = dict(zip(('forkind', 'field', 'value'), map(str, args)))
-    obj = Counter.get_or_insert(key, **params)
+    obj = Counter.get_or_insert(key_name, **params)
     obj.count += kwargs.get('delta', 1)
     obj.put()
+
+    mem_key = '{forkind}_{field}'.format(**params)
+    if memcache.get(mem_key) is not None:
+        content = cloud_content(params['forkind'], params['field'])
+        memcache.replace(mem_key, content, TIMEOUT * 12)
 
 
 def incr_count(*args):

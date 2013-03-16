@@ -17,7 +17,8 @@ from webapp2_extras.jinja2 import get_jinja2
 from jinja2.filters import environmentfilter, do_mark_safe, do_striptags
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb
-from common import make_cloud, SearchPaginator
+from common import SearchPaginator
+from models import make_cloud
 
 from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS
 
@@ -228,9 +229,9 @@ class BaseHandler(webapp2.RequestHandler):
 
 
 class RenderCloud(BaseHandler):
-    def get(self, key, value=None):
-        kind, field = key.split('_')
-        items = memcache.get(key) or make_cloud(kind, field)
+    def get(self, mem_key, value=None):
+        kind, field = mem_key.split('_')
+        items = make_cloud(mem_key)
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
@@ -250,9 +251,9 @@ class RenderCloud(BaseHandler):
 
 
 class RenderGraph(BaseHandler):
-    def get(self, key):
-        kind, field = key.split('_')
-        items = memcache.get(key) or make_cloud(kind, field)
+    def get(self, mem_key):
+        kind, field = mem_key.split('_')
+        items = make_cloud(mem_key)
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
@@ -298,8 +299,8 @@ class Find(BaseHandler):
 
 class DeleteHandler(BaseHandler):
     @login_required
-    def get(self, safekey):
-        key = ndb.Key(urlsafe=safekey)
+    def get(self, safe_key):
+        key = ndb.Key(urlsafe=safe_key)
         if key.parent():
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
@@ -314,9 +315,9 @@ class DeleteHandler(BaseHandler):
         data = {'object': obj, 'post_url': self.request.path, 'next': next}
         self.render_template('snippets/confirm.html', data)
 
-    def post(self, safekey):
+    def post(self, safe_key):
         next = str(self.request.get('next'))
-        key = ndb.Key(urlsafe=safekey)
+        key = ndb.Key(urlsafe=safe_key)
         key.delete()
         self.redirect(next)
 

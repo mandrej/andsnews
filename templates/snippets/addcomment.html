@@ -38,7 +38,7 @@ $(function() {
 	$('.content button').click(function() {
         $.ajax({
             type: 'POST',
-            url: '/{{ safekey }}/add',
+            url: '/{{ safe_key }}/add',
             data: {'email': $('#email').val(),
                    'body': $('#body').val()},
             success: function(data) {
