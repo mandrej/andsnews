@@ -162,90 +162,102 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None):
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.StringProperty(required=True)
+    value = ndb.StringProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
 
 
-def cloud_content(kind, field):
-    coll = {}
-    query = Counter.query(Counter.forkind == kind, Counter.field == field)
-    for counter in query:
-        count = counter.count
-        if count > 0:
+class Cloud(object):
+    """ cache dictionary collections on unique values and it's counts
+        {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
+    """
+    def __init__(self, mem_key):
+        self.mem_key = mem_key
+        self.kind, self.field = mem_key.split('_')
+
+    def set_cache(self, collection):
+        memcache.set(self.mem_key, collection, TIMEOUT * 2)
+
+    def get_cache(self):
+        return memcache.get(self.mem_key)
+
+    def get_list(self):
+        collection = self.get_cache() or self.make()
+        content = []
+        if self.field == 'color':
+            for k, count in collection.items():
+                data = COLORS[k]
+                data.update({'count': count, 'field': self.field})
+                content.append(data)
+        else:
+            content = calculate_cloud(collection)
+        return content
+
+    def make(self):
+        collection = {}
+        query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
+        for counter in query:
+            if counter.count > 0:
+                try:
+                    # keep sorted date, eqv, iso by int
+                    collection[int(counter.value)] = counter.count
+                except ValueError:
+                    collection[counter.value] = counter.count
+        self.set_cache(collection)
+        return collection
+
+    def update(self, value, delta):
+        collection = self.get_cache()
+        if collection is not None:
             try:
-                # keep sorted date, eqv, iso by int
-                coll[int(counter.value)] = count
+                key = int(value)
             except ValueError:
-                coll[counter.value] = count
+                key = value
+            try:
+                collection[key] += delta
+            except KeyError:
+                collection[key] = delta
+            self.set_cache(collection)
 
-    content = []
-    if field == 'color':
-        for k, count in coll.items():
-            data = COLORS[k]
-            data.update({'count': count, 'field': field})
-            content.append(data)
-    else:
-        content = calculate_cloud(coll)
-    return content
+    def rebuild(self):
+        prop = self.field
+        if self.field == 'date':
+            prop = 'year'
+        model = ndb.Model._kind_map.get(self.kind)  # TODO REMEMBER THIS
+        query = model.query()
+        properties = (getattr(x, prop, None) for x in query)  # generator
+        if prop == 'tags':
+            properties = list(itertools.chain(*properties))
+        elif prop == 'author':
+            properties = [x.nickname() for x in properties]
+        tally = collections.Counter(filter(None, properties))  # filter out None
 
+        collection = dict(tally.items())
+        self.set_cache(collection)
 
-def make_cloud(mem_key):
-    kind, field = mem_key.split('_')
-    content = memcache.get(mem_key)
-    if content is None:
-        content = cloud_content(kind, field)
-        memcache.set(mem_key, content, TIMEOUT * 12)
-    return content
+        # repair counters async
+        for value, count in collection.items():
+            key_name = '%s||%s||%s' % (self.kind, self.field, value)
+            params = dict(zip(('forkind', 'field', 'value'), map(str, [self.kind, self.field, value])))
+            obj = Counter.get_or_insert(key_name, **params)
+            if obj.count != count:
+                obj.count = count
+                obj.put_async()
 
-
-def count_property(mem_key):
-    kind, field = mem_key.split('_')
-    prop = field
-    if field == 'date':
-        prop = 'year'
-    # TODO REMEMBER
-    model = ndb.Model._kind_map.get(kind)
-    query = model.query()
-    properties = (getattr(x, prop, None) for x in query)  # generator
-    if prop == 'tags':
-        properties = list(itertools.chain(*properties))
-    elif prop == 'author':
-        properties = [x.nickname() for x in properties]
-    tally = collections.Counter(filter(None, properties))  # filter out None
-    coll = dict(tally.items())
-
-    for value, count in coll.items():
-        key_name = '%s||%s||%s' % (kind, field, value)
-        params = dict(zip(('forkind', 'field', 'value'), map(str, [kind, field, value])))
-        obj = Counter.get_or_insert(key_name, **params)
-        if obj.count != count:
-            obj.count = count
-            obj.put_async()
-
-    content = []
-    if field == 'color':
-        for k, count in coll.items():
-            data = COLORS[k]
-            data.update({'count': count, 'field': field})
-            content.append(data)
-    else:
-        content = calculate_cloud(coll)
-
-    memcache.set(mem_key, content, TIMEOUT * 12)
-    return content
+        return collection
 
 
 def update_counter(*args, **kwargs):
+    delta = kwargs.get('delta', 1)
     key_name = '%s||%s||%s' % args
     params = dict(zip(('forkind', 'field', 'value'), map(str, args)))
+
     obj = Counter.get_or_insert(key_name, **params)
-    obj.count += kwargs.get('delta', 1)
+    obj.count += delta
     obj.put()
 
     mem_key = '{forkind}_{field}'.format(**params)
-    if memcache.get(mem_key) is not None:
-        content = cloud_content(params['forkind'], params['field'])
-        memcache.replace(mem_key, content, TIMEOUT * 12)
+    cloud = Cloud(mem_key)
+    cloud.update(params['value'], delta)
 
 
 def incr_count(*args):

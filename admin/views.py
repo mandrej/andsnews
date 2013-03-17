@@ -8,7 +8,7 @@ from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
 
 from colormath.color_objects import HSLColor
-from models import Photo, Entry, Comment, Feed, Counter, KEYS, count_property, make_cloud
+from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from entry.views import make_thumbnail
 from handlers import BaseHandler, filesizeformat
 from common import Paginator, Filter
@@ -23,7 +23,9 @@ class Cache(webapp2.RequestHandler):
         self.response.write(json.dumps(data))
 
     def put(self, mem_key):
-        content = count_property(mem_key)
+        cloud = Cloud(mem_key)
+        cloud.rebuild()
+        content = cloud.get_list()
         self.response.content_type = 'application/json'
         self.response.write(json.dumps(content))
 
@@ -111,7 +113,7 @@ class Images(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': make_cloud('Entry_date')}
+                'archive': Cloud('Entry_date').get_list()}
         self.render_template('admin/images.html', data)
 
     def post(self):
@@ -146,7 +148,7 @@ class Blobs(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': make_cloud('Photo_date')}
+                'archive': Cloud('Photo_date').get_list()}
         self.render_template('admin/blobs.html', data)
 
 

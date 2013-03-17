@@ -18,7 +18,7 @@ from jinja2.filters import environmentfilter, do_mark_safe, do_striptags
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb
 from common import SearchPaginator
-from models import make_cloud
+from models import Cloud
 
 from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS
 
@@ -231,7 +231,7 @@ class BaseHandler(webapp2.RequestHandler):
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):
         kind, field = mem_key.split('_')
-        items = make_cloud(mem_key)
+        items = Cloud(mem_key).get_list()
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
@@ -253,7 +253,7 @@ class RenderCloud(BaseHandler):
 class RenderGraph(BaseHandler):
     def get(self, mem_key):
         kind, field = mem_key.split('_')
-        items = make_cloud(mem_key)
+        items = Cloud(mem_key).get_list()
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('count'), reverse=True)[:10]

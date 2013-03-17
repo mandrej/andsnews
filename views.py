@@ -9,7 +9,7 @@ from google.appengine.api import users, memcache, xmpp
 
 from models import Photo, Entry, Comment
 from handlers import ENV, BaseHandler, format_datetime
-from models import make_cloud
+from models import Cloud
 from settings import TIMEOUT, ADMIN_JID, RFC822
 
 RSS_LIMIT = 10
@@ -23,7 +23,8 @@ else:
 
 
 def auto_complete(request, mem_key):
-    words = [x['name'] for x in make_cloud(mem_key)]
+    cloud = Cloud(mem_key)
+    words = [x['name'] for x in cloud.get_list()]
     words.sort()
     response = webapp2.Response(content_type='text/plain')
     response.write('\n'.join(words))

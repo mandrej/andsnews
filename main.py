@@ -59,14 +59,15 @@ app = WSGIApplication([
     Route('/filter/<mem_key>', handler=RenderCloud),
     Route('/visualize/<mem_key>', handler=RenderGraph),
     Route('/complete/<mem_key>', handler=auto_complete),
-    Route('/search', handler=Find),
-    Route('/_ah/xmpp/message/chat/', handler=Chat),
-    Route('/send', handler=Send),
+
     Route('/sitemap.xml', handler=sitemap),
     Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
+    Route('/_ah/xmpp/message/chat/', handler=Chat),
 
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
     Route('/<safe_key>/add', handler='comment.views.Add', name='comment_add'),
+    Route('/search', handler=Find),
+    Route('/send', handler=Send),
     Route('/latest', handler=latest),
     Route('/setlang', handler=SetLanguage),
     Route('/sign', handler=Sign),

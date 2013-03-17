@@ -3,7 +3,7 @@ __author__ = 'milan'
 import unittest
 from google.appengine.api import memcache
 from timer import Timer
-from models import make_cloud, count_property
+from models import Cloud
 
 
 class CloudTest(unittest.TestCase):
@@ -16,12 +16,16 @@ class CloudTest(unittest.TestCase):
 
     def test_make(self):
         with Timer() as target:
-            content = make_cloud(self.key)
-        print content
+            cloud = Cloud(self.key)
+            coll = cloud.make()
+        print coll
+        # print cloud.get_list()
         print 'MAKE %s in %.2f ms' % (self.key, target.elapsed)
 
     def test_build(self):
         with Timer() as target:
-            content = count_property(self.key)
-        print content
+            cloud = Cloud(self.key)
+            coll = cloud.rebuild()
+        print coll
+        # print cloud.get_list()
         print 'BUILD %s in %.2f ms' % (self.key, target.elapsed)
