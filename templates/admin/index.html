@@ -87,15 +87,15 @@
     {{ super() }}
     <script>
         $(function() {
-            function build(key, arr) {
+            function build(key, value) {
                 var tmpl = '', title = key.split('_').pop() + ' cloud';
-                if (arr) {
+                if (value) {
                     tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
                     tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                     tmpl += '<div class="hide">';
-                    $.each(arr, function(i, item) {
-                        tmpl += '<dl><dt>' + item.name + '</dt>';
-                        tmpl += '<dd>' + item.count + '</dd></dl>';
+                    $.each(value, function(name, count) {
+                        tmpl += '<dl><dt>' + name + '</dt>';
+                        tmpl += '<dd>' + count + '</dd></dl>';
                     });
                     tmpl += '</div>';
                 } else {

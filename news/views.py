@@ -3,6 +3,7 @@ import datetime
 import time
 
 import webapp2
+from google.appengine.ext import ndb
 from google.appengine.api import urlfetch, memcache
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import admin_required
@@ -98,6 +99,7 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
+    @ndb.toplevel
     def get(self, slug):
         error = ''
         obj = Feed.get_by_id(slug)

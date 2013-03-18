@@ -47,12 +47,13 @@ from models import img_palette, range_names
 
 def fixer(oldkey):
     key = ndb.Key.from_old_key(oldkey)
-    obj = key.get()
-    buf = blobstore.BlobReader(obj.blob_key).read()
-    palette = img_palette(buf)
-
-    obj.rgb = palette.colors[0].value
-    obj.hue, obj.lum, obj.sat = range_names(obj.rgb)
+    key.delete()
+    # obj = key.get()
+    # buf = blobstore.BlobReader(obj.blob_key).read()
+    # palette = img_palette(buf)
+    #
+    # obj.rgb = palette.colors[0].value
+    # obj.hue, obj.lum, obj.sat = range_names(obj.rgb)
 
     # blob_info = blobstore.BlobInfo.get(obj.blob_key)
     # blob_reader = blob_info.open()
@@ -67,7 +68,7 @@ def fixer(oldkey):
     # obj.blob_key = files.blobstore.get_blob_key(file_name)
     # if hasattr(obj, 'rating'):
     #     delattr(obj, 'rating')
-    obj.put()
+    # obj.put()
 
 
 def indexer(oldkey):

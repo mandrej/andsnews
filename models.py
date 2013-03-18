@@ -162,7 +162,7 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None):
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.StringProperty(required=True)  # could be int as str
+    value = ndb.GenericProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
 
 
@@ -197,27 +197,20 @@ class Cloud(object):
         query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
         for counter in query:
             if counter.count > 0:
-                try:
-                    # keep sorted date, eqv, iso by int
-                    collection[int(counter.value)] = counter.count
-                except ValueError:
-                    collection[counter.value] = counter.count
+                collection[counter.value] = counter.count
         self.set_cache(collection)
         return collection
 
-    def update(self, value, delta):
+    def update(self, key, delta):
         collection = self.get_cache()
         if collection is not None:
-            try:
-                key = int(value)
-            except ValueError:
-                key = value
-            try:
+            if key in collection:
                 collection[key] += delta
-            except KeyError:
+            else:
                 collection[key] = delta
             self.set_cache(collection)
 
+    @ndb.toplevel
     def rebuild(self):
         prop = self.field
         if self.field == 'date':
@@ -234,10 +227,10 @@ class Cloud(object):
         collection = dict(tally.items())
         self.set_cache(collection)
 
-        # repair counters async
+        # repair counters async with toplevel
         for value, count in collection.items():
             key_name = '%s||%s||%s' % (self.kind, self.field, value)
-            params = dict(zip(('forkind', 'field', 'value'), map(str, [self.kind, self.field, value])))
+            params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
             obj = Counter.get_or_insert(key_name, **params)
             if obj.count != count:
                 obj.count = count
@@ -249,7 +242,7 @@ class Cloud(object):
 def update_counter(*args, **kwargs):
     delta = kwargs.get('delta', 1)
     key_name = '%s||%s||%s' % args
-    params = dict(zip(('forkind', 'field', 'value'), map(str, args)))
+    params = dict(zip(('forkind', 'field', 'value'), args))
 
     obj = Counter.get_or_insert(key_name, **params)
     obj.count += delta
@@ -484,6 +477,7 @@ class Entry(ndb.Model):
         self.put()
         self.index_add()
 
+    @ndb.toplevel
     def add(self, data):
         self.headline = data['headline']
         self.summary = data['summary']
@@ -506,6 +500,7 @@ class Entry(ndb.Model):
         for name in self.tags:
             incr_count('Entry', 'tags', name)
 
+    @ndb.toplevel
     def edit(self, data):
         self.headline = data['headline']
         self.summary = data['summary']

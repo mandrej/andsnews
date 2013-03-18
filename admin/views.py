@@ -25,9 +25,8 @@ class Cache(webapp2.RequestHandler):
     def put(self, mem_key):
         cloud = Cloud(mem_key)
         cloud.rebuild()
-        content = cloud.get_list()
         self.response.content_type = 'application/json'
-        self.response.write(json.dumps(content))
+        self.response.write(json.dumps(cloud.get_cache()))
 
     def delete(self, mem_key):
         memcache.delete(mem_key)

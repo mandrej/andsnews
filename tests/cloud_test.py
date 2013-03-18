@@ -8,7 +8,7 @@ from models import Cloud
 
 class CloudTest(unittest.TestCase):
     def setUp(self):
-        self.key = 'Photo_color'
+        self.key = 'Photo_iso'
 
     def tearDown(self):
         memcache.delete(self.key)
