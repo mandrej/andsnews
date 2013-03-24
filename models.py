@@ -577,7 +577,7 @@ class Comment(ndb.Model):
     # parent Photo, Entry
     author = ndb.UserProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
-    year = ndb.ComputedProperty(lambda self: self.date.year)
+    year = ndb.IntegerProperty()
     forkind = ndb.StringProperty(default='Application')
     body = ndb.TextProperty(required=True)
 
@@ -602,7 +602,11 @@ class Comment(ndb.Model):
         return self.forkind == 'Application'
 
     def add(self):
+        self.put()  # TODO stupid solution auto_now_add and ComputedProperty dont mix
+        self.year = self.date.year
+        self.index_add()
         self.put()
+
         incr_count('Comment', 'author', self.author.nickname())
         if self.is_message:
             incr_count('Comment', 'forkind', 'Application')
@@ -610,9 +614,6 @@ class Comment(ndb.Model):
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
         incr_count('Comment', 'date', self.year)
-
-        self.put()
-        self.index_add()
 
     @classmethod
     def _pre_delete_hook(cls, key):
