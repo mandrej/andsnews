@@ -30,7 +30,7 @@ MONTHS_3 = {
 }
 COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
-    _('purple'), _('pink'), _('dark'), _('medium'), _('light'), _('bright'),
+    _('purple'), _('pink'), _('dark'), _('medium'), _('light')
 )
 
 HUE = [

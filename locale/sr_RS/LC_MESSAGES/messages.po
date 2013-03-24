@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-03-03 19:12+0100\n"
-"PO-Revision-Date: 2013-03-03 19:17+0100\n"
+"POT-Creation-Date: 2013-03-24 20:36+0100\n"
+"PO-Revision-Date: 2013-03-24 20:36+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
 "Language-Team: sr_RS <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
@@ -16,60 +16,59 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
-"X-Poedit-Basepath: ../../../\n"
 
-#: handlers.py:109
+#: handlers.py:110
 msgid "year"
 msgid_plural "years"
 msgstr[0] "године"
 msgstr[1] "године"
 msgstr[2] "године"
 
-#: handlers.py:110
+#: handlers.py:111
 msgid "month"
 msgid_plural "months"
 msgstr[0] "месеца"
 msgstr[1] "месеца"
 msgstr[2] "месеци"
 
-#: handlers.py:111
+#: handlers.py:112
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "недеље"
 msgstr[1] "недеље"
 msgstr[2] "недеља"
 
-#: handlers.py:112
+#: handlers.py:113
 msgid "day"
 msgid_plural "days"
 msgstr[0] "дана"
 msgstr[1] "дана"
 msgstr[2] "дана"
 
-#: handlers.py:113
+#: handlers.py:114
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "сата"
 msgstr[1] "сата"
 msgstr[2] "сати"
 
-#: handlers.py:114
+#: handlers.py:115
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "минута"
 msgstr[1] "минута"
 msgstr[2] "минута"
 
-#: handlers.py:127
+#: handlers.py:128
 msgid "minutes"
 msgstr "минута"
 
-#: handlers.py:132
+#: handlers.py:133
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr "%(number)d %(type)s"
 
-#: handlers.py:137
+#: handlers.py:138
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ", %(number)d %(type)s"
@@ -119,27 +118,22 @@ msgid "February"
 msgstr "Фебруар"
 
 #: settings.py:24
-#: settings.py:32
 msgid "March"
 msgstr "Март"
 
 #: settings.py:24
-#: settings.py:32
 msgid "April"
 msgstr "Април"
 
 #: settings.py:24
-#: settings.py:32
 msgid "May"
 msgstr "Мај"
 
 #: settings.py:24
-#: settings.py:32
 msgid "June"
 msgstr "Јун"
 
 #: settings.py:25
-#: settings.py:33
 msgid "July"
 msgstr "Јул"
 
@@ -212,74 +206,46 @@ msgid "dec"
 msgstr "дец"
 
 #: settings.py:32
-msgid "Jan."
-msgstr "Јан."
-
-#: settings.py:32
-msgid "Feb."
-msgstr "Феб."
-
-#: settings.py:33
-msgid "Aug."
-msgstr "Авг."
-
-#: settings.py:33
-msgid "Sept."
-msgstr "Септ."
-
-#: settings.py:33
-msgid "Oct."
-msgstr "Окт."
-
-#: settings.py:33
-msgid "Nov."
-msgstr "Нов."
-
-#: settings.py:33
-msgid "Dec."
-msgstr "Дец."
-
-#: settings.py:36
 msgid "red"
 msgstr "црвена"
 
-#: settings.py:36
+#: settings.py:32
 msgid "orange"
 msgstr "наранџаста"
 
-#: settings.py:36
+#: settings.py:32
 msgid "yellow"
 msgstr "жута"
 
-#: settings.py:36
+#: settings.py:32
 msgid "green"
 msgstr "зелена"
 
-#: settings.py:36
+#: settings.py:32
 msgid "teal"
 msgstr "тиркиз"
 
-#: settings.py:36
+#: settings.py:32
 msgid "blue"
 msgstr "плава"
 
-#: settings.py:37
+#: settings.py:33
 msgid "purple"
 msgstr "љубичаста"
 
-#: settings.py:37
+#: settings.py:33
 msgid "pink"
 msgstr "розе"
 
-#: settings.py:37
+#: settings.py:33
 msgid "dark"
 msgstr "тамна"
 
-#: settings.py:37
+#: settings.py:33
 msgid "medium"
 msgstr "средња"
 
-#: settings.py:37
+#: settings.py:33
 msgid "light"
 msgstr "светла"
 
@@ -288,8 +254,8 @@ msgid "e-mail"
 msgstr "e-mail"
 
 #: comment/views.py:33
-#: templates/entry/detail.html:21
-#: templates/photo/detail.html:15
+#: templates/entry/detail.html:22
+#: templates/photo/detail.html:16
 msgid "Comment"
 msgstr "Кементар"
 
@@ -312,25 +278,25 @@ msgstr "обриши"
 
 #: entry/views.py:73
 #: entry/views.py:88
-#: news/views.py:130
-#: news/views.py:141
-#: photo/views.py:110
-#: photo/views.py:125
+#: news/views.py:132
+#: news/views.py:143
+#: photo/views.py:113
+#: photo/views.py:128
 msgid "Headline"
 msgstr "Наслов"
 
 #: entry/views.py:74
-#: news/views.py:131
-#: photo/views.py:111
+#: news/views.py:133
+#: photo/views.py:114
 msgid "Slug"
 msgstr "Обележје"
 
 #: entry/views.py:75
 #: entry/views.py:89
-#: news/views.py:132
-#: news/views.py:142
-#: photo/views.py:112
-#: photo/views.py:126
+#: news/views.py:134
+#: news/views.py:144
+#: photo/views.py:115
+#: photo/views.py:129
 #: templates/snippets/macros.html:22
 #: templates/snippets/x_tags.html:3
 msgid "Tags"
@@ -338,13 +304,13 @@ msgstr "Ознаке"
 
 #: entry/views.py:76
 #: entry/views.py:90
-#: photo/views.py:127
+#: photo/views.py:130
 msgid "Author"
 msgstr "Аутор"
 
 #: entry/views.py:77
 #: entry/views.py:91
-#: templates/entry/form.html:42
+#: templates/entry/form.html:44
 msgid "Summary"
 msgstr "Сажетак"
 
@@ -359,8 +325,8 @@ msgid "Article"
 msgstr "Чланак"
 
 #: entry/views.py:84
-#: news/views.py:137
-#: photo/views.py:117
+#: news/views.py:139
+#: photo/views.py:120
 msgid "Record with this slug already exist"
 msgstr "Слог са овим обележјем већ постоји"
 
@@ -368,71 +334,71 @@ msgstr "Слог са овим обележјем већ постоји"
 msgid "Front image"
 msgstr "Насловна слика"
 
-#: news/views.py:113
+#: news/views.py:115
 msgid "Feed server timeout"
 msgstr "Протекло време"
 
-#: news/views.py:122
+#: news/views.py:124
 msgid "Feed server send no entries"
 msgstr "Нема ниједне вести"
 
-#: news/views.py:124
+#: news/views.py:126
 #, python-format
 msgid "Feed server returns %s code"
 msgstr "Код грешке %s сервера."
 
-#: news/views.py:133
-#: news/views.py:143
+#: news/views.py:135
+#: news/views.py:145
 msgid "Url"
 msgstr "Url"
 
-#: news/views.py:144
-#: photo/views.py:128
+#: news/views.py:146
+#: photo/views.py:131
 #: templates/photo/exif.html:42
 msgid "Taken"
 msgstr "Снимљено"
 
-#: photo/views.py:113
+#: photo/views.py:116
 msgid "Photo"
 msgstr "Фотографија"
 
-#: photo/views.py:121
-msgid "Not cgi.FieldStorage type."
-msgstr ""
+#: photo/views.py:124
+msgid "Wrong type."
+msgstr "Погрешан тип."
 
-#: photo/views.py:129
+#: photo/views.py:132
 #: templates/snippets/macros.html:26
 #: templates/snippets/x_model.html:3
 msgid "Camera model"
 msgstr "Модел фотоапарата"
 
-#: photo/views.py:130
+#: photo/views.py:133
 #: templates/photo/exif.html:15
 msgid "Aperture"
 msgstr "Бленда"
 
-#: photo/views.py:131
+#: photo/views.py:134
 #: templates/photo/exif.html:21
 msgid "Shutter speed"
 msgstr "Експозиција"
 
-#: photo/views.py:132
+#: photo/views.py:135
 #: templates/photo/exif.html:25
 msgid "Focal length"
 msgstr "Жижна даљина"
 
-#: photo/views.py:133
+#: photo/views.py:136
 #: templates/photo/exif.html:37
 #: templates/snippets/macros.html:29
 #: templates/snippets/x_iso.html:3
 msgid "Sensitivity"
 msgstr "Осетљивост"
 
-#: photo/views.py:134
+#: photo/views.py:137
 msgid "Crop factor"
 msgstr "Кроп фактор"
 
-#: photo/views.py:135
+#: photo/views.py:138
 #: templates/snippets/macros.html:27
 #: templates/snippets/x_lens.html:3
 msgid "Lens type"
@@ -504,9 +470,9 @@ msgid "message"
 msgstr "порука"
 
 #: templates/results.html:41
-#: templates/entry/detail.html:41
-#: templates/news/detail.html:36
-#: templates/photo/detail.html:88
+#: templates/entry/detail.html:43
+#: templates/news/detail.html:38
+#: templates/photo/detail.html:90
 msgid "tagged by"
 msgstr "обележено са"
 
@@ -522,64 +488,64 @@ msgstr "Покушајте поново"
 msgid "Error"
 msgstr "Грешка"
 
-#: templates/entry/detail.html:9
-#: templates/entry/index.html:7
-#: templates/news/detail.html:7
-#: templates/news/index.html:10
-#: templates/photo/detail.html:9
-#: templates/photo/index.html:7
+#: templates/entry/detail.html:10
+#: templates/entry/index.html:8
+#: templates/news/detail.html:8
+#: templates/news/index.html:11
+#: templates/photo/detail.html:10
+#: templates/photo/index.html:8
 msgid "Add"
 msgstr "Додај"
 
-#: templates/entry/detail.html:13
-#: templates/entry/detail.html:17
-#: templates/news/detail.html:8
-#: templates/photo/detail.html:12
+#: templates/entry/detail.html:14
+#: templates/entry/detail.html:18
+#: templates/news/detail.html:9
+#: templates/photo/detail.html:13
 msgid "Edit"
 msgstr "Промени"
 
-#: templates/entry/detail.html:14
-#: templates/entry/detail.html:18
-#: templates/entry/form.html:9
-#: templates/news/detail.html:9
-#: templates/news/form.html:9
-#: templates/photo/detail.html:13
-#: templates/photo/form.html:9
+#: templates/entry/detail.html:15
+#: templates/entry/detail.html:19
+#: templates/entry/form.html:10
+#: templates/news/detail.html:10
+#: templates/news/form.html:10
+#: templates/photo/detail.html:14
+#: templates/photo/form.html:10
 #: templates/snippets/confirm.html:32
-#: templates/snippets/macros.html:63
+#: templates/snippets/macros.html:62
 msgid "Delete"
 msgstr "Обриши"
 
-#: templates/entry/detail.html:22
-#: templates/entry/form.html:10
-#: templates/entry/form.html:13
-#: templates/news/detail.html:11
-#: templates/news/form.html:10
-#: templates/news/form.html:13
-#: templates/photo/detail.html:16
-#: templates/photo/form.html:10
-#: templates/photo/form.html:13
+#: templates/entry/detail.html:23
+#: templates/entry/form.html:11
+#: templates/entry/form.html:14
+#: templates/news/detail.html:12
+#: templates/news/form.html:11
+#: templates/news/form.html:14
+#: templates/photo/detail.html:17
+#: templates/photo/form.html:11
+#: templates/photo/form.html:14
 msgid "Back"
 msgstr "Назад"
 
-#: templates/entry/detail.html:37
+#: templates/entry/detail.html:39
 msgid "author's blogs"
 msgstr "ауторове белешке"
 
-#: templates/entry/detail.html:46
+#: templates/entry/detail.html:48
 msgid "blogs sent same year"
 msgstr "белешке послате исте године"
 
 #: templates/entry/form.html:4
-#: templates/entry/form.html:48
+#: templates/entry/form.html:50
 msgid "Add new / change existing blog"
 msgstr "Додај нову / измени постојећу белешку"
 
-#: templates/entry/form.html:21
+#: templates/entry/form.html:23
 msgid "Choose image"
 msgstr "Затвори слику"
 
-#: templates/entry/form.html:22
+#: templates/entry/form.html:24
 #: templates/snippets/addcomment.html:3
 #: templates/snippets/addcomment.html:26
 #: templates/snippets/confirm.html:3
@@ -595,78 +561,80 @@ msgstr "Затвори слику"
 msgid "close"
 msgstr "затвори"
 
-#: templates/entry/form.html:31
+#: templates/entry/form.html:33
 msgid "No images"
 msgstr "Нема слика"
 
-#: templates/entry/form.html:32
+#: templates/entry/form.html:34
 msgid "To choose images, you must send them first"
 msgstr "Да би изабрали слику, прво је морате послати"
 
-#: templates/entry/form.html:40
-#: templates/photo/form.html:18
+#: templates/entry/form.html:42
+#: templates/news/form.html:20
+#: templates/photo/form.html:20
 msgid "Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses."
 msgstr "Обележје једнозначно представља слог. Мора почети словом и може садржати смао слова, бројеве, доњу или обичну црту. Користи се уместо URL адреса."
 
-#: templates/entry/form.html:41
-#: templates/photo/form.html:19
+#: templates/entry/form.html:43
+#: templates/news/form.html:21
+#: templates/photo/form.html:21
 msgid "Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding."
 msgstr "Ознаке одређују којој групи или типу слогова припада. Ознаке су одвојене запетом. Користи енглески за шире разумевање."
 
-#: templates/entry/form.html:42
+#: templates/entry/form.html:44
 msgid "A brief presentation in a concise form"
 msgstr "Кратка и сажета презентација"
 
-#: templates/entry/form.html:43
+#: templates/entry/form.html:45
 msgid "Send images less then"
 msgstr "Шаљите слике мање од"
 
-#: templates/entry/form.html:51
-#: templates/news/form.html:30
-#: templates/photo/form.html:44
+#: templates/entry/form.html:53
+#: templates/news/form.html:32
+#: templates/photo/form.html:46
 msgid "Please correct errors in"
 msgstr "Поправите грешке у"
 
-#: templates/entry/form.html:73
+#: templates/entry/form.html:75
 msgid "Images used in this blog"
 msgstr "Слике коришћене у овој белшци"
 
-#: templates/entry/form.html:97
-#: templates/news/form.html:51
-#: templates/photo/form.html:57
-#: templates/photo/form.html:99
+#: templates/entry/form.html:99
+#: templates/news/form.html:53
+#: templates/photo/form.html:59
+#: templates/photo/form.html:101
 msgid "Required field"
 msgstr "Обавезно поље"
 
-#: templates/entry/form.html:98
-#: templates/news/form.html:52
-#: templates/photo/form.html:100
+#: templates/entry/form.html:100
+#: templates/news/form.html:54
+#: templates/photo/form.html:102
 msgid "done"
 msgstr "заврши"
 
 #: templates/entry/index.html:3
-#: templates/entry/index.html:13
+#: templates/entry/index.html:15
 #: templates/snippets/confirm.html:12
 #: templates/snippets/macros.html:36
 msgid "Blog"
 msgstr "Белешка"
 
 #: templates/entry/index.html:31
-#: templates/news/detail.html:32
-#: templates/news/detail.html:53
+#: templates/news/detail.html:34
+#: templates/news/detail.html:54
 #: templates/news/index.html:33
-#: templates/snippets/macros.html:67
+#: templates/snippets/macros.html:66
 #, python-format
 msgid "%(since)s ago"
 msgstr "пре %(since)s"
 
-#: templates/entry/index.html:39
+#: templates/entry/index.html:38
 msgid "No blog submitted"
 msgstr "Нема белешки"
 
-#: templates/entry/index.html:39
-#: templates/news/index.html:42
-#: templates/photo/index.html:45
+#: templates/entry/index.html:38
+#: templates/news/index.html:43
+#: templates/photo/index.html:47
 msgid "or filter has no results"
 msgstr "или филтер нема резултата"
 
@@ -693,7 +661,7 @@ msgstr "Грешка сервера"
 msgid "Service unavailable"
 msgstr "Сервис није доступан"
 
-#: templates/news/detail.html:30
+#: templates/news/detail.html:32
 #: templates/news/index.html:32
 msgid "updated"
 msgstr "освежено"
@@ -708,48 +676,44 @@ msgid "News error"
 msgstr "Грешка сервера"
 
 #: templates/news/form.html:4
-#: templates/news/form.html:27
+#: templates/news/form.html:29
 msgid "Add new / change existing news"
 msgstr "Додај нову / измени послојећу вест"
 
-#: templates/news/form.html:18
-msgid "<strong>Slug</strong> uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses."
-msgstr "<strong>Обележје</strong> уникатно обележава слог. Мора почети словом и може садржати слова, бројеве и цртице. Користи се за URL адресе."
-
-#: templates/news/form.html:19
-msgid "<strong>Tags</strong> determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding."
-msgstr "<strong>Ознаке</strong> одређују припадност групи или типу слога. Одвојене су запетом. Кристи енгески због шире употребљивости."
-
-#: templates/news/form.html:21
+#: templates/news/form.html:23
 msgid "Date"
 msgstr "Датум"
 
-#: templates/news/form.html:21
+#: templates/news/form.html:23
 msgid "Last modified date"
 msgstr "Датум последње промене"
 
 #: templates/news/index.html:5
-#: templates/news/index.html:18
+#: templates/news/index.html:20
 #: templates/snippets/confirm.html:25
 #: templates/snippets/macros.html:44
 msgid "News"
 msgstr "Вести"
 
-#: templates/news/index.html:42
+#: templates/news/index.html:35
+msgid "Never fetched"
+msgstr "Никад тражено"
+
+#: templates/news/index.html:43
 msgid "No news submitted"
 msgstr "Нема вести"
 
-#: templates/photo/detail.html:69
+#: templates/photo/detail.html:71
 #: templates/photo/index.html:3
-#: templates/photo/index.html:13
+#: templates/photo/index.html:15
 msgid "Photos"
 msgstr "Фотографије"
 
-#: templates/photo/detail.html:86
+#: templates/photo/detail.html:88
 msgid "author's photos"
 msgstr "ауторове фотографије"
 
-#: templates/photo/detail.html:93
+#: templates/photo/detail.html:95
 msgid "photos taken same year"
 msgstr "фотографије снимљене исте године"
 
@@ -788,43 +752,43 @@ msgid "photos with similar color"
 msgstr "фотографије са сличном бојом"
 
 #: templates/photo/form.html:4
-#: templates/photo/form.html:41
+#: templates/photo/form.html:43
 msgid "Add new / change existing photo"
 msgstr "Додај нову / измени посојећу фотографију"
 
-#: templates/photo/form.html:20
+#: templates/photo/form.html:22
 msgid "Forward slash is not allowed in any field. It will be stripped out automatically."
 msgstr "Коса црта није дозвољена ни у јеном пољу. Биће аутоматски избрисана."
 
-#: templates/photo/form.html:21
+#: templates/photo/form.html:23
 msgid "Send photo less then"
 msgstr "Пошаљите фотографију мању од"
 
-#: templates/photo/form.html:23
+#: templates/photo/form.html:25
 msgid "Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)"
 msgstr "Crop factor је мера која представља однос између сензора вашег апарата и апарата са пуним форматом или  35 mm камером (36x24mm)"
 
-#: templates/photo/form.html:36
+#: templates/photo/form.html:38
 msgid "Date format"
 msgstr "Формат датума"
 
-#: templates/photo/form.html:58
+#: templates/photo/form.html:60
 msgid "upload"
 msgstr "пошаљи"
 
-#: templates/photo/form.html:69
+#: templates/photo/form.html:71
 msgid "Calculate palette"
 msgstr "Израчунај палету"
 
-#: templates/photo/form.html:74
+#: templates/photo/form.html:76
 msgid "Click - pick color from palette which best represent image"
 msgstr "Кликни - изабери боју из палете која најбоље представља слику"
 
-#: templates/photo/form.html:89
+#: templates/photo/form.html:91
 msgid "data"
 msgstr "подаци"
 
-#: templates/photo/index.html:45
+#: templates/photo/index.html:47
 msgid "No photos submitted"
 msgstr "Нема фотографија"
 
@@ -954,5 +918,5 @@ msgstr "за фотографије"
 msgid "messages"
 msgstr "поруке"
 
-#~ msgid "Represetative color"
-#~ msgstr ""
+#~ msgid "bright"
+#~ msgstr "светла"
