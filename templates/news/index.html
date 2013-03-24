@@ -26,11 +26,13 @@
 		{% for object in objects %}
             {% if object %}
                 <section class="third brick">
-                    {{ m.time(object.date) }}
+                    {% if object.date %}{{ m.time(object.date) }}{% endif %}
                     <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
                     <p class="details">
                         {% if object.date %}{{ _('updated') }}:
                             {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        {% else %}
+                            {{ _('Never fetched') }}
                         {% endif %}
                     </p>
                 </section>
