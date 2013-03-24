@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+{% macro _item(object, detail_name) %}
+    <title>{{ object.headline }}</title>
+    <link>{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</link>
+    <author>{{ object.author.email() }}</author>
+    <pubDate>{{ object.date|format_datetime(format) }}</pubDate>
+    <guid isPermaLink="true">{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</guid>
+    <category>{{ object.tags|join(', ') }}</category>
+{% endmacro %}
 <rss version="2.0">
     <channel>
-        <title>{{ title }}</title>
-        <link>{{ HOST }}{{ link }}</link>
-        <lastBuildDate>{{ objects.0.date|format_datetime('%a, %d %b %Y %I:%M:%S %p GMT') }}</lastBuildDate>
-        <description>{{ description }} ANDрејевићи</description>
-        {% for item in objects %}
-            <item>
-                <title>{{ item.headline }}</title>
-                {% if kind == 'photo' %}
+        {% if kind == 'photo' %}
+            <title>Photos</title>
+            <link>{{ uri_for('photo_all', _full=True) }}</link>
+            <lastBuildDate>{{ objects.0.date|format_datetime(format) }}</lastBuildDate>
+            <description>Latest photos from the ANDрејевићи site</description>
+            {% for item in objects %}
+                <item>
+                    {{ _item(item, kind) }}
                     <description>
                         Camera model: {{ item.model }},
                         Lens type: {{ item.lens }},
@@ -18,15 +26,19 @@
                         Sensitivity (ISO): {{ item.iso }}
                     </description>
 {#                    <enclosure url="{{ item.small_url() }}" length="" type="image/jpeg"/>#}
-                {% else %}
+                </item>
+            {% endfor %}
+        {% else %}
+            <title>Entries</title>
+            <link>{{ uri_for('entry_all', _full=True) }}</link>
+            <lastBuildDate>{{ objects.0.date|format_datetime(format) }}</lastBuildDate>
+            <description>Latest entries from the ANDрејевићи site</description>
+            {% for item in objects %}
+                <item>
+                    {{ _item(item, kind) }}
                     <description>{{ item.summary }}</description>
-                {% endif %}
-                <link>{{ HOST }}{{ item.get_absolute_url() }}</link>
-                <author>{{ item.author.email() }}</author>
-                <pubDate>{{ item.date|format_datetime('%a, %d %b %Y %I:%M:%S %p GMT') }}</pubDate>
-                <guid isPermaLink="true">{{ HOST }}{{ item.get_absolute_url() }}</guid>
-                <category>{{ item.tags|join(', ') }}</category>
-            </item>
-        {% endfor %}
+                </item>
+            {% endfor %}
+        {% endif %}
     </channel>
 </rss>
