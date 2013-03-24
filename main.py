@@ -1,4 +1,3 @@
-import logging
 from webapp2 import WSGIApplication, Route
 from webapp2_extras.routes import PathPrefixRoute
 from views import Index, latest, auto_complete, sitemap, Chat, Send, rss
@@ -73,9 +72,6 @@ app = WSGIApplication([
     Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),
 ], config=CONFIG, debug=DEVEL)
-
-if DEVEL:
-    logging.getLogger().setLevel(logging.DEBUG)
 
 app.error_handlers[403] = handle_403
 app.error_handlers[404] = handle_404

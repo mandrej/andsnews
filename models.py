@@ -2,6 +2,7 @@ from __future__ import division
 import logging
 import datetime
 import time
+import cgi
 import colorsys
 import itertools
 import collections
@@ -477,30 +478,31 @@ class Entry(ndb.Model):
         self.put()
         self.index_add()
 
-    @ndb.toplevel
     def add(self, data):
         self.headline = data['headline']
         self.summary = data['summary']
         self.date = data['date']
         self.body = data['body']
         self.tags = data['tags']
-
-        keyname = self.key.string_id() + '_%s'
-        for indx, newimage in enumerate(data['newimages']):
-            if newimage['blob'] and newimage['name']:
-                buff = newimage['blob'].value
-                name = newimage['name']
-                img = Img(parent=self.key, id=keyname % indx, num=indx, name=name, blob=buff)
-                img.mime = newimage['blob'].headers['Content-Type']
-                img.put_async()
-
         self._put()
+
+        for indx, obj in enumerate(data['newimages']):
+            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
+                img = Img(
+                    parent=self.key,
+                    id='%s_%s' % (self.key.string_id(), indx),
+                    num=indx,
+                    name=obj['name'],
+                    blob=obj['blob'].value
+                )
+                img.mime = obj['blob'].headers['Content-Type']
+                img.put()
+
         incr_count('Entry', 'author', self.author.nickname())
         incr_count('Entry', 'date', self.year)
         for name in self.tags:
             incr_count('Entry', 'tags', name)
 
-    @ndb.toplevel
     def edit(self, data):
         self.headline = data['headline']
         self.summary = data['summary']
@@ -508,21 +510,26 @@ class Entry(ndb.Model):
         self.body = data['body']
         self.front = data['front']
 
-        keyname = self.key.string_id() + '_%s'
-        for indx, obj in enumerate(data['newimages']):
-            if obj['blob'] and obj['name']:
-                buff = obj['blob'].value
-                name = obj['name']
-                img = Img(parent=self.key, id=keyname % indx, num=indx, name=name, blob=buff)
-                img.mime = obj['blob'].headers['Content-Type']
-                img.put_async()
-
         for indx, obj in enumerate(data['images']):
+            id = '%s_%s' % (self.key.string_id(), indx)
             if obj['delete']:
-                key = ndb.Key('Entry', self.key.string_id(), 'Img', keyname % indx)
-                key.delete_async()
+                key = ndb.Key('Entry', self.key.string_id(), 'Img', id)
+                key.delete()
                 if indx == self.front:
                     self.front = -1
+
+        for indx, obj in enumerate(data['newimages'], start=self.image_list.count()):
+            id = '%s_%s' % (self.key.string_id(), indx)
+            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
+                img = Img(
+                    parent=self.key,
+                    id=id,
+                    num=indx,
+                    name=obj['name'],
+                    blob=obj['blob'].value
+                )
+                img.mime = obj['blob'].headers['Content-Type']
+                img.put()
 
         old = self.date
         new = data['date']
@@ -628,6 +635,8 @@ class Feed(ndb.Model):
     date = ndb.DateTimeProperty()
 
     def add(self, data):
+        self.url = data['url']
+        self.headline = data['headline']
         self.tags = data['tags']
         self.put()
         for name in self.tags:
