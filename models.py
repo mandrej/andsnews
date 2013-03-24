@@ -357,7 +357,8 @@ class Photo(ndb.Model):
         if old != new:
             decr_count('Photo', 'date', self.year)
             incr_count('Photo', 'date', new.year)
-        del data['date']
+        else:
+            del data['date']
 
         if data['focal_length']:
             old = self.focal_length
