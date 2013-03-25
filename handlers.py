@@ -282,7 +282,10 @@ class Find(BaseHandler):
             if key.parent():
                 link = webapp2.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
             else:
-                link = webapp2.uri_for(key.kind().lower(), slug=key.string_id())
+                try:
+                    link = webapp2.uri_for(key.kind().lower(), slug=key.string_id())
+                except KeyError:
+                    link = ''  # Comment.is_message
 
             f['kind'] = key.kind()
             f['link'] = link
