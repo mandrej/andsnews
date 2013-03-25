@@ -602,10 +602,8 @@ class Comment(ndb.Model):
         return self.forkind == 'Application'
 
     def add(self):
-        self.put()  # TODO stupid solution auto_now_add and ComputedProperty dont mix
-        self.year = self.date.year
-        self.index_add()
         self.put()
+        self.index_add()
 
         incr_count('Comment', 'author', self.author.nickname())
         if self.is_message:
@@ -614,6 +612,9 @@ class Comment(ndb.Model):
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
         incr_count('Comment', 'date', self.year)
+
+    def _pre_put_hook(self):
+        self.year = self.date.year
 
     @classmethod
     def _pre_delete_hook(cls, key):
