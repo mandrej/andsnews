@@ -5,13 +5,6 @@
 {% block modals %}{% endblock %}
 
 {% block contents %}
-<script src="/static/scripts/jquery.highlight.js"></script>
-<script>
-$(function() {
-	var options = {exact: "partial", highlight: "#main", keys: '{{ phrase }}'};
-	$(document).SearchHighlight(options);
-});
-</script>
 <article class="plain">
 	{% if phrase %}
 		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}
@@ -66,4 +59,21 @@ $(function() {
         {% endfor %}
     </div>
 </article>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/jquery.highlight.js"></script>
+    <script>
+        $(function() {
+            var match = location.search.match(/find=([^&]+)/i);
+            if (match) {
+                $(function(){
+                    var options = {exact: "partial", highlight: "#main",
+                        keys: decodeURIComponent(match[1])};
+                    $(document).SearchHighlight(options);
+                });
+            }
+        });
+    </script>
 {% endblock %}

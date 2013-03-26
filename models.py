@@ -160,6 +160,10 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None):
     ])
 
 
+def remove_doc(safe_key):
+    return INDEX.delete(safe_key)
+
+
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
@@ -292,15 +296,12 @@ class Photo(ndb.Model):
     def index_add(self):
         return INDEX.put(
             create_doc(
-                '%s' % self.key.urlsafe(),
+                self.key.urlsafe(),
                 headline=self.headline,
                 author=self.author,
                 body='%s %s' % (self.model, self.lens),
                 tags=self.tags,
                 date=self.date))
-
-    def index_del(self):
-        return INDEX.delete('%s' % self.key.urlsafe())
 
     def _put(self):
         self.put()
@@ -395,7 +396,8 @@ class Photo(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         instance = key.get()
-        instance.index_del()
+        deferred.defer(remove_doc, key.urlsafe())
+
         blob_info = blobstore.BlobInfo.get(instance.blob_key)
         blob_info.delete()
 
@@ -465,15 +467,12 @@ class Entry(ndb.Model):
     def index_add(self):
         return INDEX.put(
             create_doc(
-                '%s' % self.key.urlsafe(),
+                self.key.urlsafe(),
                 headline=self.headline,
                 author=self.author,
                 body='%s %s' % (self.summary, self.body),
                 tags=self.tags,
                 date=self.date))
-
-    def index_del(self):
-        return INDEX.delete('%s' % self.key.urlsafe())
 
     def _put(self):
         self.put()
@@ -553,7 +552,7 @@ class Entry(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         instance = key.get()
-        instance.index_del()
+        deferred.defer(remove_doc, key.urlsafe())
 
         decr_count('Entry', 'author', instance.author.nickname())
         decr_count('Entry', 'date', instance.year)
@@ -582,20 +581,13 @@ class Comment(ndb.Model):
     body = ndb.TextProperty(required=True)
 
     def index_add(self):
-        if self.is_message:
-            headline = ''
-        else:
-            headline = self.key.parent().get().headline
         return INDEX.put(
             create_doc(
-                '%s' % self.key.urlsafe(),
-                headline=headline,
+                self.key.urlsafe(),
+                headline='' if  self.is_message else self.key.parent().get().headline,
                 author=self.author,
                 body=self.body,
                 date=self.date))
-
-    def index_del(self):
-        return INDEX.delete('%s' % self.key.urlsafe())
 
     @property
     def is_message(self):
@@ -619,7 +611,7 @@ class Comment(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         instance = key.get()
-        instance.index_del()
+        deferred.defer(remove_doc, key.urlsafe())
 
         decr_count('Comment', 'author', instance.author.nickname())
         if instance.is_message:

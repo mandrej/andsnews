@@ -105,7 +105,7 @@ class SearchPaginator:
 #    timeout = 60 #TIMEOUT/10
     def __init__(self, querystring, per_page=PER_PAGE):
         self.querystring = querystring
-        # '"{0}"'.format(querystring.replace('"',''))
+        # '"{0}"'.format(querystring.replace('"', ''))
         self.per_page = per_page
 
     #        self.id = hashlib.md5(querystring).hexdigest()
@@ -149,7 +149,9 @@ class SearchPaginator:
             found = INDEX.search(query)
             results = found.results
             number_found = found.number_found
-        except Exception, error:
+        except search.Error, error:
+            pass
+        except UnicodeDecodeError, error:
             pass
         else:
             if number_found > 0:
