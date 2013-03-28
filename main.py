@@ -1,7 +1,7 @@
-from webapp2 import WSGIApplication, Route
+from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
 from views import Index, latest, auto_complete, sitemap, Chat, Send, rss
-from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find, handle_403, handle_404, handle_500
+from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find
 from settings import DEVEL
 
 CONFIG = {
@@ -9,6 +9,7 @@ CONFIG = {
 }
 
 app = WSGIApplication([
+    SimpleRoute(r'^/photos/?$', handler='photo.views.Index'),
     PathPrefixRoute('/photos', [
         Route('/', handler='photo.views.Index', name='photo_all'),
         Route('/add', handler='photo.views.Add', name='photo_add'),
@@ -20,6 +21,7 @@ app = WSGIApplication([
         Route('/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/',
               handler='photo.views.Index', name='photo_filter_all'),
     ]),
+    SimpleRoute(r'^/entries/?$', handler='entry.views.Index'),
     PathPrefixRoute('/entries', [
         Route('/', handler='entry.views.Index', name='entry_all'),
         Route('/add', handler='entry.views.Add', name='entry_add'),
@@ -28,10 +30,12 @@ app = WSGIApplication([
         Route('/image/<slug>/<size:(small|normal)>', handler='entry.views.thumb', name='entry_image'),
         Route('/<slug>', handler='entry.views.Detail', name='entry'),
     ]),
+    SimpleRoute(r'^/comments/?$', handler='comment.views.Index'),
     PathPrefixRoute('/comments', [
         Route('/', handler='comment.views.Index', name='comment_all'),
         Route('/<field:(forkind|date|author)>/<value>/', handler='comment.views.Index', name='comment_filter_all'),
     ]),
+    SimpleRoute(r'^/news/?$', handler='news.views.Index'),
     PathPrefixRoute('/news', [
         Route('/', handler='news.views.Index', name='feed_all'),
         Route('/add', handler='news.views.Add', name='feed_add'),
@@ -39,6 +43,7 @@ app = WSGIApplication([
         Route('/<slug>', handler='news.views.Detail', name='feed'),
         Route('/<field:tags>/<value>/', handler='news.views.Index', name='feed_filter_all'),
     ]),
+    SimpleRoute(r'^/admin/?$', handler='admin.views.Index'),
     PathPrefixRoute('/admin', [
         Route('/', handler='admin.views.Index'),
         Route('/comments', handler='admin.views.Comments'),
@@ -72,7 +77,3 @@ app = WSGIApplication([
     Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),
 ], config=CONFIG, debug=DEVEL)
-
-app.error_handlers[403] = handle_403
-app.error_handlers[404] = handle_404
-app.error_handlers[500] = handle_500

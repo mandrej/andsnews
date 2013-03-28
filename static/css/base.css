@@ -73,7 +73,7 @@ pre {
 #tools { position: relative; float: right; width: 31.33%; }
 #footer { position: absolute; bottom: 2em; color: #999; }
 #forms { margin-bottom: 1em; }
-#main { margin-left: 3%; padding-bottom: 1px; }
+#main { margin-left: 3%; padding-bottom: 1px; position: relative; }
 .plain { margin-right: 3%; }
 .nomargin { margin: 0; }
 #aside { width: 30.33%; margin-right: 3%; float: right; }
@@ -199,6 +199,15 @@ fieldset .error {
 .buttons span { float: left; }
 .error { color: #fff; }
 .required { color: #fff; }
+.errorcode {
+    position: absolute;
+    top: 0.5em;
+    width: 97%;
+    font-size: 16em;
+    color: rgba(0,0,0,0.4);
+    text-align: center;
+    text-shadow: 1px 2px 0 rgba(128,128,128,0.4)
+}
 .formerrors {
 	margin: 1em 0;
 	padding: 1em 1em 1em 4em;
@@ -380,16 +389,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 .story dt { float: none; margin-bottom: 5px; padding: 0; width: auto; }
 .story dd { border: none; margin: 0; padding: 0; }
 .story blockquote { border-left: 1em solid #fff; }
-.twocolumns {
-	margin-bottom: 1em;
-	-moz-column-count: 2;
-	-moz-column-gap: 2em;
-	-webkit-column-count: 2;
-	-webkit-column-gap: 2em;
-	column-count: 2;
-	column-gap: 2em;
-}
-.twocolumns table { display: inline-block; }
 .icon {
 	padding-left: 2.5em;
 	background-repeat: no-repeat;
@@ -679,11 +678,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	#footer, #palette { display: none; }
 	#aside { width: 37%; }
 	#tools { width: 38.27% }
-	.twocolumns {
-		-moz-column-count: 1;
-		-webkit-column-count: 1;
-		column-count: 1;
-	}
 	.thumbnail { width: 22%; }
 	#port { width: 57%; }
 	.half { margin: 0 3% 1em 0; width: 37%; }

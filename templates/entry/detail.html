@@ -30,8 +30,16 @@
 <div id="addcomment" class="modal"></div>
 {% endblock %}
 
+{% block aside %}
+    <div id="comments">
+        {% for comment in object.comment_list() %}
+            {{ m.render_comment(comment, user) }}
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block contents %}
-<article class="plain">
+<article id="port">
 	<header>
 		<h2>{{ object.headline }}</h2>
 		<div class="subtitle">
@@ -50,13 +58,7 @@
 		<div class="pullquote"><p>{{ object.summary|safe }}</p></div>
 	</header>
 	
-	<div class="story twocolumns">{{ object.body|safe }}</div>
-	
-	<aside id="comments">
-        {% for comment in object.comment_list() %}
-            {{ m.render_comment(comment, user) }}
-        {% endfor %}
-	</aside>
+	<div class="story">{{ object.body|safe }}</div>
 </article>
 {% endblock %}
 

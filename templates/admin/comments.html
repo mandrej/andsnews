@@ -25,7 +25,7 @@
                 <tr id="{{ object.key.urlsafe() }}">
                     {% if object.is_message %}<td>message</td>{% else%}
                         {% with refkey=object.key.parent() %}
-                        <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}#comments">
+                        <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
                             {{ refkey.get().headline }}</a></td>
                         {% endwith %}
                     {% endif %}

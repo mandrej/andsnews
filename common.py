@@ -54,7 +54,8 @@ class Paginator:
             memcache.add(self.id, self.cache, self.timeout)
 
     def pagekeys(self, num):
-        if num < 1: webapp2.abort(404)
+        if num < 1:
+            webapp2.abort(404)
 
         try:
             cursor = self.cache[num - 1]
@@ -64,7 +65,10 @@ class Paginator:
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
         if not keys:
-            return keys, False
+            if num == 1:
+                return keys, False
+            else:
+                webapp2.abort(404)
 
         if keys and cursor:
             self.cache[num] = cursor
@@ -97,8 +101,12 @@ class Paginator:
                 other = [none]
             collection = (keys + other)[idx - (num - 1) * self.per_page - 2:]
 
-        prev, obj, next = ndb.get_multi(collection[:3])
-        return num, prev, obj, next
+        try:
+            prev, obj, next = ndb.get_multi(collection[:3])
+        except ValueError:
+            webapp2.abort(404)
+        else:
+            return num, prev, obj, next
 
 
 class SearchPaginator:

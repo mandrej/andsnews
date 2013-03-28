@@ -212,6 +212,17 @@ class BaseHandler(webapp2.RequestHandler):
     def jinja2(self):
         return get_jinja2(app=self.app)
 
+    def handle_exception(self, exception, debug):
+        template = 'errors/default.html'
+        if isinstance(exception, webapp2.HTTPException):
+            data = {'error': exception, 'path': self.request.path_qs}
+            self.render_template(template, data)
+            self.response.set_status(exception.code)
+        else:
+            data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
+            self.render_template(template, data)
+            self.response.set_status(500)
+
     def render_template(self, filename, kwargs):
         lang_code = self.session.get('lang_code') or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
@@ -344,25 +355,3 @@ class Sign(BaseHandler):
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
-
-
-def handle_403(request, response, exception):
-    template = ENV.get_template('errors/403.html')
-    response.write(template.render({'error': exception}))
-    response.set_status(403)
-    return response
-
-
-def handle_404(request, response, exception):
-    template = ENV.get_template('errors/404.html')
-    response.write(template.render({'error': exception, 'path': request.path_qs}))
-    response.set_status(404)
-    return response
-
-
-def handle_500(request, response, exception):
-    template = ENV.get_template('errors/500.html')
-    lines = ''.join(traceback.format_exception(*sys.exc_info()))
-    response.write(template.render({'error': exception, 'lines': lines}))
-    response.set_status(500)
-    return response
