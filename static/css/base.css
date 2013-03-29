@@ -706,5 +706,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	#port { width: 97%; }
 	.half { width: auto; }
 	.third { width: 97%; }
+    .errorcode { font-size: 10em }
 	.popup { width: 280px; margin-left: -140px; top: 40px; }
 }
