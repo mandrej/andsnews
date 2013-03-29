@@ -1,12 +1,12 @@
 from __future__ import division
 import re
-import math
+from StringIO import StringIO
+from PIL import Image
 
 import webapp2
 from google.appengine.api import users
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import images
 from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
@@ -16,6 +16,7 @@ from common import Paginator, Filter, TagsField
 from settings import TIMEOUT
 
 PER_PAGE = 6
+SMALL = 60, 60
 
 
 class Index(BaseHandler):
@@ -160,35 +161,23 @@ def make_thumbnail(kind, slug, size, mime='image/jpeg'):
     if size == 'small' and obj.small is not None:
         return obj.small, mime
 
-    img = images.Image(buff)
-    aspect = img.width / img.height
-    if aspect < 1:
-        aspect = 1 / aspect
-    _width = 60
-    _thumb = int(math.ceil(_width * aspect))
+    im = Image.open(StringIO(buff))
+    output = StringIO()
 
-    if _thumb < img.width or _thumb < img.height:
-        img.resize(_thumb, _thumb)
-        if str(obj.mime) == 'image/png':
-            obj.small = img.execute_transforms(output_encoding=images.PNG)
-            obj.put()
-            return obj.small, str(obj.mime)
-        else:
-            obj.small = img.execute_transforms(output_encoding=images.JPEG)
-            obj.put()
-            return obj.small, mime
-    else:
-        return buff, str(obj.mime)
+    im.thumbnail(SMALL, Image.ANTIALIAS)
+    im.save(output, format='JPEG')
+
+    obj.small = output.getvalue()
+    output.close()
+    obj.put()
+    return obj.small, mime
 
 
 def thumb(request, slug, size):
     out, mime = make_thumbnail('Entry', slug, size)
-    if out:
-        response = webapp2.Response(content_type=mime)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
-        # if size == 'normal':
-        #     response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
-        response.write(out)
-        return response
-    else:
-        webapp2.abort(503)
+    response = webapp2.Response(content_type=mime)
+    response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
+    # if size == 'normal':
+    #     response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
+    response.write(out)
+    return response
