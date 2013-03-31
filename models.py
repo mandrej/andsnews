@@ -425,7 +425,7 @@ class Photo(ndb.Model):
         return self.cached_url(1000, False)
 
     def small_url(self):
-        return self.cached_url(240, True)
+        return self.cached_url(350, False)
 
     @property
     def blob_info(self):
