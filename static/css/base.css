@@ -124,7 +124,7 @@ pre {
 	left: 0;
 	width: 44%;
 	height: 100%;
-	background: rgba(0,0,0,0.7);
+	background: rgba(0,0,0,0.5);
 	padding: 0 3%;
 	z-index: 10;
 }
@@ -469,7 +469,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	width: 440px;
 	margin-left: -220px;
 	position: absolute;
-	background: #222;
+	background: #aaa;
 	top: 150px;
 	left: 50%;
 	z-index: 1030;
@@ -481,7 +481,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	margin: 0;
 	padding: 0 0.6em;
 	color: #fff;
-	background: #444;
+	background: #666;
 	font-size: 1.6em;
 	line-height: 200%;
 	border-top-left-radius: 4px;

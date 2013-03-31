@@ -6,12 +6,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 var chartOptions = {
-    backgroundColor: '#222',
-    pieSliceBorderColor: '#222',
+    backgroundColor: '#aaa',
+    pieSliceBorderColor: '#aaa',
     fontSize: 12,
     fontName: 'sans-serif',
     chartArea: {width: 420, top: 0, left: 0, height: 300},
-    legend: {textStyle: {color: '#ccc'}}
+    legend: {textStyle: {color: '#222'}}
 };
 
 (function($) {
