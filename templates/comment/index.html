@@ -20,22 +20,26 @@
 	    	{% if object.is_message %}
 	    		<section class="third brick">
                     {{ m.time(object.date) }}
-                    <h3>{{ _('message') }}</h3>
-                    <div class="body">{{ object.body|safe }}</div>
-                    <p class="details">{{ object.author }},
-                        {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                    </p>
+                    <div class="body">
+                        <h3>{{ _('message') }}</h3>
+                        <div class="para">{{ object.body|safe }}</div>
+                        <p class="details">{{ object.author }},
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        </p>
+                    </div>
 				</section>
 	        {% else %}
 	    		<section class="third brick">
                     {{ m.time(object.date) }}
                     {% with refkey=object.key.parent() %}
-                        <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
-                            {{ refkey.get().headline }}</a></h3>
-                        <div class="body">{{ object.body|safe }}</div>
-                        <p class="details">{{ object.author }},
-                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                        </p>
+                        <div class="body">
+                            <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
+                                {{ refkey.get().headline }}</a></h3>
+                            <div class="para">{{ object.body|safe }}</div>
+                            <p class="details">{{ object.author }},
+                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                            </p>
+                        </div>
                     {% endwith %}
 				</section>
 	        {% endif %}

@@ -79,12 +79,10 @@ pre {
 #port { margin: 0 3% 2em 0; width: 63.66%; }
 .subtitle { margin: 1em 0; }
 .subtitle a { text-decoration: underline; }
-.copyright { color: #fff; }
 /* paginator */
 .paginator { float: left; }
 .paginator span, .paginator a {
 	float: left;
-	display: inline-block;
 	margin-right: 0.4em;
 	width: 1em;
 	font-size: 4em;
@@ -102,7 +100,6 @@ pre {
 /* menu */
 #menu {
 	float: right;
-	display: inline-block;
     width: 1em;
     font-size: 4em;
     font-weight: bold;
@@ -124,7 +121,7 @@ pre {
 	left: 0;
 	width: 44%;
 	height: 100%;
-	background: rgba(0,0,0,0.5);
+	background: rgba(0,0,0,0.7);
 	padding: 0 3%;
 	z-index: 10;
 }
@@ -237,7 +234,6 @@ fieldset p.upload input { margin-right: 0.5em; width: auto; }
 #langs { float: right; }
 #langs button {
 	float: left;
-	display: inline-block;
 	margin-left: 1em;
 	padding: 0 0.5em;
     height: 2em;
@@ -402,8 +398,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 /* comments */
 #comments, #exif { clear: both; margin-top: 2em; }
 .when {
-	margin: 0 0.5em 0.2em 0;
-	width: 2.5em;
+	width: 2.2em;
 	float: left;
     color: #fff;
 	font-size: 2.2em;
@@ -414,9 +409,9 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	top: -0.25em;
 	left: 0;
 }
-.when .time, .when .monthyear { display: block; font-size: 42%; line-height: 100%; text-align: right; }
-.when .day, .when .time { font-weight: bold; }
-.body { margin-bottom: 0.5em; }
+.when .year, .when .month { display: block; font-size: 42%; line-height: 100%; text-align: right; }
+.body { margin: 0 0 0.5em 5.5em; }
+.para { margin-bottom: 0.5em; }
 /* misc */
 .details {
 	clear: both;
@@ -695,12 +690,31 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 @media (max-width: 480px) {
     body { font-size: 16px; }
-	h1 { font-size: 2em; }
+	#header h1 {
+        float: left;
+        top: 0;
+        position: relative;
+        width: 1em;
+        font-size: 4em;
+        height: 1em;
+        line-height: 100%;
+    }
+    #header h1 a {
+        display: block;
+        background: rgba(255,255,255,0.5);
+        color: #fff;
+        text-indent: -100em;
+        text-decoration: none;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+    }
+    #header h1 a:hover { background-color: orange; }
     h2 { font-size: 1.4em; }
 	#footer, #aside, #langs, .submenu, .subtitle, #filters .graph, .menu a.Comment { display: none; }
     #searchForm { margin: 0; }
 	#header { height: 3em; }
-	#main { margin: 1em 0 1em 3%; }
+	#main { margin: 2em 0 1em 3%; }
 	#tools { width: auto; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
 	.menu { width: 75%; }

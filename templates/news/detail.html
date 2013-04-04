@@ -17,15 +17,7 @@
 <article class="plain nomargin">
 	{% if news %}
 		<h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
-	
-		{% if news.feed.subtitle or news.feed.rights %}
-			<p class="copyright">
-				{% if news.feed.subtitle %}
-					<strong>{{ news.feed.subtitle|safe }}</strong>
-				{% endif %}
-				{{ news.feed.rights }}
-			</p>
-		{% endif %}
+		{% if news.feed.rights %}<p>{{ news.feed.rights }}</p>{% endif %}
 		<div class="subtitle">
 			{{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
 	
