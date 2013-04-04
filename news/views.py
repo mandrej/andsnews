@@ -119,6 +119,7 @@ class Detail(BaseHandler):
                     news, obj.date = update(result)
                     if news.entries:
                         memcache.add(slug, news, TIMEOUT)
+                        obj.subtitle = news.feed.subtitle
                         obj.put_async()
                     else:
                         error = _('Feed server send no entries')

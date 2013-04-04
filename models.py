@@ -625,6 +625,7 @@ class Comment(ndb.Model):
 class Feed(ndb.Model):
     url = ndb.StringProperty(required=True)
     headline = ndb.StringProperty(required=True)
+    subtitle = ndb.StringProperty()
     author = ndb.UserProperty(auto_current_user_add=True)
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
