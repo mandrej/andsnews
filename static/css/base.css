@@ -672,6 +672,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 	#footer, #palette { display: none; }
 	#aside { width: 37%; }
 	#tools { width: 38.27% }
+    #searchForm { width: 72%; }
 	.thumbnail { width: 22%; }
 	#port { width: 57%; }
 	.half { margin: 0 3% 1em 0; width: 37%; }
@@ -680,7 +681,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 @media (max-width: 800px) {
 	#footer, #spectra, .help, .copyright, .menu a.Admin, .menu a.Login, .menu a.Logout { display: none; }
 	.menu { width: 76%; }
-    #searchForm { width: 72%; }
     .paginator span, .paginator a { line-height: 110%; }
 	#aside { width: 47%; }
 	#tools { width: 48.46%; }
