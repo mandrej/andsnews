@@ -37,8 +37,8 @@
 						{% endfor %}
 					</form>
 					<form id="searchForm" action="/search" method="get">
+                        <button type="submit">{{ _('search') }}</button>
 						<input type="text" name="find"/>
-						<button type="submit">{{ _('search') }}</button>
 					</form>
 				</div>
 			{% endblock %}
