@@ -1,7 +1,8 @@
-<div class="popup warning">
+<div class="popup">
 	<h4>{{ _('Confirm') }}</h4>
-	<a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+    <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
 	<div class="content">
+        <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
 		<form id="deleteForm" action="{{ post_url }}" method="post">
 			<p>{{ _('Do you really want to delete') }}
 				{% if object.kind == 'Comment' %}

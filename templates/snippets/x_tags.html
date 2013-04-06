@@ -1,7 +1,7 @@
 {% if graph %}
     <div class="popup">
         <h4>{{ _('Tags') }}</h4>
-        <a class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+        <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
         <div class="content">
             <div id="chart"></div>
         </div>
@@ -26,7 +26,7 @@
             {% set selected = item.name == filter.value if filter else False %}
             <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                href="{{ uri_for(link, field='tags', value=item.name) }}"
-               title="{{ item.count }}" >{{ item.name }}</a>
+               title="{{ item.count }}">{{ item.name }}</a>
         {% endfor %}
     </p>
 {% endif %}

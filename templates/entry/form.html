@@ -21,7 +21,7 @@
 <div id="images" class="modal">
 	<div class="popup">
 		<h4>{{ _('Choose image') }}</h4>
-		<a href="#" class="button close" title="{{ _('close') }}">{{ _('close') }}</a>
+        <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
 		<div class="content">
 		{% for img in object.image_list %}
 			<figure class="left{% if loop.last %} last{% endif %}">
@@ -50,6 +50,7 @@
 	<h2>{{ _('Add new / change existing blog') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
+            <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
 			<p>{{ _('Please correct errors in') }}
             {{ form.errors|join(", ") }}.</p>
 		</div>

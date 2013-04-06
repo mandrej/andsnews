@@ -41,10 +41,10 @@
                         {{ photo.headline }}</a></td>
                     <td>
                         {% if photo.blob_key %}
-                            <img src="/static/images/icon_yes.png" alt=""/>
                             {{ photo.blob_info.size|filesizeformat }}, {{ photo.blob_info.content_type }}
+                            {{ True|boolimage }}
                         {% else %}
-                            <img src="/static/images/icon_no.png" alt=""/>
+                            {{ False|boolimage }}
                         {% endif %}
                     </td>
                     <td>

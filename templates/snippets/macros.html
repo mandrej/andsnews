@@ -59,8 +59,8 @@
     {{ time(obj.date) }}
     <div class="body">
         {% if user == obj.author %}
-            <a class="confirm delete" href="{{ uri_for('delete', safe_key=obj.key.urlsafe()) }}"
-               title="{{ _('Delete') }}">❌</a>
+            <a class="confirm delete icon-remove-sign icon-2x pull-right"
+                href="{{ uri_for('delete', safe_key=obj.key.urlsafe()) }}" title="{{ _('Delete') }}"></a>
         {% endif %}
         <div class="para">{{ obj.body|safe }}</div>
         <p class="details">{{ obj.author }},

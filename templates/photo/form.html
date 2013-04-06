@@ -43,6 +43,7 @@
 	<h2>{{ _('Add new / change existing photo') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">
+            <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
 			<p>{{ _('Please correct errors in') }}
 			{{ form.errors|join(", ") }}.</p>
 		</div>

@@ -24,27 +24,27 @@
 {% endblock %}
 
 {% block paging %}
-    {% macro link(obj, index, char) %}
+    {% macro link(obj, index, class) %}
         {% if filter %}
-            <a class="prev" href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=index) }}"
-               title="{{ obj.headline }}">{{ char }}</a>
+            <a class="{{ class }}" href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=index) }}"
+               title="{{ obj.headline }}"></a>
         {% else %}
-            <a href="{{ uri_for('photo', slug=index) }}"
-               title="{{ obj.headline }}">{{ char }}</a>
+            <a class="{{ class }}" href="{{ uri_for('photo', slug=index) }}"
+               title="{{ obj.headline }}"></a>
         {% endif %}
     {% endmacro %}
 
 	{% if previous or next %}
         <nav class="paginator">
             {% if previous %}
-                {{ link(previous, idx - 1, '◀') }}
+                {{ link(previous, idx - 1, 'prev icon-chevron-left icon-4x') }}
             {% else %}
-                <span class="prev na">◀</span>
+                <span class="prev na icon-chevron-left icon-4x"></span>
             {% endif %}
             {% if next %}
-                {{ link(next, idx + 1, '▶') }}
+                {{ link(next, idx + 1, 'next icon-chevron-right icon-4x') }}
             {% else %}
-                <span class="next na">▶</span>
+                <span class="next na icon-chevron-right icon-4x"></span>
             {% endif %}
         </nav>
 	{% endif %}

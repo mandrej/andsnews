@@ -1,20 +1,20 @@
 {% if has_previous or has_next %}
 	{% if has_previous %}
 		{% if phrase %}
-			<a class="prev" href="?find={{ phrase }}&page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
+			<a class="prev icon-chevron-left icon-4x" href="?find={{ phrase }}&page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}"></a>
 		{% else %}
-			<a class="prev" href="?page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}">◀</a>
+			<a class="prev icon-chevron-left icon-4x" href="?page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}"></a>
 		{% endif %}
 	{% else %}
-	    <span class="prev na">◀</span>
+	    <span class="prev na icon-chevron-left icon-4x"></span>
 	{% endif %}
 	{% if has_next %}
 		{% if phrase %}
-			<a class="next" href="?find={{ phrase }}&page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
+			<a class="next icon-chevron-right icon-4x" href="?find={{ phrase }}&page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}"></a>
 		{% else %}
-			<a class="next" href="?page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}">▶</a>
+			<a class="next icon-chevron-right icon-4x" href="?page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}"></a>
 		{% endif %}
 	{% else %}
-	    <span class="next na">▶</span>
+	    <span class="next na icon-chevron-right icon-4x"></span>
 	{% endif %}
 {% endif %}

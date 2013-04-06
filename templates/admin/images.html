@@ -42,7 +42,7 @@
                             {% if image.small %}
                                 {{ image.small|length|filesizeformat }}
                             {% else %}
-                                <img src="/static/images/icon_no.png" alt=""/>
+                                {{ False|boolimage }}
                             {% endif %}
                         </td>
                         <td class="nowrap">

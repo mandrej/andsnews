@@ -21,7 +21,7 @@
 	<div id="graph" class="modal"></div>
 	<div id="confirm" class="modal"></div>
 	<div id="spinner" class="modal">
-		<div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div><div class="bar7"></div><div class="bar8"></div><div class="bar9"></div><div class="bar10"></div><div class="bar11"></div><div class="bar12"></div>
+	    <div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div><div class="bar7"></div><div class="bar8"></div><div class="bar9"></div><div class="bar10"></div><div class="bar11"></div><div class="bar12"></div>
 	</div>
 	{% endblock %}
 
@@ -62,9 +62,10 @@
 		</nav>
 		<header id="header">
 			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
+            <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
 			<div id="tools">
 				{% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
-				<a href="#" id="menu" title="{{ _('Tools') }}">≡</a>
+				<a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
 			</div>
 		</header>
 		<div id="main">

@@ -55,7 +55,8 @@
 			| <a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
 				title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
 		</div>
-		<div class="pullquote"><p>{{ object.summary|safe }}</p></div>
+        <i class="icon-quote-left pull-left icon-2x"></i>
+        <p>{{ object.summary|safe }}</p>
 	</header>
 	
 	<div class="story">{{ object.body|safe }}</div>

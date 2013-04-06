@@ -1,0 +1,6 @@
+<div class="popup">
+    <h4>{% block title %}{% endblock %}</h4>
+    <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
+    <div class="content">{% block content %}{% endblock %}</div>
+</div>
+{% block script %}{% endblock %}

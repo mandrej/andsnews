@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block contents %}
-<article class="plain nomargin">
+<article>
 	{% if news %}
 		<h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
 		{% if news.feed.rights %}<p>{{ news.feed.rights }}</p>{% endif %}

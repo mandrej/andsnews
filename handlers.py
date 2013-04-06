@@ -62,11 +62,11 @@ def incache(key):
 
 
 def boolimage(value):
-    """ {{ object.key.name|incache:"small"|yesno:"yes,no"|boolimage }} """
+    """ {{ object.key.name|incache|boolimage }} """
     if value is True:
-        return do_mark_safe('<img src="/static/images/icon_yes.png" alt="%s"/>' % value)
+        return do_mark_safe('<i class="icon-ok-sign" style="color: #060"></i>')
     else:
-        return do_mark_safe('<img src="/static/images/icon_no.png" alt="%s"/>' % value)
+        return do_mark_safe('<i class="icon-minus-sign" style="color: #c00"></i>')
 
 
 @environmentfilter

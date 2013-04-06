@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block modals %}{% endblock %}
 {% block aside %}
-	<div class="box dark">
+	<div class="front">
 		<header>
-			<a class="remove" href="#" title="{{ _('hide') }}">−</a>
+			<a class="remove icon-remove-sign icon-4x pull-right" href="#" title="{{ _('close') }}"></a>
 			<h2>{{ _('Welcome to our and YOUR site') }}</h2>
 		</header>
 		{% if LANGUAGE_CODE == 'en_US' %}
@@ -15,13 +15,12 @@
 			Application address is: <strong>ands@appspot.com</strong>.</p>
 			<h4>See this site on your mobile device</h4>
 
-			<div class="pullquote">
-				<p>Site administrator has right to delete offensive blogs, photos or comments
-					according to personal valuation.</p>
-				<p>If you find this appropriate, feel free to contribute to this site.
-					Sent material will not be misused in any way by site administrator.</p>
-				<p class="quote">Your account password is not visible to any other user including administrator.</p>
-			</div>
+            <i class="icon-quote-left pull-left icon-2x"></i>
+            <p>Site administrator has right to delete offensive blogs, photos or comments
+                according to personal valuation.</p>
+            <p>If you find this appropriate, feel free to contribute to this site.
+                Sent material will not be misused in any way by site administrator.</p>
+            <p>Your account password is not visible to any other user including administrator.</p>
 		{% endif %}
 		{% if LANGUAGE_CODE == 'sr_RS' %}
 			<p>Добродошли на сајт где је могуће да поставите ваше фотографије, блогове као и да
@@ -33,13 +32,12 @@
 			Адреса апликације је: <strong>ands@appspot.com</strong>.</p>
 			<h4>Видите овај сајт на вашем мобилном уређају</h4>
 
-			<div class="pullquote">
-				<p>Администратор задржава право да може да обрише недоличне написе, слике или
-					коментаре по сопственом нахођењу.</p>
-				<p>Уколико вам све ово одговара, онда слободно пошаљите ваш допринос овом сајту.
-					Послати материјал се неће злоупотребити од стране администратора сајта.</p>
-				<p class="quote">Ваша лозинка за логовање није ником видљива, чак ни администратору сајта.</p>
-			</div>
+            <i class="icon-quote-left pull-left icon-2x"></i>
+            <p>Администратор задржава право да може да обрише недоличне написе, слике или
+                коментаре по сопственом нахођењу.</p>
+            <p>Уколико вам све ово одговара, онда слободно пошаљите ваш допринос овом сајту.
+                Послати материјал се неће злоупотребити од стране администратора сајта.</p>
+            <p class="quote">Ваша лозинка за логовање није ником видљива, чак ни администратору сајта.</p>
 		{% endif %}
 	</div>
 {% endblock %}
