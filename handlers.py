@@ -144,6 +144,12 @@ def to_json(value):
     return do_mark_safe(json.dumps(value))
 
 
+def split(value, sep=','):
+    if value:
+        return value.split(sep)
+    return []
+
+
 ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
     extensions=['jinja2.ext.i18n', 'jinja2.ext.with_'],
@@ -172,6 +178,7 @@ ENV.filters.update({
     'filesizeformat': filesizeformat,
     'timesince': timesince_jinja,
     'to_json': to_json,
+    'split': split,
 })
 
 real_handle_exception = ENV.handle_exception

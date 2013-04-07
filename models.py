@@ -155,7 +155,7 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None):
         search.TextField(name='headline', value=headline),
         search.TextField(name='author', value=author.nickname()),
         search.HtmlField(name='body', value=body),
-        search.TextField(name='tags', value=', '.join(tags)),
+        search.TextField(name='tags', value=','.join(tags)),
         search.DateField(name='date', value=date.date()),
     ])
 
@@ -425,7 +425,7 @@ class Photo(ndb.Model):
         return self.cached_url(1000, False)
 
     def small_url(self):
-        return self.cached_url(350, False)
+        return self.cached_url(375, False)
 
     @property
     def blob_info(self):

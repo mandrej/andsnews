@@ -22,17 +22,21 @@
                     <i class="icon-picture icon-3x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">
                         {{ object.headline }}</a>
-                        {% if object.tags %}
-                            <br>{{ _('tagged by') }}: {{ object.tags }}
-                        {% endif %}
+                        {% for tag in object.tags|split %}
+                            {% if loop.first %}<br><i class="icon-tag"></i>{% endif %}
+                            <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
+                                {{ tag }}</a>{% if not loop.last %},{% endif %}
+                        {% endfor %}
                     </h3>
                 {% elif object.kind == 'Entry' %}
                     <i class="icon-file icon-3x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">
                         {{ object.headline }}</a>
-                        {% if object.tags %}
-                            <br>{{ _('tagged by') }}: {{ object.tags }}
-                        {% endif %}
+                        {% for tag in object.tags|split %}
+                            {% if loop.first %}<br><i class="icon-tag"></i>{% endif %}
+                            <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}">
+                                {{ tag }}</a>{% if not loop.last %},{% endif %}
+                        {% endfor %}
                     </h3>
                 {% elif object.kind == 'Comment' %}
                     {% if object.headline %}
@@ -58,7 +62,7 @@
             {{ result(object) }}
         {% else %}
             <section class="third brick">
-                <div class="box orange">
+                <div class="box">
                     <h3>{{ _('No search results for') }} {{ phrase }}.</h3>
                     <p>{{ _('Please try again') }}.</p>
                     {% if error %}
