@@ -43,17 +43,19 @@
 	<header>
 		<h2>{{ object.headline }}</h2>
 		<div class="subtitle">
+            <i class="icon-user"></i>
 			<a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
 				title="{{ _("author's blogs") }}">{{ object.author }}</a>,
 				<time datetime='{{ object.date|format_datetime }}'>
 					{{ object.date|format_datetime }}</time>
 			{% for tag in object.tags %}
-				{% if loop.first %}| {{ _('tagged by') }}:{% endif %}
+                {% if loop.first %}<i class="icon-tag"></i>{% endif %}
 				<a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}" title="{{ tag }}">
 					{{ tag }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
-			| <a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
-				title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
+            <i class="icon-time"></i>
+			<a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
+			    title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
 		</div>
         <i class="icon-quote-left pull-left icon-2x"></i>
         <p>{{ object.summary|safe }}</p>

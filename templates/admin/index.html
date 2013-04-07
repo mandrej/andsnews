@@ -109,12 +109,14 @@
                 $('.ff').collapseGroup();
             });
             $('button').live('click', function() {
+                $('#spinner').show();
                 var key = $(this).val(), method = $(this).attr('name');
                 $.ajax({
                     url: '/admin/memcache/' + key,
                     type: method,
                     dataType: 'json',
                     success: function(data) {
+                        $('#spinner').hide();
                         build(key, data);
                         $('.ff').unbind().collapseGroup();
                     }
