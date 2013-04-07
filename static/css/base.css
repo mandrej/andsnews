@@ -69,7 +69,7 @@ pre {
 #max { margin: 0 auto; min-height: 25em; background: url(../images/front.png) no-repeat; }
 #header { position: relative; height: 5em; padding: 1em 3% 0; background: rgba(31, 79, 234, 0.8); }
 #header a.icon-home { display: none; color: #fff; }
-#tools { position: relative; float: right; width: 31.33%; }
+#tools { float: right; }
 #footer { position: absolute; bottom: 2em; color: #999; }
 #forms { float: left; width: 100%; margin: 1em 0; white-space: nowrap; }
 #forms:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
@@ -481,7 +481,7 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 #spinner div {
 	width: 12%;
-	background: #333;
+	background: #fff;
 	height: 26%;
 	position: absolute;
 	left: 44.5%;
@@ -603,7 +603,6 @@ figure p.legend { padding: 0.5em; text-align: center; }
 @media (max-width: 1024px) {
 	#footer, #palette { display: none; }
 	#aside { width: 37%; }
-	#tools { width: 38%; }
     #searchForm { width: 72%; }
 	.thumbnail { width: 22%; }
 	#port { width: 57%; }
@@ -612,9 +611,8 @@ figure p.legend { padding: 0.5em; text-align: center; }
 }
 @media (max-width: 800px) {
 	#footer, #spectra, .front, .help, .copyright, .menu a.Admin, .menu a.Login, .menu a.Logout { display: none; }
-	.menu { width: 76%; }
+	.menu { width: 77%; }
 	#aside { width: 47%; }
-	#tools { width: 48%; }
 	.thumbnail { margin: 0 3% 1.5em 0; width: 30.33%; }
 	#port { width: 47%; }
 	.half { width: 47%; }
@@ -628,9 +626,9 @@ figure p.legend { padding: 0.5em; text-align: center; }
     #header a.icon-home { float: left; display: block; }
     #searchForm { width: 100%; }
 	#main { margin: 1em 0 1em 3%; }
-	#tools { width: auto; }
 	.thumbnail { margin: 0 3% 1em 0; width: 47%; }
-	.menu { width: 75%; }
+	.menu { width: 73%; }
+    .menu h1 { font-size: 2.4em;}
 	#port { width: 97%; }
 	.half { width: auto; }
 	.third { width: 97%; }
