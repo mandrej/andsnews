@@ -144,9 +144,9 @@ def range_names(rgb):
 
     rel_rgb = map(lambda x: x / 255, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    hue = in_range(int(h * 360), HUE)
-    lum = in_range(int(l * 100), LUM)
-    sat = in_range(int(s * 100), SAT)
+    hue = in_range(int(round(h * 360)), HUE)
+    lum = in_range(int(round(l * 100)), LUM)
+    sat = in_range(int(round(s * 100)), SAT)
     return hue, lum, sat
 
 
@@ -439,7 +439,7 @@ class Photo(ndb.Model):
     def hls(self):
         rel_rgb = map(lambda x: x / 255, self.rgb)
         h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-        return int(h * 360), int(l * 100), int(s * 100)
+        return int(round(h * 360)), int(round(l * 100)), int(round(s * 100))
 
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
