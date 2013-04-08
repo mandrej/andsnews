@@ -149,6 +149,9 @@ def split(value, sep=','):
         return value.split(sep)
     return []
 
+@jinja2.contextfunction
+def get_context(c):
+    return c
 
 ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
@@ -167,6 +170,8 @@ ENV.globals.update({
     'gaesdk': gaesdk,
     'language': language,
     'uri_for': webapp2.uri_for,
+    'context': get_context,
+    'callable': callable,
 })
 ENV.filters.update({
     'incache': incache,
@@ -262,9 +267,10 @@ class RenderCloud(BaseHandler):
             items = sorted(items, key=itemgetter('order'))
 
         self.render_template(
-            'snippets/x_%s.html' % field, {
+            'snippets/cloud.html', {
                 'items': items,
                 'link': '%s_filter_all' % kind.lower(),
+                'field_name': field,
                 'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
@@ -283,7 +289,7 @@ class RenderGraph(BaseHandler):
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
 
-        self.render_template('snippets/x_%s.html' % field, {'items': items, 'graph': True})
+        self.render_template('snippets/graph.html', {'items': items, 'field_name': field})
 
 
 class Find(BaseHandler):

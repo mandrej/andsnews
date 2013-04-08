@@ -1,0 +1,42 @@
+{% if field_name in ['date', 'iso', 'eqv'] %} {# integers #}
+    <p class="cloud">
+        {% for item in items %}
+            {% set selected = item.name == filter.value|int if filter else False %}
+            <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+               href="{{ uri_for(link, field=field_name, value=item.name) }}"
+               title="{{ item.count }}">{{ item.name }}</a>
+        {% endfor %}
+    </p>
+{% elif field_name =='color' %}
+    <p>
+        {% for item in items %}
+            {% if item.count > 0 %}
+                <a class="dot" style="border-color: {{ item.hex }}"
+                    href="{{ uri_for(link, field=item.field, value=item.name) }}"
+                    title="{{ item.name }} {{ item.count }}"></a>
+            {% endif %}
+        {% endfor %}
+    </p>
+{% elif field_name =='forkind' %}
+    <p class="cloud">
+        {% for item in items %}
+            {% set selected = item.name == filter.value if filter else False %}
+            <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                href="{{ uri_for(link, field=field_name, value=item.name) }}"
+                title="{{ item.count }}">
+                {% if item.name == "Entry" %}{{ _('for blog') }}{% endif %}
+                {% if item.name == "Photo" %}{{ _('for photos') }}{% endif %}
+                {% if item.name == "Application" %}{{ _('messages') }}{% endif %}
+            </a>
+        {% endfor %}
+    </p>
+{% else %} {# author, model, tags, lens #}
+    <p class="cloud">
+        {% for item in items %}
+            {% set selected = item.name == filter.value if filter else False %}
+            <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                href="{{ uri_for(link, field=field_name, value=item.name) }}"
+                title="{{ item.count }}">{{ item.name }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
