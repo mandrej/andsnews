@@ -1,4 +1,81 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin);
+/*---------------------------------------------------
+    LESS Prefixer
+  ---------------------------------------------------
+    
+    All of the CSS3 fun, none of the prefixes!
+
+    As a rule, you can use the CSS properties you
+    would expect just by adding a '.':
+
+    box-shadow => .box-shadow(@args)
+
+    Also, when shorthand is available, arguments are
+    not parameterized. Learn CSS, not LESS Prefixer.
+
+    -------------------------------------------------
+    TABLE OF CONTENTS
+    (*) denotes a syntax-sugar helper
+    -------------------------------------------------
+
+        .animation(@args)
+            .animation-delay(@delay)
+            .animation-direction(@direction)
+            .animation-duration(@duration)
+            .animation-iteration-count(@count)
+            .animation-name(@name)
+            .animation-play-state(@state)
+            .animation-timing-function(@function)
+        .background-size(@args)
+        .border-radius(@args)
+        .box-shadow(@args)
+            .inner-shadow(@args) *
+        .box-sizing(@args)
+            .border-box() *
+            .content-box() *
+        .columns(@args)
+            .column-count(@count)
+            .column-gap(@gap)
+            .column-rule(@args)
+            .column-width(@width)
+        .gradient(@default,@start,@stop) *
+            .linear-gradient-top(@default,@color1,@stop1,@color2,@stop2,[@color3,@stop3,@color4,@stop4])*
+            .linear-gradient-left(@default,@color1,@stop1,@color2,@stop2,[@color3,@stop3,@color4,@stop4])*
+        .opacity(@factor)
+        .transform(@args)
+            .rotate(@deg)
+            .scale(@factor)
+            .translate(@x,@y)
+            .translate3d(@x,@y,@z)
+            .translateHardware(@x,@y) *
+        .text-shadow(@args)
+        .transition(@args)
+            .transition-delay(@delay)
+            .transition-duration(@duration)
+            .transition-property(@property)
+            .transition-timing-function(@function)
+
+
+
+    Credit to LESS Elements for the motivation and
+    to CSS3Please.com for implementation.
+
+    Copyright (c) 2012 Joel Sutherland
+    MIT Licensed:
+    http://www.opensource.org/licenses/mit-license.php
+
+-----------------------------------------------------*/
+/* Animation */
+/* Background Size */
+/* Border Radius */
+/* Box Shadows */
+/* Box Sizing */
+/* Columns */
+/* Gradients */
+/* Opacity */
+/* Text Shadow */
+/* Transforms */
+/* Transitions */
 @font-face {
   font-family: 'FontAwesome';
   src: url('../font/fontawesome-webfont.eot?v=3.0.1');
@@ -126,6 +203,9 @@ ul.icons li [class*=" icon-"] {
 .icon-border {
   border: solid 1px #eeeeee;
   padding: .2em .25em .15em;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -135,6 +215,9 @@ ul.icons li [class*=" icon-"] {
 }
 .icon-2x.icon-border {
   border-width: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -144,6 +227,9 @@ ul.icons li [class*=" icon-"] {
 }
 .icon-3x.icon-border {
   border-width: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -153,6 +239,9 @@ ul.icons li [class*=" icon-"] {
 }
 .icon-4x.icon-border {
   border-width: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
@@ -1053,6 +1142,14 @@ ul.icons li [class*=" icon-"] {
 .ac_over {
   background-color: orange;
 }
+.rounded_left_reset {
+  border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  -webkit-border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  -webkit-border-bottom-left-radius: 0;
+}
 .clearing {
   clear: both;
   display: block;
@@ -1232,9 +1329,12 @@ a.button {
   background-color: #fff;
   font-size: 1em;
   line-height: 100%;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 button:hover,
 a.button:hover {
@@ -1399,6 +1499,16 @@ table td a {
 .admin {
   margin-bottom: 1em;
 }
+.admin h4 {
+  margin-bottom: 0.3em;
+  padding: 0.4em 0;
+  line-height: 100%;
+}
+.admin button {
+  float: right;
+  width: 5em;
+  margin-left: 0.5em;
+}
 .admin dl {
   margin-right: 5.5em;
 }
@@ -1411,11 +1521,17 @@ table td a {
 .admin a {
   text-decoration: underline;
 }
+.body {
+  margin: 0 0 0.5em 5.5em;
+}
 .body dt {
   width: 33%;
 }
 .body dd {
   margin-left: 35%;
+}
+.body .para {
+  margin-bottom: 0.5em;
 }
 .w65em dt {
   width: 6.5em;
@@ -1476,6 +1592,15 @@ table td a {
 #port {
   margin: 0 3% 2em 0;
   width: 63.66%;
+}
+#port img {
+  max-width: 100%;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .subtitle {
   margin: 1em 0;
@@ -1567,7 +1692,6 @@ a#menu:hover,
   padding-right: 0;
   border-right: none;
 }
-/* forms */
 .buttons {
   clear: both;
   margin: 1em 0;
@@ -1597,9 +1721,12 @@ a#menu:hover,
   color: #fff;
   background: rgba(220, 0, 0, 0.5);
   min-height: 3em;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 #palette {
   float: right;
@@ -1659,12 +1786,15 @@ a#menu:hover,
   color: #000;
   font-size: 1.2em;
   height: 2em;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 #searchForm input:focus {
   outline: none;
@@ -1679,16 +1809,6 @@ a#menu:hover,
 }
 #addcommentForm .editor .error {
   margin-left: 0;
-}
-.admin h4 {
-  margin-bottom: 0.3em;
-  padding: 0.4em 0;
-  line-height: 100%;
-}
-.admin button {
-  float: right;
-  width: 5em;
-  margin-left: 0.5em;
 }
 /* markItUp! */
 .editor label {
@@ -1745,21 +1865,20 @@ figure p.legend {
   padding: 0.5em;
   text-align: center;
 }
-.thumbnail {
+figure.thumbnail {
   position: relative;
   margin: 0 3% 2em 0;
   width: 13.66%;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
-.thumbnail img {
+figure.thumbnail img {
   display: block;
-  /*background-position: center center;*/
-
-  /*background-repeat: no-repeat;*/
-
   max-width: 100%;
   border-top-right-radius: 4px;
   -moz-border-radius-topright: 4px;
@@ -1768,26 +1887,34 @@ figure p.legend {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
 }
-.thumbnail .legend {
+figure.thumbnail p.legend {
   margin: 0;
   height: 2em;
   line-height: 100%;
 }
-.thumbnail a {
+figure.thumbnail a {
   text-decoration: none;
 }
-#port img {
-  max-width: 100%;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+figure.thumbnail:hover {
+  background: orange;
 }
 /* tag cloud */
 .cloud {
   line-height: 135%;
+  font-size: 1em;
+  font-weight: 200;
+}
+.cloud a {
+  color: #fff;
+  text-decoration: none;
+}
+.cloud a:hover,
+.cloud a.selected {
+  background: orange;
+  color: #000;
 }
 .cloud a.t1 {
-  font-size: 1.0em;
+  font-size: 1em;
   font-weight: 200;
 }
 .cloud a.t2 {
@@ -1807,21 +1934,16 @@ figure p.legend {
   font-weight: 600;
 }
 .cloud a.t6 {
-  font-size: 1.5em;
+  font-size: 1.6em;
   font-weight: 700;
 }
 .cloud a.t7 {
-  font-size: 1.6em;
+  font-size: 1.7em;
   font-weight: 800;
 }
 .cloud a.t8 {
-  font-size: 1.7em;
+  font-size: 1.8em;
   font-weight: 900;
-}
-.cloud a:hover,
-.cloud a.selected {
-  background: orange;
-  color: #000;
 }
 /* story, news and entry content */
 .story h1,
@@ -1844,7 +1966,7 @@ figure p.legend {
 }
 .story dt {
   float: none;
-  margin-bottom: 5px;
+  margin-bottom: 0.5em;
   padding: 0;
   width: auto;
 }
@@ -1881,12 +2003,6 @@ figure p.legend {
   line-height: 100%;
   text-align: right;
 }
-.body {
-  margin: 0 0 0.5em 5.5em;
-}
-.para {
-  margin-bottom: 0.5em;
-}
 /* misc */
 .details {
   clear: both;
@@ -1918,9 +2034,12 @@ figure p.legend {
 .box {
   padding: 1em;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .half {
   margin: 0 3% 2em 0;
@@ -1975,7 +2094,7 @@ figure p.legend {
   opacity: 1;
   z-index: 1020;
 }
-.popup {
+.modal .popup {
   width: 440px;
   margin-left: -220px;
   position: absolute;
@@ -1984,49 +2103,50 @@ figure p.legend {
   top: 150px;
   left: 50%;
   z-index: 1030;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
-.popup h4 {
+.modal .popup h4 {
   margin: 0;
   padding: 0 0.6em;
   color: #fff;
   background: #333;
   font-size: 1.6em;
   line-height: 200%;
-  border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  -webkit-border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -webkit-border-top-left-radius: 4px;
 }
-.popup .buttons {
-  margin: 0;
-}
-.popup a.close {
+.modal .popup a.close {
   position: absolute;
   top: 0.3em;
   right: 0.5em;
   color: #666;
 }
-.popup a.close:hover {
+.modal .popup a.close:hover {
   color: #fff;
 }
-.popup .buttons {
-  line-height: normal;
-}
-.popup .content {
+.modal .popup .content {
   padding: 1em;
   min-height: 32px;
 }
-.popup .content:after {
+.modal .popup .content:after {
   clear: both;
   display: block;
   content: ".";
   height: 0;
   visibility: hidden;
+}
+.modal .popup .buttons {
+  margin: 0;
+  line-height: normal;
 }
 #chart + p {
   margin: 0.5em 0 0;
@@ -2051,12 +2171,12 @@ figure p.legend {
   border-width: 1em;
   text-decoration: none;
   line-height: 0;
-  border-radius: 1em;
-  -moz-border-radius: 1em;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 1em;
-}
-.thumbnail:hover {
-  background: orange;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
 }
 .clear {
   clear: both;
@@ -2079,88 +2199,153 @@ figure p.legend {
   left: 44.5%;
   top: 37%;
   opacity: 0;
-  -webkit-animation: fade 1s linear infinite;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   -webkit-border-radius: 50px;
-  -moz-animation: fade 1s linear infinite;
   -moz-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-animation: fade 1s linear infinite;
+  -moz-animation: fade 1s linear infinite;
+  -ms-animation: fade 1s linear infinite;
+  -o-animation: fade 1s linear infinite;
 }
 #spinner div.bar1 {
   -webkit-transform: rotate(0deg) translate(0, -142%);
-  -webkit-animation-delay: 0s;
   -moz-transform: rotate(0deg) translate(0, -142%);
-  -moz-animation-delay: 0s;
+  -ms-transform: rotate(0deg) translate(0, -142%);
+  -o-transform: rotate(0deg) translate(0, -142%);
+  transform: rotate(0deg) translate(0, -142%);
+  -webkit-animation-delay: -1s;
+  -moz-animation-delay: -1s;
+  -ms-animation-delay: -1s;
+  -o-animation-delay: -1s;
 }
 #spinner div.bar2 {
   -webkit-transform: rotate(30deg) translate(0, -142%);
-  -webkit-animation-delay: -0.9167s;
   -moz-transform: rotate(30deg) translate(0, -142%);
-  -moz-animation-delay: -0.9167s;
+  -ms-transform: rotate(30deg) translate(0, -142%);
+  -o-transform: rotate(30deg) translate(0, -142%);
+  transform: rotate(30deg) translate(0, -142%);
+  -webkit-animation-delay: -0.9166666666666666s;
+  -moz-animation-delay: -0.9166666666666666s;
+  -ms-animation-delay: -0.9166666666666666s;
+  -o-animation-delay: -0.9166666666666666s;
 }
 #spinner div.bar3 {
   -webkit-transform: rotate(60deg) translate(0, -142%);
-  -webkit-animation-delay: -0.833s;
   -moz-transform: rotate(60deg) translate(0, -142%);
-  -moz-animation-delay: -0.833s;
+  -ms-transform: rotate(60deg) translate(0, -142%);
+  -o-transform: rotate(60deg) translate(0, -142%);
+  transform: rotate(60deg) translate(0, -142%);
+  -webkit-animation-delay: -0.8333333333333334s;
+  -moz-animation-delay: -0.8333333333333334s;
+  -ms-animation-delay: -0.8333333333333334s;
+  -o-animation-delay: -0.8333333333333334s;
 }
 #spinner div.bar4 {
   -webkit-transform: rotate(90deg) translate(0, -142%);
-  -webkit-animation-delay: -0.75s;
   -moz-transform: rotate(90deg) translate(0, -142%);
+  -ms-transform: rotate(90deg) translate(0, -142%);
+  -o-transform: rotate(90deg) translate(0, -142%);
+  transform: rotate(90deg) translate(0, -142%);
+  -webkit-animation-delay: -0.75s;
   -moz-animation-delay: -0.75s;
+  -ms-animation-delay: -0.75s;
+  -o-animation-delay: -0.75s;
 }
 #spinner div.bar5 {
   -webkit-transform: rotate(120deg) translate(0, -142%);
-  -webkit-animation-delay: -0.667s;
   -moz-transform: rotate(120deg) translate(0, -142%);
-  -moz-animation-delay: -0.667s;
+  -ms-transform: rotate(120deg) translate(0, -142%);
+  -o-transform: rotate(120deg) translate(0, -142%);
+  transform: rotate(120deg) translate(0, -142%);
+  -webkit-animation-delay: -0.6666666666666667s;
+  -moz-animation-delay: -0.6666666666666667s;
+  -ms-animation-delay: -0.6666666666666667s;
+  -o-animation-delay: -0.6666666666666667s;
 }
 #spinner div.bar6 {
   -webkit-transform: rotate(150deg) translate(0, -142%);
-  -webkit-animation-delay: -0.5833s;
   -moz-transform: rotate(150deg) translate(0, -142%);
-  -moz-animation-delay: -0.5833s;
+  -ms-transform: rotate(150deg) translate(0, -142%);
+  -o-transform: rotate(150deg) translate(0, -142%);
+  transform: rotate(150deg) translate(0, -142%);
+  -webkit-animation-delay: -0.5833333333333333s;
+  -moz-animation-delay: -0.5833333333333333s;
+  -ms-animation-delay: -0.5833333333333333s;
+  -o-animation-delay: -0.5833333333333333s;
 }
 #spinner div.bar7 {
   -webkit-transform: rotate(180deg) translate(0, -142%);
-  -webkit-animation-delay: -0.5s;
   -moz-transform: rotate(180deg) translate(0, -142%);
+  -ms-transform: rotate(180deg) translate(0, -142%);
+  -o-transform: rotate(180deg) translate(0, -142%);
+  transform: rotate(180deg) translate(0, -142%);
+  -webkit-animation-delay: -0.5s;
   -moz-animation-delay: -0.5s;
+  -ms-animation-delay: -0.5s;
+  -o-animation-delay: -0.5s;
 }
 #spinner div.bar8 {
   -webkit-transform: rotate(210deg) translate(0, -142%);
-  -webkit-animation-delay: -0.41667s;
   -moz-transform: rotate(210deg) translate(0, -142%);
-  -moz-animation-delay: -0.41667s;
+  -ms-transform: rotate(210deg) translate(0, -142%);
+  -o-transform: rotate(210deg) translate(0, -142%);
+  transform: rotate(210deg) translate(0, -142%);
+  -webkit-animation-delay: -0.41666666666666663s;
+  -moz-animation-delay: -0.41666666666666663s;
+  -ms-animation-delay: -0.41666666666666663s;
+  -o-animation-delay: -0.41666666666666663s;
 }
 #spinner div.bar9 {
   -webkit-transform: rotate(240deg) translate(0, -142%);
-  -webkit-animation-delay: -0.333s;
   -moz-transform: rotate(240deg) translate(0, -142%);
-  -moz-animation-delay: -0.333s;
+  -ms-transform: rotate(240deg) translate(0, -142%);
+  -o-transform: rotate(240deg) translate(0, -142%);
+  transform: rotate(240deg) translate(0, -142%);
+  -webkit-animation-delay: -0.33333333333333337s;
+  -moz-animation-delay: -0.33333333333333337s;
+  -ms-animation-delay: -0.33333333333333337s;
+  -o-animation-delay: -0.33333333333333337s;
 }
 #spinner div.bar10 {
   -webkit-transform: rotate(270deg) translate(0, -142%);
-  -webkit-animation-delay: -0.25s;
   -moz-transform: rotate(270deg) translate(0, -142%);
+  -ms-transform: rotate(270deg) translate(0, -142%);
+  -o-transform: rotate(270deg) translate(0, -142%);
+  transform: rotate(270deg) translate(0, -142%);
+  -webkit-animation-delay: -0.25s;
   -moz-animation-delay: -0.25s;
+  -ms-animation-delay: -0.25s;
+  -o-animation-delay: -0.25s;
 }
 #spinner div.bar11 {
   -webkit-transform: rotate(300deg) translate(0, -142%);
-  -webkit-animation-delay: -0.1667s;
   -moz-transform: rotate(300deg) translate(0, -142%);
-  -moz-animation-delay: -0.1667s;
+  -ms-transform: rotate(300deg) translate(0, -142%);
+  -o-transform: rotate(300deg) translate(0, -142%);
+  transform: rotate(300deg) translate(0, -142%);
+  -webkit-animation-delay: -0.16666666666666663s;
+  -moz-animation-delay: -0.16666666666666663s;
+  -ms-animation-delay: -0.16666666666666663s;
+  -o-animation-delay: -0.16666666666666663s;
 }
 #spinner div.bar12 {
   -webkit-transform: rotate(330deg) translate(0, -142%);
-  -webkit-animation-delay: -0.0833s;
   -moz-transform: rotate(330deg) translate(0, -142%);
-  -moz-animation-delay: -0.0833s;
+  -ms-transform: rotate(330deg) translate(0, -142%);
+  -o-transform: rotate(330deg) translate(0, -142%);
+  transform: rotate(330deg) translate(0, -142%);
+  -webkit-animation-delay: -0.08333333333333337s;
+  -moz-animation-delay: -0.08333333333333337s;
+  -ms-animation-delay: -0.08333333333333337s;
+  -o-animation-delay: -0.08333333333333337s;
 }
 .isotope,
 .isotope .isotope-item {
   -webkit-transition-duration: 0.5s;
   -moz-transition-duration: 0.5s;
-  -ms-transition-duration: 0.5s;
   -o-transition-duration: 0.5s;
   transition-duration: 0.5s;
 }
