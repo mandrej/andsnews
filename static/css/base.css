@@ -1,81 +1,12 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin);
-/*---------------------------------------------------
-    LESS Prefixer
-  ---------------------------------------------------
-    
-    All of the CSS3 fun, none of the prefixes!
-
-    As a rule, you can use the CSS properties you
-    would expect just by adding a '.':
-
-    box-shadow => .box-shadow(@args)
-
-    Also, when shorthand is available, arguments are
-    not parameterized. Learn CSS, not LESS Prefixer.
-
-    -------------------------------------------------
-    TABLE OF CONTENTS
-    (*) denotes a syntax-sugar helper
-    -------------------------------------------------
-
-        .animation(@args)
-            .animation-delay(@delay)
-            .animation-direction(@direction)
-            .animation-duration(@duration)
-            .animation-iteration-count(@count)
-            .animation-name(@name)
-            .animation-play-state(@state)
-            .animation-timing-function(@function)
-        .background-size(@args)
-        .border-radius(@args)
-        .box-shadow(@args)
-            .inner-shadow(@args) *
-        .box-sizing(@args)
-            .border-box() *
-            .content-box() *
-        .columns(@args)
-            .column-count(@count)
-            .column-gap(@gap)
-            .column-rule(@args)
-            .column-width(@width)
-        .gradient(@default,@start,@stop) *
-            .linear-gradient-top(@default,@color1,@stop1,@color2,@stop2,[@color3,@stop3,@color4,@stop4])*
-            .linear-gradient-left(@default,@color1,@stop1,@color2,@stop2,[@color3,@stop3,@color4,@stop4])*
-        .opacity(@factor)
-        .transform(@args)
-            .rotate(@deg)
-            .scale(@factor)
-            .translate(@x,@y)
-            .translate3d(@x,@y,@z)
-            .translateHardware(@x,@y) *
-        .text-shadow(@args)
-        .transition(@args)
-            .transition-delay(@delay)
-            .transition-duration(@duration)
-            .transition-property(@property)
-            .transition-timing-function(@function)
-
-
-
-    Credit to LESS Elements for the motivation and
-    to CSS3Please.com for implementation.
-
-    Copyright (c) 2012 Joel Sutherland
-    MIT Licensed:
-    http://www.opensource.org/licenses/mit-license.php
-
------------------------------------------------------*/
-/* Animation */
-/* Background Size */
-/* Border Radius */
-/* Box Shadows */
-/* Box Sizing */
-/* Columns */
-/* Gradients */
-/* Opacity */
-/* Text Shadow */
-/* Transforms */
-/* Transitions */
+.rounded_left_reset {
+  border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  -webkit-border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  -webkit-border-bottom-left-radius: 0;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('../font/fontawesome-webfont.eot?v=3.0.1');
@@ -1119,7 +1050,7 @@ ul.icons li [class*=" icon-"] {
   list-style-position: outside;
   list-style: none;
 }
-.ac_results li {
+.ac_results ul li {
   margin: 0;
   padding: 2px;
   display: block;
@@ -1130,7 +1061,7 @@ ul.icons li [class*=" icon-"] {
   cursor: default;
   overflow: hidden;
 }
-.ac_results li strong {
+.ac_results ul li strong {
   background: orange;
 }
 .ac_loading {
@@ -1142,14 +1073,6 @@ ul.icons li [class*=" icon-"] {
 .ac_over {
   background-color: orange;
 }
-.rounded_left_reset {
-  border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  -webkit-border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  -webkit-border-bottom-left-radius: 0;
-}
 .clearing {
   clear: both;
   display: block;
@@ -1157,11 +1080,45 @@ ul.icons li [class*=" icon-"] {
   height: 0;
   visibility: hidden;
 }
+.main_title {
+  float: left;
+  font-size: 3.2em;
+}
+@media (max-width: 480px) {
+  .main_title {
+    display: none;
+  }
+}
+.main_title a {
+  color: #fff;
+  text-decoration: none;
+}
 .title_hover a {
   text-decoration: none;
 }
 .title_hover a:hover {
   text-decoration: underline;
+}
+.default_button {
+  border: none;
+  padding: 0.4em 0.8em;
+  color: #000;
+  background-color: #fff;
+  font-size: 1em;
+  line-height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.default_button:hover {
+  background-color: orange;
+  text-decoration: none;
 }
 .left {
   float: left;
@@ -1206,6 +1163,11 @@ h2 {
 h1 {
   float: left;
   font-size: 3.2em;
+}
+@media (max-width: 480px) {
+  h1 {
+    display: none;
+  }
 }
 h1 a {
   color: #fff;
@@ -1321,14 +1283,16 @@ pre {
   font-size: 1em;
   overflow: auto;
 }
-button,
-a.button {
+button {
   border: none;
   padding: 0.4em 0.8em;
   color: #000;
   background-color: #fff;
   font-size: 1em;
   line-height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
@@ -1336,31 +1300,31 @@ a.button {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-button:hover,
-a.button:hover {
+button:hover {
   background-color: orange;
   text-decoration: none;
 }
-button::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
 button:focus {
   outline: none;
-}
-button.disabled,
-button.disabled:hover,
-button[name$=delete],
-button[name$=feed],
-button[name$=rating] {
-  box-sizing: border-box;
-  border-left: 4px solid #c00;
-  border-right: 4px solid #c00;
 }
 button[disabled],
 button[disabled]:hover {
   background: #aaa;
   color: #666;
+}
+button.disabled,
+button.disabled:hover,
+button[name$=delete] {
+  border-left: 4px solid #666;
+  border-right: 4px solid #666;
+}
+button[name$=delete] {
+  border-left: 4px solid #c00;
+  border-right: 4px solid #c00;
+}
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
 }
 .form_label {
   margin: 0.5em 0.5em 1em 0;
@@ -1455,9 +1419,6 @@ table {
   font-size: 0.9em;
   border-collapse: collapse;
 }
-table.fix {
-  width: 100%;
-}
 table tr {
   border-bottom: 1px dashed #666666;
 }
@@ -1496,6 +1457,12 @@ table td:last-child {
 table td a {
   text-decoration: underline;
 }
+table.fix {
+  width: 100%;
+}
+table.zebra tbody tr:hover {
+  background-color: #ddd;
+}
 .admin {
   margin-bottom: 1em;
 }
@@ -1511,6 +1478,12 @@ table td a {
 }
 .admin dl {
   margin-right: 5.5em;
+}
+.admin dl.w65em dt {
+  width: 6.5em;
+}
+.admin dl.w65em dd {
+  margin-left: 6.5em;
 }
 .admin dt {
   width: 75%;
@@ -1533,13 +1506,6 @@ table td a {
 .body .para {
   margin-bottom: 0.5em;
 }
-.w65em dt {
-  width: 6.5em;
-}
-.w65em dd {
-  margin-left: 6.5em;
-}
-/* layout */
 #max {
   margin: 0 auto;
   min-height: 25em;
@@ -1555,6 +1521,19 @@ table td a {
   display: none;
   color: #fff;
 }
+#header a.icon-home:hover {
+  color: orange;
+}
+@media (max-width: 480px) {
+  #header {
+    padding: 1em 3% 1.5em;
+    height: 3.5em;
+  }
+  #header a.icon-home {
+    float: left;
+    display: block;
+  }
+}
 #tools {
   float: right;
 }
@@ -1562,6 +1541,11 @@ table td a {
   position: absolute;
   bottom: 2em;
   color: #999;
+}
+@media (max-width: 1024px) {
+  #footer {
+    display: none;
+  }
 }
 #forms {
   float: left;
@@ -1589,9 +1573,39 @@ table td a {
   margin-right: 3%;
   float: right;
 }
+@media (max-width: 1024px) {
+  #aside {
+    width: 37%;
+  }
+}
+@media (max-width: 800px) {
+  #aside {
+    width: 47%;
+  }
+}
+@media (max-width: 480px) {
+  #aside {
+    display: none;
+  }
+}
 #port {
   margin: 0 3% 2em 0;
   width: 63.66%;
+}
+@media (max-width: 1024px) {
+  #port {
+    width: 57%;
+  }
+}
+@media (max-width: 800px) {
+  #port {
+    width: 47%;
+  }
+}
+@media (max-width: 480px) {
+  #port {
+    width: 97%;
+  }
 }
 #port img {
   max-width: 100%;
@@ -1611,7 +1625,11 @@ table td a {
 .subtitle a:hover {
   text-decoration: underline;
 }
-/* paginator */
+@media (max-width: 480px) {
+  .subtitle {
+    display: none;
+  }
+}
 .paginator {
   float: left;
 }
@@ -1631,13 +1649,11 @@ table td a {
 .paginator span.na {
   color: #333;
 }
-/* menu */
 #menu {
   float: right;
   color: #fff;
 }
-a#menu:hover,
-#header a.icon-home:hover {
+#menu:hover {
   color: orange;
 }
 .menu {
@@ -1651,14 +1667,54 @@ a#menu:hover,
   padding: 1em 3% 0;
   z-index: 10;
 }
+.menu h1 {
+  float: left;
+  font-size: 3.2em;
+}
+@media (max-width: 480px) {
+  .menu h1 {
+    display: none;
+  }
+}
+.menu h1 a {
+  color: #fff;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  .menu h1 {
+    font-size: 2.4em;
+  }
+}
+.menu .menu_item {
+  display: block;
+  clear: both;
+  padding-bottom: 0.5em;
+  font-size: 1.8em;
+  text-transform: lowercase;
+}
+@media (max-width: 800px) {
+  .menu {
+    width: 77%;
+  }
+}
+@media (max-width: 480px) {
+  .menu {
+    width: 73%;
+  }
+}
 .menu a {
   color: #fff;
   text-decoration: none;
 }
 .menu a.Photo,
 .menu a.Entry,
-.menu a.Comment,
-.menu a.News,
+.menu a.News {
+  display: block;
+  clear: both;
+  padding-bottom: 0.5em;
+  font-size: 1.8em;
+  text-transform: lowercase;
+}
 .menu a.Admin,
 .menu a.Logout,
 .menu a.Login {
@@ -1667,6 +1723,25 @@ a#menu:hover,
   padding-bottom: 0.5em;
   font-size: 1.8em;
   text-transform: lowercase;
+}
+@media (max-width: 800px) {
+  .menu a.Admin,
+  .menu a.Logout,
+  .menu a.Login {
+    display: none;
+  }
+}
+.menu a.Comment {
+  display: block;
+  clear: both;
+  padding-bottom: 0.5em;
+  font-size: 1.8em;
+  text-transform: lowercase;
+}
+@media (max-width: 480px) {
+  .menu a.Comment {
+    display: none;
+  }
 }
 #filters {
   margin-left: 2em;
@@ -1683,6 +1758,16 @@ a#menu:hover,
 #filters a.graph {
   float: right;
   text-transform: lowercase;
+}
+@media (max-width: 480px) {
+  #filters a.graph {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .submenu {
+    display: none;
+  }
 }
 .submenu a {
   padding-right: 0.3em;
@@ -1714,6 +1799,11 @@ a#menu:hover,
   color: rgba(0, 0, 0, 0.3);
   text-align: center;
 }
+@media (max-width: 480px) {
+  .errorcode {
+    font-size: 10em;
+  }
+}
 .formerrors {
   margin: 1em 0;
   padding: 1em;
@@ -1732,12 +1822,22 @@ a#menu:hover,
   float: right;
   width: 18em;
 }
+@media (max-width: 1024px) {
+  #palette {
+    display: none;
+  }
+}
 #palette th,
 #palette td {
   border: none;
 }
 #langs {
   float: right;
+}
+@media (max-width: 480px) {
+  #langs {
+    display: none;
+  }
 }
 #langs button {
   float: left;
@@ -1761,6 +1861,21 @@ a#menu:hover,
 #searchForm {
   width: 78%;
   position: relative;
+}
+@media (max-width: 1024px) {
+  #searchForm {
+    width: 72%;
+  }
+}
+@media (max-width: 800px) {
+  #searchForm {
+    width: 78%;
+  }
+}
+@media (max-width: 480px) {
+  #searchForm {
+    width: 100%;
+  }
 }
 #searchForm button {
   position: absolute;
@@ -1836,7 +1951,6 @@ a#menu:hover,
   line-height: normal;
   height: auto;
 }
-/*.small .markItUpEditor { width: 412px; }*/
 .markItUpPreviewFrame {
   border: 1px solid #c00;
   padding: 0;
@@ -1844,23 +1958,6 @@ a#menu:hover,
 .markItUpFooter {
   clear: both;
 }
-/* tables */
-.nowrap {
-  white-space: nowrap;
-}
-.alignright {
-  border-right: none;
-  text-align: right;
-}
-.w100p {
-  width: 100%;
-}
-.zebra tbody tr:hover,
-.odd:hover,
-.even:hover {
-  background-color: #ddd;
-}
-/* figure  */
 figure p.legend {
   padding: 0.5em;
   text-align: center;
@@ -1876,6 +1973,23 @@ figure.thumbnail {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+}
+@media (max-width: 1024px) {
+  figure.thumbnail {
+    width: 22%;
+  }
+}
+@media (max-width: 800px) {
+  figure.thumbnail {
+    margin: 0 3% 1.5em 0;
+    width: 30.33%;
+  }
+}
+@media (max-width: 480px) {
+  figure.thumbnail {
+    margin: 0 3% 1em 0;
+    width: 47%;
+  }
 }
 figure.thumbnail img {
   display: block;
@@ -1898,7 +2012,6 @@ figure.thumbnail a {
 figure.thumbnail:hover {
   background: orange;
 }
-/* tag cloud */
 .cloud {
   line-height: 135%;
   font-size: 1em;
@@ -1945,7 +2058,6 @@ figure.thumbnail:hover {
   font-size: 1.8em;
   font-weight: 900;
 }
-/* story, news and entry content */
 .story h1,
 .story h2,
 .story h3,
@@ -1978,7 +2090,6 @@ figure.thumbnail:hover {
 .story blockquote {
   border-left: 1em solid #fff;
 }
-/* comments */
 #comments,
 #exif {
   clear: both;
@@ -2003,7 +2114,6 @@ figure.thumbnail:hover {
   line-height: 100%;
   text-align: right;
 }
-/* misc */
 .details {
   clear: both;
   margin: 0.5em 0;
@@ -2017,6 +2127,11 @@ figure.thumbnail:hover {
 .ss {
   cursor: pointer;
 }
+@media (max-width: 800px) {
+  #spectra {
+    display: none;
+  }
+}
 #spectra .item {
   float: left;
   width: 0.8em;
@@ -2027,7 +2142,14 @@ figure.thumbnail:hover {
   float: left;
   width: 20em;
 }
-.front,
+.front {
+  color: #fff;
+}
+@media (max-width: 800px) {
+  .front {
+    display: none;
+  }
+}
 .front a {
   color: #fff;
 }
@@ -2041,42 +2163,38 @@ figure.thumbnail:hover {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-.half {
-  margin: 0 3% 2em 0;
-  width: 47%;
-  display: inline-block;
-  vertical-align: top;
-}
 .third {
   margin: 0 3% 2em 0;
   width: 30.33%;
   float: left;
 }
-.hide {
-  display: none;
+@media (max-width: 1024px) {
+  .third {
+    margin: 0 3% 1em 0;
+    width: 47%;
+  }
 }
-.last {
-  margin-right: 0 !important;
-  padding-right: 0 !important;
+@media (max-width: 480px) {
+  .third {
+    width: 97%;
+  }
 }
-/* search highlighting */
 .hilite1 {
   color: #000;
   background: #ffe657;
 }
 .hilite2 {
   color: #000;
-  background: #c1fe5f;
+  background: #70ff57;
 }
 .hilite3 {
   color: #000;
-  background: #5fc0fe;
+  background: #57ffe6;
 }
 .hilite4 {
   color: #000;
-  background: #fe9b5f;
+  background: #5770ff;
 }
-/* modals */
 #overlay,
 .modal {
   width: 100%;
@@ -2109,6 +2227,13 @@ figure.thumbnail:hover {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+}
+@media (max-width: 480px) {
+  .modal .popup {
+    width: 280px;
+    margin-left: -140px;
+    top: 40px;
+  }
 }
 .modal .popup h4 {
   margin: 0;
@@ -2147,23 +2272,6 @@ figure.thumbnail:hover {
 .modal .popup .buttons {
   margin: 0;
   line-height: normal;
-}
-#chart + p {
-  margin: 0.5em 0 0;
-  font-size: 0.9em;
-}
-.alignright {
-  text-align: right;
-}
-.aligncenter {
-  text-align: center;
-}
-.alignjustify {
-  text-align: justify;
-}
-.last-child {
-  border-bottom: none;
-  margin-bottom: 5px;
 }
 .dot {
   display: inline-block !important;
@@ -2391,113 +2499,37 @@ figure.thumbnail:hover {
 .delete:hover {
   color: #c00;
 }
-@media (max-width: 1024px) {
-  #footer,
-  #palette {
-    display: none;
-  }
-  #aside {
-    width: 37%;
-  }
-  #searchForm {
-    width: 72%;
-  }
-  .thumbnail {
-    width: 22%;
-  }
-  #port {
-    width: 57%;
-  }
-  .half {
-    margin: 0 3% 1em 0;
-    width: 37%;
-  }
-  .third {
-    margin: 0 3% 1em 0;
-    width: 47%;
-  }
+.nowrap {
+  white-space: nowrap;
 }
-@media (max-width: 800px) {
-  #footer,
-  #spectra,
-  .front,
-  .help,
-  .copyright,
-  .menu a.Admin,
-  .menu a.Login,
-  .menu a.Logout {
-    display: none;
-  }
-  .menu {
-    width: 77%;
-  }
-  #aside {
-    width: 47%;
-  }
-  #searchForm {
-    width: 78%;
-  }
-  .thumbnail {
-    margin: 0 3% 1.5em 0;
-    width: 30.33%;
-  }
-  #port {
-    width: 47%;
-  }
-  .half {
-    width: 47%;
-  }
+.alignright {
+  border-right: none;
+  text-align: right;
 }
-@media (max-width: 480px) {
-  #header h1,
-  #footer,
-  #aside,
-  #langs,
-  .submenu,
-  .subtitle,
-  #filters .graph,
-  .menu a.Comment {
-    display: none;
-  }
-  #header {
-    padding: 1em 3% 1.5em;
-    height: 3.5em;
-  }
-  #header a.icon-home {
-    float: left;
-    display: block;
-  }
-  #searchForm {
-    width: 100%;
-  }
-  #main {
-    margin: 1em 0 1em 3%;
-  }
-  .thumbnail {
-    margin: 0 3% 1em 0;
-    width: 47%;
-  }
-  .menu {
-    width: 73%;
-  }
-  .menu h1 {
-    font-size: 2.4em;
-  }
-  #port {
-    width: 97%;
-  }
-  .half {
-    width: auto;
-  }
-  .third {
-    width: 97%;
-  }
-  .errorcode {
-    font-size: 10em;
-  }
-  .popup {
-    width: 280px;
-    margin-left: -140px;
-    top: 40px;
-  }
+.w100p {
+  width: 100%;
+}
+#chart + p {
+  margin: 0.5em 0 0;
+  font-size: 0.9em;
+}
+.alignright {
+  text-align: right;
+}
+.aligncenter {
+  text-align: center;
+}
+.alignjustify {
+  text-align: justify;
+}
+.last-child {
+  border-bottom: none;
+  margin-bottom: 5px;
+}
+.hide {
+  display: none;
+}
+.last {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
 }
