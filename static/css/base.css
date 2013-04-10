@@ -2487,6 +2487,10 @@ figure.thumbnail:hover {
     opacity: 0;
   }
 }
+#chart + p {
+  margin: 0.5em 0 0;
+  font-size: 0.9em;
+}
 .remove {
   color: #fff;
 }
@@ -2502,16 +2506,8 @@ figure.thumbnail:hover {
 .nowrap {
   white-space: nowrap;
 }
-.alignright {
-  border-right: none;
-  text-align: right;
-}
 .w100p {
   width: 100%;
-}
-#chart + p {
-  margin: 0.5em 0 0;
-  font-size: 0.9em;
 }
 .alignright {
   text-align: right;
