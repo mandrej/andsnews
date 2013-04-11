@@ -173,22 +173,6 @@ table {
 	}
 }
 
-.admin {
-	margin-bottom: 1em;
-	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
-	button { float: right; width: 5em; margin-left: 0.5em; }
-	dl {
-		margin-right: 5.5em;
-		&.w65em {
-			dt { width: 6.5em; }
-			dd { margin-left: 6.5em; }
-		}
-	}
-	dt { width: 75%; }
-	dd { margin-left: 80%; }
-	a { text-decoration: underline; }
-}
-
 .body {
 	margin: 0 0 0.5em 5.5em;
 	dt { width: 33%; }
@@ -196,7 +180,12 @@ table {
 	.para { margin-bottom: 0.5em; }
 }
 
-#max { margin: 0 auto; min-height: 25em; background: url(../images/front.png) no-repeat; }
+#max {
+	margin: 0 auto;
+	min-height: 25em;
+	background: url(../images/front.png) no-repeat;
+	@media (max-width: 480px) { background: none; }
+}
 #header {
 	position: relative;
 	height: 5em;
@@ -333,39 +322,6 @@ table {
 	}
 }
 
-.buttons {
-	clear: both;
-	margin: 1em 0;
-	text-align: right;
-	span { float: left; }
-}
-.error { color: #fff; }
-.required { color: #fff; }
-.errorcode {
-    position: absolute;
-    top: 0.5em;
-    width: 97%;
-    font-size: 16em;
-    color: fade(black, 30%);
-    text-align: center;
-	@media (max-width: 480px) { font-size: 10em; }
-}
-.formerrors {
-	margin: 1em 0;
-	padding: 1em;
-	width: 29em;
-	color: #fff;
-	background: fade(#dc0000, 50%);
-	min-height: 3em;
-	.border-radius(4px);
-}
-
-#palette {
-	float: right; width: 18em;
-	@media (max-width: 1024px) { display: none; }
-	th, td { border: none; }
-}
-
 #langs {
 	float: right;
 	@media (max-width: 480px) {  display: none; }
@@ -413,28 +369,88 @@ table {
 	}
 }
 
-#addcommentForm {
-	fieldset { margin: 0; float: none; width: inherit; }
-	input { width: 18em; }
+.admin {
+	margin-bottom: 1em;
+	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
+	button { float: right; width: 5em; margin-left: 0.5em; }
+	dl {
+		margin-right: 5.5em;
+		&.w65em {
+			dt { width: 6.5em; }
+			dd { margin-left: 6.5em; }
+		}
+	}
+	dt { width: 75%; }
+	dd { margin-left: 80%; }
+	a { text-decoration: underline; }
 }
-#addcommentForm .editor .error { margin-left: 0; }
+
+.buttons {
+	clear: both;
+	margin: 1em 0;
+	text-align: right;
+	span { float: left; }
+}
+.error { color: #fff; }
+.required { color: #fff; }
+.errorcode {
+    position: absolute;
+    top: 0.5em;
+    width: 97%;
+    font-size: 16em;
+    color: fade(black, 30%);
+    text-align: center;
+	@media (max-width: 480px) { font-size: 10em; }
+}
+.formerrors {
+	margin: 1em 0;
+	padding: 1em;
+	width: 29em;
+	color: #fff;
+	background: fade(#dc0000, 50%);
+	min-height: 3em;
+	.border-radius(4px);
+}
+
+#palette {
+	float: right; width: 18em;
+	@media (max-width: 1024px) { display: none; }
+	th, td { border: none; }
+}
 
 /* markItUp! */
-.editor label { margin-top: 0; }
-#addcommentForm .editor label { display: none; }
-.big { margin-left: 10.5em; }
-.small { margin-left: 0; }
-.big .markItUp, .small .markItUp { width: 100%; }
-.big .markItUpEditor, .small .markItUpEditor {
-	padding: 1%;
-    width: 98%;
-	border: none;
-	font-family: @monospaced;
-	line-height: normal;
-	height: auto;
+.editor {
+	label { margin-top: 0; }
+	.defailt_editor {
+		padding: 1%;
+		width: 98%;
+		border: none;
+		font-family: @monospaced;
+		line-height: normal;
+		height: auto;
+	}
+	.big {
+		margin-left: 10.5em;
+		.markItUp { width: 100%; }
+		.markItUpEditor { .defailt_editor; }
+	}
+	.small {
+		margin-left: 0;
+		.markItUp { width: 100%; }
+		.markItUpEditor { .defailt_editor; }
+	}
 }
 .markItUpPreviewFrame { border: 1px solid #c00; padding: 0; }
 .markItUpFooter { clear: both; }
+
+#addcommentForm {
+	fieldset { margin: 0; float: none; width: inherit; }
+	input { width: 18em; }
+	.editor {
+		label { display: none; }
+		.error { margin-left: 0; }
+	}
+}
 
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
@@ -521,12 +537,12 @@ figure {
 	font-size: 91%;
 	text-align: right;
 }
-.collapse, .ff, .ss { cursor: pointer; }
 #spectra {
 	@media (max-width: 800px) { display: none; }
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
 }
 .slider { float: left; width: 20em; }
+
 .front {
 	color: #fff;
 	@media (max-width: 800px) { display: none; }
@@ -671,6 +687,7 @@ figure {
 }
 
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
+.collapse, .ff, .ss { cursor: pointer; }
 .remove { color: #fff; &:hover { color: #333; }}
 .delete { color: #fff; &:hover { color: #c00; }}
 .nowrap { white-space: nowrap; }
