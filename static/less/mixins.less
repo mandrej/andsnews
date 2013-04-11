@@ -1,14 +1,19 @@
 .debug(@var) {
 	&:after {
 		content: "@{var}";
-		font-size: 20px;
+		font-size: 1em;
 		background-color: #fff;
-		padding: 5px;
+		padding: 0.5em;
 		color: red;
 		position: absolute;
 		top: 0;
-		left: 0;
+		left: 30%;
 	}
+}
+.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+	-webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+	-moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+	box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 }
 
 .box-sizing(@args){
