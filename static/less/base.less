@@ -7,6 +7,8 @@
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
 @dashed: 1px dashed #666;
 @default_radius: 4px;
+@gap: 3%;
+@inn: percentage(@gap/(100 - @gap));
 
 .clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
 .main_title {
@@ -38,6 +40,7 @@
 * { margin: 0; padding: 0; }
 header, nav, aside, section, article, footer, figure { display: block; }
 body {
+	.debug(@inn);
 	background: url(/static/images/bg.jpg) #aaa;
     height: 100%;
 	color: #222;
