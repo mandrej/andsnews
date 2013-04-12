@@ -173,8 +173,8 @@ table {
 		&:last-child { border-right: none; padding-right: 0; }
 		a { text-decoration: underline; }
 	}
-	&.fix { width: 100%; }
 	&.zebra {
+		width: 100%;
 		tbody tr:hover { background-color: #ddd; }
 	}
 }
@@ -209,7 +209,7 @@ table {
 #tools { float: right; }
 #footer {
 	position: absolute;
-	bottom: 7em;
+	bottom: 8em;
 	color: #999;
 	@media (max-width: 1024px) { display: none; }
 }
@@ -263,7 +263,7 @@ table {
 	& span {
 		.left;
 		color: #fff;
-		&.na { color: #333; }
+		&.na { color: fade(black, 70%); }
 	}
 }
 
@@ -280,7 +280,7 @@ table {
 	width: 44%;
 	height: 100%;
 	background: fade(black, 70%);
-	padding: 0 3%;
+	padding: 1em 3% 0;
 	z-index: 10;
 	.menu_item {
 		display: block;
@@ -460,8 +460,6 @@ table {
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
-		float: left;
-		display: inline-block;
 		margin: 0 3% 2em 0;
 		width: 13.66%;
 		background: fade(white, 50%);
@@ -699,10 +697,6 @@ figure {
 .remove { color: #fff; &:hover { color: #333; }}
 .delete { color: #fff; &:hover { color: @red; }}
 .nowrap { white-space: nowrap; }
-.w100p { width: 100%; }
-.alignright { text-align: right; }
-.aligncenter { text-align: center; }
-.alignjustify { text-align: justify; }
 .last-child { border-bottom: none; margin-bottom: 5px; }
 .hide { display: none; }
 .last { margin-right: 0 !important; padding-right: 0 !important; }

@@ -15,7 +15,7 @@
     <br clear="all"/>
     {% for entry in objects %}
         <h3><a href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">{{ entry.headline }}</a></h3>
-        <table id="data2" class="zebra fix">
+        <table id="data2" class="zebra">
             <colgroup>
                 <col/>
                 <col style="width: 240px;"/>

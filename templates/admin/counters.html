@@ -5,7 +5,7 @@
 	<h2>Counter administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
 	<form action="/admin/counters" method="post">
 		<input type="hidden" name="page" value="{{ page }}"/>
-		<table id="data" class="zebra fix">
+		<table id="data" class="zebra">
 			<colgroup>
 				<col style="width: 80px;"/>
 				<col style="width: 80px;"/>
