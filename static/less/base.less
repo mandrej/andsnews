@@ -5,10 +5,14 @@
 
 @default_font: "PT Sans", sans-serif;
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
-@dashed: 1px dashed #666;
-@default_radius: 4px;
-@gap: 3%;
-@inn: percentage(@gap/(100 - @gap));
+@accent: orange;
+@paper: #aaa;
+@neutral: #666;
+@red: #c00;
+@dashed: 1px dashed @neutral;
+
+//@gap: 3%;
+//@inn: percentage(@gap/(100 - @gap));
 
 .clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
 .main_title {
@@ -32,7 +36,7 @@
 	line-height: 100%;
 	.box-sizing(border-box);
 	.border-radius(4px);
-	&:hover { background-color: orange; text-decoration: none; }
+	&:hover { background-color: @accent; text-decoration: none; }
 }
 .left { float: left; margin-right: 0.5em; }
 .right { float: right; margin-left: 0.5em; }
@@ -40,7 +44,7 @@
 * { margin: 0; padding: 0; }
 header, nav, aside, section, article, footer, figure { display: block; }
 body {
-	background: url(/static/images/bg.jpg) #aaa;
+	background: url(/static/images/bg.jpg) @paper;
     height: 100%;
 	color: #222;
 	font-family: @default_font;
@@ -78,8 +82,8 @@ dl {
 	}
 	a {
 		text-decoration: none;
-		&:hover { text-decoration: underline; background: orange; }
-		&.selected { background: orange; }
+		&:hover { text-decoration: underline; background: @accent; }
+		&.selected { background: @accent; }
 	}
 }
 pre {
@@ -91,16 +95,16 @@ button {
 	.default_button;
 	&:focus { outline: none; }
 	&[disabled], &[disabled]:hover {
-		background: #aaa;
-		color: #666;
+		background: @paper;
+		color: @neutral;
 	}
 	&.disabled, &.disabled:hover, &[name$=delete] {
-		border-left: 4px solid #666;
-		border-right: 4px solid #666;
+		border-left: 4px solid @neutral;
+		border-right: 4px solid @neutral;
 	}
 	&[name$=delete] {
-		border-left: 4px solid #c00;
-		border-right: 4px solid #c00;
+		border-left: 4px solid @red;
+		border-right: 4px solid @red;
 	}
 }
 button::-moz-focus-inner { border:0; padding:0; }
@@ -124,7 +128,7 @@ fieldset {
 	input { .form_input;
 		&:focus { .form_focus; }
 		&[type=file] { width: 20.5em; padding: 0; border: none; }
-		&[disabled] { background: #aaa; color: #666; }
+		&[disabled] { background: @paper; color: @neutral; }
 	}
 	select { .form_input; width: 20.5em; padding: 0;
 		&:focus { .form_focus; }
@@ -155,7 +159,7 @@ table {
 		border-left: @dashed;
 		border-right: @dashed;
 		padding: 0.3em;
-		border-bottom: 1px solid #666;
+		border-bottom: 1px solid @neutral;
 		font-size: 1.2em;
 		text-align: left;
 		&:first-child { border-left: none; padding-left: 0; }
@@ -183,20 +187,18 @@ table {
 }
 
 // layout
-#max {
-	min-height: 25em;
-	background: url(../images/front.png) no-repeat;
-	@media (max-width: 480px) { background: none; }
-}
 #header {
-	position: relative;
+	position: fixed;
+	top: 0;
+	width: 94%;
 	height: 5em;
 	padding: 1em 3% 0;
 	background: fade(#0048f1, 80%);
+	z-index: 20;
 	.drop-shadow(0, 1px, 10px, 0.5);
 	a.icon-home {
 		display: none; color: #fff;
-		&:hover { color: orange; }
+		&:hover { color: @accent; }
 	}
 	@media (max-width: 480px) {
 		padding: 1em 3% 1.5em;
@@ -207,7 +209,7 @@ table {
 #tools { float: right; }
 #footer {
 	position: absolute;
-	bottom: 2em;
+	bottom: 7em;
 	color: #999;
 	@media (max-width: 1024px) { display: none; }
 }
@@ -219,9 +221,12 @@ table {
 	&:after { .clearing; }
 }
 #main {
-	margin: 1em 0 1em 3%;
-	padding-bottom: 1px;
+	padding: 7em 0 0 3%;
 	position: relative;
+	min-height: 25em;
+	background: url(../images/front.png) no-repeat;
+	@media (max-width: 480px) { background: none; }
+	z-index: 5;
 }
 .plain { margin-right: 3%; }
 #aside {
@@ -253,7 +258,7 @@ table {
 	& a {
 		.left;
 		color: #fff;
-		&:hover { color: orange; }
+		&:hover { color: @accent; }
 	}
 	& span {
 		.left;
@@ -265,19 +270,18 @@ table {
 #menu {
 	float: right;
     color: #fff;
-	&:hover { color: orange; }
+	&:hover { color: @accent; }
 }
 .menu {
 	display: none;
 	position: fixed;
-	top: 0;
+	top: 6em;
 	left: 0;
 	width: 44%;
 	height: 100%;
 	background: fade(black, 70%);
-	padding: 1em 3% 0;
+	padding: 0 3%;
 	z-index: 10;
-	h1 { .main_title; @media (max-width: 480px) { font-size: 2.4em; }}
 	.menu_item {
 		display: block;
 		clear: both;
@@ -285,8 +289,7 @@ table {
 		font-size: 1.8em;
 		text-transform: lowercase;
 	}
-	@media (max-width: 800px) { width: 77%; }
-	@media (max-width: 480px) { width: 73%; }
+	@media (max-width: 480px) { width: 94%; }
 	a {
 		color: #fff;
 		text-decoration: none;
@@ -327,7 +330,7 @@ table {
 
 #langs {
 	float: right;
-	@media (max-width: 480px) {  display: none; }
+	@media (max-width: 800px) {  display: none; }
 	button {
 		float: left;
 		margin-left: 1em;
@@ -339,8 +342,8 @@ table {
 		font-weight: bold;
 		text-transform: uppercase;
 		cursor: pointer;
-		&.current { background: orange; }
-		&:hover { background-color: #666; color: #fff; }
+		&.current { background: @accent; }
+		&:hover { background-color: @neutral; color: #fff; }
 	}
 }
 
@@ -348,15 +351,14 @@ table {
 	width: 78%;
 	position: relative;
 	@media (max-width: 1024px) { width: 72%; }
-	@media (max-width: 800px) { width: 78%; }
-	@media (max-width: 480px) { width: 100%; }
+	@media (max-width: 800px) { width: 100%; }
 	button {
 		position: absolute;
 		right: 0;;
 		height: 2.4em;
-		background: orange;
+		background: @accent;
 		.rounded_left_reset;
-		&:hover { background-color: #666; color: #fff; }
+		&:hover { background-color: @neutral; color: #fff; }
 	}
 	input {
 		width: 100%;
@@ -398,7 +400,7 @@ table {
 .required { color: #fff; }
 .errorcode {
     position: absolute;
-    top: 0.5em;
+    top: 1em;
     width: 97%;
     font-size: 16em;
     color: fade(black, 30%);
@@ -443,7 +445,7 @@ table {
 		.markItUpEditor { .defailt_editor; }
 	}
 }
-.markItUpPreviewFrame { border: 1px solid #c00; padding: 0; }
+.markItUpPreviewFrame { border: 1px solid @red; padding: 0; }
 .markItUpFooter { clear: both; }
 
 #addcommentForm {
@@ -458,7 +460,8 @@ table {
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
-		position: relative;
+		float: left;
+		display: inline-block;
 		margin: 0 3% 2em 0;
 		width: 13.66%;
 		background: fade(white, 50%);
@@ -478,7 +481,7 @@ figure {
 			line-height: 100%;
 		}
 		a { text-decoration: none; }
-		&:hover { background: orange; }
+		&:hover { background: @accent; }
 	}
 }
 
@@ -489,7 +492,7 @@ figure {
 	font-size: @size;
 	font-weight: @weight;
 	a { color:  #fff; text-decoration: none;
-		&:hover, &.selected { background: orange; color: #000; }
+		&:hover, &.selected { background: @accent; color: #000; }
 	}
 	a.t1 { font-size: @size; font-weight: @weight; }
 	a.t2 { font-size: @size + 0.1; font-weight: @weight + 100; }
@@ -559,9 +562,9 @@ figure {
 	.drop-shadow(0, 0, 2px, 0.3);
 }
 .third {
+	float: left;
 	margin: 0 3% 2em 0;
 	width: 30.33%;
-	float: left;
 	@media (max-width: 1024px) { margin: 0 3% 1em 0; width: 47%; }
 	@media (max-width: 480px) { width: 97%; }
 }
@@ -612,7 +615,7 @@ figure {
 			border-top-left-radius: 4px;
 			.rounded_top;
 		}
-		a.close { position: absolute; top: 0.3em; right: 0.5em; color: #666; &:hover { color: #fff; }}
+		a.close { position: absolute; top: 0.3em; right: 0.5em; color: @neutral; &:hover { color: #fff; }}
 		.content { padding: 1em; min-height: 32px; &:after { .clearing; }}
 		.buttons { margin: 0; line-height: normal; }
 	}
@@ -694,7 +697,7 @@ figure {
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
 .remove { color: #fff; &:hover { color: #333; }}
-.delete { color: #fff; &:hover { color: #c00; }}
+.delete { color: #fff; &:hover { color: @red; }}
 .nowrap { white-space: nowrap; }
 .w100p { width: 100%; }
 .alignright { text-align: right; }

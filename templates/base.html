@@ -24,57 +24,55 @@
 	</div>
 	{% endblock %}
 
-	<div id="max">
-		<nav class="menu">
-			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
-			{% block tools %}
-				<div id="forms">
-					<form id="langs" action="/setlang" method="post">
-						{% for code, lang in LANGUAGES %}
-							<button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
-								type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ language(code) }}</button>
-						{% endfor %}
-					</form>
-					<form id="searchForm" action="/search" method="get">
-                        <button type="submit">{{ _('search') }}</button>
-						<input type="text" name="find"/>
-					</form>
-				</div>
-			{% endblock %}
+    <nav class="menu">
+        {% block tools %}
+            <div id="forms">
+                <form id="langs" action="/setlang" method="post">
+                    {% for code, lang in LANGUAGES %}
+                        <button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
+                            type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ language(code) }}</button>
+                    {% endfor %}
+                </form>
+                <form id="searchForm" action="/search" method="get">
+                    <button type="submit">{{ _('search') }}</button>
+                    <input type="text" name="find"/>
+                </form>
+            </div>
+        {% endblock %}
 
-            {% import "snippets/macros.html" as m %}
-            {% block nav %}{{ m.menu('') }}{% endblock %}
+        {% import "snippets/macros.html" as m %}
+        {% block nav %}{{ m.menu('') }}{% endblock %}
 
-			{% if is_admin %}
-                <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
-            {% endif %}
-			{% if user %}
-                <a href="/sign" class="Logout">{{ _('Logout') }}</a>
-			{% else %}
-                <a href="/sign" class="Login">{{ _('Sign in') }}</a>
-            {% endif %}
+        {% if is_admin %}
+            <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
+        {% endif %}
+        {% if user %}
+            <a href="/sign" class="Logout">{{ _('Logout') }}</a>
+        {% else %}
+            <a href="/sign" class="Login">{{ _('Sign in') }}</a>
+        {% endif %}
 
-			<p id="footer">© АNDS v.{{ version() }} 2008-{{ now() }}
-				powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
-				{% if user %}<br><strong>{{ user.nickname() }}</strong>{% endif %}
-			</p>
-		</nav>
-		<header id="header">
-			<h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
-            <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-			<div id="tools">
-				{% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
-				<a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
-			</div>
-		</header>
-		<div id="main">
-			<aside id="aside">
-				<nav class="submenu">{% block subnav %}{% endblock %}</nav>
-				{% block aside %}{% endblock %}
-			</aside>
-			{% block contents %}{% endblock %}
-		</div>
-	</div>
+        <p id="footer">© АNDS v.{{ version() }} 2008-{{ now() }}
+            powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
+            {% if user %}<br><strong>{{ user.nickname() }}</strong>{% endif %}
+        </p>
+    </nav>
+    <header id="header">
+        <h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
+        <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
+        <div id="tools">
+            {% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
+            <a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
+        </div>
+    </header>
+    <div id="main">
+        <aside id="aside">
+            <nav class="submenu">{% block subnav %}{% endblock %}</nav>
+            {% block aside %}{% endblock %}
+        </aside>
+        {% block contents %}{% endblock %}
+    </div>
+
     {% block scripts %}
         <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
         <script src="/static/scripts/jquery.isotope.min.js"></script>
