@@ -84,26 +84,16 @@ class Palette(BaseHandler):
         self.response.write(json.dumps(data))
 
     def post(self, slug):
-        fields = ('hue', 'lum', 'sat',)
         self.response.content_type = 'application/json'
 
         obj = Photo.get_by_id(slug)
-        new_rgb = self.request.get('rgb', None)
-        if new_rgb:
-            new_rgb = json.loads(new_rgb)
-        if isinstance(new_rgb, list):
-            for field in fields:
-                val = getattr(obj, field)
-                decr_count('Photo', field, val)
-
+        new_rgb = json.loads(self.request.get('rgb'))
+        if new_rgb != obj.rgb:
+            decr_count('Photo', 'color', obj.color)
             obj.rgb = new_rgb
             obj.hue, obj.lum, obj.sat = range_names(new_rgb)
             obj.put()
-
-            for field in fields:
-                val = getattr(obj, field)
-                incr_count('Photo', field, val)
-
+            incr_count('Photo', 'color', obj.color)
             self.response.write(json.dumps({'success': True}))
         else:
             self.response.write(json.dumps({'success': False}))

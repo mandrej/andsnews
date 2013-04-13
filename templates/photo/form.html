@@ -136,7 +136,7 @@
                     var cntx = $('table.palette');
                     cntx.empty()
                         .append('<tr><th>active</th>' +
-                            '<td><span class="dot" data-color="' + data.active.color + '" style="border-color: ' + data.active.hex + '"></span></td>' +
+                            '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
                             '<th>' + data.active.class + '</th></tr>');
                     $.each(data.palette, function(i, pal) {
                         cntx
