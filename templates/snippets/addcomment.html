@@ -5,13 +5,8 @@
 		<h6>{{ _('for') }} {{ headline }}</h6>
 		<form id="addcommentForm" action="" method="post">
 			<fieldset>
-                <p>
-                    {{ form.email.label(class='required') }}
-                    {{ form.email }}
-                    <span class="error C_{{ form.email.name }}"><!-- -->{{ form.email.errors|join(', ') }}</span>
-                </p>
                 <p class="editor">
-                    {{ form.body(rows=6) }}
+                    {{ form.body(rows=8) }}
                     <span class="error C_{{ form.body.name }}"><!-- -->{{ form.body.errors|join(', ') }}</span>
                 </p>
 			</fieldset>
@@ -39,8 +34,7 @@ $(function() {
         $.ajax({
             type: 'POST',
             url: '/{{ safe_key }}/add',
-            data: {'email': $('#email').val(),
-                   'body': $('#body').val()},
+            data: {'body': $('#body').val()},
             success: function(data) {
                 if (typeof(data) == 'string') {
                     $('.dummy').hide();

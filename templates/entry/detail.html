@@ -8,6 +8,7 @@
     <h2>
         {% if user %}
             <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+            <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
         {% endif %}
         {% if object %}
             {% if is_admin %}
@@ -19,7 +20,6 @@
                     <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
                 {% endif %}
             {% endif %}
-            <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
             <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
         {% endif %}
     </h2>

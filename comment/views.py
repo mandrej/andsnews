@@ -2,6 +2,7 @@ import json
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
+from webapp2_extras.appengine.users import login_required
 from wtforms import Form, fields, validators
 from models import Comment
 from handlers import BaseHandler
@@ -29,18 +30,14 @@ class Index(BaseHandler):
 
 
 class AddForm(Form):
-    email = fields.TextField(_('e-mail'), validators=[validators.DataRequired(), validators.Email()])
     body = fields.TextAreaField(_('Comment'), validators=[validators.DataRequired()])
 
 
 class Add(BaseHandler):
+    @login_required
     def get(self, safe_key):
         refobj = ndb.Key(urlsafe=safe_key).get()
-        user = users.get_current_user()
-        if user:
-            form = AddForm(**{'email': user.email()})
-        else:
-            form = AddForm()
+        form = AddForm()
         self.render_template('snippets/addcomment.html',
                              {'form': form, 'safe_key': safe_key, 'headline': refobj.headline})
 
@@ -50,7 +47,6 @@ class Add(BaseHandler):
             refkey = ndb.Key(urlsafe=safe_key)
             obj = Comment(
                 parent=refkey,
-                author=users.User(form.data['email']),
                 forkind=refkey.kind(),
                 body=form.data['body'])
             obj.add()

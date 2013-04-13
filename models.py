@@ -574,7 +574,7 @@ class Entry(ndb.Model):
 
 class Comment(ndb.Model):
     # parent Photo, Entry
-    author = ndb.UserProperty(required=True)
+    author = ndb.UserProperty(auto_current_user_add=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
     year = ndb.IntegerProperty()
     forkind = ndb.StringProperty(default='Application')
