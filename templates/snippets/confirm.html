@@ -5,24 +5,20 @@
         <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
 		<form id="deleteForm" action="{{ post_url }}" method="post">
 			<p>{{ _('Do you really want to delete') }}
-				{% if object.kind == 'Comment' %}
+				{% if object.key.kind() == 'Comment' %}
 					{{ _('comment submitted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% endif %}
-				{% if object.kind == 'Entry' %}
+				{% elif object.key.kind() == 'Entry' %}
 					{{ _('Blog') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% endif %}
-				{% if object.kind == 'Img' %}
+				{% elif object.key.kind() == 'Img' %}
 					{{ _('image') }} &quot;{{ object.name }}&quot;
-				{% endif %}
-				{% if object.kind == 'Photo' %}
+				{% elif object.key.kind() == 'Photo' %}
 					{{ _('photo') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% endif %}
-				{% if object.kind == 'Feed' %}
+				{% elif object.key.kind() == 'Feed' %}
 					{{ _('News') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
