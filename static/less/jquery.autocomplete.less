@@ -1,8 +1,8 @@
 .ac_results {
 	margin-top: -1px;
 	padding: 0px;
-	border: 1px solid #ccc;
-	background-color: #fff;
+	border: 1px solid @light;
+	background-color: white;
 	overflow: hidden;
 	ul {
 		width: 100%;
@@ -15,15 +15,15 @@
 			padding: 2px;
 			display: block;
 			font: menu;
-			color: #000;
+			color: black;
 			font-size: 12px;
 			line-height: 16px;
 			cursor: default;
 			overflow: hidden;
-			strong { background: orange; }
+			strong { background: @google_orange; }
 		}
 	}
 }
-.ac_loading { background: url(/static/images/busy.gif) #fff no-repeat right center; }
-.ac_odd { background-color: #ccc; }
-.ac_over { background-color: orange; }
+.ac_loading { background: url(/static/images/busy.gif) white no-repeat right center; }
+.ac_odd { background-color: @light; }
+.ac_over { background-color: @google_orange; }

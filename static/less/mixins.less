@@ -2,12 +2,13 @@
 	&:after {
 		content: "@{var}";
 		font-size: 1em;
-		background-color: #fff;
+		background-color: white;
 		padding: 0.5em;
 		color: red;
 		position: absolute;
 		top: 0;
 		left: 30%;
+		z-index: 10000;
 	}
 }
 .drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
@@ -15,7 +16,6 @@
 	-moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 	box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 }
-
 .box-sizing(@args){
 	-webkit-box-sizing: @args;
 	-moz-box-sizing: @args;
@@ -45,13 +45,13 @@
 	-moz-border-radius-bottomleft: 0;
 	-webkit-border-bottom-left-radius: 0;
 }
-//.transition-property(...) {
-//	@props: ~`"@{arguments}".replace(/[\[\]]/g, '')`;
-//	-webkit-transition-property: @props;
-//	-moz-transition-property: @props;
-//	-o-transition-property: @props;
-//	transition-property: @props;
-//}
+.transition-property(...) {
+	@props: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
+	-webkit-transition-property: @props;
+	-moz-transition-property: @props;
+	-o-transition-property: @props;
+	transition-property: @props;
+}
 .animation(@args) {
 	-webkit-animation: @args;
 	-moz-animation: @args;
@@ -71,7 +71,7 @@
 	-o-transform: @args;
 	transform: @args;
 }
-.transition-duration(@duration:200ms) {
+.transition-duration(@duration: 200ms) {
 	-webkit-transition-duration: @duration;
 	-moz-transition-duration: @duration;
 	-o-transition-duration: @duration;
