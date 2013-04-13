@@ -2,12 +2,13 @@
 	&:after {
 		content: "@{var}";
 		font-size: 1em;
-		background-color: #fff;
+		background-color: white;
 		padding: 0.5em;
 		color: red;
 		position: absolute;
 		top: 0;
 		left: 30%;
+		z-index: 10000;
 	}
 }
 .drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
@@ -15,7 +16,6 @@
 	-moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 	box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 }
-
 .box-sizing(@args){
 	-webkit-box-sizing: @args;
 	-moz-box-sizing: @args;
