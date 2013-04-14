@@ -1,4 +1,3 @@
-import json
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -51,5 +50,4 @@ class Add(BaseHandler):
             obj.add()
             self.render_template('snippets/comment.html', {'comment': obj})
         else:
-            self.response.content_type = 'application/json'
-            self.response.write(json.dumps(form.errors))
+            self.render_json(form.errors)

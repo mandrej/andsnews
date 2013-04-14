@@ -174,6 +174,9 @@ class Counter(ndb.Model):
 class Cloud(object):
     """ cache dictionary collections on unique values and it's counts
         {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
+
+        get_list:
+        [{'size': 4, 'count': 3, 'name': 'mihailo.genije'}, {'size': 8, 'count': 11, 'name': 'milan.andrejevic'}, ...]
     """
     def __init__(self, mem_key):
         self.mem_key = mem_key

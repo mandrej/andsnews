@@ -1,6 +1,6 @@
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from views import Index, latest, auto_complete, sitemap, Chat, Send, rss
+from views import Index, Latest, auto_complete, sitemap, Chat, Send, rss
 from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find
 from settings import DEVEL
 
@@ -72,7 +72,7 @@ app = WSGIApplication([
     Route('/<safe_key>/add', handler='comment.views.Add', name='comment_add'),
     Route('/search', handler=Find),
     Route('/send', handler=Send),
-    Route('/latest', handler=latest),
+    Route('/latest', handler=Latest),
     Route('/setlang', handler=SetLanguage),
     Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),

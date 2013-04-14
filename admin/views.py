@@ -1,8 +1,6 @@
 from __future__ import division
-import json
 from collections import defaultdict
 
-import webapp2
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
@@ -15,23 +13,20 @@ from common import Paginator, Filter
 from settings import PER_PAGE, HUE
 
 
-class Cache(webapp2.RequestHandler):
+class Cache(BaseHandler):
     def get(self):
         data = dict(zip(KEYS, [None] * len(KEYS)))
         data.update(memcache.get_multi(KEYS))
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(data))
+        self.render_json(data)
 
     def put(self, mem_key):
         cloud = Cloud(mem_key)
         cloud.rebuild()
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(cloud.get_cache()))
+        self.render_json(cloud.get_cache())
 
     def delete(self, mem_key):
         memcache.delete(mem_key)
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(None))
+        self.render_json(None)
 
 
 class Index(BaseHandler):
@@ -73,9 +68,7 @@ class Comments(BaseHandler):
             obj.put()
         else:
             key.delete()
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps({'success': True}))
-        return self.response
+        self.render_json({'success': True})
 
 
 #def thumbnail_color(request):
@@ -126,9 +119,8 @@ class Images(BaseHandler):
         elif params['action'] == 'make':
             buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
             data = {'success': True, 'small': filesizeformat(len(buff))}
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(data))
-        return self.response
+
+        self.render_json(data)
 
 
 class Blobs(BaseHandler):
@@ -201,6 +193,4 @@ class Spectra(BaseHandler):
                 hsl = 'hsl({0}, {1:.0%}, {2:.0%})'.format(*color.get_value_tuple())
                 spectra[row['name']].append(hsl)
 
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(spectra))
-        return self.response
+        self.render_json(spectra)

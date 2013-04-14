@@ -250,6 +250,10 @@ class BaseHandler(webapp2.RequestHandler):
         template = ENV.get_template(filename)
         self.response.write(template.render(kwargs))
 
+    def render_json(self, data):
+        self.response.content_type = 'application/json'
+        self.response.write(json.dumps(data))
+
 
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):

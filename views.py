@@ -1,5 +1,4 @@
 from __future__ import division
-import json
 import hashlib
 import datetime
 
@@ -35,11 +34,9 @@ def get_latest_photos():
     return objects
 
 
-def latest(request):
-    objects = get_latest_photos()
-    response = webapp2.Response(content_type='application/json')
-    response.write(json.dumps(objects))
-    return response
+class Latest(BaseHandler):
+    def get(self):
+        self.render_json(get_latest_photos())
 
 
 class Index(BaseHandler):

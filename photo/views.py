@@ -80,12 +80,9 @@ class Palette(BaseHandler):
                                'hex': colorific.rgb_to_hex(palette.bgcolor.value),
                                'class': range_names(palette.bgcolor.value)}
 
-        self.response.content_type = 'application/json'
-        self.response.write(json.dumps(data))
+        self.render_json(data)
 
     def post(self, slug):
-        self.response.content_type = 'application/json'
-
         obj = Photo.get_by_id(slug)
         new_rgb = json.loads(self.request.get('rgb'))
         if new_rgb != obj.rgb:
@@ -94,9 +91,9 @@ class Palette(BaseHandler):
             obj.hue, obj.lum, obj.sat = range_names(new_rgb)
             obj.put()
             incr_count('Photo', 'color', obj.color)
-            self.response.write(json.dumps({'success': True}))
+            self.render_json({'success': True})
         else:
-            self.response.write(json.dumps({'success': False}))
+            self.render_json({'success': False})
 
 
 class AddForm(Form):
