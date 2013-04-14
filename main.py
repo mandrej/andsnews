@@ -1,6 +1,6 @@
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from views import Index, Latest, auto_complete, sitemap, Chat, Send, rss
+from views import Index, Latest, auto_complete, SiteMap, Chat, Send, Rss
 from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find
 from settings import DEVEL
 
@@ -64,8 +64,8 @@ app = WSGIApplication([
     Route('/visualize/<mem_key>', handler=RenderGraph),
     Route('/complete/<mem_key>', handler=auto_complete),
 
-    Route('/sitemap.xml', handler=sitemap),
-    Route('/rss/<kind:(photo|entry)>.xml', handler=rss),
+    Route('/sitemap.xml', handler=SiteMap),
+    Route('/rss/<kind:(photo|entry)>.xml', handler=Rss),
     Route('/_ah/xmpp/message/chat/', handler=Chat),
 
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),

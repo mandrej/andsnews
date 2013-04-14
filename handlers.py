@@ -225,7 +225,7 @@ class BaseHandler(webapp2.RequestHandler):
         return get_jinja2(app=self.app)
 
     def handle_exception(self, exception, debug):
-        template = 'errors/default.html'
+        template = ENV.get_template('errors/default.html')
         if isinstance(exception, webapp2.HTTPException):
             data = {'error': exception, 'path': self.request.path_qs}
             self.render_template(template, data)
@@ -246,12 +246,15 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'devel': DEVEL
         }
+        if 'headers' in kwargs:
+            self.response.headers = kwargs['headers']
+            del kwargs['headers']
         kwargs.update(context)
         template = ENV.get_template(filename)
         self.response.write(template.render(kwargs))
 
     def render_json(self, data):
-        self.response.content_type = 'application/json'
+        self.response.content_type = 'application/json; charset=utf-8'
         self.response.write(json.dumps(data))
 
 

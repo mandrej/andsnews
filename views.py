@@ -6,7 +6,7 @@ import webapp2
 from google.appengine.api import users, memcache, xmpp
 
 from models import Photo, Entry, Comment
-from handlers import ENV, BaseHandler, format_datetime
+from handlers import BaseHandler, format_datetime
 from models import Cloud
 from settings import TIMEOUT, ADMIN_JID, RFC822
 
@@ -62,31 +62,30 @@ class Send(webapp2.RequestHandler):
         xmpp.send_message(ADMIN_JID, message)
 
 
-def rss(request, kind):
-    template = ENV.get_template('rss.xml')
-    if kind == 'photo':
-        query = Photo.query().order(-Photo.date)
-    elif kind == 'entry':
-        query = Entry.query().order(-Entry.date)
+class Rss(BaseHandler):
+    def get(self, kind):
+        if kind == 'photo':
+            query = Photo.query().order(-Photo.date)
+        elif kind == 'entry':
+            query = Entry.query().order(-Entry.date)
 
-    data = {'kind': kind,
-            'objects': query.fetch(RSS_LIMIT),
-            'format': RFC822}
-    last_modified = format_datetime(data['objects'][0].date, format=RFC822)
-    expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-    response = webapp2.Response(content_type='application/rss+xml')
-    response.headers['Last-Modified'] = last_modified
-    response.headers['ETag'] = hashlib.md5(last_modified).hexdigest()
-    response.headers['Expires'] = format_datetime(expires, format=RFC822)
-    response.headers['Cache-Control'] = 'max-age=86400'
-    response.write(template.render(data))
-    return response
+        data = {'kind': kind,
+                'objects': query.fetch(RSS_LIMIT),
+                'format': RFC822}
+
+        last_modified = format_datetime(data['objects'][0].date, format=RFC822)
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        data['headers'] = [('Content-Type', 'application/rss+xml'),
+                           ('Last-Modified', last_modified),
+                           ('ETag', hashlib.md5(last_modified).hexdigest()),
+                           ('Expires', format_datetime(expires, format=RFC822)),
+                           ('Cache-Control', 'max-age=86400')]
+        self.render_template('rss.xml', data)
 
 
-def sitemap(request):
-    template = ENV.get_template('urlset.xml')
-    data = {'photos': Photo.query().order(-Photo.date),
-            'entries': Entry.query().order(-Entry.date)}
-    response = webapp2.Response(content_type='application/xml')
-    response.write(template.render(data))
-    return response
+class SiteMap(BaseHandler):
+    def get(self):
+        data = {'photos': Photo.query().order(-Photo.date),
+                'entries': Entry.query().order(-Entry.date),
+                'headers': [('Content-Type', 'application/xml')]}
+        self.render_template('urlset.xml', data)
