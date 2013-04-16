@@ -149,10 +149,6 @@ def split(value, sep=','):
         return value.split(sep)
     return []
 
-@jinja2.contextfunction
-def get_context(c):
-    return c
-
 ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
     extensions=['jinja2.ext.i18n', 'jinja2.ext.with_'],
@@ -170,8 +166,6 @@ ENV.globals.update({
     'gaesdk': gaesdk,
     'language': language,
     'uri_for': webapp2.uri_for,
-    'context': get_context,
-    'callable': callable,
 })
 ENV.filters.update({
     'incache': incache,
