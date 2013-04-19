@@ -41,7 +41,7 @@ class Detail(BaseHandler):
     def get(self, slug):
         obj = Entry.get_by_id(slug)
         if obj is None:
-            webapp2.abort(404)
+            self.abort(404)
         self.render_template('entry/detail.html', {'object': obj, 'filter': None})
 
 

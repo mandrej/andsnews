@@ -39,7 +39,7 @@ class Detail(BaseHandler):
         except ValueError:
             obj = Photo.get_by_id(slug)
             if obj is None:
-                webapp2.abort(404)
+                self.abort(404)
             self.render_template('photo/detail.html',
                                  {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
         else:

@@ -1,10 +1,11 @@
 import re
 import datetime
 import time
+import rfc822
+from StringIO import StringIO
 
-import webapp2
 from google.appengine.ext import ndb
-from google.appengine.api import urlfetch, memcache
+from google.appengine.api import memcache
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import admin_required
 
@@ -26,23 +27,16 @@ ADS = (
 
 
 def make_date(tt):
-    """ Convert tt to datetime.datetime
+    """ Convert time tuple to datetime.datetime
         (2009, 7, 29, 14, 39, 12, 2, 210, 0) """
-    try:
-        return datetime.datetime.fromtimestamp(time.mktime(tt))
-    except TypeError:
-        return None
+    return datetime.datetime.fromtimestamp(time.mktime(tt))
 
 
 def parse_date(str):
-    """ Convert date from string FORMAT to tt
+    """ Convert date from string FORMAT to time tuple
         'Wed, 29 Jul 2009 21:41:18 GMT' """
-    try:
-        tt = time.strptime(str, FORMAT)
-    except ValueError:
-        return None
-    else:
-        return make_date(tt)
+    tt = rfc822.parsedate(str)
+    return make_date(tt)
 
 
 def rewrite(news):
@@ -66,18 +60,12 @@ def rewrite(news):
     return news
 
 
-def update(result):
-    news = None
-    date = datetime.datetime.now()
-    feed = feedparser.parse(result.content)
-    if feed.bozo == 0:
-        news = rewrite(feed)
-        if news.entries:
-            if 'updated_parsed' in news.feed:
-                date = make_date(news.feed['updated_parsed'])
-            elif 'date' in result.headers:
-                date = parse_date(result.headers['date'])
-    return news, date
+@ndb.tasklet
+def get_feed_async(url):
+    ctx = ndb.get_context()
+    result = yield ctx.urlfetch(url)
+    if result.status_code == 200:
+        raise ndb.Return(result)
 
 
 class Index(BaseHandler):
@@ -99,32 +87,37 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
-    @ndb.toplevel
     def get(self, slug):
         error = ''
         obj = Feed.get_by_id(slug)
         if obj is None:
-            webapp2.abort(404)
+            self.abort(404)
         news = memcache.get(slug)
         if not news:
-            rpc = urlfetch.create_rpc(deadline=20)
-            urlfetch.make_fetch_call(rpc, obj.url)
-            try:
-                result = rpc.get_result()
-            except urlfetch.DownloadError:
-                error = _('Feed server timeout')
-            else:
-                status = result.status_code
-                if status == 200:
-                    news, obj.date = update(result)
+            future = get_feed_async(obj.url)
+            if future.state:  # 1
+                result = future.get_result()
+                feed = feedparser.parse(StringIO(result.content))
+
+                if feed.bozo == 0:
+                    news = rewrite(feed)
                     if news.entries:
+                        date = datetime.datetime.now()
+                        if 'updated_parsed' in news.feed:
+                            date = make_date(news.feed['updated_parsed'])
+                        elif 'date' in result.headers:
+                            date = parse_date(result.headers['date'])
+
                         memcache.add(slug, news, TIMEOUT)
+                        obj.date = date
                         obj.subtitle = news.feed.subtitle
                         obj.put_async()
                     else:
                         error = _('Feed server send no entries')
                 else:
-                    error = _('Feed server returns %s code' % status)
+                    error = _('Feed server returns %s' % feed.bozo_exception)
+            else:
+                error = _('Feed server returns %s' % future.get_exception())
 
         self.render_template('news/detail.html', {'object': obj, 'news': news, 'error': error, 'filter': None})
 
