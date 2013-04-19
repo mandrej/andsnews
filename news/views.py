@@ -87,6 +87,7 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
+    @ndb.toplevel
     def get(self, slug):
         error = ''
         obj = Feed.get_by_id(slug)
