@@ -1,0 +1,3 @@
+blacklist:
+  - subnet: 188.143.232.211
+    description: comment spammer
