@@ -152,7 +152,7 @@ class Edit(BaseHandler):
         is_admin = users.is_current_user_admin()
         if not is_admin:
             if user != obj.author:
-                webapp2.abort(403)
+                self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
         self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})

@@ -5,6 +5,7 @@ import json
 import sys
 import traceback
 import logging
+import uuid
 from datetime import datetime, timedelta
 from operator import itemgetter
 
@@ -20,7 +21,7 @@ from google.appengine.ext import ndb
 from common import SearchPaginator
 from models import Cloud
 
-from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS
+from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS, HOST
 
 
 def version():
@@ -148,6 +149,7 @@ def split(value, sep=','):
     if value:
         return value.split(sep)
     return []
+
 
 ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
@@ -339,15 +341,23 @@ class DeleteHandler(BaseHandler):
         is_admin = users.is_current_user_admin()
         if not is_admin:
             if user != obj.author:
-                webapp2.abort(403)
+                self.abort(403)
+        self.session['uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, HOST).hex
         data = {'object': obj, 'post_url': self.request.path, 'next': next}
         self.render_template('snippets/confirm.html', data)
 
     def post(self, safe_key):
-        next = str(self.request.get('next'))
-        key = ndb.Key(urlsafe=safe_key)
-        key.delete()
-        self.redirect(next)
+        try:
+            assert self.session.get('uuid', None) == uuid.uuid5(uuid.NAMESPACE_DNS, HOST).hex
+        except AssertionError:
+            self.session.pop('uuid', None)
+            self.abort(403)
+        else:
+            next = str(self.request.get('next'))
+            key = ndb.Key(urlsafe=safe_key)
+            key.delete()
+            self.session.pop('uuid', None)
+            self.redirect(next)
 
 
 class SetLanguage(BaseHandler):
