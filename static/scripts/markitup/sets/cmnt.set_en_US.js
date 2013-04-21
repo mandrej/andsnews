@@ -12,13 +12,12 @@ cmntSettings = {
         {name:'italics', className: 'i', key:'I', openWith:'(!(<em>|!|<i>)!)', closeWith:'(!(</em>|!|</i>)!)' },
         {name:'deleted', className: 's', key:'S', openWith:'<del>', closeWith:'</del>' },
         {separator:'---------------' },
-        {name:'list', className: 'ul', openWith:'<ul>\n', closeWith:'</ul>\n' },
-        {name:'ordered list', className: 'ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
-        {name:'list item', className: 'li', openWith:'<li>', closeWith:'</li>' },
+        {name:'list', className: 'ul', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'</ul>\n' },
+        {name:'ordered list', className: 'ol', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'</ol>\n' },
         {separator:'---------------' },
-        {name:'image link', className: 'img', key:'P', replaceWith:'<img src="[![source:!:http://]!]" alt="[![alternative text]!]" />' },
-        {name:'link', className: 'a', key:'L', openWith:'<a href="[![link:!:http://]!]"(!( title="[![title]!]")!)>', closeWith:'</a>', placeHolder:'text' },
-        {separator:'---------------' },
+//        {name:'image link', className: 'img', key:'P', replaceWith:'<img src="[![source:!:http://]!]" alt="[![alternative text]!]" />' },
+//        {name:'link', className: 'a', key:'L', openWith:'<a href="[![link:!:http://]!]"(!( title="[![title]!]")!)>', closeWith:'</a>', placeHolder:'text' },
+//        {separator:'---------------' },
         {name:'delete html tags', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
         {name:'show html, Alt ~ hide', className:'preview', call:'preview' }
     ]

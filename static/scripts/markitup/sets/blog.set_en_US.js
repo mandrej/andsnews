@@ -15,9 +15,8 @@ blogSettings = {
         {name:'italics', className: 'i', key:'I', openWith:'(!(<em>|!|<i>)!)', closeWith:'(!(</em>|!|</i>)!)' },
         {name:'deleted', className: 's', key:'S', openWith:'<del>', closeWith:'</del>' },
         {separator:'---------------' },
-        {name:'list', className: 'ul', openWith:'<ul>\n', closeWith:'</ul>\n' },
-        {name:'ordered list', className: 'ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
-        {name:'list item', className: 'li', openWith:'<li>', closeWith:'</li>' },
+        {name:'list', className: 'ul', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'</ul>\n' },
+        {name:'ordered list', className: 'ol', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'</ol>\n' },
         {separator:'---------------' },
         {name:'table', className: 'table', dropMenu: [
                 {name: 'plain table', placeholder:"text",

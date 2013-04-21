@@ -15,9 +15,8 @@ blogSettings = {
         {name:'коса слова', className: 'i', key:'I', openWith:'(!(<em>|!|<i>)!)', closeWith:'(!(</em>|!|</i>)!)' },
         {name:'преправљено', className: 's', key:'S', openWith:'<del>', closeWith:'</del>' },
         {separator:'---------------' },
-        {name:'листа', className: 'ul', openWith:'<ul>\n', closeWith:'</ul>\n' },
-        {name:'нумерисана листа', className: 'ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
-        {name:'ставка листе', className: 'li', openWith:'<li>', closeWith:'</li>' },
+        {name:'листа', className: 'ul', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'</ul>\n' },
+        {name:'нумерисана листа', className: 'ol', openWith:'<li>', closeWith:'</li>\n', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'</ol>\n' },
         {separator:'---------------' },
         {name:'табела', className: 'table', dropMenu: [
                 {name: 'обична табела', placeholder:"text",
