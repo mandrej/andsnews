@@ -209,6 +209,7 @@ class Cloud(object):
         self.set_cache(collection)
         return collection
 
+    @ndb.toplevel
     def update(self, key, delta):
         collection = self.get_cache()
         if collection is not None:
@@ -216,7 +217,12 @@ class Cloud(object):
                 collection[key] += delta
             else:
                 collection[key] = delta
-            self.set_cache(collection)
+            if collection[key] > 0:
+                self.set_cache(collection)
+            else:
+                entity_key = ndb.Key('Counter', '%s||%s||%s' % (self.kind, self.field, key))
+                entity_key.delete_async()
+                del collection[key]
 
     @ndb.toplevel
     def rebuild(self):
