@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block subnav %}<h2><a href="{{ uri_for('start') }}">{{ _('Start ') }}</a></h2>{% endblock %}
 {% block aside %}{% endblock %}
@@ -8,7 +9,7 @@
 <article>
 	{% if phrase %}
 		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}
-            {% if page != 1 %} [{{ page }}]{% endif %}
+            {{ m.page_number(page) }}
         </h2>
 	{% else %}
 		<h2>{{ _('Nothing to search for') }}.</h2>

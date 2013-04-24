@@ -1,8 +1,9 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block contents %}
 <article class="plain">
-	<h2>Entry images administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	<h2>Entry images administration {{ m.page_number(page) }}</h2>
     <div class="third" style="margin: 0">
         <h3>Dates</h3>
         <p class="cloud">

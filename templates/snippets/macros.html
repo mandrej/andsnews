@@ -47,6 +47,16 @@
     {% endif %}
 {% endmacro %}
 
+{% macro page_number(page, hide_first=True) %}
+    {% if hide_first %}
+        {% if page > 1 %}
+            [{{ page }}]
+        {% endif %}
+    {% else %}
+        [{{ page }}]
+    {% endif %}
+{% endmacro %}
+
 {% macro time(dt) %}
     <time class="when" datetime='{{ dt|format_datetime }}'>
         <span class="day">{{ dt|format_datetime("%d") }}</span>

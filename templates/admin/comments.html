@@ -1,8 +1,9 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block contents %}
 <article class="plain clear">
-	<h2>Comment &amp; message administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	<h2>Comment &amp; message administration {{ m.page_number(page) }}</h2>
     <table id="data" class="zebra">
         <colgroup>
             <col style="width: 120px;"/>

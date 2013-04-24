@@ -1,4 +1,5 @@
 {% extends "photo/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 
@@ -23,7 +24,7 @@
             {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}
             {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
         {% endif %}
-        {% if page != 1 %} [{{ page }}]{% endif %}
+        {{ m.page_number(page) }}
     </h2>
 
 	<div id="container">

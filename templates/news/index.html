@@ -22,7 +22,7 @@
             {% if filter.field == 'tags' %}/ {{ filter.value }}{% endif %}
         {% endif %}
         {% if filter and filter.tags %}/ {{ filter.tags }}{% endif %}
-        {% if page != 1 %} [{{ page }}]{% endif %}
+        {{ m.page_number(page) }}
     </h2>
 
 	<div id="container">

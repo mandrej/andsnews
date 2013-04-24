@@ -1,8 +1,9 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 
 {% block contents %}
 <article class="plain clear">
-	<h2>Counter administration{% if page != 1 %} [{{ page }}]{% endif %}</h2>
+	<h2>Counter administration {{ m.page_number(page) }}</h2>
 	<form action="/admin/counters" method="post">
 		<input type="hidden" name="page" value="{{ page }}"/>
 		<table id="data" class="zebra">

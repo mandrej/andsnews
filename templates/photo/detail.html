@@ -80,7 +80,8 @@
                     {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
                 {% endif %}
             </a>
-			/ {{ object.headline }}{% if idx %} [{{ idx }}]{% endif %}
+			/ {{ object.headline }}
+            {{ m.page_number(idx, hide_first=False) }}
         </h2>
 		
 		<div class="subtitle">

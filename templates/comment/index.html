@@ -17,7 +17,7 @@
             {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
             {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
         {% endif %}
-        {% if page != 1 %} [{{ page }}]{% endif %}
+        {{ m.page_number(page) }}
     </h2>
 
 	<div id="container">
