@@ -48,13 +48,7 @@
 {% endmacro %}
 
 {% macro page_number(page, hide_first=True) %}
-    {% if hide_first %}
-        {% if page > 1 %}
-            [{{ page }}]
-        {% endif %}
-    {% else %}
-        [{{ page }}]
-    {% endif %}
+    {% if hide_first * page > 1 or not hide_first %}[{{ page }}]{% endif %}
 {% endmacro %}
 
 {% macro time(dt) %}
