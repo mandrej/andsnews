@@ -47,6 +47,22 @@
     {% endif %}
 {% endmacro %}
 
+{% macro filter_title(filter) %}
+    {% if filter %}
+        {% if filter.field == 'tags' %}/ {{ filter.value }}{% endif %}
+        {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
+        {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
+        {% if filter.field == 'color' %}/ {{ _(filter.value) }}{% endif %}
+        {% if filter.field == 'model' %}/ {{ filter.value }}{% endif %}
+        {% if filter.field == 'lens' %}/ {{ filter.value }}{% endif %}
+        {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}
+        {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
+        {% if filter.field == 'forkind' and filter.value == 'Photo' %}/ {{ _('for photos') }}{% endif %}
+        {% if filter.field == 'forkind' and filter.value == 'Entry' %}/ {{ _('for blogs') }}{% endif %}
+        {% if filter.field == 'forkind' and filter.value == 'Application' %}/ {{ _('messages') }}{% endif %}
+    {% endif %}
+{% endmacro %}
+
 {% macro page_number(page, hide_first=True) %}
     {% if hide_first * page > 1 or not hide_first %}[{{ page }}]{% endif %}
 {% endmacro %}

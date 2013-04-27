@@ -8,7 +8,8 @@
         <h3>Dates</h3>
         <p class="cloud">
             {% for item in archive|sort(attribute='name', reverse=True) %}
-                <a class="t{{ item.size }}{% if item.name == filter.year %} selected{% endif %}"
+                {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
+                <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                     title="{{ item.count }}" href="/admin/images/date/{{ item.name }}">{{ item.name }}</a>
             {% endfor %}
         </p>

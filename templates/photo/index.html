@@ -14,16 +14,7 @@
 {% block contents %}
     <h2>
         <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
-        {% if filter %}
-            {% if filter.field == 'tags' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'date' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'author' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'color' %}/ {{ _(filter.value) }}{% endif %}
-            {% if filter.field == 'model' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'lens' %}/ {{ filter.value }}{% endif %}
-            {% if filter.field == 'eqv' %}/ {{ filter.value }} mm{% endif %}
-            {% if filter.field == 'iso' %}/ {{ filter.value }} ASA{% endif %}
-        {% endif %}
+        {{ m.filter_title(filter) }}
         {{ m.page_number(page) }}
     </h2>
 

@@ -13,7 +13,7 @@
         <h3>Dates</h3>
         <p class="cloud">
             {% for item in archive|sort(attribute='name', reverse=True) %}
-                {% set selected = item.name == filter.year %}
+                {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
                 <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                     title="{{ item.count }}" href="/admin/blobs/date/{{ item.name }}">{{ item.name }}</a>
             {% endfor %}
