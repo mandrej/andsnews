@@ -63,3 +63,10 @@ error_handlers:
 
 - error_code: timeout
   file: templates/errors/timeout.html
+
+skip_files: |
+ ^(.*/)?(
+ (.*\.py[co])|
+ (\..*)|
+ (.*\.less)
+ )$
