@@ -20,6 +20,8 @@
 
 import base64
 import cgi
+import collections
+import logging
 import os
 import re
 
@@ -51,7 +53,7 @@ def decode_task_payload(task):
   return util.HugeTask.decode_payload(result)
 
 
-def execute_task(task, handlers_map=None):
+def execute_task(task, retries=0, handlers_map=None):
   """Execute mapper's executor task.
 
   This will try to determine the correct mapper handler for the task, will set
@@ -60,6 +62,14 @@ def execute_task(task, handlers_map=None):
 
   This function can be used for functional-style testing of functionality
   depending on mapper framework.
+
+  Args:
+    task: a taskqueue task.
+    retries: the current retry of this task.
+    handlers_map: a dict from url regex to handler.
+
+  Returns:
+    the handler instance used for this task.
   """
   if not handlers_map:
     handlers_map = main.create_handlers_map()
@@ -85,6 +95,7 @@ def execute_task(task, handlers_map=None):
     handler.request.headers[k] = v
     environ_key = "HTTP_" + k.replace("-", "_").upper()
     handler.request.environ[environ_key] = v
+  handler.request.headers["X-AppEngine-TaskExecutionCount"] = retries
   handler.request.environ["HTTP_X_APPENGINE_TASKNAME"] = (
       task.get("name", "default_task_name"))
   handler.request.environ["HTTP_X_APPENGINE_QUEUENAME"] = (
@@ -112,6 +123,7 @@ def execute_task(task, handlers_map=None):
                      handler.response.status_message,
                      task,
                      handler))
+  return handler
 
 
 def execute_all_tasks(taskqueue, queue="default", handlers_map=None):
@@ -120,11 +132,35 @@ def execute_all_tasks(taskqueue, queue="default", handlers_map=None):
   Args:
     taskqueue: An instance of taskqueue stub.
     queue: Queue name to run all tasks from.
+    hanlders_map: see main.create_handlers_map.
+
+  Returns:
+    task_run_counts: a dict from handler class to the number of tasks
+      it handled.
   """
   tasks = taskqueue.GetTasks(queue)
   taskqueue.FlushQueue(queue)
+  task_run_counts = collections.defaultdict(lambda: 0)
   for task in tasks:
-    execute_task(task, handlers_map=handlers_map)
+    retries = 0
+    while True:
+      try:
+        handler = execute_task(task, retries, handlers_map=handlers_map)
+        task_run_counts[handler.__class__] += 1
+        break
+      # pylint: disable=bare-except
+      except:
+        retries += 1
+        # Arbitrary large number.
+        if retries > 100:
+          logging.debug("Task %s failed for too many times. Giving up.",
+                        task["name"])
+          raise
+        logging.debug(
+            "Task %s is being retried for the %s time",
+            task["name"],
+            retries)
+  return task_run_counts
 
 
 def execute_until_empty(taskqueue, queue="default", handlers_map=None):
@@ -133,7 +169,15 @@ def execute_until_empty(taskqueue, queue="default", handlers_map=None):
   Args:
     taskqueue: An instance of taskqueue stub.
     queue: Queue name to run all tasks from.
-  """
-  while taskqueue.GetTasks(queue):
-    execute_all_tasks(taskqueue, queue, handlers_map)
+    hanlders_map: see main.create_handlers_map.
 
+  Returns:
+    task_run_counts: a dict from handler class to the number of tasks
+      it handled.
+  """
+  task_run_counts = collections.defaultdict(lambda: 0)
+  while taskqueue.GetTasks(queue):
+    new_counts = execute_all_tasks(taskqueue, queue, handlers_map)
+    for handler_cls in new_counts:
+      task_run_counts[handler_cls] += new_counts[handler_cls]
+  return task_run_counts

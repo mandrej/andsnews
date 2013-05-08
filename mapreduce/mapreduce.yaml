@@ -13,7 +13,7 @@ mapreduce:
 
 - name: full_text_search_index
   mapper:
-    input_reader: mapreduce.input_readers.DatastoreKeyInputReader
+    input_reader: mapreduce.input_readers.DatastoreInputReader
     handler: mapreduce.main.indexer
     params:
       - name: entity_kind

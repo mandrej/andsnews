@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#
 # Copyright 2011 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,10 +24,27 @@ __all__ = [
     "BadWriterParamsError",
     "BadYamlError",
     "Error",
+    "FailJobError",
     "MissingYamlError",
     "MultipleDocumentsInMrYaml",
+    "NotEnoughArgumentsError",
+    "RetrySliceError",
+    "SHARD_RETRY_ERRORS",
     "ShuffleServiceError",
     ]
+
+from google.appengine.api import files
+
+
+# Errors that should trigger shard retry.
+SHARD_RETRY_ERRORS = [
+    files.ApiTemporaryUnavailableError,
+    files.ExistenceError,
+    files.FileTemporaryUnavailableError,
+    files.FinalizationError,
+    files.UnknownError,
+    ]
+
 
 class Error(Exception):
   """Base-class for exceptions in this module."""
@@ -58,10 +74,25 @@ class BadWriterParamsError(BadParamsError):
   """The input parameters to a reader were invalid."""
 
 
-class ShuffleServiceError(Error):
-  """Error doing shuffle through shuffle service."""
+class FailJobError(Error):
+  """The job will be failed if this exception is thrown anywhere."""
+
+
+class NotEnoughArgumentsError(Error):
+  """Required argument is missing."""
 
 
 class BadCombinerOutputError(Error):
   """Combiner outputs data instead of yielding it."""
 
+
+class ShuffleServiceError(Error):
+  """Error doing shuffle through shuffle service."""
+
+
+class RetrySliceError(Error):
+  """The slice will be retried up to some maximum number of times.
+
+  The job will be failed if the slice can't progress before maximum
+  number of retries.
+  """

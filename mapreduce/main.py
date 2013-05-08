@@ -1,4 +1,3 @@
-from __future__ import with_statement
 #!/usr/bin/env python
 #
 # Copyright 2010 Google Inc.
@@ -25,14 +24,22 @@ This module should be specified as a handler for mapreduce URLs in app.yaml:
     script: mapreduce/main.py
 """
 
-from mapreduce import handlers
-from mapreduce import status
-import webapp2
 
+
+
+
+# Pipeline has to be imported before webapp.
 try:
   from mapreduce.lib import pipeline
 except ImportError:
   pipeline = None
+
+# pylint: disable=g-import-not-at-top
+# from google.appengine.ext import webapp
+import webapp2
+from mapreduce import handlers
+from mapreduce import status
+# from google.appengine.ext.webapp import util
 
 
 STATIC_RE = r".*/([^/]*\.(?:css|js)|status|detail)$"
@@ -46,7 +53,8 @@ from models import img_palette, range_names
 
 
 def fixer(oldkey):
-    key = ndb.Key.from_old_key(oldkey)
+    # entity is oldkey for DatastoreKeyInputReader <class 'google.appengine.api.datastore_types.Key'>
+    key = ndb.Key.from_old_key(oldkey)  # <class 'google.appengine.ext.ndb.key.Key'>
     key.delete()
     # obj = key.get()
     # buf = blobstore.BlobReader(obj.blob_key).read()
@@ -71,12 +79,7 @@ def fixer(oldkey):
     # obj.put()
 
 
-def indexer(oldkey):
-#    entity is oldkey for DatastoreKeyInputReader
-#    <class 'google.appengine.api.datastore_types.Key'>
-    key = ndb.Key.from_old_key(oldkey)
-#    <class 'google.appengine.ext.ndb.key.Key'>
-    entity = key.get()
+def indexer(entity):
     entity.index_add()
 
 #def process_tags(entity):
@@ -158,25 +161,23 @@ def create_handlers_map():
       (r".*", RedirectHandler),
       ]
 
-#def create_application():
-#  """Create new WSGIApplication and register all handlers.
-#
-#  Returns:
-#    an instance of webapp.WSGIApplication with all mapreduce handlers
-#    registered.
-#  """
-#  return webapp.WSGIApplication(create_handlers_map(),
-#                                debug=True)
+def create_application():
+  """Create new WSGIApplication and register all handlers.
 
-
-#APP = create_application()
-
-app = webapp2.WSGIApplication(create_handlers_map(),
+  Returns:
+    an instance of webapp.WSGIApplication with all mapreduce handlers
+    registered.
+  """
+  return webapp2.WSGIApplication(create_handlers_map(),
                                 debug=True)
 
-#def main():
-#  util.run_wsgi_app(APP)
+
+APP = create_application()
+
+
+# def main():
+#   util.run_wsgi_app(APP)
 #
 #
-#if __name__ == "__main__":
-#  main()
+# if __name__ == "__main__":
+#   main()
