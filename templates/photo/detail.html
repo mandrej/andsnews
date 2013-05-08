@@ -72,7 +72,7 @@
                 {{ m.filter_title(filter) }}
             </a>
 			/ {{ object.headline }}
-            {{ m.page_number(idx, hide_first=False) }}
+            {% if idx %}{{ m.page_number(idx, hide_first=False) }}{% endif %}
         </h2>
 		
 		<div class="subtitle">
