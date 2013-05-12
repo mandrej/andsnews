@@ -13,7 +13,7 @@ from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
 from handlers import BaseHandler
 from common import Paginator, Filter, TagsField
-from settings import TIMEOUT
+from config import TIMEOUT
 
 PER_PAGE = 6
 SMALL = 60, 60

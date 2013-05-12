@@ -7,14 +7,14 @@ from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
 from wtforms import widgets, fields
 from models import INDEX
-from settings import FAMILY, PER_PAGE, TIMEOUT
+from config import FAMILY, PER_PAGE, TIMEOUT
 
 
-class Filter:
+class Filter(object):
     def __init__(self, field, value):
         self.field, self.value = field, value
 
-    @property
+    @webapp2.cached_property
     def parameters(self):
         try:
             assert (self.field and self.value)
@@ -40,7 +40,7 @@ class Filter:
                 return {'%s' % self.field: self.value}
 
 
-class Paginator:
+class Paginator(object):
     timeout = TIMEOUT / 6
 
     def __init__(self, query, per_page=PER_PAGE):
@@ -109,7 +109,7 @@ class Paginator:
             return num, prev, obj, next
 
 
-class SearchPaginator:
+class SearchPaginator(object):
 #    timeout = 60 #TIMEOUT/10
     def __init__(self, querystring, per_page=PER_PAGE):
         self.querystring = querystring

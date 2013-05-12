@@ -8,9 +8,9 @@ from webapp2_extras.appengine.users import admin_required
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from entry.views import make_thumbnail
-from handlers import BaseHandler, filesizeformat
+from handlers import BaseHandler
+from config import filesizeformat, PER_PAGE, HUE
 from common import Paginator, Filter
-from settings import PER_PAGE, HUE
 
 
 class Cache(BaseHandler):

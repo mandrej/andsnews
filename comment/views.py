@@ -8,7 +8,7 @@ from wtforms import Form, fields, validators
 from models import Comment
 from handlers import BaseHandler
 from common import Paginator, Filter
-from settings import HOST
+from config import HOST
 
 
 PER_PAGE = 10

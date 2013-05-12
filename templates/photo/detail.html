@@ -2,7 +2,7 @@
 {% import "snippets/macros.html" as m %}
 
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
-{% block meta %}<meta name="date" content="{{ object.date|format_date }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 
 {% block subnav %}
     <h2>

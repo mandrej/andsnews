@@ -40,8 +40,8 @@
 		</tr>
 		<tr>
 			<td class="label">{{ _('Taken') }}</td>
-			<td><time datetime='{{ object.date|format_datetime }}'>
-				{{ object.date|format_datetime }}</time></td>
+			<td><time datetime='{{ object.date|to_datetime }}'>
+				{{ object.date|to_datetime }}</time></td>
 		</tr>
         <tr>
             <td class="label">{{ _('Size') }}</td>

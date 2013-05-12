@@ -6,12 +6,13 @@ import webapp2
 from google.appengine.api import users, memcache, xmpp
 
 from models import Photo, Entry, Comment
-from handlers import BaseHandler, format_datetime
+from handlers import BaseHandler
+from config import to_datetime, ADMIN_JID, TIMEOUT
 from models import Cloud
-from settings import TIMEOUT, ADMIN_JID, RFC822
 
 RSS_LIMIT = 10
 NUM_LATEST = 6
+RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 
 
 def auto_complete(request, mem_key):
@@ -73,12 +74,12 @@ class Rss(BaseHandler):
                 'objects': query.fetch(RSS_LIMIT),
                 'format': RFC822}
 
-        last_modified = format_datetime(data['objects'][0].date, format=RFC822)
+        last_modified = to_datetime(data['objects'][0].date, format=RFC822)
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         data['headers'] = [('Content-Type', 'application/rss+xml'),
                            ('Last-Modified', last_modified),
                            ('ETag', hashlib.md5(last_modified).hexdigest()),
-                           ('Expires', format_datetime(expires, format=RFC822)),
+                           ('Expires', to_datetime(expires, format=RFC822)),
                            ('Cache-Control', 'max-age=86400')]
         self.render_template('rss.xml', data)
 

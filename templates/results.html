@@ -52,8 +52,8 @@
                 {{ object.body }}
                 <p class="details">
                     <strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|format_datetime }}'>
-                        {{ object.date|format_date }}</time></p>
+                    <time datetime='{{ object.date|to_datetime }}'>
+                        {{ object.date|to_date }}</time></p>
             </div>
         </div>
     {% endmacro %}

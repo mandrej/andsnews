@@ -6,207 +6,43 @@ import sys
 import traceback
 import logging
 import uuid
-from datetime import datetime, timedelta
 from operator import itemgetter
 
 import webapp2
-import jinja2
-from webapp2_extras import i18n, sessions
-from webapp2_extras.i18n import gettext, ngettext
+from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from webapp2_extras.jinja2 import get_jinja2
-from jinja2.filters import environmentfilter, do_mark_safe, do_striptags
-from google.appengine.api import users, memcache
+from jinja2.filters import do_striptags
+from google.appengine.api import users
 from google.appengine.ext import ndb
 from common import SearchPaginator
 from models import Cloud
-
-from settings import DEVEL, TEMPLATE_DIR, LANGUAGES, RESULTS, HOST
-
-
-def version():
-    return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
-
-
-def gaesdk():
-    return os.environ.get('SERVER_SOFTWARE')
-
-
-def language(code):
-    return code.split('_')[0]
-
-
-def now():
-    date = datetime.now()
-    return date.strftime('%Y')
-
-
-def format_date(value, format='%Y-%m-%d'):
-    return value.strftime(format)
-
-
-def format_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
-    return value.strftime(format)
-
-
-def image_url_by_num(obj, arg):
-    """ {{ object|image_url_by_num:form.initial.ORDER }}/small
-        {{ object|image_url_by_num:object.front }}/small """
-    return obj.image_url(arg)
-
-
-def incache(key):
-    if memcache.get(key):
-        return True
-    else:
-        return False
-
-
-def boolimage(value):
-    """ {{ object.key.name|incache|boolimage }} """
-    if value is True:
-        return do_mark_safe('<i class="icon-ok-sign" style="color: #060"></i>')
-    else:
-        return do_mark_safe('<i class="icon-minus-sign" style="color: #c00"></i>')
-
-
-@environmentfilter
-def css_classes(env, classes):
-    return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
-
-
-def filesizeformat(value, binary=False):
-    """Format the value like a 'human-readable' file size (i.e. 13 kB,
-    4.1 MB, 102 Bytes, etc).  Per default decimal prefixes are used (Mega,
-    Giga, etc.), if the second parameter is set to `True` the binary
-    prefixes are used (Mebi, Gibi).
-    """
-    bytes = float(value)
-    base = binary and 1024 or 1000
-    prefixes = [
-        (binary and "KiB" or "kB"),
-        (binary and "MiB" or "MB"),
-        (binary and "GiB" or "GB"),
-        (binary and "TiB" or "TB"),
-        (binary and "PiB" or "PB"),
-        (binary and "EiB" or "EB"),
-        (binary and "ZiB" or "ZB"),
-        (binary and "YiB" or "YB")
-    ]
-    if bytes == 1:
-        return "1 Byte"
-    elif bytes < base:
-        return "%d Bytes" % bytes
-    else:
-        for i, prefix in enumerate(prefixes):
-            unit = base ** (i + 2)
-            if bytes < unit:
-                return '%.1f %s' % ((base * bytes / unit), prefix)
-        return '%.1f %s' % ((base * bytes / unit), prefix)
-
-
-def timesince_jinja(d, now=None):
-    # http://stackoverflow.com/questions/8292477/localized-timesince-filter-for-jinja2-with-gae
-    chunks = (
-        (60 * 60 * 24 * 365, lambda n: ngettext('year', 'years', n)),
-        (60 * 60 * 24 * 30, lambda n: ngettext('month', 'months', n)),
-        (60 * 60 * 24 * 7, lambda n: ngettext('week', 'weeks', n)),
-        (60 * 60 * 24, lambda n: ngettext('day', 'days', n)),
-        (60 * 60, lambda n: ngettext('hour', 'hours', n)),
-        (60, lambda n: ngettext('minute', 'minutes', n))
-    )
-    if not isinstance(d, datetime):
-        d = datetime(d.year, d.month, d.day)
-    if now and not isinstance(now, datetime):
-        now = datetime(now.year, now.month, now.day)
-
-    if not now:
-        now = datetime.now()
-
-    delta = now - (d - timedelta(0, 0, d.microsecond))
-    since = delta.days * 24 * 60 * 60 + delta.seconds
-    if since <= 0:
-        return u'0 ' + gettext('minutes')
-    for i, (seconds, name) in enumerate(chunks):
-        count = since // seconds
-        if count != 0:
-            break
-    s = gettext('%(number)d %(type)s') % {'number': count, 'type': name(count)}
-    if i + 1 < len(chunks):
-        seconds2, name2 = chunks[i + 1]
-        count2 = (since - (seconds * count)) // seconds2
-        if count2 != 0:
-            s += gettext(', %(number)d %(type)s') % {'number': count2, 'type': name2(count2)}
-    return s
-
-
-def to_json(value):
-    # http://stackoverflow.com/questions/8727349/converting-dict-object-to-string-in-django-jinja2-template
-    return do_mark_safe(json.dumps(value))
-
-
-def split(value, sep=','):
-    if value:
-        return value.split(sep)
-    return []
-
-
-ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
-    extensions=['jinja2.ext.i18n', 'jinja2.ext.with_'],
-    autoescape=True
-)
-ENV.install_gettext_translations(i18n, newstyle=False)
-ENV.install_gettext_callables(
-    lambda x: i18n.gettext(x),
-    lambda s, p, n: i18n.ngettext(s, p, n),
-    newstyle=False)
-
-ENV.globals.update({
-    'now': now,
-    'version': version,
-    'gaesdk': gaesdk,
-    'language': language,
-    'uri_for': webapp2.uri_for,
-})
-ENV.filters.update({
-    'incache': incache,
-    'boolimage': boolimage,
-    'format_date': format_date,
-    'format_datetime': format_datetime,
-    'image_url_by_num': image_url_by_num,
-    'css_classes': css_classes,
-    'filesizeformat': filesizeformat,
-    'timesince': timesince_jinja,
-    'to_json': to_json,
-    'split': split,
-})
-
-real_handle_exception = ENV.handle_exception
-
-
-def handle_exception(self, *args, **kwargs):
-    logging.error('Template exception:\n%s', traceback.format_exc())
-    real_handle_exception(self, *args, **kwargs)
-
-
-ENV.handle_exception = handle_exception
+from config import DEVEL, HOST, RESULTS, LANGUAGES
 
 
 class BaseHandler(webapp2.RequestHandler):
+    def dispatch(self):
+        # Get a session store for this request.
+        self.session_store = sessions.get_store(request=self.request)
+        try:
+            # Dispatch the request.
+            webapp2.RequestHandler.dispatch(self)
+        finally:
+            # Save all sessions.
+            self.session_store.save_sessions(self.response)
+
     @webapp2.cached_property
-    def session_store(self):
-        return sessions.get_store(request=self.request)
+    def jinja2(self):
+        """Returns a Jinja2 renderer cached in the app registry"""
+        return jinja2.get_jinja2(app=self.app)
 
     @webapp2.cached_property
     def session(self):
+        """Returns a session using the default cookie key"""
         return self.session_store.get_session()
 
-    def dispatch(self):
-        try:
-            super(BaseHandler, self).dispatch()
-        finally:
-            self.session_store.save_sessions(self.response)
+    @webapp2.cached_property
+    def session_store(self):
+        return sessions.get_store(request=self.request)
 
     @webapp2.cached_property
     def user(self):
@@ -216,12 +52,8 @@ class BaseHandler(webapp2.RequestHandler):
     def is_admin(self):
         return users.is_current_user_admin()
 
-    @webapp2.cached_property
-    def jinja2(self):
-        return get_jinja2(app=self.app)
-
     def handle_exception(self, exception, debug):
-        template = ENV.get_template('errors/default.html')
+        template = 'errors/default.html'
         if isinstance(exception, webapp2.HTTPException):
             data = {'error': exception, 'path': self.request.path_qs}
             self.render_template(template, data)
@@ -235,7 +67,7 @@ class BaseHandler(webapp2.RequestHandler):
         lang_code = self.session.get('lang_code') or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
 
-        context = {
+        values = {
             'LANGUAGE_CODE': lang_code,
             'LANGUAGES': LANGUAGES,
             'user': self.user,
@@ -245,9 +77,9 @@ class BaseHandler(webapp2.RequestHandler):
         if 'headers' in kwargs:
             self.response.headers = kwargs['headers']
             del kwargs['headers']
-        kwargs.update(context)
-        template = ENV.get_template(filename)
-        self.response.write(template.render(kwargs))
+
+        kwargs.update(values)
+        self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
@@ -363,9 +195,7 @@ class DeleteHandler(BaseHandler):
 class SetLanguage(BaseHandler):
     def post(self):
         next = self.request.headers.get('Referer', webapp2.uri_for('start'))
-        lang_code = self.request.get('language', None)
-        if lang_code:
-            self.session['lang_code'] = lang_code
+        self.session['lang_code'] = self.request.get('language')
         self.redirect(next)
 
 

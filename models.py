@@ -15,7 +15,7 @@ from google.appengine.api import users, memcache, search, images
 from lib import colorific
 from lib.EXIF import process_file
 from cloud import calculate_cloud
-from settings import DEVEL, COLORS, HUE, LUM, SAT, TIMEOUT
+from config import DEVEL, COLORS, HUE, LUM, SAT, TIMEOUT
 
 
 INDEX = search.Index(name='searchindex')
@@ -27,20 +27,6 @@ KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Comment_forkind', 'Comment_author', 'Comment_date']
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
-
-
-# def median(buff):
-#     triple = []
-#     histogram = images.histogram(buff)
-#     for band in histogram:
-#         suma = 0
-#         limit = sum(band) / 2
-#         for i in xrange(256):
-#             suma += band[i]
-#             if suma > limit:
-#                 triple.append(i)
-#                 break
-#     return triple
 
 
 def img_palette(buff):

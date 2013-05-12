@@ -14,7 +14,7 @@ from models import Feed
 from lib import feedparser
 from handlers import BaseHandler
 from common import Paginator, Filter, TagsField
-from settings import TIMEOUT
+from config import TIMEOUT
 
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'

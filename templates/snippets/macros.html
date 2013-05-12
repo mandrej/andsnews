@@ -68,10 +68,10 @@
 {% endmacro %}
 
 {% macro time(dt) %}
-    <time class="when" datetime='{{ dt|format_datetime }}'>
-        <span class="day">{{ dt|format_datetime("%d") }}</span>
-        <span class="month">{{ dt|format_datetime("%m") }}</span>
-        <span class="year">{{ dt|format_datetime("%Y") }}</span>
+    <time class="when" datetime='{{ dt|to_datetime }}'>
+        <span class="day">{{ dt|to_datetime("%d") }}</span>
+        <span class="month">{{ dt|to_datetime("%m") }}</span>
+        <span class="year">{{ dt|to_datetime("%Y") }}</span>
     </time>
 {% endmacro %}
 

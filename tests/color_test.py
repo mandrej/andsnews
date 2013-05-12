@@ -5,7 +5,7 @@ import numpy as np
 from colormath.color_objects import HSLColor, RGBColor
 from models import Photo
 from collections import defaultdict
-from settings import HUE
+from config import HUE
 
 
 class ColorTest(unittest.TestCase):
