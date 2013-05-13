@@ -4,7 +4,7 @@ from collections import defaultdict
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import admin_required
-
+from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from entry.views import make_thumbnail
@@ -36,6 +36,14 @@ class Index(BaseHandler):
         hits = stats.get('hits', 0)
         misses = stats.get('misses', 0)
         all = hits + misses
+
+        delta = stats.get('oldest_item_age', 0)  # seconds
+        weeks, rem1 = divmod(delta, 604800)
+        days, rem2 = divmod(rem1, 86400)
+        hours, rem3 = divmod(rem2, 3600)
+        minutes, seconds = divmod(rem3, 60)
+        oldest = datetime.now() - timedelta(weeks=weeks, days=days, hours=hours, minutes=minutes, seconds=seconds)
+
         try:
             hit_ratio = 100 * hits / all
         except ZeroDivisionError:
@@ -45,6 +53,7 @@ class Index(BaseHandler):
                 'comment_count': Comment.query().order(-Comment.date).count(),
                 'feeds_count': Feed.query().order(-Feed.date).count(),
                 'stats': stats,
+                'oldest': oldest,
                 'hit_ratio': hit_ratio}
         self.render_template('admin/index.html', data)
 
