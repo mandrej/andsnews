@@ -51,9 +51,9 @@
 
 * { margin: 0; padding: 0; }
 header, nav, aside, section, article, footer, figure { display: block; }
+html, body { height: 100%; }
 body {
 	background: url(/static/images/bg.jpg) @paper;
-    height: 100%;
 	color: @text;
 	font-family: @default_font;
     font-size: 14px;
@@ -241,14 +241,14 @@ table {
 	margin-right: @gap;
 	float: right;
 	@media (max-width: 1024px) { width: 37%; }
-	@media (max-width: 800px) {  width: (100% / 2 - @gap); }
+	@media (max-width: 800px) {  width: round(100% / 2 - @gap, 2); }
 	@media (max-width: 480px) { display: none; }
 }
 #port {
 	margin: 0 @gap 2em 0; width: 63.66%;
 	@media (max-width: 1024px) { width: 57%; }
-	@media (max-width: 800px) { width: (50% - @gap); }
-	@media (max-width: 480px) { width: (100% - @gap); }
+	@media (max-width: 800px) { width: round(50% - @gap, 2); }
+	@media (max-width: 480px) { width: round(100% - @gap, 2); }
 	img {
 		max-width: 100%;
 		.border-radius(4px);
@@ -296,7 +296,7 @@ table {
 		font-size: 1.8em;
 		text-transform: lowercase;
 	}
-	@media (max-width: 480px) { width: (100% - 2 * @gap); }
+	@media (max-width: 480px) { width: round(100% - 2 * @gap, 2); }
 	a {
 		color: white;
 		text-decoration: none;
@@ -468,13 +468,13 @@ figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
 		margin: 0 @gap 2em 0;
-		width: (100% /6 - @gap);
+		width: round(100% /6 - @gap, 2);
 		background: fade(white, 50%);
 		.border-radius(4px);
 		.drop-shadow(0, 0, 2px, 0.3);
-		@media (max-width: 1024px) { width: (100% /4 - @gap); }
-		@media (max-width: 800px) { margin: 0 @gap 1.5em 0; width: (100% /3 - @gap); }
-		@media (max-width: 480px) { margin: 0 @gap 1em 0; width: (100% /2 - @gap); }
+		@media (max-width: 1024px) { width: round(100% /4 - @gap, 2); }
+		@media (max-width: 800px) { margin: 0 @gap 1.5em 0; width: round(100% /3 - @gap, 2); }
+		@media (max-width: 480px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
 		img {
 			display: block;
 			max-width: 100%;
@@ -569,9 +569,9 @@ figure {
 .third {
 	float: left;
 	margin: 0 @gap 2em 0;
-	width: (100% /3 - @gap);
-	@media (max-width: 1024px) { margin: 0 @gap 1em 0; width: (100% /2 - @gap); }
-	@media (max-width: 480px) { width: (100% - @gap); }
+	width: round(100% /3 - @gap, 2);
+	@media (max-width: 1024px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
+	@media (max-width: 480px) { width: round(100% - @gap, 2); }
 }
 
 @hilite: #ffe657;
