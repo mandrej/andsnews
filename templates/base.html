@@ -75,6 +75,7 @@
 
     {% block scripts %}
         <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
+        <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/jquery.masonry.min.js"></script>
         <script src="/static/scripts/common.js"></script>
         <script>
@@ -173,6 +174,14 @@
                     itemSelector: '.brick'
                 }).imagesLoaded(function() {
                     $container.masonry('reload');
+                }).infinitescroll({
+                    animate: true,
+                    behavior: 'local',
+                    navSelector: 'nav.paginator',
+                    nextSelector: 'nav.paginator a.next',
+                    itemSelector: '#container .brick'
+                }, function(newElements) {
+                    $container.masonry('appended', $(newElements), true);
                 });
                 $(window).resize(function() {
                     $container.masonry('reload');
