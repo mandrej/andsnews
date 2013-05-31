@@ -10,7 +10,6 @@
 @google_red: #ea2434;
 @google_orange: #f8a912;
 @google_green: #01a514;
-@ubuntu_orange: #dd4814;
 
 @paper: #aaa;
 @text: #333;
@@ -30,7 +29,7 @@
 	a { color: white; text-decoration: none; }
 }
 .title_hover {
-	& a {
+	a {
 		text-decoration: none;
 		&:hover { text-decoration: underline;}
 	}
@@ -140,7 +139,7 @@ fieldset {
 	}
 	select { .form_input; width: 20.5em; padding: 0;
 		&:focus { .form_focus; }
-		& option { padding: 0.2em; }
+		option { padding: 0.2em; }
 	}
 	textarea { font-family: @monospaced; .form_input; }
 	.error {
@@ -152,7 +151,7 @@ fieldset {
 		margin-bottom: 1px;
 		background-repeat: no-repeat;
 		background-position: left;
-		&.upload input { margin-right: 0.5em; width: auto; }
+		input { margin-right: 0.5em; width: auto; }
 	}
 }
 .required:before { content: "*\00A0"; /* \00A0 &nbsp; */ }
@@ -262,12 +261,12 @@ table {
 
 .paginator {
 	float: left;
-	& a {
+	a {
 		.left;
 		color: white;
 		&:hover { color: @google_orange; }
 	}
-	& span {
+	span {
 		.left;
 		color: white;
 		&.na { color: fade(black, 70%); }
@@ -668,15 +667,6 @@ figure {
 	.loop (@iterations);
 }
 
-.isotope, .isotope .isotope-item { .transition-duration(0.5s); }
-.isotope { .transition-property(height, width); }
-.isotope .isotope-item {
-	-webkit-transition-property: -webkit-transform, opacity;
-	-moz-transition-property: -moz-transform, opacity;
-	-ms-transition-property: -ms-transform, opacity;
-	-o-transition-property: -o-transform, opacity;
-	transition-property: transform, opacity;
-}
 @-webkit-keyframes fade {
 	from { opacity: 1; }
 	to { opacity: 0; }
@@ -684,6 +674,15 @@ figure {
 @-moz-keyframes fade {
 	from { opacity: 1; }
 	to { opacity: 0; }
+}
+
+.masonry {
+	.transition-duration(0.7s);
+	.transition-property(height, width);
+	.masonry-brick {
+		.transition-duration(0.7s);
+		.transition-property(top, left);
+	}
 }
 
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }

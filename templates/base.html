@@ -75,7 +75,7 @@
 
     {% block scripts %}
         <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7},{name:'visualization',version:1,'packages':['corechart']}]}"></script>
-        <script src="/static/scripts/jquery.isotope.min.js"></script>
+        <script src="/static/scripts/jquery.masonry.min.js"></script>
         <script src="/static/scripts/common.js"></script>
         <script>
             $(function() {
@@ -85,9 +85,9 @@
                 crumbs.shift();
                 crumbs.shift();
 
-                if ('ontouchstart' in window) {
-                    $(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));
-                }
+{#                if ('ontouchstart' in window) {#}
+{#                    $(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));#}
+{#                }#}
                 $('a.graph').live('click', function() {
                     $('#spinner').show();
                     $('#graph').load(this.href, function() {
@@ -167,16 +167,15 @@
                     return true
                 });
 
-                // isotope
+                // masonry
                 var $container = $('#container');
-                $container.isotope({
+                $container.masonry({
                     itemSelector: '.brick'
+                }).imagesLoaded(function() {
+                    $container.masonry('reload');
                 });
-                $container.imagesLoaded(function() {
-                    $container.isotope('reLayout');
-                });
-                $(window).smartresize(function() {
-                    $container.isotope('reLayout');
+                $(window).resize(function() {
+                    $container.masonry('reload');
                 });
             });
         </script>
