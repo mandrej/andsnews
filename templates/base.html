@@ -170,20 +170,26 @@
 
                 // masonry
                 var $container = $('#container');
-                $container.masonry({
-                    itemSelector: '.brick'
-                }).imagesLoaded(function() {
-                    $container.masonry('reload');
-                }).infinitescroll({
-                    animate: true,
-                    behavior: 'local',
-                    navSelector: 'nav.paginator',
-                    nextSelector: 'nav.paginator a.next',
-                    itemSelector: '#container .brick'
-                }, function(newElements) {
-                    $container.masonry('appended', $(newElements), true);
-                });
-                $(window).resize(function() {
+                $(window).load(function() {
+                    $container.masonry({
+                        itemSelector: '.brick'
+                    }).imagesLoaded(function() {
+                        $container.masonry('reload');
+                    }).infinitescroll({
+                        animate: true,
+                        behavior: 'local',
+                        navSelector: 'nav.paginator',
+                        nextSelector: 'nav.paginator a.next',
+                        itemSelector: '#container .brick',
+                        loading: {
+                            finishedMsg: '', img: '', msgText: ''
+                        }
+                    }, function(newElements) {
+                        $container.masonry('appended', $(newElements), true);
+                    });
+{#                    var masonry = $container.data('masonry');#}
+{#                    console.log(masonry.cols, masonry.columnWidth);#}
+                }).resize(function() {
                     $container.masonry('reload');
                 });
             });
