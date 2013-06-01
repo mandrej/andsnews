@@ -468,13 +468,14 @@ table {
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
+		// subpixel fix
 		margin: 0 @inn 2em 0;
-		width: (100% /6 - @inn);
+		width: (100% /6 - @inn - 0.01);
 		background: fade(white, 50%);
 		.border-radius(4px);
 		.drop-shadow(0, 0, 2px, 0.3);
-		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn); }
-		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn); }
+		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn - 0.05); }
+		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn - 0.1); }
 		@media only screen and (max-width: 480px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn - 0.1); }
 		img {
 			display: block;
@@ -569,10 +570,10 @@ figure {
 }
 .third {
 	float: left;
-	margin: 0 @inn 2em 0;
-	width: (100% /3 - @inn);
-	@media only screen and (max-width: 1024px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
-	@media only screen and (max-width: 480px) { width: (100% - @inn); }
+	margin: 0 @gap 2em 0;
+	width: (100% /3 - @gap);
+	@media only screen and (max-width: 1024px) { margin: 0 @gap 1em 0; width: (100% /2 - @gap); }
+	@media only screen and (max-width: 480px) { width: (100% - @gap); }
 }
 
 @hilite: #ffe657;
