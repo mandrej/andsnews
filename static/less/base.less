@@ -25,7 +25,7 @@
 .main_title {
 	float: left;
 	font-size: 3.2em;
-	@media (max-width: 480px) { display: none; }
+	@media only screen and (max-width: 480px) { display: none; }
 	a { color: white; text-decoration: none; }
 }
 .title_hover {
@@ -207,7 +207,7 @@ table {
 		display: none; color: white;
 		&:hover { color: @google_orange; }
 	}
-	@media (max-width: 480px) {
+	@media only screen and (max-width: 480px) {
 		padding: 1em @gap 1.5em;
 		height: 3.5em;
 		a.icon-home { float: left; display: block; }
@@ -218,7 +218,7 @@ table {
 	position: absolute;
 	bottom: 8em;
 	color: @lighter;
-	@media (max-width: 1024px) { display: none; }
+	@media only screen and (max-width: 1024px) { display: none; }
 }
 #forms {
 	float: left;
@@ -232,22 +232,22 @@ table {
 	position: relative;
 	min-height: 25em;
 	background: url(../images/front.png) no-repeat;
-	@media (max-width: 480px) { background: none; }
+	@media only screen and (max-width: 480px) { background: none; }
 }
 .plain { margin-right: @gap; }
 #aside {
 	width: (100% / 3 - @gap);
 	margin-right: @gap;
 	float: right;
-	@media (max-width: 1024px) { width: 37%; }
-	@media (max-width: 800px) {  width: round(100% / 2 - @gap, 2); }
-	@media (max-width: 480px) { display: none; }
+	@media only screen and (max-width: 1024px) { width: 37%; }
+	@media only screen and (max-width: 800px) {  width: round(100% / 2 - @gap, 2); }
+	@media only screen and (max-width: 480px) { display: none; }
 }
 #port {
 	margin: 0 @gap 2em 0; width: 63.66%;
-	@media (max-width: 1024px) { width: 57%; }
-	@media (max-width: 800px) { width: round(50% - @gap, 2); }
-	@media (max-width: 480px) { width: round(100% - @gap, 2); }
+	@media only screen and (max-width: 1024px) { width: 57%; }
+	@media only screen and (max-width: 800px) { width: round(50% - @gap, 2); }
+	@media only screen and (max-width: 480px) { width: round(100% - @gap, 2); }
 	img {
 		max-width: 100%;
 		.border-radius(4px);
@@ -256,7 +256,7 @@ table {
 .subtitle {
 	margin: 1em 0;
 	.title_hover;
-	@media (max-width: 480px) { display: none; }
+	@media only screen and (max-width: 480px) { display: none; }
 }
 
 .paginator {
@@ -295,16 +295,16 @@ table {
 		font-size: 1.8em;
 		text-transform: lowercase;
 	}
-	@media (max-width: 480px) { width: round(100% - 2 * @gap, 2); }
+	@media only screen and (max-width: 480px) { width: round(100% - 2 * @gap, 2); }
 	a {
 		color: white;
 		text-decoration: none;
 		&.Photo, &.Entry, &.News { .menu_item; }
 		&.Admin, &.Logout, &.Login { .menu_item;
-			@media (max-width: 800px) { display: none; }
+			@media only screen and (max-width: 800px) { display: none; }
 		}
 		&.Comment { .menu_item;
-			@media (max-width: 480px) { display: none; }
+			@media only screen and (max-width: 480px) { display: none; }
 		}
 	}
 }
@@ -321,13 +321,13 @@ table {
 		}
 		&.graph {
 			float: right; text-transform: lowercase;
-			@media (max-width: 480px) { display: none; }
+			@media only screen and (max-width: 480px) { display: none; }
 		}
 	}
 }
 
 .submenu {
-	@media (max-width: 480px) { display: none; }
+	@media only screen and (max-width: 480px) { display: none; }
 	a {
 		padding-right: 0.3em; border-right: 0.1em solid white;
 		&:last-child { padding-right: 0; border-right: none; }
@@ -336,7 +336,7 @@ table {
 
 #langs {
 	float: right;
-	@media (max-width: 800px) {  display: none; }
+	@media only screen and (max-width: 800px) {  display: none; }
 	button {
 		float: left;
 		margin-left: 1em;
@@ -356,8 +356,8 @@ table {
 #searchForm {
 	width: 78%;
 	position: relative;
-	@media (max-width: 1024px) { width: 72%; }
-	@media (max-width: 800px) { width: 100%; }
+	@media only screen and (max-width: 1024px) { width: 72%; }
+	@media only screen and (max-width: 800px) { width: 100%; }
 	button {
 		position: absolute;
 		right: 0;;
@@ -412,7 +412,7 @@ table {
     color: fade(black, 30%);
     text-align: center;
 	z-index: -1;
-	@media (max-width: 480px) { font-size: 10em; }
+	@media only screen and (max-width: 480px) { font-size: 10em; }
 }
 .formerrors {
 	margin: 1em 0;
@@ -426,7 +426,7 @@ table {
 
 #palette {
 	float: right; width: 18em;
-	@media (max-width: 1024px) { display: none; }
+	@media only screen and (max-width: 1024px) { display: none; }
 	th, td { border: none; }
 }
 
@@ -471,9 +471,9 @@ figure {
 		background: fade(white, 50%);
 		.border-radius(4px);
 		.drop-shadow(0, 0, 2px, 0.3);
-		@media (max-width: 1024px) { width: round(100% /4 - @gap, 2); }
-		@media (max-width: 800px) { margin: 0 @gap 1.5em 0; width: round(100% /3 - @gap, 2); }
-		@media (max-width: 480px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
+		@media only screen and (max-width: 1024px) { width: round(100% /4 - @gap, 2); }
+		@media only screen and (max-width: 800px) { margin: 0 @gap 1.5em 0; width: round(100% /3 - @gap, 2); }
+		@media only screen and (max-width: 480px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
 		img {
 			display: block;
 			max-width: 100%;
@@ -549,14 +549,14 @@ figure {
 	text-align: right;
 }
 #spectra {
-	@media (max-width: 800px) { display: none; }
+	@media only screen and (max-width: 800px) { display: none; }
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
 }
 .slider { float: left; width: 20em; }
 
 .front {
 	color: white;
-	@media (max-width: 800px) { display: none; }
+	@media only screen and (max-width: 800px) { display: none; }
 	a { color: white; }
 }
 .box {
@@ -569,8 +569,8 @@ figure {
 	float: left;
 	margin: 0 @gap 2em 0;
 	width: round(100% /3 - @gap, 2);
-	@media (max-width: 1024px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
-	@media (max-width: 480px) { width: round(100% - @gap, 2); }
+	@media only screen and (max-width: 1024px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
+	@media only screen and (max-width: 480px) { width: round(100% - @gap, 2); }
 }
 
 @hilite: #ffe657;
@@ -604,7 +604,7 @@ figure {
 		left: 50%;
 		z-index: 1030;
 		.border-radius(4px);
-		@media (max-width: 480px) {
+		@media only screen and (max-width: 480px) {
 			width: 280px;
 			margin-left: -140px;
 			top: 40px;
