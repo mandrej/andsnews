@@ -19,6 +19,7 @@
 @darker: (@neutral - @text);
 
 @gap: 3%;
+@inn: (@gap * 100 / (100% - @gap)); // inner gap
 @dashed: 1px dashed @neutral;
 
 .clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
@@ -241,14 +242,14 @@ table {
 	margin-right: @gap;
 	float: right;
 	@media only screen and (max-width: 1024px) { width: 37%; }
-	@media only screen and (max-width: 800px) {  width: round(100% / 2 - @gap, 2); }
+	@media only screen and (max-width: 800px) { width: (100% / 2 - @gap); }
 	@media only screen and (max-width: 480px) { display: none; }
 }
 #port {
 	margin: 0 @gap 2em 0; width: 63.66%;
 	@media only screen and (max-width: 1024px) { width: 57%; }
-	@media only screen and (max-width: 800px) { width: round(50% - @gap, 2); }
-	@media only screen and (max-width: 480px) { width: round(100% - @gap, 2); }
+	@media only screen and (max-width: 800px) { width: (50% - @gap); }
+	@media only screen and (max-width: 480px) { width: (100% - @gap); }
 	img {
 		max-width: 100%;
 		.border-radius(4px);
@@ -296,7 +297,7 @@ table {
 		font-size: 1.8em;
 		text-transform: lowercase;
 	}
-	@media only screen and (max-width: 480px) { width: round(100% - 2 * @gap, 2); }
+	@media only screen and (max-width: 480px) { width: (100% - 2 * @gap); }
 	a {
 		color: white;
 		text-decoration: none;
@@ -467,14 +468,14 @@ table {
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
-		margin: 0 @gap 2em 0;
-		width: round(100% /6 - @gap, 2);
+		margin: 0 @inn 2em 0;
+		width: (100% /6 - @inn);
 		background: fade(white, 50%);
 		.border-radius(4px);
 		.drop-shadow(0, 0, 2px, 0.3);
-		@media only screen and (max-width: 1024px) { width: round(100% /4 - @gap, 2); }
-		@media only screen and (max-width: 800px) { margin: 0 @gap 1.5em 0; width: round(100% /3 - @gap, 2); }
-		@media only screen and (max-width: 480px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
+		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn); }
+		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn); }
+		@media only screen and (max-width: 480px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
 		img {
 			display: block;
 			max-width: 100%;
@@ -568,10 +569,10 @@ figure {
 }
 .third {
 	float: left;
-	margin: 0 @gap 2em 0;
-	width: round(100% /3 - @gap, 2);
-	@media only screen and (max-width: 1024px) { margin: 0 @gap 1em 0; width: round(100% /2 - @gap, 2); }
-	@media only screen and (max-width: 480px) { width: round(100% - @gap, 2); }
+	margin: 0 @inn 2em 0;
+	width: (100% /3 - @inn);
+	@media only screen and (max-width: 1024px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
+	@media only screen and (max-width: 480px) { width: (100% - @inn); }
 }
 
 @hilite: #ffe657;
