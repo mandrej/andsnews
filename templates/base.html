@@ -170,25 +170,26 @@
 
                 // masonry
                 var $container = $('#container');
-                $container.masonry({
-                    itemSelector: '.brick'
-                }).imagesLoaded(function() {
-                    $container.masonry('reload');
-                }).infinitescroll({
-                    navSelector: 'nav.paginator',
-                    nextSelector: 'nav.paginator a.next',
-                    itemSelector: '#container .brick',
-                    extraScrollPx: 0,
-                    bufferPx: 200,
-                    loading: {
-                        finishedMsg: '', img: '', msgText: ''
-                    }
-                }, function(newElements) {
-                    var $newElems = $(newElements).css({opacity: 0});
-                    $newElems.imagesLoaded(function() {
-                        $newElems.css({opacity: 1});
-                        $container.masonry('appended', $newElems, true);
-                    })
+                $container.imagesLoaded(function() {
+                    $container.masonry({
+                        itemSelector: '.brick'
+                    }).infinitescroll({
+                        navSelector: 'nav.paginator',
+                        nextSelector: 'nav.paginator a.next',
+                        itemSelector: '#container .brick',
+                        extraScrollPx: 0,
+                        bufferPx: 200,
+                        prefill: true,
+                        loading: {
+                            finishedMsg: '', img: '', msgText: ''
+                        }
+                    }, function(newElements) {
+                        var $newElems = $(newElements).css({opacity: 0});
+                        $newElems.imagesLoaded(function() {
+                            $newElems.css({opacity: 1});
+                            $container.masonry('appended', $newElems, true);
+                        })
+                    });
                 });
 {#                var masonry = $container.data('masonry');#}
 {#                console.log(masonry.cols, masonry.columnWidth);#}
