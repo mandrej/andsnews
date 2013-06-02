@@ -181,12 +181,13 @@
                         bufferPx: 200,
                         prefill: true,
                         loading: {
-                            finishedMsg: '', img: '', msgText: ''
+                            finishedMsg: '', msgText: '',
+                            img: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
                         }
                     }, function(newElements) {
                         var $newElems = $(newElements).css({opacity: 0});
                         $newElems.imagesLoaded(function() {
-                            $newElems.animate({opacity: 1});
+                            $newElems.css({opacity: 1});
                             $container.masonry('appended', $newElems, true);
                         })
                     });
