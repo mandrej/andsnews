@@ -92,15 +92,13 @@ class SiteMap(BaseHandler):
         self.render_template('urlset.xml', data)
 
 
-def csv(request):
-    data = ','.join([
-        'headline', 'author', 'tag', 'size', 'model', 'aperture', 'shutter', 'focal_length',
-        'iso', 'date', 'lens', 'crop_factor', 'eqv']) + '\n'
-    for x in Photo.query().order(-Photo.date):
-        data += ','.join([
-            x.headline, x.author.nickname(),
-            ' '.join(x.tags), str(x.size), x.model, str(x.aperture), x.shutter, str(x.focal_length),
-            str(x.iso), x.date.isoformat(), x.lens, str(x.crop_factor), str(x.eqv)]) + '\n'
-    response = webapp2.Response(content_type='text/csv')
-    response.write(data)
-    return response
+class PhotoMeta(BaseHandler):
+    def get(self):
+        fields = ('author', 'tags', 'size', 'model', 'aperture', 'shutter',
+                  'focal_length', 'iso', 'date', 'lens', 'crop_factor', 'eqv', 'color',)
+        data = []
+        for x in Photo.query().order(-Photo.date):
+            row = x.to_dict(include=fields)
+            row['slug'] = x.key.string_id()
+            data.append(row)
+        self.render_json(data)

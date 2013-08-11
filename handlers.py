@@ -1,10 +1,9 @@
 __author__ = 'milan'
 
-import os
 import json
+import datetime
 import sys
 import traceback
-import logging
 import uuid
 from operator import itemgetter
 
@@ -17,6 +16,15 @@ from google.appengine.ext import ndb
 from common import SearchPaginator
 from models import Cloud
 from config import DEVEL, HOST, RESULTS, LANGUAGES
+
+
+class LazyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        elif isinstance(obj, users.User):
+            return obj.email()
+        return obj
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -83,7 +91,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     def render_json(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
-        self.response.write(json.dumps(data))
+        self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
 class RenderCloud(BaseHandler):
