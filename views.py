@@ -16,8 +16,8 @@ RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 
 
 def auto_complete(request, mem_key):
-    cloud = Cloud(mem_key)
-    words = [x['name'] for x in cloud.get_list()]
+    cloud = Cloud(mem_key).get_list()
+    words = [x['name'] for x in cloud]
     words.sort()
     response = webapp2.Response(content_type='text/plain')
     response.write('\n'.join(words))
@@ -90,3 +90,17 @@ class SiteMap(BaseHandler):
                 'entries': Entry.query().order(-Entry.date),
                 'headers': [('Content-Type', 'application/xml')]}
         self.render_template('urlset.xml', data)
+
+
+def csv(request):
+    data = ','.join([
+        'headline', 'author', 'tag', 'size', 'model', 'aperture', 'shutter', 'focal_length',
+        'iso', 'date', 'lens', 'crop_factor', 'eqv']) + '\n'
+    for x in Photo.query().order(-Photo.date):
+        data += ','.join([
+            x.headline, x.author.nickname(),
+            ' '.join(x.tags), str(x.size), x.model, str(x.aperture), x.shutter, str(x.focal_length),
+            str(x.iso), x.date.isoformat(), x.lens, str(x.crop_factor), str(x.eqv)]) + '\n'
+    response = webapp2.Response(content_type='text/csv')
+    response.write(data)
+    return response
