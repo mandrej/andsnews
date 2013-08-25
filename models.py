@@ -166,7 +166,7 @@ class Cloud(object):
     """
     def __init__(self, mem_key):
         self.mem_key = mem_key
-        self.kind, self.field = mem_key.split('_')
+        self.kind, self.field = mem_key.split('_', 1)
 
     def set_cache(self, collection):
         memcache.set(self.mem_key, collection, TIMEOUT * 2)

@@ -7,7 +7,7 @@ from google.appengine.api import users, memcache, xmpp
 
 from models import Photo, Entry, Comment
 from handlers import BaseHandler
-from config import to_datetime, ADMIN_JID, TIMEOUT
+from config import to_datetime, ADMIN_JID, TIMEOUT, CROPS
 from models import Cloud
 
 RSS_LIMIT = 10
@@ -16,10 +16,16 @@ RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 
 
 def auto_complete(request, mem_key):
-    cloud = Cloud(mem_key).get_list()
-    words = [x['name'] for x in cloud]
-    words.sort()
     response = webapp2.Response(content_type='text/plain')
+    if mem_key == 'Photo_crop_factor':
+        mem_key = 'Photo_model'
+        cloud = Cloud(mem_key).get_list()
+        words = [str(CROPS[x['name']]) for x in cloud]
+    else:
+        cloud = Cloud(mem_key).get_list()
+        words = [x['name'] for x in cloud]
+
+    words.sort()
     response.write('\n'.join(words))
     return response
 

@@ -104,19 +104,16 @@
     <script src="/static/scripts/jquery.autocomplete.js"></script>
     <script>
         $(function() {
-            $('#headline').slugify();
-            $("#tags").autocomplete("/complete/Photo_tags", {
-                width: 284,
-                selectFirst: false,
-                multiple: true,
-                matchContains: true
-            });
-            $("#lens").autocomplete("/complete/Photo_lens", {
+            var options = {
                 width: 284,
                 selectFirst: false,
                 multiple: false,
                 matchContains: true
-            });
+            };
+            $('#headline').slugify();
+            $("#tags").autocomplete("/complete/Photo_tags", $.extend({}, options, {multiple: true}));
+            $("#lens").autocomplete("/complete/Photo_lens", options);
+            $("#crop_factor").autocomplete("/complete/Photo_crop_factor", options);
             $('button[type=submit]').click(function() {
                 $('#overlay, #spinner').show();
             });

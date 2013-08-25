@@ -46,6 +46,27 @@ COLORS = {}
 for x in HUE + LUM:
     COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
+CROPS = {
+    "Contax 137 MD Quartz": 1.0,
+    "Canon EOS 5D Mark III": 1.0,
+    "NIKON D700": 1.0,
+    "NIKON D300": 1.5,
+    "NIKON D200": 1.5,
+    "NIKON D80": 1.5,
+    "NIKON D70": 1.5,
+    "Canon EOS 400D DIGITAL": 1.6,
+    "CORP. IMAGING OLYMPUS E-P1": 2.0,
+    "Canon PowerShot A80": 4.6,
+    "Canon IXUS 115 HS": 5.6,
+    "PENTACON 8403 Luxmedia": 6.0,
+    "SONY DSC-T7": 6.0,
+    "SONY DSC-W110": 6.0,
+    "CORP. IMAGING OLYMPUS IR-500": 6.6,
+    "SAMSUNG GT-C3530": 7.0,
+    "LGE Nexus 4": 7.6,
+    "google Nexus S": 8.8
+}
+
 
 def version():
     return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
