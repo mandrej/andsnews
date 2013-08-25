@@ -24,7 +24,7 @@ def result(img):
 
 class PaletteTest(unittest.TestCase):
     def setUp(self):
-        self.slug = 'fortis-flieger-cockpit-dark'
+        self.slug = 'wien'
 
     def test_images_api(self):
         obj = Photo.get_by_id(self.slug)

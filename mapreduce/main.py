@@ -50,12 +50,22 @@ from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
 from models import img_palette, range_names
+from config import CROPS
+import logging
 
 
-def fixer(oldkey):
+def fixer(entity):
+    try:
+        entity.crop_factor = CROPS[entity.model]
+        entity.put()
+    except KeyError:
+        logging.error(entity.model)
+
+
+# def fixer(oldkey):
     # entity is oldkey for DatastoreKeyInputReader <class 'google.appengine.api.datastore_types.Key'>
-    key = ndb.Key.from_old_key(oldkey)  # <class 'google.appengine.ext.ndb.key.Key'>
-    key.delete()
+    # key = ndb.Key.from_old_key(oldkey)  # <class 'google.appengine.ext.ndb.key.Key'>
+    # key.delete()
     # obj = key.get()
     # buf = blobstore.BlobReader(obj.blob_key).read()
     # palette = img_palette(buf)
@@ -77,7 +87,6 @@ def fixer(oldkey):
     # if hasattr(obj, 'rating'):
     #     delattr(obj, 'rating')
     # obj.put()
-
 
 def indexer(entity):
     entity.index_add()
