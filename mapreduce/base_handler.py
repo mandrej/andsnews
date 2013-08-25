@@ -18,19 +18,22 @@
 
 
 
+# pylint: disable=protected-access
 # pylint: disable=g-bad-name
 
 import httplib
 import logging
 from mapreduce.lib import simplejson
 
+# pylint: disable=g-import-not-at-top
 try:
-  from mapreduce.lib import pipeline
+  from mapreduce import pipeline_base
 except ImportError:
-  pipeline = None
+  pipeline_base = None
 from google.appengine.ext import webapp
 from mapreduce import errors
 from mapreduce import model
+from mapreduce import parameters
 from mapreduce import util
 
 
@@ -43,7 +46,10 @@ class BadRequestPathError(Error):
 
 
 class BaseHandler(webapp.RequestHandler):
-  """Base class for all mapreduce handlers."""
+  """Base class for all mapreduce handlers.
+
+  In Python27 runtime, webapp2 will automatically replace webapp.
+  """
 
   def base_path(self):
     """Base path for all mapreduce-related urls."""
@@ -54,26 +60,91 @@ class BaseHandler(webapp.RequestHandler):
 class TaskQueueHandler(BaseHandler):
   """Base class for handlers intended to be run only from the task queue.
 
-  Sub-classes should implement the 'handle' method.
+  Sub-classes should implement
+  1. the 'handle' method for all POST request.
+  2. '_preprocess' method for decoding or validations before handle.
+  3. '_drop_gracefully' method if _preprocess fails and the task has to
+     be dropped.
   """
 
-  def post(self):
+  def __init__(self, *args, **kwargs):
+    # webapp framework invokes initialize after __init__.
+    # webapp2 framework invokes initialize within __init__.
+    # Python27 runtime swap webapp with webapp2 underneath us.
+    # Since initialize will conditionally change this field,
+    # it needs to be set before calling super's __init__.
+    self._preprocess_success = False
+    super(TaskQueueHandler, self).__init__(*args, **kwargs)
+
+  def initialize(self, request, response):
+    """Initialize.
+
+    1. call webapp init.
+    2. check request is indeed from taskqueue.
+    3. check the task has not been retried too many times.
+    4. run handler specific processing logic.
+    5. run error handling logic if precessing failed.
+
+    Args:
+      request: a webapp.Request instance.
+      response: a webapp.Response instance.
+    """
+    super(TaskQueueHandler, self).initialize(request, response)
+
+    # Check request is from taskqueue.
     if "X-AppEngine-QueueName" not in self.request.headers:
       logging.error(self.request.headers)
       logging.error("Task queue handler received non-task queue request")
       self.response.set_status(
           403, message="Task queue handler received non-task queue request")
       return
-    self._setup()
-    self.handle()
 
-  def _setup(self):
-    """Called before handle method to set up handler."""
-    pass
+    # Check task has not been retried too many times.
+    if self.task_retry_count() > parameters._MAX_TASK_RETRIES:
+      logging.error(
+          "Task %s has been retried %s times. Dropping it permanently.",
+          self.request.headers["X-AppEngine-TaskName"], self.task_retry_count())
+      return
+
+    try:
+      self._preprocess()
+      self._preprocess_success = True
+    # pylint: disable=bare-except
+    except:
+      # For old task w/o mr_id, we raise exception and the task will be
+      # dropped after max retries.
+      # TODO(user): Remove after all tasks have mr_id.
+      self._preprocess_success = False
+      mr_id = self.request.headers.get(util._MR_ID_TASK_HEADER, None)
+      if mr_id is None:
+        raise
+      logging.error(
+          "Preprocess task %s failed. Dropping it permanently.",
+          self.request.headers["X-AppEngine-TaskName"])
+      self._drop_gracefully()
+
+  def post(self):
+    if self._preprocess_success:
+      self.handle()
 
   def handle(self):
     """To be implemented by subclasses."""
     raise NotImplementedError()
+
+  def _preprocess(self):
+    """Preprocess.
+
+    This method is called after webapp initialization code has been run
+    successfully. It can thus access self.request, self.response and so on.
+    """
+    pass
+
+  def _drop_gracefully(self):
+    """Drop task gracefully.
+
+    When preprocess failed, this method is called before the task is dropped.
+    """
+    pass
 
   def task_retry_count(self):
     """Number of times this task has been retried."""
@@ -175,57 +246,26 @@ class HugeTaskHandler(TaskQueueHandler):
   class _RequestWrapper(object):
     def __init__(self, request):
       self._request = request
-
-      self.path = self._request.path
-      self.headers = self._request.headers
-
-      self._encoded = True  # we have encoded payload.
-
-      if (not self._request.get(util.HugeTask.PAYLOAD_PARAM) and
-          not self._request.get(util.HugeTask.PAYLOAD_KEY_PARAM)):
-        self._encoded = False
-        return
-      self._params = util.HugeTask.decode_payload(
-          {util.HugeTask.PAYLOAD_PARAM:
-           self._request.get(util.HugeTask.PAYLOAD_PARAM),
-           util.HugeTask.PAYLOAD_KEY_PARAM:
-           self._request.get(util.HugeTask.PAYLOAD_KEY_PARAM)})
+      self._params = model.HugeTask.decode_payload(request)
 
     def get(self, name, default=""):
-      if self._encoded:
-        return self._params.get(name, default)
-      else:
-        return self._request.get(name, default)
+      return self._params.get(name, default)
 
     def set(self, name, value):
-      if self._encoded:
-        self._params.set(name, value)
-      else:
-        self._request.set(name, value)
+      self._params[name] = value
+
+    def __getattr__(self, name):
+      return getattr(self._request, name)
 
   def __init__(self, *args, **kwargs):
     super(HugeTaskHandler, self).__init__(*args, **kwargs)
 
-  def _setup(self):
-    super(HugeTaskHandler, self)._setup()
+  def _preprocess(self):
     self.request = self._RequestWrapper(self.request)
 
 
-# This path will be changed by build process when this is a part of SDK.
-_DEFAULT_BASE_PATH = "/mapreduce"
-_DEFAULT_PIPELINE_BASE_PATH = _DEFAULT_BASE_PATH + "/pipeline"
-
-
-if pipeline:
-  class PipelineBase(pipeline.Pipeline):
-    """Base class for all pipelines within mapreduce framework.
-
-    Rewrites base path to use pipeline library bundled with mapreduce.
-    """
-
-    def start(self, **kwargs):
-      if "base_path" not in kwargs:
-        kwargs["base_path"] = _DEFAULT_PIPELINE_BASE_PATH
-      return pipeline.Pipeline.start(self, **kwargs)
+if pipeline_base:
+  # For backward compatiblity.
+  PipelineBase = pipeline_base.PipelineBase
 else:
   PipelineBase = None

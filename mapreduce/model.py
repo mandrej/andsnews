@@ -22,7 +22,7 @@ serialized to/from json and passed around with other means.
 """
 
 # Disable "Invalid method name"
-# pylint: disable-msg=C6409
+# pylint: disable=g-bad-name
 
 
 
@@ -38,8 +38,10 @@ __all__ = ["JsonEncoder",
            "ShardState",
            "CountersMap",
            "TransientShardState",
-           "QuerySpec"]
+           "QuerySpec",
+           "HugeTask"]
 
+import cgi
 import copy
 import datetime
 import logging
@@ -47,9 +49,13 @@ import os
 import random
 from mapreduce.lib import simplejson
 import time
+import urllib
+import zlib
 
 from google.appengine.api import datastore_errors
 from google.appengine.api import datastore_types
+from google.appengine.api import taskqueue
+from google.appengine.datastore import datastore_rpc
 from google.appengine.ext import db
 from mapreduce import context
 from mapreduce import hooks
@@ -57,16 +63,166 @@ from mapreduce import util
 from mapreduce.lib.graphy.backends import google_chart_api
 
 
-# Default rate of processed entities per second.
-# Make this high, because too many people are confused when mapper is too slow.
-_DEFAULT_PROCESSING_RATE_PER_SEC = 1000000
-
-# Default number of shards to have.
-_DEFAULT_SHARD_COUNT = 8
-
+# Special datastore kinds for MR.
 _MAP_REDUCE_KINDS = ("_AE_MR_MapreduceControl",
                      "_AE_MR_MapreduceState",
-                     "_AE_MR_ShardState")
+                     "_AE_MR_ShardState",
+                     "_AE_MR_TaskPayload")
+
+
+class _HugeTaskPayload(db.Model):
+  """Model object to store task payload."""
+
+  payload = db.BlobProperty()
+
+  @classmethod
+  def kind(cls):
+    """Returns entity kind."""
+    return "_AE_MR_TaskPayload"
+
+
+class HugeTask(object):
+  """HugeTask is a taskqueue.Task-like class that can store big payloads.
+
+  Payloads are stored either in the task payload itself or in the datastore.
+  Task handlers should inherit from base_handler.HugeTaskHandler class.
+  """
+
+  PAYLOAD_PARAM = "__payload"
+  PAYLOAD_KEY_PARAM = "__payload_key"
+
+  # Leave some wiggle room for headers and other fields.
+  MAX_TASK_PAYLOAD = taskqueue.MAX_PUSH_TASK_SIZE_BYTES - 1024
+  MAX_DB_PAYLOAD = datastore_rpc.BaseConnection.MAX_RPC_BYTES
+
+  PAYLOAD_VERSION_HEADER = "AE-MR-Payload-Version"
+  # Update version when payload handling is changed
+  # in a backward incompatible way.
+  PAYLOAD_VERSION = "1"
+
+  def __init__(self,
+               url,
+               params,
+               name=None,
+               eta=None,
+               countdown=None,
+               parent=None,
+               headers=None):
+    """Init.
+
+    Args:
+      url: task url in str.
+      params: a dict from str to str.
+      name: task name.
+      eta: task eta.
+      countdown: task countdown.
+      parent: parent entity of huge task's payload.
+      headers: a dict of headers for the task.
+
+    Raises:
+      ValueError: when payload is too big even for datastore, or parent is
+    not specified when payload is stored in datastore.
+    """
+    self.url = url
+    self.name = name
+    self.eta = eta
+    self.countdown = countdown
+    self._headers = {
+        "Content-Type": "application/octet-stream",
+        self.PAYLOAD_VERSION_HEADER: self.PAYLOAD_VERSION
+    }
+    if headers:
+      self._headers.update(headers)
+
+    # TODO(user): Find a more space efficient way than urlencoding.
+    payload_str = urllib.urlencode(params)
+    compressed_payload = ""
+    if len(payload_str) > self.MAX_TASK_PAYLOAD:
+      compressed_payload = zlib.compress(payload_str)
+
+    # Payload is small. Don't bother with anything.
+    if not compressed_payload:
+      self._payload = payload_str
+    # Compressed payload is small. Don't bother with datastore.
+    elif len(compressed_payload) < self.MAX_TASK_PAYLOAD:
+      self._payload = self.PAYLOAD_PARAM + compressed_payload
+    elif len(compressed_payload) > self.MAX_DB_PAYLOAD:
+      raise ValueError(
+          "Payload from %s to big to be stored in database: %s" %
+          (self.name, len(compressed_payload)))
+    # Store payload in the datastore.
+    else:
+      if not parent:
+        raise ValueError("Huge tasks should specify parent entity.")
+
+      payload_entity = _HugeTaskPayload(payload=compressed_payload,
+                                        parent=parent)
+      payload_key = payload_entity.put()
+      self._payload = self.PAYLOAD_KEY_PARAM + str(payload_key)
+
+  def add(self, queue_name, transactional=False):
+    """Add task to the queue."""
+    task = self.to_task()
+    task.add(queue_name, transactional)
+
+  def to_task(self):
+    """Convert to a taskqueue task."""
+    # Never pass params to taskqueue.Task. Use payload instead. Otherwise,
+    # it's up to a particular taskqueue implementation to generate
+    # payload from params. It could blow up payload size over limit.
+    return taskqueue.Task(
+        url=self.url,
+        payload=self._payload,
+        name=self.name,
+        eta=self.eta,
+        countdown=self.countdown,
+        headers=self._headers)
+
+  @classmethod
+  def decode_payload(cls, request):
+    """Decode task payload.
+
+    HugeTask controls its own payload entirely including urlencoding.
+    It doesn't depend on any particular web framework.
+
+    Args:
+      request: a webapp Request instance.
+
+    Returns:
+      A dict of str to str. The same as the params argument to __init__.
+
+    Raises:
+      DeprecationWarning: When task payload constructed from an older
+        incompatible version of mapreduce.
+    """
+    # TODO(user): Pass mr_id into headers. Otherwise when payload decoding
+    # failed, we can't abort a mr.
+    if request.headers.get(cls.PAYLOAD_VERSION_HEADER) != cls.PAYLOAD_VERSION:
+      raise DeprecationWarning(
+          "Task is generated by an older incompatible version of mapreduce. "
+          "Please kill this job manually")
+
+    body = request.body
+    compressed_payload_str = None
+    if body.startswith(cls.PAYLOAD_KEY_PARAM):
+      payload_key = body[len(cls.PAYLOAD_KEY_PARAM):]
+      payload_entity = _HugeTaskPayload.get(payload_key)
+      compressed_payload_str = payload_entity.payload
+    elif body.startswith(cls.PAYLOAD_PARAM):
+      compressed_payload_str = body[len(cls.PAYLOAD_PARAM):]
+
+    if compressed_payload_str:
+      payload_str = zlib.decompress(compressed_payload_str)
+    else:
+      payload_str = body
+
+    result = {}
+    for (name, value) in cgi.parse_qs(payload_str).items():
+      if len(value) == 1:
+        result[name] = value[0]
+      else:
+        result[name] = value
+    return result
 
 
 class JsonEncoder(simplejson.JSONEncoder):
@@ -447,7 +603,7 @@ class MapperSpec(JsonMixin):
     self.handler_spec = handler_spec
     self.input_reader_spec = input_reader_spec
     self.output_writer_spec = output_writer_spec
-    self.shard_count = shard_count
+    self.shard_count = int(shard_count)
     self.params = params
 
   def get_handler(self):
@@ -502,6 +658,11 @@ class MapperSpec(JsonMixin):
                json["mapper_shard_count"],
                json.get("mapper_output_writer")
               )
+
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+      return False
+    return self.to_json() == other.to_json()
 
 
 class MapreduceSpec(JsonMixin):
@@ -593,6 +754,14 @@ class MapreduceSpec(JsonMixin):
                          json.get("hooks_class_name"))
     return mapreduce_spec
 
+  def __str__(self):
+    return str(self.to_json())
+
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+      return False
+    return self.to_json() == other.to_json()
+
 
 class MapreduceState(db.Model):
   """Holds accumulated state of mapreduce execution.
@@ -602,7 +771,7 @@ class MapreduceState(db.Model):
 
   Properties:
     mapreduce_spec: cached deserialized MapreduceSpec instance. read-only
-    active: if we have this mapreduce running right now
+    active: if this MR is still running.
     last_poll_time: last time controller job has polled this mapreduce.
     counters_map: shard's counters map as CountersMap. Mirrors
       counters_map_json.
@@ -610,10 +779,14 @@ class MapreduceState(db.Model):
       progress of all the shards the best way it can.
     sparkline_url: last computed mapreduce status chart url in small format.
     result_status: If not None, the final status of the job.
-    active_shards: How many shards are still processing.
+    active_shards: How many shards are still processing. This starts as 0,
+      then set by KickOffJob handler to be the actual number of input
+      readers after input splitting, and is updated by Controller task
+      as shards finish.
     start_time: When the job started.
     writer_state: Json property to be used by writer to store its state.
       This is filled when single output per job. Will be deprecated.
+      Use OutputWriter.get_filenames instead.
   """
 
   RESULT_SUCCESS = "success"
@@ -629,15 +802,15 @@ class MapreduceState(db.Model):
   counters_map = JsonProperty(CountersMap, default=CountersMap(), indexed=False)
   app_id = db.StringProperty(required=False, indexed=True)
   writer_state = JsonProperty(dict, indexed=False)
+  active_shards = db.IntegerProperty(default=0, indexed=False)
+  failed_shards = db.IntegerProperty(default=0, indexed=False)
+  aborted_shards = db.IntegerProperty(default=0, indexed=False)
+  result_status = db.StringProperty(required=False, choices=_RESULTS)
 
   # For UI purposes only.
   chart_url = db.TextProperty(default="")
   chart_width = db.IntegerProperty(default=300, indexed=False)
   sparkline_url = db.TextProperty(default="")
-  result_status = db.StringProperty(required=False, choices=_RESULTS)
-  active_shards = db.IntegerProperty(default=0, indexed=False)
-  failed_shards = db.IntegerProperty(default=0, indexed=False)
-  aborted_shards = db.IntegerProperty(default=0, indexed=False)
   start_time = db.DateTimeProperty(auto_now_add=True)
 
   @classmethod
@@ -725,6 +898,11 @@ class MapreduceState(db.Model):
   def new_mapreduce_id():
     """Generate new mapreduce id."""
     return _get_descending_key()
+
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+      return False
+    return self.properties() == other.properties()
 
 
 class TransientShardState(object):
@@ -848,21 +1026,22 @@ class ShardState(db.Model):
   """Single shard execution state.
 
   The shard state is stored in the datastore and is later aggregated by
-  controller task. Shard key_name is equal to shard_id.
+  controller task. ShardState key_name is equal to shard_id.
 
   Properties:
     active: if we have this shard still running as boolean.
-    counters_map: shard's counters map as CountersMap. Mirrors
-      counters_map_json.
+    counters_map: shard's counters map as CountersMap. All counters yielded
+      within mapreduce are stored here.
     mapreduce_id: unique id of the mapreduce.
     shard_id: unique id of this shard as string.
     shard_number: ordered number for this shard.
+    retries: the number of times this shard has been retried.
     result_status: If not None, the final status of this shard.
     update_time: The last time this shard state was updated.
     shard_description: A string description of the work this shard will do.
     last_work_item: A string description of the last work item processed.
     writer_state: writer state for this shard. This is filled when a job
-      has one output per shard by OutputWriter's create method.
+      has one output per shard by MR worker after finalizing output files.
     slice_id: slice id of current executing slice. A task
       will not run unless its slice_id matches this. Initial
       value is 0. By the end of slice execution, this number is
@@ -877,11 +1056,20 @@ class ShardState(db.Model):
       expired, new request needs to verify that said request has indeed
       ended according to logs API. Do this only when lease has expired
       because logs API is expensive. This field should always be set/unset
-      with slice_start_time.
+      with slice_start_time. It is possible Logs API doesn't log a request
+      at all or doesn't log the end of a request. So a new request can
+      proceed after a long conservative timeout.
     slice_retries: the number of times a slice has been retried due to
-      data processing error (non taskqueue/datastore). This count is
+      processing data when lock is held. Taskqueue/datastore errors
+      related to shard management are not counted. This count is
       only a lower bound and is used to determined when to fail a slice
       completely.
+    acquired_once: whether the lock for this slice has been acquired at
+      least once. When this is True, duplicates in outputs are possible.
+      This is very different from when slice_retries is 0, e.g. when
+      outputs have been written but a taskqueue problem prevents a slice
+      to continue, acquired_once would be True but slice_retries would be
+      0.
   """
 
   RESULT_SUCCESS = "success"
@@ -902,6 +1090,7 @@ class ShardState(db.Model):
   slice_start_time = db.DateTimeProperty(indexed=False)
   slice_request_id = db.ByteStringProperty(indexed=False)
   slice_retries = db.IntegerProperty(default=0, indexed=False)
+  acquired_once = db.BooleanProperty(default=False, indexed=False)
 
   # For UI purposes only.
   mapreduce_id = db.StringProperty(required=True)
@@ -924,6 +1113,8 @@ class ShardState(db.Model):
       kv["slice_retries"] = self.slice_retries
     if self.slice_request_id:
       kv["slice_request_id"] = self.slice_request_id
+    if self.acquired_once:
+      kv["acquired_once"] = self.acquired_once
     keys = kv.keys()
     keys.sort()
 
@@ -944,6 +1135,7 @@ class ShardState(db.Model):
     self.slice_start_time = None
     self.slice_request_id = None
     self.slice_retries = 0
+    self.acquired_once = False
 
   def advance_for_next_slice(self):
     """Advance self for next slice."""
@@ -951,11 +1143,33 @@ class ShardState(db.Model):
     self.slice_start_time = None
     self.slice_request_id = None
     self.slice_retries = 0
+    self.acquired_once = False
+
+  def set_for_failure(self):
+    self.active = False
+    self.result_status = self.RESULT_FAILED
+
+  def set_for_abort(self):
+    self.active = False
+    self.result_status = self.RESULT_ABORTED
+
+  def set_for_success(self):
+    self.active = False
+    self.result_status = self.RESULT_SUCCESS
+    self.slice_start_time = None
+    self.slice_request_id = None
+    self.slice_retries = 0
+    self.acquired_once = False
 
   def copy_from(self, other_state):
     """Copy data from another shard state entity to self."""
     for prop in self.properties().values():
       setattr(self, prop.name, getattr(other_state, prop.name))
+
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+      return False
+    return self.properties() == other.properties()
 
   def get_shard_number(self):
     """Gets the shard number from the key name."""
@@ -1012,8 +1226,12 @@ class ShardState(db.Model):
     return cls.get_by_key_name(shard_id)
 
   @classmethod
+  @db.non_transactional
   def find_by_mapreduce_state(cls, mapreduce_state):
     """Find all shard states for given mapreduce.
+
+    Never runs within a transaction since it may touch >5 entity groups (one
+    for each shard).
 
     Args:
       mapreduce_state: MapreduceState instance
