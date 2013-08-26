@@ -20,12 +20,14 @@ def auto_complete(request, mem_key):
     if mem_key == 'Photo_crop_factor':
         mem_key = 'Photo_model'
         cloud = Cloud(mem_key).get_list()
-        words = [str(CROPS[x['name']]) for x in cloud]
+        factors = list(set([CROPS[x.get('name')] for x in cloud]))
+        factors.sort()
+        words = map(str, factors)
     else:
         cloud = Cloud(mem_key).get_list()
         words = [x['name'] for x in cloud]
+        words.sort()
 
-    words.sort()
     response.write('\n'.join(words))
     return response
 
