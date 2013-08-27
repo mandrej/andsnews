@@ -7,16 +7,16 @@ import colorsys
 import itertools
 import collections
 from cStringIO import StringIO
-from PIL import Image
 from decimal import *
 
+from PIL import Image
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
 from lib import colorific
 from exifread import process_file
 from cloud import calculate_cloud
-from config import DEVEL, COLORS, HUE, LUM, SAT, TIMEOUT
+from config import COLORS, HUE, LUM, SAT, TIMEOUT
 
 
 INDEX = search.Index(name='searchindex')
@@ -62,14 +62,14 @@ def get_exif(buff):
 
     if 'EXIF FNumber' in tags:
         getcontext().prec = 2
-        data['aperture'] = float(Decimal(tags['EXIF FNumber'].printable) / 1)
+        data['aperture'] = float(Decimal(eval(tags['EXIF FNumber'].printable)) / 1)
 
     if 'EXIF ExposureTime' in tags:
         data['shutter'] = tags['EXIF ExposureTime'].printable
 
     if 'EXIF FocalLength' in tags:
         getcontext().prec = 2
-        data['focal_length'] = float(Decimal(tags['EXIF FocalLength'].printable) / 1)
+        data['focal_length'] = float(Decimal(eval(tags['EXIF FocalLength'].printable)) / 1)
 
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 1
@@ -121,6 +121,7 @@ class Cloud(object):
         get_list:
         [{'size': 4, 'count': 3, 'name': 'mihailo.genije'}, {'size': 8, 'count': 11, 'name': 'milan.andrejevic'}, ...]
     """
+
     def __init__(self, mem_key):
         self.mem_key = mem_key
         self.kind, self.field = mem_key.split('_', 1)
@@ -536,7 +537,7 @@ class Comment(ndb.Model):
         return INDEX.put(
             create_doc(
                 self.key.urlsafe(),
-                headline='' if  self.is_message else self.key.parent().get().headline,
+                headline='' if self.is_message else self.key.parent().get().headline,
                 author=self.author,
                 body=self.body,
                 date=self.date))
