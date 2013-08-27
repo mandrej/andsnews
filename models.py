@@ -8,12 +8,13 @@ import itertools
 import collections
 from cStringIO import StringIO
 from PIL import Image
+from decimal import *
 
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
 from lib import colorific
-from lib.EXIF import process_file
+from exifread import process_file
 from cloud import calculate_cloud
 from config import DEVEL, COLORS, HUE, LUM, SAT, TIMEOUT
 
@@ -36,87 +37,43 @@ def img_palette(buff):
 
 def get_exif(buff):
     data = {}
-    if DEVEL:
-        tags = process_file(StringIO(buff), details=False)
-        if 'Image Make' in tags and 'Image Model' in tags:
-            make = tags['Image Make'].printable.replace('/', '')
-            model = tags['Image Model'].printable.replace('/', '')
-            s1 = set(make.split())
-            s2 = set(model.split())
-            if not s1 & s2:
-                data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
-            else:
-                data['model'] = model
-        elif 'Image Model' in tags:
-            data['model'] = tags['Image Model'].printable.replace('/', '')
-
-        if 'EXIF DateTimeOriginal' in tags:
-            dt_tuple = time.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
-            epochsec = time.mktime(dt_tuple)
-            data['date'] = datetime.datetime.fromtimestamp(epochsec)
+    tags = process_file(StringIO(buff), details=False)
+    if 'Image Make' in tags and 'Image Model' in tags:
+        make = tags['Image Make'].printable.replace('/', '')
+        model = tags['Image Model'].printable.replace('/', '')
+        s1 = set(make.split())
+        s2 = set(model.split())
+        if not s1 & s2:
+            data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
         else:
-            data['date'] = datetime.datetime.now()
-
-        if 'EXIF FNumber' in tags:
-            data['aperture'] = round(float(eval('%s.0' % tags['EXIF FNumber'].printable)), 1)
-
-        if 'EXIF ExposureTime' in tags:
-            data['shutter'] = tags['EXIF ExposureTime'].printable
-
-        if 'EXIF FocalLength' in tags:
-            value = float(eval('%s.0' % tags['EXIF FocalLength'].printable))
-            data['focal_length'] = round(value, 1)
-
-        if 'EXIF ISOSpeedRatings' in tags:
-            data['iso'] = int(tags['EXIF ISOSpeedRatings'].printable)
-    else:
-        img = images.Image(buff)
-        img.rotate(0)
-        img.execute_transforms(output_encoding=images.JPEG, parse_source_metadata=True)
-        tags = img.get_original_metadata()
-        if 'Make' in tags and 'Model' in tags:
-            make = tags['Make']
-            make = make.replace('/', '')
-            model = tags['Model']
-            model = model.replace('/', '')
-            s1 = set(make.split())
-            s2 = set(model.split())
-            if not s1 & s2:
-                data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
-            else:
-                data['model'] = model
-        elif 'Model' in tags:
-            model = tags['Model']
-            model = model.replace('/', '')
             data['model'] = model
+    elif 'Image Model' in tags:
+        data['model'] = tags['Image Model'].printable.replace('/', '')
 
-        elif 'Lens' in tags:
-            lens = tags['Lens']
-            data['lens'] = lens.replace('/', '')
+    if 'EXIF LensModel' in tags:
+        data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
 
-        if 'DateTimeDigitized' in tags:
-            date = tags['DateTimeDigitized']
-            dt_tuple = time.strptime(date, '%Y:%m:%d %H:%M:%S')
-            epochsec = time.mktime(dt_tuple)
-            data['date'] = datetime.datetime.fromtimestamp(epochsec)
-        else:
-            data['date'] = datetime.datetime.now()
+    if 'EXIF DateTimeOriginal' in tags:
+        dt_tuple = time.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
+        epochsec = time.mktime(dt_tuple)
+        data['date'] = datetime.datetime.fromtimestamp(epochsec)
+    else:
+        data['date'] = datetime.datetime.now()
 
-        if 'FNumber' in tags:
-            data['aperture'] = round(float(tags['FNumber']), 1)
+    if 'EXIF FNumber' in tags:
+        getcontext().prec = 2
+        data['aperture'] = float(Decimal(tags['EXIF FNumber'].printable) / 1)
 
-        if 'ExposureTime' in tags:
-            shutter = tags['ExposureTime']
-            if shutter < 1:
-                shutter = '1/%s' % round(1 / shutter)
-                data['shutter'] = shutter
+    if 'EXIF ExposureTime' in tags:
+        data['shutter'] = tags['EXIF ExposureTime'].printable
 
-        if 'FocalLength' in tags:
-            data['focal_length'] = round(float(tags['FocalLength']), 1)
+    if 'EXIF FocalLength' in tags:
+        getcontext().prec = 2
+        data['focal_length'] = float(Decimal(tags['EXIF FocalLength'].printable) / 1)
 
-        if 'ISOSpeedRatings' in tags:
-            iso = tags['ISOSpeedRatings']
-            data['iso'] = int(iso)
+    if 'EXIF ISOSpeedRatings' in tags:
+        getcontext().prec = 1
+        data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
 
     logging.info(data)
     return data
