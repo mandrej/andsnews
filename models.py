@@ -1,7 +1,6 @@
 from __future__ import division
 import logging
 import datetime
-import time
 import cgi
 import colorsys
 import itertools
@@ -54,9 +53,7 @@ def get_exif(buff):
         data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
 
     if 'EXIF DateTimeOriginal' in tags:
-        dt_tuple = time.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
-        epochsec = time.mktime(dt_tuple)
-        data['date'] = datetime.datetime.fromtimestamp(epochsec)
+        data['date'] = datetime.datetime.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
     else:
         data['date'] = datetime.datetime.now()
 
