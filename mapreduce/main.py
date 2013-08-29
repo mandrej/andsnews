@@ -54,13 +54,16 @@ from config import CROPS
 import logging
 
 
+def indexer(entity):
+    entity.index_add()
+
+
 def fixer(entity):
     try:
         entity.crop_factor = CROPS[entity.model]
         entity.put()
     except KeyError:
         logging.error(entity.model)
-
 
 # def fixer(oldkey):
     # entity is oldkey for DatastoreKeyInputReader <class 'google.appengine.api.datastore_types.Key'>
@@ -87,9 +90,6 @@ def fixer(entity):
     # if hasattr(obj, 'rating'):
     #     delattr(obj, 'rating')
     # obj.put()
-
-def indexer(entity):
-    entity.index_add()
 
 #def process_tags(entity):
 #    for tag in entity.tags:
