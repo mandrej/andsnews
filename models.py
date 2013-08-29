@@ -36,18 +36,23 @@ def img_palette(buff):
 
 def get_exif(buff):
     data = {}
+    model = None
+    make = None
     tags = process_file(StringIO(buff), details=False)
-    if 'Image Make' in tags and 'Image Model' in tags:
-        make = tags['Image Make'].printable.replace('/', '')
+
+    if 'Image Model' in tags:
         model = tags['Image Model'].printable.replace('/', '')
+
+    if 'Image Make' in tags:
+        make = tags['Image Make'].printable.replace('/', '')
+
+    if model and make:
         s1 = set(make.split())
         s2 = set(model.split())
-        if not s1 & s2:
-            data['model'] = ' '.join(list(s1 - s2) + list(s2 - s1))
-        else:
+        if s1 & s2:  # contain word in make and model
             data['model'] = model
-    elif 'Image Model' in tags:
-        data['model'] = tags['Image Model'].printable.replace('/', '')
+        else:
+            data['model'] = '%s %s' % (make, model)
 
     if 'EXIF LensModel' in tags:
         data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
