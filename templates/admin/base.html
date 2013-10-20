@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="http://www.google.com/jsapi?autoload={'modules':[{name:'jquery',version:1.7},{name:'jqueryui',version:1.8}]}"></script>
+    <script src="https://www.google.com/jsapi"></script>
+    <script>
+        google.load('jquery', '1.7');
+        google.load('jqueryui', '1.8');
+    </script>
     <script src="/static/scripts/common.js"></script>
     <script>
         $(function() {
