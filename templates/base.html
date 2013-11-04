@@ -79,6 +79,7 @@
             google.load('jquery', '1.7');
             google.load('visualization', '1', {'packages':['corechart']});
         </script>
+        <script src="/static/scripts/imagesloaded.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/jquery.masonry.min.js"></script>
         <script src="/static/scripts/common.js"></script>
@@ -178,7 +179,10 @@
                 $container.imagesLoaded(function() {
                     $container.masonry({
                         itemSelector: '.brick'
-                    }).infinitescroll({
+                    })
+                });
+                $container.infinitescroll(
+                    {
                         navSelector: 'nav.paginator',
                         nextSelector: 'nav.paginator a.next',
                         itemSelector: '#container .brick',
@@ -189,14 +193,15 @@
                             finishedMsg: '', msgText: '',
                             img: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
                         }
-                    }, function(newElements) {
+                    },
+                    function(newElements) {
                         var $newElems = $(newElements).css({opacity: 0});
                         $newElems.imagesLoaded(function() {
                             $newElems.css({opacity: 1});
                             $container.masonry('appended', $newElems, true);
-                        })
-                    });
-                });
+                        });
+                    }
+                );
                 $(window).resize(function() {
                     $container.masonry('reload');
                 });
