@@ -179,7 +179,8 @@
                 $container.imagesLoaded(function() {
                     $container.masonry({
                         itemSelector: '.brick'
-                    })
+                    });
+                    $container.masonry('bindResize');
                 });
                 $container.infinitescroll(
                     {
@@ -202,7 +203,6 @@
                         });
                     }
                 );
-                $container.masonry('bindResize')
             });
         </script>
     {% endblock %}
