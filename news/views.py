@@ -40,7 +40,7 @@ def parse_date(str):
 
 
 def rewrite(news):
-    stripADS = True
+    stripADS = False
     for entry in news.entries:
         if hasattr(entry, 'summary'):
             entry.content = entry.summary
