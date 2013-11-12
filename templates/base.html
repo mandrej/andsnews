@@ -181,28 +181,28 @@
                         itemSelector: '.brick'
                     });
                     $container.masonry('bindResize');
-                });
-                $container.infinitescroll(
-                    {
-                        navSelector: 'nav.paginator',
-                        nextSelector: 'nav.paginator a.next',
-                        itemSelector: '#container .brick',
-                        extraScrollPx: 0,
-                        bufferPx: 200,
-                        prefill: true,
-                        loading: {
-                            finishedMsg: '', msgText: '',
-                            img: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+                    $container.infinitescroll(
+                        {
+                            navSelector: 'nav.paginator',
+                            nextSelector: 'nav.paginator a.next',
+                            itemSelector: '#container .brick',
+                            extraScrollPx: 0,
+                            bufferPx: 200,
+                            prefill: true,
+                            loading: {
+                                finishedMsg: '', msgText: '',
+                                img: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+                            }
+                        },
+                        function(newElements) {
+                            var $newElems = $(newElements).css({opacity: 0});
+                            $newElems.imagesLoaded(function() {
+                                $newElems.css({opacity: 1});
+                                $container.masonry('appended', $newElems, true);
+                            });
                         }
-                    },
-                    function(newElements) {
-                        var $newElems = $(newElements).css({opacity: 0});
-                        $newElems.imagesLoaded(function() {
-                            $newElems.css({opacity: 1});
-                            $container.masonry('appended', $newElems, true);
-                        });
-                    }
-                );
+                    );
+                });
             });
         </script>
     {% endblock %}
