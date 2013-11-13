@@ -19,10 +19,10 @@ from config import TIMEOUT
 PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 ADS = (
-    re.compile(r'<div class="(feedflare|blogger-post-footer)">.+?</div>', re.DOTALL),
-    re.compile(r'<p><a.+(ads|auslieferung|feedads|pheedcontent).*?>.+?</a></p>', re.DOTALL),
-    re.compile(r'<img\b[^<]*(ads|blogger|imp|creatives|feeds|pixel|segment|blogsmithmedia).*?>'),
-    re.compile(r'background-color:\s?.+?;?')
+    re.compile(r'<div class="(feedflare|mf-viral|blogger-post-footer)">.+?</div>', re.DOTALL),
+    #re.compile(r'<p><a.+(ads|auslieferung|feedads|pheedcontent).*?>.+?</a></p>', re.DOTALL),
+    #re.compile(r'<img\b[^<]*(ads|blogger|imp|creatives|feeds|pixel|segment|blogsmithmedia).*?>'),
+    #re.compile(r'background-color:\s?.+?;?')
 )
 
 
@@ -40,7 +40,7 @@ def parse_date(str):
 
 
 def rewrite(news):
-    stripADS = False
+    stripADS = True
     for entry in news.entries:
         if hasattr(entry, 'summary'):
             entry.content = entry.summary
