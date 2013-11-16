@@ -10,6 +10,7 @@
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
 	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
+	<link type="text/css" rel="stylesheet" href="/static/css/idangerous.swiper.css"/>
 	<link type="application/rss+xml" rel="alternate" href="/rss/photo.xml" title="{{ _('photo rss') }}" />
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{{ _('entry rss') }}" />
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
@@ -65,12 +66,12 @@
             <a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
         </div>
     </header>
-    <div id="main">
-        <aside id="aside">
-            <nav class="submenu">{% block subnav %}{% endblock %}</nav>
-            {% block aside %}{% endblock %}
-        </aside>
-        {% block contents %}{% endblock %}
+    <div id="main" class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                {% block contents %}{% endblock %}
+            </div>
+        </div>
     </div>
 
     {% block scripts %}
@@ -82,6 +83,7 @@
         <script src="/static/scripts/imagesloaded.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/jquery.masonry.min.js"></script>
+        <script src="/static/scripts/idangerous.swiper-2.3.min.js"></script>
         <script src="/static/scripts/common.js"></script>
         <script>
             $(function() {
@@ -202,6 +204,41 @@
                             });
                         }
                     );
+                });
+            });
+            var swiper = $('.swiper-container').swiper({
+                speed: 1000,
+                mode: 'horizontal',
+                pagination: '.paginator',
+{#                grabCursor: true,#}
+                paginationClickable: true,
+                createPagination: false,
+                paginationElement: 'a',
+{#                keyboardControl: true#}
+{#                onTouchStart: function(e) {#}
+{#                    console.log(e);#}
+{#                }#}
+            });
+            $('.prev').live('click', function(e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                $.get(url, function(data) {
+                    var page = $(data);
+                    $('.swiper-wrapper').prepend(page.find('.swiper-slide'));
+                    $('.paginator').replaceWith(page.find('.paginator'));
+                    swiper.reInit();
+                    swiper.swipePrev();
+                });
+            });
+            $('.next').live('click', function(e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                $.get(url, function(data) {
+                    var page = $(data);
+                    $('.swiper-wrapper').append(page.find('.swiper-slide'));
+                    $('.paginator').replaceWith(page.find('.paginator'));
+                    swiper.reInit();
+                    swiper.swipeNext();
                 });
             });
         </script>

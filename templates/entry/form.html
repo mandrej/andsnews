@@ -3,19 +3,6 @@
 
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if object %}
-            {% if is_admin or user == object.author %}
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-            {% endif %}
-        {% else %}
-            <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
 {% block modals %}
 {{ super() }}
 <div id="images" class="modal">
@@ -38,14 +25,25 @@
 </div>
 {% endblock %}
 
-{% block aside %}
-	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if object %}
+                {% if is_admin or user == object.author %}
+                    <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                    <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            {% endif %}
+        </h2>
+    </nav>
+    <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
 	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
 	<p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
 	<p>{{ _('Send images less then') }} 200KB.</p>
-{% endblock %}
-
-{% block contents %}
+</aside>
 <article class="plain">
 	<h2>{{ _('Add new / change existing blog') }}</h2>
 	{% if form.errors %}

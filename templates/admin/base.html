@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block tools %}{% endblock %}
-{% block subnav %}
-    <h2>
-        <a href="/admin/counters">Counters</a>
-        <a href="/mapreduce">Mapreduce</a>
-        <a href="/admin/" title="Back">Back</a>
-    </h2>
+
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            <a href="/admin/counters">Counters</a>
+            <a href="/mapreduce">Mapreduce</a>
+            <a href="/admin/" title="Back">Back</a>
+        </h2>
+    </nav>
+</aside>
 {% endblock %}
 
 {% block scripts %}

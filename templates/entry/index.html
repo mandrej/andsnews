@@ -3,21 +3,22 @@
 
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if user %}
-            <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
 {% block contents %}
+    <aside>
+        <nav class="submenu">
+            <h2>
+                {% if user %}
+                    <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+                {% endif %}
+            </h2>
+        </nav>
+    </aside>
+
     <h2>
         <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
         {{ m.filter_title(filter) }}
         {{ m.page_number(page) }}
     </h2>
-
 	<div id="container">
 		{% for object in objects %}
             {% if object %}

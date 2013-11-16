@@ -4,20 +4,6 @@
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if user %}
-            <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-            <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-        {% endif %}
-        {% if is_admin or user == object.author %}
-            <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-            <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-        {% endif %}
-        <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-    </h2>
-{% endblock %}
-
 {% block modals %}
 {{ super() }}
 <div id="addcomment" class="modal"></div>
@@ -50,17 +36,29 @@
 	{% endif %}
 {% endblock %}
 
-{% block aside %}
-	{% include "photo/exif.html" %}
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if user %}
+                <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+                <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+            {% endif %}
+            {% if is_admin or user == object.author %}
+                <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            {% endif %}
+            <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+        </h2>
+    </nav>
+    {% include "photo/exif.html" %}
 	<div id="comments">
         {% for comment in object.comment_list() %}
             {{ m.render_comment(comment, user) }}
         {% endfor %}
     </div>
-{% endblock %}
-
-{% block contents %}
-<article id="port">
+</aside>
+<article class="port">
 	<header>
         {% if filter %}
             {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}

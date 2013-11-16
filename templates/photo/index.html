@@ -3,42 +3,43 @@
 
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if user %}
-            <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
 {% block contents %}
-    <h2>
-        <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
-        {{ m.filter_title(filter) }}
-        {{ m.page_number(page) }}
-    </h2>
-
-	<div id="container">
-		{% for object in objects %}
-            {% if object %}
-                {% if filter %}
-                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = idx + loop.index) %}
-                {% else %}
-                    {% set url = uri_for('photo', slug = idx + loop.index) %}
-                {% endif %}
-                <figure class="thumbnail brick">
-                    <a href="{{ url }}" title="{{ object.headline }}" title="{{ object.headline }}">
-                        <img src="{{ object.small_url() }}"/>
-                        <p class="legend">{{ object.headline }}</p>
-                    </a>
-                </figure>
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if user %}
+                <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
             {% endif %}
-        {% else %}
-            <section class="third">
-                <div class="box">
-                    <h3>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h3>
-                </div>
-            </section>
-		{% endfor %}
-	</div>
+        </h2>
+    </nav>
+</aside>
+<h2>
+    <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
+    {{ m.filter_title(filter) }}
+    {{ m.page_number(page) }}
+</h2>
+
+<div id="container">
+    {% for object in objects %}
+        {% if object %}
+            {% if filter %}
+                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = idx + loop.index) %}
+            {% else %}
+                {% set url = uri_for('photo', slug = idx + loop.index) %}
+            {% endif %}
+            <figure class="thumbnail brick">
+                <a href="{{ url }}" title="{{ object.headline }}" title="{{ object.headline }}">
+                    <img src="{{ object.small_url() }}"/>
+                    <p class="legend">{{ object.headline }}</p>
+                </a>
+            </figure>
+        {% endif %}
+    {% else %}
+        <section class="third">
+            <div class="box">
+                <h3>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h3>
+            </div>
+        </section>
+    {% endfor %}
+</div>
 {% endblock %}

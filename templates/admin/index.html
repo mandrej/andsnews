@@ -1,7 +1,8 @@
 {% extends "admin/base.html" %}
 
-{% block aside %}
-	<div class="admin">
+{% block contents %}
+<aside>
+    <div class="admin">
 		<h3>Memcache statistics for	v.{{ version() }}</h3>
         <dl class="w65em">
             <dt>hit ratio</dt>
@@ -21,9 +22,7 @@
             <dd>{{ oldest|timesince }} ago</dd>
         </dl>
 	</div>
-{% endblock %}
-
-{% block contents %}
+</aside>
 <article>
 	<h2>Site administration</h2>
 	<div class="third">

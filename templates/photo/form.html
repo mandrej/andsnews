@@ -3,21 +3,21 @@
 
 {% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if object %}
-            {% if is_admin or user == object.author %}
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if object %}
+                {% if is_admin or user == object.author %}
+                    <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                    <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
-        {% else %}
-            <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
-{% block aside %}
-	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+        </h2>
+    </nav>
+    <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
 	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
 	<p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
 	<p><strong>{{ _('Send photo less then') }} 1MB.</strong></p>
@@ -26,10 +26,8 @@
     {% include "photo/crop.html" %}
 
 	<p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
-{% endblock %}
-
-{% block contents %}
-<article id="port">
+</aside>
+<article class="port">
 	<h2>{{ _('Add new / change existing photo') }}</h2>
 	{% if form.errors %}
 		<div class="formerrors">

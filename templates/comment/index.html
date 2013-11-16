@@ -1,11 +1,7 @@
 {% extends "comment/base.html" %}
 {% import "snippets/macros.html" as m %}
 
-{% block title %}
-	{{ super() }} - {{ _('Comments') }}
-{% endblock %}
-
-{% block subnav %}&nbsp;{% endblock %}
+{% block title %}{{ super() }} - {{ _('Comments') }}{% endblock %}
 
 {% block contents %}
     <h2>

@@ -4,42 +4,40 @@
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if user %}
-            <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-            <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-        {% endif %}
-        {% if object %}
-            {% if is_admin %}
-                <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            {% else %}
-                {% if user == object.author %}
-                    <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                    <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                {% endif %}
-            {% endif %}
-            <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
 {% block modals %}
 {{ super() }}
 <div id="addcomment" class="modal"></div>
 {% endblock %}
 
-{% block aside %}
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if user %}
+                <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+                <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+            {% endif %}
+            {% if object %}
+                {% if is_admin %}
+                    <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                    <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                {% else %}
+                    {% if user == object.author %}
+                        <a href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                        <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                    {% endif %}
+                {% endif %}
+                <a href="{{ uri_for('entry_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+            {% endif %}
+        </h2>
+    </nav>
     <div id="comments">
         {% for comment in object.comment_list() %}
             {{ m.render_comment(comment, user) }}
         {% endfor %}
     </div>
-{% endblock %}
-
-{% block contents %}
-<article id="port">
+</aside>
+<article class="port">
 	<header>
 		<h2>{{ object.headline }}</h2>
 		<div class="subtitle">

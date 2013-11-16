@@ -5,47 +5,49 @@
 	{{ super() }} - {{ _('News') }}
 {% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if is_admin %}
-            <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-        {% else %}
-            &nbsp;
-        {% endif %}
-    </h2>
-{% endblock %}
-
 {% block contents %}
-    <h2>
-        <a href="{{ uri_for('feed_all') }}">{{ _('News') }}</a>
-        {{ m.filter_title(filter) }}
-        {{ m.page_number(page) }}
-    </h2>
-
-	<div id="container">
-		{% for object in objects %}
-            {% if object %}
-                <section class="third brick">
-                    {% if object.date %}{{ m.time(object.date) }}{% endif %}
-                    <div class="body">
-                        <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
-                        {% if object.subtitle %}<p>{{ object.subtitle }}</p>{% endif %}
-                        <p class="details">
-                            {% if object.date %}{{ _('updated') }}:
-                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                            {% else %}
-                                {{ _('Never fetched') }}
-                            {% endif %}
-                        </p>
-                    </div>
-                </section>
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if is_admin %}
+                <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
+            {% else %}
+                &nbsp;
             {% endif %}
-        {% else %}
-            <section class="third">
-                <div class="box">
-                    <h3>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</h3>
+        </h2>
+    </nav>
+</aside>
+
+<h2>
+    <a href="{{ uri_for('feed_all') }}">{{ _('News') }}</a>
+    {{ m.filter_title(filter) }}
+    {{ m.page_number(page) }}
+</h2>
+
+<div id="container">
+    {% for object in objects %}
+        {% if object %}
+            <section class="third brick">
+                {% if object.date %}{{ m.time(object.date) }}{% endif %}
+                <div class="body">
+                    <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
+                    {% if object.subtitle %}<p>{{ object.subtitle }}</p>{% endif %}
+                    <p class="details">
+                        {% if object.date %}{{ _('updated') }}:
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        {% else %}
+                            {{ _('Never fetched') }}
+                        {% endif %}
+                    </p>
                 </div>
             </section>
-		{% endfor %}
-	</div>
+        {% endif %}
+    {% else %}
+        <section class="third">
+            <div class="box">
+                <h3>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</h3>
+            </div>
+        </section>
+    {% endfor %}
+</div>
 {% endblock %}

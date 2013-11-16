@@ -3,28 +3,26 @@
 
 {% block title %}{{ super() }} - {{ _('Add new / change existing news') }}{% endblock %}
 
-{% block subnav %}
-    <h2>
-        {% if object %}
-            {% if is_admin %}
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                <a href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+{% block contents %}
+<aside>
+    <nav class="submenu">
+        <h2>
+            {% if object %}
+                {% if is_admin %}
+                    <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                    <a href="{{ uri_for('feed', slug=object.key.string_id()) }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ uri_for('feed_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
             {% endif %}
-        {% else %}
-            <a href="{{ uri_for('feed_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        {% endif %}
-    </h2>
-{% endblock %}
-
-{% block aside %}
-	<p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+        </h2>
+    </nav>
+    <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
 	<p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
 	{% if object %}
 		<p><strong>{{ _('Date') }}</strong> {{ _('Last modified date') }}.</p>
 	{% endif %}
-{% endblock %}
-
-{% block contents %}
+</aside>
 <article>
 	<h2>{{ _('Add new / change existing news') }}</h2>
 	{% if form.errors %}
