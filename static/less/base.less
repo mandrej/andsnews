@@ -53,10 +53,11 @@
 header, nav, aside, section, article, footer, figure { display: block; }
 html, body { height: 100%; }
 body {
-	background: url(/static/images/bg.jpg) @paper;
 	color: @text;
+	background: url(/static/images/bg.jpg) @paper;
 	font-family: @default_font;
     font-size: 14px;
+	padding-left: @gap;
 }
 a { color: black; outline: none; }
 a img { border: none; vertical-align: middle; }
@@ -200,6 +201,7 @@ header#header {
 	top: 0;
 	width: (100% - 2* @gap);
 	height: 5em;
+	margin-left: -@gap;
 	padding: 1em @gap 0;
 	background: fade(@google_blue, 80%);
 	z-index: 20;
@@ -228,10 +230,11 @@ header#header {
 	&:after { .clearing; }
 }
 #main {
-	padding: 7em 0 0 @gap;
+	padding-top: 7em;
 	position: relative;
-	min-height: 25em;
+	min-height: 60em;
 	background: url(../images/front.png) no-repeat;
+	overflow: hidden;
 	@media only screen and (max-width: 480px) { background: none; }
 }
 #container { position: relative; }
@@ -471,15 +474,14 @@ nav.submenu {
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
 	&.thumbnail {
-		// subpixel fix
 		margin: 0 @inn 2em 0;
-		width: (100% /6 - @inn - 0.01);
+		width: (100% /6 - @inn);
 		background: fade(white, 50%);
 		.border-radius(4px);
 		.drop-shadow(0, 0, 2px, 0.3);
-		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn - 0.05); }
-		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn - 0.1); }
-		@media only screen and (max-width: 480px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn - 0.1); }
+		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn); }
+		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn); }
+		@media only screen and (max-width: 480px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
 		img {
 			display: block;
 			max-width: 100%;
@@ -537,7 +539,7 @@ figure {
 	pre { font-size: 0.8em; }
 }
 
-#comments, #exif { clear: both; margin-top: 2em; }
+.comments, .exif { clear: both; margin-top: 2em; }
 .when {
 	width: 2.2em;
 	float: left;

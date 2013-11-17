@@ -1,11 +1,11 @@
-<table id="exif" class="data zebra">
+<table class="exif data zebra">
 	<thead>
 		<tr>
-			<th colspan="2"><a href="{{ uri_for('photo_filter_all', field='model', value=object.model) }}"
-			    title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
-				{% if object.lens %}<br/>
-                    <a href="{{ uri_for('photo_filter_all', field='lens', value=object.lens) }}"
-                       title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
+			<th colspan="2"><a href="{{ uri_for('photo_filter_all', field='model', value=obj.model) }}"
+			    title="{{ _('photos taken with same camera model') }}">{{ obj.model }}</a>
+				{% if obj.lens %}<br/>
+                    <a href="{{ uri_for('photo_filter_all', field='lens', value=obj.lens) }}"
+                       title="{{ _('photos taken with same lens') }}">{{ obj.lens }}</a>
                 {% endif %}
             </th>
 		</tr>
@@ -14,45 +14,45 @@
 		<tr>
 			<td class="label">{{ _('Aperture') }}</td>
 			<td>
-				{% if object.aperture %}F{{ object.aperture }}{% else %}---{% endif %}
+				{% if obj.aperture %}F{{ obj.aperture }}{% else %}---{% endif %}
 			</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Shutter speed') }}</td>
-			<td>{{ object.shutter }} sec</td>
+			<td>{{ obj.shutter }} sec</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Focal length') }}</td>
 			<td>
-				{% if object.focal_length %}
-					{{ object.focal_length }} mm
-					{% if object.eqv %}
-						(~<a href="{{ uri_for('photo_filter_all', field='eqv', value=object.eqv) }}"
-                             title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
+				{% if obj.focal_length %}
+					{{ obj.focal_length }} mm
+					{% if obj.eqv %}
+						(~<a href="{{ uri_for('photo_filter_all', field='eqv', value=obj.eqv) }}"
+                             title="{{ _('photos with same equvalent focal length') }}">{{ obj.eqv }} {{ _('eqv') }}</a>.)
 					{% endif %}
 				{% else %}---{% endif %}
 			</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Sensitivity') }} (ISO)</td>
-			<td>{% if object.iso %}<a href="{{ uri_for('photo_filter_all', field='iso', value=object.iso) }}"
-                                      title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
+			<td>{% if obj.iso %}<a href="{{ uri_for('photo_filter_all', field='iso', value=obj.iso) }}"
+                                      title="{{ _('photos with same iso') }}">{{ obj.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
 			<td class="label">{{ _('Taken') }}</td>
-			<td><time datetime='{{ object.date|to_datetime }}'>
-				{{ object.date|to_datetime }}</time></td>
+			<td><time datetime='{{ obj.date|to_datetime }}'>
+				{{ obj.date|to_datetime }}</time></td>
 		</tr>
         <tr>
             <td class="label">{{ _('Size') }}</td>
-            <td>{{ object.size|filesizeformat }}</td>
+            <td>{{ obj.size|filesizeformat }}</td>
         </tr>
         <tr>
-            <td class="label">{{ _('Color') }}: {{ object.color }}</td>
+            <td class="label">{{ _('Color') }}: {{ obj.color }}</td>
             <td>
-                <a href="{{ uri_for('photo_filter_all', field='color', value=object.color) }}"
-                   title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>&nbsp;
-                <span class="dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>
+                <a href="{{ uri_for('photo_filter_all', field='color', value=obj.color) }}"
+                   title="{{ _('photos with similar color') }}">RGB: {{ obj.hex }}</a>&nbsp;
+                <span class="dot" style="border-color: {{ obj.hex }}; vertical-align: middle;"></span>
             </td>
         </tr>
 	</tbody>
