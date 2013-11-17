@@ -195,7 +195,7 @@ table {
 }
 
 // layout
-#header {
+header#header {
 	position: fixed;
 	top: 0;
 	width: (100% - 2* @gap);
@@ -214,7 +214,6 @@ table {
 		a.icon-home { float: left; display: block; }
 	}
 }
-#tools { float: right; }
 #footer {
 	position: absolute;
 	bottom: 8em;
@@ -261,8 +260,8 @@ aside {
 	@media only screen and (max-width: 480px) { display: none; }
 }
 
-.paginator {
-	float: left;
+nav.paginator {
+	float: right;
 	a {
 		.left;
 		color: white;
@@ -275,7 +274,7 @@ aside {
 	}
 }
 
-#menu {
+#tools {
 	float: right;
     color: white;
 	&:hover { color: @google_orange; }
@@ -328,7 +327,7 @@ aside {
 	}
 }
 
-.submenu {
+nav.submenu {
 	@media only screen and (max-width: 480px) { display: none; }
 	a {
 		padding-right: 0.3em; border-right: 0.1em solid white;

@@ -82,7 +82,7 @@ def language(code):
     return code.split('_')[0]
 
 
-def now():
+def year():
     date = datetime.now()
     return date.strftime('%Y')
 
@@ -200,7 +200,7 @@ def split(value, sep=','):
 CONFIG = {
     'webapp2_extras.jinja2': {
         'globals': {
-            'now': now,
+            'year': year,
             'version': version,
             'gaesdk': gaesdk,
             'language': language,

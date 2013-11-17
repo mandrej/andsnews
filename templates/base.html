@@ -53,7 +53,7 @@
             <a href="/sign" class="Login">{{ _('Sign in') }}</a>
         {% endif %}
 
-        <p id="footer">© АNDS v.{{ version() }} 2008-{{ now() }}
+        <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
             powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
             {% if user %}<br><strong>{{ user.nickname() }}</strong>{% endif %}
         </p>
@@ -61,18 +61,10 @@
     <header id="header">
         <h1><a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a></h1>
         <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-        <div id="tools">
-            {% block paging %}<nav class="paginator">{% include 'snippets/paginator.html' %}</nav>{% endblock %}
-            <a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
-        </div>
+        <a href="#" id="tools" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
+        <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
-    <div id="main" class="swiper-container">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                {% block contents %}{% endblock %}
-            </div>
-        </div>
-    </div>
+    <div id="main">{% block contents %}{% endblock %}</div>
 
     {% block scripts %}
         <script src="https://www.google.com/jsapi"></script>
@@ -83,7 +75,6 @@
         <script src="/static/scripts/imagesloaded.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/jquery.masonry.min.js"></script>
-        <script src="/static/scripts/idangerous.swiper-2.3.min.js"></script>
         <script src="/static/scripts/common.js"></script>
         <script>
             $(function() {
@@ -161,7 +152,7 @@
                     return false
                 });
 
-                $('#menu').click(function() {
+                $('#tools').click(function() {
                     $('.menu').toggle('slow');
                     return false
                 });
@@ -204,41 +195,6 @@
                             });
                         }
                     );
-                });
-            });
-            var swiper = $('.swiper-container').swiper({
-                speed: 1000,
-                mode: 'horizontal',
-                pagination: '.paginator',
-{#                grabCursor: true,#}
-                paginationClickable: true,
-                createPagination: false,
-                paginationElement: 'a',
-{#                keyboardControl: true#}
-{#                onTouchStart: function(e) {#}
-{#                    console.log(e);#}
-{#                }#}
-            });
-            $('.prev').live('click', function(e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                $.get(url, function(data) {
-                    var page = $(data);
-                    $('.swiper-wrapper').prepend(page.find('.swiper-slide'));
-                    $('.paginator').replaceWith(page.find('.paginator'));
-                    swiper.reInit();
-                    swiper.swipePrev();
-                });
-            });
-            $('.next').live('click', function(e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                $.get(url, function(data) {
-                    var page = $(data);
-                    $('.swiper-wrapper').append(page.find('.swiper-slide'));
-                    $('.paginator').replaceWith(page.find('.paginator'));
-                    swiper.reInit();
-                    swiper.swipeNext();
                 });
             });
         </script>

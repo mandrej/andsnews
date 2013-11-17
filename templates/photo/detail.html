@@ -19,83 +19,85 @@
                title="{{ obj.headline }}"></a>
         {% endif %}
     {% endmacro %}
-
-	{% if previous or next %}
-        <nav class="paginator">
-            {% if previous %}
-                {{ link(previous, idx - 1, 'prev icon-chevron-left icon-4x') }}
-            {% else %}
-                <span class="prev na icon-chevron-left icon-4x"></span>
-            {% endif %}
-            {% if next %}
-                {{ link(next, idx + 1, 'next icon-chevron-right icon-4x') }}
-            {% else %}
-                <span class="next na icon-chevron-right icon-4x"></span>
-            {% endif %}
-        </nav>
-	{% endif %}
+    {% if previous or next %}
+        {% if previous %}
+            {{ link(previous, idx - 1, 'prev icon-chevron-left icon-4x') }}
+        {% else %}
+            <span class="prev na icon-chevron-left icon-4x"></span>
+        {% endif %}
+        {% if next %}
+            {{ link(next, idx + 1, 'next icon-chevron-right icon-4x') }}
+        {% else %}
+            <span class="next na icon-chevron-right icon-4x"></span>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2>
-            {% if user %}
-                <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-                <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-            {% endif %}
-            {% if is_admin or user == object.author %}
-                <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            {% endif %}
-            <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        </h2>
-    </nav>
-    {% include "photo/exif.html" %}
-	<div id="comments">
-        {% for comment in object.comment_list() %}
-            {{ m.render_comment(comment, user) }}
-        {% endfor %}
+<div class="swiper-wrapper">
+    <div class="swiper-slide">
+        <aside>
+            <nav class="submenu">
+                <h2>
+                    {% if user %}
+                        <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+                        <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+                    {% endif %}
+                    {% if is_admin or user == object.author %}
+                        <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                        <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                    {% endif %}
+                    <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                </h2>
+            </nav>
+            {% include "photo/exif.html" %}
+            <div id="comments">
+                {% for comment in object.comment_list() %}
+                    {{ m.render_comment(comment, user) }}
+                {% endfor %}
+            </div>
+        </aside>
+        <article class="port">
+            <header>
+                {% if filter %}
+                    {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
+                {% else %}
+                    {% set url = uri_for('photo_all') %}
+                {% endif %}
+                <h2>
+                    <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
+                        {{ m.filter_title(filter) }}
+                    </a>
+                    / {{ object.headline }}
+                    {% if idx %}{{ m.page_number(idx, hide_first=False) }}{% endif %}
+                </h2>
+
+                <div class="subtitle">
+                    <i class="icon-user"></i>
+                    <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
+                        title="{{ _("author's photos") }}">{{ object.author }}</a>
+                    {% for tag in object.tags %}
+                        {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+                        <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
+                            {{ tag }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    <i class="icon-time"></i>
+                    <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
+                        title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+                </div>
+            </header>
+
+            <figure>
+                <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
+            </figure>
+        </article>
     </div>
-</aside>
-<article class="port">
-	<header>
-        {% if filter %}
-            {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
-        {% else %}
-            {% set url = uri_for('photo_all') %}
-        {% endif %}
-    	<h2>
-            <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
-                {{ m.filter_title(filter) }}
-            </a>
-			/ {{ object.headline }}
-            {% if idx %}{{ m.page_number(idx, hide_first=False) }}{% endif %}
-        </h2>
-		
-		<div class="subtitle">
-            <i class="icon-user"></i>
-			<a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
-				title="{{ _("author's photos") }}">{{ object.author }}</a>
-			{% for tag in object.tags %}
-                {% if loop.first %}<i class="icon-tag"></i>{% endif %}
-				<a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
-					{{ tag }}</a>{% if not loop.last %},{% endif %}
-			{% endfor %}
-            <i class="icon-time"></i>
-			<a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
-			    title="{{ _('photos taken same year') }}">{{ object.year }}</a>
-		</div>
-	</header>
-	
-	<figure>
-        <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
-	</figure>
-</article>
+</div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/idangerous.swiper-2.3.min.js"></script>
     <script src="/static/scripts/jquery.highlight.js"></script>
     <script>
         $(function() {
@@ -112,6 +114,47 @@
                     $('#overlay, #addcomment').show();
                 });
                 return false
+            });
+            function prev(url) {
+                $.get(url, function(data) {
+                    var page = $(data);
+                    $('.swiper-wrapper').prepend(page.find('.swiper-slide'));
+                    $('.paginator').replaceWith(page.find('.paginator'));
+                    swiper.reInit();
+                    swiper.swipePrev();
+                });
+            }
+            function next(url) {
+                $.get(url, function(data) {
+                    var page = $(data);
+                    $('.swiper-wrapper').append(page.find('.swiper-slide'));
+                    $('.paginator').replaceWith(page.find('.paginator'));
+                    swiper.reInit();
+                    swiper.swipeNext();
+                });
+            }
+            var swiper = $('#main').swiper({
+                speed: 1000,
+                mode: 'horizontal',
+                pagination: '.paginator',
+                grabCursor: true,
+                paginationClickable: true,
+                createPagination: false,
+                paginationElement: 'a',
+{#                keyboardControl: true#}
+                onTouchStart: function(sw) {
+                    var url = $('.next').attr('href');
+                    next(url);
+                    console.log(sw);
+                }
+            });
+            $('.prev').live('click', function(e) {
+                e.preventDefault();
+                prev($(this).attr('href'));
+            });
+            $('.next').live('click', function(e) {
+                e.preventDefault();
+                next($(this).attr('href'));
             });
         });
     </script>
