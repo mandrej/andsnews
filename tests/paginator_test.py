@@ -1,6 +1,8 @@
+from __future__ import division
 __author__ = 'milan'
 
 import unittest
+import math
 from models import Photo
 from common import Paginator
 
@@ -16,8 +18,9 @@ class PaginatorTest(unittest.TestCase):
         self.assertEqual(len(objects), self.per_page)
         self.assertTrue(has_next)
 
-        objects, has_next = self.paginator.page(5)
-        self.assertEqual(len(objects), 0)
+        last_page = int(math.ceil(self.query.count() / self.per_page))
+        objects, has_next = self.paginator.page(last_page)
+        self.assertEqual(len(objects), self.query.count() - self.per_page * (last_page - 1))
         self.assertFalse(has_next)
 
     def test_triple(self):
@@ -28,7 +31,6 @@ class PaginatorTest(unittest.TestCase):
         self.assertIsInstance(next, Photo)
 
         page, prev1, obj1, next1 = self.paginator.triple(self.per_page)
-        #            prev2, obj2, next2
         self.assertEqual(page, 1)
         self.assertIsInstance(prev1, Photo)
         self.assertIsInstance(obj1, Photo)
@@ -40,8 +42,9 @@ class PaginatorTest(unittest.TestCase):
         self.assertEqual(obj2.key.string_id(), next1.key.string_id())
         self.assertIsInstance(next, Photo)
 
-        page, prev, obj, next = self.paginator.triple(self.query.count())
-        self.assertEqual(page, 3)
-        self.assertIsInstance(prev, Photo)
-        self.assertIsInstance(obj, Photo)
-        self.assertIsNone(next)
+        last_page = int(math.ceil(self.query.count() / self.per_page))
+        page, prev3, obj3, next3 = self.paginator.triple(self.query.count())
+        self.assertEqual(page, last_page)
+        self.assertIsInstance(prev3, Photo)
+        self.assertIsInstance(obj3, Photo)
+        self.assertIsNone(next3)
