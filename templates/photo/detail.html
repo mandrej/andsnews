@@ -10,23 +10,23 @@
 {% endblock %}
 
 {% block paging %}
-    {% macro link(obj, index, class) %}
+    {% macro link(obj, class) %}
         {% if filter %}
-            <a class="{{ class }}" href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=index) }}"
+            <a class="{{ class }}" href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}"
                title="{{ obj.headline }}"></a>
         {% else %}
-            <a class="{{ class }}" href="{{ uri_for('photo', slug=index) }}"
+            <a class="{{ class }}" href="{{ uri_for('photo', slug=obj.key.string_id()) }}"
                title="{{ obj.headline }}"></a>
         {% endif %}
     {% endmacro %}
     {% if previous or next %}
         {% if previous %}
-            {{ link(previous, idx - 1, 'prev icon-chevron-left icon-4x') }}
+            {{ link(previous, 'prev icon-chevron-left icon-4x') }}
         {% else %}
             <span class="prev na icon-chevron-left icon-4x"></span>
         {% endif %}
         {% if next %}
-            {{ link(next, idx + 1, 'next icon-chevron-right icon-4x') }}
+            {{ link(next, 'next icon-chevron-right icon-4x') }}
         {% else %}
             <span class="next na icon-chevron-right icon-4x"></span>
         {% endif %}
@@ -35,63 +35,66 @@
 
 {% block contents %}
 <div class="swiper-wrapper">
-    <div class="swiper-slide">
-        <aside>
-            <nav class="submenu">
-                <h2>
-                    {% if user %}
-                        <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-                        <a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
-                    {% endif %}
-                    {% if is_admin or user == object.author %}
-                        <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                        <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-                    {% endif %}
-                    <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-                </h2>
-            </nav>
-            {% include "photo/exif.html" %}
-            <div id="comments">
-                {% for comment in object.comment_list() %}
-                    {{ m.render_comment(comment, user) }}
-                {% endfor %}
+    {% for obj in [previous, object, next] %}
+         {% if obj %}
+            <div id="{{ obj.key.urlsafe() }}" class="swiper-slide">
+                <aside>
+                    <nav class="submenu">
+                        <h2>
+                            {% if user %}
+                                <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
+                                <a class="comment_add" href="{{ uri_for('comment_add', safe_key=obj.key.urlsafe()) }}" title="{{ _('Comment') }}">{{ _('Comment') }}</a>
+                            {% endif %}
+                            {% if is_admin or user == obj.author %}
+                                <a href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" class="change" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
+                                <a class="confirm" href="{{ uri_for('delete', safe_key=obj.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+                            {% endif %}
+                            <a href="{{ uri_for('photo_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
+                        </h2>
+                    </nav>
+                    {% include "photo/exif.html" %}
+                    <div class="comments">
+                        {% for comment in obj.comment_list() %}
+                            {{ m.render_comment(comment, user) }}
+                        {% endfor %}
+                    </div>
+                </aside>
+                <article class="port">
+                    <header>
+                        {% if filter %}
+                            {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
+                        {% else %}
+                            {% set url = uri_for('photo_all') %}
+                        {% endif %}
+                        <h2>
+                            <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
+                                {{ m.filter_title(filter) }}
+                            </a>
+                            / {{ obj.headline }}
+                        </h2>
+
+                        <div class="subtitle">
+                            <i class="icon-user"></i>
+                            <a href="{{ uri_for('photo_filter_all', field='author', value=obj.author) }}"
+                                title="{{ _("author's photos") }}">{{ obj.author }}</a>
+                            {% for tag in obj.tags %}
+                                {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+                                <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
+                                    {{ tag }}</a>{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                            <i class="icon-time"></i>
+                            <a href="{{ uri_for('photo_filter_all', field='date', value=obj.year) }}"
+                                title="{{ _('photos taken same year') }}">{{ obj.year }}</a>
+                        </div>
+                    </header>
+
+                    <figure>
+                        <img src="{{ obj.normal_url() }}" alt="{{ obj.headline }}"/>
+                    </figure>
+                </article>
             </div>
-        </aside>
-        <article class="port">
-            <header>
-                {% if filter %}
-                    {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
-                {% else %}
-                    {% set url = uri_for('photo_all') %}
-                {% endif %}
-                <h2>
-                    <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
-                        {{ m.filter_title(filter) }}
-                    </a>
-                    / {{ object.headline }}
-                    {% if idx %}{{ m.page_number(idx, hide_first=False) }}{% endif %}
-                </h2>
-
-                <div class="subtitle">
-                    <i class="icon-user"></i>
-                    <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
-                        title="{{ _("author's photos") }}">{{ object.author }}</a>
-                    {% for tag in object.tags %}
-                        {% if loop.first %}<i class="icon-tag"></i>{% endif %}
-                        <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
-                            {{ tag }}</a>{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                    <i class="icon-time"></i>
-                    <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
-                        title="{{ _('photos taken same year') }}">{{ object.year }}</a>
-                </div>
-            </header>
-
-            <figure>
-                <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
-            </figure>
-        </article>
-    </div>
+        {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
 
@@ -133,29 +136,37 @@
                     swiper.swipeNext();
                 });
             }
+            var keys = $('.swiper-slide').map(function(i, div) { return div.id; });
             var swiper = $('#main').swiper({
                 speed: 1000,
                 mode: 'horizontal',
-                pagination: '.paginator',
+                initialSlide: $.inArray('{{ object.key.urlsafe() }}', keys),
                 grabCursor: true,
-                paginationClickable: true,
-                createPagination: false,
-                paginationElement: 'a',
-{#                keyboardControl: true#}
-                onTouchStart: function(sw) {
-                    var url = $('.next').attr('href');
-                    next(url);
-                    console.log(sw);
+                onTouchEnd: function(sw) {
+                    console.log(sw.activeIndex);
                 }
+{#                pagination: '.paginator',#}
+{#                paginationClickable: true,#}
+{#                createPagination: false,#}
+{#                paginationElement: 'a',#}
+{#                keyboardControl: true#}
+{#                onInit: function(sw) {#}
+{#                }#}
+{#                onTouchStart: function(sw) {#}
+{#                    var url = $('.next').attr('href');#}
+{#                    next(url);#}
+{#                    console.log(sw);#}
+{#                }#}
             });
-            $('.prev').live('click', function(e) {
-                e.preventDefault();
-                prev($(this).attr('href'));
-            });
-            $('.next').live('click', function(e) {
-                e.preventDefault();
-                next($(this).attr('href'));
-            });
+
+{#            $('.prev').live('click', function(e) {#}
+{#                e.preventDefault();#}
+{#                prev($(this).attr('href'));#}
+{#            });#}
+{#            $('.next').live('click', function(e) {#}
+{#                e.preventDefault();#}
+{#                next($(this).attr('href'));#}
+{#            });#}
         });
     </script>
 {% endblock %}

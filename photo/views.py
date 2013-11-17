@@ -2,8 +2,9 @@ import cgi
 import json
 
 import webapp2
+import logging
 from google.appengine.api import users
-from google.appengine.ext import blobstore
+from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
@@ -11,6 +12,7 @@ from lib import colorific
 from wtforms import Form, fields, validators
 from handlers import BaseHandler
 from common import Paginator, Filter, EmailField, TagsField
+from config import PER_PAGE
 
 
 class Index(BaseHandler):
@@ -34,29 +36,31 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
-        try:
-            idx = int(slug)
-        except ValueError:
-            obj = Photo.get_by_id(slug)
-            if obj is None:
-                self.abort(404)
-            self.render_template('photo/detail.html',
-                                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
+        f = Filter(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        query = Photo.query(*filters).order(-Photo.date)
+        keys = query.fetch(keys_only=True)
+        idx = keys.index(ndb.Key('Photo', slug))
+        none = ndb.Key('XXX', 'xxx')
+
+        if idx == 0:
+            if len(keys) == 1:
+                collection = [none] + keys + [none]
+            else:
+                collection = [none] + keys[idx: idx + 2]
+        elif idx == len(keys) - 1:
+            collection = keys[idx - 1: idx + 1] + [none]
         else:
-            f = Filter(field, value)
-            filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
-            query = Photo.query(*filters).order(-Photo.date)
+            collection = keys[idx - 1: idx + 2]
 
-            paginator = Paginator(query)
-            page, prev, obj, next = paginator.triple(idx)
-
-            data = {'object': obj,
-                    'next': next,
-                    'previous': prev,
-                    'filter': {'field': field, 'value': value} if (field and value) else None,
-                    'page': page,
-                    'idx': idx}
-            self.render_template('photo/detail.html', data)
+        prev, obj, next = ndb.get_multi(collection[:3])
+        data = {'object': obj,
+                'next': next,
+                'previous': prev,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': 1 + (idx + 1) / PER_PAGE,
+                'idx': idx + 1}
+        self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):

@@ -1,6 +1,6 @@
 from __future__ import division
-
 import hashlib
+import logging
 from string import capitalize
 import webapp2
 from google.appengine.api import users, memcache, search
@@ -87,6 +87,7 @@ class Paginator(object):
         rem = idx % self.per_page
         num = int(idx / self.per_page) + (0 if rem == 0 else 1)
         keys, has_next = self.pagekeys(num)
+        #logging.info(self.pagekeys(num))
 
         if rem == 1:
             if num == 1:

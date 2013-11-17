@@ -23,9 +23,9 @@
     {% for object in objects %}
         {% if object %}
             {% if filter %}
-                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = idx + loop.index) %}
+                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
             {% else %}
-                {% set url = uri_for('photo', slug = idx + loop.index) %}
+                {% set url = uri_for('photo', slug = object.key.string_id()) %}
             {% endif %}
             <figure class="thumbnail brick">
                 <a href="{{ url }}" title="{{ object.headline }}" title="{{ object.headline }}">
