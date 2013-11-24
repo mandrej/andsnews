@@ -2,7 +2,6 @@ from __future__ import division
 import hashlib
 from string import capitalize
 import webapp2
-import logging
 from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
 from wtforms import widgets, fields
@@ -50,28 +49,28 @@ class Paginator(object):
         self.cache = memcache.get(self.id)
 
         if self.cache is None:
-            self.cache = [x.string_id() for x in self.query.fetch(keys_only=True)]
+            self.cache = [x.urlsafe() for x in self.query.fetch(keys_only=True)]
             memcache.add(self.id, self.cache, self.timeout)
 
     def pagekeys(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        slugs = self.cache[self.per_page * (num - 1): self.per_page * num + 1]
-        has_next = len(slugs) > self.per_page
+        safe_keys = self.cache[self.per_page * (num - 1): self.per_page * num + 1]
+        has_next = len(safe_keys) > self.per_page
         if has_next:
-            slugs.pop()
+            safe_keys.pop()
 
-        return slugs, has_next
+        return safe_keys, has_next
 
     def page(self, num):
-        slugs, has_next = self.pagekeys(num)
-        keys = [ndb.Key(self.query.kind, slug) for slug in slugs]
+        safe_keys, has_next = self.pagekeys(num)
+        keys = [ndb.Key(urlsafe=safe_key) for safe_key in safe_keys]
         return ndb.get_multi(keys, use_memcache=True), has_next
 
-    def triple(self, slug):
-        none = 'could_not_find'
-        idx = self.cache.index(slug)
+    def triple(self, safe_key):
+        none = ndb.Key('XXX', 'could_not_find').urlsafe()
+        idx = self.cache.index(safe_key)
         page = int(1 + (idx + 1) / self.per_page)
 
         if idx == 0:
@@ -85,7 +84,7 @@ class Paginator(object):
             collection = self.cache[idx - 1: idx + 2]
 
         try:
-            keys = [ndb.Key(self.query.kind, slug) for slug in collection][:3]
+            keys = [ndb.Key(urlsafe=safe_key) for safe_key in collection][:3]
             prev, obj, next = ndb.get_multi(keys, use_memcache=True)
         except ValueError:
             webapp2.abort(404)

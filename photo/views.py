@@ -3,7 +3,7 @@ import json
 
 import webapp2
 from google.appengine.api import users
-from google.appengine.ext import blobstore
+from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
@@ -38,7 +38,7 @@ class Detail(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
         paginator = Paginator(query)
-        page, prev, obj, next = paginator.triple(slug)
+        page, prev, obj, next = paginator.triple(ndb.Key('Photo', slug).urlsafe())
 
         data = {'object': obj,
                 'next': next,
