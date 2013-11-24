@@ -1,6 +1,5 @@
 from __future__ import division
 import hashlib
-import logging
 from string import capitalize
 import webapp2
 from google.appengine.api import users, memcache, search

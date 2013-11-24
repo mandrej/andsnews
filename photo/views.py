@@ -2,7 +2,6 @@ import cgi
 import json
 
 import webapp2
-import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
