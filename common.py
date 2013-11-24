@@ -66,7 +66,7 @@ class Paginator(object):
     def page(self, num):
         safe_keys, has_next = self.pagekeys(num)
         keys = [ndb.Key(urlsafe=safe_key) for safe_key in safe_keys]
-        return ndb.get_multi(keys, use_memcache=True), has_next
+        return ndb.get_multi(keys), has_next
 
     def triple(self, safe_key):
         none = ndb.Key('XXX', 'could_not_find').urlsafe()
@@ -85,7 +85,7 @@ class Paginator(object):
 
         try:
             keys = [ndb.Key(urlsafe=safe_key) for safe_key in collection][:3]
-            prev, obj, next = ndb.get_multi(keys, use_memcache=True)
+            prev, obj, next = ndb.get_multi(keys)
         except ValueError:
             webapp2.abort(404)
         else:
