@@ -3,7 +3,7 @@
     <title>{{ object.headline }}</title>
     <link>{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</link>
     <author>{{ object.author.email() }}</author>
-    <pubDate>{{ object.date|format_datetime(format) }}</pubDate>
+    <pubDate>{{ object.date|to_datetime(format) }}</pubDate>
     <guid isPermaLink="true">{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</guid>
     <category>{{ object.tags|join(', ') }}</category>
 {% endmacro %}
@@ -12,7 +12,7 @@
         {% if kind == 'photo' %}
             <title>Photos</title>
             <link>{{ uri_for('photo_all', _full=True) }}</link>
-            <lastBuildDate>{{ objects.0.date|format_datetime(format) }}</lastBuildDate>
+            <lastBuildDate>{{ objects.0.date|to_datetime(format) }}</lastBuildDate>
             <description>Latest photos from the ANDрејевићи site</description>
             {% for item in objects %}
                 <item>
@@ -31,7 +31,7 @@
         {% else %}
             <title>Entries</title>
             <link>{{ uri_for('entry_all', _full=True) }}</link>
-            <lastBuildDate>{{ objects.0.date|format_datetime(format) }}</lastBuildDate>
+            <lastBuildDate>{{ objects.0.date|to_datetime(format) }}</lastBuildDate>
             <description>Latest entries from the ANDрејевићи site</description>
             {% for item in objects %}
                 <item>

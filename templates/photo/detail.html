@@ -12,11 +12,11 @@
 {% block paging %}
     {% macro link(obj, class) %}
         {% if filter %}
-            <a class="{{ class }}" href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}"
-               title="{{ obj.headline }}"></a>
+            <a href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}"
+               class="{{ class }}" title="{{ obj.headline }}"></a>
         {% else %}
-            <a class="{{ class }}" href="{{ uri_for('photo', slug=obj.key.string_id()) }}"
-               title="{{ obj.headline }}"></a>
+            <a href="{{ uri_for('photo', slug=obj.key.string_id()) }}"
+               class="{{ class }}" title="{{ obj.headline }}"></a>
         {% endif %}
     {% endmacro %}
     {% if previous or next %}

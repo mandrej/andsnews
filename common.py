@@ -52,7 +52,7 @@ class Paginator(object):
             self.cache = [x.urlsafe() for x in self.query.fetch(keys_only=True)]
             memcache.add(self.id, self.cache, self.timeout)
 
-    def pagekeys(self, num):
+    def page_safe_keys(self, num):
         if num < 1:
             webapp2.abort(404)
 
@@ -64,7 +64,7 @@ class Paginator(object):
         return safe_keys, has_next
 
     def page(self, num):
-        safe_keys, has_next = self.pagekeys(num)
+        safe_keys, has_next = self.page_safe_keys(num)
         keys = [ndb.Key(urlsafe=safe_key) for safe_key in safe_keys]
         return ndb.get_multi(keys), has_next
 

@@ -72,7 +72,7 @@ app = WSGIApplication(
      Route('/search', handler=Find),
      Route('/send', handler=Send),
      Route('/latest', handler=Latest),
-     Route('/metajson', handler=PhotoMeta),
+     #Route('/metajson', handler=PhotoMeta),
      Route('/setlang', handler=SetLanguage),
      Route('/sign', handler=Sign),
      Route('/', handler=Index, name='start'),

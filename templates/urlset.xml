@@ -2,7 +2,7 @@
 {% macro _item(object, detail_name) %}
     <url>
         <loc>{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</loc>
-        <lastmod>{{ object.date|format_date }}</lastmod>
+        <lastmod>{{ object.date|to_datetime }}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.3</priority>
     </url>
