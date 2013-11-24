@@ -2,6 +2,7 @@ from __future__ import division
 import hashlib
 from string import capitalize
 import webapp2
+import logging
 from google.appengine.api import users, memcache, search
 from google.appengine.ext import ndb
 from wtforms import widgets, fields
@@ -49,27 +50,28 @@ class Paginator(object):
         self.cache = memcache.get(self.id)
 
         if self.cache is None:
-            self.cache = self.query.fetch(keys_only=True)
+            self.cache = [x.string_id() for x in self.query.fetch(keys_only=True)]
             memcache.add(self.id, self.cache, self.timeout)
 
     def pagekeys(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        keys = self.cache[self.per_page * (num - 1): self.per_page * num + 1]
-        has_next = len(keys) > self.per_page
+        slugs = self.cache[self.per_page * (num - 1): self.per_page * num + 1]
+        has_next = len(slugs) > self.per_page
         if has_next:
-            keys.pop()
+            slugs.pop()
 
-        return keys, has_next
+        return slugs, has_next
 
     def page(self, num):
-        keys, has_next = self.pagekeys(num)
+        slugs, has_next = self.pagekeys(num)
+        keys = [ndb.Key(self.query.kind, slug) for slug in slugs]
         return ndb.get_multi(keys, use_memcache=True), has_next
 
-    def triple(self, key):
-        none = ndb.Key('XXX', 'could_not_find')
-        idx = self.cache.index(key)
+    def triple(self, slug):
+        none = 'could_not_find'
+        idx = self.cache.index(slug)
         page = int(1 + (idx + 1) / self.per_page)
 
         if idx == 0:
@@ -83,7 +85,8 @@ class Paginator(object):
             collection = self.cache[idx - 1: idx + 2]
 
         try:
-            prev, obj, next = ndb.get_multi(collection[:3], use_memcache=True)
+            keys = [ndb.Key(self.query.kind, slug) for slug in collection][:3]
+            prev, obj, next = ndb.get_multi(keys, use_memcache=True)
         except ValueError:
             webapp2.abort(404)
         else:
