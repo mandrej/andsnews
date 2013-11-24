@@ -37,7 +37,7 @@
 <div class="swiper-wrapper">
     {% for obj in [previous, object, next] %}
          {% if obj %}
-            <div id="{{ obj.key.urlsafe() }}" class="swiper-slide">
+            <div id="{{ obj.key.string_id() }}" class="swiper-slide">
                 <aside>
                     <nav class="submenu">
                         <h2>
@@ -118,55 +118,90 @@
                 });
                 return false
             });
+
+            var ids = $('.swiper-slide').map(function(i, div) { return div.id; }).get();
             function prev(url) {
-                $.get(url, function(data) {
-                    var page = $(data);
-                    $('.swiper-wrapper').prepend(page.find('.swiper-slide'));
-                    $('.paginator').replaceWith(page.find('.paginator'));
-                    swiper.reInit();
+                if (url) {
                     swiper.swipePrev();
-                });
+                    $.get(url, function(data) {
+                        var page = $(data);
+                        var slide = page.find('.swiper-slide:first')[0];
+                        if ($.inArray(slide.id, ids) == -1) {
+                            $('.swiper-wrapper').prepend(slide);
+                            ids.unshift(slide.id);
+                            swiper.reInit();
+                        }
+                        $('.paginator').replaceWith(page.find('.paginator'));
+                    });
+                }
             }
             function next(url) {
-                $.get(url, function(data) {
-                    var page = $(data);
-                    $('.swiper-wrapper').append(page.find('.swiper-slide'));
-                    $('.paginator').replaceWith(page.find('.paginator'));
-                    swiper.reInit();
+                if (url) {
                     swiper.swipeNext();
-                });
-            }
-            var keys = $('.swiper-slide').map(function(i, div) { return div.id; });
-            var swiper = $('#main').swiper({
-                speed: 1000,
-                mode: 'horizontal',
-                initialSlide: $.inArray('{{ object.key.urlsafe() }}', keys),
-                grabCursor: true,
-                onTouchEnd: function(sw) {
-                    console.log(sw.activeIndex);
+                    $.get(url, function(data) {
+                        var page = $(data);
+                        var slide = page.find('.swiper-slide:last')[0];
+                        if ($.inArray(slide.id, ids) == -1) {
+                            $('.swiper-wrapper').append(slide);
+                            ids.push(slide.id);
+                            swiper.reInit();
+                            console.log('x');
+                        }
+                        $('.paginator').replaceWith(page.find('.paginator'));
+                    });
                 }
+{#                if ('{{ next }}' != 'None') {#}
+{#                    var slug = '{{ next.key.string_id() }}';#}
+{#                    var url = '{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=next.key.string_id()) }}';#}
+{#                    #}
+{#                    if ($.inArray(slug, ids) == -1) {#}
+{#                        $.get(url, function(data) {#}
+{#                            var page = $(data);#}
+{#                            var slide = page.find('.swiper-slide:last')[0];#}
+{#                            $('.swiper-wrapper').append(slide);#}
+{#                            ids.push(slide.id);#}
+{#                            swiper.reInit();#}
+{#                            swiper.swipeNext();#}
+{#                            $('.paginator').replaceWith(page.find('.paginator'));#}
+{#                        });#}
+{#                    } else {#}
+{#                        swiper.swipeNext();#}
+{#                    }#}
+{#                }#}
+            }
+            var swiper = $('#main').swiper({
+                speed: 500,
+                mode: 'horizontal',
+                initialSlide: $.inArray('{{ object.key.string_id() }}', ids),
+                grabCursor: true,
+                calculateHeight: true,
 {#                pagination: '.paginator',#}
 {#                paginationClickable: true,#}
 {#                createPagination: false,#}
 {#                paginationElement: 'a',#}
-{#                keyboardControl: true#}
-{#                onInit: function(sw) {#}
-{#                }#}
-{#                onTouchStart: function(sw) {#}
-{#                    var url = $('.next').attr('href');#}
-{#                    next(url);#}
-{#                    console.log(sw);#}
-{#                }#}
+{#                watchActiveIndex: true,#}
+{#                onlyExternal: true,#}
+                keyboardControl: true,
+                mousewheelControl: true,
+                onSlideChangeEnd: function(sw) {
+{#                    var direction = sw.touches.diff;#}
+{#                    if (direction > 0) {#}
+{#                        prev($('.prev').attr('href'));#}
+{#                    } else {#}
+{#                        next($('.next').attr('href'));#}
+{#                    }#}
+                    console.log(sw.width, sw.touches.diff);
+                }
             });
 
-{#            $('.prev').live('click', function(e) {#}
-{#                e.preventDefault();#}
-{#                prev($(this).attr('href'));#}
-{#            });#}
-{#            $('.next').live('click', function(e) {#}
-{#                e.preventDefault();#}
-{#                next($(this).attr('href'));#}
-{#            });#}
+            $('.prev').live('click', function(e) {
+                e.preventDefault();
+                prev($(this).attr('href'));
+            });
+            $('.next').live('click', function(e) {
+                e.preventDefault();
+                next($(this).attr('href'));
+            });
         });
     </script>
 {% endblock %}

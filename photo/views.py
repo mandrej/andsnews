@@ -12,7 +12,6 @@ from lib import colorific
 from wtforms import Form, fields, validators
 from handlers import BaseHandler
 from common import Paginator, Filter, EmailField, TagsField
-from config import PER_PAGE
 
 
 class Index(BaseHandler):
@@ -39,27 +38,14 @@ class Detail(BaseHandler):
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
-        keys = query.fetch(keys_only=True)
-        idx = keys.index(ndb.Key('Photo', slug))
-        none = ndb.Key('XXX', 'xxx')
+        paginator = Paginator(query)
+        page, prev, obj, next = paginator.triple(ndb.Key('Photo', slug))
 
-        if idx == 0:
-            if len(keys) == 1:
-                collection = [none] + keys + [none]
-            else:
-                collection = [none] + keys[idx: idx + 2]
-        elif idx == len(keys) - 1:
-            collection = keys[idx - 1: idx + 1] + [none]
-        else:
-            collection = keys[idx - 1: idx + 2]
-
-        prev, obj, next = ndb.get_multi(collection[:3])
         data = {'object': obj,
                 'next': next,
                 'previous': prev,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': 1 + (idx + 1) / PER_PAGE,
-                'idx': idx + 1}
+                'page': page}
         self.render_template('photo/detail.html', data)
 
 
