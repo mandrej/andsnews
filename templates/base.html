@@ -10,7 +10,6 @@
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
 	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
-	<link type="text/css" rel="stylesheet" href="/static/css/idangerous.swiper.css"/>
 	<link type="application/rss+xml" rel="alternate" href="/rss/photo.xml" title="{{ _('photo rss') }}" />
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{{ _('entry rss') }}" />
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
@@ -86,9 +85,6 @@
                 crumbs.shift();
                 crumbs.shift();
 
-{#                if ('ontouchstart' in window) {#}
-{#                    $(window).bind("load", setTimeout(function() {window.scrollTo(0, 1)}, 100));#}
-{#                }#}
                 $('a.graph').live('click', function() {
                     $('#spinner').show();
                     $('#graph').load(this.href, function() {
@@ -169,34 +165,12 @@
                 });
 
                 // masonry
-                // convert -size 1x1 xc:transparent gif:- | base64
                 var $container = $('#container');
                 $container.imagesLoaded(function() {
                     $container.masonry({
                         itemSelector: '.brick'
                     });
                     $container.masonry('bindResize');
-                    $container.infinitescroll(
-                        {
-                            navSelector: 'nav.paginator',
-{#                            nextSelector: 'nav.paginator a.next',#}
-                            itemSelector: '#container .brick',
-                            extraScrollPx: 0,
-                            bufferPx: 200,
-                            prefill: true,
-                            loading: {
-                                finishedMsg: '', msgText: '',
-                                img: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
-                            }
-                        },
-                        function(newElements) {
-                            var $newElems = $(newElements).css({opacity: 0});
-                            $newElems.imagesLoaded(function() {
-                                $newElems.css({opacity: 1});
-                                $container.masonry('appended', $newElems, true);
-                            });
-                        }
-                    );
                 });
             });
         </script>
