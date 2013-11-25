@@ -37,15 +37,25 @@ class Detail(BaseHandler):
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
-        paginator = Paginator(query)
-        page, prev, obj, next = paginator.triple(ndb.Key('Photo', slug).urlsafe())
 
-        data = {'object': obj,
-                'next': next,
-                'previous': prev,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page}
-        self.render_template('photo/detail.html', data)
+        idx = int(self.request.get('idx', 0))
+        if idx == 0:
+            obj = Photo.get_by_id(slug)
+            if obj is None:
+                self.abort(404)
+            self.render_template('photo/detail.html',
+                                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
+        else:
+            paginator = Paginator(query)
+            page, prev, obj, next = paginator.triple(ndb.Key('Photo', slug), idx)
+
+            data = {'object': obj,
+                    'next': next,
+                    'previous': prev,
+                    'filter': {'field': field, 'value': value} if (field and value) else None,
+                    'page': page,
+                    'idx': idx}
+            self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):

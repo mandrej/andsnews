@@ -10,23 +10,23 @@
 {% endblock %}
 
 {% block paging %}
-    {% macro link(obj, class) %}
+    {% macro link(obj, index, class) %}
         {% if filter %}
-            <a href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}"
+            <a href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}?idx={{ index }}"
                class="{{ class }}" title="{{ obj.headline }}"></a>
         {% else %}
-            <a href="{{ uri_for('photo', slug=obj.key.string_id()) }}"
+            <a href="{{ uri_for('photo', slug=obj.key.string_id()) }}?idx={{ index }}"
                class="{{ class }}" title="{{ obj.headline }}"></a>
         {% endif %}
     {% endmacro %}
     {% if previous or next %}
         {% if previous %}
-            {{ link(previous, 'prev icon-chevron-left icon-4x') }}
+            {{ link(previous, idx - 1, 'prev icon-chevron-left icon-4x') }}
         {% else %}
             <span class="prev na icon-chevron-left icon-4x"></span>
         {% endif %}
         {% if next %}
-            {{ link(next, 'next icon-chevron-right icon-4x') }}
+            {{ link(next, idx + 1, 'next icon-chevron-right icon-4x') }}
         {% else %}
             <span class="next na icon-chevron-right icon-4x"></span>
         {% endif %}
