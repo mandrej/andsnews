@@ -11,8 +11,6 @@ Disallow: /news/
 Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete
-Disallow: /*validate
-Disallow: /*normal
 # filters
 Disallow: /*model/
 Disallow: /*iso/
@@ -23,3 +21,5 @@ Disallow: /*date/
 Disallow: /*author/
 Disallow: /*color/
 Disallow: /*forkind/
+# sitemap
+Sitemap: http://ands.appspot.com/sitemap.xml
