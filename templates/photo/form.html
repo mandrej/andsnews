@@ -40,6 +40,7 @@
     {% if upload_url %}
         <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
             <fieldset>
+                <input name="token" type="hidden" value="{{ token }}"/>
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.slug) }}
                 {{ m.form_row(form.tags) }}
@@ -67,6 +68,7 @@
             </div>
 
 			<fieldset>
+                <input name="token" type="hidden" value="{{ token }}"/>
                 {{ m.form_row(form.headline) }}
                 {{ m.form_row(form.tags) }}
 				{% if is_admin %}

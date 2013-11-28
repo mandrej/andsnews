@@ -34,7 +34,7 @@ $(function() {
         $.ajax({
             type: 'POST',
             url: '/{{ safe_key }}/add',
-            data: {'body': $('#body').val()},
+            data: {'body': $('#body').val(), 'token': '{{ token }}'},
             success: function(data) {
                 if (typeof(data) == 'string') {
                     $('.dummy').hide();

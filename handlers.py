@@ -15,7 +15,17 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from common import SearchPaginator
 from models import Cloud
-from config import DEVEL, HOST, RESULTS, LANGUAGES
+from config import DEVEL, RESULTS, LANGUAGES
+
+
+def csrf_protected(handler):
+    def inner(self, *args, **kwargs):
+        token = self.request.params.get('token')
+        if token and self.session.get('csrf') == token:
+            handler(self, *args, **kwargs)
+        else:
+            self.abort(400)
+    return inner
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -60,6 +70,12 @@ class BaseHandler(webapp2.RequestHandler):
     def is_admin(self):
         return users.is_current_user_admin()
 
+    @webapp2.cached_property
+    def csrf_token(self):
+        if self.user and self.session.get('csrf', None) is None:
+            self.session['csrf'] = uuid.uuid1().hex
+        return self.session.get('csrf', None)
+
     def handle_exception(self, exception, debug):
         template = 'errors/default.html'
         if isinstance(exception, webapp2.HTTPException):
@@ -80,6 +96,7 @@ class BaseHandler(webapp2.RequestHandler):
             'LANGUAGES': LANGUAGES,
             'user': self.user,
             'is_admin': self.is_admin,
+            'token': self.csrf_token,
             'devel': DEVEL
         }
         if 'headers' in kwargs:
@@ -175,29 +192,19 @@ class DeleteHandler(BaseHandler):
             next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         else:
             next = webapp2.uri_for('%s_all' % key.kind().lower())
-
         obj = key.get()
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
+        if not self.is_admin:
+            if self.user != obj.author:
                 self.abort(403)
-        self.session['uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, HOST).hex
         data = {'object': obj, 'post_url': self.request.path, 'next': next}
         self.render_template('snippets/confirm.html', data)
 
+    @csrf_protected
     def post(self, safe_key):
-        try:
-            assert self.session.get('uuid', None) == uuid.uuid5(uuid.NAMESPACE_DNS, HOST).hex
-        except AssertionError:
-            self.session.pop('uuid', None)
-            self.abort(403)
-        else:
-            next = str(self.request.get('next'))
-            key = ndb.Key(urlsafe=safe_key)
-            key.delete()
-            self.session.pop('uuid', None)
-            self.redirect(next)
+        next = str(self.request.get('next'))
+        key = ndb.Key(urlsafe=safe_key)
+        key.delete()
+        self.redirect(next)
 
 
 class SetLanguage(BaseHandler):
@@ -213,6 +220,7 @@ class Sign(BaseHandler):
         if referer.endswith('admin/'):
             referer = webapp2.uri_for('start')
         if users.get_current_user():
+            self.session.pop('csrf', None)
             dest_url = users.create_logout_url(referer)
         else:
             dest_url = users.create_login_url(referer)

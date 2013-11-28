@@ -2,26 +2,30 @@
 
 {% block contents %}
 <aside>
-    <div class="admin">
-		<h3>Memcache statistics for	v.{{ version() }}</h3>
-        <dl class="w65em">
-            <dt>hit ratio</dt>
-            <dd>
-                {{ '%0.1f'|format(hit_ratio) }}%
-                ({{ stats.hits }} hits, {{ stats.misses }} misses)
-            </dd>
-        </dl>
-        <dl class="w65em">
-            <dt>size</dt>
-            <dd>{{ stats['items'] }} items,
-                {{ stats.bytes|filesizeformat }}
-            </dd>
-        </dl>
-        <dl class="w65em">
-            <dt>oldest item</dt>
-            <dd>{{ oldest|timesince }} ago</dd>
-        </dl>
-	</div>
+    <nav class="submenu">
+        <h2>
+            <a href="/admin/counters">Counters</a>
+            <a href="/mapreduce">Mapreduce</a>
+        </h2>
+    </nav>
+    <h3>Memcache statistics for	v.{{ version() }}</h3>
+    <dl class="w65em">
+        <dt>hit ratio</dt>
+        <dd>
+            {{ '%0.1f'|format(hit_ratio) }}%
+            ({{ stats.hits }} hits, {{ stats.misses }} misses)
+        </dd>
+    </dl>
+    <dl class="w65em">
+        <dt>size</dt>
+        <dd>{{ stats['items'] }} items,
+            {{ stats.bytes|filesizeformat }}
+        </dd>
+    </dl>
+    <dl class="w65em">
+        <dt>oldest item</dt>
+        <dd>{{ oldest|timesince }} ago</dd>
+    </dl>
 </aside>
 <article>
 	<h2>Site administration</h2>

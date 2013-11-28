@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler
+from handlers import BaseHandler, csrf_protected
 from common import Paginator, Filter, TagsField
 from config import TIMEOUT
 
@@ -105,6 +105,7 @@ class Add(BaseHandler):
             form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
+    @csrf_protected
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
@@ -138,6 +139,7 @@ class Edit(BaseHandler):
             form.newimages.append_entry()
         self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
+    @csrf_protected
     def post(self, slug):
         obj = Entry.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)

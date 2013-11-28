@@ -2,6 +2,7 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
+{{ super() }}
 <article class="plain clear">
 	<h2>Comment &amp; message administration {{ m.page_number(page) }}</h2>
     <table id="data" class="zebra">
@@ -53,7 +54,7 @@
             $('#main button').click(function() {
                 var row = $(this).parents('tr');
                 var url = '/admin/comments';
-                var params = {'safe_key': row.attr('id')};
+                var params = {'safe_key': row.attr('id'), 'token': '{{ token }}'};
                 if ($(this).attr('name') == 'save') {
                     params['body'] = $('textarea', row).val();
                     $.post(url, params, function(data) {

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from entry.views import make_thumbnail
-from handlers import BaseHandler
+from handlers import BaseHandler, csrf_protected
 from config import filesizeformat, PER_PAGE, HUE
 from common import Paginator, Filter
 
@@ -68,6 +68,7 @@ class Comments(BaseHandler):
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
         self.render_template('admin/comments.html', data)
 
+    @csrf_protected
     def post(self):
         params = dict(self.request.POST)
         key = ndb.Key(urlsafe=params['safe_key'])
@@ -117,6 +118,7 @@ class Images(BaseHandler):
                 'archive': Cloud('Entry_date').get_list()}
         self.render_template('admin/images.html', data)
 
+    @csrf_protected
     def post(self):
         params = dict(self.request.POST)
         key = ndb.Key(urlsafe=params['safe_key'])
@@ -128,7 +130,6 @@ class Images(BaseHandler):
         elif params['action'] == 'make':
             buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
             data = {'success': True, 'small': filesizeformat(len(buff))}
-
         self.render_json(data)
 
 
@@ -158,6 +159,7 @@ class Feeds(BaseHandler):
         query = Feed.query().order(-Feed.date)
         self.render_template('admin/feeds.html', {'objects': query})
 
+    @csrf_protected
     def post(self):
         slug = self.request.get('action:feed')
         if slug:
@@ -175,6 +177,7 @@ class Counters(BaseHandler):
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
         self.render_template('admin/counters.html', data)
 
+    @csrf_protected
     def post(self):
         cntx = ndb.get_context()
         cntx.set_cache_policy(False)
@@ -187,7 +190,6 @@ class Counters(BaseHandler):
             obj = key.get()
             obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
-
         self.redirect('/admin/counters')
 
 

@@ -96,17 +96,19 @@ def range_names(rgb):
 
 
 def create_doc(id, headline='', author=None, body='', tags=[], date=None):
-    return search.Document(doc_id=id, fields=[
-        search.TextField(name='headline', value=headline),
-        search.TextField(name='author', value=author.nickname()),
-        search.HtmlField(name='body', value=body),
-        search.TextField(name='tags', value=','.join(tags)),
-        search.DateField(name='date', value=date.date()),
-    ])
+    return search.Document(
+        doc_id=id,
+        fields=[
+            search.TextField(name='headline', value=headline),
+            search.TextField(name='author', value=author.nickname()),
+            search.HtmlField(name='body', value=body),
+            search.TextField(name='tags', value=','.join(tags)),
+            search.DateField(name='date', value=date.date())]
+    )
 
 
 def remove_doc(safe_key):
-    return INDEX.delete(safe_key)
+    INDEX.delete(safe_key)
 
 
 class Counter(ndb.Model):
@@ -249,7 +251,7 @@ class Photo(ndb.Model):
     color = ndb.ComputedProperty(lambda self: self.hue if self.sat == 'color' else self.lum)
 
     def index_add(self):
-        return INDEX.put(
+        INDEX.put(
             create_doc(
                 self.key.urlsafe(),
                 headline=self.headline,
@@ -420,7 +422,7 @@ class Entry(ndb.Model):
     front = ndb.IntegerProperty(default=-1)
 
     def index_add(self):
-        return INDEX.put(
+        INDEX.put(
             create_doc(
                 self.key.urlsafe(),
                 headline=self.headline,
@@ -536,7 +538,7 @@ class Comment(ndb.Model):
     body = ndb.TextProperty(required=True)
 
     def index_add(self):
-        return INDEX.put(
+        INDEX.put(
             create_doc(
                 self.key.urlsafe(),
                 headline='' if self.is_message else self.key.parent().get().headline,

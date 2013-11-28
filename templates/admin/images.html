@@ -2,6 +2,7 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
+{{ super() }}
 <article class="plain">
 	<h2>Entry images administration {{ m.page_number(page) }}</h2>
     <div class="third" style="margin: 0">
@@ -76,7 +77,7 @@
                 $('#overlay, #spinner').show();
                 var row = $(this).closest('tr');
                 var url = '/admin/images';
-                var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name')};
+                var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': '{{ token }}'};
 
                 if (params['action'] == 'delete') {
                     var done = function(data) {

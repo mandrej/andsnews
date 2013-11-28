@@ -12,7 +12,7 @@ from webapp2_extras.appengine.users import admin_required
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from handlers import BaseHandler
+from handlers import BaseHandler, csrf_protected
 from common import Paginator, Filter, TagsField
 from config import TIMEOUT
 
@@ -148,6 +148,7 @@ class Add(BaseHandler):
             form = AddForm()
         self.render_template('news/form.html', {'form': form, 'filter': None})
 
+    @csrf_protected
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
@@ -166,6 +167,7 @@ class Edit(BaseHandler):
             form = EditForm(obj=obj)
         self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
 
+    @csrf_protected
     def post(self, slug):
         obj = Feed.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)

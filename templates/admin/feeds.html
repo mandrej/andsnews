@@ -1,9 +1,11 @@
 {% extends "admin/base.html" %}
 
 {% block contents %}
+{{ super() }}
 <article class="plain clear">
 	<h2>Feed administration</h2>
 	<form action="/admin/feeds" method="post">
+        <input name="token" type="hidden" value="{{ token }}"/>
 		<table id="data" class="zebra">
 			<colgroup>
 				<col/>

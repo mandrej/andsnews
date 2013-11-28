@@ -9,7 +9,6 @@ from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
-HOST = 'andsnews.appspot.com' if DEVEL else 'localhost'
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
 RESULTS = 12

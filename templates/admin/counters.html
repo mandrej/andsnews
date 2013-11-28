@@ -2,10 +2,12 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
+{{ super() }}
 <article class="plain clear">
 	<h2>Counter administration {{ m.page_number(page) }}</h2>
 	<form action="/admin/counters" method="post">
 		<input type="hidden" name="page" value="{{ page }}"/>
+        <input name="token" type="hidden" value="{{ token }}"/>
 		<table id="data" class="zebra">
 			<colgroup>
 				<col style="width: 80px;"/>

@@ -60,6 +60,7 @@
 		<form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
 	{% endif %}
 		<fieldset>
+            <input name="token" type="hidden" value="{{ token }}"/>
             {{ m.form_row(form.headline) }}
             {% if not object %}
                 {{ m.form_row(form.slug) }}
