@@ -52,56 +52,54 @@ class Paginator(object):
             self.cache = {0: None}
             memcache.add(self.id, self.cache, self.timeout)
 
-    def page_keys(self, num):
+    def page_results(self, num):
         if num < 1:
             webapp2.abort(404)
 
         try:
             cursor = self.cache[num - 1]
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
+            results, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
         except KeyError:
             offset = (num - 1) * self.per_page
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
+            results, cursor, has_next = self.query.fetch_page(self.per_page, offset=offset)
 
-        if not keys:
+        if not results:
             if num == 1:
-                return keys, False
+                return results, False
             else:
                 webapp2.abort(404)
 
-        if keys and cursor:
+        if results and cursor:
             self.cache[num] = cursor
             memcache.replace(self.id, self.cache, self.timeout)
-            return keys, has_next
+            return results, has_next
         else:
             webapp2.abort(404)
 
     def page(self, num):
-        keys, has_next = self.page_keys(num)
-        return ndb.get_multi(keys), has_next
+        return self.page_results(num)
 
     def triple(self, key, idx):
         """ num and idx are 1 base index """
-        none = ndb.Key('XXX', 'xxx')
         rem = idx % self.per_page
         num = int(idx / self.per_page) + (0 if rem == 0 else 1)
-        keys, has_next = self.page_keys(num)
+        results, has_next = self.page_results(num)
 
         if rem == 1:
             if num == 1:
-                collection = [none] + keys + [none]
+                collection = [None] + results + [None]
             else:
-                other, x = self.page_keys(num - 1)
-                collection = (other + keys + [none])[idx - (num - 2) * self.per_page - 2:]
+                other, x = self.page_results(num - 1)
+                collection = (other + results + [None])[idx - (num - 2) * self.per_page - 2:]
         else:
             if has_next:
-                other, x = self.page_keys(num + 1)
+                other, x = self.page_results(num + 1)
             else:
-                other = [none]
-            collection = (keys + other)[idx - (num - 1) * self.per_page - 2:]
+                other = [None]
+            collection = (results + other)[idx - (num - 1) * self.per_page - 2:]
 
         try:
-            prev, obj, next = ndb.get_multi(collection[:3])
+            prev, obj, next = collection[:3]
         except ValueError:
             webapp2.abort(404)
         else:

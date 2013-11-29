@@ -49,11 +49,7 @@
     <script>
         $(function() {
             $.getJSON('/latest', function(data) {
-                var sources = [];
-                $.each(data, function(i, item) {
-                    sources.push(item.url);
-                });
-                $.backstretch(sources, {fade: 1000, duration: 4000});
+                $.backstretch(data, {fade: 1000, duration: 4000});
             });
             $('.remove').click(function() {
                 $('aside').slideUp();

@@ -8,10 +8,10 @@ from google.appengine.api import users, memcache, xmpp
 from models import Photo, Entry, Comment
 from handlers import BaseHandler
 from config import to_datetime, ADMIN_JID, TIMEOUT, CROPS
+from common import Paginator
 from models import Cloud
 
 RSS_LIMIT = 10
-NUM_LATEST = 6
 RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 
 
@@ -32,26 +32,21 @@ def auto_complete(request, mem_key):
     return response
 
 
-def get_latest_photos():
-    objects = memcache.get('Photo_latest')
-    if objects is None:
-        query = Photo.query().order(-Photo.date)
-        results, cursor, has_next = query.fetch_page(NUM_LATEST)
-        objects = [{"url": x.normal_url(),
-                    "title": x.headline} for x in results]
-        memcache.add('Photo_latest', objects, TIMEOUT)
-    return objects
-
-
 class Latest(BaseHandler):
     def get(self):
-        self.render_json(get_latest_photos())
+        objects = memcache.get('Photo_latest')
+        if objects is None:
+            query = Photo.query().order(-Photo.date)
+            paginator = Paginator(query)
+            results, has_next = paginator.page(1)
+            objects = [x.normal_url() for x in results]
+            memcache.add('Photo_latest', objects, TIMEOUT)
+        self.render_json(objects)
 
 
 class Index(BaseHandler):
     def get(self):
-        objects = get_latest_photos()
-        self.render_template('index.html', {'latest': objects})
+        self.render_template('index.html')
 
 
 class Chat(webapp2.RequestHandler):

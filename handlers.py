@@ -87,7 +87,7 @@ class BaseHandler(webapp2.RequestHandler):
             self.render_template(template, data)
             self.response.set_status(500)
 
-    def render_template(self, filename, kwargs):
+    def render_template(self, filename, kwargs={}):
         lang_code = self.session.get('lang_code') or 'en_US'
         i18n.get_i18n().set_locale(lang_code)
 

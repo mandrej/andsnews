@@ -11,7 +11,7 @@
 {% macro _build(filters, kind) %}
     <div id="filters">
         {% for f in filters %}
-            <a href="/visualize/{{ kind }}_{{ f.field }}" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>
+{#            <a href="/visualize/{{ kind }}_{{ f.field }}" class="graph" title="{{ _('see graph') }}">{{ _('graph') }}</a>#}
             <a class="{{ f.field }} collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }} [+]</a>
             <div id="{{ f.field }}cloud" class="hide"></div>
         {% endfor %}
