@@ -95,28 +95,29 @@
     {{ super() }}
     <script>
         $(function() {
-            function build(key, value) {
-                var tmpl = '', title = key.split('_').pop() + ' cloud';
-                if (value) {
-                    tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
-                    tmpl += '<a class="graph" href="/visualize/' + key + '">graph</a>';
-                    tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
-                    tmpl += '<div class="hide">';
-                    $.each(value, function(name, count) {
-                        tmpl += '<dl><dt>' + name + '</dt>';
-                        tmpl += '<dd>' + count + '</dd></dl>';
+            function build() {
+                $.getJSON('/admin/memcache/', function(data) {
+                    $.each(data, function(key, value) {
+                        var tmpl = '', title = key.split('_').pop() + ' cloud';
+                        if (value) {
+                            tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
+                            tmpl += '<a class="graph" href="/visualize/' + key + '">graph</a>';
+                            tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
+                            tmpl += '<div class="hide">';
+                            $.each(value, function(name, count) {
+                                tmpl += '<dl><dt>' + name + '</dt>';
+                                tmpl += '<dd>' + count + '</dd></dl>';
+                            });
+                            tmpl += '</div>';
+                        } else {
+                            tmpl += '<button type="submit" name="put" value="' + key + '">create</button>';
+                            tmpl += '<h4>' + title + ' [EMPTY]</h4>';
+                        }
+                        $('#' + key).html(tmpl);
                     });
-                    tmpl += '</div>';
-                } else {
-                    tmpl += '<button type="submit" name="put" value="' + key + '">create</button>';
-                    tmpl += '<h4>' + title + ' [EMPTY]</h4>';
-                }
-                $('#' + key).html(tmpl);
+                    $('.ff').collapseGroup();
+                });
             }
-            $.getJSON('/admin/memcache/', function(data) {
-                $.each(data, build);
-                $('.ff').collapseGroup();
-            });
             $('button').live('click', function() {
                 $('#spinner').show();
                 var key = $(this).val(), method = $(this).attr('name');
@@ -126,19 +127,18 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#spinner').hide();
-                        build(key, data);
+                        build();
                         $('.ff').unbind().collapseGroup();
                     }
                 });
             });
             $('a.graph').live('click', function() {
-                $('#spinner').show();
                 $('#graph').load(this.href, function() {
                     $('#overlay, #graph').show();
-                    $('#spinner').hide();
                 });
                 return false
             });
+            build();
 
             var drawSpectra = function() {
                 var sat = $('#sat').slider('value');
