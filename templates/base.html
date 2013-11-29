@@ -14,14 +14,12 @@
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{{ _('entry rss') }}" />
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
 </head>
+{% import "snippets/macros.html" as m %}
 <body>
 	{% block modals %}
 	<div id="overlay" class="hide"></div>
-	<div id="graph" class="modal"></div>
 	<div id="confirm" class="modal"></div>
-	<div id="spinner" class="modal">
-	    <div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div><div class="bar7"></div><div class="bar8"></div><div class="bar9"></div><div class="bar10"></div><div class="bar11"></div><div class="bar12"></div>
-	</div>
+	<div id="spinner" class="modal">{{ m.spinner() }}</div>
 	{% endblock %}
 
     <nav class="menu">
@@ -39,8 +37,6 @@
                 </form>
             </div>
         {% endblock %}
-
-        {% import "snippets/macros.html" as m %}
         {% block nav %}{{ m.menu('') }}{% endblock %}
 
         {% if is_admin %}
@@ -67,10 +63,7 @@
 
     {% block scripts %}
         <script src="https://www.google.com/jsapi"></script>
-        <script>
-            google.load('jquery', '1.7');
-            google.load('visualization', '1', {'packages':['corechart']});
-        </script>
+        <script>google.load('jquery', '1.7');</script>
         <script src="/static/scripts/imagesloaded.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/jquery.masonry.min.js"></script>
@@ -83,14 +76,6 @@
                 crumbs.shift();
                 crumbs.shift();
 
-                $('a.graph').live('click', function() {
-                    $('#spinner').show();
-                    $('#graph').load(this.href, function() {
-                        $('#overlay, #graph').show();
-                        $('#spinner').hide();
-                    });
-                    return false
-                })
                 $('a.confirm').click(function() {
                     $('#confirm').load(this.href, function() {
                         $('#overlay, #confirm').show();

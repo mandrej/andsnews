@@ -1,11 +1,6 @@
 {% extends "admin/base.html" %}
 {% import "snippets/macros.html" as m %}
 
-{% block modals %}
-{{ super() }}
-<div id="info" class="modal"></div>
-{% endblock %}
-
 {% block contents %}
 {{ super() }}
 <article class="plain">
@@ -61,18 +56,4 @@
         </tbody>
     </table>
 </article>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script>
-        $(function() {
-            $('a.message').click(function() {
-                $('#info').load(this.href, function() {
-                    $('#overlay, #info').show();
-                });
-                return false
-            });
-        });
-    </script>
 {% endblock %}

@@ -1,5 +1,10 @@
 {% extends "admin/base.html" %}
 
+{% block modals %}
+{{ super() }}
+<div id="graph" class="modal"></div>
+{% endblock %}
+
 {% block contents %}
 <aside>
     <nav class="submenu">
@@ -94,6 +99,7 @@
                 var tmpl = '', title = key.split('_').pop() + ' cloud';
                 if (value) {
                     tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
+                    tmpl += '<a class="graph" href="/visualize/' + key + '">graph</a>';
                     tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                     tmpl += '<div class="hide">';
                     $.each(value, function(name, count) {
@@ -124,6 +130,14 @@
                         $('.ff').unbind().collapseGroup();
                     }
                 });
+            });
+            $('a.graph').live('click', function() {
+                $('#spinner').show();
+                $('#graph').load(this.href, function() {
+                    $('#overlay, #graph').show();
+                    $('#spinner').hide();
+                });
+                return false
             });
 
             var drawSpectra = function() {

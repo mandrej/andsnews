@@ -323,10 +323,6 @@ nav.paginator {
 			padding-bottom: 0.5em;
 			text-transform: lowercase;
 		}
-		&.graph {
-			float: right; text-transform: lowercase;
-			@media only screen and (max-width: 480px) { display: none; }
-		}
 	}
 }
 
@@ -397,7 +393,12 @@ nav.submenu {
 	}
 	dt { width: 75%; }
 	dd { margin-left: 80%; }
-	a { text-decoration: underline; }
+	a {
+		text-decoration: underline;
+		&.graph {
+			float: right; margin: 0.2em 0.5em;
+		}
+	}
 }
 
 .buttons {
