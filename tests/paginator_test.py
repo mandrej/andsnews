@@ -48,3 +48,21 @@ class PaginatorTest(unittest.TestCase):
         self.assertIsInstance(prev3, Photo)
         self.assertIsInstance(obj3, Photo)
         self.assertIsNone(next3)
+
+"""
+from models import Photo
+query = Photo.query().order(-Photo.date)
+i = query.iter(produce_cursors=True)
+for x in i:
+  before = i.cursor_before()
+  #after = i.cursor_after()
+  #print before.urlsafe()
+  #print after.urlsafe()
+
+  num = 3 if before.urlsafe() else 2
+  results, cursor, has_next = query.fetch_page(num, start_cursor=before.reversed())
+  for p in results:
+    print p.key
+  #print cursor.urlsafe()
+  print '---------------------------'
+"""

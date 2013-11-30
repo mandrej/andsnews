@@ -47,7 +47,7 @@ class Detail(BaseHandler):
                                  {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
         else:
             paginator = Paginator(query)
-            page, prev, obj, next = paginator.triple(ndb.Key('Photo', slug), idx)
+            page, prev, obj, next = paginator.triple(slug, idx)
 
             data = {'object': obj,
                     'next': next,
