@@ -8,9 +8,8 @@ from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected
+from handlers import BaseHandler, csrf_protected, Paginator, Filter
 from config import filesizeformat, PER_PAGE, HUE
-from common import Paginator, Filter
 
 
 class Cache(BaseHandler):

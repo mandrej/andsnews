@@ -4,8 +4,7 @@ from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Comment
-from handlers import BaseHandler, csrf_protected
-from common import Paginator, Filter
+from handlers import BaseHandler, csrf_protected, Paginator, Filter
 
 PER_PAGE = 10
 

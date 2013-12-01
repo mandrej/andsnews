@@ -9,8 +9,7 @@ from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected
-from common import Paginator, Filter, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField
 
 
 class Index(BaseHandler):

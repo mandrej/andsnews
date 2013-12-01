@@ -12,8 +12,7 @@ from webapp2_extras.appengine.users import admin_required
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from handlers import BaseHandler, csrf_protected
-from common import Paginator, Filter, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField
 from config import TIMEOUT
 
 PER_PAGE = 12

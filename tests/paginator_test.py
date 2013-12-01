@@ -4,7 +4,7 @@ __author__ = 'milan'
 import unittest
 import math
 from models import Photo
-from common import Paginator
+from handlers import Paginator
 
 
 class PaginatorTest(unittest.TestCase):

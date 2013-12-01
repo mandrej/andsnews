@@ -2,8 +2,8 @@ __author__ = 'milan'
 
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from common import Index, Latest, auto_complete, SiteMap, Chat, Send, Rss, PhotoMeta
-from handlers import DeleteHandler, SetLanguage, Sign, RenderCloud, RenderGraph, Find
+from handlers import auto_complete, Index, Latest, SetLanguage, Sign, SiteMap, Chat, Rss, \
+    DeleteHandler, RenderCloud, RenderGraph, Find
 from config import CONFIG, DEVEL
 
 
@@ -70,7 +70,7 @@ app = WSGIApplication(
      Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
      Route('/<safe_key>/add', handler='views.comment.Add', name='comment_add'),
      Route('/search', handler=Find),
-     Route('/send', handler=Send),
+     #Route('/send', handler=Send),
      Route('/latest', handler=Latest),
      #Route('/metajson', handler=PhotoMeta),
      Route('/setlang', handler=SetLanguage),
