@@ -2,8 +2,8 @@ __author__ = 'milan'
 
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import auto_complete, Index, Latest, SetLanguage, Sign, SiteMap, Chat, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, Find
+from handlers import auto_complete, Index, Latest, SetLanguage, Sign, Find, Chat, Rss, \
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap
 from config import CONFIG, DEVEL
 
 

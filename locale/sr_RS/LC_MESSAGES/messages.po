@@ -7,18 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-12-01 12:14+0100\n"
-"PO-Revision-Date: 2013-12-01 12:16+0100\n"
+"POT-Creation-Date: 2013-12-01 23:22+0100\n"
+"PO-Revision-Date: 2013-12-01 23:23+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
 "Language-Team: sr_RS <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 "X-Generator: Poedit 1.5.4\n"
-"X-Poedit-Basepath: ../../../\n"
 
 #: config.py:21
 msgid "english"
@@ -611,60 +610,3 @@ msgstr "страна"
 #: templates/snippets/paginator.html:13 templates/snippets/paginator.html:15
 msgid "next"
 msgstr "следећа"
-
-#~ msgid "This field is required if other \"%s\" present."
-#~ msgstr "Ово поље је неоходно уколико је \"%s\" присутно."
-
-#~ msgid "New Image"
-#~ msgstr "Нова слика"
-
-#~ msgid "Image"
-#~ msgstr "Слика"
-
-#~ msgid "remove"
-#~ msgstr "обриши"
-
-#~ msgid "Headline"
-#~ msgstr "Наслов"
-
-#~ msgid "Slug"
-#~ msgstr "Обележје"
-
-#~ msgid "Author"
-#~ msgstr "Аутор"
-
-#~ msgid "Posted"
-#~ msgstr "Послато"
-
-#~ msgid "Article"
-#~ msgstr "Чланак"
-
-#~ msgid "Record with this slug already exist"
-#~ msgstr "Слог са овим обележјем већ постоји"
-
-#~ msgid "Front image"
-#~ msgstr "Насловна слика"
-
-#~ msgid "Feed server send no entries"
-#~ msgstr "Нема ниједне вести"
-
-#~ msgid "Feed server returns %s"
-#~ msgstr "Код грешке %s сервера."
-
-#~ msgid "Url"
-#~ msgstr "Url"
-
-#~ msgid "Photo"
-#~ msgstr "Фотографија"
-
-#~ msgid "Wrong type."
-#~ msgstr "Погрешан тип."
-
-#~ msgid "Crop factor"
-#~ msgstr "Кроп фактор"
-
-#~ msgid "see graph"
-#~ msgstr "види график"
-
-#~ msgid "graph"
-#~ msgstr "график"
