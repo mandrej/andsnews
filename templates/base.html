@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ language_code }}">
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -26,8 +26,8 @@
         {% block tools %}
             <div id="forms">
                 <form id="langs" action="/setlang" method="post">
-                    {% for code, lang in LANGUAGES %}
-                        <button class="{% if code == LANGUAGE_CODE %}current{% endif %}"
+                    {% for code, lang in all_languages %}
+                        <button class="{% if code == language_code %}current{% endif %}"
                             type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ language(code) }}</button>
                     {% endfor %}
                 </form>

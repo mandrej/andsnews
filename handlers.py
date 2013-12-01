@@ -110,7 +110,7 @@ class BaseHandler(webapp2.RequestHandler):
         i18n.get_i18n().set_locale(lang_code)
 
         values = {
-            'LANGUAGE_CODE': lang_code,
+            'language_code': lang_code,
             'user': self.user,
             'is_admin': self.is_admin,
             'token': self.csrf_token

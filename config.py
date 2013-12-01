@@ -205,7 +205,7 @@ CONFIG = {
             'version': version,
             'gaesdk': gaesdk,
             'language': language,
-            'LANGUAGES': LANGUAGES,
+            'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
         },
