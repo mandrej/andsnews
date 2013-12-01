@@ -18,7 +18,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, DEVEL, RESULTS, LANGUAGES, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822
+from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822
 
 
 def auto_complete(request, mem_key):
@@ -111,11 +111,9 @@ class BaseHandler(webapp2.RequestHandler):
 
         values = {
             'LANGUAGE_CODE': lang_code,
-            'LANGUAGES': LANGUAGES,
             'user': self.user,
             'is_admin': self.is_admin,
-            'token': self.csrf_token,
-            'devel': DEVEL
+            'token': self.csrf_token
         }
         if 'headers' in kwargs:
             self.response.headers = kwargs['headers']
