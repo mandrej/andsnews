@@ -6,16 +6,16 @@ import sys
 import traceback
 import uuid
 from operator import itemgetter
+from jinja2.filters import do_striptags
 
 import webapp2
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from jinja2.filters import do_striptags
-from google.appengine.api import users
+from google.appengine.api import users, search
 from google.appengine.ext import ndb
-from common import SearchPaginator
-from models import Cloud
-from config import DEVEL, RESULTS, LANGUAGES
+
+from models import Cloud, INDEX
+from config import DEVEL, RESULTS, LANGUAGES, PER_PAGE
 
 
 def csrf_protected(handler):
@@ -25,6 +25,7 @@ def csrf_protected(handler):
             handler(self, *args, **kwargs)
         else:
             self.abort(400)
+
     return inner
 
 
@@ -225,3 +226,64 @@ class Sign(BaseHandler):
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
+
+
+class SearchPaginator(object):
+#    timeout = 60 #TIMEOUT/10
+    def __init__(self, querystring, per_page=PER_PAGE):
+        self.querystring = querystring
+        # '"{0}"'.format(querystring.replace('"', ''))
+        self.per_page = per_page
+
+    #        self.id = hashlib.md5(querystring).hexdigest()
+    #        self.cache = memcache.get(self.id)
+    #
+    #        if self.cache is None:
+    #            self.cache = {1: None}
+    #            memcache.add(self.id, self.cache, self.timeout)
+
+    def page(self, num):
+        error = None
+        results = []
+        number_found = 0
+        has_next = False
+        # opts = {
+        #     'limit': self.per_page,
+        #     'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
+        #     'returned_expressions': [
+        #         search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)
+        #     ],
+        #     'snippeted_fields': ['body']
+        # }
+        # try:
+        #     cursor = self.cache[num]
+        # except KeyError:
+        #     cursor = None
+        #
+        # opts['cursor'] = search.Cursor(web_safe_string=cursor)
+        # opts['offset'] = (num - 1)*self.per_page
+        # found = INDEX.search(search.Query(query_string=self.querystring,
+        #                                   options=search.QueryOptions(**opts)))
+        query = search.Query(
+            query_string=self.querystring,
+            options=search.QueryOptions(
+                limit=self.per_page,
+                offset=(num - 1) * self.per_page,
+                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
+                snippeted_fields=['body']
+            ))
+        try:
+            found = INDEX.search(query)
+            results = found.results
+            number_found = found.number_found
+        except search.Error, error:
+            pass
+        except UnicodeDecodeError, error:
+            pass
+        else:
+            if number_found > 0:
+                has_next = number_found > num * self.per_page
+                # self.cache[num + 1] = found.cursor.web_safe_string
+                # memcache.replace(self.id, self.cache, self.timeout)
+
+        return results, number_found, has_next, error

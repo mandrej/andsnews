@@ -1,12 +1,51 @@
 from __future__ import division
 import hashlib
 from string import capitalize
+import datetime
+
 import webapp2
-from google.appengine.api import users, memcache, search
+from google.appengine.api import users, memcache, xmpp
 from google.appengine.ext import ndb
+
 from wtforms import widgets, fields
-from models import INDEX
-from config import FAMILY, PER_PAGE, TIMEOUT
+from config import to_datetime, ADMIN_JID, CROPS, FAMILY, PER_PAGE, RSS_LIMIT, RFC822, TIMEOUT
+from models import Photo, Entry, Comment
+from handlers import BaseHandler
+from models import Cloud
+
+
+def auto_complete(request, mem_key):
+    response = webapp2.Response(content_type='text/plain')
+    if mem_key == 'Photo_crop_factor':
+        mem_key = 'Photo_model'
+        cloud = Cloud(mem_key).get_list()
+        factors = list(set([CROPS[x.get('name')] for x in cloud]))
+        factors.sort()
+        words = map(str, factors)
+    else:
+        cloud = Cloud(mem_key).get_list()
+        words = [x['name'] for x in cloud]
+        words.sort()
+
+    response.write('\n'.join(words))
+    return response
+
+
+class Latest(BaseHandler):
+    def get(self):
+        objects = memcache.get('Photo_latest')
+        if objects is None:
+            query = Photo.query().order(-Photo.date)
+            paginator = Paginator(query)
+            results, has_next = paginator.page(1)
+            objects = [x.normal_url() for x in results]
+            memcache.add('Photo_latest', objects, TIMEOUT)
+        self.render_json(objects)
+
+
+class Index(BaseHandler):
+    def get(self):
+        self.render_template('index.html')
 
 
 class Filter(object):
@@ -111,65 +150,50 @@ class Paginator(object):
             return num, prev, obj, next
 
 
-class SearchPaginator(object):
-#    timeout = 60 #TIMEOUT/10
-    def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring
-        # '"{0}"'.format(querystring.replace('"', ''))
-        self.per_page = per_page
+class Chat(webapp2.RequestHandler):
+    def post(self):
+        message = xmpp.Message(self.request.POST)
+        message.reply("ANDS thank you!")
 
-    #        self.id = hashlib.md5(querystring).hexdigest()
-    #        self.cache = memcache.get(self.id)
-    #
-    #        if self.cache is None:
-    #            self.cache = {1: None}
-    #            memcache.add(self.id, self.cache, self.timeout)
+        email = message.sender.split('/')[0]  # node@domain/resource
+        user = users.User(email)
+        obj = Comment(author=user, body=message.body)
+        obj.add()
 
-    def page(self, num):
-        error = None
-        results = []
-        number_found = 0
-        has_next = False
-        # opts = {
-        #     'limit': self.per_page,
-        #     'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-        #     'returned_expressions': [
-        #         search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)
-        #     ],
-        #     'snippeted_fields': ['body']
-        # }
-        # try:
-        #     cursor = self.cache[num]
-        # except KeyError:
-        #     cursor = None
-        #
-        # opts['cursor'] = search.Cursor(web_safe_string=cursor)
-        # opts['offset'] = (num - 1)*self.per_page
-        # found = INDEX.search(search.Query(query_string=self.querystring,
-        #                                   options=search.QueryOptions(**opts)))
-        query = search.Query(
-            query_string=self.querystring,
-            options=search.QueryOptions(
-                limit=self.per_page,
-                offset=(num - 1) * self.per_page,
-                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
-                snippeted_fields=['body']
-            ))
-        try:
-            found = INDEX.search(query)
-            results = found.results
-            number_found = found.number_found
-        except search.Error, error:
-            pass
-        except UnicodeDecodeError, error:
-            pass
-        else:
-            if number_found > 0:
-                has_next = number_found > num * self.per_page
-                # self.cache[num + 1] = found.cursor.web_safe_string
-                # memcache.replace(self.id, self.cache, self.timeout)
 
-        return results, number_found, has_next, error
+class Send(webapp2.RequestHandler):
+    def post(self):
+        message = self.request.get('msg')
+        xmpp.send_message(ADMIN_JID, message)
+
+
+class Rss(BaseHandler):
+    def get(self, kind):
+        if kind == 'photo':
+            query = Photo.query().order(-Photo.date)
+        elif kind == 'entry':
+            query = Entry.query().order(-Entry.date)
+
+        data = {'kind': kind,
+                'objects': query.fetch(RSS_LIMIT),
+                'format': RFC822}
+
+        last_modified = to_datetime(data['objects'][0].date, format=RFC822)
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        data['headers'] = [('Content-Type', 'application/rss+xml'),
+                           ('Last-Modified', last_modified),
+                           ('ETag', hashlib.md5(last_modified).hexdigest()),
+                           ('Expires', to_datetime(expires, format=RFC822)),
+                           ('Cache-Control', 'max-age=86400')]
+        self.render_template('rss.xml', data)
+
+
+class SiteMap(BaseHandler):
+    def get(self):
+        data = {'photos': Photo.query().order(-Photo.date),
+                'entries': Entry.query().order(-Entry.date),
+                'headers': [('Content-Type', 'application/xml')]}
+        self.render_template('urlset.xml', data)
 
 
 class EmailField(fields.SelectField):
@@ -196,3 +220,15 @@ class TagsField(fields.TextField):
             self.data = sorted([x.strip().lower() for x in valuelist[0].split(',') if x.strip() != ''])
         else:
             self.data = []
+
+
+class PhotoMeta(BaseHandler):
+    def get(self):
+        fields = ('author', 'tags', 'size', 'model', 'aperture', 'shutter',
+                  'focal_length', 'iso', 'date', 'lens', 'crop_factor', 'eqv', 'color',)
+        data = []
+        for x in Photo.query().order(-Photo.date):
+            row = x.to_dict(include=fields)
+            row['slug'] = x.key.string_id()
+            data.append(row)
+        self.render_json(data)
