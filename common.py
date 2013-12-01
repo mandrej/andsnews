@@ -49,19 +49,22 @@ class Paginator(object):
         self.cache = memcache.get(self.id)
 
         if self.cache is None:
-            self.cache = {0: None}
+            self.cache = {0: {'cursor': None, 'keys': [], 'has_next': True}}
             memcache.add(self.id, self.cache, self.timeout)
 
     def page_keys(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        try:
-            cursor = self.cache[num - 1]
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
-        except KeyError:
-            offset = (num - 1) * self.per_page
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
+        if num in self.cache and self.cache[num]['keys']:
+            return self.cache[num]['keys'], self.cache[num]['has_next']
+        else:
+            try:
+                cursor = self.cache[num - 1]['cursor']
+                keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
+            except KeyError:
+                offset = (num - 1) * self.per_page
+                keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
         if not keys:
             if num == 1:
@@ -70,7 +73,7 @@ class Paginator(object):
                 webapp2.abort(404)
 
         if keys and cursor:
-            self.cache[num] = cursor
+            self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
             memcache.replace(self.id, self.cache, self.timeout)
             return keys, has_next
         else:
