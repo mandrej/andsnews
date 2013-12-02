@@ -42,10 +42,10 @@ def csrf_protected(handler):
     def inner(self, *args, **kwargs):
         token = self.request.params.get('token')
         if token and self.session.get('csrf') == token:
+            self.session['csrf'] = uuid.uuid1().hex
             handler(self, *args, **kwargs)
         else:
             self.abort(400)
-
     return inner
 
 
@@ -90,9 +90,9 @@ class BaseHandler(webapp2.RequestHandler):
 
     @webapp2.cached_property
     def csrf_token(self):
-        if self.user and self.session.get('csrf', None) is None:
+        if self.session.get('csrf', None) is None:
             self.session['csrf'] = uuid.uuid1().hex
-        return self.session.get('csrf', None)
+        return self.session.get('csrf')
 
     def handle_exception(self, exception, debug):
         template = 'errors/default.html'
@@ -106,7 +106,7 @@ class BaseHandler(webapp2.RequestHandler):
             self.response.set_status(500)
 
     def render_template(self, filename, kwargs={}):
-        lang_code = self.session.get('lang_code') or 'en_US'
+        lang_code = self.session.get('lang_code', 'en_US')
         i18n.get_i18n().set_locale(lang_code)
 
         values = {
@@ -276,18 +276,12 @@ class Paginator(object):
             offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
-        if not keys:
-            if num == 1:
-                return keys, False
-            else:
-                webapp2.abort(404)
-
-        if keys and cursor:
-            self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
-            memcache.replace(self.id, self.cache, self.timeout)
+        if not keys and num == 1:
             return keys, has_next
-        else:
-            webapp2.abort(404)
+
+        self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
+        memcache.replace(self.id, self.cache, self.timeout)
+        return keys, has_next
 
     def page(self, num):
         keys, has_next = self.page_keys(num)
