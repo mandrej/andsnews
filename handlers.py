@@ -268,13 +268,13 @@ class Paginator(object):
 
         if num in self.cache and self.cache[num]['keys']:
             return self.cache[num]['keys'], self.cache[num]['has_next']
-        else:
-            try:
-                cursor = self.cache[num - 1]['cursor']
-                keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
-            except KeyError:
-                offset = (num - 1) * self.per_page
-                keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
+
+        try:
+            cursor = self.cache[num - 1]['cursor']
+            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
+        except KeyError:
+            offset = (num - 1) * self.per_page
+            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
         if not keys:
             if num == 1:
