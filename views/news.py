@@ -153,7 +153,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Feed(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('feed_all')
+            self.redirect_to('feed', slug=obj.key.string_id())
         else:
             self.render_template('news/form.html', {'form': form, 'filter': None})
 
@@ -172,6 +172,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('feed_all')
+            self.redirect_to('feed', slug=slug)
         else:
             self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
