@@ -109,17 +109,16 @@ class BaseHandler(webapp2.RequestHandler):
         lang_code = self.session.get('lang_code', 'en_US')
         i18n.get_i18n().set_locale(lang_code)
 
-        values = {
-            'language_code': lang_code,
-            'user': self.user,
-            'is_admin': self.is_admin,
-            'token': self.csrf_token
-        }
         if 'headers' in kwargs:
             self.response.headers = kwargs['headers']
             del kwargs['headers']
 
-        kwargs.update(values)
+        kwargs.update({
+            'language_code': lang_code,
+            'user': self.user,
+            'is_admin': self.is_admin,
+            'token': self.csrf_token
+        })
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
