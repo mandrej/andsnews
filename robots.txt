@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /*?*
 Disallow: /sign
 Disallow: /search
 Disallow: /latest
