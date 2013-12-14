@@ -58,15 +58,5 @@
 
 {% block scripts %}
     {{ super() }}
-    <script>
-        $(function() {
-            $('input[type="text"]').change(function() {
-                var id = $(this).attr('id');
-                $('button[name="action:edit"]')
-                        .attr({disabled: 'disabled'}).addClass('disabled');
-                $('button[value="' + id + '"]')
-                        .removeAttr('disabled').removeClass('disabled');
-            });
-        });
-    </script>
+    <script src="/static/scripts/admin.counters.min.js"></script>
 {% endblock %}

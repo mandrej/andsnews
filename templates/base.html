@@ -63,100 +63,13 @@
 
     {% block scripts %}
         <script src="https://www.google.com/jsapi"></script>
-        <script>google.load('jquery', '1.7');</script>
-        <script src="/static/scripts/imagesloaded.min.js"></script>
-        <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
-        <script src="/static/scripts/jquery.masonry.min.js"></script>
-        <script src="/static/scripts/common.js"></script>
         <script>
-            $(function() {
-                var $pinner = $('#overlay, #spinner');
-                var kind = '{{ kind }}';
-                var crumbs = location.pathname.split('/');
-                crumbs.shift();
-                crumbs.shift();
-
-                $('a.confirm').click(function() {
-                    $('#confirm').load(this.href, function() {
-                        $('#overlay, #confirm').show();
-                    });
-                    return false
-                });
-                $('#searchForm').submit(function() {
-                    $pinner.show();
-                });
-
-                if (kind != '') {
-                    $('.hide').hide();
-                    $('.collapse').each(function() {
-                        $(this).plus();
-                    });
-
-                    if (crumbs.length >= 2) {
-                        var field = crumbs[0];
-                        var available = ['tags', 'date', 'author', 'color', 'model', 'lens', 'eqv', 'iso', 'forkind'];
-                        if ($.inArray(field, available) != -1) {
-                            $.ajax({
-                                url: '/filter/' + kind + '_' + field + '/' + crumbs[1],
-                                context: $('#' + field + 'cloud'),
-                                success: function(snippet) {
-                                    $(this).html(snippet).slideDown();
-                                    $('.' + field).minus();
-                                }
-                            });
-                        }
-                    }
-                }
-
-                $('.collapse').click(function() {
-                    var cntx = $(this);
-                    var url = cntx.attr('href');
-                    var key = url.split('/').pop();
-                    var field = key.split('_').pop();
-
-                    $('.hide').slideUp();
-                    $('.collapse').each(function() {
-                        $(this).plus();
-                    });
-
-                    $pinner.show();
-                    if (crumbs[0] == field && crumbs[1] != undefined) url += '/' + crumbs[1];
-                    $.ajax({
-                        url: url,
-                        context: $('#' + field + 'cloud'),
-                        success: function(snippet) {
-                            $(this).html(snippet).slideDown();
-                            cntx.minus();
-                            $pinner.hide();
-                        }
-                    });
-                    return false
-                });
-
-                $('#tools').click(function() {
-                    $('.menu').toggle('slow');
-                    return false
-                });
-                $('.menu').click(function(event) {
-                    var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
-                    var parnetTagName = $(event.target).parent()[0].tagName;
-                    if (!(disallow[event.target.tagName] || disallow[parnetTagName])) {
-                        $('.menu').toggle('slow');
-                        return false
-                    }
-                    return true
-                });
-
-                // masonry
-                var $container = $('#container');
-                $container.imagesLoaded(function() {
-                    $container.masonry({
-                        itemSelector: '.brick'
-                    });
-                    $container.masonry('bindResize');
-                });
-            });
+            google.load('jquery', '1.7');
         </script>
+        <script src="/static/scripts/imagesloaded.min.js" async></script>
+        <script src="/static/scripts/jquery.masonry.min.js" async></script>
+        <script src="/static/scripts/common.min.js" async></script>
+        <script src="/static/scripts/base.min.js" async></script>
     {% endblock %}
     {% block ga %}
         {% if not devel %}

@@ -98,7 +98,7 @@ downcode= function( slug ) {
 	return downcoded;
 }
 
-function URLify(s, num_chars) {s
+function URLify(s, num_chars) {
 	// changes, e.g., "Petty theft" to "petty_theft"
 	// remove all these words from the string before urlifying
 	s = downcode(s);

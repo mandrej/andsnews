@@ -133,9 +133,9 @@
 			}
         })
 	};
-	$('a.close').live('click', function() {
+	$('a.close').live('click', function(evt) {
+        evt.preventDefault();
 		$(this).parents('.modal').hide();
 		$('#overlay').hide();
-		return false
 	});
 })(jQuery);

@@ -81,17 +81,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.highlight.js"></script>
-    <script>
-        $(function() {
-            var match = location.search.match(/find=([^&]+)/i);
-            if (match) {
-                $(function(){
-                    var options = {exact: "partial", highlight: "#main",
-                        keys: decodeURIComponent(match[1])};
-                    $(document).SearchHighlight(options);
-                });
-            }
-        });
-    </script>
+    <script src="/static/scripts/jquery.highlight.js " async></script>
+    <script src="/static/scripts/results.min.js" async></script>
 {% endblock %}

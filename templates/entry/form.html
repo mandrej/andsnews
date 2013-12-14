@@ -106,36 +106,12 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/urlify.js"></script>
-    <script src="/static/scripts/jquery.autocomplete.js"></script>
-    <script src="/static/scripts/markitup/jquery.markitup.js"></script>
-    <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.js"></script>
+    <script src="/static/scripts/urlify.min.js" async></script>
+    <script src="/static/scripts/jquery.autocomplete.js" async></script>
+    <script src="/static/scripts/markitup/jquery.markitup.js" async></script>
+    <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.js" async></script>
+    <script src="/static/scripts/entry.form.min.js" async></script>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
-    <script>
-        $(function() {
-            $('#headline').slugify();
-            $('#body').markItUp(blogSettings, {nameSpace: 'big'});
-            $('#images img').click(function() {
-                src = $(this).attr('src').replace('small', 'normal');
-                title = $(this).attr('title');
-                tab = '    ';
-                $.markItUp(
-                        {replaceWith:'<figure class="left">\n'+tab+'<img src="' + src +
-                                '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
-                );
-                return false;
-            });
-            $("#tags").autocomplete("/complete/Entry_tags", {
-                width: 284,
-                selectFirst: false,
-                multiple: true,
-                matchContains: true
-            });
-            $('#main button').click(function() {
-                $('#overlay, #spinner').show();
-            });
-        });
-    </script>
 {% endblock %}
 {% block ga %}{% endblock %}

@@ -45,17 +45,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.backstretch.min.js"></script>
-    <script>
-        $(function() {
-            $.getJSON('/latest', function(data) {
-                $.backstretch(data, {fade: 1000, duration: 4000});
-            });
-            $('.remove').click(function() {
-                $('aside').slideUp();
-                return false
-            });
-{#            $('.menu').toggle('slow');#}
-        })
-    </script>
+    <script src="/static/scripts/jquery.backstretch.min.js" async></script>
+    <script src="/static/scripts/index.min.js" async></script>
 {% endblock %}
