@@ -42,7 +42,7 @@ def csrf_protected(handler):
     def inner(self, *args, **kwargs):
         token = self.request.params.get('token')
         if token and self.session.get('csrf') == token:
-            self.session['csrf'] = uuid.uuid1().hex
+            # self.session['csrf'] = uuid.uuid1().hex
             handler(self, *args, **kwargs)
         else:
             self.abort(400)
