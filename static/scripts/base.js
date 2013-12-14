@@ -4,12 +4,6 @@ var crumbs = location.pathname.split('/');
 crumbs.shift();
 crumbs.shift();
 
-$('a.confirm').click(function(evt) {
-    evt.preventDefault();
-    $('#confirm').load(this.href, function() {
-        $('#overlay, #confirm').show();
-    });
-});
 $('#searchForm').submit(function() {
     $pinner.show();
 });

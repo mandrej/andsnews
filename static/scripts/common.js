@@ -134,7 +134,7 @@
         })
 	};
 
-    // SearchHighlight
+    // search highlight
     var matchFind = location.search.match(/find=([^&]+)/i);
     if (matchFind) {
         $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
@@ -146,6 +146,13 @@
 		$(this).parents('.modal').hide();
 		$('#overlay').hide();
 	});
+    // confirm
+    $('a.confirm').click(function(evt) {
+        evt.preventDefault();
+        $('#confirm').load(this.href, function() {
+            $('#overlay, #confirm').show();
+        });
+    });
     // add comment
     $('a.comment_add').click(function(evt) {
         evt.preventDefault();
