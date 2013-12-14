@@ -89,3 +89,11 @@
     </figure>
 </article>
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var url = '/{{ safe_key }}/add';
+        var token = '{{ token }}';
+    </script>
+{% endblock %}

@@ -1,6 +1,6 @@
 var tab = "   ";
 cmntSettings = {
-    previewAutoRefresh: true,
+//    previewAutoRefresh: true,
     onShiftEnter: {keepDefault:false, replaceWith:'<br />\n'},
     onCtrlEnter:  {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
     onTab:        {keepDefault:false, openWith:tab},
@@ -18,7 +18,7 @@ cmntSettings = {
 //        {name:'слика', className: 'img', key:'P', replaceWith:'<img src="[![извор:!:http://]!]" alt="[![алтернативни текст]!]" />' },
 //        {name:'линк', className: 'a', key:'L', openWith:'<a href="[![линк:!:http://]!]"(!( title="[![наслов]!]")!)>', closeWith:'</a>', placeHolder:'текст' },
 //        {separator:'---------------' },
-        {name:'обриши html тагове', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
-        {name:'прикажи html, Alt ~ сакри', className:'preview', call:'preview' }
+        {name:'обриши html тагове', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
+//        {name:'прикажи html, Alt ~ сакри', className:'preview', call:'preview' }
     ]
 }

@@ -13,12 +13,7 @@ $('#images img').click(function(evt) {
             '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
     );
 });
-$("#tags").autocomplete("/complete/Entry_tags", {
-    width: 284,
-    selectFirst: false,
-    multiple: true,
-    matchContains: true
-});
+$("#tags").autocomplete("/complete/Entry_tags", autoCompleteOptions);
 $('#main button').click(function() {
     $('#overlay, #spinner').show();
 });

@@ -72,5 +72,5 @@ $('.slider').slider({
 $('h2.ss').click(function() {
     drawSpectra();
 });
-$('#sat').slider('value', 35);
+$('#sat').slider('value', 70);
 $('#lum').slider('value', 40);

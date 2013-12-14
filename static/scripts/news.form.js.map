@@ -1,0 +1,1 @@
+{"version":3,"file":"news.form.min.js","sources":["news.form.js"],"names":["$","slugify","autocomplete","autoCompleteOptions","click","show"],"mappings":"AAGAA,EAAE,aAAaC,SACfD,GAAE,SAASE,aAAa,sBAAuBC,oBAC/CH,GAAE,gBAAgBI,MAAM,WACpBJ,EAAE,sBAAsBK"}

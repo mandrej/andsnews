@@ -1,16 +1,10 @@
 /**
  * Created by milan on 12/14/13.
  */
-var options = {
-    width: 284,
-    selectFirst: false,
-    multiple: false,
-    matchContains: true
-};
 $('#headline').slugify();
-$("#tags").autocomplete("/complete/Photo_tags", $.extend({}, options, {multiple: true}));
-$("#lens").autocomplete("/complete/Photo_lens", options);
-$("#crop_factor").autocomplete("/complete/Photo_crop_factor", options);
+$("#tags").autocomplete("/complete/Photo_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
+$("#lens").autocomplete("/complete/Photo_lens", autoCompleteOptions);
+$("#crop_factor").autocomplete("/complete/Photo_crop_factor", autoCompleteOptions);
 $('button[type=submit]').click(function() {
     $('#overlay, #spinner').show();
 });
@@ -33,7 +27,7 @@ var write_palette = function() {
         }
 //        cntx.after('<p>' + explain + '</p>');
     });
-}
+};
 $('button[type=button]').click(function(evt) {
     evt.preventDefault();
     write_palette();

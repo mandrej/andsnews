@@ -5,6 +5,14 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  */
+// autocomplete
+var autoCompleteOptions = {
+    width: 284,
+    selectFirst: false,
+    multiple: false,
+    matchContains: true
+};
+
 (function($) {
 	$.fn.minus = function() {
 		$(this).html($(this).html().replace(/[+]/i, "−"));

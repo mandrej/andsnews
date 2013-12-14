@@ -6,7 +6,7 @@ $('#main button').click(function(evt) {
     $('#overlay, #spinner').show();
     var row = $(this).closest('tr');
     var url = '/admin/images';
-    var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': '{{ token }}'};
+    var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': token};
 
     if (params['action'] == 'delete') {
         var done = function(data) {

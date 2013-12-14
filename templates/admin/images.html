@@ -71,5 +71,8 @@
 
 {% block scripts %}
     {{ super() }}
+    <script>
+        var token = '{{ token }}';
+    </script>
     <script src="/static/scripts/admin.images.min.js" async></script>
 {% endblock %}

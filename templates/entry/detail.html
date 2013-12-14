@@ -62,3 +62,11 @@
 	<div class="story">{{ object.body|safe }}</div>
 </article>
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var url = '/{{ object.key.urlsafe() }}/add';
+        var token = '{{ token }}';
+    </script>
+{% endblock %}

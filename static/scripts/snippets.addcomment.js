@@ -6,8 +6,8 @@ $('.content button').click(function(evt) {
     evt.preventDefault();
     $.ajax({
         type: 'POST',
-        url: '/{{ safe_key }}/add',
-        data: {'body': $('#body').val(), 'token': '{{ token }}'},
+        url: url,
+        data: {'body': $('#body').val(), 'token': token},
         success: function(data) {
             if (typeof(data) == 'string') {
                 $('.dummy').hide();

@@ -1,6 +1,6 @@
 var tab = "   ";
 cmntSettings = {
-    previewAutoRefresh: true,
+//    previewAutoRefresh: true,
     onShiftEnter: {keepDefault:false, replaceWith:'<br />\n'},
     onCtrlEnter:  {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
     onTab:        {keepDefault:false, openWith:tab},
@@ -18,7 +18,7 @@ cmntSettings = {
 //        {name:'image link', className: 'img', key:'P', replaceWith:'<img src="[![source:!:http://]!]" alt="[![alternative text]!]" />' },
 //        {name:'link', className: 'a', key:'L', openWith:'<a href="[![link:!:http://]!]"(!( title="[![title]!]")!)>', closeWith:'</a>', placeHolder:'text' },
 //        {separator:'---------------' },
-        {name:'delete html tags', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
-        {name:'show html, Alt ~ hide', className:'preview', call:'preview' }
+        {name:'delete html tags', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
+//        {name:'show html, Alt ~ hide', className:'preview', call:'preview' }
     ]
 }
