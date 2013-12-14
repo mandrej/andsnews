@@ -41,7 +41,7 @@
 					previewInElement:		'',
 					previewAutoRefresh:		true,
 					previewPosition:		'after',
-					previewTemplatePath:	'~/templates/preview.html',
+					previewTemplatePath:	'/static/scripts/markitup/templates/preview.html',
 					previewParser:			false,
 					previewParserPath:		'',
 					previewParserVar:		'data',
