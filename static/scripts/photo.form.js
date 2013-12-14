@@ -18,21 +18,18 @@ $('button[type=submit]').click(function() {
 var write_palette = function() {
     $.getJSON(palette_url, function(data) {
         var cntx = $('table.palette');
-        cntx.empty()
-            .append('<tr><th>active</th>' +
-                '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
-                '<th>' + data.active.class + '</th></tr>');
+        cntx.empty().append('<tr><th>active</th>' +
+            '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
+            '<th>' + data.active['class'] + '</th></tr>');
         $.each(data.palette, function(i, pal) {
-            cntx
-                .append('<tr><th>' + pal.prominence + '</th>' +
-                    '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
-                    '<td>' + pal.class + '</td></tr>');
+            cntx.append('<tr><th>' + pal.prominence + '</th>' +
+                '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
+                '<td>' + pal['class'] + '</td></tr>');
         });
         if (data.bgcolor) {
-            cntx
-                .append('<tr><th>' + data.bgcolor.prominence + '</th>' +
-                    '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
-                    '<td>' + data.bgcolor.class + '</td></tr>');
+            cntx.append('<tr><th>' + data.bgcolor.prominence + '</th>' +
+                '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
+                '<td>' + data.bgcolor['class'] + '</td></tr>');
         }
 //        cntx.after('<p>' + explain + '</p>');
     });

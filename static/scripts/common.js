@@ -133,9 +133,24 @@
 			}
         })
 	};
+
+    // SearchHighlight
+    var matchFind = location.search.match(/find=([^&]+)/i);
+    if (matchFind) {
+        $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
+    }
+
+    // close
 	$('a.close').live('click', function(evt) {
         evt.preventDefault();
 		$(this).parents('.modal').hide();
 		$('#overlay').hide();
 	});
+    // add comment
+    $('a.comment_add').click(function(evt) {
+        evt.preventDefault();
+        $('#addcomment').load(this.href, function() {
+            $('#overlay, #addcomment').show();
+        });
+    });
 })(jQuery);
