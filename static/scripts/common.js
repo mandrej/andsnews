@@ -159,6 +159,9 @@ var autoCompleteOptions = {
         evt.preventDefault();
         $('#confirm').load(this.href, function() {
             $('#overlay, #confirm').show();
+            $('.content button').click(function() {
+                $('#overlay, #spinner').show();
+            });
         });
     });
     // add comment
