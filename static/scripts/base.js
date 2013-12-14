@@ -55,10 +55,6 @@ $('.collapse').click(function(evt) {
     });
 });
 
-$('#tools').click(function(evt) {
-    evt.preventDefault();
-    $('.menu').toggle('slow');
-});
 $('.menu').click(function(evt) {
     var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
     var parnetTagName = $(evt.target).parent()[0].tagName;

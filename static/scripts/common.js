@@ -160,4 +160,9 @@
             $('#overlay, #addcomment').show();
         });
     });
+    // tools
+    $('#tools').click(function(evt) {
+        evt.preventDefault();
+        $('.menu').toggle('slow');
+    });
 })(jQuery);
