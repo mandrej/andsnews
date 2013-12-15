@@ -3,7 +3,7 @@
     <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
 	<div class="content">
 		<h6>{{ _('for') }} {{ headline }}</h6>
-		<form id="addcommentForm" action="" method="post">
+		<form id="addcommentForm" action="/{{ safe_key }}/add" method="post">
 			<fieldset>
                 <p class="editor">
                     {{ form.body(rows=8) }}
@@ -23,8 +23,3 @@
 		<p>{{ _('Thank you for your contribution') }}.</p>
 	</div>
 </div>
-<script src="/static/scripts/markitup/jquery.markitup.min.js" async></script>
-<script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js" async></script>
-<script src="/static/scripts/snippets.addcomment.min.js" async></script>
-<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
-<link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>

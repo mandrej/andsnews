@@ -93,7 +93,10 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        var url = '/{{ safe_key }}/add';
         var token = '{{ token }}';
     </script>
+    <script src="/static/scripts/markitup/jquery.markitup.min.js" async></script>
+    <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js" async></script>
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
 {% endblock %}
