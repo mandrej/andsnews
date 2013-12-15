@@ -13,14 +13,10 @@
 </aside>
 {% endblock %}
 {% block scripts %}
-    <script src="https://www.google.com/jsapi"></script>
+    {{ super() }}
     <script>
-        google.load('jquery', '1.7');
-        google.load('jqueryui', '1.8');
-        google.load('visualization', '1', {'packages':['corechart']});
+        scripts = ['/static/scripts/common.min.js', '/static/scripts/admin.base.min.js'];
     </script>
-    <script src="/static/scripts/common.js" async></script>
-    <script src="/static/scripts/admin.base.min.js" async></script>
     <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
 {% endblock %}
 {% block ga %}{% endblock %}

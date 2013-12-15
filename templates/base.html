@@ -64,24 +64,32 @@
     {% block scripts %}
         <script src="https://www.google.com/jsapi"></script>
         <script>
-            google.load('jquery', '1.7');
+            kind = '{{ kind }}';
             token = '{{ token }}';
+            scripts = [
+                '/static/scripts/imagesloaded.min.js',
+                '/static/scripts/jquery.masonry.min.js',
+                '/static/scripts/jquery.highlight.js',
+                '/static/scripts/urlify.min.js',
+                '/static/scripts/jquery.autocomplete.js',
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js'];
+            function deferred_load() {
+                for (var j = 0; j < scripts.length; j++) {
+                    var elm = document.createElement('script');
+                    elm.src = scripts[j];
+                    document.body.appendChild(elm);
+                }
+            }
         </script>
-        <script src="/static/scripts/imagesloaded.min.js" async></script>
-        <script src="/static/scripts/jquery.masonry.min.js" async></script>
-        <script src="/static/scripts/jquery.highlight.js" async></script>
-        <script src="/static/scripts/urlify.min.js" async></script>
-        <script src="/static/scripts/jquery.autocomplete.js" async></script>
-        <script src="/static/scripts/common.min.js" async></script>
-        <script src="/static/scripts/base.min.js" async></script>
     {% endblock %}
+
     {% block ga %}
         {% if not devel %}
             <script>
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', 'UA-8994922-1']);
                 _gaq.push(['_trackPageview']);
-
                 (function() {
                     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
                     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';

@@ -45,6 +45,10 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.backstretch.min.js" async></script>
-    <script src="/static/scripts/index.min.js" async></script>
+    <script>
+        scripts.push('/static/scripts/jquery.backstretch.min.js');
+        scripts.push('/static/scripts/index.min.js');
+        google.load('jquery', '1.7');
+        google.setOnLoadCallback(deferred_load);
+    </script>
 {% endblock %}

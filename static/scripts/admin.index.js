@@ -24,6 +24,8 @@ function build() {
         $('.ff').collapseGroup();
     });
 }
+build();
+
 $('button').live('click', function() {
     $('#spinner').show();
     var key = $(this).val(), method = $(this).attr('name');
@@ -44,7 +46,6 @@ $('a.graph').live('click', function(evt) {
         $('#overlay, #graph').show();
     });
 });
-build();
 
 var drawSpectra = function() {
     var sat = $('#sat').slider('value');
@@ -69,7 +70,8 @@ $('.slider').slider({
         drawSpectra();
     }
 })
-$('h2.ss').click(function() {
+$('h2.ss').click(function(evt) {
+    evt.preventDefault();
     drawSpectra();
 });
 $('#sat').slider('value', 70);

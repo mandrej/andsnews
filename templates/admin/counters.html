@@ -55,8 +55,11 @@
 	</form>
 </article>
 {% endblock %}
-
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/admin.counters.min.js"></script>
+    <script>
+        scripts.push('/static/scripts/admin.counters.min.js');
+        google.load('jquery', '1.7');
+        google.setOnLoadCallback(deferred_load);
+    </script>
 {% endblock %}

@@ -46,8 +46,11 @@
     </table>
 </article>
 {% endblock %}
-
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/admin.comments.min.js" async> </script>
+    <script>
+        scripts.push('/static/scripts/admin.comments.min.js');
+        google.load('jquery', '1.7');
+        google.setOnLoadCallback(deferred_load);
+    </script>
 {% endblock %}

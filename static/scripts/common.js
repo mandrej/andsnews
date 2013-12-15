@@ -5,14 +5,6 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  */
-// autocomplete
-var autoCompleteOptions = {
-    width: 284,
-    selectFirst: false,
-    multiple: false,
-    matchContains: true
-};
-
 (function($) {
 	$.fn.minus = function() {
 		$(this).html($(this).html().replace(/[+]/i, "−"));
@@ -45,7 +37,7 @@ var autoCompleteOptions = {
 					$this.plus();
 					$next.slideUp();
 				}
-				$(thisContexts).not($this).each(function() {
+				thisContexts.not($this).each(function() {
 					$(this).plus();
 					$(this).next().slideUp();
 				});
@@ -89,30 +81,6 @@ var autoCompleteOptions = {
 	focusHighlightDefaults = {
 		highlightClass: 'focus' 
 	};
-	/*
-	 * resetHighlight - Reser highlighted words
-	 * $Version: 2009.10.15
-	 * Depends on jquery.highlight.js
-	 * 
-	 * Example: $('#data').resetHighlight();
-	 */
-	$.fn.resetHighlight = function(options) {
-		return this.find('span[class^=hilite]').each(function() {
-			var hilite = $(this);
-			var txt_el = hilite[0].previousSibling;
-			if(txt_el && txt_el.nodeType==3) {
-				txt_el.data += hilite.text();
-			} else {
-				hilite.before(hilite.text());
-				txt_el = hilite[0].previousSibling;
-			}
-			if(hilite[0].nextSibling && hilite[0].nextSibling.nodeType==3) {
-				txt_el.data += hilite[0].nextSibling.data;
-				$(hilite[0].nextSibling).remove();
-			}
-			hilite.remove();
-		})
-	};
     /*
 	 * Style table columns according to colgroup col style
 	 * $Version: 2010.01.25
@@ -141,69 +109,24 @@ var autoCompleteOptions = {
 			}
         })
 	};
-
-    // search highlight
-    var matchFind = location.search.match(/find=([^&]+)/i);
-    if (matchFind) {
-        $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
-    }
-
     // close
-	$('a.close').live('click', function(evt) {
+    $('a.close').live('click', function(evt) {
         evt.preventDefault();
-		$(this).parents('.modal').hide();
-		$('#overlay').hide();
-	});
-    // confirm
-    $('a.confirm').click(function(evt) {
-        evt.preventDefault();
-        $('#confirm').load(this.href, function() {
-            $('#overlay, #confirm').show();
-            $('.content button').click(function() {
-                $('#overlay, #spinner').show();
-            });
-        });
-    });
-    // add comment
-    $('a.comment_add').click(function(evt) {
-        evt.preventDefault();
-        $('#addcomment').load(this.href, function() {
-            $('#overlay, #addcomment').show();
-            $('#body').markItUp(cmntSettings, {nameSpace: 'small'});
-            $('.content button').click(function(evt) {
-                evt.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: $('#addcommentForm').attr('action'),
-                    data: {'body': $('#body').val(), 'token': token},
-                    success: function(data) {
-                        if (typeof(data) == 'string') {
-                            $('.dummy').hide();
-                            $('.info').show()
-                            $('.comments').prepend(data);
-                            $('a.confirm').click(function(e) {
-                                e.preventDefault();
-                                $('#confirm').load(this.href, function() {
-                                    $('#overlay, #confirm').show();
-                                });
-                            });
-                            setTimeout(function() {
-                                $('#overlay, #addcomment').hide();
-                            }, 1000);
-                        } else {
-                            $('.error').text('');
-                            $.each(data, function(key, arr) {
-                                $('.error.C_' + key).text(arr.join(', '));
-                            });
-                        }
-                    }
-                });
-            });
-        });
+        $(this).parents('.modal').hide();
+        $('#overlay').hide();
     });
     // tools
     $('#tools').click(function(evt) {
         evt.preventDefault();
         $('.menu').toggle('slow');
+    });
+    // menu
+    $('.menu').click(function(evt) {
+        var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
+        var parnetTagName = $(evt.target).parent()[0].tagName;
+        if (!(disallow[evt.target.tagName] || disallow[parnetTagName])) {
+            evt.preventDefault();
+            $('.menu').toggle('slow');
+        }
     });
 })(jQuery);

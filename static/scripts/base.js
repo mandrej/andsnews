@@ -1,12 +1,7 @@
 var $pinner = $('#overlay, #spinner');
-var kind = '{{ kind }}';
 var crumbs = location.pathname.split('/');
 crumbs.shift();
 crumbs.shift();
-
-$('#searchForm').submit(function() {
-    $pinner.show();
-});
 
 if (kind != '') {
     $('.hide').hide();
@@ -29,6 +24,14 @@ if (kind != '') {
         }
     }
 }
+
+// autocomplete
+var autoCompleteOptions = {
+    width: 284,
+    selectFirst: false,
+    multiple: false,
+    matchContains: true
+};
 
 $('.collapse').click(function(evt) {
     evt.preventDefault();
@@ -55,13 +58,62 @@ $('.collapse').click(function(evt) {
     });
 });
 
-$('.menu').click(function(evt) {
-    var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
-    var parnetTagName = $(evt.target).parent()[0].tagName;
-    if (!(disallow[evt.target.tagName] || disallow[parnetTagName])) {
-        $('.menu').toggle('slow');
-        evt.preventDefault();
-    }
+$('#searchForm').submit(function() {
+    $pinner.show();
+});
+
+// search highlight
+var matchFind = location.search.match(/find=([^&]+)/i);
+if (matchFind) {
+    $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
+}
+
+// confirm
+$('a.confirm').click(function(evt) {
+    evt.preventDefault();
+    $('#confirm').load(this.href, function() {
+        $('#overlay, #confirm').show();
+        $('.content button').click(function() {
+            $('#overlay, #spinner').show();
+        });
+    });
+});
+// add comment
+$('a.comment_add').click(function(evt) {
+    evt.preventDefault();
+    $('#addcomment').load(this.href, function() {
+        $('#overlay, #addcomment').show();
+        $('#body').markItUp(cmntSettings, {nameSpace: 'small'});
+        $('.content button').click(function(evt) {
+            evt.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $('#addcommentForm').attr('action'),
+                data: {'body': $('#body').val(), 'token': token},
+                success: function(data) {
+                    if (typeof(data) == 'string') {
+                        $('.dummy').hide();
+                        $('.info').show()
+                        $('.comments').prepend(data);
+                        $('a.confirm').click(function(e) {
+                            e.preventDefault();
+                            $('#confirm').load(this.href, function() {
+                                $('#overlay, #confirm').show();
+                            });
+                        });
+                        setTimeout(function() {
+                            $('#overlay, #addcomment').hide();
+                        }, 1000);
+                    } else {
+                        $('.error').text('');
+                        $.each(data, function(key, arr) {
+                            $('.error.C_' + key).text(arr.join(', '));
+                        });
+                    }
+                }
+            });
+        });
+    });
 });
 
 // masonry

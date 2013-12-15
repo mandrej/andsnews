@@ -46,14 +46,21 @@
                     </td>
                     <td>
                         {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                        <span class="_hex" style="display: inline-block; width: 1.5em; background-color: {{ photo.hex }};">&nbsp;</span>
                     </td>
                     <td>
                         {{ photo.hue }}, {{ photo.lum }}, {{ photo.sat }}
-                        <span class="_hex" style="display: inline-block; width: 1.5em; background-color: {{ photo.hex }};">&nbsp;</span>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </article>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        google.load('jquery', '1.7');
+        google.setOnLoadCallback(deferred_load);
+    </script>
 {% endblock %}
