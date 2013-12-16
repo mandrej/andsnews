@@ -75,11 +75,15 @@
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js'];
             function deferred_load() {
-                for (var j = 0; j < scripts.length; j++) {
-                    var elm = document.createElement('script');
-                    elm.src = scripts[j];
-                    document.body.appendChild(elm);
+                if (!scripts.length) return;
+                var elm = document.createElement('script');
+                elm.src = scripts.shift();
+                elm.onload = elm.onreadystatechange = function() {
+                    if (!this.readyState || this.readyState === 'loaded' || this.readyState == 'complete') {
+                        deferred_load();
+                    }
                 }
+                document.body.appendChild(elm);
             }
         </script>
     {% endblock %}

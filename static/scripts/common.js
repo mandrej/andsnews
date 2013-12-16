@@ -11,7 +11,7 @@
 		return this
 	};
 	$.fn.plus = function() {
-		$(this).html($(this).html().replace(/[−]/i, "+"));
+        $(this).html($(this).html().replace(/[−]/i, "+"));
 		return this
 	};
 	/*
