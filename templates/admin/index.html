@@ -93,10 +93,9 @@
 {% block scripts %}
     {{ super() }}
     <script>
+        scripts.push('//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js');
+        scripts.push('//www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart"]}]}');
         scripts.push('/static/scripts/admin.index.min.js');
-        google.load('jquery', '1.7');
-        google.load('jqueryui', '1.8');
-        google.load('visualization', '1', {'packages':['corechart']});
-        google.setOnLoadCallback(deferred_load);
+        deferred_load();
     </script>
 {% endblock %}

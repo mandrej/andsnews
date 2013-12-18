@@ -62,11 +62,11 @@
     <div id="main">{% block contents %}{% endblock %}</div>
 
     {% block scripts %}
-        <script src="https://www.google.com/jsapi"></script>
         <script>
             kind = '{{ kind }}';
             token = '{{ token }}';
             scripts = [
+                '//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
                 '/static/scripts/imagesloaded.min.js',
                 '/static/scripts/jquery.masonry.min.js',
                 '/static/scripts/jquery.highlight.js',

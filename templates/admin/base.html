@@ -15,7 +15,10 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts = ['/static/scripts/common.min.js', '/static/scripts/admin.base.min.js'];
+        scripts = [
+            '//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js',
+            '/static/scripts/admin.base.min.js'];
     </script>
     <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
 {% endblock %}

@@ -102,8 +102,7 @@
     {{ super() }}
     <script>
         scripts.push('/static/scripts/photo.form.min.js');
-        google.load('jquery', '1.7');
-        google.setOnLoadCallback(deferred_load);
+        deferred_load();
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

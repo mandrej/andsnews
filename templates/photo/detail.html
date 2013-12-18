@@ -95,8 +95,7 @@
     <script>
         scripts.push('/static/scripts/markitup/jquery.markitup.min.js');
         scripts.push('/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js');
-        google.load('jquery', '1.7');
-        google.setOnLoadCallback(deferred_load);
+        deferred_load();
     </script>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>

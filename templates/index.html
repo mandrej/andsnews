@@ -48,7 +48,6 @@
     <script>
         scripts.push('/static/scripts/jquery.backstretch.min.js');
         scripts.push('/static/scripts/index.min.js');
-        google.load('jquery', '1.7');
-        google.setOnLoadCallback(deferred_load);
+        deferred_load();
     </script>
 {% endblock %}

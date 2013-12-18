@@ -47,8 +47,5 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script>
-        google.load('jquery', '1.7');
-        google.setOnLoadCallback(deferred_load);
-    </script>
+    <script>deferred_load();</script>
 {% endblock %}
