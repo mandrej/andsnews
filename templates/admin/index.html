@@ -92,10 +92,11 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
+    <script src="https://www.google.com/jsapi"></script>
     <script>
         scripts.push('//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js');
-        scripts.push('//www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart"]}]}');
         scripts.push('/static/scripts/admin.index.min.js');
-        deferred_load();
+        google.load('visualization', '1', {'packages':['corechart']});
+        google.setOnLoadCallback(deferred_load);
     </script>
 {% endblock %}
