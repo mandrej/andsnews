@@ -117,11 +117,10 @@ $('a.comment_add').click(function(evt) {
 });
 
 // masonry
-var msnry = $('#container');
+var msnry = $('#container').masonry({
+    itemSelector: '.brick'
+});
 msnry.imagesLoaded(function() {
-    msnry.masonry({
-        itemSelector: '.brick',
-        transitionDuration: '0.7s'
-    });
+    msnry.masonry();
 });
 msnry.masonry('bindResize');
