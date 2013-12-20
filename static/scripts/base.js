@@ -117,10 +117,10 @@ $('a.comment_add').click(function(evt) {
 });
 
 // masonry
-var msnry = $('#container').masonry({
-    itemSelector: '.brick'
+var $container = $('#container');
+$container.imagesLoaded(function() {
+    $container.masonry({
+        itemSelector: '.brick'
+    });
+    $container.masonry('bindResize');
 });
-msnry.imagesLoaded(function() {
-    msnry.masonry();
-});
-msnry.masonry('bindResize');
