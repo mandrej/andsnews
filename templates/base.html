@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ language_code }}">
+<html lang="{{ language_code }}" manifest="/static/cache.appcache">
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -78,13 +78,20 @@
                 if (!scripts.length) return;
                 var elm = document.createElement('script');
                 elm.src = scripts.shift();
-                elm.onload = elm.onreadystatechange = function() {
-                    if (!this.readyState || this.readyState === 'loaded' || this.readyState == 'complete') {
+                elm.onload = function() {
+                    if (!this.readyState || this.readyState == 'complete') {
                         deferred_load();
                     }
                 }
                 document.body.appendChild(elm);
             }
+            window.addEventListener('load', function(evt) {
+                window.applicationCache.addEventListener('updateready', function(evt) {
+                    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                        window.location.reload();
+                    }
+                }, false);
+            }, false);
         </script>
     {% endblock %}
 
