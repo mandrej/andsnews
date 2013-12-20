@@ -33,11 +33,6 @@ handlers:
   mime_type: text/cache-manifest
   upload: static/(.*\.appcache)
 
-- url: /static/(.*\.html)
-  static_files: static/\1
-  mime_type: text/html
-  upload: static/(.*\.html)
-
 - url: /static
   static_dir: static
 

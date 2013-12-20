@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ language_code }}">
+<html lang="{{ language_code }}" manifest="/static/cache.appcache">
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -60,7 +60,6 @@
         <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
     <div id="main">{% block contents %}{% endblock %}</div>
-    <iframe src="/static/cache.html" style="display: none"></iframe>
 
     {% block scripts %}
         <script>
@@ -86,6 +85,14 @@
                 }
                 document.body.appendChild(elm);
             }
+            window.addEventListener('load', function(evt) {
+                window.applicationCache.addEventListener('updateready', function(evt) {
+                    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                        window.applicationCache.swapCache();
+                        window.location.reload();
+                    }
+                }, false);
+            }, false);
         </script>
     {% endblock %}
 
