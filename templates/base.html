@@ -7,8 +7,6 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 	<meta name="verify-v1" content="500ha7MSGCMgwkQG3S+CaeF1KzDLZB3Q9Ly5o+R7g5w="/>
 	<meta name="keywords" content="gae, google appengine, google app engine, django, python, html5, andrejevic"/>
-    <meta http-equiv="Cache-control" content="no-cache"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
 	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
@@ -90,6 +88,7 @@
             window.addEventListener('load', function(evt) {
                 window.applicationCache.addEventListener('updateready', function(evt) {
                     if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                        window.applicationCache.swapCache();
                         window.location.reload();
                     }
                 }, false);
