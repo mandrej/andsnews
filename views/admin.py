@@ -163,6 +163,7 @@ class Feeds(BaseHandler):
     def post(self):
         slug = self.request.get('action:feed')
         if slug:
+            touch_appcache()
             memcache.delete(slug)
         self.redirect('/admin/feeds')
 

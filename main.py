@@ -73,7 +73,7 @@ app = WSGIApplication(
      #Route('/send', handler=Send),
      Route('/latest', handler=Latest),
      #Route('/metajson', handler=PhotoMeta),
-     Route('/static/cache.appcache', handler=AppCache),
+     Route('/cache.appcache', handler=AppCache),
      Route('/setlang', handler=SetLanguage),
      Route('/sign', handler=Sign),
      Route('/', handler=Index, name='start'),
