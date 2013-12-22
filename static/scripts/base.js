@@ -1,12 +1,12 @@
+// autocomplete
+var autoCompleteOptions = {
+    width: 284,
+    selectFirst: false,
+    multiple: false,
+    matchContains: true
+};
 $( function() {
     var $pinner = $('#overlay, #spinner');
-    // autocomplete
-    var autoCompleteOptions = {
-        width: 284,
-        selectFirst: false,
-        multiple: false,
-        matchContains: true
-    };
 
     $('.collapse').click(function(evt) {
         evt.preventDefault();

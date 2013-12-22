@@ -4,7 +4,7 @@ from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Comment
-from handlers import BaseHandler, csrf_protected, Paginator, Filter
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
 
 PER_PAGE = 10
 
@@ -49,6 +49,7 @@ class Add(BaseHandler):
                 forkind=for_key.kind(),
                 body=form.data['body'])
             obj.add()
+            touch_appcache()
             self.render_template('snippets/comment.html', {'comment': obj})
         else:
             self.render_json(form.errors)

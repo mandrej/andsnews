@@ -9,6 +9,7 @@ import traceback
 import hashlib
 import uuid
 import webapp2
+import logging
 from operator import itemgetter
 from jinja2.filters import do_striptags
 from string import capitalize
@@ -19,6 +20,36 @@ from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb
 from models import Photo, Entry, Comment, Cloud, INDEX
 from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822
+OFFLINE = """CACHE MANIFEST
+# %s
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
+/static/font/FontAwesome.otf
+/static/images/bg.jpg
+/static/images/front.png
+/static/css/base.css
+http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
+/static/scripts/imagesloaded.min.js
+/static/scripts/jquery.masonry.min.js
+/static/scripts/jquery.highlight.js
+/static/scripts/urlify.min.js
+/static/scripts/jquery.autocomplete.js
+/static/scripts/common.min.js
+/static/scripts/base.min.js
+/static/scripts/jquery.backstretch.min.js
+/static/scripts/markitup/jquery.markitup.min.js
+/static/scripts/markitup/sets/cmnt.set_en_US.min.js
+/static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
+/latest
+FALLBACK:
+/ /offline.html
+NETWORK:
+*
+"""
+
+
+def touch_appcache():
+    memcache.replace('appcache', OFFLINE % datetime.datetime.now().isoformat())
 
 
 def auto_complete(request, mem_key):
@@ -120,6 +151,20 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
+        # cache_dependents = {
+        #     'language_code': lang_code,
+        #     'user': self.user,
+        #     'is_admin': self.is_admin,
+        #     'path': self.request.path
+        # }
+        # etag = hashlib.md5(json.dumps(cache_dependents, cls=LazyEncoder)).hexdigest()
+        # if etag == str(self.request.if_none_match).strip('"'):
+        #     logging.error('ETAG')
+        #     self.response.set_status(304)
+        # else:
+        #     logging.error('FRESH')
+        #     self.response.headers['Cache-Control'] = 'store'
+        #     self.response.headers['ETag'] = etag
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
@@ -148,6 +193,7 @@ class SetLanguage(BaseHandler):
     def post(self):
         next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         self.session['lang_code'] = self.request.get('language')
+        touch_appcache()
         self.redirect(next)
 
 
@@ -161,7 +207,17 @@ class Sign(BaseHandler):
             dest_url = users.create_logout_url(referer)
         else:
             dest_url = users.create_login_url(referer)
+        touch_appcache()
         self.redirect(dest_url)
+
+
+class AppCache(webapp2.RequestHandler):
+    def get(self):
+        appcache = memcache.get('appcache')
+        if appcache is None:
+            memcache.add('appcache', OFFLINE % datetime.datetime.now().isoformat())
+        self.response.headers['Content-Type'] = 'text/cache-manifest'
+        self.response.write(appcache)
 
 
 class Find(BaseHandler):
@@ -216,6 +272,7 @@ class DeleteHandler(BaseHandler):
         next = str(self.request.get('next'))
         key = ndb.Key(urlsafe=safe_key)
         key.delete()
+        touch_appcache()
         self.redirect(next)
 
 

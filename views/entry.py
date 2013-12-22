@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
 from config import TIMEOUT
 
 PER_PAGE = 6
@@ -110,6 +110,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
+            touch_appcache()
             self.redirect_to('entry', slug=obj.key.string_id())
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
@@ -145,6 +146,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
+            touch_appcache()
             self.redirect_to('entry', slug=slug)
         else:
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})

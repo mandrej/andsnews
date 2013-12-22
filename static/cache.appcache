@@ -1,11 +1,11 @@
 CACHE MANIFEST
-# Fri Dec 20 23:48:19 CET 2013
-CACHE:
-/static/css/base.css
-http://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin
+# %s
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
 /static/font/FontAwesome.otf
 /static/images/bg.jpg
 /static/images/front.png
+/static/css/base.css
 http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
 /static/scripts/imagesloaded.min.js
 /static/scripts/jquery.masonry.min.js
@@ -18,5 +18,8 @@ http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
 /static/scripts/markitup/jquery.markitup.min.js
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
+/latest
+FALLBACK:
+/ /offline.html
 NETWORK:
 *

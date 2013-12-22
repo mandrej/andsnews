@@ -3,7 +3,7 @@ __author__ = 'milan'
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
 from handlers import auto_complete, Index, Latest, SetLanguage, Sign, Find, Chat, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap, AppCache
 from config import CONFIG, DEVEL
 
 
@@ -73,6 +73,7 @@ app = WSGIApplication(
      #Route('/send', handler=Send),
      Route('/latest', handler=Latest),
      #Route('/metajson', handler=PhotoMeta),
+     Route('/static/cache.appcache', handler=AppCache),
      Route('/setlang', handler=SetLanguage),
      Route('/sign', handler=Sign),
      Route('/', handler=Index, name='start'),

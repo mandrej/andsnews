@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paginator, Filter
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
 from config import filesizeformat, PER_PAGE, HUE
 
 
@@ -74,6 +74,7 @@ class Comments(BaseHandler):
         if 'body' in params:
             obj = key.get()
             obj.body = params['body']
+            touch_appcache()
             obj.put()
         else:
             key.delete()
