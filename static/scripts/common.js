@@ -87,7 +87,7 @@
 	 * 
 	 * Example: $('table').colStyle();
 	 */
-	$.fn.colStyle = function(options) {
+	$.fn.colStyle = function() {
         return this.each(function() {
 			var table = $(this);
             var styles = $.map($('col', table), function(e) {

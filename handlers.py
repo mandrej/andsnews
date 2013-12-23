@@ -9,7 +9,6 @@ import traceback
 import hashlib
 import uuid
 import webapp2
-import logging
 from operator import itemgetter
 from jinja2.filters import do_striptags
 from string import capitalize
@@ -19,37 +18,26 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822
-OFFLINE = """CACHE MANIFEST
-# %s
-http://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
-http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
-/static/font/FontAwesome.otf
-/static/images/bg.jpg
-/static/images/front.png
-/static/css/base.css
-http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
-/static/scripts/imagesloaded.min.js
-/static/scripts/jquery.masonry.min.js
-/static/scripts/jquery.highlight.js
-/static/scripts/urlify.min.js
-/static/scripts/jquery.autocomplete.js
-/static/scripts/common.min.js
-/static/scripts/base.min.js
-/static/scripts/jquery.backstretch.min.js
-/static/scripts/markitup/jquery.markitup.min.js
-/static/scripts/markitup/sets/cmnt.set_en_US.min.js
-/static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
-/latest
-FALLBACK:
-/ /offline.html
-NETWORK:
-*
-"""
+from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE
 
 
-def touch_appcache():
-    memcache.replace('appcache', OFFLINE % datetime.datetime.now().isoformat())
+def touch_appcache(handler_method):
+    def wrapper(self, *args, **kwargs):
+        memcache.replace('appcache', OFFLINE % datetime.datetime.now().isoformat())
+        handler_method(self, *args, **kwargs)
+    return wrapper
+
+
+def csrf_protected(handler_method):
+    def wrapper(self, *args, **kwargs):
+        token = self.request.params.get('token')
+        if token and self.session.get('csrf') == token:
+            if self.request.headers.get('X-Requested-With') is None:
+                self.session['csrf'] = uuid.uuid1().hex
+            handler_method(self, *args, **kwargs)
+        else:
+            self.abort(400)
+    return wrapper
 
 
 def auto_complete(request, mem_key):
@@ -67,18 +55,6 @@ def auto_complete(request, mem_key):
 
     response.write('\n'.join(words))
     return response
-
-
-def csrf_protected(handler):
-    def inner(self, *args, **kwargs):
-        token = self.request.params.get('token')
-        if token and self.session.get('csrf') == token:
-            if self.request.headers.get('X-Requested-With') is None:
-                self.session['csrf'] = uuid.uuid1().hex
-            handler(self, *args, **kwargs)
-        else:
-            self.abort(400)
-    return inner
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -190,14 +166,15 @@ class Index(BaseHandler):
 
 
 class SetLanguage(BaseHandler):
+    @touch_appcache
     def post(self):
         next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         self.session['lang_code'] = self.request.get('language')
-        touch_appcache()
         self.redirect(next)
 
 
 class Sign(BaseHandler):
+    @touch_appcache
     def get(self):
         referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
         if referer.endswith('admin/'):
@@ -207,7 +184,6 @@ class Sign(BaseHandler):
             dest_url = users.create_logout_url(referer)
         else:
             dest_url = users.create_login_url(referer)
-        touch_appcache()
         self.redirect(dest_url)
 
 
@@ -268,11 +244,11 @@ class DeleteHandler(BaseHandler):
         self.render_template('snippets/confirm.html', data)
 
     @csrf_protected
+    @touch_appcache
     def post(self, safe_key):
         next = str(self.request.get('next'))
         key = ndb.Key(urlsafe=safe_key)
         key.delete()
-        touch_appcache()
         self.redirect(next)
 
 

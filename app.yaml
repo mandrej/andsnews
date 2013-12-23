@@ -28,12 +28,6 @@ handlers:
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
 
-#- url: /static/(.*\.appcache)
-#  static_files: static/\1
-#  mime_type: text/cache-manifest
-#  upload: static/(.*\.appcache)
-#  application_readable: true
-
 - url: /offline\.html
   static_files: templates/errors/offline.html
   mime_type: text/html

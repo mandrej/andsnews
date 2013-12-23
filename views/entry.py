@@ -105,12 +105,12 @@ class Add(BaseHandler):
         self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            touch_appcache()
             self.redirect_to('entry', slug=obj.key.string_id())
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
@@ -140,13 +140,13 @@ class Edit(BaseHandler):
         self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self, slug):
         obj = Entry.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            touch_appcache()
             self.redirect_to('entry', slug=slug)
         else:
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})

@@ -40,6 +40,7 @@ class Add(BaseHandler):
                              {'form': form, 'safe_key': safe_key, 'headline': for_headline})
 
     @csrf_protected
+    @touch_appcache
     def post(self, safe_key):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
@@ -49,7 +50,6 @@ class Add(BaseHandler):
                 forkind=for_key.kind(),
                 body=form.data['body'])
             obj.add()
-            touch_appcache()
             self.render_template('snippets/comment.html', {'comment': obj})
         else:
             self.render_json(form.errors)

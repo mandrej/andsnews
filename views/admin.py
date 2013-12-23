@@ -68,13 +68,13 @@ class Comments(BaseHandler):
         self.render_template('admin/comments.html', data)
 
     @csrf_protected
+    @touch_appcache
     def post(self):
         params = dict(self.request.POST)
         key = ndb.Key(urlsafe=params['safe_key'])
         if 'body' in params:
             obj = key.get()
             obj.body = params['body']
-            touch_appcache()
             obj.put()
         else:
             key.delete()
@@ -160,10 +160,10 @@ class Feeds(BaseHandler):
         self.render_template('admin/feeds.html', {'objects': query})
 
     @csrf_protected
+    @touch_appcache
     def post(self):
         slug = self.request.get('action:feed')
         if slug:
-            touch_appcache()
             memcache.delete(slug)
         self.redirect('/admin/feeds')
 

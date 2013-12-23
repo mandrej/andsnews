@@ -87,6 +87,7 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     @ndb.toplevel
+    @touch_appcache
     def get(self, slug):
         error = ''
         obj = Feed.get_by_id(slug)
@@ -111,7 +112,6 @@ class Detail(BaseHandler):
                         memcache.add(slug, news, TIMEOUT)
                         obj.date = date
                         obj.subtitle = news.feed.subtitle
-                        touch_appcache()
                         obj.put_async()
                     else:
                         error = _('Feed server send no entries')
@@ -149,12 +149,12 @@ class Add(BaseHandler):
         self.render_template('news/form.html', {'form': form, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
             obj = Feed(id=form.slug.data)
             obj.add(form.data)
-            touch_appcache()
             self.redirect_to('feed', slug=obj.key.string_id())
         else:
             self.render_template('news/form.html', {'form': form, 'filter': None})
@@ -169,12 +169,12 @@ class Edit(BaseHandler):
         self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self, slug):
         obj = Feed.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            touch_appcache()
             self.redirect_to('feed', slug=slug)
         else:
             self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})

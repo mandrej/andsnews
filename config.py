@@ -20,6 +20,34 @@ FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
 LANGUAGES = (
     ('en_US', _('english')), ('sr_RS', _('serbian')),
 )
+OFFLINE = """CACHE MANIFEST
+# %s
+# http://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
+http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
+/static/font/FontAwesome.otf
+/static/images/bg.jpg
+/static/images/front.png
+/static/css/base.css
+http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
+/static/scripts/imagesloaded.min.js
+/static/scripts/jquery.masonry.min.js
+/static/scripts/jquery.highlight.js
+/static/scripts/urlify.min.js
+/static/scripts/jquery.autocomplete.js
+/static/scripts/common.min.js
+/static/scripts/base.min.js
+/static/scripts/index.min.js
+/static/scripts/jquery.backstretch.min.js
+/static/scripts/markitup/jquery.markitup.min.js
+/static/scripts/markitup/sets/cmnt.set_en_US.min.js
+/static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
+/latest
+FALLBACK:
+/ /offline.html
+NETWORK:
+*
+"""
 COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
     _('purple'), _('pink'), _('dark'), _('medium'), _('light')
