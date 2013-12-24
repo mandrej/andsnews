@@ -88,7 +88,8 @@
             window.addEventListener('load', function(evt) {
                 window.applicationCache.addEventListener('updateready', function(evt) {
                     if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-                        window.location.replace(window.location.href);
+                        window.location.reload();
+{#                        window.location.replace(window.location.href);#}
 {#                        window.history.replaceState({} , 'Page Name', path);#}
                     }
                 }, false);
