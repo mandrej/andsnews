@@ -43,6 +43,10 @@ http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
 /latest
+/static/scripts/urlify.js.map
+/static/scripts/base.min.js
+/static/scripts/common.js.map
+/static/scripts/base.js.map
 FALLBACK:
 / /offline.html
 NETWORK:
