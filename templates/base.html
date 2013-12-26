@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ language_code }}" manifest="/cache.appcache">
+<html{{ {'lang': language(language_code), 'manifest': none if devel else '/cache.appcache'}|xmlattr }}>
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 	<meta name="verify-v1" content="500ha7MSGCMgwkQG3S+CaeF1KzDLZB3Q9Ly5o+R7g5w="/>
-	<meta name="keywords" content="gae, google appengine, google app engine, django, python, html5, andrejevic"/>
+	<meta name="keywords" content="gae, google appengine, google app engine, webapp2, jinja2, python, html5, andrejevic"/>
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
 	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
@@ -27,8 +27,9 @@
             <div id="forms">
                 <form id="langs" action="/setlang" method="post">
                     {% for code, lang in all_languages %}
-                        <button class="{% if code == language_code %}current{% endif %}"
-                            type="submit" name="language" value="{{ code }}" title="{{ lang }}">{{ language(code) }}</button>
+                        <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                            'class': 'current' if code == language_code else none,
+                            'title': lang}|xmlattr }}>{{ language(code) }}</button>
                     {% endfor %}
                 </form>
                 <form id="searchForm" action="/search" method="get">
@@ -42,11 +43,7 @@
         {% if is_admin %}
             <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
         {% endif %}
-        {% if user %}
-            <a href="/sign" class="Logout">{{ _('Logout') }}</a>
-        {% else %}
-            <a href="/sign" class="Login">{{ _('Sign in') }}</a>
-        {% endif %}
+        <a href="/sign" class="Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
 
         <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
             powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
