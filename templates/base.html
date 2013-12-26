@@ -46,7 +46,7 @@
         <a href="/sign" class="Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
 
         <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
-            powered by <a href="http://code.google.com/appengine/">Google App Engine {{ gaesdk() }}</a>
+            powered by <a href="http://code.google.com/appengine/">{{ gaesdk() }}</a>
             {% if user %}<br><strong>{{ user.nickname() }}</strong>{% endif %}
         </p>
     </nav>
