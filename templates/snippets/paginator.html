@@ -1,20 +1,20 @@
+{% macro link(page, class, title) %}
+    {% if phrase %}
+        <a href="?find={{ phrase }}&page={{ page }}" class="{{ class }}" title="{{ title }}"></a>
+    {% else %}
+        <a href="?page={{ page }}" class="{{ class }}" title="{{ title }}"></a>
+    {% endif %}
+{% endmacro %}
+
 {% if has_previous or has_next %}
-	{% if has_previous %}
-		{% if phrase %}
-			<a class="prev icon-chevron-left icon-4x" href="?find={{ phrase }}&page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}"></a>
-		{% else %}
-			<a class="prev icon-chevron-left icon-4x" href="?page={{ page - 1 }}" title="{{ _('previous') }} {{ _('page') }}"></a>
-		{% endif %}
-	{% else %}
-	    <span class="prev na icon-chevron-left icon-4x"></span>
-	{% endif %}
-	{% if has_next %}
-		{% if phrase %}
-			<a class="next icon-chevron-right icon-4x" href="?find={{ phrase }}&page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}"></a>
-		{% else %}
-			<a class="next icon-chevron-right icon-4x" href="?page={{ page + 1 }}" title="{{ _('next') }} {{ _('page') }}"></a>
-		{% endif %}
-	{% else %}
-	    <span class="next na icon-chevron-right icon-4x"></span>
-	{% endif %}
+    {% if has_previous %}
+        {{ link(page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
+    {% else %}
+        <span class="{{ prev_class }} na"></span>
+    {% endif %}
+    {% if has_next %}
+        {{ link(page + 1, next_class, '%s %s' % (_('next'), _('page'))) }}
+    {% else %}
+        <span class="{{ next_class }} na"></span>
+    {% endif %}
 {% endif %}

@@ -253,6 +253,8 @@ CONFIG = {
             'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
+            'prev_class': 'prev icon-chevron-left icon-4x',
+            'next_class': 'next icon-chevron-right icon-4x',
         },
         'filters': {
             'incache': incache,
