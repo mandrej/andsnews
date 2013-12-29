@@ -1,9 +1,6 @@
 {% macro link(page, class, title) %}
-    {% if phrase %}
-        <a href="?find={{ phrase }}&page={{ page }}" class="{{ class }}" title="{{ title }}"></a>
-    {% else %}
-        <a href="?page={{ page }}" class="{{ class }}" title="{{ title }}"></a>
-    {% endif %}
+    <a{{ {'href': '?find=%s&page=%s' % (phrase, page) if phrase else '?page=%s' % page,
+        'class': class, 'title': title}|xmlattr }}></a>
 {% endmacro %}
 
 {% if has_previous or has_next %}
