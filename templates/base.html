@@ -82,14 +82,15 @@
                 }
                 document.body.appendChild(elm);
             }
-
-            var appCache = window.applicationCache;
-            appCache.addEventListener('updateready', function() {
-                window.location.replace(window.location.href);
+            window.addEventListener('load', function() {
+                var appCache = window.applicationCache;
+                appCache.addEventListener('updateready', function() {
+                    if (appCache.status == appCache.UPDATEREADY) window.location.replace(window.location.href);
+                }, false);
+                appCache.addEventListener('downloading', function() {$('#spinner').show();}, false);
+                appCache.addEventListener('noupdate', function() {$('#spinner').hide();}, false);
+                appCache.addEventListener('error', function() {$('#spinner').hide();}, false);
             }, false);
-            appCache.addEventListener('downloading', function() {$('#spinner').show();}, false);
-            appCache.addEventListener('noupdate', function() {$('#spinner').hide();}, false);
-            appCache.addEventListener('error', function() {$('#spinner').hide();}, false);
         </script>
     {% endblock %}
 
