@@ -11,13 +11,11 @@
 
 {% block paging %}
     {% macro link(obj, index, class) %}
-        {% if filter %}
-            <a href="{{ uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()) }}?idx={{ index }}"
-               class="{{ class }}" title="{{ obj.headline }}"></a>
-        {% else %}
-            <a href="{{ uri_for('photo', slug=obj.key.string_id()) }}?idx={{ index }}"
-               class="{{ class }}" title="{{ obj.headline }}"></a>
-        {% endif %}
+        {% set attributes = {'href': '%s?idx=%s' %
+            (uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()), index)
+            if filter else '%s?idx=%s' %  (uri_for('photo', slug=obj.key.string_id()), index),
+            'class': class, 'title': obj.headline} %}
+        <a{{ attributes|xmlattr }}></a>
     {% endmacro %}
 
     {% if previous or next %}
