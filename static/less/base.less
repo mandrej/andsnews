@@ -17,6 +17,7 @@
 @light: (@neutral + 2 * @text);
 @lighter: (@neutral + @text);
 @darker: (@neutral - @text);
+@hilite: #ffe657;
 
 @gap: 3%;
 @inn: (@gap * 100 / (100% - @gap)); // inner gap
@@ -584,7 +585,6 @@ figure {
 	@media only screen and (max-width: 480px) { width: (100% - @inn); }
 }
 
-@hilite: #ffe657;
 .hilite1 { color: black; background: @hilite; }
 .hilite2 { color: black; background: spin(@hilite, 60); }
 .hilite3 { color: black; background: spin(@hilite, 120); }

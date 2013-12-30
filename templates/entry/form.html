@@ -106,13 +106,14 @@
 
 {% block scripts %}
     {{ super() }}
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
     <script>
         scripts.push('/static/scripts/markitup/jquery.markitup.min.js');
         scripts.push('/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js');
         scripts.push('/static/scripts/entry.form.min.js');
         deferred_load();
+        update_cache();
     </script>
-    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
 {% endblock %}
 {% block ga %}{% endblock %}

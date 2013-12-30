@@ -47,5 +47,8 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script>deferred_load();</script>
+    <script>
+        deferred_load();
+        update_cache();
+    </script>
 {% endblock %}
