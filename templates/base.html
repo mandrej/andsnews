@@ -80,17 +80,12 @@
                     if (!this.readyState || this.readyState == 'complete') {
                         deferred_load();
                     }
-                }
+                };
                 document.body.appendChild(elm);
             }
-            function update_cache() {
-                window.applicationCache.addEventListener('updateready', function() {
-                    window.location.replace(window.location.href);
-                }, false);
-                window.applicationCache.addEventListener('downloading', function() {$('#spinner').show();}, false);
-                window.applicationCache.addEventListener('noupdate', function() {$('#spinner').hide();}, false);
-                window.applicationCache.addEventListener('error', function() {$('#spinner').hide();}, false);
-            }
+            window.applicationCache.addEventListener('updateready', function() {
+                window.location.replace(window.location.href);
+            }, false);
         </script>
     {% endblock %}
 
