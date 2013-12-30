@@ -64,6 +64,8 @@ FALLBACK:
 
 NETWORK:
 *
+SETTINGS:
+prefer-online
 """
 COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),

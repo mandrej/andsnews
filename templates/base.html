@@ -83,6 +83,9 @@
                 };
                 document.body.appendChild(elm);
             }
+            window.applicationCache.addEventListener('downloading', function() {
+                document.querySelector('#spinner').style.display = 'block';
+            }, false);
             window.applicationCache.addEventListener('updateready', function() {
                 window.location.replace(window.location.href);
             }, false);
