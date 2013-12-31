@@ -76,7 +76,7 @@ def get_exif(buff):
         data['focal_length'] = float(Decimal(eval(tags['EXIF FocalLength'].printable)) / 1)
 
     if 'EXIF ISOSpeedRatings' in tags:
-        getcontext().prec = 1
+        getcontext().prec = 2
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
 
     logging.info(data)
