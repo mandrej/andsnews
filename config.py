@@ -25,7 +25,7 @@ OFFLINE = """CACHE MANIFEST
 http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
 http://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
 http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
-/static/font/FontAwesome.otf
+/static/font/fontawesome.woff
 /static/images/bg.jpg
 /static/images/front.png
 /static/css/base.css
