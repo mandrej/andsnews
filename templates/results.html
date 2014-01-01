@@ -23,7 +23,7 @@
         <div class="third brick">
             <div>
                 {% if object.kind == 'Photo' %}
-                    <i class="icon-picture icon-3x pull-left"></i>
+                    <i class="icon-camera icon-2x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">
                         {{ object.headline }}</a>
                         {% for tag in object.tags|split %}
@@ -33,7 +33,7 @@
                         {% endfor %}
                     </h3>
                 {% elif object.kind == 'Entry' %}
-                    <i class="icon-file icon-3x pull-left"></i>
+                    <i class="icon-file-text icon-2x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">
                         {{ object.headline }}</a>
                         {% for tag in object.tags|split %}
@@ -44,11 +44,11 @@
                     </h3>
                 {% elif object.kind == 'Comment' %}
                     {% if object.headline %}
-                        <i class="icon-comment-alt icon-3x pull-left"></i>
+                        <i class="icon-comment icon-2x pull-left"></i>
                         <h3><a href="{{ object.link }}?find={{ phrase }}">
                             {{ object.headline }} ({{ _('comment') }})</a></h3>
                     {% else %}
-                        <i class="icon-comment icon-3x pull-left"></i>
+                        <i class="icon-comment icon-2x pull-left"></i>
                         <h3>{{ _('message') }}</h3>
                     {% endif %}
                 {% endif %}
