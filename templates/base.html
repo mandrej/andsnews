@@ -22,6 +22,7 @@
 	<div id="confirm" class="modal"></div>
 	<div id="spinner" class="modal">{{ m.spinner() }}</div>
 	{% endblock %}
+    <div id="progress"></div>
 
     <nav class="menu">
         {% block tools %}
@@ -83,8 +84,8 @@
                 };
                 document.body.appendChild(elm);
             }
-            window.applicationCache.addEventListener('downloading', function() {
-                document.querySelector('#spinner').style.display = 'block';
+            window.applicationCache.addEventListener('progress', function(evt) {
+                document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
             }, false);
             window.applicationCache.addEventListener('updateready', function() {
                 window.location.replace(window.location.href);
