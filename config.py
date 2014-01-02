@@ -32,7 +32,7 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 
 /static/scripts/imagesloaded.min.js
 /static/scripts/jquery.masonry.min.js
-/static/scripts/jquery.highlight.js
+/static/scripts/jquery.searchhighlight.min.js
 /static/scripts/urlify.min.js
 /static/scripts/jquery.autocomplete.js
 /static/scripts/common.min.js
@@ -56,6 +56,7 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 /static/scripts/markitup/jquery.markitup.js.map
 /static/scripts/markitup/sets/cmnt.set_en_US.js.map
 /static/scripts/markitup/sets/cmnt.set_sr_RS.js.map
+/static/scripts/jquery.searchhighlight.js.map
 /static/scripts/admin.base.js.map
 /static/scripts/admin.index.js.map
 
