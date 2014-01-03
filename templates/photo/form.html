@@ -101,8 +101,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts.push('/static/scripts/photo.form.min.js');
-        deferred_load();
+        nbl.l(['/static/scripts/photo.form.min.js']);
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

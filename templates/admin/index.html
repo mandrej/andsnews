@@ -91,12 +91,13 @@
 </article>
 {% endblock %}
 {% block scripts %}
+    <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
     {{ super() }}
+    <script>
+        nbl.l(['http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js', '/static/scripts/admin.index.min.js']);
+    </script>
     <script src="https://www.google.com/jsapi"></script>
     <script>
-        scripts.push('//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js');
-        scripts.push('/static/scripts/admin.index.min.js');
         google.load('visualization', '1', {'packages':['corechart']});
-        google.setOnLoadCallback(deferred_load);
     </script>
 {% endblock %}

@@ -13,13 +13,19 @@
 </aside>
 {% endblock %}
 {% block scripts %}
-    {{ super() }}
+    <script src="/static/scripts/nbl.min.js" data-nbl="[[
+        'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
+        '/static/scripts/common.min.js', [
+        '/static/scripts/admin.base.min.js']]]]"></script>
     <script>
-        scripts = [
-            '//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
-            '/static/scripts/common.min.js',
-            '/static/scripts/admin.base.min.js'];
+        kind = '{{ kind }}';
+        token = '{{ token }}';
+        window.applicationCache.addEventListener('progress', function(evt) {
+            document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
+        }, false);
+        window.applicationCache.addEventListener('updateready', function() {
+            window.location.replace(window.location.href);
+        }, false);
     </script>
-    <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
 {% endblock %}
 {% block ga %}{% endblock %}

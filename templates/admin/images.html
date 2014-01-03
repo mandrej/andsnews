@@ -72,7 +72,6 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts.push('/static/scripts/admin.images.min.js');
-        deferred_load();
+        nbl.l(['/static/scripts/admin.images.min.js']);
     </script>
 {% endblock %}

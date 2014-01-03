@@ -49,7 +49,6 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts.push('/static/scripts/admin.comments.min.js');
-        deferred_load();
+        nbl.l(['/static/scripts/admin.comments.min.js']);
     </script>
 {% endblock %}

@@ -94,8 +94,8 @@
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
     <script>
-        scripts.push('/static/scripts/markitup/jquery.markitup.min.js');
-        scripts.push('/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js');
-        deferred_load();
+        nbl.l([
+            '/static/scripts/markitup/jquery.markitup.min.js',
+            '/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js']);
     </script>
 {% endblock %}
