@@ -5,7 +5,7 @@ var autoCompleteOptions = {
     multiple: false,
     matchContains: true
 };
-$( function() {
+$(function() {
     var $pinner = $('#overlay, #spinner');
 
     $('.collapse').click(function(evt) {

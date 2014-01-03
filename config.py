@@ -44,7 +44,6 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
 
-/static/scripts/admin.base.min.js
 /static/scripts/admin.index.min.js
 
 /static/scripts/urlify.js.map
@@ -56,7 +55,6 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 /static/scripts/markitup/sets/cmnt.set_sr_RS.js.map
 /static/scripts/jquery.autocomplete.js.map
 /static/scripts/jquery.searchhighlight.js.map
-/static/scripts/admin.base.js.map
 /static/scripts/admin.index.js.map
 
 FALLBACK:

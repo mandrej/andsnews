@@ -61,18 +61,21 @@
     <div id="main">{% block contents %}{% endblock %}</div>
 
     {% block scripts %}
-        <script src="/static/scripts/nbl.min.js" data-nbl="[[
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
-            '/static/scripts/jquery.masonry.min.js',
-            '/static/scripts/jquery.searchhighlight.min.js',
-            '/static/scripts/urlify.min.js',
-            '/static/scripts/jquery.autocomplete.min.js',
-            '/static/scripts/common.min.js',
-            '/static/scripts/base.min.js'],
-            '/static/scripts/imagesloaded.min.js']"></script>
+        <script src="/static/scripts/nbl.min.js"></script>
         <script>
             kind = '{{ kind }}';
             token = '{{ token }}';
+
+            nbl.l([[
+                'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+                '/static/scripts/urlify.min.js',
+                '/static/scripts/imagesloaded.min.js', [
+                    '/static/scripts/jquery.searchhighlight.min.js',
+                    '/static/scripts/jquery.autocomplete.min.js',
+                    '/static/scripts/common.min.js', [
+                        '/static/scripts/jquery.masonry.min.js',
+                        '/static/scripts/base.min.js']]]]);
+
             window.applicationCache.addEventListener('progress', function(evt) {
                 document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
             }, false);

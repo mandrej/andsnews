@@ -13,13 +13,25 @@
 </aside>
 {% endblock %}
 {% block scripts %}
-    <script src="/static/scripts/nbl.min.js" data-nbl="[[
-        'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
-        '/static/scripts/common.min.js', [
-        '/static/scripts/admin.base.min.js']]]]"></script>
+    <link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="/static/scripts/nbl.min.js"></script>
     <script>
         kind = '{{ kind }}';
         token = '{{ token }}';
+
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
+                'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js', [
+                    '/static/scripts/common.min.js',
+                    function() {
+                        $('#main button, #sidebar button').click(function() {
+                            $('#overlay, #spinner').show();
+                        });
+                        $('.ff, .ss').collapseGroup();
+                        $('.zebra').colStyle();
+                    }]]]]
+        );
+
         window.applicationCache.addEventListener('progress', function(evt) {
             document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
         }, false);
