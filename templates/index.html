@@ -46,8 +46,15 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts.push('/static/scripts/jquery.backstretch.min.js');
-        scripts.push('/static/scripts/index.min.js');
-        deferred_load();
+        nbl.l(['/static/scripts/jquery.backstretch.min.js', function(){done();}]);
+        function done() {
+            $.getJSON('/latest', function(data) {
+                $.backstretch(data, {fade: 1000, duration: 4000});
+            });
+            $('.remove').click(function(evt) {
+                evt.preventDefault();
+                $('aside').slideUp();
+            });
+        }
     </script>
 {% endblock %}

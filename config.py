@@ -37,8 +37,6 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 /static/scripts/jquery.autocomplete.min.js
 /static/scripts/common.min.js
 /static/scripts/base.min.js
-
-/static/scripts/index.min.js
 /static/scripts/jquery.backstretch.min.js
 /latest
 

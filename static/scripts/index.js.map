@@ -1,1 +1,0 @@
-{"version":3,"file":"index.min.js","sources":["index.js"],"names":["$","getJSON","data","backstretch","fade","duration","click","evt","preventDefault","slideUp"],"mappings":"AAAAA,EAAEC,QAAQ,UAAW,SAASC,MAC1BF,EAAEG,YAAYD,MAAOE,KAAM,IAAMC,SAAU,OAE/CL,GAAE,WAAWM,MAAM,SAASC,KACxBA,IAAIC,gBACJR,GAAE,SAASS"}
