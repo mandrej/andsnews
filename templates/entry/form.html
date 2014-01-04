@@ -103,16 +103,45 @@
 	</form>
 </article>
 {% endblock %}
-
 {% block scripts %}
-    {{ super() }}
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
+    {{ super() }}
     <script>
-        nbl.l([
-            '/static/scripts/markitup/jquery.markitup.min.js',
-            '/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js',
-            '/static/scripts/entry.form.min.js']);
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
+                '/static/scripts/urlify.min.js',
+                '/static/scripts/jquery.autocomplete.min.js',
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js', [
+                    '/static/scripts/markitup/jquery.markitup.min.js',
+                    '/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js',
+                    function() {done()}]]]]);
+
+        var autoCompleteOptions = {
+            width: 284,
+            selectFirst: false,
+            multiple: false,
+            matchContains: true
+        };
+        function done() {
+            $('#headline').slugify();
+            $('#body').markItUp(blogSettings, {nameSpace: 'big'});
+            $('#images img').click(function(evt) {
+                evt.preventDefault();
+                src = $(this).attr('src').replace('small', 'normal');
+                title = $(this).attr('title');
+                tab = '    ';
+                $.markItUp(
+                    {replaceWith:'<figure class="left">\n'+tab+'<img src="' + src +
+                        '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
+                );
+            });
+            $("#tags").autocomplete("/complete/Entry_tags", autoCompleteOptions);
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+        }
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

@@ -24,23 +24,25 @@
         </thead>
         <tbody>
             {% for object in objects %}
-                <tr id="{{ object.key.urlsafe() }}">
-                    {% if object.is_message %}<td>message</td>{% else%}
-                        {% with refkey=object.key.parent() %}
-                        <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
-                            {{ refkey.get().headline }}</a></td>
-                        {% endwith %}
-                    {% endif %}
-                    <td>
-                        <textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
-                    </td>
-                    <td>{{ object.author }}</td>
-                    <td>{{ object.date|to_datetime }}</td>
-                    <td class="nowrap">
-                        <button type="submit" name="save">save</button>
-                        <button type="submit" name="delete">delete</button>
-                    </td>
-                </tr>
+                {% if object %}
+                    <tr id="{{ object.key.urlsafe() }}">
+                        {% if object.is_message %}<td>message</td>{% else%}
+                            {% with refkey=object.key.parent() %}
+                            <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
+                                {{ refkey.get().headline }}</a></td>
+                            {% endwith %}
+                        {% endif %}
+                        <td>
+                            <textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
+                        </td>
+                        <td>{{ object.author }}</td>
+                        <td>{{ object.date|to_datetime }}</td>
+                        <td class="nowrap">
+                            <button type="submit" name="save">save</button>
+                            <button type="submit" name="delete">delete</button>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
@@ -49,6 +51,33 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        nbl.l(['/static/scripts/admin.comments.min.js']);
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js',
+            function() {done()}]]);
+        function done() {
+            $('#main button').click(function(evt) {
+                evt.preventDefault();
+                var row = $(this).parents('tr');
+                var url = '/admin/comments';
+                var params = {'safe_key': row.attr('id'), 'token': token};
+                if ($(this).attr('name') == 'save') {
+                    params['body'] = $('textarea', row).val();
+                    $.post(url, params, function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                        }
+                    }, 'json');
+                }
+                if ($(this).attr('name') == 'delete') {
+                    $.post(url, params, function(data) {
+                        if (data.success == true) {
+                            row.remove();
+                            $('#overlay, #spinner').hide();
+                        }
+                    }, 'json');
+                }
+            });
+        }
     </script>
 {% endblock %}

@@ -58,12 +58,18 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        $('input[type="text"]').change(function() {
-            var id = $(this).attr('id');
-            $('button[name="action:edit"]')
-                .attr({disabled: 'disabled'}).addClass('disabled');
-            $('button[value="' + id + '"]')
-                .removeAttr('disabled').removeClass('disabled');
-        });
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js',
+            function() {done()}]]);
+        function done() {
+            $('input[type="text"]').change(function() {
+                var id = $(this).attr('id');
+                $('button[name="action:edit"]')
+                    .attr({disabled: 'disabled'}).addClass('disabled');
+                $('button[value="' + id + '"]')
+                    .removeAttr('disabled').removeClass('disabled');
+            });
+        }
     </script>
 {% endblock %}

@@ -68,10 +68,46 @@
     {% endfor %}
 </article>
 {% endblock %}
-
 {% block scripts %}
     {{ super() }}
     <script>
-        nbl.l(['/static/scripts/admin.images.min.js']);
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js',
+            function() {done()}]]);
+        function done() {
+            $('#main button').click(function(evt) {
+                evt.preventDefault();
+                $('#overlay, #spinner').show();
+                var row = $(this).closest('tr');
+                var url = '/admin/images';
+                var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': token};
+
+                if (params['action'] == 'delete') {
+                    var done = function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                            row.find('._small').html('<i class="icon-minus-sign" style="color: #c00"></i>');
+                            row.find('button[name=delete]')
+                                .attr('disabled', 'disabled').addClass('disabled');
+                            row.find('button[name=make]')
+                                .removeAttr('disabled').removeClass('disabled');
+                        }
+                    }
+                } else if (params['action'] == 'make') {
+                    var done = function(data) {
+                        if (data.success == true) {
+                            $('#overlay, #spinner').hide();
+                            row.find('._small').html(data.small);
+                            row.find('button[name=make]')
+                                .attr('disabled', 'disabled').addClass('disabled');
+                            row.find('button[name=delete]')
+                                .removeAttr('disabled').removeClass('disabled');
+                        }
+                    }
+                }
+                $.post(url, params, done, 'json');
+            });
+        }
     </script>
 {% endblock %}

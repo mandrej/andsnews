@@ -42,3 +42,24 @@
     {% endfor %}
 </div>
 {% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
+                '/static/scripts/imagesloaded.min.js',
+                '/static/scripts/jquery.masonry.min.js',
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js',
+                function() {done()}]]]);
+        function done() {
+           var $container = $('#container');
+            $container.imagesLoaded(function() {
+                $container.masonry({
+                    itemSelector: '.brick'
+                });
+                $container.masonry('bindResize');
+            });
+        }
+    </script>
+{% endblock %}

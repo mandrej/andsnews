@@ -1,10 +1,3 @@
-// autocomplete
-var autoCompleteOptions = {
-    width: 284,
-    selectFirst: false,
-    multiple: false,
-    matchContains: true
-};
 $(function() {
     var $pinner = $('#overlay, #spinner');
 
@@ -115,14 +108,5 @@ $(function() {
                 });
             });
         });
-    });
-
-    // masonry
-    var $container = $('#container');
-    $container.imagesLoaded(function() {
-        $container.masonry({
-            itemSelector: '.brick'
-        });
-        $container.masonry('bindResize');
     });
 });

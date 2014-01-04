@@ -60,8 +60,27 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        scripts.push('/static/scripts/news.form.min.js');
-        deferred_load();
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js', [
+                '/static/scripts/urlify.min.js',
+                '/static/scripts/jquery.autocomplete.min.js',
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js',
+                function() {done()}]]]);
+
+        var autoCompleteOptions = {
+            width: 284,
+            selectFirst: false,
+            multiple: false,
+            matchContains: true
+        };
+        function done() {
+            $('#headline').slugify();
+            $("#tags").autocomplete("/complete/Feed_tags", autoCompleteOptions);
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+        }
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

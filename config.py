@@ -43,7 +43,6 @@ http://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGP
 /static/scripts/markitup/jquery.markitup.min.js
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
-
 /static/scripts/admin.index.min.js
 
 /static/scripts/urlify.js.map

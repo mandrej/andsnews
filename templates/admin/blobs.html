@@ -57,3 +57,11 @@
     </table>
 </article>
 {% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js']]);
+    </script>
+{% endblock %}

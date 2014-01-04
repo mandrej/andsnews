@@ -42,12 +42,16 @@
     {% endif %}
 </aside>
 {% endblock %}
-
 {% block scripts %}
     {{ super() }}
     <script>
-        nbl.l(['/static/scripts/jquery.backstretch.min.js', function(){done();}]);
+        nbl.l([[
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+            '/static/scripts/common.min.js',
+            '/static/scripts/base.min.js',
+            '/static/scripts/jquery.backstretch.min.js', function() {done()}]]);
         function done() {
+            console.log(nbl.q);
             $.getJSON('/latest', function(data) {
                 $.backstretch(data, {fade: 1000, duration: 4000});
             });
