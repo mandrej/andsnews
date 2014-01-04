@@ -76,7 +76,7 @@
         };
         function done() {
             $('#headline').slugify();
-            $("#tags").autocomplete("/complete/Feed_tags", autoCompleteOptions);
+            $("#tags").autocomplete("/complete/Feed_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
             $('#main button').click(function() {
                 $('#overlay, #spinner').show();
             });

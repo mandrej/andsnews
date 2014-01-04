@@ -137,7 +137,7 @@
                         '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
                 );
             });
-            $("#tags").autocomplete("/complete/Entry_tags", autoCompleteOptions);
+            $("#tags").autocomplete("/complete/Entry_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
             $('#main button').click(function() {
                 $('#overlay, #spinner').show();
             });
