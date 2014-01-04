@@ -51,7 +51,6 @@
             '/static/scripts/base.min.js',
             '/static/scripts/jquery.backstretch.min.js', function() {done()}]]);
         function done() {
-            console.log(nbl.q);
             $.getJSON('/latest', function(data) {
                 $.backstretch(data, {fade: 1000, duration: 4000});
             });
