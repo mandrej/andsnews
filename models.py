@@ -411,7 +411,6 @@ class Photo(ndb.Model):
         pattern = '_%s=s%s' if secure else '%s=s%s'
         pattern = '%s-crop' % pattern if crop else pattern
         key = pattern % (self.key.string_id(), size)
-        logging.error(key)
         url = memcache.get(key)
         if url is None:
             url = images.get_serving_url(self.blob_key, size=size, crop=crop, secure_url=secure)
