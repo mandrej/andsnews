@@ -41,6 +41,7 @@ handlers:
 
 - url: /.*
   script: main.app
+  secure: always
 
 includes:
 - mapreduce/include.yaml

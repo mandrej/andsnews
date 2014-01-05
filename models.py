@@ -407,20 +407,22 @@ class Photo(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def cached_url(self, size, crop):
-        pattern = '%s=s%s-c' if crop else '%s=s%s'
+    def cached_url(self, size, crop, secure):
+        pattern = '_%s=s%s' if secure else '%s=s%s'
+        pattern = '%s-crop' % pattern if crop else pattern
         key = pattern % (self.key.string_id(), size)
+        logging.error(key)
         url = memcache.get(key)
         if url is None:
-            url = images.get_serving_url(self.blob_key, size=size, crop=crop)
+            url = images.get_serving_url(self.blob_key, size=size, crop=crop, secure_url=secure)
             memcache.add(key, url)
         return url
 
     def normal_url(self):
-        return self.cached_url(1000, False)
+        return self.cached_url(1000, False, True)
 
     def small_url(self):
-        return self.cached_url(375, False)
+        return self.cached_url(375, False, True)
 
     @property
     def blob_info(self):
