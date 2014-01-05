@@ -1,8 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin);
 @import "mixins.less";
 @import "fontawesome.less";
 @import "jquery.autocomplete.less";
 
-@default_font: "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+@default_font: "PT Sans", sans-serif;
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
 
 @google_blue: #0048f1;
@@ -209,7 +210,7 @@ header#header {
 		float: left;
 		font-size: 3.2em;
 		a { color: white; text-decoration: none; }
-		span { position: absolute; bottom: -7px; font-size: 0.3em; color: #fff; }
+		span { position: absolute; left: 0; bottom: -7px; font-size: 0.3em; color: #fff; }
 		@media only screen and (max-width: 480px) { display: none; }
 	}
 	a.icon-home {
@@ -552,7 +553,7 @@ figure {
 	position: relative;
 	.day {
 		position: absolute;
-		top: -0.15em;
+		top: -0.3em;
 		left: 0;
 	}
 	.year, .month { display: block; font-size: 42%; line-height: 100%; text-align: right; }
