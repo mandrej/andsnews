@@ -28,6 +28,7 @@ https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
 /static/images/front.png
 /static/css/base.css
 
+/static/scripts/nbl.min.js
 /static/scripts/imagesloaded.min.js
 /static/scripts/jquery.masonry.min.js
 /static/scripts/jquery.searchhighlight.min.js
