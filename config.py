@@ -23,8 +23,6 @@ LANGUAGES = (
 OFFLINE = """CACHE MANIFEST
 # %s
 https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
-https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
-https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
 /static/font/fontawesome.woff
 /static/images/bg.jpg
 /static/images/front.png
