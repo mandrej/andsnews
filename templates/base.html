@@ -55,7 +55,7 @@
     <header id="header">
         <h1>
             <a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a>
-            <span>offline</span>
+            <span>online</span>
         </h1>
         <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
         <a href="#" id="tools" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
@@ -68,6 +68,7 @@
         <script>
             kind = '{{ kind }}';
             token = '{{ token }}';
+            if (!navigator.onLine) document.querySelectorAll('#header span')[0].innerText = 'offline';
             window.applicationCache.addEventListener('progress', function(evt) {
                 document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
             }, false);
