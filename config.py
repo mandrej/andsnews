@@ -46,22 +46,12 @@ https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnG
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
 /static/scripts/admin.index.min.js
 
-/static/scripts/urlify.js.map
-/static/scripts/base.min.js
-/static/scripts/common.js.map
-/static/scripts/base.js.map
-/static/scripts/markitup/jquery.markitup.js.map
-/static/scripts/markitup/sets/cmnt.set_en_US.js.map
-/static/scripts/markitup/sets/cmnt.set_sr_RS.js.map
-/static/scripts/jquery.autocomplete.js.map
-/static/scripts/jquery.searchhighlight.js.map
-/static/scripts/admin.index.js.map
-
 FALLBACK:
 / /offline.html
 
 NETWORK:
 *
+
 SETTINGS:
 prefer-online
 """
