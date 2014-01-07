@@ -1,7 +1,19 @@
-@import url(https://fonts.googleapis.com/css?family=PT+Sans:regular,bold&subset=cyrillic,latin);
 @import "mixins.less";
 @import "fontawesome.less";
 @import "jquery.autocomplete.less";
+
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Sans'), local('PTSans-Regular'), url(https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff) format('woff');
+}
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('PT Sans Bold'), local('PTSans-Bold'), url(https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
+}
 
 @default_font: "PT Sans", sans-serif;
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
