@@ -109,6 +109,25 @@
 			}
         })
 	};
+    /*
+	 * copyright - Draw copyrighted image on canvas
+	 * $Version: 2014.01.08
+	 *
+	 */
+    $.fn.copyright = function(src) {
+        var canvas = this[0];
+        var cntx = canvas.getContext('2d');
+        var img = new Image();
+        img.src = src + '=s1000';
+        img.onload = function() {
+            $(canvas).attr('width', this.width).attr('height', this.height);
+            cntx.drawImage(img, 0, 0, this.width, this.height);
+            cntx.font = '22px "PT Sans"';
+            cntx.fillStyle = '#fff';
+            cntx.fillText('© ands.appspot.com', this.width - 210, 30);
+        };
+        return canvas
+    }
     // close
     $('a.close').live('click', function(evt) {
         evt.preventDefault();

@@ -82,10 +82,7 @@
                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
         </div>
     </header>
-
-    <figure>
-        <img src="{{ object.normal_url() }}" alt="{{ object.headline }}"/>
-    </figure>
+    <canvas></canvas>
 </article>
 {% endblock %}
 {% block scripts %}
@@ -99,6 +96,9 @@
             '/static/scripts/markitup/jquery.markitup.min.js',
             '/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js', [
                 '/static/scripts/common.min.js',
-                '/static/scripts/base.min.js']]]);
+                '/static/scripts/base.min.js',
+                function() {
+                    $('canvas').copyright('{{ object.url() }}');
+                }]]]);
     </script>
 {% endblock %}

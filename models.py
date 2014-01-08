@@ -417,6 +417,9 @@ class Photo(ndb.Model):
             memcache.add(key, url)
         return url
 
+    def url(self):
+        return self.cached_url(None, False, True)
+
     def normal_url(self):
         return self.cached_url(1000, False, True)
 
