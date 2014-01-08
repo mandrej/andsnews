@@ -686,7 +686,7 @@ figure {
 	}
 	@iterations: 12;
 	.loop (@index) when (@index > 0) {
-		(~".bar@{index}") {
+		.bar@{index} {
 			@delay: (1s * @index / @iterations - 1);
 			.transform(rotate(0deg + @index * 30) translate(0, -142%));
 			.animation-delay(@delay);
