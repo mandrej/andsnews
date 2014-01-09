@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿/**
  * Various Common jQuery plugins
  *
  * Copyright (c) 2008 Milan Andrejevic <milan.andrejevic@gmail.com>
