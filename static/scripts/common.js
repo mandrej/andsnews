@@ -118,13 +118,18 @@
         var canvas = this[0];
         var cntx = canvas.getContext('2d');
         var img = new Image();
-        img.src = src + '=s1000';
+        img.src = src;
         img.onload = function() {
             $(canvas).attr('width', this.width).attr('height', this.height);
             cntx.drawImage(img, 0, 0, this.width, this.height);
-            cntx.font = '22px "PT Sans"';
+            var factor = this.width / $(canvas).width();
+            cntx.font = 22 * factor + 'px "PT Sans"';
             cntx.fillStyle = '#fff';
-            cntx.fillText('© ands.appspot.com', this.width - 210, 30);
+            cntx.shadowColor = '#000';
+            cntx.shadowOffsetX = 0;
+            cntx.shadowOffsetY = 0;
+            cntx.shadowBlur = 5;
+            cntx.fillText('© ands.appspot.com', this.width - 205 * factor, 32);
         };
         return canvas
     }

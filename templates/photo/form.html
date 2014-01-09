@@ -61,10 +61,6 @@
                     <button type="button">{{ _('Calculate palette') }}</button>
                 </p>
                 <table class="palette zebra"></table>
-                <script>
-                    var palette_url = '/photos/' + '{{ object.key.string_id() }}' + '/palette';
-                    var explain = '{{ _('Click - pick color from palette which best represent image') }}';
-                </script>
             </div>
 
 			<fieldset>
@@ -123,6 +119,7 @@
                 $('#overlay, #spinner').show();
             });
 
+            var palette_url = '/photos/' + '{{ object.key.string_id() }}' + '/palette';
             var write_palette = function() {
                 $.getJSON(palette_url, function(data) {
                     var cntx = $('table.palette');
