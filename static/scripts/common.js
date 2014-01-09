@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Various Common jQuery plugins
  *
  * Copyright (c) 2008 Milan Andrejevic <milan.andrejevic@gmail.com>
@@ -122,14 +122,15 @@
         img.onload = function() {
             $(canvas).attr('width', this.width).attr('height', this.height);
             cntx.drawImage(img, 0, 0, this.width, this.height);
-            var factor = this.width / $(canvas).width();
-            cntx.font = 22 * factor + 'px "PT Sans"';
+            var width_factor = this.width / $(canvas).width();
+            var height_factor = this.height / $(canvas).height();
+            cntx.font = 16 * width_factor + 'px "PT Sans"';
             cntx.fillStyle = '#fff';
             cntx.shadowColor = '#000';
             cntx.shadowOffsetX = 0;
             cntx.shadowOffsetY = 0;
             cntx.shadowBlur = 5;
-            cntx.fillText('© ands.appspot.com', this.width - 205 * factor, 32);
+            cntx.fillText('© ands.appspot.com', this.width - 160 * width_factor, 30 * height_factor);
         };
         return canvas
     }
