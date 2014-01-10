@@ -9,6 +9,7 @@ import math
 import colorsys
 import itertools
 import collections
+import webapp2
 from cStringIO import StringIO
 from decimal import *
 
@@ -407,23 +408,15 @@ class Photo(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def cached_url(self, size, crop, secure):
-        pattern = '_%s=s%s' if secure else '%s=s%s'
-        pattern = '%s-crop' % pattern if crop else pattern
-        key = pattern % (self.key.string_id(), size)
-        url = memcache.get(key)
-        if url is None:
-            url = images.get_serving_url(self.blob_key, size=size, crop=crop, secure_url=secure)
-            memcache.add(key, url)
-        return url
-
+    @webapp2.cached_property
     def normal_url(self):
-        return self.cached_url(1000, False, True)
+        return images.get_serving_url(self.blob_key, size=1000, crop=False, secure_url=True)
 
+    @webapp2.cached_property
     def small_url(self):
-        return self.cached_url(375, False, True)
+        return images.get_serving_url(self.blob_key, size=375, crop=False, secure_url=True)
 
-    @property
+    @webapp2.cached_property
     def blob_info(self):
         return blobstore.BlobInfo.get(self.blob_key)
 

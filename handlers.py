@@ -155,7 +155,7 @@ class Latest(BaseHandler):
             query = Photo.query().order(-Photo.date)
             paginator = Paginator(query)
             results, has_next = paginator.page(1)
-            objects = [x.normal_url() for x in results]
+            objects = [x.normal_url for x in results]
             memcache.add('Photo_latest', objects, TIMEOUT)
         self.render_json(objects)
 

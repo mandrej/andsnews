@@ -56,7 +56,7 @@
 	{% if object %}
 	    <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
             <div id="palette">
-                <img src="{{ object.small_url() }}"/>
+                <img src="{{ object.small_url }}"/>
                 <p style="padding: 0.5em 0; text-align: center">
                     <button type="button">{{ _('Calculate palette') }}</button>
                 </p>

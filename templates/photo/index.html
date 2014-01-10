@@ -28,7 +28,7 @@
             {% endif %}
             <figure class="thumbnail brick">
                 <a href="{{ url }}?idx={{ idx + loop.index }}" title="{{ object.headline }}">
-                    <img src="{{ object.small_url() }}"/>
+                    <img src="{{ object.small_url }}"/>
                     <p class="legend">{{ object.headline }}</p>
                 </a>
             </figure>
