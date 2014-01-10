@@ -522,14 +522,13 @@ figure {
 	a { color:  white; text-decoration: none;
 		&:hover, &.selected { background: @google_orange; color: black; }
 	}
-	a.t1 { font-size: @size; font-weight: @weight; }
-	a.t2 { font-size: @size + 0.1; font-weight: @weight + 100; }
-	a.t3 { font-size: @size + 0.2 ; font-weight: @weight + 200; }
-	a.t4 { font-size: @size + 0.3; font-weight: @weight + 300; }
-	a.t5 { font-size: @size + 0.4; font-weight: @weight + 400; }
-	a.t6 { font-size: @size + 0.6; font-weight: @weight + 500; }
-	a.t7 { font-size: @size + 0.7; font-weight: @weight + 600; }
-	a.t8 { font-size: @size + 0.8; font-weight: @weight + 700; }
+	@iterations: 8;
+	.loop (@index) when (@index > 0) {
+		a.t@{index} { font-size: @size + (@index - 1) / 10; font-weight: @weight + (@index - 1) * 100; }
+		.loop (@index - 1);
+	}
+	.loop (0) {}
+	.loop (@iterations);
 }
 
 .story {
@@ -604,10 +603,13 @@ figure {
 	@media only screen and (max-width: 480px) { width: (100% - @inn); }
 }
 
-.hilite1 { color: black; background: @hilite; }
-.hilite2 { color: black; background: spin(@hilite, 60); }
-.hilite3 { color: black; background: spin(@hilite, 120); }
-.hilite4 { color: black; background: spin(@hilite, 180); }
+@iterations: 4;
+.loop (@index) when (@index > 0) {
+	.hilite@{index} { color: black; background: spin(@hilite, 60 * (@index - 1)); }
+	.loop (@index - 1);
+}
+.loop (0) {}
+.loop (@iterations);
 
 #overlay, .modal {
 	width: 100%;
