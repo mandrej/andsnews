@@ -127,20 +127,6 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
-        # cache_dependents = {
-        #     'language_code': lang_code,
-        #     'user': self.user,
-        #     'is_admin': self.is_admin,
-        #     'path': self.request.path
-        # }
-        # etag = hashlib.md5(json.dumps(cache_dependents, cls=LazyEncoder)).hexdigest()
-        # if etag == str(self.request.if_none_match).strip('"'):
-        #     logging.error('ETAG')
-        #     self.response.set_status(304)
-        # else:
-        #     logging.error('FRESH')
-        #     self.response.headers['Cache-Control'] = 'store'
-        #     self.response.headers['ETag'] = etag
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
