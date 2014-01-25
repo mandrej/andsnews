@@ -6,8 +6,6 @@ from wtforms import Form, fields, validators
 from models import Comment
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
 
-PER_PAGE = 10
-
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
@@ -16,7 +14,7 @@ class Index(BaseHandler):
         query = Comment.query(*filters).order(-Comment.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

@@ -14,7 +14,6 @@ from models import Entry, ENTRY_IMAGES
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
 from config import TIMEOUT
 
-PER_PAGE = 6
 SMALL = 60, 60
 
 
@@ -25,7 +24,7 @@ class Index(BaseHandler):
         query = Entry.query(*filters).order(-Entry.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paginator(query, per_page=9)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

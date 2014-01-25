@@ -15,7 +15,6 @@ from lib import feedparser
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
 from config import TIMEOUT
 
-PER_PAGE = 12
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 ADS = (
     re.compile(r'<div class="(feedflare|mf-viral|blogger-post-footer)">.+?</div>', re.DOTALL),
@@ -74,7 +73,7 @@ class Index(BaseHandler):
         query = Feed.query(*filters).order(-Feed.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

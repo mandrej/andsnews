@@ -9,7 +9,7 @@ from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
-from config import filesizeformat, PER_PAGE, HUE
+from config import filesizeformat, HUE
 
 
 class Cache(BaseHandler):
@@ -170,10 +170,10 @@ class Feeds(BaseHandler):
 
 class Counters(BaseHandler):
     @admin_required
-    def get(self, per_page=PER_PAGE):
+    def get(self):
         query = Counter.query().order(Counter.field)
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=per_page)
+        paginator = Paginator(query)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/counters.html', data)
