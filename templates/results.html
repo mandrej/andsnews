@@ -61,7 +61,7 @@
         </div>
     {% endmacro %}
 
-    <div id="container">
+    <div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
         {% for object in objects %}
             {{ result(object) }}
         {% else %}
@@ -83,10 +83,9 @@
     <script>
         nbl.l([[
             'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
-            '/static/scripts/imagesloaded.min.js', [
-                '/static/scripts/jquery.searchhighlight.min.js',
-                '/static/scripts/jquery.masonry.min.js', [
-                    '/static/scripts/common.min.js',
-                    '/static/scripts/base.min.js']]]]);
+            '/static/scripts/jquery.searchhighlight.min.js',
+            '/static/scripts/jquery.masonry.min.js', [
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js']]]);
     </script>
 {% endblock %}

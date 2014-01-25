@@ -18,7 +18,7 @@
     {{ m.page_number(page) }}
 </h2>
 
-<div id="container">
+<div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
     {% for object in objects %}
         {% if object %}
             {% if filter %}
@@ -46,20 +46,9 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
-                '/static/scripts/imagesloaded.min.js',
-                '/static/scripts/jquery.masonry.min.js', [
-                    '/static/scripts/common.min.js',
-                    '/static/scripts/base.min.js',
-                    function() {done()}]]]]);
-        function done() {
-           var $container = $('#container');
-            $container.imagesLoaded(function() {
-                $container.masonry({
-                    itemSelector: '.brick'
-                });
-                $container.masonry('bindResize');
-            });
-        }
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
+            '/static/scripts/jquery.masonry.min.js', [
+                '/static/scripts/common.min.js',
+                '/static/scripts/base.min.js']]]);
     </script>
 {% endblock %}

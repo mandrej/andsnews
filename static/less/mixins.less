@@ -52,6 +52,12 @@
 	-o-transition-property: @props;
 	transition-property: @props;
 }
+.transition-delay(@delay:0) {
+    -webkit-transition-delay: @delay;
+    -moz-transition-delay: @delay;
+    -o-transition-delay: @delay;
+    transition-delay: @delay;
+}
 .animation(@args) {
 	-webkit-animation: @args;
 	-moz-animation: @args;
