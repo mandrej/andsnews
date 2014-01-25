@@ -18,7 +18,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE
+from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
 
 def touch_appcache(handler_method):
@@ -127,6 +127,7 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
+        kwargs['caching'] = not DEVEL and kwargs.get('form', None) is None
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):

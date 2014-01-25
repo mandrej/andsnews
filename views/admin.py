@@ -64,7 +64,7 @@ class Comments(BaseHandler):
         page = int(self.request.get('page', 1))
         paginator = Paginator(query, 10)
         objects, has_next = paginator.page(page)
-        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
+        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/comments.html', data)
 
     @csrf_protected
@@ -175,7 +175,7 @@ class Counters(BaseHandler):
         page = int(self.request.get('page', 1))
         paginator = Paginator(query, per_page=per_page)
         objects, has_next = paginator.page(page)
-        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
+        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/counters.html', data)
 
     @csrf_protected
