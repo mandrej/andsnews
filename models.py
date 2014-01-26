@@ -2,7 +2,6 @@ from __future__ import division
 
 __author__ = 'milan'
 
-import logging
 import datetime
 import cgi
 import math
@@ -30,6 +29,10 @@ KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
+
+
+# def divide60(pow_num):
+#     return pow_num[1] / 60 ** pow_num[0]
 
 
 def img_palette(buff):
@@ -96,8 +99,8 @@ def get_exif(buff):
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
 
     # if 'GPS GPSLatitude' in tags:
-    #     d, m, s = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
-    #     data['latitude'] = d + m / 60 + s / 3600
+    #     deg_min_sec = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
+    #     data['latitude'] = sum(map(divide60, enumerate(deg_min_sec)))  # [(0, 44), (1, 47), (2, 55.9597)]
 
     # if 'GPS GPSLongitude' in tags:
     #     d, m, s = eval(tags['GPS GPSLongitude'].printable)  # [20, 28, 508547/10000]
