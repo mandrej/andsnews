@@ -38,6 +38,21 @@ def img_palette(buff):
 
 
 def get_exif(buff):
+    """
+    EXIF tags:
+    ColorSpace, ComponentsConfiguration, DateTimeDigitized, DateTimeOriginal, ExifImageLength, ExifImageWidth,
+    ExifVersion, ExposureTime, FNumber, FlashPixVersion, FocalLength, ISOSpeedRatings, InteroperabilityOffset
+    
+    GPS tags:
+    GPSAltitude, GPSAltitudeRef, GPSDate, GPSImgDirection, GPSImgDirectionRef, GPSLatitude, GPSLatitudeRef,
+    GPSLongitude, GPSLongitudeRef, GPSProcessingMethod, GPSTimeStamp, GPSVersionID
+    
+    Image tags:
+    ExifOffset, GPSInfo, Make, Model, ResolutionUnit, Software, XResolution, YCbCrPositioning, YResolution
+    
+    Thumbnail tags:
+    Compression, JPEGInterchangeFormat, JPEGInterchangeFormatLength, ResolutionUnit, XResolution, YResolution
+    """
     data = {}
     model = None
     make = None
@@ -80,7 +95,14 @@ def get_exif(buff):
         getcontext().prec = 2
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
 
-    logging.info(data)
+    # if 'GPS GPSLatitude' in tags:
+    #     d, m, s = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
+    #     data['latitude'] = d + m / 60 + s / 3600
+
+    # if 'GPS GPSLongitude' in tags:
+    #     d, m, s = eval(tags['GPS GPSLongitude'].printable)  # [20, 28, 508547/10000]
+    #     data['longitude'] = d + m / 60 + s / 3600
+
     return data
 
 
