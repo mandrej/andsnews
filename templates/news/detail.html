@@ -34,9 +34,9 @@
 			{% endfor %}
 		</div>
 		
-		<div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
+		<div id="container" class="cols">
 			{% for entry in news.entries %}
-				<article class="third brick">
+				<article class="third">
                     <header>
                         <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
                     </header>
@@ -62,8 +62,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
-            '/static/scripts/jquery.masonry.min.js', [
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

@@ -21,10 +21,10 @@
     {{ m.page_number(page) }}
 </h2>
 
-<div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
+<div id="container" class="cols">
     {% for object in objects %}
         {% if object %}
-            <section class="third brick">
+            <section class="third">
                 {% if object.date %}{{ m.time(object.date) }}{% endif %}
                 <div class="body">
                     <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
@@ -52,8 +52,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
-            '/static/scripts/jquery.masonry.min.js', [
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

@@ -9,10 +9,10 @@
         {{ m.page_number(page) }}
     </h2>
 
-	<div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
+	<div id="container" class="cols">
 		{% for object in objects %}
 	    	{% if object.is_message %}
-	    		<section class="third brick">
+	    		<section class="third">
                     {{ m.time(object.date) }}
                     <div class="body">
                         <h3>{{ _('message') }}</h3>
@@ -23,7 +23,7 @@
                     </div>
 				</section>
 	        {% else %}
-	    		<section class="third brick">
+	    		<section class="third">
                     {{ m.time(object.date) }}
                     {% with refkey=object.key.parent() %}
                         <div class="body">
@@ -50,8 +50,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
-            '/static/scripts/jquery.masonry.min.js', [
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

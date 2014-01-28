@@ -18,7 +18,7 @@
     {{ m.page_number(page) }}
 </h2>
 
-<div id="container" class="js-masonry" data-masonry-options='{"itemSelector": ".brick", "transitionDuration": 0}'>
+<div id="container" class="cols">
     {% for object in objects %}
         {% if object %}
             {% if filter %}
@@ -26,7 +26,7 @@
             {% else %}
                 {% set url = uri_for('photo', slug = object.key.string_id()) %}
             {% endif %}
-            <figure class="thumbnail brick">
+            <figure class="thumbnail">
                 <a href="{{ url }}?idx={{ idx + loop.index }}" title="{{ object.headline }}">
                     <img src="{{ object.small_url }}"/>
                     <p class="legend">{{ object.headline }}</p>
@@ -46,8 +46,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
-            '/static/scripts/jquery.masonry.min.js', [
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

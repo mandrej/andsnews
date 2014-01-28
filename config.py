@@ -31,7 +31,6 @@ https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnG
 /static/css/base.css
 
 /static/scripts/nbl.min.js
-/static/scripts/jquery.masonry.min.js
 /static/scripts/jquery.searchhighlight.min.js
 /static/scripts/urlify.min.js
 /static/scripts/jquery.autocomplete.min.js
