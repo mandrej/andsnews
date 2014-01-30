@@ -203,8 +203,8 @@ table {
 // layout
 #progress {
 	position: absolute;
-	height: 5px;
-	margin-left: -3%;
+	height: 10px;
+	margin: 0 -@gap;
 	background: #000;
 }
 header#header {
@@ -257,11 +257,11 @@ header#header {
 	@media only screen and (max-width: 480px) { background: none; }
 }
 #container {
-	&.cols6 {
+	&.thumbnails {
 		.columns(auto, 6, @inn);
 		@media only screen and (max-width: 1024px) { .columns(auto, 4, @inn); }
 		@media only screen and (max-width: 800px) { .columns(auto, 3, @inn * 0.66); }
-		@media only screen and (max-width: 480px) { .columns(auto, 2, @inn * 0.33); }
+		@media only screen and (max-width: 480px) { .columns(auto, 2, @inn * 0.66); }
 		figure {
 			display: inline-block;
 			margin-bottom: 2em;
@@ -286,7 +286,7 @@ header#header {
 			&:hover { background: @google_orange; }
 		}
 	}
-	&.cols3 {
+	&.cols {
 		.columns(auto, 3, @inn);
 		@media only screen and (max-width: 800px) { .columns(auto, 2, @inn * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 1, 0); }
@@ -301,15 +301,14 @@ header#header {
 aside {
 	float: right;
 	width: calc(~'100% / 3 - 19px');
-//	@media only screen and (max-width: 1024px) { width: calc(~'100% / 3 - 19px'); }
-	@media only screen and (max-width: 800px) { width: (100% / 2 - @gap); }
+	@media only screen and (max-width: 800px) { width: calc(~'100% / 2 - 9px'); }
 	@media only screen and (max-width: 480px) { display: none; }
 }
 .port {
-	margin-bottom: 2em; width: calc(~'200% / 3 - 19px');;
-	@media only screen and (max-width: 1024px) { width: 57%; }
-	@media only screen and (max-width: 800px) { width: (50% - @gap); }
-	@media only screen and (max-width: 480px) { width: (100% - @gap); }
+	margin-bottom: 2em; width: calc(~'200% / 3 - 19px');
+	@media only screen and (max-width: 1024px) { margin-bottom: 2em; width: calc(~'200% / 3 - 9px'); }
+	@media only screen and (max-width: 800px) { margin-bottom: 1.5em; width: calc(~'100% / 2 - 9px'); }
+	@media only screen and (max-width: 480px) { width: 100%; }
 	canvas {
 		max-width: 100%;
 	}
@@ -525,9 +524,8 @@ nav.submenu {
 	}
 }
 
-figure {
-	p.legend { padding: 0.5em; text-align: center; }
-}
+
+p.legend { padding: 0.5em; text-align: center; }
 
 .cloud {
 	@size: 1.0em;

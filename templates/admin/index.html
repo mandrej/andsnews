@@ -13,61 +13,58 @@
             <a href="/mapreduce">Mapreduce</a>
         </h2>
     </nav>
-    <h3>Memcache statistics for	v.{{ version() }}</h3>
-    <dl class="w65em">
-        <dt>hit ratio</dt>
-        <dd>
-            {{ '%0.1f'|format(hit_ratio) }}%
-            ({{ stats.hits }} hits, {{ stats.misses }} misses)
-        </dd>
-    </dl>
-    <dl class="w65em">
-        <dt>size</dt>
-        <dd>{{ stats['items'] }} items,
-            {{ stats.bytes|filesizeformat }}
-        </dd>
-    </dl>
-    <dl class="w65em">
-        <dt>oldest item</dt>
-        <dd>{{ oldest|timesince }} ago</dd>
-    </dl>
 </aside>
 <article>
 	<h2>Site administration</h2>
-	<section>
-		<div class="admin">
-			<h3><a href="/admin/blobs">Photo {{ photo_count }}</a></h3>
-			<div id="Photo_tags"></div>
-			<div id="Photo_author"></div>
-			<div id="Photo_date"></div>
-			<div id="Photo_model"></div>
-			<div id="Photo_lens"></div>
-			<div id="Photo_eqv"></div>
-			<div id="Photo_iso"></div>
-			<div id="Photo_color"></div>
-		</div>
-	</section>
-
-	<section>
-		<div class="admin">
-			<h3><a href="/admin/images">Entry {{ entry_count }}</a></h3>
-			<div id="Entry_tags"></div>
-			<div id="Entry_author"></div>
-			<div id="Entry_date"></div>
-		</div>
-		
-		<div class="admin">
-			<h3><a href="/admin/feeds">Feeds {{ feeds_count }}</a></h3>
-			<div id="Feed_tags"></div>
-		</div>
-
-		<div class="admin">
-			<h3><a href="/admin/comments">Comment {{ comment_count }}</a></h3>
-			<div id="Comment_forkind"></div>
-			<div id="Comment_author"></div>
-			<div id="Comment_date"></div>
-		</div>
-	</section>
+    <div id="container" class="cols">
+        <section class="admin">
+            <h3><a href="/admin/blobs">Photo {{ photo_count }}</a></h3>
+            <div id="Photo_tags"></div>
+            <div id="Photo_author"></div>
+            <div id="Photo_date"></div>
+            <div id="Photo_model"></div>
+            <div id="Photo_lens"></div>
+            <div id="Photo_eqv"></div>
+            <div id="Photo_iso"></div>
+            <div id="Photo_color"></div>
+        </section>
+        <section class="admin">
+            <h3><a href="/admin/images">Entry {{ entry_count }}</a></h3>
+            <div id="Entry_tags"></div>
+            <div id="Entry_author"></div>
+            <div id="Entry_date"></div>
+        </section>
+        <section class="admin">
+            <h3><a href="/admin/feeds">Feeds {{ feeds_count }}</a></h3>
+            <div id="Feed_tags"></div>
+        </section>
+        <section class="admin">
+            <h3><a href="/admin/comments">Comment {{ comment_count }}</a></h3>
+            <div id="Comment_forkind"></div>
+            <div id="Comment_author"></div>
+            <div id="Comment_date"></div>
+        </section>
+        <section>
+            <h3>Memcache statistics for	v.{{ version() }}</h3>
+            <dl class="w65em">
+                <dt>hit ratio</dt>
+                <dd>
+                    {{ '%0.1f'|format(hit_ratio) }}%
+                    ({{ stats.hits }} hits, {{ stats.misses }} misses)
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>size</dt>
+                <dd>{{ stats['items'] }} items,
+                    {{ stats.bytes|filesizeformat }}
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>oldest item</dt>
+                <dd>{{ oldest|timesince }} ago</dd>
+            </dl>
+        </section>
+    </div>
     <h2 class="ss clear">Spectra [+]</h2>
     <div class="hide">
         <div class="admin">
