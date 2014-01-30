@@ -3,7 +3,7 @@
 
 {% block contents %}
 {{ super() }}
-<article class="plain clear">
+<article class="clear">
 	<h2>Counter administration {{ m.page_number(page) }}</h2>
 	<form action="/admin/counters" method="post">
 		<input type="hidden" name="page" value="{{ page }}"/>

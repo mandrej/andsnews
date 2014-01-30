@@ -3,9 +3,9 @@
 
 {% block contents %}
 {{ super() }}
-<article class="plain">
+<article>
 	<h2>Photo blobs administration {{ m.page_number(page) }}</h2>
-    <div class="third" style="margin: 0">
+    <section>
         <h3>Dates</h3>
         <p class="cloud">
             {% for item in archive|sort(attribute='name', reverse=True) %}
@@ -14,7 +14,8 @@
                     title="{{ item.count }}" href="/admin/blobs/date/{{ item.name }}">{{ item.name }}</a>
             {% endfor %}
         </p>
-    </div>
+    </section>
+
     <br clear="all"/>
     <table id="data1" class="zebra">
         <colgroup>

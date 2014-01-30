@@ -34,9 +34,9 @@
 			{% endfor %}
 		</div>
 		
-		<div id="container" class="cols">
+		<div id="container" class="cols3">
 			{% for entry in news.entries %}
-				<article class="third">
+				<section>
                     <header>
                         <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
                     </header>
@@ -47,7 +47,7 @@
                             {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
                         {% endif %}
                     </p>
-				</article>
+				</section>
 			{% endfor %}
 		</div>
 	{% else %}

@@ -18,7 +18,7 @@
     {{ m.page_number(page) }}
 </h2>
 
-<div id="container" class="cols">
+<div id="container" class="cols6">
     {% for object in objects %}
         {% if object %}
             {% if filter %}
@@ -26,7 +26,7 @@
             {% else %}
                 {% set url = uri_for('photo', slug = object.key.string_id()) %}
             {% endif %}
-            <figure class="thumbnail">
+            <figure>
                 <a href="{{ url }}?idx={{ idx + loop.index }}" title="{{ object.headline }}">
                     <img src="{{ object.small_url }}"/>
                     <p class="legend">{{ object.headline }}</p>
@@ -34,7 +34,7 @@
             </figure>
         {% endif %}
     {% else %}
-        <section class="third">
+        <section>
             <div class="box">
                 <h3>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h3>
             </div>

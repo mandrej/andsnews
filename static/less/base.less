@@ -63,7 +63,7 @@ body {
 	background: url(/static/images/bg.jpg) @paper;
 	font-family: @default_font;
     font-size: 14px;
-	padding-left: @gap;
+	padding: 0 @gap;
 }
 a { color: black; outline: none; }
 a img { border: none; vertical-align: middle; }
@@ -257,29 +257,62 @@ header#header {
 	@media only screen and (max-width: 480px) { background: none; }
 }
 #container {
-	position: relative;
-	&.cols {
-//		.box-sizing(border-box);
-//		.columns((100% /6), 6, 0, transparent, none, 0);
+	&.cols6 {
+		.columns(auto, 6, 30px);
+		@media only screen and (max-width: 1024px) { .columns(auto, 4, 30px); }
+		@media only screen and (max-width: 800px) { .columns(auto, 3, 20px); }
+		@media only screen and (max-width: 480px) { .columns(auto, 2, 10px); }
+		figure {
+			display: inline-block;
+			margin-bottom: 2em;
+			width: 100%;
+			background: fade(white, 50%);
+			.border-radius(4px);
+			.drop-shadow(0, 0, 2px, 0.3);
+			@media only screen and (max-width: 800px) { margin-bottom: 1.5em; }
+			@media only screen and (max-width: 480px) { margin-bottom: 1em; }
+			img {
+				display: block;
+				max-width: 100%;
+				.rounded_top;
+			}
+			p.legend {
+				margin: 0;
+				line-height: 110%;
+				padding: 0.5em;
+				text-align: center;
+			}
+			a { text-decoration: none; }
+			&:hover { background: @google_orange; }
+		}
+	}
+	&.cols3 {
+		.columns(auto, 3, 30px);
+//		@media only screen and (max-width: 1024px) { .columns(auto, 3, 30px); }
+		@media only screen and (max-width: 800px) { .columns(auto, 2, 20px); }
+		@media only screen and (max-width: 480px) { .columns(auto, 1, 0); }
+		section {
+			display: inline-block;
+			width: 100%;
+			margin-bottom: 2em;
+			@media only screen and (max-width: 1024px) { margin-bottom: 1em; }
+		}
 	}
 }
-.plain { margin-right: @gap; }
 aside {
-	width: (100% / 3 - @gap);
-	margin-right: @gap;
 	float: right;
-	@media only screen and (max-width: 1024px) { width: 37%; }
+	width: calc(~'100% / 3 - 20px');
+//	@media only screen and (max-width: 1024px) { width: calc(~'100% / 3 - 20px'); }
 	@media only screen and (max-width: 800px) { width: (100% / 2 - @gap); }
 	@media only screen and (max-width: 480px) { display: none; }
 }
 .port {
-	margin: 0 @gap 2em 0; width: 63.66%;
+	margin-bottom: 2em; width: calc(~'200% / 3 - 20px');;
 	@media only screen and (max-width: 1024px) { width: 57%; }
 	@media only screen and (max-width: 800px) { width: (50% - @gap); }
 	@media only screen and (max-width: 480px) { width: (100% - @gap); }
-	img, canvas {
+	canvas {
 		max-width: 100%;
-		.border-radius(4px);
 	}
 }
 .subtitle {
@@ -495,31 +528,6 @@ nav.submenu {
 
 figure {
 	p.legend { padding: 0.5em; text-align: center; }
-	&.thumbnail {
-		float: left;
-		margin: 0 @inn 2em 0;
-		width: (100% /6 - @inn);
-//		display: inline-block;
-//		margin: 0 @inn 2em 0;
-//		width: (100% - @inn);
-		background: fade(white, 50%);
-		.border-radius(4px);
-		.drop-shadow(0, 0, 2px, 0.3);
-		@media only screen and (max-width: 1024px) { width: (100% /4 - @inn); }
-		@media only screen and (max-width: 800px) { margin: 0 @inn 1.5em 0; width: (100% /3 - @inn); }
-		@media only screen and (max-width: 480px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
-		img {
-			display: block;
-			max-width: 100%;
-			.rounded_top;
-		}
-		p.legend {
-			margin: 0;
-			line-height: 110%;
-		}
-		a { text-decoration: none; }
-		&:hover { background: @google_orange; }
-	}
 }
 
 .cloud {
@@ -603,13 +611,6 @@ figure {
     background: fade(white, 50%);
 	.border-radius(4px);
 	.drop-shadow(0, 0, 2px, 0.3);
-}
-.third {
-	float: left;
-	margin: 0 @inn 2em 0;
-	width: (100% /3 - @inn);
-	@media only screen and (max-width: 1024px) { margin: 0 @inn 1em 0; width: (100% /2 - @inn); }
-	@media only screen and (max-width: 480px) { width: (100% - @inn); }
 }
 
 @iterations: 4;

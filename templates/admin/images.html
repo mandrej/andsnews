@@ -3,9 +3,9 @@
 
 {% block contents %}
 {{ super() }}
-<article class="plain">
+<article>
 	<h2>Entry images administration {{ m.page_number(page) }}</h2>
-    <div class="third" style="margin: 0">
+    <section>
         <h3>Dates</h3>
         <p class="cloud">
             {% for item in archive|sort(attribute='name', reverse=True) %}
@@ -14,7 +14,8 @@
                     title="{{ item.count }}" href="/admin/images/date/{{ item.name }}">{{ item.name }}</a>
             {% endfor %}
         </p>
-    </div>
+    </section>
+
     <br clear="all"/>
     {% for entry in objects %}
         <h3><a href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">{{ entry.headline }}</a></h3>

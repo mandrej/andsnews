@@ -21,10 +21,10 @@
     {{ m.page_number(page) }}
 </h2>
 
-<div id="container" class="cols">
+<div id="container" class="cols3">
     {% for object in objects %}
         {% if object %}
-            <section class="third">
+            <section>
                 {% if object.date %}{{ m.time(object.date) }}{% endif %}
                 <div class="body">
                     <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
@@ -40,7 +40,7 @@
             </section>
         {% endif %}
     {% else %}
-        <section class="third">
+        <section>
             <div class="box">
                 <h3>{{ _('No news submitted') }}, {{ _('or filter has no results') }}.</h3>
             </div>

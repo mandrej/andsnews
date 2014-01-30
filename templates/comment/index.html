@@ -9,10 +9,10 @@
         {{ m.page_number(page) }}
     </h2>
 
-	<div id="container" class="cols">
+	<div id="container" class="cols3">
 		{% for object in objects %}
 	    	{% if object.is_message %}
-	    		<section class="third">
+	    		<section>
                     {{ m.time(object.date) }}
                     <div class="body">
                         <h3>{{ _('message') }}</h3>
@@ -23,7 +23,7 @@
                     </div>
 				</section>
 	        {% else %}
-	    		<section class="third">
+	    		<section>
                     {{ m.time(object.date) }}
                     {% with refkey=object.key.parent() %}
                         <div class="body">
@@ -38,7 +38,7 @@
 				</section>
 	        {% endif %}
         {% else %}
-            <section class="third">
+            <section>
                 <div class="box">
                     <h3>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h3>
                 </div>

@@ -20,7 +20,7 @@
 	{% endif %}
 
     {% macro result(object) %}
-        <div class="third">
+        <section>
             <div>
                 {% if object.kind == 'Photo' %}
                     <i class="icon-camera icon-2x pull-left"></i>
@@ -58,14 +58,14 @@
                     <time datetime='{{ object.date|to_datetime }}'>
                         {{ object.date|to_date }}</time></p>
             </div>
-        </div>
+        </section>
     {% endmacro %}
 
-    <div id="container" class="cols">
+    <div id="container" class="cols3">
         {% for object in objects %}
             {{ result(object) }}
         {% else %}
-            <section class="third">
+            <section>
                 <div class="box">
                     <h3>{{ _('No search results for') }} {{ phrase }}.</h3>
                     <p>{{ _('Please try again') }}.</p>
