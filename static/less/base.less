@@ -259,6 +259,7 @@ header#header {
 #container {
 	&.thumbnails {
 		.columns(auto, 6, @inn);
+		clear: both;
 		@media only screen and (max-width: 1024px) { .columns(auto, 4, @inn); }
 		@media only screen and (max-width: 800px) { .columns(auto, 3, @inn * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 2, @inn * 0.66); }
@@ -266,13 +267,14 @@ header#header {
 			display: inline-block;
 			margin-bottom: 2em;
 			width: 100%;
+			overflow: hidden;
 			background: fade(white, 50%);
 			.border-radius(4px);
 			.drop-shadow(0, 0, 2px, 0.3);
 			@media only screen and (max-width: 800px) { margin-bottom: 1.5em; }
 			@media only screen and (max-width: 480px) { margin-bottom: 1em; }
 			img {
-				display: block;
+//				display: block;
 				max-width: 100%;
 				.rounded_top;
 			}
@@ -301,17 +303,17 @@ header#header {
 aside {
 	float: right;
 	width: calc(~'100% / 3 - 19px');
-	@media only screen and (max-width: 800px) { width: calc(~'100% / 2 - 9px'); }
+	margin-left: @inn;
+	@media only screen and (max-width: 800px) { width: calc(~'100% / 2 - 9px'); margin-left: @inn * 0.66; }
 	@media only screen and (max-width: 480px) { display: none; }
 }
 .port {
-	margin-bottom: 2em; width: calc(~'200% / 3 - 19px');
-	@media only screen and (max-width: 1024px) { margin-bottom: 2em; width: calc(~'200% / 3 - 9px'); }
-	@media only screen and (max-width: 800px) { margin-bottom: 1.5em; width: calc(~'100% / 2 - 9px'); }
+	margin-bottom: 2em;
+	width: calc(~'200% / 3 - 11px');
+	@media only screen and (max-width: 1024px) { margin-bottom: 2em; width: calc(~'200% / 3 - 11px'); }
+	@media only screen and (max-width: 800px) { margin-bottom: 1.5em; width: calc(~'100% / 2 - 11px'); }
 	@media only screen and (max-width: 480px) { width: 100%; }
-	canvas {
-		max-width: 100%;
-	}
+	canvas { .border-radius(4px); max-width: 100%; }
 }
 .subtitle {
 	margin: 1em 0;
@@ -487,6 +489,7 @@ nav.submenu {
 
 #palette {
 	float: right; width: 18em;
+	img { .border-radius(4px); max-width: 100%; }
 	@media only screen and (max-width: 1024px) { display: none; }
 	th, td { border: none; }
 }
@@ -567,6 +570,7 @@ p.legend { padding: 0.5em; text-align: center; }
 	dd { border: none; margin: 0; padding: 0; }
 	blockquote { border-left: 1em solid white; }
 	pre { font-size: 0.8em; }
+	img { .border-radius(4px); }
 }
 
 .comments, .exif { clear: both; margin-top: 2em; }
