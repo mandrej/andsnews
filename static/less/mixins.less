@@ -94,6 +94,11 @@
 	column-count: @colcount;
 	column-gap: @colgap;
 }
+.column-break-inside(@args) {
+	-webkit-column-break-inside: @args;
+	-moz-column-break-inside: @args;
+	column-break-inside: @args;
+}
 .flex-display(@display: flex) {
 	display: ~"-webkit-@{display}";
 	display: ~"-moz-@{display}";

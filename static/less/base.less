@@ -258,22 +258,18 @@ header#header {
 #container {
 	&.thumbnails {
 		.columns(auto, 6, @gap);
-		clear: both;
 		@media only screen and (max-width: 1024px) { .columns(auto, 4, @gap); }
 		@media only screen and (max-width: 800px) { .columns(auto, 3, @gap * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 2, @gap * 0.66); }
 		figure {
-			display: inline-block;
 			margin-bottom: 2em;
-			width: 100%;
-			overflow: hidden;
 			background: fade(white, 50%);
 			.border-radius(4px);
 			.drop-shadow(0, 0, 2px, 0.3);
+			.column-break-inside(avoid);
 			@media only screen and (max-width: 800px) { margin-bottom: 1.5em; }
 			@media only screen and (max-width: 480px) { margin-bottom: 1em; }
 			img {
-//				display: block;
 				max-width: 100%;
 				.rounded_top;
 			}
@@ -292,9 +288,8 @@ header#header {
 		@media only screen and (max-width: 800px) { .columns(auto, 2, @gap * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 1, 0); }
 		section {
-			display: inline-block;
-			width: 100%;
 			margin-bottom: 2em;
+			.column-break-inside(avoid);
 			@media only screen and (max-width: 1024px) { margin-bottom: 1em; }
 		}
 	}
