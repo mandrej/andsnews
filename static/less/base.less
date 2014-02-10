@@ -63,6 +63,8 @@ body {
 	font-family: @default_font;
     font-size: 14px;
 	padding: 0 @gap;
+	@media only screen and (max-width: 800px) { padding: 0 @gap * 0.66; }
+	@media only screen and (max-width: 480px) { padding: 0 @gap * 0.5; }
 }
 a { color: black; outline: none; }
 a img { border: none; vertical-align: middle; }
@@ -205,6 +207,8 @@ table {
 	height: 10px;
 	margin: 0 -@gap;
 	background: #000;
+	@media only screen and (max-width: 800px) { margin: 0 -@gap * 0.66; }
+	@media only screen and (max-width: 480px) { margin: 0 -@gap * 0.5; }
 }
 header#header {
 	position: fixed;
@@ -228,9 +232,9 @@ header#header {
 		display: none; color: white;
 		&:hover { color: @google_orange; }
 	}
+	@media only screen and (max-width: 800px) { padding: 1em @gap * 0.66; }
 	@media only screen and (max-width: 480px) {
-		padding: 1em @gap 1.5em;
-		height: 3.5em;
+		padding: 1em @gap * 0.5;
 		a.icon-home { float: left; display: block; }
 	}
 }
@@ -260,16 +264,16 @@ header#header {
 		.columns(auto, 6, @gap);
 		@media only screen and (max-width: 1024px) { .columns(auto, 4, @gap); }
 		@media only screen and (max-width: 800px) { .columns(auto, 3, @gap * 0.66); }
-		@media only screen and (max-width: 480px) { .columns(auto, 2, @gap * 0.66); }
+		@media only screen and (max-width: 480px) { .columns(auto, 2, @gap * 0.5); }
 		figure {
-			margin-bottom: 2em;
+			margin-bottom: @gap;
 			background: fade(white, 50%);
 			.border-radius(4px);
 			.drop-shadow(0, 0, 2px, 0.3);
 			.column-break-inside(avoid);
 			overflow: hidden;
-			@media only screen and (max-width: 800px) { margin-bottom: 1.5em; }
-			@media only screen and (max-width: 480px) { margin-bottom: 1em; }
+			@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.66; }
+			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
 			img {
 				max-width: 100%;
 				.rounded_top;
@@ -289,10 +293,11 @@ header#header {
 		@media only screen and (max-width: 800px) { .columns(auto, 2, @gap * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 1, 0); }
 		section {
-			margin-bottom: 2em;
+			margin-bottom: @gap;
 			.column-break-inside(avoid);
 			overflow: hidden;
-			@media only screen and (max-width: 1024px) { margin-bottom: 1em; }
+			@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.66); }
+			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
 		}
 	}
 }
@@ -355,7 +360,7 @@ nav.paginator {
 		font-size: 1.8em;
 		text-transform: lowercase;
 	}
-	@media only screen and (max-width: 480px) { width: (100% - 2 * @gap); }
+	@media only screen and (max-width: 480px) { width: 100%; }
 	a {
 		color: white;
 		text-decoration: none;
