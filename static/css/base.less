@@ -256,7 +256,6 @@ header#header {
 	min-height: 400px;
 	background: url(../images/front.png) no-repeat;
 	overflow: hidden;
-	@media only screen and (max-width: 480px) { background: none; }
 }
 #container {
 	&.thumbnails {
@@ -307,15 +306,13 @@ aside {
 	.box-sizing(border-box);
 	width: calc(~'100% / 3 - 19px');
 	margin-left: @gap;
-	@media only screen and (max-width: 800px) { width: calc(~'50% - 9px'); margin-left: @gap * 0.66; }
-	@media only screen and (max-width: 480px) { display: none; }
+	@media only screen and (max-width: 800px) { display: none; }
 }
 .port {
-	margin-bottom: 2em;
+	margin-bottom: @gap;
 	width: calc(~'200% / 3 - 11px');
-	@media only screen and (max-width: 1024px) { margin-bottom: 2em; width: calc(~'200% / 3 - 11px'); }
-	@media only screen and (max-width: 800px) { margin-bottom: 1.5em; width: calc(~'50% - 11px'); }
-	@media only screen and (max-width: 480px) { width: 100%; }
+	@media only screen and (max-width: 1024px) { width: calc(~'200% / 3 - 11px'); }
+	@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.5;  width: 100%; }
 	canvas { .border-radius(4px); max-width: 100%; }
 }
 .subtitle {
@@ -366,11 +363,13 @@ nav.paginator {
 		color: white;
 		text-decoration: none;
 		&.Photo, &.Entry, &.News { .menu_item; }
-		&.Admin, &.Sign { .menu_item;
+		&.Admin, &.Sign {
+			.menu_item;
 			@media only screen and (max-width: 800px) { display: none; }
 		}
-		&.Comment { .menu_item;
-			@media only screen and (max-width: 480px) { display: none; }
+		&.Comment {
+			.menu_item;
+			@media only screen and (max-width: 800px) { display: none; }
 		}
 	}
 }
