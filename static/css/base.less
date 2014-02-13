@@ -203,7 +203,7 @@ table {
 // layout
 #progress {
 	position: absolute;
-	height: 10px;
+	height: 1%;
 	margin: 0 -@gap;
 	background: #000;
 	@media only screen and (max-width: 800px) { margin: 0 -@gap * 0.66; }
@@ -263,9 +263,8 @@ header#header {
 		@media only screen and (max-width: 800px) { .columns(auto, 3, @gap * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 2, @gap * 0.5); }
 		figure {
-			display: inline-block;
-			width: 100%;
 			margin-bottom: @gap;
+			overflow: hidden;
 			background: fade(white, 50%);
 			.border-radius(4px);
 			.drop-shadow(0, 0, 2px, 0.3);
@@ -291,9 +290,8 @@ header#header {
 		@media only screen and (max-width: 800px) { .columns(auto, 2, @gap * 0.66); }
 		@media only screen and (max-width: 480px) { .columns(auto, 1, 0); }
 		section {
-			display: inline-block;
-			width: 100%;
 			margin-bottom: @gap;
+			overflow: hidden;
 			.column-break-inside(avoid);
 			@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.66; }
 			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
