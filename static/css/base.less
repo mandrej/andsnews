@@ -40,6 +40,8 @@
 		&:hover { text-decoration: underline;}
 	}
 }
+.white_shadow { text-shadow: 1px 1px 1px fade(white, 25%); }
+.black_shadow { text-shadow: -1px -1px 1px fade(black, 25%); }
 .default_button {
 	border: none;
 	padding: 0.4em 0.8em;
@@ -62,6 +64,7 @@ body {
 	font-family: @default_font;
     font-size: 14px;
 	padding: 0 @gap;
+	.white_shadow;
 	@media only screen and (max-width: 800px) { padding: 0 @gap * 0.66; }
 	@media only screen and (max-width: 480px) { padding: 0 @gap * 0.5; }
 }
@@ -223,12 +226,14 @@ header#header {
 		position: relative;
 		float: left;
 		font-size: 3.2em;
+		.black_shadow;
 		a { color: white; text-decoration: none; }
 		span { position: absolute; left: 0; bottom: -7px; font-size: 0.3em; color: #fff; }
 		@media only screen and (max-width: 480px) { display: none; }
 	}
 	a.icon-home {
 		display: none; color: white;
+		.black_shadow;
 		&:hover { color: @google_orange; }
 	}
 	@media only screen and (max-width: 800px) { padding: 1em @gap * 0.66; }
@@ -320,6 +325,7 @@ aside {
 
 nav.paginator {
 	float: right;
+	.black_shadow;
 	a {
 		.left;
 		color: white;
@@ -328,13 +334,14 @@ nav.paginator {
 	span {
 		.left;
 		color: white;
-		&.na { color: fade(black, 70%); }
+		&.na { color: fade(black, 70%); .white_shadow; }
 	}
 }
 
 #tools {
 	float: right;
     color: white;
+	.black_shadow;
 	&:hover { color: @google_orange; }
 }
 .menu {
@@ -348,6 +355,7 @@ nav.paginator {
 	background: fade(black, 70%);
 	padding: 1em @gap 0;
 	z-index: 10;
+	text-shadow: none;
 	.menu_item {
 		display: block;
 		clear: both;
@@ -466,7 +474,7 @@ nav.submenu {
 	span { float: left; }
 }
 .error { color: white; }
-.required { color: white; }
+.required { color: white; .black_shadow; }
 .errorcode {
     position: absolute;
     top: 1em;
@@ -577,6 +585,7 @@ p.legend { padding: 0.5em; text-align: center; }
     color: white;
 	font-size: 2em;
 	position: relative;
+	.black_shadow;
 	.day {
 		position: absolute;
 		top: 0;
@@ -608,6 +617,7 @@ p.legend { padding: 0.5em; text-align: center; }
 
 .front {
 	color: white;
+	.black_shadow;
 	@media only screen and (max-width: 800px) { display: none; }
 	a { color: white; }
 }
@@ -659,13 +669,14 @@ p.legend { padding: 0.5em; text-align: center; }
 			margin: 0;
 			padding: 0 0.6em;
 			color: white;
+			.black_shadow;
 			background: @darker;
 			font-size: 1.6em;
 			line-height: 200%;
 			border-top-left-radius: 4px;
 			.rounded_top;
 		}
-		a.close { position: absolute; top: 0.3em; right: 0.5em; color: @neutral; &:hover { color: white; }}
+		a.close { position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow; &:hover { color: white; }}
 		.content { padding: 1em; min-height: 32px; &:after { .clearing; }}
 		.buttons { margin: 0; line-height: normal; }
 	}
@@ -756,7 +767,7 @@ p.legend { padding: 0.5em; text-align: center; }
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
 .remove { color: white; &:hover { color: @darker; }}
-.delete { color: white; &:hover { color: @google_red; }}
+.delete { color: white; &:hover { color: @google_red; .black_shadow; }}
 .nowrap { white-space: nowrap; }
 .hide { display: none; }
 .clear { clear: both; }
