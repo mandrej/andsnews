@@ -137,14 +137,10 @@ class BaseHandler(webapp2.RequestHandler):
 
 class Latest(BaseHandler):
     def get(self):
-        objects = memcache.get('Photo_latest')
-        if objects is None:
-            query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=16)
-            results, has_next = paginator.page(1)
-            objects = [x.normal_url for x in results]
-            memcache.add('Photo_latest', objects, TIMEOUT)
-        self.render_json(objects)
+        query = Photo.query().order(-Photo.date)
+        paginator = Paginator(query, per_page=16)
+        results, has_next = paginator.page(1)
+        self.render_json([x.normal_url for x in results])
 
 
 class Index(BaseHandler):
