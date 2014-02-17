@@ -17,7 +17,9 @@
                     <div class="body">
                         <h3>{{ _('message') }}</h3>
                         <div class="para">{{ object.body|safe }}</div>
-                        <p class="details">{{ object.author }},
+                        <p class="details">
+                            <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
+                                title="{{ _("author's messages") }}">{{ object.author }}</a>,
                             {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                         </p>
                     </div>
@@ -30,7 +32,9 @@
                             <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
                                 {{ refkey.get().headline }}</a></h3>
                             <div class="para">{{ object.body|safe }}</div>
-                            <p class="details">{{ object.author }},
+                            <p class="details">
+                                <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
+				                    title="{{ _("author's comments") }}">{{ object.author }}</a>,
                                 {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                             </p>
                         </div>

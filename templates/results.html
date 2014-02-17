@@ -24,39 +24,50 @@
             <div>
                 {% if object.kind == 'Photo' %}
                     <i class="icon-camera icon-2x pull-left"></i>
-                    <h3><a href="{{ object.link }}?find={{ phrase }}">
-                        {{ object.headline }}</a>
+                    <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a> </h3>
+                    {{ object.body }}
+                    <p class="details">
                         {% for tag in object.tags|split %}
-                            {% if loop.first %}<br><i class="icon-tag"></i>{% endif %}
+                            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
                             <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                    </h3>
+                        &nbsp;
+                        <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
+				            title="{{ _("author's photos") }}">{{ object.author }}</a>
+                        <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
+                    </p>
+
                 {% elif object.kind == 'Entry' %}
                     <i class="icon-file-text icon-2x pull-left"></i>
-                    <h3><a href="{{ object.link }}?find={{ phrase }}">
-                        {{ object.headline }}</a>
+                    <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a></h3>
+                    {{ object.body }}
+                    <p class="details">
                         {% for tag in object.tags|split %}
-                            {% if loop.first %}<br><i class="icon-tag"></i>{% endif %}
+                            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
                             <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                    </h3>
+                        &nbsp;
+                        <a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
+				            title="{{ _("author's blogs") }}">{{ object.author }}</a>
+                        <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
+                    </p>
                 {% elif object.kind == 'Comment' %}
+                    <i class="icon-comment icon-2x pull-left"></i>
                     {% if object.headline %}
-                        <i class="icon-comment icon-2x pull-left"></i>
-                        <h3><a href="{{ object.link }}?find={{ phrase }}">
-                            {{ object.headline }} ({{ _('comment') }})</a></h3>
+                        <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }} ({{ _('comment') }})</a></h3>
                     {% else %}
-                        <i class="icon-comment icon-2x pull-left"></i>
                         <h3>{{ _('message') }}</h3>
                     {% endif %}
+                    {{ object.body }}
+                    <p class="details">
+                        &nbsp;
+                        <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
+				            title="{{ _("author's comments") }}">{{ object.author }}</a>
+                        <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
+                    </p>
                 {% endif %}
-                {{ object.body }}
-                <p class="details">
-                    <strong>{{ object.author }}</strong>,
-                    <time datetime='{{ object.date|to_datetime }}'>
-                        {{ object.date|to_date }}</time></p>
             </div>
         </section>
     {% endmacro %}
