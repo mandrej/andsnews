@@ -140,7 +140,7 @@ class Latest(BaseHandler):
         objects = memcache.get('Photo_latest')
         if objects is None:
             query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=16)
+            paginator = Paginator(query, per_page=18)
             results, has_next = paginator.page(1)
             objects = [x.normal_url for x in results]
             memcache.add('Photo_latest', objects, TIMEOUT)
