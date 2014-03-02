@@ -31,6 +31,7 @@
 @hilite: #ffe657;
 
 @gap: 30px;
+@radius: 4px;
 @dashed: 1px dashed @neutral;
 
 .clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
@@ -50,7 +51,7 @@
 	font-size: 1em;
 	line-height: 100%;
 	.box-sizing(border-box);
-	.border-radius(4px);
+	.border-radius(@radius);
 	&:hover { background-color: @google_orange; text-decoration: none; }
 }
 .left { float: left; margin-right: 0.5em; }
@@ -271,7 +272,7 @@ header#header {
 			margin-bottom: @gap;
 			overflow: hidden;
 			background: fade(white, 50%);
-			.border-radius(4px);
+			.border-radius(@radius);
 			.column-break-inside(avoid);
 			@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.66; }
 			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
@@ -311,7 +312,7 @@ aside {
 	width: calc(~'200% / 3 - 11px');
 	@media only screen and (max-width: 1024px) { width: calc(~'200% / 3 - 11px'); }
 	@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.5;  width: 100%; }
-	canvas { .border-radius(4px); max-width: 100%; }
+	canvas { .border-radius(@radius); max-width: 100%; }
 }
 .subtitle {
 	margin: 1em 0;
@@ -437,7 +438,7 @@ nav.submenu {
 		font-size: 1.2em;
 		height: 2em;
 		.box-sizing(border-box);
-		.border-radius(4px);
+		.border-radius(@radius);
 		&:focus { outline: none; }
 	}
 }
@@ -488,12 +489,12 @@ nav.submenu {
 	color: white;
 	background: fade(@google_red, 70%);
 	min-height: 3em;
-	.border-radius(4px);
+	.border-radius(@radius);
 }
 
 #palette {
 	float: right; width: 18em;
-	img { .border-radius(4px); max-width: 100%; }
+	img { .border-radius(@radius); max-width: 100%; }
 	@media only screen and (max-width: 1024px) { display: none; }
 	th, td { border: none; }
 }
@@ -571,7 +572,7 @@ p.legend { padding: 0.5em; text-align: center; }
 	dd { border: none; margin: 0; padding: 0; }
 	blockquote { border-left: 1em solid white; }
 	pre { font-size: 0.8em; }
-	img { .border-radius(4px); }
+	img { .border-radius(@radius); }
 }
 
 .comments, .exif { clear: both; margin-top: 2em; }
@@ -620,7 +621,7 @@ p.legend { padding: 0.5em; text-align: center; }
 .box {
     padding: 1em;
     background: fade(white, 50%);
-	.border-radius(4px);
+	.border-radius(@radius);
 }
 
 .loop (@index) when (@index > 0) {
@@ -654,7 +655,7 @@ p.legend { padding: 0.5em; text-align: center; }
 		top: 150px;
 		left: 50%;
 		z-index: 1030;
-		.border-radius(4px);
+		.border-radius(@radius);
 		@media only screen and (max-width: 480px) {
 			width: 280px;
 			margin-left: -140px;
@@ -668,7 +669,7 @@ p.legend { padding: 0.5em; text-align: center; }
 			background: @darker;
 			font-size: 1.6em;
 			line-height: 200%;
-			border-top-left-radius: 4px;
+			border-top-left-radius: @radius;
 		}
 		a.close { position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow; &:hover { color: white; }}
 		.content { padding: 1em; min-height: 32px; &:after { .clearing; }}
