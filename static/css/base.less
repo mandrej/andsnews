@@ -264,6 +264,7 @@ header#header {
 		@media only screen and (max-width: 480px) { .columns(auto, 2, @gap * 0.5); }
 		figure {
 			margin-bottom: @gap;
+			overflow: hidden; // firefox
 			.column-break-inside(avoid);
 			@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.85; }
 			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
