@@ -205,9 +205,9 @@ table {
 // layout
 #progress {
 	position: absolute;
-	height: 1%;
+	height: 86px;
 	margin: 0 -3%;
-	background: #000;
+	background: @neutral;
 }
 header#header {
 	position: fixed;
@@ -270,15 +270,15 @@ header#header {
 			@media only screen and (max-width: 480px) { margin-bottom: @gap * 0.5; }
 			a { text-decoration: none;
 				display: block;
-				img { display: block; max-width: 100%; .border-radius(@radius @radius 0 0); }
-				p.legend {
-					margin: 0;
-					line-height: 110%;
-					padding: 0.5em;
-					text-align: center;
-					background: fade(white, 50%);
-					.border-radius(0 0 @radius @radius);
-				}
+				img { display: block; max-width: 100%; .border-radius(@radius); }
+//				p.legend {
+//					margin: 0;
+//					line-height: 110%;
+//					padding: 0.5em;
+//					text-align: center;
+//					background: fade(white, 50%);
+//					.border-radius(0 0 @radius @radius);
+//				}
 				&:hover p.legend {
 					background: @google_orange;
 				}
