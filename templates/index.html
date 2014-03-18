@@ -1,62 +1,19 @@
 {% extends "base.html" %}
 {% block modals %}{% endblock %}
 
-{% block contents %}
-<aside class="front">
-    <header>
-        <a class="remove icon-remove-sign icon-4x pull-right" href="#" title="{{ _('close') }}"></a>
-        <h2>{{ _('Welcome to our and YOUR site') }}</h2>
-    </header>
-    {% if language_code == 'en_US' %}
-        <p>Welcome to our site where possible to post your photos, blogs and to comment on all this.
-        To be able to do so, it is necessary to <strong>have an open Google account</strong> (same as for Gmail),
-        or to register and obtain one (all free).</p>
-        <p>Send a message to this site using your jabber client such as <a href="http://www.google.com/talk/">Google Talk</a>
-        or <a href="http://www.pidgin.im/">Pidgin</a>.<br/>
-        Application address is: <strong>ands@appspot.com</strong>.</p>
-        <h4>See this site on your mobile device</h4>
-
-        <i class="icon-quote-left pull-left icon-2x"></i>
-        <p>Site administrator has right to delete offensive blogs, photos or comments
-            according to personal valuation.</p>
-        <p>If you find this appropriate, feel free to contribute to this site.
-            Sent material will not be misused in any way by site administrator.</p>
-        <p>Your account password is not visible to any other user including administrator.</p>
-    {% endif %}
-    {% if language_code == 'sr_RS' %}
-        <p>Добродошли на сајт где је могуће да поставите ваше фотографије, блогове као и да
-        коментаришете све ово. Да би сте били у стању да било шта пошаљете, неопходно је да
-        <strong>имате отворен налог на Google-у</strong> (исто што и налог на Gmail-у) или да се региструјете и
-        добијете један (све бесплатно).</p>
-        <p>Пошаљите поруку на овај сајт користећи ваш jabber клијент као што је <a href="http://www.google.com/talk/">Google Talk</a>
-        или <a href="http://www.pidgin.im/">Pidgin</a>.<br/>
-        Адреса апликације је: <strong>ands@appspot.com</strong>.</p>
-        <h4>Видите овај сајт на вашем мобилном уређају</h4>
-
-        <i class="icon-quote-left pull-left icon-2x"></i>
-        <p>Администратор задржава право да може да обрише недоличне написе, слике или
-            коментаре по сопственом нахођењу.</p>
-        <p>Уколико вам све ово одговара, онда слободно пошаљите ваш допринос овом сајту.
-            Послати материјал се неће злоупотребити од стране администратора сајта.</p>
-        <p class="quote">Ваша лозинка за логовање није ником видљива, чак ни администратору сајта.</p>
-    {% endif %}
-</aside>
-{% endblock %}
+{% block contents %}{% endblock %}
 {% block scripts %}
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
             '/static/scripts/common.min.js',
             '/static/scripts/base.min.js',
-            '/static/scripts/jquery.backstretch.min.js', function() {done()}]]);
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js',
+                function() {done()}]]);
         function done() {
             $.getJSON('/latest', function(data) {
                 $.backstretch(data, {fade: 1000, duration: 4000});
-            });
-            $('.remove').click(function(evt) {
-                evt.preventDefault();
-                $('aside').slideUp();
             });
         }
     </script>

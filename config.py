@@ -22,7 +22,8 @@ LANGUAGES = (
 )
 OFFLINE = """CACHE MANIFEST
 # %s
-https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
+https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js
+https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
 /static/font/fontawesome.woff
@@ -36,7 +37,6 @@ https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnG
 /static/scripts/jquery.autocomplete.min.js
 /static/scripts/common.min.js
 /static/scripts/base.min.js
-/static/scripts/jquery.backstretch.min.js
 /latest
 
 /static/scripts/markitup/jquery.markitup.min.js

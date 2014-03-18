@@ -3,15 +3,6 @@
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 
 {% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2>
-            {% if user %}
-                <a href="{{ uri_for('photo_add') }}" class="add" title="{{ _('Add') }}">{{ _('Add') }}</a>
-            {% endif %}
-        </h2>
-    </nav>
-</aside>
 <h2>
     <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
     {{ m.filter_title(filter) }}
@@ -46,7 +37,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

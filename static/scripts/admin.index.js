@@ -26,7 +26,7 @@ function build() {
 }
 build();
 
-$('button').live('click', function() {
+$('.admin div').on('click', 'button', function() {
     $('#spinner').show();
     var key = $(this).val(), method = $(this).attr('name');
     $.ajax({
@@ -40,7 +40,7 @@ $('button').live('click', function() {
         }
     });
 });
-$('a.graph').live('click', function(evt) {
+$('.admin div').on('click', 'a.graph', function(evt) {
     evt.preventDefault();
     $('#graph').load(this.href, function() {
         $('#overlay, #graph').show();

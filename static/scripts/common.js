@@ -135,7 +135,7 @@
         return canvas
     }
     // close
-    $('a.close').live('click', function(evt) {
+    $('.modal').on('click', '.close', function(evt) {
         evt.preventDefault();
         $(this).parents('.modal').hide();
         $('#overlay').hide();

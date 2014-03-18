@@ -3,18 +3,6 @@
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 
 {% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2>
-            {% if is_admin %}
-                <a href="{{ uri_for('feed_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-                <a href="{{ uri_for('feed_edit', slug=object.key.string_id()) }}" title="{{ _('Edit') }}">{{ _('Edit') }}</a>
-                <a class="confirm" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            {% endif %}
-            <a href="{{ uri_for('feed_all') }}" title="{{ _('Back') }}">{{ _('Back') }}</a>
-        </h2>
-    </nav>
-</aside>
 <article>
 	{% if news %}
 		<h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
@@ -62,7 +50,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

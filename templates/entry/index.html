@@ -3,48 +3,38 @@
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
 {% block contents %}
-    <aside>
-        <nav class="submenu">
-            <h2>
-                {% if user %}
-                    <a href="{{ uri_for('entry_add') }}" title="{{ _('Add') }}">{{ _('Add') }}</a>
-                {% endif %}
-            </h2>
-        </nav>
-    </aside>
-
-    <h2>
-        <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
-        {{ m.filter_title(filter) }}
-        {{ m.page_number(page) }}
-    </h2>
-	<div id="container" class="cols">
-		{% for object in objects %}
-            {% if object %}
-                <section>
-                    <h3><a href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
-                    <p>{% if object.front >= 0 %}
-                            <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
-                        {% endif %}{{ object.summary }}</p>
-                    <p class="details">{{ object.author }},
-                        {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                    </p>
-                </section>
-            {% endif %}
-        {% else %}
+<h2>
+    <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
+    {{ m.filter_title(filter) }}
+    {{ m.page_number(page) }}
+</h2>
+<div id="container" class="cols">
+    {% for object in objects %}
+        {% if object %}
             <section>
-                <div class="box">
-                    <h3>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</h3>
-                </div>
+                <h3><a href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
+                <p>{% if object.front >= 0 %}
+                        <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
+                    {% endif %}{{ object.summary }}</p>
+                <p class="details">{{ object.author }},
+                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                </p>
             </section>
-		{% endfor %}
-	</div>
+        {% endif %}
+    {% else %}
+        <section>
+            <div class="box">
+                <h3>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</h3>
+            </div>
+        </section>
+    {% endfor %}
+</div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js', [
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
     </script>

@@ -4,11 +4,6 @@
 {% block modals %}{% endblock %}
 
 {% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2><a href="{{ uri_for('start') }}">{{ _('Start ') }}</a></h2>
-    </nav>
-</aside>
 <article>
 	{% if phrase %}
 		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}
@@ -93,7 +88,7 @@
     {{ super() }}
     <script>
         nbl.l([[
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
             '/static/scripts/jquery.searchhighlight.min.js', [
                 '/static/scripts/common.min.js',
                 '/static/scripts/base.min.js']]]);
