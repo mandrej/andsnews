@@ -64,7 +64,6 @@ body {
 	background: url(/static/images/bg.jpg) @paper;
 	font-family: @default_font;
     font-size: 14px;
-	padding: 0 3%;
 	.white_shadow;
 }
 a { color: black; outline: none; }
@@ -251,9 +250,11 @@ header#header {
 	&:after { .clearing; }
 }
 #main {
-	padding-top: 7em;
+	position: relative;
+	padding: 7em 3% 0;
 	min-height: 400px;
 	background: url(../images/front.png) no-repeat;
+	.transition(all 0.3s ease);
 }
 
 #container {
@@ -333,17 +334,16 @@ nav.paginator {
 	}
 }
 
-#tools {
+#menu {
 	float: right;
     color: white;
 	.black_shadow;
 	&:hover { color: @google_orange; }
 }
 .menu {
-	display: none;
 	position: fixed;
 	top: 86px;
-	left: 0;
+	left: -50%;
 	.box-sizing(border-box);
 	width: 50%;
 	height: 100%;
@@ -351,6 +351,7 @@ nav.paginator {
 	padding: 1em 3% 0;
 	z-index: 10;
 	text-shadow: none;
+	.transition(all 0.3s ease);
 	.menu_item {
 		display: block;
 		clear: both;

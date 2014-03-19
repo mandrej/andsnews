@@ -25,7 +25,7 @@
     <div id="progress"></div>
 
     <nav class="menu">
-        {% block tools %}
+        {% block forms %}
             <div id="forms">
                 <form id="langs" action="/setlang" method="post">
                     {% for code, lang in all_languages %}
@@ -40,8 +40,8 @@
                 </form>
             </div>
         {% endblock %}
-        {% block nav %}{{ m.menu('') }}{% endblock %}
 
+        {% block nav %}{{ m.menu('') }}{% endblock %}
         {% if is_admin %}
             <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
         {% endif %}
@@ -57,7 +57,7 @@
             <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
         </h1>
         <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-        <a href="#" id="tools" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
+        <a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
         <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
     <div id="main">{% block contents %}{% endblock %}</div>
