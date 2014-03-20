@@ -24,11 +24,12 @@
 	-moz-border-radius-bottomleft: 0;
 	-webkit-border-bottom-left-radius: 0;
 }
-.transition(@args) {
-	-webkit-transition: @args;
-	-moz-transition: @args;
-	-o-transition: @args;
-	transition: @args;
+.transition(@transition, @duration, @timingFunction: ease-in-out ) when (@transition = transform) {
+	-webkit-transition: -webkit-transform @duration @timingFunction;
+    -moz-transition: -moz-transform @duration @timingFunction;
+    -ms-transition: -ms-transform @duration @timingFunction;
+    -o-transition: -o-transform @duration @timingFunction;
+    transition: transform @duration @timingFunction;
 }
 .animation(@args) {
 	-webkit-animation: @args;

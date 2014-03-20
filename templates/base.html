@@ -24,43 +24,47 @@
 	{% endblock %}
     <div id="progress"></div>
 
-    <nav class="menu">
-        {% block forms %}
-            <div id="forms">
-                <form id="langs" action="/setlang" method="post">
-                    {% for code, lang in all_languages %}
-                        <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                            'class': 'current' if code == language_code else none,
-                            'title': lang}|xmlattr }}>{{ language(code) }}</button>
-                    {% endfor %}
-                </form>
-                <form id="searchForm" action="/search" method="get">
-                    <button type="submit">{{ _('search') }}</button>
-                    <input type="text" name="find"/>
-                </form>
-            </div>
-        {% endblock %}
-
-        {% block nav %}{{ m.menu('') }}{% endblock %}
-        {% if is_admin %}
-            <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
-        {% endif %}
-        <a href="/sign" class="Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
-
-        <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
-            powered by <a href="http://code.google.com/appengine/">{{ gaesdk() }}</a>
-        </p>
-    </nav>
     <header id="header">
         <h1>
             <a href="{{ uri_for('start') }}" title="{{ _('Start') }}">ANDрејевићи</a>
             <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
         </h1>
         <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-        <a href="#" id="menu" class="icon-reorder icon-4x" title="{{ _('Tools') }}"></a>
+        <label for="swipe" data-function='swipe' class="icon-reorder icon-4x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
-    <div id="main">{% block contents %}{% endblock %}</div>
+
+    <div id="wrapper">
+        <input type="checkbox" id="swipe" data-function="swipe"/>
+        <nav class="menu">
+            {% block forms %}
+                <div id="forms">
+                    <form id="langs" action="/setlang" method="post">
+                        {% for code, lang in all_languages %}
+                            <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                                'class': 'current' if code == language_code else none,
+                                'title': lang}|xmlattr }}>{{ language(code) }}</button>
+                        {% endfor %}
+                    </form>
+                    <form id="searchForm" action="/search" method="get">
+                        <button type="submit">{{ _('search') }}</button>
+                        <input type="text" name="find"/>
+                    </form>
+                </div>
+            {% endblock %}
+
+            {% block nav %}{{ m.menu('') }}{% endblock %}
+            {% if is_admin %}
+                <a href="/admin/" title="{{ _('Administration') }}" class="Admin">{{ _('Administration') }}</a>
+            {% endif %}
+            <a href="/sign" class="Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
+
+            <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
+                powered by <a href="http://code.google.com/appengine/">{{ gaesdk() }}</a>
+            </p>
+        </nav>
+        <div id="main">{% block contents %}{% endblock %}</div>
+    </div>
 
     <script src="/static/scripts/nbl.min.js"></script>
     {% block scripts %}

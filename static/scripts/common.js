@@ -141,16 +141,16 @@
         $('#overlay').hide();
     });
     // activate menu
-    $('#menu').click(function(evt) {
-        evt.preventDefault();
-        if ($('.menu').css('left') != '0px') {
-            $('.menu').css('left', '0px');
-            $('#main').css('left', '50%');
-        } else {
-            $('.menu').css('left', '-50%');
-            $('#main').css('left', '0px');
-        }
-    });
+//    $('#menu').click(function(evt) {
+//        evt.preventDefault();
+//        if ($('.menu').css('left') != '0px') {
+//            $('.menu').css('left', '0px');
+//            $('#main').css('left', '50%');
+//        } else {
+//            $('.menu').css('left', '-50%');
+//            $('#main').css('left', '0px');
+//        }
+//    });
     // menu
     $('.menu').click(function(evt) {
         var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
@@ -158,7 +158,7 @@
         if (!(disallow[evt.target.tagName] || disallow[parnetTagName])) {
             evt.preventDefault();
         }
-        $('.menu').css('left', '-50%');
+//        $('.menu').css('left', '-50%');
     });
     // search
     $('#searchForm').submit(function() {
