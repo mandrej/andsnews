@@ -24,18 +24,25 @@
 	-moz-border-radius-bottomleft: 0;
 	-webkit-border-bottom-left-radius: 0;
 }
-.transition(@transition, @duration, @timingFunction: ease-in-out ) when (@transition = transform) {
+.transition(@transition, @duration, @timingFunction: ease-in-out) when (@transition = transform) {
 	-webkit-transition: -webkit-transform @duration @timingFunction;
     -moz-transition: -moz-transform @duration @timingFunction;
     -ms-transition: -ms-transform @duration @timingFunction;
     -o-transition: -o-transform @duration @timingFunction;
     transition: transform @duration @timingFunction;
 }
-.animation(@args) {
-	-webkit-animation: @args;
-	-moz-animation: @args;
-	-ms-animation: @args;
-	-o-animation: @args;
+.transition(...) {
+	-webkit-transition: @arguments;
+    -moz-transition: @arguments;
+    -ms-transition: @arguments;
+    -o-transition: @arguments;
+    transition: @arguments;
+}
+.animation(...) {
+	-webkit-animation: @arguments;
+	-moz-animation: @arguments;
+	-ms-animation: @arguments;
+	-o-animation: @arguments;
 }
 .animation-delay(@delay) {
 	-webkit-animation-delay: @delay;
@@ -43,12 +50,32 @@
 	-ms-animation-delay: @delay;
 	-o-animation-delay: @delay;
 }
-.transform(@args) {
-	-webkit-transform: @args;
-	-moz-transform: @args;
-	-ms-transform: @args;
-	-o-transform: @args;
-	transform: @args;
+.transform(...) {
+	-webkit-transform: @arguments;
+	-moz-transform: @arguments;
+	-ms-transform: @arguments;
+	-o-transform: @arguments;
+	transform: @arguments;
+}
+.transform-style(...) {
+	-webkit-transform-style: @arguments;
+	-moz-transform-style: @arguments;
+	-ms-transform-style: @arguments;
+	-o-transform-style: @arguments;
+	transform-style: @arguments;
+}
+.perspective(...) {
+	-webkit-perspective: @arguments;
+	-moz-perspective: @arguments;
+	-ms-perspective: @arguments;
+	perspective: @arguments;
+}
+.backface(...) {
+	-webkit-backface-visibility: @arguments;
+	-moz-backface-visibility: @arguments;
+	-ms-backface-visibility: @arguments;
+	-o-backface-visibility: @arguments;
+	backface-visibility: @arguments;
 }
 .columns(@colwidth: 250px, @colcount: 0, @colgap: 50px) {
 	-moz-column-width: @colwidth;
@@ -90,6 +117,12 @@
     -moz-align-content: @align;
     -ms-align-content: @align;
     align-content: @align;
+}
+.justify-content(@justify: flex-start) {
+  -webkit-justify-content: @justify;
+     -moz-justify-content: @justify;
+      -ms-justify-content: @justify;
+          justify-content: @justify;
 }
 .align-items(@align: stretch) {
 	-webkit-align-items: @align;
