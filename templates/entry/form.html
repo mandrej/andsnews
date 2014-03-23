@@ -8,7 +8,7 @@
 <div id="images" class="modal">
 	<div class="popup">
 		<h4>{{ _('Choose image') }}</h4>
-        <a class="close icon-remove-sign icon-2x" title="{{ _('close') }}"></a>
+        <a class="close fa fa-times-circle fa-2x" title="{{ _('close') }}"></a>
 		<div class="content">
 		{% for img in object.image_list %}
 			<figure class="left{% if loop.last %} last{% endif %}">
@@ -31,7 +31,7 @@
     <article>
         {% if form.errors %}
             <div class="formerrors">
-                <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
+                <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
                 <p>{{ _('Please correct errors in') }}
                 {{ form.errors|join(", ") }}.</p>
             </div>

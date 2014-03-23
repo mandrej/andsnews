@@ -9,7 +9,7 @@
     <article>
         {% if form.errors %}
             <div class="formerrors">
-                <i class="icon-warning-sign icon-3x pull-left" style="color: orange"></i>
+                <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
                 <p>{{ _('Please correct errors in') }}
                 {{ form.errors|join(", ") }}.</p>
             </div>

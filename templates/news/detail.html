@@ -15,7 +15,7 @@
             </time>
         {% endif %}
         {% for tag in object.tags %}
-            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+            {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
             <a href="{{ uri_for('feed_all') }}tags/{{ tag }}/" title="{{ tag }}">
                 {{ tag }}</a>{% if not loop.last %},{% endif %}
         {% endfor %}

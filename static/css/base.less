@@ -1,6 +1,4 @@
 @import "mixins";
-@import "fontawesome";
-
 @font-face {
   font-family: 'PT Sans';
   font-style: normal;
@@ -249,13 +247,13 @@ header#header {
 		span { position: absolute; top: -3px; right: 2px; font-size: 0.3em; color: #fff; }
 		@media only screen and (max-width: 480px) { display: none; }
 	}
-	a.icon-home {
+	a.fa-home {
 		display: none; color: white;
 		.black_shadow;
 		&:hover { color: @google_orange; }
 	}
 	@media only screen and (max-width: 480px) {
-		a.icon-home { float: left; display: block; }
+		a.fa-home { float: left; display: block; }
 	}
 }
 #footer {
@@ -431,20 +429,6 @@ input[data-function*='swipe'] {
 }
 .comments, .exif { margin-bottom: 2em; }
 
-//aside {
-//	float: right;
-//	.box-sizing(border-box);
-//	width: calc(~'100% / 3 - 19px');
-//	margin-left: @gap;
-//	@media only screen and (max-width: 800px) { display: none; }
-//}
-//.port {
-//	margin-bottom: @gap;
-//	width: calc(~'200% / 3 - 11px');
-//	@media only screen and (max-width: 1024px) { width: calc(~'200% / 3 - 11px'); }
-//	@media only screen and (max-width: 800px) { margin-bottom: @gap * 0.5;  width: 100%; }
-//	canvas { .border-radius(@radius); max-width: 100%; }
-//}
 .subtitle {
 	margin: 1em 0;
 	.title_hover;
@@ -457,6 +441,7 @@ nav.paginator {
 	a {
 		.left;
 		color: white;
+		text-decoration: none;
 		&:hover { color: @google_orange; }
 	}
 	span {
@@ -831,7 +816,7 @@ p.legend { padding: 0.5em; text-align: center; }
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
 .remove { color: white; &:hover { color: @darker; }}
-.delete { color: white; &:hover { color: @google_red; .black_shadow; }}
+.delete { text-decoration: none; color: white; &:hover { color: @google_red; .black_shadow; }}
 .nowrap { white-space: nowrap; }
 .hide { display: none; }
 .clear { clear: both; }

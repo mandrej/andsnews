@@ -18,12 +18,12 @@
         <section>
             <div>
                 {% if object.kind == 'Photo' %}
-                    <i class="icon-camera icon-2x pull-left"></i>
+                    <i class="fa fa-camera fa-2x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a> </h3>
                     {{ object.body }}
                     <p class="details">
                         {% for tag in object.tags|split %}
-                            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+                            {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
                             <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
@@ -34,12 +34,12 @@
                     </p>
 
                 {% elif object.kind == 'Entry' %}
-                    <i class="icon-file-text icon-2x pull-left"></i>
+                    <i class="fa fa-file-text fa-2x pull-left"></i>
                     <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a></h3>
                     {{ object.body }}
                     <p class="details">
                         {% for tag in object.tags|split %}
-                            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+                            {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
                             <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
@@ -49,7 +49,7 @@
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
                     </p>
                 {% elif object.kind == 'Comment' %}
-                    <i class="icon-comment icon-2x pull-left"></i>
+                    <i class="fa fa-comment fa-2x pull-left"></i>
                     {% if object.headline %}
                         <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }} ({{ _('comment') }})</a></h3>
                     {% else %}

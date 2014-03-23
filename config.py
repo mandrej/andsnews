@@ -26,7 +26,7 @@ https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js
 https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
-/static/font/fontawesome.woff
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/images/bg.jpg
 /static/images/front.png
 /static/css/base.css
@@ -145,9 +145,9 @@ def incache(key):
 def boolimage(value):
     """ {{ object.key.name|incache|boolimage }} """
     if value is True:
-        return do_mark_safe('<i class="icon-ok-sign" style="color: #060"></i>')
+        return do_mark_safe('<i class="fa fa-check-circle" style="color: #060"></i>')
     else:
-        return do_mark_safe('<i class="icon-minus-sign" style="color: #c00"></i>')
+        return do_mark_safe('<i class="fa fa-minus-circle" style="color: #c00"></i>')
 
 
 @environmentfilter
@@ -241,8 +241,8 @@ CONFIG = {
             'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
-            'prev_class': 'prev icon-chevron-left icon-4x',
-            'next_class': 'next icon-chevron-right icon-4x',
+            'prev_class': 'prev fa fa-chevron-left fa-4x',
+            'next_class': 'next fa fa-chevron-right fa-4x',
         },
         'filters': {
             'incache': incache,

@@ -10,7 +10,8 @@
     <meta http-equiv="Content-Security-Policy" content="script-src https: 'self' 'unsafe-inline' 'unsafe-eval'"/>
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
-	<link type="text/css" rel="stylesheet" href="/static/css/base.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+	<link rel="stylesheet" href="/static/css/base.css"/>
 	<link type="application/rss+xml" rel="alternate" href="/rss/photo.xml" title="{{ _('photo rss') }}" />
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{{ _('entry rss') }}" />
 	<link type="image/x-icon" rel="shortcut icon" href="/static/images/favicon.ico"/>
@@ -30,8 +31,8 @@
                 <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
                 <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
             </h1>
-            <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-            <label for="swipe" data-function='swipe' class="icon-reorder icon-4x" title="{{ _('Menu') }}"></label>
+            <a class="fa fa-home fa-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
+            <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
             <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
         </div>
     </header>
@@ -41,7 +42,7 @@
         <nav class="menu">
             {% block search %}
                 <form id="searchForm" action="/search" method="get">
-                    <button type="submit"><i class="icon-search"></i></button>
+                    <button type="submit"><i class="fa fa-search"></i></button>
                     <input type="text" name="find"/>
                 </form>
             {% endblock %}

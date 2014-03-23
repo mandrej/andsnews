@@ -45,15 +45,15 @@
     / {{ object.headline }}
 </h2>
 <div class="subtitle">
-    <i class="icon-user"></i>
+    <i class="fa fa-user"></i>
     <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
         title="{{ _("author's photos") }}">{{ object.author }}</a>
     {% for tag in object.tags %}
-        {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+        {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
         <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
             {{ tag }}</a>{% if not loop.last %},{% endif %}
     {% endfor %}
-    <i class="icon-time"></i>
+    <i class="fa fa-clock-o"></i>
     <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
         title="{{ _('photos taken same year') }}">{{ object.year }}</a>
 </div>
@@ -69,7 +69,8 @@
                 {{ m.render_comment(comment, user) }}
             {% endfor %}
             {% if user %}
-                <p><a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Add Comment') }}">{{ _('Add Comment') }}</a></p>
+                <h3><a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
+                    <i class="fa fa-comment fa-fw"></i> {{ _('Add Comment') }}</a></h3>
             {% endif %}
         </div>
     </aside>

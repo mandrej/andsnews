@@ -92,7 +92,7 @@
                     var done = function(data) {
                         if (data.success == true) {
                             $('#overlay, #spinner').hide();
-                            row.find('._small').html('<i class="icon-minus-sign" style="color: #c00"></i>');
+                            row.find('._small').html('<i class="fa fa-minus-circle" style="color: #c00"></i>');
                             row.find('button[name=delete]')
                                 .attr('disabled', 'disabled').addClass('disabled');
                             row.find('button[name=make]')
