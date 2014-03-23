@@ -1,4 +1,4 @@
 {% extends "base.html" %}
 {% import "snippets/macros.html" as m %}
 {% set kind='Entry' %}
-{% block nav %}{{ m.menu(kind) }}{% endblock %}
+{% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}

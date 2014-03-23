@@ -1,15 +1,7 @@
 {% extends "base.html" %}
-
+{% import "snippets/macros.html" as m %}
 {% block search %}{% endblock %}
-{% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2>
-            <a href="/admin/counters">Counters</a>
-            <a href="/mapreduce">Mapreduce</a>
-            <a href="/admin/" title="Back">Back</a>
-        </h2>
-    </nav>
-</aside>
-{% endblock %}
+{% block footer %}{% endblock %}
+{% set kind='Admin' %}
+{% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
 {% block ga %}{% endblock %}

@@ -1,19 +1,10 @@
 {% extends "admin/base.html" %}
-
 {% block modals %}
 {{ super() }}
 <div id="graph" class="modal"></div>
 {% endblock %}
 
 {% block contents %}
-<aside>
-    <nav class="submenu">
-        <h2>
-            <a href="/admin/counters">Counters</a>
-            <a href="/mapreduce">Mapreduce</a>
-        </h2>
-    </nav>
-</aside>
 <article>
 	<h2>Site administration</h2>
     <div id="container" class="cols">

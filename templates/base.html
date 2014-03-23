@@ -25,44 +25,39 @@
     <div id="progress"></div>
 
     <header id="header">
-        <h1>
-            <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
-            <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
-        </h1>
-        <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-        <label for="swipe" data-function='swipe' class="icon-reorder icon-4x" title="{{ _('Menu') }}"></label>
-        <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
+        <div class="blue">
+            <h1>
+                <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
+                <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
+            </h1>
+            <a class="icon-home icon-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
+            <label for="swipe" data-function='swipe' class="icon-reorder icon-4x" title="{{ _('Menu') }}"></label>
+            <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
+        </div>
     </header>
 
     <div id="wrapper">
         <input type="checkbox" id="swipe" data-function="swipe"/>
         <nav class="menu">
-
-
-{#                <form id="langs" action="/setlang" method="post">#}
-{#                    {% for code, lang in all_languages %}#}
-{#                        <button{{ {'type': 'submit', 'name': 'language', 'value': code,#}
-{#                            'class': 'current' if code == language_code else none,#}
-{#                            'title': lang}|xmlattr }}>{{ language(code) }}</button>#}
-{#                    {% endfor %}#}
-{#                </form>#}
             {% block search %}
                 <form id="searchForm" action="/search" method="get">
                     <button type="submit"><i class="icon-search"></i></button>
                     <input type="text" name="find"/>
                 </form>
             {% endblock %}
-
-            {% block nav %}{{ m.menu('') }}{% endblock %}
-            {% if is_admin %}
-                <a href="/admin/" data-hover="{{ _('Administration') }}" class="top Admin">{{ _('Administration') }}</a>
-            {% endif %}
-            <a href="/sign" data-hover="{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}"
-               class="top Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
-
-            <p id="footer">© АNDS v.{{ version() }} 2008-{{ year() }}
-                powered by <a href="http://code.google.com/appengine/">{{ gaesdk() }}</a>
-            </p>
+            {% block nav %}{{ m.menu('', user, is_admin) }}{% endblock %}
+            {% block footer %}
+                <div id="footer">
+                    <form id="langs" action="/setlang" method="post">
+                        {% for code, lang in all_languages %}
+                            <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                                'class': 'current' if code == language_code else none,
+                                'title': lang}|xmlattr }}>{{ language(code) }}</button>
+                        {% endfor %}
+                        <p>АNDS v.{{ version() }} 2008-{{ year() }}</p>
+                    </form>
+                </div>
+            {% endblock %}
         </nav>
         <div id="main">{% block contents %}{% endblock %}</div>
     </div>

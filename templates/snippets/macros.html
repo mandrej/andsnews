@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {% macro _build(filters, kind) %}
-    <div id="filters">
+    <div class="submenu">
         {% for f in filters %}
             <a class="{{ f.field }} collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }} [+]</a>
             <div id="{{ f.field }}cloud" class="hide"></div>
@@ -17,7 +17,7 @@
     </div>
 {% endmacro %}
 
-{% macro menu(kind) %}
+{% macro menu(kind, user, is_admin) %}
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
@@ -44,6 +44,18 @@
     {% if kind == 'Feed' %}
         {{ _build([_tags], kind) }}
     {% endif %}
+
+    {% if is_admin %}
+        <a href="/admin/" data-hover="{{ _('Administration') }}" class="top Admin">{{ _('Administration') }}</a>
+        {% if kind == 'Admin' %}
+            <div class="submenu">
+                <a href="/admin/counters" class="collapse">Counters</a>
+                <a href="/mapreduce" class="collapse">Mapreduce</a>
+            </div>
+        {% endif %}
+    {% endif %}
+    <a href="/sign" data-hover="{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}"
+       class="top Sign">{% if user %}{{ _('Logout') }}{% else %}{{ _('Sign in') }}{% endif %}</a>
 {% endmacro %}
 
 {% macro filter_title(filter) %}

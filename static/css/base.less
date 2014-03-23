@@ -263,6 +263,7 @@ header#header {
 	bottom: 2em;
 	color: @lighter;
 	@media only screen and (max-width: 1024px) { display: none; }
+	p { display: inline-block; }
 }
 
 @menuOffset: 385px;
@@ -295,11 +296,12 @@ input[data-function*='swipe'] {
 }
 .menu {
 	position: fixed;
-	top: 86px;
+	margin-top: 86px;
+	top: 0;
 	left: -@menuOffset;
+	bottom: 0;
 	.box-sizing(border-box);
 	width: @menuOffset;
-	height: 100%;
 	background: fade(black, 80%);
 	padding: 1em 3% 0;
 	z-index: 1;
@@ -336,6 +338,18 @@ input[data-function*='swipe'] {
 			}
 			&:hover::before {
 				max-width: 100%;
+			}
+		}
+	}
+	.submenu {
+		margin-left: 2em;
+		a {
+			display: inline;
+			&.collapse {
+				display: block;
+				font-size: 1.2em;
+				margin-bottom: 0.5em;
+				text-transform: lowercase;
 			}
 		}
 	}
@@ -435,33 +449,13 @@ nav.paginator {
 	}
 }
 
-#filters {
-	margin-left: 2em;
-	a {
-		display: inline;
-		&.collapse {
-			display: block;
-			font-size: 1.2em;
-			margin-bottom: 0.5em;
-			text-transform: lowercase;
-		}
-	}
-}
-
-nav.submenu {
-	@media only screen and (max-width: 480px) { display: none; }
-	a {
-		padding-right: 0.3em; border-right: 0.1em solid white;
-		&:last-child { padding-right: 0; border-right: none; }
-	}
-}
-
 #langs {
-	float: right;
+	position: relative;
+	margin: 1em 0;
 	@media only screen and (max-width: 800px) {  display: none; }
 	button {
-		float: left;
-		margin-left: 1em;
+		display: inline-block;
+		margin-right: 1em;
 		padding: 0 0.5em;
 		height: 2em;
 		color: white;
