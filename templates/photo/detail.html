@@ -33,47 +33,47 @@
 {% endblock %}
 
 {% block contents %}
-<aside>
-    {% include "photo/exif.html" %}
-    <div class="comments">
-        {% for comment in object.comment_list() %}
-            {{ m.render_comment(comment, user) }}
-        {% endfor %}
-        {% if user %}
-            <p><a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Add Comment') }}">{{ _('Add Comment') }}</a></p>
-        {% endif %}
-    </div>
-</aside>
-<article class="port">
-    <header>
-        {% if filter %}
-            {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
-        {% else %}
-            {% set url = uri_for('photo_all') %}
-        {% endif %}
-        <h2>
-            <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
-                {{ m.filter_title(filter) }}
-            </a>
-            / {{ object.headline }}
-        </h2>
+{% if filter %}
+    {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
+{% else %}
+    {% set url = uri_for('photo_all') %}
+{% endif %}
+<h2>
+    <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
+        {{ m.filter_title(filter) }}
+    </a>
+    / {{ object.headline }}
+</h2>
+<div class="subtitle">
+    <i class="icon-user"></i>
+    <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
+        title="{{ _("author's photos") }}">{{ object.author }}</a>
+    {% for tag in object.tags %}
+        {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+        <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
+            {{ tag }}</a>{% if not loop.last %},{% endif %}
+    {% endfor %}
+    <i class="icon-time"></i>
+    <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
+        title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+</div>
 
-        <div class="subtitle">
-            <i class="icon-user"></i>
-            <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
-                title="{{ _("author's photos") }}">{{ object.author }}</a>
-            {% for tag in object.tags %}
-                {% if loop.first %}<i class="icon-tag"></i>{% endif %}
-                <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
-                    {{ tag }}</a>{% if not loop.last %},{% endif %}
+<div id="container" class="port">
+    <article>
+        <canvas></canvas>
+    </article>
+    <aside>
+        {% include "photo/exif.html" %}
+        <div class="comments">
+            {% for comment in object.comment_list() %}
+                {{ m.render_comment(comment, user) }}
             {% endfor %}
-            <i class="icon-time"></i>
-            <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
-                title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+            {% if user %}
+                <p><a class="comment_add" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}" title="{{ _('Add Comment') }}">{{ _('Add Comment') }}</a></p>
+            {% endif %}
         </div>
-    </header>
-    <canvas></canvas>
-</article>
+    </aside>
+</div>
 {% endblock %}
 {% block scripts %}
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>

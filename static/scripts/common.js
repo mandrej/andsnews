@@ -115,22 +115,22 @@
 	 *
 	 */
     $.fn.copyright = function(src) {
+        var width = $(this).parent().width();
         var canvas = this[0];
         var cntx = canvas.getContext('2d');
         var img = new Image();
         img.src = src;
         img.onload = function() {
-            $(canvas).attr('width', this.width).attr('height', this.height);
-            cntx.drawImage(img, 0, 0, this.width, this.height);
-            var width_factor = this.width / $(canvas).width();
-            var height_factor = this.height / $(canvas).height();
-            cntx.font = 16 * width_factor + 'px "PT Sans"';
+            var factor = width / img.width;
+            $(canvas).attr('width', width).attr('height', img.height * factor);
+            cntx.drawImage(img, 0, 0, img.width, img.height, 0, 0, width, img.height * factor);
+            cntx.font = '16px "PT Sans"';
             cntx.fillStyle = '#fff';
             cntx.shadowColor = '#000';
             cntx.shadowOffsetX = 0;
             cntx.shadowOffsetY = 0;
             cntx.shadowBlur = 5;
-            cntx.fillText('© ands.appspot.com', this.width - 160 * width_factor, 30 * height_factor);
+            cntx.fillText('© ands.appspot.com', 20, 30);
         };
         return canvas
     }

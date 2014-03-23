@@ -3,48 +3,46 @@
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 
 {% block contents %}
-<article>
-	{% if news %}
-		<h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
-		{% if news.feed.rights %}<p>{{ news.feed.rights }}</p>{% endif %}
-		<div class="subtitle">
-			{{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
-	
-			{% if object.date %}{{ _('updated') }}:
-				<time datetime="{{ object.date|to_datetime }}">
-                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-				</time>
-			{% endif %}
-			{% for tag in object.tags %}
-				{% if loop.first %}<i class="icon-tag"></i>{% endif %}
-				<a href="{{ uri_for('feed_all') }}tags/{{ tag }}/" title="{{ tag }}">
-					{{ tag }}</a>{% if not loop.last %},{% endif %}
-			{% endfor %}
-		</div>
-		
-		<div id="container" class="cols">
-			{% for entry in news.entries %}
-				<section>
-                    <header>
-                        <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
-                    </header>
-                    <div class="story">{{ entry.content|safe }}</div>
-                    <p class="details">
-                        {{ entry.author|striptags }}
-                        {% if entry.date %}
-                            {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
-                        {% endif %}
-                    </p>
-				</section>
-			{% endfor %}
-		</div>
-	{% else %}
-		<h2>{% trans title=object.headline %}No {{ title }} at the moment{% endtrans %}.</h2>
-        {% if error %}
-            <p>{{ _('News error') }}.<br/>{{ error }}.</p>
+{% if news %}
+    <h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
+    {% if news.feed.rights %}<p>{{ news.feed.rights }}</p>{% endif %}
+    <div class="subtitle">
+        {{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
+
+        {% if object.date %}{{ _('updated') }}:
+            <time datetime="{{ object.date|to_datetime }}">
+                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+            </time>
         {% endif %}
-	{% endif %}
-</article>
+        {% for tag in object.tags %}
+            {% if loop.first %}<i class="icon-tag"></i>{% endif %}
+            <a href="{{ uri_for('feed_all') }}tags/{{ tag }}/" title="{{ tag }}">
+                {{ tag }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+    </div>
+
+    <div id="container" class="cols">
+        {% for entry in news.entries %}
+            <section>
+                <header>
+                    <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
+                </header>
+                <div class="story">{{ entry.content|safe }}</div>
+                <p class="details">
+                    {{ entry.author|striptags }}
+                    {% if entry.date %}
+                        {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
+                    {% endif %}
+                </p>
+            </section>
+        {% endfor %}
+    </div>
+{% else %}
+    <h2>{% trans title=object.headline %}No {{ title }} at the moment{% endtrans %}.</h2>
+    {% if error %}
+        <p>{{ _('News error') }}.<br/>{{ error }}.</p>
+    {% endif %}
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
