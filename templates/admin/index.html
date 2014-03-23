@@ -10,9 +10,13 @@
     <div id="container" class="cols">
         <section class="admin">
             <h3>
-                <a href="/admin/blobs">Photo</a>
-                <a href="{{ uri_for('photo_add') }}">Add</a>
-                {{ photo_count }}
+                <a href="/admin/blobs" class="button">
+                    <i class="fa fa-th-list"></i>
+                    Photo {{ photo_count }}
+                </a>
+                <a href="{{ uri_for('photo_add') }}" class="button">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
             </h3>
             <div id="Photo_tags"></div>
             <div id="Photo_author"></div>
@@ -25,28 +29,46 @@
         </section>
         <section class="admin">
             <h3>
-                <a href="/admin/images">Entry</a>
-                <a href="{{ uri_for('entry_add') }}">Add</a>
-                {{ entry_count }}
+                <a href="/admin/images" class="button">
+                    <i class="fa fa-th-list"></i>
+                    Entry {{ entry_count }}
+                </a>
+                <a href="{{ uri_for('entry_add') }}" class="button">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
             </h3>
             <div id="Entry_tags"></div>
             <div id="Entry_author"></div>
             <div id="Entry_date"></div>
 
             <h3>
-                <a href="/admin/feeds">Feeds</a>
-                <a href="{{ uri_for('feed_add') }}">Add</a>
-                {{ feeds_count }}
+                <a href="/admin/feeds" class="button">
+                    <i class="fa fa-th-list"></i>
+                    Feeds {{ feeds_count }}
+                </a>
+                <a href="{{ uri_for('feed_add') }}" class="button">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
             </h3>
             <div id="Feed_tags"></div>
 
-            <h3><a href="/admin/comments">Comment {{ comment_count }}</a></h3>
+            <h3>
+                <a href="/admin/comments" class="button">
+                    <i class="fa fa-th-list"></i>
+                    Comment {{ comment_count }}
+                </a>
+            </h3>
             <div id="Comment_forkind"></div>
             <div id="Comment_author"></div>
             <div id="Comment_date"></div>
         </section>
-        <section>
-            <h3>Memcache statistics for	v.{{ version() }}</h3>
+        <section class="admin">
+            <h3>
+                <span class="button">
+                    <i class="fa fa-bars"></i>
+                    Memcache statistics for	v.{{ version() }}
+                </span>
+            </h3>
             <dl class="w65em">
                 <dt>hit ratio</dt>
                 <dd>

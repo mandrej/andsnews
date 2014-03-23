@@ -6,8 +6,8 @@ function build() {
         $.each(data, function(key, value) {
             var tmpl = '', title = key.split('_').pop() + ' cloud';
             if (value) {
-                tmpl += '<button type="submit" name="delete" value="' + key + '">delete</button>';
-                tmpl += '<a class="graph" href="/visualize/' + key + '">graph</a>';
+                tmpl += '<button type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
+                tmpl += '<a class="graph button" href="/visualize/' + key + '"><i class="fa fa-eye"></i> graph</a>';
                 tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                 tmpl += '<div class="hide">';
                 $.each(value, function(name, count) {
@@ -16,7 +16,7 @@ function build() {
                 });
                 tmpl += '</div>';
             } else {
-                tmpl += '<button type="submit" name="put" value="' + key + '">create</button>';
+                tmpl += '<button type="submit" name="put" value="' + key + '"><i class="fa fa-cog"></i> create</button>';
                 tmpl += '<h4>' + title + ' [EMPTY]</h4>';
             }
             $('#' + key).html(tmpl);

@@ -21,8 +21,9 @@
         <colgroup>
             <col/>
             <col style="width: 190px; text-align: right;"/>
-            <col style="width: 170px; text-align: right;"/>
+            <col style="width: 120px; text-align: right;"/>
             <col style="width: 210px; text-align: right;"/>
+            <col style="width: 125px; text-align: right;"/>
         </colgroup>
         <thead>
             <tr>
@@ -37,24 +38,30 @@
             {% for photo in objects %}
                 <tr id="{{ photo.key.urlsafe() }}">
                     <td>
-                        {{ photo.headline }}
-                        <a href="{{ uri_for('photo_edit', slug=photo.key.string_id()) }}">Edit</a>
-                        <a class="confirm" href="{{ uri_for('delete', safe_key=photo.key.urlsafe()) }}">Delete</a>
+                        <a href="{{ uri_for('photo', slug=photo.key.string_id()) }}">
+                            {{ photo.headline }}
+                        </a>
                     </td>
                     <td>
                         {% if photo.blob_key %}
-                            {{ photo.blob_info.size|filesizeformat }}, {{ photo.blob_info.content_type }}
                             {{ True|boolimage }}
+                            {{ photo.blob_info.size|filesizeformat }}, {{ photo.blob_info.content_type }}
                         {% else %}
                             {{ False|boolimage }}
                         {% endif %}
                     </td>
                     <td>
-                        {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
                         <span class="_hex" style="display: inline-block; width: 1.5em; background-color: {{ photo.hex }};">&nbsp;</span>
+                        {% for c in photo.hls %}{{ '%03d'|format(c) }} {% endfor %}
                     </td>
                     <td>
                         {{ photo.hue }}, {{ photo.lum }}, {{ photo.sat }}
+                    </td>
+                    <td>
+                        <a class="button" href="{{ uri_for('photo_edit', slug=photo.key.string_id()) }}">
+                            <i class="fa fa-pencil-square"></i> edit</a>
+                        <a class="confirm button delete" href="{{ uri_for('delete', safe_key=photo.key.urlsafe()) }}">
+                            <i class="fa fa-times-circle"></i> delete</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -43,7 +43,7 @@
 .black_shadow { text-shadow: -1px -1px 1px fade(black, 25%); }
 .default_button {
 	border: none;
-	padding: 0.4em 0.8em;
+	padding: 0.3em 0.5em;
 	color: black;
 	background-color: white;
 	font-size: 1em;
@@ -106,20 +106,23 @@ pre {
 	font-size: 1em;
 	overflow: auto;
 }
-button {
+button, .button {
 	.default_button;
+	text-decoration: none;
 	&:focus { outline: none; }
-	&[disabled], &[disabled]:hover {
+	&.delete {
+		color: @google_red;
+		&:hover {
+			color: white;
+			background: @google_red;
+		}
+	}
+	&[disabled], &.disabled {
 		background: @paper;
 		color: @neutral;
-	}
-	&.disabled, &.disabled:hover, &[name$=delete] {
-		border-left: 4px solid @neutral;
-		border-right: 4px solid @neutral;
-	}
-	&[name$=delete] {
-		border-left: 4px solid @google_red;
-		border-right: 4px solid @google_red;
+		&:hover {
+			background: @darker;
+		}
 	}
 }
 button::-moz-focus-inner { border:0; padding:0; }
@@ -173,7 +176,7 @@ table {
 	th {
 		border-left: @dashed;
 		border-right: @dashed;
-		padding: 0.3em;
+		padding: 0.5em;
 		border-bottom: 1px solid @neutral;
 		font-size: 1.2em;
 		text-align: left;
@@ -183,7 +186,7 @@ table {
 	td {
 		border-left: @dashed;
 		border-right: @dashed;
-		padding: 0.3em;
+		padding: 0.5em;
 		&:first-child { border-left: none; padding-left: 0; }
 		&:last-child { border-right: none; padding-right: 0; }
 		a { text-decoration: underline; }
@@ -427,7 +430,7 @@ input[data-function*='swipe'] {
 		}
 	}
 }
-.comments, .exif { margin-bottom: 2em; }
+.comment, .exif { margin-bottom: 1em; }
 
 .subtitle {
 	margin: 1em 0;
@@ -499,8 +502,13 @@ nav.paginator {
 
 .admin {
 	margin-bottom: 1em;
+	h3 { margin: 1em 0; }
 	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
 	button { float: right; width: 5em; margin-left: 0.5em; }
+	.button {
+		.default_button;
+		.border-radius(0);
+	}
 	dl {
 		margin-right: 5.5em;
 		&.w65em {
@@ -511,9 +519,10 @@ nav.paginator {
 	dt { width: 75%; }
 	dd { margin-left: 80%; }
 	a {
-		text-decoration: underline;
 		&.graph {
-			float: right; margin: 0.2em 0.5em;
+			float: right;
+			text-decoration: none;
+			.border-radius(@radius);
 		}
 	}
 }
@@ -815,8 +824,6 @@ p.legend { padding: 0.5em; text-align: center; }
 
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
-.remove { color: white; &:hover { color: @darker; }}
-.delete { text-decoration: none; color: white; &:hover { color: @google_red; .black_shadow; }}
 .nowrap { white-space: nowrap; }
 .hide { display: none; }
 .clear { clear: both; }

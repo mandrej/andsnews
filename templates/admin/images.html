@@ -19,9 +19,11 @@
     <br clear="all"/>
     {% for entry in objects %}
         <h3>
-            {{ entry.headline }}
-            <a href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">Edit</a>
-            <a class="confirm" href="{{ uri_for('delete', safe_key=entry.key.urlsafe()) }}">Delete</a>
+            <a class="button" href="{{ uri_for('entry', slug=entry.key.string_id()) }}">{{ entry.headline }}</a>
+            <a class="button" href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">
+                <i class="fa fa-pencil-square"></i> edit</a>
+            <a class="confirm button delete" href="{{ uri_for('delete', safe_key=entry.key.urlsafe()) }}">
+                <i class="fa fa-times-circle"></i> delete</a>
         </h3>
         <table id="data2" class="zebra">
             <colgroup>
@@ -29,7 +31,7 @@
                 <col style="width: 240px;"/>
                 <col style="width: 140px; text-align: right;"/>
                 <col style="width: 80px; text-align: right;"/>
-                <col style="width: 130px; text-align: right;"/>
+                <col style="width: 125px; text-align: right;"/>
             </colgroup>
             <thead>
                 <tr>
@@ -55,11 +57,15 @@
                         </td>
                         <td class="nowrap">
                             {% if image.small %}
-                                <button type="submit" name="delete">delete</button>
-                                <button type="submit" name="make" class="disabled" disabled="disabled">make</button>
+                                <button type="submit" name="delete" class="button delete">
+                                    <i class="fa fa-times-circle"></i> delete</button>
+                                <button type="submit" name="make" class="disabled button" disabled="disabled">
+                                    <i class="fa fa-cog"></i> make</button>
                             {% else %}
-                                <button type="submit" name="delete" class="disabled" disabled="disabled">delete</button>
-                                <button type="submit" name="make">make</button>
+                                <button type="submit" name="delete" class="disabled button delete" disabled="disabled">
+                                    <i class="fa fa-times-circle"></i> delete</button>
+                                <button type="submit" name="make" class="button">
+                                    <i class="fa fa-cog"></i> make</button>
                             {% endif %}
                         </td>
                     </tr>
