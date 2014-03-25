@@ -98,7 +98,7 @@
                 evt.preventDefault();
                 $('#overlay, #spinner').show();
                 var row = $(this).closest('tr');
-                var url = '/admin/images';
+                var url = '/admin/entries/';
                 var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': token};
 
                 if (params['action'] == 'delete') {
