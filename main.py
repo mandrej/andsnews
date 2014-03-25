@@ -45,15 +45,15 @@ app = WSGIApplication(
      SimpleRoute(r'^/admin/?$', handler='views.admin.Index'),
      PathPrefixRoute('/admin', [
          Route('/', handler='views.admin.Index'),
-         Route('/comments', handler='views.admin.Comments'),
-         Route('/feeds', handler='views.admin.Feeds'),
          Route('/counters', handler='views.admin.Counters'),
          Route('/spectra', handler='views.admin.Spectra'),
 
-         Route('/blobs', handler='views.admin.Blobs'),
-         Route('/blobs/<field:date>/<value>', handler='views.admin.Blobs'),
-         Route('/images', handler='views.admin.Images'),
-         Route('/images/<field:date>/<value>', handler='views.admin.Images'),
+         Route('/photos', handler='views.admin.Photos'),
+         Route('/photos/<field:date>/<value>', handler='views.admin.Photos'),
+         Route('/entries', handler='views.admin.Entries'),
+         Route('/entries/<field:date>/<value>', handler='views.admin.Entries'),
+         Route('/feeds', handler='views.admin.Feeds'),
+         Route('/comments', handler='views.admin.Comments'),
 
          Route('/memcache/', handler='views.admin.Cache', methods=['GET']),
          Route('/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),

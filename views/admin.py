@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
-from webapp2_extras.appengine.users import admin_required
+from webapp2_extras.appengine.users import login_required, admin_required
 from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
@@ -29,7 +29,7 @@ class Cache(BaseHandler):
 
 
 class Index(BaseHandler):
-    @admin_required
+    @login_required
     def get(self):
         stats = memcache.get_stats()
         hits = stats.get('hits', 0)
@@ -57,6 +57,93 @@ class Index(BaseHandler):
         self.render_template('admin/index.html', data)
 
 
+#def thumbnail_color(request):
+#    params = request.POST
+#    parentkind = params['kind']
+#    slug = params['slug']
+#
+#    obj = ndb.Key(parentkind, slug, 'Picture', slug).get()
+#    obj.rgb = median(obj.small)
+#    obj.put()
+#    photo = ndb.Key(parentkind, slug).get()
+#    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
+#    photo.put()
+#    response = webapp2.Response(content_type='application/json')
+#    response.write(json.dumps({'success': True, 'hex': obj.hex}))
+#    return response
+
+#model = ndb.Model._kind_map.get(kind)
+
+
+class Photos(BaseHandler):
+    @login_required
+    def get(self, field=None, value=None):
+        f = Filter(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        query = Photo.query(*filters).order(-Photo.date)
+
+        page = int(self.request.get('page', 1))
+        paginator = Paginator(query)
+        objects, has_next = paginator.page(page)
+
+        data = {'objects': objects,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1,
+                'archive': Cloud('Photo_date').get_list()}
+        self.render_template('admin/photos.html', data)
+
+
+class Entries(BaseHandler):
+    @login_required
+    def get(self, field=None, value=None):
+        f = Filter(field, value)
+        filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
+        query = Entry.query(*filters).order(-Entry.date)
+
+        page = int(self.request.get('page', 1))
+        paginator = Paginator(query, per_page=6)
+        objects, has_next = paginator.page(page)
+
+        data = {'objects': objects,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1,
+                'archive': Cloud('Entry_date').get_list()}
+        self.render_template('admin/entries.html', data)
+
+    @csrf_protected
+    def post(self):
+        params = dict(self.request.POST)
+        key = ndb.Key(urlsafe=params['safe_key'])
+        if params['action'] == 'delete':
+            obj = key.get()
+            obj.small = None
+            obj.put()
+            data = {'success': True}
+        elif params['action'] == 'make':
+            buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
+            data = {'success': True, 'small': filesizeformat(len(buff))}
+        self.render_json(data)
+
+
+class Feeds(BaseHandler):
+    @login_required
+    def get(self):
+        query = Feed.query().order(-Feed.date)
+        self.render_template('admin/feeds.html', {'objects': query})
+
+    @csrf_protected
+    @touch_appcache
+    def post(self):
+        slug = self.request.get('action:feed')
+        if slug:
+            memcache.delete(slug)
+        self.redirect('/admin/feeds')
+
+
 class Comments(BaseHandler):
     @admin_required
     def get(self):
@@ -79,93 +166,6 @@ class Comments(BaseHandler):
         else:
             key.delete()
         self.render_json({'success': True})
-
-
-#def thumbnail_color(request):
-#    params = request.POST
-#    parentkind = params['kind']
-#    slug = params['slug']
-#
-#    obj = ndb.Key(parentkind, slug, 'Picture', slug).get()
-#    obj.rgb = median(obj.small)
-#    obj.put()
-#    photo = ndb.Key(parentkind, slug).get()
-#    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
-#    photo.put()
-#    response = webapp2.Response(content_type='application/json')
-#    response.write(json.dumps({'success': True, 'hex': obj.hex}))
-#    return response
-
-#model = ndb.Model._kind_map.get(kind)
-
-
-class Images(BaseHandler):
-    @admin_required
-    def get(self, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
-        query = Entry.query(*filters).order(-Entry.date)
-
-        page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=6)
-        objects, has_next = paginator.page(page)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1,
-                'archive': Cloud('Entry_date').get_list()}
-        self.render_template('admin/images.html', data)
-
-    @csrf_protected
-    def post(self):
-        params = dict(self.request.POST)
-        key = ndb.Key(urlsafe=params['safe_key'])
-        if params['action'] == 'delete':
-            obj = key.get()
-            obj.small = None
-            obj.put()
-            data = {'success': True}
-        elif params['action'] == 'make':
-            buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
-            data = {'success': True, 'small': filesizeformat(len(buff))}
-        self.render_json(data)
-
-
-class Blobs(BaseHandler):
-    @admin_required
-    def get(self, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
-        query = Photo.query(*filters).order(-Photo.date)
-
-        page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
-        objects, has_next = paginator.page(page)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1,
-                'archive': Cloud('Photo_date').get_list()}
-        self.render_template('admin/blobs.html', data)
-
-
-class Feeds(BaseHandler):
-    @admin_required
-    def get(self):
-        query = Feed.query().order(-Feed.date)
-        self.render_template('admin/feeds.html', {'objects': query})
-
-    @csrf_protected
-    @touch_appcache
-    def post(self):
-        slug = self.request.get('action:feed')
-        if slug:
-            memcache.delete(slug)
-        self.redirect('/admin/feeds')
 
 
 class Counters(BaseHandler):

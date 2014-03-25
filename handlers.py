@@ -225,9 +225,8 @@ class DeleteHandler(BaseHandler):
         else:
             next = webapp2.uri_for('%s_all' % key.kind().lower())
         obj = key.get()
-        if not self.is_admin:
-            if self.user != obj.author:
-                self.abort(403)
+        if not any([self.is_admin, self.user == obj.author]):
+            self.abort(403)
         data = {'object': obj, 'post_url': self.request.path, 'next': next}
         self.render_template('snippets/confirm.html', data)
 

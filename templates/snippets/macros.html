@@ -45,9 +45,9 @@
         {{ _build([_tags], kind) }}
     {% endif %}
 
-    {% if is_admin %}
+    {% if user %}
         <a href="/admin/" data-hover="{{ _('Administration') }}" class="top Admin">{{ _('Administration') }}</a>
-        {% if kind == 'Admin' %}
+        {% if kind == 'Admin' and is_admin %}
             <div class="submenu">
                 <a href="/admin/counters" class="collapse">Counters</a>
                 <a href="/mapreduce" class="collapse">Mapreduce</a>

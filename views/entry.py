@@ -4,7 +4,6 @@ from StringIO import StringIO
 from PIL import Image
 
 import webapp2
-from google.appengine.api import users
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from google.appengine.ext import ndb
@@ -125,11 +124,8 @@ class Edit(BaseHandler):
     @login_required
     def get(self, slug, form=None):
         obj = Entry.get_by_id(slug)
-        user = users.get_current_user()
-        is_admin = users.is_current_user_admin()
-        if not is_admin:
-            if user != obj.author:
-                self.abort(403)
+        if not any([self.is_admin, self.user == obj.author]):
+            self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
             form.front.choices = front_choices(obj)

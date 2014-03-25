@@ -7,7 +7,7 @@ from StringIO import StringIO
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import admin_required
+from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Feed
@@ -140,7 +140,7 @@ class EditForm(Form):
 
 
 class Add(BaseHandler):
-    @admin_required
+    @login_required
     def get(self, form=None):
         if form is None:
             form = AddForm()
@@ -159,9 +159,11 @@ class Add(BaseHandler):
 
 
 class Edit(BaseHandler):
-    @admin_required
+    @login_required
     def get(self, slug, form=None):
         obj = Feed.get_by_id(slug)
+        if not any([self.is_admin, self.user == obj.author]):
+            self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
         self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
