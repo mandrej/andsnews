@@ -11,8 +11,6 @@ app = WSGIApplication(
     [SimpleRoute(r'^/photos/?$', handler='views.photo.Index'),
      PathPrefixRoute('/photos', [
          Route('/', handler='views.photo.Index', name='photo_all'),
-         Route('/add', handler='views.photo.Add', name='photo_add'),
-         Route('/<slug>/edit', handler='views.photo.Edit', name='photo_edit'),
          Route('/<slug>/palette', handler='views.photo.Palette', name='palette'),
          Route('/<slug>', handler='views.photo.Detail', name='photo'),
          Route('/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/<slug>',
@@ -23,8 +21,6 @@ app = WSGIApplication(
      SimpleRoute(r'^/entries/?$', handler='views.entry.Index'),
      PathPrefixRoute('/entries', [
          Route('/', handler='views.entry.Index', name='entry_all'),
-         Route('/add', handler='views.entry.Add', name='entry_add'),
-         Route('/<slug>/edit', handler='views.entry.Edit', name='entry_edit'),
          Route('/<field:(tags|date|author)>/<value>/', handler='views.entry.Index', name='entry_filter_all'),
          Route('/image/<slug>/<size:(small|normal)>', handler='views.entry.thumb', name='entry_image'),
          Route('/<slug>', handler='views.entry.Detail', name='entry'),
@@ -37,8 +33,6 @@ app = WSGIApplication(
      SimpleRoute(r'^/news/?$', handler='views.news.Index'),
      PathPrefixRoute('/news', [
          Route('/', handler='views.news.Index', name='feed_all'),
-         Route('/add', handler='views.news.Add', name='feed_add'),
-         Route('/<slug>/edit', handler='views.news.Edit', name='feed_edit'),
          Route('/<slug>', handler='views.news.Detail', name='feed'),
          Route('/<field:tags>/<value>/', handler='views.news.Index', name='feed_filter_all'),
      ]),
@@ -47,14 +41,26 @@ app = WSGIApplication(
          Route('/', handler='views.admin.Index'),
          Route('/counters', handler='views.admin.Counters'),
          Route('/spectra', handler='views.admin.Spectra'),
-
-         Route('/photos', handler='views.admin.Photos'),
-         Route('/photos/<field:date>/<value>', handler='views.admin.Photos'),
-         Route('/entries', handler='views.admin.Entries'),
-         Route('/entries/<field:date>/<value>', handler='views.admin.Entries'),
-         Route('/feeds', handler='views.admin.Feeds'),
-         Route('/comments', handler='views.admin.Comments'),
-
+         PathPrefixRoute('/photos', [
+            Route('/', handler='views.admin.Photos', name='photo_admin'),
+            Route('/<field:date>/<value>', handler='views.admin.Photos'),
+            Route('/add', handler='views.photo.Add', name='photo_add'),
+            Route('/<slug>/edit', handler='views.photo.Edit', name='photo_edit'),
+         ]),
+         PathPrefixRoute('/entries', [
+            Route('/', handler='views.admin.Entries', name='entry_admin'),
+            Route('/<field:date>/<value>', handler='views.admin.Entries'),
+            Route('/add', handler='views.entry.Add', name='entry_add'),
+            Route('/<slug>/edit', handler='views.entry.Edit', name='entry_edit'),
+         ]),
+         PathPrefixRoute('/feeds', [
+             Route('/', handler='views.admin.Feeds', name='feed_admin'),
+             Route('/add', handler='views.news.Add', name='feed_add'),
+            Route('/<slug>/edit', handler='views.news.Edit', name='feed_edit'),
+         ]),
+         PathPrefixRoute('/comments', [
+             Route('/', handler='views.admin.Comments'),
+         ]),
          Route('/memcache/', handler='views.admin.Cache', methods=['GET']),
          Route('/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
      ]),

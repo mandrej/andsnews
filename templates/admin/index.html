@@ -10,7 +10,7 @@
     <div id="container" class="cols">
         <section class="admin">
             <h3>
-                <a href="/admin/photos" class="button">
+                <a href="/admin/photos/" class="button">
                     <i class="fa fa-th-list"></i>
                     Photo {{ photo_count }}
                 </a>
@@ -29,7 +29,7 @@
         </section>
         <section class="admin">
             <h3>
-                <a href="/admin/entries" class="button">
+                <a href="/admin/entries/" class="button">
                     <i class="fa fa-th-list"></i>
                     Entry {{ entry_count }}
                 </a>
@@ -42,7 +42,7 @@
             <div id="Entry_date"></div>
 
             <h3>
-                <a href="/admin/feeds" class="button">
+                <a href="/admin/feeds/" class="button">
                     <i class="fa fa-th-list"></i>
                     Feeds {{ feeds_count }}
                 </a>
@@ -52,15 +52,17 @@
             </h3>
             <div id="Feed_tags"></div>
 
-            <h3>
-                <a href="/admin/comments" class="button">
-                    <i class="fa fa-th-list"></i>
-                    Comment {{ comment_count }}
-                </a>
-            </h3>
-            <div id="Comment_forkind"></div>
-            <div id="Comment_author"></div>
-            <div id="Comment_date"></div>
+            {% if is_admin %}
+                <h3>
+                    <a href="/admin/comments/" class="button">
+                        <i class="fa fa-th-list"></i>
+                        Comment {{ comment_count }}
+                    </a>
+                </h3>
+                <div id="Comment_forkind"></div>
+                <div id="Comment_author"></div>
+                <div id="Comment_date"></div>
+            {% endif %}
         </section>
         <section class="admin">
             <h3>

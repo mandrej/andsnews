@@ -109,7 +109,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('entry', slug=obj.key.string_id())
+            self.redirect_to('entry_admin')
         else:
             self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
 
@@ -142,7 +142,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('entry', slug=slug)
+            self.redirect_to('entry_admin')
         else:
             self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
 

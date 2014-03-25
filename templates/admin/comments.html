@@ -62,7 +62,7 @@
             $('#main button').click(function(evt) {
                 evt.preventDefault();
                 var row = $(this).parents('tr');
-                var url = '/admin/comments';
+                var url = '/admin/comments/';
                 var params = {'safe_key': row.attr('id'), 'token': token};
                 if ($(this).attr('name') == 'save') {
                     params['body'] = $('textarea', row).val();
