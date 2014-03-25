@@ -128,7 +128,7 @@ class Add(BaseHandler):
         upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
         if form is None:
             form = AddForm()
-        self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+        self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -140,7 +140,7 @@ class Add(BaseHandler):
             self.redirect_to('photo_edit', slug=obj.key.string_id())
         else:
             upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
-            self.render_template('photo/form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+            self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
 
 class Edit(BaseHandler):
@@ -151,7 +151,7 @@ class Edit(BaseHandler):
             self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-        self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
+        self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -162,4 +162,4 @@ class Edit(BaseHandler):
             obj.edit(form.data)
             self.redirect_to('photo_admin')
         else:
-            self.render_template('photo/form.html', {'form': form, 'object': obj, 'filter': None})
+            self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})

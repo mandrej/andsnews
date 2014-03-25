@@ -100,7 +100,7 @@ class Add(BaseHandler):
         if form is None:
             form = AddForm()
             form.newimages.append_entry()
-        self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
+        self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -111,7 +111,7 @@ class Add(BaseHandler):
             obj.add(form.data)
             self.redirect_to('entry_admin')
         else:
-            self.render_template('entry/form.html', {'form': form, 'object': None, 'filter': None})
+            self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
 
 def front_choices(obj):
@@ -132,7 +132,7 @@ class Edit(BaseHandler):
             for img in obj.image_list:
                 form.images.append_entry(img)
             form.newimages.append_entry()
-        self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
+        self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -144,7 +144,7 @@ class Edit(BaseHandler):
             obj.edit(form.data)
             self.redirect_to('entry_admin')
         else:
-            self.render_template('entry/form.html', {'form': form, 'object': obj, 'filter': None})
+            self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 
 
 def make_thumbnail(kind, slug, size, mime='image/jpeg'):

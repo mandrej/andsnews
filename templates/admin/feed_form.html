@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
+
+{% block title %}{{ super() }} - {{ _('Add new / change existing news') }}{% endblock %}
+
+{% block contents %}
+<h2>{{ _('Add new / change existing news') }}</h2>
+<div id="container" class="port">
+    <article>
+        {% if form.errors %}
+            <div class="formerrors">
+                <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
+                <p>{{ _('Please correct errors in') }}
+                {{ form.errors|join(", ") }}.</p>
+            </div>
+        {% endif %}
+
+        {% if object %}
+            <form action="{{ uri_for('feed_edit', slug=object.key.string_id()) }}" method="post">
+        {% else %}
+            <form action="{{ uri_for('feed_add') }}" method="post">
+        {% endif %}
+            <fieldset>
+                <input name="token" type="hidden" value="{{ token }}"/>
+                {{ m.form_row(form.headline) }}
+                {% if not object %}
+                    {{ m.form_row(form.slug) }}
+                {% endif %}
+                {{ m.form_row(form.tags) }}
+                {{ m.form_row(form.url) }}
+                {% if object %}
+                    {{ m.form_row(form.date, disabled='disabled') }}
+                {% endif %}
+                <p class="buttons">
+                    <span class="required">{{ _('Required field') }}</span>
+                    <button type="submit">{{ _('done') }}</button>
+                </p>
+            </fieldset>
+        </form>
+    </article>
+    <aside>
+        <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+        <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+        {% if object %}
+            <p><strong>{{ _('Date') }}</strong> {{ _('Last modified date') }}.</p>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        nbl.l([[
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js', [
+                '/static/scripts/jquery.autocomplete.min.js',
+                '/static/scripts/urlify.min.js', [
+                    '/static/scripts/common.min.js',
+                    '/static/scripts/base.min.js',
+                    function() {done()}]]]]);
+
+        var autoCompleteOptions = {
+            width: 284,
+            selectFirst: false,
+            multiple: false,
+            matchContains: true
+        };
+        function done() {
+            $('#headline').slugify();
+            $("#tags").autocomplete("/complete/Feed_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
+            $('#main button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+        }
+    </script>
+{% endblock %}
+{% block ga %}{% endblock %}

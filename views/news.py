@@ -144,7 +144,7 @@ class Add(BaseHandler):
     def get(self, form=None):
         if form is None:
             form = AddForm()
-        self.render_template('news/form.html', {'form': form, 'filter': None})
+        self.render_template('admin/feed_form.html', {'form': form, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -155,7 +155,7 @@ class Add(BaseHandler):
             obj.add(form.data)
             self.redirect_to('feed_admin')
         else:
-            self.render_template('news/form.html', {'form': form, 'filter': None})
+            self.render_template('admin/feed_form.html', {'form': form, 'filter': None})
 
 
 class Edit(BaseHandler):
@@ -166,7 +166,7 @@ class Edit(BaseHandler):
             self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-        self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
+        self.render_template('admin/feed_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
     @touch_appcache
@@ -177,4 +177,4 @@ class Edit(BaseHandler):
             obj.edit(form.data)
             self.redirect_to('feed_admin')
         else:
-            self.render_template('news/form.html', {'form': form, 'object': obj, 'filter': None})
+            self.render_template('admin/feed_form.html', {'form': form, 'object': obj, 'filter': None})

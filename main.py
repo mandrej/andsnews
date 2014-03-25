@@ -45,18 +45,18 @@ app = WSGIApplication(
             Route('/', handler='views.admin.Photos', name='photo_admin'),
             Route('/<field:date>/<value>', handler='views.admin.Photos'),
             Route('/add', handler='views.photo.Add', name='photo_add'),
-            Route('/<slug>/edit', handler='views.photo.Edit', name='photo_edit'),
+            Route('/<slug>', handler='views.photo.Edit', name='photo_edit'),
          ]),
          PathPrefixRoute('/entries', [
             Route('/', handler='views.admin.Entries', name='entry_admin'),
             Route('/<field:date>/<value>', handler='views.admin.Entries'),
             Route('/add', handler='views.entry.Add', name='entry_add'),
-            Route('/<slug>/edit', handler='views.entry.Edit', name='entry_edit'),
+            Route('/<slug>', handler='views.entry.Edit', name='entry_edit'),
          ]),
          PathPrefixRoute('/feeds', [
              Route('/', handler='views.admin.Feeds', name='feed_admin'),
              Route('/add', handler='views.news.Add', name='feed_add'),
-            Route('/<slug>/edit', handler='views.news.Edit', name='feed_edit'),
+            Route('/<slug>', handler='views.news.Edit', name='feed_edit'),
          ]),
          PathPrefixRoute('/comments', [
              Route('/', handler='views.admin.Comments'),
