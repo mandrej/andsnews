@@ -4,7 +4,12 @@
 {% block contents %}
 {{ super() }}
 <article>
-	<h2>Photo administration {{ m.page_number(page) }}</h2>
+	<h2 class="clearing">
+        Photo administration {{ m.page_number(page) }}
+        <a href="{{ uri_for('photo_add') }}" class="button right">
+            <i class="fa fa-plus-square"></i> Add
+        </a>
+    </h2>
     <section>
         <h3>Dates</h3>
         <p class="cloud">
@@ -16,7 +21,6 @@
         </p>
     </section>
 
-    <br clear="all"/>
     <table id="data1" class="zebra">
         <colgroup>
             <col/>

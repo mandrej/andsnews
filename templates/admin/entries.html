@@ -4,7 +4,12 @@
 {% block contents %}
 {{ super() }}
 <article>
-	<h2>Entry administration {{ m.page_number(page) }}</h2>
+	<h2 class="clearing">
+        Entry administration {{ m.page_number(page) }}
+        <a href="{{ uri_for('entry_add') }}" class="button right">
+            <i class="fa fa-plus-square"></i> Add
+        </a>
+    </h2>
     <section>
         <h3>Dates</h3>
         <p class="cloud">
@@ -16,15 +21,14 @@
         </p>
     </section>
 
-    <br clear="all"/>
     {% for entry in objects %}
         {% if user == entry.author or is_admin %}
-            <h3>
-                <a class="button" href="{{ uri_for('entry', slug=entry.key.string_id()) }}">{{ entry.headline }}</a>
-                <a class="button" href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">
-                    <i class="fa fa-pencil-square"></i> edit</a>
-                <a class="confirm button delete" href="{{ uri_for('delete', safe_key=entry.key.urlsafe()) }}">
+            <h3 class="clearing">
+                <a class="button left" href="{{ uri_for('entry', slug=entry.key.string_id()) }}">{{ entry.headline }}</a>
+                <a class="confirm button delete right" href="{{ uri_for('delete', safe_key=entry.key.urlsafe()) }}">
                     <i class="fa fa-times-circle"></i> delete</a>
+                <a class="button right" href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">
+                    <i class="fa fa-pencil-square"></i> edit</a>
             </h3>
             <table id="data2" class="zebra">
                 <colgroup>

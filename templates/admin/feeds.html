@@ -2,8 +2,13 @@
 
 {% block contents %}
 {{ super() }}
-<article class="clear">
-	<h2>Feed administration</h2>
+<article>
+	<h2 class="clearing">
+        Feed administration
+        <a href="{{ uri_for('feed_add') }}" class="button right">
+            <i class="fa fa-plus-square"></i> Add
+        </a>
+    </h2>
 	<form action="/admin/feeds" method="post">
         <input name="token" type="hidden" value="{{ token }}"/>
 		<table id="data" class="zebra">
