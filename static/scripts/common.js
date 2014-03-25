@@ -146,7 +146,7 @@
         var parnetTagName = $(evt.target).parent()[0].tagName;
         if (!(disallow[evt.target.tagName] || disallow[parnetTagName])) {
             evt.preventDefault();
-            $("input[data-function*='swipe']").attr('checked',false);
+            $("input[data-function*='swipe']").prop('checked',false);
         }
     });
     // search
