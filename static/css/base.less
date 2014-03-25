@@ -32,25 +32,31 @@
 @radius: 4px;
 @dashed: 1px dashed @neutral;
 
-.clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
-.title_hover {
-	a {
-		text-decoration: none;
-		&:hover { text-decoration: underline;}
+a {
+	color: black;
+	outline: none;
+	text-decoration: none;
+	.transition(0.3s);
+	&:hover, &:focus {
+		color: black; background: fade(white, 50%);
+	}
+	&[data-hover]:hover, &[data-hover]:focus {
+		background: transparent;
 	}
 }
+.clearing { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
 .white_shadow { text-shadow: 1px 1px 1px fade(white, 25%); }
 .black_shadow { text-shadow: -1px -1px 1px fade(black, 25%); }
 .default_button {
 	border: none;
 	padding: 0.3em 0.5em;
 	color: black;
-	background-color: white;
+	background: white;
 	font-size: 1em;
 	line-height: 100%;
 	.box-sizing(border-box);
 	.border-radius(@radius);
-	&:hover { background-color: @google_orange; text-decoration: none; }
+	&:hover { color: black; background: @google_orange; }
 }
 .left { float: left; margin-right: 0.5em; }
 .right { float: right; margin-left: 0.5em; }
@@ -66,12 +72,11 @@ body {
 	height: 100%;
 	.white_shadow;
 }
-a { color: black; outline: none; }
 a img { border: none; vertical-align: middle; }
 h1, h2, h3 { font-weight: normal; }
 h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table { margin: 0 0 0.5em; }
-h2 { font-size: 2em; .title_hover; }
-h3 { font-size: 1.3em; .title_hover; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.3em; }
 h4, h5, h6 { font-size: 1em; }
 blockquote { padding-left: 1em; border-left: 1em solid white; font-style: italic; }
 ul li { list-style: square; }
@@ -96,8 +101,7 @@ dl {
 		span { padding-left: 0.3em; font-weight: normal; }
 	}
 	a {
-		text-decoration: none;
-		&:hover { text-decoration: underline; background: @google_orange; }
+		&:hover { background: @google_orange; }
 		&.selected { background: @google_orange; }
 	}
 }
@@ -108,11 +112,11 @@ pre {
 }
 button, .button {
 	.default_button;
-	text-decoration: none;
+	.transition(0.3s);
 	&:focus { outline: none; }
 	&.delete {
 		color: @google_red;
-		&:hover {
+		&:hover, &:focus {
 			color: white;
 			background: @google_red;
 		}
@@ -120,7 +124,7 @@ button, .button {
 	&[disabled], &.disabled {
 		background: @paper;
 		color: @neutral;
-		&:hover {
+		&:hover, &:focus {
 			background: @darker;
 		}
 	}
@@ -189,7 +193,6 @@ table {
 		padding: 0.5em;
 		&:first-child { border-left: none; padding-left: 0; }
 		&:last-child { border-right: none; padding-right: 0; }
-		a { text-decoration: underline; }
 	}
 	&.zebra {
 		width: 100%;
@@ -231,7 +234,7 @@ header#header {
 		font-size: 3.2em;
 		a {
 			position: relative;
-			color: black; text-decoration: none;
+			color: black;
 			&::before {
 				position: absolute;
 				overflow: hidden;
@@ -272,11 +275,12 @@ header#header {
 //	display: flex;
 	min-height: 100%;
 	overflow: hidden;
-	background: url(../images/front.png) no-repeat;
+	background: url(../images/front.png) no-repeat fixed;
 }
 label[data-function*='swipe'] {
 	float: right;
     color: white;
+	.transition(0.3s);
 	.black_shadow;
 	&:hover { color: @google_orange; }
 }
@@ -320,8 +324,10 @@ input[data-function*='swipe'] {
 	}
 	a {
 		color: @paper;
-		text-decoration: none;
 		position: relative;
+		&:hover, &:focus {
+			color: white; background: transparent;
+		}
 		&.top {
 			.menu_item;
 			&.Admin, &.Sign, &.Comment {
@@ -369,7 +375,6 @@ input[data-function*='swipe'] {
 			padding: 0 @gap/4 @gap/2 @gap/4;
 			a {	display: block;
 				position: relative;
-				text-decoration: none;
 				overflow: hidden;
 				img {
 					display: block;
@@ -392,6 +397,9 @@ input[data-function*='swipe'] {
 					background: white;
 					.box-sizing(border-box);
 					.transition(all .3s ease-in-out);
+				}
+				&:hover, &:focus {
+					background: transparent;
 				}
 				&:hover img {
 					.transform(scale(1.1));
@@ -434,7 +442,6 @@ input[data-function*='swipe'] {
 
 .subtitle {
 	margin: 1em 0;
-	.title_hover;
 	@media only screen and (max-width: 480px) { display: none; }
 }
 
@@ -444,8 +451,7 @@ nav.paginator {
 	a {
 		.left;
 		color: white;
-		text-decoration: none;
-		&:hover { color: @google_orange; }
+		&:hover, &:focus { color: @google_orange; background: transparent; }
 	}
 	span {
 		.left;
@@ -481,6 +487,7 @@ nav.paginator {
 		position: absolute;
 		right: 0;;
 		height: 2.4em;
+		padding: .3em .8em;
 		color: white;
 		background: @google_orange;
 		.rounded_left_reset;
@@ -521,7 +528,6 @@ nav.paginator {
 	a {
 		&.graph {
 			float: right;
-			text-decoration: none;
 			.border-radius(@radius);
 		}
 	}
@@ -603,7 +609,7 @@ p.legend { padding: 0.5em; text-align: center; }
 	line-height: 135%;
 	font-size: @size;
 	font-weight: @weight;
-	a { color:  white; text-decoration: none;
+	a { color:  white;
 		&:hover, &.selected { background: @google_orange; color: black; }
 	}
 	.loop (@index) when (@index > 0) {
@@ -734,7 +740,10 @@ p.legend { padding: 0.5em; text-align: center; }
 			line-height: 200%;
 			border-top-left-radius: @radius;
 		}
-		a.close { position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow; &:hover { color: white; }}
+		a.close {
+			position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow;
+			&:hover, &:focus { color: white; background: transparent; }
+		}
 		.content { padding: 1em; min-height: 32px; &:after { .clearing; }}
 		.buttons { margin: 0; line-height: normal; }
 	}
@@ -744,7 +753,6 @@ p.legend { padding: 0.5em; text-align: center; }
 	display: inline-block !important;
 	border-style: solid;
 	border-width: 1em;
-	text-decoration: none;
 	line-height: 0;
 	.border-radius(1em);
 }
@@ -825,5 +833,7 @@ p.legend { padding: 0.5em; text-align: center; }
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
 .nowrap { white-space: nowrap; }
+.delete { color: white;
+	&:hover, &:focus { color: @google_red; background: transparent; .black_shadow; }}
 .hide { display: none; }
 .clear { clear: both; }
