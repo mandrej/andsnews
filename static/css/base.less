@@ -272,7 +272,7 @@ table {
 	p { display: inline-block; }
 }
 
-@menuOffset: 385px;
+@menuOffset: 375px;
 #wrapper {
 	min-height: 100%;
 	overflow: hidden;
@@ -407,6 +407,12 @@ input[data-function*='swipe'] {
 					opacity: 0.8;
 					bottom: 0;
 				}
+			}
+			@media 	only screen and (min--moz-device-pixel-ratio: 2),
+					only screen and (-o-min-device-pixel-ratio: 2/1),
+					only screen and (-webkit-min-device-pixel-ratio: 2),
+					only screen and (min-device-pixel-ratio: 2) {
+				.flex(1 1 150px);
 			}
 		}
 	}
