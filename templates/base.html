@@ -23,18 +23,16 @@
 	<div id="confirm" class="modal"></div>
 	<div id="spinner" class="modal">{{ m.spinner() }}</div>
 	{% endblock %}
-    <div id="progress"></div>
 
+    <div id="black"></div>
     <header id="header">
-        <div class="blue">
-            <h1>
-                <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
-                <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
-            </h1>
-            <a class="fa fa-home fa-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
-            <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
-            <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
-        </div>
+        <h1>
+            <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
+            <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
+        </h1>
+        <a class="fa fa-home fa-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
+        <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
+        <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
 
     <div id="wrapper">
@@ -69,9 +67,9 @@
             kind = '{{ kind }}';
             token = '{{ token }}';
             if (!navigator.onLine) document.querySelectorAll('#header span')[0].innerText = 'offline';
-            window.applicationCache.addEventListener('progress', function(evt) {
-                document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';
-            }, false);
+{#            window.applicationCache.addEventListener('progress', function(evt) {#}
+{#                document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';#}
+{#            }, false);#}
             window.applicationCache.addEventListener('updateready', function() {
                 window.location.replace(window.location.href);
             }, false);

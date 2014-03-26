@@ -21,46 +21,37 @@
         </p>
     </section>
 
-    {% for entry in objects %}
-        {% if user == entry.author or is_admin %}
+    {% for object in objects %}
+        {% if user == object.author or is_admin %}
             <h3 class="clearing">
-                <a class="button left" href="{{ uri_for('entry', slug=entry.key.string_id()) }}">{{ entry.headline }}</a>
-                <a class="confirm button delete right" href="{{ uri_for('delete', safe_key=entry.key.urlsafe()) }}">
+                <a class="button left" href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a>
+                <a class="confirm button delete right" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
                     <i class="fa fa-times-circle"></i> delete</a>
-                <a class="button right" href="{{ uri_for('entry_edit', slug=entry.key.string_id()) }}">
+                <a class="button right" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
                     <i class="fa fa-pencil-square"></i> edit</a>
             </h3>
-            <table id="data2" class="zebra">
+            <table class="zebra">
                 <colgroup>
                     <col/>
                     <col style="width: 240px;"/>
                     <col style="width: 140px; text-align: right;"/>
-                    <col style="width: 80px; text-align: right;"/>
-                    <col style="width: 120px; text-align: right;"/>
+                    <col style="width: 130px; text-align: right;"/>
                 </colgroup>
                 <thead>
                     <tr>
                         <th>name</th>
                         <th>keyname</th>
                         <th>normal</th>
-                        <th>small</th>
-                        <th></th>
+                        <th>thumbnail</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for image in entry.image_list %}
+                    {% for image in object.image_list %}
                         <tr id="{{ image.key.urlsafe() }}">
                             <td>{{ image.name }}</td>
                             <td>{{ image.key.string_id() }}</td>
                             <td>{{ image.blob|length|filesizeformat }}, {{ image.mime }}</td>
-                            <td class="_small">
-                                {% if image.small %}
-                                    {{ image.small|length|filesizeformat }}
-                                {% else %}
-                                    {{ False|boolimage }}
-                                {% endif %}
-                            </td>
-                            <td class="nowrap">
+                            <td>
                                 {% if image.small %}
                                     <button type="submit" name="delete" class="button delete">
                                         <i class="fa fa-times-circle"></i> delete</button>
@@ -96,6 +87,7 @@
         function done() {
             $('#main button').click(function(evt) {
                 evt.preventDefault();
+{#                $('table').colStyle();#}
                 $('#overlay, #spinner').show();
                 var row = $(this).closest('tr');
                 var url = '/admin/entries/';
@@ -105,7 +97,6 @@
                     var done = function(data) {
                         if (data.success == true) {
                             $('#overlay, #spinner').hide();
-                            row.find('._small').html('<i class="fa fa-minus-circle" style="color: #c00"></i>');
                             row.find('button[name=delete]')
                                 .attr('disabled', 'disabled').addClass('disabled');
                             row.find('button[name=make]')
@@ -116,7 +107,6 @@
                     var done = function(data) {
                         if (data.success == true) {
                             $('#overlay, #spinner').hide();
-                            row.find('._small').html(data.small);
                             row.find('button[name=make]')
                                 .attr('disabled', 'disabled').addClass('disabled');
                             row.find('button[name=delete]')

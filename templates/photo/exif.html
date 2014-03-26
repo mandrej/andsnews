@@ -1,9 +1,10 @@
 <table class="exif data zebra">
 	<thead>
 		<tr>
-			<th colspan="2"><a href="{{ uri_for('photo_filter_all', field='model', value=object.model) }}"
-			    title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
-				{% if object.lens %}<br/>
+			<th colspan="2">
+                <a href="{{ uri_for('photo_filter_all', field='model', value=object.model) }}"
+                title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
+                {% if object.lens %}<br/>
                     <a href="{{ uri_for('photo_filter_all', field='lens', value=object.lens) }}"
                        title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
                 {% endif %}

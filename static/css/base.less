@@ -25,7 +25,7 @@
 @neutral: #666;
 @light: (@neutral + 2 * @text);
 @lighter: (@neutral + @text);
-@darker: (@neutral - @text);
+@darker: #222;
 @hilite: #ffe657;
 
 @gap: 28px;
@@ -33,12 +33,12 @@
 @dashed: 1px dashed white;
 
 a {
-	color: black;
+	color: @darker;
 	outline: none;
 	text-decoration: none;
 	.transition(0.3s);
 	&:hover, &:focus {
-		color: black; background: fade(@google_blue, 50%);
+		color: black;;
 	}
 	&[data-hover]:hover, &[data-hover]:focus {
 		background: transparent;
@@ -58,7 +58,7 @@ a {
 	line-height: 100%;
 	.box-sizing(border-box);
 	.border-radius(@radius);
-	&:hover { color: black; background: @google_orange; }
+	&:hover, &:focus { color: black; background: @google_orange; }
 }
 .left { float: left; margin-right: 0.5em; }
 .right { float: right; margin-left: 0.5em; }
@@ -79,7 +79,7 @@ h1, h2, h3 { font-weight: normal; }
 h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table { margin: 0 0 0.5em; }
 h2 { font-size: 2em; }
 h3 { font-size: 1.3em; }
-h4, h5, h6 { font-size: 1em; }
+h4, h5, h6 { font-size: 1.1em; }
 blockquote { padding-left: 1em; border-left: 1em solid white; font-style: italic; }
 ul li { list-style: square; }
 li { margin-left: 2em; }
@@ -124,10 +124,10 @@ button, .button {
 		}
 	}
 	&[disabled], &.disabled {
-		background: @paper;
-		color: @neutral;
+		color: @light;
+		background: lighten(@text, 30);
 		&:hover, &:focus {
-			background: @darker;
+			color: @text;
 		}
 	}
 }
@@ -210,22 +210,22 @@ table {
 }
 
 // layout
-#progress {
+#black, #header {
+	width: 100%;
+	height: 86px;
+}
+#black {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 86px;
 	background: black;
 	z-index: -1;
-	@media only screen and (max-width: 480px) { height: 84px; }
 }
-header#header {
+#header {
 	position: fixed;
 	top: 0;
 	left: 0;
 	.box-sizing(border-box);
-	width: 100%;
 	padding: 1em 3%;
 	background: fade(@google_blue, 80%);
 	z-index: 2;
@@ -274,7 +274,6 @@ header#header {
 
 @menuOffset: 385px;
 #wrapper {
-//	display: flex;
 	min-height: 100%;
 	overflow: hidden;
 	background: url(../images/front.png) no-repeat fixed;
@@ -295,7 +294,6 @@ input[data-function*='swipe'] {
 }
 
 #main {
-//	flex: 1;
 	padding: 8em 3% @gap;
 	min-height: 400px;
 	.transform(translate3d(0,0,0));
@@ -315,7 +313,6 @@ input[data-function*='swipe'] {
 	text-shadow: none;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
-	@media only screen and (max-width: 480px) { top: 84px; }
 	.menu_item {
 		display: block;
 		clear: both;
@@ -739,10 +736,10 @@ p.legend { padding: 0.5em; text-align: center; }
 			padding: 0 0.6em;
 			color: white;
 			.black_shadow;
-			background: @darker;
+			background: @text;
 			font-size: 1.6em;
 			line-height: 200%;
-			border-top-left-radius: @radius;
+			.border-radius(@radius @radius 0 0);
 		}
 		a.close {
 			position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow;

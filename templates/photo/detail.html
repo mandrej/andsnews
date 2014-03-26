@@ -44,7 +44,7 @@
     </a>
     / {{ object.headline }}
 </h2>
-<div class="subtitle">
+<p class="subtitle">
     <i class="fa fa-user"></i>
     <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
         title="{{ _("author's photos") }}">{{ object.author }}</a>
@@ -56,7 +56,7 @@
     <i class="fa fa-clock-o"></i>
     <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
         title="{{ _('photos taken same year') }}">{{ object.year }}</a>
-</div>
+</p>
 
 <div id="container" class="port">
     <article>
