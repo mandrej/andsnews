@@ -79,8 +79,18 @@
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
+        <script src="/static/scripts/restive.min.js"></script>
         <script src="/static/scripts/common.min.js"></script>
         <script src="/static/scripts/base.min.js"></script>
+        <script>
+            $(function() {
+                $('body').restive({
+                    breakpoints: ['320', '480', '640', '768', '960', '1024', '1280'],
+                    classes: ['css-320', 'css-480', 'css-640', 'css-768', 'css-960', 'css-1024', 'css-1280'],
+                    turbo_classes: 'is_retina=retina'
+                });
+            });
+        </script>
     {% endblock %}
 
     {% block ga %}

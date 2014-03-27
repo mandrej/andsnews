@@ -253,14 +253,16 @@ table {
 			}
 		}
 		span { position: absolute; top: -3px; right: 2px; font-size: 0.3em; color: #fff; }
-		@media only screen and (max-width: 480px) { display: none; }
+		.css-320 &, .css-480 &,
+		.css-320.retina &, .css-480.retina &, .css-768.retina & { display: none; }
 	}
 	a.fa-home {
 		display: none; color: white;
 		.black_shadow;
 		&:hover { color: @google_orange; }
 	}
-	@media only screen and (max-width: 480px) {
+	.css-320 &, .css-480 &,
+	.css-320.retina &, .css-480.retina &, .css-768.retina & {
 		a.fa-home { float: left; display: block; }
 	}
 }
@@ -268,8 +270,27 @@ table {
 	position: absolute;
 	bottom: 2em;
 	color: @lighter;
-	@media only screen and (max-width: 1024px) { display: none; }
 	p { display: inline-block; }
+	#langs {
+		position: relative;
+		margin: 1em 0;
+		button {
+			display: inline-block;
+			margin-right: 1em;
+			padding: 0 0.5em;
+			height: 2em;
+			color: white;
+			background: transparent;
+			font-size: 1.2em;
+			font-weight: bold;
+			text-transform: uppercase;
+			cursor: pointer;
+			&.current { background: @google_orange; }
+			&:hover { background-color: @neutral; color: white; }
+		}
+	}
+	.css-320 &, .css-480 &, .css-640 &, .css-768 &, .css-960 &, .css-1024 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-960.retina &, .css-1024.retina &, .css-1280.retina & { display: none; }
 }
 
 @menuOffset: 375px;
@@ -294,7 +315,7 @@ input[data-function*='swipe'] {
 }
 
 #main {
-	padding: 8em 3% @gap;
+	padding: 8em 3% 0;
 	min-height: 400px;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
@@ -330,7 +351,8 @@ input[data-function*='swipe'] {
 		&.top {
 			.menu_item;
 			&.Admin, &.Sign, &.Comment {
-				@media only screen and (max-width: 800px) { display: none; }
+				.css-320 &, .css-480 &, .css-640 &, .css-768 &,
+				.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-1024.retina & { display: none; }
 			}
 			&::before {
 				position: absolute;
@@ -365,7 +387,6 @@ input[data-function*='swipe'] {
 	&.thumbnails {
 		.flex-display;
 		.flex-flow(row wrap);
-//		.justify-content(space-between);
 		.perspective(1000);
 		margin: 0 -@gap/4;
 		figure {
@@ -409,29 +430,17 @@ input[data-function*='swipe'] {
 					bottom: 0;
 				}
 			}
-			@media 	only screen and (min--moz-device-pixel-ratio: 2),
-					only screen and (-o-min-device-pixel-ratio: 2/1),
-					only screen and (-webkit-min-device-pixel-ratio: 2),
-					only screen and (min-device-pixel-ratio: 2) {
-				.flex(1 1 150px);
-			}
+			.retina & { .flex(1 1 150px); }
 		}
 	}
 	&.cols {
 		.flex-display;
 		.flex-flow(row wrap);
-//		.align-content(space-between);
-//		.justify-content(space-between);
 		margin: 0 -@gap/2;
 		section {
 			.flex(1 1 375px);
 			padding: 0 @gap/2 @gap @gap/2;
-			@media 	only screen and (min--moz-device-pixel-ratio: 2),
-					only screen and (-o-min-device-pixel-ratio: 2/1),
-					only screen and (-webkit-min-device-pixel-ratio: 2),
-					only screen and (min-device-pixel-ratio: 2) {
-				.flex(1 1 200px);
-			}
+			.retina & { .flex(1 1 180px); }
 		}
 	}
 	&.port {
@@ -440,13 +449,14 @@ input[data-function*='swipe'] {
 		margin: 0 -@gap/2;
 		article {
 			.flex(3);
-			padding: 0 @gap/2 @gap @gap/2;
+			padding: 0 @gap/2 @gap/2 @gap/2;
 			canvas { .border-radius(@radius); max-width: 100%; }
 		}
 		aside {
 			.flex(1);
-			padding: 0 @gap/2 @gap @gap/2;
-			@media only screen and (max-width: 800px) { display: none; }
+			padding: 0 @gap/2 @gap/2 @gap/2;
+			.css-320 &, .css-480 &, .css-640 &, .css-768 &,
+			.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-1024.retina & { display: none; }
 		}
 	}
 }
@@ -455,7 +465,8 @@ input[data-function*='swipe'] {
 
 .subtitle {
 	margin: 1em 0;
-	@media only screen and (max-width: 480px) { display: none; }
+	.css-320 &, .css-480 &,
+	.css-320.retina &, .css-480.retina &, .css-768.retina & { display: none; }
 }
 
 nav.paginator {
@@ -470,26 +481,6 @@ nav.paginator {
 		.left;
 		color: white;
 		&.na { color: fade(black, 70%); .white_shadow; }
-	}
-}
-
-#langs {
-	position: relative;
-	margin: 1em 0;
-	@media only screen and (max-width: 800px) {  display: none; }
-	button {
-		display: inline-block;
-		margin-right: 1em;
-		padding: 0 0.5em;
-		height: 2em;
-		color: white;
-		background: transparent;
-		font-size: 1.2em;
-		font-weight: bold;
-		text-transform: uppercase;
-		cursor: pointer;
-		&.current { background: @google_orange; }
-		&:hover { background-color: @neutral; color: white; }
 	}
 }
 
@@ -562,7 +553,8 @@ nav.paginator {
     color: fade(black, 30%);
     text-align: center;
 	z-index: -1;
-	@media only screen and (max-width: 480px) { font-size: 10em; }
+	.css-320 &, .css-480 &,
+	.css-320.retina &, .css-480.retina &, .css-768.retina & { font-size: 10em; }
 }
 .formerrors {
 	margin: 1em 0;
@@ -577,7 +569,8 @@ nav.paginator {
 #palette {
 	float: right; width: 18em;
 	img { .border-radius(@radius); max-width: 100%; }
-	@media only screen and (max-width: 1024px) { display: none; }
+	.css-320 &, .css-480 &, .css-640 &, .css-768 &, .css-960 &, .css-1024 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-1024.retina &, .css-1280.retina & { display: none; }
 	th, td { border: none; }
 }
 
@@ -690,17 +683,12 @@ p.legend { padding: 0.5em; text-align: center; }
 	text-align: right;
 }
 #spectra {
-	@media only screen and (max-width: 800px) { display: none; }
+	.css-320 &, .css-480 &, .css-640 &, .css-768 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-1024.retina & { display: none; }
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
 }
 .slider { float: left; width: 20em; }
 
-.front {
-	color: white;
-	.black_shadow;
-	@media only screen and (max-width: 800px) { display: none; }
-	a { color: white; }
-}
 .box {
     padding: 1em;
     background: fade(white, 50%);
@@ -739,7 +727,8 @@ p.legend { padding: 0.5em; text-align: center; }
 		left: 50%;
 		z-index: 1030;
 		.border-radius(@radius);
-		@media only screen and (max-width: 480px) {
+		.css-320 &, .css-480 &
+		.css-320.retina &, .css-480.retina &, .css-768.retina & {
 			width: 280px;
 			margin-left: -140px;
 			top: 40px;
