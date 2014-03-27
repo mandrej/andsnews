@@ -365,12 +365,13 @@ input[data-function*='swipe'] {
 	&.thumbnails {
 		.flex-display;
 		.flex-flow(row wrap);
-//		.align-content(space-between);
 //		.justify-content(space-between);
 		.perspective(1000);
 		margin: 0 -@gap/4;
 		figure {
 			.flex(1 1 200px);
+			.flex-display;
+			.justify-content(space-around);
 			padding: 0 @gap/4 @gap/2 @gap/4;
 			a {	display: block;
 				position: relative;
@@ -425,6 +426,12 @@ input[data-function*='swipe'] {
 		section {
 			.flex(1 1 375px);
 			padding: 0 @gap/2 @gap @gap/2;
+			@media 	only screen and (min--moz-device-pixel-ratio: 2),
+					only screen and (-o-min-device-pixel-ratio: 2/1),
+					only screen and (-webkit-min-device-pixel-ratio: 2),
+					only screen and (min-device-pixel-ratio: 2) {
+				.flex(1 1 200px);
+			}
 		}
 	}
 	&.port {

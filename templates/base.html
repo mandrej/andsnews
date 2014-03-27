@@ -66,10 +66,14 @@
         <script>
             kind = '{{ kind }}';
             token = '{{ token }}';
-            if (!navigator.onLine) document.querySelectorAll('#header span')[0].innerText = 'offline';
-{#            window.applicationCache.addEventListener('progress', function(evt) {#}
+            nick = '{% if user %} | {{ user.nickname() }}{% endif %}';
+            if (!navigator.onLine) {
+                document.querySelectorAll('#header span')[0].innerText = 'offline' + nick;
+            }
+            window.applicationCache.addEventListener('progress', function(evt) {
+                document.querySelectorAll('#header span')[0].innerText = 'caching' + nick;
 {#                document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';#}
-{#            }, false);#}
+            }, false);
             window.applicationCache.addEventListener('updateready', function() {
                 window.location.replace(window.location.href);
             }, false);
