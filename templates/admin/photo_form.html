@@ -88,23 +88,16 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/jquery.autocomplete.min.js"></script>
+    <script src="/static/scripts/urlify.min.js"></script>
     <script>
-        nbl.l([[
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js', [
-                '/static/scripts/jquery.autocomplete.min.js',
-                '/static/scripts/urlify.min.js', [
-                    '/static/scripts/common.min.js',
-                    '/static/scripts/base.min.js',
-                    function() {done()}]]]]);
-
         var autoCompleteOptions = {
             width: 284,
             selectFirst: false,
             multiple: false,
             matchContains: true
         };
-        function done() {
+        $(function() {
             $('#headline').slugify();
             $("#tags").autocomplete("/complete/Photo_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
             $("#lens").autocomplete("/complete/Photo_lens", autoCompleteOptions);
@@ -144,7 +137,7 @@
                     }
                 })
             });
-        }
+        })
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

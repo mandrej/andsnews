@@ -79,12 +79,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        nbl.l([[
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js',
-            '/static/scripts/common.min.js',
-            function() {done()}]]);
-        function done() {
+        $(function() {
             $('#main button').click(function(evt) {
                 evt.preventDefault();
 {#                $('table').colStyle();#}
@@ -116,6 +111,6 @@
                 }
                 $.post(url, params, done, 'json');
             });
-        }
+        });
     </script>
 {% endblock %}

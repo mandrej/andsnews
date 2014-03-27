@@ -60,12 +60,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        nbl.l([[
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js',
-            '/static/scripts/common.min.js',
-            function() {done()}]]);
-        function done() {
+        $(function() {
             $('input[type="text"]').change(function() {
                 var id = $(this).attr('id');
                 $('button[name="action:edit"]')
@@ -73,6 +68,6 @@
                 $('button[value="' + id + '"]')
                     .removeAttr('disabled').removeClass('disabled');
             });
-        }
+        });
     </script>
 {% endblock %}

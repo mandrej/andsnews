@@ -11,7 +11,7 @@
 {% macro _build(filters, kind) %}
     <div class="submenu">
         {% for f in filters %}
-            <a class="{{ f.field }} collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }} [+]</a>
+            <a class="{{ f.field }} block collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }} [+]</a>
             <div id="{{ f.field }}cloud" class="hide"></div>
         {% endfor %}
     </div>
@@ -49,8 +49,8 @@
         <a href="/admin/" data-hover="{{ _('Administration') }}" class="top Admin">{{ _('Administration') }}</a>
         {% if kind == 'Admin' and is_admin %}
             <div class="submenu">
-                <a href="/admin/counters" class="collapse">Counters</a>
-                <a href="/mapreduce" class="collapse">Mapreduce</a>
+                <a href="/admin/counters" class="block">Counters</a>
+                <a href="/mapreduce" class="block">Mapreduce</a>
             </div>
         {% endif %}
     {% endif %}

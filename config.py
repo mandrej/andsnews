@@ -32,7 +32,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/images/front.png
 /static/css/base.css
 
-/static/scripts/nbl.min.js
 /static/scripts/jquery.searchhighlight.min.js
 /static/scripts/urlify.min.js
 /static/scripts/jquery.autocomplete.min.js
@@ -43,7 +42,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/scripts/markitup/jquery.markitup.min.js
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
 /static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
-/static/scripts/admin.index.min.js
 
 FALLBACK:
 / /offline.html

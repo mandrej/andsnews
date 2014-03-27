@@ -4,18 +4,12 @@
 {% block contents %}{% endblock %}
 {% block scripts %}
     {{ super() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
     <script>
-        nbl.l([[
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js',
-            '/static/scripts/common.min.js',
-            '/static/scripts/base.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js',
-                function() {done()}]]);
-        function done() {
+        $(function () {
             $.getJSON('/latest', function(data) {
                 $.backstretch(data, {fade: 1000, duration: 4000});
             });
-        }
+        });
     </script>
 {% endblock %}

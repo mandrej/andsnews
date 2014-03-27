@@ -94,28 +94,21 @@
 </div>
 {% endblock %}
 {% block scripts %}
+    {{ super() }}
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
-    {{ super() }}
+    <script src="/static/scripts/jquery.autocomplete.min.js"></script>
+    <script src="/static/scripts/urlify.min.js"></script>
+    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
+    <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js"></script>
     <script>
-        nbl.l([[
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js', [
-                '/static/scripts/jquery.autocomplete.min.js',
-                '/static/scripts/urlify.min.js',
-                '/static/scripts/common.min.js',
-                '/static/scripts/base.min.js', [
-                    '/static/scripts/markitup/jquery.markitup.min.js',
-                    '/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js',
-                    function() {done()}]]]]);
-
         var autoCompleteOptions = {
             width: 284,
             selectFirst: false,
             multiple: false,
             matchContains: true
         };
-        function done() {
+        $(function() {
             $('#headline').slugify();
             $('#body').markItUp(blogSettings, {nameSpace: 'big'});
             $('#images img').click(function(evt) {
@@ -132,7 +125,7 @@
             $('#main button').click(function() {
                 $('#overlay, #spinner').show();
             });
-        }
+        });
     </script>
 {% endblock %}
 {% block ga %}{% endblock %}

@@ -113,26 +113,94 @@
 </article>
 {% endblock %}
 {% block scripts %}
-    <link href="https://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
     {{ super() }}
+    <link href="https://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script src="https://www.google.com/jsapi"></script>
     <script>
-        google.load('visualization', '1', {packages: ['corechart'], callback: load});
-        function load() {
-            nbl.l([
-                'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-                'https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js', [
-                    'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js', [
-                        '/static/scripts/common.min.js',
-                        '/static/scripts/admin.index.min.js',
-                        function() {
-                            $('#main button, #sidebar button').click(function() {
-                                $('#overlay, #spinner').show();
+        google.load('visualization', '1', {packages: ['corechart']});
+        $(function() {
+            function build() {
+                $.getJSON('/admin/memcache/', function(data) {
+                    $.each(data, function(key, value) {
+                        var tmpl = '', title = key.split('_').pop() + ' cloud';
+                        if (value) {
+                            tmpl += '<button type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
+                            tmpl += '<a class="graph button" href="/visualize/' + key + '"><i class="fa fa-eye"></i> graph</a>';
+                            tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
+                            tmpl += '<div class="hide">';
+                            $.each(value, function(name, count) {
+                                tmpl += '<dl><dt>' + name + '</dt>';
+                                tmpl += '<dd>' + count + '</dd></dl>';
                             });
-                            $('.ff, .ss').collapseGroup();
-                            $('.zebra').colStyle();
-                        }]]]
-            );
-        }
+                            tmpl += '</div>';
+                        } else {
+                            tmpl += '<button type="submit" name="put" value="' + key + '"><i class="fa fa-cog"></i> create</button>';
+                            tmpl += '<h4>' + title + ' [EMPTY]</h4>';
+                        }
+                        $('#' + key).html(tmpl);
+                    });
+                    $('.ff').collapseGroup();
+                });
+            }
+            build();
+
+            $('.admin div').on('click', 'button', function() {
+                $('#spinner').show();
+                var key = $(this).val(), method = $(this).attr('name');
+                $.ajax({
+                    url: '/admin/memcache/' + key,
+                    type: method,
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#spinner').hide();
+                        build();
+                        $('.ff').unbind().collapseGroup();
+                    }
+                });
+            });
+            $('.admin div').on('click', 'a.graph', function(evt) {
+                evt.preventDefault();
+                $('#graph').load(this.href, function() {
+                    $('#overlay, #graph').show();
+                });
+            });
+
+            var drawSpectra = function() {
+                var sat = $('#sat').slider('value');
+                var lum = $('#lum').slider('value');
+
+                $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {
+                    $('#spectra').empty();
+                    $.each(data, function(name, colors) {
+                        var str = '<div style="clear: both"><span class="item" style="width: 50px;">' + name + '</span>';
+                        $.each(colors, function(i, c) {
+                            str += '<span class="item" style="background: ' + c + '">&nbsp;</span>';
+                        });
+                        str += '</div>';
+                        $('#spectra').append(str);
+                    });
+                })
+            };
+            $('.slider').slider({
+                min: 0, max: 100, step: 5,
+                change: function(event, ui) {
+                    $('input[name=' + event.target.id + ']').val(ui.value);
+                    drawSpectra();
+                }
+            })
+            $('h2.ss').click(function(evt) {
+                evt.preventDefault();
+                drawSpectra();
+            });
+            $('#main button, #sidebar button').click(function() {
+                $('#overlay, #spinner').show();
+            });
+            $('#sat').slider('value', 70);
+            $('#lum').slider('value', 40);
+
+            $('.ff, .ss').collapseGroup();
+            $('.zebra').colStyle();
+        });
     </script>
 {% endblock %}
