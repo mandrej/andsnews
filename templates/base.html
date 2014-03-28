@@ -2,7 +2,7 @@
 <html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>
 <head>
 	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 	<meta name="verify-v1" content="500ha7MSGCMgwkQG3S+CaeF1KzDLZB3Q9Ly5o+R7g5w="/>
@@ -86,7 +86,7 @@
             $(function() {
                 $('body').restive({
                     breakpoints: ['320', '480', '640', '768', '960', '1024', '1280'],
-                    classes: ['css-320', 'css-480', 'css-640', 'css-768', 'css-960', 'css-1024', 'css-1280'],
+                    classes: ['r320', 'r480', 'r640', 'r768', 'r960', 'r1024', 'r1280'],
                     turbo_classes: 'is_retina=retina'
                 });
             });
