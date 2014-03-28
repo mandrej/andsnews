@@ -253,16 +253,16 @@ table {
 			}
 		}
 		span { position: absolute; top: -3px; right: 2px; font-size: 0.3em; color: #fff; }
-		.css-320 &, .css-480 &,
-		.css-320.retina &, .css-480.retina &, .css-768.retina & { display: none; }
+		.css-320 &, .css-480 &, .css-640 &,
+		.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & { display: none; }
 	}
 	a.fa-home {
 		display: none; color: white;
 		.black_shadow;
 		&:hover { color: @google_orange; }
 	}
-	.css-320 &, .css-480 &,
-	.css-320.retina &, .css-480.retina &, .css-768.retina & {
+	.css-320 &, .css-480 &, .css-640 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & {
 		a.fa-home { float: left; display: block; }
 	}
 }
@@ -293,7 +293,7 @@ table {
 	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina &, .css-960.retina &, .css-1024.retina &, .css-1280.retina & { display: none; }
 }
 
-@menuOffset: 375px;
+@menuOffset: 384px;
 #wrapper {
 	min-height: 100%;
 	overflow: hidden;
@@ -465,8 +465,8 @@ input[data-function*='swipe'] {
 
 .subtitle {
 	margin: 1em 0;
-	.css-320 &, .css-480 &,
-	.css-320.retina &, .css-480.retina &, .css-768.retina & { display: none; }
+	.css-320 &, .css-480 &, .css-640 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & { display: none; }
 }
 
 nav.paginator {
@@ -509,6 +509,8 @@ nav.paginator {
 		.border-radius(@radius);
 		&:focus { outline: none; }
 	}
+	.css-320 &, .css-480 &, .css-640 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & { display: none; }
 }
 
 .admin {
@@ -553,8 +555,8 @@ nav.paginator {
     color: fade(black, 30%);
     text-align: center;
 	z-index: -1;
-	.css-320 &, .css-480 &,
-	.css-320.retina &, .css-480.retina &, .css-768.retina & { font-size: 10em; }
+	.css-320 &, .css-480 &, .css-640 &,
+	.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & { font-size: 10em; }
 }
 .formerrors {
 	margin: 1em 0;
@@ -727,8 +729,8 @@ p.legend { padding: 0.5em; text-align: center; }
 		left: 50%;
 		z-index: 1030;
 		.border-radius(@radius);
-		.css-320 &, .css-480 &
-		.css-320.retina &, .css-480.retina &, .css-768.retina & {
+		.css-320 &, .css-480 &, .css-640 &
+		.css-320.retina &, .css-480.retina &, .css-640.retina &, .css-768.retina & {
 			width: 280px;
 			margin-left: -140px;
 			top: 40px;
