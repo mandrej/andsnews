@@ -254,7 +254,7 @@ table {
 		}
 		span { position: absolute; top: -3px; right: 2px; font-size: 0.3em; color: #fff; }
 		.r320 &, .r480 &, .r640 &,
-		.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & { display: none; }
+		.r640.retina &, .r768.retina & { display: none; }
 	}
 	a.fa-home {
 		display: none; color: white;
@@ -262,7 +262,7 @@ table {
 		&:hover { color: @google_orange; }
 	}
 	.r320 &, .r480 &, .r640 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & {
+	.r640.retina &, .r768.retina & {
 		a.fa-home { float: left; display: block; }
 	}
 }
@@ -290,7 +290,7 @@ table {
 		}
 	}
 	.r320 &, .r480 &, .r640 &, .r768 &, .r960 &, .r1024 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina &, .r960.retina &, .r1024.retina &, .r1280.retina & { display: none; }
+	.r640.retina &, .r768.retina &, .r960.retina &, .r1024.retina &, .r1280.retina & { display: none; }
 }
 
 @menuOffset: 384px;
@@ -328,20 +328,12 @@ input[data-function*='swipe'] {
 	bottom: 0;
 	.box-sizing(border-box);
 	width: @menuOffset;
-	background: fade(black, 80%);
+	background: fade(black, 70%);
 	padding: 1em 3% 0;
 	z-index: 1;
 	text-shadow: none;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
-	.menu_item {
-		display: block;
-		clear: both;
-		margin-bottom: 0.5em;
-		font-size: 1.8em;
-		text-transform: lowercase;
-		white-space: nowrap;
-	}
 	a {
 		color: @paper;
 		position: relative;
@@ -349,10 +341,15 @@ input[data-function*='swipe'] {
 			color: white; background: transparent;
 		}
 		&.top {
-			.menu_item;
-			&.Admin, &.Sign, &.Comment {
+			display: block;
+			clear: both;
+			margin-bottom: 0.5em;
+			font-size: 1.8em;
+			text-transform: lowercase;
+			white-space: nowrap;
+			&.Admin, &.Sign, &.Comment, &.News {
 				.r320 &, .r480 &, .r640 &, .r768 &,
-				.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
+				.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
 			}
 			&::before {
 				position: absolute;
@@ -456,7 +453,7 @@ input[data-function*='swipe'] {
 			.flex(1);
 			padding: 0 @gap/2 @gap/2 @gap/2;
 			.r320 &, .r480 &, .r640 &, .r768 &,
-			.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
+			.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
 		}
 	}
 }
@@ -466,7 +463,7 @@ input[data-function*='swipe'] {
 .subtitle {
 	margin: 1em 0;
 	.r320 &, .r480 &, .r640 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & { display: none; }
+	.r640.retina &, .r768.retina & { display: none; }
 }
 
 nav.paginator {
@@ -510,7 +507,7 @@ nav.paginator {
 		&:focus { outline: none; }
 	}
 	.r320 &, .r480 &, .r640 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & { display: none; }
+	.r640.retina &, .r768.retina & { display: none; }
 }
 
 .admin {
@@ -556,7 +553,7 @@ nav.paginator {
     text-align: center;
 	z-index: -1;
 	.r320 &, .r480 &, .r640 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & { font-size: 10em; }
+	.r640.retina &, .r768.retina & { font-size: 10em; }
 }
 .formerrors {
 	margin: 1em 0;
@@ -573,7 +570,7 @@ nav.paginator {
 	img { .border-radius(@radius); max-width: 100%; }
 	th, td { border: none; }
 	.r320 &, .r480 &, .r640 &, .r768 &, .r960 &, .r1024 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina &, .r1024.retina &, .r1280.retina & { display: none; }
+	.r640.retina &, .r768.retina &, .r1024.retina &, .r1280.retina & { display: none; }
 }
 
 // markItUp!
@@ -687,7 +684,7 @@ p.legend { padding: 0.5em; text-align: center; }
 #spectra {
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
 	.r320 &, .r480 &, .r640 &, .r768 &,
-	.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
+	.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
 }
 .slider { float: left; width: 20em; }
 
@@ -730,7 +727,7 @@ p.legend { padding: 0.5em; text-align: center; }
 		z-index: 1030;
 		.border-radius(@radius);
 		.r320 &, .r480 &, .r640 &
-		.r320.retina &, .r480.retina &, .r640.retina &, .r768.retina & {
+		.r640.retina &, .r768.retina & {
 			width: 280px;
 			margin-left: -140px;
 			top: 40px;
