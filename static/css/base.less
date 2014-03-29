@@ -253,17 +253,13 @@ table {
 			}
 		}
 		span { position: absolute; top: -3px; right: 2px; font-size: 0.3em; color: #fff; }
-		.r320 &, .r480 &, .r640 &,
-		.r640.retina &, .r768.retina & { display: none; }
+		@media @mobile, @tablet { display: none; }
 	}
 	a.fa-home {
 		display: none; color: white;
 		.black_shadow;
 		&:hover { color: @google_orange; }
-	}
-	.r320 &, .r480 &, .r640 &,
-	.r640.retina &, .r768.retina & {
-		a.fa-home { float: left; display: block; }
+		@media @mobile, @tablet { float: left; display: block; }
 	}
 }
 #footer {
@@ -289,8 +285,7 @@ table {
 			&:hover { background-color: @neutral; color: white; }
 		}
 	}
-	.r320 &, .r480 &, .r640 &, .r768 &, .r960 &, .r1024 &,
-	.r640.retina &, .r768.retina &, .r960.retina &, .r1024.retina &, .r1280.retina & { display: none; }
+	@media @mobile, @tablet { display: none; }
 }
 
 @menuOffset: 384px;
@@ -347,10 +342,6 @@ input[data-function*='swipe'] {
 			font-size: 1.8em;
 			text-transform: lowercase;
 			white-space: nowrap;
-			&.Admin, &.Sign, &.Comment, &.News {
-				.r320 &, .r480 &, .r640 &, .r768 &,
-				.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
-			}
 			&::before {
 				position: absolute;
 				overflow: hidden;
@@ -363,6 +354,9 @@ input[data-function*='swipe'] {
 			}
 			&:hover::before {
 				max-width: 100%;
+			}
+			@media @mobile, @tablet {
+				&.Admin, &.Sign, &.Comment, &.News { display: none; }
 			}
 		}
 	}
@@ -427,7 +421,7 @@ input[data-function*='swipe'] {
 					bottom: 0;
 				}
 			}
-			.retina & { .flex(1 1 150px); }
+			@media @highdensity { .flex(1 1 150px); }
 		}
 	}
 	&.cols {
@@ -437,7 +431,7 @@ input[data-function*='swipe'] {
 		section {
 			.flex(1 1 375px);
 			padding: 0 @gap/2 @gap @gap/2;
-			.retina & { .flex(1 1 180px); }
+			@media @mobile, @tablet { .flex(1 1 180px); }
 		}
 	}
 	&.port {
@@ -452,8 +446,7 @@ input[data-function*='swipe'] {
 		aside {
 			.flex(1);
 			padding: 0 @gap/2 @gap/2 @gap/2;
-			.r320 &, .r480 &, .r640 &, .r768 &,
-			.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
+			@media @mobile, @tablet { display: none; }
 		}
 	}
 }
@@ -462,8 +455,7 @@ input[data-function*='swipe'] {
 
 .subtitle {
 	margin: 1em 0;
-	.r320 &, .r480 &, .r640 &,
-	.r640.retina &, .r768.retina & { display: none; }
+	@media @mobile, @tablet { display: none; }
 }
 
 nav.paginator {
@@ -506,8 +498,7 @@ nav.paginator {
 		.border-radius(@radius);
 		&:focus { outline: none; }
 	}
-	.r320 &, .r480 &, .r640 &,
-	.r640.retina &, .r768.retina & { display: none; }
+	@media @mobile, @tablet { display: none; }
 }
 
 .admin {
@@ -552,8 +543,7 @@ nav.paginator {
     color: fade(black, 30%);
     text-align: center;
 	z-index: -1;
-	.r320 &, .r480 &, .r640 &,
-	.r640.retina &, .r768.retina & { font-size: 10em; }
+	@media @mobile, @tablet { font-size: 10em; }
 }
 .formerrors {
 	margin: 1em 0;
@@ -569,8 +559,7 @@ nav.paginator {
 	float: right; width: 18em;
 	img { .border-radius(@radius); max-width: 100%; }
 	th, td { border: none; }
-	.r320 &, .r480 &, .r640 &, .r768 &, .r960 &, .r1024 &,
-	.r640.retina &, .r768.retina &, .r1024.retina &, .r1280.retina & { display: none; }
+	@media @mobile, @tablet { display: none; }
 }
 
 // markItUp!
@@ -683,8 +672,7 @@ p.legend { padding: 0.5em; text-align: center; }
 }
 #spectra {
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
-	.r320 &, .r480 &, .r640 &, .r768 &,
-	.r640.retina &, .r768.retina &, .r1024.retina & { display: none; }
+	@media @mobile, @tablet { display: none; }
 }
 .slider { float: left; width: 20em; }
 
@@ -726,8 +714,7 @@ p.legend { padding: 0.5em; text-align: center; }
 		left: 50%;
 		z-index: 1030;
 		.border-radius(@radius);
-		.r320 &, .r480 &, .r640 &
-		.r640.retina &, .r768.retina & {
+		@media @mobile, @tablet {
 			width: 280px;
 			margin-left: -140px;
 			top: 40px;
