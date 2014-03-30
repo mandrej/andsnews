@@ -28,7 +28,7 @@
     {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
     {% set _forkind = {'field': 'forkind', 'title': _('Type')} %}
 
-    <a href="{{ uri_for('photo_all') }}" data-hover="{{ _('photo album') }}" class="top Photo">{{ _('photo album') }}</a>
+    <a href="{{ uri_for('photo_all') }}" data-hover="{{ _('Photos') }}" class="top Photo">{{ _('Photos') }}</a>
     {% if kind == 'Photo' %}
         {{ _build([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], kind) }}
     {% endif %}
