@@ -83,7 +83,7 @@ class Photos(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
+        paginator = Paginator(query, per_page=10, caching=False)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -103,7 +103,7 @@ class Entries(BaseHandler):
         query = Entry.query(*filters).order(-Entry.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, per_page=6)
+        paginator = Paginator(query, per_page=5, caching=False)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -148,7 +148,7 @@ class Comments(BaseHandler):
     def get(self):
         query = Comment.query().order(-Comment.date)
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query, 10)
+        paginator = Paginator(query, per_page=10, caching=False)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/comments.html', data)
@@ -171,7 +171,7 @@ class Counters(BaseHandler):
     def get(self):
         query = Counter.query().order(Counter.field)
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
+        paginator = Paginator(query, per_page=10, caching=False)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/counters.html', data)
