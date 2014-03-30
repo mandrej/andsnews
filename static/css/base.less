@@ -54,12 +54,12 @@ a {
 	border: none;
 	padding: 0.3em 0.5em;
 	color: black;
-	background: white;
+	background: rgba(255,255,255,.5);
 	font-size: 1em;
 	line-height: 100%;
 	.box-sizing(border-box);
 	.border-radius(@radius);
-	&:hover, &:focus { color: black; background: @google_orange; }
+	&:hover, &:focus { color: black; background: fade(@google_orange, 70%); }
 }
 .hide { display: none; }
 .left { float: left; margin-right: 0.5em; }
@@ -117,12 +117,13 @@ pre {
 button, .button {
 	.default_button;
 	.transition(0.3s);
+	&.comment_add { display: block; }
 	&:focus { outline: none; }
 	&.delete {
 		color: @google_red;
 		&:hover, &:focus {
 			color: white;
-			background: @google_red;
+			background: fade(@google_red, 70%);
 		}
 	}
 	&[disabled], &.disabled {
@@ -384,6 +385,8 @@ input[data-function*='swipe'] {
 		margin: 0 -@gap/4;
 		figure {
 			.flex(1 1 200px);
+			.flex-display;
+			.justify-content(center);
 			padding: 0 @gap/4 @gap/2 @gap/4;
 			a {	display: block;
 				position: relative;

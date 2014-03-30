@@ -87,6 +87,9 @@
     <script>
         $(function () {
             $('canvas').copyright('{{ object.normal_url }}');
+            $(window).resize(function() {
+                $('canvas').copyright('{{ object.normal_url }}');
+            });
         });
     </script>
 {% endblock %}
