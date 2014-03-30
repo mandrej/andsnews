@@ -6,7 +6,6 @@
 <h2>
     <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
     {{ m.filter_title(filter) }}
-    {{ m.page_number(page) }}
 </h2>
 <div id="container" class="cols">
     {% for object in objects %}

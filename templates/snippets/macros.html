@@ -74,10 +74,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro page_number(page, hide_first=True) %}
-    {% if hide_first * page > 1 or not hide_first %}[{{ page }}]{% endif %}
-{% endmacro %}
-
 {% macro time(dt) %}
     <time class="when" datetime='{{ dt|to_datetime }}'>
         <span class="day">{{ dt|to_datetime("%d") }}</span>

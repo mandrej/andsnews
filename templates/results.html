@@ -6,9 +6,7 @@
 {% block contents %}
 <article>
 	{% if phrase %}
-		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}
-            {{ m.page_number(page) }}
-        </h2>
+		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}</h2>
 	{% else %}
 		<h2>{{ _('Nothing to search for') }}.</h2>
         <p>{{ _('Please try something') }}.</p>
