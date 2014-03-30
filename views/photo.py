@@ -131,7 +131,6 @@ class Add(BaseHandler):
         self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
     @csrf_protected
-    @touch_appcache
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():

@@ -2,7 +2,6 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
-{{ super() }}
 <article>
 	<h2>Counter administration {{ m.page_number(page) }}</h2>
 	<form action="/admin/counters" method="post">

@@ -137,14 +137,10 @@ class BaseHandler(webapp2.RequestHandler):
 
 class Latest(BaseHandler):
     def get(self):
-        objects = memcache.get('Photo_latest')
-        if objects is None:
-            query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=15)
-            results, has_next = paginator.page(1)
-            objects = [x.normal_url for x in results]
-            memcache.add('Photo_latest', objects, TIMEOUT)
-            memcache.add('appcache', OFFLINE % datetime.datetime.now().isoformat())
+        query = Photo.query().order(-Photo.date)
+        paginator = Paginator(query, per_page=15)
+        results, has_next = paginator.page(1)
+        objects = [x.normal_url for x in results]
         self.render_json(objects)
 
 
@@ -270,7 +266,7 @@ class Filter(object):
 
 
 class Paginator(object):
-    timeout = TIMEOUT / 6
+    timeout = TIMEOUT / 12
 
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, Filter
 from config import filesizeformat, HUE
 
 
@@ -136,7 +136,6 @@ class Feeds(BaseHandler):
         self.render_template('admin/feeds.html', {'objects': query})
 
     @csrf_protected
-    @touch_appcache
     def post(self):
         slug = self.request.get('action:feed')
         if slug:
@@ -155,7 +154,6 @@ class Comments(BaseHandler):
         self.render_template('admin/comments.html', data)
 
     @csrf_protected
-    @touch_appcache
     def post(self):
         params = dict(self.request.POST)
         key = ndb.Key(urlsafe=params['safe_key'])

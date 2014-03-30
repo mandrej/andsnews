@@ -43,13 +43,13 @@ app = WSGIApplication(
          Route('/spectra', handler='views.admin.Spectra'),
          PathPrefixRoute('/photos', [
             Route('/', handler='views.admin.Photos', name='photo_admin'),
-            Route('/<field:date>/<value>', handler='views.admin.Photos'),
+            Route('/<field:date>/<value>', handler='views.admin.Photos', name='photo_admin_filter'),
             Route('/add', handler='views.photo.Add', name='photo_add'),
             Route('/<slug>', handler='views.photo.Edit', name='photo_edit'),
          ]),
          PathPrefixRoute('/entries', [
             Route('/', handler='views.admin.Entries', name='entry_admin'),
-            Route('/<field:date>/<value>', handler='views.admin.Entries'),
+            Route('/<field:date>/<value>', handler='views.admin.Entries', name='entry_admin_filter'),
             Route('/add', handler='views.entry.Add', name='entry_add'),
             Route('/<slug>', handler='views.entry.Edit', name='entry_edit'),
          ]),
