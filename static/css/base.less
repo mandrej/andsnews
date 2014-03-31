@@ -1,4 +1,5 @@
 @import "mixins";
+@import "slideshow";
 @font-face {
   font-family: 'PT Sans';
   font-style: normal;
@@ -788,6 +789,18 @@ p.legend { padding: 0.5em; text-align: center; }
 	to { opacity: 0; }
 }
 @-moz-keyframes fade {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@-o-keyframes fade {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@-ms-keyframes fade {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@keyframes fade {
 	from { opacity: 1; }
 	to { opacity: 0; }
 }

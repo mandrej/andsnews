@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 {% block modals %}{% endblock %}
-
-{% block contents %}{% endblock %}
-{% block scripts %}
-    {{ super() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
-    <script>
-        $(function () {
-            $.getJSON('/latest', function(data) {
-                $.backstretch(data, {fade: 1000, duration: 4000});
-            });
-        });
-    </script>
+{% block slideshow %}
+    <ul class="slideshow">
+        {% for object in objects %}
+            <li>
+                <span style="background-image: url({{ object.normal_url }})"></span>
+                <div><h3>{{ object.headline }}</h3></div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

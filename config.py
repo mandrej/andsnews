@@ -24,7 +24,6 @@ OFFLINE = """CACHE MANIFEST
 # %s
 https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js
 https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js
-https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css

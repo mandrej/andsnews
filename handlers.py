@@ -135,18 +135,12 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
-class Latest(BaseHandler):
+class Index(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
         paginator = Paginator(query, per_page=15)
-        results, has_next = paginator.page(1)
-        objects = [x.normal_url for x in results]
-        self.render_json(objects)
-
-
-class Index(BaseHandler):
-    def get(self):
-        self.render_template('index.html')
+        objects, has_next = paginator.page(1)
+        self.render_template('index.html', {'objects': objects})
 
 
 class SetLanguage(BaseHandler):
