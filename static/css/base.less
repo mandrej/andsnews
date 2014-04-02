@@ -772,15 +772,14 @@ p.legend { padding: 0.5em; text-align: center; }
 		.animation(fade 1s linear infinite);
 	}
 	@iterations: 12;
-	.loop (@index) when (@index > 0) {
-		.bar@{index} {
-			@delay: (1s * @index / @iterations - 1);
-			.transform(rotate(0deg + @index * 30) translate(0, -142%));
+	.loop (@n, @i: 1) when (@i =< @n) {
+		.bar@{i} {
+			@delay: (1s * @i / @iterations - 1);
+			.transform(rotate(0deg + @i * 30) translate(0, -142%));
 			.animation-delay(@delay);
 		}
-		.loop (@index - 1);
+		.loop (@n, (@i + 1));
 	}
-	.loop (0) {}
 	.loop (@iterations);
 }
 

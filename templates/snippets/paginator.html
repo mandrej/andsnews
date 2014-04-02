@@ -4,7 +4,7 @@
 {% endmacro %}
 
 {% if has_previous or has_next %}
-    <span class="number">{{ page }}</span>
+{#    <span class="number">{{ page }}</span>#}
     {% if has_previous %}
         {{ link(page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
     {% else %}

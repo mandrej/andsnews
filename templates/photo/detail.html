@@ -19,7 +19,7 @@
     {% endmacro %}
 
     {% if previous or next %}
-        <span class="number">{{ idx }}</span>
+{#        <span class="number">{{ idx }}</span>#}
         {% if previous %}
             {{ link(previous, idx - 1, prev_class) }}
         {% else %}

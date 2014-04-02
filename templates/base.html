@@ -34,7 +34,6 @@
         <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
-    {% block slideshow %}{% endblock %}
 
     <div id="wrapper">
         <input type="checkbox" id="swipe" data-function="swipe"/>
@@ -61,6 +60,7 @@
         </nav>
         <div id="main">{% block contents %}{% endblock %}</div>
     </div>
+    {% block slideshow %}{% endblock %}
 
     {% block scripts %}
         <script>
