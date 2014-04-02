@@ -29,6 +29,7 @@ https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnG
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/images/bg.jpg
 /static/images/front.png
+/static/images/overlay.png
 /static/css/base.css
 
 /static/scripts/jquery.searchhighlight.min.js
@@ -36,7 +37,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/scripts/jquery.autocomplete.min.js
 /static/scripts/common.min.js
 /static/scripts/base.min.js
-/latest
 
 /static/scripts/markitup/jquery.markitup.min.js
 /static/scripts/markitup/sets/cmnt.set_en_US.min.js
