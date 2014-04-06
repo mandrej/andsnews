@@ -263,5 +263,6 @@ CONFIG = {
         'translations_path': 'locale',
         'default_locale': 'en_US'
     },
-    'webapp2_extras.sessions': {'secret_key': 'kTlR8YMGAMkL7L9JilpgADfh8MRFz2fkeBJ6+VM9FD4='}
+    'webapp2_extras.sessions': {'secret_key': 'kTlR8YMGAMkL7L9JilpgADfh8MRFz2fkeBJ6+VM9FD4=', 'session_max_age': 86400}
 }
+# < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;

@@ -85,10 +85,6 @@ class BaseHandler(webapp2.RequestHandler):
         return self.session_store.get_session()
 
     @webapp2.cached_property
-    def session_store(self):
-        return sessions.get_store(request=self.request)
-
-    @webapp2.cached_property
     def user(self):
         return users.get_current_user()
 
