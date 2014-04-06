@@ -34,9 +34,11 @@
         <div class="story">{{ object.body|safe }}</div>
     </article>
     <aside>
-        {% for comment in object.comment_list() %}
-            {{ m.render_comment(comment, user) }}
-        {% endfor %}
+        <div id="comments">
+            {% for comment in object.comment_list() %}
+                {{ m.render_comment(comment, user) }}
+            {% endfor %}
+        </div>
         {% if user %}
             <h3>
                 <a class="comment_add button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">

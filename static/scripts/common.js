@@ -179,7 +179,7 @@
                         if (typeof(data) == 'string') {
                             $('.dummy').hide();
                             $('.info').show()
-                            $('.comments').prepend(data);
+                            $('#comments').prepend(data);
                             $('a.confirm').click(function(e) {
                                 e.preventDefault();
                                 $('#confirm').load(this.href, function() {
