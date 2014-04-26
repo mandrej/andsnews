@@ -250,7 +250,7 @@ table {
 				.black_shadow;
 				content: attr(data-hover);
 				max-width: 0;
-				.transition(max-width .5s linear);
+				.transition(max-width .3s linear);
 			}
 			&:hover::before {
 				max-width: 100%;
@@ -445,7 +445,7 @@ input[data-function*='swipe'] {
 		article {
 			.flex(3);
 			padding: 0 @gap/2 @gap/2 @gap/2;
-			canvas { .border-radius(@radius); max-width: 100%; }
+			canvas { .border-radius(@radius); }
 		}
 		aside {
 			.flex(1);

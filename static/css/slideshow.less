@@ -9,11 +9,12 @@
 }
 .slideshow:after {
     content: '';
-    background: transparent url(/static/images/overlay.png) repeat top left;
+    background: url(/static/images/front.png), url(/static/images/overlay.png);
+	background-repeat: no-repeat, repeat;
 }
 
-@numImages: 15;
-@totalDuration: 90s;
+@numImages: 5; // config.LATEST
+@totalDuration: (@numImages * 6s);
 .slideshow li {
 	list-style:  none;
 	span {
@@ -63,28 +64,28 @@
 @frame3: percentage(1/@numImages/3*4);
 
 @-webkit-keyframes fadeinout {
-	0% { opacity:0; }
+	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
 	@{frame2} { opacity: 1; }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @-moz-keyframes fadeinout {
-	0% { opacity:0; }
+	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
 	@{frame2} { opacity: 1; }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @-o-keyframes fadeinout {
-	0% { opacity:0; }
+	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
 	@{frame2} { opacity: 1; }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @keyframes fadeinout {
-	0% { opacity:0; }
+	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
 	@{frame2} { opacity: 1; }
 	@{frame3} { opacity: 0; }

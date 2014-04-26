@@ -435,7 +435,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def normal_url(self):
-        return images.get_serving_url(self.blob_key, size=1000, crop=False, secure_url=True)
+        return images.get_serving_url(self.blob_key, size=0, crop=False, secure_url=True)
 
     @webapp2.cached_property
     def small_url(self):

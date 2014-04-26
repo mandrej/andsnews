@@ -2,7 +2,7 @@
 {% block modals %}{% endblock %}
 {% block slideshow %}
     <ul class="slideshow">
-        {% for object in objects %}
+        {% for object in objects[:latest] %}
             <li>
                 <span style="background-image: url({{ object.normal_url }})"></span>
                 <div><h3>{{ object.headline }}</h3></div>

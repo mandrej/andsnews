@@ -18,7 +18,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
+from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
 
 def touch_appcache(handler_method):
@@ -136,7 +136,7 @@ class Index(BaseHandler):
         query = Photo.query().order(-Photo.date)
         paginator = Paginator(query, per_page=15)
         objects, has_next = paginator.page(1)
-        self.render_template('index.html', {'objects': objects})
+        self.render_template('index.html', {'objects': objects, 'latest': LATEST})
 
 
 class SetLanguage(BaseHandler):
