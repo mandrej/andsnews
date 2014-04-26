@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% import "snippets/macros.html" as m %}
-{% block search %}{% endblock %}
-{% block footer %}{% endblock %}
 {% set kind='Admin' %}
 {% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
 {% block ga %}{% endblock %}

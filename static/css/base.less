@@ -421,25 +421,25 @@ input[data-function*='swipe'] {
 	&.cols {
 		.flex-display;
 		.flex-flow(row wrap);
-		margin: 0 -@gap/2;
+		margin: 0 -@gap;
 		section {
-			.flex(1 1 375px);
-			padding: 0 @gap/2 @gap @gap/2;
-			@media @mobile, @tablet { .flex(1 1 180px); }
+			.flex(1 1 350px);
+			padding: 0 @gap @gap @gap;
+			@media @mobile, @tablet { .flex(1 1 220px); }
 		}
 	}
 	&.port {
 		.flex-display;
 		.flex-flow(row);
-		margin: 0 -@gap/2;
+		margin: 0 -@gap;
 		article {
 			.flex(3);
-			padding: 0 @gap/2 @gap/2 @gap/2;
+			padding: 0 @gap @gap @gap;
 			canvas { .border-radius(@radius); }
 		}
 		aside {
 			.flex(1);
-			padding: 0 @gap/2 @gap/2 @gap/2;
+			padding: 0 @gap @gap @gap;
 			@media @mobile, @tablet { .hide; }
 		}
 	}

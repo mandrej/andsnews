@@ -67,28 +67,28 @@
 @-webkit-keyframes fadeinout {
 	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
-	@{frame2} { opacity: 1; }
+	@{frame2} { opacity: 1; -webkit-transform: scale(1.2); }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @-moz-keyframes fadeinout {
 	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
-	@{frame2} { opacity: 1; }
+	@{frame2} { opacity: 1; -moz-transform: scale(1.2); }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @-o-keyframes fadeinout {
 	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
-	@{frame2} { opacity: 1; }
+	@{frame2} { opacity: 1; -o-transform: scale(1.2); }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
 @keyframes fadeinout {
 	0% { opacity: 0; }
 	@{frame1} { opacity: 1; }
-	@{frame2} { opacity: 1; }
+	@{frame2} { opacity: 1; transform: scale(1.2); }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
 }
@@ -96,27 +96,27 @@
 	0% { opacity: 0; -webkit-transform: translateY(200px); }
 	@{frame1} { opacity: 1; -webkit-transform: translateY(0px); }
 	@{frame2} { opacity: 1; -webkit-transform: scale(1); }
-	@{frame3} { opacity: 0; -webkit-transform: scale(5); }
+	@{frame3} { opacity: 0; -webkit-transform: scale(2) translateY(-100px); }
 	100% { opacity: 0; }
 }
 @-moz-keyframes titles {
 	0% { opacity: 0; -moz-transform: translateY(200px); }
 	@{frame1} { opacity: 1; -moz-transform: translateY(0px); }
 	@{frame2} { opacity: 1; -moz-transform: scale(1); }
-	@{frame3} { opacity: 0; -moz-transform: scale(5); }
+	@{frame3} { opacity: 0; -moz-transform: scale(2); -moz-transform: translateY(-100px); }
 	100% { opacity: 0; }
 }
 @-o-keyframes titles {
 	0% { opacity: 0; -o-transform: translateY(200px); }
 	@{frame1} { opacity: 1; -o-transform: translateY(0px); }
 	@{frame2} { opacity: 1; -o-transform: scale(1); }
-	@{frame3} { opacity: 0; -o-transform: scale(5); }
+	@{frame3} { opacity: 0; -o-transform: scale(2); -o-transform: translateY(-100px); }
 	100% { opacity: 0; }
 }
 @keyframes titles {
 	0% { opacity: 0; transform: translateY(200px); }
 	@{frame1} { opacity: 1; transform: translateY(0px); }
 	@{frame2} { opacity: 1; transform: scale(1); }
-	@{frame3} { opacity: 0; transform: scale(5); }
+	@{frame3} { opacity: 0; transform: scale(2); transform: translateY(-100px); }
 	100% { opacity: 0; }
 }
