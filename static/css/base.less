@@ -719,12 +719,16 @@ p.legend { padding: 0.5em; text-align: center; }
 	}
 }
 
-.dot {
-	display: inline-block !important;
-	border-style: solid;
-	border-width: 1em;
-	line-height: 0;
-	.border-radius(1em);
+#colorcloud p {
+	.flex-display;
+	.flex-flow(row);
+	.justify-content(space-between);
+	.dot {
+		border-style: solid;
+		border-width: 1em;
+		line-height: 0;
+		.border-radius(@radius);
+	}
 }
 
 #spinner {
