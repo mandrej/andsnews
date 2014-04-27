@@ -170,6 +170,13 @@ class AppCache(webapp2.RequestHandler):
         self.response.write(appcache)
 
 
+class Invalidate(webapp2.RequestHandler):
+    @touch_appcache
+    def get(self):
+        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        self.redirect(referer)
+
+
 class Find(BaseHandler):
     def get(self):
         querystring = self.request.get('find')

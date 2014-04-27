@@ -323,39 +323,24 @@ input[data-function*='swipe'] {
 	text-shadow: none;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
-	a {
-		color: @paper;
-		position: relative;
-		&:hover, &:focus {
-			color: white; background: transparent;
-		}
-		&.top {
-			display: block;
-			clear: both;
-			margin-bottom: 0.5em;
-			font-size: 1.8em;
-			text-transform: lowercase;
-			white-space: nowrap;
-			&::before {
-				position: absolute;
-				overflow: hidden;
-				top: 0;
-				left: 0;
-				color: white;
-				content: attr(data-hover);
-				max-width: 0;
-				.transition(max-width .5s linear);
-			}
-			&:hover::before {
-				max-width: 100%;
-			}
-			@media @mobile, @tablet {
-				&.Admin, &.Sign, &.Comment, &.News { .hide; }
-			}
+	.hover {
+		&:hover, &:focus { color: white; background: transparent; }
+	}
+	h3 { color: @google_orange; }
+	a { color: @paper; .hover; }
+	ul.fa-ul {
+		margin: 1em 0;
+		.flex-display;
+		.flex-flow(row);
+		.justify-content(space-between);
+		li {
+			margin: 0;
+			list-style: none;
+			font-size: 3.6em;
+			&.active a { color: @google_orange; .hover; }
 		}
 	}
 	.submenu {
-		margin-left: 2em;
 		a {
 			display: inline;
 			&.block {
@@ -598,8 +583,9 @@ p.legend { padding: 0.5em; text-align: center; }
 	line-height: 135%;
 	font-size: @size;
 	font-weight: @weight;
-	a { color:  white;
-		&:hover, &.selected { background: @google_orange; color: black; }
+	a { color:  @paper;
+		&.selected { color: @google_orange; }
+		&:hover, &:focus{ color: white; }
 	}
 	.loop (@index) when (@index > 0) {
 		a.t@{index} { font-size: @size + (@index - 1) / 10; font-weight: @weight + (@index - 1) * 100; }

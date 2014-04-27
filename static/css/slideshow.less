@@ -15,6 +15,10 @@
 
 @numImages: 5; // config.LATEST
 @totalDuration: (@numImages * 6s);
+@frame1: percentage(1/@numImages/3);	// 6.66666667%
+@frame2: percentage(1/@numImages/3*3);	// 20%
+@frame3: percentage(1/@numImages/3*4);	// 26.66666667%
+
 .slideshow li {
 	list-style:  none;
 	span {
@@ -35,19 +39,20 @@
 	div {
 		z-index: 1000;
 		position: absolute;
-		bottom: 30px;
+		bottom: 40px;
 		left: 0px;
 		width: 100%;
 		text-align: center;
 		opacity: 0;
-		color: #fff;
 		.animation(titles @totalDuration linear infinite);
 		h3 {
+			margin: 0;
+			padding: 0;
 			font-family: @default_font;
 			font-size: 80px;
-			padding: 0;
 			text-shadow: none;
-			line-height: 70px;
+			color: #fff;
+			line-height: 0.9;
 		}
 	}
 	.generate-delays(@n, @i: 1) when (@i =< @n) {
@@ -59,10 +64,6 @@
 	}
 	.generate-delays(@numImages);
 }
-
-@frame1: percentage(1/@numImages/3);
-@frame2: percentage(1/@numImages/3*3);
-@frame3: percentage(1/@numImages/3*4);
 
 @-webkit-keyframes fadeinout {
 	0% { opacity: 0; }
