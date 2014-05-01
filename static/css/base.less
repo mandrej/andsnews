@@ -58,23 +58,24 @@ a {
 	background: rgba(255,255,255,.5);
 	font-size: 1em;
 	line-height: 100%;
-	.box-sizing(border-box);
-	.border-radius(@radius);
+	border-radius: @radius;
 	&:hover, &:focus { color: black; background: fade(@google_orange, 70%); }
 }
 .hide { display: none; }
 .left { float: left; margin-right: 0.5em; }
 .right { float: right; margin-left: 0.5em; }
 
-* { margin: 0; padding: 0; }
+* { margin: 0; padding: 0; .box-sizing(border-box); }
 header, nav, aside, section, article, footer, figure { display: block; }
+html, body {
+	width: 100%;
+	height: 100%;
+}
 body {
 	color: @text;
 	background: url(/static/images/bg.jpg) @paper;
 	font-family: @default_font;
     font-size: 14px;
-	width: 100%;
-	height: 100%;
 	.white_shadow;
 }
 a img { border: none; vertical-align: middle; }
@@ -229,11 +230,10 @@ table {
 	position: fixed;
 	top: 0;
 	left: 0;
-	.box-sizing(border-box);
 	padding: 1em 3%;
 	background: fade(@google_blue, 80%);
 	z-index: 2;
-	.drop-shadow(0, 1px, 10px, 0.5);
+	box-shadow: 0 1px 10px rgba(0,0,0,0.5);
 	h1 {
 		position: relative;
 		float: left;
@@ -315,7 +315,6 @@ input[data-function*='swipe'] {
 	top: 0;
 	left: -@menuOffset;
 	bottom: 0;
-	.box-sizing(border-box);
 	width: @menuOffset;
 	background: fade(black, 70%);
 	padding: 1em 3% 0;
@@ -330,9 +329,9 @@ input[data-function*='swipe'] {
 	a { color: @paper; .hover; }
 	ul.fa-ul {
 		margin: 1em 0;
-		.flex-display;
-		.flex-flow(row);
-		.justify-content(space-between);
+		display: flex;
+		flex-flow: row;
+		justify-content: space-between;
 		li {
 			margin: 0;
 			list-style: none;
@@ -355,14 +354,14 @@ input[data-function*='swipe'] {
 
 #container {
 	&.thumbnails {
-		.flex-display;
-		.flex-flow(row wrap);
-		.perspective(1000);
+		display: flex;
+		flex-flow: row wrap;
+		.perspective(1000px);
 		margin: 0 -@gap/4;
 		figure {
-			.flex(1 1 200px);
-			.flex-display;
-			.justify-content(center);
+			flex: 1 1 200px;
+			display: flex;
+			justify-content: center;
 			padding: 0 @gap/4 @gap/2 @gap/4;
 			a {	display: block;
 				position: relative;
@@ -370,7 +369,7 @@ input[data-function*='swipe'] {
 				img {
 					display: block;
 					max-width: 100%;
-					.border-radius(@radius);
+					border-radius: @radius;
 					.transition(.5s);
 					.transform-style(preserve-3d);
 					.backface(hidden); // prevents jumping
@@ -386,7 +385,6 @@ input[data-function*='swipe'] {
 					line-height: 110%;
 					text-align: center;
 					background: white;
-					.box-sizing(border-box);
 					.transition(all .3s ease-in-out);
 				}
 				&:hover, &:focus {
@@ -400,30 +398,30 @@ input[data-function*='swipe'] {
 					bottom: 0;
 				}
 			}
-			@media @highdensity { .flex(1 1 150px); }
+			@media @highdensity { flex: 1 1 150px; }
 		}
 	}
 	&.cols {
-		.flex-display;
-		.flex-flow(row wrap);
+		display: flex;
+		flex-flow: row wrap;
 		margin: 0 -@gap;
 		section {
-			.flex(1 1 350px);
+			flex: 1 1 350px;
 			padding: 0 @gap @gap @gap;
-			@media @mobile, @tablet { .flex(1 1 220px); }
+			@media @mobile, @tablet { flex: 1 1 220px; }
 		}
 	}
 	&.port {
-		.flex-display;
-		.flex-flow(row);
+		display: flex;
+		flex-flow: row;
 		margin: 0 -@gap;
 		article {
-			.flex(3);
+			flex: 3;
 			padding: 0 @gap @gap @gap;
-			canvas { .border-radius(@radius); }
+			canvas { border-radius: @radius; }
 		}
 		aside {
-			.flex(1);
+			flex: 1;
 			padding: 0 @gap @gap @gap;
 			@media @mobile, @tablet { .hide; }
 		}
@@ -463,7 +461,7 @@ nav.paginator {
 		padding: .3em .8em;
 		color: white;
 		background: @google_orange;
-		.rounded_left_reset;
+		border-radius: 0 @radius @radius 0;
 		&:hover { background-color: @neutral; }
 	}
 	input {
@@ -474,8 +472,7 @@ nav.paginator {
 		color: black;
 		font-size: 1.2em;
 		height: 2em;
-		.box-sizing(border-box);
-		.border-radius(@radius);
+		border-radius: @radius;
 		&:focus { outline: none; }
 	}
 	@media @mobile, @tablet, @desktop { .hide; }
@@ -488,7 +485,7 @@ nav.paginator {
 	button { float: right; width: 5em; margin-left: 0.5em; }
 	.button {
 		.default_button;
-		.border-radius(0);
+		border-radius: 0;
 	}
 	dl {
 		margin-right: 5.5em;
@@ -502,7 +499,7 @@ nav.paginator {
 	a {
 		&.graph {
 			float: right;
-			.border-radius(@radius);
+			border-radius: @radius;
 		}
 	}
 }
@@ -532,12 +529,12 @@ nav.paginator {
 	color: white;
 	background: fade(@google_red, 70%);
 	min-height: 3em;
-	.border-radius(@radius);
+	border-radius: @radius;
 }
 
 #palette {
 	float: right; width: 18em;
-	img { .border-radius(@radius); max-width: 100%; }
+	img { border-radius: @radius; max-width: 100%; }
 	th, td { border: none; }
 	@media @mobile, @tablet { .hide; }
 }
@@ -618,7 +615,7 @@ p.legend { padding: 0.5em; text-align: center; }
 	dd { border: none; margin: 0; padding: 0; }
 	blockquote { border-left: 1em solid white; }
 	pre { font-size: 0.8em; }
-	img { .border-radius(@radius); }
+	img { border-radius: @radius; }
 }
 
 .when {
@@ -660,7 +657,7 @@ p.legend { padding: 0.5em; text-align: center; }
 .box {
     padding: 1em;
     background: fade(white, 50%);
-	.border-radius(@radius);
+	border-radius: @radius;
 }
 
 .loop (@index) when (@index > 0) {
@@ -694,7 +691,7 @@ p.legend { padding: 0.5em; text-align: center; }
 		top: 150px;
 		left: 50%;
 		z-index: 1030;
-		.border-radius(@radius);
+		border-radius: @radius;
 		@media @mobile, @tablet {
 			width: 280px;
 			margin-left: -140px;
@@ -708,7 +705,7 @@ p.legend { padding: 0.5em; text-align: center; }
 			background: @text;
 			font-size: 1.6em;
 			line-height: 200%;
-			.border-radius(@radius @radius 0 0);
+			border-radius: @radius @radius 0 0;
 		}
 		a.close {
 			position: absolute; top: 0.3em; right: 0.5em; color: @neutral; .black_shadow;
@@ -720,14 +717,14 @@ p.legend { padding: 0.5em; text-align: center; }
 }
 
 #colorcloud p {
-	.flex-display;
-	.flex-flow(row);
-	.justify-content(space-between);
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
 	.dot {
 		border-style: solid;
 		border-width: 1em;
 		line-height: 0;
-		.border-radius(@radius);
+		border-radius: @radius;
 	}
 }
 
@@ -748,7 +745,7 @@ p.legend { padding: 0.5em; text-align: center; }
 		left: 44.5%;
 		top: 37%;
 		opacity: 0;
-		.border-radius(50px);
+		border-radius: 50px;
 		.animation(fade 1s linear infinite);
 	}
 	@iterations: 12;

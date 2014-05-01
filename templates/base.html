@@ -24,7 +24,6 @@
 	<div id="spinner" class="modal">{{ m.spinner() }}</div>
 	{% endblock %}
 
-    <div id="black"></div>
     <header id="header">
         <h1>
             <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
@@ -34,6 +33,7 @@
         <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% include 'snippets/paginator.html' %}{% endblock %}</nav>
     </header>
+    <div id="black"></div>
 
     <div id="wrapper">
         <input type="checkbox" id="swipe" data-function="swipe"/>
@@ -78,7 +78,7 @@
                 window.location.replace(window.location.href);
             }, false);
         </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
         <script src="/static/scripts/common.min.js"></script>
         <script src="/static/scripts/base.min.js"></script>
