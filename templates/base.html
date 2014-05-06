@@ -26,7 +26,7 @@
 
     <header id="header">
         <h1>
-            <a href="{{ uri_for('start') }}" data-hover="ANDрејевићи">ANDрејевићи</a>
+            <a href="{{ uri_for('start') }}">ANDрејевићи</a>
             <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
         </h1>
         <a class="fa fa-home fa-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
