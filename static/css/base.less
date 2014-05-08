@@ -359,7 +359,7 @@ input[data-function*='swipe'] {
 		.perspective(1000px);
 		margin: 0 -@gap/4;
 		figure {
-			flex: 1 1 200px;
+			flex: 1 1 220px;
 			display: flex;
 			justify-content: center;
 			padding: 0 @gap/4 @gap/2 @gap/4;
@@ -716,13 +716,14 @@ p.legend { padding: 0.5em; text-align: center; }
 	display: flex;
 	flex-flow: row;
 	justify-content: space-between;
-	.dot {
-		border-style: solid;
-		border-width: 1em;
-		line-height: 0;
-		border-radius: @radius;
-	}
 }
+.dot {
+	border-style: solid;
+	border-width: 1em;
+	line-height: 0;
+	border-radius: @radius;
+}
+td .dot { display: inline-block; }
 
 #spinner {
 	margin: -50px 0 0 -50px;
