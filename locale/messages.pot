@@ -8,20 +8,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-30 15:26+0200\n"
+"POT-Creation-Date: 2014-05-11 12:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 0.9.6\n"
+"Generated-By: Babel 1.3\n"
 
-#: config.py:21
+#: config.py:22
 msgid "english"
 msgstr ""
 
-#: config.py:21
+#: config.py:22
 msgid "serbian"
 msgstr ""
 
@@ -127,11 +127,11 @@ msgstr ""
 msgid "entry rss"
 msgstr ""
 
-#: templates/base.html:33
+#: templates/base.html:32
 msgid "Start"
 msgstr ""
 
-#: templates/base.html:34
+#: templates/base.html:33
 msgid "Menu"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgid ""
 "is comma separated. Use english for wider understanding."
 msgstr ""
 
-#: templates/admin/entry_form.html:91
+#: templates/admin/entry_form.html:91 views/entry.py:75 views/entry.py:89
 msgid "Summary"
 msgstr ""
 
@@ -302,18 +302,19 @@ msgstr ""
 msgid "blogs sent same year"
 msgstr ""
 
-#: templates/entry/detail.html:43 templates/photo/detail.html:74
+#: templates/entry/detail.html:45 templates/photo/detail.html:76
 msgid "Add Comment"
 msgstr ""
 
 #: templates/entry/index.html:3 templates/entry/index.html:7
 #: templates/snippets/confirm.html:13 templates/snippets/macros.html:35
+#: templates/snippets/macros.html:52
 msgid "Blog"
 msgstr ""
 
 #: templates/entry/index.html:19 templates/news/detail.html:14
 #: templates/news/detail.html:34 templates/news/index.html:21
-#: templates/snippets/macros.html:95
+#: templates/snippets/macros.html:107
 #, python-format
 msgid "%(since)s ago"
 msgstr ""
@@ -341,7 +342,8 @@ msgid "News error"
 msgstr ""
 
 #: templates/news/index.html:3 templates/news/index.html:7
-#: templates/snippets/confirm.html:23 templates/snippets/macros.html:43
+#: templates/snippets/confirm.html:23 templates/snippets/macros.html:39
+#: templates/snippets/macros.html:58
 msgid "News"
 msgstr ""
 
@@ -354,7 +356,8 @@ msgid "No news submitted"
 msgstr ""
 
 #: templates/photo/detail.html:43 templates/photo/index.html:3
-#: templates/photo/index.html:7 templates/snippets/macros.html:31
+#: templates/photo/index.html:7 templates/snippets/macros.html:33
+#: templates/snippets/macros.html:49
 msgid "Photos"
 msgstr ""
 
@@ -370,15 +373,15 @@ msgstr ""
 msgid "photos taken with same lens"
 msgstr ""
 
-#: templates/photo/exif.html:16
+#: templates/photo/exif.html:16 views/photo.py:117
 msgid "Aperture"
 msgstr ""
 
-#: templates/photo/exif.html:22
+#: templates/photo/exif.html:22 views/photo.py:118
 msgid "Shutter speed"
 msgstr ""
 
-#: templates/photo/exif.html:26
+#: templates/photo/exif.html:26 views/photo.py:119
 msgid "Focal length"
 msgstr ""
 
@@ -391,7 +394,7 @@ msgid "eqv"
 msgstr ""
 
 #: templates/photo/exif.html:38 templates/snippets/graph.html:3
-#: templates/snippets/macros.html:28
+#: templates/snippets/macros.html:28 views/photo.py:120
 msgid "Sensitivity"
 msgstr ""
 
@@ -399,7 +402,7 @@ msgstr ""
 msgid "photos with same iso"
 msgstr ""
 
-#: templates/photo/exif.html:43
+#: templates/photo/exif.html:43 views/news.py:139 views/photo.py:115
 msgid "Taken"
 msgstr ""
 
@@ -444,11 +447,11 @@ msgstr ""
 msgid "for blog"
 msgstr ""
 
-#: templates/snippets/cloud.html:28 templates/snippets/macros.html:71
+#: templates/snippets/cloud.html:28 templates/snippets/macros.html:83
 msgid "for photos"
 msgstr ""
 
-#: templates/snippets/cloud.html:29 templates/snippets/macros.html:73
+#: templates/snippets/cloud.html:29 templates/snippets/macros.html:85
 msgid "messages"
 msgstr ""
 
@@ -477,11 +480,13 @@ msgstr ""
 msgid "photo"
 msgstr ""
 
-#: templates/snippets/confirm.html:30 templates/snippets/macros.html:91
+#: templates/snippets/confirm.html:30 templates/snippets/macros.html:103
 msgid "Delete"
 msgstr ""
 
 #: templates/snippets/graph.html:2 templates/snippets/macros.html:21
+#: views/entry.py:73 views/entry.py:87 views/news.py:127 views/news.py:137
+#: views/photo.py:99 views/photo.py:113
 msgid "Tags"
 msgstr ""
 
@@ -494,10 +499,12 @@ msgid "Authors"
 msgstr ""
 
 #: templates/snippets/graph.html:2 templates/snippets/macros.html:25
+#: views/photo.py:116
 msgid "Camera model"
 msgstr ""
 
 #: templates/snippets/graph.html:3 templates/snippets/macros.html:26
+#: views/photo.py:122
 msgid "Lens type"
 msgstr ""
 
@@ -523,23 +530,27 @@ msgid ""
 " film camera, rounded to nearset 10"
 msgstr ""
 
-#: templates/snippets/macros.html:39
+#: templates/snippets/macros.html:37 templates/snippets/macros.html:55
 msgid "Comments"
 msgstr ""
 
-#: templates/snippets/macros.html:49
+#: templates/snippets/macros.html:42 templates/snippets/macros.html:61
 msgid "Administration"
 msgstr ""
 
-#: templates/snippets/macros.html:57 templates/snippets/macros.html:58
-msgid "Logout"
+#: templates/snippets/macros.html:44
+msgid "Log in"
 msgstr ""
 
-#: templates/snippets/macros.html:57 templates/snippets/macros.html:58
-msgid "Sign in"
+#: templates/snippets/macros.html:67
+msgid "Invalidate cache"
 msgstr ""
 
-#: templates/snippets/macros.html:72
+#: templates/snippets/macros.html:68
+msgid "Log out"
+msgstr ""
+
+#: templates/snippets/macros.html:84
 msgid "for blogs"
 msgstr ""
 
@@ -553,5 +564,80 @@ msgstr ""
 
 #: templates/snippets/paginator.html:14
 msgid "next"
+msgstr ""
+
+#: views/comment.py:29
+msgid "Comment"
+msgstr ""
+
+#: views/entry.py:53
+#, python-format
+msgid "This field is required if other \"%s\" present."
+msgstr ""
+
+#: views/entry.py:59
+msgid "New Image"
+msgstr ""
+
+#: views/entry.py:65
+msgid "Image"
+msgstr ""
+
+#: views/entry.py:67
+msgid "remove"
+msgstr ""
+
+#: views/entry.py:71 views/entry.py:86 views/news.py:125 views/news.py:136
+#: views/photo.py:97 views/photo.py:112
+msgid "Headline"
+msgstr ""
+
+#: views/entry.py:72 views/news.py:126 views/photo.py:98
+msgid "Slug"
+msgstr ""
+
+#: views/entry.py:74 views/entry.py:88 views/photo.py:114
+msgid "Author"
+msgstr ""
+
+#: views/entry.py:76 views/entry.py:90
+msgid "Posted"
+msgstr ""
+
+#: views/entry.py:77 views/entry.py:91
+msgid "Article"
+msgstr ""
+
+#: views/entry.py:82 views/news.py:132 views/photo.py:104
+msgid "Record with this slug already exist"
+msgstr ""
+
+#: views/entry.py:92
+msgid "Front image"
+msgstr ""
+
+#: views/news.py:115
+msgid "Feed server send no entries"
+msgstr ""
+
+#: views/news.py:117 views/news.py:119
+#, python-format
+msgid "Feed server returns %s"
+msgstr ""
+
+#: views/news.py:128 views/news.py:138
+msgid "Url"
+msgstr ""
+
+#: views/photo.py:100
+msgid "Photo"
+msgstr ""
+
+#: views/photo.py:108
+msgid "Wrong type."
+msgstr ""
+
+#: views/photo.py:121
+msgid "Crop factor"
 msgstr ""
 
