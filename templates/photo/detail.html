@@ -73,7 +73,7 @@
         {% if user %}
             <h3><a class="comment_add button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
                 <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
-            <h3><a class="download button" href="{{ object.normal_url }}">
+            <h3><a class="download button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
                 <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
         {% endif %}
     </aside>

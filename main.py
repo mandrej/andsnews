@@ -3,7 +3,7 @@ __author__ = 'milan'
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
 from handlers import auto_complete, Index, SetLanguage, Sign, Find, Chat, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap, AppCache, Invalidate
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap, AppCache, Invalidate, SaveAsHandler
 from config import CONFIG, DEVEL
 
 
@@ -73,6 +73,7 @@ app = WSGIApplication(
      Route('/rss/<kind:(photo|entry)>.xml', handler=Rss),
      Route('/_ah/xmpp/message/chat/', handler=Chat),
 
+     Route('/<safe_key>/download', handler=SaveAsHandler, name='download'),
      Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
      Route('/<safe_key>/add', handler='views.comment.Add', name='comment_add'),
      Route('/search', handler=Find),

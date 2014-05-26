@@ -16,7 +16,7 @@ from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
-from google.appengine.ext import ndb
+from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
 from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
@@ -230,6 +230,17 @@ class DeleteHandler(BaseHandler):
         key = ndb.Key(urlsafe=safe_key)
         key.delete()
         self.redirect(next)
+
+
+class SaveAsHandler(BaseHandler):
+    @login_required
+    def get(self, safe_key):
+        key = ndb.Key(urlsafe=safe_key)
+        obj = key.get()
+        blob_reader = blobstore.BlobReader(obj.blob_key)
+        buff = blob_reader.read()
+        self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
+        self.response.write(buff)
 
 
 class Filter(object):
