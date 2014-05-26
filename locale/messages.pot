@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-11 12:13+0200\n"
+"POT-Creation-Date: 2014-05-26 19:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -410,9 +410,8 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: templates/photo/exif.html:52 templates/snippets/graph.html:2
-#: templates/snippets/macros.html:24
-msgid "Color"
+#: templates/photo/exif.html:52
+msgid "Similar color"
 msgstr ""
 
 #: templates/photo/exif.html:55
@@ -496,6 +495,10 @@ msgstr ""
 
 #: templates/snippets/graph.html:2 templates/snippets/macros.html:23
 msgid "Authors"
+msgstr ""
+
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:24
+msgid "Color"
 msgstr ""
 
 #: templates/snippets/graph.html:2 templates/snippets/macros.html:25

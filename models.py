@@ -445,15 +445,19 @@ class Photo(ndb.Model):
     def blob_info(self):
         return blobstore.BlobInfo.get(self.blob_key)
 
-    @property
+    @webapp2.cached_property
     def hex(self):
         return '#%02x%02x%02x' % tuple(self.rgb)
 
-    @property
+    @webapp2.cached_property
     def hls(self):
         rel_rgb = map(lambda x: x / 255, self.rgb)
         h, l, s = colorsys.rgb_to_hls(*rel_rgb)
         return int(round(h * 360)), int(round(l * 100)), int(round(s * 100))
+
+    @webapp2.cached_property
+    def similar(self):
+        return COLORS[self.color]
 
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)

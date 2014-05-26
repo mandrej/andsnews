@@ -49,10 +49,11 @@
             <td>{{ object.size|filesizeformat }}</td>
         </tr>
         <tr>
-            <td class="label">{{ _('Color') }}: {{ object.color }}</td>
+            <td class="label">{{ _('Similar color') }}</td>
             <td>
                 <a href="{{ uri_for('photo_filter_all', field='color', value=object.color) }}"
-                   title="{{ _('photos with similar color') }}">RGB: {{ object.hex }}</a>&nbsp;
+                   title="{{ _('photos with similar color') }}">{{ object.color }}</a>&nbsp;
+                <span class="dot" style="border-color: {{ object.similar.hex }}; vertical-align: middle;"></span>
                 <span class="dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>
             </td>
         </tr>
