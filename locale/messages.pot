@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-26 19:20+0200\n"
+"POT-Creation-Date: 2014-05-26 19:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -302,7 +302,7 @@ msgstr ""
 msgid "blogs sent same year"
 msgstr ""
 
-#: templates/entry/detail.html:45 templates/photo/detail.html:76
+#: templates/entry/detail.html:45 templates/photo/detail.html:75
 msgid "Add Comment"
 msgstr ""
 
@@ -365,6 +365,10 @@ msgstr ""
 msgid "photos taken same year"
 msgstr ""
 
+#: templates/photo/detail.html:77
+msgid "Download"
+msgstr ""
+
 #: templates/photo/exif.html:6
 msgid "photos taken with same camera model"
 msgstr ""
@@ -407,14 +411,10 @@ msgid "Taken"
 msgstr ""
 
 #: templates/photo/exif.html:48
-msgid "Size"
-msgstr ""
-
-#: templates/photo/exif.html:52
 msgid "Similar color"
 msgstr ""
 
-#: templates/photo/exif.html:55
+#: templates/photo/exif.html:51
 msgid "photos with similar color"
 msgstr ""
 
