@@ -5,21 +5,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version: 1403\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-26 19:47+0200\n"
-"PO-Revision-Date: 2014-05-26 19:48+0100\n"
+"POT-Creation-Date: 2014-05-27 21:41+0200\n"
+"PO-Revision-Date: 2014-05-27 21:45+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
-"Language-Team: sr_RS <LL@li.org>\n"
+"Language-Team: sr_RS <milan.andrejevic@gmail.com>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
-"X-Generator: Poedit 1.5.4\n"
 "Language: Serbian\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-Basepath: ../../../\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: config.py:22
 msgid "english"
@@ -318,9 +319,13 @@ msgstr "Формат датума"
 msgid "blogs sent same year"
 msgstr "белешке послате исте године"
 
-#: templates/entry/detail.html:45 templates/photo/detail.html:75
+#: templates/entry/detail.html:44 templates/photo/detail.html:75
 msgid "Add Comment"
 msgstr "Дај кометар"
+
+#: templates/entry/detail.html:48 templates/photo/detail.html:81
+msgid "Edit"
+msgstr "Измени"
 
 #: templates/entry/index.html:3 templates/entry/index.html:7
 #: templates/snippets/confirm.html:13 templates/snippets/macros.html:35
@@ -426,13 +431,13 @@ msgstr "фотографије са истом осетљивошћу"
 msgid "Taken"
 msgstr "Снимљено"
 
-#: templates/photo/exif.html:48
-msgid "Similar color"
-msgstr "Cличнa бојa"
-
-#: templates/photo/exif.html:51
+#: templates/photo/exif.html:50
 msgid "photos with similar color"
 msgstr "фотографије са сличном бојом"
+
+#: templates/photo/exif.html:50
+msgid "Similar color"
+msgstr "Cличнa бојa"
 
 #: templates/photo/index.html:29
 msgid "No photos submitted"

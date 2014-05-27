@@ -13,17 +13,17 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td class="label">{{ _('Aperture') }}</td>
+			<td>{{ _('Aperture') }}</td>
 			<td>
 				{% if object.aperture %}F{{ object.aperture }}{% else %}---{% endif %}
 			</td>
 		</tr>
 		<tr>
-			<td class="label">{{ _('Shutter speed') }}</td>
+			<td>{{ _('Shutter speed') }}</td>
 			<td>{{ object.shutter }} sec</td>
 		</tr>
 		<tr>
-			<td class="label">{{ _('Focal length') }}</td>
+			<td>{{ _('Focal length') }}</td>
 			<td>
 				{% if object.focal_length %}
 					{{ object.focal_length }} mm
@@ -35,20 +35,21 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="label">{{ _('Sensitivity') }} (ISO)</td>
+			<td>{{ _('Sensitivity') }} (ISO)</td>
 			<td>{% if object.iso %}<a href="{{ uri_for('photo_filter_all', field='iso', value=object.iso) }}"
                                       title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
-			<td class="label">{{ _('Taken') }}</td>
+			<td>{{ _('Taken') }}</td>
 			<td><time datetime='{{ object.date|to_datetime }}'>
 				{{ object.date|to_datetime }}</time></td>
 		</tr>
         <tr>
-            <td class="label">{{ _('Similar color') }}</td>
             <td>
                 <a href="{{ uri_for('photo_filter_all', field='color', value=object.color) }}"
-                   title="{{ _('photos with similar color') }}">{{ object.color }}</a>&nbsp;
+                   title="{{ _('photos with similar color') }}">{{ _('Similar color') }}</a>
+            </td>
+            <td>
                 <span class="dot" style="border-color: {{ object.similar.hex }}; vertical-align: middle;"></span>
                 <span class="dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>
             </td>
