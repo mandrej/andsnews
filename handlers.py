@@ -9,6 +9,7 @@ import traceback
 import hashlib
 import uuid
 import webapp2
+import logging
 from operator import itemgetter
 from jinja2.filters import do_striptags
 from string import capitalize
@@ -240,6 +241,7 @@ class SaveAsHandler(BaseHandler):
         blob_reader = blobstore.BlobReader(obj.blob_key)
         buff = blob_reader.read()
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
+        logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
         self.response.write(buff)
 
 
