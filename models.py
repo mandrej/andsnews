@@ -604,7 +604,7 @@ class Comment(ndb.Model):
                 self.key.urlsafe(),
                 headline='' if self.is_message else self.key.parent().get().headline,
                 author=self.author,
-                body=self.body,
+                body='%s' % self.body,
                 date=self.date))
 
     @property
