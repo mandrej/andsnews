@@ -249,16 +249,16 @@ class Filter(object):
 
 
 class Paginator(object):
-    timeout = TIMEOUT / 12
+    timeout = TIMEOUT / 12  # 5 min
 
-    def __init__(self, query, per_page=PER_PAGE, caching=True):
+    def __init__(self, query, per_page=PER_PAGE):
         self.query = query
         self.per_page = per_page
-        self.id = hashlib.md5(repr(self.query)).hexdigest()
-        self.caching = caching
+        # <str> repr(self.query)
+        self.id = hashlib.md5('{0}{1}'.format(self.query, self.per_page)).hexdigest()
         self.cache = memcache.get(self.id)
 
-        if self.cache is None and self.caching:
+        if self.cache is None:
             self.cache = {0: {'cursor': None, 'keys': [], 'has_next': True}}
             memcache.add(self.id, self.cache, self.timeout)
 
@@ -279,9 +279,8 @@ class Paginator(object):
         if not keys and num == 1:
             return keys, has_next
 
-        if self.caching:
-            self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
-            memcache.replace(self.id, self.cache, self.timeout)
+        self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
+        memcache.replace(self.id, self.cache, self.timeout)
         return keys, has_next
 
     def page(self, num):
