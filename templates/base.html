@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>
+<html{{ {'lang': language(language_code)}|xmlattr }}>
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -27,7 +27,7 @@
     <header id="header">
         <h1>
             <a href="{{ uri_for('start') }}">ANDрејевићи</a>
-            <span>online{% if user %} | {{ user.nickname() }}{% endif %}</span>
+            <span>{% if user %}{{ user.nickname() }}{% endif %}</span>
         </h1>
         <a class="fa fa-home fa-4x" href="{{ uri_for('start') }}" title="{{ _('Start') }}"></a>
         <label for="swipe" data-function='swipe' class="fa fa-bars fa-4x" title="{{ _('Menu') }}"></label>
@@ -66,17 +66,6 @@
         <script>
             kind = '{{ kind }}';
             token = '{{ token }}';
-            nick = '{% if user %} | {{ user.nickname() }}{% endif %}';
-            if (!navigator.onLine) {
-                document.querySelectorAll('#header span')[0].innerText = 'offline' + nick;
-            }
-            window.applicationCache.addEventListener('progress', function(evt) {
-                document.querySelectorAll('#header span')[0].innerText = 'caching' + nick;
-{#                document.querySelector('#progress').style.width = (100 * evt.loaded / evt.total) + '%';#}
-            }, false);
-            window.applicationCache.addEventListener('updateready', function() {
-                window.location.replace(window.location.href);
-            }, false);
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
