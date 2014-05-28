@@ -2,7 +2,6 @@ User-agent: *
 Disallow: /*?idx*
 Disallow: /sign
 Disallow: /search
-Disallow: /latest
 Disallow: /admin/
 Disallow: /filter/
 Disallow: /visualize/
@@ -12,6 +11,7 @@ Disallow: /news/
 Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete
+Disallow: /*download
 # filters
 Disallow: /*model/
 Disallow: /*iso/
