@@ -399,7 +399,7 @@ class RenderCloud(BaseHandler):
         items = Cloud(mem_key).get_list()
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
-            items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+            items = sorted(items, key=itemgetter('count'), reverse=True)
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
@@ -422,7 +422,7 @@ class RenderGraph(BaseHandler):
         items = Cloud(mem_key).get_list()
 
         if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
-            items = sorted(items, key=itemgetter('count'), reverse=True)[:10]
+            items = sorted(items, key=itemgetter('count'), reverse=True)
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
@@ -431,7 +431,7 @@ class RenderGraph(BaseHandler):
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
 
-        self.render_template('snippets/graph.html', {'items': items, 'field_name': field})
+        self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
 
 
 class Rss(BaseHandler):
