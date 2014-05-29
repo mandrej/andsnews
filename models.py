@@ -434,12 +434,12 @@ class Photo(ndb.Model):
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     @webapp2.cached_property
-    def normal_url(self):
-        return images.get_serving_url(self.blob_key, size=0, crop=False, secure_url=True)
+    def normal_url_async(self):
+        return images.get_serving_url_async(self.blob_key, size=0, crop=False, secure_url=True)
 
     @webapp2.cached_property
-    def small_url(self):
-        return images.get_serving_url(self.blob_key, size=300, crop=True, secure_url=True)
+    def small_url_async(self):
+        return images.get_serving_url_async(self.blob_key, size=300, crop=True, secure_url=True)
 
     @webapp2.cached_property
     def blob_info(self):

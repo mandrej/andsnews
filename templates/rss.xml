@@ -25,7 +25,7 @@
                         Focal length: {{ item.focal_length }} mm (~ {{ item.eqv }} eqv.),
                         Sensitivity (ISO): {{ item.iso }}
                     </description>
-{#                    <enclosure url="{{ item.small_url() }}" length="" type="image/jpeg"/>#}
+{#                    <enclosure url="{{ item.small_url_async.get_result() }}" length="" type="image/jpeg"/>#}
                 </item>
             {% endfor %}
         {% else %}
