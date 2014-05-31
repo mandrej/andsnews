@@ -10,7 +10,7 @@ from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
-PER_PAGE = 12
+PER_PAGE = 20  # photos
 RESULTS = 12
 RSS_LIMIT = 10
 LATEST = 5
