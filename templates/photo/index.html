@@ -16,10 +16,12 @@
             {% else %}
                 {% set url = uri_for('photo', slug = object.key.string_id()) %}
             {% endif %}
-            <a href="{{ url }}?idx={{ idx + loop.index }}" class="lazy"
-               style="background-image: url({{ object.small_url_async.get_result() }})">
-                <p class="legend">{{ object.headline }}</p>
-            </a>
+            <figure>
+                <a href="{{ url }}?idx={{ idx + loop.index }}">
+                    <img src="{{ object.small_url_async.get_result() }}"/>
+                    <p class="legend">{{ object.headline }}</p>
+                </a>
+            </figure>
         {% endif %}
     {% else %}
         <section>

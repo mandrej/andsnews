@@ -18,7 +18,7 @@ class Index(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
+        paginator = Paginator(query, per_page=15)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -44,7 +44,7 @@ class Detail(BaseHandler):
             self.render_template('photo/detail.html',
                                  {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
         else:
-            paginator = Paginator(query)
+            paginator = Paginator(query, per_page=15)
             page, prev, obj, next = paginator.triple(slug, idx)
 
             data = {'object': obj,
