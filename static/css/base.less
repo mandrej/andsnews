@@ -396,7 +396,10 @@ input[data-function*='swipe'] {
 						bottom: 0;
 					}
 				}
-				@media @highdensity { height: 150px; }
+				@media @highdensity {
+					height: 150px;
+					max-width: 150px;
+				}
 			}
 			@media @highdensity { flex: 1 1 150px; }
 		}
