@@ -124,8 +124,7 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
-        # kwargs['caching'] = not DEVEL and kwargs.get('form', None) is None
-        kwargs['caching'] = kwargs.get('form', None) is None
+        kwargs['caching'] = not DEVEL and kwargs.get('form', None) is None
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
