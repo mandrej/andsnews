@@ -56,7 +56,7 @@
       return this.each(function(){
         var el = this;
         if(el==document) el = $("body")[0];
-        SearchHighlight.hiliteElement(el, q); 
+        SearchHighlight.hiliteElement(el, q);
       })
     } else return this;
   }    
