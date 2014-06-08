@@ -10,7 +10,7 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
 from config import TIMEOUT
 
 SMALL = 60, 60
@@ -103,6 +103,7 @@ class Add(BaseHandler):
         self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
@@ -134,6 +135,7 @@ class Edit(BaseHandler):
         self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self, slug):
         obj = Entry.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)

@@ -8,7 +8,7 @@ from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField, touch_appcache
 
 
 class Index(BaseHandler):
@@ -153,6 +153,7 @@ class Edit(BaseHandler):
         self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
+    @touch_appcache
     def post(self, slug):
         obj = Photo.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)

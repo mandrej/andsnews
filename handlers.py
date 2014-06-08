@@ -19,7 +19,14 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, DEVEL
+from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
+
+
+def touch_appcache(handler_method):
+    def wrapper(self, *args, **kwargs):
+        memcache.replace('appcache', OFFLINE % datetime.datetime.now().isoformat())
+        handler_method(self, *args, **kwargs)
+    return wrapper
 
 
 def csrf_protected(handler_method):
@@ -117,6 +124,8 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
+        # kwargs['caching'] = not DEVEL and kwargs.get('form', None) is None
+        kwargs['caching'] = kwargs.get('form', None) is None
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
@@ -133,6 +142,7 @@ class Index(BaseHandler):
 
 
 class SetLanguage(BaseHandler):
+    @touch_appcache
     def post(self):
         next = self.request.headers.get('Referer', webapp2.uri_for('start'))
         self.session['lang_code'] = self.request.get('language')
@@ -140,6 +150,7 @@ class SetLanguage(BaseHandler):
 
 
 class Sign(BaseHandler):
+    @touch_appcache
     def get(self):
         referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
         if referer.endswith('admin/'):
@@ -150,6 +161,22 @@ class Sign(BaseHandler):
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
+
+
+class AppCache(webapp2.RequestHandler):
+    def get(self):
+        appcache = memcache.get('appcache')
+        if appcache is None:
+            memcache.add('appcache', OFFLINE % datetime.datetime.now().isoformat())
+        self.response.headers['Content-Type'] = 'text/cache-manifest'
+        self.response.write(appcache)
+
+
+class Invalidate(webapp2.RequestHandler):
+    @touch_appcache
+    def get(self):
+        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        self.redirect(referer)
 
 
 class Find(BaseHandler):
@@ -199,6 +226,7 @@ class DeleteHandler(BaseHandler):
         self.render_template('snippets/confirm.html', data)
 
     @csrf_protected
+    @touch_appcache
     def post(self, safe_key):
         next = str(self.request.get('next'))
         key = ndb.Key(urlsafe=safe_key)

@@ -39,6 +39,11 @@ handlers:
   upload: static/.*.map
   mime_type: application/json
 
+- url: /offline\.html
+  static_files: templates/errors/offline.html
+  mime_type: text/html
+  upload: templates/errors/offline.html
+
 - url: /static
   static_dir: static
 

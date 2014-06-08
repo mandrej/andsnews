@@ -4,7 +4,7 @@ from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Comment
-from handlers import BaseHandler, csrf_protected, Paginator, Filter
+from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appcache
 
 
 class Index(BaseHandler):
@@ -38,6 +38,7 @@ class Add(BaseHandler):
                              {'form': form, 'safe_key': safe_key, 'headline': for_headline})
 
     @csrf_protected
+    @touch_appcache
     def post(self, safe_key):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
