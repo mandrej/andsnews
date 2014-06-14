@@ -28,9 +28,11 @@ class Index(BaseHandler):
                 'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
-
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-            self.render_template('photo/page.html', data)
+            if objects:
+                self.render_template('photo/page.html', data)
+            else:
+                self.abort(404)
         else:
             self.render_template('photo/index.html', data)
 

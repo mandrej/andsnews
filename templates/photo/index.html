@@ -1,6 +1,7 @@
 {% extends "photo/base.html" %}
 {% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
+{% block paging %}{% endblock %}
 
 {% block contents %}
 <h2>
@@ -25,7 +26,7 @@
                 speed: 500,
                 loop: false,
                 grabCursor: true,
-                slideClass: 'thumbnails',
+                calculateHeight: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
                 onTouchStart: appendSlide,
