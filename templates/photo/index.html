@@ -42,7 +42,6 @@
                 if (endIndex == lastIndex) return;
                 var xhr = $.get('?page=' + ++lastIndex)
                     .done(function(data) {
-{#                        console.log(data);#}
                         var newSlide = swiper.createSlide(data);
                         newSlide.data('index', lastIndex);
                         newSlide.append();

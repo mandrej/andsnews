@@ -30,7 +30,7 @@ class Index(BaseHandler):
                 'has_previous': page > 1}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
             if objects:
-                self.render_template('photo/page.html', data)
+                self.render_template('photo/index_page.html', data)
             else:
                 self.abort(404)
         else:
@@ -60,7 +60,13 @@ class Detail(BaseHandler):
                     'filter': {'field': field, 'value': value} if (field and value) else None,
                     'page': page,
                     'idx': idx}
-            self.render_template('photo/detail.html', data)
+            if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
+                if obj:
+                    self.render_template('photo/detail_page.html', data)
+                else:
+                    self.abort(404)
+            else:
+                self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):
