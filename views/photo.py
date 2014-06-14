@@ -1,5 +1,6 @@
 import cgi
 import json
+import logging
 
 import webapp2
 from google.appengine.ext import blobstore
@@ -27,7 +28,11 @@ class Index(BaseHandler):
                 'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
-        self.render_template('photo/index.html', data)
+
+        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
+            self.render_template('photo/page.html', data)
+        else:
+            self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):

@@ -8,27 +8,53 @@
     {{ m.filter_title(filter) }}
 </h2>
 
-<div id="container" class="thumbnails">
-    {% for object in objects %}
-        {% if object %}
-            {% if filter %}
-                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-            {% else %}
-                {% set url = uri_for('photo', slug = object.key.string_id()) %}
-            {% endif %}
-            <figure>
-                <a href="{{ url }}?idx={{ idx + loop.index }}"
-                    style="background-image: url({{ object.small_url_async.get_result() }})">
-                    <p class="legend">{{ object.headline }}</p>
-                </a>
-            </figure>
-        {% endif %}
-    {% else %}
-        <section>
-            <div class="box">
-                <h3>{{ _('No photos submitted') }}, {{ _('or filter has no results') }}.</h3>
-            </div>
-        </section>
-    {% endfor %}
+<div id="container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper"></div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/idangerous.swiper.min.js"></script>
+    <script>
+        $(function() {
+            var endIndex = -1;
+            var mySwiper = new Swiper('.swiper-container', {
+                speed: 500,
+                loop: false,
+                grabCursor: true,
+                slideClass: 'thumbnails',
+                keyboardControl: true,
+                watchActiveIndex: true,
+                onTouchStart: appendSlide,
+                onSlideNext: appendSlide
+            });
+            function appendSlide(swiper) {
+                var lastIndex, lastSlide = swiper.getLastSlide();
+                if (lastSlide == undefined) {
+                    lastIndex = 0;
+                } else {
+                    lastIndex = 1 * lastSlide.data('index');
+                }
+                if (endIndex == lastIndex) return;
+                var xhr = $.get('?page=' + ++lastIndex)
+                    .done(function(data) {
+{#                        console.log(data);#}
+                        var newSlide = swiper.createSlide(data);
+                        newSlide.data('index', lastIndex);
+                        newSlide.append();
+                        swiper.reInit();
+                        if (swiper.slides.length == 1) {
+                            appendSlide(swiper);
+                        }
+                    })
+                    .fail(function() {
+                        endIndex = lastIndex - 1;
+                    });
+            }
+            appendSlide(mySwiper);
+        });
+    </script>
 {% endblock %}
