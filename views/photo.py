@@ -24,7 +24,7 @@ class Index(BaseHandler):
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'idx': (page - 1) * paginator.per_page,
+                'start_idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('photo/index.html', data)
