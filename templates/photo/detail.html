@@ -10,23 +10,18 @@
 {% endblock %}
 
 {% block paging %}
-    {% macro link(obj, index, class) %}
-        {% set attributes = {'href': '%s?idx=%s' %
-            (uri_for('photo_filter', field=filter.field, value=filter.value, slug=obj.key.string_id()), index)
-            if filter else '%s?idx=%s' %  (uri_for('photo', slug=obj.key.string_id()), index),
-            'class': class, 'title': obj.headline} %}
-        <a{{ attributes|xmlattr }}></a>
-    {% endmacro %}
-
     {% if previous or next %}
-{#        <span class="number">{{ idx }}</span>#}
         {% if previous %}
-            {{ link(previous, idx - 1, prev_class) }}
+            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=previous.key.string_id())
+                if filter else uri_for('photo', slug=previous.key.string_id()) %}
+            <a{{ {'href': url, 'class': prev_class, 'title': previous.headline}|xmlattr }}></a>
         {% else %}
             <span class="{{ prev_class }} na"></span>
         {% endif %}
         {% if next %}
-            {{ link(next, idx + 1, next_class) }}
+            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=next.key.string_id())
+                if filter else uri_for('photo', slug=next.key.string_id()) %}
+            <a{{ {'href': url, 'class': next_class, 'title': next.headline}|xmlattr }}></a>
         {% else %}
             <span class="{{ next_class }} na"></span>
         {% endif %}

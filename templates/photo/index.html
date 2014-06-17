@@ -17,7 +17,7 @@
                 {% set url = uri_for('photo', slug = object.key.string_id()) %}
             {% endif %}
             <figure>
-                <a href="{{ url }}?idx={{ start_idx + loop.index }}"
+                <a href="{{ url }}"
                     style="background-image: url({{ object.small_url_async.get_result() }})">
                     <p class="legend">{{ object.headline }}</p>
                 </a>
