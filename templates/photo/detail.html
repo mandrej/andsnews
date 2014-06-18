@@ -16,6 +16,9 @@
     <div class="swiper-container">
         <div class="swiper-wrapper"></div>
     </div>
+    {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=previous.key.string_id())
+        if filter else uri_for('photo', slug=previous.key.string_id()) %}
+    <pre>{{ url }}</pre>
 </div>
 {% endblock %}
 
@@ -23,9 +26,8 @@
     {{ super() }}
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
-        var slug = '{{ next.key.string_id() }}';
-        console.log(slug);
         $(function() {
+            var url = $('pre').text();
             var endIndex = -1;
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
@@ -45,7 +47,7 @@
                     lastIndex = 1 * lastSlide.data('index');
                 }
                 if (endIndex == lastIndex) return;
-                var xhr = $.get('?idx=' + ++lastIndex)
+                var xhr = $.get(url)
                     .done(function(data) {
                         var newSlide = swiper.createSlide(data);
                         newSlide.data('index', lastIndex);
