@@ -286,7 +286,7 @@ class Paginator(object):
         self.cache = memcache.get(self.id)
 
         if self.cache is None:
-            self.cache = {0: {'cursor': None, 'keys': [], 'has_next': True}}
+            self.cache = {}
             memcache.add(self.id, self.cache, self.timeout)
 
     def page_keys(self, num):
@@ -314,14 +314,27 @@ class Paginator(object):
         keys, has_next = self.page_keys(num)
         return ndb.get_multi(keys), has_next
 
-    def triple(self, slug, idx):
-        """ num and idx are 1 base index """
-        none = ndb.Key('XXX', 'xxx')
-        rem = idx % self.per_page
-        num = int(idx / self.per_page) + (0 if rem == 0 else 1)
-        keys, has_next = self.page_keys(num)
+    def triple(self, slug):
+        num = 1
+        idx = 0
+        key = ndb.Key(self.query.kind, slug)
+        none = ndb.Key(self.query.kind, 'does_not_exist')
+        if not key.get():
+            webapp2.abort(404)
 
-        if rem == 1:
+        while idx == 0:
+            keys, has_next = self.page_keys(num)
+            try:
+                idx = keys.index(key) + self.per_page * (num - 1) + 1  # 1 base index
+            except ValueError:
+                if has_next:
+                    num += 1
+                else:
+                    break
+        if idx == 0:
+            webapp2.abort(404)
+
+        if idx % self.per_page == 1:
             if num == 1:
                 collection = [none] + keys + [none]
             else:

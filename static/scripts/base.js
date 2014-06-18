@@ -117,8 +117,9 @@
         img.src = src;
         img.onload = function() {
             var factor = width / img.width;
-            $(canvas).attr('width', width).attr('height', img.height * factor);
-            cntx.drawImage(img, 0, 0, img.width, img.height, 0, 0, width, img.height * factor);
+            if (factor > 1) factor = 1; // don't enlarge
+            $(canvas).attr('width', img.width * factor).attr('height', img.height * factor);
+            cntx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * factor, img.height * factor);
             cntx.font = '16px "PT Sans"';
             cntx.fillStyle = '#fff';
             cntx.shadowColor = '#000';

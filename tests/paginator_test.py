@@ -24,30 +24,23 @@ class PaginatorTest(unittest.TestCase):
         self.assertFalse(has_next)
 
     def test_triple(self):
-        page, prev, obj, next = self.paginator.triple('xxx', 1)
+        page, prev, obj, next = self.paginator.triple('ziveli-sokici')
         self.assertEqual(page, 1)
         self.assertIsNone(prev)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
-        page, prev1, obj1, next1 = self.paginator.triple('xxx', self.per_page)
+        page, prev, obj, next = self.paginator.triple('gruja-rumunija')
         self.assertEqual(page, 1)
-        self.assertIsInstance(prev1, Photo)
-        self.assertIsInstance(obj1, Photo)
-        self.assertIsInstance(next1, Photo)
-
-        page, prev2, obj2, next2 = self.paginator.triple('xxx', self.per_page + 1)
-        self.assertEqual(page, 2)
-        self.assertEqual(prev2.key.string_id(), obj1.key.string_id())
-        self.assertEqual(obj2.key.string_id(), next1.key.string_id())
+        self.assertIsInstance(prev, Photo)
+        self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
-        last_page = int(math.ceil(self.query.count() / self.per_page))
-        page, prev3, obj3, next3 = self.paginator.triple('xxx', self.query.count())
-        self.assertEqual(page, last_page)
-        self.assertIsInstance(prev3, Photo)
-        self.assertIsInstance(obj3, Photo)
-        self.assertIsNone(next3)
+        page, prev, obj, next = self.paginator.triple('nasa-deca')
+        self.assertEqual(page, 2)
+        self.assertIsInstance(prev, Photo)
+        self.assertIsInstance(obj, Photo)
+        self.assertIsInstance(next, Photo)
 
 """
 from models import Photo

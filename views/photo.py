@@ -25,7 +25,6 @@ class Index(BaseHandler):
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'idx': (page - 1) * paginator.per_page,
                 'has_next': has_next,
                 'has_previous': page > 1}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
@@ -43,30 +42,21 @@ class Detail(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        idx = int(self.request.get('idx', 0))
-        if idx == 0:
-            obj = Photo.get_by_id(slug)
-            if obj is None:
-                self.abort(404)
-            self.render_template('photo/detail.html',
-                                 {'object': obj, 'next': None, 'previous': None, 'page': 1, 'filter': None})
-        else:
-            paginator = Paginator(query)
-            page, prev, obj, next = paginator.triple(slug, idx)
+        paginator = Paginator(query)
+        page, prev, obj, next = paginator.triple(slug)
 
-            data = {'object': obj,
-                    'next': next,
-                    'previous': prev,
-                    'filter': {'field': field, 'value': value} if (field and value) else None,
-                    'page': page,
-                    'idx': idx}
-            if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-                if obj:
-                    self.render_template('photo/detail_page.html', data)
-                else:
-                    self.abort(404)
+        data = {'object': obj,
+                'next': next,
+                'previous': prev,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': page}
+        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
+            if obj:
+                self.render_template('photo/detail_page.html', data)
             else:
-                self.render_template('photo/detail.html', data)
+                self.abort(404)
+        else:
+            self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):
