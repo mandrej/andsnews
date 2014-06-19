@@ -315,44 +315,17 @@ class Paginator(object):
         return ndb.get_multi(keys), has_next
 
     def triple(self, slug):
-        num = 1
-        idx = 0
         key = ndb.Key(self.query.kind, slug)
-        none = ndb.Key(self.query.kind, 'does_not_exist')
-        if not key.get():
+        obj = key.get()
+        if not obj:
             webapp2.abort(404)
 
-        while idx == 0:
-            keys, has_next = self.page_keys(num)
-            try:
-                idx = keys.index(key) + self.per_page * (num - 1) + 1  # 1 base index
-            except ValueError:
-                if has_next:
-                    num += 1
-                else:
-                    break
-        if idx == 0:
-            webapp2.abort(404)
+        next = self.query.filter(Photo.date < obj.date).get()
+        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
+        self.query._Query__orders = self.query.orders.reversed()
+        prev = self.query.filter(Photo.date > obj.date).get()
 
-        if idx % self.per_page == 1:
-            if num == 1:
-                collection = [none] + keys + [none]
-            else:
-                other, x = self.page_keys(num - 1)
-                collection = (other + keys + [none])[idx - (num - 2) * self.per_page - 2:]
-        else:
-            if has_next:
-                other, x = self.page_keys(num + 1)
-            else:
-                other = [none]
-            collection = (keys + other)[idx - (num - 1) * self.per_page - 2:]
-
-        try:
-            prev, obj, next = ndb.get_multi(collection[:3])
-        except ValueError:
-            webapp2.abort(404)
-        else:
-            return num, prev, obj, next
+        return prev, obj, next
 
 
 class SearchPaginator(object):
