@@ -143,7 +143,7 @@ class Index(BaseHandler):
 class SetLanguage(BaseHandler):
     @touch_appcache
     def post(self):
-        next = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        next = self.request.headers.get('Referer', self.uri_for('start'))
         self.session['lang_code'] = self.request.get('language')
         self.redirect(next)
 
@@ -151,9 +151,9 @@ class SetLanguage(BaseHandler):
 class Sign(BaseHandler):
     @touch_appcache
     def get(self):
-        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        referer = self.request.headers.get('Referer', self.uri_for('start'))
         if referer.endswith('admin/'):
-            referer = webapp2.uri_for('start')
+            referer = self.uri_for('start')
         if users.get_current_user():
             self.session.pop('csrf', None)
             dest_url = users.create_logout_url(referer)
@@ -174,7 +174,7 @@ class AppCache(webapp2.RequestHandler):
 class Invalidate(webapp2.RequestHandler):
     @touch_appcache
     def get(self):
-        referer = self.request.headers.get('Referer', webapp2.uri_for('start'))
+        referer = self.request.headers.get('Referer', self.uri_for('start'))
         self.redirect(referer)
 
 
@@ -190,10 +190,10 @@ class Find(BaseHandler):
             f = dict()
             key = ndb.Key(urlsafe=doc.doc_id)
             if key.parent():
-                link = webapp2.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
+                link = self.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
             else:
                 try:
-                    link = webapp2.uri_for(key.kind().lower(), slug=key.string_id())
+                    link = self.uri_for(key.kind().lower(), slug=key.string_id())
                 except KeyError:
                     link = ''  # Comment.is_message
 
@@ -215,9 +215,9 @@ class DeleteHandler(BaseHandler):
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
         if key.parent():
-            next = self.request.headers.get('Referer', webapp2.uri_for('start'))
+            next = self.request.headers.get('Referer', self.uri_for('start'))
         else:
-            next = webapp2.uri_for('%s_all' % key.kind().lower())
+            next = self.uri_for('%s_all' % key.kind().lower())
         obj = key.get()
         if not any([self.is_admin, self.user == obj.author]):
             self.abort(403)

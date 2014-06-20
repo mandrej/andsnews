@@ -44,11 +44,17 @@ class Detail(BaseHandler):
 
         paginator = Paginator(query)
         page, prev, obj, next = paginator.triple(slug)
+        if field and value:
+            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id())
+            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=prev.key.string_id())
+        else:
+            next_url = self.uri_for('photo', slug=next.key.string_id())
+            previous_url = self.uri_for('photo', slug=prev.key.string_id())
 
         data = {'object': obj,
-                'next': next,
-                'previous': prev,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'next_url': next_url,
+                'previous_url': previous_url,
+                'filter': {'field': field, 'value': value} if field and value else None,
                 'page': page}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
             if obj:
@@ -128,7 +134,7 @@ class EditForm(Form):
 class Add(BaseHandler):
     @login_required
     def get(self, form=None):
-        upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
+        upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
         if form is None:
             form = AddForm()
         self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
@@ -141,7 +147,7 @@ class Add(BaseHandler):
             obj.add(form.data)
             self.redirect_to('photo_edit', slug=obj.key.string_id())
         else:
-            upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
+            upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
             self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
 
