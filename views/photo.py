@@ -115,7 +115,7 @@ class EditForm(Form):
 class Add(BaseHandler):
     @login_required
     def get(self, form=None):
-        upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
+        upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
         if form is None:
             form = AddForm()
         self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
@@ -128,7 +128,7 @@ class Add(BaseHandler):
             obj.add(form.data)
             self.redirect_to('photo_edit', slug=obj.key.string_id())
         else:
-            upload_url = blobstore.create_upload_url(webapp2.uri_for('photo_add'))
+            upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
             self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
 
