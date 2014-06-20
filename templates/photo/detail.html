@@ -23,6 +23,14 @@
 
 {% block scripts %}
     {{ super() }}
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
+    <script src="/static/scripts/base.min.js"></script>
+    <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
+    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
+    <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {

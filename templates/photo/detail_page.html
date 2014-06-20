@@ -6,7 +6,7 @@
         {% set url = uri_for('photo_all') %}
     {% endif %}
     <h2>
-        <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
+        <a href="{{ url }}"> {{ _('Photos') }}
             {{ m.filter_title(filter) }}
         </a>
         / {{ object.headline }}
@@ -25,9 +25,7 @@
             title="{{ _('photos taken same year') }}">{{ object.year }}</a>
     </p>
 
-    <article>
-        <canvas></canvas>
-    </article>
+    <canvas></canvas>
     <aside>
         {% include "photo/exif.html" %}
         <div id="comments">
@@ -47,14 +45,6 @@
         {% endif %}
     </aside>
 
-    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
-    <script src="/static/scripts/base.min.js"></script>
-    <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
-    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
-    <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
     <script>
         $(function () {
             var normal_url = '{{ object.normal_url_async.get_result() }}';
