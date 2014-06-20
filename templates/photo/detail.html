@@ -35,7 +35,7 @@
     {% set url = uri_for('photo_all') %}
 {% endif %}
 <h2>
-    <a href="{{ url }}"> {{ _('Photos') }}
+    <a href="{{ url }}?page={{ page }}"> {{ _('Photos') }}
         {{ m.filter_title(filter) }}
     </a>
     / {{ object.headline }}

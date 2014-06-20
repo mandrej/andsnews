@@ -36,12 +36,13 @@ class Detail(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)
-        prev, obj, next = paginator.triple(slug)
+        page, prev, obj, next = paginator.triple(slug)
 
         data = {'object': obj,
                 'next': next,
                 'previous': prev,
-                'filter': {'field': field, 'value': value} if (field and value) else None}
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': page}
         self.render_template('photo/detail.html', data)
 
 

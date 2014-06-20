@@ -325,7 +325,16 @@ class Paginator(object):
         self.query._Query__orders = self.query.orders.reversed()
         prev = self.query.filter(Photo.date > obj.date).get()
 
-        return prev, obj, next
+        num = 1
+        for n, data in self.cache.items():
+            try:
+                data['keys'].index(key)
+            except ValueError:
+                pass
+            else:
+                num = n
+
+        return num, prev, obj, next
 
 
 class SearchPaginator(object):
