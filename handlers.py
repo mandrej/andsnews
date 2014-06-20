@@ -315,15 +315,16 @@ class Paginator(object):
         return ndb.get_multi(keys), has_next
 
     def triple(self, slug):
+        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
         key = ndb.Key(self.query.kind, slug)
         obj = key.get()
         if not obj:
             webapp2.abort(404)
 
-        next = self.query.filter(Photo.date < obj.date).get()
-        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
+        model = ndb.Model._kind_map.get(self.query.kind)
+        next = self.query.filter(model.date < obj.date).get_async()
         self.query._Query__orders = self.query.orders.reversed()
-        prev = self.query.filter(Photo.date > obj.date).get()
+        prev = self.query.filter(model.date > obj.date).get_async()
 
         num = 1
         for n, data in self.cache.items():
@@ -334,7 +335,7 @@ class Paginator(object):
             else:
                 num = n
 
-        return num, prev, obj, next
+        return num, prev.get_result(), obj, next.get_result()
 
 
 class SearchPaginator(object):
