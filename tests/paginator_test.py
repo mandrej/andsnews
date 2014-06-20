@@ -5,6 +5,7 @@ import unittest
 import math
 from models import Photo
 from handlers import Paginator
+from google.appengine.ext import ndb
 
 
 class PaginatorTest(unittest.TestCase):
@@ -24,38 +25,12 @@ class PaginatorTest(unittest.TestCase):
         self.assertFalse(has_next)
 
     def test_triple(self):
-        page, prev, obj, next = self.paginator.triple('ziveli-sokici')
-        self.assertEqual(page, 1)
+        prev, obj, next = self.paginator.triple('ziveli-sokici')
         self.assertIsNone(prev)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
-        page, prev, obj, next = self.paginator.triple('gruja-rumunija')
-        self.assertEqual(page, 1)
+        prev, obj, next = self.paginator.triple('kia-rio-15-crdi')
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
-        self.assertIsInstance(next, Photo)
-
-        page, prev, obj, next = self.paginator.triple('nasa-deca')
-        self.assertEqual(page, 2)
-        self.assertIsInstance(prev, Photo)
-        self.assertIsInstance(obj, Photo)
-        self.assertIsInstance(next, Photo)
-
-"""
-from models import Photo
-query = Photo.query().order(-Photo.date)
-i = query.iter(produce_cursors=True)
-for x in i:
-  before = i.cursor_before()
-  #after = i.cursor_after()
-  #print before.urlsafe()
-  #print after.urlsafe()
-
-  num = 3 if before.urlsafe() else 2
-  results, cursor, has_next = query.fetch_page(num, start_cursor=before.reversed())
-  for p in results:
-    print p.key
-  #print cursor.urlsafe()
-  print '---------------------------'
-"""
+        self.assertIsNone(next)
