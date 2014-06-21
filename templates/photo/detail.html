@@ -13,7 +13,13 @@
 {% block contents %}
 <div id="container">
     <div class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+            {% for obj in [previous, object, next] %}
+                <div class="swiper-slide" data-slug="{{ obj.key.string_id() }}">
+                    {% include 'photo/detail_page.html' %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -31,7 +37,6 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
-            var endIndex = -1;
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
                 loop: false,
@@ -39,32 +44,40 @@
                 calculateHeight: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
-                onTouchStart: appendSlide,
-                onSlideNext: appendSlide
+                initialSlide: 1
+{#                onTouchStart: appendSlide,#}
+{#                onSlideNext: appendSlide#}
             });
-            function appendSlide(swiper) {
-                var lastIndex, lastSlide = swiper.getLastSlide();
-                if (lastSlide == undefined) {
-                    lastIndex = 0;
-                } else {
-                    lastIndex = 1 * lastSlide.data('index');
-                }
-                if (endIndex == lastIndex) return;
-                var xhr = $.get('{{ next_url }}')
-                    .done(function(data) {
-                        var newSlide = swiper.createSlide(data);
-                        newSlide.data('index', lastIndex);
-                        newSlide.append();
-                        swiper.reInit();
-                        if (swiper.slides.length == 1) {
-                            appendSlide(swiper);
-                        }
-                    })
-                    .fail(function() {
-                        endIndex = lastIndex - 1;
-                    });
-            }
-            appendSlide(mySwiper);
+{#            function appendSlide(swiper, url, slug) {#}
+{#                var xhr = $.get(url)#}
+{#                    .done(function(data) {#}
+{#                        var newSlide = swiper.createSlide(data);#}
+{#                        newSlide.data('slug', slug);#}
+{#                        newSlide.append();#}
+{#                        swiper.reInit();#}
+{#                    });#}
+{#            }#}
+{#            $.when($.get('{{ previous_url }}'), $.get('{{ object_url }}'), $.get('{{ next_url }}'))#}
+{#                .done(function(a1, a2, a3) {#}
+{#                    var newSlide;#}
+{#                    newSlide = mySwiper.createSlide(a1[0]);#}
+{#                    newSlide.data('slug', '{{ previous.key.string_id() }}');#}
+{#                    newSlide.append();#}
+{##}
+{#                    newSlide = mySwiper.createSlide(a2[0]);#}
+{#                    newSlide.data('slug', '{{ object.key.string_id() }}');#}
+{#                    newSlide.append();#}
+{##}
+{#                    newSlide = mySwiper.createSlide(a3[0]);#}
+{#                    newSlide.data('slug', '{{ next.key.string_id() }}');#}
+{#                    newSlide.append();#}
+{##}
+{#                    mySwiper.params.initialSlide = 2;#}
+{#                    mySwiper.reInit();#}
+{#                });#}
+{#            appendSlide(mySwiper, '{{ previous_url }}', );#}
+{#            appendSlide(mySwiper, '{{ object_url }}', '{{ object.key.string_id() }}');#}
+{#            appendSlide(mySwiper, '{{ next_url }}', '{{ next.key.string_id() }}');#}
         });
     </script>
 {% endblock %}

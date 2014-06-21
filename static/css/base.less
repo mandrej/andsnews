@@ -353,6 +353,7 @@ input[data-function*='swipe'] {
 
 #container {
 	width: 100%;
+
 //	margin: 0 -@gap/4;
 //	position: relative;
 	.thumbnails {
@@ -409,25 +410,26 @@ input[data-function*='swipe'] {
 	&.cols {
 		display: flex;
 		flex-flow: row wrap;
-		margin: 0 -@gap;
+//		margin: 0 -@gap;
 		section {
 			flex: 1 1 350px;
 			padding: 0 @gap @gap @gap;
 			@media @mobile, @tablet { flex: 1 1 220px; }
 		}
 	}
-	&.port {
+	.port {
 		display: flex;
 		flex-flow: row;
-		margin: 0 -@gap;
+		margin: 0 -@gap/2;
 		article {
 			flex: 3;
-			padding: 0 @gap @gap @gap;
+			margin: 0 @gap/2;
+			padding: 0 @gap/2 @gap/2 @gap/2;
 			canvas { border-radius: @radius; }
 		}
 		aside {
 			flex: 1;
-			padding: 0 @gap @gap @gap;
+			padding: @gap;
 			@media @mobile, @tablet { .hide; }
 		}
 	}
@@ -891,8 +893,8 @@ sizes, pagination, etc.
 .swiper-slide {
 	/* Specify Slides's Size: */
 
-	/*width: 100%;
-	height: 100%;*/
+	width: 100%;
+	height: 100%;
 }
 .swiper-slide-active {
 	/* Specific active slide styling: */

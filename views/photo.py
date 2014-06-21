@@ -21,6 +21,8 @@ class Index(BaseHandler):
         page = int(self.request.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
+        pages = [page - 1 if page > 1 else None, page, page + 1 if has_next else None]
+        logging.error('{0}: {1}'.format(page, pages))
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
@@ -43,17 +45,22 @@ class Detail(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)
-        page, prev, obj, next = paginator.triple(slug)
+        page, previous, obj, next = paginator.triple(slug)
         if field and value:
-            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id())
-            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=prev.key.string_id())
+            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=previous.key.string_id()) if previous else ''
+            object_url = self.uri_for('photo_filter', field=field, value=value, slug=obj.key.string_id())
+            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id()) if next else ''
         else:
-            next_url = self.uri_for('photo', slug=next.key.string_id())
-            previous_url = self.uri_for('photo', slug=prev.key.string_id())
+            previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else ''
+            object_url = self.uri_for('photo', slug=obj.key.string_id())
+            next_url = self.uri_for('photo', slug=next.key.string_id()) if next else ''
 
-        data = {'object': obj,
-                'next_url': next_url,
+        data = {'previous': previous,
                 'previous_url': previous_url,
+                'object': obj,
+                'object_url': object_url,
+                'next': next,
+                'next_url': next_url,
                 'filter': {'field': field, 'value': value} if field and value else None,
                 'page': page}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':

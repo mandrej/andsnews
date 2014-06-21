@@ -11,7 +11,11 @@
 
 <div id="container">
     <div class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" data-page="{{ page }}">
+                {% include 'photo/index_page.html' %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -21,7 +25,11 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
-            var endIndex = -1;
+            var xhr;
+            var page = parseInt('{{ page }}');
+            var has_previous = ('{{ has_previous }}' == 'True');
+            var has_next = ('{{ has_next }}' == 'True');
+
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
                 loop: false,
@@ -29,32 +37,83 @@
                 calculateHeight: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
-                onTouchStart: appendSlide,
-                onSlideNext: appendSlide
-            });
-            function appendSlide(swiper) {
-                var lastIndex, lastSlide = swiper.getLastSlide();
-                if (lastSlide == undefined) {
-                    lastIndex = 0;
-                } else {
-                    lastIndex = 1 * lastSlide.data('index');
+{#                onSlideChangeStart: function(swiper) {#}
+{#                    swiper.reInit();#}
+{#                },#}
+                onSlideNext: function(swiper) {
+                    var next = page + 2;
+                    if ($('.swiper-slide[data-index=' + next + ']').length == 0) {
+                        $.get('?page=' + next).done(function(data) {
+                            var newSlide = swiper.createSlide(data);
+                            newSlide.data('index', next);
+                            newSlide.append();
+                        })
+                    }
+                },
+                onSlidePrev: function(swiper) {
+
                 }
-                if (endIndex == lastIndex) return;
-                var xhr = $.get('?page=' + ++lastIndex)
-                    .done(function(data) {
-                        var newSlide = swiper.createSlide(data);
-                        newSlide.data('index', lastIndex);
-                        newSlide.append();
-                        swiper.reInit();
-                        if (swiper.slides.length == 1) {
-                            appendSlide(swiper);
-                        }
-                    })
-                    .fail(function() {
-                        endIndex = lastIndex - 1;
-                    });
+{#                onTouchStart: appendSlide,#}
+{#                onSlideNext: appendSlide#}
+            });
+{#            function appendSlide(swiper) {#}
+{#                var lastIndex, lastSlide = swiper.getLastSlide();#}
+{#                if (lastSlide == undefined) {#}
+{#                    lastIndex = 0;#}
+{#                } else {#}
+{#                    lastIndex = 1 * lastSlide.data('index');#}
+{#                }#}
+{#                if (endIndex == lastIndex) return;#}
+{#                var xhr = $.get('?page=' + ++lastIndex)#}
+{#                    .done(function(data) {#}
+{#                        var newSlide = swiper.createSlide(data);#}
+{#                        newSlide.data('index', lastIndex);#}
+{#                        newSlide.append();#}
+{#                        swiper.reInit();#}
+{#                        if (swiper.slides.length == 1) {#}
+{#                            appendSlide(swiper);#}
+{#                        }#}
+{#                    })#}
+{#                    .fail(function() {#}
+{#                        endIndex = lastIndex - 1;#}
+{#                    });#}
+{#            }#}
+{#            appendSlide(mySwiper);#}
+
+            if (has_previous && has_next) {
+                xhr = $.when($.get('?page=' + (page - 1)), $.get('?page=' + (page + 1)));
+            } else if (has_previous && !has_next) {
+                xhr = $.when($.get('?page=' + (page - 1)));
+            }  else if (!has_previous && has_next) {
+                xhr = $.when($.get('?page=' + (page + 1)));
             }
-            appendSlide(mySwiper);
+            xhr.done(function(a1, a2) {
+                var newSlide;
+                if (has_previous && has_next) {
+                    newSlide = mySwiper.createSlide(a1[0]);
+                    newSlide.data('index', (page - 1));
+                    newSlide.prepend();
+
+                    newSlide = mySwiper.createSlide(a2[0]);
+                    newSlide.data('index', (page + 1));
+                    newSlide.append();
+
+                    mySwiper.params.initialSlide = 1;
+                } else if (has_previous && !has_next) {
+                    newSlide = mySwiper.createSlide(a1[0]);
+                    newSlide.data('index', (page - 1));
+                    newSlide.prepend();
+
+                    mySwiper.params.initialSlide = 1;
+                }  else if (!has_previous && has_next) {
+                    newSlide = mySwiper.createSlide(a1[0]);
+                    newSlide.data('index', (page + 1));
+                    newSlide.append();
+
+                    mySwiper.params.initialSlide = 0;
+                }
+            });
+            console.log(mySwiper.params.initialSlide);
         });
     </script>
 {% endblock %}

@@ -1,54 +1,59 @@
 {% import "snippets/macros.html" as m %}
 <div class="port">
-    {% if filter %}
-        {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
-    {% else %}
-        {% set url = uri_for('photo_all') %}
-    {% endif %}
-    <h2>
-        <a href="{{ url }}"> {{ _('Photos') }}
-            {{ m.filter_title(filter) }}
-        </a>
-        / {{ object.headline }}
-    </h2>
-    <p class="subtitle">
-        <i class="fa fa-user"></i>
-        <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
-            title="{{ _("author's photos") }}">{{ object.author }}</a>
-        {% for tag in object.tags %}
-            {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
-            <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
-                {{ tag }}</a>{% if not loop.last %},{% endif %}
-        {% endfor %}
-        <i class="fa fa-clock-o"></i>
-        <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
-            title="{{ _('photos taken same year') }}">{{ object.year }}</a>
-    </p>
-
-    <canvas></canvas>
+    <article>
+        {% if filter %}
+            {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
+        {% else %}
+            {% set url = uri_for('photo_all') %}
+        {% endif %}
+        <h2>
+            <a href="{{ url }}"> {{ _('Photos') }}
+                {{ m.filter_title(filter) }}
+            </a>
+            / {{ obj.headline }}
+        </h2>
+        <p class="subtitle">
+            <i class="fa fa-user"></i>
+            <a href="{{ uri_for('photo_filter_all', field='author', value=obj.author) }}"
+                title="{{ _("author's photos") }}">{{ obj.author }}</a>
+            {% for tag in obj.tags %}
+                {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
+                <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
+                    {{ tag }}</a>{% if not loop.last %},{% endif %}
+            {% endfor %}
+            <i class="fa fa-clock-o"></i>
+            <a href="{{ uri_for('photo_filter_all', field='date', value=obj.year) }}"
+                title="{{ _('photos taken same year') }}">{{ obj.year }}</a>
+        </p>
+        <canvas></canvas>
+    </article>
     <aside>
         {% include "photo/exif.html" %}
         <div id="comments">
-            {% for comment in object.comment_list() %}
+            {% for comment in obj.comment_list() %}
                 {{ m.render_comment(comment, user) }}
             {% endfor %}
         </div>
         {% if user %}
-            <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
+            <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=obj.key.urlsafe()) }}">
                 <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
-            <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
-                <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
+            <h3><a class="block button" href="{{ uri_for('download', safe_key=obj.key.urlsafe()) }}">
+                <i class="fa fa-download"></i> {{ _('Download') }} ({{ obj.size|filesizeformat }})</a></h3>
         {% endif %}
-        {% if is_admin or user == object.author %}
-            <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+        {% if is_admin or user == obj.author %}
+            <h3><a class="block button" href="{{ uri_for('photo_edit', slug=obj.key.string_id()) }}">
                 <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
         {% endif %}
     </aside>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
+    <script src="/static/scripts/base.min.js"></script>
     <script>
         $(function () {
-            var normal_url = '{{ object.normal_url_async.get_result() }}';
-            $('canvas').copyright(normal_url);
+            var normal_url = '{{ obj.normal_url_async.get_result() }}';
+            $('div[data-slug=' + '{{ obj.key.string_id() }}' + '] canvas').copyright(normal_url);
+            console.log(normal_url);
             $(window).resize(function() {
                 $('canvas').copyright(normal_url);
             });
