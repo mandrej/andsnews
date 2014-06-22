@@ -21,8 +21,6 @@ class Index(BaseHandler):
         page = int(self.request.get('page', 1))
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
-        pages = [page - 1 if page > 1 else None, page, page + 1 if has_next else None]
-        logging.error('{0}: {1}'.format(page, pages))
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
