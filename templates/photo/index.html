@@ -26,10 +26,17 @@
             var has_previous = ('{{ has_previous }}' == 'True');
             var has_next = ('{{ has_next }}' == 'True');
 
-            function create(data, num, next) {
+            function create(data, next) {
                 if (next == undefined) next = true;
-                var slide = mySwiper.createSlide(data);
-                slide.data('index', num);
+                var root = $(data).filter('.thumbnails'),
+                    attrs = $(root).data();
+                $.each(attrs, function(k, v) {
+                    $(root).removeAttr('data-' + k);
+                });
+                var slide = mySwiper.createSlide($(root).prop('outerHTML'));
+                slide.data('prev', attrs.prev);
+                slide.data('page', attrs.page);
+                slide.data('next', attrs.next);
                 if (next) {
                     slide.append();
                 } else {
@@ -45,22 +52,18 @@
                 keyboardControl: true,
                 watchActiveIndex: true,
                 onSlideNext: function(swiper) {
-                    var num, slide = swiper.getLastSlide();
-                    num = 1 * slide.data('index') + 1;
-                    if ($('.swiper-slide[data-index=' + num + ']').length == 0) {
-                        $.get('?page=' + num).done(function(data) {
-                            create(data, num);
-                        })
-                    }
+                    var num = swiper.getLastSlide().data('next');
+                    if (num == '-') return;
+                    $.get('?page=' + num).done(function(data) {
+                        create(data);
+                    })
                 },
                 onSlidePrev: function(swiper) {
-                    var num, slide = swiper.getFirstSlide();
-                    num = 1 * slide.data('index') - 1;
-                    if ($('.swiper-slide[data-index=' + num + ']').length == 0) {
-                        $.get('?page=' + num).done(function(data) {
-                            create(data, num, false);
-                        })
-                    }
+                    var num = swiper.getFirstSlide().data('prev');
+                    if (num == '-') return;
+                    $.get('?page=' + num).done(function(data) {
+                        create(data, false);
+                    })
                 }
             });
 
@@ -73,17 +76,13 @@
             }
             xhr.done(function(a1, a2, a3) {
                 if (has_previous && has_next) {
-                    create(a1[0], page - 1);
-                    create(a2[0], page);
-                    create(a3[0], page + 1);
+                    create(a1[0]); create(a2[0]); create(a3[0]);
                     mySwiper.swipeTo(1, 0, false);
                 } else if (has_previous && !has_next) {
-                    create(a1[0], page - 1);
-                    create(a2[0], page);
+                    create(a1[0]); create(a2[0]);
                     mySwiper.swipeTo(1, 0, false);
                 }  else if (!has_previous && has_next) {
-                    create(a1[0], page);
-                    create(a2[0], page + 1);
+                    create(a1[0]); create(a2[0]);
                 }
             });
         });
