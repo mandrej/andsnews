@@ -13,13 +13,7 @@
 {% block contents %}
 <div id="container">
     <div class="swiper-container">
-        <div class="swiper-wrapper">
-            {% for obj in [previous, object, next] %}
-                <div class="swiper-slide" data-slug="{{ obj.key.string_id() }}">
-                    {% include 'photo/detail_page.html' %}
-                </div>
-            {% endfor %}
-        </div>
+        <div class="swiper-wrapper"></div>
     </div>
 </div>
 {% endblock %}
@@ -28,15 +22,42 @@
     {{ super() }}
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/skins/simple/style.css"/>
     <link type="text/css" rel="stylesheet" href="/static/scripts/markitup/sets/buttons.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.js"></script>
-    <script src="/static/scripts/base.min.js"></script>
     <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
     <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
     <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
+            var xhr;
+            var object_url = '{{ object_url }}';
+            var previous_url = '{{ previous_url }}';
+            var next_url = '{{ next_url }}';
+            var has_previous = (previous_url != '-');
+            var has_next = (next_url != '-');
+
+            function create(data, next) {
+                if (next == undefined) next = true;
+                var root = $(data).filter('.port'),
+                    attrs = $(root).data();
+                $.each(attrs, function(k, v) {
+                    $(root).removeAttr('data-' + k);
+                });
+                var slide = mySwiper.createSlide($(root).prop('outerHTML'));
+                slide.data('prev', attrs.prev);
+                slide.data('page', attrs.page);
+                slide.data('next', attrs.next);
+                if (next) {
+                    slide.append();
+                } else {
+                    slide.prepend();
+                }
+                var canvas = $('div[data-page="' + '{{ object_url }}' +'"] canvas');
+                var normal_url = $(canvas).attr('data-url');
+                $(canvas).copyright(normal_url);
+                $(window).resize(function() {
+                    $(canvas).copyright(normal_url);
+                });
+            }
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
                 loop: false,
@@ -44,40 +65,40 @@
                 calculateHeight: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
-                initialSlide: 1
-{#                onTouchStart: appendSlide,#}
-{#                onSlideNext: appendSlide#}
+                onSlideNext: function(swiper) {
+                    var url = swiper.getLastSlide().data('next');
+                    if (url == '-') return;
+                    $.get(url).done(function(data) {
+                        create(data);
+                    })
+                },
+                onSlidePrev: function(swiper) {
+                    var url = swiper.getFirstSlide().data('prev');
+                    if (url == '-') return;
+                    $.get(url).done(function(data) {
+                        create(data, false);
+                    })
+                }
             });
-{#            function appendSlide(swiper, url, slug) {#}
-{#                var xhr = $.get(url)#}
-{#                    .done(function(data) {#}
-{#                        var newSlide = swiper.createSlide(data);#}
-{#                        newSlide.data('slug', slug);#}
-{#                        newSlide.append();#}
-{#                        swiper.reInit();#}
-{#                    });#}
-{#            }#}
-{#            $.when($.get('{{ previous_url }}'), $.get('{{ object_url }}'), $.get('{{ next_url }}'))#}
-{#                .done(function(a1, a2, a3) {#}
-{#                    var newSlide;#}
-{#                    newSlide = mySwiper.createSlide(a1[0]);#}
-{#                    newSlide.data('slug', '{{ previous.key.string_id() }}');#}
-{#                    newSlide.append();#}
-{##}
-{#                    newSlide = mySwiper.createSlide(a2[0]);#}
-{#                    newSlide.data('slug', '{{ object.key.string_id() }}');#}
-{#                    newSlide.append();#}
-{##}
-{#                    newSlide = mySwiper.createSlide(a3[0]);#}
-{#                    newSlide.data('slug', '{{ next.key.string_id() }}');#}
-{#                    newSlide.append();#}
-{##}
-{#                    mySwiper.params.initialSlide = 2;#}
-{#                    mySwiper.reInit();#}
-{#                });#}
-{#            appendSlide(mySwiper, '{{ previous_url }}', );#}
-{#            appendSlide(mySwiper, '{{ object_url }}', '{{ object.key.string_id() }}');#}
-{#            appendSlide(mySwiper, '{{ next_url }}', '{{ next.key.string_id() }}');#}
+
+            if (has_previous && has_next) {
+                xhr = $.when($.get(previous_url), $.get(object_url), $.get(next_url));
+            } else if (has_previous && !has_next) {
+                xhr = $.when($.get(previous_url), $.get(object_url));
+            }  else if (!has_previous && has_next) {
+                xhr = $.when($.get(object_url), $.get(next_url));
+            }
+            xhr.done(function(a1, a2, a3) {
+                if (has_previous && has_next) {
+                    create(a1[0]); create(a2[0]); create(a3[0]);
+                    mySwiper.swipeTo(1, 0, false);
+                } else if (has_previous && !has_next) {
+                    create(a1[0]); create(a2[0]);
+                    mySwiper.swipeTo(1, 0, false);
+                }  else if (!has_previous && has_next) {
+                    create(a1[0]); create(a2[0]);
+                }
+            });
         });
     </script>
 {% endblock %}

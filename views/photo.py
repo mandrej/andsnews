@@ -53,6 +53,8 @@ class Detail(BaseHandler):
             object_url = self.uri_for('photo', slug=obj.key.string_id())
             next_url = self.uri_for('photo', slug=next.key.string_id()) if next else ''
 
+        logging.error(previous_url)
+
         data = {'previous': previous,
                 'previous_url': previous_url,
                 'object': obj,
