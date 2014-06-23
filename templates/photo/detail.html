@@ -32,8 +32,8 @@
             var object_url = '{{ object_url }}';
             var previous_url = '{{ previous_url }}';
             var next_url = '{{ next_url }}';
-            var has_previous = (previous_url != '-');
-            var has_next = (next_url != '-');
+            var has_previous = (previous_url != '');
+            var has_next = (next_url != '');
 
             function create(data, next) {
                 if (next == undefined) next = true;
@@ -51,7 +51,7 @@
                 } else {
                     slide.prepend();
                 }
-                var canvas = $('div[data-page="' + '{{ object_url }}' +'"] canvas');
+                var canvas = $(slide).find('canvas');
                 var normal_url = $(canvas).attr('data-url');
                 $(canvas).copyright(normal_url);
                 $(window).resize(function() {
