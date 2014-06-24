@@ -1,10 +1,10 @@
-{% import "snippets/macros.html" as m %}
 {% set data = {
     'class': 'port',
-    'data-prev': previous_url if previous else '-',
+    'data-prev': previous_url if previous else '',
     'data-page': object_url,
-    'data-next': next_url if next else '-'} %}
+    'data-next': next_url if next else ''} %}
 <div{{ data|xmlattr }}>
+    {% import "snippets/macros.html" as m %}
     <article>
         {% if filter %}
             {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}

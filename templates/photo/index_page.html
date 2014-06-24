@@ -1,8 +1,8 @@
 {% set data = {
     'class': 'thumbnails',
-    'data-prev': (page - 1) if has_previous else '-',
+    'data-prev': (page - 1) if has_previous else '',
     'data-page': page,
-    'data-next': (page + 1) if has_next else '-'} %}
+    'data-next': (page + 1) if has_next else ''} %}
 <div{{ data|xmlattr }}>
     {% for object in objects %}
         {% if object %}

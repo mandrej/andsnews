@@ -2,7 +2,6 @@ import cgi
 import json
 import logging
 
-import webapp2
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -52,8 +51,6 @@ class Detail(BaseHandler):
             previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else ''
             object_url = self.uri_for('photo', slug=obj.key.string_id())
             next_url = self.uri_for('photo', slug=next.key.string_id()) if next else ''
-
-        logging.error(previous_url)
 
         data = {'previous': previous,
                 'previous_url': previous_url,
