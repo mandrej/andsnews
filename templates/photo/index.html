@@ -48,14 +48,14 @@
                 watchActiveIndex: true,
                 onSlideNext: function(swiper) {
                     var num = swiper.getLastSlide().data('next');
-                    if (num == '') return;
+                    if (num == undefined) return;
                     $.get('?page=' + num).done(function(data) {
                         create(data);
                     })
                 },
                 onSlidePrev: function(swiper) {
                     var num = swiper.getFirstSlide().data('prev');
-                    if (num == '') return;
+                    if (num == undefined) return;
                     $.get('?page=' + num).done(function(data) {
                         create(data, false);
                     })

@@ -63,14 +63,14 @@
                 watchActiveIndex: true,
                 onSlideNext: function(swiper) {
                     var url = swiper.getLastSlide().data('next');
-                    if (url == '') return;
+                    if (url == undefined) return;
                     $.get(url).done(function(data) {
                         create(data);
                     })
                 },
                 onSlidePrev: function(swiper) {
                     var url = swiper.getFirstSlide().data('prev');
-                    if (url == '') return;
+                    if (url == undefined) return;
                     $.get(url).done(function(data) {
                         create(data, false);
                     })
