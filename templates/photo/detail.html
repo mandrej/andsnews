@@ -104,10 +104,8 @@
                     create(a1[0]); create(a2[0]);
                 });
             } else {
-                $.when(
-                    $.get(object_url))
-                .done(function(a1) {
-                    create(a1[0]);
+                $.get(object_url, function(a1) {
+                    create(a1);
                 });
             }
         });
