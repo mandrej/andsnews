@@ -1,8 +1,8 @@
 {% set data = {
     'class': 'port',
-    'data-prev': previous_url if previous else None,
-    'data-page': object_url,
-    'data-next': next_url if next else None} %}
+    'data-prev': previous_url,
+    'data-page': current_url,
+    'data-next': next_url} %}
 <div{{ data|xmlattr }}>
     {% import "snippets/macros.html" as m %}
     <article>

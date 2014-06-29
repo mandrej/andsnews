@@ -21,11 +21,12 @@ class Index(BaseHandler):
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
-        data = {'objects': objects,
+        data = {'previous_url': '?page=%s' % (page - 1) if page > 1 else None,
+                'current_url': '?page=%s' % page,
+                'next_url': '?page=%s' % (page + 1) if has_next else None,
+                'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'page': page}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
             if objects:
                 self.render_template('photo/index_page.html', data)
@@ -44,20 +45,18 @@ class Detail(BaseHandler):
         paginator = Paginator(query)
         page, previous, obj, next = paginator.triple(slug)
         if field and value:
-            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=previous.key.string_id()) if previous else ''
-            object_url = self.uri_for('photo_filter', field=field, value=value, slug=obj.key.string_id())
-            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id()) if next else ''
+            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=previous.key.string_id()) if previous else None
+            current_url = self.uri_for('photo_filter', field=field, value=value, slug=obj.key.string_id())
+            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id()) if next else None
         else:
-            previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else ''
-            object_url = self.uri_for('photo', slug=obj.key.string_id())
-            next_url = self.uri_for('photo', slug=next.key.string_id()) if next else ''
+            previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else None
+            current_url = self.uri_for('photo', slug=obj.key.string_id())
+            next_url = self.uri_for('photo', slug=next.key.string_id()) if next else None
 
-        data = {'previous': previous,
-                'previous_url': previous_url,
-                'object': obj,
-                'object_url': object_url,
-                'next': next,
+        data = {'previous_url': previous_url,
+                'current_url': current_url,
                 'next_url': next_url,
+                'object': obj,
                 'filter': {'field': field, 'value': value} if field and value else None,
                 'page': page}
         if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':

@@ -38,19 +38,21 @@
                 watchActiveIndex: true,
                 preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
-                    var num, next = (direction == 'next');
+                    var url,
+                        next = (direction == 'next'),
+                        selector = '.thumbnails';
                     switch(direction) {
                         case 'prev':
-                            num = $(swiper.getFirstSlide()).find('.thumbnails').data('prev');
+                            url = $(swiper.getFirstSlide()).find(selector).data('prev');
                             break;
                         case 'next':
-                            num = $(swiper.getLastSlide()).find('.thumbnails').data('next');
+                            url = $(swiper.getLastSlide()).find(selector).data('next');
                             break;
                         default:
                             return;
                     }
-                    if (num != undefined) {
-                        $.get('?page=' + num, function (data) {
+                    if (url != undefined) {
+                        $.get(url, function (data) {
                             create(data, next);
                             var total = swiper.slides.length;
                             if (next) {
@@ -59,9 +61,7 @@
                                     swiper.swipeTo(swiper.activeIndex - 1, 0, false);
                                 }
                             } else {
-                                if (total > 3) {
-                                    swiper.getLastSlide().remove();
-                                }
+                                if (total > 3) swiper.getLastSlide().remove();
                                 swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                             }
                         });
@@ -70,34 +70,34 @@
             });
 
             var page = 1 * '{{ page }}';
-            var object_url = '?page=' + page;
-            var previous_url = '?page=' + (page - 1);
-            var next_url = '?page=' + (page + 1);
-            var has_previous = ('{{ has_previous }}' == 'True');
-            var has_next = ('{{ has_next }}' == 'True');
+            var current_url = '{{ current_url }}';
+            var previous_url = '{{ previous_url }}';
+            var next_url = '{{ next_url }}';
+            var has_previous = (previous_url != 'None');
+            var has_next = (next_url != 'None');
 
             if (has_previous && has_next) {
                 $.when(
-                    $.get(previous_url), $.get(object_url), $.get(next_url))
+                    $.get(previous_url), $.get(current_url), $.get(next_url))
                 .done(function(a1, a2, a3) {
                     create(a1[0]); create(a2[0]); create(a3[0]);
                     mySwiper.swipeTo(1, 0, false);
                 });
             } else if (has_previous && !has_next) {
                 $.when(
-                    $.get(previous_url), $.get(object_url))
+                    $.get(previous_url), $.get(current_url))
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
                     mySwiper.swipeTo(1, 0, false);
                 });
             } else if (!has_previous && has_next) {
                 $.when(
-                    $.get(object_url), $.get(next_url))
+                    $.get(current_url), $.get(next_url))
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
                 });
             } else {
-                $.get(object_url, function(a1) {
+                $.get(current_url, function(a1) {
                     create(a1);
                 });
             }
