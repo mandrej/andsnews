@@ -26,10 +26,25 @@
                 var slide = mySwiper.createSlide(data);
                 if (next) {
                     slide.append();
+                    if (mySwiper.slides.length > 3) {
+                        mySwiper.getFirstSlide().remove();
+                        mySwiper.swipeTo(mySwiper.activeIndex - 1, 0, false);
+                    } else if (mySwiper.slides.length == 3) {
+                        mySwiper.swipeTo(mySwiper.activeIndex, 0, false);
+                    } else {
+                        mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
+                    }
                 } else {
                     slide.prepend();
+                    if (mySwiper.slides.length > 3) {
+                        mySwiper.getLastSlide().remove();
+                        mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
+                    } else if (mySwiper.slides.length == 3) {
+                        mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
+                    } else {
+                        mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
+                    }
                 }
-
             }
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
@@ -37,8 +52,10 @@
                 grabCursor: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
+                preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
-                    var num, next;
+                    var num,
+                        next = (direction == 'next');
                     switch(direction) {
                         case 'prev':
                             num = $(swiper.getFirstSlide()).find('.thumbnails').data('prev');
@@ -50,11 +67,8 @@
                             return;
                     }
                     if (num == undefined) return;
-                    next = (direction == 'next');
-                    console.log(direction, num, next);
                     $.get('?page=' + num, function(data) {
                         create(data, next);
-                        if (!next) swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                     });
                 }
             });
@@ -71,14 +85,12 @@
                     $.get(previous_url), $.get(object_url), $.get(next_url))
                 .done(function(a1, a2, a3) {
                     create(a1[0]); create(a2[0]); create(a3[0]);
-                    mySwiper.swipeTo(1, 0, false);
                 });
             } else if (has_previous && !has_next) {
                 $.when(
                     $.get(previous_url), $.get(object_url))
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
-                    mySwiper.swipeTo(1, 0, false);
                 });
             } else if (!has_previous && has_next) {
                 $.when(

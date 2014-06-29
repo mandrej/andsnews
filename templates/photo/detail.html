@@ -33,13 +33,21 @@
                 var slide = mySwiper.createSlide(data);
                 if (next) {
                     slide.append();
+                    if (mySwiper.slides.length > 3) {
+                        mySwiper.getFirstSlide().remove();
+                        mySwiper.swipeTo(mySwiper.activeIndex - 1, 0, false);
+                    } else if (mySwiper.slides.length == 3) {
+                        mySwiper.swipeTo(mySwiper.activeIndex, 0, false);
+                    } else {
+                        mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
+                    }
                 } else {
                     slide.prepend();
+                    if (mySwiper.slides.length > 3) {
+                        mySwiper.getLastSlide().remove();
+                    }
+                    mySwiper.swipeTo(mySwiper.activeIndex + 1, 0, false);
                 }
-{#                console.log('-------------------', attrs.page);#}
-{#                $.each(mySwiper.slides, function(i, s) {#}
-{#                   console.log($(s).data('page'));#}
-{#                });#}
                 var canvas = $(slide).find('canvas');
                 var normal_url = $(canvas).attr('data-url');
                 $(canvas).copyright(normal_url);
@@ -54,7 +62,8 @@
                 keyboardControl: true,
                 watchActiveIndex: true,
                 onSlideChangeEnd: function(swiper, direction) {
-                    var url, next;
+                    var url,
+                        next = (direction == 'next');
                     switch(direction) {
                         case 'prev':
                             url = $(swiper.getFirstSlide()).find('.port').data('prev');
@@ -66,11 +75,9 @@
                             return;
                     }
                     if (url == undefined) return;
-                    next = (direction == 'next');
                     console.log(direction, url, next);
                     $.get(url, function(data) {
                         create(data, next);
-                        if (!next) swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                     });
                 }
             });
@@ -86,14 +93,12 @@
                     $.get(previous_url), $.get(object_url), $.get(next_url))
                 .done(function(a1, a2, a3) {
                     create(a1[0]); create(a2[0]); create(a3[0]);
-                    mySwiper.swipeTo(1, 0, false);
                 });
             } else if (has_previous && !has_next) {
                 $.when(
                     $.get(previous_url), $.get(object_url))
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
-                    mySwiper.swipeTo(1, 0, false);
                 });
             } else if (!has_previous && has_next) {
                 $.when(
