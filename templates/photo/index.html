@@ -23,15 +23,7 @@
         $(function() {
             function create(data, next) {
                 if (next == undefined) next = true;
-                var root = $(data).filter('.thumbnails'),
-                    attrs = $(root).data();
-                $.each(attrs, function(k, v) {
-                    $(root).removeAttr('data-' + k);
-                });
-                var slide = mySwiper.createSlide($(root).prop('outerHTML'));
-                slide.data('prev', attrs.prev);
-                slide.data('page', attrs.page);
-                slide.data('next', attrs.next);
+                var slide = mySwiper.createSlide(data);
                 if (next) {
                     slide.append();
                 } else {
@@ -43,22 +35,27 @@
                 speed: 500,
                 loop: false,
                 grabCursor: true,
-                calculateHeight: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
-                onSlideNext: function(swiper) {
-                    var num = swiper.getLastSlide().data('next');
+                onSlideChangeEnd: function(swiper, direction) {
+                    var num, next;
+                    switch(direction) {
+                        case 'prev':
+                            num = $(swiper.getFirstSlide()).find('.thumbnails').data('prev');
+                            break;
+                        case 'next':
+                            num = $(swiper.getLastSlide()).find('.thumbnails').data('next');
+                            break;
+                        default:
+                            return;
+                    }
                     if (num == undefined) return;
-                    $.get('?page=' + num).done(function(data) {
-                        create(data);
-                    })
-                },
-                onSlidePrev: function(swiper) {
-                    var num = swiper.getFirstSlide().data('prev');
-                    if (num == undefined) return;
-                    $.get('?page=' + num).done(function(data) {
-                        create(data, false);
-                    })
+                    next = (direction == 'next');
+                    console.log(direction, num, next);
+                    $.get('?page=' + num, function(data) {
+                        create(data, next);
+                        if (!next) swiper.swipeTo(swiper.activeIndex + 1, 0, false);
+                    });
                 }
             });
 

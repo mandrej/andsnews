@@ -1,5 +1,6 @@
 @import "mixins";
 @import "slideshow";
+@import "idangerous.swiper.css";
 @font-face {
   font-family: 'PT Sans';
   font-style: normal;
@@ -352,20 +353,16 @@ input[data-function*='swipe'] {
 }
 
 #container {
-	width: 100%;
-
-//	margin: 0 -@gap/4;
-//	position: relative;
+	margin: 0 -@gap/2;
 	.thumbnails {
 		display: flex;
 		flex-flow: row wrap;
 		.perspective(1000px);
-//		margin: 0 -@gap/4;
 		figure {
 			flex: 1 1 220px;
 			display: flex;
 			justify-content: center;
-			padding: 0 @gap/4 @gap/2 @gap/4;
+			padding: 0 @gap/2 @gap/2 @gap/2;
 			a {
 				display: block;
 				width: 100%;
@@ -410,26 +407,23 @@ input[data-function*='swipe'] {
 	&.cols {
 		display: flex;
 		flex-flow: row wrap;
-//		margin: 0 -@gap;
 		section {
 			flex: 1 1 350px;
-			padding: 0 @gap @gap @gap;
+			padding: 0 @gap/2 @gap/2 @gap/2;
 			@media @mobile, @tablet { flex: 1 1 220px; }
 		}
 	}
 	.port {
 		display: flex;
 		flex-flow: row;
-		margin: 0 -@gap/2;
 		article {
 			flex: 3;
-			margin: 0 @gap/2;
 			padding: 0 @gap/2 @gap/2 @gap/2;
 			canvas { border-radius: @radius; }
 		}
 		aside {
 			flex: 1;
-			padding: @gap;
+			padding: 0 @gap/2 @gap/2 @gap/2;
 			@media @mobile, @tablet { .hide; }
 		}
 	}
@@ -812,112 +806,6 @@ td .dot { display: inline-block; }
 			strong { background: @google_orange; }
 		}
 	}
-}
-/*
- * Swiper 2.6.1
- * Mobile touch slider and framework with hardware accelerated transitions
- *
- * http://www.idangero.us/sliders/swiper/
- *
- * Copyright 2010-2014, Vladimir Kharlampidi
- * The iDangero.us
- * http://www.idangero.us/
- *
- * Licensed under GPL & MIT
- *
- * Released on: May 6, 2014
-*/
-.swiper-container {
-	margin: 0 -@gap/4;
-	position: relative;
-	overflow: hidden;
-	.backface(hidden);
-	/* Fix of Webkit flickering */
-	z-index:1;
-}
-.swiper-wrapper {
-	position:relative;
-	width:100%;
-
-	-webkit-transition-property:-webkit-transform, left, top;
-	-webkit-transition-duration:0s;
-	-webkit-transform:translate3d(0px,0,0);
-	-webkit-transition-timing-function:ease;
-
-	-moz-transition-property:-moz-transform, left, top;
-	-moz-transition-duration:0s;
-	-moz-transform:translate3d(0px,0,0);
-	-moz-transition-timing-function:ease;
-
-	-o-transition-property:-o-transform, left, top;
-	-o-transition-duration:0s;
-	-o-transform:translate3d(0px,0,0);
-	-o-transition-timing-function:ease;
-	-o-transform:translate(0px,0px);
-
-	-ms-transition-property:-ms-transform, left, top;
-	-ms-transition-duration:0s;
-	-ms-transform:translate3d(0px,0,0);
-	-ms-transition-timing-function:ease;
-
-	transition-property:transform, left, top;
-	transition-duration:0s;
-	transform:translate3d(0px,0,0);
-	transition-timing-function:ease;
-
-	.box-sizing(content-box);
-}
-
-.swiper-slide {
-	float: left;
-}
-
-/* IE10 Windows Phone 8 Fixes */
-.swiper-wp8-horizontal {
-	-ms-touch-action: pan-y;
-}
-.swiper-wp8-vertical {
-	-ms-touch-action: pan-x;
-}
-
-/* ===============================================================
-Your custom styles, here you need to specify container's and slide's
-sizes, pagination, etc.
-================================================================*/
-.swiper-container {
-	/* Specify Swiper's Size: */
-
-	/*width:200px;
-	height: 100px;*/
-}
-.swiper-slide {
-	/* Specify Slides's Size: */
-
-	width: 100%;
-	height: 100%;
-}
-.swiper-slide-active {
-	/* Specific active slide styling: */
-
-}
-.swiper-slide-visible {
-	/* Specific visible slide styling: */
-
-}
-/* ===============================================================
-Pagination Styles
-================================================================*/
-.swiper-pagination-switch {
-	/* Stylize pagination button: */
-
-}
-.swiper-active-switch {
-	/* Specific active button style: */
-
-}
-.swiper-visible-switch {
-	/* Specific visible button style: */
-
 }
 
 .ac_loading { background: url(/static/images/busy.gif) white no-repeat right center; }
