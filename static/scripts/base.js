@@ -150,7 +150,7 @@
         $('#overlay, #spinner').show();
     });
     // confirm TODO NOT WORKING WHEN SWIPING
-    $('a.confirm').live('click', function(evt) {
+    $(document).on('click', 'a.confirm', function(evt) {
         evt.preventDefault();
         $('#confirm').load(this.href, function() {
             $('#overlay, #confirm').show();
@@ -160,7 +160,7 @@
         });
     });
     // add comment
-    $('a.comment_add').live('click', function(evt) {
+    $(document).on('click', 'a.comment_add', function(evt) {
         evt.preventDefault();
         $('#addcomment').load(this.href, function() {
             $('#overlay, #addcomment').show();
