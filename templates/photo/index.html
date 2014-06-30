@@ -21,6 +21,7 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
+            var selector = '.thumbnails'
             function create(data, next) {
                 if (next == undefined) next = true;
                 var slide = mySwiper.createSlide(data);
@@ -39,8 +40,7 @@
                 preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
                     var url,
-                        next = (direction == 'next'),
-                        selector = '.thumbnails';
+                        next = (direction == 'next');
                     switch(direction) {
                         case 'prev':
                             url = $(swiper.getFirstSlide()).find(selector).data('prev');
@@ -64,10 +64,14 @@
                                 if (total > 3) swiper.getLastSlide().remove();
                                 swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                             }
+                            push_state();
                         });
                     }
                 }
             });
+            function push_state() {
+                history.pushState(null, null, $(mySwiper.activeSlide()).find(selector).data('page'));
+            }
 
             var page = 1 * '{{ page }}';
             var current_url = '{{ current_url }}';
@@ -82,6 +86,7 @@
                 .done(function(a1, a2, a3) {
                     create(a1[0]); create(a2[0]); create(a3[0]);
                     mySwiper.swipeTo(1, 0, false);
+                    push_state();
                 });
             } else if (has_previous && !has_next) {
                 $.when(
@@ -89,16 +94,19 @@
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
                     mySwiper.swipeTo(1, 0, false);
+                    push_state();
                 });
             } else if (!has_previous && has_next) {
                 $.when(
                     $.get(current_url), $.get(next_url))
                 .done(function(a1, a2) {
                     create(a1[0]); create(a2[0]);
+                    push_state();
                 });
             } else {
                 $.get(current_url, function(a1) {
                     create(a1);
+                    push_state();
                 });
             }
         });

@@ -149,8 +149,8 @@
     $('#searchForm').submit(function() {
         $('#overlay, #spinner').show();
     });
-    // confirm
-    $('a.confirm').click(function(evt) {
+    // confirm TODO NOT WORKING WHEN SWIPING
+    $('a.confirm').live('click', function(evt) {
         evt.preventDefault();
         $('#confirm').load(this.href, function() {
             $('#overlay, #confirm').show();
@@ -160,7 +160,7 @@
         });
     });
     // add comment
-    $('a.comment_add').click(function(evt) {
+    $('a.comment_add').live('click', function(evt) {
         evt.preventDefault();
         $('#addcomment').load(this.href, function() {
             $('#overlay, #addcomment').show();

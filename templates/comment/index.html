@@ -10,36 +10,38 @@
 
 	<div id="container" class="cols">
 		{% for object in objects %}
-	    	{% if object.is_message %}
-	    		<section>
-                    {{ m.time(object.date) }}
-                    <div class="body">
-                        <h3>{{ _('message') }}</h3>
-                        <div class="para">{{ object.body|safe }}</div>
-                        <p class="details">
-                            <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
-                                title="{{ _("author's messages") }}">{{ object.author }}</a>,
-                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                        </p>
-                    </div>
-				</section>
-	        {% else %}
-	    		<section>
-                    {{ m.time(object.date) }}
-                    {% with refkey=object.key.parent() %}
+            {% if object %}
+                {% if object.is_message %}
+                    <section>
+                        {{ m.time(object.date) }}
                         <div class="body">
-                            <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
-                                {{ refkey.get().headline }}</a></h3>
+                            <h3>{{ _('message') }}</h3>
                             <div class="para">{{ object.body|safe }}</div>
                             <p class="details">
                                 <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
-				                    title="{{ _("author's comments") }}">{{ object.author }}</a>,
+                                    title="{{ _("author's messages") }}">{{ object.author }}</a>,
                                 {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                             </p>
                         </div>
-                    {% endwith %}
-				</section>
-	        {% endif %}
+                    </section>
+                {% else %}
+                    <section>
+                        {{ m.time(object.date) }}
+                        {% with refkey=object.key.parent() %}
+                            <div class="body">
+                                <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
+                                    {{ refkey.get().headline }}</a></h3>
+                                <div class="para">{{ object.body|safe }}</div>
+                                <p class="details">
+                                    <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
+                                        title="{{ _("author's comments") }}">{{ object.author }}</a>,
+                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                                </p>
+                            </div>
+                        {% endwith %}
+                    </section>
+                {% endif %}
+            {% endif %}
         {% else %}
             <section>
                 <div class="box">
