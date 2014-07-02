@@ -109,6 +109,10 @@
                     push_state();
                 });
             }
+            $(window).on('popstate', function(event) {
+                console.log(event);
+{#                window.location.href = window.location.href;#}
+            });
         });
     </script>
 {% endblock %}

@@ -122,6 +122,9 @@
                     push_state();
                 });
             }
+            $(window).on('popstate', function(event) {
+                location.href = location.href;
+            });
         });
     </script>
 {% endblock %}
