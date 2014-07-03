@@ -21,7 +21,7 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
-            var selector = '.thumbnails'
+            var selector = '.thumbnails';
             function create(data, next) {
                 if (next == undefined) next = true;
                 var slide = mySwiper.createSlide(data);
@@ -109,10 +109,20 @@
                     push_state();
                 });
             }
-            $(window).on('popstate', function(event) {
-                console.log(event);
-{#                window.location.href = window.location.href;#}
-            });
+            window.onpopstate = function(event) {
+                var url = location.pathname;
+				var active_slide = $(mySwiper.activeSlide()).find(selector);
+                var params = active_slide.data();
+                $.get(url, function(data) {
+                    if (params.prev && params.prev == url) {
+                        create(data, false);
+                        mySwiper.swipePrev();
+                    } else if (params.next && params.next == url) {
+                        create(data, true);
+                        mySwiper.swipeNext();
+                    }
+                });
+			};
         });
     </script>
 {% endblock %}
