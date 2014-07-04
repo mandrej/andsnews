@@ -73,7 +73,7 @@ class Index(BaseHandler):
         query = Feed.query(*filters).order(-Feed.date)
 
         page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
+        paginator = Paginator(query, per_page=12)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
