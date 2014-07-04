@@ -21,9 +21,14 @@ class Index(BaseHandler):
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
-        data = {'previous_url': '?page=%s' % (page - 1) if page > 1 else None,
-                'current_url': '?page=%s' % page,
-                'next_url': '?page=%s' % (page + 1) if has_next else None,
+        if field and value:
+            base_url = self.uri_for('photo_filter_all', field=field, value=value)
+        else:
+            base_url = self.uri_for('photo_all')
+
+        data = {'previous_url': '%s?page=%s' % (base_url, (page - 1)) if page > 1 else None,
+                'current_url': '%s?page=%s' % (base_url, page),
+                'next_url': '%s?page=%s' % (base_url, (page + 1)) if has_next else None,
                 'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page}

@@ -26,8 +26,13 @@
     <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
     <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
+    <script src="/static/scripts/jquery.history.min.js"></script>
     <script>
         $(function() {
+            var History = window.History;
+            if (!History.enabled) {
+                return false;
+            }
             var selector = '.port';
             function create(data, next) {
                 if (next == undefined) next = true;
@@ -64,26 +69,30 @@
                         default:
                             return;
                     }
-                    if (url != undefined) {
-                        $.get(url, function (data) {
-                            create(data, next);
-                            var total = swiper.slides.length;
-                            if (next) {
-                                if (total > 3) {
-                                    swiper.getFirstSlide().remove();
-                                    swiper.swipeTo(swiper.activeIndex - 1, 0, false);
-                                }
-                            } else {
-                                if (total > 3) swiper.getLastSlide().remove();
-                                swiper.swipeTo(swiper.activeIndex + 1, 0, false);
-                            }
-                            push_state();
-                        });
+                    if (url == undefined) {
+                        push_state();
+                        return
                     }
+                    $.get(url, function (data) {
+                        create(data, next);
+                        var total = swiper.slides.length;
+                        if (next) {
+                            if (total > 3) {
+                                swiper.getFirstSlide().remove();
+                                swiper.swipeTo(swiper.activeIndex - 1, 0, false);
+                            }
+                        } else {
+                            if (total > 3) swiper.getLastSlide().remove();
+                            swiper.swipeTo(swiper.activeIndex + 1, 0, false);
+                        }
+                        push_state();
+                    });
                 }
             });
             function push_state() {
-                history.pushState(null, null, $(mySwiper.activeSlide()).find(selector).data('page'));
+                var active_slide = $(mySwiper.activeSlide()).find(selector);
+{#                History.pushState(active_slide[0].outerHTML, null, active_slide.data('page'));#}
+                History.pushState(null, null, active_slide.data('page'));
             }
 
             var page = 1 * '{{ page }}';
@@ -122,20 +131,20 @@
                     push_state();
                 });
             }
-            window.onpopstate = function(event) {
-                var url = location.pathname;
+            History.Adapter.bind(window, 'statechange', function() { // Note: We are using statechange instead of popstate
+                var State = History.getState(); // Note: We are using History.getState() instead of event.state
 				var active_slide = $(mySwiper.activeSlide()).find(selector);
                 var params = active_slide.data();
-                $.get(url, function(data) {
-                    if (params.prev && params.prev == url) {
+                $.get(State.hash, function(data) {
+                    if (params.prev == State.hash) {
                         create(data, false);
                         mySwiper.swipePrev();
-                    } else if (params.next && params.next == url) {
+                    } else if (params.next == State.hash) {
                         create(data, true);
                         mySwiper.swipeNext();
                     }
                 });
-			};
+			});
         });
     </script>
 {% endblock %}
