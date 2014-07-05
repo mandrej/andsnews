@@ -51,3 +51,10 @@
         {% endif %}
     </aside>
 </div>
+<script>
+    (function() {
+        window.addEventListener('popstate', function(event) {
+            window.location.href = document.URL;
+        });
+    })();
+</script>

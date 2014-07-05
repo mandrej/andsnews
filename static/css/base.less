@@ -281,7 +281,6 @@ table {
 }
 
 #wrapper {
-	min-height: 100%;
 	overflow: hidden;
 	background: url(../images/front.png) no-repeat fixed;
 }
@@ -353,10 +352,11 @@ input[data-function*='swipe'] {
 }
 
 #container {
+	margin: 0 -@gap;
 	.thumbnails {
 		display: flex;
 		flex-flow: row wrap;
-		margin: 0 -@gap/4;
+		margin: 0 3*@gap/4;
 		.perspective(1000px);
 		figure {
 			flex: 1 1 220px;
@@ -407,7 +407,6 @@ input[data-function*='swipe'] {
 	&.cols {
 		display: flex;
 		flex-flow: row wrap;
-		margin: 0 -@gap;
 		section {
 			flex: 1 1 350px;
 			padding: 0 @gap @gap/2 @gap;
@@ -417,7 +416,6 @@ input[data-function*='swipe'] {
 	.port {
 		display: flex;
 		flex-flow: row;
-		margin: 0 -@gap;
 		article {
 			flex: 3;
 			padding: 0 @gap @gap/2 @gap;

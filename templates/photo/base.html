@@ -2,3 +2,15 @@
 {% import "snippets/macros.html" as m %}
 {% set kind='Photo' %}
 {% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/jquery.history.min.js"></script>
+    <script>
+         $(function() {
+            var History = window.History;
+            if (!History.enabled) {
+                return false;
+            }
+         });
+    </script>
+{% endblock %}

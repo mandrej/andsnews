@@ -73,6 +73,11 @@ indexes:
   properties:
   - name: color
   - name: date
+
+- kind: Photo
+  properties:
+  - name: color
+  - name: date
     direction: desc
 
 - kind: Photo
