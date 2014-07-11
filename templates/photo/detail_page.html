@@ -48,10 +48,6 @@
                 <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
                     <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
             {% endif %}
-            {% if is_admin or user == object.author %}
-                <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
-                    <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
-            {% endif %}
         </aside>
     </article>
 </div>

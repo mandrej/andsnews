@@ -44,10 +44,6 @@
                     <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
                         <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
                 {% endif %}
-                {% if is_admin or user == object.author %}
-                    <h3><a class="block button" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
-                        <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
-                {% endif %}
             </aside>
         </article>
     </div>

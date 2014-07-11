@@ -1,5 +1,4 @@
 {% extends "photo/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block paging %}{% endblock %}
 
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
@@ -48,7 +47,6 @@
                 grabCursor: true,
                 keyboardControl: true,
                 watchActiveIndex: true,
-{#                calculateHeight: true,#}
                 preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
                     var url,
