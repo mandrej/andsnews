@@ -1,17 +1,17 @@
 {% extends "base.html" %}
-{% import "snippets/macros.html" as m %}
-
 {% block modals %}{% endblock %}
 
 {% block contents %}
-<article>
-	{% if phrase %}
-		<h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}</h2>
-	{% else %}
-		<h2>{{ _('Nothing to search for') }}.</h2>
-        <p>{{ _('Please try something') }}.</p>
-	{% endif %}
-
+<div class="page">
+    {% import "snippets/macros.html" as m %}
+    <header>
+        {% if phrase %}
+            <h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}</h2>
+        {% else %}
+            <h2>{{ _('Nothing to search for') }}.</h2>
+            <p>{{ _('Please try something') }}.</p>
+        {% endif %}
+    </header>
     {% macro result(object) %}
         <section>
             <div>
@@ -64,8 +64,7 @@
             </div>
         </section>
     {% endmacro %}
-
-    <div id="container" class="cols">
+    <article class="cols">
         {% for object in objects %}
             {{ result(object) }}
         {% else %}
@@ -79,8 +78,8 @@
                 </div>
             </section>
         {% endfor %}
-    </div>
-</article>
+    </article>
+</div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

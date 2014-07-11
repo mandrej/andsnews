@@ -1,19 +1,11 @@
 {% extends "photo/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}{% endblock %}
 
 {% block contents %}
-<h2>
-    <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
-    {{ m.filter_title(filter) }}
-</h2>
-
-<div id="container">
     <div class="swiper-container">
         <div class="swiper-wrapper"></div>
     </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
@@ -21,7 +13,7 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
-            var selector = '.thumbnails';
+            var selector = '.page';
             function create(data, next) {
                 if (next == undefined) next = true;
                 var slide = mySwiper.createSlide(data);

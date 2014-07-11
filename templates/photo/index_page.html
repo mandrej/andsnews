@@ -1,24 +1,33 @@
 {% set data = {
-    'class': 'thumbnails',
+    'class': 'page',
     'data-prev': previous_url,
     'data-page': current_url,
     'data-next': next_url} %}
 <div{{ data|xmlattr }}>
-    {% for object in objects %}
-        {% if object %}
-            {% if filter %}
-                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-            {% else %}
-                {% set url = uri_for('photo', slug = object.key.string_id()) %}
+    {% import "snippets/macros.html" as m %}
+    <header>
+        <h2>
+            <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
+            {{ m.filter_title(filter) }}
+        </h2>
+    </header>
+    <article class="thumbnails">
+        {% for object in objects %}
+            {% if object %}
+                {% if filter %}
+                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
+                {% else %}
+                    {% set url = uri_for('photo', slug = object.key.string_id()) %}
+                {% endif %}
+                <figure>
+                    <a href="{{ url }}"
+                        style="background-image: url({{ object.small_url_async.get_result() }})">
+                        <p class="legend">{{ object.headline }}</p>
+                    </a>
+                </figure>
             {% endif %}
-            <figure>
-                <a href="{{ url }}"
-                    style="background-image: url({{ object.small_url_async.get_result() }})">
-                    <p class="legend">{{ object.headline }}</p>
-                </a>
-            </figure>
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
+    </article>
 </div>
 <script>
     (function() {

@@ -1,60 +1,64 @@
 {% extends "admin/base.html" %}
 
 {% block contents %}
-<article>
-	<h2 class="clearing">
-        Feed administration
-        <a href="{{ uri_for('feed_add') }}" class="button right">
-            <i class="fa fa-plus-square"></i> Add
-        </a>
-    </h2>
-	<form action="/admin/feeds" method="post">
-        <input name="token" type="hidden" value="{{ token }}"/>
-		<table id="data" class="zebra">
-			<colgroup>
-				<col/>
-				<col style="width: 150px; text-align: right;"/>
-				<col style="width: 100px; text-align: center;"/>
-				<col style="width: 150px; text-align: right;"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>headline</th>
-					<th>updated</th>
-					<th>cache</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for object in objects %}
-                    {% if user == object.author or is_admin %}
+    <div class="page">
+        <header>
+            <h2 class="clearing">
+                Feed administration
+                <a href="{{ uri_for('feed_add') }}" class="button right">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
+            </h2>
+        </header>
+        <article class="normal">
+            <form action="/admin/feeds" method="post">
+                <input name="token" type="hidden" value="{{ token }}"/>
+                <table id="data" class="zebra">
+                    <colgroup>
+                        <col/>
+                        <col style="width: 150px; text-align: right;"/>
+                        <col style="width: 100px; text-align: center;"/>
+                        <col style="width: 150px; text-align: right;"/>
+                    </colgroup>
+                    <thead>
                         <tr>
-                            <td><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">
-                                {{ object.headline }}</a></td>
-                            <td>{{ object.date|to_datetime }}</td>
-                            <td>
-                                {% if object.key.string_id()|incache %}
-                                    <button type="submit" name="action:feed" class="button delete"
-                                        value="{{ object.key.string_id() }}">
-                                        <i class="fa fa-times-circle"></i> delete</button>
-                                {% else %}
-                                    <button type="submit" name="action:feed"
-                                        class="disabled button delete" disabled="disabled"
-                                        value="{{ object.key.string_id() }}">
-                                        <i class="fa fa-times-circle"></i> delete</button>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a class="button" href="{{ uri_for('feed_edit', slug=object.key.string_id()) }}">
-                                    <i class="fa fa-pencil-square"></i> edit</a>
-                                <a class="confirm button delete" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
-                                <i class="fa fa-times-circle"></i> delete</a>
-                            </td>
+                            <th>headline</th>
+                            <th>updated</th>
+                            <th>cache</th>
+                            <th></th>
                         </tr>
-                    {% endif %}
-				{% endfor %}
-			</tbody>
-		</table>
-	</form>
-</article>
+                    </thead>
+                    <tbody>
+                        {% for object in objects %}
+                            {% if user == object.author or is_admin %}
+                                <tr>
+                                    <td><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">
+                                        {{ object.headline }}</a></td>
+                                    <td>{{ object.date|to_datetime }}</td>
+                                    <td>
+                                        {% if object.key.string_id()|incache %}
+                                            <button type="submit" name="action:feed" class="button delete"
+                                                value="{{ object.key.string_id() }}">
+                                                <i class="fa fa-times-circle"></i> delete</button>
+                                        {% else %}
+                                            <button type="submit" name="action:feed"
+                                                class="disabled button delete" disabled="disabled"
+                                                value="{{ object.key.string_id() }}">
+                                                <i class="fa fa-times-circle"></i> delete</button>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="button" href="{{ uri_for('feed_edit', slug=object.key.string_id()) }}">
+                                            <i class="fa fa-pencil-square"></i> edit</a>
+                                        <a class="confirm button delete" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                                        <i class="fa fa-times-circle"></i> delete</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </article>
+    </div>
 {% endblock %}

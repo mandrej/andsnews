@@ -1,11 +1,11 @@
 {% set data = {
-    'class': 'port',
+    'class': 'page',
     'data-prev': previous_url,
     'data-page': current_url,
     'data-next': next_url} %}
 <div{{ data|xmlattr }}>
     {% import "snippets/macros.html" as m %}
-    <article>
+    <header>
         {% if filter %}
             {% set url = uri_for('photo_filter_all', field=filter.field, value=filter.value) %}
         {% else %}
@@ -30,26 +30,30 @@
             <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
         </p>
-        <canvas data-url="{{ object.normal_url_async.get_result() }}"></canvas>
+    </header>
+    <article class="port">
+        <section>
+            <canvas data-url="{{ object.normal_url_async.get_result() }}"></canvas>
+        </section>
+        <aside>
+            {% include "photo/exif.html" %}
+            <div id="comments">
+                {% for comment in object.comment_list() %}
+                    {{ m.render_comment(comment, user) }}
+                {% endfor %}
+            </div>
+            {% if user %}
+                <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
+                    <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
+                <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
+                    <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
+            {% endif %}
+            {% if is_admin or user == object.author %}
+                <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+                    <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
+            {% endif %}
+        </aside>
     </article>
-    <aside>
-        {% include "photo/exif.html" %}
-        <div id="comments">
-            {% for comment in object.comment_list() %}
-                {{ m.render_comment(comment, user) }}
-            {% endfor %}
-        </div>
-        {% if user %}
-            <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
-                <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
-            <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
-                <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
-        {% endif %}
-        {% if is_admin or user == object.author %}
-            <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
-                <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
-        {% endif %}
-    </aside>
 </div>
 <script>
     (function() {

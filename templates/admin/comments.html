@@ -2,52 +2,56 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
-<article>
-	<h2>Comment &amp; message administration</h2>
-    <table class="zebra">
-        <colgroup>
-            <col style="width: 120px;"/>
-            <col/>
-            <col style="width: 120px;"/>
-            <col style="width: 130px; text-align: right;"/>
-            <col style="width: 150px; text-align: right;"/>
-        </colgroup>
-        <thead>
-            <tr>
-                <th>for headline</th>
-                <th>body ...</th>
-                <th>author</th>
-                <th>date</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for object in objects %}
-                {% if object %}
-                    <tr id="{{ object.key.urlsafe() }}">
-                        {% if object.is_message %}<td>message</td>{% else%}
-                            {% with refkey=object.key.parent() %}
-                            <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
-                                {{ refkey.get().headline }}</a></td>
-                            {% endwith %}
-                        {% endif %}
-                        <td>
-                            <textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
-                        </td>
-                        <td>{{ object.author }}</td>
-                        <td>{{ object.date|to_datetime }}</td>
-                        <td class="nowrap">
-                            <button type="submit" name="save" class="button">
-                                <i class="fa fa-check-circle"></i> save</button>
-                            <button type="submit" name="delete" class="delete button">
-                                <i class="fa fa-times-circle"></i> delete</button>
-                        </td>
+    <div class="page">
+        <header>
+            <h2>Comment &amp; message administration</h2>
+        </header>
+        <article class="normal">
+            <table class="zebra">
+                <colgroup>
+                    <col style="width: 120px;"/>
+                    <col/>
+                    <col style="width: 120px;"/>
+                    <col style="width: 130px; text-align: right;"/>
+                    <col style="width: 150px; text-align: right;"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>for headline</th>
+                        <th>body ...</th>
+                        <th>author</th>
+                        <th>date</th>
+                        <th></th>
                     </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-</article>
+                </thead>
+                <tbody>
+                    {% for object in objects %}
+                        {% if object %}
+                            <tr id="{{ object.key.urlsafe() }}">
+                                {% if object.is_message %}<td>message</td>{% else%}
+                                    {% with refkey=object.key.parent() %}
+                                    <td><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
+                                        {{ refkey.get().headline }}</a></td>
+                                    {% endwith %}
+                                {% endif %}
+                                <td>
+                                    <textarea name="body" cols="4" style="width: 100%">{{ object.body }}</textarea>
+                                </td>
+                                <td>{{ object.author }}</td>
+                                <td>{{ object.date|to_datetime }}</td>
+                                <td class="nowrap">
+                                    <button type="submit" name="save" class="button">
+                                        <i class="fa fa-check-circle"></i> save</button>
+                                    <button type="submit" name="delete" class="delete button">
+                                        <i class="fa fa-times-circle"></i> delete</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </article>
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

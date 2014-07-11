@@ -1,6 +1,4 @@
 {% extends "entry/base.html" %}
-{% import "snippets/macros.html" as m %}
-
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 
@@ -10,47 +8,49 @@
 {% endblock %}
 
 {% block contents %}
-<h2>{{ object.headline }}</h2>
-<p class="subtitle">
-    <i class="fa fa-user"></i>
-    <a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
-        title="{{ _("author's blogs") }}">{{ object.author }}</a>,
-        <time datetime='{{ object.date|to_datetime }}'>
-            {{ object.date|to_datetime }}</time>
-    {% for tag in object.tags %}
-        {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
-        <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}" title="{{ tag }}">
-            {{ tag }}</a>{% if not loop.last %},{% endif %}
-    {% endfor %}
-    <i class="fa fa-clock-o"></i>
-    <a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
-        title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
-</p>
-
-<div id="container">
-    <div class="port">
-        <article>
-            <i class="fa fa-quote-left fa-2x pull-left"></i>
-            <p>{{ object.summary|safe }}</p>
-            <div class="story">{{ object.body|safe }}</div>
-        </article>
-        <aside>
-            <div id="comments">
-                {% for comment in object.comment_list() %}
-                    {{ m.render_comment(comment, user) }}
+    <div class="page">
+        {% import "snippets/macros.html" as m %}
+        <header>
+            <h2>{{ object.headline }}</h2>
+            <p class="subtitle">
+                <i class="fa fa-user"></i>
+                <a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
+                    title="{{ _("author's blogs") }}">{{ object.author }}</a>,
+                    <time datetime='{{ object.date|to_datetime }}'>
+                        {{ object.date|to_datetime }}</time>
+                {% for tag in object.tags %}
+                    {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
+                    <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}" title="{{ tag }}">
+                        {{ tag }}</a>{% if not loop.last %},{% endif %}
                 {% endfor %}
-            </div>
-            {% if user %}
-                <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
-                    <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
-            {% endif %}
-            {% if is_admin or user == object.author %}
-                <h3><a class="block button" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
-                    <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
-            {% endif %}
-        </aside>
+                <i class="fa fa-clock-o"></i>
+                <a href="{{ uri_for('entry_filter_all', field='date', value=object.year) }}"
+                    title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
+            </p>
+        </header>
+        <article class="port">
+            <section>
+                <i class="fa fa-quote-left fa-2x pull-left"></i>
+                <p>{{ object.summary|safe }}</p>
+                <div class="story">{{ object.body|safe }}</div>
+            </section>
+            <aside>
+                <div id="comments">
+                    {% for comment in object.comment_list() %}
+                        {{ m.render_comment(comment, user) }}
+                    {% endfor %}
+                </div>
+                {% if user %}
+                    <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
+                        <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
+                {% endif %}
+                {% if is_admin or user == object.author %}
+                    <h3><a class="block button" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
+                        <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
+                {% endif %}
+            </aside>
+        </article>
     </div>
-</div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

@@ -1,31 +1,35 @@
 {% extends "entry/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 
 {% block contents %}
-<h2>
-    <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
-    {{ m.filter_title(filter) }}
-</h2>
-<div id="container" class="cols">
-    {% for object in objects %}
-        {% if object %}
+<div class="page">
+    {% import "snippets/macros.html" as m %}
+    <header>
+        <h2>
+            <a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
+            {{ m.filter_title(filter) }}
+        </h2>
+    </header>
+    <article class="cols">
+        {% for object in objects %}
+            {% if object %}
+                <section>
+                    <h3><a href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
+                    <p>{% if object.front >= 0 %}
+                            <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
+                        {% endif %}{{ object.summary }}</p>
+                    <p class="details">{{ object.author }},
+                        {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                    </p>
+                </section>
+            {% endif %}
+        {% else %}
             <section>
-                <h3><a href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
-                <p>{% if object.front >= 0 %}
-                        <img src="{{ object|image_url_by_num(object.front) }}/small" class="left" style="margin-bottom: 5px;"/>
-                    {% endif %}{{ object.summary }}</p>
-                <p class="details">{{ object.author }},
-                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                </p>
+                <div class="box">
+                    <h3>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</h3>
+                </div>
             </section>
-        {% endif %}
-    {% else %}
-        <section>
-            <div class="box">
-                <h3>{{ _('No blog submitted') }}, {{ _('or filter has no results') }}.</h3>
-            </div>
-        </section>
-    {% endfor %}
+        {% endfor %}
+    </article>
 </div>
 {% endblock %}

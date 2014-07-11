@@ -5,112 +5,116 @@
 {% endblock %}
 
 {% block contents %}
-<article>
-	<h2>Site administration</h2>
-    <div id="container" class="cols">
-        <section class="admin">
-            <h3>
-                <a href="/admin/photos/" class="button">
-                    <i class="fa fa-th-list"></i>
-                    Photo {{ photo_count }}
-                </a>
-                <a href="{{ uri_for('photo_add') }}" class="button">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h3>
-            <div id="Photo_tags"></div>
-            <div id="Photo_author"></div>
-            <div id="Photo_date"></div>
-            <div id="Photo_model"></div>
-            <div id="Photo_lens"></div>
-            <div id="Photo_eqv"></div>
-            <div id="Photo_iso"></div>
-            <div id="Photo_color"></div>
-        </section>
-        <section class="admin">
-            <h3>
-                <a href="/admin/entries/" class="button">
-                    <i class="fa fa-th-list"></i>
-                    Entry {{ entry_count }}
-                </a>
-                <a href="{{ uri_for('entry_add') }}" class="button">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h3>
-            <div id="Entry_tags"></div>
-            <div id="Entry_author"></div>
-            <div id="Entry_date"></div>
-
-            <h3>
-                <a href="/admin/feeds/" class="button">
-                    <i class="fa fa-th-list"></i>
-                    Feeds {{ feeds_count }}
-                </a>
-                <a href="{{ uri_for('feed_add') }}" class="button">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h3>
-            <div id="Feed_tags"></div>
-
-            {% if is_admin %}
+    <div class="page">
+        <header>
+            <h2>Site administration</h2>
+        </header>
+        <article class="cols">
+            <section class="admin">
                 <h3>
-                    <a href="/admin/comments/" class="button">
+                    <a href="/admin/photos/" class="button">
                         <i class="fa fa-th-list"></i>
-                        Comment {{ comment_count }}
+                        Photo {{ photo_count }}
+                    </a>
+                    <a href="{{ uri_for('photo_add') }}" class="button">
+                        <i class="fa fa-plus-square"></i> Add
                     </a>
                 </h3>
-                <div id="Comment_forkind"></div>
-                <div id="Comment_author"></div>
-                <div id="Comment_date"></div>
-            {% endif %}
-        </section>
-        <section class="admin">
-            <h3>
-                <span class="button">
-                    <i class="fa fa-bars"></i>
-                    Memcache statistics for	v.{{ version() }}
-                </span>
-            </h3>
-            <dl class="w65em">
-                <dt>hit ratio</dt>
-                <dd>
-                    {{ '%0.1f'|format(hit_ratio) }}%
-                    ({{ stats.hits }} hits, {{ stats.misses }} misses)
-                </dd>
-            </dl>
-            <dl class="w65em">
-                <dt>size</dt>
-                <dd>{{ stats['items'] }} items,
-                    {{ stats.bytes|filesizeformat }}
-                </dd>
-            </dl>
-            <dl class="w65em">
-                <dt>oldest item</dt>
-                <dd>{{ oldest|timesince }} ago</dd>
-            </dl>
-        </section>
+                <div id="Photo_tags"></div>
+                <div id="Photo_author"></div>
+                <div id="Photo_date"></div>
+                <div id="Photo_model"></div>
+                <div id="Photo_lens"></div>
+                <div id="Photo_eqv"></div>
+                <div id="Photo_iso"></div>
+                <div id="Photo_color"></div>
+            </section>
+            <section class="admin">
+                <h3>
+                    <a href="/admin/entries/" class="button">
+                        <i class="fa fa-th-list"></i>
+                        Entry {{ entry_count }}
+                    </a>
+                    <a href="{{ uri_for('entry_add') }}" class="button">
+                        <i class="fa fa-plus-square"></i> Add
+                    </a>
+                </h3>
+                <div id="Entry_tags"></div>
+                <div id="Entry_author"></div>
+                <div id="Entry_date"></div>
+
+                <h3>
+                    <a href="/admin/feeds/" class="button">
+                        <i class="fa fa-th-list"></i>
+                        Feeds {{ feeds_count }}
+                    </a>
+                    <a href="{{ uri_for('feed_add') }}" class="button">
+                        <i class="fa fa-plus-square"></i> Add
+                    </a>
+                </h3>
+                <div id="Feed_tags"></div>
+
+                {% if is_admin %}
+                    <h3>
+                        <a href="/admin/comments/" class="button">
+                            <i class="fa fa-th-list"></i>
+                            Comment {{ comment_count }}
+                        </a>
+                    </h3>
+                    <div id="Comment_forkind"></div>
+                    <div id="Comment_author"></div>
+                    <div id="Comment_date"></div>
+                {% endif %}
+            </section>
+            <section class="admin">
+                <h3>
+                    <span class="button">
+                        <i class="fa fa-bars"></i>
+                        Memcache statistics for	v.{{ version() }}
+                    </span>
+                </h3>
+                <dl class="w65em">
+                    <dt>hit ratio</dt>
+                    <dd>
+                        {{ '%0.1f'|format(hit_ratio) }}%
+                        ({{ stats.hits }} hits, {{ stats.misses }} misses)
+                    </dd>
+                </dl>
+                <dl class="w65em">
+                    <dt>size</dt>
+                    <dd>{{ stats['items'] }} items,
+                        {{ stats.bytes|filesizeformat }}
+                    </dd>
+                </dl>
+                <dl class="w65em">
+                    <dt>oldest item</dt>
+                    <dd>{{ oldest|timesince }} ago</dd>
+                </dl>
+            </section>
+        </article>
     </div>
-    <h2 class="ss">Spectra [+]</h2>
-    <div class="hide">
-        <div class="admin">
-            <dl class="w65em">
-                <dt>Saturation</dt>
-                <dd>
-                    <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="sat" size="2" disabled="disabled"/>
-                </dd>
-            </dl>
-            <dl class="w65em">
-                <dt>Lightness</dt>
-                <dd>
-                    <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>
-                    <input type="text" name="lum" size="2" disabled="disabled"/>
-                </dd>
-            </dl>
-        </div>
-        <div id="spectra"></div>
-    </div>
-</article>
+
+{#    <h2 class="ss">Spectra [+]</h2>#}
+{#    <div class="hide">#}
+{#        <div class="admin">#}
+{#            <dl class="w65em">#}
+{#                <dt>Saturation</dt>#}
+{#                <dd>#}
+{#                    <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
+{#                    <input type="text" name="sat" size="2" disabled="disabled"/>#}
+{#                </dd>#}
+{#            </dl>#}
+{#            <dl class="w65em">#}
+{#                <dt>Lightness</dt>#}
+{#                <dd>#}
+{#                    <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
+{#                    <input type="text" name="lum" size="2" disabled="disabled"/>#}
+{#                </dd>#}
+{#            </dl>#}
+{#        </div>#}
+{#        <div id="spectra"></div>#}
+{#    </div>#}
+
 {% endblock %}
 {% block scripts %}
     {{ super() }}

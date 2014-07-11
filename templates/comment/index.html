@@ -1,53 +1,56 @@
 {% extends "comment/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Comments') }}{% endblock %}
 
 {% block contents %}
-    <h2>
-        <a href="{{ uri_for('comment_all') }}">{{ _('Comments') }}</a>
-        {{ m.filter_title(filter) }}
-    </h2>
-
-	<div id="container" class="cols">
-		{% for object in objects %}
-            {% if object %}
-                {% if object.is_message %}
-                    <section>
-                        {{ m.time(object.date) }}
-                        <div class="body">
-                            <h3>{{ _('message') }}</h3>
-                            <div class="para">{{ object.body|safe }}</div>
-                            <p class="details">
-                                <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
-                                    title="{{ _("author's messages") }}">{{ object.author }}</a>,
-                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                            </p>
-                        </div>
-                    </section>
-                {% else %}
-                    <section>
-                        {{ m.time(object.date) }}
-                        {% with refkey=object.key.parent() %}
+    <div class="page">
+        {% import "snippets/macros.html" as m %}
+        <header>
+            <h2>
+                <a href="{{ uri_for('comment_all') }}">{{ _('Comments') }}</a>
+                {{ m.filter_title(filter) }}
+            </h2>
+        </header>
+        <article class="cols">
+            {% for object in objects %}
+                {% if object %}
+                    {% if object.is_message %}
+                        <section>
+                            {{ m.time(object.date) }}
                             <div class="body">
-                                <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
-                                    {{ refkey.get().headline }}</a></h3>
+                                <h3>{{ _('message') }}</h3>
                                 <div class="para">{{ object.body|safe }}</div>
                                 <p class="details">
                                     <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
-                                        title="{{ _("author's comments") }}">{{ object.author }}</a>,
+                                        title="{{ _("author's messages") }}">{{ object.author }}</a>,
                                     {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                                 </p>
                             </div>
-                        {% endwith %}
-                    </section>
+                        </section>
+                    {% else %}
+                        <section>
+                            {{ m.time(object.date) }}
+                            {% with refkey=object.key.parent() %}
+                                <div class="body">
+                                    <h3><a href="{{ uri_for(refkey.kind().lower(), slug=refkey.string_id()) }}">
+                                        {{ refkey.get().headline }}</a></h3>
+                                    <div class="para">{{ object.body|safe }}</div>
+                                    <p class="details">
+                                        <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
+                                            title="{{ _("author's comments") }}">{{ object.author }}</a>,
+                                        {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                                    </p>
+                                </div>
+                            {% endwith %}
+                        </section>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        {% else %}
-            <section>
-                <div class="box">
-                    <h3>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h3>
-                </div>
-            </section>
-		{% endfor %}
-	</div>
+            {% else %}
+                <section>
+                    <div class="box">
+                        <h3>{{ _('No comments sent') }}, {{ _('or filter has no results') }}.</h3>
+                    </div>
+                </section>
+            {% endfor %}
+        </article>
+    </div>
 {% endblock %}

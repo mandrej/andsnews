@@ -2,59 +2,63 @@
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
-<article>
-	<h2>Counter administration</h2>
-	<form action="/admin/counters" method="post">
-		<input type="hidden" name="page" value="{{ page }}"/>
-        <input name="token" type="hidden" value="{{ token }}"/>
-		<table class="zebra">
-			<colgroup>
-				<col style="width: 80px;"/>
-				<col style="width: 80px;"/>
-				<col/>
-				<col style="width: 70px; text-align: right;"/>
-				<col style="width: 150px; text-align: right;"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>kind</th>
-					<th>field</th>
-					<th>value</th>
-					<th>count</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for object in objects %}
-                    {% if object %}
+    <div class="page">
+        <header>
+            <h2>Counter administration</h2>
+        </header>
+        <article class="normal">
+            <form action="/admin/counters" method="post">
+                <input type="hidden" name="page" value="{{ page }}"/>
+                <input name="token" type="hidden" value="{{ token }}"/>
+                <table class="zebra">
+                    <colgroup>
+                        <col style="width: 80px;"/>
+                        <col style="width: 80px;"/>
+                        <col/>
+                        <col style="width: 70px; text-align: right;"/>
+                        <col style="width: 150px; text-align: right;"/>
+                    </colgroup>
+                    <thead>
                         <tr>
-                            <td>{{ object.forkind|default('---') }}</td>
-                            <td>{{ object.field|default('---') }}</td>
-                            <td>{{ object.value|default('---') }}</td>
-                            <td>
-                                <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
-                                    {% if object.count <= 0 %}
-                                        style="width: 58px; text-align: right; background: #c00; color: #fff;"
-                                    {% else %}
-                                        style="width: 58px; text-align: right;"
-                                    {% endif%}
-                                    type="text" value="{{ object.count }}"/>
-                            </td>
-                            <td class="nowrap">
-                                <button class="disabled button" type="submit" name="action:edit"
-                                    disabled="disabled" value="{{ object.key.urlsafe() }}">
-                                    <i class="fa fa-check-circle"></i> change</button>
-                                <button class="button delete" type="submit" name="action:delete"
-                                    value="{{ object.key.urlsafe() }}">
-                                    <i class="fa fa-times-circle"></i> delete</button>
-                            </td>
+                            <th>kind</th>
+                            <th>field</th>
+                            <th>value</th>
+                            <th>count</th>
+                            <th></th>
                         </tr>
-                    {% endif %}
-				{% endfor %}
-			</tbody>
-		</table>
-	</form>
-</article>
+                    </thead>
+                    <tbody>
+                        {% for object in objects %}
+                            {% if object %}
+                                <tr>
+                                    <td>{{ object.forkind|default('---') }}</td>
+                                    <td>{{ object.field|default('---') }}</td>
+                                    <td>{{ object.value|default('---') }}</td>
+                                    <td>
+                                        <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
+                                            {% if object.count <= 0 %}
+                                                style="width: 58px; text-align: right; background: #c00; color: #fff;"
+                                            {% else %}
+                                                style="width: 58px; text-align: right;"
+                                            {% endif%}
+                                            type="text" value="{{ object.count }}"/>
+                                    </td>
+                                    <td class="nowrap">
+                                        <button class="disabled button" type="submit" name="action:edit"
+                                            disabled="disabled" value="{{ object.key.urlsafe() }}">
+                                            <i class="fa fa-check-circle"></i> change</button>
+                                        <button class="button delete" type="submit" name="action:delete"
+                                            value="{{ object.key.urlsafe() }}">
+                                            <i class="fa fa-times-circle"></i> delete</button>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </article>
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

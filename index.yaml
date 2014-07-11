@@ -113,6 +113,11 @@ indexes:
   properties:
   - name: tags
   - name: date
+
+- kind: Photo
+  properties:
+  - name: tags
+  - name: date
     direction: desc
 
 - kind: Photo

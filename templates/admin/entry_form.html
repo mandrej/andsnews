@@ -1,6 +1,4 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
-
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block modals %}
@@ -26,72 +24,77 @@
 {% endblock %}
 
 {% block contents %}
-<h2>{{ _('Add new / change existing blog') }}</h2>
-<div id="container" class="port">
-    <article>
-        {% if form.errors %}
-            <div class="formerrors">
-                <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
-                <p>{{ _('Please correct errors in') }}
-                {{ form.errors|join(", ") }}.</p>
-            </div>
-        {% endif %}
-
-        {% if object %}
-            <form action="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" enctype="multipart/form-data"  method="post">
-        {% else %}
-            <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
-        {% endif %}
-            <fieldset>
-                <input name="token" type="hidden" value="{{ token }}"/>
-                {{ m.form_row(form.headline) }}
-                {% if not object %}
-                    {{ m.form_row(form.slug) }}
+    <div class="page">
+        {% import "snippets/macros.html" as m %}
+        <header>
+            <h2>{{ _('Add new / change existing blog') }}</h2>
+        </header>
+        <article class="port">
+            <section>
+                {% if form.errors %}
+                    <div class="formerrors">
+                        <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
+                        <p>{{ _('Please correct errors in') }}
+                        {{ form.errors|join(", ") }}.</p>
+                    </div>
                 {% endif %}
-                {{ m.form_row(form.tags) }}
-                {{ m.form_row(form.summary, rows=4) }}
-                {{ m.form_row(form.author) }}
-                {{ m.form_row(form.date, placeholder='YYYY-mm-dd HH:MM:SS') }}
-            </fieldset>
 
-            <fieldset>
-                <h3>{{ _('Images used in this blog') }}</h3>
                 {% if object %}
-                    {{ m.form_row(form.front) }}
-                    {% for field in form.images %}
-                        <p class="upload" style="background-image: url({{ object.image_url(field.form.num.data) }}/small);">
-                            {{ field.form.name.label }} {{ field.form.num(size=1, disabled='disabled') }} {{ field.form.name(size=30) }}
-                            {{ field.form.delete }} {{ field.form.delete.label.text }}
-                        </p>
-                    {% endfor %}
+                    <form action="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" enctype="multipart/form-data"  method="post">
+                {% else %}
+                    <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
                 {% endif %}
-                {% for field in form.newimages %}
-                    <p>
-                        {{ field.form.name.label }} {{ field.form.name }}
-                        {{ field.form.blob }}
-                        <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
-                    </p>
-                {% endfor %}
-            </fieldset>
+                    <fieldset>
+                        <input name="token" type="hidden" value="{{ token }}"/>
+                        {{ m.form_row(form.headline) }}
+                        {% if not object %}
+                            {{ m.form_row(form.slug) }}
+                        {% endif %}
+                        {{ m.form_row(form.tags) }}
+                        {{ m.form_row(form.summary, rows=4) }}
+                        {{ m.form_row(form.author) }}
+                        {{ m.form_row(form.date, placeholder='YYYY-mm-dd HH:MM:SS') }}
+                    </fieldset>
 
-            <fieldset style="float: none">
-                <p class="editor">
-                    {{ form.body(rows=20) }}
-                </p>
-                <p class="buttons">
-                    <span class="required">{{ _('Required field') }}</span>
-                    <button type="submit">{{ _('done') }}</button>
-                </p>
-            </fieldset>
-        </form>
-    </article>
-    <aside>
-        <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
-        <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
-        <p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
-        <p>{{ _('Send images less then') }} 200KB.</p>
-    </aside>
-</div>
+                    <fieldset>
+                        <h3>{{ _('Images used in this blog') }}</h3>
+                        {% if object %}
+                            {{ m.form_row(form.front) }}
+                            {% for field in form.images %}
+                                <p class="upload" style="background-image: url({{ object.image_url(field.form.num.data) }}/small);">
+                                    {{ field.form.name.label }} {{ field.form.num(size=1, disabled='disabled') }} {{ field.form.name(size=30) }}
+                                    {{ field.form.delete }} {{ field.form.delete.label.text }}
+                                </p>
+                            {% endfor %}
+                        {% endif %}
+                        {% for field in form.newimages %}
+                            <p>
+                                {{ field.form.name.label }} {{ field.form.name }}
+                                {{ field.form.blob }}
+                                <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
+                            </p>
+                        {% endfor %}
+                    </fieldset>
+
+                    <fieldset style="float: none">
+                        <p class="editor">
+                            {{ form.body(rows=20) }}
+                        </p>
+                        <p class="buttons">
+                            <span class="required">{{ _('Required field') }}</span>
+                            <button type="submit">{{ _('done') }}</button>
+                        </p>
+                    </fieldset>
+                </form>
+            </section>
+            <aside>
+                <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+                <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+                <p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
+                <p>{{ _('Send images less then') }} 200KB.</p>
+            </aside>
+        </article>
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

@@ -11,11 +11,9 @@
 {% endblock %}
 
 {% block contents %}
-<div id="container">
     <div class="swiper-container">
         <div class="swiper-wrapper"></div>
     </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
@@ -28,7 +26,7 @@
     <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
         $(function() {
-            var selector = '.port';
+            var selector = '.page';
             function create(data, next) {
                 if (next == undefined) next = true;
                 var slide = mySwiper.createSlide(data);
