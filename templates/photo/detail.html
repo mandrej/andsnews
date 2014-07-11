@@ -66,6 +66,7 @@
                         return
                     }
                     $.get(url, function (data) {
+                        console.log(url);
                         create(data, next);
                         var total = swiper.slides.length;
                         if (next) {
@@ -122,19 +123,15 @@
                     push_state();
                 });
             }
-            History.Adapter.bind(window, 'popstate', function() {
+            History.Adapter.bind(window, 'statechange', function() {
                 var State = History.getState();
 				var active_slide = $(mySwiper.activeSlide()).find(selector);
                 var params = active_slide.data();
-                $.get(State.hash, function(data) {
-                    if (params.prev == State.hash) {
-                        create(data, false);
-                        mySwiper.swipePrev();
-                    } else if (params.next == State.hash) {
-                        create(data, true);
-                        mySwiper.swipeNext();
-                    }
-                });
+                if (params.prev == State.hash) {
+                    mySwiper.swipePrev();
+                } else if (params.next == State.hash) {
+                    mySwiper.swipeNext();
+                }
 			});
         });
     </script>
