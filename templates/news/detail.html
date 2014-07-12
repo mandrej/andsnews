@@ -42,7 +42,9 @@
             </header>
             <article class="cols">
                 {% if error %}
-                    <p>{{ _('News error') }}.<br/>{{ error }}.</p>
+                    <section>
+                        <p>{{ _('News error') }}.<br/>{{ error }}.</p>
+                    </section>
                 {% endif %}
             </article>
         {% endif %}

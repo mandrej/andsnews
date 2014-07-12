@@ -5,12 +5,129 @@
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/jquery.history.min.js"></script>
+    <script src="/static/scripts/idangerous.swiper.min.js"></script>
     <script>
          $(function() {
             var History = window.History;
             if (!History.enabled) {
                 return false;
             }
+            var selector = '.page';
+            function create(data, next) {
+                if (next == undefined) next = true;
+                var slide = mySwiper.createSlide(data);
+                if (next) {
+                    slide.append();
+                } else {
+                    slide.prepend();
+                }
+                var canvas = $(slide).find('canvas');
+                if (canvas.length) {
+                    var normal_url = $(canvas).attr('data-url');
+                    $(canvas).copyright(normal_url);
+                    $(window).resize(function() {
+                        $(canvas).copyright(normal_url);
+                    });
+                }
+            }
+            var mySwiper = new Swiper('.swiper-container', {
+                speed: 500,
+                loop: false,
+                grabCursor: true,
+                keyboardControl: true,
+                watchActiveIndex: true,
+                preventLinksPropagation: true,
+                onSlideChangeEnd: function(swiper, direction) {
+                    var url,
+                        next = (direction == 'next');
+                    switch(direction) {
+                        case 'prev':
+                            url = $(swiper.getFirstSlide()).find(selector).data('prev');
+                            break;
+                        case 'next':
+                            url = $(swiper.getLastSlide()).find(selector).data('next');
+                            break;
+                        default:
+                            return;
+                    }
+                    if (url == undefined) {
+                        push_state();
+                        return
+                    }
+                    $.get(url, function (data) {
+                        create(data, next);
+                        var total = swiper.slides.length;
+                        if (next) {
+                            if (total > 3) {
+                                swiper.getFirstSlide().remove();
+                                swiper.swipeTo(swiper.activeIndex - 1, 0, false);
+                            }
+                        } else {
+                            if (total > 3) swiper.getLastSlide().remove();
+                            swiper.swipeTo(swiper.activeIndex + 1, 0, false);
+                        }
+                        push_state();
+                    });
+                }
+            });
+            function push_state() {
+                var active_slide = $(mySwiper.activeSlide()).find(selector);
+                History.pushState(null, null, active_slide.data('page'));
+            }
+
+            var page = 1 * '{{ page }}';
+            var current_url = '{{ current_url }}';
+            var previous_url = '{{ previous_url }}';
+            var next_url = '{{ next_url }}';
+            var has_previous = (previous_url != 'None');
+            var has_next = (next_url != 'None');
+
+            if (has_previous && has_next) {
+                $.when(
+                    $.get(previous_url), $.get(current_url), $.get(next_url))
+                .done(function(a1, a2, a3) {
+                    create(a1[0]); create(a2[0]); create(a3[0]);
+                    mySwiper.swipeTo(1, 0, false);
+                    push_state();
+                });
+            } else if (has_previous && !has_next) {
+                $.when(
+                    $.get(previous_url), $.get(current_url))
+                .done(function(a1, a2) {
+                    create(a1[0]); create(a2[0]);
+                    mySwiper.swipeTo(1, 0, false);
+                    push_state();
+                });
+            } else if (!has_previous && has_next) {
+                $.when(
+                    $.get(current_url), $.get(next_url))
+                .done(function(a1, a2) {
+                    create(a1[0]); create(a2[0]);
+                    push_state();
+                });
+            } else {
+                $.get(current_url, function(a1) {
+                    create(a1);
+                    push_state();
+                });
+            }
+            History.Adapter.bind(window, 'popstate', function() {
+                var State = History.getState();
+				var active_slide = $(mySwiper.activeSlide()).find(selector);
+                var params = active_slide.data();
+                if (params.page == State.hash) return;
+                if (params.prev == State.hash) {
+                    mySwiper.swipePrev();
+                } else if (params.next == State.hash) {
+                    mySwiper.swipeNext();
+                } else {
+                    window.location.href = State.hash;
+                }
+			});
+
+            $(document).on('click', 'figure a', function(evt) {
+                History.pushState(null, null, this.href);
+            });
          });
     </script>
 {% endblock %}

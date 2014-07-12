@@ -85,7 +85,7 @@ blockquote { padding-left: 1em; border-left: 1em solid white; font-style: italic
 ul li { list-style: square; }
 li { margin-left: 2em; }
 ol li { margin-left: 3em; list-style: decimal; }
-fieldset { border: none; float: left; clear: left; margin-right: 3%; }
+fieldset { border: none; float: left; clear: left; }
 input, textarea, select, option, button {
 	color: black;
 	background: white;
@@ -152,12 +152,15 @@ fieldset {
 		.form_label;
 		&:after { content: ":"; }
 	}
-	input { .form_input;
+	input {
+		.form_input;
 		&:focus { .form_focus; }
 		&[type=file] { width: 20em; padding: 0; border: none; }
 		&[disabled] { background: @paper; color: @neutral; }
 	}
-	select { .form_input; width: 20.5em; padding: 0;
+	select {
+		.form_input;
+		padding: 0;
 		&:focus { .form_focus; }
 		option { padding: 0.2em; }
 	}
@@ -367,7 +370,7 @@ input[data-function*='swipe'] {
 			}
 			aside {
 				flex: 1;
-				padding: 0 @gap @gap/2 @gap;
+				padding: 0 @gap @gap/2 0;
 				@media @mobile, @tablet { .hide; }
 			}
 		}
@@ -441,7 +444,6 @@ input[data-function*='swipe'] {
 .exif td a { text-decoration: underline; }
 
 .subtitle {
-	margin: 1em 0;
 	@media @mobile, @tablet { .hide; }
 }
 
@@ -544,7 +546,8 @@ nav.paginator {
 }
 
 #palette {
-	float: right; width: 18em;
+	float: right;
+	width: 16em;
 	img { border-radius: @radius; max-width: 100%; }
 	th, td { border: none; }
 	@media @mobile, @tablet { .hide; }
@@ -554,8 +557,6 @@ nav.paginator {
 .editor {
 	label { margin-top: 0; }
 	.defailt_editor {
-		padding: 1%;
-		width: 98%;
 		border: none;
 		font-family: @monospaced;
 		line-height: normal;
@@ -572,7 +573,7 @@ nav.paginator {
 		.markItUpEditor { .defailt_editor; }
 	}
 }
-.markItUpPreviewFrame { border: 1px solid @google_red; padding: 0; }
+.markItUpPreviewFrame { border: none; padding: 0; }
 .markItUpFooter { clear: both; }
 
 #addcommentForm {
