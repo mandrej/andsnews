@@ -10,7 +10,7 @@ from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
-PER_PAGE = 5  # photos default
+PER_PAGE = 24  # photos default
 RESULTS = 12
 RSS_LIMIT = 10
 LATEST = 5
@@ -254,7 +254,8 @@ CONFIG = {
             'split': split,
         },
         'environment_args': {
-            'autoescape': True,
+            'autoescape': False,
+            'trim_blocks': True,
             'extensions': ['jinja2.ext.autoescape', 'jinja2.ext.with_', 'jinja2.ext.i18n']
         },
     },

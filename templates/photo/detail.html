@@ -1,6 +1,5 @@
 {% extends "photo/base.html" %}
 {% block paging %}{% endblock %}
-
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 

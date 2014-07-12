@@ -8,8 +8,8 @@
                 <h2><a href="{{ news.feed.link }}">{{ object.headline }}</a></h2>
                 {% if news.feed.rights %}<p>{{ news.feed.rights }}</p>{% endif %}
                 <p class="subtitle">
-                    {{ news.version|upper }}{# if news.feed.generator %} {{ news.feed.generator }}{% endif #},
-
+                    {{ news.version|upper }},
+                    {# if news.feed.generator %} {{ news.feed.generator }}{% endif #}
                     {% if object.date %}{{ _('updated') }}:
                         <time datetime="{{ object.date|to_datetime }}">
                             {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
@@ -27,8 +27,7 @@
                     <section>
                         <h3><a href="{{ entry.link }}">{{ entry.title|safe }}</a></h3>
                         <div class="story">{{ entry.content|safe }}</div>
-                        <p class="details">
-                            {{ entry.author|striptags }}
+                        <p class="details">{{ entry.author|striptags }}
                             {% if entry.date %}
                                 {% trans since=entry.date|timesince %}{{ since }} ago{% endtrans %}
                             {% endif %}

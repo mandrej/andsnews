@@ -1,7 +1,5 @@
 import cgi
 import json
-import logging
-
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required

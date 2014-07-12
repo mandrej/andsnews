@@ -6,7 +6,7 @@
     {% import "snippets/macros.html" as m %}
     <header>
         {% if phrase %}
-            <h2>{% trans count=number_found %}{{ count }} search result for {{ phrase }}{% pluralize %}{{ count }} search results for {{ phrase }}{% endtrans %}</h2>
+            <h2>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h2>
         {% else %}
             <h2>{{ _('Nothing to search for') }}.</h2>
             <p>{{ _('Please try something') }}.</p>
@@ -17,7 +17,7 @@
             <div>
                 {% if object.kind == 'Photo' %}
                     <i class="fa fa-camera fa-2x pull-left"></i>
-                    <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a> </h3>
+                    <h3><a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }}</a></h3>
                     {{ object.body }}
                     <p class="details">
                         {% for tag in object.tags|split %}
@@ -25,7 +25,7 @@
                             <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                        &nbsp;
+                        <i class="fa fa-user"></i>
                         <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
 				            title="{{ _("author's photos") }}">{{ object.author }}</a>
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
@@ -41,7 +41,7 @@
                             <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                        &nbsp;
+                        <i class="fa fa-user"></i>
                         <a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
 				            title="{{ _("author's blogs") }}">{{ object.author }}</a>
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
@@ -55,7 +55,7 @@
                     {% endif %}
                     {{ object.body }}
                     <p class="details">
-                        &nbsp;
+                        <i class="fa fa-user"></i>
                         <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
 				            title="{{ _("author's comments") }}">{{ object.author }}</a>
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>

@@ -14,9 +14,7 @@
 	<tbody>
 		<tr>
 			<td>{{ _('Aperture') }}</td>
-			<td>
-				{% if object.aperture %}F{{ object.aperture }}{% else %}---{% endif %}
-			</td>
+			<td>{% if object.aperture %}F{{ object.aperture }}{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
 			<td>{{ _('Shutter speed') }}</td>
@@ -25,14 +23,11 @@
 		<tr>
 			<td>{{ _('Focal length') }}</td>
 			<td>
-				{% if object.focal_length %}
-					{{ object.focal_length }} mm
-					{% if object.eqv %}
-						(~<a href="{{ uri_for('photo_filter_all', field='eqv', value=object.eqv) }}"
-                             title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
+				{% if object.focal_length %}{{ object.focal_length }} mm
+					{% if object.eqv %}(~<a href="{{ uri_for('photo_filter_all', field='eqv', value=object.eqv) }}"
+                        title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
 					{% endif %}
-				{% else %}---{% endif %}
-			</td>
+				{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
 			<td>{{ _('Sensitivity') }} (ISO)</td>

@@ -2,7 +2,8 @@
     'class': 'page',
     'data-prev': previous_url,
     'data-page': current_url,
-    'data-next': next_url} %}
+    'data-next': next_url,
+    'data-title': object.headline} %}
 <div{{ data|xmlattr }}>
     {% import "snippets/macros.html" as m %}
     <header>
@@ -12,11 +13,7 @@
             {% set url = uri_for('photo_all') %}
         {% endif %}
         <h2>
-            <a href="{{ url }}"> {{ _('Photos') }}
-                {{ m.filter_title(filter) }}
-            </a>
-            / {{ object.headline }}
-        </h2>
+            <a href="{{ url }}">{{ _('Photos') }} {{ m.filter_title(filter) }}</a> / {{ object.headline }}</h2>
         <p class="subtitle">
             <i class="fa fa-user"></i>
             <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
