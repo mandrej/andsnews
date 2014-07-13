@@ -162,6 +162,7 @@
     // add comment
     $(document).on('click', 'a.comment_add', function(evt) {
         evt.preventDefault();
+        var $this = $(evt.currentTarget);
         $('#addcomment').load(this.href, function() {
             $('#overlay, #addcomment').show();
             $('#body').markItUp(cmntSettings, {nameSpace: 'small'});
@@ -174,8 +175,8 @@
                     success: function(data) {
                         if (typeof(data) == 'string') {
                             $('.dummy').hide();
-                            $('.info').show()
-                            $('#comments').prepend(data);
+                            $('.info').show();
+                            $this.closest('.page').find('.comments').prepend(data);
                             $('a.confirm').click(function(e) {
                                 e.preventDefault();
                                 $('#confirm').load(this.href, function() {

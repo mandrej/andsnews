@@ -36,7 +36,7 @@
         </section>
         <aside>
             {% include "photo/exif.html" %}
-            <div id="comments">
+            <div class="comments">
                 {% for comment in object.comment_list() %}
                     {{ m.render_comment(comment, user) }}
                 {% endfor %}

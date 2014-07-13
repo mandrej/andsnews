@@ -35,7 +35,7 @@
                 <div class="story">{{ object.body|safe }}</div>
             </section>
             <aside>
-                <div id="comments">
+                <div class="comments">
                     {% for comment in object.comment_list() %}
                         {{ m.render_comment(comment, user) }}
                     {% endfor %}
