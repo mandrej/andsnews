@@ -103,6 +103,10 @@ dl {
 		padding: 0.3em 0 0.3em 0.5em;
 		span { padding-left: 0.3em; font-weight: normal; }
 	}
+    &.w25em {
+        dt { width: 2.5em; }
+        dd { margin-left: 2.5em; }
+    }
 	a {
 		&:hover, &:focus { background: @google_orange; }
 		&.selected { background: @google_orange; }
@@ -496,10 +500,6 @@ nav.paginator {
 	h3 { margin: 1em 0; }
 	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
 	button { float: right; width: 5em; margin-left: 0.5em; }
-	.button {
-		.default_button;
-		border-radius: 0;
-	}
 	dl {
 		margin-right: 5.5em;
 		&.w65em {
