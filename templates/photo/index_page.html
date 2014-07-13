@@ -4,6 +4,7 @@
     'data-page': current_url,
     'data-next': next_url,
     'data-title': _('Photos')} %}
+{% spaceless %}
 <div{{ data|xmlattr }}>
     {% import "snippets/macros.html" as m %}
     <header>
@@ -30,3 +31,4 @@
         {% endfor %}
     </article>
 </div>
+{% endspaceless %}

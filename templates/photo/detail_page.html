@@ -4,6 +4,7 @@
     'data-page': current_url,
     'data-next': next_url,
     'data-title': object.headline} %}
+{% spaceless %}
 <div{{ data|xmlattr }}>
     {% import "snippets/macros.html" as m %}
     <header>
@@ -13,17 +14,18 @@
             {% set url = uri_for('photo_all') %}
         {% endif %}
         <h2>
-            <a href="{{ url }}">{{ _('Photos') }} {{ m.filter_title(filter) }}</a> / {{ object.headline }}</h2>
+            <a href="{{ url }}">{{ _('Photos') }} {{ m.filter_title(filter) }}</a> / {{ object.headline }}
+        </h2>
         <p class="subtitle">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-user"></i>&nbsp;
             <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
                 title="{{ _("author's photos") }}">{{ object.author }}</a>
             {% for tag in object.tags %}
-                {% if loop.first %}<i class="fa fa-tags"></i>{% endif %}
+                {% if loop.first %}&nbsp;<i class="fa fa-tags"></i>{% endif %}
                 <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
                     {{ tag }}</a>{% if not loop.last %},{% endif %}
             {% endfor %}
-            <i class="fa fa-clock-o"></i>
+            &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
             <a href="{{ uri_for('photo_filter_all', field='date', value=object.year) }}"
                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
         </p>
@@ -48,3 +50,4 @@
         </aside>
     </article>
 </div>
+{% endspaceless %}

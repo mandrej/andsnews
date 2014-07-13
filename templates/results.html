@@ -25,9 +25,9 @@
                             <a href="{{ uri_for('photo_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>&nbsp;
                         <a href="{{ uri_for('photo_filter_all', field='author', value=object.author) }}"
-				            title="{{ _("author's photos") }}">{{ object.author }}</a>
+				            title="{{ _("author's photos") }}">{{ object.author }}</a>&nbsp;
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
                     </p>
 
@@ -41,9 +41,9 @@
                             <a href="{{ uri_for('entry_filter_all', field='tags', value=tag) }}">
                                 {{ tag }}</a>{% if not loop.last %},{% endif %}
                         {% endfor %}
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>&nbsp;
                         <a href="{{ uri_for('entry_filter_all', field='author', value=object.author) }}"
-				            title="{{ _("author's blogs") }}">{{ object.author }}</a>
+				            title="{{ _("author's blogs") }}">{{ object.author }}</a>&nbsp;
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
                     </p>
                 {% elif object.kind == 'Comment' %}
@@ -55,9 +55,9 @@
                     {% endif %}
                     {{ object.body }}
                     <p class="details">
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>&nbsp;
                         <a href="{{ uri_for('comment_filter_all', field='author', value=object.author) }}"
-				            title="{{ _("author's comments") }}">{{ object.author }}</a>
+				            title="{{ _("author's comments") }}">{{ object.author }}</a>&nbsp;
                         <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
                     </p>
                 {% endif %}

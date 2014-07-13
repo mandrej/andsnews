@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>
+{% import "snippets/macros.html" as m %}
+{% spaceless %}
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -18,7 +20,6 @@
 	<link type="application/rss+xml" rel="alternate" href="/rss/entry.xml" title="{{ _('entry rss') }}" />
 	<link type="image/x-icon" rel="shortcut icon" href="/favicon.ico"/>
 </head>
-{% import "snippets/macros.html" as m %}
 <body>
 	{% block modals %}
 	<div id="overlay" class="hide"></div>
@@ -90,4 +91,5 @@
         {% endif %}
     {% endblock %}
 </body>
+{% endspaceless %}
 </html>
