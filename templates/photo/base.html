@@ -57,12 +57,12 @@
                         create(data, next);
                         var total = swiper.slides.length;
                         if (next) {
-                            if (total > 3) {
+                            if (total > 5) {
                                 swiper.getFirstSlide().remove();
                                 swiper.swipeTo(swiper.activeIndex - 1, 0, false);
                             }
                         } else {
-                            if (total > 3) swiper.getLastSlide().remove();
+                            if (total > 5) swiper.getLastSlide().remove();
                             swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                         }
                         push_state();
