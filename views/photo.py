@@ -19,24 +19,12 @@ class Index(BaseHandler):
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
-        if field and value:
-            base_url = self.uri_for('photo_filter_all', field=field, value=value)
-        else:
-            base_url = self.uri_for('photo_all')
-
-        data = {'previous_url': '%s?page=%s' % (base_url, (page - 1)) if page > 1 else None,
-                'current_url': '%s?page=%s' % (base_url, page),
-                'next_url': '%s?page=%s' % (base_url, (page + 1)) if has_next else None,
-                'objects': objects,
+        data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page}
-        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-            if objects:
-                self.render_template('photo/index_page.html', data)
-            else:
-                self.abort(404)
-        else:
-            self.render_template('photo/index.html', data)
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1}
+        self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):
@@ -46,29 +34,14 @@ class Detail(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)
-        page, previous, obj, next = paginator.triple(slug)
-        if field and value:
-            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=previous.key.string_id()) if previous else None
-            current_url = self.uri_for('photo_filter', field=field, value=value, slug=obj.key.string_id())
-            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id()) if next else None
-        else:
-            previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else None
-            current_url = self.uri_for('photo', slug=obj.key.string_id())
-            next_url = self.uri_for('photo', slug=next.key.string_id()) if next else None
+        page, prev, obj, next = paginator.triple(slug)
 
-        data = {'previous_url': previous_url,
-                'current_url': current_url,
-                'next_url': next_url,
-                'object': obj,
-                'filter': {'field': field, 'value': value} if field and value else None,
+        data = {'object': obj,
+                'next': next,
+                'previous': prev,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page}
-        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-            if obj:
-                self.render_template('photo/detail_page.html', data)
-            else:
-                self.abort(404)
-        else:
-            self.render_template('photo/detail.html', data)
+        self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):
