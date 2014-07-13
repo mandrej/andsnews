@@ -19,7 +19,7 @@
                         {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
                         <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                             href="{{ uri_for('entry_admin_filter', field='date', value=item.name) }}"
-                            title="{{ item.count }}" >{{ item.name }}</a>
+                            title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
                     {% endfor %}
                 </p>
             </section>
@@ -38,7 +38,7 @@
                             <col/>
                             <col style="width: 240px;"/>
                             <col style="width: 140px; text-align: right;"/>
-                            <col style="width: 180px; text-align: right;"/>
+                            <col style="width: 170px; text-align: right;"/>
                         </colgroup>
                         <thead>
                             <tr>

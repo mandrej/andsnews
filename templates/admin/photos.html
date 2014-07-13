@@ -19,7 +19,7 @@
                         {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
                         <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                             href="{{ uri_for('photo_admin_filter', field='date', value=item.name) }}"
-                            title="{{ item.count }}" >{{ item.name }}</a>
+                            title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
                     {% endfor %}
                 </p>
             </section>
