@@ -19,8 +19,8 @@
                             <h3><a href="{{ uri_for('feed', slug=object.key.string_id()) }}">{{ object.headline }}</a></h3>
                             {% if object.subtitle %}<p>{{ object.subtitle }}</p>{% endif %}
                             <p class="details">
-                                {% if object.date %}{{ _('updated') }}:
-                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                                {% if object.date %}{{ _('updated') }}:&nbsp;
+                                    {%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}
                                 {% else %}
                                     {{ _('Never fetched') }}
                                 {% endif %}

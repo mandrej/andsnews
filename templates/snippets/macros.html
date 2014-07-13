@@ -103,8 +103,8 @@
                     href="{{ uri_for('delete', safe_key=obj.key.urlsafe()) }}" title="{{ _('Delete') }}"></a>
             {% endif %}
             <div class="para">{{ obj.body|safe }}</div>
-            <p class="details">{{ obj.author }},
-                {% trans since=obj.date|timesince %}{{ since }} ago{% endtrans %}
+            <p class="details">{{ obj.author }},&nbsp;
+                {%- trans since=obj.date|timesince %}{{ since }} ago{% endtrans -%}
             </p>
         </div>
     </div>
