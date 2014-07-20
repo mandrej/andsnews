@@ -11,7 +11,7 @@
             var prefix = 'ANDрејевићи - ';
             var History = window.History;
             History.options.disableSuid = true;
-            var max = 3;
+{#            var max = 3;#}
             var selector = '.page';
             function create(data, next) {
                 if (next == undefined) next = true;
@@ -38,8 +38,7 @@
                 watchActiveIndex: true,
                 preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
-                    var url,
-                        next = (direction == 'next');
+                    var url, next = (direction == 'next');
                     switch(direction) {
                         case 'prev':
                             url = $(swiper.getFirstSlide()).find(selector).data('prev');
@@ -56,14 +55,19 @@
                     }
                     $.get(url, function(data) {
                         create(data, next);
-                        var total = swiper.slides.length;
+{#                        var total = swiper.slides.length;#}
+{#                        if (next) {#}
+{#                            if (total > max) {#}
+{#                                swiper.getFirstSlide().remove();#}
+{#                                swiper.swipeTo(swiper.activeIndex - 1, 0, false);#}
+{#                            }#}
+{#                        } else {#}
+{#                            if (total > max) swiper.getLastSlide().remove();#}
+{#                            swiper.swipeTo(swiper.activeIndex + 1, 0, false);#}
+{#                        }#}
                         if (next) {
-                            if (total > max) {
-                                swiper.getFirstSlide().remove();
-                                swiper.swipeTo(swiper.activeIndex - 1, 0, false);
-                            }
+                            swiper.swipeTo(swiper.activeIndex, 0, false);
                         } else {
-                            if (total > max) swiper.getLastSlide().remove();
                             swiper.swipeTo(swiper.activeIndex + 1, 0, false);
                         }
                         push_state();
