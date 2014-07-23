@@ -2,3 +2,4 @@
 {% import "snippets/macros.html" as m %}
 {% set kind='Entry' %}
 {% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
+{% block paging %}{{ m.paging(kind, has_previous, has_next, page) }}{% endblock %}

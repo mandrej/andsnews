@@ -2,7 +2,6 @@
 {% import "snippets/macros.html" as m %}
 {% set kind='Photo' %}
 {% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
-{% block paging %}{% endblock %}
 
 {% block scripts %}
     {{ super() }}
