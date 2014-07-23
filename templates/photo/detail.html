@@ -45,7 +45,7 @@
                         </header>
                         <article class="port">
                             <section>
-                                <img src="{{ object.normal_url_async.get_result() }}">
+                                <canvas data-url="{{ object.normal_url_async.get_result() }}"></canvas>
                             </section>
                             <aside>
                                 {% include "photo/exif.html" %}
@@ -74,9 +74,4 @@
     <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
     <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
     <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
-    <script>
-         $(function() {
-
-         });
-    </script>
 {% endblock %}

@@ -1,6 +1,5 @@
 import cgi
 import json
-import logging
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -12,9 +11,6 @@ from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField,
 
 class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
-        logging.error(field)
-        logging.error(value)
-        logging.error(page)
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)

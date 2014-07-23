@@ -13,9 +13,24 @@
             var History = window.History;
             History.options.disableSuid = true;
 
+            function drawCanvas(slide) {
+                var canvas = slide.find('canvas');
+                if (canvas.length) {
+                    if (canvas.attr('width') == undefined) {
+                        var normal_url = $(canvas).data('url');
+                        canvas.copyright(normal_url);
+                        $(window).resize(function() {
+                            canvas.copyright(normal_url);
+                        });
+                    }
+                }
+            }
+
             function push_state() {
-                var params = $(mySwiper.activeSlide()).data();
+                var slide = $(mySwiper.activeSlide());
+                var params = slide.data();
                 History.pushState(null, prefix + params.title, params.page);
+                drawCanvas(slide);
             }
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
@@ -43,10 +58,11 @@
             var pages = $.map($('.swiper-slide'), function(item) {
                return item.data('page')
             });
-            console.log(pages);
-            console.log(location.pathname);
             var start = $.inArray(location.pathname, pages);
-            if (start != - 1) mySwiper.swipeTo(start, 0, false);
+            if (start != - 1) {
+                mySwiper.swipeTo(start, 0, false);
+                drawCanvas($(mySwiper.activeSlide()));
+            }
          });
     </script>
 {% endblock %}
