@@ -19,7 +19,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, PER_PAGE, RSS_LIMIT, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
+from config import to_datetime, RESULTS, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
 
 def touch_appcache(handler_method):
@@ -135,7 +135,7 @@ class BaseHandler(webapp2.RequestHandler):
 class Index(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query)
+        paginator = Paginator(query, per_page=48)
         objects, has_next = paginator.page(1)
         self.render_template('index.html', {'objects': objects, 'latest': LATEST})
 
@@ -278,7 +278,7 @@ class Filter(object):
 class Paginator(object):
     timeout = TIMEOUT / 12  # 5 min
 
-    def __init__(self, query, per_page=PER_PAGE):
+    def __init__(self, query, per_page):
         self.query = query
         self.per_page = per_page
         # <str> repr(self.query)
@@ -340,7 +340,7 @@ class Paginator(object):
 
 class SearchPaginator(object):
 #    timeout = 60 #TIMEOUT/10
-    def __init__(self, querystring, per_page=PER_PAGE):
+    def __init__(self, querystring, per_page):
         self.querystring = querystring
         # '"{0}"'.format(querystring.replace('"', ''))
         self.per_page = per_page
@@ -461,12 +461,13 @@ class Rss(BaseHandler):
     def get(self, kind):
         if kind == 'photo':
             query = Photo.query().order(-Photo.date)
+            paginator = Paginator(query, per_page=48)
         elif kind == 'entry':
             query = Entry.query().order(-Entry.date)
+            paginator = Paginator(query, per_page=9)
+        objects, _ = paginator.page(1)
 
-        data = {'kind': kind,
-                'objects': query.fetch(RSS_LIMIT),
-                'format': RFC822}
+        data = {'kind': kind, 'objects': objects, 'format': RFC822}
 
         last_modified = to_datetime(data['objects'][0].date, format=RFC822)
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
@@ -480,8 +481,16 @@ class Rss(BaseHandler):
 
 class SiteMap(BaseHandler):
     def get(self):
-        data = {'photos': Photo.query().order(-Photo.date),
-                'entries': Entry.query().order(-Entry.date),
+        query = Photo.query().order(-Photo.date)
+        paginator = Paginator(query, per_page=48)
+        photos, _ = paginator.page(1)
+
+        query = Entry.query().order(-Entry.date)
+        paginator = Paginator(query, per_page=9)
+        entries, _ = paginator.page(1)
+
+        data = {'photos': photos,
+                'entries': entries,
                 'headers': [('Content-Type', 'application/xml')]}
         self.render_template('urlset.xml', data)
 

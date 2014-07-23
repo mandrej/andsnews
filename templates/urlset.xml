@@ -9,7 +9,7 @@
 {% endmacro %}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>{{ uri_for('photo_all', _full=True) }}</loc>
+        <loc>{{ uri_for('photo_all', page=1, _full=True) }}</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -17,7 +17,7 @@
         {{ _item(object, 'photo') }}
     {% endfor %}
     <url>
-        <loc>{{ uri_for('entry_all', _full=True) }}</loc>
+        <loc>{{ uri_for('entry_all', page=1, _full=True) }}</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>

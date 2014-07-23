@@ -11,7 +11,7 @@
     <channel>
         {% if kind == 'photo' %}
             <title>Photos</title>
-            <link>{{ uri_for('photo_all', _full=True) }}</link>
+            <link>{{ uri_for('photo_all', page=1, _full=True) }}</link>
             <lastBuildDate>{{ objects.0.date|to_datetime(format) }}</lastBuildDate>
             <description>Latest photos from the ANDрејевићи site</description>
             {% for item in objects %}
@@ -30,7 +30,7 @@
             {% endfor %}
         {% else %}
             <title>Entries</title>
-            <link>{{ uri_for('entry_all', _full=True) }}</link>
+            <link>{{ uri_for('entry_all', page=1, _full=True) }}</link>
             <lastBuildDate>{{ objects.0.date|to_datetime(format) }}</lastBuildDate>
             <description>Latest entries from the ANDрејевићи site</description>
             {% for item in objects %}
