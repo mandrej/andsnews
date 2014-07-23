@@ -77,12 +77,12 @@ class Index(BaseHandler):
 
 class Photos(BaseHandler):
     @login_required
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=10)
         objects, has_next = paginator.page(page)
 
@@ -97,12 +97,12 @@ class Photos(BaseHandler):
 
 class Entries(BaseHandler):
     @login_required
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
         f = Filter(field, value)
         filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
         query = Entry.query(*filters).order(-Entry.date)
 
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=5)
         objects, has_next = paginator.page(page)
 
@@ -145,9 +145,9 @@ class Feeds(BaseHandler):
 
 class Comments(BaseHandler):
     @admin_required
-    def get(self):
+    def get(self, page=1):
         query = Comment.query().order(-Comment.date)
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=10)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
@@ -168,9 +168,9 @@ class Comments(BaseHandler):
 
 class Counters(BaseHandler):
     @admin_required
-    def get(self):
+    def get(self, page=1):
         query = Counter.query().order(Counter.field)
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=10)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}

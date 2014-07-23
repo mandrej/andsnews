@@ -8,24 +8,24 @@
     </p>
 {% endmacro %}
 
-{% macro _link(kind, page, class, title) %}
+{% macro _link(name, page, class, title) %}
     {% if filter %}
-        {% set url = uri_for('%s_filter_all' % kind.lower(), page=page, field=filter.field, value=filter.value) %}
+        {% set url = uri_for('%s_filter' % name, page=page, field=filter.field, value=filter.value) %}
     {% else %}
-        {% set url = uri_for('%s_all' % kind.lower(), page=page) %}
+        {% set url = uri_for(name, page=page) %}
     {% endif %}
     <a{{ {'href': '%s?find=%s' % (url, phrase) if phrase else url, 'class': class, 'title': title}|xmlattr }}></a>
 {% endmacro %}
 
-{% macro paging(kind, has_previous, has_next, page) %}
+{% macro paging(name, has_previous, has_next, page) %}
     {% if has_previous or has_next %}
         {% if has_previous %}
-            {{ _link(kind, page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
+            {{ _link(name, page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
         {% else %}
             <span class="{{ prev_class }} na"></span>
         {% endif %}
         {% if has_next %}
-            {{ _link(kind, page + 1, next_class, '%s %s' % (_('next'), _('page'))) }}
+            {{ _link(name, page + 1, next_class, '%s %s' % (_('next'), _('page'))) }}
         {% else %}
             <span class="{{ next_class }} na"></span>
         {% endif %}
@@ -85,7 +85,7 @@
         <h3>{{ _('Administration') }}</h3>
         <div class="submenu">
             {% if is_admin %}
-                <a href="/admin/counters" class="block">Counters</a>
+                <a href="{{ uri_for('counter_admin', page=1) }}" class="block">Counters</a>
                 <a href="/mapreduce" class="block">Mapreduce</a>
             {% endif %}
             <a href="/invalidate" class="block">{{ _('Invalidate cache') }}</a>

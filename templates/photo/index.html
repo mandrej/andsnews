@@ -7,7 +7,7 @@
         <div class="swiper-wrapper">
             {% for slide in objects|slice(num) %}
                 {% if filter %}
-                    {% set base_url = uri_for('photo_filter_all', page=loop.index, field=filter.field, value=filter.value) %}
+                    {% set base_url = uri_for('photo_all_filter', page=loop.index, field=filter.field, value=filter.value) %}
                 {% else %}
                     {% set base_url = uri_for('photo_all', page=loop.index) %}
                 {% endif %}

@@ -12,7 +12,7 @@
         <article class="cols">
             <section class="admin">
                 <h3>
-                    <a href="/admin/photos/" class="button">
+                    <a href="{{ uri_for('photo_admin', page=1) }}" class="button">
                         <i class="fa fa-th-list"></i>
                         Photo {{ photo_count }}
                     </a>&nbsp;
@@ -31,7 +31,7 @@
             </section>
             <section class="admin">
                 <h3>
-                    <a href="/admin/entries/" class="button">
+                    <a href="{{ uri_for('entry_admin', page=1) }}" class="button">
                         <i class="fa fa-th-list"></i>
                         Entry {{ entry_count }}
                     </a>&nbsp;
@@ -44,7 +44,7 @@
                 <div id="Entry_date"></div>
 
                 <h3>
-                    <a href="/admin/feeds/" class="button">
+                    <a href="{{ uri_for('feed_admin', page=1) }}" class="button">
                         <i class="fa fa-th-list"></i>
                         Feeds {{ feeds_count }}
                     </a>&nbsp;
@@ -56,7 +56,7 @@
 
                 {% if is_admin %}
                     <h3>
-                        <a href="/admin/comments/" class="button">
+                        <a href="{{ uri_for('comment_admin', page=1) }}" class="button">
                             <i class="fa fa-th-list"></i>
                             Comment {{ comment_count }}
                         </a>

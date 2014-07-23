@@ -13,7 +13,7 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 {% if filter %}
-                    {% set base_url = uri_for('photo_filter_all', page=1, field=filter.field, value=filter.value) %}
+                    {% set base_url = uri_for('photo_all_filter', page=1, field=filter.field, value=filter.value) %}
                     {% set current_url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
                 {% else %}
                     {% set base_url = uri_for('photo_all', page=1) %}
@@ -31,15 +31,15 @@
                             </h2>
                             <p class="subtitle">
                                 <i class="fa fa-user"></i>&nbsp;
-                                <a href="{{ uri_for('photo_filter_all', page=1, field='author', value=object.author) }}"
+                                <a href="{{ uri_for('photo_all_filter', page=1, field='author', value=object.author) }}"
                                     title="{{ _("author's photos") }}">{{ object.author }}</a>
                                 {% for tag in object.tags %}
                                     {% if loop.first %}&nbsp;<i class="fa fa-tags"></i>{% endif %}
-                                    <a href="{{ uri_for('photo_filter_all', page=1, field='tags', value=tag) }}">
+                                    <a href="{{ uri_for('photo_all_filter', page=1, field='tags', value=tag) }}">
                                         {{ tag }}</a>{% if not loop.last %},{% endif %}
                                 {% endfor %}
                                 &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
-                                <a href="{{ uri_for('photo_filter_all', page=1, field='date', value=object.year) }}"
+                                <a href="{{ uri_for('photo_all_filter', page=1, field='date', value=object.year) }}"
                                     title="{{ _('photos taken same year') }}">{{ object.year }}</a>
                             </p>
                         </header>

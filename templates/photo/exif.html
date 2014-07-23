@@ -2,10 +2,10 @@
 	<thead>
 		<tr>
 			<th colspan="2">
-                <a href="{{ uri_for('photo_filter_all', page=1, field='model', value=object.model) }}"
+                <a href="{{ uri_for('photo_all_filter', page=1, field='model', value=object.model) }}"
                 title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
                 {% if object.lens %}<br/>
-                    <a href="{{ uri_for('photo_filter_all', page=1, field='lens', value=object.lens) }}"
+                    <a href="{{ uri_for('photo_all_filter', page=1, field='lens', value=object.lens) }}"
                        title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
                 {% endif %}
             </th>
@@ -24,14 +24,14 @@
 			<td>{{ _('Focal length') }}</td>
 			<td>
 				{%- if object.focal_length %}{{ object.focal_length }} mm
-					{%- if object.eqv %}(~<a href="{{ uri_for('photo_filter_all', page=1, field='eqv', value=object.eqv) }}"
+					{%- if object.eqv %}(~<a href="{{ uri_for('photo_all_filter', page=1, field='eqv', value=object.eqv) }}"
                         title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
 					{% endif -%}
 				{% else %}---{% endif -%}</td>
 		</tr>
 		<tr>
 			<td>{{ _('Sensitivity') }} (ISO)</td>
-			<td>{% if object.iso %}<a href="{{ uri_for('photo_filter_all', page=1, field='iso', value=object.iso) }}"
+			<td>{% if object.iso %}<a href="{{ uri_for('photo_all_filter', page=1, field='iso', value=object.iso) }}"
                 title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
 		<tr>
@@ -41,7 +41,7 @@
 		</tr>
         <tr>
             <td>
-                <a href="{{ uri_for('photo_filter_all', page=1, field='color', value=object.color) }}"
+                <a href="{{ uri_for('photo_all_filter', page=1, field='color', value=object.color) }}"
                    title="{{ _('photos with similar color') }}">{{ _('Similar color') }}</a>
             </td>
             <td>
