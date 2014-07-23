@@ -140,7 +140,7 @@ class Feeds(BaseHandler):
         slug = self.request.get('action:feed')
         if slug:
             memcache.delete(slug)
-        self.redirect('/admin/feeds')
+        self.redirect_to('feed_admin')
 
 
 class Comments(BaseHandler):
@@ -177,9 +177,10 @@ class Counters(BaseHandler):
         self.render_template('admin/counters.html', data)
 
     @csrf_protected
-    def post(self):
-        cntx = ndb.get_context()
-        cntx.set_cache_policy(False)
+    def post(self, page=1):
+        # cntx = ndb.get_context()
+        # cntx.set_cache_policy(False)
+        page = int(page)
         if self.request.get('action:delete'):
             key = ndb.Key(urlsafe=self.request.get('action:delete'))
             key.delete()
@@ -189,7 +190,7 @@ class Counters(BaseHandler):
             obj = key.get()
             obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
-        self.redirect('/admin/counters')
+        self.redirect_to('counter_admin', page=page)
 
 
 class Spectra(BaseHandler):

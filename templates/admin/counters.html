@@ -8,8 +8,7 @@
             <h2>Counter administration</h2>
         </header>
         <article class="normal">
-            <form action="/admin/counters" method="post">
-                <input type="hidden" name="page" value="{{ page }}"/>
+            <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
                 <input name="token" type="hidden" value="{{ token }}"/>
                 <table class="zebra">
                     <colgroup>

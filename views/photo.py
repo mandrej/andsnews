@@ -146,6 +146,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('photo_admin')
+            self.redirect_to('photo_admin', page=1)
         else:
             self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})

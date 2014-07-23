@@ -434,7 +434,7 @@ class RenderCloud(BaseHandler):
         self.render_template(
             'snippets/cloud.html', {
                 'items': items,
-                'link': '%s_filter_all' % kind.lower(),
+                'link': '%s_all_filter' % kind.lower(),
                 'field_name': field,
                 'filter': {'field': field, 'value': value} if (field and value) else None})
 
