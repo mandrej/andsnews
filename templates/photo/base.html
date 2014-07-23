@@ -2,6 +2,8 @@
 {% import "snippets/macros.html" as m %}
 {% set kind='Photo' %}
 {% block nav %}{{ m.menu(kind, user, is_admin) }}{% endblock %}
+{% block paging %}{% endblock %}
+
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/jquery.history.min.js"></script>
@@ -11,24 +13,10 @@
             var prefix = 'ANDрејевићи - ';
             var History = window.History;
             History.options.disableSuid = true;
-{#            var max = 3;#}
-            var selector = '.page';
-            function create(data, next) {
-                if (next == undefined) next = true;
-                var slide = mySwiper.createSlide(data);
-                if (next) {
-                    slide.append();
-                } else {
-                    slide.prepend();
-                }
-                var canvas = $(slide).find('canvas');
-                if (canvas.length) {
-                    var normal_url = $(canvas).attr('data-url');
-                    $(canvas).copyright(normal_url);
-                    $(window).resize(function() {
-                        $(canvas).copyright(normal_url);
-                    });
-                }
+
+            function push_state() {
+                var params = $(mySwiper.activeSlide()).data();
+                History.pushState(null, prefix + params.title, params.page);
             }
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
@@ -38,100 +26,28 @@
                 watchActiveIndex: true,
                 preventLinksPropagation: true,
                 onSlideChangeEnd: function(swiper, direction) {
-                    var url, next = (direction == 'next');
-                    switch(direction) {
-                        case 'prev':
-                            url = $(swiper.getFirstSlide()).find(selector).data('prev');
-                            break;
-                        case 'next':
-                            url = $(swiper.getLastSlide()).find(selector).data('next');
-                            break;
-                        default:
-                            return;
-                    }
-                    if (url == undefined) {
-                        push_state();
-                        return
-                    }
-                    $.get(url, function(data) {
-                        create(data, next);
-{#                        var total = swiper.slides.length;#}
-{#                        if (next) {#}
-{#                            if (total > max) {#}
-{#                                swiper.getFirstSlide().remove();#}
-{#                                swiper.swipeTo(swiper.activeIndex - 1, 0, false);#}
-{#                            }#}
-{#                        } else {#}
-{#                            if (total > max) swiper.getLastSlide().remove();#}
-{#                            swiper.swipeTo(swiper.activeIndex + 1, 0, false);#}
-{#                        }#}
-                        if (next) {
-                            swiper.swipeTo(swiper.activeIndex, 0, false);
-                        } else {
-                            swiper.swipeTo(swiper.activeIndex + 1, 0, false);
-                        }
-                        push_state();
-                    });
+                    push_state();
                 }
             });
-            function push_state() {
-                var params = $(mySwiper.activeSlide()).find(selector).data();
-                History.pushState(null, prefix + params.title, params.page);
-            }
 
-            var page = 1 * '{{ page }}';
-            var current_url = '{{ current_url }}';
-            var previous_url = '{{ previous_url }}';
-            var next_url = '{{ next_url }}';
-            var has_previous = (previous_url != 'None');
-            var has_next = (next_url != 'None');
-
-            if (has_previous && has_next) {
-                $.when(
-                    $.get(previous_url), $.get(current_url), $.get(next_url))
-                .done(function(a1, a2, a3) {
-                    create(a1[0]); create(a2[0]); create(a3[0]);
-                    mySwiper.swipeTo(1, 0, false);
-                    push_state();
-                });
-            } else if (has_previous && !has_next) {
-                $.when(
-                    $.get(previous_url), $.get(current_url))
-                .done(function(a1, a2) {
-                    create(a1[0]); create(a2[0]);
-                    mySwiper.swipeTo(1, 0, false);
-                    push_state();
-                });
-            } else if (!has_previous && has_next) {
-                $.when(
-                    $.get(current_url), $.get(next_url))
-                .done(function(a1, a2) {
-                    create(a1[0]); create(a2[0]);
-                    push_state();
-                });
-            } else {
-                $.get(current_url, function(a1) {
-                    create(a1);
-                    push_state();
-                });
-            }
             History.Adapter.bind(window, 'statechange', function() {
                 var State = History.getState();
-				var params = $(mySwiper.activeSlide()).find(selector).data();
-                if (params.page == State.hash) return;
-                if (params.prev == State.hash) {
-                    mySwiper.swipePrev();
-                } else if (params.next == State.hash) {
+                var current = mySwiper.activeIndex;
+                var index = $.inArray(State.hash, pages);
+                if (index > current) {
                     mySwiper.swipeNext();
-                } else {
-                    window.location.href = State.hash;
+                } else if (index < current) {
+                    mySwiper.swipePrev();
                 }
 			});
 
-            $(document).on('click', 'figure a', function(evt) {
-                var title = $(this).find('.legend').text();
-                History.pushState(null, prefix + title, this.href);
+            var pages = $.map($('.swiper-slide'), function(item) {
+               return item.data('page')
             });
+            console.log(pages);
+            console.log(location.pathname);
+            var start = $.inArray(location.pathname, pages);
+            if (start != - 1) mySwiper.swipeTo(start, 0, false);
          });
     </script>
 {% endblock %}

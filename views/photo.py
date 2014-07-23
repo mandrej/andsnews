@@ -1,5 +1,6 @@
 import cgi
 import json
+import logging
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -10,33 +11,21 @@ from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField,
 
 
 class Index(BaseHandler):
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
+        logging.error(field)
+        logging.error(value)
+        logging.error(page)
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.request.get('page', 1))
         paginator = Paginator(query)
-        objects, has_next = paginator.page(page)
+        objects, has_next = paginator.page(1)
 
-        if field and value:
-            base_url = self.uri_for('photo_filter_all', field=field, value=value)
-        else:
-            base_url = self.uri_for('photo_all')
-
-        data = {'previous_url': '%s?page=%s' % (base_url, (page - 1)) if page > 1 else None,
-                'current_url': '%s?page=%s' % (base_url, page),
-                'next_url': '%s?page=%s' % (base_url, (page + 1)) if has_next else None,
-                'objects': objects,
+        data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page}
-        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-            if objects:
-                self.render_template('photo/index_page.html', data)
-            else:
-                self.abort(404)
-        else:
-            self.render_template('photo/index.html', data)
+                'num': 2 if len(objects) > 24 else 1}
+        self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):
@@ -46,29 +35,29 @@ class Detail(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)
-        page, previous, obj, next = paginator.triple(slug)
-        if field and value:
-            previous_url = self.uri_for('photo_filter', field=field, value=value, slug=previous.key.string_id()) if previous else None
-            current_url = self.uri_for('photo_filter', field=field, value=value, slug=obj.key.string_id())
-            next_url = self.uri_for('photo_filter', field=field, value=value, slug=next.key.string_id()) if next else None
-        else:
-            previous_url = self.uri_for('photo', slug=previous.key.string_id()) if previous else None
-            current_url = self.uri_for('photo', slug=obj.key.string_id())
-            next_url = self.uri_for('photo', slug=next.key.string_id()) if next else None
+        objects, has_next = paginator.page(1)
 
-        data = {'previous_url': previous_url,
-                'current_url': current_url,
-                'next_url': next_url,
-                'object': obj,
-                'filter': {'field': field, 'value': value} if field and value else None,
+        data = {'objects': objects,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'slug': slug}
+        self.render_template('photo/detail.html', data)
+
+
+class XXXDetail(BaseHandler):
+    def get(self, slug, field=None, value=None):
+        f = Filter(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        query = Photo.query(*filters).order(-Photo.date)
+
+        paginator = Paginator(query)
+        page, prev, obj, next = paginator.triple(slug)
+
+        data = {'object': obj,
+                'next': next,
+                'previous': prev,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page}
-        if self.request.headers.get('X-Requested-With', '') == 'XMLHttpRequest':
-            if obj:
-                self.render_template('photo/detail_page.html', data)
-            else:
-                self.abort(404)
-        else:
-            self.render_template('photo/detail.html', data)
+        self.render_template('photo/detail.html', data)
 
 
 class Palette(BaseHandler):

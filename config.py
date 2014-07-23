@@ -10,7 +10,7 @@ from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
-PER_PAGE = 24  # photos default
+PER_PAGE = 48  # photos default
 RESULTS = 12
 RSS_LIMIT = 10
 LATEST = 5
@@ -35,7 +35,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 
 /static/scripts/jquery.searchhighlight.min.js
 /static/scripts/idangerous.swiper.min.js
-/static/scripts/jquery.history.min.js
 /static/scripts/urlify.min.js
 /static/scripts/jquery.autocomplete.min.js
 /static/scripts/base.min.js

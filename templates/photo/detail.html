@@ -1,7 +1,6 @@
 {% extends "photo/base.html" %}
-{% block paging %}{% endblock %}
-{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
-{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
+{#{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}#}
+{#{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}#}
 
 {% block modals %}
 {{ super() }}
@@ -9,8 +8,64 @@
 {% endblock %}
 
 {% block contents %}
+    {% import "snippets/macros.html" as m %}
     <div class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+            {% for object in objects %}
+                {% if filter %}
+                    {% set base_url = uri_for('photo_filter_all', page=1, field=filter.field, value=filter.value) %}
+                    {% set current_url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
+                {% else %}
+                    {% set base_url = uri_for('photo_all', page=1) %}
+                    {% set current_url = uri_for('photo', slug=object.key.string_id()) %}
+                {% endif %}
+                {% set data = {
+                    'class': 'swiper-slide',
+                    'data-page': current_url,
+                    'data-title': object.headline} %}
+                <div{{ data|xmlattr }}>
+                    <div class="page">
+                        <header>
+                            <h2>
+                                <a href="{{ base_url }}">{{ _('Photos') }} {{ m.filter_title(filter) }}</a> / {{ object.headline }}
+                            </h2>
+                            <p class="subtitle">
+                                <i class="fa fa-user"></i>&nbsp;
+                                <a href="{{ uri_for('photo_filter_all', page=1, field='author', value=object.author) }}"
+                                    title="{{ _("author's photos") }}">{{ object.author }}</a>
+                                {% for tag in object.tags %}
+                                    {% if loop.first %}&nbsp;<i class="fa fa-tags"></i>{% endif %}
+                                    <a href="{{ uri_for('photo_filter_all', page=1, field='tags', value=tag) }}">
+                                        {{ tag }}</a>{% if not loop.last %},{% endif %}
+                                {% endfor %}
+                                &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
+                                <a href="{{ uri_for('photo_filter_all', page=1, field='date', value=object.year) }}"
+                                    title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+                            </p>
+                        </header>
+                        <article class="port">
+                            <section>
+                                <img src="{{ object.normal_url_async.get_result() }}">
+                            </section>
+                            <aside>
+                                {% include "photo/exif.html" %}
+                                <div class="comments">
+                                    {% for comment in object.comment_list() %}
+                                        {{ m.render_comment(comment, user) }}
+                                    {% endfor %}
+                                </div>
+                                {% if user %}
+                                    <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
+                                        <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
+                                    <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
+                                        <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
+                                {% endif %}
+                            </aside>
+                        </article>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 
@@ -19,4 +74,9 @@
     <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
     <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
     <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
+    <script>
+         $(function() {
+
+         });
+    </script>
 {% endblock %}

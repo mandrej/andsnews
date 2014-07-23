@@ -6,7 +6,7 @@
         {% import "snippets/macros.html" as m %}
         <header>
             <h2>
-                <a href="{{ uri_for('feed_all') }}">{{ _('News') }}</a>
+                <a href="{{ uri_for('feed_all', page=1) }}">{{ _('News') }}</a>
                 {{ m.filter_title(filter) }}
             </h2>
         </header>

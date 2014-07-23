@@ -1,9 +1,48 @@
 {% extends "photo/base.html" %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
-{% block paging %}{% endblock %}
 
 {% block contents %}
+    {% import "snippets/macros.html" as m %}
     <div class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+            {% for slide in objects|slice(num) %}
+                {% if filter %}
+                    {% set base_url = uri_for('photo_filter_all', page=loop.index, field=filter.field, value=filter.value) %}
+                {% else %}
+                    {% set base_url = uri_for('photo_all', page=loop.index) %}
+                {% endif %}
+                {% set data = {
+                    'class': 'swiper-slide',
+                    'data-page': base_url,
+                    'data-title': _('Photos')} %}
+                <div{{ data|xmlattr }}>
+                    <div class="page">
+                        <header>
+                            <h2>
+                                <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a>
+                                {{ m.filter_title(filter) }}
+                            </h2>
+                        </header>
+                        <article class="thumbnails">
+                            {% for object in slide %}
+                                {% if object %}
+                                    {% if filter %}
+                                        {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
+                                    {% else %}
+                                        {% set url = uri_for('photo', slug = object.key.string_id()) %}
+                                    {% endif %}
+                                    <figure>
+                                        <a href="{{ url }}"
+                                            style="background-image: url({{ object.small_url_async.get_result() }})">
+                                            <p class="legend">{{ object.headline }}</p>
+                                        </a>
+                                    </figure>
+                                {% endif %}
+                            {% endfor %}
+                        </article>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

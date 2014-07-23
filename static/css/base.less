@@ -307,7 +307,7 @@ input[data-function*='swipe'] {
 
 #main {
 	padding: 8em 3% 0;
-	min-height: 400px;
+	min-height: 500px;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
 }
@@ -369,7 +369,7 @@ input[data-function*='swipe'] {
 			section {
 				flex: 3;
 				padding: 0 @gap @gap/2 @gap;
-				canvas { border-radius: @radius; }
+				img { border-radius: @radius; max-width: 100%; }
 			}
 			aside {
 				flex: 1;
