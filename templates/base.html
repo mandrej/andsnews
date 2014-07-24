@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>
+{#<html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>#}
+<html{{ {'lang': language(language_code)}|xmlattr }}>
 {% import "snippets/macros.html" as m %}
 {% spaceless %}
 <head>
