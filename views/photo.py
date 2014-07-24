@@ -15,12 +15,15 @@ class Index(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        paginator = Paginator(query, per_page=48)
-        objects, has_next = paginator.page(1)
+        page = int(page)
+        paginator = Paginator(query, per_page=24)
+        objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'num': 2 if len(objects) > 24 else 1}
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1}
         self.render_template('photo/index.html', data)
 
 
@@ -30,12 +33,14 @@ class Detail(BaseHandler):
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        paginator = Paginator(query, per_page=48)
-        objects, has_next = paginator.page(1)
+        paginator = Paginator(query)
+        page, previous, object, next = paginator.triple(slug)
 
-        data = {'objects': objects,
+        data = {'object': object,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'slug': slug}
+                'page': page,
+                'next': next,
+                'previous': previous}
         self.render_template('photo/detail.html', data)
 
 

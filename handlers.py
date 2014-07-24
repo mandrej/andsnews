@@ -135,7 +135,7 @@ class BaseHandler(webapp2.RequestHandler):
 class Index(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=48)
+        paginator = Paginator(query, per_page=24)
         objects, has_next = paginator.page(1)
         self.render_template('index.html', {'objects': objects, 'latest': LATEST})
 
@@ -278,7 +278,7 @@ class Filter(object):
 class Paginator(object):
     timeout = TIMEOUT / 12  # 5 min
 
-    def __init__(self, query, per_page):
+    def __init__(self, query, per_page=None):
         self.query = query
         self.per_page = per_page
         # <str> repr(self.query)
@@ -461,7 +461,7 @@ class Rss(BaseHandler):
     def get(self, kind):
         if kind == 'photo':
             query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=48)
+            paginator = Paginator(query, per_page=24)
         elif kind == 'entry':
             query = Entry.query().order(-Entry.date)
             paginator = Paginator(query, per_page=9)
@@ -482,7 +482,7 @@ class Rss(BaseHandler):
 class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=48)
+        paginator = Paginator(query, per_page=24)
         photos, _ = paginator.page(1)
 
         query = Entry.query().order(-Entry.date)
