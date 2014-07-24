@@ -45,7 +45,8 @@
                         </header>
                         <article class="port">
                             <section>
-                                <canvas data-url="{{ object.normal_url_async.get_result() }}"></canvas>
+                                <img src="{{ object.normal_url_async.get_result() }}">
+{#                                <canvas data-url="{{ object.normal_url_async.get_result() }}"></canvas>#}
                             </section>
                             <aside>
                                 {% include "photo/exif.html" %}

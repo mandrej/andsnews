@@ -30,7 +30,7 @@
                 var slide = $(mySwiper.activeSlide());
                 var params = slide.data();
                 History.pushState(null, prefix + params.title, params.page);
-                drawCanvas(slide);
+{#                drawCanvas(slide);#}
             }
             var mySwiper = new Swiper('.swiper-container', {
                 speed: 500,
@@ -61,7 +61,7 @@
             var start = $.inArray(location.pathname, pages);
             if (start != - 1) {
                 mySwiper.swipeTo(start, 0, false);
-                drawCanvas($(mySwiper.activeSlide()));
+{#                drawCanvas($(mySwiper.activeSlide()));#}
             }
          });
     </script>
