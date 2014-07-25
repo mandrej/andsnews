@@ -96,6 +96,11 @@ indexes:
   properties:
   - name: lens
   - name: date
+
+- kind: Photo
+  properties:
+  - name: lens
+  - name: date
     direction: desc
 
 - kind: Photo
