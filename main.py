@@ -78,7 +78,7 @@ app = WSGIApplication([
     Route('/<safe_key>/download', handler=SaveAsHandler, name='download'),
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
     Route('/<safe_key>/add', handler='views.comment.Add', name='comment_add'),
-    Route('/search', handler=Find),
+    Route('/search/<page:\d+>', handler=Find, name='search'),
     # Route('/send', handler=Send),
     Route('/photometa', handler=PhotoMeta),
     Route('/cache.appcache', handler=AppCache),

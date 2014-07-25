@@ -179,9 +179,9 @@ class Invalidate(webapp2.RequestHandler):
 
 
 class Find(BaseHandler):
-    def get(self):
+    def get(self, page):
         querystring = self.request.get('find')
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = SearchPaginator(querystring, per_page=RESULTS)
         results, number_found, has_next, error = paginator.page(page)
 
@@ -205,9 +205,10 @@ class Find(BaseHandler):
                 f[expr.name] = do_striptags(expr.value)
             objects.append(f)
 
-        self.render_template('results.html',
-                             {'objects': objects, 'phrase': querystring, 'number_found': number_found,
-                              'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
+        self.render_template(
+            'results.html',
+            {'objects': objects, 'phrase': querystring, 'number_found': number_found,
+             'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 
 class DeleteHandler(BaseHandler):

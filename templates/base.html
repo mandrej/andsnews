@@ -42,7 +42,7 @@
         <input type="checkbox" id="swipe" data-function="swipe"/>
         <nav class="menu">
             {% block search %}
-                <form id="searchForm" action="/search" method="get">
+                <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
                     <button type="submit"><i class="fa fa-search"></i></button>
                     <input type="text" name="find"/>
                 </form>
@@ -75,6 +75,7 @@
         </script>
         <script src="https://code.jquery.com/jquery-1.9.0.js"></script>
         <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+        <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
         <script src="/static/scripts/base.min.js"></script>
     {% endblock %}
 
