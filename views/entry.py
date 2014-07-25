@@ -17,12 +17,12 @@ SMALL = 60, 60
 
 
 class Index(BaseHandler):
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
         f = Filter(field, value)
         filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
         query = Entry.query(*filters).order(-Entry.date)
 
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=9)
         objects, has_next = paginator.page(page)
 
@@ -109,7 +109,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('entry_admin')
+            self.redirect_to('entry_admin', page=1)
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
@@ -142,7 +142,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('entry_admin')
+            self.redirect_to('entry_admin', page=1)
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 

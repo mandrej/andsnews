@@ -8,12 +8,12 @@ from handlers import BaseHandler, csrf_protected, Paginator, Filter, touch_appca
 
 
 class Index(BaseHandler):
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
         f = Filter(field, value)
         filters = [Comment._properties[k] == v for k, v in f.parameters.items()]
         query = Comment.query(*filters).order(-Comment.date)
 
-        page = int(self.request.get('page', 1))
+        page = int(page)
         paginator = Paginator(query, per_page=12)
         objects, has_next = paginator.page(page)
 

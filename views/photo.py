@@ -10,13 +10,13 @@ from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField,
 
 
 class Index(BaseHandler):
-    def get(self, field=None, value=None):
+    def get(self, page=1, field=None, value=None):
         f = Filter(field, value)
         filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
-        page = int(self.request.get('page', 1))
-        paginator = Paginator(query)
+        page = int(page)
+        paginator = Paginator(query, per_page=24)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -34,13 +34,13 @@ class Detail(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)
-        page, prev, obj, next = paginator.triple(slug)
+        page, previous, object, next = paginator.triple(slug)
 
-        data = {'object': obj,
-                'next': next,
-                'previous': prev,
+        data = {'object': object,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page}
+                'page': page,
+                'next': next,
+                'previous': previous}
         self.render_template('photo/detail.html', data)
 
 
@@ -147,6 +147,6 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('photo_admin')
+            self.redirect_to('photo_admin', page=1)
         else:
             self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})

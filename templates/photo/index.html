@@ -1,12 +1,12 @@
 {% extends "photo/base.html" %}
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 
 {% block contents %}
     <div class="page">
-        {% import "snippets/macros.html" as m %}
         <header>
             <h2>
-                <a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
+                <a href="{{ uri_for('photo_all', page=page) }}">{{ _('Photos') }}</a>
                 {{ m.filter_title(filter) }}
             </h2>
         </header>

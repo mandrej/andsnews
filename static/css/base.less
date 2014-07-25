@@ -33,11 +33,11 @@
 @dashed: 1px dashed white;
 @menuOffset: 384px;
 
-a {
-	color: darken(@google_blue, 25%);
+a, a:visited {
+	color: @google_blue;
 	outline: none;
 	text-decoration: none;
-	.transition(0.3s);
+	.transition(all, 0.3s);
 	&:hover, &:focus {
 		color: black;
 	}
@@ -243,7 +243,6 @@ table {
 		font-size: 3.2em;
 		text-shadow: none;
 		a {
-			position: relative;
 			color: white;
 			&:hover {
 				text-shadow: 0px 0px 25px white;
@@ -306,7 +305,7 @@ input[data-function*='swipe'] {
 
 #main {
 	padding: 8em 3% 0;
-	min-height: 400px;
+	min-height: 500px;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
 }
@@ -368,7 +367,7 @@ input[data-function*='swipe'] {
 			section {
 				flex: 3;
 				padding: 0 @gap @gap/2 @gap;
-				canvas { border-radius: @radius; }
+                canvas { border-radius: @radius; }
 			}
 			aside {
 				flex: 1;

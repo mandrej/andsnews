@@ -11,7 +11,7 @@
             </h2>
         </header>
         <article class="normal">
-            <form action="/admin/feeds" method="post">
+            <form action="{{ uri_for('feed_admin') }}" method="post">
                 <input name="token" type="hidden" value="{{ token }}"/>
                 <table id="data" class="zebra">
                     <colgroup>

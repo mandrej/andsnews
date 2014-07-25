@@ -8,6 +8,30 @@
     </p>
 {% endmacro %}
 
+{% macro _link(name, page, class, title) %}
+    {% if filter %}
+        {% set url = uri_for('%s_filter' % name, page=page, field=filter.field, value=filter.value) %}
+    {% else %}
+        {% set url = uri_for(name, page=page) %}
+    {% endif %}
+    <a{{ {'href': '%s?find=%s' % (url, phrase) if phrase else url, 'class': class, 'title': title}|xmlattr }}></a>
+{% endmacro %}
+
+{% macro paging(name, has_previous, has_next, page) %}
+    {% if has_previous or has_next %}
+        {% if has_previous %}
+            {{ _link(name, page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
+        {% else %}
+            <span class="{{ prev_class }} na"></span>
+        {% endif %}
+        {% if has_next %}
+            {{ _link(name, page + 1, next_class, '%s %s' % (_('next'), _('page'))) }}
+        {% else %}
+            <span class="{{ next_class }} na"></span>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
 {% macro _build(filters, kind) %}
     <div class="submenu">
         {% for f in filters %}
@@ -30,13 +54,13 @@
 
     <ul class="fa-ul">
         <li{{ {'class': 'active' if kind == 'Photo'}|xmlattr }}>
-            <a href="{{ uri_for('photo_all') }}" title="{{ _('Photos') }}"><i class="fa fa-camera"></i></a></li>
+            <a href="{{ uri_for('photo_all', page=1) }}" title="{{ _('Photos') }}"><i class="fa fa-camera"></i></a></li>
         <li{{ {'class': 'active' if kind == 'Entry'}|xmlattr }}>
-            <a href="{{ uri_for('entry_all') }}" title="{{ _('Blog') }}"><i class="fa fa-file-text"></i></a></li>
+            <a href="{{ uri_for('entry_all', page=1) }}" title="{{ _('Blog') }}"><i class="fa fa-file-text"></i></a></li>
         <li{{ {'class': 'active' if kind == 'Comment'}|xmlattr }}>
-            <a href="{{ uri_for('comment_all') }}" title="{{ _('Comments') }}"><i class="fa fa-comment"></i></a></li>
+            <a href="{{ uri_for('comment_all', page=1) }}" title="{{ _('Comments') }}"><i class="fa fa-comment"></i></a></li>
         <li{{ {'class': 'active' if kind == 'Feed'}|xmlattr }}>
-            <a href="{{ uri_for('feed_all') }}" title="{{ _('News') }}"><i class="fa fa-rss-square"></i></a></li>
+            <a href="{{ uri_for('feed_all', page=1) }}" title="{{ _('News') }}"><i class="fa fa-rss-square"></i></a></li>
         {% if user %}
             <li{{ {'class': 'active' if kind == 'Admin'}|xmlattr }}>
                 <a href="/admin/" title="{{ _('Administration') }}"><i class="fa fa-cog"></i></a></li>
@@ -61,7 +85,7 @@
         <h3>{{ _('Administration') }}</h3>
         <div class="submenu">
             {% if is_admin %}
-                <a href="/admin/counters" class="block">Counters</a>
+                <a href="{{ uri_for('counter_admin', page=1) }}" class="block">Counters</a>
                 <a href="/mapreduce" class="block">Mapreduce</a>
             {% endif %}
             <a href="/invalidate" class="block">{{ _('Invalidate cache') }}</a>
