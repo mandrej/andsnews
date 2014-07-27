@@ -17,7 +17,6 @@ except ImportError:
     has_identity_key = False
 
 
-
 __all__ = (
     'QuerySelectField', 'QuerySelectMultipleField',
 )
@@ -117,12 +116,15 @@ class QuerySelectField(SelectFieldBase):
                 self._formdata = valuelist[0]
 
     def pre_validate(self, form):
-        if not self.allow_blank or self.data is not None:
+        data = self.data
+        if data is not None:
             for pk, obj in self._get_object_list():
-                if self.data == obj:
+                if data == obj:
                     break
             else:
                 raise ValidationError(self.gettext('Not a valid choice'))
+        elif self._formdata or not self.allow_blank:
+            raise ValidationError(self.gettext('Not a valid choice'))
 
 
 class QuerySelectMultipleField(QuerySelectField):
@@ -140,6 +142,9 @@ class QuerySelectMultipleField(QuerySelectField):
         if default is None:
             default = []
         super(QuerySelectMultipleField, self).__init__(label, validators, default=default, **kwargs)
+        if kwargs.get('allow_blank', False):
+            import warnings
+            warnings.warn('allow_blank=True does not do anything for QuerySelectMultipleField.')
         self._invalid_formdata = False
 
     def _get_data(self):

@@ -84,8 +84,8 @@ class Palette(BaseHandler):
 
 
 class AddForm(Form):
-    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
-    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.StringField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     photo = fields.FileField(_('Photo'))
 
@@ -99,17 +99,17 @@ class AddForm(Form):
 
 
 class EditForm(Form):
-    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Taken'), validators=[validators.DataRequired()])
-    model = fields.TextField(_('Camera model'))
+    model = fields.StringField(_('Camera model'))
     aperture = fields.FloatField(_('Aperture'))
-    shutter = fields.TextField(_('Shutter speed'))
+    shutter = fields.StringField(_('Shutter speed'))
     focal_length = fields.FloatField(_('Focal length'))
     iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'))
     crop_factor = fields.FloatField(_('Crop factor'))
-    lens = fields.TextField(_('Lens type'))
+    lens = fields.StringField(_('Lens type'))
 
 
 class Add(BaseHandler):

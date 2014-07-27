@@ -56,22 +56,22 @@ class RequiredIf(validators.Required):
 
 
 class ImgAddForm(Form):
-    name = fields.TextField(_('New Image'))
+    name = fields.StringField(_('New Image'))
     #    blob = fields.FileField(validators=[RequiredIf('name')])
     blob = fields.FileField()
 
 
 class ImgEditForm(Form):
-    name = fields.TextField(_('Image'))
+    name = fields.StringField(_('Image'))
     num = fields.IntegerField()
     delete = fields.BooleanField(_('remove'))
 
 
 class AddForm(Form):
-    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
-    slug = fields.TextField(_('Slug'), validators=[validators.DataRequired()])
+    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
+    slug = fields.StringField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    author = fields.TextField(_('Author'), validators=[validators.DataRequired()])
+    author = fields.StringField(_('Author'), validators=[validators.DataRequired()])
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
@@ -83,9 +83,9 @@ class AddForm(Form):
 
 
 class EditForm(Form):
-    headline = fields.TextField(_('Headline'), validators=[validators.DataRequired()])
+    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
-    author = fields.TextField(_('Author'), validators=[validators.DataRequired()])
+    author = fields.StringField(_('Author'), validators=[validators.DataRequired()])
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])

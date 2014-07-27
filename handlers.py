@@ -508,7 +508,7 @@ class EmailField(fields.SelectField):
         self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
 
 
-class TagsField(fields.TextField):
+class TagsField(fields.StringField):
     widget = widgets.TextInput()
 
     def _value(self):
