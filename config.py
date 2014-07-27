@@ -82,6 +82,7 @@ CROPS = {
     "NIKON D200": 1.5,
     "NIKON D80": 1.5,
     "NIKON D70": 1.5,
+    "FUJIFILM X-E1": 1.5,
     "Canon EOS 20D": 1.6,
     "Canon EOS 40D": 1.6,
     "Canon EOS 400D DIGITAL": 1.6,
