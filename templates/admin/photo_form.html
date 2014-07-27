@@ -81,15 +81,16 @@
                 <p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
                 <p><strong>{{ _('Send photo less then') }} 1MB.</strong></p>
 
-                <p>{{ _('Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
-                {% for crop, models in crops.items() %}
-                    <dl class="w25em">
-                        <dt>{{ crop }}</dt>
-                        <dd>{% for model in models %}{{ model }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
-                    </dl>
-                {% endfor %}
-
-                <p><br><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+                {% if object %}
+                    <p>{{ _('Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
+                    {% for crop, models in crops.items() %}
+                        <dl class="w25em">
+                            <dt>{{ crop }}</dt>
+                            <dd>{% for model in models %}{{ model }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+                        </dl>
+                    {% endfor %}
+                    <p><br><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+                {% endif %}
             </aside>
         </article>
     </div>
