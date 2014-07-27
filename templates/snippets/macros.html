@@ -84,6 +84,10 @@
     {% elif kind == 'Admin' and user %}
         <h3>{{ _('Administration') }}</h3>
         <div class="submenu">
+            <a href="{{ uri_for('photo_admin', page=1) }}" class="block">Photo administration</a>
+            <a href="{{ uri_for('entry_admin', page=1) }}" class="block">Entry administration</a>
+            <a href="{{ uri_for('feed_admin') }}" class="block">Feed administration</a>
+            <a href="{{ uri_for('comment_admin', page=1) }}" class="block">Comment &amp; message administration</a>
             {% if is_admin %}
                 <a href="{{ uri_for('counter_admin', page=1) }}" class="block">Counters</a>
                 <a href="/mapreduce" class="block">Mapreduce</a>
