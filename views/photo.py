@@ -1,5 +1,6 @@
 import cgi
 import json
+from collections import defaultdict, OrderedDict
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -7,6 +8,7 @@ from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField, touch_appcache
+from config import CROPS
 
 
 class Index(BaseHandler):
@@ -138,7 +140,17 @@ class Edit(BaseHandler):
             self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-        self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})
+            if obj.model and obj.focal_length:
+                try:
+                    form.crop_factor.data = CROPS[obj.model]
+                except KeyError:
+                    form.crop_factor.data = 1.6
+
+            v = defaultdict(list)
+            for key, value in sorted(CROPS.iteritems()):
+                v[value].append(key)
+            crops = OrderedDict(sorted(v.items()))
+        self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None, 'crops': crops})
 
     @csrf_protected
     @touch_appcache

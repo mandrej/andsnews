@@ -73,6 +73,7 @@ COLORS = {}
 for x in HUE + LUM:
     COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
+# math.sqrt(36**2 + 24**2) = 43.266615305567875 crop = 43.266615305567875/(0.28*25.4)
 CROPS = {
     "Contax 137 MD Quartz": 1.0,
     "Canon EOS 5D Mark III": 1.0,
@@ -90,6 +91,7 @@ CROPS = {
     "PENTACON Luxmedia 8403": 6.0,
     "SONY DSC-T7": 6.0,
     "SONY DSC-W110": 6.0,
+    "SAMSUNG SM-T520": 6.1,
     "OLYMPUS IMAGING CORP. IR-500": 6.6,
     "SAMSUNG GT-C3530": 7.0,
     "LGE Nexus 4": 7.6,

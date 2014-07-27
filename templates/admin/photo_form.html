@@ -82,9 +82,14 @@
                 <p><strong>{{ _('Send photo less then') }} 1MB.</strong></p>
 
                 <p>{{ _('Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}:</p>
-                {% include "photo/crop.html" %}
+                {% for crop, models in crops.items() %}
+                    <dl class="w25em">
+                        <dt>{{ crop }}</dt>
+                        <dd>{% for model in models %}{{ model }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+                    </dl>
+                {% endfor %}
 
-                <p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+                <p><br><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
             </aside>
         </article>
     </div>
@@ -95,7 +100,7 @@
     <script src="/static/scripts/urlify.min.js"></script>
     <script>
         var autoCompleteOptions = {
-            width: 284,
+            width: '20em',
             selectFirst: false,
             multiple: false,
             matchContains: true
@@ -104,7 +109,6 @@
             $('#headline').slugify();
             $("#tags").autocomplete("/complete/Photo_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
             $("#lens").autocomplete("/complete/Photo_lens", autoCompleteOptions);
-            $("#crop_factor").autocomplete("/complete/Photo_crop_factor", autoCompleteOptions);
             $('button[type=submit]').click(function() {
                 $('#overlay, #spinner').show();
             });

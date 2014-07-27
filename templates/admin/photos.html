@@ -20,7 +20,7 @@
                     {% for item in archive|sort(attribute='name', reverse=True) %}
                         {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
                         <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                            href="{{ uri_for('photo_admin_filter', field='date', value=item.name) }}"
+                            href="{{ uri_for('photo_admin_filter', page=1, field='date', value=item.name) }}"
                             title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
                     {% endfor %}
                 </p>
@@ -47,38 +47,40 @@
                 </thead>
                 <tbody>
                     {% for object in objects %}
-                        {% if user == object.author or is_admin %}
-                            <tr id="{{ object.key.urlsafe() }}">
-                                <td>
-                                    <img src="{{ object.small_url_async.get_result() }}" width="50"/>
-                                </td>
-                                <td>
-                                    <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">
-                                        {{ object.headline }}
-                                    </a>
-                                </td>
-                                <td>
-                                    {% if object.blob_key %}
-                                        {{ True|boolimage }}
-                                        {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
-                                    {% else %}
-                                        {{ False|boolimage }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
-                                    {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
-                                </td>
-                                <td>
-                                    {{ object.hue }}, {{ object.lum }}, {{ object.sat }}
-                                </td>
-                                <td>
-                                    <a class="button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
-                                        <i class="fa fa-pencil-square"></i> edit</a>&nbsp;
-                                    <a class="confirm button delete" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
-                                        <i class="fa fa-times-circle"></i> delete</a>
-                                </td>
-                            </tr>
+                        {% if object %}
+                            {% if user == object.author or is_admin %}
+                                <tr id="{{ object.key.urlsafe() }}">
+                                    <td>
+                                        <img src="{{ object.small_url_async.get_result() }}" width="50"/>
+                                    </td>
+                                    <td>
+                                        <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">
+                                            {{ object.headline }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if object.blob_key %}
+                                            {{ True|boolimage }}
+                                            {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
+                                        {% else %}
+                                            {{ False|boolimage }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
+                                        {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                                    </td>
+                                    <td>
+                                        {{ object.hue }}, {{ object.lum }}, {{ object.sat }}
+                                    </td>
+                                    <td>
+                                        <a class="button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+                                            <i class="fa fa-pencil-square"></i> edit</a>&nbsp;
+                                        <a class="confirm button delete" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                                            <i class="fa fa-times-circle"></i> delete</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </tbody>

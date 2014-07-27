@@ -43,16 +43,9 @@ def csrf_protected(handler_method):
 
 def auto_complete(request, mem_key):
     response = webapp2.Response(content_type='text/plain')
-    if mem_key == 'Photo_crop_factor':
-        mem_key = 'Photo_model'
-        cloud = Cloud(mem_key).get_list()
-        factors = list(set([CROPS[x.get('name')] for x in cloud]))
-        factors.sort()
-        words = map(str, factors)
-    else:
-        cloud = Cloud(mem_key).get_list()
-        words = [x['name'] for x in cloud]
-        words.sort()
+    cloud = Cloud(mem_key).get_list()
+    words = [x['name'] for x in cloud]
+    words.sort()
 
     response.write('\n'.join(words))
     return response
@@ -215,10 +208,7 @@ class DeleteHandler(BaseHandler):
     @login_required
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
-        if key.parent():
-            next = self.request.headers.get('Referer', self.uri_for('start'))
-        else:
-            next = self.uri_for('%s_all' % key.kind().lower())
+        next = self.request.headers.get('Referer', self.uri_for('start'))
         obj = key.get()
         if not any([self.is_admin, self.user == obj.author]):
             self.abort(403)
