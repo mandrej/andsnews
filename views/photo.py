@@ -8,7 +8,7 @@ from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField, touch_appcache
-from config import CROPS
+from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
@@ -18,7 +18,7 @@ class Index(BaseHandler):
         query = Photo.query(*filters).order(-Photo.date)
 
         page = int(page)
-        paginator = Paginator(query, per_page=24)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

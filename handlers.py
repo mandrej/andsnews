@@ -19,7 +19,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, RESULTS, LATEST, CROPS, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
+from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, LATEST, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
 
 def touch_appcache(handler_method):
@@ -128,7 +128,7 @@ class BaseHandler(webapp2.RequestHandler):
 class Index(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=24)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(1)
         self.render_template('index.html', {'objects': objects, 'latest': LATEST})
 
@@ -175,7 +175,7 @@ class Find(BaseHandler):
     def get(self, page):
         querystring = self.request.get('find')
         page = int(page)
-        paginator = SearchPaginator(querystring, per_page=RESULTS)
+        paginator = SearchPaginator(querystring, per_page=PER_PAGE)
         results, number_found, has_next, error = paginator.page(page)
 
         objects = []
@@ -269,7 +269,7 @@ class Filter(object):
 class Paginator(object):
     timeout = TIMEOUT / 12  # 5 min
 
-    def __init__(self, query, per_page=None):
+    def __init__(self, query, per_page=PER_PAGE):
         self.query = query
         self.per_page = per_page
         # <str> repr(self.query)
@@ -331,7 +331,7 @@ class Paginator(object):
 
 class SearchPaginator(object):
 #    timeout = 60 #TIMEOUT/10
-    def __init__(self, querystring, per_page):
+    def __init__(self, querystring, per_page=PER_PAGE):
         self.querystring = querystring
         # '"{0}"'.format(querystring.replace('"', ''))
         self.per_page = per_page
@@ -452,10 +452,10 @@ class Rss(BaseHandler):
     def get(self, kind):
         if kind == 'photo':
             query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=24)
+            paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         elif kind == 'entry':
             query = Entry.query().order(-Entry.date)
-            paginator = Paginator(query, per_page=9)
+            paginator = Paginator(query, per_page=PER_PAGE)
         objects, _ = paginator.page(1)
 
         data = {'kind': kind, 'objects': objects, 'format': RFC822}
@@ -473,11 +473,11 @@ class Rss(BaseHandler):
 class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=24)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         photos, _ = paginator.page(1)
 
         query = Entry.query().order(-Entry.date)
-        paginator = Paginator(query, per_page=9)
+        paginator = Paginator(query, per_page=PER_PAGE)
         entries, _ = paginator.page(1)
 
         data = {'photos': photos,

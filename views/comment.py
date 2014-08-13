@@ -14,7 +14,7 @@ class Index(BaseHandler):
         query = Comment.query(*filters).order(-Comment.date)
 
         page = int(page)
-        paginator = Paginator(query, per_page=12)
+        paginator = Paginator(query)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

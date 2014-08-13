@@ -10,8 +10,10 @@ from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
-RESULTS = 12
-LATEST = 5
+PER_PAGE = 12
+PHOTOS_PER_PAGE = 24
+ENTRIES_PER_PAGE = 9
+LATEST = 6
 RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
