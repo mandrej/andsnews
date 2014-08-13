@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 {% import "snippets/macros.html" as m %}
-{% block paging %}{{ m.paging('comment_admin', has_previous, has_next, page) }}{% endblock %}
+{% block paging %}{{ m.paging('comment_admin', filter, has_previous, has_next, page) }}{% endblock %}
 
 {% block contents %}
     <div class="page">

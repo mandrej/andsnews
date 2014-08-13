@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "snippets/macros.html" as m %}
-{% block paging %}{{ m.paging('search', has_previous, has_next, page, phrase) }}{% endblock %}
+{% block paging %}{{ m.paging('search', filter, has_previous, has_next, page, phrase) }}{% endblock %}
 {% block modals %}{% endblock %}
 
 {% block contents %}
