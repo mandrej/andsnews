@@ -209,6 +209,7 @@ var crumbs = location.pathname.split('/');
 crumbs.shift();
 crumbs.shift();
 
+// NEED kind in template context
 if (kind != '') {
     $('.hide').hide();
     $('.collapse').each(function() {

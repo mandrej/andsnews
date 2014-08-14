@@ -84,6 +84,11 @@ indexes:
   properties:
   - name: eqv
   - name: date
+
+- kind: Photo
+  properties:
+  - name: eqv
+  - name: date
     direction: desc
 
 - kind: Photo
