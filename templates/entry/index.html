@@ -1,5 +1,8 @@
 {% extends "entry/base.html" %}
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
+{% block paging %}
+    {% with name='entry_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+{% endblock %}
 
 {% block contents %}
 <div class="page">

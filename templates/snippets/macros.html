@@ -8,30 +8,6 @@
     </p>
 {% endmacro %}
 
-{% macro _link(name, filter, page, class, title, phrase) %}
-    {% if filter %}
-        {% set url = uri_for('%s_filter' % name, page=page, field=filter.field, value=filter.value) %}
-    {% else %}
-        {% set url = uri_for(name, page=page) %}
-    {% endif %}
-    <a{{ {'href': '%s?find=%s' % (url, phrase) if phrase else url, 'class': class, 'title': title}|xmlattr }}></a>
-{% endmacro %}
-
-{% macro paging(name, filter, has_previous, has_next, page, phrase) %}
-    {% if has_previous or has_next %}
-        {% if has_previous %}
-            {{ _link(name, filter, page - 1, prev_class, '%s %s' % (_('previous'), _('page')), phrase) }}
-        {% else %}
-            <span class="{{ prev_class }} na"></span>
-        {% endif %}
-        {% if has_next %}
-            {{ _link(name, filter, page + 1, next_class, '%s %s' % (_('next'), _('page')), phrase) }}
-        {% else %}
-            <span class="{{ next_class }} na"></span>
-        {% endif %}
-    {% endif %}
-{% endmacro %}
-
 {% macro _build(filters, kind) %}
     <div class="submenu">
         {% for f in filters %}

@@ -1,5 +1,8 @@
 {% extends "news/base.html" %}
 {% block title %}{{ super() }} - {{ _('News') }}{% endblock %}
+{% block paging %}
+    {% with name='feed_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+{% endblock %}
 
 {% block contents %}
     <div class="page">
