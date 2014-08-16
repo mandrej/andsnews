@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% set kind='Entry' %}
 {% block nav %}
     <ul class="fa-ul">
         <li><a href="{{ uri_for('photo_all', page=1) }}" title="{{ _('Photos') }}"><i class="fa fa-camera"></i></a></li>
@@ -20,8 +19,50 @@
     <h3>{{ _('Blog') }}</h3>
     <div class="submenu">
         {% for f in [_tags, _date, _author] %}
-            <a class="{{ f.field }} block collapse" href="/filter/{{ kind }}_{{ f.field }}">{{ f.title }} [+]</a>
+            <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>
             <div id="{{ f.field }}cloud" class="hide"></div>
         {% endfor %}
     </div>
+    <script>
+        $(function () {
+            var filter = {{ filter|to_json }};
+            if (filter) {
+                $('.hide').hide();
+                $('.collapse').each(function() {
+                    $(this).plus();
+                });
+                $.ajax({
+                    url: '/filter/Entry_' + filter.field + '/' + filter.value,
+                    context: $('#' + filter.field + 'cloud'),
+                    success: function(snippet) {
+                        $(this).html(snippet).slideDown();
+                        $('.' + filter.field).minus();
+                    }
+                });
+            }
+            $('.collapse').click(function(evt) {
+                evt.preventDefault();
+                var cntx = $(this);
+                var url = cntx.attr('href');
+                var key = url.split('/').pop();
+                var field = key.split('_').pop();
+
+                $('.hide').slideUp();
+                $('.collapse').each(function() {
+                    $(this).plus();
+                });
+
+                $('#overlay, #spinner').show();
+                $.ajax({
+                    url: url,
+                    context: $('#' + field + 'cloud'),
+                    success: function(snippet) {
+                        $(this).html(snippet).slideDown();
+                        cntx.minus();
+                        $('#overlay, #spinner').hide();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
