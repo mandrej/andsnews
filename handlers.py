@@ -41,16 +41,6 @@ def csrf_protected(handler_method):
     return wrapper
 
 
-def auto_complete(request, mem_key):
-    response = webapp2.Response(content_type='text/plain')
-    cloud = Cloud(mem_key).get_list()
-    words = [x['name'] for x in cloud]
-    words.sort()
-
-    response.write('\n'.join(words))
-    return response
-
-
 class LazyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -131,6 +121,14 @@ class Index(BaseHandler):
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(1)
         self.render_template('index.html', {'objects': objects, 'latest': PHOTOS_LATEST})
+
+
+class Complete(BaseHandler):
+    def get(self, mem_key):
+        cloud = Cloud(mem_key).get_list()
+        term = self.request.get('term', '').lower()
+        data = [{'id': x['name'], 'value': x['name']} for x in cloud if term in x['name'].lower()]
+        self.render_json(data)
 
 
 class SetLanguage(BaseHandler):

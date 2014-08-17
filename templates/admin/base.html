@@ -29,5 +29,56 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <script>
+        (function($) {
+            function split(val) {
+                return val.split(/,\s*/);
+            }
+            function extractLast(term) {
+                return split(term).pop();
+            }
+            $.fn.multicomplete = function(options) {
+                var opts = $.extend({}, multicompleteDefaults, options);
+                return this.each(function() {
+                    $(this).bind('keydown', function(event) {
+                        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active ) {
+                            event.preventDefault();
+                        }
+                    }).autocomplete({
+                        source: function(request, response) {
+                            $.getJSON(opts.source, {
+                                term: extractLast(request.term)
+                            }, response);
+                        },
+                        search: function() {
+                            var term = extractLast(this.value);
+                            if (term.length < opts.minLength) {
+                                return false;
+                            }
+                        },
+                        focus: function(event, ui) {
+                            return false;
+                        },
+                        select: function(event, ui) {
+                            var terms = split(this.value);
+                            terms.pop();
+                            terms.push(ui.item.value);
+                            terms.push('');
+                            this.value = terms.join(', ');
+                            return false;
+                        }
+                    });
+                });
+            };
+            multicompleteDefaults = {minLength: 2};
+        })(jQuery);
+    </script>
+{% endblock %}
+
 {% block ga %}{% endblock %}
 {% set caching=false %}

@@ -98,17 +98,10 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.autocomplete.min.js"></script>
     <script src="/static/scripts/urlify.min.js"></script>
     <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
     <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js"></script>
     <script>
-        var autoCompleteOptions = {
-            width: '20em',
-            selectFirst: false,
-            multiple: false,
-            matchContains: true
-        };
         $(function() {
             $('#headline').slugify();
             $('#body').markItUp(blogSettings, {nameSpace: 'big'});
@@ -122,7 +115,11 @@
                         '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
                 );
             });
-            $("#tags").autocomplete("/complete/Entry_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
+            $('#tags').multicomplete({
+                minLength: 2,
+                source: '/complete/Entry_tags'
+            });
+
             $('#main button').click(function() {
                 $('#overlay, #spinner').show();
             });

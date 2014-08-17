@@ -23,8 +23,7 @@ LANGUAGES = (
 )
 OFFLINE = """CACHE MANIFEST
 # %s
-https://code.jquery.com/jquery-1.9.0.js
-https://code.jquery.com/jquery-migrate-1.2.1.js
+https://code.jquery.com/jquery-1.10.2.js
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
 https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
@@ -35,7 +34,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 
 /static/scripts/jquery.searchhighlight.min.js
 /static/scripts/urlify.min.js
-/static/scripts/jquery.autocomplete.min.js
 /static/scripts/base.min.js
 
 /static/scripts/markitup/jquery.markitup.min.js

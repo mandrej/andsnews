@@ -52,18 +52,15 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.autocomplete.min.js"></script>
     <script src="/static/scripts/urlify.min.js"></script>
     <script>
-        var autoCompleteOptions = {
-            width: '20em',
-            selectFirst: false,
-            multiple: false,
-            matchContains: true
-        };
         $(function() {
             $('#headline').slugify();
-            $("#tags").autocomplete("/complete/Feed_tags", $.extend({}, autoCompleteOptions, {multiple: true}));
+            $('#tags').multicomplete({
+                minLength: 2,
+                source: '/complete/Feed_tags'
+            });
+
             $('#main button').click(function() {
                 $('#overlay, #spinner').show();
             });

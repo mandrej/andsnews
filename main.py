@@ -2,7 +2,7 @@ __author__ = 'milan'
 
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import auto_complete, Index, SetLanguage, Sign, Find, Chat, Rss, \
+from handlers import Index, Complete, SetLanguage, Sign, Find, Chat, Rss, \
     DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, AppCache, Invalidate, SaveAsHandler
 from config import CONFIG, DEVEL
 
@@ -69,7 +69,7 @@ app = WSGIApplication([
     Route('/filter/<mem_key>/<value>', handler=RenderCloud),
     Route('/filter/<mem_key>', handler=RenderCloud),
     Route('/visualize/<mem_key>', handler=RenderGraph),
-    Route('/complete/<mem_key>', handler=auto_complete),
+    Route('/complete/<mem_key>', handler=Complete),
 
     Route('/sitemap.xml', handler=SiteMap),
     Route('/rss/<kind:(photo|entry)>.xml', handler=Rss),
