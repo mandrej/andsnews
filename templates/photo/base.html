@@ -45,29 +45,6 @@
                     }
                 });
             }
-            $('.collapse').click(function(evt) {
-                evt.preventDefault();
-                var cntx = $(this);
-                var url = cntx.attr('href');
-                var key = url.split('/').pop();
-                var field = key.split('_').pop();
-
-                $('.hide').slideUp();
-                $('.collapse').each(function() {
-                    $(this).plus();
-                });
-
-                $('#overlay, #spinner').show();
-                $.ajax({
-                    url: url,
-                    context: $('#' + field + 'cloud'),
-                    success: function(snippet) {
-                        $(this).html(snippet).slideDown();
-                        cntx.minus();
-                        $('#overlay, #spinner').hide();
-                    }
-                });
-            });
         });
     </script>
 {% endblock %}

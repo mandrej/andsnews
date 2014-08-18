@@ -42,7 +42,8 @@
                 return split(term).pop();
             }
             $.fn.multicomplete = function(options) {
-                var opts = $.extend({}, multicompleteDefaults, options);
+                var defaults = {minLength: 2};
+                var opts = $.extend({}, defaults, options);
                 return this.each(function() {
                     $(this).bind('keydown', function(event) {
                         if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active ) {
@@ -74,7 +75,6 @@
                     });
                 });
             };
-            multicompleteDefaults = {minLength: 2};
         })(jQuery);
     </script>
 {% endblock %}

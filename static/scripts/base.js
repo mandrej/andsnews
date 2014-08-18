@@ -6,6 +6,8 @@
     http://www.opensource.org/licenses/mit-license.php
 */
 (function($) {
+    "use strict";
+
 	$.fn.minus = function() {
 		$(this).html($(this).html().replace(/[+]/i, "−"));
 		return this
@@ -50,7 +52,8 @@
         Example: $('#id_headline').slugify({slug: $('#id_slug')});
 	*/
 	$.fn.slugify = function(options) {
-		var opts = $.extend({}, slugifyDefaults, options);
+        var defaults = {max: 50, slug: '#slug:enabled'};
+		var opts = $.extend({}, defaults, options);
 		var output = $(opts.slug);
 
 		$(this).blur(function() {
@@ -58,14 +61,14 @@
 		});
 		return this
 	};
-	slugifyDefaults = {max: 50, slug: '#slug:enabled'};
 	/*
 	    Highlights paragraph on element focus
 	    $Version: 2009.02.08
 	    Example: $('input, select, textarea').focusHighlight();
 	*/
 	$.fn.focusHighlight = function(options) {
-		var opts = $.extend({}, focusHighlightDefaults, options);
+        var defaults = {highlightClass: 'focus'};
+		var opts = $.extend({}, defaults, options);
 		return this.each(function() {
 			var para = $(this).parents('p');
 			$(this).focus(function() {
@@ -74,9 +77,6 @@
 				$(para).removeClass(opts.highlightClass);
 			});
 		});
-	};
-	focusHighlightDefaults = {
-		highlightClass: 'focus'
 	};
     /*
 	    Style table columns according to colgroup col style
@@ -88,7 +88,7 @@
 			var table = $(this);
             var styles = $.map($('col', table), function(e) {
             	return $(e).attr('style') || "";
-            })
+            });
 			if (styles.length > 0) {
 	            $('thead th', table).each(function(i,eth) {
 					var style = $(eth).attr('style') || "";
@@ -129,66 +129,75 @@
             cntx.fillText('© ands.appspot.com', 20, 30);
         };
         return canvas
-    }
+    };
+})(jQuery);
+
+// search highlight
+var matchFind = location.search.match(/find=([^&]+)/i);
+if (matchFind) {
+    $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
+}
+
+$(document).ready(function() {
     // close
-    $('.modal').on('click', '.close', function(evt) {
+    $('.modal').on('click', '.close', function (evt) {
         evt.preventDefault();
         $(this).parents('.modal').hide();
         $('#overlay').hide();
     });
     // menu close
-    $('#wrapper').click(function(evt) {
+    $('#wrapper').click(function (evt) {
         var disallow = {"A": 1, "BUTTON": 1, "INPUT": 1};
         var parnetTagName = $(evt.target).parent()[0].tagName;
         if (!(disallow[evt.target.tagName] || disallow[parnetTagName])) {
             evt.preventDefault();
-            $("input[data-function*='swipe']").prop('checked',false);
+            $("input[data-function*='swipe']").prop('checked', false);
         }
     });
     // search
-    $('#searchForm').submit(function() {
+    $('#searchForm').submit(function () {
         $('#overlay, #spinner').show();
     });
-    // confirm TODO NOT WORKING WHEN SWIPING
-    $(document).on('click', 'a.confirm', function(evt) {
+    // confirm
+    $(document).on('click', 'a.confirm', function (evt) {
         evt.preventDefault();
-        $('#confirm').load(this.href, function() {
+        $('#confirm').load(this.href, function () {
             $('#overlay, #confirm').show();
-            $('.content button').click(function() {
+            $('.content button').click(function () {
                 $('#overlay, #spinner').show();
             });
         });
     });
     // add comment
-    $(document).on('click', 'a.comment_add', function(evt) {
+    $(document).on('click', 'a.comment_add', function (evt) {
         evt.preventDefault();
         var $this = $(evt.currentTarget);
-        $('#addcomment').load(this.href, function() {
+        $('#addcomment').load(this.href, function () {
             $('#overlay, #addcomment').show();
             $('#body').markItUp(cmntSettings, {nameSpace: 'small'});
-            $('.content button').click(function(evt) {
+            $('.content button').click(function (evt) {
                 evt.preventDefault();
                 $.ajax({
                     type: 'POST',
                     url: $('#addcommentForm').attr('action'),
                     data: {'body': $('#body').val(), 'token': token},
-                    success: function(data) {
+                    success: function (data) {
                         if (typeof(data) == 'string') {
                             $('.dummy').hide();
                             $('.info').show();
                             $this.closest('.page').find('.comments').prepend(data);
-                            $('a.confirm').click(function(e) {
+                            $('a.confirm').click(function (e) {
                                 e.preventDefault();
-                                $('#confirm').load(this.href, function() {
+                                $('#confirm').load(this.href, function () {
                                     $('#overlay, #confirm').show();
                                 });
                             });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#overlay, #addcomment').hide();
                             }, 1000);
                         } else {
                             $('.error').text('');
-                            $.each(data, function(key, arr) {
+                            $.each(data, function (key, arr) {
                                 $('.error.C_' + key).text(arr.join(', '));
                             });
                         }
@@ -197,10 +206,28 @@
             });
         });
     });
-})(jQuery);
+    // menu expand/ collapse
+    $(document).on('click', 'a.collapse', function (evt) {
+        evt.preventDefault();
+        var cntx = $(this);
+        var url = cntx.attr('href');
+        var key = url.split('/').pop();
+        var field = key.split('_').pop();
 
-// search highlight
-var matchFind = location.search.match(/find=([^&]+)/i);
-if (matchFind) {
-    $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
-}
+        $('.hide').slideUp();
+        $('.collapse').each(function () {
+            $(this).plus();
+        });
+
+        $('#overlay, #spinner').show();
+        $.ajax({
+            url: url,
+            context: $('#' + field + 'cloud'),
+            success: function (snippet) {
+                $(this).html(snippet).slideDown();
+                cntx.minus();
+                $('#overlay, #spinner').hide();
+            }
+        });
+    });
+});
