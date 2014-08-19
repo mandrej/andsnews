@@ -10,7 +10,7 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, parameters, TagsField, touch_appcache
 from config import TIMEOUT, ENTRIES_PER_PAGE
 
 SMALL = 60, 60
@@ -18,8 +18,8 @@ SMALL = 60, 60
 
 class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Entry._properties[k] == v for k, v in f.items()]
         query = Entry.query(*filters).order(-Entry.date)
 
         page = int(page)

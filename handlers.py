@@ -22,6 +22,31 @@ from models import Photo, Entry, Comment, Cloud, INDEX
 from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
 
 
+def parameters(field, value):
+    try:
+        assert (field and value)
+    except AssertionError:
+        return {}
+    else:
+        if field == 'date':
+            return {'year': int(value)}
+        elif field == 'author':
+            # TODO Not all emails are gmail
+            return {field: users.User(email='%s@gmail.com' % value)}
+        elif field == 'forkind':
+            return {field: capitalize(value)}
+        elif field == 'hue':
+            return {field: value, 'sat': 'color'}
+        elif field == 'lum':
+            return {field: value, 'sat': 'monochrome'}
+        else:
+            try:
+                value = int(value)
+            except ValueError:
+                pass
+            return {field: value}
+
+
 def touch_appcache(handler_method):
     def wrapper(self, *args, **kwargs):
         memcache.replace('appcache', OFFLINE % datetime.datetime.now().isoformat())
@@ -232,36 +257,6 @@ class SaveAsHandler(BaseHandler):
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
         logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
         self.response.write(buff)
-
-
-class Filter(object):
-    def __init__(self, field, value):
-        self.field, self.value = field, value
-
-    @webapp2.cached_property
-    def parameters(self):
-        try:
-            assert (self.field and self.value)
-        except AssertionError:
-            return {}
-        else:
-            if self.field == 'date':
-                return {'year': int(self.value)}
-            elif self.field == 'author':
-                # TODO Not all emails are gmail
-                return {self.field: users.User(email='%s@gmail.com' % self.value)}
-            elif self.field == 'forkind':
-                return {self.field: capitalize(self.value)}
-            elif self.field == 'hue':
-                return {self.field: self.value, 'sat': 'color'}
-            elif self.field == 'lum':
-                return {self.field: self.value, 'sat': 'monochrome'}
-            else:
-                try:
-                    self.value = int(self.value)
-                except ValueError:
-                    pass
-                return {'%s' % self.field: self.value}
 
 
 class Paginator(object):

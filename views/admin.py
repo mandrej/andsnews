@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paginator, Filter
+from handlers import BaseHandler, csrf_protected, Paginator, parameters
 from config import filesizeformat, HUE
 
 
@@ -78,8 +78,8 @@ class Index(BaseHandler):
 class Photos(BaseHandler):
     @login_required
     def get(self, page=1, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
         page = int(page)
@@ -98,8 +98,8 @@ class Photos(BaseHandler):
 class Entries(BaseHandler):
     @login_required
     def get(self, page=1, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Entry._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Entry._properties[k] == v for k, v in f.items()]
         query = Entry.query(*filters).order(-Entry.date)
 
         page = int(page)

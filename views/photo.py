@@ -7,14 +7,14 @@ from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from lib import colorific
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, EmailField, TagsField, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, parameters, EmailField, TagsField, touch_appcache
 from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
         page = int(page)
@@ -31,8 +31,8 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Photo._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Photo._properties[k] == v for k, v in f.items()]
         query = Photo.query(*filters).order(-Photo.date)
 
         paginator = Paginator(query)

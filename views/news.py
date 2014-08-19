@@ -12,7 +12,7 @@ from webapp2_extras.appengine.users import login_required
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from handlers import BaseHandler, csrf_protected, Paginator, Filter, TagsField, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, parameters, TagsField, touch_appcache
 from config import TIMEOUT
 
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
@@ -68,8 +68,8 @@ def get_feed_async(url):
 
 class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
-        f = Filter(field, value)
-        filters = [Feed._properties[k] == v for k, v in f.parameters.items()]
+        f = parameters(field, value)
+        filters = [Feed._properties[k] == v for k, v in f.items()]
         query = Feed.query(*filters).order(-Feed.date)
 
         page = int(page)
