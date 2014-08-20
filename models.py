@@ -13,6 +13,7 @@ from cStringIO import StringIO
 from decimal import *
 
 from PIL import Image
+from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
@@ -38,6 +39,25 @@ LOGARITHMIC, LINEAR = 1, 2
 def img_palette(buff):
     img = Image.open(StringIO(buff))
     return colorific.extract_colors(img.resize((100, 100)))
+
+
+def filter_param(field, value):
+    try:
+        assert (field and value)
+    except AssertionError:
+        return {}
+    if field == 'date':
+        field = 'year'
+    elif field == 'author':
+        # TODO Not all emails are gmail
+        value = users.User(email='%s@gmail.com' % value)
+    elif field == 'forkind':
+        value = capitalize(value)
+    try:
+        value = int(value)
+    except (ValueError, TypeError):
+        pass
+    return {field: value}
 
 
 def get_exif(buff):
@@ -462,6 +482,13 @@ class Photo(ndb.Model):
     def comment_list(self):
         return Comment.query(ancestor=self.key).order(-Comment.date)
 
+    @classmethod
+    def query_for(cls, field, value):
+        """[FilterNode('color', '=', 'pink')]"""
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters).order(-cls.date)
+
 
 class Img(ndb.Model):
     # parent Entry
@@ -589,6 +616,12 @@ class Entry(ndb.Model):
     def image_url(self, num):
         return '/entries/image/%s_%s' % (self.key.string_id(), num)
 
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters).order(-cls.date)
+
 
 class Comment(ndb.Model):
     # parent Photo, Entry
@@ -639,6 +672,12 @@ class Comment(ndb.Model):
             decr_count('Comment', 'forkind', key.parent().kind())
         decr_count('Comment', 'date', instance.year)
 
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters).order(-cls.date)
+
 
 class Feed(ndb.Model):
     url = ndb.StringProperty(required=True)
@@ -677,3 +716,9 @@ class Feed(ndb.Model):
         for name in instance.tags:
             decr_count('Feed', 'tags', name)
         memcache.delete(key.string_id())
+
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters).order(-cls.date)

@@ -4,15 +4,12 @@ from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Comment
-from handlers import BaseHandler, csrf_protected, Paginator, parameters, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, touch_appcache
 
 
 class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
-        f = parameters(field, value)
-        filters = [Comment._properties[k] == v for k, v in f.items()]
-        query = Comment.query(*filters).order(-Comment.date)
-
+        query = Comment.query_for(field, value)
         page = int(page)
         paginator = Paginator(query)
         objects, has_next = paginator.page(page)

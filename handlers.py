@@ -12,7 +12,6 @@ import webapp2
 import logging
 from operator import itemgetter
 from jinja2.filters import do_striptags
-from string import capitalize
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
@@ -20,31 +19,6 @@ from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
 from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
-
-
-def parameters(field, value):
-    try:
-        assert (field and value)
-    except AssertionError:
-        return {}
-    else:
-        if field == 'date':
-            return {'year': int(value)}
-        elif field == 'author':
-            # TODO Not all emails are gmail
-            return {field: users.User(email='%s@gmail.com' % value)}
-        elif field == 'forkind':
-            return {field: capitalize(value)}
-        elif field == 'hue':
-            return {field: value, 'sat': 'color'}
-        elif field == 'lum':
-            return {field: value, 'sat': 'monochrome'}
-        else:
-            try:
-                value = int(value)
-            except ValueError:
-                pass
-            return {field: value}
 
 
 def touch_appcache(handler_method):
