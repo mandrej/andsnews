@@ -33,6 +33,7 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 /static/css/base.css
 
 /static/scripts/jquery.searchhighlight.min.js
+/static/scripts/jquery.zoom.min.js
 /static/scripts/urlify.min.js
 /static/scripts/base.min.js
 

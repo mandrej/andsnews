@@ -367,12 +367,26 @@ input[data-function*='swipe'] {
 			flex-flow: row;
 			section {
 				flex: 3;
-				padding: 0 @gap @gap/2 @gap;
-                canvas { border-radius: @radius; }
+				margin: 0 @gap @gap/2 @gap;
+                border-radius: @radius;
+                &:after {
+                    content: '© ands.appspot.com';
+                    display: block;
+                    padding: @radius 2*@radius;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    color: white;
+                    background: fade(black, 50%);
+                }
+                img {
+                    display: block;
+                    max-width: 100%;
+                }
 			}
 			aside {
 				flex: 1;
-				padding: 0 @gap @gap/2 0;
+				margin: 0 @gap @gap/2 0;
 				@media @mobile, @tablet { .hide; }
 			}
 		}
@@ -380,8 +394,8 @@ input[data-function*='swipe'] {
 			display: flex;
 			flex-flow: row wrap;
 			section {
-				flex: 1 1 350px;
-				padding: 0 @gap @gap @gap;
+				flex: 1 1 300px;
+				margin: 0 @gap @gap @gap;
 				@media @mobile, @tablet {
 					flex: 1 1 220px;
 				}
@@ -396,7 +410,7 @@ input[data-function*='swipe'] {
 				flex: 1 1 220px;
 				display: flex;
 				justify-content: center;
-				padding: 0 @gap/4 @gap/2 @gap/4;
+				margin: 0 @gap/4 @gap/2 @gap/4;
 				a {
 					display: block;
 					width: 100%;
@@ -787,38 +801,6 @@ td .dot { display: inline-block; }
 	from { opacity: 1; }
 	to { opacity: 0; }
 }
-
-// autocomplete
-//.ac_results {
-//	margin-top: -1px;
-//	padding: 0px;
-//	border: 1px solid @light;
-//	background-color: white;
-//	overflow: hidden;
-//	ul {
-//		width: 100%;
-//		padding: 0;
-//		margin: 0;
-//		list-style-position: outside;
-//		list-style: none;
-//		li {
-//			margin: 0;
-//			padding: 2px;
-//			display: block;
-//			font: menu;
-//			color: black;
-//			font-size: 12px;
-//			line-height: 16px;
-//			cursor: default;
-//			overflow: hidden;
-//			strong { background: @google_orange; }
-//		}
-//	}
-//}
-//
-//.ac_loading { background: url(/static/images/busy.gif) white no-repeat right center; }
-//.ac_odd { background-color: @light; }
-//.ac_over { background-color: @google_orange; }
 
 #chart + p { margin: 0.5em 0 0; font-size: 0.9em; }
 .collapse, .ff, .ss { cursor: pointer; }
