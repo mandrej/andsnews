@@ -143,9 +143,9 @@ def range_names(rgb):
     return hue, lum, sat
 
 
-def create_doc(id, headline='', author=None, body='', tags=[], date=None):
-    return search.Document(
-        doc_id=id,
+def update_doc(doc_id, headline, author, body='', tags=[], date=None):
+    doc = search.Document(
+        doc_id=doc_id,
         fields=[
             search.TextField(name='headline', value=headline),
             search.TextField(name='author', value=author.nickname()),
@@ -153,6 +153,7 @@ def create_doc(id, headline='', author=None, body='', tags=[], date=None):
             search.TextField(name='tags', value=','.join(tags)),
             search.DateField(name='date', value=date.date())]
     )
+    INDEX.put(doc)
 
 
 def remove_doc(safe_key):
@@ -334,19 +335,16 @@ class Photo(ndb.Model):
     sat = ndb.StringProperty()
     color = ndb.ComputedProperty(lambda self: self.hue if self.sat == 'color' else self.lum)
 
-    def index_add(self):
-        INDEX.put(
-            create_doc(
-                self.key.urlsafe(),
-                headline=self.headline,
-                author=self.author,
-                body='%s %s' % (self.model, self.lens),
-                tags=self.tags,
-                date=self.date))
-
-    def _put(self):
-        self.put()
-        self.index_add()
+    @webapp2.cached_property
+    def index_data(self):
+        return {
+            'doc_id': self.key.urlsafe(),
+            'headline': self.headline,
+            'author': self.author,
+            'body': '%s %s' % (self.model, self.lens),
+            'tags': self.tags,
+            'date': self.date
+        }
 
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
@@ -362,7 +360,8 @@ class Photo(ndb.Model):
             setattr(self, field, value)
         self.hue, self.lum, self.sat = range_names(self.rgb)
         self.tags = data['tags']
-        self._put()
+        self.put()
+        deferred.defer(update_doc, **self.index_data)
 
         for name in self.tags:
             incr_count('Photo', 'tags', name)
@@ -432,7 +431,8 @@ class Photo(ndb.Model):
             else:
                 setattr(self, field, value)
 
-        self._put()
+        self.put()
+        deferred.defer(update_doc, **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
@@ -509,19 +509,16 @@ class Entry(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     front = ndb.IntegerProperty(default=-1)
 
-    def index_add(self):
-        INDEX.put(
-            create_doc(
-                self.key.urlsafe(),
-                headline=self.headline,
-                author=self.author,
-                body='%s %s' % (self.summary, self.body),
-                tags=self.tags,
-                date=self.date))
-
-    def _put(self):
-        self.put()
-        self.index_add()
+    @webapp2.cached_property
+    def index_data(self):
+        return {
+            'doc_id': self.key.urlsafe(),
+            'headline': self.headline,
+            'author': self.author,
+            'body': '%s %s' % (self.summary, self.body),
+            'tags': self.tags,
+            'date': self.date
+        }
 
     def add(self, data):
         self.headline = data['headline']
@@ -529,7 +526,8 @@ class Entry(ndb.Model):
         self.date = data['date']
         self.body = data['body']
         self.tags = data['tags']
-        self._put()
+        self.put()
+        deferred.defer(update_doc, **self.index_data)
 
         for indx, obj in enumerate(data['newimages']):
             if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
@@ -592,7 +590,8 @@ class Entry(ndb.Model):
                 incr_count('Entry', 'tags', name)
         self.tags = sorted(new_tags)
 
-        self._put()
+        self.put()
+        deferred.defer(update_doc, **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
@@ -631,22 +630,24 @@ class Comment(ndb.Model):
     forkind = ndb.StringProperty(default='Application')
     body = ndb.TextProperty(required=True)
 
-    def index_add(self):
-        INDEX.put(
-            create_doc(
-                self.key.urlsafe(),
-                headline='' if self.is_message else self.key.parent().get().headline,
-                author=self.author,
-                body='%s' % self.body,
-                date=self.date))
+    @webapp2.cached_property
+    def index_data(self):
+        return {
+            'doc_id': self.key.urlsafe(),
+            'headline': '' if self.is_message else self.key.parent().get().headline,
+            'author': self.author,
+            'body': '%s' % self.body,
+            'tags': self.tags,
+            'date': self.date
+        }
 
-    @property
+    @webapp2.cached_property
     def is_message(self):
         return self.forkind == 'Application'
 
     def add(self):
         self.put()
-        self.index_add()
+        deferred.defer(update_doc, **self.index_data)
 
         incr_count('Comment', 'author', self.author.nickname())
         if self.is_message:
