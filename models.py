@@ -33,6 +33,9 @@ LOGARITHMIC, LINEAR = 1, 2
 
 # def divide60(pow_num):
 #     return pow_num[1] / 60 ** pow_num[0]
+# import itertools
+# values = [50,64,80,100,125,160,200]
+# itertools.ifilter(lambda x: 150 < x, values).next()
 
 def img_palette(buff):
     img = Image.open(StringIO(buff))

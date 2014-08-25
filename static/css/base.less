@@ -369,7 +369,7 @@ input[data-function*='swipe'] {
 				flex: 3;
 				margin: 0 @gap @gap/2 @gap;
                 border-radius: @radius;
-                &:after {
+                &.copyright:after {
                     content: '© ands.appspot.com';
                     display: block;
                     padding: @radius 2*@radius;
@@ -553,7 +553,7 @@ nav.paginator {
 	width: 29em;
 	color: white;
 	background: fade(@google_red, 70%);
-	min-height: 3em;
+	min-height: 5em;
 	border-radius: @radius;
 }
 
