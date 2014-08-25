@@ -31,10 +31,8 @@ PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
 
-
 # def divide60(pow_num):
 #     return pow_num[1] / 60 ** pow_num[0]
-
 
 def img_palette(buff):
     img = Image.open(StringIO(buff))
@@ -160,13 +158,6 @@ def remove_doc(safe_key):
     INDEX.delete(safe_key)
 
 
-class Counter(ndb.Model):
-    forkind = ndb.StringProperty(required=True)
-    field = ndb.StringProperty(required=True)
-    value = ndb.GenericProperty(required=True)  # could be int as str
-    count = ndb.IntegerProperty(default=0)
-
-
 def _calculate_thresholds(min_weight, max_weight, steps):
     delta = (max_weight - min_weight) / steps
     return [min_weight + i * delta for i in range(1, steps + 1)]
@@ -286,8 +277,14 @@ class Cloud(object):
         return collection
 
 
-def update_counter(*args, **kwargs):
-    delta = kwargs.get('delta', 1)
+class Counter(ndb.Model):
+    forkind = ndb.StringProperty(required=True)
+    field = ndb.StringProperty(required=True)
+    value = ndb.GenericProperty(required=True)  # could be int as str
+    count = ndb.IntegerProperty(default=0)
+
+
+def update_counter(delta, *args):
     key_name = '%s||%s||%s' % args
     params = dict(zip(('forkind', 'field', 'value'), args))
 
@@ -301,11 +298,22 @@ def update_counter(*args, **kwargs):
 
 
 def incr_count(*args):
-    deferred.defer(update_counter, *args, delta=1)
+    deferred.defer(update_counter, 1, *args)
 
 
 def decr_count(*args):
-    deferred.defer(update_counter, *args, delta=-1)
+    deferred.defer(update_counter, -1, *args)
+
+
+def update_tags(kind, old, new):
+    old_tags = set(old or [])
+    new_tags = set(new or [])
+    if old_tags - new_tags:
+        for name in list(old_tags - new_tags):
+            decr_count(kind, 'tags', name)
+    if new_tags - old_tags:
+        for name in list(new_tags - old_tags):
+            incr_count(kind, 'tags', name)
 
 
 class Photo(ndb.Model):
@@ -336,6 +344,10 @@ class Photo(ndb.Model):
     color = ndb.ComputedProperty(lambda self: self.hue if self.sat == 'color' else self.lum)
 
     @webapp2.cached_property
+    def kind(self):
+        return self.key.kind()
+
+    @webapp2.cached_property
     def index_data(self):
         return {
             'doc_id': self.key.urlsafe(),
@@ -361,45 +373,37 @@ class Photo(ndb.Model):
         self.hue, self.lum, self.sat = range_names(self.rgb)
         self.tags = data['tags']
         self.put()
-        deferred.defer(update_doc, **self.index_data)
 
-        for name in self.tags:
-            incr_count('Photo', 'tags', name)
-        incr_count('Photo', 'author', self.author.nickname())
-        incr_count('Photo', 'date', self.year)
+        incr_count(self.kind, 'author', self.author.nickname())
+        incr_count(self.kind, 'date', self.year)
+        update_tags(self.kind, None, self.tags)
         for field in PHOTO_FIELDS:
             value = data.get(field, None)
             if value:
-                incr_count('Photo', field, value)
+                incr_count(self.kind, field, value)
+        deferred.defer(update_doc, **self.index_data)
 
     def edit(self, data):
-        old = self.author
+        old = self.author.nickname()
         new = data['author']
-        if new != old.nickname():
+        if new != old:
             # TODO Not all emails are gmail
             self.author = users.User(email='%s@gmail.com' % new)
-            decr_count('Photo', 'author', old.nickname())
-            incr_count('Photo', 'author', self.author.nickname())
+            decr_count(self.kind, 'author', old)
+            incr_count(self.kind, 'author', new)
         del data['author']
-
-        old_tags = set(self.tags)
-        new_tags = set(data['tags'])
-        if old_tags - new_tags:
-            for name in list(old_tags - new_tags):
-                decr_count('Photo', 'tags', name)
-        if new_tags - old_tags:
-            for name in list(new_tags - old_tags):
-                incr_count('Photo', 'tags', name)
-        self.tags = sorted(new_tags)
-        del data['tags']
 
         old = self.date
         new = data['date']
         if old != new:
-            decr_count('Photo', 'date', self.year)
-            incr_count('Photo', 'date', new.year)
+            decr_count(self.kind, 'date', self.year)
+            incr_count(self.kind, 'date', new.year)
         else:
             del data['date']
+
+        update_tags(self.kind, self.tags, data['tags'])
+        self.tags = sorted(data['tags'])
+        del data['tags']
 
         if data['focal_length']:
             old = self.focal_length
@@ -407,14 +411,12 @@ class Photo(ndb.Model):
             if old != new:
                 self.focal_length = new
             del data['focal_length']
-
         if data['crop_factor']:
             old = self.crop_factor
             new = round(data['crop_factor'], 1)
             if old != new:
                 self.crop_factor = new
             del data['crop_factor']
-
         if self.focal_length and self.crop_factor:
             data['eqv'] = int(10 * round(self.focal_length * self.crop_factor / 10))
 
@@ -424,9 +426,9 @@ class Photo(ndb.Model):
                 new = data.get(field)
                 if old != new:
                     if old:
-                        decr_count('Photo', field, old)
+                        decr_count(self.kind, field, old)
                     if new:
-                        incr_count('Photo', field, new)
+                        incr_count(self.kind, field, new)
                     setattr(self, field, new)
             else:
                 setattr(self, field, value)
@@ -442,15 +444,13 @@ class Photo(ndb.Model):
         blob_info = blobstore.BlobInfo.get(instance.blob_key)
         blob_info.delete()
 
-        for name in instance.tags:
-            decr_count('Photo', 'tags', name)
-        decr_count('Photo', 'author', instance.author.nickname())
-        decr_count('Photo', 'date', instance.year)
+        decr_count(key.kind(), 'author', instance.author.nickname())
+        decr_count(key.kind(), 'date', instance.year)
+        update_tags(key.kind(), instance.tags, None)
         for field in PHOTO_FIELDS:
             value = getattr(instance, field)
             if value:
-                decr_count('Photo', field, value)
-
+                decr_count(key.kind(), field, value)
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     @webapp2.cached_property
@@ -510,6 +510,10 @@ class Entry(ndb.Model):
     front = ndb.IntegerProperty(default=-1)
 
     @webapp2.cached_property
+    def kind(self):
+        return self.key.kind()
+
+    @webapp2.cached_property
     def index_data(self):
         return {
             'doc_id': self.key.urlsafe(),
@@ -527,7 +531,6 @@ class Entry(ndb.Model):
         self.body = data['body']
         self.tags = data['tags']
         self.put()
-        deferred.defer(update_doc, **self.index_data)
 
         for indx, obj in enumerate(data['newimages']):
             if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
@@ -541,10 +544,10 @@ class Entry(ndb.Model):
                 img.mime = obj['blob'].headers['Content-Type']
                 img.put()
 
-        incr_count('Entry', 'author', self.author.nickname())
-        incr_count('Entry', 'date', self.year)
-        for name in self.tags:
-            incr_count('Entry', 'tags', name)
+        incr_count(self.kind, 'author', self.author.nickname())
+        incr_count(self.kind, 'date', self.year)
+        update_tags(self.kind, None, self.tags)
+        deferred.defer(update_doc, **self.index_data)
 
     def edit(self, data):
         self.headline = data['headline']
@@ -577,18 +580,10 @@ class Entry(ndb.Model):
         old = self.date
         new = data['date']
         if old != new:
-            decr_count('Entry', 'date', self.year)
-            incr_count('Entry', 'date', new.year)
-
-        old_tags = set(self.tags)
-        new_tags = set(data['tags'])
-        if old_tags - new_tags:
-            for name in list(old_tags - new_tags):
-                decr_count('Entry', 'tags', name)
-        if new_tags - old_tags:
-            for name in list(new_tags - old_tags):
-                incr_count('Entry', 'tags', name)
-        self.tags = sorted(new_tags)
+            decr_count(self.kind, 'date', self.year)
+            incr_count(self.kind, 'date', new.year)
+        update_tags(self.kind, self.tags, data['tags'])
+        self.tags = sorted(data['tags'])
 
         self.put()
         deferred.defer(update_doc, **self.index_data)
@@ -598,10 +593,9 @@ class Entry(ndb.Model):
         instance = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count('Entry', 'author', instance.author.nickname())
-        decr_count('Entry', 'date', instance.year)
-        for name in instance.tags:
-            decr_count('Entry', 'tags', name)
+        decr_count(key.kind(), 'author', instance.author.nickname())
+        decr_count(key.kind(), 'date', instance.year)
+        update_tags(key.kind(), instance.tags, None)
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
@@ -631,6 +625,10 @@ class Comment(ndb.Model):
     body = ndb.TextProperty(required=True)
 
     @webapp2.cached_property
+    def kind(self):
+        return self.key.kind()
+
+    @webapp2.cached_property
     def index_data(self):
         return {
             'doc_id': self.key.urlsafe(),
@@ -647,15 +645,15 @@ class Comment(ndb.Model):
 
     def add(self):
         self.put()
-        deferred.defer(update_doc, **self.index_data)
 
-        incr_count('Comment', 'author', self.author.nickname())
+        incr_count(self.kind, 'author', self.author.nickname())
         if self.is_message:
-            incr_count('Comment', 'forkind', 'Application')
+            incr_count(self.kind, 'forkind', 'Application')
         else:
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
         incr_count('Comment', 'date', self.year)
+        deferred.defer(update_doc, **self.index_data)
 
     def _pre_put_hook(self):
         self.year = self.date.year
@@ -665,13 +663,13 @@ class Comment(ndb.Model):
         instance = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count('Comment', 'author', instance.author.nickname())
+        decr_count(key.kind(), 'author', instance.author.nickname())
+        decr_count(key.kind(), 'date', instance.year)
         if instance.is_message:
-            decr_count('Comment', 'forkind', 'Application')
+            decr_count(key.kind(), 'forkind', 'Application')
         else:
             decr_count(key.parent().kind(), 'comment', key.parent().id())
-            decr_count('Comment', 'forkind', key.parent().kind())
-        decr_count('Comment', 'date', instance.year)
+            decr_count(key.kind(), 'forkind', key.parent().kind())
 
     @classmethod
     def query_for(cls, field, value):
@@ -688,6 +686,10 @@ class Feed(ndb.Model):
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
 
+    @webapp2.cached_property
+    def kind(self):
+        return self.key.kind()
+
     def add(self, data):
         self.url = data['url']
         self.headline = data['headline']
@@ -697,16 +699,8 @@ class Feed(ndb.Model):
             incr_count('Feed', 'tags', name)
 
     def edit(self, data):
-        old_tags = set(self.tags)
-        new_tags = set(data['tags'])
-        if old_tags - new_tags:
-            for name in list(old_tags - new_tags):
-                decr_count('Feed', 'tags', name)
-        if new_tags - old_tags:
-            for name in list(new_tags - old_tags):
-                incr_count('Feed', 'tags', name)
-        self.tags = sorted(new_tags)
-
+        update_tags(self.kind, self.tags, data['tags'])
+        self.tags = sorted(data['tags'])
         self.url = data['url']
         self.headline = data['headline']
         self.put()
@@ -714,8 +708,7 @@ class Feed(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         instance = key.get()
-        for name in instance.tags:
-            decr_count('Feed', 'tags', name)
+        update_tags(key.kind(), instance.tags, None)
         memcache.delete(key.string_id())
 
     @classmethod

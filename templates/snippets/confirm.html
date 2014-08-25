@@ -6,20 +6,20 @@
 		<form id="deleteForm" action="{{ post_url }}" method="post">
             <input name="token" type="hidden" value="{{ token }}"/>
 			<p>{{ _('Do you really want to delete') }}
-				{% if object.key.kind() == 'Comment' %}
+				{% if object.kind == 'Comment' %}
 					{{ _('comment submitted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% elif object.key.kind() == 'Entry' %}
+				{% elif object.kind == 'Entry' %}
 					{{ _('Blog') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% elif object.key.kind() == 'Img' %}
+				{% elif object.kind == 'Img' %}
 					{{ _('image') }} &quot;{{ object.name }}&quot;
-				{% elif object.key.kind() == 'Photo' %}
+				{% elif object.kind == 'Photo' %}
 					{{ _('photo') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
-				{% elif object.key.kind() == 'Feed' %}
+				{% elif object.kind == 'Feed' %}
 					{{ _('News') }} &quot;{{ object.headline }}&quot;
 					{{ _('posted by') }}
 					<strong>{{ object.author }}</strong>?
