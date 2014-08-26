@@ -453,17 +453,17 @@ class Photo(ndb.Model):
 
     @classmethod
     def _pre_delete_hook(cls, key):
-        instance = key.get()
+        obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        blob_info = blobstore.BlobInfo.get(instance.blob_key)
+        blob_info = blobstore.BlobInfo.get(obj.blob_key)
         blob_info.delete()
 
-        decr_count(key.kind(), 'author', instance.author.nickname())
-        decr_count(key.kind(), 'date', instance.year)
-        update_tags(key.kind(), instance.tags, None)
+        decr_count(key.kind(), 'author', obj.author.nickname())
+        decr_count(key.kind(), 'date', obj.year)
+        update_tags(key.kind(), obj.tags, None)
         for field in PHOTO_FIELDS:
-            value = getattr(instance, field)
+            value = getattr(obj, field)
             if value:
                 decr_count(key.kind(), field, value)
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
@@ -605,12 +605,12 @@ class Entry(ndb.Model):
 
     @classmethod
     def _pre_delete_hook(cls, key):
-        instance = key.get()
+        obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count(key.kind(), 'author', instance.author.nickname())
-        decr_count(key.kind(), 'date', instance.year)
-        update_tags(key.kind(), instance.tags, None)
+        decr_count(key.kind(), 'author', obj.author.nickname())
+        decr_count(key.kind(), 'date', obj.year)
+        update_tags(key.kind(), obj.tags, None)
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
@@ -674,12 +674,12 @@ class Comment(ndb.Model):
 
     @classmethod
     def _pre_delete_hook(cls, key):
-        instance = key.get()
+        obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count(key.kind(), 'author', instance.author.nickname())
-        decr_count(key.kind(), 'date', instance.year)
-        if instance.is_message:
+        decr_count(key.kind(), 'author', obj.author.nickname())
+        decr_count(key.kind(), 'date', obj.year)
+        if obj.is_message:
             decr_count(key.kind(), 'forkind', 'Application')
         else:
             decr_count(key.parent().kind(), 'comment', key.parent().id())
@@ -721,8 +721,8 @@ class Feed(ndb.Model):
 
     @classmethod
     def _pre_delete_hook(cls, key):
-        instance = key.get()
-        update_tags(key.kind(), instance.tags, None)
+        obj = key.get()
+        update_tags(key.kind(), obj.tags, None)
         memcache.delete(key.string_id())
 
     @classmethod
