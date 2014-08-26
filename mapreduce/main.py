@@ -49,21 +49,25 @@ from mapreduce import operation as op
 from mapreduce import control
 from mapreduce.model import MapreduceState
 from google.appengine.ext import ndb, blobstore
-from models import img_palette, range_names
-from config import CROPS
+from models import update_doc, rounding
+from config import CROPS, ASA, LENGTHS
+import itertools
 import logging
 
 
 def indexer(entity):
-    entity.index_add()
+    update_doc(**entity.index_data)
 
 
 def fixer(entity):
-    try:
-        entity.crop_factor = CROPS[entity.model]
-        entity.put()
-    except KeyError:
-        logging.error(entity.model)
+    if entity.focal_length and entity.crop_factor:
+        value = int(entity.focal_length * entity.crop_factor)
+        entity.eqv = rounding(value, LENGTHS)
+    if entity.iso:
+        value = int(entity.iso)
+        entity.iso = rounding(value, ASA)
+
+    entity.put()
 
 # def fixer(oldkey):
     # entity is oldkey for DatastoreKeyInputReader <class 'google.appengine.api.datastore_types.Key'>

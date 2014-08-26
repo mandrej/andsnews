@@ -6,6 +6,7 @@ import datetime
 import cgi
 import math
 import colorsys
+import bisect
 import itertools
 import collections
 import webapp2
@@ -19,7 +20,7 @@ from google.appengine.api import users, memcache, search, images
 
 from lib import colorific
 from exifread import process_file
-from config import COLORS, HUE, LUM, SAT, TIMEOUT
+from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
@@ -31,15 +32,19 @@ PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
 
-# def divide60(pow_num):
-#     return pow_num[1] / 60 ** pow_num[0]
-# import itertools
-# values = [50,64,80,100,125,160,200]
-# itertools.ifilter(lambda x: 150 < x, values).next()
 
 def img_palette(buff):
     img = Image.open(StringIO(buff))
     return colorific.extract_colors(img.resize((100, 100)))
+
+
+def rounding(val, values):
+    i = bisect.bisect_right(values, val)
+    prev, next = values[i-1: i+1]
+    if abs(prev-val) <= abs(next-val):
+        return prev
+    else:
+        return next
 
 
 def filter_param(field, value):
@@ -117,7 +122,8 @@ def get_exif(buff):
 
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
-        data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
+        value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
+        data['iso'] = rounding(value, ASA)
 
     # if 'GPS GPSLatitude' in tags:
     #     deg_min_sec = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
@@ -421,7 +427,8 @@ class Photo(ndb.Model):
                 self.crop_factor = new
             del data['crop_factor']
         if self.focal_length and self.crop_factor:
-            data['eqv'] = int(10 * round(self.focal_length * self.crop_factor / 10))
+            value = int(self.focal_length * self.crop_factor)
+            data['eqv'] = rounding(value, LENGTHS)
 
         for field, value in data.items():
             if field in PHOTO_FIELDS:
@@ -638,7 +645,6 @@ class Comment(ndb.Model):
             'headline': '' if self.is_message else self.key.parent().get().headline,
             'author': self.author,
             'body': '%s' % self.body,
-            'tags': self.tags,
             'date': self.date
         }
 
