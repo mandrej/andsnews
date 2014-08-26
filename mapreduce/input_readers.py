@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-#
-# Copyright 2010 Google Inc.
+# Copyright 2010 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +24,6 @@ __all__ = [
     "BlobstoreLineInputReader",
     "BlobstoreZipInputReader",
     "BlobstoreZipLineInputReader",
-    "ConsistentKeyReader",
     "COUNTER_IO_READ_BYTES",
     "COUNTER_IO_READ_MSEC",
     "DatastoreEntityInputReader",
@@ -42,6 +40,7 @@ __all__ = [
     ]
 
 # pylint: disable=g-bad-name
+# pylint: disable=protected-access
 
 import base64
 import copy
@@ -59,10 +58,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import datastore
 from google.appengine.api import files
 from google.appengine.api import logservice
-from google.appengine.api.files import records
+from google.appengine.api.files import file_service_pb
 from google.appengine.api.logservice import log_service_pb
-from google.appengine.datastore import datastore_query
-from google.appengine.datastore import datastore_rpc
 from google.appengine.ext import blobstore
 from google.appengine.ext import db
 from google.appengine.ext import key_range
@@ -72,17 +69,22 @@ from mapreduce import datastore_range_iterators as db_iters
 from mapreduce import errors
 from mapreduce import file_format_parser
 from mapreduce import file_format_root
+from mapreduce import json_util
 from mapreduce import key_ranges
 from mapreduce import model
 from mapreduce import namespace_range
 from mapreduce import operation
 from mapreduce import property_range
+from mapreduce import records
 from mapreduce import util
 
 # pylint: disable=g-import-not-at-top
 # TODO(user): Cleanup imports if/when cloudstorage becomes part of runtime.
 try:
+  # Check if the full cloudstorage package exists. The stub part is in runtime.
   import cloudstorage
+  if hasattr(cloudstorage, "_STUB"):
+    cloudstorage = None
 except ImportError:
   pass  # CloudStorage library not available
 
@@ -104,7 +106,7 @@ COUNTER_IO_READ_MSEC = "io-read-msec"
 ALLOW_CHECKPOINT = object()
 
 
-class InputReader(model.JsonMixin):
+class InputReader(json_util.JsonMixin):
   """Abstract base class for input readers.
 
   InputReaders have the following properties:
@@ -218,7 +220,7 @@ def _get_params(mapper_spec, allowed_keys=None, allow_old=True):
   """
   if "input_reader" not in mapper_spec.params:
     message = ("Input reader's parameters should be specified in "
-        "input_reader subdictionary.")
+               "input_reader subdictionary.")
     if not allow_old or allowed_keys:
       raise errors.BadReaderParamsError(message)
     params = mapper_spec.params
@@ -449,7 +451,7 @@ class AbstractDatastoreInputReader(InputReader):
 
     return model.QuerySpec(
         entity_kind=cls._get_raw_entity_kind(entity_kind),
-        keys_only=bool(params.get(cls.KEY_RANGE_PARAM, False)),
+        keys_only=bool(params.get(cls.KEYS_ONLY_PARAM, False)),
         filters=filters,
         batch_size=int(params.get(cls.BATCH_SIZE_PARAM, cls._BATCH_SIZE)),
         model_class_path=entity_kind,
@@ -546,6 +548,8 @@ class AbstractDatastoreInputReader(InputReader):
                            raw_entity_kind,
                            app):
     """Split a namespace by scatter index into key_range.KeyRange.
+
+    TODO(user): Power this with key_range.KeyRange.compute_split_points.
 
     Args:
       shard_count: number of shards.
@@ -856,7 +860,6 @@ DatastoreEntityInputReader = RawDatastoreInputReader
 
 
 # TODO(user): Remove this after the only dependency GroomerMarkReader is
-# refactored to use megastore safetime.
 class _OldAbstractDatastoreInputReader(InputReader):
   """Abstract base class for classes that iterate over datastore entities.
 
@@ -890,6 +893,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
   # TODO(user): Add support for arbitrary queries. It's not possible to
   # support them without cursors since right now you can't even serialize query
   # definition.
+  # pylint: disable=redefined-outer-name
   def __init__(self,
                entity_kind,
                key_ranges=None,
@@ -1041,12 +1045,21 @@ class _OldAbstractDatastoreInputReader(InputReader):
   @classmethod
   def _split_input_from_namespace(cls, app, namespace, entity_kind,
                                   shard_count):
-    """Return KeyRange objects. Helper for _split_input_from_params.
+    """Helper for _split_input_from_params.
 
     If there are not enough Entities to make all of the given shards, the
     returned list of KeyRanges will include Nones. The returned list will
     contain KeyRanges ordered lexographically with any Nones appearing at the
     end.
+
+    Args:
+      app: the app.
+      namespace: the namespace.
+      entity_kind: entity kind as string.
+      shard_count: the number of shards.
+
+    Returns:
+      KeyRange objects.
     """
 
     raw_entity_kind = cls._get_raw_entity_kind(entity_kind)
@@ -1073,6 +1086,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
       # We've got a lot of scatter values. Sample them down.
       random_keys = cls._choose_split_points(random_keys, shard_count)
 
+    # pylint: disable=redefined-outer-name
     key_ranges = []
 
     key_ranges.append(key_range.KeyRange(
@@ -1105,7 +1119,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
 
     if len(key_ranges) < shard_count:
       # We need to have as many shards as it was requested. Add some Nones.
-      key_ranges = key_ranges + [None] * (shard_count - len(key_ranges))
+      key_ranges += [None] * (shard_count - len(key_ranges))
 
     return key_ranges
 
@@ -1113,6 +1127,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
   def _split_input_from_params(cls, app, namespaces, entity_kind_name,
                                params, shard_count):
     """Return input reader objects. Helper for split_input."""
+    # pylint: disable=redefined-outer-name
     key_ranges = []  # KeyRanges for all namespaces
     for namespace in namespaces:
       key_ranges.extend(
@@ -1240,7 +1255,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
       elif not namespace_keys:
         return [cls(entity_kind_name,
                     key_ranges=None,
-                    ns_range=namespace_range.NamespaceRange(),
+                    ns_range=namespace_range.NamespaceRange(_app=app),
                     batch_size=shard_count,
                     filters=filters)]
       else:
@@ -1301,6 +1316,7 @@ class _OldAbstractDatastoreInputReader(InputReader):
       an instance of DatastoreInputReader with all data deserialized from json.
     """
     if json[cls.KEY_RANGE_PARAM] is None:
+      # pylint: disable=redefined-outer-name
       key_ranges = None
     else:
       key_ranges = []
@@ -1610,7 +1626,6 @@ class BlobstoreZipInputReader(InputReader):
       raise BadReaderParamsError("Could not find blobinfo for key %s" %
                                  blob_key)
 
-
   @classmethod
   def split_input(cls, mapper_spec, _reader=blobstore.BlobReader):
     """Returns a list of input shard states for the input spec.
@@ -1627,8 +1642,8 @@ class BlobstoreZipInputReader(InputReader):
     params = _get_params(mapper_spec)
     blob_key = params[cls.BLOB_KEY_PARAM]
     zip_input = zipfile.ZipFile(_reader(blob_key))
-    files = zip_input.infolist()
-    total_size = sum(x.file_size for x in files)
+    zfiles = zip_input.infolist()
+    total_size = sum(x.file_size for x in zfiles)
     num_shards = min(mapper_spec.shard_count, cls._MAX_SHARD_COUNT)
     size_per_shard = total_size // num_shards
 
@@ -1636,14 +1651,14 @@ class BlobstoreZipInputReader(InputReader):
     # size_per_shard bytes.
     shard_start_indexes = [0]
     current_shard_size = 0
-    for i, fileinfo in enumerate(files):
+    for i, fileinfo in enumerate(zfiles):
       current_shard_size += fileinfo.file_size
       if current_shard_size >= size_per_shard:
         shard_start_indexes.append(i + 1)
         current_shard_size = 0
 
-    if shard_start_indexes[-1] != len(files):
-      shard_start_indexes.append(len(files))
+    if shard_start_indexes[-1] != len(zfiles):
+      shard_start_indexes.append(len(zfiles))
 
     return [cls(blob_key, start_index, end_index, _reader)
             for start_index, end_index
@@ -1772,11 +1787,11 @@ class BlobstoreZipLineInputReader(InputReader):
 
     readers = []
     for blob_key in blob_keys:
-      files = blob_files[blob_key]
+      bfiles = blob_files[blob_key]
       current_shard_size = 0
       start_file_index = 0
       next_file_index = 0
-      for fileinfo in files:
+      for fileinfo in bfiles:
         next_file_index += 1
         current_shard_size += fileinfo.file_size
         if current_shard_size >= size_per_shard:
@@ -1986,7 +2001,7 @@ class NamespaceInputReader(InputReader):
   BATCH_SIZE_PARAM = "batch_size"
   _BATCH_SIZE = 10
 
-  def __init__(self, ns_range, batch_size = _BATCH_SIZE):
+  def __init__(self, ns_range, batch_size=_BATCH_SIZE):
     self.ns_range = ns_range
     self._batch_size = batch_size
 
@@ -2098,7 +2113,8 @@ class RecordsReader(InputReader):
   def __iter__(self):
     """Iterate over records in file.
 
-    Yields records as strings.
+    Yields:
+      Records as strings.
     """
     ctx = context.get()
 
@@ -2170,12 +2186,12 @@ class RecordsReader(InputReader):
       filenames = [params[cls.FILE_PARAM]]
 
     batch_list = [[] for _ in xrange(shard_count)]
-    for index, filename in enumerate(filenames):
+    for index, _ in enumerate(filenames):
       # Simplest round robin so we don't have any short shards.
       batch_list[index % shard_count].append(filenames[index])
 
     # Sort from most shards to least shards so the short shard is last.
-    batch_list.sort(reverse=True, key=lambda x: len(x))
+    batch_list.sort(reverse=True, key=len)
     return [cls(batch, 0) for batch in batch_list]
 
   @classmethod
@@ -2218,6 +2234,7 @@ class LogInputReader(InputReader):
   INCLUDE_INCOMPLETE_PARAM = "include_incomplete"
   INCLUDE_APP_LOGS_PARAM = "include_app_logs"
   VERSION_IDS_PARAM = "version_ids"
+  MODULE_VERSIONS_PARAM = "module_versions"
 
   # Semi-hidden parameters used only internally or for privileged applications.
   _OFFSET_PARAM = "offset"
@@ -2226,7 +2243,7 @@ class LogInputReader(InputReader):
   _PARAMS = frozenset([START_TIME_PARAM, END_TIME_PARAM, _OFFSET_PARAM,
                        MINIMUM_LOG_LEVEL_PARAM, INCLUDE_INCOMPLETE_PARAM,
                        INCLUDE_APP_LOGS_PARAM, VERSION_IDS_PARAM,
-                       _PROTOTYPE_REQUEST_PARAM])
+                       MODULE_VERSIONS_PARAM, _PROTOTYPE_REQUEST_PARAM])
   _KWARGS = frozenset([_OFFSET_PARAM, _PROTOTYPE_REQUEST_PARAM])
 
   def __init__(self,
@@ -2236,6 +2253,7 @@ class LogInputReader(InputReader):
                include_incomplete=False,
                include_app_logs=False,
                version_ids=None,
+               module_versions=None,
                **kwargs):
     """Constructor.
 
@@ -2251,9 +2269,13 @@ class LogInputReader(InputReader):
         but not yet finished, as a boolean.  Defaults to False.
       include_app_logs: Whether or not to include application level logs in the
         mapped logs, as a boolean.  Defaults to False.
-      version_ids: A list of version ids whose logs should be mapped against.
+      version_ids: A list of version ids whose logs should be read. This can not
+        be used with module_versions
+      module_versions: A list of tuples containing a module and version id
+        whose logs should be read. This can not be used with version_ids
+      **kwargs: A dictionary of keywords associated with this input reader.
     """
-    InputReader.__init__(self)
+    InputReader.__init__(self)  # pylint: disable=non-parent-init-called
 
     # The rule for __params is that its contents will always be suitable as
     # input to logservice.fetch().
@@ -2271,6 +2293,8 @@ class LogInputReader(InputReader):
       self.__params[self.INCLUDE_APP_LOGS_PARAM] = include_app_logs
     if version_ids:
       self.__params[self.VERSION_IDS_PARAM] = version_ids
+    if module_versions:
+      self.__params[self.MODULE_VERSIONS_PARAM] = module_versions
 
     # Any submitted prototype_request will be in encoded form.
     if self._PROTOTYPE_REQUEST_PARAM in self.__params:
@@ -2370,9 +2394,14 @@ class LogInputReader(InputReader):
       raise errors.BadReaderParamsError("Input reader class mismatch")
 
     params = _get_params(mapper_spec, allowed_keys=cls._PARAMS)
-    if cls.VERSION_IDS_PARAM not in params:
-      raise errors.BadReaderParamsError("Must specify a list of version ids "
-                                        "for mapper input")
+    if (cls.VERSION_IDS_PARAM not in params and
+        cls.MODULE_VERSIONS_PARAM not in params):
+      raise errors.BadReaderParamsError("Must specify a list of version ids or "
+                                        "module/version ids for mapper input")
+    if (cls.VERSION_IDS_PARAM in params and
+        cls.MODULE_VERSIONS_PARAM in params):
+      raise errors.BadReaderParamsError("Can not supply both version ids or "
+                                        "module/version ids. Use only one.")
     if (cls.START_TIME_PARAM not in params or
         params[cls.START_TIME_PARAM] is None):
       raise errors.BadReaderParamsError("Must specify a starting time for "
@@ -2417,7 +2446,7 @@ class LogInputReader(InputReader):
 
 
 class _GoogleCloudStorageInputReader(InputReader):
-  """Input reader from Gloogle Cloud Storage using the cloudstorage library.
+  """Input reader from Google Cloud Storage using the cloudstorage library.
 
   This class is expected to be subclassed with a reader that understands
   user-level records.
@@ -2437,12 +2466,19 @@ class _GoogleCloudStorageInputReader(InputReader):
 
   Optional configuration in the mapper_sec.input_reader dictionary.
     BUFFER_SIZE_PARAM: the size of the read buffer for each file handle.
+    DELIMITER_PARAM: if specified, turn on the shallow splitting mode.
+      The delimiter is used as a path separator to designate directory
+      hierarchy. Matching of prefixes from OBJECT_NAME_PARAM
+      will stop at the first directory instead of matching
+      all files under the directory. This allows MR to process bucket with
+      hundreds of thousands of files.
   """
 
   # Supported parameters
   BUCKET_NAME_PARAM = "bucket_name"
   OBJECT_NAMES_PARAM = "objects"
   BUFFER_SIZE_PARAM = "buffer_size"
+  DELIMITER_PARAM = "delimiter"
 
   # Internal parameters
   _ACCOUNT_ID_PARAM = "account_id"
@@ -2451,7 +2487,14 @@ class _GoogleCloudStorageInputReader(InputReader):
   _JSON_PICKLE = "pickle"
   _STRING_MAX_FILES_LISTED = 10  # Max files shown in the str representation
 
-  def __init__(self, filenames, index=0, buffer_size=None, _account_id=None):
+  # Input reader can also take in start and end filenames and do
+  # listbucket. This saves space but has two cons.
+  # 1. Files to read are less well defined: files can be added or removed over
+  #    the lifetime of the MR job.
+  # 2. A shard has to process files from a contiguous namespace.
+  #    May introduce staggering shard.
+  def __init__(self, filenames, index=0, buffer_size=None, _account_id=None,
+               delimiter=None):
     """Initialize a GoogleCloudStorageInputReader instance.
 
     Args:
@@ -2460,11 +2503,40 @@ class _GoogleCloudStorageInputReader(InputReader):
       index: Index of the next filename to read.
       buffer_size: The size of the read buffer, None to use default.
       _account_id: Internal use only. See cloudstorage documentation.
+      delimiter: Delimiter used as path separator. See class doc for details.
     """
     self._filenames = filenames
     self._index = index
     self._buffer_size = buffer_size
     self._account_id = _account_id
+    self._delimiter = delimiter
+    self._bucket = None
+    self._bucket_iter = None
+
+  def _next_file(self):
+    """Find next filename.
+
+    self._filenames may need to be expanded via listbucket.
+
+    Returns:
+      None if no more file is left. Filename otherwise.
+    """
+    while True:
+      if self._bucket_iter:
+        try:
+          return self._bucket_iter.next().filename
+        except StopIteration:
+          self._bucket_iter = None
+          self._bucket = None
+      if self._index >= len(self._filenames):
+        return
+      filename = self._filenames[self._index]
+      self._index += 1
+      if self._delimiter is None or not filename.endswith(self._delimiter):
+        return filename
+      self._bucket = cloudstorage.listbucket(filename,
+                                             delimiter=self._delimiter)
+      self._bucket_iter = iter(self._bucket)
 
   @classmethod
   def validate(cls, mapper_spec):
@@ -2474,7 +2546,7 @@ class _GoogleCloudStorageInputReader(InputReader):
       mapper_spec: an instance of model.MapperSpec
 
     Raises:
-      BadReaderParamsError if the specification is invalid for any reason such
+      BadReaderParamsError: if the specification is invalid for any reason such
         as missing the bucket name or providing an invalid bucket name.
     """
     reader_spec = _get_params(mapper_spec, allow_old=False)
@@ -2505,6 +2577,12 @@ class _GoogleCloudStorageInputReader(InputReader):
         raise errors.BadReaderParamsError(
             "Object name is not a string but a %s" %
             filename.__class__.__name__)
+    if cls.DELIMITER_PARAM in reader_spec:
+      delimiter = reader_spec[cls.DELIMITER_PARAM]
+      if not isinstance(delimiter, basestring):
+        raise errors.BadReaderParamsError(
+            "%s is not a string but a %s" %
+            (cls.DELIMITER_PARAM, type(delimiter)))
 
   @classmethod
   def split_input(cls, mapper_spec):
@@ -2522,23 +2600,22 @@ class _GoogleCloudStorageInputReader(InputReader):
       A list of InputReaders. None when no input data can be found.
     """
     reader_spec = _get_params(mapper_spec, allow_old=False)
+    bucket = reader_spec[cls.BUCKET_NAME_PARAM]
+    filenames = reader_spec[cls.OBJECT_NAMES_PARAM]
+    delimiter = reader_spec.get(cls.DELIMITER_PARAM)
+    account_id = reader_spec.get(cls._ACCOUNT_ID_PARAM)
+    buffer_size = reader_spec.get(cls.BUFFER_SIZE_PARAM)
 
     # Gather the complete list of files (expanding wildcards)
     all_filenames = []
-    bucket = reader_spec[cls.BUCKET_NAME_PARAM]
-    filenames = reader_spec[cls.OBJECT_NAMES_PARAM]
     for filename in filenames:
       if filename.endswith("*"):
         all_filenames.extend(
             [file_stat.filename for file_stat in cloudstorage.listbucket(
-                "/" + bucket,
-                prefix=filename[:-1],
-                _account_id=reader_spec.get(cls._ACCOUNT_ID_PARAM, None))])
+                "/" + bucket + "/" + filename[:-1], delimiter=delimiter,
+                _account_id=account_id)])
       else:
         all_filenames.append("/%s/%s" % (bucket, filename))
-        # The existence of an object can only be checked by sending requests to
-        # GCS, thus this not performed at this time.
-
 
     # Split into shards
     readers = []
@@ -2546,20 +2623,30 @@ class _GoogleCloudStorageInputReader(InputReader):
       shard_filenames = all_filenames[shard::mapper_spec.shard_count]
       if shard_filenames:
         readers.append(cls(
-            shard_filenames,
-            buffer_size=reader_spec.get(cls.BUFFER_SIZE_PARAM, None),
-            _account_id=reader_spec.get(cls._ACCOUNT_ID_PARAM, None)))
+            shard_filenames, buffer_size=buffer_size, _account_id=account_id,
+            delimiter=delimiter))
     return readers
 
   @classmethod
   def from_json(cls, state):
-    return pickle.loads(state[cls._JSON_PICKLE])
+    obj = pickle.loads(state[cls._JSON_PICKLE])
+    if obj._bucket:
+      obj._bucket_iter = iter(obj._bucket)
+    return obj
 
   def to_json(self):
-    return {self._JSON_PICKLE: pickle.dumps(self)}
+    before_iter = self._bucket_iter
+    self._bucket_iter = None
+    try:
+      return {self._JSON_PICKLE: pickle.dumps(self)}
+    finally:
+      self._bucket_itr = before_iter
 
   def next(self):
     """Returns the next input from this input reader, a block of bytes.
+
+    Non existent files will be logged and skipped. The file might have been
+    removed after input splitting.
 
     Returns:
       The next input from this input reader in the form of a cloudstorage
@@ -2569,19 +2656,28 @@ class _GoogleCloudStorageInputReader(InputReader):
     Raises:
       StopIteration: The list of files has been exhausted.
     """
-    # A generator or for-loop is not used to ensure we can easily serialize
-    # the state of the iteration
-    if self._index >= len(self._filenames):
-      raise StopIteration()
-    else:
-      options = {}
-      if self._buffer_size:
-        options["read_buffer_size"] = self._buffer_size
-      if self._account_id:
-        options["_account_id"] = self._account_id
-      handle = cloudstorage.open(self._filenames[self._index], **options)
-      self._index += 1
-      return handle
+    options = {}
+    if self._buffer_size:
+      options["read_buffer_size"] = self._buffer_size
+    if self._account_id:
+      options["_account_id"] = self._account_id
+    while True:
+      filename = self._next_file()
+      if filename is None:
+        raise StopIteration()
+      try:
+        start_time = time.time()
+        handle = cloudstorage.open(filename, **options)
+
+        ctx = context.get()
+        if ctx:
+          operation.counters.Increment(
+              COUNTER_IO_READ_MSEC, int((time.time() - start_time) * 1000))(ctx)
+
+        return handle
+      except cloudstorage.NotFoundError:
+        logging.warning("File %s may have been removed. Skipping file.",
+                        filename)
 
   def __str__(self):
     # Only show a limited number of files individually for readability
@@ -2638,12 +2734,135 @@ class _GoogleCloudStorageRecordInputReader(_GoogleCloudStorageInputReader):
         self._record_reader = records.RecordsReader(self._cur_handle)
 
       try:
-        return self._record_reader.read()
+        start_time = time.time()
+        content = self._record_reader.read()
+
+        ctx = context.get()
+        if ctx:
+          operation.counters.Increment(COUNTER_IO_READ_BYTES, len(content))(ctx)
+          operation.counters.Increment(
+              COUNTER_IO_READ_MSEC, int((time.time() - start_time) * 1000))(ctx)
+        return content
+
       except EOFError:
         self._cur_handle = None
         self._record_reader = None
 
 
-# For backward compatibility.
-# TODO(user): remove after 184.
-ConsistentKeyReader = DatastoreKeyInputReader
+# TODO(user): Use _GoogleCloudStorageInputReader instead of the File API.
+class _ReducerReader(RecordsReader):
+  """Reader to read KeyValues records files from Files API."""
+
+  expand_parameters = True
+
+  def __init__(self, filenames, position):
+    super(_ReducerReader, self).__init__(filenames, position)
+    self.current_key = None
+    self.current_values = None
+
+  def __iter__(self):
+    ctx = context.get()
+    combiner = None
+
+    if ctx:
+      combiner_spec = ctx.mapreduce_spec.mapper.params.get("combiner_spec")
+      if combiner_spec:
+        combiner = util.handler_for_name(combiner_spec)
+
+    for binary_record in super(_ReducerReader, self).__iter__():
+      proto = file_service_pb.KeyValues()
+      proto.ParseFromString(binary_record)
+
+      to_yield = None
+      if self.current_key is not None and self.current_key != proto.key():
+        to_yield = (self.current_key, self.current_values)
+        self.current_key = None
+        self.current_values = None
+
+      if self.current_key is None:
+        self.current_key = proto.key()
+        self.current_values = []
+
+      if combiner:
+        combiner_result = combiner(
+            self.current_key, proto.value_list(), self.current_values)
+
+        if not util.is_generator(combiner_result):
+          raise errors.BadCombinerOutputError(
+              "Combiner %s should yield values instead of returning them (%s)" %
+              (combiner, combiner_result))
+
+        self.current_values = []
+        for value in combiner_result:
+          if isinstance(value, operation.Operation):
+            value(ctx)
+          else:
+            # With combiner the current values always come from the combiner.
+            self.current_values.append(value)
+
+        # Check-point after each combiner call is run only when there's nothing
+        # that needs to be yielded below. Otherwise allowing a check-point here
+        # would cause the current to_yield data to be lost.
+        if not to_yield:
+          yield ALLOW_CHECKPOINT
+      else:
+        # Without combiner we just accumulate values.
+        self.current_values.extend(proto.value_list())
+
+      if to_yield:
+        yield to_yield
+        # Check-point after each key is yielded.
+        yield ALLOW_CHECKPOINT
+
+    # There may be some accumulated values left at the end of an input file
+    # so be sure to yield those too.
+    if self.current_key is not None:
+      to_yield = (self.current_key, self.current_values)
+      self.current_key = None
+      self.current_values = None
+      yield to_yield
+
+  @staticmethod
+  def encode_data(data):
+    """Encodes the given data, which may have include raw bytes.
+
+    Works around limitations in JSON encoding, which cannot handle raw bytes.
+
+    Args:
+      data: the data to encode.
+
+    Returns:
+      The data encoded.
+    """
+    return base64.b64encode(pickle.dumps(data))
+
+  @staticmethod
+  def decode_data(data):
+    """Decodes data encoded with the encode_data function."""
+    return pickle.loads(base64.b64decode(data))
+
+  def to_json(self):
+    """Returns an input shard state for the remaining inputs.
+
+    Returns:
+      A json-izable version of the remaining InputReader.
+    """
+    result = super(_ReducerReader, self).to_json()
+    result["current_key"] = self.encode_data(self.current_key)
+    result["current_values"] = self.encode_data(self.current_values)
+    return result
+
+  @classmethod
+  def from_json(cls, json):
+    """Creates an instance of the InputReader for the given input shard state.
+
+    Args:
+      json: The InputReader state as a dict-like object.
+
+    Returns:
+      An instance of the InputReader configured using the values of json.
+    """
+    result = super(_ReducerReader, cls).from_json(json)
+    result.current_key = _ReducerReader.decode_data(json["current_key"])
+    result.current_values = _ReducerReader.decode_data(json["current_values"])
+    return result

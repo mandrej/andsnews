@@ -31,11 +31,11 @@ import logging
 import os
 import time
 
-from mapreduce.lib import pipeline
-from mapreduce.lib.pipeline import common as pipeline_common
+from mapreduce.third_party import pipeline
+from mapreduce.third_party.pipeline import common as pipeline_common
 from google.appengine.api import files
+from google.appengine.api import modules
 from google.appengine.api.files import file_service_pb
-from google.appengine.api.files import records
 from google.appengine.ext import db
 from mapreduce import context
 from mapreduce import errors
@@ -44,8 +44,10 @@ from mapreduce import mapper_pipeline
 from mapreduce import operation
 from mapreduce import output_writers
 from mapreduce import pipeline_base
+from mapreduce import records
 
 # pylint: disable=g-bad-name
+# pylint: disable=protected-access
 
 
 class _OutputFile(db.Model):
@@ -249,7 +251,7 @@ class _MergingReader(input_readers.InputReader):
     """
     ctx = context.get()
     mapper_spec = ctx.mapreduce_spec.mapper
-    shard_number = ctx.shard_state.shard_number
+    shard_number = ctx._shard_state.shard_number
     filenames = mapper_spec.params[self.FILES_PARAM][shard_number]
 
     if len(filenames) != len(self._offsets):
@@ -443,15 +445,9 @@ class _HashingBlobstoreOutputWriter(output_writers.BlobstoreOutputWriterBase):
     return {"filenames": self._filenames}
 
   @classmethod
-  def create(cls, mapreduce_state, shard_state):
-    """Create new writer for a shard.
-
-    Args:
-      mapreduce_state: an instance of model.MapreduceState describing current
-      job. State can be modified.
-      shard_state: shard state.
-    """
-    return cls(mapreduce_state.writer_state["filenames"])
+  def create(cls, mr_spec, shard_number, shard_attempt, _writer_state=None):
+    """Inherit docs."""
+    return cls(_writer_state["filenames"])
 
   @classmethod
   def get_filenames(cls, mapreduce_state):
@@ -463,13 +459,13 @@ class _HashingBlobstoreOutputWriter(output_writers.BlobstoreOutputWriterBase):
   def finalize(self, ctx, shard_state):
     pass
 
-  def write(self, data, ctx):
+  def write(self, data):
     """Write data.
 
     Args:
       data: actual data yielded from handler. Type is writer-specific.
-      ctx: an instance of context.Context.
     """
+    ctx = context.get()
     if len(data) != 2:
       logging.error("Got bad tuple of length %d (2-tuple expected): %s",
                     len(data), data)
@@ -587,12 +583,12 @@ class _HashPipeline(pipeline_base.PipelineBase):
     if shards is None:
       shards = len(filenames)
     yield mapper_pipeline.MapperPipeline(
-            job_name + "-shuffle-hash",
-            __name__ + "._hashing_map",
-            input_readers.__name__ + ".RecordsReader",
-            output_writer_spec= __name__ + "._HashingBlobstoreOutputWriter",
-            params={'files': filenames},
-            shards=shards)
+        job_name + "-shuffle-hash",
+        __name__ + "._hashing_map",
+        input_readers.__name__ + ".RecordsReader",
+        output_writer_spec= __name__ + "._HashingBlobstoreOutputWriter",
+        params={'files': filenames},
+        shards=shards)
 
 
 class _ShuffleServicePipeline(pipeline_base.PipelineBase):
@@ -631,14 +627,28 @@ class _ShuffleServicePipeline(pipeline_base.PipelineBase):
           _blobinfo_uploaded_filename=blob_file_name)
       output_files.append(file_name)
     self.fill(self.outputs._output_files, output_files)
+
+    # Support shuffler callbacks going to specific modules and
+    # specific non-default versions of those modules.
+    target = modules.get_current_version_name()
+    module_name = modules.get_current_module_name()
+    if module_name != "default":
+      # NOTE(user): The final dot is necessary here because old versions
+      # of the shuffler library would put "myversion.12345678" in this field,
+      # expecting the admin-shuffler app to remove the timestamp suffix.
+      target = "%s.%s." % (target, module_name)
+
     files.shuffler.shuffle("%s-%s" % (job_name, int(time.time())),
                            input_files,
                            output_files,
                            {
                                "url": self.get_callback_url(),
+                               # NOTE(user): This is always GET because of
+                               # how the admin_shuffler app adds the callback
+                               # task with additional URL params.
                                "method": "GET",
                                "queue": self.queue_name,
-                               "version": os.environ["CURRENT_VERSION_ID"],
+                               "version": target,
                            })
 
   def callback(self, **kwargs):
@@ -681,17 +691,14 @@ class ShufflePipeline(pipeline_base.PipelineBase):
   """
 
   def run(self, job_name, filenames, shards=None):
-    if files.shuffler.available():
-      yield _ShuffleServicePipeline(job_name, filenames)
-    else:
-      hashed_files = yield _HashPipeline(job_name, filenames, shards=shards)
-      sorted_files = yield _SortChunksPipeline(job_name, hashed_files)
-      temp_files = [hashed_files, sorted_files]
+    hashed_files = yield _HashPipeline(job_name, filenames, shards=shards)
+    sorted_files = yield _SortChunksPipeline(job_name, hashed_files)
+    temp_files = [hashed_files, sorted_files]
 
-      merged_files = yield _MergePipeline(job_name, sorted_files)
+    merged_files = yield _MergePipeline(job_name, sorted_files)
 
-      with pipeline.After(merged_files):
-        all_temp_files = yield pipeline_common.Extend(*temp_files)
-        yield mapper_pipeline._CleanupPipeline(all_temp_files)
+    with pipeline.After(merged_files):
+      all_temp_files = yield pipeline_common.Extend(*temp_files)
+      yield mapper_pipeline._CleanupPipeline(all_temp_files)
 
-      yield pipeline_common.Return(merged_files)
+    yield pipeline_common.Return(merged_files)

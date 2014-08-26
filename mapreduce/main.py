@@ -30,28 +30,22 @@ This module should be specified as a handler for mapreduce URLs in app.yaml:
 
 # Pipeline has to be imported before webapp.
 try:
-  from mapreduce.lib import pipeline
+  from mapreduce.third_party import pipeline
 except ImportError:
   pipeline = None
 
 # pylint: disable=g-import-not-at-top
-# from google.appengine.ext import webapp
-import webapp2
+from google.appengine.ext import webapp
 from mapreduce import handlers
 from mapreduce import status
-# from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import util
 
 
 STATIC_RE = r".*/([^/]*\.(?:css|js)|status|detail)$"
 
 ###################################################### mda 
-from mapreduce import operation as op
-from mapreduce import control
-from mapreduce.model import MapreduceState
-from google.appengine.ext import ndb, blobstore
 from models import update_doc, rounding
-from config import CROPS, ASA, LENGTHS
-import itertools
+from config import ASA, LENGTHS
 import logging
 
 
@@ -71,65 +65,9 @@ def fixer(entity):
 
     entity.put()
 
-# def fixer(oldkey):
-    # entity is oldkey for DatastoreKeyInputReader <class 'google.appengine.api.datastore_types.Key'>
-    # key = ndb.Key.from_old_key(oldkey)  # <class 'google.appengine.ext.ndb.key.Key'>
-    # key.delete()
-    # obj = key.get()
-    # buf = blobstore.BlobReader(obj.blob_key).read()
-    # palette = img_palette(buf)
-    #
-    # obj.rgb = palette.colors[0].value
-    # obj.hue, obj.lum, obj.sat = range_names(obj.rgb)
-
-    # blob_info = blobstore.BlobInfo.get(obj.blob_key)
-    # blob_reader = blob_info.open()
-    # buff = blob_reader.read()
-    #
-    # file_name = files.blobstore.create(mime_type='image/jpeg',
-    #     _blobinfo_uploaded_filename='%s.jpg' % obj.key.string_id())
-    # with files.open(file_name, 'a') as f:
-    #     f.write(buff)
-    # files.finalize(file_name)
-    #
-    # obj.blob_key = files.blobstore.get_blob_key(file_name)
-    # if hasattr(obj, 'rating'):
-    #     delattr(obj, 'rating')
-    # obj.put()
-
-#def process_tags(entity):
-#    for tag in entity.tags:
-#        yield op.counters.Increment(tag)
-#
-#class ReduceTags(webapp2.RequestHandler):
-#    def get(self):
-#        job_id = control.start_map(
-#            'reduce_tags',
-#            'mapreduce.main.process_tags',
-#            'mapreduce.input_readers.DatastoreInputReader',
-#            {'entity_kind': 'models.Photo', 'processing_rate': 5},
-#            shard_count=4,
-#            mapreduce_parameters={'done_callback': '/mapreduce/reduce_tags'}
-#        )
-#        self.redirect('mapreduce/status')
-#
-#    def post(self):
-#        job_id = self.request.headers['Mapreduce-Id']
-#        state = MapreduceState.get_by_job_id(job_id)
-#        counters = state.counters_map.counters
-#        del counters['mapper_calls']
-#        del counters['mapper-walltime-msec']
-#        coll = {}
-#        for key, val in counters.iteritems():
-#            coll[key] = val
-#        logging.error(coll)
-#        self.response.headers['Content-Type'] = 'text/plain'
-#        self.response.out.write('done %s' % job_id)
-#        return self.response
-
 ###################################################### mda
 
-class RedirectHandler(webapp2.RequestHandler):
+class RedirectHandler(webapp.RequestHandler):
   """Redirects the user back to the status page."""
 
   def get(self):
@@ -153,12 +91,12 @@ def create_handlers_map():
 
   return pipeline_handlers_map + [
       # Task queue handlers.
-      (r".*/worker_callback", handlers.MapperWorkerCallbackHandler),
-      (r".*/controller_callback", handlers.ControllerCallbackHandler),
-      (r".*/kickoffjob_callback", handlers.KickOffJobHandler),
-      (r".*/finalizejob_callback", handlers.FinalizeJobHandler),
-      
-#      (r".*/reduce_tags", ReduceTags),
+      # Always suffix by mapreduce_id or shard_id for log analysis purposes.
+      # mapreduce_id or shard_id also presents in headers or payload.
+      (r".*/worker_callback.*", handlers.MapperWorkerCallbackHandler),
+      (r".*/controller_callback.*", handlers.ControllerCallbackHandler),
+      (r".*/kickoffjob_callback.*", handlers.KickOffJobHandler),
+      (r".*/finalizejob_callback.*", handlers.FinalizeJobHandler),
 
       # RPC requests with JSON responses
       # All JSON handlers should have /command/ prefix.
@@ -183,16 +121,16 @@ def create_application():
     an instance of webapp.WSGIApplication with all mapreduce handlers
     registered.
   """
-  return webapp2.WSGIApplication(create_handlers_map(),
+  return webapp.WSGIApplication(create_handlers_map(),
                                 debug=True)
 
 
 APP = create_application()
 
 
-# def main():
-#   util.run_wsgi_app(APP)
-#
-#
-# if __name__ == "__main__":
-#   main()
+def main():
+  util.run_wsgi_app(APP)
+
+
+if __name__ == "__main__":
+  main()

@@ -16,7 +16,8 @@
 
 """Status page handler for mapreduce framework."""
 
-
+__author__ = ("aizatsky@google.com (Mike Aizatsky)",
+              "bslatkin@google.com (Brett Slatkin)")
 
 import os
 import pkgutil
@@ -28,6 +29,7 @@ from google.appengine.api import yaml_errors
 from google.appengine.api import yaml_listener
 from google.appengine.api import yaml_object
 from google.appengine.ext import db
+from google.appengine.ext import webapp
 from mapreduce import base_handler
 from mapreduce import errors
 from mapreduce import model
@@ -259,16 +261,17 @@ def get_mapreduce_yaml(parse=parse_mapreduce_yaml):
     mr_yaml_file.close()
 
 
-class ResourceHandler(base_handler.BaseHandler):
+class ResourceHandler(webapp.RequestHandler):
   """Handler for static resources."""
 
   _RESOURCE_MAP = {
-    "status": ("overview.html", "text/html"),
-    "detail": ("detail.html", "text/html"),
-    "base.css": ("base.css", "text/css"),
-    "jquery.js": ("jquery-1.6.1.min.js", "text/javascript"),
-    "jquery-json.js": ("jquery.json-2.2.min.js", "text/javascript"),
-    "status.js": ("status.js", "text/javascript"),
+      "status": ("overview.html", "text/html"),
+      "detail": ("detail.html", "text/html"),
+      "base.css": ("base.css", "text/css"),
+      "jquery.js": ("jquery-1.6.1.min.js", "text/javascript"),
+      "jquery-json.js": ("jquery.json-2.2.min.js", "text/javascript"),
+      "jquery-url.js": ("jquery.url.js", "text/javascript"),
+      "status.js": ("status.js", "text/javascript"),
   }
 
   def get(self, relative):
@@ -364,10 +367,8 @@ class GetJobDetailHandler(base_handler.GetJsonHandler):
     })
     self.json_response["result_status"] = job.result_status
 
-    shards_list = model.ShardState.find_by_mapreduce_state(job)
     all_shards = []
-    shards_list.sort(key=lambda x: x.shard_number)
-    for shard in shards_list:
+    for shard in model.ShardState.find_all_by_mapreduce_state(job):
       out = {
           "active": shard.active,
           "result_status": shard.result_status,
@@ -380,4 +381,5 @@ class GetJobDetailHandler(base_handler.GetJsonHandler):
       }
       out.update(shard.counters_map.to_json())
       all_shards.append(out)
+    all_shards.sort(key=lambda x: x["shard_number"])
     self.json_response["shards"] = all_shards

@@ -20,8 +20,11 @@
 
 __all__ = ['Increment']
 
+# Deprecated. Use map_job_context.SliceContext.count instead.
 
 from mapreduce.operation import base
+
+# pylint: disable=protected-access
 
 
 class Increment(base.Operation):
@@ -43,4 +46,4 @@ class Increment(base.Operation):
     Args:
       context: mapreduce context as context.Context.
     """
-    context.counters.increment(self.counter_name, self.delta)
+    context._counters.increment(self.counter_name, self.delta)

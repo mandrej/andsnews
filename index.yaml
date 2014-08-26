@@ -100,6 +100,11 @@ indexes:
   properties:
   - name: iso
   - name: date
+
+- kind: Photo
+  properties:
+  - name: iso
+  - name: date
     direction: desc
 
 - kind: Photo
