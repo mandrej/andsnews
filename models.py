@@ -379,12 +379,18 @@ class Photo(ndb.Model):
         self.size = blob_info.size
         blob_reader = blob_info.open()
         buff = blob_reader.read()
+
         palette = img_palette(buff)
-        self.rgb = palette.colors[0].value
+        if palette.bgcolor:
+            self.rgb = palette.bgcolor.value
+        else:
+            self.rgb = palette.colors[0].value
+        self.hue, self.lum, self.sat = range_names(self.rgb)
+
         exif = get_exif(buff)
         for field, value in exif.items():
             setattr(self, field, value)
-        self.hue, self.lum, self.sat = range_names(self.rgb)
+
         self.tags = data['tags']
         self.put()
 
