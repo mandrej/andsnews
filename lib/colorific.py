@@ -18,7 +18,7 @@ import colorsys
 
 from PIL import Image as Im
 from PIL import ImageChops, ImageDraw
-from colormath.color_objects import RGBColor
+from lib.colormath.color_objects import RGBColor
 
 Color = namedtuple('Color', ['value', 'prominence'])
 Palette = namedtuple('Palette', 'colors bgcolor')

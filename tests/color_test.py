@@ -2,7 +2,7 @@ __author__ = 'milan'
 
 import unittest
 import numpy as np
-from colormath.color_objects import HSLColor, RGBColor
+from lib.colormath.color_objects import HSLColor, RGBColor
 from models import Photo
 from collections import defaultdict
 from config import HUE

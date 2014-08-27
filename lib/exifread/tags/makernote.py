@@ -1,5 +1,5 @@
 
-from exifread.utils import make_string, make_string_uc, Ratio
+from ..utils import make_string, make_string_uc, Ratio
 
 def nikon_ev_bias(seq):
     """

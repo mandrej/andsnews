@@ -4,12 +4,12 @@ Conversion between color spaces
 import math
 import numpy
 from numpy.linalg import pinv
-from colormath import color_constants
-from colormath import spectral_constants
-from colormath.color_exceptions import InvalidIlluminant
+import color_constants
+import spectral_constants
+from .color_exceptions import InvalidIlluminant
 
 def _color_objects():
-    from colormath import color_objects
+    import color_objects
     return color_objects
 
 def _transfer_common(old_cobj, new_cobj):

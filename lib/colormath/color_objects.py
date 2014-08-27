@@ -2,11 +2,11 @@
 This module contains classes to represent various color spaces.
 """
 import numpy
-from colormath import color_conversions
-from colormath import color_constants
-from colormath import density
-from colormath.color_exceptions import *
-from colormath.color_diff import delta_e_cie2000, delta_e_cie1976, delta_e_cie1994, delta_e_cmc
+import color_conversions
+import color_constants
+import density
+from .color_exceptions import *
+from .color_diff import delta_e_cie2000, delta_e_cie1976, delta_e_cie1994, delta_e_cmc
 
 class ColorBase(object):
     """

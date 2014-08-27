@@ -5,7 +5,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 from datetime import datetime, timedelta
-from colormath.color_objects import HSLColor
+from lib.colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
