@@ -374,11 +374,13 @@ class Photo(ndb.Model):
 
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
+        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)
+        buff = blob_reader.read()
+
         self.headline = data['headline']
         self.blob_key = blob_info.key()
         self.size = blob_info.size
-        blob_reader = blob_info.open()
-        buff = blob_reader.read()
+        self.tags = data['tags']
 
         palette = img_palette(buff)
         if palette.bgcolor:
@@ -391,7 +393,6 @@ class Photo(ndb.Model):
         for field, value in exif.items():
             setattr(self, field, value)
 
-        self.tags = data['tags']
         self.put()
 
         incr_count(self.kind, 'author', self.author.nickname())
