@@ -44,8 +44,9 @@ class Detail(BaseHandler):
 class Palette(BaseHandler):
     def get(self, slug):
         obj = Photo.get_by_id(slug)
-        buf = blobstore.BlobReader(obj.blob_key).read()
-        palette = img_palette(buf)
+        blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
+        buff = blob_reader.read()
+        palette = img_palette(buff)
 
         data = {'active': {'color': obj.rgb,
                            'hex': obj.hex,

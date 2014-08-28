@@ -31,14 +31,21 @@ class PaletteTest(unittest.TestCase):
             img = images.Image(blob_key=self.obj.blob_key)
             img.resize(width=100, height=100)
             thumb = img.execute_transforms(output_encoding=images.JPEG)  # str
-            img = Image.open(StringIO(thumb))
+            # img = Image.open(StringIO(thumb))
         print 'Image image in %.2f ms' % target.elapsed
-        result(img)
+        result(StringIO(thumb))
 
     def test_blobstore(self):
         with Timer() as target:
             blob_reader = blobstore.BlobReader(self.obj.blob_key, buffer_size=1024*1024)
-            img = Image.open(StringIO(blob_reader.read()))
-            thumb = img.resize((100, 100), resample=3)
+            buff = blob_reader.read()
+            img = Image.open(StringIO(buff))
+            img.thumbnail((100, 100), Image.ANTIALIAS)
+            output = StringIO()
+            img.save(output, format='JPEG')
+            buff = output.getvalue()
+            output.close()
+            # thumb = Image.open(StringIO(buff))
+            # thumb = img.resize((100, 100), resample=3)
         print 'Blobstore image in %.2f ms' % target.elapsed
-        result(thumb)
+        result(StringIO(buff))

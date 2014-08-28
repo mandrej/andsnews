@@ -54,8 +54,8 @@ COLOR_NAMES = (
 HUE = [
     {'span': range(342, 360) + range(12), 'order': '0', 'name': 'red', 'hex': '#cc0000'},  # 0
     {'span': range(12, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
-    {'span': range(40, 72), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
-    {'span': range(72, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
+    {'span': range(40, 69), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
+    {'span': range(69, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
     {'span': range(143, 192), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'},  # 180
     {'span': range(192, 244), 'order': '5', 'name': 'blue', 'hex': '#005fbf'},  # 210
     {'span': range(244, 287), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'},  # 270

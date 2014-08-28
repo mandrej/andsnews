@@ -34,11 +34,6 @@ ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
 
 
-def img_palette(buff):
-    img = Image.open(StringIO(buff))
-    return colorific.extract_colors(img.resize((100, 100)))
-
-
 def rounding(val, values):
     i = bisect.bisect_right(values, val)
     try:
@@ -69,6 +64,16 @@ def filter_param(field, value):
     except (ValueError, TypeError):
         pass
     return {field: value}
+
+
+def img_palette(buff):
+    img = Image.open(StringIO(buff))
+    img.thumbnail((100, 100), Image.ANTIALIAS)
+
+    output = StringIO()
+    img.save(output, format='JPEG')
+    buff = output.getvalue()
+    return colorific.extract_colors(StringIO(buff))
 
 
 def get_exif(buff):
@@ -374,13 +379,17 @@ class Photo(ndb.Model):
 
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
-        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)
-        buff = blob_reader.read()
 
         self.headline = data['headline']
         self.blob_key = blob_info.key()
         self.size = blob_info.size
         self.tags = data['tags']
+
+        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)
+        buff = blob_reader.read()
+        exif = get_exif(buff)
+        for field, value in exif.items():
+            setattr(self, field, value)
 
         palette = img_palette(buff)
         if palette.bgcolor:
@@ -389,9 +398,7 @@ class Photo(ndb.Model):
             self.rgb = palette.colors[0].value
         self.hue, self.lum, self.sat = range_names(self.rgb)
 
-        exif = get_exif(buff)
-        for field, value in exif.items():
-            setattr(self, field, value)
+
 
         self.put()
 
