@@ -63,8 +63,8 @@ HUE = [
 ]
 LUM = [
     {'span': range(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
-    {'span': range(10, 40), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': range(40, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+    {'span': range(10, 75), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': range(75, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
 ]
 SAT = [
     {'span': range(0, 20), 'name': 'monochrome'},

@@ -72,7 +72,15 @@
                                         {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
                                     </td>
                                     <td>
-                                        {{ object.hue }}, {{ object.lum }}, {{ object.sat }}
+                                        {% if object.color == object.hue %}
+                                            <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
+                                        {% endif %}
+                                        {% if object.color == object.lum %}
+                                            {{ object.hue }}, <strong>{{ object.lum }}</strong>, {{ object.sat }}
+                                        {% endif %}
+                                        {% if object.color == object.sat %}
+                                            {{ object.hue }}, {{ object.lum }}, <strong>{{ object.sat }}</strong>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <a class="button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
