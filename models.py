@@ -14,7 +14,6 @@ import webapp2
 from cStringIO import StringIO
 from decimal import *
 
-from PIL import Image
 from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
@@ -67,13 +66,10 @@ def filter_param(field, value):
 
 
 def img_palette(buff):
-    img = Image.open(StringIO(buff))
-    img.thumbnail((100, 100), Image.ANTIALIAS)
-
-    output = StringIO()
-    img.save(output, format='JPEG')
-    buff = output.getvalue()
-    return colorific.extract_colors(StringIO(buff))
+    img = images.Image(buff)
+    img.resize(width=100, height=100)
+    thumb = img.execute_transforms(output_encoding=images.JPEG, quality=86)
+    return colorific.extract_colors(StringIO(thumb))
 
 
 def get_exif(buff):

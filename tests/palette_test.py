@@ -24,28 +24,25 @@ def result(img):
 
 class PaletteTest(unittest.TestCase):
     def setUp(self):
-        self.obj = Photo.get_by_id('current-wallpaper')
+        obj = Photo.get_by_id('current-wallpaper')
+        blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
+        self.buff = blob_reader.read()
 
     def test_images_api(self):
         with Timer() as target:
-            img = images.Image(blob_key=self.obj.blob_key)
+            img = images.Image(self.buff)
             img.resize(width=100, height=100)
-            thumb = img.execute_transforms(output_encoding=images.JPEG)  # str
-            # img = Image.open(StringIO(thumb))
-        print 'Image image in %.2f ms' % target.elapsed
+            thumb = img.execute_transforms(output_encoding=images.JPEG, quality=86)  # str
+        print 'API image in %.2f ms' % target.elapsed
         result(StringIO(thumb))
 
     def test_blobstore(self):
         with Timer() as target:
-            blob_reader = blobstore.BlobReader(self.obj.blob_key, buffer_size=1024*1024)
-            buff = blob_reader.read()
-            img = Image.open(StringIO(buff))
+            img = Image.open(StringIO(self.buff))
             img.thumbnail((100, 100), Image.ANTIALIAS)
             output = StringIO()
             img.save(output, format='JPEG')
-            buff = output.getvalue()
+            thumb = output.getvalue()
             output.close()
-            # thumb = Image.open(StringIO(buff))
-            # thumb = img.resize((100, 100), resample=3)
-        print 'Blobstore image in %.2f ms' % target.elapsed
-        result(StringIO(buff))
+        print 'PIL image in %.2f ms' % target.elapsed
+        result(StringIO(thumb))
