@@ -452,7 +452,10 @@ input[data-function*='swipe'] {
 				@media @highdensity { flex: 1 1 150px; }
 			}
 		}
-		article.normal { margin: 0 @gap; }
+		article.normal {
+            margin: 0 @gap;
+            .hide { margin-bottom: @gap; }
+        }
 	}
 }
 
@@ -669,6 +672,7 @@ p.legend { padding: 0.5em; text-align: center; }
 	text-align: right;
 }
 #spectra {
+    div { .clearing; }
 	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
 	@media @mobile, @tablet { .hide; }
 }

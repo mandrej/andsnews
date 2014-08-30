@@ -1,10 +1,11 @@
 from __future__ import division
-from collections import defaultdict
+from datetime import datetime, timedelta
+import collections
 
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
-from datetime import datetime, timedelta
+
 from lib.colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
@@ -57,8 +58,8 @@ class Index(BaseHandler):
         self.render_template('admin/index.html', data)
 
 
-#def thumbnail_color(request):
-#    params = request.POST
+# def thumbnail_color(request):
+# params = request.POST
 #    parentkind = params['kind']
 #    slug = params['slug']
 #
@@ -191,11 +192,13 @@ class Spectra(BaseHandler):
     def get(self):
         sat = int(self.request.get('sat', 20))
         lum = int(self.request.get('lum', 40))
-        spectra = defaultdict(list)
+        spectra = collections.OrderedDict()
         for row in HUE:
+            temp = []
             for hue in row['span']:
                 color = HSLColor(hue, sat / 100.0, lum / 100.0)
                 hsl = 'hsl({0}, {1:.0%}, {2:.0%})'.format(*color.get_value_tuple())
-                spectra[row['name']].append(hsl)
+                temp.append(hsl)
+            spectra[row['name']] = temp
 
         self.render_json(spectra)

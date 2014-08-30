@@ -176,7 +176,7 @@
                 $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {
                     $('#spectra').empty();
                     $.each(data, function(name, colors) {
-                        var str = '<div style="clear: both"><span class="item" style="width: 50px;">' + name + '</span>';
+                        var str = '<div><span class="item" style="width: 50px;">' + name + '</span>';
                         $.each(colors, function(i, c) {
                             str += '<span class="item" style="background: ' + c + '">&nbsp;</span>';
                         });
