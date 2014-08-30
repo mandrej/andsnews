@@ -13,7 +13,7 @@
     </ul>
 
     {% if user %}
-        <h3>{{ _('Administration') }}</h3>
+        <h3><a class="selected" href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></h3>
         <div class="submenu">
             <a href="{{ uri_for('photo_admin', page=1) }}" class="block">Photo administration</a>
             <a href="{{ uri_for('entry_admin', page=1) }}" class="block">Entry administration</a>

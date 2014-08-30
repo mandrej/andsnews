@@ -14,7 +14,7 @@
 
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
 
-    <h3>{{ _('News') }}</h3>
+    <h3><a class="selected" href="{{ uri_for('entry_all', page=1) }}">{{ _('News') }}</a></h3>
     <div class="submenu">
         {% for f in [_tags] %}
             <a class="{{ f.field }} block collapse" href="/filter/Feed_{{ f.field }}">{{ f.title }} [+]</a>

@@ -16,7 +16,7 @@
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
 
-    <h3>{{ _('Comments') }}</h3>
+    <h3><a class="selected" href="{{ uri_for('comment_all', page=1) }}">{{ _('Comments') }}</a></h3>
     <div class="submenu">
         {% for f in [_forkind, _date, _author] %}
             <a class="{{ f.field }} block collapse" href="/filter/Comment_{{ f.field }}">{{ f.title }} [+]</a>
