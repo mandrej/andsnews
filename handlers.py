@@ -11,6 +11,7 @@ import uuid
 import webapp2
 import logging
 from operator import itemgetter
+from timeit import default_timer
 from jinja2.filters import do_striptags
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
@@ -19,6 +20,17 @@ from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Comment, Cloud, INDEX
 from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822, OFFLINE, DEVEL
+
+
+def timeit(f):
+    def wrapper(*args, **kw):
+        timer = default_timer
+        ts = timer()
+        result = f(*args, **kw)
+        te = timer()
+        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, te-ts))
+        return result
+    return wrapper
 
 
 def touch_appcache(handler_method):
