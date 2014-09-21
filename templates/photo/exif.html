@@ -18,7 +18,7 @@
 		</tr>
 		<tr>
 			<td>{{ _('Shutter speed') }}</td>
-			<td>{{ '%s sec' % object.shutter if object.shutter is not none else '---' }}</td>
+			<td>{{ '%s sec' % object.shutter if object.shutter != '' else '---' }}</td>
 		</tr>
 		<tr>
 			<td>{{ _('Focal length') }}</td>
