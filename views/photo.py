@@ -1,6 +1,5 @@
 import cgi
 import json
-import logging
 from collections import defaultdict, OrderedDict
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
@@ -100,10 +99,10 @@ class EditForm(Form):
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Taken'), validators=[validators.DataRequired()])
     model = fields.StringField(_('Camera model'))
-    aperture = fields.FloatField(_('Aperture'))
+    aperture = fields.FloatField(_('Aperture'), validators=[validators.Optional()])
     shutter = fields.StringField(_('Shutter speed'))
     focal_length = fields.FloatField(_('Focal length'))
-    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'))
+    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'), validators=[validators.Optional()])
     crop_factor = fields.FloatField(_('Crop factor'))
     lens = fields.StringField(_('Lens type'))
 

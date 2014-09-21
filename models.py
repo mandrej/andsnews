@@ -400,9 +400,6 @@ class Photo(ndb.Model):
         else:
             self.rgb = palette.colors[0].value
         self.hue, self.lum, self.sat = range_names(self.rgb)
-
-
-
         self.put()
 
         incr_count(self.kind, 'author', self.author.nickname())
