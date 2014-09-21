@@ -128,6 +128,13 @@ class Add(BaseHandler):
             self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
 
+def crop_dict():
+    v = defaultdict(list)
+    for key, value in sorted(CROPS.iteritems()):
+        v[value].append(key)
+    return OrderedDict(sorted(v.items()))
+
+
 class Edit(BaseHandler):
     @login_required
     def get(self, slug, form=None):
@@ -142,11 +149,8 @@ class Edit(BaseHandler):
                 except KeyError:
                     form.crop_factor.data = 1.6
 
-            v = defaultdict(list)
-            for key, value in sorted(CROPS.iteritems()):
-                v[value].append(key)
-            crops = OrderedDict(sorted(v.items()))
-        self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None, 'crops': crops})
+        self.render_template('admin/photo_form.html', {
+            'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})
 
     @csrf_protected
     @touch_appcache
@@ -157,4 +161,5 @@ class Edit(BaseHandler):
             obj.edit(form.data)
             self.redirect_to('photo_admin', page=1)
         else:
-            self.render_template('admin/photo_form.html', {'form': form, 'object': obj, 'filter': None})
+            self.render_template('admin/photo_form.html', {
+                'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})

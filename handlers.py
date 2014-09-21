@@ -25,10 +25,10 @@ from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY
 def timeit(f):
     def wrapper(*args, **kw):
         timer = default_timer
-        ts = timer()
+        start = timer()
         result = f(*args, **kw)
-        te = timer()
-        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, te-ts))
+        end = timer()
+        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
         return result
     return wrapper
 

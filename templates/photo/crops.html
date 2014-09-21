@@ -1,0 +1,10 @@
+<h4 class="ff">Crop factors  [+]</h4>
+<div class="hide">
+    <p>{{ _('Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)') }}</p>
+    {% for crop, models in crops.items() %}
+        <dl class="w25em">
+            <dt>{{ crop }}</dt>
+            <dd>{% for model in models %}{{ model }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+        </dl>
+    {% endfor %}
+</div>
