@@ -90,7 +90,7 @@ class AddForm(Form):
 
     def validate_photo(self, field):
         if not isinstance(field.data, cgi.FieldStorage):
-            raise validators.ValidationError(_('Wrong type.'))
+            raise validators.ValidationError(_('Nothing to upload.'))
 
 
 class EditForm(Form):

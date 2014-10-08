@@ -388,7 +388,7 @@ class Photo(ndb.Model):
         self.size = blob_info.size
         self.tags = data['tags']
 
-        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)
+        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)  # Max 1MB
         buff = blob_reader.read()
         exif = get_exif(buff)
         for field, value in exif.items():
