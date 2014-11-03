@@ -3,7 +3,7 @@ __author__ = 'milan'
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
 from handlers import Index, Complete, SetLanguage, Sign, Find, Chat, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, AppCache, Invalidate, SaveAsHandler
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, Invalidate, SaveAsHandler
 from config import CONFIG, DEVEL
 
 
@@ -79,9 +79,7 @@ app = WSGIApplication([
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
     Route('/<safe_key>/add', handler='views.comment.Add', name='comment_add'),
     Route('/search/<page:\d+>', handler=Find, name='search'),
-    # Route('/send', handler=Send),
     Route('/photometa', handler=PhotoMeta),
-    Route('/cache.appcache', handler=AppCache),
     Route('/setlang', handler=SetLanguage),
     Route('/invalidate', handler=Invalidate),
     Route('/sign', handler=Sign),

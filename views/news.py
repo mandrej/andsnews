@@ -12,7 +12,7 @@ from webapp2_extras.appengine.users import login_required
 from wtforms import Form, fields, validators
 from models import Feed
 from lib import feedparser
-from handlers import BaseHandler, csrf_protected, Paginator, TagsField, touch_appcache
+from handlers import BaseHandler, csrf_protected, Paginator, TagsField
 from config import TIMEOUT
 
 FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
@@ -144,7 +144,6 @@ class Add(BaseHandler):
         self.render_template('admin/feed_form.html', {'form': form, 'filter': None})
 
     @csrf_protected
-    @touch_appcache
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
@@ -166,7 +165,6 @@ class Edit(BaseHandler):
         self.render_template('admin/feed_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
-    @touch_appcache
     def post(self, slug):
         obj = Feed.get_by_id(slug)
         form = EditForm(formdata=self.request.POST)

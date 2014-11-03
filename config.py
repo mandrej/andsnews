@@ -21,32 +21,6 @@ FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
 LANGUAGES = (
     ('en_US', _('english')), ('sr_RS', _('serbian')),
 )
-OFFLINE = """CACHE MANIFEST
-# %s
-https://code.jquery.com/jquery-1.10.2.js
-https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff
-https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
-/static/images/bg.jpg
-/static/images/front.png
-/static/images/overlay.png
-/static/css/base.css
-
-/static/scripts/jquery.searchhighlight.min.js
-/static/scripts/jquery.zoom.min.js
-/static/scripts/urlify.min.js
-/static/scripts/base.min.js
-
-/static/scripts/markitup/jquery.markitup.min.js
-/static/scripts/markitup/sets/cmnt.set_en_US.min.js
-/static/scripts/markitup/sets/cmnt.set_sr_RS.min.js
-
-FALLBACK:
-/ /offline.html
-
-NETWORK:
-*
-"""
 COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
     _('purple'), _('pink'), _('dark'), _('medium'), _('light')

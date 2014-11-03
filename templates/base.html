@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{{ {'lang': language(language_code), 'manifest': '/cache.appcache' if caching else none}|xmlattr }}>
+<html{{ {'lang': language(language_code)}|xmlattr }}>
 {% import "snippets/macros.html" as m %}
 {% spaceless %}
 <head>
@@ -81,9 +81,6 @@
     {% block scripts %}
         <script>
             token = '{{ token }}';
-            window.applicationCache.addEventListener('updateready', function() {
-                window.location.replace(window.location.href);
-            }, false);
         </script>
         <script src="/static/scripts/base.min.js"></script>
         <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
