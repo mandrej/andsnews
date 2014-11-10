@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html{{ {'lang': language(language_code)}|xmlattr }}>
 {% import "snippets/macros.html" as m %}
-{% spaceless %}
 <head>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -99,5 +98,4 @@
         {% endif %}
     {% endblock %}
 </body>
-{% endspaceless %}
 </html>

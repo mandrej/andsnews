@@ -235,7 +235,7 @@ CONFIG = {
         'environment_args': {
             'autoescape': False,
             'trim_blocks': True,
-            'extensions': ['jinja2.ext.autoescape', 'jinja2.ext.with_', 'jinja2.ext.i18n', 'jinja2spaceless.Spaceless']
+            'extensions': ['jinja2.ext.autoescape', 'jinja2.ext.with_', 'jinja2.ext.i18n']
         },
     },
     'webapp2_extras.i18n': {
