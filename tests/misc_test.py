@@ -1,7 +1,6 @@
 __author__ = 'milan'
 
 import unittest
-import itertools
 from models import Cloud, rounding
 from config import CROPS, ASA, LENGTHS
 
@@ -18,11 +17,11 @@ class MiscTest(unittest.TestCase):
         print words
 
     def test_round_iso(self):
-        test = int(124)
+        test = int(325)
         round = rounding(test, ASA)
         print 'Rounding {0} to {1}'.format(test, round)
 
     def test_round_eqv(self):
-        test = int(37.88)
+        test = int(45)
         round = rounding(test, LENGTHS)
         print 'Rounding {0} to {1}'.format(test, round)

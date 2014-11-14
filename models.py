@@ -6,7 +6,6 @@ import datetime
 import cgi
 import math
 import colorsys
-import bisect
 import itertools
 import logging
 import collections
@@ -34,16 +33,7 @@ LOGARITHMIC, LINEAR = 1, 2
 
 
 def rounding(val, values):
-    i = bisect.bisect_right(values, val)
-    try:
-        prev, next = values[i-1: i+1]
-    except ValueError:
-        logging.error('Could not round {0}'.format(val))
-    else:
-        if abs(prev-val) <= abs(next-val):
-            return prev
-        else:
-            return next
+    return min(values, key=lambda x: abs(x - val))
 
 
 def filter_param(field, value):
