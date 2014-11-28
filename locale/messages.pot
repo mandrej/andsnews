@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-27 21:41+0200\n"
+"POT-Creation-Date: 2014-11-28 22:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,351 +25,361 @@ msgstr ""
 msgid "serbian"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "red"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "orange"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "yellow"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "green"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "teal"
 msgstr ""
 
-#: config.py:56
+#: config.py:25
 msgid "blue"
 msgstr ""
 
-#: config.py:57
+#: config.py:26
 msgid "purple"
 msgstr ""
 
-#: config.py:57
+#: config.py:26
 msgid "pink"
 msgstr ""
 
-#: config.py:57
+#: config.py:26
 msgid "dark"
 msgstr ""
 
-#: config.py:57
+#: config.py:26
 msgid "medium"
 msgstr ""
 
-#: config.py:57
+#: config.py:26
 msgid "light"
 msgstr ""
 
-#: config.py:190
+#: config.py:168
 msgid "year"
 msgid_plural "years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:191
+#: config.py:169
 msgid "month"
 msgid_plural "months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:192
+#: config.py:170
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:193
+#: config.py:171
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:194
+#: config.py:172
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:195
+#: config.py:173
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:208
+#: config.py:186
 msgid "minutes"
 msgstr ""
 
-#: config.py:213
+#: config.py:191
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr ""
 
-#: config.py:218
+#: config.py:196
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ""
 
-#: templates/base.html:15
+#: templates/base.html:18
 msgid "photo rss"
 msgstr ""
 
-#: templates/base.html:16
+#: templates/base.html:19
 msgid "entry rss"
 msgstr ""
 
-#: templates/base.html:32
+#: templates/base.html:35
 msgid "Start"
 msgstr ""
 
-#: templates/base.html:33
+#: templates/base.html:36
 msgid "Menu"
 msgstr ""
 
-#: templates/results.html:9
-#, python-format
-msgid "%(count)s search result for %(phrase)s"
-msgid_plural "%(count)s search results for %(phrase)s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/results.html:11
-msgid "Nothing to search for"
+#: templates/base.html:52 templates/admin/base.html:4
+#: templates/comment/base.html:4 templates/entry/base.html:4
+#: templates/news/base.html:4 templates/photo/base.html:4
+#: templates/photo/base.html:24 templates/photo/detail.html:38
+msgid "Photos"
 msgstr ""
 
-#: templates/results.html:12
-msgid "Please try something"
+#: templates/base.html:53 templates/admin/base.html:5
+#: templates/comment/base.html:5 templates/entry/base.html:5
+#: templates/entry/base.html:19 templates/news/base.html:5
+#: templates/photo/base.html:5 templates/snippets/confirm.html:13
+msgid "Blog"
 msgstr ""
 
-#: templates/results.html:30 templates/photo/detail.html:51
-msgid "author's photos"
+#: templates/base.html:54 templates/admin/base.html:6
+#: templates/comment/base.html:6 templates/comment/base.html:19
+#: templates/entry/base.html:6 templates/news/base.html:6
+#: templates/photo/base.html:6
+msgid "Comments"
 msgstr ""
 
-#: templates/results.html:46 templates/entry/detail.html:17
-msgid "author's blogs"
+#: templates/base.html:55 templates/admin/base.html:7
+#: templates/comment/base.html:7 templates/entry/base.html:7
+#: templates/news/base.html:7 templates/news/base.html:17
+#: templates/photo/base.html:7 templates/snippets/confirm.html:23
+msgid "News"
 msgstr ""
 
-#: templates/results.html:52
-msgid "comment"
+#: templates/base.html:57 templates/admin/base.html:9
+#: templates/admin/base.html:16 templates/comment/base.html:9
+#: templates/entry/base.html:9 templates/news/base.html:9
+#: templates/photo/base.html:9
+msgid "Administration"
 msgstr ""
 
-#: templates/results.html:54
-msgid "message"
+#: templates/base.html:59 templates/admin/base.html:11
+#: templates/comment/base.html:11 templates/entry/base.html:11
+#: templates/news/base.html:11 templates/photo/base.html:11
+msgid "Log in"
 msgstr ""
 
-#: templates/results.html:60
-msgid "author's comments"
+#: templates/admin/base.html:26
+msgid "Invalidate cache"
 msgstr ""
 
-#: templates/results.html:74
-msgid "No search results for"
+#: templates/admin/base.html:27
+msgid "Log out"
 msgstr ""
 
-#: templates/results.html:75
-msgid "Please try again"
-msgstr ""
-
-#: templates/results.html:77
-msgid "Error"
-msgstr ""
-
-#: templates/admin/entry_form.html:4 templates/admin/entry_form.html:29
+#: templates/admin/entry_form.html:2 templates/admin/entry_form.html:30
 msgid "Add new / change existing blog"
 msgstr ""
 
-#: templates/admin/entry_form.html:10
+#: templates/admin/entry_form.html:8
 msgid "Choose image"
 msgstr ""
 
-#: templates/admin/entry_form.html:11 templates/snippets/addcomment.html:3
+#: templates/admin/entry_form.html:9 templates/snippets/addcomment.html:3
 #: templates/snippets/addcomment.html:21 templates/snippets/confirm.html:3
 #: templates/snippets/graph.html:7
 msgid "close"
 msgstr ""
 
-#: templates/admin/entry_form.html:20
+#: templates/admin/entry_form.html:18
 msgid "No images"
 msgstr ""
 
-#: templates/admin/entry_form.html:21
+#: templates/admin/entry_form.html:19
 msgid "To choose images, you must send them first"
 msgstr ""
 
-#: templates/admin/entry_form.html:35 templates/admin/feed_form.html:13
-#: templates/admin/photo_form.html:13
+#: templates/admin/entry_form.html:37 templates/admin/feed_form.html:15
+#: templates/admin/photo_form.html:15
 msgid "Please correct errors in"
 msgstr ""
 
-#: templates/admin/entry_form.html:58
+#: templates/admin/entry_form.html:60
 msgid "Images used in this blog"
 msgstr ""
 
-#: templates/admin/entry_form.html:82 templates/admin/feed_form.html:35
-#: templates/admin/photo_form.html:27 templates/admin/photo_form.html:69
+#: templates/admin/entry_form.html:84 templates/admin/feed_form.html:37
+#: templates/admin/photo_form.html:29 templates/admin/photo_form.html:71
 msgid "Required field"
 msgstr ""
 
-#: templates/admin/entry_form.html:83 templates/admin/feed_form.html:36
-#: templates/admin/photo_form.html:70
+#: templates/admin/entry_form.html:85 templates/admin/feed_form.html:38
+#: templates/admin/photo_form.html:72
 msgid "done"
 msgstr ""
 
-#: templates/admin/entry_form.html:89 templates/admin/feed_form.html:42
-#: templates/admin/photo_form.html:77
+#: templates/admin/entry_form.html:91 templates/admin/feed_form.html:44
+#: templates/admin/photo_form.html:79
 msgid ""
 "Slug uniquely represent record. It must start with letter and may contain"
 " only letters, numbers, underscores or hyphens. It is used for URL "
 "addresses."
 msgstr ""
 
-#: templates/admin/entry_form.html:90 templates/admin/feed_form.html:43
-#: templates/admin/photo_form.html:78
+#: templates/admin/entry_form.html:92 templates/admin/feed_form.html:45
+#: templates/admin/photo_form.html:80
 msgid ""
 "Tags determine record qualification to a group or a type of records. It "
 "is comma separated. Use english for wider understanding."
 msgstr ""
 
-#: templates/admin/entry_form.html:91 views/entry.py:75 views/entry.py:89
+#: templates/admin/entry_form.html:93 views/entry.py:72 views/entry.py:86
 msgid "Summary"
 msgstr ""
 
-#: templates/admin/entry_form.html:91
+#: templates/admin/entry_form.html:93
 msgid "A brief presentation in a concise form"
 msgstr ""
 
-#: templates/admin/entry_form.html:92
+#: templates/admin/entry_form.html:94
 msgid "Send images less then"
 msgstr ""
 
-#: templates/admin/feed_form.html:4 templates/admin/feed_form.html:7
+#: templates/admin/feed_form.html:2 templates/admin/feed_form.html:8
 msgid "Add new / change existing news"
 msgstr ""
 
-#: templates/admin/feed_form.html:45
+#: templates/admin/feed_form.html:47
 msgid "Date"
 msgstr ""
 
-#: templates/admin/feed_form.html:45
+#: templates/admin/feed_form.html:47
 msgid "Last modified date"
 msgstr ""
 
-#: templates/admin/photo_form.html:4 templates/admin/photo_form.html:7
+#: templates/admin/photo_form.html:2 templates/admin/photo_form.html:8
 msgid "Add new / change existing photo"
 msgstr ""
 
-#: templates/admin/photo_form.html:28
+#: templates/admin/photo_form.html:30
 msgid "upload"
 msgstr ""
 
-#: templates/admin/photo_form.html:39
+#: templates/admin/photo_form.html:41
 msgid "Calculate palette"
 msgstr ""
 
-#: templates/admin/photo_form.html:59
+#: templates/admin/photo_form.html:61
 msgid "data"
 msgstr ""
 
-#: templates/admin/photo_form.html:79
+#: templates/admin/photo_form.html:81
 msgid ""
 "Forward slash is not allowed in any field. It will be stripped out "
 "automatically."
-msgstr ""
-
-#: templates/admin/photo_form.html:80
-msgid "Send photo less then"
-msgstr ""
-
-#: templates/admin/photo_form.html:82
-msgid ""
-"Crop factor represent dimensional ratio between sensor and the 35 mm film"
-" camera (36x24mm)"
 msgstr ""
 
 #: templates/admin/photo_form.html:85
 msgid "Date format"
 msgstr ""
 
-#: templates/entry/detail.html:27
+#: templates/comment/base.html:15 templates/snippets/graph.html:3
+msgid "Type"
+msgstr ""
+
+#: templates/comment/base.html:16 templates/entry/base.html:16
+#: templates/photo/base.html:16 templates/snippets/graph.html:2
+msgid "Dates"
+msgstr ""
+
+#: templates/comment/base.html:17 templates/entry/base.html:17
+#: templates/photo/base.html:17 templates/snippets/graph.html:2
+msgid "Authors"
+msgstr ""
+
+#: templates/entry/base.html:15 templates/news/base.html:15
+#: templates/photo/base.html:15 templates/snippets/graph.html:2
+#: views/entry.py:70 views/entry.py:84 views/news.py:124 views/news.py:134
+#: views/photo.py:84 views/photo.py:98
+msgid "Tags"
+msgstr ""
+
+#: templates/entry/detail.html:18
+msgid "author's blogs"
+msgstr ""
+
+#: templates/entry/detail.html:28
 msgid "blogs sent same year"
 msgstr ""
 
-#: templates/entry/detail.html:44 templates/photo/detail.html:75
+#: templates/entry/detail.html:45 templates/photo/detail.html:67
 msgid "Add Comment"
 msgstr ""
 
-#: templates/entry/detail.html:48 templates/photo/detail.html:81
-msgid "Edit"
+#: templates/news/detail.html:13
+msgid "updated"
 msgstr ""
 
-#: templates/entry/index.html:3 templates/entry/index.html:7
-#: templates/snippets/confirm.html:13 templates/snippets/macros.html:35
-#: templates/snippets/macros.html:52
-msgid "Blog"
-msgstr ""
-
-#: templates/entry/index.html:19 templates/news/detail.html:14
-#: templates/news/detail.html:34 templates/news/index.html:21
-#: templates/snippets/macros.html:107
+#: templates/news/detail.html:15 templates/news/detail.html:32
+#: templates/snippets/macros.html:45
 #, python-format
 msgid "%(since)s ago"
 msgstr ""
 
-#: templates/entry/index.html:26
-msgid "No blog submitted"
-msgstr ""
-
-#: templates/entry/index.html:26 templates/news/index.html:32
-#: templates/photo/index.html:29
-msgid "or filter has no results"
-msgstr ""
-
-#: templates/news/detail.html:12 templates/news/index.html:20
-msgid "updated"
-msgstr ""
-
-#: templates/news/detail.html:41
+#: templates/news/detail.html:40
 #, python-format
 msgid "No %(title)s at the moment"
 msgstr ""
 
-#: templates/news/detail.html:43
+#: templates/news/detail.html:45
 msgid "News error"
 msgstr ""
 
-#: templates/news/index.html:3 templates/news/index.html:7
-#: templates/snippets/confirm.html:23 templates/snippets/macros.html:39
-#: templates/snippets/macros.html:58
-msgid "News"
+#: templates/photo/base.html:18 templates/snippets/graph.html:2
+msgid "Color"
 msgstr ""
 
-#: templates/news/index.html:23
-msgid "Never fetched"
+#: templates/photo/base.html:19 templates/snippets/graph.html:2
+#: views/photo.py:101
+msgid "Camera model"
 msgstr ""
 
-#: templates/news/index.html:32
-msgid "No news submitted"
+#: templates/photo/base.html:20 templates/snippets/graph.html:3
+#: views/photo.py:107
+msgid "Lens type"
 msgstr ""
 
-#: templates/photo/detail.html:43 templates/photo/index.html:3
-#: templates/photo/index.html:7 templates/snippets/macros.html:33
-#: templates/snippets/macros.html:49
-msgid "Photos"
+#: templates/photo/base.html:21 templates/snippets/graph.html:3
+msgid "Eqv. focal length"
 msgstr ""
 
-#: templates/photo/detail.html:59
+#: templates/photo/base.html:22 templates/photo/exif.html:34
+#: templates/snippets/graph.html:3 views/photo.py:105
+msgid "Sensitivity"
+msgstr ""
+
+#: templates/photo/crops.html:3
+msgid ""
+"Crop factor represent dimensional ratio between sensor and the 35 mm film"
+" camera (36x24mm)"
+msgstr ""
+
+#: templates/photo/detail.html:43
+msgid "author's photos"
+msgstr ""
+
+#: templates/photo/detail.html:51
 msgid "photos taken same year"
 msgstr ""
 
-#: templates/photo/detail.html:77
+#: templates/photo/detail.html:69
 msgid "Download"
 msgstr ""
 
@@ -381,49 +391,40 @@ msgstr ""
 msgid "photos taken with same lens"
 msgstr ""
 
-#: templates/photo/exif.html:16 views/photo.py:117
+#: templates/photo/exif.html:16 views/photo.py:102
 msgid "Aperture"
 msgstr ""
 
-#: templates/photo/exif.html:22 views/photo.py:118
+#: templates/photo/exif.html:20 views/photo.py:103
 msgid "Shutter speed"
 msgstr ""
 
-#: templates/photo/exif.html:26 views/photo.py:119
+#: templates/photo/exif.html:24 views/photo.py:104
 msgid "Focal length"
 msgstr ""
 
-#: templates/photo/exif.html:32
+#: templates/photo/exif.html:29
 msgid "photos with same equvalent focal length"
 msgstr ""
 
-#: templates/photo/exif.html:32
+#: templates/photo/exif.html:29
 msgid "eqv"
 msgstr ""
 
-#: templates/photo/exif.html:38 templates/snippets/graph.html:3
-#: templates/snippets/macros.html:28 views/photo.py:120
-msgid "Sensitivity"
-msgstr ""
-
-#: templates/photo/exif.html:40
+#: templates/photo/exif.html:36
 msgid "photos with same iso"
 msgstr ""
 
-#: templates/photo/exif.html:43 views/news.py:139 views/photo.py:115
+#: templates/photo/exif.html:39 views/news.py:136 views/photo.py:100
 msgid "Taken"
 msgstr ""
 
-#: templates/photo/exif.html:50
+#: templates/photo/exif.html:46
 msgid "photos with similar color"
 msgstr ""
 
-#: templates/photo/exif.html:50
+#: templates/photo/exif.html:46
 msgid "Similar color"
-msgstr ""
-
-#: templates/photo/index.html:29
-msgid "No photos submitted"
 msgstr ""
 
 #: templates/snippets/addcomment.html:2
@@ -450,11 +451,11 @@ msgstr ""
 msgid "for blog"
 msgstr ""
 
-#: templates/snippets/cloud.html:28 templates/snippets/macros.html:83
+#: templates/snippets/cloud.html:28 templates/snippets/macros.html:21
 msgid "for photos"
 msgstr ""
 
-#: templates/snippets/cloud.html:29 templates/snippets/macros.html:85
+#: templates/snippets/cloud.html:29 templates/snippets/macros.html:23
 msgid "messages"
 msgstr ""
 
@@ -483,44 +484,8 @@ msgstr ""
 msgid "photo"
 msgstr ""
 
-#: templates/snippets/confirm.html:30 templates/snippets/macros.html:103
+#: templates/snippets/confirm.html:30 templates/snippets/macros.html:41
 msgid "Delete"
-msgstr ""
-
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:21
-#: views/entry.py:73 views/entry.py:87 views/news.py:127 views/news.py:137
-#: views/photo.py:99 views/photo.py:113
-msgid "Tags"
-msgstr ""
-
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:22
-msgid "Dates"
-msgstr ""
-
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:23
-msgid "Authors"
-msgstr ""
-
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:24
-msgid "Color"
-msgstr ""
-
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:25
-#: views/photo.py:116
-msgid "Camera model"
-msgstr ""
-
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:26
-#: views/photo.py:122
-msgid "Lens type"
-msgstr ""
-
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:27
-msgid "Eqv. focal length"
-msgstr ""
-
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:29
-msgid "Type"
 msgstr ""
 
 #: templates/snippets/graph.html:11
@@ -537,114 +502,94 @@ msgid ""
 " film camera, rounded to nearset 10"
 msgstr ""
 
-#: templates/snippets/macros.html:37 templates/snippets/macros.html:55
-msgid "Comments"
-msgstr ""
-
-#: templates/snippets/macros.html:42 templates/snippets/macros.html:61
-msgid "Administration"
-msgstr ""
-
-#: templates/snippets/macros.html:44
-msgid "Log in"
-msgstr ""
-
-#: templates/snippets/macros.html:67
-msgid "Invalidate cache"
-msgstr ""
-
-#: templates/snippets/macros.html:68
-msgid "Log out"
-msgstr ""
-
-#: templates/snippets/macros.html:84
+#: templates/snippets/macros.html:22
 msgid "for blogs"
 msgstr ""
 
-#: templates/snippets/paginator.html:9
+#: templates/snippets/paging.html:12
 msgid "previous"
 msgstr ""
 
-#: templates/snippets/paginator.html:9 templates/snippets/paginator.html:14
+#: templates/snippets/paging.html:12 templates/snippets/paging.html:17
 msgid "page"
 msgstr ""
 
-#: templates/snippets/paginator.html:14
+#: templates/snippets/paging.html:17
 msgid "next"
 msgstr ""
 
-#: views/comment.py:29
+#: views/comment.py:26
 msgid "Comment"
 msgstr ""
 
-#: views/entry.py:53
+#: views/entry.py:50
 #, python-format
 msgid "This field is required if other \"%s\" present."
 msgstr ""
 
-#: views/entry.py:59
+#: views/entry.py:56
 msgid "New Image"
 msgstr ""
 
-#: views/entry.py:65
+#: views/entry.py:62
 msgid "Image"
 msgstr ""
 
-#: views/entry.py:67
+#: views/entry.py:64
 msgid "remove"
 msgstr ""
 
-#: views/entry.py:71 views/entry.py:86 views/news.py:125 views/news.py:136
-#: views/photo.py:97 views/photo.py:112
+#: views/entry.py:68 views/entry.py:83 views/news.py:122 views/news.py:133
+#: views/photo.py:82 views/photo.py:97
 msgid "Headline"
 msgstr ""
 
-#: views/entry.py:72 views/news.py:126 views/photo.py:98
+#: views/entry.py:69 views/news.py:123 views/photo.py:83
 msgid "Slug"
 msgstr ""
 
-#: views/entry.py:74 views/entry.py:88 views/photo.py:114
+#: views/entry.py:71 views/entry.py:85 views/photo.py:99
 msgid "Author"
 msgstr ""
 
-#: views/entry.py:76 views/entry.py:90
+#: views/entry.py:73 views/entry.py:87
 msgid "Posted"
 msgstr ""
 
-#: views/entry.py:77 views/entry.py:91
+#: views/entry.py:74 views/entry.py:88
 msgid "Article"
 msgstr ""
 
-#: views/entry.py:82 views/news.py:132 views/photo.py:104
+#: views/entry.py:79 views/news.py:129 views/photo.py:89
 msgid "Record with this slug already exist"
 msgstr ""
 
-#: views/entry.py:92
+#: views/entry.py:89
 msgid "Front image"
 msgstr ""
 
-#: views/news.py:115
+#: views/news.py:112
 msgid "Feed server send no entries"
 msgstr ""
 
-#: views/news.py:117 views/news.py:119
+#: views/news.py:114 views/news.py:116
 #, python-format
 msgid "Feed server returns %s"
 msgstr ""
 
-#: views/news.py:128 views/news.py:138
+#: views/news.py:125 views/news.py:135
 msgid "Url"
 msgstr ""
 
-#: views/photo.py:100
+#: views/photo.py:85
 msgid "Photo"
 msgstr ""
 
-#: views/photo.py:108
-msgid "Wrong type."
+#: views/photo.py:93
+msgid "Nothing to upload."
 msgstr ""
 
-#: views/photo.py:121
+#: views/photo.py:106
 msgid "Crop factor"
 msgstr ""
 
