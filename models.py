@@ -17,7 +17,7 @@ from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
-from lib import colorific
+from colorific.palette import extract_colors
 from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
@@ -59,7 +59,7 @@ def img_palette(buff):
     img = images.Image(buff)
     img.resize(width=100, height=100)
     thumb = img.execute_transforms(output_encoding=images.JPEG, quality=86)
-    return colorific.extract_colors(StringIO(thumb))
+    return extract_colors(StringIO(thumb))
 
 
 def get_exif(buff):

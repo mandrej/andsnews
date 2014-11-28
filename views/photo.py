@@ -5,7 +5,7 @@ from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
-from lib import colorific
+from colorific.palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
@@ -53,13 +53,13 @@ class Palette(BaseHandler):
                 'palette': [
                     {'prominence': '%.1f%%' % (100 * c.prominence,),
                      'color': c.value,
-                     'hex': colorific.rgb_to_hex(c.value),
+                     'hex': rgb_to_hex(c.value),
                      'class': range_names(c.value)} for c in palette.colors]}
 
         if palette.bgcolor:
             data['bgcolor'] = {'prominence': '%.1f%%' % (100 * palette.bgcolor.prominence,),
                                'color': palette.bgcolor.value,
-                               'hex': colorific.rgb_to_hex(palette.bgcolor.value),
+                               'hex': rgb_to_hex(palette.bgcolor.value),
                                'class': range_names(palette.bgcolor.value)}
 
         self.render_json(data)

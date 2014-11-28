@@ -8,18 +8,18 @@ from google.appengine.ext import blobstore
 from google.appengine.api import images
 
 from timer import Timer
-from lib import colorific
+from colorific.palette import extract_colors, rgb_to_hex
 from models import Photo
 
 
 def result(img):
     with Timer() as target:
-        palette = colorific.extract_colors(img)
+        palette = extract_colors(img)
     print 'palette in %.2f ms' % target.elapsed
     print palette.bgcolor
     print palette.colors[0].value
     for c in palette.colors:
-        print '%.2f %s' % (c.prominence, colorific.rgb_to_hex(c.value))
+        print '%.2f %s' % (c.prominence, rgb_to_hex(c.value))
 
 
 class PaletteTest(unittest.TestCase):
