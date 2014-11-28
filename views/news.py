@@ -2,6 +2,7 @@ import re
 import datetime
 import time
 import rfc822
+import feedparser
 from StringIO import StringIO
 
 from google.appengine.ext import ndb
@@ -11,7 +12,6 @@ from webapp2_extras.appengine.users import login_required
 
 from wtforms import Form, fields, validators
 from models import Feed
-from lib import feedparser
 from handlers import BaseHandler, csrf_protected, Paginator, TagsField
 from config import TIMEOUT
 

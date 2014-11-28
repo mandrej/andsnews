@@ -18,7 +18,7 @@ import colorsys
 
 from PIL import Image as Im
 from PIL import ImageChops, ImageDraw
-from lib.colormath.color_objects import RGBColor
+from colormath.color_objects import sRGBColor
 
 Color = namedtuple('Color', ['value', 'prominence'])
 Palette = namedtuple('Palette', 'colors bgcolor')
@@ -101,7 +101,7 @@ def color_process(queue, lock):
 
 def distance(c1, c2):
     "Calculate the visual distance between the two colors."
-    return RGBColor(*c1).delta_e(RGBColor(*c2), method='cmc')
+    return sRGBColor(*c1).delta_e(sRGBColor(*c2), method='cmc')
 
 def rgb_to_hex(color):
     return '#%.02x%.02x%.02x' % color

@@ -1,4 +1,9 @@
 .idea/
 babel
+colormath
+exifread
 node_modules/
+pytz
+wtforms
+feedparser.py
 *.pyc

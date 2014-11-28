@@ -18,7 +18,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images
 
 from lib import colorific
-from lib.exifread import process_file
+from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
 INDEX = search.Index(name='searchindex')
