@@ -12,7 +12,7 @@ Detect the main colors used in an image.
 from __future__ import print_function
 
 import colorsys
-import multiprocessing
+# import multiprocessing
 import sys
 from PIL import Image, ImageChops, ImageDraw
 from collections import Counter, namedtuple
