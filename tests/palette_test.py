@@ -40,9 +40,9 @@ class PaletteTest(unittest.TestCase):
         with Timer() as target:
             img = Image.open(StringIO(self.buff))
             img.thumbnail((100, 100), Image.ANTIALIAS)
-            output = StringIO()
-            img.save(output, format='JPEG')
-            thumb = output.getvalue()
-            output.close()
+            # output = StringIO()
+            # img.save(output, format='JPEG')
+            # thumb = output.getvalue()
+            # output.close()
         print 'PIL image in %.2f ms' % target.elapsed
-        result(StringIO(thumb))
+        result(img)
