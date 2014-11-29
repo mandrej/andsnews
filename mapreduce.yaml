@@ -22,3 +22,15 @@ mapreduce:
         default: 5
       - name: shard_count
         default: 8
+
+- name: current_fix
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: views.mapreduce.current_fix
+    params:
+      - name: entity_kind
+        default: models.Photo
+      - name: processing_rate
+        default: 50
+      - name: shard_count
+        default: 4
