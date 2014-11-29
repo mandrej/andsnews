@@ -54,7 +54,7 @@ def indexer(entity):
     update_doc(**entity.index_data)
 
 
-def fixer(entity):
+def calculate_palette(entity):
     logging.info(entity.headline)
 
     blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
