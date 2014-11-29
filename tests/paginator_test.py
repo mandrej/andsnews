@@ -5,13 +5,13 @@ import unittest
 import math
 from models import Photo
 from handlers import Paginator
-from google.appengine.ext import ndb
+from config import PHOTOS_PER_PAGE
 
 
 class PaginatorTest(unittest.TestCase):
     def setUp(self):
         self.query = Photo.query().order(-Photo.date)
-        self.paginator = Paginator(self.query)
+        self.paginator = Paginator(self.query, per_page=PHOTOS_PER_PAGE)
         self.per_page = self.paginator.per_page
 
     def test_page(self):
@@ -25,9 +25,15 @@ class PaginatorTest(unittest.TestCase):
         self.assertFalse(has_next)
 
     def test_triple(self):
-        page, prev, obj, next = self.paginator.triple('ziveli-sokici')
+        page, prev, obj, next = self.paginator.triple('street-crossing')
         self.assertEqual(page, 1)
         self.assertIsNone(prev)
+        self.assertIsInstance(obj, Photo)
+        self.assertIsInstance(next, Photo)
+
+        page, prev, obj, next = self.paginator.triple('blue-butterfly')
+        self.assertEqual(page, 1)
+        self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
