@@ -2,8 +2,11 @@
 babel
 colormath
 exifread
+graphy
+mapreduce
 node_modules/
 pytz
+simplejson
 wtforms
 feedparser.py
 *.pyc
