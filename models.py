@@ -302,11 +302,11 @@ def update_counter(delta, *args):
 
 
 def incr_count(*args):
-    deferred.defer(update_counter, 1, *args)
+    deferred.defer(update_counter, 1, *args, _queue='queue25')
 
 
 def decr_count(*args):
-    deferred.defer(update_counter, -1, *args)
+    deferred.defer(update_counter, -1, *args, _queue='queue25')
 
 
 def update_tags(kind, old, new):
@@ -398,7 +398,7 @@ class Photo(ndb.Model):
             value = data.get(field, None)
             if value:
                 incr_count(self.kind, field, value)
-        deferred.defer(update_doc, **self.index_data)
+        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         old = self.author.nickname()
@@ -452,12 +452,12 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
         self.put()
-        deferred.defer(update_doc, **self.index_data)
+        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
+        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         blob_info = blobstore.BlobInfo.get(obj.blob_key)
         blob_info.delete()
@@ -565,7 +565,7 @@ class Entry(ndb.Model):
         incr_count(self.kind, 'author', self.author.nickname())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
-        deferred.defer(update_doc, **self.index_data)
+        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         self.headline = data['headline']
@@ -604,12 +604,12 @@ class Entry(ndb.Model):
         self.tags = sorted(data['tags'])
 
         self.put()
-        deferred.defer(update_doc, **self.index_data)
+        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
+        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)
@@ -670,7 +670,7 @@ class Comment(ndb.Model):
             incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
             incr_count('Comment', 'forkind', self.key.parent().kind())
         incr_count('Comment', 'date', self.year)
-        deferred.defer(update_doc, **self.index_data)
+        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def _pre_put_hook(self):
         self.year = self.date.year
@@ -678,7 +678,7 @@ class Comment(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
+        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)

@@ -1,5 +1,9 @@
 queue:
 - name: default
+  rate: 6/m
+  bucket_size: 5
+
+- name: queue25
   rate: 5/s
   bucket_size: 5
 

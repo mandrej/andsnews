@@ -1,5 +1,6 @@
 __author__ = 'milan'
 
+from mapreduce import operation as op
 from google.appengine.ext import blobstore
 from models import update_doc, rounding, img_palette, range_names
 from config import ASA, LENGTHS
@@ -11,8 +12,6 @@ def indexer(entity):
 
 
 def calculate_palette(entity):
-    logging.info(entity.headline)
-
     blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
     buff = blob_reader.read()
     palette = img_palette(buff)
@@ -22,7 +21,7 @@ def calculate_palette(entity):
         entity.rgb = palette.colors[0].value
     entity.hue, entity.lum, entity.sat = range_names(entity.rgb)
 
-    entity.put()
+    yield op.db.Put(entity)
 
 
 def current_fix(entity):
@@ -34,4 +33,4 @@ def current_fix(entity):
         value = int(entity.iso)
         entity.iso = rounding(value, ASA)
 
-    entity.put()
+    yield op.db.Put(entity)

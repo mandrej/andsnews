@@ -1,8 +1,8 @@
 mapreduce:
-- name: full_text_search_index
+- name: Create Full text search index
   mapper:
     input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.mapreduce.indexer
+    handler: views.background.indexer
     params:
       - name: entity_kind
         default: models.Photo
@@ -11,26 +11,26 @@ mapreduce:
       - name: shard_count
         default: 4
 
-- name: calculate_palette
+- name: Calculate photo palette
   mapper:
     input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.mapreduce.calculate_palette
+    handler: views.background.calculate_palette
     params:
       - name: entity_kind
         default: models.Photo
       - name: processing_rate
-        default: 5
-      - name: shard_count
-        default: 8
-
-- name: current_fix
-  mapper:
-    input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.mapreduce.current_fix
-    params:
-      - name: entity_kind
-        default: models.Photo
-      - name: processing_rate
-        default: 50
+        default: 1
       - name: shard_count
         default: 4
+
+#- name: Current fix
+#  mapper:
+#    input_reader: mapreduce.input_readers.DatastoreInputReader
+#    handler: views.background.current_fix
+#    params:
+#      - name: entity_kind
+#        default: models.Photo
+#      - name: processing_rate
+#        default: 50
+#      - name: shard_count
+#        default: 4
