@@ -36,13 +36,13 @@ HUE = [
     {'span': range(287, 342), 'order': '7', 'name': 'pink', 'hex': '#bf005f'}  # 330
 ]
 LUM = [
-    {'span': range(0, 10), 'order': '8', 'name': 'dark', 'hex': '#191919'},
-    {'span': range(10, 75), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': range(75, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+    {'span': range(0, 20), 'order': '8', 'name': 'dark', 'hex': '#191919'},
+    {'span': range(20, 60), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': range(60, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
 ]
 SAT = [
-    {'span': range(0, 20), 'name': 'monochrome'},
-    {'span': range(20, 101), 'name': 'color'}
+    {'span': range(0, 6), 'name': 'monochrome'},
+    {'span': range(6, 101), 'name': 'color'}
 ]
 COLORS = {}
 for x in HUE + LUM:
