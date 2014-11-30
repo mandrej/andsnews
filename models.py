@@ -346,13 +346,8 @@ class Photo(ndb.Model):
     lum = ndb.StringProperty()
     sat = ndb.StringProperty()
 
-    def characterise(self):
-        if self.lum in ('dark', 'light',) or self.sat == 'monochrome':
-            return self.lum
-        else:
-            return self.hue
-
-    color = ndb.ComputedProperty(characterise)
+    color = ndb.ComputedProperty(
+        lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
 
     @webapp2.cached_property
     def kind(self):
