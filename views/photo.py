@@ -65,12 +65,20 @@ class Palette(BaseHandler):
         self.render_json(data)
 
     def post(self, slug):
+        def characterise(hue, lum, sat):
+            if lum in ('dark', 'light',) or sat == 'monochrome':
+                return lum
+            else:
+                return hue
+
         obj = Photo.get_by_id(slug)
         new_rgb = json.loads(self.request.get('rgb'))
-        if new_rgb != obj.rgb:
+        new_range_names = range_names(new_rgb)
+        new_color = characterise(*new_range_names)
+        if new_rgb != obj.rgb or new_color != obj.color:
             decr_count('Photo', 'color', obj.color)
             obj.rgb = new_rgb
-            obj.hue, obj.lum, obj.sat = range_names(new_rgb)
+            obj.hue, obj.lum, obj.sat = new_range_names
             obj.put()
             incr_count('Photo', 'color', obj.color)
             self.render_json({'success': True})
