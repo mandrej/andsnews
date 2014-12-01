@@ -50,6 +50,9 @@ handlers:
   login: admin
   script: aeta.main.APP
 
+#- url: /stats.*
+#  script: google.appengine.ext.appstats.ui.app
+
 - url: /.*
   script: main.app
   secure: always
@@ -60,8 +63,8 @@ inbound_services:
 
 builtins:
 - deferred: on
-#- remote_api: on
 #- appstats: on
+#- remote_api: on
 
 error_handlers:
 - file: templates/errors/error.html

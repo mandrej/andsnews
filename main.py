@@ -65,6 +65,8 @@ app = WSGIApplication([
         ]),
         Route('/memcache/', handler='views.admin.Cache', methods=['GET']),
         Route('/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
+        # MapReduce Jobs
+        Route('/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),
     ]),
     Route('/filter/<mem_key>/<value>', handler=RenderCloud),
     Route('/filter/<mem_key>', handler=RenderCloud),

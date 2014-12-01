@@ -6,6 +6,9 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 
+from mapreduce.base_handler import PipelineBase
+from mapreduce.mapper_pipeline import MapperPipeline
+
 from colormath.color_objects import HSLColor
 from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
@@ -202,3 +205,33 @@ class Spectra(BaseHandler):
             spectra[row['name']] = temp
 
         self.render_json(spectra)
+
+JOBS = {
+    "palette": {
+        "job_name": "calculate_palette",
+        "handler_spec": "views.background.calculate_palette",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
+    }
+}
+
+
+class DatastoreMapperPipeline(PipelineBase):
+    def run(self, job_name):
+        yield MapperPipeline(**JOBS[job_name])
+
+
+class DatastoreBackground(BaseHandler):
+    def get(self, job):
+        try:
+            JOBS[job]
+        except KeyError:
+            self.abort(404)
+        else:
+            pipeline = DatastoreMapperPipeline(job)
+            pipeline.start()
+            redirect_url = "%s/status?root=%s" % (pipeline.base_path, pipeline.pipeline_id)
+            self.redirect(redirect_url)
