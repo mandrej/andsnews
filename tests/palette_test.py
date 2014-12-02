@@ -1,6 +1,7 @@
 __author__ = 'milan'
 
 import unittest
+import urllib
 from PIL import Image
 from cStringIO import StringIO
 
@@ -27,6 +28,7 @@ class PaletteTest(unittest.TestCase):
         obj = Photo.get_by_id('current-wallpaper')
         blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
         self.buff = blob_reader.read()
+        self.url = images.get_serving_url(obj.blob_key, size=300, crop=True, secure_url=True)
 
     def test_images_api(self):
         with Timer() as target:
@@ -45,4 +47,11 @@ class PaletteTest(unittest.TestCase):
             # thumb = output.getvalue()
             # output.close()
         print 'PIL image in %.2f ms' % target.elapsed
+        result(img)
+
+    def test_from_url(self):
+        with Timer() as target:
+            file = StringIO(urllib.urlopen(self.url).read())
+            img = Image.open(file)
+        print 'PIL image from url %.2f ms' % target.elapsed
         result(img)

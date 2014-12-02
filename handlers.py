@@ -154,12 +154,6 @@ class Sign(BaseHandler):
         self.redirect(dest_url)
 
 
-class Invalidate(webapp2.RequestHandler):
-    def get(self):
-        referer = self.request.headers.get('Referer', self.uri_for('start'))
-        self.redirect(referer)
-
-
 class Find(BaseHandler):
     def get(self, page):
         querystring = self.request.get('find')

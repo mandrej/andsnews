@@ -68,7 +68,7 @@
             </section>
             <section class="admin">
                 <h3>
-                    <span class="button">
+                    <span class="block button">
                         <i class="fa fa-bars"></i>
                         Memcache statistics for	v.{{ version() }}
                     </span>
@@ -91,12 +91,21 @@
                     <dd>{{ oldest|timesince }} ago</dd>
                 </dl>
 
-                <h3>
-                    <a href="{{ uri_for('datastore_background', job='palette') }}" class="button">
-                        <i class="fa fa-cloud"></i>
-                        Calculate photo palette
-                    </a>
-                </h3>
+                {% if is_admin %}
+                    <h3>
+                        <span class="block button">
+                            <i class="fa fa-cloud"></i> MapReduce
+                        </span>
+                    </h3>
+                    <p>
+                        <a href="/mapreduce" class="block button">Status</a>
+                    </p>
+                    <p>
+                        <a href="{{ uri_for('datastore_background', job='palette') }}" class="block button">
+                            Calculate photo palette
+                        </a>
+                    </p>
+                {% endif %}
             </section>
         </article>
 

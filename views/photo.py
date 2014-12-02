@@ -81,7 +81,10 @@ class Palette(BaseHandler):
             obj.hue, obj.lum, obj.sat = new_range_names
             obj.put()
             incr_count('Photo', 'color', obj.color)
-            self.render_json({'success': True})
+            self.render_json({
+                'success': True,
+                'similar_url': self.uri_for('photo_all_filter', page=1, field='color', value=obj.color)
+            })
         else:
             self.render_json({'success': False})
 

@@ -35,17 +35,6 @@
 
                 {% if object %}
                     <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
-                        <div id="palette">
-                            <img src="{{ object.small_url_async.get_result() }}"/>
-                            <p style="padding: 0.5em 0; text-align: center">
-                                <button type="button">{{ _('Calculate palette') }}</button>
-                            </p>
-                            <table class="palette zebra"></table>
-                            <script>
-                                var palette_url = '/photos/' + '{{ object.key.string_id() }}' + '/palette';
-                            </script>
-                        </div>
-
                         <fieldset>
                             <input name="token" type="hidden" value="{{ token }}"/>
                             {{ m.form_row(form.headline) }}
@@ -104,38 +93,6 @@
             });
             $('button[type=submit]').click(function() {
                 $('#overlay, #spinner').show();
-            });
-
-            var write_palette = function() {
-                $.getJSON(palette_url, function(data) {
-                    var cntx = $('table.palette');
-                    cntx.empty().append('<tr><th>active</th>' +
-                        '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
-                        '<th>' + data.active['class'] + '</th></tr>');
-                    $.each(data.palette, function(i, pal) {
-                        cntx.append('<tr><th>' + pal.prominence + '</th>' +
-                            '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
-                            '<td>' + pal['class'] + '</td></tr>');
-                    });
-                    if (data.bgcolor) {
-                        cntx.append('<tr><th>' + data.bgcolor.prominence + '</th>' +
-                            '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
-                            '<td>' + data.bgcolor['class'] + '</td></tr>');
-                    }
-            //        cntx.after('<p>' + explain + '</p>');
-                });
-            };
-            $('button[type=button]').click(function(evt) {
-                evt.preventDefault();
-                write_palette();
-            });
-            $('.palette').on('click', '.dot', function() {
-                var rgb = $(this).attr('data-color');
-                $.post(palette_url, {'rgb': rgb}, function(data) {
-                    if (data.success == true) {
-                        write_palette();
-                    }
-                })
             });
             $('.ff').collapseGroup();
         })

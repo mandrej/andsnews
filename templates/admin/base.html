@@ -21,9 +21,7 @@
             <a href="{{ uri_for('comment_admin', page=1) }}" class="block">Comment &amp; message administration</a>
             {% if is_admin %}
                 <a href="{{ uri_for('counter_admin', page=1) }}" class="block">Counters</a>
-                <a href="/mapreduce" class="block">Mapreduce</a>
             {% endif %}
-            <a href="/invalidate" class="block">{{ _('Invalidate cache') }}</a>
             <a href="/sign" class="block">{{ _('Log out') }}</a>
         </div>
     {% endif %}

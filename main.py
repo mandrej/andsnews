@@ -1,11 +1,13 @@
 __author__ = 'milan'
 
+import logging
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
 from handlers import Index, Complete, SetLanguage, Sign, Find, Chat, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, Invalidate, SaveAsHandler
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, SaveAsHandler
 from config import CONFIG, DEVEL
 
+logging.getLogger().setLevel(logging.INFO)
 
 app = WSGIApplication([
     SimpleRoute(r'^/photos/?$', handler='views.photo.Index'),
@@ -42,7 +44,7 @@ app = WSGIApplication([
     PathPrefixRoute('/admin', [
         Route('/', handler='views.admin.Index', name='admin_all'),
         Route('/counters/page/<page:\d+>', handler='views.admin.Counters', name='counter_admin'),
-        Route('/spectra', handler='views.admin.Spectra'),
+        # Route('/spectra', handler='views.admin.Spectra'),
         PathPrefixRoute('/photos', [
             Route('/page/<page:\d+>', handler='views.admin.Photos', name='photo_admin'),
             Route('/<field:date>/<value>/page/<page:\d+>', handler='views.admin.Photos', name='photo_admin_filter'),
@@ -83,7 +85,6 @@ app = WSGIApplication([
     Route('/search/<page:\d+>', handler=Find, name='search'),
     Route('/photometa', handler=PhotoMeta),
     Route('/setlang', handler=SetLanguage),
-    Route('/invalidate', handler=Invalidate),
     Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),
     ], config=CONFIG, debug=DEVEL)
