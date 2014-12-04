@@ -36,25 +36,6 @@
 		.backface(hidden);
 		.animation(fadeinout @totalDuration linear infinite);
 	}
-	div {
-		z-index: 1000;
-		position: absolute;
-		bottom: 40px;
-		left: 0px;
-		width: 100%;
-		text-align: center;
-		opacity: 0;
-		.animation(titles @totalDuration linear infinite);
-		h3 {
-			margin: 0;
-			padding: 0;
-			font-family: @default_font;
-			font-size: 80px;
-			text-shadow: none;
-			color: #fff;
-			line-height: 0.9;
-		}
-	}
 	.generate-delays(@n, @i: 1) when (@i =< @n) {
 		&:nth-child(@{i}) span, &:nth-child(@{i}) div {
     		@fadeStep: @totalDuration/@numImages/3;
@@ -92,32 +73,4 @@
 	@{frame2} { opacity: 1; transform: scale(1.2); }
 	@{frame3} { opacity: 0; }
 	100% { opacity:0; }
-}
-@-webkit-keyframes titles {
-	0% { opacity: 0; -webkit-transform: translateY(200px); }
-	@{frame1} { opacity: 1; -webkit-transform: translateY(0px); }
-	@{frame2} { opacity: 1; -webkit-transform: scale(1); }
-	@{frame3} { opacity: 0; -webkit-transform: scale(2) translateY(-100px); }
-	100% { opacity: 0; }
-}
-@-moz-keyframes titles {
-	0% { opacity: 0; -moz-transform: translateY(200px); }
-	@{frame1} { opacity: 1; -moz-transform: translateY(0px); }
-	@{frame2} { opacity: 1; -moz-transform: scale(1); }
-	@{frame3} { opacity: 0; -moz-transform: scale(2); -moz-transform: translateY(-100px); }
-	100% { opacity: 0; }
-}
-@-o-keyframes titles {
-	0% { opacity: 0; -o-transform: translateY(200px); }
-	@{frame1} { opacity: 1; -o-transform: translateY(0px); }
-	@{frame2} { opacity: 1; -o-transform: scale(1); }
-	@{frame3} { opacity: 0; -o-transform: scale(2); -o-transform: translateY(-100px); }
-	100% { opacity: 0; }
-}
-@keyframes titles {
-	0% { opacity: 0; transform: translateY(200px); }
-	@{frame1} { opacity: 1; transform: translateY(0px); }
-	@{frame2} { opacity: 1; transform: scale(1); }
-	@{frame3} { opacity: 0; transform: scale(2); transform: translateY(-100px); }
-	100% { opacity: 0; }
 }

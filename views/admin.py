@@ -10,7 +10,7 @@ from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 
 from colormath.color_objects import HSLColor
-from models import Photo, Entry, Comment, Feed, Counter, Cloud, KEYS
+from models import Photo, Entry, Comment, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
 from config import filesizeformat, HUE
@@ -54,7 +54,6 @@ class Index(BaseHandler):
         data = {'photo_count': Photo.query().order(-Photo.date).count(),
                 'entry_count': Entry.query().order(-Entry.date).count(),
                 'comment_count': Comment.query().order(-Comment.date).count(),
-                'feeds_count': Feed.query().order(-Feed.date).count(),
                 'stats': stats,
                 'oldest': oldest,
                 'hit_ratio': hit_ratio}
@@ -125,20 +124,6 @@ class Entries(BaseHandler):
             buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
             data = {'success': True, 'small': filesizeformat(len(buff))}
         self.render_json(data)
-
-
-class Feeds(BaseHandler):
-    @login_required
-    def get(self):
-        query = Feed.query().order(-Feed.date)
-        self.render_template('admin/feeds.html', {'objects': query})
-
-    @csrf_protected
-    def post(self):
-        slug = self.request.get('action:feed')
-        if slug:
-            memcache.delete(slug)
-        self.redirect_to('feed_admin')
 
 
 class Comments(BaseHandler):

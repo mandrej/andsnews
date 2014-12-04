@@ -9,7 +9,6 @@ WTForms==2.0.1
 argparse==1.2.1
 colorific==0.3
 colormath==2.0.2
-feedparser==5.1.3
 mock==1.0.1
 mox==0.5.3
 numpy==1.9.1

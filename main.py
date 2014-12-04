@@ -34,12 +34,6 @@ app = WSGIApplication([
         Route('/<field:(forkind|date|author)>/<value>/page/<page:\d+>',
               handler='views.comment.Index', name='comment_all_filter'),
     ]),
-    SimpleRoute(r'^/news/?$', handler='views.news.Index'),
-    PathPrefixRoute('/news', [
-        Route('/page/<page:\d+>', handler='views.news.Index', name='feed_all'),
-        Route('/<slug>', handler='views.news.Detail', name='feed'),
-        Route('/<field:tags>/<value>/page/<page:\d+>', handler='views.news.Index', name='feed_all_filter'),
-    ]),
     SimpleRoute(r'^/admin/?$', handler='views.admin.Index'),
     PathPrefixRoute('/admin', [
         Route('/', handler='views.admin.Index', name='admin_all'),
@@ -56,11 +50,6 @@ app = WSGIApplication([
             Route('/<field:date>/<value>/page/<page:\d+>', handler='views.admin.Entries', name='entry_admin_filter'),
             Route('/add', handler='views.entry.Add', name='entry_add'),
             Route('/<slug>', handler='views.entry.Edit', name='entry_edit'),
-        ]),
-        PathPrefixRoute('/feeds', [
-            Route('/', handler='views.admin.Feeds', name='feed_admin'),
-            Route('/add', handler='views.news.Add', name='feed_add'),
-            Route('/<slug>', handler='views.news.Edit', name='feed_edit'),
         ]),
         PathPrefixRoute('/comments', [
             Route('/page/<page:\d+>', handler='views.admin.Comments', name='comment_admin'),

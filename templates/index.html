@@ -5,7 +5,6 @@
         {% for object in objects[:latest] %}
             <li>
                 <span style="background-image: url({{ object.normal_url_async.get_result() }})"></span>
-                <div><h3>{{ object.headline }}</h3></div>
             </li>
         {% endfor %}
     </ul>

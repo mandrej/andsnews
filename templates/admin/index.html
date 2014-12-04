@@ -43,17 +43,6 @@
                 <div id="Entry_author"></div>
                 <div id="Entry_date"></div>
 
-                <h3>
-                    <a href="{{ uri_for('feed_admin') }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Feeds {{ feeds_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('feed_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Feed_tags"></div>
-
                 {% if is_admin %}
                     <h3>
                         <a href="{{ uri_for('comment_admin', page=1) }}" class="button">
