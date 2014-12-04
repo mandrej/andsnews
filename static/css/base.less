@@ -459,8 +459,10 @@ input[data-function*='swipe'] {
 	}
 }
 
-.exif { margin-bottom: 1em; }
-.exif td a { text-decoration: underline; }
+.exif {
+	margin-bottom: 1em;
+	td a { text-decoration: underline; }
+}
 
 .subtitle {
 	@media @mobile, @tablet { .hide; }
@@ -663,13 +665,6 @@ p.legend { padding: 0.5em; text-align: center; }
 	font-size: 91%;
 	text-align: right;
 }
-#spectra {
-    div { .clearing; }
-	.item { float: left; width: 0.8em; height: 1.2em; margin: 0 1px 1px 0; }
-	@media @mobile, @tablet { .hide; }
-}
-.slider { float: left; width: 20em; }
-
 .box {
     padding: 1em;
     background: fade(white, 50%);

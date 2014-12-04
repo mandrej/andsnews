@@ -3,8 +3,8 @@ __author__ = 'milan'
 import logging
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import Index, Complete, SetLanguage, Sign, Find, Rss, \
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, SaveAsHandler
+from handlers import Index, Complete, SetLanguage, Sign, Find,\
+    DeleteHandler, RenderCloud, RenderGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
 logging.getLogger().setLevel(logging.INFO)
@@ -56,12 +56,10 @@ app = WSGIApplication([
     Route('/complete/<mem_key>', handler=Complete),
 
     Route('/sitemap.xml', handler=SiteMap),
-    Route('/rss/<kind:(photo|entry)>.xml', handler=Rss),
 
     Route('/<safe_key>/download', handler=SaveAsHandler, name='download'),
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
     Route('/search/<page:\d+>', handler=Find, name='search'),
-    Route('/photometa', handler=PhotoMeta),
     Route('/setlang', handler=SetLanguage),
     Route('/sign', handler=Sign),
     Route('/', handler=Index, name='start'),

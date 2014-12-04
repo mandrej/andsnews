@@ -9,5 +9,4 @@ pipeline
 pytz
 simplejson
 wtforms
-feedparser.py
 *.pyc

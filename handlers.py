@@ -380,28 +380,6 @@ class RenderGraph(BaseHandler):
         self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
 
 
-class Rss(BaseHandler):
-    def get(self, kind):
-        if kind == 'photo':
-            query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        elif kind == 'entry':
-            query = Entry.query().order(-Entry.date)
-            paginator = Paginator(query, per_page=PER_PAGE)
-        objects, _ = paginator.page(1)
-
-        data = {'kind': kind, 'objects': objects, 'format': RFC822}
-
-        last_modified = to_datetime(data['objects'][0].date, format=RFC822)
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        data['headers'] = [('Content-Type', 'application/rss+xml'),
-                           ('Last-Modified', last_modified),
-                           ('ETag', hashlib.md5(last_modified).hexdigest()),
-                           ('Expires', to_datetime(expires, format=RFC822)),
-                           ('Cache-Control', 'max-age=86400')]
-        self.render_template('rss.xml', data)
-
-
 class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
@@ -416,18 +394,6 @@ class SiteMap(BaseHandler):
                 'entries': entries,
                 'headers': [('Content-Type', 'application/xml')]}
         self.render_template('urlset.xml', data)
-
-
-class PhotoMeta(BaseHandler):
-    def get(self):
-        fields = ('author', 'tags', 'size', 'model', 'aperture', 'shutter',
-                  'focal_length', 'iso', 'date', 'lens', 'crop_factor', 'eqv', 'color',)
-        data = []
-        for x in Photo.query().order(-Photo.date):
-            row = x.to_dict(include=fields)
-            row['slug'] = x.key.string_id()
-            data.append(row)
-        self.render_json(data)
 
 
 class EmailField(fields.SelectField):
