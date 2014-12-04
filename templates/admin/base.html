@@ -3,7 +3,6 @@
     <ul class="fa-ul">
         <li><a href="{{ uri_for('photo_all', page=1) }}" title="{{ _('Photos') }}"><i class="fa fa-camera"></i></a></li>
         <li><a href="{{ uri_for('entry_all', page=1) }}" title="{{ _('Blog') }}"><i class="fa fa-file-text"></i></a></li>
-        <li><a href="{{ uri_for('comment_all', page=1) }}" title="{{ _('Comments') }}"><i class="fa fa-comment"></i></a></li>
         {% if user %}
             <li class="active"><a href="/admin/" title="{{ _('Administration') }}"><i class="fa fa-cog"></i></a></li>
         {% else %}
@@ -16,7 +15,6 @@
         <div class="submenu">
             <a href="{{ uri_for('photo_admin', page=1) }}" class="block">Photo administration</a>
             <a href="{{ uri_for('entry_admin', page=1) }}" class="block">Entry administration</a>
-            <a href="{{ uri_for('comment_admin', page=1) }}" class="block">Comment &amp; message administration</a>
             {% if is_admin %}
                 <a href="{{ uri_for('counter_admin', page=1) }}" class="block">Counters</a>
             {% endif %}
@@ -27,8 +25,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
     <script>
         (function($) {
             function split(val) {

@@ -168,44 +168,6 @@ $(document).ready(function() {
             });
         });
     });
-    // add comment
-    $(document).on('click', 'a.comment_add', function (evt) {
-        evt.preventDefault();
-        var $this = $(evt.currentTarget);
-        $('#addcomment').load(this.href, function () {
-            $('#overlay, #addcomment').show();
-            $('#body').markItUp(cmntSettings, {nameSpace: 'small'});
-            $('.content button').click(function (evt) {
-                evt.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: $('#addcommentForm').attr('action'),
-                    data: {'body': $('#body').val(), 'token': token},
-                    success: function (data) {
-                        if (typeof(data) == 'string') {
-                            $('.dummy').hide();
-                            $('.info').show();
-                            $this.closest('.page').find('.comments').prepend(data);
-                            $('a.confirm').click(function (e) {
-                                e.preventDefault();
-                                $('#confirm').load(this.href, function () {
-                                    $('#overlay, #confirm').show();
-                                });
-                            });
-                            setTimeout(function () {
-                                $('#overlay, #addcomment').hide();
-                            }, 1000);
-                        } else {
-                            $('.error').text('');
-                            $.each(data, function (key, arr) {
-                                $('.error.C_' + key).text(arr.join(', '));
-                            });
-                        }
-                    }
-                });
-            });
-        });
-    });
     // menu expand/ collapse
     $(document).on('click', 'a.collapse', function (evt) {
         evt.preventDefault();

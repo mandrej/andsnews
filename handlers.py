@@ -18,7 +18,7 @@ from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, memcache, xmpp
 from google.appengine.ext import ndb, blobstore
-from models import Photo, Entry, Comment, Cloud, INDEX
+from models import Photo, Entry, Cloud, INDEX
 from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822
 
 
@@ -168,10 +168,7 @@ class Find(BaseHandler):
             if key.parent():
                 link = self.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
             else:
-                try:
-                    link = self.uri_for(key.kind().lower(), slug=key.string_id())
-                except KeyError:
-                    link = ''  # Comment.is_message
+                link = self.uri_for(key.kind().lower(), slug=key.string_id())
 
             f['kind'] = key.kind()
             f['link'] = link
@@ -342,23 +339,6 @@ class SearchPaginator(object):
         return results, number_found, has_next, error
 
 
-class Chat(webapp2.RequestHandler):
-    def post(self):
-        message = xmpp.Message(self.request.POST)
-        message.reply("ANDS thank you!")
-
-        email = message.sender.split('/')[0]  # node@domain/resource
-        user = users.User(email)
-        obj = Comment(author=user, body=message.body)
-        obj.add()
-
-
-#class Send(webapp2.RequestHandler):
-#    def post(self):
-#        message = self.request.get('msg')
-#        xmpp.send_message(ADMIN_JID, message)
-
-
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):
         kind, field = mem_key.split('_')
@@ -369,7 +349,7 @@ class RenderCloud(BaseHandler):
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso', 'forkind',):
+        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('name'), reverse=False)
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
@@ -392,7 +372,7 @@ class RenderGraph(BaseHandler):
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('eqv', 'iso', 'forkind',):
+        elif field in ('eqv', 'iso',):
             items = sorted(items, key=itemgetter('name'), reverse=False)
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))

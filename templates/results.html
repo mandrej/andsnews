@@ -60,27 +60,6 @@
                     </p>
                 </div>
             </div>
-        {% elif object.kind == 'Comment' %}
-            <div>
-                {{ m.time(object.date) }}
-                <div class="body">
-                    {% if object.headline %}
-                        <h3>
-                            <i class="fa fa-comment"></i>&nbsp;
-                            <a href="{{ object.link }}?find={{ phrase }}">{{ object.headline }} ({{ _('comment') }})</a>
-                        </h3>
-                    {% else %}
-                        <h3><i class="fa fa-comment"></i>&nbsp;{{ _('message') }}</h3>
-                    {% endif %}
-                    {{ object.body }}
-                    <p class="details">
-                        &nbsp;<i class="fa fa-user"></i>&nbsp;
-                        <a href="{{ uri_for('comment_all_filter', page=1, field='author', value=object.author) }}"
-                            title="{{ _("author's comments") }}">{{ object.author }}</a>&nbsp;
-                        <time datetime='{{ object.date|to_datetime }}'>{{ object.date|to_date }}</time>
-                    </p>
-                </div>
-            </div>
         {% endif %}
     {% endmacro %}
     <article class="cols">

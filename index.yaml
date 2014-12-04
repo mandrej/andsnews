@@ -11,24 +11,6 @@ indexes:
 # your application using appcfg.py.
 
 - kind: Comment
-  properties:
-  - name: author
-  - name: date
-    direction: desc
-
-- kind: Comment
-  properties:
-  - name: forkind
-  - name: date
-    direction: desc
-
-- kind: Comment
-  properties:
-  - name: year
-  - name: date
-    direction: desc
-
-- kind: Comment
   ancestor: yes
   properties:
   - name: date
@@ -49,12 +31,6 @@ indexes:
 - kind: Entry
   properties:
   - name: year
-  - name: date
-    direction: desc
-
-- kind: Feed
-  properties:
-  - name: tags
   - name: date
     direction: desc
 

@@ -42,18 +42,6 @@
                 <div id="Entry_tags"></div>
                 <div id="Entry_author"></div>
                 <div id="Entry_date"></div>
-
-                {% if is_admin %}
-                    <h3>
-                        <a href="{{ uri_for('comment_admin', page=1) }}" class="button">
-                            <i class="fa fa-th-list"></i>
-                            Comment {{ comment_count }}
-                        </a>
-                    </h3>
-                    <div id="Comment_forkind"></div>
-                    <div id="Comment_author"></div>
-                    <div id="Comment_date"></div>
-                {% endif %}
             </section>
             <section class="admin">
                 <h3>
@@ -97,29 +85,6 @@
                 {% endif %}
             </section>
         </article>
-
-{#        <article class="normal">#}
-{#            <h2 class="ss">Spectra [+]</h2>#}
-{#            <div class="hide">#}
-{#                <div class="admin">#}
-{#                    <dl class="w65em">#}
-{#                        <dt>Saturation</dt>#}
-{#                        <dd>#}
-{#                            <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
-{#                            <input type="text" name="sat" size="2" disabled="disabled"/>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                    <dl class="w65em">#}
-{#                        <dt>Lightness</dt>#}
-{#                        <dd>#}
-{#                            <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
-{#                            <input type="text" name="lum" size="2" disabled="disabled"/>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                </div>#}
-{#                <div id="spectra"></div>#}
-{#            </div>#}
-{#        </article>#}
     </div>
 {% endblock %}
 {% block scripts %}
@@ -174,38 +139,9 @@
                 });
             });
 
-{#            var drawSpectra = function() {#}
-{#                var sat = $('#sat').slider('value');#}
-{#                var lum = $('#lum').slider('value');#}
-{##}
-{#                $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {#}
-{#                    $('#spectra').empty();#}
-{#                    $.each(data, function(name, colors) {#}
-{#                        var str = '<div><span class="item" style="width: 50px;">' + name + '</span>';#}
-{#                        $.each(colors, function(i, c) {#}
-{#                            str += '<span class="item" style="background: ' + c + '">&nbsp;</span>';#}
-{#                        });#}
-{#                        str += '</div>';#}
-{#                        $('#spectra').append(str);#}
-{#                    });#}
-{#                })#}
-{#            };#}
-{#            $('.slider').slider({#}
-{#                min: 0, max: 100, step: 5,#}
-{#                change: function(event, ui) {#}
-{#                    $('input[name=' + event.target.id + ']').val(ui.value);#}
-{#                    drawSpectra();#}
-{#                }#}
-{#            });#}
-{#            $('h2.ss').click(function(evt) {#}
-{#                evt.preventDefault();#}
-{#                drawSpectra();#}
-{#            });#}
             $('#main button, #sidebar button').click(function() {
                 $('#overlay, #spinner').show();
             });
-            $('#sat').slider('value', 70);
-            $('#lum').slider('value', 40);
 
             $('.ff, .ss').collapseGroup();
             $('.zebra').colStyle();

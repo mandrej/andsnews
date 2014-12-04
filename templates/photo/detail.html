@@ -4,7 +4,6 @@
 
 {% block modals %}
 {{ super() }}
-<div id="addcomment" class="modal"></div>
 {% endblock %}
 
 {% block paging %}
@@ -57,14 +56,7 @@
             </section>
             <aside>
                 {% include "photo/exif.html" %}
-                <div class="comments">
-                    {% for comment in object.comment_list() %}
-                        {{ m.render_comment(comment, user) }}
-                    {% endfor %}
-                </div>
                 {% if user %}
-                    <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
-                        <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
                     <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
                         <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
                     <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">

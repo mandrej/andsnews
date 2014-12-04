@@ -6,8 +6,6 @@ Disallow: /admin/
 Disallow: /filter/
 Disallow: /visualize/
 Disallow: /complete/
-Disallow: /comments/
-Disallow: /news/
 Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete

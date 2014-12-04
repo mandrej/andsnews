@@ -3,7 +3,7 @@ __author__ = 'milan'
 import logging
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import Index, Complete, SetLanguage, Sign, Find, Chat, Rss, \
+from handlers import Index, Complete, SetLanguage, Sign, Find, Rss, \
     DeleteHandler, RenderCloud, RenderGraph, SiteMap, PhotoMeta, SaveAsHandler
 from config import CONFIG, DEVEL
 
@@ -28,12 +28,6 @@ app = WSGIApplication([
         Route('/image/<slug>/<size:(small|normal)>', handler='views.entry.thumb', name='entry_image'),
         Route('/<slug>', handler='views.entry.Detail', name='entry'),
     ]),
-    SimpleRoute(r'^/comments/?$', handler='views.comment.Index'),
-    PathPrefixRoute('/comments', [
-        Route('/page/<page:\d+>', handler='views.comment.Index', name='comment_all'),
-        Route('/<field:(forkind|date|author)>/<value>/page/<page:\d+>',
-              handler='views.comment.Index', name='comment_all_filter'),
-    ]),
     SimpleRoute(r'^/admin/?$', handler='views.admin.Index'),
     PathPrefixRoute('/admin', [
         Route('/', handler='views.admin.Index', name='admin_all'),
@@ -51,9 +45,6 @@ app = WSGIApplication([
             Route('/add', handler='views.entry.Add', name='entry_add'),
             Route('/<slug>', handler='views.entry.Edit', name='entry_edit'),
         ]),
-        PathPrefixRoute('/comments', [
-            Route('/page/<page:\d+>', handler='views.admin.Comments', name='comment_admin'),
-        ]),
         Route('/memcache/', handler='views.admin.Cache', methods=['GET']),
         Route('/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
         # MapReduce Jobs
@@ -66,11 +57,9 @@ app = WSGIApplication([
 
     Route('/sitemap.xml', handler=SiteMap),
     Route('/rss/<kind:(photo|entry)>.xml', handler=Rss),
-    Route('/_ah/xmpp/message/chat/', handler=Chat),
 
     Route('/<safe_key>/download', handler=SaveAsHandler, name='download'),
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
-    Route('/<safe_key>/add', handler='views.comment.Add', name='comment_add'),
     Route('/search/<page:\d+>', handler=Find, name='search'),
     Route('/photometa', handler=PhotoMeta),
     Route('/setlang', handler=SetLanguage),

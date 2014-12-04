@@ -10,7 +10,7 @@ from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 
 from colormath.color_objects import HSLColor
-from models import Photo, Entry, Comment, Counter, Cloud, KEYS
+from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
 from config import filesizeformat, HUE
@@ -53,29 +53,10 @@ class Index(BaseHandler):
             hit_ratio = 0
         data = {'photo_count': Photo.query().order(-Photo.date).count(),
                 'entry_count': Entry.query().order(-Entry.date).count(),
-                'comment_count': Comment.query().order(-Comment.date).count(),
                 'stats': stats,
                 'oldest': oldest,
                 'hit_ratio': hit_ratio}
         self.render_template('admin/index.html', data)
-
-
-# def thumbnail_color(request):
-# params = request.POST
-#    parentkind = params['kind']
-#    slug = params['slug']
-#
-#    obj = ndb.Key(parentkind, slug, 'Picture', slug).get()
-#    obj.rgb = median(obj.small)
-#    obj.put()
-#    photo = ndb.Key(parentkind, slug).get()
-#    photo.hue, photo.lum, photo.sat = range_names(*obj.hls)
-#    photo.put()
-#    response = webapp2.Response(content_type='application/json')
-#    response.write(json.dumps({'success': True, 'hex': obj.hex}))
-#    return response
-
-#model = ndb.Model._kind_map.get(kind)
 
 
 class Photos(BaseHandler):
@@ -124,29 +105,6 @@ class Entries(BaseHandler):
             buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
             data = {'success': True, 'small': filesizeformat(len(buff))}
         self.render_json(data)
-
-
-class Comments(BaseHandler):
-    @admin_required
-    def get(self, page=1):
-        query = Comment.query().order(-Comment.date)
-        page = int(page)
-        paginator = Paginator(query, per_page=10)
-        objects, has_next = paginator.page(page)
-        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
-        self.render_template('admin/comments.html', data)
-
-    @csrf_protected
-    def post(self):
-        params = dict(self.request.POST)
-        key = ndb.Key(urlsafe=params['safe_key'])
-        if 'body' in params:
-            obj = key.get()
-            obj.body = params['body']
-            obj.put()
-        else:
-            key.delete()
-        self.render_json({'success': True})
 
 
 class Counters(BaseHandler):

@@ -24,9 +24,7 @@ from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
-        'Entry_tags', 'Entry_author', 'Entry_date',
-        'Feed_tags',
-        'Comment_forkind', 'Comment_author', 'Comment_date']
+        'Entry_tags', 'Entry_author', 'Entry_date']
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
@@ -46,8 +44,6 @@ def filter_param(field, value):
     elif field == 'author':
         # TODO Not all emails are gmail
         value = users.User(email='%s@gmail.com' % value)
-    elif field == 'forkind':
-        value = capitalize(value)
     try:
         value = int(value)
     except (ValueError, TypeError):
@@ -492,9 +488,6 @@ class Photo(ndb.Model):
     def similar(self):
         return COLORS[self.color]
 
-    def comment_list(self):
-        return Comment.query(ancestor=self.key).order(-Comment.date)
-
     @classmethod
     def query_for(cls, field, value):
         """[FilterNode('color', '=', 'pink')]"""
@@ -612,76 +605,12 @@ class Entry(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def comment_list(self):
-        return Comment.query(ancestor=self.key).order(-Comment.date)
-
     @property
     def image_list(self):
         return Img.query(ancestor=self.key).order(Img.num)
 
     def image_url(self, num):
         return '/entries/image/%s_%s' % (self.key.string_id(), num)
-
-    @classmethod
-    def query_for(cls, field, value):
-        f = filter_param(field, value)
-        filters = [cls._properties[k] == v for k, v in f.items()]
-        return cls.query(*filters).order(-cls.date)
-
-
-class Comment(ndb.Model):
-    # parent Photo, Entry
-    author = ndb.UserProperty(auto_current_user_add=True)
-    date = ndb.DateTimeProperty(auto_now_add=True)
-    year = ndb.IntegerProperty()
-    forkind = ndb.StringProperty(default='Application')
-    body = ndb.TextProperty(required=True)
-
-    @webapp2.cached_property
-    def kind(self):
-        return self.key.kind()
-
-    @webapp2.cached_property
-    def index_data(self):
-        return {
-            'doc_id': self.key.urlsafe(),
-            'headline': '' if self.is_message else self.key.parent().get().headline,
-            'author': self.author,
-            'body': '%s' % self.body,
-            'date': self.date
-        }
-
-    @webapp2.cached_property
-    def is_message(self):
-        return self.forkind == 'Application'
-
-    def add(self):
-        self.put()
-
-        incr_count(self.kind, 'author', self.author.nickname())
-        if self.is_message:
-            incr_count(self.kind, 'forkind', 'Application')
-        else:
-            incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
-            incr_count('Comment', 'forkind', self.key.parent().kind())
-        incr_count('Comment', 'date', self.year)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
-
-    def _pre_put_hook(self):
-        self.year = self.date.year
-
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
-
-        decr_count(key.kind(), 'author', obj.author.nickname())
-        decr_count(key.kind(), 'date', obj.year)
-        if obj.is_message:
-            decr_count(key.kind(), 'forkind', 'Application')
-        else:
-            decr_count(key.parent().kind(), 'comment', key.parent().id())
-            decr_count(key.kind(), 'forkind', key.parent().kind())
 
     @classmethod
     def query_for(cls, field, value):

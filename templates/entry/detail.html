@@ -4,7 +4,6 @@
 
 {% block modals %}
 {{ super() }}
-<div id="addcomment" class="modal"></div>
 {% endblock %}
 
 {% block contents %}
@@ -35,15 +34,6 @@
                 <div class="story">{{ object.body|safe }}</div>
             </section>
             <aside>
-                <div class="comments">
-                    {% for comment in object.comment_list() %}
-                        {{ m.render_comment(comment, user) }}
-                    {% endfor %}
-                </div>
-                {% if user %}
-                    <h3><a class="comment_add block button" href="{{ uri_for('comment_add', safe_key=object.key.urlsafe()) }}">
-                        <i class="fa fa-comment"></i> {{ _('Add Comment') }}</a></h3>
-                {% endif %}
             </aside>
         </article>
     </div>
