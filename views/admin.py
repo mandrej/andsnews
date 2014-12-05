@@ -152,7 +152,7 @@ class Comments(BaseHandler):
         self.render_template('admin/comments.html', data)
 
     @csrf_protected
-    def post(self):
+    def post(self, page=1):
         params = dict(self.request.POST)
         key = ndb.Key(urlsafe=params['safe_key'])
         if 'body' in params:
