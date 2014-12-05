@@ -45,14 +45,13 @@ a {
 .clearing {
 	&:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
 }
-.white_shadow { text-shadow: 1px 1px 1px fade(white, 25%); }
+.white_shadow { text-shadow: 1px 1px 1px fadeout(white, 75%); }
 .black_shadow { text-shadow: -1px -1px 1px fade(black, 25%); }
 .default_button {
 	border: none;
 	padding: 0.3em 0.5em;
 	color: black;
 	background: rgba(255,255,255,.5);
-	line-height: 100%;
 	border-radius: @radius;
 	&:hover, &:focus { color: black; background: fade(@google_orange, 70%); }
 }
@@ -317,7 +316,7 @@ input[data-function*='swipe'] {
 	left: -@menuOffset;
 	bottom: 0;
 	width: @menuOffset;
-	background: fade(black, 70%);
+	background: fadeout(black, 30%);
 	padding: 1em 3% 0;
 	z-index: 1;
 	text-shadow: none;
@@ -365,7 +364,7 @@ input[data-function*='swipe'] {
                     top: 0;
                     left: 0;
                     color: white;
-                    background: fade(black, 50%);
+                    background: fadeout(black, 50%);
                 }
                 img {
                     display: block;
@@ -422,7 +421,7 @@ input[data-function*='swipe'] {
 						padding: 1em 0;
 						line-height: 110%;
 						text-align: center;
-						background: fade(white, 50%);
+						background: fadeout(white, 50%);
 						border-radius: 0 0 @radius @radius;
 						.transition(all .3s ease-in-out);
 					}
@@ -467,7 +466,7 @@ nav.paginator {
 	span {
 		.left;
 		color: white;
-		&.na, &.number { color: fade(black, 70%); .white_shadow; }
+		&.na, &.number { color: fadeout(black, 30%); .white_shadow; }
 		&.number { font-size: 4em; line-height: 1; }
 	}
 }
@@ -535,7 +534,7 @@ nav.paginator {
     top: 1em;
     width: (100% - 3%);
     font-size: 16em;
-    color: fade(black, 30%);
+    color: fadeout(black, 70%);
     text-align: center;
 	z-index: -1;
 	@media @mobile, @tablet { font-size: 10em; }
@@ -655,7 +654,7 @@ p.legend { padding: 0.5em; text-align: center; }
 }
 .box {
     padding: 1em;
-    background: fade(white, 50%);
+    background: fadeout(white, 50%);
 	border-radius: @radius;
 }
 
