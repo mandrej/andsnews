@@ -19,6 +19,5 @@ Disallow: /*tags/
 Disallow: /*date/
 Disallow: /*author/
 Disallow: /*color/
-Disallow: /*forkind/
 # sitemap
 Sitemap: http://ands.appspot.com/sitemap.xml

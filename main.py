@@ -32,7 +32,6 @@ app = WSGIApplication([
     PathPrefixRoute('/admin', [
         Route('/', handler='views.admin.Index', name='admin_all'),
         Route('/counters/page/<page:\d+>', handler='views.admin.Counters', name='counter_admin'),
-        # Route('/spectra', handler='views.admin.Spectra'),
         PathPrefixRoute('/photos', [
             Route('/page/<page:\d+>', handler='views.admin.Photos', name='photo_admin'),
             Route('/<field:date>/<value>/page/<page:\d+>', handler='views.admin.Photos', name='photo_admin_filter'),

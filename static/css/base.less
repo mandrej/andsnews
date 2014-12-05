@@ -326,22 +326,10 @@ input[data-function*='swipe'] {
 	.hover {
 		&:hover, &:focus { color: white; background: transparent; }
 	}
-	h3 { color: @google_orange; }
+	h3 { font-size: 1.5em; }
 	a {
 		color: @paper; .hover;
 		&.selected { color: @google_orange; }
-	}
-	ul.fa-ul {
-		margin: 1em 0;
-		display: flex;
-		flex-flow: row;
-		justify-content: space-between;
-		li {
-			margin: 0;
-			list-style: none;
-			font-size: 3.6em;
-			&.active a { color: @google_orange; .hover; }
-		}
 	}
 	.submenu {
 		a {

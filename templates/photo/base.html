@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 {% block nav %}
-    <ul class="fa-ul">
-        <li class="active"><a href="{{ uri_for('photo_all', page=1) }}" title="{{ _('Photos') }}"><i class="fa fa-camera"></i></a></li>
-        <li><a href="{{ uri_for('entry_all', page=1) }}" title="{{ _('Blog') }}"><i class="fa fa-file-text"></i></a></li>
-        {% if user %}
-            <li><a href="/admin/" title="{{ _('Administration') }}"><i class="fa fa-cog"></i></a></li>
-        {% else %}
-            <li><a href="/sign" title="{{ _('Log in') }}"><i class="fa fa-sign-in"></i></a></li>
-        {% endif %}
-    </ul>
-
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
@@ -26,6 +16,8 @@
             <div id="{{ f.field }}cloud" class="hide"></div>
         {% endfor %}
     </div>
+    <h3><a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a></h3>
+    <h3><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></h3>
     <script>
         $(function () {
             var filter = {{ filter|to_json }};

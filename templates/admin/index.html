@@ -42,6 +42,12 @@
                 <div id="Entry_tags"></div>
                 <div id="Entry_author"></div>
                 <div id="Entry_date"></div>
+
+                {% if is_admin %}
+                    <h3>
+                        <a href="{{ uri_for('counter_admin', page=1) }}" class="block button">Counters</a>
+                    </h3>
+                {% endif %}
             </section>
             <section class="admin">
                 <h3>
