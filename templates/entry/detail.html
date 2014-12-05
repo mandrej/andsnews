@@ -27,14 +27,12 @@
                     title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
             </p>
         </header>
-        <article class="port">
+        <article class="cols">
             <section>
                 <i class="fa fa-quote-left fa-2x pull-left"></i>
                 <p>{{ object.summary|safe }}</p>
                 <div class="story">{{ object.body|safe }}</div>
             </section>
-            <aside>
-            </aside>
         </article>
     </div>
 {% endblock %}

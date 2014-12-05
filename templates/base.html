@@ -46,9 +46,9 @@
                 </form>
             {% endblock %}
             {% block nav %}
-                <h3><a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a></h3>
-                <h3><a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a></h3>
-                <h3><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></h3>
+                <h3><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h3>
+                <h3><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h3>
+                <h3><a href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h3>
             {% endblock %}
             {% block footer %}
                 <div id="footer">

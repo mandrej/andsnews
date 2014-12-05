@@ -4,15 +4,15 @@
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
 
-    <h3><a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a></h3>
-    <h3><a class="selected" href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a></h3>
+    <h3><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h3>
+    <h3><a class="selected" href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h3>
     <div class="submenu">
         {% for f in [_tags, _date, _author] %}
             <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>
             <div id="{{ f.field }}cloud" class="hide"></div>
         {% endfor %}
     </div>
-    <h3><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></h3>
+    <h3><a href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h3>
     <script>
         $(function () {
             var filter = {{ filter|to_json }};
