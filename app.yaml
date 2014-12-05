@@ -59,7 +59,6 @@ handlers:
 
 inbound_services:
 - warmup
-- xmpp_message
 
 builtins:
 - deferred: on
