@@ -7,13 +7,11 @@ import cgi
 import math
 import colorsys
 import itertools
-import logging
 import collections
 import webapp2
 from cStringIO import StringIO
 from decimal import *
 from PIL import Image
-from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, images
 

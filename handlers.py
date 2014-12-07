@@ -11,7 +11,6 @@ import uuid
 import webapp2
 import logging
 from operator import itemgetter
-from timeit import default_timer
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
@@ -19,17 +18,6 @@ from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud
 from config import PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT
-
-
-def timeit(f):
-    def wrapper(*args, **kw):
-        timer = default_timer
-        start = timer()
-        result = f(*args, **kw)
-        end = timer()
-        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
-        return result
-    return wrapper
 
 
 def csrf_protected(handler_method):
