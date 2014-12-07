@@ -37,16 +37,10 @@
     <div id="wrapper">
         <input type="checkbox" id="swipe" data-function="swipe"/>
         <nav class="menu">
-            {% block search %}
-                <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                    <input type="text" name="find"/>
-                </form>
-            {% endblock %}
             {% block nav %}
-                <h3><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h3>
-                <h3><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h3>
-                <h3><a href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h3>
+                <h2><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h2>
+                <h2><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h2>
+                <h2><a href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h2>
             {% endblock %}
             {% block footer %}
                 <div id="footer">
@@ -70,7 +64,6 @@
             token = '{{ token }}';
         </script>
         <script src="/static/scripts/base.min.js"></script>
-        <script src="/static/scripts/jquery.searchhighlight.min.js"></script>
     {% endblock %}
 
     {% block ga %}

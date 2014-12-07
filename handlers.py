@@ -12,14 +12,13 @@ import webapp2
 import logging
 from operator import itemgetter
 from timeit import default_timer
-from jinja2.filters import do_striptags
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import users, search, memcache, xmpp
+from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
-from models import Photo, Entry, Cloud, INDEX
-from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822
+from models import Photo, Entry, Cloud
+from config import PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT
 
 
 def timeit(f):
@@ -154,36 +153,6 @@ class Sign(BaseHandler):
         self.redirect(dest_url)
 
 
-class Find(BaseHandler):
-    def get(self, page):
-        querystring = self.request.get('find')
-        page = int(page)
-        paginator = SearchPaginator(querystring, per_page=PER_PAGE)
-        results, number_found, has_next, error = paginator.page(page)
-
-        objects = []
-        for doc in results:
-            f = dict()
-            key = ndb.Key(urlsafe=doc.doc_id)
-            if key.parent():
-                link = self.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
-            else:
-                link = self.uri_for(key.kind().lower(), slug=key.string_id())
-
-            f['kind'] = key.kind()
-            f['link'] = link
-            for field in doc.fields:
-                f[field.name] = field.value
-            for expr in doc.expressions:
-                f[expr.name] = do_striptags(expr.value)
-            objects.append(f)
-
-        self.render_template(
-            'results.html',
-            {'objects': objects, 'phrase': querystring, 'number_found': number_found,
-             'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
-
-
 class DeleteHandler(BaseHandler):
     @login_required
     def get(self, safe_key):
@@ -276,67 +245,6 @@ class Paginator(object):
                 num = n
 
         return num, prev.get_result(), obj, next.get_result()
-
-
-class SearchPaginator(object):
-#    timeout = 60 #TIMEOUT/10
-    def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring
-        # '"{0}"'.format(querystring.replace('"', ''))
-        self.per_page = per_page
-
-    #        self.id = hashlib.md5(querystring).hexdigest()
-    #        self.cache = memcache.get(self.id)
-    #
-    #        if self.cache is None:
-    #            self.cache = {1: None}
-    #            memcache.add(self.id, self.cache, self.timeout)
-
-    def page(self, num):
-        error = None
-        results = []
-        number_found = 0
-        has_next = False
-        # opts = {
-        #     'limit': self.per_page,
-        #     'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-        #     'returned_expressions': [
-        #         search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)
-        #     ],
-        #     'snippeted_fields': ['body']
-        # }
-        # try:
-        #     cursor = self.cache[num]
-        # except KeyError:
-        #     cursor = None
-        #
-        # opts['cursor'] = search.Cursor(web_safe_string=cursor)
-        # opts['offset'] = (num - 1)*self.per_page
-        # found = INDEX.search(search.Query(query_string=self.querystring,
-        #                                   options=search.QueryOptions(**opts)))
-        query = search.Query(
-            query_string=self.querystring,
-            options=search.QueryOptions(
-                limit=self.per_page,
-                offset=(num - 1) * self.per_page,
-                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
-                snippeted_fields=['body']
-            ))
-        try:
-            found = INDEX.search(query)
-            results = found.results
-            number_found = found.number_found
-        except search.Error, error:
-            pass
-        except UnicodeDecodeError, error:
-            pass
-        else:
-            if number_found > 0:
-                has_next = number_found > num * self.per_page
-                # self.cache[num + 1] = found.cursor.web_safe_string
-                # memcache.replace(self.id, self.cache, self.timeout)
-
-        return results, number_found, has_next, error
 
 
 class RenderCloud(BaseHandler):

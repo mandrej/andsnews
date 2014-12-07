@@ -61,23 +61,6 @@
 		});
 		return this
 	};
-	/*
-	    Highlights paragraph on element focus
-	    $Version: 2009.02.08
-	    Example: $('input, select, textarea').focusHighlight();
-	*/
-	$.fn.focusHighlight = function(options) {
-        var defaults = {highlightClass: 'focus'};
-		var opts = $.extend({}, defaults, options);
-		return this.each(function() {
-			var para = $(this).parents('p');
-			$(this).focus(function() {
-				$(para).addClass(opts.highlightClass);
-			}).blur(function() {
-				$(para).removeClass(opts.highlightClass);
-			});
-		});
-	};
     /*
 	    Style table columns according to colgroup col style
         $Version: 2010.01.25
@@ -132,12 +115,6 @@
     };
 })(jQuery);
 
-// search highlight
-var matchFind = location.search.match(/find=([^&]+)/i);
-if (matchFind) {
-    $(document).SearchHighlight({exact: "partial", highlight: "#main", keys: decodeURIComponent(matchFind[1])});
-}
-
 $(document).ready(function() {
     // close
     $('.modal').on('click', '.close', function (evt) {
@@ -153,10 +130,6 @@ $(document).ready(function() {
             evt.preventDefault();
             $("input[data-function*='swipe']").prop('checked', false);
         }
-    });
-    // search
-    $('#searchForm').submit(function () {
-        $('#overlay, #spinner').show();
     });
     // confirm
     $(document).on('click', 'a.confirm', function (evt) {

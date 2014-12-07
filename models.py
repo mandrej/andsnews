@@ -15,13 +15,12 @@ from decimal import *
 from PIL import Image
 from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.api import users, memcache, search, images
+from google.appengine.api import users, memcache, images
 
 from colorific.palette import extract_colors
 from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
-INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
@@ -139,23 +138,6 @@ def range_names(rgb):
     lum = in_range(int(round(l * 100)), LUM)
     sat = in_range(int(round(s * 100)), SAT)
     return hue, lum, sat
-
-
-def update_doc(doc_id, headline, author, body='', tags=[], date=None):
-    doc = search.Document(
-        doc_id=doc_id,
-        fields=[
-            search.TextField(name='headline', value=headline),
-            search.TextField(name='author', value=author.nickname()),
-            search.HtmlField(name='body', value=body),
-            search.TextField(name='tags', value=','.join(tags)),
-            search.DateField(name='date', value=date.date())]
-    )
-    INDEX.put(doc)
-
-
-def remove_doc(safe_key):
-    INDEX.delete(safe_key)
 
 
 def _calculate_thresholds(min_weight, max_weight, steps):
@@ -389,7 +371,6 @@ class Photo(ndb.Model):
             value = data.get(field, None)
             if value:
                 incr_count(self.kind, field, value)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         old = self.author.nickname()
@@ -443,12 +424,10 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
         self.put()
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         blob_info = blobstore.BlobInfo.get(obj.blob_key)
         blob_info.delete()
@@ -553,7 +532,6 @@ class Entry(ndb.Model):
         incr_count(self.kind, 'author', self.author.nickname())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         self.headline = data['headline']
@@ -592,12 +570,10 @@ class Entry(ndb.Model):
         self.tags = sorted(data['tags'])
 
         self.put()
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)

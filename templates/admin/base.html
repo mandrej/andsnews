@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block nav %}
-    <h3><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h3>
-    <h3><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h3>
-    <h3><a class="selected" href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h3>
+    <h2><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h2>
+    <h2><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h2>
+    <h2><a class="selected" href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h2>
     {% if user %}
         <div class="submenu">
             <a href="/sign" class="block">{{ _('Log out') }}</a>

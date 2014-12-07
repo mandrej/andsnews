@@ -321,7 +321,7 @@ input[data-function*='swipe'] {
 	bottom: 0;
 	width: @menuOffset;
 	background: fadeout(black, 30%);
-	padding: 1em 3% 0;
+	padding: 2em 3% 0;
 	z-index: 1;
 	text-shadow: none;
 	.transform(translate3d(0,0,0));
@@ -329,7 +329,6 @@ input[data-function*='swipe'] {
 	.hover {
 		&:hover, &:focus { color: white; background: transparent; }
 	}
-	h3 { font-size: 1.5em; }
 	a {
 		color: @paper; .hover;
 		&.selected { color: @google_orange; }
@@ -473,34 +472,6 @@ nav.paginator {
 		&.na, &.number { color: fadeout(black, 30%); .white_shadow; }
 		&.number { font-size: 4em; line-height: 1; }
 	}
-}
-
-#searchForm {
-	position: relative;
-	margin: 1em 0;
-	button {
-		position: absolute;
-		right: 0;
-		height: 2.4em;
-		padding: .3em .8em;
-		color: white;
-		font-size: 1em;
-		background: @google_orange;
-		border-radius: 0 @radius @radius 0;
-		&:hover { background-color: @neutral; }
-	}
-	input {
-		width: 100%;
-		padding: 0.1em 2em 0.1em 0.2em;
-		border: none;
-		background: white;
-		color: black;
-		font-size: 1.2em;
-		height: 2em;
-		border-radius: @radius;
-		&:focus { outline: none; }
-	}
-	@media @mobile, @tablet, @desktop { .hide; }
 }
 
 .admin {

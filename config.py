@@ -14,7 +14,6 @@ PER_PAGE = 12
 PHOTOS_PER_PAGE = 24
 PHOTOS_LATEST = 5
 ENTRIES_PER_PAGE = 9
-RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
           'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
@@ -85,10 +84,6 @@ def version():
     return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
 
 
-def gaesdk():
-    return os.environ.get('SERVER_SOFTWARE')
-
-
 def language(code):
     return code.split('_')[0]
 
@@ -110,13 +105,6 @@ def image_url_by_num(obj, arg):
     """ {{ object|image_url_by_num:form.initial.ORDER }}/small
         {{ object|image_url_by_num:object.front }}/small """
     return obj.image_url(arg)
-
-
-def incache(key):
-    if memcache.get(key):
-        return True
-    else:
-        return False
 
 
 def boolimage(value):
@@ -213,7 +201,6 @@ CONFIG = {
         'globals': {
             'year': year,
             'version': version,
-            'gaesdk': gaesdk,
             'language': language,
             'all_languages': LANGUAGES,
             'devel': DEVEL,
@@ -222,7 +209,6 @@ CONFIG = {
             'next_class': 'next fa fa-chevron-right fa-4x',
         },
         'filters': {
-            'incache': incache,
             'boolimage': boolimage,
             'to_date': to_date,
             'to_datetime': to_datetime,
