@@ -4,7 +4,6 @@ colormath
 exifread
 graphy
 mapreduce
-node_modules/
 pipeline
 pytz
 simplejson

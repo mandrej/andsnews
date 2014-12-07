@@ -3,8 +3,8 @@ __author__ = 'milan'
 import logging
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import Index, Complete, SetLanguage, Sign,\
-    DeleteHandler, RenderCloud, RenderGraph, SiteMap, SaveAsHandler
+from handlers import Index, Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
+    SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
 logging.getLogger().setLevel(logging.INFO)
@@ -46,7 +46,7 @@ app = WSGIApplication([
         ]),
         Route('/memcache/', handler='views.admin.Cache', methods=['GET']),
         Route('/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
-        # MapReduce Jobs
+
         Route('/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),
     ]),
     Route('/filter/<mem_key>/<value>', handler=RenderCloud),

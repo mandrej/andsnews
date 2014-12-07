@@ -74,7 +74,7 @@ class BaseHandler(webapp2.RequestHandler):
         return self.session.get('csrf')
 
     def handle_exception(self, exception, debug):
-        template = 'errors/default.html'
+        template = 'error.html'
         if isinstance(exception, webapp2.HTTPException):
             data = {'error': exception, 'path': self.request.path_qs}
             self.render_template(template, data)
@@ -297,7 +297,7 @@ class EmailField(fields.SelectField):
         super(EmailField, self).__init__(*args, **kwargs)
         user = users.get_current_user()
         email = user.email()
-        if not email in FAMILY:
+        if email not in FAMILY:
             FAMILY.append(email)
         self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
 

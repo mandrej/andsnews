@@ -1,5 +1,5 @@
 application: andsnews
-version: 1411
+version: 1412
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -64,15 +64,6 @@ builtins:
 - deferred: on
 #- appstats: on
 #- remote_api: on
-
-error_handlers:
-- file: templates/errors/error.html
-- error_code: dos_api_denial
-  file: templates/errors/dos_api_denial.html
-- error_code: over_quota
-  file: templates/errors/over_quota.html
-- error_code: timeout
-  file: templates/errors/timeout.html
 
 skip_files:
 - ^(.*/)?.*\.py[co]$
