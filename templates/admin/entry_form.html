@@ -77,9 +77,7 @@
                     </fieldset>
 
                     <fieldset style="float: none">
-                        <p class="editor">
-                            {{ form.body(rows=20) }}
-                        </p>
+                        {{ form.body(rows=20) }}
                         <p class="buttons">
                             <span class="required">{{ _('Required field') }}</span>
                             <button type="submit">{{ _('done') }}</button>
@@ -99,21 +97,14 @@
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/urlify.min.js"></script>
-    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
-    <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js"></script>
     <script>
         $(function() {
             $('#headline').slugify();
-            $('#body').markItUp(blogSettings, {nameSpace: 'big'});
             $('#images img').click(function(evt) {
                 evt.preventDefault();
                 src = $(this).attr('src').replace('small', 'normal');
                 title = $(this).attr('title');
                 tab = '    ';
-                $.markItUp(
-                    {replaceWith:'<figure class="left">\n'+tab+'<img src="' + src +
-                        '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
-                );
             });
             $('#tags').multicomplete({
                 minLength: 2,

@@ -75,8 +75,6 @@
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/jquery.zoom.min.js"></script>
-    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
-    <script src="/static/scripts/markitup/sets/cmnt.set_{{ language_code }}.min.js"></script>
     <script>
         $(function () {
             $('section').zoom({duration: 500});
@@ -97,7 +95,7 @@
                             '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
                             '<td>' + data.bgcolor['class'] + '</td></tr>');
                     }
-            //        cntx.after('<p>' + explain + '</p>');
+{#                    cntx.after('<p>' + explain + '</p>');#}
                 });
             }
             $('#draw').click(function(evt) {

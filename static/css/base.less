@@ -166,7 +166,11 @@ fieldset {
 		&:focus { .form_focus; }
 		option { padding: 0.2em; }
 	}
-	textarea { font-family: @monospaced; .form_input; }
+	textarea {
+		font-family: @monospaced; .form_input;
+		&:focus { .form_focus; }
+		&#body { width: 100%; }
+	}
 	.error {
 		display: block;
 		font-size: 90%;
@@ -557,29 +561,6 @@ nav.paginator {
 	@media @mobile, @tablet { .hide; }
 }
 
-// markItUp!
-.editor {
-	label { margin-top: 0; }
-	.defailt_editor {
-		border: none;
-		font-family: @monospaced;
-		line-height: normal;
-		height: auto;
-	}
-	.big {
-		margin-left: 10.5em;
-		.markItUp { width: 100%; }
-		.markItUpEditor { .defailt_editor; }
-	}
-	.small {
-		margin-left: 0;
-		.markItUp { width: 100%; }
-		.markItUpEditor { .defailt_editor; }
-	}
-}
-.markItUpPreviewFrame { border: none; padding: 0; }
-.markItUpFooter { clear: both; }
-
 p.legend { padding: 0.5em; text-align: center; }
 
 .cloud {
@@ -608,7 +589,6 @@ p.legend { padding: 0.5em; text-align: center; }
 	}
 	a { text-decoration: underline; }
 	img {
-		float: left; margin-right: 0.5em; max-width: 100%; height: auto;
 		&[height="1"] { .hide; }
 	}
 	td {
