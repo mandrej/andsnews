@@ -1,6 +1,6 @@
+import collections
 from __future__ import division
 from datetime import datetime, timedelta
-import collections
 
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
@@ -133,21 +133,6 @@ class Counters(BaseHandler):
             obj.put()
         self.redirect_to('counter_admin', page=page)
 
-
-class Spectra(BaseHandler):
-    def get(self):
-        sat = int(self.request.get('sat', 20))
-        lum = int(self.request.get('lum', 40))
-        spectra = collections.OrderedDict()
-        for row in HUE:
-            temp = []
-            for hue in row['span']:
-                color = HSLColor(hue, sat / 100.0, lum / 100.0)
-                hsl = 'hsl({0}, {1:.0%}, {2:.0%})'.format(*color.get_value_tuple())
-                temp.append(hsl)
-            spectra[row['name']] = temp
-
-        self.render_json(spectra)
 
 JOBS = {
     "palette": {
