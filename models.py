@@ -15,7 +15,7 @@ from PIL import Image
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, images
 
-from colorific.palette import extract_colors
+from palette import extract_colors, rgb_to_hex
 from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
@@ -453,7 +453,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def hex(self):
-        return '#%02x%02x%02x' % tuple(self.rgb)
+        return rgb_to_hex(tuple(self.rgb))
 
     @webapp2.cached_property
     def hls(self):

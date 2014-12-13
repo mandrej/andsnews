@@ -1,97 +1,28 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#  palette.py
-#  palette_detect
-#
-
-"""
-Detect the main colors used in an image.
-"""
-
-from __future__ import print_function
+__author__ = 'milan'
+""" Taken from colorific 0.3 """
 
 import colorsys
-# import multiprocessing
-import sys
-from PIL import Image, ImageChops, ImageDraw
+from PIL import Image, ImageChops
 from collections import Counter, namedtuple
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_diff import delta_e_cmc
 from colormath.color_conversions import convert_color
 from operator import itemgetter, mul, attrgetter
 
-from colorific import config
-
-
 Color = namedtuple('Color', ['value', 'prominence'])
 Palette = namedtuple('Palette', 'colors bgcolor')
 
+# colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
-def color_stream_st(istream=sys.stdin, save_palette=False, **kwargs):
-    """
-    Read filenames from the input stream and detect their palette.
-    """
-    for line in istream:
-        filename = line.strip()
-        try:
-            palette = extract_colors(filename, **kwargs)
-
-        except Exception as e:
-            print(filename, e, file=sys.stderr)
-            continue
-
-        print_colors(filename, palette)
-        if save_palette:
-            save_palette_as_image(filename, palette)
-
-
-def color_stream_mt(istream=sys.stdin, n=config.N_PROCESSES, **kwargs):
-    """
-    Read filenames from the input stream and detect their palette using
-    multiple processes.
-    """
-    queue = multiprocessing.Queue(1000)
-    lock = multiprocessing.Lock()
-
-    pool = [multiprocessing.Process(target=color_process, args=(queue, lock),
-            kwargs=kwargs) for i in range(n)]
-    for p in pool:
-        p.start()
-
-    block = []
-    for line in istream:
-        block.append(line.strip())
-        if len(block) == config.BLOCK_SIZE:
-            queue.put(block)
-            block = []
-    if block:
-        queue.put(block)
-
-    for i in range(n):
-        queue.put(config.SENTINEL)
-
-    for p in pool:
-        p.join()
-
-
-def color_process(queue, lock):
-    "Receive filenames and get the colors from their images."
-    while True:
-        block = queue.get()
-        if block == config.SENTINEL:
-            break
-
-        for filename in block:
-            try:
-                palette = extract_colors(filename)
-            except:  # TODO: it's too broad exception.
-                continue
-            lock.acquire()
-            try:
-                print_colors(filename, palette)
-            finally:
-                lock.release()
+# algorithm tuning
+N_QUANTIZED = 25             # start with an adaptive palette of this size
+MIN_DISTANCE = 10.0          # min distance to consider two colors different
+MIN_PROMINENCE = 0.05        # ignore if less than this proportion of image
+MIN_SATURATION = 0.01        # ignore if not saturated enough
+MAX_COLORS = 4               # keep only this many colors
+BACKGROUND_PROMINENCE = 0.4  # level of prominence indicating a bg color
 
 
 def distance(c1, c2):
@@ -114,9 +45,9 @@ def hex_to_rgb(color):
 
 
 def extract_colors(
-        filename_or_img, min_saturation=config.MIN_SATURATION,
-        min_distance=config.MIN_DISTANCE, max_colors=config.MAX_COLORS,
-        min_prominence=config.MIN_PROMINENCE, n_quantized=config.N_QUANTIZED):
+        filename_or_img, min_saturation=MIN_SATURATION,
+        min_distance=MIN_DISTANCE, max_colors=MAX_COLORS,
+        min_prominence=MIN_PROMINENCE, n_quantized=N_QUANTIZED):
     """
     Determine what the major colors are in the given image.
     """
@@ -128,7 +59,7 @@ def extract_colors(
     # get point color count
     if im.mode != 'RGB':
         im = im.convert('RGB')
-    im = autocrop(im, config.WHITE)  # assume white box
+    im = autocrop(im, WHITE)  # assume white box
     im = im.convert(
         'P', palette=Image.ADAPTIVE, colors=n_quantized).convert('RGB')
     data = im.getdata()
@@ -136,8 +67,8 @@ def extract_colors(
     n_pixels = mul(*im.size)
 
     # aggregate colors
-    to_canonical = {config.WHITE: config.WHITE, config.BLACK: config.BLACK}
-    aggregated = Counter({config.WHITE: 0, config.BLACK: 0})
+    to_canonical = {WHITE: WHITE, BLACK: BLACK}
+    aggregated = Counter({WHITE: 0, BLACK: 0})
     sorted_cols = sorted(dist.items(), key=itemgetter(1), reverse=True)
     for c, n in sorted_cols:
         if c in aggregated:
@@ -193,7 +124,7 @@ def norm_color(c):
 
 def detect_background(im, colors, to_canonical):
     # more then half the image means background
-    if colors[0].prominence >= config.BACKGROUND_PROMINENCE:
+    if colors[0].prominence >= BACKGROUND_PROMINENCE:
         return colors[1:], colors[0]
 
     # work out the background color
@@ -216,43 +147,12 @@ def detect_background(im, colors, to_canonical):
     return colors, bg_color
 
 
-def print_colors(filename, palette):
-    colors = '%s\t%s\t%s' % (
-        filename, ','.join(rgb_to_hex(c.value) for c in palette.colors),
-        palette.bgcolor and rgb_to_hex(palette.bgcolor.value) or '')
-    print(colors)
-    sys.stdout.flush()
-
-
-def save_palette_as_image(filename, palette):
-    "Save palette as a PNG with labeled, colored blocks"
-    output_filename = '%s_palette.png' % filename[:filename.rfind('.')]
-    size = (80 * len(palette.colors), 80)
-    im = Image.new('RGB', size)
-    draw = ImageDraw.Draw(im)
-    for i, c in enumerate(palette.colors):
-        v = colorsys.rgb_to_hsv(*norm_color(c.value))[2]
-        (x1, y1) = (i * 80, 0)
-        (x2, y2) = ((i + 1) * 80 - 1, 79)
-        draw.rectangle([(x1, y1), (x2, y2)], fill=c.value)
-        if v < 0.6:
-            # white with shadow
-            draw.text((x1 + 4, y1 + 4), rgb_to_hex(c.value), (90, 90, 90))
-            draw.text((x1 + 3, y1 + 3), rgb_to_hex(c.value))
-        else:
-            # dark with bright "shadow"
-            draw.text((x1 + 4, y1 + 4), rgb_to_hex(c.value), (230, 230, 230))
-            draw.text((x1 + 3, y1 + 3), rgb_to_hex(c.value), (0, 0, 0))
-
-    im.save(output_filename, "PNG")
-
-
 def meets_min_saturation(c, threshold):
     return colorsys.rgb_to_hsv(*norm_color(c.value))[1] > threshold
 
 
 def autocrop(im, bgcolor):
-    "Crop away a border of the given background color."
+    """Crop away a border of the given background color."""
     if im.mode != "RGB":
         im = im.convert("RGB")
     bg = Image.new("RGB", im.size, bgcolor)

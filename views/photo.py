@@ -5,7 +5,7 @@ from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
-from colorific.palette import rgb_to_hex
+from palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
