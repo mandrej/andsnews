@@ -1,4 +1,3 @@
-import collections
 from __future__ import division
 from datetime import datetime, timedelta
 
@@ -9,7 +8,6 @@ from webapp2_extras.appengine.users import login_required, admin_required
 from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 
-from colormath.color_objects import HSLColor
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
