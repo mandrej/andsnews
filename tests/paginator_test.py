@@ -25,13 +25,13 @@ class PaginatorTest(unittest.TestCase):
         self.assertFalse(has_next)
 
     def test_triple(self):
-        page, prev, obj, next = self.paginator.triple('street-crossing')
+        page, prev, obj, next = self.paginator.triple('zenith-velibora-andrejevica')
         self.assertEqual(page, 1)
         self.assertIsNone(prev)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
-        page, prev, obj, next = self.paginator.triple('blue-butterfly')
+        page, prev, obj, next = self.paginator.triple('manastir-dudovica')
         self.assertEqual(page, 1)
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
