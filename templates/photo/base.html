@@ -9,15 +9,39 @@
     {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
     {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
 
-    <h2><a class="selected" href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-camera"></i> {{ _('Photos') }}</a></h2>
-    <div class="submenu">
-        {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
-            <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
-            <div id="{{ f.field }}cloud" class="hide"></div>
-        {% endfor %}
-    </div>
-    <h2><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-file-text"></i> {{ _('Blog') }}</a></h2>
-    <h2><a href="{{ uri_for('admin_all') }}"><i class="fa fa-cog"></i> {{ _('Administration') }}</a></h2>
+    <ul class="fa-ul">
+        <li>
+            <h2>
+                <a class="selected" href="{{ uri_for('photo_all', page=1) }}">
+                    <i class="fa fa-li fa-camera"></i>
+                    {{ _('Photos') }}
+                </a>
+            </h2>
+            <div class="submenu">
+                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
+                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
+                    <div id="{{ f.field }}cloud" class="hide"></div>
+                {% endfor %}
+            </div>
+        </li>
+        <li>
+            <h2>
+                <a href="{{ uri_for('entry_all', page=1) }}">
+                    <i class="fa fa-li fa-file-text"></i>
+                    {{ _('Blog') }}
+                </a>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                <a href="{{ uri_for('admin_all') }}">
+                    <i class="fa fa-li fa-cog"></i>
+                    {{ _('Administration') }}
+                </a>
+            </h2>
+        </li>
+    </ul>
+
     <script>
         $(function () {
             var filter = {{ filter|to_json }};
