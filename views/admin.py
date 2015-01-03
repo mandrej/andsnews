@@ -11,7 +11,7 @@ from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
-from config import filesizeformat, HUE
+from config import filesizeformat
 
 
 class Cache(BaseHandler):
