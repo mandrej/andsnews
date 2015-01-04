@@ -1,47 +1,36 @@
 {% extends "base.html" %}
-{% block nav %}
-    {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
-    {% set _date = {'field': 'date', 'title': _('Dates')} %}
-    {% set _author = {'field': 'author', 'title': _('Authors')} %}
-    {% set _color = {'field': 'color', 'title': _('Color')} %}
-    {% set _model = {'field': 'model', 'title': _('Camera model')} %}
-    {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
-    {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
-    {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+{% import "snippets/macros.html" as m %}
 
-    <ul class="fa-ul">
-        <li>
+{% block teaser %}
+    <article class="ib-content">
+        <div class="ib-teaser">
             <h2>
-                <a class="selected" href="{{ uri_for('photo_all', page=1) }}">
-                    <i class="fa fa-li fa-camera"></i>
-                    {{ _('Photos') }}
-                </a>
+                {{ _('Photos') }}
+                <span>{{ m.filter_title(filter) }}</span>
             </h2>
-            <div class="submenu">
+        </div>
+        <div class="ib-content-full">
+            {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+            {% set _date = {'field': 'date', 'title': _('Dates')} %}
+            {% set _author = {'field': 'author', 'title': _('Authors')} %}
+            {% set _color = {'field': 'color', 'title': _('Color')} %}
+            {% set _model = {'field': 'model', 'title': _('Camera model')} %}
+            {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
+            {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
+            {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+
+            <div id="filters">
                 {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
                     <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
                     <div id="{{ f.field }}cloud" class="hide"></div>
                 {% endfor %}
             </div>
-        </li>
-        <li>
-            <h2>
-                <a href="{{ uri_for('entry_all', page=1) }}">
-                    <i class="fa fa-li fa-file-text"></i>
-                    {{ _('Blog') }}
-                </a>
-            </h2>
-        </li>
-        <li>
-            <h2>
-                <a href="{{ uri_for('admin_all') }}">
-                    <i class="fa fa-li fa-cog"></i>
-                    {{ _('Administration') }}
-                </a>
-            </h2>
-        </li>
-    </ul>
+        </div>
+    </article>
+{% endblock %}
 
+{% block scripts %}
+    {{ super() }}
     <script>
         $(function () {
             var filter = {{ filter|to_json }};
@@ -59,6 +48,30 @@
                     }
                 });
             }
+
+            $(document).on('click', 'a.collapse', function (evt) {
+                evt.preventDefault();
+                var cntx = $(this);
+                var url = cntx.attr('href');
+                var key = url.split('/').pop();
+                var field = key.split('_').pop();
+
+                $('.hide').slideUp();
+                $('.collapse').each(function () {
+                    $(this).plus();
+                });
+
+                $('#spinner').show();
+                $.ajax({
+                    url: url,
+                    context: cntx.next(),
+                    success: function (snippet) {
+                        $(this).html(snippet).slideDown();
+                        cntx.minus();
+                        $('#spinner').hide();
+                    }
+                });
+            });
         });
     </script>
 {% endblock %}

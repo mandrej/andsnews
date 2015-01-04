@@ -1,34 +1,18 @@
 {% extends "photo/base.html" %}
-{% import "snippets/macros.html" as m %}
+{#{% import "snippets/macros.html" as m %}#}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
-{% block paging %}
-    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
-{% endblock %}
+{#{% block paging %}#}
+{#    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}#}
+{#{% endblock %}#}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2>
-                <a href="{{ uri_for('photo_all', page=page) }}">{{ _('Photos') }}</a>
-                {{ m.filter_title(filter) }}
-            </h2>
-        </header>
-        <article class="thumbnails">
-            {% for object in objects %}
-                {% if object %}
-                    {% if filter %}
-                        {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-                    {% else %}
-                        {% set url = uri_for('photo', slug = object.key.string_id()) %}
-                    {% endif %}
-                    <figure>
-                        <a href="{{ url }}"
-                            style="background-image: url({{ object.small_url_async.get_result() }})">
-                            <p class="legend">{{ object.headline }}</p>
-                        </a>
-                    </figure>
-                {% endif %}
-            {% endfor %}
-        </article>
-    </div>
+    {% for object in objects %}
+        {% if object %}
+            <article class="ib-image">
+                <img src="{{ object.small_url_async.get_result() }}"
+                     data-largesrc="{{ object.normal_url_async.get_result() }}" alt="">
+                <span>{{ object.headline }}</span>
+            </article>
+        {% endif %}
+    {% endfor %}
 {% endblock %}
