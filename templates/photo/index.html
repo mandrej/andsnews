@@ -6,13 +6,49 @@
 {#{% endblock %}#}
 
 {% block contents %}
-    {% for object in objects %}
-        {% if object %}
-            <article class="ib-image">
-                <img src="{{ object.small_url_async.get_result() }}"
-                     data-largesrc="{{ object.normal_url_async.get_result() }}" alt="">
-                <span>{{ object.headline }}</span>
-            </article>
-        {% endif %}
-    {% endfor %}
+    <div id="gallery" class="blueimp-gallery blueimp-gallery-controls">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+{#        <ol class="indicator"></ol>#}
+    </div>
+    <div id="links">
+        <a href="/filter/Photo_tags" class="item" data-type="text/html" data-gallery>
+            <h1>GET</h1>
+        </a>
+        {% for object in objects %}
+            {% if object %}
+                <a href="{{ object.normal_url_async.get_result() }}"
+                   class="item" data-gallery
+                   title="{{ object.headline }}">
+                    <img src="{{ object.small_url_async.get_result() }}">
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            var links = $('#links').find('a.item'),
+                opt = {
+                    container: '#gallery',
+                    disableScroll: false,
+                    toggleControlsOnReturn: false,
+                    startSlideshow: false,
+                    stretchImages: 'cover'
+                };
+            $("#links").delegate('a.item', 'click', function (event) {
+                var $this = $(this),
+                    index = $this.index(),
+                    options = $.extend({}, opt, {index: index});
+                gallery = blueimp.Gallery(links, options);
+            });
+        });
+    </script>
 {% endblock %}

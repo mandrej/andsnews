@@ -21,62 +21,34 @@
 	{% endblock %}
 
     <div class="container">
-        <div id="header" class="header">
-            <h1>ANDрејевићи
-                <span>with Google AppEngine</span>
-                <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a>
-                <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>
-            </h1>
-        </div>
-        <div id="footer" class="footer">
-            <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-            {% if user %}{{ user.nickname() }}{% endif %}
-            <form id="langs" class="right_ab" action="/setlang" method="post">
-                {% for code, lang in all_languages %}
-                    <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                        'class': 'current' if code == language_code else none,
-                        'title': lang}|xmlattr }}>{{ language(code) }}</button>
-                {% endfor %}
-            </form>
-            &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
-        </div>
-        <div id="ib-main-wrapper" class="ib-main-wrapper">
-            <div class="ib-main">
-                {% block teaser %}{% endblock %}
-                {% block contents %}{% endblock %}
-                <div class="clr"></div>
-            </div>
+{#        <div id="header" class="header">#}
+{#            <h1>ANDрејевићи#}
+{#                <span>with Google AppEngine</span>#}
+{#                <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a>#}
+{#                <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>#}
+{#            </h1>#}
+{#        </div>#}
+{#        <div id="footer" class="footer">#}
+{#            <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>#}
+{#            {% if user %}{{ user.nickname() }}{% endif %}#}
+{#            <form id="langs" class="right_ab" action="/setlang" method="post">#}
+{#                {% for code, lang in all_languages %}#}
+{#                    <button{{ {'type': 'submit', 'name': 'language', 'value': code,#}
+{#                        'class': 'current' if code == language_code else none,#}
+{#                        'title': lang}|xmlattr }}>{{ language(code) }}</button>#}
+{#                {% endfor %}#}
+{#            </form>#}
+{#            &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}#}
+{#        </div>#}
+        <div id="main">
+{#            {% block teaser %}{% endblock %}#}
+            {% block contents %}{% endblock %}
         </div>
     </div>
 
     {% block scripts %}
         <script>token = '{{ token }}';</script>
-        <script src="/static/scripts/jquery.tmpl.min.js"></script>
-        <script src="/static/scripts/jquery.kinetic.min.js"></script>
-        <script src="/static/scripts/jquery.easing.1.3.min.js"></script>
-        <script src="/static/scripts/custom.min.js"></script>
-        <script id="previewTmpl" type="text/x-jquery-tmpl">
-            {% raw %}
-                <div id="ib-img-preview" class="ib-preview">
-                    <img src="${src}" alt="" class="ib-preview-img"/>
-                    <span class="ib-preview-descr" style="display:none;">${description}</span>
-                    <div class="ib-nav" style="display:none;">
-                        <span class="ib-nav-prev">Previous</span>
-                        <span class="ib-nav-next">Next</span>
-                    </div>
-                    <span class="ib-close" style="display:none;">Close Preview</span>
-                </div>
-            {% endraw %}
-        </script>
-        <script id="contentTmpl" type="text/x-jquery-tmpl">
-            {% raw %}
-                <div id="ib-content-preview" class="ib-content-preview">
-                    <div class="ib-teaser" style="display:none;">{{html teaser}}</div>
-                    <div class="ib-content-full" style="display:none;">{{html content}}</div>
-                    <span class="ib-close" style="display:none;">Close Preview</span>
-                </div>
-            {% endraw %}
-        </script>
+        <script src="/static/scripts/jquery.blueimp-gallery.min.js"></script>
     {% endblock %}
 
     {% block ga %}
