@@ -1,15 +1,13 @@
 {% extends "base.html" %}
 {% import "snippets/macros.html" as m %}
 
-{% block teaser %}
-    <article class="ib-content">
-        <div class="ib-teaser">
-            <h2>
-                {{ _('Blog') }}
+{% block filters %}
+    <div id="filters" class="hide">
+        <div id="links">
+            <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
-        </div>
-        <div class="ib-content-full">
+
             {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
             {% set _date = {'field': 'date', 'title': _('Dates')} %}
             {% set _author = {'field': 'author', 'title': _('Authors')} %}
@@ -21,7 +19,7 @@
                 {% endfor %}
             </div>
         </div>
-    </article>
+    </div>
 {% endblock %}
 
 {% block scripts %}

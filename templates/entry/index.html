@@ -1,24 +1,52 @@
 {% extends "entry/base.html" %}
 {% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
-{#{% block paging %}#}
-{#    {% with name='entry_all' %}{% include 'snippets/paging.html' %}{% endwith %}#}
-{#{% endblock %}#}
+{% block paging %}
+    {% with name='entry_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+{% endblock %}
 
 {% block contents %}
-    {% for object in objects %}
-        {% if object %}
-            <article class="ib-content">
-                <div class="ib-teaser">
-                    <h2>
-                        {{ object.headline }}
+    <div id="gallery" class="gallery">
+        <a href="#filters" class="inline" data-type="inline" data-gall>
+            <h2>{{ _('Filter') }}
+                <span>{{ m.filter_title(filter) }}</span>
+            </h2>
+        </a>
+        {% for object in objects %}
+            {% if object %}
+                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
+                   class="blog" data-type="ajax" data-gall>
+                    <h2>{{ object.headline }}
+                        <span>{{ object.author }}</span>
                         <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
                     </h2>
-                </div>
-                <div class="ib-content-full">
-                    <p>{{ object.summary|safe }}</p>
-                    <div class="story">{{ object.body|safe }}</div>
-                </div>
-            </article>
-        {% endif %}
-    {% endfor %}
+                    <p>{{ object.summary }}</p>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            var $container = $('#gallery');
+            $container.gridalicious({
+                selector: '.inline, .blog',
+                width: 200,
+                gutter: 1,
+                animate: true
+            });
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.blog',
+                nextSelector: '.next',
+                navSelector: "nav.paginator"
+            }, function(data) {
+                $container.gridalicious('append', data);
+                $('a[data-gall]').venobox({infinigall: true});
+            });
+            $('a[data-gall]').venobox({infinigall: true});
+        });
+    </script>
 {% endblock %}

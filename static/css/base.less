@@ -102,7 +102,7 @@ a {
 		}
 	}
 }
-.item, .inline {
+.item, .inline, .blog {
 	display: block;
 	color: #000;
 	text-decoration: none;
@@ -121,6 +121,15 @@ a {
 .item {
 	.grayscale;
 	&:hover { .color; }
+}
+.blog {
+	background: @gray;
+	color: #fff;
+	h2 { font-size: 1.4em; padding: 10px;
+		span { display: block; font-size: 71%; }
+	}
+	p { padding: 5px 10px; }
+	&:hover { background: #000; }
 }
 
 /// OLD STUFF ///
