@@ -1,9 +1,9 @@
 {% extends "photo/base.html" %}
-{#{% import "snippets/macros.html" as m %}#}
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
-{#{% block paging %}#}
-{#    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}#}
-{#{% endblock %}#}
+{% block paging %}
+    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+{% endblock %}
 
 {% block contents %}
     <div id="gallery" class="blueimp-gallery blueimp-gallery-controls">
@@ -16,9 +16,6 @@
 {#        <ol class="indicator"></ol>#}
     </div>
     <div id="links">
-        <a href="/filter/Photo_tags" class="item" data-type="text/html" data-gallery>
-            <h1>GET</h1>
-        </a>
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
@@ -35,7 +32,7 @@
     {{ super() }}
     <script>
         $(function () {
-            var links = $('#links').find('a.item'),
+            var $container = $('#links'),
                 opt = {
                     container: '#gallery',
                     disableScroll: false,
@@ -43,8 +40,23 @@
                     startSlideshow: false,
                     stretchImages: 'cover'
                 };
-            $("#links").delegate('a.item', 'click', function (event) {
+            $container.gridalicious({
+                selector: '.item',
+                width: 200,
+                gutter: 2,
+                animate: true
+            });
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.item',
+                nextSelector: '.next',
+                navSelector: "nav.paginator"
+            }, function(data) {
+                $container.gridalicious('append', data);
+            });
+            $container.delegate('a.item', 'click', function (event) {
                 var $this = $(this),
+                    links = $container.find('a.item'),
                     index = $this.index(),
                     options = $.extend({}, opt, {index: index});
                 gallery = blueimp.Gallery(links, options);

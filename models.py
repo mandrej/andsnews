@@ -445,7 +445,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def small_url_async(self):
-        return images.get_serving_url_async(self.blob_key, size=250, crop=True, secure_url=True)
+        return images.get_serving_url_async(self.blob_key, size=250, crop=False, secure_url=True)
 
     @webapp2.cached_property
     def blob_info(self):
