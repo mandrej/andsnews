@@ -6,21 +6,16 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery" class="blueimp-gallery blueimp-gallery-controls">
-        <div class="slides"></div>
-        <h3 class="title"></h3>
-        <a class="prev">‹</a>
-        <a class="next">›</a>
-        <a class="close">×</a>
-        <a class="play-pause"></a>
-{#        <ol class="indicator"></ol>#}
-    </div>
-    <div id="links">
+    <div id="gallery" class="gallery">
+        <a href="#filters" class="inline" data-type="inline" data-gall>
+            <h2>{{ _('Filter') }}
+                <span>{{ m.filter_title(filter) }}</span>
+            </h2>
+        </a>
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
-                   class="item" data-gallery
-                   title="{{ object.headline }}">
+                   class="item" title="{{ object.headline }}" data-gall>
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
@@ -32,18 +27,11 @@
     {{ super() }}
     <script>
         $(function () {
-            var $container = $('#links'),
-                opt = {
-                    container: '#gallery',
-                    disableScroll: false,
-                    toggleControlsOnReturn: false,
-                    startSlideshow: false,
-                    stretchImages: 'cover'
-                };
+            var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.item',
+                selector: '.inline, .item',
                 width: 200,
-                gutter: 2,
+                gutter: 1,
                 animate: true
             });
             $container.infinitescroll({
@@ -53,14 +41,9 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
+                $('a[data-gall]').venobox({infinigall: true});
             });
-            $container.delegate('a.item', 'click', function (event) {
-                var $this = $(this),
-                    links = $container.find('a.item'),
-                    index = $this.index(),
-                    options = $.extend({}, opt, {index: index});
-                gallery = blueimp.Gallery(links, options);
-            });
+            $('a[data-gall]').venobox({infinigall: true});
         });
     </script>
 {% endblock %}
