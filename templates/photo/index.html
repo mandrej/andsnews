@@ -41,9 +41,9 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
-                $('a[data-gall]').venobox({infinigall: true});
+                $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
             });
-            $('a[data-gall]').venobox({infinigall: true});
+            $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
         });
     </script>
 {% endblock %}

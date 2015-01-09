@@ -22,6 +22,7 @@
 
 @gold: #ffcf00;
 @gray: #999;
+@dark: #333;
 
 body {
     background: #fff;
@@ -47,7 +48,7 @@ a {
     z-index: 10;
     height: 40px;
 	h1 {
-		color: #333;
+		color: @dark;
 		font-size: 24px;
 		line-height: 40px;
 		padding: 0 10px;
@@ -58,7 +59,7 @@ a {
 	}
 	.paginator {
 		position: fixed;
-		top: 6px;
+		top: 0;
 		right: 10px;
 		.next_class, .next_class {
 			line-height: 40px;
@@ -123,7 +124,7 @@ a {
 	&:hover { .color; }
 }
 .blog {
-	background: @gray;
+	background: @dark;
 	color: #fff;
 	h2 { font-size: 1.4em; padding: 10px;
 		span { display: block; font-size: 71%; }
@@ -134,7 +135,8 @@ a {
 
 /// OLD STUFF ///
 #links {
-	padding: 10px;
+    margin: 0 25%;
+    padding: 10px;
 	background: @gold;
 	h2 { font-size: 1.4em;
 		span { display: block; font-size: 71%; }
@@ -157,15 +159,18 @@ a {
 	.loop (0) {}
 	.loop (8);
 }
-.story {
+.page {
+    padding: 10px;
 	color: @gray;
 //	aside { float: none; width: auto; margin: 0; }
 	h1, h2, h3, h4 {
+        color: #fff;
 		padding: 1em 0;
 		font-family: @default_font;
 		font-size: 1.4em;
-		text-transform: uppercase;
-		line-height: normal;
+//		text-transform: uppercase;
+//		line-height: normal;
+        clear: both;
 	}
 	a { color: #fff; text-decoration: underline; }
 	td {
@@ -174,8 +179,9 @@ a {
 	}
 	dt { float: none; margin-bottom: 0.5em; padding: 0; width: auto; }
 	dd { border: none; margin: 0; padding: 0; }
-	blockquote { border-left: 1em solid white; }
+	blockquote { border-left: 1em solid #fff; }
 	pre { font-family: @monospaced; font-size: 0.8em; }
+    .subtitle { margin-bottom: 1em; color: @gold; }
 }
 .left { float: left; margin-right: 0.5em; }
 .right { float: right; margin-left: 0.5em; }

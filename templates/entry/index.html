@@ -14,6 +14,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
+                   title="{{ object.headline }}"
                    class="blog" data-type="ajax" data-gall>
                     <h2>{{ object.headline }}
                         <span>{{ object.author }}</span>
@@ -44,9 +45,9 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
-                $('a[data-gall]').venobox({infinigall: true});
+                $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
             });
-            $('a[data-gall]').venobox({infinigall: true});
+            $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
         });
     </script>
 {% endblock %}
