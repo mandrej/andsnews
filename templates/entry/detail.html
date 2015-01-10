@@ -1,4 +1,5 @@
 <div class="page">
+    <h2>{{ object.headline }}</h2>
     <p class="subtitle">
         <a href="{{ uri_for('entry_all_filter', page=1, field='author', value=object.author) }}"
             title="{{ _("author's blogs") }}">{{ object.author }}</a>,

@@ -6,7 +6,7 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="inline mfp-inline">
+        <a href="#filters" class="mfp-inline">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
@@ -14,7 +14,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
-                   title="{{ object.headline }}" class="blog mfp-ajax">
+                   title="{{ object.headline }}" class="mfp-ajax">
                     <h2>{{ object.headline }}
                         <span>{{ object.author }}</span>
                         <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
@@ -32,14 +32,14 @@
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.inline, .blog',
+                selector: '.mfp-inline, .mfp-ajax',
                 width: 200,
                 gutter: 1,
                 animate: true
             });
             $container.infinitescroll({
                 binder: $(window),
-                itemSelector: '.blog',
+                itemSelector: '.mfp-ajax',
                 nextSelector: '.next',
                 navSelector: "nav.paginator"
             }, function(data) {
@@ -48,8 +48,10 @@
             $container.magnificPopup({
                 delegate: '.galcolumn > a',
                 gallery: {
-                    enabled: true
-                }
+                    enabled: true,
+                    arrows: false
+                },
+                showCloseBtn: false
             });
         });
     </script>

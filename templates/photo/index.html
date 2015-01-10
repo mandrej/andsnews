@@ -7,7 +7,7 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="inline mfp-inline">
+        <a href="#filters" class="mfp-inline">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
@@ -15,7 +15,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
-                   class="item mfp-image" title="{{ object.headline }}">
+                   class="mfp-image" title="{{ object.headline }}">
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
@@ -29,13 +29,19 @@
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.inline, .item',
+                selector: '.mfp-inline, .mfp-image',
                 width: 200,
-                gutter: 1
+                gutter: 1,
+                animate: true,
+                animationOptions: {
+                    speed: 100,
+                    duration: 200
+{#                    complete: onComplete#}
+                }
             });
             $container.infinitescroll({
                 binder: $(window),
-                itemSelector: '.item',
+                itemSelector: '.mfp-image',
                 nextSelector: '.next',
                 navSelector: "nav.paginator"
             }, function(data) {
@@ -43,14 +49,17 @@
             });
             $container.magnificPopup({
                 delegate: '.galcolumn > a',
+                mainClass: 'mfp-with-zoom',
                 gallery: {
-                    enabled: true,
-                    arrows: false
+                    enabled: true
                 },
                 image: {
                     verticalFit: true
-                }
-
+                },
+                zoom: {
+                    enabled: true
+                },
+                showCloseBtn: false
             });
         });
     </script>
