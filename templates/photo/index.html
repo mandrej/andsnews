@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery" class="gallery">
-        <a href="#filters" class="inline" data-type="inline" data-gall>
+    <div id="gallery">
+        <a href="#filters" class="inline mfp-inline">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
@@ -15,7 +15,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
-                   class="item" title="{{ object.headline }}" data-gall>
+                   class="item mfp-image" title="{{ object.headline }}">
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
@@ -31,8 +31,7 @@
             $container.gridalicious({
                 selector: '.inline, .item',
                 width: 200,
-                gutter: 1,
-                animate: true
+                gutter: 1
             });
             $container.infinitescroll({
                 binder: $(window),
@@ -41,9 +40,18 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
-                $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
             });
-            $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
+            $container.magnificPopup({
+                delegate: '.galcolumn > a',
+                gallery: {
+                    enabled: true,
+                    arrows: false
+                },
+                image: {
+                    verticalFit: true
+                }
+
+            });
         });
     </script>
 {% endblock %}

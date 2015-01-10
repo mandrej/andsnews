@@ -16,42 +16,36 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-    {% block modals %}
-    	<div id="spinner" class="modal">{{ m.spinner() }}</div>
-	{% endblock %}
-
-    <div class="container">
-        <div id="header" class="header">
-            <h1>
-                <a href="{{ uri_for('start') }}">ANDрејевићи</a> |
-                <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a> |
-                <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>
-            </h1>
-            <nav class="paginator">{% block paging %}{% endblock %}</nav>
-        </div>
-        <div id="footer" class="footer">
-            <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-            {% if user %}{{ user.nickname() }}{% endif %}
-            <form id="langs" class="right_ab" action="/setlang" method="post">
-                {% for code, lang in all_languages %}
-                    <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                        'class': 'current' if code == language_code else none,
-                        'title': lang}|xmlattr }}>{{ language(code) }}</button>
-                {% endfor %}
-            </form>
-            &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
-        </div>
-        <div id="main">
-            {% block filters %}{% endblock %}
-            {% block contents %}{% endblock %}
-        </div>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{ uri_for('start') }}">ANDрејевићи</a> |
+            <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a> |
+            <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>
+        </h1>
+        <nav class="paginator">{% block paging %}{% endblock %}</nav>
+    </div>
+    <div id="footer" class="footer">
+        <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
+        {% if user %}{{ user.nickname() }}{% endif %}
+        <form id="langs" class="right_ab" action="/setlang" method="post">
+            {% for code, lang in all_languages %}
+                <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                    'class': 'current' if code == language_code else none,
+                    'title': lang}|xmlattr }}>{{ language(code) }}</button>
+            {% endfor %}
+        </form>
+        &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
+    </div>
+    <div id="main">
+        {% block filters %}{% endblock %}
+        {% block contents %}{% endblock %}
     </div>
 
     {% block scripts %}
         <script>token = '{{ token }}';</script>
         <script src="/static/scripts/jquery.grid-a-licious.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
-        <script src="/static/scripts/venobox.min.js"></script>
+        <script src="/static/scripts/jquery.magnific-popup.min.js"></script>
         <script src="/static/scripts/custom.min.js"></script>
     {% endblock %}
 

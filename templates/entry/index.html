@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery" class="gallery">
-        <a href="#filters" class="inline" data-type="inline" data-gall>
+    <div id="gallery">
+        <a href="#filters" class="inline mfp-inline">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
@@ -14,8 +14,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
-                   title="{{ object.headline }}"
-                   class="blog" data-type="ajax" data-gall>
+                   title="{{ object.headline }}" class="blog mfp-ajax">
                     <h2>{{ object.headline }}
                         <span>{{ object.author }}</span>
                         <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
@@ -45,9 +44,13 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
-                $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
             });
-            $('a[data-gall]').venobox({infinigall: true, bgcolor: '#333'});
+            $container.magnificPopup({
+                delegate: '.galcolumn > a',
+                gallery: {
+                    enabled: true
+                }
+            });
         });
     </script>
 {% endblock %}
