@@ -37,6 +37,7 @@
         &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
     </div>
     <div id="main">
+        {% block slideshow %}{% endblock %}
         {% block filters %}{% endblock %}
         {% block contents %}{% endblock %}
     </div>
