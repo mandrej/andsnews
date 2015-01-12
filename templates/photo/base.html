@@ -41,7 +41,10 @@
             </h2>
         </li>
     </ul>
+{% endblock %}
 
+{% block scripts %}
+    {{ super() }}
     <script>
         $(function () {
             var filter = {{ filter|to_json }};
@@ -59,6 +62,21 @@
                     }
                 });
             }
+
+            var $container = $('article.thumbnails');
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: 'figure',
+                nextSelector: '.next',
+                navSelector: "nav.paginator",
+                loading: {
+                    finished: undefined,
+                    finishedMsg: '',
+                    img: null,
+                    msg: null,
+                    msgText: ''
+                }
+            });
         });
     </script>
 {% endblock %}
