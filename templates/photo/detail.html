@@ -56,69 +56,7 @@
             </section>
             <aside>
                 {% include "photo/exif.html" %}
-                {% if user %}
-                    <h3><a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
-                        <i class="fa fa-download"></i> {{ _('Download') }} ({{ object.size|filesizeformat }})</a></h3>
-                    <h3><a class="block button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
-                        <i class="fa fa-pencil-square"></i> {{ _('Edit') }}</a></h3>
-                    <h3><a id="draw" class="block button" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
-                        <i class="fa fa-th"></i> {{ _('Calculate palette') }}</a></h3>
-                    <div id="palette">
-                        <table class="palette"></table>
-                    </div>
-                {% endif %}
             </aside>
         </article>
     </div>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script src="/static/scripts/jquery.zoom.min.js"></script>
-    <script>
-        $(function () {
-            $('section').zoom({duration: 500});
-            var palette_url;
-            function write_palette(url) {
-                $.getJSON(palette_url, function(data) {
-                    var cntx = $('table.palette');
-                    cntx.empty().append('<tr><th>active</th>' +
-                        '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
-                        '<th>' + data.active['class'] + '</th></tr>');
-                    $.each(data.palette, function(i, pal) {
-                        cntx.append('<tr><th>' + pal.prominence + '</th>' +
-                            '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
-                            '<td>' + pal['class'] + '</td></tr>');
-                    });
-                    if (data.bgcolor) {
-                        cntx.append('<tr><th>' + data.bgcolor.prominence + '</th>' +
-                            '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
-                            '<td>' + data.bgcolor['class'] + '</td></tr>');
-                    }
-{#                    cntx.after('<p>' + explain + '</p>');#}
-                });
-            }
-            $('#draw').click(function(evt) {
-                evt.preventDefault();
-                palette_url = $(this).attr('href');
-                write_palette();
-            });
-            $('.palette').on('click', '.dot', function() {
-                var rgb = $(this).attr('data-color'),
-                    hex = $(this).css('border-color');
-                $.post(palette_url, {'rgb': rgb}, function(data) {
-                    if (data.success == true) {
-                        write_palette();
-                        $('.hex').css('border-color', hex);
-                        $('.url').attr('href', data.similar_url);
-                    }
-                })
-            });
-{#            var normal_url = '{{ object.normal_url_async.get_result() }}';#}
-{#            $('canvas').copyright(normal_url);#}
-{#            $(window).resize(function() {#}
-{#                $('canvas').copyright(normal_url);#}
-{#            });#}
-        });
-    </script>
 {% endblock %}

@@ -362,11 +362,12 @@ input[data-function*='swipe'] {
 			section {
 				flex: 3;
 				margin: 0 @gap @gap/2 @gap;
-                border-radius: @radius;
+                position: relative;
                 &.copyright:after {
                     content: '© ands.appspot.com';
                     display: block;
                     padding: @radius 2*@radius;
+                    border-radius: @radius 0 0 0;
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -376,6 +377,7 @@ input[data-function*='swipe'] {
                 img {
                     display: block;
                     max-width: 100%;
+                    border-radius: @radius;
                 }
 			}
 			aside {
@@ -555,7 +557,7 @@ p.legend { padding: 0.5em; text-align: center; }
 .story {
 	aside { float: none; width: auto; margin: 0; }
 	h1, h2, h3, h4 {
-		top: auto;
+		clear: both;
 		position: relative;
 		border: none !important;
 		font-family: @default_font;
