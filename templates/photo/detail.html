@@ -4,6 +4,15 @@
 
 {% block modals %}
 {{ super() }}
+<div id="exif" class="modal">
+	<div class="popup">
+		<h4>EXIF {{ _('data') }}</h4>
+        <a class="close fa fa-times-circle fa-2x" title="{{ _('close') }}"></a>
+		<div class="content">
+            {% include "photo/exif.html" %}
+		</div>
+	</div>
+</div>
 {% endblock %}
 
 {% block paging %}
@@ -48,15 +57,26 @@
                 &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
                 <a href="{{ uri_for('photo_all_filter', page=1, field='date', value=object.year) }}"
                     title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+                &nbsp;<i class="fa fa-camera"></i>&nbsp;
+                <a href="#exif" class="exif">EXIF {{ _('data') }}</a>
             </p>
         </header>
         <article class="port">
             <section class="copyright">
                 <img src="{{ object.normal_url_async.get_result() }}">
             </section>
-            <aside>
-                {% include "photo/exif.html" %}
-            </aside>
         </article>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+        <script>
+        $(function() {
+            $('.exif').click(function (evt) {
+                evt.stopPropagation();
+                $('#overlay, #exif').show();
+            });
+        });
+    </script>
 {% endblock %}

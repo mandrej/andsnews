@@ -1,28 +1,6 @@
 {% extends "admin/base.html" %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
-{% block modals %}
-{{ super() }}
-<div id="images" class="modal">
-	<div class="popup">
-		<h4>{{ _('Choose image') }}</h4>
-        <a class="close fa fa-times-circle fa-2x" title="{{ _('close') }}"></a>
-		<div class="content">
-		{% for img in object.image_list %}
-			<figure class="left{% if loop.last %} last{% endif %}">
-				<img src="{{ uri_for('entry_image', slug=img.key.string_id(), size='small') }}"
-					alt="{{ img.key.string_id() }}" title="{{ img.name }}"/>
-				<p class="legend">{{ img.name|truncate(20) }}</p>
-			</figure>
-		{% else %}
-			<p>{{ _('No images') }}</p>
-			<p>{{ _('To choose images, you must send them first') }}.</p>
-		{% endfor %}
-		</div>
-	</div>
-</div>
-{% endblock %}
-
 {% block contents %}
     <div class="page">
         {% import "snippets/macros.html" as m %}
