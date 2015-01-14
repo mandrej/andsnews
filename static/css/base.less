@@ -21,7 +21,7 @@
 @google_orange: #f8a912;
 @google_green: #01a514;
 
-@paper: #aaa;
+@paper: #bbb;
 @text: #333;
 @neutral: #666;
 @light: (@neutral + 2 * @text);
@@ -67,7 +67,7 @@ html, body {
 }
 body {
 	color: @text;
-	background: url(/static/images/bg.jpg) @paper;
+	background: @paper;
 	font-family: @default_font;
     font-size: 14px;
 	.white_shadow;
@@ -335,7 +335,7 @@ input[data-function*='swipe'] {
 	}
 	.fa-ul {
 		margin: 0;
-		li { margin-left: 2.142857142857143em; }
+		li { margin-left: 2.142857142857143em; list-style: none; }
 	}
 	.submenu {
 		a {
@@ -461,6 +461,7 @@ input[data-function*='swipe'] {
 }
 
 .subtitle {
+    font-size: 1.2em;
 	@media @mobile, @tablet { .hide; }
 }
 
