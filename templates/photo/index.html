@@ -7,7 +7,7 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="mfp-inline">
+        <a href="#filters" class="inline" data-type="inline">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
@@ -15,7 +15,7 @@
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
-                   class="mfp-image" title="{{ object.headline }}">
+                   class="image" data-type="image" title="{{ object.headline }}">
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
@@ -25,11 +25,13 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/jquery.tosrus.min.all.js"></script>
+    <script src="/static/scripts/hammer.min.js"></script>
     <script>
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.mfp-inline, .mfp-image',
+                selector: '.inline, .image',
                 width: 200,
                 gutter: 1,
                 animate: true,
@@ -41,25 +43,29 @@
             });
             $container.infinitescroll({
                 binder: $(window),
-                itemSelector: '.mfp-image',
+                itemSelector: '.image',
                 nextSelector: '.next',
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
             });
-            $container.magnificPopup({
-                delegate: '.galcolumn > a',
-                mainClass: 'mfp-with-zoom',
-                gallery: {
-                    enabled: true
+            $container.find('a').tosrus({
+                media: {
+                    image: {
+                        filterAnchors: function($anchor) {
+                            if ($anchor.data('type') == 'image') {
+                                return true;
+                            }
+                        }
+                    }
                 },
-                image: {
-                    verticalFit: true
+                slides: {
+                    scale: "fill"
                 },
-                zoom: {
-                    enabled: true
+                caption: {
+                    add: true
                 },
-                showCloseBtn: false
+                buttons: true
             });
         });
     </script>
