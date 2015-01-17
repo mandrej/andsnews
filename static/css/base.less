@@ -327,28 +327,30 @@ input[data-function*='swipe'] {
 	text-shadow: none;
 	.transform(translate3d(0,0,0));
 	.transition(transform, .5s);
-	.hover {
-		&:hover, &:focus { color: white; background: transparent; }
-	}
-	a {
-		color: @paper; .hover;
-		&.selected { color: @google_orange; }
-	}
-	.fa-ul {
-		margin: 0;
-		li { margin-left: 2.142857142857143em; list-style: none; }
-	}
-	.submenu {
-		a {
-			display: inline;
-			&.block {
-				display: block;
-				font-size: 1.2em;
-				margin-bottom: 0.5em;
-				text-transform: lowercase;
-			}
-		}
-	}
+    a {
+        color: @paper;
+        &:hover, &:focus { color: white; background: transparent; }
+        &.selected { color: @google_orange; }
+    }
+    li {
+        margin-left: 0; list-style: none;
+        a {
+            display: block;
+            margin: 0 0 0.5em;
+            font-size: 2em;
+        }
+        .submenu {
+            a {
+                display: inline;
+                &.block {
+                    display: block;
+                    font-size: 1.2em;
+                    margin-bottom: 0.5em;
+                    text-transform: lowercase;
+                }
+            }
+        }
+    }
 }
 
 #main {
