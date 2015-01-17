@@ -45,6 +45,8 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/jquery.tosrus.min.all.js"></script>
+    <script src="/static/scripts/hammer.min.js"></script>
     <script>
         $(function () {
             var filter = {{ filter|to_json }};
@@ -63,15 +65,9 @@
                 });
             }
 
-            var $container = $('article.thumbnails');
-            $container.infinitescroll({
-                binder: $(window),
-                itemSelector: 'figure',
-                nextSelector: '.next',
-                navSelector: "nav.paginator",
-                loading: {
-                    selector: '#spinner'
-                }
+            $('article.thumbnails a').tosrus({
+                caption: {add: true},
+                close: {direct: true}
             });
         });
     </script>

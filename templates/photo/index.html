@@ -16,16 +16,14 @@
         <article class="thumbnails">
             {% for object in objects %}
                 {% if object %}
-                    {% if filter %}
-                        {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-                    {% else %}
-                        {% set url = uri_for('photo', slug = object.key.string_id()) %}
-                    {% endif %}
                     <figure>
-                        <a href="{{ url }}"
-                            style="background-image: url({{ object.small_url_async.get_result() }})">
+                        <a href="#{{ object.key.urlsafe() }}" title="{{ object.headline }}"
+                           style="background-image: url({{ object.small_url_async.get_result() }})">
                             <p class="legend">{{ object.headline }}</p>
                         </a>
+                        <div id="{{ object.key.urlsafe() }}" class="fill"
+                            style="background-image: url({{ object.normal_url_async.get_result() }})">
+                        </div>
                     </figure>
                 {% endif %}
             {% endfor %}
