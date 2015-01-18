@@ -7,15 +7,15 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="inline" data-type="inline">
-            <h2>{{ _('Filter') }}
-                <span>{{ m.filter_title(filter) }}</span>
-            </h2>
-        </a>
+{#        <a href="#filters" class="inline" data-type="inline">#}
+{#            <h2>{{ _('Filter') }}#}
+{#                <span>{{ m.filter_title(filter) }}</span>#}
+{#            </h2>#}
+{#        </a>#}
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
-                   class="image" data-type="image" title="{{ object.headline }}">
+                   class="mfp-image" title="{{ object.headline }}">
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
@@ -25,47 +25,31 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.tosrus.min.all.js"></script>
-    <script src="/static/scripts/hammer.min.js"></script>
+    <script src="/static/scripts/jquery.swipebox.min.js"></script>
     <script>
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.inline, .image',
+                selector: '.mfp-image',
                 width: 200,
                 gutter: 1,
                 animate: true,
                 animationOptions: {
                     speed: 100,
                     duration: 200
-{#                    complete: onComplete#}
                 }
             });
             $container.infinitescroll({
                 binder: $(window),
-                itemSelector: '.image',
+                itemSelector: '.mfp-image',
                 nextSelector: '.next',
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
             });
-            $container.find('a').tosrus({
-                media: {
-                    image: {
-                        filterAnchors: function($anchor) {
-                            if ($anchor.data('type') == 'image') {
-                                return true;
-                            }
-                        }
-                    }
-                },
-                slides: {
-                    scale: "fill"
-                },
-                caption: {
-                    add: true
-                },
-                buttons: true
+            $container.find('.mfp-image').swipebox({
+                useCSS : true,
+		        useSVG : true
             });
         });
     </script>
