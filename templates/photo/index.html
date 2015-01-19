@@ -7,11 +7,11 @@
 
 {% block contents %}
     <div id="gallery">
-{#        <a href="#filters" class="inline" data-type="inline">#}
-{#            <h2>{{ _('Filter') }}#}
-{#                <span>{{ m.filter_title(filter) }}</span>#}
-{#            </h2>#}
-{#        </a>#}
+        <a href="#filters" class="mfp-inline">
+            <h2>{{ _('Filter') }}
+                <span>{{ m.filter_title(filter) }}</span>
+            </h2>
+        </a>
         {% for object in objects %}
             {% if object %}
                 <a href="{{ object.normal_url_async.get_result() }}"
@@ -30,7 +30,7 @@
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.mfp-image',
+                selector: '.mfp-inline, .mfp-image',
                 width: 200,
                 gutter: 1,
                 animate: true,
@@ -48,8 +48,7 @@
                 $container.gridalicious('append', data);
             });
             $container.find('.mfp-image').swipebox({
-                useCSS : true,
-		        useSVG : true
+                hideBarsDelay : -1
             });
         });
     </script>
