@@ -1,7 +1,6 @@
 @import "reset.css";
 @import "mixins";
 @import "slideshow";
-@import "swipebox.css";
 
 @font-face {
   font-family: 'PT Sans';
@@ -33,11 +32,26 @@ body {
 a {
     color: #000;
     text-decoration: none;
+    .transition(all, 0.3s);
 }
-#main, #gallery {
-    width: 100%;
-    margin-top: 40px;
+#main {
+    position: relative;
+    margin: 40px 0 25px 0;
     outline: none;
+}
+#cover {
+    display: none;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    bottom: 25px;
+    width: 100%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    z-index: 2;
 }
 .header {
     background: #fff;
@@ -60,8 +74,9 @@ a {
 	.paginator {
 		position: fixed;
 		top: 0;
-		right: 10px;
-		.next_class, .next_class {
+        right: 0;
+		.next, .prev {
+            padding: 0 10px;
 			line-height: 40px;
 		}
 	}
@@ -134,7 +149,6 @@ a {
 
 /// OLD STUFF ///
 #links {
-    margin: 0 30%;
     padding: 10px;
 	background: @gold;
 	h2 {

@@ -14,24 +14,24 @@
         </a>
         {% for object in objects %}
             {% if object %}
-                <a href="{{ object.normal_url_async.get_result() }}"
+                <a href="#" data-src="{{ object.normal_url_async.get_result() }}"
                    class="mfp-image" title="{{ object.headline }}">
                     <img src="{{ object.small_url_async.get_result() }}">
                 </a>
             {% endif %}
         {% endfor %}
     </div>
+    <div id="cover"></div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.swipebox.min.js"></script>
     <script>
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.mfp-inline, .mfp-image',
-                width: 200,
+                width: 240,
                 gutter: 1,
                 animate: true,
                 animationOptions: {
@@ -47,9 +47,14 @@
             }, function(data) {
                 $container.gridalicious('append', data);
             });
-            $container.find('.mfp-image').swipebox({
-                hideBarsDelay : -1
+
+            $container.on('click', 'a.mfp-image', function(event) {
+                event.preventDefault();
+                $('#cover').css({'background-image': 'url(' + $(this).data('src') + ')'}).show();
             });
+            $('#cover').on('click', function() {
+                $(this).hide();
+            })
         });
     </script>
 {% endblock %}
