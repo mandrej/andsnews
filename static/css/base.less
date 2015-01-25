@@ -184,16 +184,19 @@ footer {
             padding-left: 0.5em;
         }
         .exif_data {
-            display: none;
             position: fixed;
-            bottom: 25px;
+            bottom: -250px;
             left: 50%;
+            width: 50%;
             padding: 10px;
             color: #fff;
             background: rgba(0, 0, 0, 0.5);
             .box-sizing(border-box);
-//            transform: translate(-50%, 0);
+            transform: translate(-50%, 0);
             @media @mobile { width: 100%; }
+            table {
+                margin: 0 auto;
+            }
         }
     }
 }

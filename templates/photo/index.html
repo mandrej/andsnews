@@ -37,7 +37,7 @@
                     <div id="{{ object.key.string_id() }}" class="cover"
                          style="background-image: url({{ object.normal_url_async.get_result() }})">
                         <i class="fa fa-bars exif"></i>
-                        <div class="exif_data">
+                        <div class="exif_data off">
                             {% include "photo/exif.html" %}
                         </div>
                     </div>
@@ -104,6 +104,7 @@
                     } else {
                         slide.css({left: '100%'}).show().transition({left: '0%'}, options);
                         current.transition({left: '-100%'}, options);
+                        current.find('.exif_data').css({bottom: '-250px'}).addClass('off');
                     }
                 } else if ($(this).hasClass('prev')) {
                     index --;
@@ -115,6 +116,7 @@
                     } else {
                         slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
                         current.transition({left: '100%'}, options);
+                        current.find('.exif_data').css({bottom: '-250px'}).addClass('off');
                     }
                 }
             });
@@ -131,9 +133,13 @@
             });
 
             $('.exif').click(function (evt) {
-                $(this).next().toggle(function() {
-                    $(this).transition({x: '-50%', y: 0});
-                })
+                var target = $(this).next();
+                if (target.hasClass('off')) {
+                    target.removeClass('off').transition({bottom: '25px'});
+                } else {
+                    target.removeClass('on').transition({bottom: '-250px'})
+                }
+
             });
         });
     </script>
