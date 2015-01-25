@@ -6,94 +6,90 @@
 
 {% block contents %}
     <div class="page">
-        <header>
-            <h2>
-                <a href="{{ uri_for('photo_admin', page=1) }}">Photo administration</a>
-                <a href="{{ uri_for('photo_add') }}" class="button right">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h2>
-        </header>
-        <article class="normal">
-            <section>
-                <h3>Dates</h3>
-                <p class="cloud">
-                    {% for item in archive|sort(attribute='name', reverse=True) %}
-                        {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
-                        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                            href="{{ uri_for('photo_admin_filter', page=1, field='date', value=item.name) }}"
-                            title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
-                    {% endfor %}
-                </p>
-            </section>
+        <h2 class="clearing">
+            <a href="{{ uri_for('photo_admin', page=1) }}">Photo administration</a>
+            <a href="{{ uri_for('photo_add') }}" class="button right">
+                <i class="fa fa-plus-square"></i> Add
+            </a>
+        </h2>
 
-            <table class="zebra">
-                <colgroup>
-                    <col style="width: 50px;"/>
-                    <col/>
-                    <col style="width: 190px; text-align: right;"/>
-                    <col style="width: 120px; text-align: right;"/>
-                    <col style="width: 210px; text-align: right;"/>
-                    <col style="width: 160px; text-align: right;"/>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>headline</th>
-                        <th>blob info</th>
-                        <th>HLS</th>
-                        <th>color classification</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for object in objects %}
-                        {% if object %}
-                            {% if user == object.author or is_admin %}
-                                <tr id="{{ object.key.urlsafe() }}">
-                                    <td>
-                                        <img src="{{ object.small_url_async.get_result() }}" width="50"/>
-                                    </td>
-                                    <td>
-                                        <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">
-                                            {{ object.headline }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {% if object.blob_key %}
-                                            {{ True|boolimage }}
-                                            {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
-                                        {% else %}
-                                            {{ False|boolimage }}
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
-                                        {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% if object.color == object.hue %}
-                                            <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
-                                        {% endif %}
-                                        {% if object.color == object.lum %}
-                                            {{ object.hue }}, <strong>{{ object.lum }}</strong>, {{ object.sat }}
-                                        {% endif %}
-                                        {% if object.color == object.sat %}
-                                            {{ object.hue }}, {{ object.lum }}, <strong>{{ object.sat }}</strong>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <a class="button" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
-                                            <i class="fa fa-pencil-square"></i> edit</a>&nbsp;
-                                        <a class="confirm button delete" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
-                                            <i class="fa fa-times-circle"></i> delete</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
+        <section>
+            <p class="cloud">
+                {% for item in archive|sort(attribute='name', reverse=True) %}
+                    {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('photo_admin_filter', page=1, field='date', value=item.name) }}"
+                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </p>
+        </section>
+
+        <table class="zebra">
+            <colgroup>
+                <col style="width: 50px;"/>
+                <col/>
+                <col style="width: 190px; text-align: right;"/>
+                <col style="width: 120px; text-align: right;"/>
+                <col style="width: 210px; text-align: right;"/>
+                <col style="width: 100px; text-align: right;"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>headline</th>
+                    <th>blob info</th>
+                    <th>HLS</th>
+                    <th>color classification</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in objects %}
+                    {% if object %}
+                        {% if user == object.author or is_admin %}
+                            <tr id="{{ object.key.urlsafe() }}">
+                                <td>
+                                    <img src="{{ object.small_url_async.get_result() }}" width="50"/>
+                                </td>
+                                <td>
+                                    <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">
+                                        {{ object.headline }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if object.blob_key %}
+                                        {{ True|boolimage }}
+                                        {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
+                                    {% else %}
+                                        {{ False|boolimage }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
+                                    {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                                </td>
+                                <td>
+                                    {% if object.color == object.hue %}
+                                        <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
+                                    {% endif %}
+                                    {% if object.color == object.lum %}
+                                        {{ object.hue }}, <strong>{{ object.lum }}</strong>, {{ object.sat }}
+                                    {% endif %}
+                                    {% if object.color == object.sat %}
+                                        {{ object.hue }}, {{ object.lum }}, <strong>{{ object.sat }}</strong>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="button"
+                                       href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">edit</a>&nbsp;
+                                    <a class="confirm button delete"
+                                       href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">delete</a>
+                                </td>
+                            </tr>
                         {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </article>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

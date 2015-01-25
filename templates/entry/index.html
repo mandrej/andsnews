@@ -25,8 +25,7 @@
         </div>
         {% for object in objects %}
             {% if object %}
-                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
-                   title="{{ object.headline }}" class="mfp-ajax">
+                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
                     <h2>{{ object.headline }}
                         <span>{{ object.author }}</span>
                         <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
@@ -46,7 +45,7 @@
             var options = {duration: 350, queue: false};
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.filters, .mfp-ajax',
+                selector: '.filters, .blog',
                 width: 240,
                 gutter: 1,
                 animate: true,
@@ -57,7 +56,7 @@
             });
             $container.infinitescroll({
                 binder: $(window),
-                itemSelector: '.mfp-ajax',
+                itemSelector: '.blog',
                 nextSelector: '.next',
                 navSelector: "nav.paginator"
             }, function(data) {

@@ -16,18 +16,24 @@
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 </head>
 <body>
-    <div id="header" class="header">
+    {% block modals %}
+        <div id="overlay" class="hide"></div>
+        <div id="confirm" class="modal"></div>
+        <div id="spinner" class="modal">{{ m.spinner() }}</div>
+	{% endblock %}
+
+    <header>
         <h1>
             <a href="{{ uri_for('start') }}">ANDрејевићи</a> |
             <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a> |
             <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>
         </h1>
         <nav class="paginator">{% block paging %}{% endblock %}</nav>
-    </div>
-    <div id="footer" class="footer">
+    </header>
+    <footer>
         <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
         {% if user %}{{ user.nickname() }}{% endif %}
-        <form id="langs" class="right_ab" action="/setlang" method="post">
+        <form id="langs" action="/setlang" method="post">
             {% for code, lang in all_languages %}
                 <button{{ {'type': 'submit', 'name': 'language', 'value': code,
                     'class': 'current' if code == language_code else none,
@@ -35,7 +41,7 @@
             {% endfor %}
         </form>
         &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
-    </div>
+    </footer>
     <div id="main">
         {% block slideshow %}{% endblock %}
         {% block contents %}{% endblock %}

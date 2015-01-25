@@ -1,18 +1,4 @@
 {% extends "base.html" %}
-{% block nav %}
-    <ul>
-        <li><a href="{{ uri_for('photo_all', page=1) }}"><i class="fa fa-li fa-camera"></i>{{ _('Photos') }}</a></li>
-        <li><a href="{{ uri_for('entry_all', page=1) }}"><i class="fa fa-li fa-file-text"></i>{{ _('Blog') }}</a></li>
-        <li>
-            <a class="selected" href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-            {% if user %}
-                <div class="submenu">
-                    <a href="/sign" class="block">{{ _('Log out') }}</a>
-                </div>
-            {% endif %}
-        </li>
-    </ul>
-{% endblock %}
 
 {% block scripts %}
     {{ super() }}

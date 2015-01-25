@@ -5,92 +5,72 @@
 {% endblock %}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2>Site administration</h2>
-        </header>
-        <article class="cols">
-            <section class="admin">
-                <h3>
-                    <a href="{{ uri_for('photo_admin', page=1) }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Photo {{ photo_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('photo_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Photo_tags"></div>
-                <div id="Photo_author"></div>
-                <div id="Photo_date"></div>
-                <div id="Photo_model"></div>
-                <div id="Photo_lens"></div>
-                <div id="Photo_eqv"></div>
-                <div id="Photo_iso"></div>
-                <div id="Photo_color"></div>
-            </section>
-            <section class="admin">
-                <h3>
-                    <a href="{{ uri_for('entry_admin', page=1) }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Entry {{ entry_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('entry_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Entry_tags"></div>
-                <div id="Entry_author"></div>
-                <div id="Entry_date"></div>
+    <div id="gallery">
+        <section class="admin">
+            <h3 class="clearing">
+                <a href="{{ uri_for('photo_admin', page=1) }}">
+                    Photo {{ photo_count }}
+                </a>
+                <a href="{{ uri_for('photo_add') }}" class="button right">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
+            </h3>
+            <div id="Photo_tags"></div>
+            <div id="Photo_author"></div>
+            <div id="Photo_date"></div>
+            <div id="Photo_model"></div>
+            <div id="Photo_lens"></div>
+            <div id="Photo_eqv"></div>
+            <div id="Photo_iso"></div>
+            <div id="Photo_color"></div>
+        </section>
+        <section class="admin">
+            <h3 class="clearing">
+                <a href="{{ uri_for('entry_admin', page=1) }}">
+                    Entry {{ entry_count }}
+                </a>
+                <a href="{{ uri_for('entry_add') }}" class="button right">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
+            </h3>
+            <div id="Entry_tags"></div>
+            <div id="Entry_author"></div>
+            <div id="Entry_date"></div>
+        </section>
 
-                {% if is_admin %}
-                    <h3>
-                        <a href="{{ uri_for('counter_admin', page=1) }}" class="block button">Counters</a>
-                    </h3>
-                {% endif %}
-            </section>
+        {% if is_admin %}
             <section class="admin">
-                <h3>
-                    <span class="block button">
-                        <i class="fa fa-bars"></i>
-                        Memcache statistics for	v.{{ version() }}
-                    </span>
-                </h3>
-                <dl class="w65em">
-                    <dt>hit ratio</dt>
-                    <dd>
-                        {{ '%0.1f'|format(hit_ratio) }}%
-                        ({{ stats.hits }} hits, {{ stats.misses }} misses)
-                    </dd>
-                </dl>
-                <dl class="w65em">
-                    <dt>size</dt>
-                    <dd>{{ stats['items'] }} items,
-                        {{ stats.bytes|filesizeformat }}
-                    </dd>
-                </dl>
-                <dl class="w65em">
-                    <dt>oldest item</dt>
-                    <dd>{{ oldest|timesince }} ago</dd>
-                </dl>
-
-                {% if is_admin %}
-                    <h3>
-                        <span class="block button">
-                            <i class="fa fa-cloud"></i> MapReduce
-                        </span>
-                    </h3>
-                    <p>
-                        <a href="/mapreduce" class="block button">Status</a>
-                    </p>
-                    <p>
-                        <a href="{{ uri_for('datastore_background', job='palette') }}" class="block button">
-                            Calculate photo palette
-                        </a>
-                    </p>
-                {% endif %}
+                <h3>MapReduce</h3>
+                <p><a href="/mapreduce">Status</a></p>
+                <p><a href="{{ uri_for('datastore_background', job='palette') }}">
+                    Calculate photo palette</a>
+                </p>
+                <hr>
+                <p><a href="{{ uri_for('counter_admin', page=1) }}">Counters</a></p>
+                <p><a href="/sign">{{ _('Log out') }}</a></p>
             </section>
-        </article>
+        {% endif %}
+
+        <section class="admin">
+            <h3>Memcache statistics for	v.{{ version() }}</h3>
+            <dl class="w65em">
+                <dt>hit ratio</dt>
+                <dd>
+                    {{ '%0.1f'|format(hit_ratio) }}%
+                    ({{ stats.hits }} hits, {{ stats.misses }} misses)
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>size</dt>
+                <dd>{{ stats['items'] }} items,
+                    {{ stats.bytes|filesizeformat }}
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>oldest item</dt>
+                <dd>{{ oldest|timesince }} ago</dd>
+            </dl>
+        </section>
     </div>
 {% endblock %}
 {% block scripts %}
@@ -123,6 +103,18 @@
                 });
             }
             build();
+
+            var $container = $('#gallery');
+            $container.gridalicious({
+                selector: '.admin',
+                width: 360,
+                gutter: 1,
+                animate: true,
+                animationOptions: {
+                    speed: 100,
+                    duration: 200
+                }
+            });
 
             $('.admin div').on('click', 'button', function() {
                 $('#spinner').show();

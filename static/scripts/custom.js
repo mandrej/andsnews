@@ -85,3 +85,22 @@ $(function() {
         })
 	};
 });
+
+$(document).ready(function() {
+    // close
+    $('.modal').on('click', '.close', function (evt) {
+        evt.preventDefault();
+        $(this).parents('.modal').hide();
+        $('#overlay').hide();
+    });
+    // confirm
+    $(document).on('click', 'a.confirm', function (evt) {
+        evt.preventDefault();
+        $('#confirm').load(this.href, function () {
+            $('#overlay, #confirm').show();
+            $('.content button').click(function () {
+                $('#overlay, #spinner').show();
+            });
+        });
+    });
+});
