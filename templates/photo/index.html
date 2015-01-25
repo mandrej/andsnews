@@ -64,14 +64,14 @@
                     duration: 200
                 }
             });
-{#            $container.infinitescroll({#}
-{#                binder: $(window),#}
-{#                itemSelector: '.thumbnail',#}
-{#                nextSelector: '.next',#}
-{#                navSelector: "nav.paginator"#}
-{#            }, function(data) {#}
-{#                $container.gridalicious('append', data);#}
-{#            });#}
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.thumbnail',
+                nextSelector: '.next',
+                navSelector: "nav.paginator"
+            }, function(data) {
+                $container.gridalicious('append', data);
+            });
 
             $container.on('click', '.thumbnail a', function(event) {
                 var href = $(this).attr('href');
@@ -118,9 +118,9 @@
                 }
             });
 
-            $('.filters').click(function() {
+            $('.filters h2').click(function(event) {
                 $('#links').slideToggle();
-            })
+            });
         });
     </script>
 {% endblock %}

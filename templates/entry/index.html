@@ -6,11 +6,23 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="mfp-inline">
+        <div class="filters">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
-        </a>
+            <div id="links">
+                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+                {% set _date = {'field': 'date', 'title': _('Dates')} %}
+                {% set _author = {'field': 'author', 'title': _('Authors')} %}
+
+                <div id="filters">
+                    {% for f in [_tags, _date, _author] %}
+                        <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>
+                        <div id="{{ f.field }}cloud" class="hide"></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         {% for object in objects %}
             {% if object %}
                 <a href="{{ uri_for('entry', slug=object.key.string_id()) }}"
@@ -30,12 +42,18 @@
     {{ super() }}
     <script>
         $(function () {
+            var index = 0;
+            var options = {duration: 350, queue: false};
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.mfp-inline, .mfp-ajax',
-                width: 200,
+                selector: '.filters, .mfp-ajax',
+                width: 240,
                 gutter: 1,
-                animate: true
+                animate: true,
+                animationOptions: {
+                    speed: 100,
+                    duration: 200
+                }
             });
             $container.infinitescroll({
                 binder: $(window),
@@ -45,13 +63,26 @@
             }, function(data) {
                 $container.gridalicious('append', data);
             });
-            $container.magnificPopup({
-                delegate: '.galcolumn > a',
-                gallery: {
-                    enabled: true,
-                    arrows: false
-                },
-                showCloseBtn: false
+
+{#            $container.on('click', '.thumbnail a', function(event) {#}
+{#                var href = $(this).attr('href');#}
+{#                event.preventDefault();#}
+{#                $('.thumbnail a').hide();#}
+{#                $(this).next().show().css({top: '-100%'}).animate({top: '0%'}, options);#}
+{#                $('.cover').each(function(i, el){#}
+{#                    if ($(el).is(':visible')) {#}
+{#                        index = i;#}
+{#                    }#}
+{#                });#}
+{#            });#}
+{#            $('.cover').on('mouseenter', function() {#}
+{#                $('#nav').fadeIn();#}
+{#            }).on('mouseleave', function() {#}
+{#                $('#nav').fadeOut();#}
+{#            });#}
+
+            $('.filters h2').click(function(event) {
+                $('#links').slideToggle();
             });
         });
     </script>
