@@ -7,30 +7,55 @@
 
 {% block contents %}
     <div id="gallery">
-        <a href="#filters" class="mfp-inline">
+        <div class="filters">
             <h2>{{ _('Filter') }}
                 <span>{{ m.filter_title(filter) }}</span>
             </h2>
-        </a>
+            <div id="links">
+                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+                {% set _date = {'field': 'date', 'title': _('Dates')} %}
+                {% set _author = {'field': 'author', 'title': _('Authors')} %}
+                {% set _color = {'field': 'color', 'title': _('Color')} %}
+                {% set _model = {'field': 'model', 'title': _('Camera model')} %}
+                {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
+                {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
+                {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+
+                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
+                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
+                    <div id="{{ f.field }}cloud" class="hide"></div>
+                {% endfor %}
+            </div>
+        </div>
+
         {% for object in objects %}
             {% if object %}
-                <a href="#" data-src="{{ object.normal_url_async.get_result() }}"
-                   class="mfp-image" title="{{ object.headline }}">
-                    <img src="{{ object.small_url_async.get_result() }}">
-                </a>
+                <div class="thumbnail">
+                    <a href="#{{ object.key.string_id() }}" title="{{ object.headline }}">
+                        <img src="{{ object.small_url_async.get_result() }}">
+                    </a>
+                    <div id="{{ object.key.string_id() }}" class="cover"
+                         style="background-image: url({{ object.normal_url_async.get_result() }})">
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
     </div>
-    <div id="cover"></div>
+    <div id="nav">
+        <i class="fa fa-angle-left prev"></i>
+        <i class="fa fa-angle-right next"></i>
+    </div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     <script>
         $(function () {
+            var index = 0;
+            var options = {duration: 350, queue: false};
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.mfp-inline, .mfp-image',
+                selector: '.filters, .thumbnail',
                 width: 240,
                 gutter: 1,
                 animate: true,
@@ -39,21 +64,62 @@
                     duration: 200
                 }
             });
-            $container.infinitescroll({
-                binder: $(window),
-                itemSelector: '.mfp-image',
-                nextSelector: '.next',
-                navSelector: "nav.paginator"
-            }, function(data) {
-                $container.gridalicious('append', data);
+{#            $container.infinitescroll({#}
+{#                binder: $(window),#}
+{#                itemSelector: '.thumbnail',#}
+{#                nextSelector: '.next',#}
+{#                navSelector: "nav.paginator"#}
+{#            }, function(data) {#}
+{#                $container.gridalicious('append', data);#}
+{#            });#}
+
+            $container.on('click', '.thumbnail a', function(event) {
+                var href = $(this).attr('href');
+                event.preventDefault();
+                $('.thumbnail a').hide();
+                $(this).next().show().css({top: '-100%'}).animate({top: '0%'}, options);
+                $('.cover').each(function(i, el){
+                    if ($(el).is(':visible')) {
+                        index = i;
+                    }
+                });
+            });
+{#            $('.cover').on('mouseenter', function() {#}
+{#                $('#nav').fadeIn();#}
+{#            }).on('mouseleave', function() {#}
+{#                $('#nav').fadeOut();#}
+{#            });#}
+
+            $(document).on('click', 'i', function() {
+                var slide,
+                    current = $('.cover:eq(' + index +')');
+
+                if ($(this).hasClass('next')) {
+                    index ++;
+                    slide = $('.cover:eq(' + index +')');
+                    slide.css({left: '100%'}).show().animate({left: '0%'}, options);
+                    current.animate({left: '-100%'}, options, function() {
+                        $(this).hide();
+                    });
+                } else {
+                    index --;
+                    slide = $('.cover:eq(' + index +')');
+                    slide.css({left: '-100%'}).show().animate({left: '0%'}, options);
+                    current.animate({left: '100%'}, options, function() {
+                        $(this).hide();
+                    });
+                }
+                console.log(index, $('.cover:visible').length);
+            });
+            $(window).on('keydown', function(event) {
+                if (event.keyCode == 27) {
+                    $('.cover').hide();
+                    $('.thumbnail a').show();
+                }
             });
 
-            $container.on('click', 'a.mfp-image', function(event) {
-                event.preventDefault();
-                $('#cover').css({'background-image': 'url(' + $(this).data('src') + ')'}).show();
-            });
-            $('#cover').on('click', function() {
-                $(this).hide();
+            $('.filters').click(function() {
+                $('#links').slideToggle();
             })
         });
     </script>
