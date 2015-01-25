@@ -36,6 +36,10 @@
                     </a>
                     <div id="{{ object.key.string_id() }}" class="cover"
                          style="background-image: url({{ object.normal_url_async.get_result() }})">
+                        <i class="fa fa-bars exif"></i>
+                        <div class="exif_data">
+                            {% include "photo/exif.html" %}
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -78,7 +82,7 @@
                 event.preventDefault();
                 $('.thumbnail a').hide();
                 $('nav.sliding').show();
-                $(this).next().show().css({top: '-100%'}).animate({top: '0%'}, options);
+                $(this).next().show().css({top: '-100%'}).transition({top: '0%'}, options);
                 $('.cover').each(function(i, el){
                     if ($(el).is(':visible')) {
                         index = i;
@@ -93,19 +97,26 @@
                 if ($(this).hasClass('next')) {
                     index ++;
                     slide = $('.cover:eq(' + index +')');
-                    slide.css({left: '100%'}).show().animate({left: '0%'}, options);
-                    current.animate({left: '-100%'}, options, function() {
-                        $(this).hide();
-                    });
-                } else {
+                    if (slide.length == 0) {
+                        $('.cover').hide();
+                        $('.thumbnail a').show();
+                        $('nav.sliding').hide();
+                    } else {
+                        slide.css({left: '100%'}).show().transition({left: '0%'}, options);
+                        current.transition({left: '-100%'}, options);
+                    }
+                } else if ($(this).hasClass('prev')) {
                     index --;
                     slide = $('.cover:eq(' + index +')');
-                    slide.css({left: '-100%'}).show().animate({left: '0%'}, options);
-                    current.animate({left: '100%'}, options, function() {
-                        $(this).hide();
-                    });
+                    if (slide.length == 0) {
+                        $('.cover').hide();
+                        $('.thumbnail a').show();
+                        $('nav.sliding').hide();
+                    } else {
+                        slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
+                        current.transition({left: '100%'}, options);
+                    }
                 }
-                console.log(index, $('.cover:visible').length);
             });
             $(window).on('keydown', function(event) {
                 if (event.keyCode == 27) {
@@ -117,6 +128,12 @@
 
             $('.filters h2').click(function(event) {
                 $('#links').slideToggle();
+            });
+
+            $('.exif').click(function (evt) {
+                $(this).next().toggle(function() {
+                    $(this).transition({x: '-50%', y: 0});
+                })
             });
         });
     </script>

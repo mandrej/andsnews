@@ -127,8 +127,8 @@ footer {
             top: 50%;
             padding: 1em;
             transform: translate(0,-50%);
-            &.prev { left: 0; padding-left: 0;}
-            &.next { right: 0; padding-right: 0; }
+            &.prev { left: 0; padding-left: 0.25em; }
+            &.next { right: 0; padding-right: 0.25em; }
         }
     }
 }
@@ -173,6 +173,28 @@ footer {
         background-size: cover;
         background-position: 50% 50%;
         background-repeat: no-repeat;
+        .backface(hidden);
+        .exif {
+            color: #fff;
+            position: fixed;
+            font-size: 4em;
+            left: 0;
+            top: 0;
+            padding: 1em;
+            padding-left: 0.5em;
+        }
+        .exif_data {
+            display: none;
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            padding: 10px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            .box-sizing(border-box);
+//            transform: translate(-50%, 0);
+            @media @mobile { width: 100%; }
+        }
     }
 }
 

@@ -1,12 +1,13 @@
-<table class="exif data zebra">
+<table>
 	<thead>
 		<tr>
+			<th colspan="2">{{ object.headline }}</th>
+		</tr>
+        <tr>
 			<th colspan="2">
-                <a href="{{ uri_for('photo_all_filter', page=1, field='model', value=object.model) }}"
-                title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
-                {% if object.lens %}<br/>
-                    <a href="{{ uri_for('photo_all_filter', page=1, field='lens', value=object.lens) }}"
-                       title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
+                {{ object.model }}
+                {% if object.lens %}
+                    <br>{{ object.lens }}
                 {% endif %}
             </th>
 		</tr>
@@ -25,30 +26,19 @@
 			<td>
 				{{ '%s mm' % object.focal_length if object.focal_length is not none else '---' }}
                 {% if object.eqv %}
-                    (~<a href="{{ uri_for('photo_all_filter', page=1, field='eqv', value=object.eqv) }}"
-                    title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
+                    (~{{ object.eqv }} {{ _('eqv') }})
                 {% endif %}
             </td>
 		</tr>
 		<tr>
 			<td>{{ _('Sensitivity') }} (ISO)</td>
-			<td>{% if object.iso %}<a href="{{ uri_for('photo_all_filter', page=1, field='iso', value=object.iso) }}"
-                title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
+			<td>{% if object.iso %}
+                    {{ object.iso }} ASA
+                {% else %}---{% endif %}</td>
 		</tr>
 		<tr>
 			<td>{{ _('Taken') }}</td>
-			<td><time datetime='{{ object.date|to_datetime }}'>
-				{{ object.date|to_datetime }}</time></td>
+			<td>{{ object.date|to_datetime }}</td>
 		</tr>
-        <tr>
-            <td>
-                {{ _('Dominant color') }}
-            </td>
-            <td>
-                <span class="hex dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>&nbsp;
-				<a class="url" href="{{ uri_for('photo_all_filter', page=1, field='color', value=object.color) }}"
-                   title="{{ _('photos with similar color') }}">{{ _('Similar color') }}</a>
-            </td>
-        </tr>
 	</tbody>
 </table>
