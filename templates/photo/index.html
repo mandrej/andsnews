@@ -82,7 +82,9 @@
                 event.preventDefault();
                 $('.thumbnail a').hide();
                 $('nav.sliding').show();
-                $(this).next().show().css({top: '-100%'}).transition({top: '0%'}, options);
+
+                var slide = $(this).next();
+                slide.show().css({bottom: '-100%'}).animate({bottom: '0%'}, options);
                 $('.cover').each(function(i, el){
                     if ($(el).is(':visible')) {
                         index = i;
@@ -90,7 +92,7 @@
                 });
             });
 
-            $(document).on('click', 'i', function() {
+            $('.sliding').on('click', 'i.fa', function() {
                 var slide,
                     current = $('.cover:eq(' + index +')');
 
@@ -102,9 +104,10 @@
                         $('.thumbnail a').show();
                         $('nav.sliding').hide();
                     } else {
-                        slide.css({left: '100%'}).show().transition({left: '0%'}, options);
-                        current.transition({left: '-100%'}, options);
-                        current.find('.exif_data').css({bottom: '-250px'}).addClass('off');
+                        slide.css({left: '100%'}).show().animate({left: '0%'}, options);
+                        current.animate({left: '-100%'}, $.extend({}, options, {complete: function() {
+                            $(this).hide();
+                        }}));
                     }
                 } else if ($(this).hasClass('prev')) {
                     index --;
@@ -114,11 +117,13 @@
                         $('.thumbnail a').show();
                         $('nav.sliding').hide();
                     } else {
-                        slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
-                        current.transition({left: '100%'}, options);
-                        current.find('.exif_data').css({bottom: '-250px'}).addClass('off');
+                        slide.css({left: '-100%'}).show().animate({left: '0%'}, options);
+                        current.animate({left: '100%'}, $.extend({}, options, {complete: function() {
+                            $(this).hide();
+                        }}));
                     }
                 }
+                $('.exif_data').css({bottom: '-250px'}).addClass('off');
             });
             $(window).on('keydown', function(event) {
                 if (event.keyCode == 27) {
@@ -132,14 +137,15 @@
                 $('#links').slideToggle();
             });
 
-            $('.exif').click(function (evt) {
+            $container.on('click', 'i.exif', function (event) {
+                console.log($('.cover:visible').length);
+                console.log($(event.target).closest('.cover').attr('id'));
                 var target = $(this).next();
                 if (target.hasClass('off')) {
-                    target.removeClass('off').transition({bottom: '25px'});
+                    target.toggleClass('off').animate({bottom: '25px'}, options);
                 } else {
-                    target.removeClass('on').transition({bottom: '-250px'})
+                    target.toggleClass('off').animate({bottom: '-250px'}, options);
                 }
-
             });
         });
     </script>
