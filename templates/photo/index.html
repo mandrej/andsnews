@@ -62,7 +62,7 @@
                 selector: '.filters, .thumbnail',
                 width: 240,
                 gutter: 1,
-                animate: true,
+                animate: false,
                 animationOptions: {
                     speed: 100,
                     duration: 200
@@ -84,7 +84,7 @@
                 $('nav.sliding').show();
 
                 var slide = $(this).next();
-                slide.show().css({bottom: '-100%'}).animate({bottom: '0%'}, options);
+                slide.show().css({bottom: '-100%'}).transition({bottom: '0%'}, options);
                 $('.cover').each(function(i, el){
                     if ($(el).is(':visible')) {
                         index = i;
@@ -104,8 +104,8 @@
                         $('.thumbnail a').show();
                         $('nav.sliding').hide();
                     } else {
-                        slide.css({left: '100%'}).show().animate({left: '0%'}, options);
-                        current.animate({left: '-100%'}, $.extend({}, options, {complete: function() {
+                        slide.css({left: '100%'}).show().transition({left: '0%'}, options);
+                        current.transition({left: '-100%'}, $.extend({}, options, {complete: function() {
                             $(this).hide();
                         }}));
                     }
@@ -117,8 +117,8 @@
                         $('.thumbnail a').show();
                         $('nav.sliding').hide();
                     } else {
-                        slide.css({left: '-100%'}).show().animate({left: '0%'}, options);
-                        current.animate({left: '100%'}, $.extend({}, options, {complete: function() {
+                        slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
+                        current.transition({left: '100%'}, $.extend({}, options, {complete: function() {
                             $(this).hide();
                         }}));
                     }
@@ -127,9 +127,9 @@
             });
             $(window).on('keydown', function(event) {
                 if (event.keyCode == 27) {
-                    $('.cover').hide();
                     $('.thumbnail a').show();
                     $('nav.sliding').hide();
+                    $('.cover').hide();
                 }
             });
 
@@ -138,13 +138,11 @@
             });
 
             $container.on('click', 'i.exif', function (event) {
-                console.log($('.cover:visible').length);
-                console.log($(event.target).closest('.cover').attr('id'));
                 var target = $(this).next();
                 if (target.hasClass('off')) {
-                    target.toggleClass('off').animate({bottom: '25px'}, options);
+                    target.toggleClass('off').transition({bottom: '25px'}, options);
                 } else {
-                    target.toggleClass('off').animate({bottom: '-250px'}, options);
+                    target.toggleClass('off').transition({bottom: '-250px'}, options);
                 }
             });
         });

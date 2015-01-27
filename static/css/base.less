@@ -26,6 +26,9 @@
 @red: #ea2434;
 @dashed: 1px dashed @neutral;
 
+.head {
+    font-size: 24px;
+}
 .clearing {
 	&:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; }
 }
@@ -60,8 +63,8 @@ header {
     z-index: 10;
     height: 40px;
 	h1 {
+        .head;
 		color: @dark;
-		font-size: 24px;
 		line-height: 40px;
 		padding: 0 10px;
 		span {
@@ -187,7 +190,7 @@ footer {
             bottom: -250px;
             left: 50%;
             width: 50%;
-            padding: 10px;
+            padding: 0 10px 10px;
             color: #fff;
             background: rgba(0, 0, 0, 0.5);
             .box-sizing(border-box);
@@ -217,7 +220,7 @@ footer {
     padding: 10px;
 	color: @gray;
     background: @dark;
-    h2 { font-size: 24px; color: #fff; }
+    h2 { .head; color: #fff; }
     .subtitle { margin-bottom: 1em; }
     a { color: #fff; }
     section {
@@ -290,7 +293,7 @@ table {
 	th {
 		border-left: @dashed;
 		border-right: @dashed;
-		padding: 0.5em;
+		padding: 0.5rem;
 		border-bottom: 1px solid @gray;
 		font-size: 1.2em;
 		text-align: left;
