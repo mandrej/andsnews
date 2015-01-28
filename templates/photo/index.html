@@ -72,7 +72,10 @@
                 binder: $(window),
                 itemSelector: '.thumbnail',
                 nextSelector: '.next',
-                navSelector: "nav.paginator"
+                navSelector: 'nav.paginator',
+                loading: {
+                    selector: '#spinner'
+                }
             }, function(data) {
                 $container.gridalicious('append', data);
             });
@@ -92,44 +95,57 @@
                 });
             });
 
-            $('.sliding').on('click', 'i.fa', function() {
-                var slide,
-                    current = $('.cover:eq(' + index +')');
+            function back() {
+                $('.cover').hide();
+                $('.thumbnail a').show();
+                $('nav.sliding').hide();
+            }
 
+            function next() {
+                var current = $('.cover:eq(' + index +')');
+                index ++;
+                var slide = $('.cover:eq(' + index +')');
+
+                if (slide.length == 0) {
+                    back();
+                } else {
+                    slide.css({left: '100%'}).show().transition({left: '0%'}, options);
+                    current.transition({left: '-100%'}, $.extend({}, options, {complete: function() {
+                        $(this).css({left: 0}).hide();
+                    }}));
+                }
+            }
+
+            function prev() {
+                var current = $('.cover:eq(' + index +')');
+                index --;
+                var slide = $('.cover:eq(' + index +')');
+
+                if (slide.length == 0) {
+                   back();
+                } else {
+                    slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
+                    current.transition({left: '100%'}, $.extend({}, options, {complete: function() {
+                        $(this).css({left: 0}).hide();
+                    }}));
+                }
+            }
+
+            $('.sliding').on('click', 'i.fa', function() {
                 if ($(this).hasClass('next')) {
-                    index ++;
-                    slide = $('.cover:eq(' + index +')');
-                    if (slide.length == 0) {
-                        $('.cover').hide();
-                        $('.thumbnail a').show();
-                        $('nav.sliding').hide();
-                    } else {
-                        slide.css({left: '100%'}).show().transition({left: '0%'}, options);
-                        current.transition({left: '-100%'}, $.extend({}, options, {complete: function() {
-                            $(this).hide();
-                        }}));
-                    }
+                    next();
                 } else if ($(this).hasClass('prev')) {
-                    index --;
-                    slide = $('.cover:eq(' + index +')');
-                    if (slide.length == 0) {
-                        $('.cover').hide();
-                        $('.thumbnail a').show();
-                        $('nav.sliding').hide();
-                    } else {
-                        slide.css({left: '-100%'}).show().transition({left: '0%'}, options);
-                        current.transition({left: '100%'}, $.extend({}, options, {complete: function() {
-                            $(this).hide();
-                        }}));
-                    }
+                    prev();
                 }
                 $('.exif_data').css({bottom: '-250px'}).addClass('off');
             });
             $(window).on('keydown', function(event) {
-                if (event.keyCode == 27) {
-                    $('.thumbnail a').show();
-                    $('nav.sliding').hide();
-                    $('.cover').hide();
+                if (event.keyCode == 27 || event.keyCode == 13) {
+                    back();
+                } else if (event.keyCode == 39) {
+                    next();
+                } else if (event.keyCode == 37) {
+                    prev();
                 }
             });
 
