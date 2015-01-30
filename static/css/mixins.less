@@ -34,6 +34,13 @@
     -o-transition: @arguments;
     transition: @arguments;
 }
+.transition(...) {
+	-webkit-transition: @arguments;
+    -moz-transition: @arguments;
+    -ms-transition: @arguments;
+    -o-transition: @arguments;
+    transition: @arguments;
+}
 .animation(...) {
 	-webkit-animation: @arguments;
 	-moz-animation: @arguments;
@@ -66,7 +73,7 @@
 	-ms-perspective: @arguments;
 	perspective: @arguments;
 }
-.backface(...) {
+.backface-visibility(...) {
 	-webkit-backface-visibility: @arguments;
 	-moz-backface-visibility: @arguments;
 	-ms-backface-visibility: @arguments;
