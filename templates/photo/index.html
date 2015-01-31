@@ -6,90 +6,74 @@
 {% endblock %}
 
 {% block contents %}
-    <div class="swiper-container swiper-parent">
-        <div class="swiper-wrapper">
-{#        <div class="filters">#}
-{#            <h2>{{ _('Filter') }}#}
-{#                <span>{{ m.filter_title(filter) }}</span>#}
-{#            </h2>#}
-{#            <div id="links">#}
-{#                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}#}
-{#                {% set _date = {'field': 'date', 'title': _('Dates')} %}#}
-{#                {% set _author = {'field': 'author', 'title': _('Authors')} %}#}
-{#                {% set _color = {'field': 'color', 'title': _('Color')} %}#}
-{#                {% set _model = {'field': 'model', 'title': _('Camera model')} %}#}
-{#                {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}#}
-{#                {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}#}
-{#                {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}#}
-{##}
-{#                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}#}
-{#                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>#}
-{#                    <div id="{{ f.field }}cloud" class="hide"></div>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
+    <div id="gallery">
+        <div class="filters">
+            <h2>{{ _('Filter') }}
+                <span>{{ m.filter_title(filter) }}</span>
+            </h2>
+            <div id="links">
+                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+                {% set _date = {'field': 'date', 'title': _('Dates')} %}
+                {% set _author = {'field': 'author', 'title': _('Authors')} %}
+                {% set _color = {'field': 'color', 'title': _('Color')} %}
+                {% set _model = {'field': 'model', 'title': _('Camera model')} %}
+                {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
+                {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
+                {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+
+                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
+                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
+                    <div id="{{ f.field }}cloud" class="hide"></div>
+                {% endfor %}
+            </div>
+        </div>
 
         {% for object in objects %}
             {% if object %}
-                <div class="swiper-slide cover" style="background-image: url({{ object.normal_url_async.get_result() }})">
-                    <div class="swiper-container swiper-nested">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide blank"></div>
-                            <div class="swiper-slide exif">
-                                {% include "photo/exif.html" %}
-                            </div>
-                        </div>
-                    </div>
-{#                    <a href="#{{ object.key.string_id() }}" title="{{ object.headline }}">#}
-{#                        <img src="{{ object.small_url_async.get_result() }}">#}
-{#                    </a>#}
-{#                    <div id="{{ object.key.string_id() }}" class="cover"#}
-{#                         >#}
-{#                        <i class="fa fa-bars exif"></i>#}
-{#                        <div class="exif_data off">#}
-{#                            #}
-{#                        </div>#}
-{#                    </div>#}
+                {% if filter %}
+                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
+                {% else %}
+                    {% set url = uri_for('photo', slug = object.key.string_id()) %}
+                {% endif %}
+                <div class="thumbnail">
+                    <a href="{{ url }}" title="{{ object.headline }}">
+                        <img src="{{ object.small_url_async.get_result() }}">
+                    </a>
                 </div>
             {% endif %}
         {% endfor %}
-        </div>
     </div>
-{#    <nav class="sliding">#}
-{#        <i class="fa fa-angle-left prev"></i>#}
-{#        <i class="fa fa-angle-right next"></i>#}
-{#    </nav>#}
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     <script>
         $(function () {
-{#            var index = 0;#}
-{#            var options = {duration: 350, queue: false};#}
-
-            var horizontal = $('.swiper-parent').swiper({
-                mode: 'horizontal',
-                keyboardControl: true,
-                loop: true
+            var index = 0;
+            var options = {duration: 350, queue: false};
+            var $container = $('#gallery');
+            $container.gridalicious({
+                selector: '.filters, .thumbnail',
+                width: 240,
+                gutter: 1,
+                animate: false,
+                animationOptions: {
+                    speed: 100,
+                    duration: 200
+                }
             });
-            var vertical = $('.swiper-nested').swiper({
-                mode: 'vertical',
-                keyboardControl: true
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.thumbnail',
+                nextSelector: '.next',
+                navSelector: "nav.paginator"
+            }, function(data) {
+                $container.gridalicious('append', data);
             });
 
             $('.filters h2').click(function(event) {
                 $('#links').slideToggle();
             });
-
-{#            $container.on('click', 'i.exif', function (event) {#}
-{#                var target = $(this).next();#}
-{#                if (target.hasClass('off')) {#}
-{#                    target.toggleClass('off').transition({bottom: '25px'}, options);#}
-{#                } else {#}
-{#                    target.toggleClass('off').transition({bottom: '-250px'}, options);#}
-{#                }#}
-{#            });#}
         });
     </script>
 {% endblock %}

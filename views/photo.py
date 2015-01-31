@@ -36,7 +36,9 @@ class Detail(BaseHandler):
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
                 'next': next,
-                'previous': previous}
+                'previous': previous,
+                'has_next': next is not None,
+                'has_previous': previous is not None}
         self.render_template('photo/detail.html', data)
 
 
