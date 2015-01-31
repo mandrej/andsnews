@@ -42,3 +42,11 @@ class PaginatorTest(unittest.TestCase):
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
         self.assertIsNone(next)
+
+    def test_neighbors(self):
+        index, objects = self.paginator.neighbors('zlatna-ana')
+        print index
+        j = 0
+        for x in objects:
+            print j, x.key.string_id()
+            j += 1

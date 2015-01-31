@@ -234,6 +234,21 @@ class Paginator(object):
 
         return num, prev.get_result(), obj, next.get_result()
 
+    def neighbors(self, slug):
+        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
+        key = ndb.Key(self.query.kind, slug)
+        obj = key.get()
+        if not obj:
+            webapp2.abort(404)
+
+        model = ndb.Model._kind_map.get(self.query.kind)
+        next, cursor, more = self.query.filter(model.date < obj.date).fetch_page(self.per_page)
+        self.query._Query__orders = self.query.orders.reversed()
+        prev, cursor, more = self.query.filter(model.date > obj.date).fetch_page(self.per_page)
+
+        index = len(prev)
+        return index, prev + [obj] + next
+
 
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):

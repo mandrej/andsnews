@@ -30,15 +30,11 @@ class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        page, previous, object, next = paginator.triple(slug)
+        index, objects = paginator.neighbors(slug)
 
-        data = {'object': object,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'next': next,
-                'previous': previous,
-                'has_next': next is not None,
-                'has_previous': previous is not None}
+        data = {'objects': objects,
+                'index': index,
+                'filter': {'field': field, 'value': value} if (field and value) else None}
         self.render_template('photo/detail.html', data)
 
 

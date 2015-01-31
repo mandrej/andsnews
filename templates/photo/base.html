@@ -1,49 +1,49 @@
 {% extends "base.html" %}
-{#{% import "snippets/macros.html" as m %}#}
+{% import "snippets/macros.html" as m %}
 
-{#{% block scripts %}#}
-{#    {{ super() }}#}
-{#    <script>#}
-{#        $(function () {#}
-{#            var filter = {{ filter|to_json }};#}
-{#            if (filter) {#}
-{#                $('.hide').hide();#}
-{#                $('.collapse').each(function() {#}
-{#                    $(this).plus();#}
-{#                });#}
-{#                $.ajax({#}
-{#                    url: '/filter/Photo_' + filter.field + '/' + filter.value,#}
-{#                    context: $('#' + filter.field + 'cloud'),#}
-{#                    success: function(snippet) {#}
-{#                        $(this).html(snippet).slideDown();#}
-{#                        $('.' + filter.field).minus();#}
-{#                    }#}
-{#                });#}
-{#            }#}
-{##}
-{#            $(document).on('click', 'a.collapse', function (evt) {#}
-{#                evt.preventDefault();#}
-{#                var cntx = $(this);#}
-{#                var url = cntx.attr('href');#}
-{#                var key = url.split('/').pop();#}
-{#                var field = key.split('_').pop();#}
-{##}
-{#                $('.hide').slideUp();#}
-{#                $('.collapse').each(function () {#}
-{#                    $(this).plus();#}
-{#                });#}
-{##}
-{#                $('#spinner').show();#}
-{#                $.ajax({#}
-{#                    url: url,#}
-{#                    context: cntx.next(),#}
-{#                    success: function (snippet) {#}
-{#                        $(this).html(snippet).slideDown();#}
-{#                        cntx.minus();#}
-{#                        $('#spinner').hide();#}
-{#                    }#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#{% endblock %}#}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            var filter = {{ filter|to_json }};
+            if (filter) {
+                $('.hide').hide();
+                $('.collapse').each(function() {
+                    $(this).plus();
+                });
+                $.ajax({
+                    url: '/filter/Photo_' + filter.field + '/' + filter.value,
+                    context: $('#' + filter.field + 'cloud'),
+                    success: function(snippet) {
+                        $(this).html(snippet).slideDown();
+                        $('.' + filter.field).minus();
+                    }
+                });
+            }
+
+            $(document).on('click', 'a.collapse', function (evt) {
+                evt.preventDefault();
+                var cntx = $(this);
+                var url = cntx.attr('href');
+                var key = url.split('/').pop();
+                var field = key.split('_').pop();
+
+                $('.hide').slideUp();
+                $('.collapse').each(function () {
+                    $(this).plus();
+                });
+
+                $('#spinner').show();
+                $.ajax({
+                    url: url,
+                    context: cntx.next(),
+                    success: function (snippet) {
+                        $(this).html(snippet).slideDown();
+                        cntx.minus();
+                        $('#spinner').hide();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

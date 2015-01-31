@@ -33,7 +33,7 @@
 		background-repeat: no-repeat;
 		opacity: 0;
 		z-index: 0;
-		.backface(hidden);
+		.backface-visibility(hidden);
 		.animation(fadeinout @totalDuration linear infinite);
 	}
 	.generate-delays(@n, @i: 1) when (@i =< @n) {

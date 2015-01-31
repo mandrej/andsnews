@@ -1,50 +1,28 @@
 {% extends "photo/base.html" %}
-{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
-{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
+{#{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}#}
+{#{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}#}
 
-{% block paging %}
-    {% if previous or next %}
-        {% if previous %}
-            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=previous.key.string_id())
-                if filter else uri_for('photo', slug=previous.key.string_id()) %}
-            <a{{ {'href': url, 'class': prev_class, 'title': previous.headline}|xmlattr }}></a>
-        {% else %}
-            <span class="{{ prev_class }} na"></span>
-        {% endif %}
-        {% if next %}
-            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=next.key.string_id())
-                if filter else uri_for('photo', slug=next.key.string_id()) %}
-            <a{{ {'href': url, 'class': next_class, 'title': next.headline}|xmlattr }}></a>
-        {% else %}
-            <span class="{{ next_class }} na"></span>
-        {% endif %}
-    {% endif %}
-{% endblock %}
-
-{% macro item(object) %}
-    <div id="{{ object.key.string_id() }}" class="swiper-slide cover"
-         style="background-image: url({{ object.normal_url_async.get_result() }})">
-        <div class="swiper-container swiper-nested">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide blank"></div>
-                <div class="swiper-slide exif">
-                    {% include "photo/exif.html" %}
-                </div>
-            </div>
-        </div>
-    </div>
-{% endmacro %}
+{% block paging %}{% endblock %}
 
 {% block contents %}
     <div class="swiper-container swiper-parent">
         <div class="swiper-wrapper">
-            {% if previous %}
-                {{ item(previous) }}
-            {% endif %}
-            {{ item(object) }}
-            {% if next %}
-                {{ item(next) }}
-            {% endif %}
+            {% for object in objects %}
+                {% if object %}
+                    <div class="swiper-slide">
+                        <div class="cover" style="background-image: url({{ object.normal_url }})">
+                            <div class="swiper-container swiper-nested">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide blank"></div>
+                                    <div class="swiper-slide exif">
+                                        {% include "photo/exif.html" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
@@ -53,38 +31,12 @@
     {{ super() }}
     <script>
         $(function () {
-            var has_next = {{ has_next|to_json }};
-            var has_previous = {{ has_previous|to_json }};
+            var index = {{ index|to_json }};
 
             var horizontal = $('.swiper-parent').swiper({
                 mode: 'horizontal',
                 keyboardControl: true,
-                initialSlide: (has_previous)? 1: 0,
-{#                pagination : '.paginator',#}
-{#                createPagination: true,#}
-{#                grabCursor: true,#}
-                onSlideNext: function() {
-                    var href = $('.next').attr('href');
-{#                    var existing_slides = $('.cover');#}
-{#                    $.each(existing_slides, function(i, item) {#}
-{#                        console.log($(item).attr('id'));#}
-{#                    });#}
-                    $.get(href, function(html) {
-                        var new_slides = $(html).find('.cover:last');
-{#                        console.log(new_slides[0].outerHTML);#}
-{#                        console.log('---------------------');#}
-{#                        $.each(new_slides, function(i, item) {#}
-{#                            console.log($(item).attr('id'));#}
-{#                        });#}
-                        horizontal.appendSlide(new_slides[0].outerHTML);
-{#                        horizontal.prependSlide()#}
-                    });
-{#                    console.log(href);#}
-                },
-                onSlidePrev: function() {
-                    var href = $('.prev').attr('href');
-                    console.log(href);
-                }
+                initialSlide: index
             });
             var vertical = $('.swiper-nested').swiper({
                 mode: 'vertical',

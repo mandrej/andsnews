@@ -3,7 +3,7 @@
     <ul class="slideshow">
         {% for object in objects[:latest] %}
             <li>
-                <span style="background-image: url({{ object.normal_url_async.get_result() }})"></span>
+                <span style="background-image: url({{ object.normal_url }})"></span>
             </li>
         {% endfor %}
     </ul>
