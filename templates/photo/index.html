@@ -11,7 +11,7 @@
             {% for object in objects %}
                 {% if object %}
                     <div class="swiper-slide main">
-                        <div class="cover" style="background-image: url({{ object.normal_url }})">
+                        <div class="cover lazyload" data-bg="{{ object.normal_url }}">
                             <div class="swiper-container swiper-nested">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide blank"></div>
@@ -64,6 +64,12 @@
             });
             var num = horizontal.slides.length;
             $('nav.paginator').hide();
+
+            $(document).on('lazybeforeunveil', function(e) {
+                var $this = $(e.target);
+                var url = $this.data('bg');
+                if (url) $this.css('background-image', 'url(' + url + ')').removeAttr('data-bg');
+            });
         });
     </script>
 {% endblock %}
