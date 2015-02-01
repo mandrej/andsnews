@@ -17,7 +17,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud
-from config import PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT
+from config import PER_PAGE, PHOTOS_PER_PAGE, FAMILY, TIMEOUT
 
 
 def csrf_protected(handler_method):
@@ -110,7 +110,7 @@ class Index(BaseHandler):
         query = Photo.query().order(-Photo.date)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(1)
-        self.render_template('index.html', {'objects': objects, 'latest': PHOTOS_LATEST})
+        self.render_template('index.html', {'objects': objects})
 
 
 class Complete(BaseHandler):

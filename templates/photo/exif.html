@@ -1,18 +1,34 @@
 <table>
 	<thead>
 		<tr>
-			<th colspan="2" class="head">{{ object.headline }}</th>
-		</tr>
-        <tr>
 			<th colspan="2">
-                {{ object.model }}
-                {% if object.lens %}
-                    <br>{{ object.lens }}
-                {% endif %}
+                <h2>{{ object.headline }}</h2>
+                <p>
+                    <a href="{{ uri_for('photo_all_filter', page=1, field='author', value=object.author) }}"
+                        title="{{ _("author's photos") }}">{{ object.author }}</a>,
+                    <time datetime='{{ object.date|to_datetime }}'>
+                        {{ object.date|to_date }}</time>
+                    {% for tag in object.tags %}
+                        {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
+                        <a href="{{ uri_for('photo_all_filter', page=1, field='tags', value=tag) }}">
+                            {{ tag }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
+                    <a href="{{ uri_for('photo_all_filter', page=1, field='date', value=object.year) }}"
+                        title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+                </p>
             </th>
 		</tr>
 	</thead>
 	<tbody>
+        <tr>
+			<td colspan="2">
+                {{ object.model }}
+                {% if object.lens %}
+                    <br>{{ object.lens }}
+                {% endif %}
+            </td>
+		</tr>
 		<tr>
 			<td>{{ _('Aperture') }}</td>
 			<td>{{ 'F%s' % object.aperture if object.aperture is not none else '---' }}</td>
@@ -26,19 +42,25 @@
 			<td>
 				{{ '%s mm' % object.focal_length if object.focal_length is not none else '---' }}
                 {% if object.eqv %}
-                    (~{{ object.eqv }} {{ _('eqv') }})
+                    (~<a href="{{ uri_for('photo_all_filter', page=1, field='eqv', value=object.eqv) }}"
+                    title="{{ _('photos with same equvalent focal length') }}">{{ object.eqv }} {{ _('eqv') }}</a>.)
                 {% endif %}
             </td>
 		</tr>
 		<tr>
 			<td>{{ _('Sensitivity') }} (ISO)</td>
-			<td>{% if object.iso %}
-                    {{ object.iso }} ASA
-                {% else %}---{% endif %}</td>
+			<td>{% if object.iso %}<a href="{{ uri_for('photo_all_filter', page=1, field='iso', value=object.iso) }}"
+                title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
 		</tr>
-		<tr>
-			<td>{{ _('Taken') }}</td>
-			<td>{{ object.date|to_datetime }}</td>
-		</tr>
+        <tr>
+            <td>
+                {{ _('Dominant color') }}
+            </td>
+            <td>
+                <span class="hex dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>&nbsp;
+				<a class="url" href="{{ uri_for('photo_all_filter', page=1, field='color', value=object.color) }}"
+                   title="{{ _('photos with similar color') }}">{{ _('Similar color') }}</a>
+            </td>
+        </tr>
 	</tbody>
 </table>

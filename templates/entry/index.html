@@ -41,8 +41,6 @@
     {{ super() }}
     <script>
         $(function () {
-            var index = 0;
-            var options = {duration: 350, queue: false};
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.filters, .blog',
@@ -51,7 +49,8 @@
                 animate: true,
                 animationOptions: {
                     speed: 100,
-                    duration: 200
+                    duration: 200,
+                    effect: 'fadeInOnAppear'
                 }
             });
             $container.infinitescroll({
@@ -62,23 +61,6 @@
             }, function(data) {
                 $container.gridalicious('append', data);
             });
-
-{#            $container.on('click', '.thumbnail a', function(event) {#}
-{#                var href = $(this).attr('href');#}
-{#                event.preventDefault();#}
-{#                $('.thumbnail a').hide();#}
-{#                $(this).next().show().css({top: '-100%'}).animate({top: '0%'}, options);#}
-{#                $('.cover').each(function(i, el){#}
-{#                    if ($(el).is(':visible')) {#}
-{#                        index = i;#}
-{#                    }#}
-{#                });#}
-{#            });#}
-{#            $('.cover').on('mouseenter', function() {#}
-{#                $('#nav').fadeIn();#}
-{#            }).on('mouseleave', function() {#}
-{#                $('#nav').fadeOut();#}
-{#            });#}
 
             $('.filters h2').click(function(event) {
                 $('#links').slideToggle();
