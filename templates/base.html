@@ -24,15 +24,13 @@
 
     <header>
         <h1>
-            <a href="{{ uri_for('start') }}">ANDрејевићи</a> |
-            <a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a> |
-            <a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a>
+            <a href="{{ uri_for('start') }}">ANDрејевићи</a>
         </h1>
+        <label for="swipe" data-function='swipe' class="fa fa-bars fa-2x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% endblock %}</nav>
     </header>
     <footer>
         <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-        {% if user %}{{ user.nickname() }}{% endif %}
         <form id="langs" action="/setlang" method="post">
             {% for code, lang in all_languages %}
                 <button{{ {'type': 'submit', 'name': 'language', 'value': code,
@@ -42,8 +40,19 @@
         </form>
         &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
     </footer>
-    <div id="main">
-        {% block contents %}{% endblock %}
+    <div id="wrapper">
+        <input type="checkbox" id="swipe" data-function="swipe"/>
+        <nav class="menu">
+            {% block menu %}
+                <ul>
+                    <li><a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a></li>
+                    <li><a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a></li>
+                </ul>
+            {% endblock %}
+        </nav>
+        <div id="main">
+            {% block contents %}{% endblock %}
+        </div>
     </div>
 
     {% block scripts %}

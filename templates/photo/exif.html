@@ -23,9 +23,11 @@
 	<tbody>
         <tr>
 			<td colspan="2">
-                {{ object.model }}
-                {% if object.lens %}
-                    <br>{{ object.lens }}
+                <a href="{{ uri_for('photo_all_filter', page=1, field='model', value=object.model) }}"
+                title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
+                {% if object.lens %}<br/>
+                    <a href="{{ uri_for('photo_all_filter', page=1, field='lens', value=object.lens) }}"
+                       title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
                 {% endif %}
             </td>
 		</tr>
@@ -54,12 +56,12 @@
 		</tr>
         <tr>
             <td>
-                {{ _('Dominant color') }}
+                {{ _('Color classification') }}
             </td>
             <td>
                 <span class="hex dot" style="border-color: {{ object.hex }}; vertical-align: middle;"></span>&nbsp;
 				<a class="url" href="{{ uri_for('photo_all_filter', page=1, field='color', value=object.color) }}"
-                   title="{{ _('photos with similar color') }}">{{ _('Similar color') }}</a>
+                   title="{{ _('photos with similar color') }}">{{ _(object.color) }}</a>
             </td>
         </tr>
 	</tbody>

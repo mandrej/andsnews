@@ -73,28 +73,3 @@
         });
     </script>
 {% endblock %}
-
-{#{% block contents %}#}
-{#    <div id="gallery">#}
-{#        <div class="filters">#}
-{#            <h2>{{ _('Filter') }}#}
-{#                <span>{{ m.filter_title(filter) }}</span>#}
-{#            </h2>#}
-{#            <div id="links">#}
-{#                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}#}
-{#                {% set _date = {'field': 'date', 'title': _('Dates')} %}#}
-{#                {% set _author = {'field': 'author', 'title': _('Authors')} %}#}
-{#                {% set _color = {'field': 'color', 'title': _('Color')} %}#}
-{#                {% set _model = {'field': 'model', 'title': _('Camera model')} %}#}
-{#                {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}#}
-{#                {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}#}
-{#                {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}#}
-{##}
-{#                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}#}
-{#                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>#}
-{#                    <div id="{{ f.field }}cloud" class="hide"></div>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}

@@ -6,23 +6,6 @@
 
 {% block contents %}
     <div id="gallery">
-        <div class="filters">
-            <h2>{{ _('Filter') }}
-                <span>{{ m.filter_title(filter) }}</span>
-            </h2>
-            <div id="links">
-                {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
-                {% set _date = {'field': 'date', 'title': _('Dates')} %}
-                {% set _author = {'field': 'author', 'title': _('Authors')} %}
-
-                <div id="filters">
-                    {% for f in [_tags, _date, _author] %}
-                        <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>
-                        <div id="{{ f.field }}cloud" class="hide"></div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
         {% for object in objects %}
             {% if object %}
                 <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
@@ -43,7 +26,7 @@
         $(function () {
             var $container = $('#gallery');
             $container.gridalicious({
-                selector: '.filters, .blog',
+                selector: '.blog',
                 width: 240,
                 gutter: 1,
                 animate: true,
@@ -60,10 +43,6 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
-            });
-
-            $('.filters h2').click(function(event) {
-                $('#links').slideToggle();
             });
         });
     </script>
