@@ -4,79 +4,82 @@
 {% block contents %}
     <div class="page">
         {% import "snippets/macros.html" as m %}
-        <h2>{{ _('Add new / change existing photo') }}</h2>
+        <header>
+            <h2>{{ _('Add new / change existing photo') }}</h2>
+        </header>
+        <article>
+            <section>
+                {% if form.errors %}
+                    <div class="formerrors">
+                        <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
+                        <p>{{ _('Please correct errors in') }}
+                        {{ form.errors|join(", ") }}.</p>
+                    </div>
+                {% endif %}
 
-        <section>
-            {% if form.errors %}
-                <div class="formerrors">
-                    <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
-                    <p>{{ _('Please correct errors in') }}
-                    {{ form.errors|join(", ") }}.</p>
-                </div>
-            {% endif %}
+                {% if upload_url %}
+                    <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
+                        <fieldset>
+                            <input name="token" type="hidden" value="{{ token }}"/>
+                            {{ m.form_row(form.headline) }}
+                            {{ m.form_row(form.slug) }}
+                            {{ m.form_row(form.tags) }}
+                            {{ m.form_row(form.photo) }}
+                            <p class="buttons">
+                                <span class="required">{{ _('Required field') }}</span>
+                                <button type="submit">{{ _('upload') }}</button>
+                            </p>
+                        </fieldset>
+                    </form>
+                {% endif %}
 
-            {% if upload_url %}
-                <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
-                    <fieldset>
-                        <input name="token" type="hidden" value="{{ token }}"/>
-                        {{ m.form_row(form.headline) }}
-                        {{ m.form_row(form.slug) }}
-                        {{ m.form_row(form.tags) }}
-                        {{ m.form_row(form.photo) }}
-                        <p class="buttons">
-                            <span class="required">{{ _('Required field') }}</span>
-                            <button type="submit">{{ _('upload') }}</button>
-                        </p>
-                    </fieldset>
-                </form>
-            {% endif %}
+                {% if object %}
+                    <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
+                        <fieldset>
+                            <input name="token" type="hidden" value="{{ token }}"/>
+                            {{ m.form_row(form.headline) }}
+                            {{ m.form_row(form.tags) }}
+                            {% if is_admin %}
+                                {{ m.form_row(form.author) }}
+                            {% else %}
+                                <input type="hidden" name="author" value="{{ object.author.nickname() }}"/>
+                            {% endif %}
+                        </fieldset>
 
-            {% if object %}
-                <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
-                    <fieldset>
-                        <input name="token" type="hidden" value="{{ token }}"/>
-                        {{ m.form_row(form.headline) }}
-                        {{ m.form_row(form.tags) }}
-                        {% if is_admin %}
-                            {{ m.form_row(form.author) }}
-                        {% else %}
-                            <input type="hidden" name="author" value="{{ object.author.nickname() }}"/>
-                        {% endif %}
-                    </fieldset>
+                        <fieldset>
+                            <h3>EXIF {{ _('data') }}</h3>
+                            {{ m.form_row(form.model) }}
+                            {{ m.form_row(form.lens) }}
+                            {{ m.form_row(form.aperture) }}
+                            {{ m.form_row(form.shutter) }}
+                            {{ m.form_row(form.focal_length) }}
+                            {{ m.form_row(form.crop_factor) }}
+                            {{ m.form_row(form.iso) }}
+                            {{ m.form_row(form.date) }}
+                            <p class="buttons">
+                                <span class="required">{{ _('Required field') }}</span>
+                                <button type="submit">{{ _('done') }}</button>
+                            </p>
+                        </fieldset>
+                    </form>
+                {% endif %}
+            </section>
+            <aside>
+                <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+                <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+                <p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
 
-                    <fieldset>
-                        <h3>EXIF {{ _('data') }}</h3>
-                        {{ m.form_row(form.model) }}
-                        {{ m.form_row(form.lens) }}
-                        {{ m.form_row(form.aperture) }}
-                        {{ m.form_row(form.shutter) }}
-                        {{ m.form_row(form.focal_length) }}
-                        {{ m.form_row(form.crop_factor) }}
-                        {{ m.form_row(form.iso) }}
-                        {{ m.form_row(form.date) }}
-                        <p class="buttons">
-                            <span class="required">{{ _('Required field') }}</span>
-                            <button type="submit">{{ _('done') }}</button>
-                        </p>
-                    </fieldset>
-                </form>
-            {% endif %}
-        </section>
-        <aside>
-            <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
-            <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
-            <p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
-
-            {% if object %}
-                {% include "photo/crops.html" %}
-                <p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
-                <h3><a id="draw" class="block button" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
-                    <i class="fa fa-th"></i> {{ _('Calculate palette') }}</a></h3>
-                <div id="palette">
-                    <table class="palette"></table>
-                </div>
-            {% endif %}
-        </aside>
+                {% if object %}
+                    {% include "photo/crops.html" %}
+                    <p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+                    <h3><a id="draw" class="block button" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
+                        <i class="fa fa-th"></i> {{ _('Calculate palette') }}</a></h3>
+                    <div id="palette">
+                        <table class="palette"></table>
+                    </div>
+                {% endif %}
+            </aside>
+        </article>
     </div>
 {% endblock %}
 {% block scripts %}

@@ -5,9 +5,7 @@
                 <h2>{{ object.headline }}</h2>
                 <p>
                     <a href="{{ uri_for('photo_all_filter', page=1, field='author', value=object.author) }}"
-                        title="{{ _("author's photos") }}">{{ object.author }}</a>,
-                    <time datetime='{{ object.date|to_datetime }}'>
-                        {{ object.date|to_date }}</time>
+                        title="{{ _("author's photos") }}">{{ object.author }}</a>
                     {% for tag in object.tags %}
                         {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
                         <a href="{{ uri_for('photo_all_filter', page=1, field='tags', value=tag) }}">
@@ -53,6 +51,11 @@
 			<td>{{ _('Sensitivity') }} (ISO)</td>
 			<td>{% if object.iso %}<a href="{{ uri_for('photo_all_filter', page=1, field='iso', value=object.iso) }}"
                 title="{{ _('photos with same iso') }}">{{ object.iso }} ASA</a>{% else %}---{% endif %}</td>
+		</tr>
+		<tr>
+			<td>{{ _('Taken') }}</td>
+			<td><time datetime='{{ object.date|to_datetime }}'>
+				{{ object.date|to_datetime }}</time></td>
 		</tr>
         <tr>
             <td>
