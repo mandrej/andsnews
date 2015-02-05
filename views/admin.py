@@ -10,7 +10,7 @@ from mapreduce.mapper_pipeline import MapperPipeline
 
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paginator
+from handlers import BaseHandler, csrf_protected, Paging
 from config import filesizeformat
 
 
@@ -62,7 +62,7 @@ class Photos(BaseHandler):
     def get(self, page=1, field=None, value=None):
         query = Photo.query_for(field, value)
         page = int(page)
-        paginator = Paginator(query, per_page=10)
+        paginator = Paging(query, per_page=10)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -79,7 +79,7 @@ class Entries(BaseHandler):
     def get(self, page=1, field=None, value=None):
         query = Entry.query_for(field, value)
         page = int(page)
-        paginator = Paginator(query, per_page=5)
+        paginator = Paging(query, per_page=5)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -110,7 +110,7 @@ class Counters(BaseHandler):
     def get(self, page=1):
         query = Counter.query().order(Counter.field)
         page = int(page)
-        paginator = Paginator(query, per_page=10)
+        paginator = Paging(query, per_page=10)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/counters.html', data)

@@ -1,4 +1,5 @@
 @import "reset.css";
+@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
 @import "lesshat";
 
 @highdensity: ~"only screen and (min-resolution: 1.5dppx)";
@@ -6,19 +7,6 @@
 @tablet:      ~"only screen and (min-width: 530px) and (max-width: 949px)";
 @desktop:     ~"only screen and (min-width: 950px) and (max-width: 1128px)";
 @desktop-xl:  ~"only screen and (min-width: 1129px)";
-
-@font-face {
-  font-family: 'PT Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('PT Sans'), local('PTSans-Regular'), url(https://themes.googleusercontent.com/static/fonts/ptsans/v5/yrzXiAvgeQQdopyG8QSg8Q.woff) format('woff');
-}
-@font-face {
-  font-family: 'PT Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('PT Sans Bold'), local('PTSans-Bold'), url(https://themes.googleusercontent.com/static/fonts/ptsans/v5/g46X4VH_KHOWAAa-HpnGPhsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
-}
 
 @default_font: "PT Sans", sans-serif;
 @default_size: 1.6rem;
@@ -83,6 +71,65 @@ h3 { font-size: 2.1rem; }
 h4 { font-size: 1.8rem; }
 h2, h3, h4 { padding-bottom: 0.5rem; }
 p { padding-bottom: 0.5rem; }
+
+table {
+    font-size: @default_size;
+    border-collapse: collapse;
+    td, th {
+        border: @dashed;
+        padding: 10px;
+    }
+    tr:first-child th {
+        border-top: 0;
+    }
+    tr:last-child td {
+        border-bottom: 0;
+    }
+    tr td:first-child, tr th:first-child {
+        border-left: 0;
+    }
+    tr td:last-child, tr th:last-child {
+        border-right: 0;
+    }
+    &.zebra {
+        width: 100%;
+        tbody tr:hover { background-color: rgba(0, 0, 0, 0.8); }
+        th { text-transform: uppercase; border-bottom: 1px solid #fff; }
+        td { padding: 0 10px; }
+    }
+}
+
+hr {
+    display: block;
+    margin: 1em 0;
+    padding: 0;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #fff;
+}
+
+.buttons {
+	clear: both;
+	margin: 1em 0;
+	text-align: right;
+	span { float: left; }
+}
+button, .button {
+	.default_button;
+	&.block { display: block; }
+	&:focus { outline: none; }
+	&.delete {
+		color: @red;
+		&:hover, &:focus {
+			color: #fff;
+			background: fade(@red, 70%);
+		}
+	}
+	&[disabled], &.disabled {
+		color: @dark;
+		background: @neutral;
+	}
+}
 
 label, input, select, textarea { font-size: @default_size; .box-sizing(border-box); }
 
@@ -389,65 +436,6 @@ input[data-function*='swipe'] {
     }
 	a {
 		&.graph { float: right; }
-	}
-}
-
-table {
-    font-size: @default_size;
-    border-collapse: collapse;
-    td, th {
-        border: @dashed;
-        padding: 10px;
-    }
-    tr:first-child th {
-        border-top: 0;
-    }
-    tr:last-child td {
-        border-bottom: 0;
-    }
-    tr td:first-child, tr th:first-child {
-        border-left: 0;
-    }
-    tr td:last-child, tr th:last-child {
-        border-right: 0;
-    }
-    &.zebra {
-        width: 100%;
-        tbody tr:hover { background-color: rgba(0, 0, 0, 0.8); }
-        th { text-transform: uppercase; border-bottom: 1px solid #fff; }
-        td { padding: 0 10px; }
-    }
-}
-
-hr {
-    display: block;
-    margin: 1em 0;
-    padding: 0;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #fff;
-}
-
-.buttons {
-	clear: both;
-	margin: 1em 0;
-	text-align: right;
-	span { float: left; }
-}
-button, .button {
-	.default_button;
-	&.block { display: block; }
-	&:focus { outline: none; }
-	&.delete {
-		color: @red;
-		&:hover, &:focus {
-			color: #fff;
-			background: fade(@red, 70%);
-		}
-	}
-	&[disabled], &.disabled {
-		color: @dark;
-		background: @neutral;
 	}
 }
 

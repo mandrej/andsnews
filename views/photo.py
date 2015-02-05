@@ -7,7 +7,7 @@ from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, Paging, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
 
 
@@ -15,7 +15,7 @@ class Index(BaseHandler):
     def get(self, page=1, field=None, value=None):
         query = Photo.query_for(field, value)
         page = int(page)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
+        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -29,8 +29,8 @@ class Index(BaseHandler):
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
         query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        index, objects = paginator.neighbors(slug)
+        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
+        index, objects = paginator.vicinity(slug)
 
         data = {'objects': objects,
                 'index': index,

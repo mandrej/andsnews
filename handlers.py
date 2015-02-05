@@ -108,7 +108,7 @@ class BaseHandler(webapp2.RequestHandler):
 class Index(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
+        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(1)
         self.render_template('index.html', {'objects': objects})
 
@@ -234,20 +234,42 @@ class Paginator(object):
 
         return num, prev.get_result(), obj, next.get_result()
 
-    def neighbors(self, slug):
-        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
+
+class Paging(object):
+    def __init__(self, query, per_page=PER_PAGE):
+        self.query = query
+        self.per_page = per_page
+        self.model = ndb.Model._kind_map.get(self.query.kind)
+
+    def page(self, num):
+        if num < 1:
+            webapp2.abort(404)
+
+        offset = (num - 1) * self.per_page
+        objects, cursor, has_next = self.query.fetch_page(self.per_page, offset=offset)
+        return objects, has_next
+
+    def get_obj(self, slug):
         key = ndb.Key(self.query.kind, slug)
         obj = key.get()
         if not obj:
             webapp2.abort(404)
+        return obj
 
-        model = ndb.Model._kind_map.get(self.query.kind)
-        next, cursor, more = self.query.filter(model.date < obj.date).fetch_page(self.per_page)
-        self.query._Query__orders = self.query.orders.reversed()
-        prev, cursor, more = self.query.filter(model.date > obj.date).fetch_page(self.per_page)
+    def vicinity(self, slug):
+        obj, left_objects, left_cursor, left_more = self.left_from(slug)
+        obj, right_objects, right_cursor, right_more = self.right_from(slug)
+        return len(left_objects), left_objects + [obj] + right_objects
 
-        index = len(prev)
-        return index, prev + [obj] + next
+    def right_from(self, slug):
+        obj = self.get_obj(slug)
+        objects, cursor, more = self.query.filter(self.model.date < obj.date).fetch_page(self.per_page)
+        return obj, objects, cursor, more
+
+    def left_from(self, slug):
+        obj = self.get_obj(slug)
+        objects, cursor, more = self.query.filter(self.model.date > obj.date).fetch_page(self.per_page)
+        return obj, objects, cursor, more
 
 
 class RenderCloud(BaseHandler):
@@ -294,11 +316,11 @@ class RenderGraph(BaseHandler):
 class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
+        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
         photos, _ = paginator.page(1)
 
         query = Entry.query().order(-Entry.date)
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paging(query, per_page=PER_PAGE)
         entries, _ = paginator.page(1)
 
         data = {'photos': photos,

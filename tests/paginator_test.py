@@ -44,8 +44,12 @@ class PaginatorTest(unittest.TestCase):
         self.assertIsNone(next)
 
     def test_neighbors(self):
-        index, objects = self.paginator.neighbors('zlatna-ana')
+        index, objects, next_more, next_cursor, prev_more, prev_cursor = self.paginator.neighbors('fortis-flieger-cockpit')
         print index
+        print next_more
+        print next_cursor
+        print prev_more
+        print prev_cursor
         j = 0
         for x in objects:
             print j, x.key.string_id()
