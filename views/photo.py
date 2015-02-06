@@ -1,7 +1,9 @@
 import cgi
 import json
+import logging
 from collections import defaultdict, OrderedDict
 from google.appengine.ext import blobstore
+from google.appengine.datastore.datastore_query import Cursor
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
@@ -12,17 +14,17 @@ from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
         query = Photo.query_for(field, value)
-        page = int(page)
-        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(page)
+        start_cursor = self.request.get('c', None)
+        if start_cursor is not None:
+            start_cursor = Cursor(urlsafe=start_cursor)
+        objects, cursor, has_next = query.fetch_page(PHOTOS_PER_PAGE, start_cursor=start_cursor)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'cursor': cursor.urlsafe(),
+                'has_next': has_next}
         self.render_template('photo/index.html', data)
 
 

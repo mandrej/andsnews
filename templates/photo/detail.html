@@ -1,15 +1,16 @@
 {% extends "photo/base.html" %}
-{#{% block title %}{{ super() }} - {{ object.headline }}{% endblock %}#}
-{#{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}#}
-
-{% block paging %}{% endblock %}
+{% import "snippets/macros.html" as m %}
+{% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
+{% block paging %}
+    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+{% endblock %}
 
 {% block contents %}
     <div class="swiper-container swiper-parent">
         <div class="swiper-wrapper">
             {% for object in objects %}
                 {% if object %}
-                    <div class="swiper-slide">
+                    <div class="swiper-slide main">
                         <div class="cover lazyload" data-bg="{{ object.normal_url }}">
                             <div class="swiper-container swiper-nested">
                                 <div class="swiper-wrapper">
@@ -31,17 +32,39 @@
     {{ super() }}
     <script>
         $(function () {
-            var index = {{ index|to_json }};
-
             var horizontal = $('.swiper-parent').swiper({
                 mode: 'horizontal',
                 keyboardControl: true,
-                initialSlide: index
+                watchActiveIndex: true,
+                onSlideChangeEnd: function(sw, direction) {
+                    var href = $('.next').attr('href'),
+                        slide = sw.activeSlide();
+
+                    if (href && num - slide.index() == 3 && direction == 'next') {
+                        $.get(href, function(page) {
+                            var nav = $(page).find('nav.paginator'),
+                                slides = $(page).find('.main');
+
+                            $.each(slides, function(i, slide) {
+                                sw.appendSlide(slide);
+                            });
+                            $('nav.paginator').html(nav);
+                            num = sw.slides.length;
+                            vertical = $('.swiper-nested').swiper({
+                                mode: 'vertical',
+                                keyboardControl: true
+                            })
+                        })
+                    }
+                }
             });
             var vertical = $('.swiper-nested').swiper({
                 mode: 'vertical',
                 keyboardControl: true
             });
+            var num = horizontal.slides.length;
+            $('nav.paginator').hide();
+
             $(document).on('lazybeforeunveil', function(e) {
                 var $this = $(e.target);
                 var url = $this.data('bg');

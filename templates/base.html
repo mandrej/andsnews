@@ -45,8 +45,8 @@
         <nav class="menu">
             {% block menu %}
                 <ul>
-                    <li><a href="{{ uri_for('photo_all', page=1) }}">{{ _('Photos') }}</a></li>
-                    <li><a href="{{ uri_for('entry_all', page=1) }}">{{ _('Blog') }}</a></li>
+                    <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
+                    <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
                 </ul>
             {% endblock %}
         </nav>

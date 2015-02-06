@@ -107,10 +107,7 @@ class BaseHandler(webapp2.RequestHandler):
 
 class Index(BaseHandler):
     def get(self):
-        query = Photo.query().order(-Photo.date)
-        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(1)
-        self.render_template('index.html', {'objects': objects})
+        self.render_template('index.html')
 
 
 class Complete(BaseHandler):

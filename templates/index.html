@@ -1,34 +1,5 @@
 {% extends "base.html" %}
-{% block contents %}
-    <div id="gallery">
-        {% for object in objects %}
-            {% if object %}
-                {% if filter %}
-                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-                {% else %}
-                    {% set url = uri_for('photo', slug = object.key.string_id()) %}
-                {% endif %}
-                <div class="thumbnail">
-                    <a href="{{ url }}" title="{{ object.headline }}">
-                        <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                             data-src="{{ object.small_url }}">
-                    </a>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-{% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-    <script>
-        $(function () {
-            var $container = $('#gallery');
-            $container.gridalicious({
-                selector: '.thumbnail',
-                width: 240,
-                gutter: 1
-            });
-        });
-    </script>
+{% block contents %}
+    <h2>???????????</h2>
 {% endblock %}
