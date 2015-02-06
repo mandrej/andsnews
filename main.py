@@ -3,7 +3,7 @@ __author__ = 'milan'
 import logging
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import Index, Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
+from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
     SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
@@ -59,5 +59,5 @@ app = WSGIApplication([
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
     Route('/setlang', handler=SetLanguage),
     Route('/sign', handler=Sign),
-    Route('/', handler=Index, name='start'),
+    Route('/', handler='views.photo.Index', name='start'),
     ], config=CONFIG, debug=DEVEL)

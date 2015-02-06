@@ -4,30 +4,31 @@ from StringIO import StringIO
 from PIL import Image
 
 import webapp2
+from google.appengine.datastore.datastore_query import Cursor
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler, csrf_protected, Paging, TagsField
+from handlers import BaseHandler, csrf_protected, TagsField
 from config import TIMEOUT, ENTRIES_PER_PAGE
 
 SMALL = 60, 60
 
 
 class Index(BaseHandler):
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
         query = Entry.query_for(field, value)
-        page = int(page)
-        paginator = Paging(query, per_page=ENTRIES_PER_PAGE)
-        objects, has_next = paginator.page(page)
+        start_cursor = self.request.get('c', None)
+        if start_cursor is not None:
+            start_cursor = Cursor(urlsafe=start_cursor)
+        objects, cursor, has_next = query.fetch_page(ENTRIES_PER_PAGE, start_cursor=start_cursor)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'cursor': cursor.urlsafe(),
+                'has_next': has_next}
         self.render_template('entry/index.html', data)
 
 
@@ -105,7 +106,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('entry_admin', page=1)
+            self.redirect_to('entry_admin')
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
@@ -137,7 +138,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('entry_admin', page=1)
+            self.redirect_to('entry_admin')
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 

@@ -105,11 +105,6 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
-class Index(BaseHandler):
-    def get(self):
-        self.render_template('index.html')
-
-
 class Complete(BaseHandler):
     def get(self, mem_key):
         cloud = Cloud(mem_key).get_list()
@@ -313,12 +308,10 @@ class RenderGraph(BaseHandler):
 class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
-        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
-        photos, _ = paginator.page(1)
+        photos, _, _ = query.fetch_page(PHOTOS_PER_PAGE)
 
         query = Entry.query().order(-Entry.date)
-        paginator = Paging(query, per_page=PER_PAGE)
-        entries, _ = paginator.page(1)
+        entries, _, _ = query.fetch_page(PER_PAGE)
 
         data = {'photos': photos,
                 'entries': entries,

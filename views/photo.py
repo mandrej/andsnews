@@ -9,7 +9,7 @@ from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paging, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
 
 
@@ -30,12 +30,16 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
+        obj = Photo.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
         query = Photo.query_for(field, value)
-        paginator = Paging(query, per_page=PHOTOS_PER_PAGE)
-        index, objects = paginator.vicinity(slug)
+        
+        left_objects, left_cursor, left_more = query.filter(Photo.date > obj.date).fetch_page(PHOTOS_PER_PAGE)
+        right_objects, right_cursor, right_more = query.filter(Photo.date < obj.date).fetch_page(PHOTOS_PER_PAGE)
 
-        data = {'objects': objects,
-                'index': index,
+        data = {'objects': left_objects + [obj] + right_objects,
+                'index': len(left_objects),
                 'filter': {'field': field, 'value': value} if (field and value) else None}
         self.render_template('photo/detail.html', data)
 
@@ -83,7 +87,7 @@ class Palette(BaseHandler):
             incr_count('Photo', 'color', obj.color)
             self.render_json({
                 'success': True,
-                'similar_url': self.uri_for('photo_all_filter', page=1, field='color', value=obj.color)
+                'similar_url': self.uri_for('photo_all_filter', field='color', value=obj.color)
             })
         else:
             self.render_json({'success': False})
@@ -168,7 +172,7 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('photo_admin', page=1)
+            self.redirect_to('photo_admin')
         else:
             self.render_template('admin/photo_form.html', {
                 'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})
