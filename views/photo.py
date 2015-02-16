@@ -40,19 +40,11 @@ class Detail(BaseHandler):
         query = Photo.query_for(field, value)
         offset = (page - 1) * PHOTOS_PER_PAGE
         objects, cursor, right_more = query.fetch_page(PHOTOS_PER_PAGE, offset=offset)
-
         slug = self.request.get('slug', None)
-        obj = Photo.get_by_id(slug)
-        if not obj:
-            self.abort(404)
-
-        # query = Photo.query_for(field, value)
-        # left_objects, left_cursor, left_more = query.filter(Photo.date > obj.date).fetch_page(PHOTOS_PER_PAGE)
-        # right_objects, right_cursor, right_more = query.filter(Photo.date < obj.date).fetch_page(PHOTOS_PER_PAGE)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'index': [x.key.string_id() for x in objects].index(slug),
+                'slug': slug,
                 'page': page,
                 'right_more': right_more,
                 'left_more': page > 1}

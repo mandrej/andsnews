@@ -2,7 +2,7 @@
 {% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}
-    {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
+    {% with name='photo' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
@@ -10,7 +10,7 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 {% if object %}
-                    <div class="swiper-slide main">
+                    <div id="{{ object.key.string_id() }}" class="swiper-slide main">
                         <div class="cover lazyload" data-bg="{{ object.normal_url }}">
                             <div class="swiper-container swiper-nested">
                                 <div class="swiper-wrapper">
@@ -31,63 +31,68 @@
 {% block scripts %}
     {{ super() }}
     <script>
+        jQuery.fn.reverse = function() {
+            return this.pushStack(this.get().reverse(), arguments);
+        };
+
         $(function () {
-            var horizontal = $('.swiper-parent').swiper({
-                mode: 'horizontal',
+            var ids = $('.main').map(function() {
+                return this.id
+            }).get();
+            var index = $.inArray('{{ slug }}', ids);
+
+            var horizontal = new Swiper('.swiper-parent', {
+                direction: 'horizontal',
+                loop: false,
                 keyboardControl: true,
-                watchActiveIndex: true,
-                initialSlide: {{ index|to_json }},
-                onSlideChangeEnd: function(sw, direction) {
-                    var index = sw.activeIndex;
-                    console.log(num, index, direction);
+                initialSlide: (index != -1)? index: 0,
+                onReachEnd: function(sw) {
+                    console.log('right');
+                    var href = $('.next').attr('href');
+                    $.get(href, function(page) {
+                        var $page = $(page),
+                            nav = $page.find('nav.paginator');
 
+                        $page.find('.main').each(function(i, slide) {
+                            if ($('#' + slide.id).length == 0) {
+                                sw.appendSlide(slide);
+                            }
+                        });
+                        $('nav.paginator').replaceWith(nav);
 
-{#                    if (direction == 'next' && index == (num - 1)) {#}
-{#                        var href = $('.next').attr('href');#}
-{#                        $.get(href, function(page) {#}
-{#                            var nav = $(page).find('nav.paginator'),#}
-{#                                slides = $(page).find('.main');#}
-{##}
-{#                            $.each(slides, function(i, slide) {#}
-{#                                sw.appendSlide(slide);#}
-{#                            });#}
-{#                            $('nav.paginator').html(nav);#}
-{#                            num = sw.slides.length;#}
-{#                            vertical = $('.swiper-nested').swiper({#}
-{#                                mode: 'vertical',#}
-{#                                keyboardControl: true#}
-{#                            })#}
-{#                        })#}
-{#                    } else if (direction == 'prev' && index == 0) {#}
-{#                        var href = $('.prev').attr('href');#}
-{#                        $.get(href, function(page) {#}
-{#                            var nav = $(page).find('nav.paginator'),#}
-{#                                slides = $(page).find('.main');#}
-{##}
-{#                            $.each(slides, function(i, slide) {#}
-{#                                sw.prependSlide(slide);#}
-{#                            });#}
-{#                            $('nav.paginator').html(nav);#}
-{#                            num = sw.slides.length;#}
-{#                            vertical = $('.swiper-nested').swiper({#}
-{#                                mode: 'vertical',#}
-{#                                keyboardControl: true#}
-{#                            })#}
-{#                        })#}
-{#                    }#}
+                        vertical = new Swiper('.swiper-nested', {
+                            direction: 'vertical',
+                            keyboardControl: true
+                        });
+                    });
+                },
+                onReachBeginning: function(sw) {
+                    console.log('left');
+                    var href = $('.prev').attr('href');
+                    $.get(href, function(page) {
+                        var $page = $(page),
+                            nav = $page.find('nav.paginator');
 
+                        $page.find('.main').reverse().each(function(i, slide) {
+                            if ($('#' + slide.id).length == 0) {
+                                sw.prependSlide(slide);
+                            }
+                        });
+                        $('nav.paginator').replaceWith(nav);
 
-{#                    if (href && num - slide.index() == 3 && direction == 'next') {#}
-{#                        #}
-{#                    }#}
+                        vertical = new Swiper('.swiper-nested', {
+                            direction: 'vertical',
+                            keyboardControl: true
+                        });
+                    });
                 }
             });
-            var vertical = $('.swiper-nested').swiper({
-                mode: 'vertical',
+            var vertical = new Swiper('.swiper-nested', {
+                direction: 'vertical',
                 keyboardControl: true
             });
-            var num = horizontal.slides.length;
-{#            $('nav.paginator').hide();#}
+
+            $('nav.paginator').hide();
 
             $(document).on('lazybeforeunveil', function(e) {
                 var $this = $(e.target);

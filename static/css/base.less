@@ -1,5 +1,6 @@
 @import "reset.css";
 @import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
+@import "swiper.css";
 @import "lesshat";
 
 @highdensity: ~"only screen and (min-resolution: 1.5dppx)";
@@ -313,21 +314,6 @@ input[data-function*='swipe'] {
     &:hover, &:focus { .grayscale(0); }
 }
 
-.swiper-container {
-	position: relative;
-	overflow: hidden;
-    .backface-visibility(hidden);
-	z-index:1;
-}
-.swiper-wrapper {
-	position: relative;
-	width: 100%;
-    .transition-property(transform, left, top);
-    .transition-duration(0s);
-    .translate3d(0, 0, 0);
-	.transition-timing-function(ease);
-}
-
 .swiper-parent {
     width: 100%;
     height: 100%;
@@ -335,9 +321,6 @@ input[data-function*='swipe'] {
 .swiper-nested {
     width: 100%;
     height: 100%;
-}
-.swiper-slide {
-    float: left;
 }
 .cover {
     width: 100%;
