@@ -14,8 +14,8 @@ app = WSGIApplication([
     PathPrefixRoute('/photos', [
         Route('/', handler='views.photo.Index', name='photo_all'),
         Route('/<slug>/palette', handler='views.photo.Palette', name='palette'),
-        Route('/<slug>', handler='views.photo.Detail', name='photo'),
-        Route('/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/<slug>',
+        Route('/item', handler='views.photo.Detail', name='photo'),
+        Route('/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/item',
               handler='views.photo.Detail', name='photo_filter'),
         Route('/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/',
               handler='views.photo.Index', name='photo_all_filter'),

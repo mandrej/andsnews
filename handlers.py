@@ -246,27 +246,15 @@ class Paging(object):
         objects, cursor, has_next = self.query.fetch_page(self.per_page, offset=offset)
         return objects, has_next
 
-    def get_obj(self, slug):
+    def vicinity(self, slug):
         key = ndb.Key(self.query.kind, slug)
         obj = key.get()
         if not obj:
             webapp2.abort(404)
-        return obj
 
-    def vicinity(self, slug):
-        obj, left_objects, left_cursor, left_more = self.left_from(slug)
-        obj, right_objects, right_cursor, right_more = self.right_from(slug)
+        left_objects, left_cursor, left_more = self.query.filter(self.model.date > obj.date).fetch_page(self.per_page)
+        right_objects, right_cursor, right_more = self.query.filter(self.model.date < obj.date).fetch_page(self.per_page)
         return len(left_objects), left_objects + [obj] + right_objects
-
-    def right_from(self, slug):
-        obj = self.get_obj(slug)
-        objects, cursor, more = self.query.filter(self.model.date < obj.date).fetch_page(self.per_page)
-        return obj, objects, cursor, more
-
-    def left_from(self, slug):
-        obj = self.get_obj(slug)
-        objects, cursor, more = self.query.filter(self.model.date > obj.date).fetch_page(self.per_page)
-        return obj, objects, cursor, more
 
 
 class RenderCloud(BaseHandler):

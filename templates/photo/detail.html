@@ -36,26 +36,50 @@
                 mode: 'horizontal',
                 keyboardControl: true,
                 watchActiveIndex: true,
+                initialSlide: {{ index|to_json }},
                 onSlideChangeEnd: function(sw, direction) {
-                    var href = $('.next').attr('href'),
-                        slide = sw.activeSlide();
+                    var index = sw.activeIndex;
+                    console.log(num, index, direction);
 
-                    if (href && num - slide.index() == 3 && direction == 'next') {
-                        $.get(href, function(page) {
-                            var nav = $(page).find('nav.paginator'),
-                                slides = $(page).find('.main');
 
-                            $.each(slides, function(i, slide) {
-                                sw.appendSlide(slide);
-                            });
-                            $('nav.paginator').html(nav);
-                            num = sw.slides.length;
-                            vertical = $('.swiper-nested').swiper({
-                                mode: 'vertical',
-                                keyboardControl: true
-                            })
-                        })
-                    }
+{#                    if (direction == 'next' && index == (num - 1)) {#}
+{#                        var href = $('.next').attr('href');#}
+{#                        $.get(href, function(page) {#}
+{#                            var nav = $(page).find('nav.paginator'),#}
+{#                                slides = $(page).find('.main');#}
+{##}
+{#                            $.each(slides, function(i, slide) {#}
+{#                                sw.appendSlide(slide);#}
+{#                            });#}
+{#                            $('nav.paginator').html(nav);#}
+{#                            num = sw.slides.length;#}
+{#                            vertical = $('.swiper-nested').swiper({#}
+{#                                mode: 'vertical',#}
+{#                                keyboardControl: true#}
+{#                            })#}
+{#                        })#}
+{#                    } else if (direction == 'prev' && index == 0) {#}
+{#                        var href = $('.prev').attr('href');#}
+{#                        $.get(href, function(page) {#}
+{#                            var nav = $(page).find('nav.paginator'),#}
+{#                                slides = $(page).find('.main');#}
+{##}
+{#                            $.each(slides, function(i, slide) {#}
+{#                                sw.prependSlide(slide);#}
+{#                            });#}
+{#                            $('nav.paginator').html(nav);#}
+{#                            num = sw.slides.length;#}
+{#                            vertical = $('.swiper-nested').swiper({#}
+{#                                mode: 'vertical',#}
+{#                                keyboardControl: true#}
+{#                            })#}
+{#                        })#}
+{#                    }#}
+
+
+{#                    if (href && num - slide.index() == 3 && direction == 'next') {#}
+{#                        #}
+{#                    }#}
                 }
             });
             var vertical = $('.swiper-nested').swiper({
@@ -63,7 +87,7 @@
                 keyboardControl: true
             });
             var num = horizontal.slides.length;
-            $('nav.paginator').hide();
+{#            $('nav.paginator').hide();#}
 
             $(document).on('lazybeforeunveil', function(e) {
                 var $this = $(e.target);

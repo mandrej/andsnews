@@ -195,6 +195,9 @@ body > header {
 		.next, .prev {
             padding: 0 10px;
 			line-height: 40px;
+            &.na {
+                color: @gray;
+            }
 		}
 	}
 }
@@ -233,7 +236,7 @@ body > footer {
 	}
 }
 
-#wrapper { height: 100%; overflow-x: hidden; }
+#wrapper { height: 100%; }
 
 label[data-function*='swipe'] {
 	position: absolute;
