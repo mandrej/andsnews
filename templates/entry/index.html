@@ -23,7 +23,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        $(function () {
+        $(document).ready(function () {
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.blog',

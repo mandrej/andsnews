@@ -1,10 +1,11 @@
 __author__ = 'milan'
 
 import logging
+
 from webapp2 import WSGIApplication, Route, SimpleRoute
 from webapp2_extras.routes import PathPrefixRoute
-from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
-    SiteMap, SaveAsHandler
+
+from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
 logging.getLogger().setLevel(logging.INFO)

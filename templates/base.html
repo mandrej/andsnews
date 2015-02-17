@@ -36,21 +36,20 @@
                     'title': lang}|xmlattr }}>{{ language(code) }}</button>
             {% endfor %}
         </form>
-        &nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}
+        <small>&nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}</small>
     </footer>
-    <div id="wrapper">
-        <input type="checkbox" id="swipe" data-function="swipe"/>
-        <nav class="menu">
-            {% block menu %}
-                <ul>
-                    <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
-                    <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
-                </ul>
-            {% endblock %}
-        </nav>
-        <div id="main">
-            {% block contents %}{% endblock %}
-        </div>
+
+    <input type="checkbox" id="swipe" data-function="swipe"/>
+    <nav class="menu">
+        {% block menu %}
+            <ul>
+                <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
+                <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
+            </ul>
+        {% endblock %}
+    </nav>
+    <div id="main">
+        {% block contents %}{% endblock %}
     </div>
 
     {% block scripts %}

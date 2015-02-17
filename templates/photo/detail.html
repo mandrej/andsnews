@@ -31,7 +31,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        $(function () {
+        $(document).ready(function () {
             var parameters = $.getQueryParameters(),
                 ids = $('.main').map(function() {
                     return $(this).data('hash')

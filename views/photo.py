@@ -1,10 +1,11 @@
 import cgi
 import json
-import logging
 from collections import defaultdict, OrderedDict
+
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
+
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
