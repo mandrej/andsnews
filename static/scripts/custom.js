@@ -93,6 +93,16 @@ $(function() {
     $.fn.reverse = function() {
         return this.pushStack(this.get().reverse(), arguments);
     };
+    /*
+        Get Query Params as Object
+        http://css-tricks.com/snippets/jquery/get-query-params-object/
+     */
+    $.extend({
+        getQueryParameters : function(str) {
+            if (str) str = str.replace(/^.*(\?)/,'');
+            return (str || document.location.search).replace(/(^\?)/,'').split("&").map(function(n){return n = n.split("="),this[n[0]] = n[1],this}.bind({}))[0];
+        }
+    });
 });
 
 $(document).ready(function() {

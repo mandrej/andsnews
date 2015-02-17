@@ -23,9 +23,7 @@
 	{% endblock %}
 
     <header>
-        <h1>
-            <a href="{{ uri_for('start') }}">ANDрејевићи</a>
-        </h1>
+        <h1><a href="{{ uri_for('start') }}">ANDрејевићи</a></h1>
         <label for="swipe" data-function='swipe' class="fa fa-bars fa-2x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% endblock %}</nav>
     </header>
@@ -58,9 +56,9 @@
     {% block scripts %}
         <script>token = '{{ token }}';</script>
         <script src="/static/scripts/jquery.grid-a-licious.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-infinitescroll/2.0b2.120519/jquery.infinitescroll.min.js"></script>
+        <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/swiper.jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/0.8.1/lazysizes.min.js"></script>
+        <script src="/static/scripts/lazysizes.min.js"></script>
         <script src="/static/scripts/custom.min.js"></script>
     {% endblock %}
 

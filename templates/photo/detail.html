@@ -10,7 +10,7 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 {% if object %}
-                    <div id="{{ object.key.string_id() }}" class="swiper-slide main">
+                    <div data-hash="{{ object.key.string_id() }}" class="swiper-slide main">
                         <div class="cover lazyload" data-bg="{{ object.normal_url }}">
                             <div class="swiper-container swiper-nested">
                                 <div class="swiper-wrapper">
@@ -32,53 +32,64 @@
     {{ super() }}
     <script>
         $(function () {
-            var ids = $('.main').map(function() {
-                return this.id
-            }).get();
-            var index = $.inArray('{{ slug }}', ids);
+            var parameters = $.getQueryParameters(),
+                ids = $('.main').map(function() {
+                    return $(this).data('hash')
+                }).get(),
+                index = $.inArray('{{ slug }}', ids),
+                pages = [];
+
+            pages.push(parseInt(parameters.page));
+{#            window.history.pushState("object or string", "Title", location.pathname + '#' + parameters.slug);#}
 
             var horizontal = new Swiper('.swiper-parent', {
                 direction: 'horizontal',
                 loop: false,
+                hashnav: true,
                 keyboardControl: true,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
-                    var href = $('.next').attr('href');
-                    $.get(href, function(page) {
-                        var $page = $(page),
-                            nav = $page.find('nav.paginator');
+                    var href = $('.next').attr('href'),
+                        page = parseInt($.getQueryParameters(href).page);
 
-                        $page.find('.main').each(function(i, slide) {
-                            if ($('#' + slide.id).length == 0) {
-                                sw.appendSlide(slide);
-                            }
-                        });
-                        $('nav.paginator').replaceWith(nav);
+                    if ($.inArray(page, pages) == -1) {
+                        $.get(href, function(response) {
+                            var $page = $(response);
 
-                        vertical = new Swiper('.swiper-nested', {
-                            direction: 'vertical',
-                            keyboardControl: true
+                            pages.push(page);
+                            sw.appendSlide($page.find('.main'));
+                            $('nav.paginator').replaceWith(function() {
+                                return $page.find('nav.paginator').hide()
+                            });
+
+                            vertical = new Swiper('.swiper-nested', {
+                                direction: 'vertical',
+                                keyboardControl: true
+                            });
                         });
-                    });
+                    }
                 },
                 onReachBeginning: function(sw) {
-                    var href = $('.prev').attr('href');
-                    $.get(href, function(page) {
-                        var $page = $(page),
-                            nav = $page.find('nav.paginator');
+                    var href = $('.prev').attr('href'),
+                        page = parseInt($.getQueryParameters(href).page);
 
-                        $page.find('.main').reverse().each(function(i, slide) {
-                            if ($('#' + slide.id).length == 0) {
-                                sw.prependSlide(slide);
-                            }
-                        });
-                        $('nav.paginator').replaceWith(nav);
+                    if ($.inArray(page, pages) == -1) {
+                        $.get(href, function (response) {
+                            var $page = $(response);
 
-                        vertical = new Swiper('.swiper-nested', {
-                            direction: 'vertical',
-                            keyboardControl: true
+                            pages.push(page);
+                            // reverse defined in custom.js
+                            sw.prependSlide($page.find('.main').reverse());
+                            $('nav.paginator').replaceWith(function() {
+                                return $page.find('nav.paginator').hide()
+                            });
+
+                            vertical = new Swiper('.swiper-nested', {
+                                direction: 'vertical',
+                                keyboardControl: true
+                            });
                         });
-                    });
+                    }
                 }
             });
             var vertical = new Swiper('.swiper-nested', {
@@ -86,13 +97,13 @@
                 keyboardControl: true
             });
 
-            $('nav.paginator').hide();
-
             $(document).on('lazybeforeunveil', function(e) {
                 var $this = $(e.target);
                 var url = $this.data('bg');
                 if (url) $this.css('background-image', 'url(' + url + ')').removeAttr('data-bg');
             });
+
+            $('nav.paginator').hide();
         });
     </script>
 {% endblock %}
