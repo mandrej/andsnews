@@ -3,51 +3,44 @@ import json
 import logging
 from collections import defaultdict, OrderedDict
 from google.appengine.ext import blobstore
-from google.appengine.datastore.datastore_query import Cursor
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from models import Photo, img_palette, incr_count, decr_count, range_names
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paging, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
-        if page < 1:
-            self.abort(404)
-
         query = Photo.query_for(field, value)
-        offset = (page - 1) * PHOTOS_PER_PAGE
-        objects, cursor, right_more = query.fetch_page(PHOTOS_PER_PAGE, offset=offset)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
+        objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'right_more': right_more,
-                'left_more': page > 1}
+                'has_next': has_next,
+                'has_previous': page > 1}
         self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
-        if page < 1:
-            self.abort(404)
-
-        query = Photo.query_for(field, value)
-        offset = (page - 1) * PHOTOS_PER_PAGE
-        objects, cursor, right_more = query.fetch_page(PHOTOS_PER_PAGE, offset=offset)
         slug = self.request.get('slug', None)
+        query = Photo.query_for(field, value)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
+        objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'slug': slug,
                 'page': page,
-                'right_more': right_more,
-                'left_more': page > 1}
+                'has_next': has_next,
+                'has_previous': page > 1}
         self.render_template('photo/detail.html', data)
 
 

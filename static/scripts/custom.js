@@ -84,6 +84,15 @@ $(function() {
 			}
         })
 	};
+    /*
+        Reverse array order
+        2015.02.16
+        Example: $page.find('.main').reverse().each(function(i, slide) {});
+        http://stackoverflow.com/questions/1394020/jquery-each-backwards
+     */
+    $.fn.reverse = function() {
+        return this.pushStack(this.get().reverse(), arguments);
+    };
 });
 
 $(document).ready(function() {

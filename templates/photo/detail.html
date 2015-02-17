@@ -31,10 +31,6 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        jQuery.fn.reverse = function() {
-            return this.pushStack(this.get().reverse(), arguments);
-        };
-
         $(function () {
             var ids = $('.main').map(function() {
                 return this.id
@@ -47,7 +43,6 @@
                 keyboardControl: true,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
-                    console.log('right');
                     var href = $('.next').attr('href');
                     $.get(href, function(page) {
                         var $page = $(page),
@@ -67,7 +62,6 @@
                     });
                 },
                 onReachBeginning: function(sw) {
-                    console.log('left');
                     var href = $('.prev').attr('href');
                     $.get(href, function(page) {
                         var $page = $(page),

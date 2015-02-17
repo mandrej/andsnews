@@ -10,7 +10,7 @@ from mapreduce.mapper_pipeline import MapperPipeline
 
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paging
+from handlers import BaseHandler, csrf_protected, Paginator
 from config import filesizeformat
 
 
@@ -59,10 +59,10 @@ class Index(BaseHandler):
 
 class Photos(BaseHandler):
     @login_required
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
+        page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
-        page = int(page)
-        paginator = Paging(query, per_page=10)
+        paginator = Paginator(query, per_page=10)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -76,10 +76,10 @@ class Photos(BaseHandler):
 
 class Entries(BaseHandler):
     @login_required
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
+        page = int(self.request.get('page', 1))
         query = Entry.query_for(field, value)
-        page = int(page)
-        paginator = Paging(query, per_page=5)
+        paginator = Paginator(query, per_page=5)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -107,10 +107,10 @@ class Entries(BaseHandler):
 
 class Counters(BaseHandler):
     @admin_required
-    def get(self, page=1):
+    def get(self):
+        page = int(self.request.get('page', 1))
         query = Counter.query().order(Counter.field)
-        page = int(page)
-        paginator = Paging(query, per_page=10)
+        paginator = Paginator(query, per_page=20)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
         self.render_template('admin/counters.html', data)

@@ -1,16 +1,16 @@
-{% if left_more or right_more %}
+{% if has_next or has_previous %}
     {% if filter %}
         {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value) %}
     {% else %}
         {% set url = uri_for(name) %}
     {% endif %}
 
-    {% if left_more %}
+    {% if has_previous %}
         <a{{ {'href': '%s?page=%s' % (url, page - 1), 'class': prev_class}|xmlattr }}></a>
     {% else %}
         <span class="{{ prev_class }} na"></span>
     {% endif %}
-    {% if right_more %}
+    {% if has_next %}
         <a{{ {'href': '%s?page=%s' % (url, page + 1), 'class': next_class}|xmlattr }}></a>
     {% else %}
         <span class="{{ next_class }} na"></span>

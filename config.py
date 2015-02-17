@@ -12,7 +12,7 @@ from webapp2_extras.i18n import ngettext, lazy_gettext as _
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
-PHOTOS_PER_PAGE = 8
+PHOTOS_PER_PAGE = 24
 ENTRIES_PER_PAGE = 9
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
