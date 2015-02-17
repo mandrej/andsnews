@@ -362,7 +362,7 @@ input[data-function*='swipe'] {
 	dt { float: none; margin-bottom: 0.5em; padding: 0; width: auto; }
 	dd { border: none; margin: 0; padding: 0; }
 	blockquote { border-left: 1em solid @gray; margin: 0.5em 0; padding-left: 1em; }
-	pre { font-family: @monospaced; font-size: 0.8em; }
+	pre { font-family: @monospaced; font-size: @default_size; overflow: hidden; }
     .story {
         .clearing;
         h2, h3, h4 {
@@ -427,11 +427,10 @@ input[data-function*='swipe'] {
 .errorcode {
     position: absolute;
     top: 1em;
-    width: (100% - 3%);
-    font-size: 16em;
-    color: fadeout(#000, 70%);
+    width: (100% - 10px);
+    font-size: 15em;
+    color: fadeout(#fff, 70%);
     text-align: center;
-	z-index: -1;
 	@media @mobile, @tablet { font-size: 10em; }
 }
 .formerrors {

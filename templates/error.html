@@ -2,10 +2,12 @@
 {% block title %}{{ super() }} - {{ error.status|default('500 Internal Server Error') }}{% endblock %}
 
 {% block contents %}
-    <h2>{{ error }}</h2>
-    {% if path %}<pre>{{ path }}</pre>{% endif %}
-    {% if lines %}<pre>{{ lines }}</pre>{% endif %}
-    <div class="errorcode">{{ error.status_code|default(500) }}</div>
+    <div class="page">
+        <h2>{{ error }}</h2>
+        {% if path %}<pre>{{ path }}</pre>{% endif %}
+        {% if lines %}<pre>{{ lines }}</pre>{% endif %}
+        <div class="errorcode">{{ error.status_code|default(500) }}</div>
+    </div>
 {% endblock %}
 
 {% block ga %}{% endblock %}
