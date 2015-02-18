@@ -165,7 +165,7 @@ class SaveAsHandler(BaseHandler):
 
 
 class Paginator(object):
-    timeout = TIMEOUT / 30  # 2 min
+    timeout = TIMEOUT / 12  # 5 min
 
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query

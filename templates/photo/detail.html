@@ -10,7 +10,7 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 {% if object %}
-                    <div data-hash="{{ object.key.string_id() }}" class="swiper-slide main">
+                    <div id="{{ object.key.string_id() }}" class="swiper-slide main">
                         <div class="cover lazyload" data-bg="{{ object.normal_url }}">
                             <div class="swiper-container swiper-nested">
                                 <div class="swiper-wrapper">
@@ -34,18 +34,17 @@
         $(document).ready(function () {
             var parameters = $.getQueryParameters(),
                 ids = $('.main').map(function() {
-                    return $(this).data('hash')
+                    return this.id
                 }).get(),
                 index = $.inArray('{{ slug }}', ids),
                 pages = [];
 
             pages.push(parseInt(parameters.page));
-{#            window.history.pushState("object or string", "Title", location.pathname + '#' + parameters.slug);#}
+            window.history.replaceState(null, '', location.pathname);
 
             var horizontal = new Swiper('.swiper-parent', {
                 direction: 'horizontal',
                 loop: false,
-                hashnav: true,
                 keyboardControl: true,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
