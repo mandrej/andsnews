@@ -172,17 +172,13 @@ class Paginator(object):
         self.per_page = per_page
         # <str> repr(self.query)
         self.id = hashlib.md5('{0}{1}'.format(self.query, self.per_page)).hexdigest()
-        self.cache = memcache.get(self.id)
-
-        if self.cache is None:
-            self.cache = {}
-            memcache.add(self.id, self.cache, self.timeout)
+        self.cache = memcache.get(self.id) or {}
 
     def page_keys(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        if self.cache and num in self.cache and self.cache[num]['keys']:
+        if self.cache and num in self.cache:
             return self.cache[num]['keys'], self.cache[num]['has_next']
 
         try:
@@ -192,11 +188,8 @@ class Paginator(object):
             offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
-        if not keys and num == 1:
-            return keys, has_next
-
-        self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
-        memcache.replace(self.id, self.cache, self.timeout)
+        self.cache[num] = {'keys': keys, 'cursor': cursor, 'has_next': has_next}
+        memcache.set(self.id, self.cache, self.timeout)
         return keys, has_next
 
     def page(self, num):

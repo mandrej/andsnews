@@ -3,4 +3,3 @@ blacklist:
     description: comment spammer
   - subnet: 103.224.250.78
     description: Fckeditor/editor/filemanager/browser
-
