@@ -303,16 +303,12 @@ input[data-function*='swipe'] {
     }
 }
 
-.thumbnail, .blog, .admin {
-	display: block;
-	color: #000;
-}
-.blog, .admin { .transition(all .3s ease-out); }
-.thumbnail a {
+.thumbnail {
     display: block;
     position: relative;
     text-align: center;
     img, .mask {
+        .grayscale(0);
         .transition(all .3s ease-out);
     }
     .mask {
@@ -354,17 +350,17 @@ input[data-function*='swipe'] {
     a { color: #fff; }
 }
 
-.blog, .admin {
-    padding: 10px;
-	background: @gold;
-}
 .blog {
+	display: block;
+    padding: 10px;
+	background: @gray;
+    .transition(all .3s ease-out);
     h2, h3 {
         line-height: 110%;
         margin-bottom: 0.5rem;
 		span { display: block; font-size: @default_size; line-height: 110%; }
 	}
-	&:hover { background: @dark; color: #fff; }
+	&:focus, &:hover { background: @gold; }
 }
 
 .page {
@@ -410,6 +406,8 @@ input[data-function*='swipe'] {
 }
 
 .admin {
+    padding: 10px;
+    background: @gray;
 	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
 	button { float: right; margin-left: 0.5em; }
 	dl {
