@@ -28,17 +28,6 @@
         <label for="swipe" data-function='swipe' class="fa fa-bars fa-2x" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% endblock %}</nav>
     </header>
-    <footer>
-        <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-        <form id="langs" action="/setlang" method="post">
-            {% for code, lang in all_languages %}
-                <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                    'class': 'current' if code == language_code else none,
-                    'title': lang}|xmlattr }}>{{ language(code) }}</button>
-            {% endfor %}
-        </form>
-        <small>&nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}</small>
-    </footer>
 
     <input type="checkbox" id="swipe" data-function="swipe"/>
     <nav class="menu">
@@ -52,6 +41,18 @@
     <div id="main">
         {% block contents %}{% endblock %}
     </div>
+
+    <footer>
+        <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
+        <form id="langs" action="/setlang" method="post">
+            {% for code, lang in all_languages %}
+                <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                    'class': 'current' if code == language_code else none,
+                    'title': lang}|xmlattr }}>{{ language(code) }}</button>
+            {% endfor %}
+        </form>
+        <small>&nbsp;&nbsp;АNDS v.{{ version() }} 2008-{{ year() }}</small>
+    </footer>
 
     {% block scripts %}
         <script src="/static/scripts/jquery.grid-a-licious.min.js"></script>
