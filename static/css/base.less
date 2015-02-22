@@ -61,7 +61,7 @@ body {
     color: #000;
     font-family: @default_font;
     font-size: @default_size;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 a {
     color: #000;
@@ -180,7 +180,6 @@ body > header {
     width: 100%;
     z-index: 10;
     height: 40px;
-    overflow: hidden;
 	h1 {
         font-size: 2.4rem;
 		color: @dark;
@@ -216,7 +215,6 @@ body > footer {
 	color: @gray;
     background: #000;
     z-index: 20;
-    overflow: hidden;
 	a {
 		padding: 5px 10px;
 		color: #fff;
@@ -258,11 +256,15 @@ input[data-function*='swipe'] {
 }
 
 #main {
-    height: 100%;
-    padding: 40px 0 25px 0;
+    position:absolute;
+    top: 40px;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+
     .translate3d(0, 0, 0);
 	.transition(transform, .5s);
-    .box-sizing(border-box);
+
 }
 
 .menu {
