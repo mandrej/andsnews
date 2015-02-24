@@ -1,5 +1,4 @@
 User-agent: *
-Disallow: /*?idx*
 Disallow: /sign
 Disallow: /search
 Disallow: /admin/

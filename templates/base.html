@@ -35,6 +35,7 @@
             <ul>
                 <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
                 <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
+                <li><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></li>
             </ul>
         {% endblock %}
     </nav>
@@ -43,7 +44,6 @@
     </div>
 
     <footer>
-        <a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
         <form id="langs" action="/setlang" method="post">
             {% for code, lang in all_languages %}
                 <button{{ {'type': 'submit', 'name': 'language', 'value': code,

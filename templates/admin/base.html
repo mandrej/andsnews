@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block menu %}
+    <ul>
+        <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
+        <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
+        <li>
+            <a class="selected" href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
+            {% if user %}
+                <div class="submenu">
+                    {% if is_admin %}
+                        <a href="{{ uri_for('counter_admin') }}" class="block">Counters</a>
+                    {% endif %}
+                    <a href="/sign" class="block">{{ _('Log out') }}</a>
+                </div>
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
     <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
