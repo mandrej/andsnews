@@ -1,5 +1,4 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block paging %}
     {% with name='counter_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
@@ -29,30 +28,28 @@
                 </thead>
                 <tbody>
                     {% for object in objects %}
-                        {% if object %}
-                            <tr>
-                                <td>{{ object.forkind|default('---') }}</td>
-                                <td>{{ object.field|default('---') }}</td>
-                                <td>{{ object.value|default('---') }}</td>
-                                <td>
-                                    <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
-                                        {% if object.count <= 0 %}
-                                            style="width: 58px; text-align: right; background: #c00; color: #fff;"
-                                        {% else %}
-                                            style="width: 58px; text-align: right;"
-                                        {% endif%}
-                                        type="text" value="{{ object.count }}"/>
-                                </td>
-                                <td class="nowrap">
-                                    <button class="disabled button" type="submit" name="action:edit"
-                                        disabled="disabled" value="{{ object.key.urlsafe() }}">
-                                        change</button>&nbsp;
-                                    <button class="button delete" type="submit" name="action:delete"
-                                        value="{{ object.key.urlsafe() }}">
-                                        delete</button>
-                                </td>
-                            </tr>
-                        {% endif %}
+                        <tr>
+                            <td>{{ object.forkind|default('---') }}</td>
+                            <td>{{ object.field|default('---') }}</td>
+                            <td>{{ object.value|default('---') }}</td>
+                            <td>
+                                <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
+                                    {% if object.count <= 0 %}
+                                        style="width: 58px; text-align: right; background: #c00; color: #fff;"
+                                    {% else %}
+                                        style="width: 58px; text-align: right;"
+                                    {% endif%}
+                                    type="text" value="{{ object.count }}"/>
+                            </td>
+                            <td class="nowrap">
+                                <button class="disabled button" type="submit" name="action:edit"
+                                    disabled="disabled" value="{{ object.key.urlsafe() }}">
+                                    change</button>&nbsp;
+                                <button class="button delete" type="submit" name="action:delete"
+                                    value="{{ object.key.urlsafe() }}">
+                                    delete</button>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

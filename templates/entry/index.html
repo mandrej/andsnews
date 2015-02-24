@@ -7,15 +7,13 @@
 {% block contents %}
     <div id="gallery">
         {% for object in objects %}
-            {% if object %}
-                <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
-                    <h2>{{ object.headline }}
-                        <span>{{ object.author }}</span>
-                        <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
-                    </h2>
-                    <p>{{ object.summary }}</p>
-                </a>
-            {% endif %}
+            <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
+                <h2>{{ object.headline }}
+                    <span>{{ object.author }}</span>
+                    <span>{%- trans since=object.date|timesince %}{{ since }} ago{% endtrans -%}</span>
+                </h2>
+                <p>{{ object.summary }}</p>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}

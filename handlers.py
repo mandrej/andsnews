@@ -128,6 +128,7 @@ class Sign(BaseHandler):
         if users.get_current_user():
             self.session.pop('csrf', None)
             dest_url = users.create_logout_url(referer)
+            logging.info('LOGGED IN AS %s' % users.get_current_user().email())
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
@@ -178,23 +179,22 @@ class Paginator(object):
         if num < 1:
             webapp2.abort(404)
 
-        if self.cache and num in self.cache:
-            return self.cache[num]['keys'], self.cache[num]['has_next']
-
         try:
-            cursor = self.cache[num - 1]['cursor']
+            cursor = self.cache[num - 1]
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
         except (KeyError, TypeError):
             offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
-        self.cache[num] = {'keys': keys, 'cursor': cursor, 'has_next': has_next}
+        self.cache[num] = cursor
         memcache.set(self.id, self.cache, self.timeout)
         return keys, has_next
 
     def page(self, num):
         keys, has_next = self.page_keys(num)
-        return ndb.get_multi(keys), has_next
+        objects = ndb.get_multi(keys)
+        # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
+        return [x for x in objects if x is not None], has_next
 
 
 class RenderCloud(BaseHandler):

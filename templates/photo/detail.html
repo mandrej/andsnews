@@ -1,5 +1,4 @@
 {% extends "photo/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}
     {% with name='photo' %}{% include 'snippets/paging.html' %}{% endwith %}
@@ -9,19 +8,17 @@
     <div class="swiper-container swiper-parent">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                {% if object %}
-                    <div id="{{ object.key.string_id() }}"
-                         class="swiper-slide cover lazyload" data-bg="{{ object.normal_url }}">
-                        <div class="swiper-container swiper-nested">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide blank"></div>
-                                <div class="swiper-slide exif">
-                                    {% include "photo/exif.html" %}
-                                </div>
+                <div id="{{ object.key.string_id() }}"
+                     class="swiper-slide cover lazyload" data-bg="{{ object.normal_url }}">
+                    <div class="swiper-container swiper-nested">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide blank"></div>
+                            <div class="swiper-slide exif">
+                                {% include "photo/exif.html" %}
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                </div>
             {% endfor %}
         </div>
     </div>

@@ -21,14 +21,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro time(dt) %}
-    <time class="when" datetime='{{ dt|to_datetime }}'>
-        <span class="day">{{ dt|to_datetime("%d") }}</span>
-        <span class="month">{{ dt|to_datetime("%m") }}</span>
-        <span class="year">{{ dt|to_datetime("%Y") }}</span>
-    </time>
-{% endmacro %}
-
 {% macro spinner() %}
     {%- for n in range(1, 13) %}<div class="bar{{ n }}"></div>{% endfor -%}
 {% endmacro %}

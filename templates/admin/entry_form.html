@@ -1,9 +1,9 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block contents %}
     <div class="page">
-        {% import "snippets/macros.html" as m %}
         <header>
             <h2>{{ _('Add new / change existing blog') }}</h2>
         </header>

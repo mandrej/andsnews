@@ -255,21 +255,22 @@ input[data-function*='swipe'] {
 	}
 }
 
+#main, .menu {
+    margin: 40px 0 25px 0;
+}
+
 #main {
     position:absolute;
-    top: 40px;
-    bottom: 25px;
+    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-
     .translate3d(0, 0, 0);
 	.transition(transform, .5s);
-
 }
 
 .menu {
 	position: fixed;
-	margin: 40px 0 25px 0;
 	top: 0;
 	left: -@menuOffset;
 	bottom: 0;
