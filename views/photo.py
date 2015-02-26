@@ -30,8 +30,8 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
         slug = self.request.get('slug', None)
+        page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)

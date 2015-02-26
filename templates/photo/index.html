@@ -13,7 +13,7 @@
                 {% set url = uri_for('photo') %}
             {% endif %}
             <a class="thumbnail"
-               href="{{ url }}?page={{ page }}&slug={{ object.key.string_id() }}">
+               href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
                 <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                      data-src="{{ object.small_url }}">
                 <div class="mask">
