@@ -14,8 +14,8 @@
             {% endif %}
             <a class="thumbnail"
                href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
-                <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                     data-src="{{ object.small_url }}">
+                <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-src="{{ object.serving_url }}=s400">
                 <div class="mask">
                     {{ object.headline }}
                 </div>
@@ -26,8 +26,10 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/blazy.min.js"></script>
     <script>
         $(document).ready(function () {
+            var bLazy = new Blazy();
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.thumbnail',
@@ -42,6 +44,7 @@
                 navSelector: "nav.paginator"
             }, function(data) {
                 $container.gridalicious('append', data);
+                bLazy.revalidate();
             });
         });
     </script>

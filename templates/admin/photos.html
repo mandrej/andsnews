@@ -47,7 +47,7 @@
                     {% if user == object.author or is_admin %}
                         <tr id="{{ object.key.urlsafe() }}">
                             <td>
-                                <img src="{{ object.small_url }}" width="50"/>
+                                <img src="{{ object.serving_url }}=s400" width="50"/>
                             </td>
                             <td>
                                 <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">

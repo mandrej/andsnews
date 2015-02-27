@@ -9,7 +9,9 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}"
-                     class="swiper-slide cover lazyload" data-bg="{{ object.normal_url }}">
+                     class="swiper-slide cover b-lazy"
+                     data-src="{{ object.serving_url }}=s0"
+                     data-src-small="{{ object.serving_url }}=s800">
                     <div class="swiper-container swiper-nested">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide blank"></div>
@@ -26,6 +28,7 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/blazy.min.js"></script>
     <script>
         $(document).ready(function () {
             var parameters = $.getQueryParameters(),
@@ -38,6 +41,15 @@
             pages.push(parseInt(parameters.page));
             window.history.replaceState(null, '', location.pathname);
 
+            function lazyLoad(sw) {
+                var bLazy = new Blazy({
+                    breakpoints: [{width: 400, src: 'data-src-small'}]
+                });
+                var activeSlide = sw.slides[sw.activeIndex];
+                if (!$(activeSlide).hasClass('b-loaded')) {
+                    bLazy.load(activeSlide);
+                }
+            }
             var horizontal = new Swiper('.swiper-parent', {
                 direction: 'horizontal',
                 loop: false,
@@ -86,18 +98,15 @@
                             });
                         });
                     }
-                }
+                },
+                onSlideChangeStart: lazyLoad
             });
             var vertical = new Swiper('.swiper-nested', {
                 direction: 'vertical',
                 keyboardControl: true
             });
 
-            $(document).on('lazybeforeunveil', function(e) {
-                var $this = $(e.target);
-                var url = $this.data('bg');
-                if (url) $this.css('background-image', 'url(' + url + ')').removeAttr('data-bg');
-            });
+            lazyLoad(horizontal);
 
             $('nav.paginator').hide();
         });

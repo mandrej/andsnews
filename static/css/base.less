@@ -540,6 +540,9 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 .collapse, .ff, .ss { cursor: pointer; }
 .required:before { content: "*\00A0"; /* \00A0 &nbsp; */ }
 
+.b-lazy { opacity: 0; .transition(opacity 350ms ease-in-out); }
+.b-lazy.b-loaded { opacity: 1; }
+
 .modal {
 	display: none;
 	background: transparent;
