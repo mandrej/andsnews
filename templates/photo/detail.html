@@ -41,6 +41,20 @@
             pages.push(parseInt(parameters.page));
             window.history.replaceState(null, '', location.pathname);
 
+            function getPage(href, callback) {
+                $.get(href, function(response) {
+                    var $page = $(response);
+                    callback($page);
+
+                    $('nav.paginator').replaceWith(function() {
+                        return $page.find('nav.paginator').hide()
+                    });
+                    vertical = new Swiper('.swiper-nested', {
+                        direction: 'vertical',
+                        keyboardControl: true
+                    });
+                });
+            }
             function lazyLoad(sw) {
                 var bLazy = new Blazy({
                     breakpoints: [{width: 400, src: 'data-src-small'}]
@@ -58,48 +72,27 @@
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     var href = $('.next').attr('href'),
-                        page = parseInt($.getQueryParameters(href).page);
+                        num = parseInt($.getQueryParameters(href).page);
 
-                    if ($.inArray(page, pages) == -1) {
-                        $.get(href, function(response) {
-                            var $page = $(response);
-
-                            pages.push(page);
+                    if ($.inArray(num, pages) == -1) {
+                        getPage(href, function($page) {
                             sw.appendSlide($page.find('.cover'));
-                            $('nav.paginator').replaceWith(function() {
-                                return $page.find('nav.paginator').hide()
-                            });
-
-                            vertical = new Swiper('.swiper-nested', {
-                                direction: 'vertical',
-                                keyboardControl: true
-                            });
+                            pages.push(num);
                         });
                     }
                 },
                 onReachBeginning: function(sw) {
                     var href = $('.prev').attr('href'),
-                        page = parseInt($.getQueryParameters(href).page);
+                        num = parseInt($.getQueryParameters(href).page);
 
-                    if ($.inArray(page, pages) == -1) {
-                        $.get(href, function (response) {
-                            var $page = $(response);
-
-                            pages.push(page);
-                            // reverse defined in custom.js
+                    if ($.inArray(num, pages) == -1) {
+                        getPage(href, function($page) {
                             sw.prependSlide($page.find('.cover').reverse());
-                            $('nav.paginator').replaceWith(function() {
-                                return $page.find('nav.paginator').hide()
-                            });
-
-                            vertical = new Swiper('.swiper-nested', {
-                                direction: 'vertical',
-                                keyboardControl: true
-                            });
+                            pages.push(num);
                         });
                     }
                 },
-                onSlideChangeStart: lazyLoad
+                onSlideChangeEnd: lazyLoad
             });
             var vertical = new Swiper('.swiper-nested', {
                 direction: 'vertical',
