@@ -49,20 +49,20 @@
                     $('nav.paginator').replaceWith(function() {
                         return $page.find('nav.paginator').hide()
                     });
-                    vertical = new Swiper('.swiper-nested', {
-                        direction: 'vertical',
-                        keyboardControl: true
-                    });
                 });
             }
             function lazyLoad(sw) {
                 var bLazy = new Blazy({
                     breakpoints: [{width: 400, src: 'data-src-small'}]
                 });
-                var activeSlide = sw.slides[sw.activeIndex];
-                if (!$(activeSlide).hasClass('b-loaded')) {
+                var activeSlide = sw.slides.eq(sw.activeIndex);
+                if (!activeSlide.hasClass('b-loaded')) {
                     bLazy.load(activeSlide);
                 }
+                var vertical = new Swiper(activeSlide.find('.swiper-nested'), {
+                    direction: 'vertical',
+                    keyboardControl: true
+                });
             }
             var horizontal = new Swiper('.swiper-parent', {
                 direction: 'horizontal',
@@ -94,10 +94,6 @@
                     }
                 },
                 onSlideChangeEnd: lazyLoad
-            });
-            var vertical = new Swiper('.swiper-nested', {
-                direction: 'vertical',
-                keyboardControl: true
             });
 
             lazyLoad(horizontal);
