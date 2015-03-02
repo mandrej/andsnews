@@ -39,7 +39,7 @@
     .box-sizing(border-box);
     .transition(all, 0.3s);
     .user-select(text);
-	&:hover, &:focus { color: @black; background: @gold; }
+	&:hover, &:focus { color: @black !important; background: @gold; }
 }
 .form_label {
 	margin: 0.3em 0.5em 0.5em 0;
@@ -343,7 +343,10 @@ input[data-function*='swipe'] {
     color: @gray;
     background: rgba(0, 0, 0, 0.8);
     h2 { color: @white; margin: 0; padding: 0; }
-    a { color: @gold; }
+    a {
+        color: @gold;
+        &:focus, &:hover { color: @white; }
+    }
 }
 
 .blog {
@@ -367,7 +370,10 @@ input[data-function*='swipe'] {
     background: @dark;
     min-height: 100%;
     h2 { color: @white; }
-    a { color: @gold; }
+    a {
+        color: @gold;
+        &:focus, &:hover { color: @white; }
+    }
 	td {
 		img { float: none; margin: 0; }
 	}
