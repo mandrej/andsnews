@@ -68,7 +68,7 @@
         {% if user %}
             <tr>
                 <td colspan="2">
-                    <a class="block button" href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
+                    <a href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
                         {{ _('Download') }} ({{ object.size|filesizeformat }})</a>
                 </td>
             </tr>
