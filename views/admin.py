@@ -10,7 +10,7 @@ from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, Paginator
-from config import filesizeformat
+from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE
 
 
 class Cache(BaseHandler):
@@ -61,7 +61,7 @@ class Photos(BaseHandler):
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=10)
+        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
@@ -78,7 +78,7 @@ class Entries(BaseHandler):
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Entry.query_for(field, value)
-        paginator = Paginator(query, per_page=5)
+        paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
         objects, has_next = paginator.page(page)
 
         data = {'objects': objects,

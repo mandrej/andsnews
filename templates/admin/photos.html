@@ -44,12 +44,17 @@
             <tbody>
                 {% for object in objects %}
                     {% if user == object.author or is_admin %}
-                        <tr id="{{ object.key.urlsafe() }}">
+                        <tr>
                             <td>
                                 <img src="{{ object.serving_url }}=s400" width="50"/>
                             </td>
                             <td>
-                                <a href="{{ uri_for('photo', slug=object.key.string_id()) }}">
+                                {% if filter %}
+                                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}
+                                {% else %}
+                                    {% set url = uri_for('photo') %}
+                                {% endif %}
+                                <a href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
                                     {{ object.headline }}
                                 </a>
                             </td>

@@ -17,7 +17,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud
-from config import PER_PAGE, PHOTOS_PER_PAGE, FAMILY, TIMEOUT
+from config import PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
 
 
 def csrf_protected(handler_method):
@@ -245,7 +245,7 @@ class SiteMap(BaseHandler):
         photos, _ = paginator.page(1)
 
         query = Entry.query().order(-Entry.date)
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
         entries, _ = paginator.page(1)
 
         data = {'photos': photos,
