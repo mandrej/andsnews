@@ -40,7 +40,8 @@
                 binder: $(window),
                 itemSelector: '.thumbnail',
                 nextSelector: 'a.next',
-                navSelector: "nav.paginator"
+                navSelector: "nav.paginator",
+                loading: { msg: $('#dummy') }
             }, function(data) {
                 $container.gridalicious('append', data);
                 bLazy.revalidate();

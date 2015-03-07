@@ -32,7 +32,8 @@
                 binder: $(window),
                 itemSelector: '.blog',
                 nextSelector: '.next',
-                navSelector: "nav.paginator"
+                navSelector: "nav.paginator",
+                loading: { msg: $('#dummy') }
             }, function(data) {
                 $container.gridalicious('append', data);
             });
