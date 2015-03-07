@@ -1,5 +1,5 @@
 @import "reset.css";
-@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto:700,400&subset=latin,cyrillic);
 @import "swiper.css";
 @import "lesshat";
 
@@ -9,7 +9,7 @@
 @desktop:     ~"only screen and (min-width: 950px) and (max-width: 1128px)";
 @desktop-xl:  ~"only screen and (min-width: 1129px)";
 
-@default_font: "PT Sans", sans-serif;
+@default_font: "Roboto", sans-serif;
 @default_size: 1.6rem;
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
 
@@ -63,6 +63,7 @@ body {
     color: @dark;
     font-family: @default_font;
     font-size: @default_size;
+    line-height: 140%;
     overflow-x: hidden;
 }
 a {
@@ -70,18 +71,17 @@ a {
     text-decoration: none;
     .transition(all, 0.3s);
 }
-h2 { font-size: 2.4rem; }
+h2 { font-size: 2.4rem; padding: 1rem 0; }
 h3 { font-size: 2.1rem; }
 h4 { font-size: 1.8rem; }
-h2, h3, h4 { padding-bottom: 0.5rem; }
-p { padding-bottom: 0.5rem; }
+h3, h4, p { padding-bottom: 1rem; }
 
 table {
     font-size: @default_size;
     border-collapse: collapse;
     td, th {
         border: @dashed;
-        padding: 10px;
+        padding: 1rem;
     }
     tr:first-child th {
         border-top: 0;
@@ -99,7 +99,7 @@ table {
         width: 100%;
         tbody tr:hover { background-color: rgba(0, 0, 0, 0.2); }
         th { text-transform: uppercase; }
-        td { padding: 0 10px; }
+        td { padding: 0 1rem; }
     }
 }
 
@@ -187,14 +187,14 @@ body > header {
         font-size: 2.8rem;
 		color: @dark;
 		line-height: 40px;
-		padding: 0 10px;
+		padding: 0 1rem;
 	}
 	nav.paginator {
 		position: absolute;
 		top: 0;
         right: 50px;
 		.next, .prev {
-            padding: 0 10px;
+            padding: 0 1rem;
 			line-height: 40px;
             &.na {
                 color: @gray;
@@ -207,7 +207,7 @@ label[data-function*='swipe'] {
 	position: absolute;
     top: 0;
     right: 0;
-    padding: 0 10px;
+    padding: 0 1rem;
     color: @dark;
     line-height: 40px;
 }
@@ -240,7 +240,7 @@ input[data-function*='swipe'] {
 	bottom: 0;
 	width: @menuOffset;
 	background: @dark;
-	padding: 10px;
+	padding: 1rem;
 	z-index: 1;
 	.translate3d(0, 0, 0);
 	.transition(transform, .5s);
@@ -253,8 +253,8 @@ input[data-function*='swipe'] {
     li {
         a {
             font-size: 2.4rem;
-            display: block;
-            margin: 0 0 0.5rem;
+            display: inline-block;
+            margin: 1rem 0;
         }
         .submenu {
             a {
@@ -262,7 +262,6 @@ input[data-function*='swipe'] {
                 &.block {
                     display: block;
                     font-size: 1.8rem;
-                    margin-bottom: 0.5em;
                     text-transform: lowercase;
                 }
             }
@@ -313,7 +312,7 @@ input[data-function*='swipe'] {
         left: 100%;
         opacity: 0;
         background: @gold;
-        padding: 10px;
+        padding: 1rem;
         .box-sizing(border-box);
     }
     &:focus .mask, &:hover .mask {
@@ -342,7 +341,7 @@ input[data-function*='swipe'] {
 .exif {
     color: @gray;
     background: rgba(0, 0, 0, 0.8);
-    h2 { color: @white; margin: 0; padding: 0; }
+    h2 { color: @white; }
     a {
         color: @gold;
         &:focus, &:hover { color: @white; }
@@ -351,21 +350,21 @@ input[data-function*='swipe'] {
 
 .blog {
 	display: block;
-    padding: 10px;
+    padding: 1rem;
 	background: @gray;
     .transition(all .3s ease-out);
     h2, h3 {
         line-height: 110%;
-        margin-bottom: 0.5rem;
-		span { display: block; font-size: @default_size; line-height: 110%; }
+		span { display: block; margin-top: 0.5rem; font-size: 1.4rem; line-height: 110%; }
 	}
+    p { padding-bottom: 0; }
 	&:focus, &:hover { background: @gold; }
 }
 
 .page {
     display: flex;
     flex-flow: column;
-    padding: 10px;
+    padding: 1rem;
 	color: @gray;
     background: @dark;
     min-height: 100%;
@@ -403,17 +402,17 @@ input[data-function*='swipe'] {
         }
         aside {
             flex: 1;
-            margin-left: 10px;
+            margin-left: 1rem;
         }
     }
 }
 
 .admin {
-    padding: 10px;
+    padding: 1rem;
     color: @dark;
     background: @gray;
     h2 { color: @dark; }
-	h4 { margin-bottom: 0.3em; padding: 0.4em 0; line-height: 100%; }
+	h4 { padding: 1rem 0; line-height: 100%; }
 	button { float: right; margin-left: 0.5em; }
 	dl {
         .clearing;
@@ -453,7 +452,7 @@ input[data-function*='swipe'] {
 .errorcode {
     position: absolute;
     top: 1em;
-    width: (100% - 10px);
+    width: (100% - 1rem);
     font-size: 15em;
     color: fadeout(@white, 70%);
     text-align: center;
@@ -508,23 +507,22 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 		}
 		h4 {
 			margin: 0;
-			padding: 0 10px;
+			padding: 0 1rem;
 			color: @white;
 			background: @dark;
 			line-height: 40px;
 		}
 		a.close {
-			position: absolute; top: 5px; right: 10px; color: @neutral;
+			position: absolute; top: 5px; right: 1rem; color: @neutral;
 			&:hover, &:focus { color: @white; background: transparent; }
 		}
-		.content { padding: 10px; min-height: 32px; .clearing; }
+		.content { padding: 1rem; min-height: 32px; .clearing; }
 		.buttons { margin: 0; line-height: normal; }
 	}
 }
 
 .cloud {
 	@weight: 200;
-	line-height: 135%;
 	font-size: @default_size;
 	font-weight: @weight;
 	.loop (@index) when (@index > 0) {

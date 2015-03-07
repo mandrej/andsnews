@@ -7,14 +7,14 @@
 {% block contents %}
     <div id="gallery">
         <section class="admin">
-            <h3 class="clearing">
+            <h2 class="clearing">
                 <a href="{{ uri_for('photo_admin') }}">
                     Photo {{ photo_count }}
                 </a>
                 <a href="{{ uri_for('photo_add') }}" class="button right">
                     <i class="fa fa-plus-square"></i> Add
                 </a>
-            </h3>
+            </h2>
             <div id="Photo_tags"></div>
             <div id="Photo_author"></div>
             <div id="Photo_date"></div>
@@ -25,21 +25,21 @@
             <div id="Photo_color"></div>
         </section>
         <section class="admin">
-            <h3 class="clearing">
+            <h2 class="clearing">
                 <a href="{{ uri_for('entry_admin') }}">
                     Entry {{ entry_count }}
                 </a>
                 <a href="{{ uri_for('entry_add') }}" class="button right">
                     <i class="fa fa-plus-square"></i> Add
                 </a>
-            </h3>
+            </h2>
             <div id="Entry_tags"></div>
             <div id="Entry_author"></div>
             <div id="Entry_date"></div>
         </section>
 
         <section class="admin">
-            <h3>Memcache statistics for	v.{{ version() }}</h3>
+            <h2>Memcache statistics for	v.{{ version() }}</h2>
             <dl class="w65em">
                 <dt>hit ratio</dt>
                 <dd>
@@ -61,7 +61,7 @@
 
         {% if is_admin %}
             <section class="admin">
-                <h3>MapReduce</h3>
+                <h2>MapReduce</h2>
                 <h4><a class="button" href="/mapreduce">Status</a></h4>
                 <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">
                     Calculate photo palette</a>
