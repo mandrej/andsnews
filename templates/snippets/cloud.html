@@ -3,8 +3,7 @@
         {% for item in items %}
             {% set selected = item.name == filter.value|int if filter else False %}
             <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-               href="{{ uri_for(link, field=field_name, value=item.name) }}"
-               title="{{ item.count }}">{{ item.name }}</a>
+               href="{{ uri_for(link, field=field_name, value=item.name) }}">{{ item.name }}</a>
         {% endfor %}
     </p>
 {% elif field_name =='color' %}
@@ -12,8 +11,7 @@
         {% for item in items %}
             {% if item.count > 0 %}
                 <a class="dot" style="border-color: {{ item.hex }}"
-                    href="{{ uri_for(link, field=item.field, value=item.name) }}"
-                    title="{{ item.name }} {{ item.count }}"></a>
+                    href="{{ uri_for(link, field=item.field, value=item.name) }}"></a>
             {% endif %}
         {% endfor %}
     </p>
@@ -22,8 +20,7 @@
         {% for item in items %}
             {% set selected = item.name == filter.value if filter else False %}
             <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                href="{{ uri_for(link, field=field_name, value=item.name) }}"
-                title="{{ item.count }}">{{ item.name }}</a>
+                href="{{ uri_for(link, field=field_name, value=item.name) }}">{{ item.name }}</a>
         {% endfor %}
     </p>
 {% endif %}

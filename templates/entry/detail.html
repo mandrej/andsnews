@@ -4,29 +4,22 @@
 
 {% block contents %}
     <div class="page">
-        <header>
-            <h2>{{ object.headline }}</h2>
-            <p>
-                <a href="{{ uri_for('entry_all_filter', field='author', value=object.author) }}"
-                    title="{{ _("author's blogs") }}">{{ object.author }}</a>,
-                <time datetime='{{ object.date|to_datetime }}'>
-                    {{ object.date|to_date }}</time>
-                {% for tag in object.tags %}
-                        {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
-                    <a href="{{ uri_for('entry_all_filter', field='tags', value=tag) }}" title="{{ tag }}">
-                        {{ tag }}</a>{% if not loop.last %},{% endif %}
-                {% endfor %}
-                    &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
-                <a href="{{ uri_for('entry_all_filter', field='date', value=object.year) }}"
-                    title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
-            </p>
-        </header>
-        <article>
-            <section>
-                <i class="fa fa-quote-left pull-left"></i>
-                <p>{{ object.summary|safe }}</p>
-                <div class="story">{{ object.body|safe }}</div>
-            </section>
-        </article>
+        <h2>{{ object.headline }}</h2>
+        <p>
+            <a href="{{ uri_for('entry_all_filter', field='author', value=object.author) }}"
+                title="{{ _("author's blogs") }}">{{ object.author }}</a>,
+            <time datetime='{{ object.date|to_datetime }}'>
+                {{ object.date|to_date }}</time>
+            {% for tag in object.tags %}
+                    {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
+                <a href="{{ uri_for('entry_all_filter', field='tags', value=tag) }}" title="{{ tag }}">
+                    {{ tag }}</a>{% if not loop.last %},{% endif %}
+            {% endfor %}
+                &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
+            <a href="{{ uri_for('entry_all_filter', field='date', value=object.year) }}"
+                title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
+        </p>
+
+        <div class="story">{{ object.body|safe }}</div>
     </div>
 {% endblock %}
