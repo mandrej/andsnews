@@ -19,7 +19,7 @@
 @gray: #999;
 @white: white;
 @gold: gold; // #ffcf00
-@red: #ea2434;
+@red: #c00;
 @dashed: 1px dashed #aaa;
 @menuOffset: 384px;
 
@@ -126,8 +126,8 @@ button, .button {
 	&.delete {
 		color: @red;
 		&:hover, &:focus {
-			color: @white;
-			background: fade(@red, 70%);
+			color: @white !important;
+			background: @red !important;
 		}
 	}
 	&[disabled], &.disabled {

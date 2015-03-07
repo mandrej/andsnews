@@ -81,7 +81,7 @@
                     $.each(data, function(key, value) {
                         var tmpl = '', title = key.split('_').pop() + ' cloud';
                         if (value) {
-                            tmpl += '<button type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
+                            tmpl += '<button class="delete" type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
                             tmpl += '<a class="graph button" href="/visualize/' + key + '"><i class="fa fa-eye"></i> graph</a>';
                             tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                             tmpl += '<div class="hide">';
