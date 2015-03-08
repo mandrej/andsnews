@@ -36,6 +36,8 @@ app = WSGIApplication([
     Route('/admin/entries/add', handler='views.entry.Add', name='entry_add'),
     Route('/admin/entries/<slug>', handler='views.entry.Edit', name='entry_edit'),
     Route('/admin/counters/', handler='views.admin.Counters', name='counter_admin'),
+    Route('/admin/counters/<field:(forkind|field|value)>/<value>/',
+          handler='views.admin.Counters', name='counter_admin_filter'),
     Route('/admin/memcache/', handler='views.admin.Cache', methods=['GET']),
     Route('/admin/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
     Route('/admin/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),

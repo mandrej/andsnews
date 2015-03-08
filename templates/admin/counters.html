@@ -5,7 +5,7 @@
 
 {% block contents %}
     <div class="admin page">
-        <h2>Counter administration</h2>
+        <h2><a href="{{ uri_for('counter_admin') }}">Counter administration</a></h2>
 
         <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
             <input name="token" type="hidden" value="{{ token }}"/>
@@ -19,7 +19,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>kind</th>
+                        <th>forkind</th>
                         <th>field</th>
                         <th>value</th>
                         <th>count</th>
@@ -29,9 +29,12 @@
                 <tbody>
                     {% for object in objects %}
                         <tr>
-                            <td>{{ object.forkind|default('---') }}</td>
-                            <td>{{ object.field|default('---') }}</td>
-                            <td>{{ object.value|default('---') }}</td>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='forkind', value=object.forkind) }}">
+                                {{ object.forkind }}</a></td>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='field', value=object.field) }}">
+                                {{ object.field }}</a></td>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='value', value=object.value) }}">
+                                {{ object.value }}</a></td>
                             <td>
                                 <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
                                     {% if object.count <= 0 %}

@@ -110,9 +110,9 @@ class Entries(BaseHandler):
 
 class Counters(BaseHandler):
     @admin_required
-    def get(self):
+    def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
-        query = Counter.query().order(Counter.field)
+        query = Counter.query_for(field, value)
         paginator = Paginator(query, per_page=20)
         objects, has_next = paginator.page(page)
         data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}

@@ -16,24 +16,24 @@
                 {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                        href="{{ uri_for('photo_admin_filter', field='tags', value=item.name) }}"
-                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                        href="{{ uri_for('photo_admin_filter', field='tags', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
             <div class="cloud">
                 {% for item in author_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                        href="{{ uri_for('photo_admin_filter', field='author', value=item.name) }}"
-                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                        href="{{ uri_for('photo_admin_filter', field='author', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
             <div class="cloud">
                 {% for item in date_cloud|sort(attribute='name', reverse=True) %}
                     {% set selected = item.name == filter.value|int if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                        href="{{ uri_for('photo_admin_filter', field='date', value=item.name) }}"
-                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                        href="{{ uri_for('photo_admin_filter', field='date', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
         </section>

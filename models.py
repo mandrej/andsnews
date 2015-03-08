@@ -263,6 +263,12 @@ class Counter(ndb.Model):
     value = ndb.GenericProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
 
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters)
+
 
 def update_counter(delta, *args):
     key_name = '%s||%s||%s' % args
