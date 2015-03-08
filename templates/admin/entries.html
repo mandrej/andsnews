@@ -6,21 +6,36 @@
 {% block contents %}
     <div class="admin page">
         <h2>Entry administration
-            <a href="{{ uri_for('entry_add') }}" class="button right">
+            <a href="{{ uri_for('entry_add') }}" class="button abs_right">
                 <i class="fa fa-plus-square"></i> Add
             </a>
         </h2>
 
-        <section>
-            <h3>Dates</h3>
-            <p class="cloud">
-                {% for item in archive|sort(attribute='name', reverse=True) %}
-                    {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
+        <section style="margin: 1rem 0;">
+            <div class="cloud">
+                {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
+                    {% set selected = item.name == filter.value if filter else False %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('entry_admin_filter', field='tags', value=item.name) }}"
+                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </div>
+            <div class="cloud">
+                {% for item in author_cloud|sort(attribute='name', reverse=False) %}
+                    {% set selected = item.name == filter.value if filter else False %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('entry_admin_filter', field='author', value=item.name) }}"
+                        title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </div>
+            <div class="cloud">
+                {% for item in date_cloud|sort(attribute='name', reverse=True) %}
+                    {% set selected = item.name == filter.value|int if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                         href="{{ uri_for('entry_admin_filter', field='date', value=item.name) }}"
                         title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
                 {% endfor %}
-            </p>
+            </div>
         </section>
 
         {% for object in objects %}

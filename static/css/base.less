@@ -414,7 +414,7 @@ input[data-function*='swipe'] {
     padding: 1rem;
     color: @dark;
     background: @gray;
-    h2 { color: @dark; }
+    h2 { color: @dark; position: relative; }
 	h4 { padding: 1rem 0; line-height: 100%; }
 	button { float: right; margin-left: 0.5em; }
 	dl {
@@ -448,6 +448,7 @@ input[data-function*='swipe'] {
             &:focus, &:hover { background: gold; color: @dark; }
         }
 		&.graph { float: right; }
+        &.selected { color: @white; }
 	}
 }
 
@@ -550,6 +551,7 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 
 .left { float: left; margin-right: 1rem; }
 .right { float: right; margin-left: 1rem; }
+.abs_right { position: absolute; top: 0; right: 0; margin-left: 1rem; }
 .hide { display: none; }
 .collapse, .ff, .ss { cursor: pointer; }
 .required:before { content: "*\00A0"; /* \00A0 &nbsp; */ }

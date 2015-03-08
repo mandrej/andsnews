@@ -69,7 +69,9 @@ class Photos(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': Cloud('Photo_date').get_list()}
+                'tags_cloud': Cloud('Photo_tags').get_list(),
+                'author_cloud': Cloud('Photo_author').get_list(),
+                'date_cloud': Cloud('Photo_date').get_list()}
         self.render_template('admin/photos.html', data)
 
 
@@ -86,7 +88,9 @@ class Entries(BaseHandler):
                 'page': page,
                 'has_next': has_next,
                 'has_previous': page > 1,
-                'archive': Cloud('Entry_date').get_list()}
+                'tags_cloud': Cloud('Entry_tags').get_list(),
+                'author_cloud': Cloud('Entry_author').get_list(),
+                'date_cloud': Cloud('Entry_date').get_list()}
         self.render_template('admin/entries.html', data)
 
     @csrf_protected
@@ -111,7 +115,7 @@ class Counters(BaseHandler):
         query = Counter.query().order(Counter.field)
         paginator = Paginator(query, per_page=20)
         objects, has_next = paginator.page(page)
-        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'form': 'something'}
+        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
         self.render_template('admin/counters.html', data)
 
     @csrf_protected
