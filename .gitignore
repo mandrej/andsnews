@@ -4,8 +4,10 @@ colormath
 exifread
 graphy
 mapreduce
+networkx
 pipeline
 pytz
 simplejson
 wtforms
+decorator.py
 *.pyc
