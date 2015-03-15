@@ -1,13 +1,12 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
 {% block contents %}
-    <div class="page">
-        {% import "snippets/macros.html" as m %}
-        <header>
-            <h2>{{ _('Add new / change existing photo') }}</h2>
-        </header>
-        <article class="port">
+    <div class="admin page">
+        <h2>{{ _('Add new / change existing photo') }}</h2>
+
+        <article>
             <section>
                 {% if form.errors %}
                     <div class="formerrors">
@@ -72,6 +71,11 @@
                 {% if object %}
                     {% include "photo/crops.html" %}
                     <p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
+                    <h3><a id="draw" class="block button" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
+                        <i class="fa fa-th"></i> {{ _('Calculate palette') }}</a></h3>
+                    <div id="palette">
+                        <table class="palette"></table>
+                    </div>
                 {% endif %}
             </aside>
         </article>
@@ -95,6 +99,43 @@
                 $('#overlay, #spinner').show();
             });
             $('.ff').collapseGroup();
+
+            var palette_url;
+            function write_palette(url) {
+                $.getJSON(palette_url, function(data) {
+                    var cntx = $('table.palette');
+                    cntx.empty().append('<tr><th>active</th>' +
+                        '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
+                        '<th>' + data.active['class'] + '</th></tr>');
+                    $.each(data.palette, function(i, pal) {
+                        cntx.append('<tr><th>' + pal.prominence + '</th>' +
+                            '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
+                            '<td>' + pal['class'] + '</td></tr>');
+                    });
+                    if (data.bgcolor) {
+                        cntx.append('<tr><th>' + data.bgcolor.prominence + '</th>' +
+                            '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
+                            '<td>' + data.bgcolor['class'] + '</td></tr>');
+                    }
+{#                    cntx.after('<p>' + explain + '</p>');#}
+                });
+            }
+            $('#draw').click(function(evt) {
+                evt.preventDefault();
+                palette_url = $(this).attr('href');
+                write_palette();
+            });
+            $('.palette').on('click', '.dot', function() {
+                var rgb = $(this).attr('data-color'),
+                    hex = $(this).css('border-color');
+                $.post(palette_url, {'rgb': rgb}, function(data) {
+                    if (data.success == true) {
+                        write_palette();
+                        $('.hex').css('border-color', hex);
+                        $('.url').attr('href', data.similar_url);
+                    }
+                })
+            });
         })
     </script>
 {% endblock %}

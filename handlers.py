@@ -11,26 +11,13 @@ import uuid
 import webapp2
 import logging
 from operator import itemgetter
-from timeit import default_timer
-from jinja2.filters import do_striptags
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import users, search, memcache, xmpp
+from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
-from models import Photo, Entry, Comment, Cloud, INDEX
-from config import to_datetime, PER_PAGE, PHOTOS_PER_PAGE, PHOTOS_LATEST, FAMILY, TIMEOUT, RFC822
-
-
-def timeit(f):
-    def wrapper(*args, **kw):
-        timer = default_timer
-        start = timer()
-        result = f(*args, **kw)
-        end = timer()
-        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
-        return result
-    return wrapper
+from models import Photo, Entry, Cloud
+from config import PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
 
 
 def csrf_protected(handler_method):
@@ -87,7 +74,7 @@ class BaseHandler(webapp2.RequestHandler):
         return self.session.get('csrf')
 
     def handle_exception(self, exception, debug):
-        template = 'errors/default.html'
+        template = 'error.html'
         if isinstance(exception, webapp2.HTTPException):
             data = {'error': exception, 'path': self.request.path_qs}
             self.render_template(template, data)
@@ -118,14 +105,6 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
-class Index(BaseHandler):
-    def get(self):
-        query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(1)
-        self.render_template('index.html', {'objects': objects, 'latest': PHOTOS_LATEST})
-
-
 class Complete(BaseHandler):
     def get(self, mem_key):
         cloud = Cloud(mem_key).get_list()
@@ -149,42 +128,10 @@ class Sign(BaseHandler):
         if users.get_current_user():
             self.session.pop('csrf', None)
             dest_url = users.create_logout_url(referer)
+            logging.info('LOGGED IN AS %s' % users.get_current_user().email())
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
-
-
-class Find(BaseHandler):
-    def get(self, page):
-        querystring = self.request.get('find')
-        page = int(page)
-        paginator = SearchPaginator(querystring, per_page=PER_PAGE)
-        results, number_found, has_next, error = paginator.page(page)
-
-        objects = []
-        for doc in results:
-            f = dict()
-            key = ndb.Key(urlsafe=doc.doc_id)
-            if key.parent():
-                link = self.uri_for(key.parent().kind().lower(), slug=key.parent().string_id())
-            else:
-                try:
-                    link = self.uri_for(key.kind().lower(), slug=key.string_id())
-                except KeyError:
-                    link = ''  # Comment.is_message
-
-            f['kind'] = key.kind()
-            f['link'] = link
-            for field in doc.fields:
-                f[field.name] = field.value
-            for expr in doc.expressions:
-                f[expr.name] = do_striptags(expr.value)
-            objects.append(f)
-
-        self.render_template(
-            'results.html',
-            {'objects': objects, 'phrase': querystring, 'number_found': number_found,
-             'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 
 class DeleteHandler(BaseHandler):
@@ -226,137 +173,28 @@ class Paginator(object):
         self.per_page = per_page
         # <str> repr(self.query)
         self.id = hashlib.md5('{0}{1}'.format(self.query, self.per_page)).hexdigest()
-        self.cache = memcache.get(self.id)
-
-        if self.cache is None:
-            self.cache = {}
-            memcache.add(self.id, self.cache, self.timeout)
+        self.cache = memcache.get(self.id) or {}
 
     def page_keys(self, num):
         if num < 1:
             webapp2.abort(404)
 
-        if self.cache and num in self.cache and self.cache[num]['keys']:
-            return self.cache[num]['keys'], self.cache[num]['has_next']
-
         try:
-            cursor = self.cache[num - 1]['cursor']
+            cursor = self.cache[num - 1]
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
         except (KeyError, TypeError):
             offset = (num - 1) * self.per_page
             keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
 
-        if not keys and num == 1:
-            return keys, has_next
-
-        self.cache[num] = {'cursor': cursor, 'keys': keys, 'has_next': has_next}
-        memcache.replace(self.id, self.cache, self.timeout)
+        self.cache[num] = cursor
+        memcache.set(self.id, self.cache, self.timeout)
         return keys, has_next
 
     def page(self, num):
         keys, has_next = self.page_keys(num)
-        return ndb.get_multi(keys), has_next
-
-    def triple(self, slug):
-        # https://medium.com/engineering-workzeit/reverse-the-sort-orders-on-an-ndb-query-2c1d22451974
-        key = ndb.Key(self.query.kind, slug)
-        obj = key.get()
-        if not obj:
-            webapp2.abort(404)
-
-        model = ndb.Model._kind_map.get(self.query.kind)
-        next = self.query.filter(model.date < obj.date).get_async()
-        self.query._Query__orders = self.query.orders.reversed()
-        prev = self.query.filter(model.date > obj.date).get_async()
-
-        num = 1
-        for n, data in self.cache.items():
-            try:
-                data['keys'].index(key)
-            except ValueError:
-                pass
-            else:
-                num = n
-
-        return num, prev.get_result(), obj, next.get_result()
-
-
-class SearchPaginator(object):
-#    timeout = 60 #TIMEOUT/10
-    def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring
-        # '"{0}"'.format(querystring.replace('"', ''))
-        self.per_page = per_page
-
-    #        self.id = hashlib.md5(querystring).hexdigest()
-    #        self.cache = memcache.get(self.id)
-    #
-    #        if self.cache is None:
-    #            self.cache = {1: None}
-    #            memcache.add(self.id, self.cache, self.timeout)
-
-    def page(self, num):
-        error = None
-        results = []
-        number_found = 0
-        has_next = False
-        # opts = {
-        #     'limit': self.per_page,
-        #     'returned_fields': ['headline', 'author', 'tags', 'date', 'link', 'kind'],
-        #     'returned_expressions': [
-        #         search.FieldExpression(name='body', expression='snippet("%s", body)' % self.querystring)
-        #     ],
-        #     'snippeted_fields': ['body']
-        # }
-        # try:
-        #     cursor = self.cache[num]
-        # except KeyError:
-        #     cursor = None
-        #
-        # opts['cursor'] = search.Cursor(web_safe_string=cursor)
-        # opts['offset'] = (num - 1)*self.per_page
-        # found = INDEX.search(search.Query(query_string=self.querystring,
-        #                                   options=search.QueryOptions(**opts)))
-        query = search.Query(
-            query_string=self.querystring,
-            options=search.QueryOptions(
-                limit=self.per_page,
-                offset=(num - 1) * self.per_page,
-                returned_fields=['headline', 'author', 'tags', 'date', 'link', 'kind'],
-                snippeted_fields=['body']
-            ))
-        try:
-            found = INDEX.search(query)
-            results = found.results
-            number_found = found.number_found
-        except search.Error, error:
-            pass
-        except UnicodeDecodeError, error:
-            pass
-        else:
-            if number_found > 0:
-                has_next = number_found > num * self.per_page
-                # self.cache[num + 1] = found.cursor.web_safe_string
-                # memcache.replace(self.id, self.cache, self.timeout)
-
-        return results, number_found, has_next, error
-
-
-class Chat(webapp2.RequestHandler):
-    def post(self):
-        message = xmpp.Message(self.request.POST)
-        message.reply("ANDS thank you!")
-
-        email = message.sender.split('/')[0]  # node@domain/resource
-        user = users.User(email)
-        obj = Comment(author=user, body=message.body)
-        obj.add()
-
-
-#class Send(webapp2.RequestHandler):
-#    def post(self):
-#        message = self.request.get('msg')
-#        xmpp.send_message(ADMIN_JID, message)
+        objects = ndb.get_multi(keys)
+        # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
+        return [x for x in objects if x is not None], has_next
 
 
 class RenderCloud(BaseHandler):
@@ -369,7 +207,7 @@ class RenderCloud(BaseHandler):
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso', 'forkind',):
+        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
             items = sorted(items, key=itemgetter('name'), reverse=False)
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
@@ -392,34 +230,12 @@ class RenderGraph(BaseHandler):
 
         if field == 'date':
             items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('eqv', 'iso', 'forkind',):
+        elif field in ('eqv', 'iso',):
             items = sorted(items, key=itemgetter('name'), reverse=False)
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
 
         self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
-
-
-class Rss(BaseHandler):
-    def get(self, kind):
-        if kind == 'photo':
-            query = Photo.query().order(-Photo.date)
-            paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        elif kind == 'entry':
-            query = Entry.query().order(-Entry.date)
-            paginator = Paginator(query, per_page=PER_PAGE)
-        objects, _ = paginator.page(1)
-
-        data = {'kind': kind, 'objects': objects, 'format': RFC822}
-
-        last_modified = to_datetime(data['objects'][0].date, format=RFC822)
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        data['headers'] = [('Content-Type', 'application/rss+xml'),
-                           ('Last-Modified', last_modified),
-                           ('ETag', hashlib.md5(last_modified).hexdigest()),
-                           ('Expires', to_datetime(expires, format=RFC822)),
-                           ('Cache-Control', 'max-age=86400')]
-        self.render_template('rss.xml', data)
 
 
 class SiteMap(BaseHandler):
@@ -429,7 +245,7 @@ class SiteMap(BaseHandler):
         photos, _ = paginator.page(1)
 
         query = Entry.query().order(-Entry.date)
-        paginator = Paginator(query, per_page=PER_PAGE)
+        paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
         entries, _ = paginator.page(1)
 
         data = {'photos': photos,
@@ -438,24 +254,12 @@ class SiteMap(BaseHandler):
         self.render_template('urlset.xml', data)
 
 
-class PhotoMeta(BaseHandler):
-    def get(self):
-        fields = ('author', 'tags', 'size', 'model', 'aperture', 'shutter',
-                  'focal_length', 'iso', 'date', 'lens', 'crop_factor', 'eqv', 'color',)
-        data = []
-        for x in Photo.query().order(-Photo.date):
-            row = x.to_dict(include=fields)
-            row['slug'] = x.key.string_id()
-            data.append(row)
-        self.render_json(data)
-
-
 class EmailField(fields.SelectField):
     def __init__(self, *args, **kwargs):
         super(EmailField, self).__init__(*args, **kwargs)
         user = users.get_current_user()
         email = user.email()
-        if not email in FAMILY:
+        if email not in FAMILY:
             FAMILY.append(email)
         self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
 

@@ -1,20 +1,22 @@
 import cgi
 import json
 from collections import defaultdict, OrderedDict
+
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
+
 from models import Photo, img_palette, incr_count, decr_count, range_names
-from colorific.palette import rgb_to_hex
+from palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
+        page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
-        page = int(page)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
 
@@ -27,16 +29,19 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
-    def get(self, slug, field=None, value=None):
+    def get(self, field=None, value=None):
+        slug = self.request.get('slug', None)
+        page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        page, previous, object, next = paginator.triple(slug)
+        objects, has_next = paginator.page(page)
 
-        data = {'object': object,
+        data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
+                'slug': slug,
                 'page': page,
-                'next': next,
-                'previous': previous}
+                'has_next': has_next,
+                'has_previous': page > 1}
         self.render_template('photo/detail.html', data)
 
 

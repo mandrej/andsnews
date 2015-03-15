@@ -1,11 +1,11 @@
 __author__ = 'milan'
 
 import unittest
+import collections
 import numpy as np
 from colormath.color_objects import HSLColor, sRGBColor
 from colormath.color_conversions import convert_color
 from models import Photo
-from collections import defaultdict
 from config import HUE
 
 
@@ -30,17 +30,15 @@ class ColorTest(unittest.TestCase):
         print 'HUE std {0:.2f}\nSAT std {1:.2f}\nLUM std {2:.2f}'.format(*tuple(np.std(colors, axis=0)))
 
     def test_spectra(self):
-        spectra = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
-        for sat in (20, 60,):
-            for lum in (40, 80,):
-                for row in HUE:
-                    for hue in row['span']:
-                        color = HSLColor(hue, sat / 100.0, lum / 100.0)
-                        rgb = convert_color(color, sRGBColor).get_rgb_hex()
-                        spectra[sat][lum][row['name']].append(rgb)
+        sat = 10  # int(self.request.get('sat', 20))
+        lum = 40  # int(self.request.get('lum', 40))
+        spectra = collections.OrderedDict()
+        for row in HUE:
+            temp = []
+            for hue in row['span']:
+                color = HSLColor(hue, sat / 100.0, lum / 100.0)
+                hsl = 'hsl({0}, {1:.0%}, {2:.0%})'.format(*color.get_value_tuple())
+                temp.append(hsl)
+            spectra[row['name']] = temp
 
-        for sat, x in spectra.items():
-            print sat
-            for lum, y in x.items():
-                print('\t{0}\n{1}'.format(lum, y))
-
+        print spectra

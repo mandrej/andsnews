@@ -1,35 +1,12 @@
 {% extends "admin/base.html" %}
+{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
-{% block modals %}
-{{ super() }}
-<div id="images" class="modal">
-	<div class="popup">
-		<h4>{{ _('Choose image') }}</h4>
-        <a class="close fa fa-times-circle fa-2x" title="{{ _('close') }}"></a>
-		<div class="content">
-		{% for img in object.image_list %}
-			<figure class="left{% if loop.last %} last{% endif %}">
-				<img src="{{ uri_for('entry_image', slug=img.key.string_id(), size='small') }}"
-					alt="{{ img.key.string_id() }}" title="{{ img.name }}"/>
-				<p class="legend">{{ img.name|truncate(20) }}</p>
-			</figure>
-		{% else %}
-			<p>{{ _('No images') }}</p>
-			<p>{{ _('To choose images, you must send them first') }}.</p>
-		{% endfor %}
-		</div>
-	</div>
-</div>
-{% endblock %}
-
 {% block contents %}
-    <div class="page">
-        {% import "snippets/macros.html" as m %}
-        <header>
-            <h2>{{ _('Add new / change existing blog') }}</h2>
-        </header>
-        <article class="port">
+    <div class="admin page">
+        <h2>{{ _('Add new / change existing blog') }}</h2>
+
+        <article>
             <section>
                 {% if form.errors %}
                     <div class="formerrors">
@@ -77,9 +54,7 @@
                     </fieldset>
 
                     <fieldset style="float: none">
-                        <p class="editor">
-                            {{ form.body(rows=20) }}
-                        </p>
+                        {{ form.body(rows=20) }}
                         <p class="buttons">
                             <span class="required">{{ _('Required field') }}</span>
                             <button type="submit">{{ _('done') }}</button>
@@ -99,21 +74,14 @@
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/urlify.min.js"></script>
-    <script src="/static/scripts/markitup/jquery.markitup.min.js"></script>
-    <script src="/static/scripts/markitup/sets/blog.set_{{ language_code }}.min.js"></script>
     <script>
         $(function() {
             $('#headline').slugify();
-            $('#body').markItUp(blogSettings, {nameSpace: 'big'});
             $('#images img').click(function(evt) {
                 evt.preventDefault();
                 src = $(this).attr('src').replace('small', 'normal');
                 title = $(this).attr('title');
                 tab = '    ';
-                $.markItUp(
-                    {replaceWith:'<figure class="left">\n'+tab+'<img src="' + src +
-                        '" alt="' + title + '"/>\n'+tab+'<p class="legend">' + title + '</p>\n</figure>\n'}
-                );
             });
             $('#tags').multicomplete({
                 minLength: 2,

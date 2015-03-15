@@ -1,34 +1,51 @@
 {% extends "photo/base.html" %}
-{% import "snippets/macros.html" as m %}
-{% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
+
 {% block paging %}
     {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2>
-                <a href="{{ uri_for('photo_all', page=page) }}">{{ _('Photos') }}</a>
-                {{ m.filter_title(filter) }}
-            </h2>
-        </header>
-        <article class="thumbnails">
-            {% for object in objects %}
-                {% if object %}
-                    {% if filter %}
-                        {% set url = uri_for('photo_filter', field = filter.field, value = filter.value, slug = object.key.string_id()) %}
-                    {% else %}
-                        {% set url = uri_for('photo', slug = object.key.string_id()) %}
-                    {% endif %}
-                    <figure>
-                        <a href="{{ url }}"
-                            style="background-image: url({{ object.small_url_async.get_result() }})">
-                            <p class="legend">{{ object.headline }}</p>
-                        </a>
-                    </figure>
-                {% endif %}
-            {% endfor %}
-        </article>
+    <div id="gallery">
+        {% for object in objects %}
+            {% if filter %}
+                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}
+            {% else %}
+                {% set url = uri_for('photo') %}
+            {% endif %}
+            <a class="thumbnail"
+               href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
+                <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-src="{{ object.serving_url }}=s400">
+                <div class="mask">
+                    {{ object.headline }}
+                </div>
+            </a>
+        {% endfor %}
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="/static/scripts/blazy.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var bLazy = new Blazy();
+            var $container = $('#gallery');
+            $container.gridalicious({
+                selector: '.thumbnail',
+                width: 240,
+                gutter: 1
+            });
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.thumbnail',
+                nextSelector: 'a.next',
+                navSelector: "nav.paginator",
+                loading: { msg: $('#dummy') }
+            }, function(data) {
+                $container.gridalicious('append', data);
+                bLazy.revalidate();
+            });
+        });
+    </script>
 {% endblock %}

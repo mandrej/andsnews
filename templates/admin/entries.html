@@ -1,88 +1,97 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block paging %}
     {% with name='entry_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2 class="clearing">
-                <a href="{{ uri_for('entry_admin', page=1) }}">Entry administration</a>
-                <a href="{{ uri_for('entry_add') }}" class="button right">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h2>
-        </header>
-        <article class="normal">
-            <section>
-                <h3>Dates</h3>
-                <p class="cloud">
-                    {% for item in archive|sort(attribute='name', reverse=True) %}
-                        {% if filter %}{% set selected = item.name == filter.value|int %}{% endif %}
-                        <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
-                            href="{{ uri_for('entry_admin_filter', page=1, field='date', value=item.name) }}"
-                            title="{{ item.count }}" >{{ item.name }}</a>&nbsp;
-                    {% endfor %}
-                </p>
-            </section>
+    <div class="admin page">
+        <h2>Entry administration
+            <a href="{{ uri_for('entry_add') }}" class="button abs_right">
+                <i class="fa fa-plus-square"></i> Add
+            </a>
+        </h2>
 
-            {% for object in objects %}
-                {% if object %}
-                    {% if user == object.author or is_admin %}
-                        <h3 class="clearing">
-                            <a class="button left" href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a>
-                            <a class="confirm button delete left" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
-                                <i class="fa fa-times-circle"></i> delete</a>&nbsp;
-                            <a class="button left" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
-                                <i class="fa fa-pencil-square"></i> edit</a>
-                        </h3>
-                        <table class="zebra">
-                            <colgroup>
-                                <col/>
-                                <col style="width: 240px;"/>
-                                <col style="width: 140px; text-align: right;"/>
-                                <col style="width: 170px; text-align: right;"/>
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>name</th>
-                                    <th>keyname</th>
-                                    <th>normal</th>
-                                    <th>thumbnail</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for image in object.image_list %}
-                                    <tr id="{{ image.key.urlsafe() }}">
-                                        <td>{{ image.name }}</td>
-                                        <td>{{ image.key.string_id() }}</td>
-                                        <td>{{ image.blob|length|filesizeformat }}, {{ image.mime }}</td>
-                                        <td>
-                                            {% if image.small %}
-                                                <button type="submit" name="delete" class="button delete">
-                                                    <i class="fa fa-times-circle"></i> delete</button>&nbsp;
-                                                <button type="submit" name="make" class="disabled button" disabled="disabled">
-                                                    <i class="fa fa-cog"></i> make</button>
-                                            {% else %}
-                                                <button type="submit" name="delete" class="disabled button delete" disabled="disabled">
-                                                    <i class="fa fa-times-circle"></i> delete</button>&nbsp;
-                                                <button type="submit" name="make" class="button">
-                                                    <i class="fa fa-cog"></i> make</button>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="6">No images</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </article>
+        <section style="margin: 1rem 0;">
+            <div class="cloud">
+                {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
+                    {% set selected = item.name == filter.value if filter else False %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('entry_admin_filter', field='tags', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </div>
+            <div class="cloud">
+                {% for item in author_cloud|sort(attribute='name', reverse=False) %}
+                    {% set selected = item.name == filter.value if filter else False %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('entry_admin_filter', field='author', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </div>
+            <div class="cloud">
+                {% for item in date_cloud|sort(attribute='name', reverse=True) %}
+                    {% set selected = item.name == filter.value|int if filter else False %}
+                    <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
+                        href="{{ uri_for('entry_admin_filter', field='date', value=item.name) }}">
+                        {{ item.name }}</a>&nbsp;
+                {% endfor %}
+            </div>
+        </section>
+
+        {% for object in objects %}
+            {% if user == object.author or is_admin %}
+                <h3 class="clearing">
+                    <a class="button left" href="{{ uri_for('entry', slug=object.key.string_id()) }}">{{ object.headline }}</a>
+                    <a class="confirm button delete left" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                        <i class="fa fa-times-circle"></i> delete</a>&nbsp;
+                    <a class="button left" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
+                        <i class="fa fa-pencil-square"></i> edit</a>
+                </h3>
+                <table class="zebra">
+                    <colgroup>
+                        <col/>
+                        <col style="width: 300px;"/>
+                        <col style="width: 180px; text-align: right;"/>
+                        <col style="width: 160px; text-align: right;"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>keyname</th>
+                            <th>normal</th>
+                            <th>thumbnail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for image in object.image_list %}
+                            <tr id="{{ image.key.urlsafe() }}">
+                                <td>{{ image.name }}</td>
+                                <td>{{ image.key.string_id() }}</td>
+                                <td>{{ image.blob|length|filesizeformat }}, {{ image.mime }}</td>
+                                <td>
+                                    {% if image.small %}
+                                        <button type="submit" name="delete"
+                                            class="button delete">delete</button>&nbsp;
+                                        <button type="submit" name="make"
+                                            class="disabled button" disabled="disabled">make</button>
+                                    {% else %}
+                                        <button type="submit" name="delete"
+                                            class="disabled button delete" disabled="disabled">
+                                            delete</button>&nbsp;
+                                        <button type="submit" name="make"
+                                            class="button">make</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">No images</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}
 {% block scripts %}

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-{% macro _item(object, detail_name) %}
-    <url>
-        <loc>{{ uri_for(detail_name, slug=object.key.string_id(), _full=True) }}</loc>
-        <lastmod>{{ object.date|to_datetime }}Z</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.3</priority>
-    </url>
-{% endmacro %}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>{{ uri_for('photo_all', page=1, _full=True) }}</loc>
+        <loc>{{ uri_for('photo_all', _full=True) }}</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     {% for object in photos %}
-        {{ _item(object, 'photo') }}
+        <url>
+            <loc>{{ uri_for('photo', slug=object.key.string_id(), _full=True) }}</loc>
+            <lastmod>{{ object.date|to_datetime }}Z</lastmod>
+            <changefreq>monthly</changefreq>
+            <priority>0.3</priority>
+        </url>
     {% endfor %}
     <url>
-        <loc>{{ uri_for('entry_all', page=1, _full=True) }}</loc>
+        <loc>{{ uri_for('entry_all', _full=True) }}</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     {% for object in entries %}
-        {{ _item(object, 'entry') }}
+        <url>
+            <loc>{{ uri_for('entry', slug=object.key.string_id(), _full=True) }}</loc>
+            <lastmod>{{ object.date|to_datetime }}Z</lastmod>
+            <changefreq>monthly</changefreq>
+            <priority>0.3</priority>
+        </url>
     {% endfor %}
 </urlset>

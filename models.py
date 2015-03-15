@@ -7,26 +7,21 @@ import cgi
 import math
 import colorsys
 import itertools
-import logging
 import collections
 import webapp2
 from cStringIO import StringIO
 from decimal import *
 from PIL import Image
-from string import capitalize
 from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.api import users, memcache, search, images
+from google.appengine.api import users, memcache, images
 
-from colorific.palette import extract_colors
+from palette import extract_colors, rgb_to_hex
 from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
-INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
-        'Entry_tags', 'Entry_author', 'Entry_date',
-        'Feed_tags',
-        'Comment_forkind', 'Comment_author', 'Comment_date']
+        'Entry_tags', 'Entry_author', 'Entry_date']
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
@@ -46,8 +41,6 @@ def filter_param(field, value):
     elif field == 'author':
         # TODO Not all emails are gmail
         value = users.User(email='%s@gmail.com' % value)
-    elif field == 'forkind':
-        value = capitalize(value)
     try:
         value = int(value)
     except (ValueError, TypeError):
@@ -143,23 +136,6 @@ def range_names(rgb):
     lum = in_range(int(round(l * 100)), LUM)
     sat = in_range(int(round(s * 100)), SAT)
     return hue, lum, sat
-
-
-def update_doc(doc_id, headline, author, body='', tags=[], date=None):
-    doc = search.Document(
-        doc_id=doc_id,
-        fields=[
-            search.TextField(name='headline', value=headline),
-            search.TextField(name='author', value=author.nickname()),
-            search.HtmlField(name='body', value=body),
-            search.TextField(name='tags', value=','.join(tags)),
-            search.DateField(name='date', value=date.date())]
-    )
-    INDEX.put(doc)
-
-
-def remove_doc(safe_key):
-    INDEX.delete(safe_key)
 
 
 def _calculate_thresholds(min_weight, max_weight, steps):
@@ -287,6 +263,12 @@ class Counter(ndb.Model):
     value = ndb.GenericProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
 
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters)
+
 
 def update_counter(delta, *args):
     key_name = '%s||%s||%s' % args
@@ -393,7 +375,6 @@ class Photo(ndb.Model):
             value = data.get(field, None)
             if value:
                 incr_count(self.kind, field, value)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         old = self.author.nickname()
@@ -447,12 +428,10 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
         self.put()
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         blob_info = blobstore.BlobInfo.get(obj.blob_key)
         blob_info.delete()
@@ -467,12 +446,8 @@ class Photo(ndb.Model):
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     @webapp2.cached_property
-    def normal_url_async(self):
-        return images.get_serving_url_async(self.blob_key, size=0, crop=False, secure_url=True)
-
-    @webapp2.cached_property
-    def small_url_async(self):
-        return images.get_serving_url_async(self.blob_key, size=300, crop=True, secure_url=True)
+    def serving_url(self):
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
 
     @webapp2.cached_property
     def blob_info(self):
@@ -480,7 +455,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def hex(self):
-        return '#%02x%02x%02x' % tuple(self.rgb)
+        return rgb_to_hex(tuple(self.rgb))
 
     @webapp2.cached_property
     def hls(self):
@@ -491,9 +466,6 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def similar(self):
         return COLORS[self.color]
-
-    def comment_list(self):
-        return Comment.query(ancestor=self.key).order(-Comment.date)
 
     @classmethod
     def query_for(cls, field, value):
@@ -560,7 +532,6 @@ class Entry(ndb.Model):
         incr_count(self.kind, 'author', self.author.nickname())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     def edit(self, data):
         self.headline = data['headline']
@@ -599,12 +570,10 @@ class Entry(ndb.Model):
         self.tags = sorted(data['tags'])
 
         self.put()
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
 
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)
@@ -612,116 +581,12 @@ class Entry(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    def comment_list(self):
-        return Comment.query(ancestor=self.key).order(-Comment.date)
-
     @property
     def image_list(self):
         return Img.query(ancestor=self.key).order(Img.num)
 
     def image_url(self, num):
         return '/entries/image/%s_%s' % (self.key.string_id(), num)
-
-    @classmethod
-    def query_for(cls, field, value):
-        f = filter_param(field, value)
-        filters = [cls._properties[k] == v for k, v in f.items()]
-        return cls.query(*filters).order(-cls.date)
-
-
-class Comment(ndb.Model):
-    # parent Photo, Entry
-    author = ndb.UserProperty(auto_current_user_add=True)
-    date = ndb.DateTimeProperty(auto_now_add=True)
-    year = ndb.IntegerProperty()
-    forkind = ndb.StringProperty(default='Application')
-    body = ndb.TextProperty(required=True)
-
-    @webapp2.cached_property
-    def kind(self):
-        return self.key.kind()
-
-    @webapp2.cached_property
-    def index_data(self):
-        return {
-            'doc_id': self.key.urlsafe(),
-            'headline': '' if self.is_message else self.key.parent().get().headline,
-            'author': self.author,
-            'body': '%s' % self.body,
-            'date': self.date
-        }
-
-    @webapp2.cached_property
-    def is_message(self):
-        return self.forkind == 'Application'
-
-    def add(self):
-        self.put()
-
-        incr_count(self.kind, 'author', self.author.nickname())
-        if self.is_message:
-            incr_count(self.kind, 'forkind', 'Application')
-        else:
-            incr_count(self.key.parent().kind(), 'comment', self.key.parent().id())
-            incr_count('Comment', 'forkind', self.key.parent().kind())
-        incr_count('Comment', 'date', self.year)
-        deferred.defer(update_doc, _queue='queue25', **self.index_data)
-
-    def _pre_put_hook(self):
-        self.year = self.date.year
-
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe(), _queue='queue25')
-
-        decr_count(key.kind(), 'author', obj.author.nickname())
-        decr_count(key.kind(), 'date', obj.year)
-        if obj.is_message:
-            decr_count(key.kind(), 'forkind', 'Application')
-        else:
-            decr_count(key.parent().kind(), 'comment', key.parent().id())
-            decr_count(key.kind(), 'forkind', key.parent().kind())
-
-    @classmethod
-    def query_for(cls, field, value):
-        f = filter_param(field, value)
-        filters = [cls._properties[k] == v for k, v in f.items()]
-        return cls.query(*filters).order(-cls.date)
-
-
-class Feed(ndb.Model):
-    url = ndb.StringProperty(required=True)
-    headline = ndb.StringProperty(required=True)
-    subtitle = ndb.StringProperty()
-    author = ndb.UserProperty(auto_current_user_add=True)
-    tags = ndb.StringProperty(repeated=True)
-    date = ndb.DateTimeProperty()
-
-    @webapp2.cached_property
-    def kind(self):
-        return self.key.kind()
-
-    def add(self, data):
-        self.url = data['url']
-        self.headline = data['headline']
-        self.tags = data['tags']
-        self.put()
-        for name in self.tags:
-            incr_count('Feed', 'tags', name)
-
-    def edit(self, data):
-        update_tags(self.kind, self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-        self.url = data['url']
-        self.headline = data['headline']
-        self.put()
-
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        update_tags(key.kind(), obj.tags, None)
-        memcache.delete(key.string_id())
 
     @classmethod
     def query_for(cls, field, value):

@@ -1,13 +1,10 @@
 User-agent: *
-Disallow: /*?idx*
 Disallow: /sign
 Disallow: /search
 Disallow: /admin/
 Disallow: /filter/
 Disallow: /visualize/
 Disallow: /complete/
-Disallow: /comments/
-Disallow: /news/
 Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete
@@ -21,6 +18,5 @@ Disallow: /*tags/
 Disallow: /*date/
 Disallow: /*author/
 Disallow: /*color/
-Disallow: /*forkind/
 # sitemap
 Sitemap: http://ands.appspot.com/sitemap.xml

@@ -25,13 +25,13 @@ class PaginatorTest(unittest.TestCase):
         self.assertFalse(has_next)
 
     def test_triple(self):
-        page, prev, obj, next = self.paginator.triple('street-crossing')
+        page, prev, obj, next = self.paginator.triple('zenith-velibora-andrejevica')
         self.assertEqual(page, 1)
         self.assertIsNone(prev)
         self.assertIsInstance(obj, Photo)
         self.assertIsInstance(next, Photo)
 
-        page, prev, obj, next = self.paginator.triple('blue-butterfly')
+        page, prev, obj, next = self.paginator.triple('manastir-dudovica')
         self.assertEqual(page, 1)
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
@@ -42,3 +42,15 @@ class PaginatorTest(unittest.TestCase):
         self.assertIsInstance(prev, Photo)
         self.assertIsInstance(obj, Photo)
         self.assertIsNone(next)
+
+    def test_neighbors(self):
+        index, objects, next_more, next_cursor, prev_more, prev_cursor = self.paginator.neighbors('fortis-flieger-cockpit')
+        print index
+        print next_more
+        print next_cursor
+        print prev_more
+        print prev_cursor
+        j = 0
+        for x in objects:
+            print j, x.key.string_id()
+            j += 1

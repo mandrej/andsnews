@@ -9,7 +9,7 @@ from google.appengine.ext import blobstore
 from google.appengine.api import images
 
 from timer import Timer
-from colorific.palette import extract_colors, rgb_to_hex
+from palette import extract_colors, rgb_to_hex
 from models import Photo
 
 

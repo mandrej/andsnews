@@ -1,20 +1,17 @@
-{% macro _link(name, page, class, title) %}
+{% if has_next or has_previous %}
     {% if filter %}
-        {% set url = uri_for('%s_filter' % name, page=page, field=filter.field, value=filter.value) %}
+        {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value) %}
     {% else %}
-        {% set url = uri_for(name, page=page) %}
+        {% set url = uri_for(name) %}
     {% endif %}
-    <a{{ {'href': '%s?find=%s' % (url, phrase) if phrase else url, 'class': class, 'title': title}|xmlattr }}></a>
-{% endmacro %}
 
-{% if has_previous or has_next %}
     {% if has_previous %}
-        {{ _link(name, page - 1, prev_class, '%s %s' % (_('previous'), _('page'))) }}
+        <a{{ {'href': '%s?page=%s' % (url, page - 1), 'class': prev_class}|xmlattr }}></a>
     {% else %}
         <span class="{{ prev_class }} na"></span>
     {% endif %}
     {% if has_next %}
-        {{ _link(name, page + 1, next_class, '%s %s' % (_('next'), _('page'))) }}
+        <a{{ {'href': '%s?page=%s' % (url, page + 1), 'class': next_class}|xmlattr }}></a>
     {% else %}
         <span class="{{ next_class }} na"></span>
     {% endif %}

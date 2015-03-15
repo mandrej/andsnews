@@ -1,14 +1,12 @@
 __author__ = 'milan'
 
-from mapreduce import operation as op
-from google.appengine.ext import blobstore
-from models import update_doc, rounding, img_palette, range_names
-from config import ASA, LENGTHS
 import logging
 
+from google.appengine.ext import blobstore
 
-def indexer(entity):
-    update_doc(**entity.index_data)
+from mapreduce import operation as op
+from models import rounding, img_palette, range_names
+from config import ASA, LENGTHS
 
 
 def calculate_palette(entity):

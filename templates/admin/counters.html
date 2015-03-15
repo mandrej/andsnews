@@ -1,65 +1,62 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block paging %}
     {% with name='counter_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2>Counter administration</h2>
-        </header>
-        <article class="normal">
-            <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
-                <input name="token" type="hidden" value="{{ token }}"/>
-                <table class="zebra">
-                    <colgroup>
-                        <col style="width: 80px;"/>
-                        <col style="width: 80px;"/>
-                        <col/>
-                        <col style="width: 70px; text-align: right;"/>
-                        <col style="width: 160px; text-align: right;"/>
-                    </colgroup>
-                    <thead>
+    <div class="admin page">
+        <h2><a href="{{ uri_for('counter_admin') }}">Counter administration</a></h2>
+
+        <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
+            <input name="token" type="hidden" value="{{ token }}"/>
+            <table class="zebra">
+                <colgroup>
+                    <col style="width: 80px;"/>
+                    <col style="width: 80px;"/>
+                    <col/>
+                    <col style="width: 70px; text-align: right;"/>
+                    <col style="width: 170px; text-align: right;"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>forkind</th>
+                        <th>field</th>
+                        <th>value</th>
+                        <th>count</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in objects %}
                         <tr>
-                            <th>kind</th>
-                            <th>field</th>
-                            <th>value</th>
-                            <th>count</th>
-                            <th></th>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='forkind', value=object.forkind) }}">
+                                {{ object.forkind }}</a></td>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='field', value=object.field) }}">
+                                {{ object.field }}</a></td>
+                            <td><a href="{{ uri_for('counter_admin_filter', field='value', value=object.value) }}">
+                                {{ object.value }}</a></td>
+                            <td>
+                                <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
+                                    {% if object.count <= 0 %}
+                                        style="width: 58px; text-align: right; background: #c00; color: #fff;"
+                                    {% else %}
+                                        style="width: 58px; text-align: right;"
+                                    {% endif%}
+                                    type="text" value="{{ object.count }}"/>
+                            </td>
+                            <td class="nowrap">
+                                <button class="disabled button" type="submit" name="action:edit"
+                                    disabled="disabled" value="{{ object.key.urlsafe() }}">
+                                    change</button>&nbsp;
+                                <button class="button delete" type="submit" name="action:delete"
+                                    value="{{ object.key.urlsafe() }}">
+                                    delete</button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for object in objects %}
-                            {% if object %}
-                                <tr>
-                                    <td>{{ object.forkind|default('---') }}</td>
-                                    <td>{{ object.field|default('---') }}</td>
-                                    <td>{{ object.value|default('---') }}</td>
-                                    <td>
-                                        <input id="{{ object.key.urlsafe() }}" name="count.{{ object.key.urlsafe() }}"
-                                            {% if object.count <= 0 %}
-                                                style="width: 58px; text-align: right; background: #c00; color: #fff;"
-                                            {% else %}
-                                                style="width: 58px; text-align: right;"
-                                            {% endif%}
-                                            type="text" value="{{ object.count }}"/>
-                                    </td>
-                                    <td class="nowrap">
-                                        <button class="disabled button" type="submit" name="action:edit"
-                                            disabled="disabled" value="{{ object.key.urlsafe() }}">
-                                            <i class="fa fa-check-circle"></i> change</button>&nbsp;
-                                        <button class="button delete" type="submit" name="action:delete"
-                                            value="{{ object.key.urlsafe() }}">
-                                            <i class="fa fa-times-circle"></i> delete</button>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </form>
-        </article>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
     </div>
 {% endblock %}
 {% block scripts %}

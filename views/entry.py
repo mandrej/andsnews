@@ -1,8 +1,8 @@
 from __future__ import division
 import re
 from StringIO import StringIO
-from PIL import Image
 
+from PIL import Image
 import webapp2
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -17,9 +17,9 @@ SMALL = 60, 60
 
 
 class Index(BaseHandler):
-    def get(self, page=1, field=None, value=None):
+    def get(self, field=None, value=None):
+        page = int(self.request.get('page', 1))
         query = Entry.query_for(field, value)
-        page = int(page)
         paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
         objects, has_next = paginator.page(page)
 

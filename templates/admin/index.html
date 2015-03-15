@@ -5,132 +5,69 @@
 {% endblock %}
 
 {% block contents %}
-    <div class="page">
-        <header>
-            <h2>Site administration</h2>
-        </header>
-        <article class="cols">
+    <div id="gallery">
+        <section class="admin">
+            <h2 class="clearing">
+                <a href="{{ uri_for('photo_admin') }}" class="button left">
+                    Photo {{ photo_count }}
+                </a>
+                <a href="{{ uri_for('photo_add') }}" class="button right">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
+            </h2>
+            <div id="Photo_tags"></div>
+            <div id="Photo_author"></div>
+            <div id="Photo_date"></div>
+            <div id="Photo_model"></div>
+            <div id="Photo_lens"></div>
+            <div id="Photo_eqv"></div>
+            <div id="Photo_iso"></div>
+            <div id="Photo_color"></div>
+        </section>
+        <section class="admin">
+            <h2 class="clearing">
+                <a href="{{ uri_for('entry_admin') }}" class="button left">
+                    Entry {{ entry_count }}
+                </a>
+                <a href="{{ uri_for('entry_add') }}" class="button right">
+                    <i class="fa fa-plus-square"></i> Add
+                </a>
+            </h2>
+            <div id="Entry_tags"></div>
+            <div id="Entry_author"></div>
+            <div id="Entry_date"></div>
+        </section>
+
+        <section class="admin">
+            <h2>Memcache statistics for	v.{{ version() }}</h2>
+            <dl class="w65em">
+                <dt>hit ratio</dt>
+                <dd>
+                    {{ '%0.1f'|format(hit_ratio) }}%
+                    ({{ stats.hits }} hits, {{ stats.misses }} misses)
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>size</dt>
+                <dd>{{ stats['items'] }} items,
+                    {{ stats.bytes|filesizeformat }}
+                </dd>
+            </dl>
+            <dl class="w65em">
+                <dt>oldest item</dt>
+                <dd>{{ oldest|timesince }} ago</dd>
+            </dl>
+        </section>
+
+        {% if is_admin %}
             <section class="admin">
-                <h3>
-                    <a href="{{ uri_for('photo_admin', page=1) }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Photo {{ photo_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('photo_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Photo_tags"></div>
-                <div id="Photo_author"></div>
-                <div id="Photo_date"></div>
-                <div id="Photo_model"></div>
-                <div id="Photo_lens"></div>
-                <div id="Photo_eqv"></div>
-                <div id="Photo_iso"></div>
-                <div id="Photo_color"></div>
+                <h2>MapReduce</h2>
+                <h4><a class="button" href="/mapreduce">Status</a></h4>
+                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">
+                    Calculate photo palette</a>
+                </h4>
             </section>
-            <section class="admin">
-                <h3>
-                    <a href="{{ uri_for('entry_admin', page=1) }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Entry {{ entry_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('entry_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Entry_tags"></div>
-                <div id="Entry_author"></div>
-                <div id="Entry_date"></div>
-
-                <h3>
-                    <a href="{{ uri_for('feed_admin') }}" class="button">
-                        <i class="fa fa-th-list"></i>
-                        Feeds {{ feeds_count }}
-                    </a>&nbsp;
-                    <a href="{{ uri_for('feed_add') }}" class="button">
-                        <i class="fa fa-plus-square"></i> Add
-                    </a>
-                </h3>
-                <div id="Feed_tags"></div>
-
-                {% if is_admin %}
-                    <h3>
-                        <a href="{{ uri_for('comment_admin', page=1) }}" class="button">
-                            <i class="fa fa-th-list"></i>
-                            Comment {{ comment_count }}
-                        </a>
-                    </h3>
-                    <div id="Comment_forkind"></div>
-                    <div id="Comment_author"></div>
-                    <div id="Comment_date"></div>
-                {% endif %}
-            </section>
-            <section class="admin">
-                <h3>
-                    <span class="block button">
-                        <i class="fa fa-bars"></i>
-                        Memcache statistics for	v.{{ version() }}
-                    </span>
-                </h3>
-                <dl class="w65em">
-                    <dt>hit ratio</dt>
-                    <dd>
-                        {{ '%0.1f'|format(hit_ratio) }}%
-                        ({{ stats.hits }} hits, {{ stats.misses }} misses)
-                    </dd>
-                </dl>
-                <dl class="w65em">
-                    <dt>size</dt>
-                    <dd>{{ stats['items'] }} items,
-                        {{ stats.bytes|filesizeformat }}
-                    </dd>
-                </dl>
-                <dl class="w65em">
-                    <dt>oldest item</dt>
-                    <dd>{{ oldest|timesince }} ago</dd>
-                </dl>
-
-                {% if is_admin %}
-                    <h3>
-                        <span class="block button">
-                            <i class="fa fa-cloud"></i> MapReduce
-                        </span>
-                    </h3>
-                    <p>
-                        <a href="/mapreduce" class="block button">Status</a>
-                    </p>
-                    <p>
-                        <a href="{{ uri_for('datastore_background', job='palette') }}" class="block button">
-                            Calculate photo palette
-                        </a>
-                    </p>
-                {% endif %}
-            </section>
-        </article>
-
-{#        <article class="normal">#}
-{#            <h2 class="ss">Spectra [+]</h2>#}
-{#            <div class="hide">#}
-{#                <div class="admin">#}
-{#                    <dl class="w65em">#}
-{#                        <dt>Saturation</dt>#}
-{#                        <dd>#}
-{#                            <div id="sat" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
-{#                            <input type="text" name="sat" size="2" disabled="disabled"/>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                    <dl class="w65em">#}
-{#                        <dt>Lightness</dt>#}
-{#                        <dd>#}
-{#                            <div id="lum" class="slider"></div><div style="float: left; width: 1em">&nbsp;</div>#}
-{#                            <input type="text" name="lum" size="2" disabled="disabled"/>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                </div>#}
-{#                <div id="spectra"></div>#}
-{#            </div>#}
-{#        </article>#}
+        {% endif %}
     </div>
 {% endblock %}
 {% block scripts %}
@@ -138,13 +75,13 @@
     <script src="https://www.google.com/jsapi"></script>
     <script>
         google.load('visualization', '1', {packages: ['corechart']});
-        $(function() {
+        $(document).ready(function () {
             function build() {
                 $.getJSON('/admin/memcache/', function(data) {
                     $.each(data, function(key, value) {
                         var tmpl = '', title = key.split('_').pop() + ' cloud';
                         if (value) {
-                            tmpl += '<button type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
+                            tmpl += '<button class="delete" type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
                             tmpl += '<a class="graph button" href="/visualize/' + key + '"><i class="fa fa-eye"></i> graph</a>';
                             tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
                             tmpl += '<div class="hide">';
@@ -163,6 +100,13 @@
                 });
             }
             build();
+
+            var $container = $('#gallery');
+            $container.gridalicious({
+                selector: '.admin',
+                width: 360,
+                gutter: 1
+            });
 
             $('.admin div').on('click', 'button', function() {
                 $('#spinner').show();
@@ -185,38 +129,9 @@
                 });
             });
 
-{#            var drawSpectra = function() {#}
-{#                var sat = $('#sat').slider('value');#}
-{#                var lum = $('#lum').slider('value');#}
-{##}
-{#                $.getJSON('/admin/spectra?sat=' + sat + '&lum=' + lum, function(data) {#}
-{#                    $('#spectra').empty();#}
-{#                    $.each(data, function(name, colors) {#}
-{#                        var str = '<div><span class="item" style="width: 50px;">' + name + '</span>';#}
-{#                        $.each(colors, function(i, c) {#}
-{#                            str += '<span class="item" style="background: ' + c + '">&nbsp;</span>';#}
-{#                        });#}
-{#                        str += '</div>';#}
-{#                        $('#spectra').append(str);#}
-{#                    });#}
-{#                })#}
-{#            };#}
-{#            $('.slider').slider({#}
-{#                min: 0, max: 100, step: 5,#}
-{#                change: function(event, ui) {#}
-{#                    $('input[name=' + event.target.id + ']').val(ui.value);#}
-{#                    drawSpectra();#}
-{#                }#}
-{#            });#}
-{#            $('h2.ss').click(function(evt) {#}
-{#                evt.preventDefault();#}
-{#                drawSpectra();#}
-{#            });#}
             $('#main button, #sidebar button').click(function() {
                 $('#overlay, #spinner').show();
             });
-            $('#sat').slider('value', 70);
-            $('#lum').slider('value', 40);
 
             $('.ff, .ss').collapseGroup();
             $('.zebra').colStyle();

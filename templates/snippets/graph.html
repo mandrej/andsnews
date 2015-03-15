@@ -1,6 +1,6 @@
 {% set titles = {
     'tags': _('Tags'), 'date': _('Dates'), 'author': _('Authors'), 'color': _('Color'), 'model': _('Camera model'),
-    'lens': _('Lens type'), 'eqv': _('Eqv. focal length'), 'iso': _('Sensitivity'), 'forkind': _('Type')
+    'lens': _('Lens type'), 'eqv': _('Eqv. focal length'), 'iso': _('Sensitivity')
 } %}
 <div class="popup">
     <h4>{{ titles[field_name] }}</h4>
@@ -8,8 +8,9 @@
     <div class="content">
         <div id="chart"></div>
         {% if field_name == 'color' %}
-            <p>{{ _('Based od colorific color extraction in CIE 2000 color space') }},
-                <a href="http://99designs.com/tech-blog/blog/2012/05/11/color-analysis/" target="_blank">{{ _('see') }}</a></p>
+            <p><a href="http://99designs.com/tech-blog/blog/2012/05/11/color-analysis/" target="_blank">
+                {{ _('Based od colorific color extraction in CIE 2000 color space') }}</a>
+            </p>
         {% elif field_name == 'eqv' %}
             <p>{{ _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10') }}</p>
         {% endif %}

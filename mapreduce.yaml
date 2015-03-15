@@ -1,16 +1,4 @@
 mapreduce:
-- name: Create Full text search index
-  mapper:
-    input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.background.indexer
-    params:
-      - name: entity_kind
-        default: models.Photo
-      - name: processing_rate
-        default: 50
-      - name: shard_count
-        default: 4
-
 #- name: Calculate photo palette
 #  mapper:
 #    input_reader: mapreduce.input_readers.DatastoreInputReader

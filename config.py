@@ -2,9 +2,11 @@ __author__ = 'milan'
 
 import os
 import json
-import webapp2
+import logging
+from timeit import default_timer
 from datetime import datetime, timedelta
-from google.appengine.api import memcache
+
+import webapp2
 from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
@@ -12,9 +14,7 @@ DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
 PHOTOS_PER_PAGE = 24
-PHOTOS_LATEST = 5
 ENTRIES_PER_PAGE = 9
-RFC822 = '%a, %d %b %Y %I:%M:%S %p GMT'
 ADMIN_JID = 'milan.andrejevic@gmail.com'
 FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
           'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
@@ -81,12 +81,19 @@ ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,
 LENGTHS = [8, 15, 20, 24, 28, 35, 50, 85, 105, 135, 200, 300, 400, 600]
 
 
+def timeit(f):
+    def wrapper(*args, **kw):
+        timer = default_timer
+        start = timer()
+        result = f(*args, **kw)
+        end = timer()
+        logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
+        return result
+    return wrapper
+
+
 def version():
     return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
-
-
-def gaesdk():
-    return os.environ.get('SERVER_SOFTWARE')
 
 
 def language(code):
@@ -110,13 +117,6 @@ def image_url_by_num(obj, arg):
     """ {{ object|image_url_by_num:form.initial.ORDER }}/small
         {{ object|image_url_by_num:object.front }}/small """
     return obj.image_url(arg)
-
-
-def incache(key):
-    if memcache.get(key):
-        return True
-    else:
-        return False
 
 
 def boolimage(value):
@@ -213,16 +213,14 @@ CONFIG = {
         'globals': {
             'year': year,
             'version': version,
-            'gaesdk': gaesdk,
             'language': language,
             'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
-            'prev_class': 'prev fa fa-chevron-left fa-4x',
-            'next_class': 'next fa fa-chevron-right fa-4x',
+            'prev_class': 'prev fa fa-angle-left fa-3x',
+            'next_class': 'next fa fa-angle-right fa-3x',
         },
         'filters': {
-            'incache': incache,
             'boolimage': boolimage,
             'to_date': to_date,
             'to_datetime': to_datetime,
