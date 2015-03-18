@@ -181,7 +181,6 @@ class Cloud(object):
         get_list:
         [{'size': 4, 'count': 3, 'name': 'mihailo.genije'}, {'size': 8, 'count': 11, 'name': 'milan.andrejevic'}, ...]
     """
-
     def __init__(self, mem_key):
         self.mem_key = mem_key
         self.kind, self.field = mem_key.split('_', 1)
@@ -253,6 +252,42 @@ class Cloud(object):
             if obj.count != count:
                 obj.count = count
                 obj.put_async()
+
+        return collection
+
+
+class Graph(object):
+    def __init__(self, field):
+        self.field = field
+        self.mem_key = '%s_graph' % field
+
+    def get_json(self):
+        collection = memcache.get(self.mem_key)
+        if collection is None:
+            items = []
+            query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
+                                                               'katarina', 'iva', 'masa', 'djordje']))
+            for x in query:
+                items += getattr(x, self.field)
+
+            i = 0
+            nodes = []
+            tally = collections.Counter(items)
+            items = {}
+            for name, count in tally.items():
+                items[name] = i
+                nodes.append({'name': name, 'index': i, 'count': count})
+                i += 1
+
+            links = []
+            pairs = itertools.combinations(items.keys(), 2)
+            for x, y in pairs:
+                c = Photo.query(getattr(Photo, self.field) == x, getattr(Photo, self.field) == y).count()
+                if c > 0:
+                    links.append({'source': items[x], 'target': items[y], 'value': c})
+
+            collection = {'nodes': nodes, 'links': links}
+            memcache.set(self.mem_key, collection, TIMEOUT * 2)
 
         return collection
 

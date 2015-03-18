@@ -9,8 +9,6 @@ import traceback
 import hashlib
 import uuid
 import webapp2
-import itertools
-import collections
 import logging
 from operator import itemgetter
 from wtforms import widgets, fields
@@ -18,7 +16,7 @@ from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
-from models import Photo, Entry, Cloud
+from models import Photo, Entry, Cloud, Graph
 from config import PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
 
 
@@ -240,30 +238,10 @@ class RenderGraph(BaseHandler):
         self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
 
 
-class Graph(BaseHandler):
-    def get(self):
-        tags = []
-        for x in Photo.query():
-            tags += x.tags
-
-        i = 0
-        nodes = []
-        tally = collections.Counter(tags)
-        tags = {}
-        for name, count in tally.items():
-            tags[name] = i
-            nodes.append({'name': name, 'index': i, 'count': count})
-            i += 1
-
-        links = []
-        pairs = itertools.combinations(tags.keys(), 2)
-        query = Photo.gql('WHERE tags = :1 AND tags = :2')
-        for x, y in pairs:
-            c = query.bind(x, y).count()
-            if c > 0:
-                links.append({'source': tags[x], 'target': tags[y], 'value': c})
-
-        self.render_json({'nodes': nodes, 'links': links})
+class DrawGraph(BaseHandler):
+    def get(self, field):
+        data = Graph(field).get_json()
+        self.render_json(data)
 
 
 class SiteMap(BaseHandler):

@@ -4,7 +4,8 @@ import logging
 
 from webapp2 import WSGIApplication, Route
 
-from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, Graph, SiteMap, SaveAsHandler
+from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
+    DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
 logging.getLogger().setLevel(logging.INFO)
@@ -47,7 +48,7 @@ app = WSGIApplication([
     Route('/visualize/<mem_key>', handler=RenderGraph),
     Route('/complete/<mem_key>', handler=Complete),
 
-    Route('/graph.json', handler=Graph),
+    Route('/<field:tags>/graph', handler=DrawGraph),
     Route('/sitemap.xml', handler=SiteMap),
     Route('/<safe_key>/download', handler=SaveAsHandler, name='download'),
     Route('/<safe_key>/delete', handler=DeleteHandler, name='delete'),
