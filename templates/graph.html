@@ -41,7 +41,7 @@
                 .links(graph.links)
                 .charge(-200)
                 .gravity(0.03)
-                .linkDistance(function(d) { return 250 / d.value})
+                .linkDistance(160)
                 .start();
 
             //http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
@@ -86,10 +86,10 @@
                 if (toggle == 0) {
                     d = d3.select(this).node().__data__;
                     node.style('opacity', function (o) {
-                        return neighboring(d, o) | neighboring(o, d) ? 1 : 0.2;
+                        return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
                     });
                     link.style('opacity', function (o) {
-                        return d.index==o.source.index | d.index==o.target.index ? 1 : 0.2;
+                        return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
                     });
                     toggle = 1;
                 } else {
@@ -103,7 +103,7 @@
                 .data(graph.links)
                 .enter().append('line')
                 .attr('class', 'link')
-                .style('stroke-width', function(d) { return 2 * d.value; });
+                .style('stroke-width', function(d) { return d.value / 2; });
 
             var node = vis.selectAll('.node')
                 .data(graph.nodes)
@@ -113,7 +113,7 @@
                 .on('dblclick', connectedNodes);
 
             var circle = node.append('circle')
-                .attr('r', function(d) { return 5 * d.count; })
+                .attr('r', function(d) { return 5 * (1 + Math.log(d.count)); })
                 .style('fill', function(d) { return color(d.index); });
 
             var text = node.append('text')
