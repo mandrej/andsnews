@@ -238,6 +238,11 @@ class RenderGraph(BaseHandler):
         self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
 
 
+class Plain(BaseHandler):
+    def get(self):
+        self.render_template('graph.html')
+
+
 class DrawGraph(BaseHandler):
     def get(self, field):
         data = Graph(field).get_json()
