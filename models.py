@@ -6,6 +6,7 @@ import datetime
 import cgi
 import math
 import colorsys
+import logging
 import itertools
 import collections
 import webapp2
@@ -264,15 +265,20 @@ class Graph(object):
     def get_json(self):
         collection = memcache.get(self.mem_key)
         if collection is None:
-            items = []
             query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
                                                                'katarina', 'iva', 'masa', 'djordje']))
-            for x in query:
-                items += getattr(x, self.field)
+            res = [x.tags for x in query]
+            flat = reduce(lambda x, y: x + y, res)
+
+            tally = {}
+            for name in flat:
+                if name in tally:
+                    tally[name] += 1
+                else:
+                    tally[name] = 1
 
             i = 0
             nodes = []
-            tally = collections.Counter(items)
             items = {}
             for name, count in tally.items():
                 items[name] = i
@@ -282,12 +288,15 @@ class Graph(object):
             links = []
             pairs = itertools.combinations(items.keys(), 2)
             for x, y in pairs:
-                c = Photo.query(getattr(Photo, self.field) == x, getattr(Photo, self.field) == y).count()
-                if c > 0:
-                    links.append({'source': items[x], 'target': items[y], 'value': c})
+                i = 0
+                for tags in res:
+                    intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
+                    i += intersection == {x, y}
+                if i > 0:
+                    links.append({'source': items[x], 'target': items[y], 'value': i})
 
             collection = {'nodes': nodes, 'links': links}
-            memcache.set(self.mem_key, collection, TIMEOUT * 2)
+            memcache.set(self.mem_key, collection, TIMEOUT * 12)
 
         return collection
 
