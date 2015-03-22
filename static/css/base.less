@@ -334,8 +334,9 @@ input[data-function*='swipe'] {
     border-width: 0 1px 1px 1px;
 }
 .cover {
+    background-color: @dark;
     background-size: cover;
-    background-position: 50% 50%;
+    background-position: center;
     background-repeat: no-repeat;
 }
 .exif {
@@ -556,7 +557,7 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 .collapse, .ff, .ss { cursor: pointer; }
 .required:before { content: "*\00A0"; /* \00A0 &nbsp; */ }
 
-.b-lazy { opacity: 0; .transition(opacity 350ms ease-in-out); }
+.b-lazy { opacity: 0; .transition(all .3s ease-in-out); }
 .b-lazy.b-loaded { opacity: 1; }
 
 .modal {

@@ -71,7 +71,7 @@
                 loop: false,
                 keyboardControl: true,
                 longSwipesRatio: 0.3,
-                grabCursor: true,
+{#                grabCursor: true,#}
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     var href = $('.next').attr('href'),
@@ -96,6 +96,15 @@
                     }
                 },
                 onSlideChangeEnd: lazyLoad
+            });
+
+            $('.swiper-parent').on('click', '.blank', function() {
+                var cntx = $(this).closest('.cover');
+                if (cntx.css('background-size') == 'cover') {
+                    cntx.css('background-size', 'contain');
+                } else {
+                    cntx.css('background-size', 'cover');
+                }
             });
 
             lazyLoad(horizontal);
