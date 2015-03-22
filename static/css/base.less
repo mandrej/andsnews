@@ -56,7 +56,7 @@
 }
 .form_focus { border: 1px solid @gold; outline: none; }
 
-html, body { height: 100%; font-size: 62.5%; }
+html, body { height: 100%; position: relative; font-size: 62.5%; }
 
 body {
     background: @white;
@@ -219,21 +219,15 @@ input[data-function*='swipe'] {
 	}
 }
 
-#main, .menu {
-    margin: 40px 0 0 0;
-}
-
 #main {
-    position:absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    padding: 40px 0 0 0;
+    .box-sizing(border-box);
     .translate3d(0, 0, 0);
 	.transition(transform, .5s);
 }
 
 .menu {
+    margin: 40px 0 0 0;
 	position: fixed;
 	top: 0;
 	left: -@menuOffset;
@@ -324,32 +318,22 @@ input[data-function*='swipe'] {
     }
 }
 
-.swiper-parent, .swiper-nested {
-    width: 100%;
-    height: 100%;
-    .box-sizing(border-box);
-}
-.swiper-parent {
-    border: 1px solid @white;
-    border-width: 0 1px 1px 1px;
-}
-.cover {
+.swiper-container {
     background-color: @dark;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
-.exif {
-    color: @gray;
-    background: rgba(0, 0, 0, 0.8);
-    h2 { color: @white; }
-    a {
-        color: @gold;
-        &:focus, &:hover { color: @white; }
+.swiper-slide {
+    img {
+        display: block;
+        width: 100%;
     }
-}
-.blank {
-    img { width: 100%; height: 100%; }
+    .exif {
+        color: @gray;
+        h2 { color: @white; }
+        a {
+            color: @gold;
+            &:focus, &:hover { color: @white; }
+        }
+    }
 }
 
 .blog {
@@ -372,8 +356,6 @@ input[data-function*='swipe'] {
 	color: @gray;
     background: @dark;
     min-height: 100%;
-    border: 1px solid @white;
-    border-width: 0 1px 1px 1px;
     .box-sizing(border-box);
     h2 { color: @white; }
     a {
@@ -451,7 +433,6 @@ input[data-function*='swipe'] {
 		&.graph { float: right; }
         &.selected { color: @white; }
 	}
-    &:focus, &:hover { background-color: rgba(0, 0, 0, 0.2); }
 }
 
 .error { color: @white; }
@@ -557,7 +538,7 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 .collapse, .ff, .ss { cursor: pointer; }
 .required:before { content: "*\00A0"; /* \00A0 &nbsp; */ }
 
-.b-lazy { opacity: 0; .transition(all .3s ease-in-out); }
+.b-lazy { opacity: 0; .transition(opacity .3s ease-in-out); }
 .b-lazy.b-loaded { opacity: 1; }
 
 .modal {
