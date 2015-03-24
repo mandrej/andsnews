@@ -38,14 +38,19 @@
             window.history.replaceState(null, '', location.pathname);
 
             function getPage(href, callback) {
-                $.get(href, function(response) {
-                    var $page = $(response);
-                    callback($page);
+                var num = parseInt($.getQueryParameters(href).page);
+                if (!isNaN(num) && $.inArray(num, pages) == -1) {
+                    $.get(href, function(response) {
+                        var $page = $(response);
+                        callback($page);
 
-                    $('nav.paginator').replaceWith(function() {
-                        return $page.find('nav.paginator').hide()
+                        $('nav.paginator').replaceWith(function() {
+                            return $page.find('nav.paginator').hide()
+                        });
                     });
-                });
+                    pages.push(num);
+                }
+
             }
             function lazyLoad(sw) {
                 var bLazy = new Blazy({
@@ -64,26 +69,14 @@
                 grabCursor: true,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
-                    var href = $('.next').attr('href'),
-                        num = parseInt($.getQueryParameters(href).page);
-
-                    if ($.inArray(num, pages) == -1) {
-                        getPage(href, function($page) {
-                            sw.appendSlide($page.find('.swiper-slide'));
-                            pages.push(num);
-                        });
-                    }
+                    getPage($('.next').attr('href'), function($page) {
+                        sw.appendSlide($page.find('.swiper-slide'));
+                    });
                 },
                 onReachBeginning: function(sw) {
-                    var href = $('.prev').attr('href'),
-                        num = parseInt($.getQueryParameters(href).page);
-
-                    if ($.inArray(num, pages) == -1) {
-                        getPage(href, function($page) {
-                            sw.prependSlide($page.find('.swiper-slide').reverse());
-                            pages.push(num);
-                        });
-                    }
+                    getPage($('.prev').attr('href'), function($page) {
+                        sw.prependSlide($page.find('.swiper-slide').reverse());
+                    });
                 },
                 onSlideChangeEnd: lazyLoad
             });
