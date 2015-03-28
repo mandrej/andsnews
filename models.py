@@ -379,17 +379,6 @@ class Photo(ndb.Model):
     def kind(self):
         return self.key.kind()
 
-    @webapp2.cached_property
-    def index_data(self):
-        return {
-            'doc_id': self.key.urlsafe(),
-            'headline': self.headline,
-            'author': self.author,
-            'body': '%s %s' % (self.model, self.lens),
-            'tags': self.tags,
-            'date': self.date
-        }
-
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
 
@@ -541,17 +530,6 @@ class Entry(ndb.Model):
     @webapp2.cached_property
     def kind(self):
         return self.key.kind()
-
-    @webapp2.cached_property
-    def index_data(self):
-        return {
-            'doc_id': self.key.urlsafe(),
-            'headline': self.headline,
-            'author': self.author,
-            'body': '%s %s' % (self.summary, self.body),
-            'tags': self.tags,
-            'date': self.date
-        }
 
     def add(self, data):
         self.headline = data['headline']

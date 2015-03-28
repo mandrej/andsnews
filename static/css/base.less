@@ -228,8 +228,8 @@ input[data-function*='swipe'] {
     padding: 40px 0 0 0;
     .box-sizing(border-box);
     .translate3d(0, 0, 0);
-	.transition(transform, .5s);
-    .transition(all, 0.3s);
+//	.transition(transform, .5s);
+    .transition(all, .3s);
 }
 
 .menu {
@@ -243,7 +243,7 @@ input[data-function*='swipe'] {
 	padding: 1rem;
 	z-index: 1;
 	.translate3d(0, 0, 0);
-	.transition(transform, .5s);
+	.transition(transform, .3s);
     .box-sizing(border-box);
     a {
         color: @gray;
@@ -324,27 +324,27 @@ input[data-function*='swipe'] {
     }
 }
 
-.swiper-parent, .swiper-nested {
+.swiper-container {
     width: 100%;
     height: 100%;
 }
 .cover {
     background-color: @dark;
     background-size: cover;
-    background-position: center;
+//    background-position: 50% 0%;
     background-repeat: no-repeat;
-}
-.exif {
-    color: @gray;
-    background: rgba(0, 0, 0, 0.8);
-    h2 { color: @white; }
-    a {
-        color: @gold;
-        &:focus, &:hover { color: @white; }
+    .headline, .exif {
+        padding: 1rem;
+        color: @gray;
+        background: rgba(0, 0, 0, 0.5);
+        h2 { color: @white; }
+        a {
+            color: @gold;
+            &:focus, &:hover { color: @white; }
+        }
+        z-index: 2;
     }
-}
-.blank {
-    img { width: 100%; height: 100%; }
+    .exif { margin: 0 -1rem; padding: 0; background: none; }
 }
 
 .blog {
