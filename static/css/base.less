@@ -56,7 +56,7 @@
 }
 .form_focus { border: 1px solid @gold; outline: none; }
 
-html, body { height: 100%; position: relative; font-size: 62.5%; }
+html, body { height: 100%; font-size: 62.5%; }
 
 body {
     background: @white;
@@ -220,11 +220,16 @@ input[data-function*='swipe'] {
 }
 
 #main {
-    position: relative;
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 40px 0 0 0;
     .box-sizing(border-box);
     .translate3d(0, 0, 0);
 	.transition(transform, .5s);
+    .transition(all, 0.3s);
 }
 
 .menu {
@@ -319,22 +324,27 @@ input[data-function*='swipe'] {
     }
 }
 
-.swiper-container {
-    background-color: @dark;
+.swiper-parent, .swiper-nested {
+    width: 100%;
+    height: 100%;
 }
-.swiper-slide {
-    img {
-        display: block;
-        width: 100%;
+.cover {
+    background-color: @dark;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.exif {
+    color: @gray;
+    background: rgba(0, 0, 0, 0.8);
+    h2 { color: @white; }
+    a {
+        color: @gold;
+        &:focus, &:hover { color: @white; }
     }
-    .exif {
-        color: @gray;
-        h2 { color: @white; }
-        a {
-            color: @gold;
-            &:focus, &:hover { color: @white; }
-        }
-    }
+}
+.blank {
+    img { width: 100%; height: 100%; }
 }
 
 .blog {
