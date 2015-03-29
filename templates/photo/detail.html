@@ -101,9 +101,9 @@
                 var main = $('#main');
                 var cntx = $(this);
                 if (main.css('bottom') == '0px') {
-                    main.css('bottom', '-80%');
-                    cntx.css({'background-size': '100% auto', 'background-position': '100% 0'});
-                    cntx.find('.exif').slideDown();
+                    main.css('bottom', '-50%');
+                    cntx.css({'background-size': 'auto 100%', 'background-position': '50% 0'});
+                    cntx.find('.exif').show();
                 } else {
                     main.css('bottom', '0px');
                     cntx.css({'background-size': 'cover', 'background-position': '50% 50%'});
