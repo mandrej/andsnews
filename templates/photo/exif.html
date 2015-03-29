@@ -1,13 +1,13 @@
 <table>
     <tr>
-        <td colspan="2">
+        <th colspan="2">
             <a href="{{ uri_for('photo_all_filter', field='model', value=object.model) }}"
             title="{{ _('photos taken with same camera model') }}">{{ object.model }}</a>
             {% if object.lens %}<br/>
                 <a href="{{ uri_for('photo_all_filter', field='lens', value=object.lens) }}"
                    title="{{ _('photos taken with same lens') }}">{{ object.lens }}</a>
             {% endif %}
-        </td>
+        </th>
     </tr>
     <tr>
         <td>{{ _('Aperture') }}</td>

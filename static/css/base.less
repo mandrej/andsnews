@@ -328,13 +328,13 @@ input[data-function*='swipe'] {
     width: 100%;
     height: 100%;
 }
+
 .cover {
     background-color: @dark;
     background-size: cover;
-//    background-position: 50% 0%;
+    background-position: 50% 50%;
     background-repeat: no-repeat;
     .headline, .exif {
-        padding: 1rem;
         color: @gray;
         background: rgba(0, 0, 0, 0.5);
         h2 { color: @white; }
@@ -342,9 +342,13 @@ input[data-function*='swipe'] {
             color: @gold;
             &:focus, &:hover { color: @white; }
         }
-        z-index: 2;
     }
-    .exif { margin: 0 -1rem; padding: 0; background: none; }
+    .headline { padding: 1rem; }
+    .exif {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
 }
 
 .blog {

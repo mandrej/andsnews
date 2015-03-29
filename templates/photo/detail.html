@@ -13,7 +13,6 @@
                      data-src="{{ object.serving_url }}=s0"
                      data-src-small="{{ object.serving_url }}=s800">
                     <div class="headline">
-                        <i class="fa fa-camera" style="margin: 2rem; float: right; font-size: 4rem;"></i>
                         <h2>{{ object.headline }}</h2>
                         <p>
                             <a href="{{ uri_for('photo_all_filter', field='author', value=object.author) }}"
@@ -27,9 +26,9 @@
                             <a href="{{ uri_for('photo_all_filter', field='date', value=object.year) }}"
                                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
                         </p>
-                        <div class="exif hide">
-                            {% include "photo/exif.html" %}
-                        </div>
+                    </div>
+                    <div class="exif hide">
+                        {% include "photo/exif.html" %}
                     </div>
                 </div>
             {% endfor %}
@@ -74,9 +73,9 @@
                 if (!activeSlide.hasClass('b-loaded')) {
                     bLazy.load(activeSlide);
                 }
-                activeSlide.css('background-size', 'cover');
-                activeSlide.find('.exif').slideUp();
-                $('#main').css('bottom', '0%');
+                activeSlide.css({'background-size': 'cover', 'background-position': '50% 50%'});
+                activeSlide.find('.exif').hide();
+                $('#main').css('bottom', '0px');
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -98,16 +97,17 @@
                 onSlideChangeEnd: lazyLoad
             });
 
-            $('#main').on('click', '.headline', function() {
-                var cntx = $(this).closest('.cover');
-                if (cntx.css('background-size') == 'cover') {
-                    $('#main').css('bottom', '-80%');
-                    cntx.css('background-size', '100% auto');
+            $('#main').on('click', '.cover', function() {
+                var main = $('#main');
+                var cntx = $(this);
+                if (main.css('bottom') == '0px') {
+                    main.css('bottom', '-80%');
+                    cntx.css({'background-size': '100% auto', 'background-position': '100% 0'});
                     cntx.find('.exif').slideDown();
                 } else {
-                $('#main').css('bottom', '0%');
-                    cntx.css('background-size', 'cover');
-                    cntx.find('.exif').slideUp();
+                    main.css('bottom', '0px');
+                    cntx.css({'background-size': 'cover', 'background-position': '50% 50%'});
+                    cntx.find('.exif').hide();
                 }
             });
 
