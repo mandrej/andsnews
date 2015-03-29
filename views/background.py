@@ -5,7 +5,7 @@ import logging
 from google.appengine.ext import blobstore
 
 from mapreduce import operation as op
-from models import rounding, img_palette, range_names
+from models import rounding, img_palette, img_dimesion, range_names
 from config import ASA, LENGTHS
 
 
@@ -18,6 +18,14 @@ def calculate_palette(entity):
     else:
         entity.rgb = palette.colors[0].value
     entity.hue, entity.lum, entity.sat = range_names(entity.rgb)
+
+    yield op.db.Put(entity)
+
+
+def calculate_dimension(entity):
+    blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
+    buff = blob_reader.read()
+    entity.dim = img_dimesion(buff)
 
     yield op.db.Put(entity)
 

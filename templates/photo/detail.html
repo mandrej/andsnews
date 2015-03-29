@@ -11,7 +11,9 @@
                 <div id="{{ object.key.string_id() }}"
                      class="swiper-slide cover b-lazy"
                      data-src="{{ object.serving_url }}=s0"
-                     data-src-small="{{ object.serving_url }}=s800">
+                     data-src-small="{{ object.serving_url }}=s1000"
+                     data-ratio="{{ object.ratio }}"
+                     data-height="{{ object.dim.1 }}">
                     <div class="headline">
                         <h2>{{ object.headline }}</h2>
                         <p>
@@ -98,10 +100,14 @@
             });
 
             $('#main').on('click', '.cover', function() {
-                var main = $('#main');
-                var cntx = $(this);
+                var cntx = $(this),
+                    main = $('#main'),
+                    main_height = parseInt(main.css('height')),
+                    img_height = parseInt(cntx.data('height')),
+                    img_ratio = parseFloat(cntx.data('ratio'));
+                var minHeight = Math.min((main_height / img_ratio), img_height);
                 if (main.css('bottom') == '0px') {
-                    main.css('bottom', '-70%');
+                    main.css('bottom', - 100 * (minHeight / main_height) + '%');
                     cntx.css({'background-size': 'auto 100%', 'background-position': '50% 0'});
                     cntx.find('.exif').show();
                 } else {

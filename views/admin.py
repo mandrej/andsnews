@@ -144,6 +144,15 @@ JOBS = {
             "entity_kind": "models.Photo",
         },
         "shards": 4
+    },
+    "dimension": {
+        "job_name": "calculate_dimension",
+        "handler_spec": "views.background.calculate_dimension",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
     }
 }
 

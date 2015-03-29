@@ -49,10 +49,36 @@ def filter_param(field, value):
     return {field: value}
 
 
+def memoize(f):
+    """ Memoization decorator for functions taking one or more arguments.
+        http://code.activestate.com/recipes/578231-probably-the-fastest-memoization-decorator-in-the-/ """
+    class memodict(dict):
+        def __init__(self, f):
+            self.f = f
+
+        def __call__(self, *args):
+            return self[args]
+
+        def __missing__(self, key):
+            ret = self[key] = self.f(*key)
+            return ret
+    return memodict(f)
+
+
+@memoize
+def get_image_from_stream(buff):
+    return Image.open(StringIO(buff))
+
+
 def img_palette(buff):
-    img = Image.open(StringIO(buff))
+    img = get_image_from_stream(buff)
     img.thumbnail((100, 100), Image.ANTIALIAS)
     return extract_colors(img)
+
+
+def img_dimesion(buff):
+    img = get_image_from_stream(buff)
+    return img.size  # (width, height) tuple
 
 
 def get_exif(buff):
@@ -371,6 +397,11 @@ class Photo(ndb.Model):
     hue = ndb.StringProperty()
     lum = ndb.StringProperty()
     sat = ndb.StringProperty()
+    # image dimension
+    dim = ndb.IntegerProperty(repeated=True)  # width, height
+
+    ratio = ndb.ComputedProperty(
+        lambda self: self.dim[0] / self.dim[1] if self.dim and len(self.dim) == 2 else 1.5)
 
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
@@ -392,6 +423,8 @@ class Photo(ndb.Model):
         exif = get_exif(buff)
         for field, value in exif.items():
             setattr(self, field, value)
+
+        self.dim = img_dimesion(buff)
 
         palette = img_palette(buff)
         if palette.bgcolor:
