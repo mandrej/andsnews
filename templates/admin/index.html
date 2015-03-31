@@ -76,7 +76,7 @@
     <script src="https://www.google.com/jsapi"></script>
     <script>
         google.load('visualization', '1', {packages: ['corechart']});
-        $(document).ready(function () {
+        $(function () {
             function build() {
                 $.getJSON('/admin/memcache/', function(data) {
                     $.each(data, function(key, value) {
