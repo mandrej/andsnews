@@ -63,10 +63,10 @@
             <section class="admin">
                 <h2>MapReduce</h2>
                 <h4><a class="button" href="/mapreduce">Status</a></h4>
-                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">
-                    Calculate photo palette</a></h4>
-                <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">
-                    Calculate photo dimension</a></h4>
+{#                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">#}
+{#                    Calculate photo palette</a></h4>#}
+{#                <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">#}
+{#                    Calculate photo dimension</a></h4>#}
             </section>
         {% endif %}
     </div>
@@ -106,7 +106,7 @@
             $container.gridalicious({
                 selector: '.admin',
                 width: 360,
-                gutter: 1
+                gutter: 0
             });
 
             $('.admin div').on('click', 'button', function() {
