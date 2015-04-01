@@ -3,7 +3,7 @@
 {% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block contents %}
-    <div class="admin page">
+    <div class="admin">
         <h2>{{ _('Add new / change existing blog') }}</h2>
 
         <article>
@@ -53,7 +53,7 @@
                         {% endfor %}
                     </fieldset>
 
-                    <fieldset style="float: none">
+                    <fieldset>
                         {{ form.body(rows=20) }}
                         <p class="buttons">
                             <span class="required">{{ _('Required field') }}</span>

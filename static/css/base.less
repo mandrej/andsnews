@@ -42,19 +42,20 @@
 	&:hover, &:focus { color: @dark; background: @gold; }
 }
 .form_label {
-	margin: 0.3em 0.5em 0.5em 0;
+	margin: .3rem .5rem 0 0;
 	width: 10em;
 	float: left;
-	font-weight: bold;
 	text-align: right;
+    .box-sizing(border-box);
 }
 .form_input {
     width: 20em;
-    margin: 0.3em 0;
     padding: 0.2em;
     border: 1px solid @gray;
+    background: @white;
+    .box-sizing(border-box);
 }
-.form_focus { border: 1px solid @gold; outline: none; }
+.form_focus { border: 1px solid @dark; outline: none; }
 
 html, body { height: 100%; font-size: 62.5%; }
 
@@ -139,7 +140,6 @@ button, .button {
 label, input, select, textarea { font-size: @default_size; .box-sizing(border-box); }
 
 fieldset {
-	p { clear: left; }
 	label {
 		.form_label;
 		&:after { content: ":"; }
@@ -147,12 +147,11 @@ fieldset {
 	input {
 		.form_input;
 		&:focus { .form_focus; }
-		&[type=file] { width: 20em; padding: 0; border: none; }
+		&[type=file] { width: 20em; padding: 0.1rem; border: none; }
 		&[disabled] { color: @neutral; }
 	}
 	select {
 		.form_input;
-		padding: 0;
 		&:focus { .form_focus; }
 		option { padding: 0.2em; }
 	}
@@ -168,10 +167,9 @@ fieldset {
 		line-height: 100%;
 	}
 	p.upload {
-		margin-bottom: 1px;
 		background-repeat: no-repeat;
 		background-position: left;
-		input { margin-right: 0.5em; width: auto; }
+		input { margin-right: 0.5rem; width: auto; }
 	}
 }
 
@@ -353,7 +351,6 @@ input[data-function*='swipe'] {
 .blog {
 	display: block;
     padding: 1rem;
-	background: @gray;
     .transition(all .3s ease-out);
     h2, h3 {
         line-height: 110%;
@@ -394,23 +391,11 @@ input[data-function*='swipe'] {
             padding-bottom: 0.5em;
         }
     }
-    article {
-        display: flex;
-        flex-flow: row;
-        section {
-            flex: 2;
-        }
-        aside {
-            flex: 1;
-            margin-left: 1rem;
-        }
-    }
 }
 
 .admin {
     padding: 1rem;
     color: @dark;
-    background: @gray;
     h2 { color: @dark; position: relative; }
 	h4 { padding: 1rem 0; line-height: 100%; }
 	button { float: right; margin-left: 0.5em; }
@@ -447,6 +432,17 @@ input[data-function*='swipe'] {
 		&.graph { float: right; }
         &.selected { color: @white; }
 	}
+    article {
+        display: flex;
+        flex-flow: row;
+        section {
+            flex: 2;
+        }
+        aside {
+            flex: 1;
+            margin-left: 1rem;
+        }
+    }
 }
 
 .error { color: @white; }
