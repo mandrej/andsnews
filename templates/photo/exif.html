@@ -49,7 +49,7 @@
         <tr>
             <td colspan="2">
                 <a href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
-                    {{ _('Download') }} ({{ object.size|filesizeformat }})</a>
+                    {{ _('Download') }} ({{ object|image_dimension }}, {{ object.size|filesizeformat }})</a>
             </td>
         </tr>
     {% endif %}

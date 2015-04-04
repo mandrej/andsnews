@@ -119,6 +119,10 @@ def image_url_by_num(obj, arg):
     return obj.image_url(arg)
 
 
+def image_dimension(obj):
+    return '{0} x {1}'.format(*obj.dim)
+
+
 def boolimage(value):
     """ {{ object.key.name|incache|boolimage }} """
     if value is True:
@@ -225,6 +229,7 @@ CONFIG = {
             'to_date': to_date,
             'to_datetime': to_datetime,
             'image_url_by_num': image_url_by_num,
+            'image_dimension': image_dimension,
             'css_classes': css_classes,
             'filesizeformat': filesizeformat,
             'timesince': timesince_jinja,

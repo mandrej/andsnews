@@ -13,8 +13,8 @@
 @default_size: 1.6rem;
 @monospaced: "Courier New", Courier, Freemono, "Nimbus Mono L", monospace;
 
-@black: black;
-@dark: #111;
+@black: #000;
+@dark: #222;
 @neutral: #666;
 @gray: #ccc;
 @white: white;
@@ -65,7 +65,7 @@ body {
     font-family: @default_font;
     font-size: @default_size;
     line-height: 140%;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 a {
     color: @dark;
@@ -275,7 +275,6 @@ input[data-function*='swipe'] {
         line-height: 25px;
         font-size: 1.4rem;
         color: @gray;
-        background: @black;
         form {
             position: absolute;
             bottom: 0;
