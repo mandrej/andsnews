@@ -380,8 +380,8 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def buffer(self):
-        blob_reader = blobstore.BlobReader(self.blob_key)
-        return blob_reader.read()
+        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
+        return blob_reader.read(size=-1)
 
     @webapp2.cached_property
     def image_from_buffer(self):

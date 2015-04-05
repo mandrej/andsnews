@@ -158,8 +158,8 @@ class SaveAsHandler(BaseHandler):
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
         obj = key.get()
-        blob_reader = blobstore.BlobReader(obj.blob_key)
-        buff = blob_reader.read()
+        blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
+        buff = blob_reader.read(size=-1)
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
         logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
         self.response.write(buff)
