@@ -10,6 +10,7 @@ import webapp2
 from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
+
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
@@ -89,7 +90,26 @@ def timeit(f):
         end = timer()
         logging.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
         return result
+
     return wrapper
+
+
+def memoize(f):
+    """ Memoization decorator for functions taking one or more arguments.
+        http://code.activestate.com/recipes/578231-probably-the-fastest-memoization-decorator-in-the-/ """
+
+    class memodict(dict):
+        def __init__(self, f):
+            self.f = f
+
+        def __call__(self, *args):
+            return self[args]
+
+        def __missing__(self, key):
+            ret = self[key] = self.f(*key)
+            return ret
+
+    return memodict(f)
 
 
 def version():

@@ -2,31 +2,31 @@ __author__ = 'milan'
 
 import logging
 
-from google.appengine.ext import blobstore
+from PIL import Image
 
+from palette import extract_colors
 from mapreduce import operation as op
-from models import rounding, img_palette, img_dimesion, range_names
+from models import rounding, range_names
 from config import ASA, LENGTHS
 
 
 def calculate_palette(entity):
-    blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
-    buff = blob_reader.read()
-    palette = img_palette(buff)
+    # yield entity.palette_async()
+    img = entity.image_from_buffer
+    img.thumbnail((100, 100), Image.ANTIALIAS)
+    palette = extract_colors(img)
     if palette.bgcolor:
         entity.rgb = palette.bgcolor.value
     else:
         entity.rgb = palette.colors[0].value
-    entity.hue, entity.lum, entity.sat = range_names(entity.rgb)
+        entity.hue, entity.lum, entity.sat = range_names(entity.rgb)
 
     yield op.db.Put(entity)
 
 
 def calculate_dimension(entity):
-    blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
-    buff = blob_reader.read()
-    entity.dim = img_dimesion(buff)
-
+    # yield entity.dim_async()
+    entity.dim = entity.image_from_buffer.size
     yield op.db.Put(entity)
 
 

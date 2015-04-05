@@ -6,7 +6,6 @@ import datetime
 import cgi
 import math
 import colorsys
-import logging
 import itertools
 import collections
 import webapp2
@@ -47,38 +46,6 @@ def filter_param(field, value):
     except (ValueError, TypeError):
         pass
     return {field: value}
-
-
-def memoize(f):
-    """ Memoization decorator for functions taking one or more arguments.
-        http://code.activestate.com/recipes/578231-probably-the-fastest-memoization-decorator-in-the-/ """
-    class memodict(dict):
-        def __init__(self, f):
-            self.f = f
-
-        def __call__(self, *args):
-            return self[args]
-
-        def __missing__(self, key):
-            ret = self[key] = self.f(*key)
-            return ret
-    return memodict(f)
-
-
-@memoize
-def get_image_from_stream(buff):
-    return Image.open(StringIO(buff))
-
-
-def img_palette(buff):
-    img = get_image_from_stream(buff)
-    img.thumbnail((100, 100), Image.ANTIALIAS)
-    return extract_colors(img)
-
-
-def img_dimesion(buff):
-    img = get_image_from_stream(buff)
-    return img.size  # (width, height) tuple
 
 
 def get_exif(buff):
@@ -141,8 +108,8 @@ def get_exif(buff):
         data['iso'] = rounding(value, ASA)
 
     # if 'GPS GPSLatitude' in tags:
-    #     deg_min_sec = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
-    #     data['latitude'] = sum(map(divide60, enumerate(deg_min_sec)))  # [(0, 44), (1, 47), (2, 55.9597)]
+    # deg_min_sec = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
+    # data['latitude'] = sum(map(divide60, enumerate(deg_min_sec)))  # [(0, 44), (1, 47), (2, 55.9597)]
 
     # if 'GPS GPSLongitude' in tags:
     #     d, m, s = eval(tags['GPS GPSLongitude'].printable)  # [20, 28, 508547/10000]
@@ -208,6 +175,7 @@ class Cloud(object):
         get_list:
         [{'size': 4, 'count': 3, 'name': 'mihailo.genije'}, {'size': 8, 'count': 11, 'name': 'milan.andrejevic'}, ...]
     """
+
     def __init__(self, mem_key):
         self.mem_key = mem_key
         self.kind, self.field = mem_key.split('_', 1)
@@ -410,6 +378,42 @@ class Photo(ndb.Model):
     def kind(self):
         return self.key.kind()
 
+    @webapp2.cached_property
+    def buffer(self):
+        blob_reader = blobstore.BlobReader(self.blob_key)
+        return blob_reader.read()
+
+    @webapp2.cached_property
+    def image_from_buffer(self):
+        return Image.open(StringIO(self.buffer))
+
+    @ndb.tasklet
+    def exif_async(self):
+        exif = get_exif(self.buffer)
+        for field, value in exif.items():
+            setattr(self, field, value)
+
+        raise ndb.Return()
+
+    @ndb.tasklet
+    def dim_async(self):
+        self.dim = self.image_from_buffer.size  # (width, height) tuple
+        raise ndb.Return()
+
+    @ndb.tasklet
+    def palette_async(self):
+        img = self.image_from_buffer
+        img.thumbnail((100, 100), Image.ANTIALIAS)
+        palette = extract_colors(img)
+        if palette.bgcolor:
+            self.rgb = palette.bgcolor.value
+        else:
+            self.rgb = palette.colors[0].value
+            self.hue, self.lum, self.sat = range_names(self.rgb)
+
+        raise ndb.Return()
+
+    @ndb.toplevel
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
 
@@ -418,27 +422,16 @@ class Photo(ndb.Model):
         self.size = blob_info.size
         self.tags = data['tags']
 
-        blob_reader = blobstore.BlobReader(blob_info, buffer_size=1024*1024)  # Max 1MB
-        buff = blob_reader.read()
-        exif = get_exif(buff)
-        for field, value in exif.items():
-            setattr(self, field, value)
-
-        self.dim = img_dimesion(buff)
-
-        palette = img_palette(buff)
-        if palette.bgcolor:
-            self.rgb = palette.bgcolor.value
-        else:
-            self.rgb = palette.colors[0].value
-        self.hue, self.lum, self.sat = range_names(self.rgb)
+        yield self.exif_async()
+        yield self.dim_async()
+        yield self.palette_async()
         self.put()
 
         incr_count(self.kind, 'author', self.author.nickname())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
         for field in PHOTO_FIELDS:
-            value = data.get(field, None)
+            value = getattr(self, field, None)
             if value:
                 incr_count(self.kind, field, value)
 

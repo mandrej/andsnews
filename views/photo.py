@@ -5,8 +5,10 @@ from collections import defaultdict, OrderedDict
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
+from PIL import Image
 
-from models import Photo, img_palette, incr_count, decr_count, range_names
+from palette import extract_colors
+from models import Photo, incr_count, decr_count, range_names
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
@@ -48,9 +50,9 @@ class Detail(BaseHandler):
 class Palette(BaseHandler):
     def get(self, slug):
         obj = Photo.get_by_id(slug)
-        blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
-        buff = blob_reader.read()
-        palette = img_palette(buff)
+        img = obj.image_from_buffer
+        img.thumbnail((100, 100), Image.ANTIALIAS)
+        palette = extract_colors(img)
 
         data = {'active': {'color': obj.rgb,
                            'hex': obj.hex,
@@ -98,6 +100,7 @@ class AddForm(Form):
     headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
     slug = fields.StringField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
+    author = EmailField(_('Author'), validators=[validators.DataRequired()])
     photo = fields.FileField(_('Photo'))
 
     def validate_slug(self, field):
@@ -128,7 +131,7 @@ class Add(BaseHandler):
     def get(self, form=None):
         upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
         if form is None:
-            form = AddForm()
+            form = AddForm(author=self.user.nickname())
         self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
 
     @csrf_protected
