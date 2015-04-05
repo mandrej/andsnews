@@ -8,12 +8,12 @@ from config import ASA, LENGTHS
 
 
 def calculate_palette(entity):
-    yield entity.palette_async()
+    entity.palette_values()
     yield op.db.Put(entity)
 
 
 def calculate_dimension(entity):
-    yield entity.dim_async()
+    entity.dim_values()
     yield op.db.Put(entity)
 
 

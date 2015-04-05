@@ -387,21 +387,15 @@ class Photo(ndb.Model):
     def image_from_buffer(self):
         return Image.open(StringIO(self.buffer))
 
-    @ndb.tasklet
-    def exif_async(self):
+    def exif_values(self):
         exif = get_exif(self.buffer)
         for field, value in exif.items():
             setattr(self, field, value)
 
-        raise ndb.Return()
-
-    @ndb.tasklet
-    def dim_async(self):
+    def dim_values(self):
         self.dim = self.image_from_buffer.size  # (width, height) tuple
-        raise ndb.Return()
 
-    @ndb.tasklet
-    def palette_async(self):
+    def palette_values(self):
         img = self.image_from_buffer
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
@@ -411,9 +405,6 @@ class Photo(ndb.Model):
             self.rgb = palette.colors[0].value
             self.hue, self.lum, self.sat = range_names(self.rgb)
 
-        raise ndb.Return()
-
-    @ndb.toplevel
     def add(self, data):
         blob_info = blobstore.parse_blob_info(data['photo'])
 
@@ -422,9 +413,9 @@ class Photo(ndb.Model):
         self.size = blob_info.size
         self.tags = data['tags']
 
-        yield self.exif_async()
-        yield self.dim_async()
-        yield self.palette_async()
+        self.exif_values()
+        self.dim_values()
+        self.palette_values()
         self.put()
 
         incr_count(self.kind, 'author', self.author.nickname())

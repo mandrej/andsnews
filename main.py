@@ -8,10 +8,7 @@ from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, Re
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
-if DEVEL:
-    logging.getLogger().setLevel(logging.DEBUG)
-else:
-    logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.INFO)  # DEBUG
 
 app = WSGIApplication([
     Route('/photos/', handler='views.photo.Index', name='photo_all'),
