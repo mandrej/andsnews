@@ -99,6 +99,9 @@
                 onSlideChangeEnd: lazyLoad
             });
 
+            $('#main').on('click', '.headline, .exif', function(event) {
+               event.stopPropagation();
+            });
             $('#main').on('click', '.cover', function() {
                 var cntx = $(this),
                     main = $('#main'),
