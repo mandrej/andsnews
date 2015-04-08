@@ -405,26 +405,28 @@ class Photo(ndb.Model):
             self.rgb = palette.colors[0].value
             self.hue, self.lum, self.sat = range_names(self.rgb)
 
-    def add(self, data):
-        blob_info = blobstore.parse_blob_info(data['photo'])
+    def add(self, data, blob_info):
+        try:
+            self.headline = data['headline']
+            self.blob_key = blob_info.key()
+            self.size = blob_info.size
+            self.tags = data['tags']
 
-        self.headline = data['headline']
-        self.blob_key = blob_info.key()
-        self.size = blob_info.size
-        self.tags = data['tags']
+            self.exif_values()
+            self.dim_values()
+            self.palette_values()
+        except (blobstore.Error, Exception):
+            blob_info.delete()
+        else:
+            self.put()
 
-        self.exif_values()
-        self.dim_values()
-        self.palette_values()
-        self.put()
-
-        incr_count(self.kind, 'author', self.author.nickname())
-        incr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, None, self.tags)
-        for field in PHOTO_FIELDS:
-            value = getattr(self, field, None)
-            if value:
-                incr_count(self.kind, field, value)
+            incr_count(self.kind, 'author', self.author.nickname())
+            incr_count(self.kind, 'date', self.year)
+            update_tags(self.kind, None, self.tags)
+            for field in PHOTO_FIELDS:
+                value = getattr(self, field, None)
+                if value:
+                    incr_count(self.kind, field, value)
 
     def edit(self, data):
         old = self.author.nickname()

@@ -2,6 +2,7 @@ import cgi
 import json
 from collections import defaultdict, OrderedDict
 
+from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext import blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
@@ -103,11 +104,13 @@ class AddForm(Form):
     author = EmailField(_('Author'), validators=[validators.DataRequired()])
     photo = fields.FileField(_('Photo'))
 
-    def validate_slug(self, field):
+    @staticmethod
+    def validate_slug(form, field):
         if Photo.get_by_id(field.data):
             raise validators.ValidationError(_('Record with this slug already exist'))
 
-    def validate_photo(self, field):
+    @staticmethod
+    def validate_photo(form, field):
         if not isinstance(field.data, cgi.FieldStorage):
             raise validators.ValidationError(_('Nothing to upload.'))
 
@@ -126,7 +129,7 @@ class EditForm(Form):
     lens = fields.StringField(_('Lens type'))
 
 
-class Add(BaseHandler):
+class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
     @login_required
     def get(self, form=None):
         upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
@@ -138,8 +141,10 @@ class Add(BaseHandler):
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
+            # blob_info = blobstore.parse_blob_info(data['photo'])
+            blob_info = self.get_uploads()[0]
             obj = Photo(id=form.slug.data)
-            obj.add(form.data)
+            obj.add(form.data, blob_info)
             self.redirect_to('photo_edit', slug=obj.key.string_id())
         else:
             upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))

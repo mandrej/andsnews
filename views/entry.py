@@ -39,7 +39,7 @@ class Detail(BaseHandler):
         self.render_template('entry/detail.html', {'object': obj, 'filter': None})
 
 
-class RequiredIf(validators.Required):
+class RequiredIf(validators.DataRequired):
     def __init__(self, other_field_name, *args, **kwargs):
         self.other_field_name = other_field_name
         super(RequiredIf, self).__init__(*args, **kwargs)
@@ -74,7 +74,8 @@ class AddForm(Form):
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
     newimages = FieldList(FormField(ImgAddForm))
 
-    def validate_slug(self, field):
+    @staticmethod
+    def validate_slug(form, field):
         if Entry.get_by_id(field.data):
             raise validators.ValidationError(_('Record with this slug already exist'))
 
