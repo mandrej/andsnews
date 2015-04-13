@@ -408,6 +408,8 @@ class Photo(ndb.Model):
     def add(self, data, blob_info):
         try:
             self.headline = data['headline']
+            # TODO Not all emails are gmail
+            self.author = users.User(email='%s@gmail.com' % data['author'])
             self.blob_key = blob_info.key()
             self.size = blob_info.size
             self.tags = data['tags']
