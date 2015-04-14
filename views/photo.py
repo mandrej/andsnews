@@ -54,6 +54,16 @@ class Palette(BaseHandler):
         img = obj.image_from_buffer
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
+        """
+        Palette(
+            colors=[
+                Color(value=(211, 73, 74), prominence=0.27075757575757575),
+                Color(value=(69, 101, 103), prominence=0.08575757575757575),
+                Color(value=(69, 1, 2), prominence=0.06818181818181818),
+                Color(value=(88, 57, 60), prominence=0.0353030303030303)],
+            bgcolor=
+                Color(value=(164, 14, 12), prominence=0.4356060606060606))
+        """
 
         data = {'active': {'color': obj.rgb,
                            'hex': obj.hex,

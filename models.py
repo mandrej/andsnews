@@ -126,7 +126,7 @@ def range_names(rgb):
 
     rel_rgb = map(lambda x: x / 255, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    hue = in_range(int(round(h * 360)), HUE)
+    hue = in_range(int(round(h * 360) % 360), HUE)
     lum = in_range(int(round(l * 100)), LUM)
     sat = in_range(int(round(s * 100)), SAT)
     return hue, lum, sat
