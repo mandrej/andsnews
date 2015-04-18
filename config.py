@@ -27,21 +27,21 @@ COLOR_NAMES = (
     _('dark'), _('medium'), _('light')
 )
 HUE = [
-    {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
-    {'span': range(13, 42), 'order': '1', 'name': 'orange', 'hex': '#ff9900'},
-    {'span': range(42, 70), 'order': '2', 'name': 'yellow', 'hex': '#ffff00'},
-    {'span': range(70, 167), 'order': '3', 'name': 'green', 'hex': '#00cc00'},
-    {'span': range(167, 252), 'order': '4', 'name': 'blue', 'hex': '#0066ff'},
-    {'span': range(252, 306), 'order': '5', 'name': 'violet', 'hex': '#cc00cc'}
+    {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red',    'hex': '#c00'},
+    {'span': range(13, 42),               'order': '1', 'name': 'orange', 'hex': '#f90'},
+    {'span': range(42, 70),               'order': '2', 'name': 'yellow', 'hex': '#ff0'},
+    {'span': range(70, 167),              'order': '3', 'name': 'green',  'hex': '#0c0'},
+    {'span': range(167, 252),             'order': '4', 'name': 'blue',   'hex': '#06f'},
+    {'span': range(252, 306),             'order': '5', 'name': 'violet', 'hex': '#c0c'}
 ]
 LUM = [
-    {'span': range(0, 15), 'order': '6', 'name': 'dark', 'hex': '#191919'},
-    {'span': range(15, 70), 'order': '7', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': range(70, 101), 'order': '8', 'name': 'light', 'hex': '#cccccc'}
+    {'span': range(0, 15),                'order': '6', 'name': 'dark',   'hex': '#111'},
+    {'span': range(15, 70),               'order': '7', 'name': 'medium', 'hex': '#555'},
+    {'span': range(70, 101),              'order': '8', 'name': 'light',  'hex': '#ccc'}
 ]
 SAT = [
-    {'span': range(0, 6), 'name': 'monochrome'},
-    {'span': range(6, 101), 'name': 'color'}
+    {'span': range(0, 6),                               'name': 'monochrome'},
+    {'span': range(6, 101),                             'name': 'color'}
 ]
 COLORS = {}
 for x in HUE + LUM:

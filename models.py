@@ -126,9 +126,10 @@ def rgb_hls(rgb):
 
 def range_names(rgb):
     def in_range(value, component):
-        for x in component:
-            if value in x['span']:
-                return x['name']
+        match = next((x for x in component if value in x['span']), None)
+        if match:
+            return match['name']
+        return 'none'
 
     h, l, s = rgb_hls(rgb)
     hue = in_range(h % 360, HUE)
