@@ -23,23 +23,21 @@ LANGUAGES = (
     ('en_US', _('english')), ('sr_RS', _('serbian')),
 )
 COLOR_NAMES = (
-    _('red'), _('orange'), _('yellow'), _('green'), _('teal'), _('blue'),
-    _('purple'), _('pink'), _('dark'), _('medium'), _('light')
+    _('red'), _('orange'), _('yellow'), _('green'), _('blue'), _('violet'),
+    _('dark'), _('medium'), _('light')
 )
 HUE = [
-    {'span': range(342, 360) + range(12), 'order': '0', 'name': 'red', 'hex': '#cc0000'},  # 0
-    {'span': range(12, 40), 'order': '1', 'name': 'orange', 'hex': '#ff7f00'},  # 30
-    {'span': range(40, 69), 'order': '2', 'name': 'yellow', 'hex': '#ffff0f'},  # 60
-    {'span': range(69, 143), 'order': '3', 'name': 'green', 'hex': '#00bf00'},  # 120
-    {'span': range(143, 192), 'order': '4', 'name': 'teal', 'hex': '#00bfbf'},  # 180
-    {'span': range(192, 244), 'order': '5', 'name': 'blue', 'hex': '#005fbf'},  # 210
-    {'span': range(244, 287), 'order': '6', 'name': 'purple', 'hex': '#5f00bf'},  # 270
-    {'span': range(287, 342), 'order': '7', 'name': 'pink', 'hex': '#bf005f'}  # 330
+    {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red', 'hex': '#cc0000'},
+    {'span': range(13, 42), 'order': '1', 'name': 'orange', 'hex': '#ff9900'},
+    {'span': range(42, 70), 'order': '2', 'name': 'yellow', 'hex': '#ffff00'},
+    {'span': range(70, 167), 'order': '3', 'name': 'green', 'hex': '#00cc00'},
+    {'span': range(167, 252), 'order': '4', 'name': 'blue', 'hex': '#0066ff'},
+    {'span': range(252, 306), 'order': '5', 'name': 'violet', 'hex': '#cc00cc'}
 ]
 LUM = [
-    {'span': range(0, 20), 'order': '8', 'name': 'dark', 'hex': '#191919'},
-    {'span': range(20, 60), 'order': '9', 'name': 'medium', 'hex': '#4c4c4c'},
-    {'span': range(60, 101), 'order': 'a', 'name': 'light', 'hex': '#cccccc'}
+    {'span': range(0, 15), 'order': '6', 'name': 'dark', 'hex': '#191919'},
+    {'span': range(15, 70), 'order': '7', 'name': 'medium', 'hex': '#4c4c4c'},
+    {'span': range(70, 101), 'order': '8', 'name': 'light', 'hex': '#cccccc'}
 ]
 SAT = [
     {'span': range(0, 6), 'name': 'monochrome'},

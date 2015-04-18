@@ -101,20 +101,14 @@
             function write_palette(url) {
                 $.getJSON(palette_url, function(data) {
                     var cntx = $('table.palette');
-                    cntx.empty().append('<tr><th>active</th>' +
+                    cntx.empty().append('<tr><td><strong>active</strong></td>' +
                         '<td><span class="dot" data-color="[' + data.active.color + ']" style="border-color: ' + data.active.hex + '"></span></td>' +
-                        '<th>' + data.active['class'] + '</th></tr>');
+                        '<td>' + data.active['class'] + '</td><td style="text-align: right">' + data.active.hls[2] + '</td></tr>');
                     $.each(data.palette, function(i, pal) {
-                        cntx.append('<tr><th>' + pal.prominence + '</th>' +
+                        cntx.append('<tr><td>' + pal.prominence + '</td>' +
                             '<td><span class="dot" data-color="[' + pal.color + ']" style="border-color: ' + pal.hex + '"></span></td>' +
-                            '<td>' + pal['class'] + '</td></tr>');
+                            '<td>' + pal['class'] + '</td><td style="text-align: right">' + pal.hls[2] + '</td></tr>');
                     });
-                    if (data.bgcolor) {
-                        cntx.append('<tr><th>' + data.bgcolor.prominence + '</th>' +
-                            '<td><span class="dot" data-color="[' + data.bgcolor.color + ']" style="border-color: ' + data.bgcolor.hex + '"></span></td>' +
-                            '<td>' + data.bgcolor['class'] + '</td></tr>');
-                    }
-{#                    cntx.after('<p>' + explain + '</p>');#}
                 });
             }
             $('#draw').click(function(evt) {

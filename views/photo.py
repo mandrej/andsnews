@@ -9,7 +9,7 @@ from webapp2_extras.appengine.users import login_required
 from PIL import Image
 
 from palette import extract_colors
-from models import Photo, incr_count, decr_count, range_names
+from models import Photo, incr_count, decr_count, range_names, rgb_hls
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
@@ -49,36 +49,36 @@ class Detail(BaseHandler):
 
 
 class Palette(BaseHandler):
+    """
+    Palette(
+        colors=[
+            Color(value=(211, 73, 74), prominence=0.27075757575757575),
+            Color(value=(69, 101, 103), prominence=0.08575757575757575),
+            Color(value=(69, 1, 2), prominence=0.06818181818181818),
+            Color(value=(88, 57, 60), prominence=0.0353030303030303)],
+        bgcolor=
+            Color(value=(164, 14, 12), prominence=0.4356060606060606))
+    """
     def get(self, slug):
         obj = Photo.get_by_id(slug)
         img = obj.image_from_buffer
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
-        """
-        Palette(
-            colors=[
-                Color(value=(211, 73, 74), prominence=0.27075757575757575),
-                Color(value=(69, 101, 103), prominence=0.08575757575757575),
-                Color(value=(69, 1, 2), prominence=0.06818181818181818),
-                Color(value=(88, 57, 60), prominence=0.0353030303030303)],
-            bgcolor=
-                Color(value=(164, 14, 12), prominence=0.4356060606060606))
-        """
+        if palette.bgcolor:
+            colors = [palette.bgcolor] + palette.colors
+        else:
+            colors = palette.colors
 
         data = {'active': {'color': obj.rgb,
+                           'hls': rgb_hls(obj.rgb),
                            'hex': obj.hex,
                            'class': obj.color},
                 'palette': [
                     {'prominence': '%.1f%%' % (100 * c.prominence,),
                      'color': c.value,
+                     'hls': rgb_hls(c.value),
                      'hex': rgb_to_hex(c.value),
-                     'class': range_names(c.value)} for c in palette.colors]}
-
-        if palette.bgcolor:
-            data['bgcolor'] = {'prominence': '%.1f%%' % (100 * palette.bgcolor.prominence,),
-                               'color': palette.bgcolor.value,
-                               'hex': rgb_to_hex(palette.bgcolor.value),
-                               'class': range_names(palette.bgcolor.value)}
+                     'class': range_names(c.value)} for c in colors]}
 
         self.render_json(data)
 

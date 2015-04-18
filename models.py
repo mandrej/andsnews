@@ -118,17 +118,22 @@ def get_exif(buff):
     return data
 
 
+def rgb_hls(rgb):
+    rel_rgb = map(lambda x: x/255, rgb)
+    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
+    return int(round(h * 360)), int(round(l * 100)), int(round(s * 100))
+
+
 def range_names(rgb):
     def in_range(value, component):
         for x in component:
             if value in x['span']:
                 return x['name']
 
-    rel_rgb = map(lambda x: x / 255, rgb)
-    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    hue = in_range(int(round(h * 360) % 360), HUE)
-    lum = in_range(int(round(l * 100)), LUM)
-    sat = in_range(int(round(s * 100)), SAT)
+    h, l, s = rgb_hls(rgb)
+    hue = in_range(h % 360, HUE)
+    lum = in_range(l, LUM)
+    sat = in_range(s, SAT)
     return hue, lum, sat
 
 
@@ -400,10 +405,19 @@ class Photo(ndb.Model):
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
         if palette.bgcolor:
-            self.rgb = palette.bgcolor.value
+            colors = [palette.bgcolor] + palette.colors
         else:
-            self.rgb = palette.colors[0].value
-            self.hue, self.lum, self.sat = range_names(self.rgb)
+            colors = palette.colors
+
+        max = 0
+        for c in colors:
+            h, l, s = rgb_hls(c.value)
+            criteria = s * c.prominence
+            if criteria > max:
+                max = criteria
+                self.rgb = c.value
+
+        self.hue, self.lum, self.sat = range_names(self.rgb)
 
     def add(self, data, blob_info):
         try:
@@ -513,9 +527,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def hls(self):
-        rel_rgb = map(lambda x: x / 255, self.rgb)
-        h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-        return int(round(h * 360)), int(round(l * 100)), int(round(s * 100))
+        return rgb_hls(self.rgb)
 
     @webapp2.cached_property
     def similar(self):
