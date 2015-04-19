@@ -119,9 +119,12 @@ def get_exif(buff):
 
 
 def rgb_hls(rgb):
+    def intround(n):
+        return int(round(n))
+
     rel_rgb = map(lambda x: x/255, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    return int(round(h * 360)), int(round(l * 100)), int(round(s * 100))
+    return map(intround, (h*360, l*100, s*100))
 
 
 def range_names(rgb):

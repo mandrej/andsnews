@@ -7,6 +7,7 @@ from timeit import default_timer
 from datetime import datetime, timedelta
 
 import webapp2
+from functools import wraps
 from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
@@ -26,6 +27,7 @@ COLOR_NAMES = (
     _('red'), _('orange'), _('yellow'), _('green'), _('blue'), _('violet'),
     _('dark'), _('medium'), _('light')
 )
+# http://www.color-blindness.com/color-name-hue/
 HUE = [
     {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red',    'hex': '#c00'},
     {'span': range(13, 42),               'order': '1', 'name': 'orange', 'hex': '#f90'},
@@ -90,24 +92,6 @@ def timeit(f):
         return result
 
     return wrapper
-
-
-def memoize(f):
-    """ Memoization decorator for functions taking one or more arguments.
-        http://code.activestate.com/recipes/578231-probably-the-fastest-memoization-decorator-in-the-/ """
-
-    class memodict(dict):
-        def __init__(self, f):
-            self.f = f
-
-        def __call__(self, *args):
-            return self[args]
-
-        def __missing__(self, key):
-            ret = self[key] = self.f(*key)
-            return ret
-
-    return memodict(f)
 
 
 def version():
