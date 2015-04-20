@@ -122,7 +122,7 @@ def rgb_hls(rgb):
     def intround(n):
         return int(round(n))
 
-    rel_rgb = map(lambda x: x/255, rgb)
+    rel_rgb = map(lambda x: x/255.0, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
     return map(intround, (h*360, l*100, s*100))
 

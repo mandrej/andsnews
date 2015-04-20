@@ -7,7 +7,6 @@ from timeit import default_timer
 from datetime import datetime, timedelta
 
 import webapp2
-from functools import wraps
 from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
