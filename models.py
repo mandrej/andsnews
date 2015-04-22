@@ -417,7 +417,7 @@ class Photo(ndb.Model):
         for c in colors:
             h, l, s = rgb_hls(c.value)
             criteria = s * c.prominence
-            if criteria > max:
+            if criteria >= max:  # saturation could be 0
                 max = criteria
                 self.rgb = c.value
 
@@ -435,8 +435,9 @@ class Photo(ndb.Model):
             self.exif_values()
             self.dim_values()
             self.palette_values()
-        except (blobstore.Error, Exception):
+        except (blobstore.Error, Exception) as e:
             blob_info.delete()
+            return {'success': False, 'message': e.message}
         else:
             self.put()
 
@@ -447,6 +448,7 @@ class Photo(ndb.Model):
                 value = getattr(self, field, None)
                 if value:
                     incr_count(self.kind, field, value)
+            return {'success': True}
 
     def edit(self, data):
         old = self.author.nickname()

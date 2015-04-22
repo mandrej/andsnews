@@ -154,8 +154,13 @@ class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
             # blob_info = blobstore.parse_blob_info(data['photo'])
             blob_info = self.get_uploads()[0]
             obj = Photo(id=form.slug.data)
-            obj.add(form.data, blob_info)
-            self.redirect_to('photo_edit', slug=obj.key.string_id())
+            response = obj.add(form.data, blob_info)
+            if response['success']:
+                self.redirect_to('photo_edit', slug=obj.key.string_id())
+            else:
+                upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
+                form.photo.errors.append(response['message'])
+                self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
         else:
             upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
             self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
@@ -172,6 +177,8 @@ class Edit(BaseHandler):
     @login_required
     def get(self, slug, form=None):
         obj = Photo.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
         if not any([self.is_admin, self.user == obj.author]):
             self.abort(403)
         if form is None:
