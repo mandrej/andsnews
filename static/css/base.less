@@ -183,20 +183,21 @@ body > header {
     left: 0;
     width: 100%;
     z-index: 10;
-    height: 40px;
+    height: 6rem;
 	h1 {
-        font-size: 2.8rem;
+        font-size: 3rem;
 		color: @dark;
-		line-height: 40px;
+		line-height: 6rem;
 		padding: 0 1rem;
 	}
 	nav.paginator {
 		position: absolute;
 		top: 0;
-        right: 50px;
+        right: 6rem;
 		.next, .prev {
             padding: 0 1rem;
-			line-height: 40px;
+            font-size: 6rem;
+			line-height: 6rem;
             &.na {
                 color: @gray;
             }
@@ -210,7 +211,8 @@ label[data-function*='swipe'] {
     right: 0;
     padding: 0 1rem;
     color: @dark;
-    line-height: 40px;
+    font-size: 4rem;
+    line-height: 6rem;
 }
 input[data-function*='swipe'] {
 	position: absolute;
@@ -226,15 +228,16 @@ input[data-function*='swipe'] {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 40px 0 0 0;
+    padding: 6rem 0 0 0;
     .box-sizing(border-box);
     .translate3d(0, 0, 0);
-//	.transition(transform, .5s);
     .transition(all, .3s);
 }
 
+.white { background: @white; }
+
 .menu {
-    margin: 40px 0 0 0;
+    margin: 6rem 0 0 0;
 	position: fixed;
 	top: 0;
 	left: -@menuOffset;
@@ -274,10 +277,10 @@ input[data-function*='swipe'] {
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 25px;
-        line-height: 25px;
-        font-size: 1.4rem;
+        line-height: 3.2rem;
+        font-size: 1.6rem;
         color: @gray;
+        small { padding-left: 1rem; }
         form {
             position: absolute;
             bottom: 0;
@@ -285,8 +288,9 @@ input[data-function*='swipe'] {
             button {
                 color: @white;
                 background: @black;
+                font-size: 1.6rem;
                 border: 0;
-                height: 25px;
+                height: 3.2rem;
                 &.current {
                     color: @black;
                     background: @gold;
@@ -501,7 +505,7 @@ p.legend { font-size: 1.4rem; padding: 0.5rem; text-align: center; }
 		@media @mobile, @tablet {
 			width: 280px;
 			margin-left: -140px;
-			top: 40px;
+			top: 6rem;
 		}
 		h4 {
 			margin: 0;

@@ -222,8 +222,8 @@ CONFIG = {
             'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
-            'prev_class': 'prev fa fa-angle-left fa-3x',
-            'next_class': 'next fa fa-angle-right fa-3x',
+            'prev_class': 'prev fa fa-angle-left',
+            'next_class': 'next fa fa-angle-right',
         },
         'filters': {
             'boolimage': boolimage,

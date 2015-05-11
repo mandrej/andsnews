@@ -26,7 +26,7 @@
 
     <header>
         <h1><a href="{{ uri_for('start') }}">ANDрејевићи</a></h1>
-        <label for="swipe" data-function='swipe' class="fa fa-bars fa-2x" title="{{ _('Menu') }}"></label>
+        <label for="swipe" data-function='swipe' class="fa fa-bars" title="{{ _('Menu') }}"></label>
         <nav class="paginator">{% block paging %}{% endblock %}</nav>
     </header>
 
@@ -48,7 +48,7 @@
                         'title': lang}|xmlattr }}>{{ language(code) }}</button>
                 {% endfor %}
             </form>
-            <small>&nbsp;&nbsp;АNDS 2008-{{ year() }} v.{{ version() }}</small>
+            <small>АNDS 2008-{{ year() }} v.{{ version() }}</small>
         </footer>
     </aside>
 

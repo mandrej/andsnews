@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery">
+    <div id="gallery" class="white">
         {% for object in objects %}
             {% if filter %}
                 {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}
@@ -34,7 +34,7 @@
             $container.gridalicious({
                 selector: '.thumbnail',
                 width: 240,
-                gutter: 0
+                gutter: 10
             });
             $container.infinitescroll({
                 binder: $(window),
