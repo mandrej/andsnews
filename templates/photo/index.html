@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery" class="white">
+    <div id="gallery">
         {% for object in objects %}
             {% if filter %}
                 {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}

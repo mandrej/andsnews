@@ -17,7 +17,7 @@
 @dark: #222;
 @neutral: #666;
 @gray: #ccc;
-@white: white;
+@white: #fff;
 @gold: #fc0;
 @red: #c00;
 @dashed: 1px dashed #aaa;
@@ -67,6 +67,10 @@ body {
     line-height: 140%;
     overflow-x: hidden;
 }
+.white { background: @white; }
+.gray { background: @gray; }
+.neutral { background: @neutral; }
+
 a {
     color: @dark;
     text-decoration: none;
@@ -233,8 +237,6 @@ input[data-function*='swipe'] {
     .translate3d(0, 0, 0);
     .transition(all, .3s);
 }
-
-.white { background: @white; }
 
 .menu {
     margin: 6rem 0 0 0;

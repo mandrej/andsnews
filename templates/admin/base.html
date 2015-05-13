@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block background %}
+<body class="neutral">
+{% endblock %}
+
 {% block menu %}
     <ul>
         <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>

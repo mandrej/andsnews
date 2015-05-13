@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block background %}
+<body class="white">
+{% endblock %}
+
 {% block menu %}
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
