@@ -9,7 +9,7 @@ from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, Paginator
+from handlers import BaseHandler, csrf_protected, xss_protected, Paginator
 from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE
 
 
@@ -58,6 +58,7 @@ class Index(BaseHandler):
 
 class Photos(BaseHandler):
     @login_required
+    @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
@@ -77,6 +78,7 @@ class Photos(BaseHandler):
 
 class Entries(BaseHandler):
     @login_required
+    @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Entry.query_for(field, value)
@@ -110,6 +112,7 @@ class Entries(BaseHandler):
 
 class Counters(BaseHandler):
     @admin_required
+    @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Counter.query_for(field, value)

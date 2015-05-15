@@ -17,7 +17,7 @@ from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, memcache
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud, Graph
-from config import PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
+from config import LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
 
 
 def csrf_protected(handler_method):
@@ -28,6 +28,16 @@ def csrf_protected(handler_method):
                 self.session['csrf'] = uuid.uuid1().hex
             handler_method(self, *args, **kwargs)
         else:
+            self.abort(400)
+    return wrapper
+
+
+def xss_protected(handler_method):
+    def wrapper(self, *args, **kwargs):
+        try:
+            int(self.request.get('page', 1))
+            handler_method(self, *args, **kwargs)
+        except ValueError:
             self.abort(400)
     return wrapper
 
@@ -98,6 +108,7 @@ class BaseHandler(webapp2.RequestHandler):
             'is_admin': self.is_admin,
             'token': self.csrf_token
         })
+        self.response.headers['X-XSS-Protection'] = '1;mode=block'
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
     def render_json(self, data):
@@ -116,7 +127,9 @@ class Complete(BaseHandler):
 class SetLanguage(BaseHandler):
     def post(self):
         next = self.request.headers.get('Referer', self.uri_for('start'))
-        self.session['lang_code'] = self.request.get('language')
+        language = self.request.get('language')
+        if language in dict(LANGUAGES):
+            self.session['lang_code'] = language
         self.redirect(next)
 
 

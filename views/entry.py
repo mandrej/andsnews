@@ -10,13 +10,14 @@ from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
 from models import Entry, ENTRY_IMAGES
-from handlers import BaseHandler, csrf_protected, Paginator, TagsField
+from handlers import BaseHandler, csrf_protected, xss_protected, Paginator, TagsField
 from config import TIMEOUT, ENTRIES_PER_PAGE
 
 SMALL = 60, 60
 
 
 class Index(BaseHandler):
+    @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Entry.query_for(field, value)

@@ -12,11 +12,12 @@ from palette import extract_colors
 from models import Photo, incr_count, decr_count, range_names, rgb_hls
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, Paginator, EmailField, TagsField
+from handlers import BaseHandler, csrf_protected, xss_protected, Paginator, EmailField, TagsField
 from config import CROPS, PHOTOS_PER_PAGE
 
 
 class Index(BaseHandler):
+    @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
         query = Photo.query_for(field, value)
@@ -32,9 +33,12 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
+    @xss_protected
     def get(self, field=None, value=None):
-        slug = self.request.get('slug', None)
         page = int(self.request.get('page', 1))
+        slug = self.request.get('slug', '')
+        if slug and Photo.get_by_id(slug) is None:
+            self.abort(400)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)

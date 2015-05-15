@@ -238,7 +238,7 @@ CONFIG = {
             'split': split,
         },
         'environment_args': {
-            'autoescape': False,
+            'autoescape': True,
             'trim_blocks': True,
             'extensions': ['jinja2.ext.autoescape', 'jinja2.ext.with_', 'jinja2.ext.i18n']
         },
