@@ -318,26 +318,31 @@ class Counter(ndb.Model):
         return cls.query(*filters)
 
 
-def update_counter(delta, *args):
-    key_name = '%s||%s||%s' % args
-    params = dict(zip(('forkind', 'field', 'value'), args))
-    logging.info(params)
+def update_counter(delta, args):
+    try:
+        assert len(args) == 3
+    except AssertionError:
+        pass
+    else:
+        key_name = '%s||%s||%s' % args
+        params = dict(zip(('forkind', 'field', 'value'), args))
+        logging.info(params)
 
-    obj = Counter.get_or_insert(key_name, **params)
-    obj.count += delta
-    obj.put()
+        obj = Counter.get_or_insert(key_name, **params)
+        obj.count += delta
+        obj.put()
 
-    mem_key = '{forkind}_{field}'.format(**params)
-    cloud = Cloud(mem_key)
-    cloud.update(params['value'], delta)
+        mem_key = '{forkind}_{field}'.format(**params)
+        cloud = Cloud(mem_key)
+        cloud.update(params['value'], delta)
 
 
 def incr_count(*args):
-    deferred.defer(update_counter, 1, *args, _queue='queue25')
+    deferred.defer(update_counter, 1, args)
 
 
 def decr_count(*args):
-    deferred.defer(update_counter, -1, *args, _queue='queue25')
+    deferred.defer(update_counter, -1, args)
 
 
 def update_tags(kind, old, new):

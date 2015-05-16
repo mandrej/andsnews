@@ -8,6 +8,7 @@ Disallow: /complete/
 Disallow: /*add
 Disallow: /*edit
 Disallow: /*delete
+Disallow: /*palette
 Disallow: /*download
 # filters
 Disallow: /*model/
