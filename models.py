@@ -18,7 +18,7 @@ from google.appengine.api import users, memcache, images
 
 from palette import extract_colors, rgb_to_hex
 from exifread import process_file
-from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
+from config import DEVEL, COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
@@ -27,6 +27,8 @@ PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
 ENTRY_IMAGES = 10
 LOGARITHMIC, LINEAR = 1, 2
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if DEVEL else logging.INFO)
 
 def rounding(val, values):
     return min(values, key=lambda x: abs(x - val))
@@ -322,7 +324,7 @@ def update_counter(delta, args):
     try:
         assert len(args) == 3
     except AssertionError:
-        logging.info(args)
+        logger.error(args)
     else:
         key_name = '%s||%s||%s' % args
         params = dict(zip(('forkind', 'field', 'value'), args))

@@ -19,6 +19,9 @@ from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud, Graph
 from config import DEVEL, LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, MAIL_BODY, FAMILY, TIMEOUT
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if DEVEL else logging.INFO)
+
 
 def csrf_protected(handler_method):
     def wrapper(self, *args, **kwargs):
@@ -147,7 +150,7 @@ class Sign(BaseHandler):
         if users.get_current_user():
             self.session.pop('csrf', None)
             dest_url = users.create_logout_url(referer)
-            logging.info('LOGGED IN AS %s' % users.get_current_user().email())
+            logger.info('LOGGED IN AS %s' % users.get_current_user().email())
         else:
             dest_url = users.create_login_url(referer)
         self.redirect(dest_url)
@@ -180,7 +183,7 @@ class SaveAsHandler(BaseHandler):
         blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
         buff = blob_reader.read(size=-1)
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
-        logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
+        logger.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
         self.response.write(buff)
 
 

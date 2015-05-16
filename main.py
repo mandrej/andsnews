@@ -1,14 +1,10 @@
 __author__ = 'milan'
 
-import logging
-
 from webapp2 import WSGIApplication, Route
-
 from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
-logging.getLogger().setLevel(logging.INFO)  # DEBUG
 
 app = WSGIApplication([
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),
