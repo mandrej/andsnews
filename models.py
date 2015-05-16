@@ -9,6 +9,7 @@ import colorsys
 import itertools
 import collections
 import webapp2
+import logging
 from cStringIO import StringIO
 from decimal import *
 from PIL import Image
@@ -320,6 +321,7 @@ class Counter(ndb.Model):
 def update_counter(delta, *args):
     key_name = '%s||%s||%s' % args
     params = dict(zip(('forkind', 'field', 'value'), args))
+    logging.info(params)
 
     obj = Counter.get_or_insert(key_name, **params)
     obj.count += delta
