@@ -372,7 +372,8 @@ input[data-function*='swipe'] {
     flex-flow: column;
     padding: 1rem;
 	color: @gray;
-    background: @dark;
+    background-color: @dark;
+    background-repeat: no-repeat;
     min-height: 100%;
     .box-sizing(border-box);
     h2 { color: @white; }
@@ -452,15 +453,6 @@ input[data-function*='swipe'] {
     }
 }
 
-.errorcode {
-    position: absolute;
-    top: 1em;
-    width: (100% - 1rem);
-    font-size: 15em;
-    color: fadeout(@white, 70%);
-    text-align: center;
-	@media @mobile, @tablet { font-size: 10em; }
-}
 .formerrors {
 	margin: 1em 0;
 	padding: 1em;

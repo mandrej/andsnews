@@ -24,3 +24,7 @@
 {% macro spinner() %}
     {%- for n in range(1, 13) %}<div class="bar{{ n }}"></div>{% endfor -%}
 {% endmacro %}
+
+{% macro errorcode(code) %}
+url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 -50 100 100\"><text fill=\"#c00\" font-size=\"52\" dy=\".3em\">{{ code|default(500) }}</text></svg>")
+{% endmacro %}
