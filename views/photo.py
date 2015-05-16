@@ -63,8 +63,11 @@ class Palette(BaseHandler):
         bgcolor=
             Color(value=(164, 14, 12), prominence=0.4356060606060606))
     """
+    @login_required
     def get(self, slug):
         obj = Photo.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
         img = obj.image_from_buffer
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
@@ -94,6 +97,8 @@ class Palette(BaseHandler):
                 return hue
 
         obj = Photo.get_by_id(slug)
+        if obj is None:
+            self.render_json({'success': False})
         new_rgb = json.loads(self.request.get('rgb'))
         new_range_names = range_names(new_rgb)
         new_color = characterise(*new_range_names)
