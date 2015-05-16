@@ -16,9 +16,23 @@ TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
 PHOTOS_PER_PAGE = 24
 ENTRIES_PER_PAGE = 9
-ADMIN_JID = 'milan.andrejevic@gmail.com'
-FAMILY = ['mihailo.genije@gmail.com', 'milan.andrejevic@gmail.com',
-          'svetlana.andrejevic@gmail.com', 'ana.devic@gmail.com', 'dannytaboo@gmail.com']
+ADMIN = 'milan.andrejevic@gmail.com'
+MAIL_BODY = """
+Dear Administrator:
+
+{error}
+
+{lines}
+
+ANDS Support
+"""
+FAMILY = [
+    ADMIN,
+    'mihailo.genije@gmail.com',
+    'svetlana.andrejevic@gmail.com',
+    'ana.devic@gmail.com',
+    'dannytaboo@gmail.com'
+]
 LANGUAGES = (
     ('en_US', _('english')), ('sr_RS', _('serbian')),
 )

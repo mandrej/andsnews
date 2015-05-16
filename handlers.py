@@ -14,10 +14,10 @@ from operator import itemgetter
 from wtforms import widgets, fields
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import users, memcache
+from google.appengine.api import users, memcache, mail
 from google.appengine.ext import ndb, blobstore
 from models import Photo, Entry, Cloud, Graph
-from config import LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY, TIMEOUT
+from config import DEVEL, LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, MAIL_BODY, FAMILY, TIMEOUT
 
 
 def csrf_protected(handler_method):
@@ -91,6 +91,12 @@ class BaseHandler(webapp2.RequestHandler):
             self.response.set_status(exception.code)
         else:
             data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
+            if not DEVEL:
+                mail.send_mail_to_admins(
+                    sender='ANDS Support <andsnews@appspot.gserviceaccount.com>',
+                    subject='Server Error',
+                    body=MAIL_BODY.format(**data)
+                )
             self.render_template(template, data)
             self.response.set_status(500)
 

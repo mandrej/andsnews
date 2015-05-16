@@ -322,11 +322,10 @@ def update_counter(delta, args):
     try:
         assert len(args) == 3
     except AssertionError:
-        pass
+        logging.info(args)
     else:
         key_name = '%s||%s||%s' % args
         params = dict(zip(('forkind', 'field', 'value'), args))
-        logging.info(params)
 
         obj = Counter.get_or_insert(key_name, **params)
         obj.count += delta
