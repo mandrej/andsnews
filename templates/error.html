@@ -1,9 +1,18 @@
 {% extends "base.html" %}
-{% import "snippets/macros.html" as m %}
 {% block title %}{{ super() }} - {{ error.status|default("500 Internal Server Error") }}{% endblock %}
 
+{% set attr = {
+    'viewBox': '0 -50 100 100',
+    'fill': '#c00',
+    'font-size': '52',
+    'dy': '.3em',
+    'text': code|default(500)
+} %}
+{% set svg = "<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='{viewBox}'>\
+<text fill='{fill}' font-size='{font-size}' dy='{dy}'>{text}</text></svg>".format(**attr) %}
+
 {% block contents %}
-    <div class="page" style='background-image: {{ m.errorcode(error.status_code) }}'>
+    <div class="page" style='background-image: url("data:image/svg+xml;utf8,{{ svg }}")'>
         <h2>{{ error }}</h2>
         {% if path %}<pre>{{ path }}</pre>{% endif %}
         {% if lines %}<pre>{{ lines }}</pre>{% endif %}
