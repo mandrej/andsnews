@@ -94,8 +94,6 @@ ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,
        1000, 1250, 1600, 2000, 2500, 3200, 4000, 5000, 6400]
 LENGTHS = [8, 15, 20, 24, 28, 35, 50, 85, 105, 135, 200, 300, 400, 600]
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG if DEVEL else logging.INFO)
 
 def timeit(f):
     def wrapper(*args, **kw):
@@ -103,7 +101,7 @@ def timeit(f):
         start = timer()
         result = f(*args, **kw)
         end = timer()
-        logger.info('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
+        logging.debug('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, end - start))
         return result
 
     return wrapper
