@@ -16,7 +16,7 @@
                 {% endfor %}
             </div>
             <div class="cloud">
-                {% for name in ['tags', 'date', 'author', 'color', 'model', 'crop_factor', 'lens', 'eqv', 'iso'] %}
+                {% for name in ['tags', 'date', 'author', 'color', 'model', 'lens', 'eqv', 'iso'] %}
                     {% set selected = name == filter.value if filter else False %}
                     <a class="{{ ['t4', 'selected' if selected]|css_classes }}"
                        href="{{ uri_for('counter_admin_filter', field='field', value=name) }}">{{ name }}</a>
