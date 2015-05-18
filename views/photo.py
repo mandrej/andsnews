@@ -38,7 +38,7 @@ class Detail(BaseHandler):
         page = int(self.request.get('page', 1))
         slug = self.request.get('slug', '')
         if slug and Photo.get_by_id(slug) is None:
-            self.abort(400)
+            self.abort(404)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)

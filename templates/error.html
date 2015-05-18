@@ -6,14 +6,13 @@
     'fill': '#c00',
     'font-size': '52',
     'dy': '.3em',
-    'text': code|default(500)
+    'text': error.status_code|default(500)
 } %}
 {% set svg = "<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='{viewBox}'>\
 <text fill='{fill}' font-size='{font-size}' dy='{dy}'>{text}</text></svg>".format(**attr) %}
 
 {% block contents %}
     <div class="page" style='background-image: url("data:image/svg+xml;utf8,{{ svg }}")'>
-        <h2>{{ error }}</h2>
         {% if path %}<pre>{{ path }}</pre>{% endif %}
         {% if lines %}<pre>{{ lines }}</pre>{% endif %}
     </div>
