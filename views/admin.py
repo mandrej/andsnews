@@ -111,6 +111,10 @@ class Entries(BaseHandler):
 
 
 class Counters(BaseHandler):
+    """
+    filter:
+    /forkind/Photo/, /field/date/, /value/2010/
+    """
     @admin_required
     @xss_protected
     def get(self, field=None, value=None):
@@ -118,7 +122,11 @@ class Counters(BaseHandler):
         query = Counter.query_for(field, value)
         paginator = Paginator(query, per_page=20)
         objects, has_next = paginator.page(page)
-        data = {'objects': objects, 'page': page, 'has_next': has_next, 'has_previous': page > 1}
+        data = {'objects': objects,
+                'filter': {'field': field, 'value': value} if (field and value) else None,
+                'page': page,
+                'has_next': has_next,
+                'has_previous': page > 1}
         self.render_template('admin/counters.html', data)
 
     @csrf_protected

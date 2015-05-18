@@ -7,6 +7,23 @@
     <div class="admin">
         <h2><a href="{{ uri_for('counter_admin') }}">Counter administration</a></h2>
 
+        <section style="margin: 1rem 0;">
+            <div class="cloud">
+                {% for name in ['Photo', 'Entry'] %}
+                    {% set selected = name == filter.value if filter else False %}
+                    <a class="{{ ['t6', 'selected' if selected]|css_classes }}"
+                       href="{{ uri_for('counter_admin_filter', field='forkind', value=name) }}">{{ name|lower }}</a>
+                {% endfor %}
+            </div>
+            <div class="cloud">
+                {% for name in ['tags', 'date', 'author', 'color', 'model', 'crop_factor', 'lens', 'eqv', 'iso'] %}
+                    {% set selected = name == filter.value if filter else False %}
+                    <a class="{{ ['t4', 'selected' if selected]|css_classes }}"
+                       href="{{ uri_for('counter_admin_filter', field='field', value=name) }}">{{ name }}</a>
+                {% endfor %}
+            </div>
+        </section>
+
         <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
             <input name="token" type="hidden" value="{{ token }}"/>
             <table class="zebra">
