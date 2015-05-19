@@ -13,6 +13,7 @@
 
 {% block contents %}
     <div class="page" style='background-image: url("data:image/svg+xml;utf8,{{ svg }}")'>
+        <h2>{{ error }}</h2>
         {% if path %}<pre>{{ path }}</pre>{% endif %}
         {% if lines %}<pre>{{ lines }}</pre>{% endif %}
     </div>
