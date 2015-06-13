@@ -16,9 +16,7 @@
                href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
                 <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                      data-src="{{ object.serving_url }}=s400">
-                <div class="mask">
-                    {{ object.headline }}
-                </div>
+                <div class="title">{{ object.headline }}</div>
             </a>
         {% endfor %}
     </div>

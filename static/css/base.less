@@ -303,30 +303,15 @@ input[data-function*='swipe'] {
 
 .thumbnail {
     display: block;
-    position: relative;
     text-align: center;
-    img, .mask {
-        .grayscale(0);
-        .transition(all .3s ease-out);
-    }
-    .mask {
-        position: absolute;
-        width: 100%;
-        height: auto;
-        bottom: 0;
-        left: 100%;
-        opacity: 0;
-        background: @gold;
+    img, .title { .transition(all .3s ease-out); }
+    img { .grayscale(0); }
+    .title {
+        background: @white;
         padding: 1rem;
-        .box-sizing(border-box);
     }
-    &:focus .mask, &:hover .mask {
-        opacity: 1;
-        .translate3d(-100%, 0, 0);
-    }
-    &:focus img, &:hover img {
-        .grayscale(100%);
-    }
+    &:focus img, &:hover img { .grayscale(100%); }
+    &:focus .title, &:hover .title { background: @gold; }
 }
 
 .swiper-container {
