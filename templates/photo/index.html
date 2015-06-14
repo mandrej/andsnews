@@ -14,8 +14,7 @@
             {% endif %}
             <a class="thumbnail"
                href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
-                <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                     data-src="{{ object.serving_url }}=s400">
+                <img src="{{ object.serving_url }}=s400">
                 <div class="title">{{ object.headline }}</div>
             </a>
         {% endfor %}
@@ -24,10 +23,8 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/blazy.min.js"></script>
     <script>
         $(function () {
-            var bLazy = new Blazy();
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.thumbnail',
@@ -42,7 +39,6 @@
                 loading: { msg: $('#dummy') }
             }, function(data) {
                 $container.gridalicious('append', data);
-                bLazy.revalidate();
             });
         });
     </script>

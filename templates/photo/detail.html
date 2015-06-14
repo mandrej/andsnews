@@ -24,9 +24,7 @@
                                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
                         </p>
                     </div>
-                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                         data-src-small="{{ object.serving_url }}=s1000"
-                         data-src="{{ object.serving_url }}=s0">
+                    <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
                     <div class="exif">
                         {% include "photo/exif.html" %}
                     </div>
@@ -38,7 +36,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/blazy.min.js"></script>
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
@@ -66,14 +63,8 @@
                 }
             }
             function fixHeight(sw) {
-                var bLazy = new Blazy({
-                    breakpoints: [{width: 400, src: 'data-src-small'}]
-                });
-                var activeSlide = sw.slides.eq(sw.activeIndex);
-                if (!activeSlide.find('img').hasClass('b-loaded')) {
-                    bLazy.load(activeSlide);
-                }
-                var height = activeSlide.height();
+                var slide = sw.slides.eq(sw.activeIndex),
+                    height = slide.height();
                 $('#main').css({'height': height + 'px'});
                 $('html, body').animate({scrollTop: 0});
             }
@@ -83,6 +74,9 @@
                 keyboardControl: true,
                 longSwipesRatio: 0.3,
                 grabCursor: true,
+                lazyLoading: true,
+                lazyLoadingInPrevNext: true,
+                onLazyImageReady: fixHeight,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
@@ -101,7 +95,6 @@
                event.stopPropagation();
             });
 
-            fixHeight(horizontal);
             $('nav.paginator').hide();
         });
     </script>
