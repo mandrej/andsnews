@@ -226,13 +226,8 @@ input[data-function*='swipe'] {
 }
 
 #main {
-    position:absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     padding: 6rem 0 0 0;
-    .box-sizing(border-box);
+    overflow: hidden;
     .translate3d(0, 0, 0);
     .transition(all, .3s);
 }
@@ -314,29 +309,25 @@ input[data-function*='swipe'] {
     &:focus .title, &:hover .title { background: @gold; }
 }
 
-.swiper-container {
-    width: 100%;
-    height: 100%;
-}
-
 .cover {
-    background-color: @dark;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+    background: @dark;
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .headline {
+        padding: 0.5rem 1rem;
+        background: @dark;
+    }
     .headline, .exif {
         color: @white;
-        background: rgba(0, 0, 0, 0.5);
+        .box-sizing(border-box);
         a {
             color: @gold;
             &:focus, &:hover { color: @white; }
         }
-    }
-    .headline { padding: 1rem; }
-    .exif {
-        position: absolute;
-        left: 0;
-        bottom: 0;
     }
 }
 

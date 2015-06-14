@@ -8,12 +8,7 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}"
-                     class="swiper-slide cover b-lazy"
-                     data-src="{{ object.serving_url }}=s0"
-                     data-src-small="{{ object.serving_url }}=s1000"
-                     data-ratio="{{ object.ratio }}"
-                     data-height="{{ object.dim.1 }}">
+                <div id="{{ object.key.string_id() }}" class="swiper-slide cover">
                     <div class="headline">
                         <h2>{{ object.headline }}</h2>
                         <p>
@@ -29,7 +24,10 @@
                                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
                         </p>
                     </div>
-                    <div class="exif hide">
+                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                         data-src-small="{{ object.serving_url }}=s1000"
+                         data-src="{{ object.serving_url }}=s0">
+                    <div class="exif">
                         {% include "photo/exif.html" %}
                     </div>
                 </div>
@@ -67,17 +65,17 @@
                     pages.push(num);
                 }
             }
-            function lazyLoad(sw) {
+            function fixHeight(sw) {
                 var bLazy = new Blazy({
                     breakpoints: [{width: 400, src: 'data-src-small'}]
                 });
                 var activeSlide = sw.slides.eq(sw.activeIndex);
-                if (!activeSlide.hasClass('b-loaded')) {
+                if (!activeSlide.find('img').hasClass('b-loaded')) {
                     bLazy.load(activeSlide);
                 }
-                activeSlide.css({'background-size': 'cover', 'background-position': '50% 50%'});
-                activeSlide.find('.exif').hide();
-                $('#main').css('bottom', '0px');
+                var height = activeSlide.height();
+                $('#main').css({'height': height + 'px'});
+                $('html, body').animate({scrollTop: 0});
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -96,31 +94,14 @@
                         sw.prependSlide($page.find('.cover').reverse());
                     });
                 },
-                onSlideChangeEnd: lazyLoad
+                onSlideChangeEnd: fixHeight
             });
 
             $('#main').on('click', '.headline, .exif', function(event) {
                event.stopPropagation();
             });
-            $('#main').on('click', '.cover', function() {
-                var cntx = $(this),
-                    main = $('#main'),
-                    main_height = parseInt(main.css('height')),
-                    img_height = parseInt(cntx.data('height')),
-                    img_ratio = parseFloat(cntx.data('ratio'));
-                var minHeight = Math.min((main_height / img_ratio), img_height);
-                if (main.css('bottom') == '0px') {
-                    main.css('bottom', - 100 * (minHeight / main_height) + '%');
-                    cntx.css({'background-size': 'auto 100%', 'background-position': '50% 0'});
-                    cntx.find('.exif').show();
-                } else {
-                    main.css('bottom', '0px');
-                    cntx.css({'background-size': 'cover', 'background-position': '50% 50%'});
-                    cntx.find('.exif').hide();
-                }
-            });
 
-            lazyLoad(horizontal);
+            fixHeight(horizontal);
             $('nav.paginator').hide();
         });
     </script>
