@@ -92,11 +92,11 @@ class BaseHandler(webapp2.RequestHandler):
         else:
             data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
             if not DEVEL:
-                mail.send_mail_to_admins(
-                    sender='ANDS Support <andsnews@appspot.gserviceaccount.com>',
+                mail.AdminEmailMessage(
+                    sender='ANDS Outage <outage@andsnews.appspotmail.com>',
                     subject='Server Error',
                     body=MAIL_BODY.format(**data)
-                )
+                ).send()
             self.render_template(template, data)
             self.response.set_status(500)
 
