@@ -100,7 +100,8 @@ class BaseHandler(webapp2.RequestHandler):
             self.render_template(template, data)
             self.response.set_status(500)
 
-    def render_template(self, filename, kwargs={}):
+    def render_template(self, filename, kwargs):
+        # http://effbot.org/zone/default-values.htm
         lang_code = self.session.get('lang_code', 'en_US')
         i18n.get_i18n().set_locale(lang_code)
 
@@ -259,7 +260,7 @@ class RenderGraph(BaseHandler):
 
 class Plain(BaseHandler):
     def get(self):
-        self.render_template('graph.html')
+        self.render_template('graph.html', {})
 
 
 class DrawGraph(BaseHandler):
