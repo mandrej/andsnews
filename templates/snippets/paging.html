@@ -1,8 +1,16 @@
 {% if has_next or has_previous %}
     {% if filter %}
-        {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value) %}
+        {% if slug %}
+            {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value, slug=slug) %}
+        {% else %}
+            {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value) %}
+        {% endif %}
     {% else %}
-        {% set url = uri_for(name) %}
+        {% if slug %}
+            {% set url = uri_for(name, slug=slug) %}
+        {% else %}
+            {% set url = uri_for(name) %}
+        {% endif %}
     {% endif %}
 
     {% if has_previous %}

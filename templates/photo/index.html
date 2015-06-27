@@ -8,12 +8,12 @@
     <div id="gallery">
         {% for object in objects %}
             {% if filter %}
-                {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}
+                {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
             {% else %}
-                {% set url = uri_for('photo') %}
+                {% set url = uri_for('photo', slug=object.key.string_id()) %}
             {% endif %}
             <a class="thumbnail"
-               href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
+               href="{{ url }}?page={{ page }}">
                 <img src="{{ object.serving_url }}=s400">
                 <div class="title">{{ object.headline }}</div>
             </a>

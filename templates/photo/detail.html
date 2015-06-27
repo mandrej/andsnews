@@ -1,7 +1,11 @@
 {% extends "photo/base.html" %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}
-    {% with name='photo' %}{% include 'snippets/paging.html' %}{% endwith %}
+    {% with %}
+        {% set name='photo' %}
+        {% set slug=slug %}
+        {% include 'snippets/paging.html' %}
+    {% endwith %}
 {% endblock %}
 
 {% block contents %}
@@ -46,17 +50,17 @@
                 pages = [];
 
             pages.push(parseInt(parameters.page));
-            window.history.replaceState(null, '', location.pathname);
+{#            window.history.replaceState(null, '', location.pathname);#}
 
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
                 if (!isNaN(num) && $.inArray(num, pages) == -1) {
+{#                    href is from paginator#}
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
-
                         $('nav.paginator').replaceWith(function() {
-                            return $page.find('nav.paginator').hide()
+                            return $page.find('nav.paginator').hide();
                         });
                     });
                     pages.push(num);
@@ -64,9 +68,11 @@
             }
             function fixHeight(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
+                    slug = slide[0].id,
                     height = slide.height();
                 $('#main').css({'height': height + 'px'});
                 $('html, body').animate({scrollTop: 0});
+                window.history.replaceState(location.pathname, '', slug);
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -94,7 +100,6 @@
             $('#main').on('click', '.headline, .exif', function(event) {
                event.stopPropagation();
             });
-
             $('nav.paginator').hide();
         });
     </script>

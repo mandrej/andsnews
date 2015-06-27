@@ -66,11 +66,11 @@
                             </td>
                             <td>
                                 {% if filter %}
-                                    {% set url = uri_for('photo_filter', field = filter.field, value = filter.value) %}
+                                    {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
                                 {% else %}
-                                    {% set url = uri_for('photo') %}
+                                    {% set url = uri_for('photo', slug=object.key.string_id()) %}
                                 {% endif %}
-                                <a href="{{ url }}?slug={{ object.key.string_id() }}&page={{ page }}">
+                                <a href="{{ url }}?&page={{ page }}">
                                     {{ object.headline }}
                                 </a>
                             </td>

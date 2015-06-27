@@ -34,14 +34,25 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     @xss_protected
-    def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
-        slug = self.request.get('slug', '')
-        if slug and Photo.get_by_id(slug) is None:
+    def get(self, slug, field=None, value=None):
+        obj = Photo.get_by_id(slug)
+        if obj is None:
             self.abort(404)
+
+        page = int(self.request.get('page', -1))
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(page)
+
+        # find in only first 3 pages
+        objects, has_next = [obj], False
+        if page == -1:
+            for num in range(1, 4):
+                objects, has_next = paginator.page(num)
+                if obj in objects:
+                    page = num
+                    break
+        else:
+            objects, has_next = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,

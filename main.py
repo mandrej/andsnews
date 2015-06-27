@@ -8,8 +8,8 @@ from config import CONFIG, DEVEL
 
 app = WSGIApplication([
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),
-    Route(r'/photos/item', handler='views.photo.Detail', name='photo'),
-    Route(r'/photos/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/item',
+    Route(r'/photos/<slug:[\w-]+>', handler='views.photo.Detail', name='photo'),
+    Route(r'/photos/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/<slug:[\w-]+>',
           handler='views.photo.Detail', name='photo_filter'),
     Route(r'/photos/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/',
           handler='views.photo.Index', name='photo_all_filter'),

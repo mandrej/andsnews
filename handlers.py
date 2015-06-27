@@ -214,7 +214,7 @@ class Paginator(object):
         keys, has_next = self.page_keys(num)
         objects = ndb.get_multi(keys)
         # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
-        return (x for x in objects if x is not None), has_next
+        return [x for x in objects if x is not None], has_next
 
 
 class RenderCloud(BaseHandler):
