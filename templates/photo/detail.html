@@ -76,7 +76,7 @@
                 $('#main').css({'height': height + 'px'});
                 $('html, body').animate({scrollTop: 0});
                 window.history.replaceState(location.pathname, '', slug);
-                slide.find('.zooming:first').zoom({on: 'click'});
+                slide.find('.zooming:first').zoom({on: 'grab'});
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
