@@ -28,7 +28,9 @@
                                 title="{{ _('photos taken same year') }}">{{ object.year }}</a>
                         </p>
                     </div>
-                    <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                    <div class="zooming">
+                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                    </div>
                     <div class="exif">
                         {% include "photo/exif.html" %}
                     </div>
@@ -40,6 +42,7 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/jquery.zoom.min.js"></script>
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
@@ -55,7 +58,7 @@
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
                 if (!isNaN(num) && $.inArray(num, pages) == -1) {
-{#                    href is from paginator#}
+{#                    TODO href is from paginator#}
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
@@ -73,13 +76,14 @@
                 $('#main').css({'height': height + 'px'});
                 $('html, body').animate({scrollTop: 0});
                 window.history.replaceState(location.pathname, '', slug);
+                slide.find('.zooming:first').zoom({on: 'click'});
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
                 loop: false,
                 keyboardControl: true,
                 longSwipesRatio: 0.3,
-                grabCursor: true,
+{#                grabCursor: true,#}
                 lazyLoading: true,
                 lazyLoadingInPrevNext: true,
                 onLazyImageReady: fixHeight,
