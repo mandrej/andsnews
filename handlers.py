@@ -16,6 +16,7 @@ from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, memcache, mail
 from google.appengine.ext import ndb, blobstore
+from google.appengine.runtime import apiproxy_errors
 from models import Photo, Entry, Cloud, Graph
 from config import DEVEL, LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, MAIL_BODY, FAMILY, TIMEOUT
 
@@ -91,10 +92,10 @@ class BaseHandler(webapp2.RequestHandler):
             self.response.set_status(exception.code)
         else:
             data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
-            if not DEVEL:
+            if not DEVEL and not isinstance(exception, apiproxy_errors.OverQuotaError):
                 mail.AdminEmailMessage(
                     sender='ANDS Outage <outage@andsnews.appspotmail.com>',
-                    subject='Server Error',
+                    subject='Server Error traceback',
                     body=MAIL_BODY.format(**data)
                 ).send()
             self.render_template(template, data)
