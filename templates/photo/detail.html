@@ -77,7 +77,7 @@
                 $('html, body').animate({scrollTop: 0});
                 window.history.replaceState(location.pathname, '', slug);
                 $('.cover').trigger('zoom.destroy');
-                slide.zoom({on: 'click'});
+                slide.zoom({on: 'click', duration: 300});
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
