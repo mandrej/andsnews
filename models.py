@@ -14,12 +14,13 @@ from cStringIO import StringIO
 from decimal import *
 from PIL import Image
 from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.api import users, memcache, images
+from google.appengine.api import users, memcache, search, images
 
 from palette import extract_colors, rgb_to_hex
 from exifread import process_file
 from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
 
+INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
@@ -140,6 +141,21 @@ def range_names(rgb):
     lum = in_range(l, LUM)
     sat = in_range(s, SAT)
     return hue, lum, sat
+
+
+def spliting(slug):
+    n = 3
+    res = []
+    for part in slug.split('-'):
+        if len(part) <= n:
+            res.append(part)
+        else:
+            for i in range(0, len(part), n):
+                res.append(part[i:i+n])
+    return ' '.join(res)
+
+def remove_doc(safe_key):
+    INDEX.delete(safe_key)
 
 
 def _calculate_thresholds(min_weight, max_weight, steps):
@@ -393,6 +409,17 @@ class Photo(ndb.Model):
     def kind(self):
         return self.key.kind()
 
+    def index_doc(self):
+        doc = search.Document(
+            doc_id=self.key.urlsafe(),
+            fields=[
+                search.TextField(name='slug', value=spliting(self.key.string_id())),
+                search.TextField(name='author', value=self.author.nickname()),
+                search.TextField(name='tags', value=','.join(self.tags)),
+                search.DateField(name='date', value=self.date.date())]
+        )
+        INDEX.put(doc)
+
     @webapp2.cached_property
     def buffer(self):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
@@ -454,6 +481,7 @@ class Photo(ndb.Model):
                 value = getattr(self, field, None)
                 if value:
                     incr_count(self.kind, field, value)
+            deferred.defer(self.index_doc)
             return {'success': True}
 
     def edit(self, data):
@@ -512,6 +540,7 @@ class Photo(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
+        deferred.defer(remove_doc, key.urlsafe())
 
         blob_info = blobstore.BlobInfo.get(obj.blob_key)
         blob_info.delete()
@@ -576,6 +605,17 @@ class Entry(ndb.Model):
     def kind(self):
         return self.key.kind()
 
+    def index_doc(self):
+        doc = search.Document(
+            doc_id=self.key.urlsafe(),
+            fields=[
+                search.TextField(name='slug', value=spliting(self.key.string_id())),
+                search.TextField(name='author', value=self.author.nickname()),
+                search.TextField(name='tags', value=','.join(self.tags)),
+                search.DateField(name='date', value=self.date.date())]
+        )
+        INDEX.put(doc)
+
     def add(self, data):
         self.headline = data['headline']
         self.summary = data['summary']
@@ -599,6 +639,7 @@ class Entry(ndb.Model):
         incr_count(self.kind, 'author', self.author.nickname())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
+        deferred.defer(self.index_doc)
 
     def edit(self, data):
         self.headline = data['headline']
@@ -641,6 +682,7 @@ class Entry(ndb.Model):
     @classmethod
     def _pre_delete_hook(cls, key):
         obj = key.get()
+        deferred.defer(remove_doc, key.urlsafe())
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)

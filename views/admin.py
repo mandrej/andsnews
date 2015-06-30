@@ -147,6 +147,15 @@ class Counters(BaseHandler):
 
 
 JOBS = {
+    "index": {
+        "job_name": "full_index",
+        "handler_spec": "views.background.indexer",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
+    },
     "palette": {
         "job_name": "calculate_palette",
         "handler_spec": "views.background.calculate_palette",
