@@ -47,9 +47,10 @@ class Detail(BaseHandler):
         objects, has_next = [obj], False
         if page == -1:
             for num in range(1, 4):
-                objects, has_next = paginator.page(num)
-                if obj in objects:
+                _objects, _has_next = paginator.page(num)
+                if obj in _objects:
                     page = num
+                    objects, has_next = _objects, _has_next
                     break
         else:
             objects, has_next = paginator.page(page)
