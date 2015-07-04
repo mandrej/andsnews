@@ -8,10 +8,10 @@ var LATIN_MAP = {
 	'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i', 'ð': 'o', 'ñ': 'n', 'ò': 'o', 'ó':
 	'o', 'ô': 'o', 'õ': 'o', 'ö': 'o', 'ő': 'o', 'ø': 'o', 'ù': 'u', 'ú': 'u',
 	'û': 'u', 'ü': 'u', 'ű': 'u', 'ý': 'y', 'þ': 'th', 'ÿ': 'y'
-}
+};
 var LATIN_SYMBOLS_MAP = {
 	'©':'(c)'
-}
+};
 var GREEK_MAP = {
 	'α':'a', 'β':'b', 'γ':'g', 'δ':'d', 'ε':'e', 'ζ':'z', 'η':'h', 'θ':'8',
 	'ι':'i', 'κ':'k', 'λ':'l', 'μ':'m', 'ν':'n', 'ξ':'3', 'ο':'o', 'π':'p',
@@ -23,11 +23,11 @@ var GREEK_MAP = {
 	'Ρ':'R', 'Σ':'S', 'Τ':'T', 'Υ':'Y', 'Φ':'F', 'Χ':'X', 'Ψ':'PS', 'Ω':'W',
 	'Ά':'A', 'Έ':'E', 'Ί':'I', 'Ό':'O', 'Ύ':'Y', 'Ή':'H', 'Ώ':'W', 'Ϊ':'I',
 	'Ϋ':'Y'
-}
+};
 var TURKISH_MAP = {
 	'ş':'s', 'Ş':'S', 'ı':'i', 'İ':'I', 'ç':'c', 'Ç':'C', 'ü':'u', 'Ü':'U',
 	'ö':'o', 'Ö':'O', 'ğ':'g', 'Ğ':'G'
-}
+};
 var RUSSIAN_MAP = {
 	'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'е':'e', 'ё':'yo', 'ж':'zh',
 	'з':'z', 'и':'i', 'й':'j', 'к':'k', 'л':'l', 'м':'m', 'н':'n', 'о':'o',
@@ -39,7 +39,7 @@ var RUSSIAN_MAP = {
 	'П':'P', 'Р':'R', 'С':'S', 'Т':'T', 'У':'U', 'Ф':'F', 'Х':'H', 'Ц':'C',
 	'Ч':'Ch', 'Ш':'Sh', 'Щ':'Sh', 'Ъ':'', 'Ы':'Y', 'Ь':'', 'Э':'E', 'Ю':'Yu',
 	'Я':'Ya'
-}
+};
 var SERBIAN_MAP = {
 	'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'ђ':'dj', 'е':'e', 'ж':'z',
 	'з':'z', 'и':'i', 'ј':'j', 'к':'k', 'л':'l', 'љ':'lj', 'м':'m', 'н':'n',
@@ -51,35 +51,36 @@ var SERBIAN_MAP = {
 	'Ф':'F', 'Х':'H', 'Ц':'C', 'Ч':'C', 'Џ':'Dz', 'Ш':'S',
 	'đ':'dj', 'ž':'z', 'ć':'c', 'č':'c', 'š':'s',
 	'Đ':'Dj', 'Ž':'Z', 'Ć':'C', 'Č':'C', 'Š':'S'
-}
+};
 
-var ALL_DOWNCODE_MAPS=new Array()
-ALL_DOWNCODE_MAPS[0]=LATIN_MAP
-ALL_DOWNCODE_MAPS[1]=LATIN_SYMBOLS_MAP
-ALL_DOWNCODE_MAPS[2]=GREEK_MAP
-ALL_DOWNCODE_MAPS[3]=TURKISH_MAP
-ALL_DOWNCODE_MAPS[4]=RUSSIAN_MAP
-ALL_DOWNCODE_MAPS[5]=SERBIAN_MAP
+var ALL_DOWNCODE_MAPS=[
+	LATIN_MAP,
+	LATIN_SYMBOLS_MAP,
+	GREEK_MAP,
+	TURKISH_MAP,
+	RUSSIAN_MAP,
+	SERBIAN_MAP
+];
 
 var Downcoder = new Object();
 Downcoder.Initialize = function() {
 	if (Downcoder.map) // already made
 		return;
-	Downcoder.map ={}
+	Downcoder.map ={};
 	Downcoder.chars = '';
 	for (var i in ALL_DOWNCODE_MAPS) {
-		var lookup = ALL_DOWNCODE_MAPS[i]
+		var lookup = ALL_DOWNCODE_MAPS[i];
 		for (var c in lookup) {
 			Downcoder.map[c] = lookup[c];
 			Downcoder.chars += c;
 		}
 	}
 	Downcoder.regex = new RegExp('[' + Downcoder.chars + ']|[^' + Downcoder.chars + ']+','g') ;
-}
+};
 
 downcode= function( slug ) {
 	Downcoder.Initialize();
-	var downcoded =""
+	var downcoded ="";
 	var pieces = slug.match(Downcoder.regex);
 	if (pieces) {
 		for (var i = 0; i < pieces.length; i++) {
@@ -96,7 +97,7 @@ downcode= function( slug ) {
 		downcoded = slug;
 	}
 	return downcoded;
-}
+};
 
 function URLify(s, num_chars) {
 	// changes, e.g., "Petty theft" to "petty_theft"
@@ -117,4 +118,3 @@ function URLify(s, num_chars) {
 	s = s.toLowerCase();             // convert to lowercase
 	return s.substring(0, num_chars);// trim to first num_chars chars
 }
-

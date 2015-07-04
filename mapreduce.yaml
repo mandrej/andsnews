@@ -1,5 +1,5 @@
 mapreduce:
-- name: Create Full text search index
+- name: Full text search index
   mapper:
     input_reader: mapreduce.input_readers.DatastoreInputReader
     handler: views.background.indexer

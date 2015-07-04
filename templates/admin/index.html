@@ -63,6 +63,10 @@
             <section class="admin">
                 <h2>MapReduce</h2>
                 <h4><a class="button" href="/mapreduce">Status</a></h4>
+                <h4>Full text index for
+                    <a class="button" href="{{ uri_for('datastore_background', job='photo_index') }}">photos</a>
+                    <a class="button" href="{{ uri_for('datastore_background', job='entry_index') }}">entries</a>
+                </h4>
 {#                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">#}
 {#                    Calculate photo palette</a></h4>#}
 {#                <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">#}

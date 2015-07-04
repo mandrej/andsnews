@@ -146,7 +146,7 @@ def range_names(rgb):
 def tokenize(phrase):
     res = []
     for word in phrase.split('-'):
-        for i in range(1, len(word) + 1):
+        for i in range(3, len(word) + 1):
             res.append(word[:i])
     return ' '.join(res)
 
@@ -411,10 +411,10 @@ class Photo(ndb.Model):
             doc_id=self.key.urlsafe(),
             fields=[
                 search.TextField(name='slug', value=tokenize(self.key.string_id())),
-                search.TextField(name='author', value=tokenize(self.author.nickname())),
-                search.TextField(name='tags', value=tokenize('-'.join(self.tags))),
-                search.AtomField(name='year', value=str(self.year)),
-                search.AtomField(name='month', value=str(self.date.month))]
+                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                search.TextField(name='tags', value=' '.join(self.tags)),
+                search.NumberField(name='year', value=self.year),
+                search.NumberField(name='month', value=self.date.month)]
         )
         INDEX.put(doc)
 
@@ -608,10 +608,10 @@ class Entry(ndb.Model):
             doc_id=self.key.urlsafe(),
             fields=[
                 search.TextField(name='slug', value=tokenize(self.key.string_id())),
-                search.TextField(name='author', value=tokenize(self.author.nickname())),
-                search.TextField(name='tags', value=tokenize('-'.join(self.tags))),
-                search.AtomField(name='year', value=str(self.year)),
-                search.AtomField(name='month', value=str(self.date.month))]
+                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                search.TextField(name='tags', value=' '.join(self.tags)),
+                search.NumberField(name='year', value=self.year),
+                search.NumberField(name='month', value=self.date.month)]
         )
         INDEX.put(doc)
 
