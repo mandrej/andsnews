@@ -143,16 +143,13 @@ def range_names(rgb):
     return hue, lum, sat
 
 
-def spliting(slug):
-    n = 3
+def tokenize(phrase):
     res = []
-    for part in slug.split('-'):
-        if len(part) <= n:
-            res.append(part)
-        else:
-            for i in range(0, len(part), n):
-                res.append(part[i:i+n])
+    for word in phrase.split('-'):
+        for i in range(1, len(word) + 1):
+            res.append(word[:i])
     return ' '.join(res)
+
 
 def remove_doc(safe_key):
     INDEX.delete(safe_key)
@@ -413,10 +410,11 @@ class Photo(ndb.Model):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=spliting(self.key.string_id())),
-                search.TextField(name='author', value=self.author.nickname()),
-                search.TextField(name='tags', value=','.join(self.tags)),
-                search.DateField(name='date', value=self.date.date())]
+                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                search.TextField(name='author', value=tokenize(self.author.nickname())),
+                search.TextField(name='tags', value=tokenize('-'.join(self.tags))),
+                search.AtomField(name='year', value=str(self.year)),
+                search.AtomField(name='month', value=str(self.date.month))]
         )
         INDEX.put(doc)
 
@@ -609,10 +607,11 @@ class Entry(ndb.Model):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=spliting(self.key.string_id())),
-                search.TextField(name='author', value=self.author.nickname()),
-                search.TextField(name='tags', value=','.join(self.tags)),
-                search.DateField(name='date', value=self.date.date())]
+                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                search.TextField(name='author', value=tokenize(self.author.nickname())),
+                search.TextField(name='tags', value=tokenize('-'.join(self.tags))),
+                search.AtomField(name='year', value=str(self.year)),
+                search.AtomField(name='month', value=str(self.date.month))]
         )
         INDEX.put(doc)
 

@@ -1,7 +1,7 @@
 __author__ = 'milan'
 
 from webapp2 import WSGIApplication, Route
-from handlers import Complete, SetLanguage, Sign, DeleteHandler, RenderCloud, RenderGraph, \
+from handlers import Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, RenderGraph, \
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
@@ -49,6 +49,7 @@ app = WSGIApplication([
     Route(r'/sitemap.xml', handler=SiteMap),
     Route(r'/<safe_key:[\w-]+>/download', handler=SaveAsHandler, name='download'),
     Route(r'/<safe_key:[\w-]+>/delete', handler=DeleteHandler, name='delete'),
+    Route('/search', handler=Find, name='search'),
     Route(r'/setlang', handler=SetLanguage),
     Route(r'/sign', handler=Sign),
     Route(r'/', handler='views.photo.Index', name='start'),

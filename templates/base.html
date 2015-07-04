@@ -34,6 +34,12 @@
 
     <input type="checkbox" id="swipe" data-function="swipe"/>
     <aside class="menu">
+        {% block search %}
+            <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
+                <button type="submit"><i class="fa fa-search"></i></button>
+                <input type="text" name="find" placeholder="{{ _('Search') }}"/>
+            </form>
+        {% endblock %}
         {% block menu %}
             <ul>
                 <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
@@ -65,6 +71,11 @@
         <script src="/static/scripts/custom.min.js"></script>
         <script>
             token = '{{ token }}';
+            $(function () {
+                $('#swipe').focus(function() {
+                    $('#searchForm input').focus();
+                });
+            });
         </script>
     {% endblock %}
 
