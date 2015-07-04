@@ -42,6 +42,8 @@ def xss_protected(handler_method):
                     int(val)
                 except ValueError:
                     self.abort(400)
+            elif key == 'find':
+                pass
             else:
                 if val != Markup.escape(val):
                     self.abort(400)
@@ -164,20 +166,25 @@ class Sign(BaseHandler):
 class Find(BaseHandler):
     @xss_protected
     def get(self):
-        querystring = self.request.get('find')
-        page = int(self.request.get('page', 1))
-        paginator = SearchPaginator(querystring, per_page=PER_PAGE)
-        results, number_found, has_next, error = paginator.page(page)
+        find = self.request.get('find').strip()
+        futures, number_found, error = [], 0, None
 
-        unique = set(results)
-        number_found = len(unique)
-        keys = [ndb.Key(urlsafe=doc.doc_id) for doc in unique]
-        futures = ndb.get_multi_async(keys)
+        if find:
+            try:
+                query = search.Query(find)
+                found = INDEX.search(query)
+                results = found.results
+            except search.Error as e:
+                error = e.message
+            else:
+                unique = set(results)
+                number_found = len(unique)
+                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in unique]
+                futures = ndb.get_multi_async(keys)
 
         self.render_template(
             'results.html', {
-                'futures': futures, 'phrase': querystring, 'number_found': number_found,
-                'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
+                'futures': futures, 'phrase': find, 'number_found': number_found, 'error': error})
 
 
 class DeleteHandler(BaseHandler):
@@ -241,37 +248,6 @@ class Paginator(object):
         objects = ndb.get_multi(keys)
         # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
         return [x for x in objects if x is not None], has_next
-
-
-class SearchPaginator(object):
-    def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring
-        # '"{0}"'.format(querystring.replace('"', ''))
-        self.per_page = per_page
-
-    def page(self, num):
-        error = None
-        results = []
-        number_found = 0
-        has_next = False
-
-        try:
-            query = search.Query(
-                query_string=self.querystring,
-                options=search.QueryOptions(
-                    limit=self.per_page,
-                    offset=(num - 1) * self.per_page
-                ))
-            found = INDEX.search(query)
-            results = found.results
-            number_found = found.number_found
-        except search.Error as e:
-            error = e.message
-        else:
-            if number_found > 0:
-                has_next = number_found > num * self.per_page
-
-        return results, number_found, has_next, error
 
 
 class RenderCloud(BaseHandler):

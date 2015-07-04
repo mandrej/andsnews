@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{% block paging %}
-    {% with name='search' %}{% include 'snippets/paging.html' %}{% endwith %}
-{% endblock %}
 {% block modals %}{% endblock %}
 
 {% block contents %}
@@ -9,8 +6,8 @@
         {% if phrase %}
             <h2>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h2>
         {% else %}
-            <h2>{{ _('Nothing to search for') }}.</h2>
-            <p>{{ _('Please try something') }}.</p>
+            <h2>{{ _('Nothing to search for') }}</h2>
+            <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>
         {% endif %}
     </header>
     <div id="gallery">
@@ -38,8 +35,8 @@
                 {% if error %}
                     <h3>{{ _('Error') }}: {{ error }}</h3>
                 {% else %}
-                    <h3>{{ _('No search results for') }} {{ phrase }}.</h3>
-                    <p>{{ _('Please try again') }}.</p>
+                    <h3>{{ _('No search results') }}</h3>
+                    <p>{{ _('Please try again') }}</p>
                 {% endif %}
             </div>
         {% endfor %}
@@ -55,15 +52,6 @@
                 selector: '.found',
                 width: 240,
                 gutter: 10
-            });
-            $container.infinitescroll({
-                binder: $(window),
-                itemSelector: '.found',
-                nextSelector: '.next',
-                navSelector: "nav.paginator",
-                loading: { msg: $('#dummy') }
-            }, function(data) {
-                $container.gridalicious('append', data);
             });
         });
     </script>
