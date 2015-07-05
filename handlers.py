@@ -171,15 +171,26 @@ class Find(BaseHandler):
 
         if find:
             try:
-                query = search.Query(find)
+                query = search.Query(
+                    query_string=find,
+                    options=search.QueryOptions(
+                        limit=100,
+                        ids_only=True,
+                        sort_options=search.SortOptions(
+                            expressions=[
+                                search.SortExpression(
+                                    expression='year * 12 + month',
+                                    direction=search.SortExpression.DESCENDING, default_value=2030*12)
+                            ]
+                        )
+                    ))
                 found = INDEX.search(query)
                 results = found.results
             except search.Error as e:
                 error = e.message
             else:
-                unique = set(results)
-                number_found = len(unique)
-                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in unique]
+                number_found = found.number_found
+                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
                 futures = ndb.get_multi_async(keys)
 
         self.render_template(
