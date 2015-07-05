@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% block paging %}
+    {% with %}
+        {% set name='search' %}
+        {% set phrase=phrase %}
+        {% include 'snippets/paging.html' %}
+    {% endwith %}
+{% endblock %}
 {% block modals %}{% endblock %}
 
 {% block contents %}

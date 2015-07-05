@@ -14,12 +14,20 @@
     {% endif %}
 
     {% if has_previous %}
-        <a{{ {'href': '%s?page=%s' % (url, page - 1), 'class': prev_class}|xmlattr }}></a>
+        {% if phrase %}
+            <a{{ {'href': '%s?find=%s&page=%s' % (url, phrase, page - 1), 'class': prev_class}|xmlattr }}></a>
+        {% else %}
+            <a{{ {'href': '%s?page=%s' % (url, page - 1), 'class': prev_class}|xmlattr }}></a>
+        {% endif %}
     {% else %}
         <span class="{{ prev_class }} na"></span>
     {% endif %}
     {% if has_next %}
-        <a{{ {'href': '%s?page=%s' % (url, page + 1), 'class': next_class}|xmlattr }}></a>
+        {% if phrase %}
+            <a{{ {'href': '%s?find=%s&page=%s' % (url, phrase, page + 1), 'class': next_class}|xmlattr }}></a>
+        {% else %}
+            <a{{ {'href': '%s?page=%s' % (url, page + 1), 'class': next_class}|xmlattr }}></a>
+        {% endif %}
     {% else %}
         <span class="{{ next_class }} na"></span>
     {% endif %}

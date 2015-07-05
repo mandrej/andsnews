@@ -167,35 +167,14 @@ class Find(BaseHandler):
     @xss_protected
     def get(self):
         find = self.request.get('find').strip()
-        futures, number_found, error = [], 0, None
-
-        if find:
-            try:
-                query = search.Query(
-                    query_string=find,
-                    options=search.QueryOptions(
-                        limit=100,
-                        ids_only=True,
-                        sort_options=search.SortOptions(
-                            expressions=[
-                                search.SortExpression(
-                                    expression='year * 12 + month',
-                                    direction=search.SortExpression.DESCENDING, default_value=2030*12)
-                            ]
-                        )
-                    ))
-                found = INDEX.search(query)
-                results = found.results
-            except search.Error as e:
-                error = e.message
-            else:
-                number_found = found.number_found
-                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
-                futures = ndb.get_multi_async(keys)
+        page = int(self.request.get('page', 1))
+        paginator = SearchPaginator(find, per_page=PER_PAGE)
+        futures, number_found, has_next, error = paginator.page(page)
 
         self.render_template(
             'results.html', {
-                'futures': futures, 'phrase': find, 'number_found': number_found, 'error': error})
+                'futures': futures, 'phrase': find, 'number_found': number_found,
+                'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 
 class DeleteHandler(BaseHandler):
@@ -259,6 +238,59 @@ class Paginator(object):
         objects = ndb.get_multi(keys)
         # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
         return [x for x in objects if x is not None], has_next
+
+
+class SearchPaginator(object):
+    timeout = TIMEOUT/12
+
+    def __init__(self, querystring, per_page=PER_PAGE):
+        self.querystring = querystring
+        self.per_page = per_page
+
+        self.options = {
+            'cursor': search.Cursor(),
+            'limit': self.per_page,
+            'ids_only': True,
+            'sort_options': search.SortOptions(
+                expressions=[
+                    search.SortExpression(
+                        expression='year * 12 + month',
+                        direction=search.SortExpression.DESCENDING, default_value=2030*12)
+                ]
+            )
+        }
+        self.id = hashlib.md5(querystring).hexdigest()
+        self.cache = memcache.get(self.id) or {}
+
+    def page(self, num):
+        futures, has_next, number_found, error = [], False, 0, None
+
+        if self.querystring:
+            try:
+                cursor = self.cache[num]
+            except KeyError:
+                cursor = None
+            try:
+                self.options['cursor'] = search.Cursor(web_safe_string=cursor)
+                query = search.Query(
+                    query_string=self.querystring,
+                    options=search.QueryOptions(**self.options)
+                )
+                found = INDEX.search(query)
+                results = found.results
+            except search.Error as e:
+                error = e.message
+            else:
+                number_found = found.number_found
+                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
+                futures = ndb.get_multi_async(keys)
+
+                if found.cursor is not None:
+                    has_next = True
+                    self.cache[num + 1] = found.cursor.web_safe_string
+                    memcache.set(self.id, self.cache, self.timeout)
+
+        return futures, number_found, has_next, error
 
 
 class RenderCloud(BaseHandler):
