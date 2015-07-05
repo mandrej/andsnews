@@ -1,29 +1,20 @@
-# README #
+# ANDS README #
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* This is personal site for pictures and blog built using Google App Engine
+* Version 1502
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Install python 2.7, virtualenv, pip and Google App Engine
+* Create virtualenv, activate it and install requirements
+* In virtualenv lib folder clone [aeta](https://code.google.com/p/aeta/)
+* Symlink all libraries to project root
 
-### Contribution guidelines ###
+### Deployment instructions ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* Create application on [Google Developers Console](https://console.developers.google.com/project)
+* Deploy on Google infrastructure
