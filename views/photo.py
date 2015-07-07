@@ -42,18 +42,7 @@ class Detail(BaseHandler):
         page = int(self.request.get('page', -1))
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-
-        # find in only first 3 pages
-        objects, has_next = [obj], False
-        if page == -1:
-            for num in range(1, 4):
-                _objects, _has_next = paginator.page(num)
-                if obj in _objects:
-                    page = num
-                    objects, has_next = _objects, _has_next
-                    break
-        else:
-            objects, has_next = paginator.page(page)
+        objects, has_next = paginator.page(page) if page > 0 else [obj], False
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
