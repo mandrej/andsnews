@@ -60,16 +60,18 @@
             <tbody>
                 {% for object in objects %}
                     {% if user == object.author or is_admin %}
+                        {% if filter %}
+                            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
+                        {% else %}
+                            {% set url = uri_for('photo', slug=object.key.string_id()) %}
+                        {% endif %}
                         <tr>
                             <td>
-                                <img src="{{ object.serving_url }}=s400" width="50"/>
+                                <a href="{{ url }}?&page={{ page }}">
+                                    <img src="{{ object.serving_url }}=s400" width="50"/>
+                                </a>
                             </td>
                             <td>
-                                {% if filter %}
-                                    {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
-                                {% else %}
-                                    {% set url = uri_for('photo', slug=object.key.string_id()) %}
-                                {% endif %}
                                 <a href="{{ url }}?&page={{ page }}">
                                     {{ object.headline }}
                                 </a>
