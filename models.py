@@ -579,6 +579,18 @@ class Photo(ndb.Model):
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
 
+    def serialize(self):
+        data = self.to_dict(exclude=(
+            'blob_key', 'dim', 'size', 'ratio',
+            'rgb', 'sat', 'lum', 'hue', 'year',
+            'aperture', 'shutter', 'focal_length', 'crop_factor'))
+        data.update({
+            'slug': self.key.string_id(),
+            'url': webapp2.uri_for('photo', slug=self.key.string_id()),
+            'serving_url': self.serving_url,
+        })
+        return data
+
 
 class Img(ndb.Model):
     # parent Entry
@@ -701,3 +713,11 @@ class Entry(ndb.Model):
         f = filter_param(field, value)
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
+
+    def serialize(self):
+        data = self.to_dict(exclude=('front', 'year'))
+        data.update({
+            'slug': self.key.string_id(),
+            'url': webapp2.uri_for('entry', slug=self.key.string_id()),
+        })
+        return data

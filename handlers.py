@@ -53,7 +53,9 @@ def xss_protected(handler_method):
 
 class LazyEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, datetime.datetime):
+        if isinstance(obj, ndb.Model):
+            return obj.serialize()
+        elif isinstance(obj, datetime.datetime):
             return obj.isoformat()
         elif isinstance(obj, users.User):
             return obj.email()
