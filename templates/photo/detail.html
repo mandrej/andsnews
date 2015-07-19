@@ -1,4 +1,7 @@
 {% extends "photo/base.html" %}
+{% block background %}
+<body class="dark">
+{% endblock %}
 {% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}
     {% with %}

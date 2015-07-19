@@ -1,6 +1,9 @@
 {% extends "entry/base.html" %}
 {% block title %}{{ super() }} - {{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
+{% block background %}
+<body class="dark">
+{% endblock %}
 
 {% block contents %}
     <div class="page">

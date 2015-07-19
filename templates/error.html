@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block background %}
+<body class="dark">
+{% endblock %}
 {% block title %}{{ super() }} - {{ error.status|default("500 Internal Server Error") }}{% endblock %}
 
 {% set attr = {

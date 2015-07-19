@@ -69,6 +69,7 @@ body {
 }
 .white { background: @white; }
 .gray { background: @gray; }
+.dark { background: @dark; }
 
 a {
     color: @dark;
@@ -319,7 +320,6 @@ input[data-function*='swipe'] {
     }
     .headline {
         padding: 0.5rem 1rem;
-        background: @dark;
     }
     .headline, .exif {
         color: @white;
@@ -350,9 +350,8 @@ input[data-function*='swipe'] {
     flex-flow: column;
     padding: 1rem;
 	color: @gray;
-    background-color: @dark;
     background-repeat: no-repeat;
-    min-height: 100%;
+    min-height: 40rem;
     .box-sizing(border-box);
     h2 { color: @white; }
     a {
