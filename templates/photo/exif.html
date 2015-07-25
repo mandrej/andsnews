@@ -10,6 +10,20 @@
         </th>
     </tr>
     <tr>
+        <th colspan="2">
+            <a href="{{ uri_for('photo_all_filter', field='author', value=object.author) }}"
+                title="{{ _("author's photos") }}">{{ object.author }}</a>
+            {% for tag in object.tags %}
+                {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
+                <a href="{{ uri_for('photo_all_filter', field='tags', value=tag) }}">
+                    {{ tag }}</a>{% if not loop.last %},{% endif %}
+            {% endfor %}
+            &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
+            <a href="{{ uri_for('photo_all_filter', field='date', value=object.year) }}"
+                title="{{ _('photos taken same year') }}">{{ object.year }}</a>
+        </th>
+    </tr>
+    <tr>
         <td>{{ _('Aperture') }}</td>
         <td>{{ 'F%s' % object.aperture if object.aperture is not none else '---' }}</td>
     </tr>

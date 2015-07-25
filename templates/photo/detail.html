@@ -15,25 +15,9 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="swiper-slide cover">
-                    <div class="headline">
-                        <h2>{{ object.headline }}</h2>
-                        <p>
-                            <a href="{{ uri_for('photo_all_filter', field='author', value=object.author) }}"
-                                title="{{ _("author's photos") }}">{{ object.author }}</a>
-                            {% for tag in object.tags %}
-                                {% if loop.first %}&nbsp;<i class="fa fa-tag"></i>{% endif %}
-                                <a href="{{ uri_for('photo_all_filter', field='tags', value=tag) }}">
-                                    {{ tag }}</a>{% if not loop.last %},{% endif %}
-                            {% endfor %}
-                            &nbsp;<i class="fa fa-clock-o"></i>&nbsp;
-                            <a href="{{ uri_for('photo_all_filter', field='date', value=object.year) }}"
-                                title="{{ _('photos taken same year') }}">{{ object.year }}</a>
-                        </p>
-                    </div>
-
+                <div id="{{ object.key.string_id() }}" class="swiper-slide cover"
+                    data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
                     <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
-
                     <div class="exif">
                         {% include "photo/exif.html" %}
                     </div>
@@ -48,6 +32,10 @@
     <script src="/static/scripts/jquery.zoom.min.js"></script>
     <script>
         $(function () {
+            var viewPort = {
+                width: window.innerWidth,
+                height: window.innerHeight - 60
+            };
             var parameters = $.getQueryParameters(),
                 ids = $('.cover').map(function() {
                     return this.id
@@ -56,7 +44,6 @@
                 pages = [];
 
             pages.push(parseInt(parameters.page));
-{#            window.history.replaceState(null, '', location.pathname);#}
 
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
@@ -72,15 +59,23 @@
                     pages.push(num);
                 }
             }
-            function fixHeight(sw) {
+            function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id,
-                    height = slide.height();
-                $('#main').css({'height': height + 'px'});
-                $('html, body').animate({scrollTop: 0});
+                    title = slide.data('title'),
+                    img_width = slide.data('dim')[0],
+                    img_height = slide.data('dim')[1],
+                    slide_height = slide.height();
+
                 window.history.replaceState(location.pathname, '', slug);
-                $('.cover').trigger('zoom.destroy');
-                slide.zoom({on: 'click', duration: 300, touch: false});
+                $('header h1').html(title);
+                $('#main').css({'height': slide_height + 'px'});
+                $('.zoomImg').remove();
+                $('html, body').animate({scrollTop: 0});
+
+                if (img_width > viewPort.width) {
+                    slide.zoom({on: 'click', duration: 300, touch: false});
+                }
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -90,7 +85,7 @@
                 grabCursor: true,
                 lazyLoading: true,
                 lazyLoadingInPrevNext: true,
-                onLazyImageReady: fixHeight,
+                onLazyImageReady: adjastView,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
@@ -102,10 +97,10 @@
                         sw.prependSlide($page.find('.cover').reverse());
                     });
                 },
-                onSlideChangeEnd: fixHeight
+                onSlideChangeEnd: adjastView
             });
 
-            $('#main').on('click', '.headline, .exif', function(event) {
+            $('#main').on('click', '.exif', function(event) {
                event.stopPropagation();
             });
             $('nav.paginator').hide();
