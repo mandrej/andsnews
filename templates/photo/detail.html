@@ -17,7 +17,9 @@
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}" class="swiper-slide cover"
                     data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
-                    <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                    <div class="panzoom">
+                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                    </div>
                     <div class="exif">
                         {% include "photo/exif.html" %}
                     </div>
@@ -29,7 +31,7 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.zoom.min.js"></script>
+    <script src="/static/scripts/jquery.panzoom.min.js"></script>
     <script>
         $(function () {
             var viewPort = {
@@ -65,16 +67,29 @@
                     title = slide.data('title'),
                     img_width = slide.data('dim')[0],
                     img_height = slide.data('dim')[1],
-                    slide_height = slide.height();
+                    slide_height = slide.height(),
+                    $panzoom = slide.find('.panzoom');
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('header h1').html(title);
+                $('.panzoom').panzoom('resetZoom', false);
                 $('#main').css({'height': slide_height + 'px'});
-                $('.zoomImg').remove();
                 $('html, body').animate({scrollTop: 0});
 
                 if (img_width > viewPort.width) {
-                    slide.zoom({on: 'click', duration: 300, touch: false});
+                    $panzoom.panzoom({
+                        minScale: 1,
+                        increment: 0.1,
+                        maxScale: img_width / viewPort.width,
+                        contain: 'invert'
+                    }).on('mousewheel.focal', function(e) {
+                        var delta = e.delta || e.originalEvent.wheelDelta;
+                        var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+                        $panzoom.panzoom('zoom', zoomOut, {
+                            animate: true,
+                            focal: e
+                        })
+                    });
                 }
             }
             var horizontal = new Swiper('.swiper-container', {
@@ -100,8 +115,8 @@
                 onSlideChangeEnd: adjastView
             });
 
-            $('#main').on('click', '.exif', function(event) {
-               event.stopPropagation();
+            $(window).on('resize', function() {
+                $('.panzoom').panzoom('resetDimensions');
             });
             $('nav.paginator').hide();
         });
