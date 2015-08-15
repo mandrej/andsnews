@@ -79,7 +79,6 @@
                 if (img_width > viewPort.width) {
                     $panzoom.panzoom({
                         minScale: 1,
-                        increment: 0.1,
                         maxScale: img_width / viewPort.width,
                         contain: 'invert'
                     }).on('mousewheel.focal', function(e) {
