@@ -66,7 +66,6 @@
                     slug = slide[0].id,
                     title = slide.data('title'),
                     img_width = slide.data('dim')[0],
-                    img_height = slide.data('dim')[1],
                     slide_height = slide.height(),
                     $panzoom = slide.find('.panzoom');
 
@@ -80,14 +79,14 @@
                     $panzoom.panzoom({
                         minScale: 1,
                         maxScale: img_width / viewPort.width,
+                        increment: 3,
                         contain: 'invert'
-                    }).on('mousewheel.focal', function(e) {
-                        var delta = e.delta || e.originalEvent.wheelDelta;
-                        var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-                        $panzoom.panzoom('zoom', zoomOut, {
-                            animate: true,
-                            focal: e
-                        })
+                    }).on('panzoomend', function(e, panzoom, matrix, changed) {
+                        if (changed) {
+                            $panzoom.panzoom('resetZoom');
+                        } else {
+                            $panzoom.panzoom('zoom', {focal: e})
+                        }
                     });
                 }
             }
