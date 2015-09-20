@@ -34,10 +34,6 @@
     <script src="/static/scripts/jquery.panzoom.min.js"></script>
     <script>
         $(function () {
-            var viewPort = {
-                width: window.innerWidth,
-                height: window.innerHeight - 60
-            };
             var parameters = $.getQueryParameters(),
                 ids = $('.cover').map(function() {
                     return this.id
@@ -66,6 +62,7 @@
                     slug = slide[0].id,
                     title = slide.data('title'),
                     img_width = slide.data('dim')[0],
+                    slide_width = slide.width(),
                     slide_height = slide.height(),
                     $panzoom = slide.find('.panzoom');
 
@@ -75,10 +72,10 @@
                 $('#main').css({'height': slide_height + 'px'});
                 $('html, body').animate({scrollTop: 0});
 
-                if (img_width > viewPort.width) {
+                if (img_width > slide_width) {
                     $panzoom.panzoom({
                         minScale: 1,
-                        maxScale: img_width / viewPort.width,
+                        maxScale: img_width / slide_width,
                         increment: 3,
                         contain: 'invert'
                     }).on('panzoomend', function(e, panzoom, matrix, changed) {
@@ -115,6 +112,7 @@
 
             $(window).on('resize', function() {
                 $('.panzoom').panzoom('resetDimensions');
+                adjastView(horizontal);
             });
             $('nav.paginator').hide();
         });
