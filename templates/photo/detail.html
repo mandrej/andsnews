@@ -17,7 +17,7 @@
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}" class="swiper-slide cover"
                     data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
-                    <div class="panzoom">
+                    <div class="zoom">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
                     </div>
                     <div class="exif">
@@ -31,7 +31,7 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.panzoom.min.js"></script>
+    <script src="/static/scripts/jquery.zoom.min.js"></script>
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
@@ -60,32 +60,17 @@
             function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id,
-                    title = slide.data('title'),
-                    img_width = slide.data('dim')[0],
-                    slide_width = slide.width(),
-                    slide_height = slide.height(),
-                    $panzoom = slide.find('.panzoom');
+                    title = slide.data('title');
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('header h1').html(title);
-                $('.panzoom').panzoom('resetZoom', false);
-                $('#main').css({'height': slide_height + 'px'});
                 $('html, body').animate({scrollTop: 0});
 
-                if (img_width > slide_width) {
-                    $panzoom.panzoom({
-                        minScale: 1,
-                        maxScale: img_width / slide_width,
-                        increment: 3,
-                        contain: 'invert'
-                    }).on('panzoomend', function(e, panzoom, matrix, changed) {
-                        if (changed) {
-                            $panzoom.panzoom('resetZoom');
-                        } else {
-                            $panzoom.panzoom('zoom', {focal: e})
-                        }
-                    });
-                }
+                $('.zoom').trigger('zoom.destroy');
+                slide.find('.zoom').zoom({
+                    on: 'click',
+                    duration: 300
+                });
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -111,8 +96,7 @@
             });
 
             $(window).on('resize', function() {
-                $('.panzoom').panzoom('resetDimensions');
-                adjastView(horizontal);
+                $('.zoom').trigger('zoom.destroy');
             });
             $('nav.paginator').hide();
         });
