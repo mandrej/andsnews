@@ -1,8 +1,8 @@
-__author__ = 'milan'
-
 import unittest
 import collections
+
 import numpy as np
+
 from colormath.color_objects import HSLColor, sRGBColor
 from colormath.color_conversions import convert_color
 from models import Photo

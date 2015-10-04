@@ -1,6 +1,5 @@
-__author__ = 'milan'
-
 import unittest
+
 from models import Cloud, rounding
 from config import CROPS, ASA, LENGTHS
 

@@ -1,17 +1,16 @@
 from __future__ import division
 
-__author__ = 'milan'
-
 import datetime
 import cgi
 import math
 import colorsys
 import itertools
 import collections
-import webapp2
 import logging
 from cStringIO import StringIO
 from decimal import *
+
+import webapp2
 from PIL import Image
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import users, memcache, search, images

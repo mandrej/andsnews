@@ -1,7 +1,7 @@
-__author__ = 'milan'
-
 import unittest
+
 import webapp2
+
 import main
 
 

@@ -1,15 +1,12 @@
-__author__ = 'milan'
-
-import os
 import json
 import logging
 from timeit import default_timer
 from datetime import datetime, timedelta
 
+import os
 import webapp2
 from jinja2.filters import environmentfilter, do_mark_safe
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
-
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour

@@ -1,7 +1,7 @@
-__author__ = 'milan'
-
 import unittest
+
 from google.appengine.api import memcache
+
 from timer import Timer
 from models import Cloud
 

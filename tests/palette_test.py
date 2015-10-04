@@ -1,10 +1,8 @@
-__author__ = 'milan'
-
 import unittest
 import urllib
-from PIL import Image
 from cStringIO import StringIO
 
+from PIL import Image
 from google.appengine.ext import blobstore
 from google.appengine.api import images
 

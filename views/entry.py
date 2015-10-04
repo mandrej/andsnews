@@ -1,7 +1,7 @@
 from __future__ import division
-import re
 from StringIO import StringIO
 
+import re
 from PIL import Image
 import webapp2
 from webapp2_extras.i18n import lazy_gettext as _

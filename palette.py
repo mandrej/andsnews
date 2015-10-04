@@ -1,13 +1,13 @@
-__author__ = 'milan'
 """ Taken from colorific 0.3 """
-
 import colorsys
-from PIL import Image, ImageChops
 from collections import Counter, namedtuple
+from operator import itemgetter, mul, attrgetter
+
+from PIL import Image, ImageChops
+
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_diff import delta_e_cmc
 from colormath.color_conversions import convert_color
-from operator import itemgetter, mul, attrgetter
 
 Color = namedtuple('Color', ['value', 'prominence'])
 Palette = namedtuple('Palette', 'colors bgcolor')

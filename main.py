@@ -1,10 +1,8 @@
-__author__ = 'milan'
-
 from webapp2 import WSGIApplication, Route
+
 from handlers import Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, RenderGraph, \
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
-
 
 app = WSGIApplication([
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),

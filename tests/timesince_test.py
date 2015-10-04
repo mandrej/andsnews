@@ -1,7 +1,6 @@
-__author__ = 'milan'
-
 import unittest
 from datetime import datetime, timedelta
+
 from config import timesince_jinja
 
 

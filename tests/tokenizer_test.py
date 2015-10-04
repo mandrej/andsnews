@@ -1,7 +1,7 @@
-__author__ = 'milan'
-
 import unittest
+
 from models import tokenize
+
 
 class TimesinceTest(unittest.TestCase):
     def setUp(self):
