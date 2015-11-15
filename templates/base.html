@@ -31,39 +31,25 @@
                 <div class="progress">
                     <div class="indeterminate"></div>
                 </div>
-                <ul id="nav-mobile" class="side-nav collapsible fixed grey">
-                    <li><nav class="red"><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
-                    {% block menu %}
-                        <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
-                        <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
-                        <li><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
-                    {% endblock %}
+                <div id="nav-mobile" class="side-nav collapsible fixed grey">
+                    <ul>
+                        <li><nav class="red"><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
+                        {% block menu %}
+                            <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+                            <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+                            <li><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
+                        {% endblock %}
+                    </ul>
                     {% block search %}
-                        <li>
-                            <div class="divider"></div>
-                            <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
-                                <div class="input-field">
-                                    <input id="search" name="find" type="search" required>
-                                    <label for="search"><i class="material-icons">search</i></label>
-                                    <i class="material-icons">close</i>
-                                </div>
-                            </form>
-                        </li>
-                    {% endblock %}
-                    <li class="center-align">
-                        <form id="langs" action="/setlang" method="post">
-                            {% for code, lang in all_languages %}
-                                <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                                    'class': 'btn waves-effect red' if code == language_code else 'btn waves-effect',
-                                    'title': lang}|xmlattr }}>{{ language(code) }}</button>
-                            {% endfor %}
+                        <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
+                            <div class="input-field">
+                                <input id="search" name="find" type="search" required>
+                                <label for="search"><i class="material-icons">search</i></label>
+                                <i class="material-icons">close</i>
+                            </div>
                         </form>
-                    </li>
-                    <li class="center-align">
-                        <div class="divider"></div>
-                        АNDS 2008-{{ year() }} v.{{ version() }}
-                    </li>
-                </ul>
+                    {% endblock %}
+                </div>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
             </div>
         </nav>
@@ -71,13 +57,26 @@
 
     <main>{% block contents %}{% endblock %}</main>
 
-{#    <footer class="page-footer grey darken-1">#}
-{#        <div class="footer-copyright">#}
-{#            <div class="container">#}
-{#                © АNDS 2008-{{ year() }} v.{{ version() }}#}
-{#            </div>#}
-{#        </div>#}
-{#    </footer>#}
+    <footer class="page-footer grey darken-1 hide-on-med-and-down">
+        <div class="footer-copyright">
+            <div class="row">
+                <div class="col l8">
+                    © АNDS 2008-{{ year() }} v.{{ version() }}
+                </div>
+                <div class="col l4 right-align">
+                    <form id="langs" action="/setlang" method="post">
+                        {% for code, lang in all_languages %}
+                            <button{{ {'type': 'submit', 'name': 'language', 'value': code,
+                                'class': 'btn waves-effect red' if code == language_code else 'btn waves-effect',
+                                'title': lang}|xmlattr }}>{{ language(code) }}</button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </footer>
 
     {% block scripts %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
