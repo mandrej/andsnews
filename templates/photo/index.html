@@ -1,5 +1,4 @@
 {% extends "photo/base.html" %}
-
 {% block paging %}
     {% with name='photo_all' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
@@ -12,10 +11,18 @@
             {% else %}
                 {% set url = uri_for('photo', slug=object.key.string_id()) %}
             {% endif %}
-            <a class="thumbnail"
-               href="{{ url }}?page={{ page }}">
-                <img src="{{ object.serving_url }}=s400">
-                <div class="title">{{ object.headline }}</div>
+            <a href="{{ url }}?page={{ page }}" class="thumbnail">
+                <div class="card waves-effect z-depth-0">
+                    <div class="card-image">
+                        <img src="{{ object.serving_url }}=s400">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title">{{ object.headline }}</span>
+                        <span class="card-author">{{ object.author }},
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        </span>
+                    </div>
+                </div>
             </a>
         {% endfor %}
     </div>
@@ -28,14 +35,14 @@
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.thumbnail',
-                width: 240,
-                gutter: 10
+                width: 300,
+                gutter: 0
             });
             $container.infinitescroll({
                 binder: $(window),
                 itemSelector: '.thumbnail',
-                nextSelector: 'a.next',
-                navSelector: "nav.paginator",
+                nextSelector: '.next',
+                navSelector: ".pagination",
                 loading: { msg: $('#dummy') }
             }, function(data) {
                 $container.gridalicious('append', data);

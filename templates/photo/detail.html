@@ -1,8 +1,4 @@
 {% extends "photo/base.html" %}
-{% block background %}
-<body class="dark">
-{% endblock %}
-{% block title %}{{ super() }} - {{ _('Photos') }}{% endblock %}
 {% block paging %}
     {% with %}
         {% set name='photo' %}
@@ -12,21 +8,21 @@
 {% endblock %}
 
 {% block contents %}
-    <div class="swiper-container">
+    <article class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="swiper-slide cover"
+                <div id="{{ object.key.string_id() }}" class="card swiper-slide cover"
                     data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
-                    <div class="zoom">
+                    <div class="card-image zoom">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
                     </div>
-                    <div class="exif">
+                    <div class="card-content exif" style="background-color: {{ object.hex }};">
                         {% include "photo/exif.html" %}
                     </div>
                 </div>
             {% endfor %}
         </div>
-    </div>
+    </article>
 {% endblock %}
 
 {% block scripts %}
@@ -46,12 +42,12 @@
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
                 if (!isNaN(num) && $.inArray(num, pages) == -1) {
-{#                    TODO href is from paginator#}
+{#                    TODO href is from pagination#}
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
-                        $('nav.paginator').replaceWith(function() {
-                            return $page.find('nav.paginator').hide();
+                        $('nav.pagination').replaceWith(function() {
+                            return $page.find('nav.pagination').hide();
                         });
                     });
                     pages.push(num);
@@ -63,7 +59,7 @@
                     title = slide.data('title');
 
                 window.history.replaceState(location.pathname, '', slug);
-                $('header h1').html(title);
+                $('.nav-wrapper > .brand-logo').text(title);
                 $('html, body').animate({scrollTop: 0});
 
                 $('.zoom').trigger('zoom.destroy');
@@ -81,6 +77,7 @@
                 lazyLoading: true,
                 lazyLoadingInPrevNext: true,
                 onLazyImageReady: adjastView,
+                spaceBetween: 0,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
@@ -98,7 +95,7 @@
             $(window).on('resize', function() {
                 $('.zoom').trigger('zoom.destroy');
             });
-            $('nav.paginator').hide();
+            $('.pagination').hide();
         });
     </script>
 {% endblock %}

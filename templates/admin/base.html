@@ -1,23 +1,18 @@
 {% extends "base.html" %}
-
+{% block title %}{{ _('Administration') }}{% endblock %}
+{% block modals %}
+    <div id="graph" class="modal bottom-sheet"></div>
+    <div id="confirm" class="modal bottom-sheet"></div>
+{% endblock %}
 {% block menu %}
-    <ul>
-        <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
-        <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
-        <li>
-            <a class="selected" href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a>
-            {% if user %}
-                <div class="submenu">
-                    {% if is_admin %}
-                        <a href="{{ uri_for('photo_admin') }}" class="block">Photos</a>
-                        <a href="{{ uri_for('entry_admin') }}" class="block">Entries</a>
-                        <a href="{{ uri_for('counter_admin') }}" class="block">Counters</a>
-                    {% endif %}
-                    <a href="/sign" class="block">{{ _('Log out') }}</a>
-                </div>
-            {% endif %}
-        </li>
-    </ul>
+    <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+    <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+    <li class="active">
+        <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
+    </li>
+    {% if user %}
+        <li><a href="/sign" class="waves-effect">{{ _('Log out') }}</a></li>
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}

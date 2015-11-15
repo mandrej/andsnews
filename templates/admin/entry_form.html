@@ -1,75 +1,109 @@
 {% extends "admin/base.html" %}
+{% block title %}{{ _('Add new / change existing blog') }}{% endblock %}
 {% import "snippets/macros.html" as m %}
-{% block title %}{{ super() }} - {{ _('Add new / change existing blog') }}{% endblock %}
 
 {% block contents %}
-    <div class="admin">
-        <h2>{{ _('Add new / change existing blog') }}</h2>
+    <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
+                <a href="{{ uri_for('entry_admin') }}" class="breadcrumb">{{ _('Blog') }}</a>
+                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+            </div>
+        </div>
+    </nav>
+    <section>
+        {% if object %}
+            <form action="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" enctype="multipart/form-data"  method="post">
+        {% else %}
+            <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
+        {% endif %}
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    {% if form.errors %}
+                        <div class="alert white">
+                            <i class="material-icons red-text">error</i>
+                            <p class="title">{{ _('Please correct errors in') }}</p>
+                            <p>{{ form.errors|join(", ") }}.</p>
+                        </div>
+                    {% endif %}
 
-        <article>
-            <section>
-                {% if form.errors %}
-                    <div class="formerrors">
-                        <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
-                        <p>{{ _('Please correct errors in') }}
-                        {{ form.errors|join(", ") }}.</p>
-                    </div>
-                {% endif %}
-
-                {% if object %}
-                    <form action="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" enctype="multipart/form-data"  method="post">
-                {% else %}
-                    <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
-                {% endif %}
-                    <fieldset>
-                        <input name="token" type="hidden" value="{{ token }}"/>
-                        {{ m.form_row(form.headline) }}
-                        {% if not object %}
-                            {{ m.form_row(form.slug) }}
-                        {% endif %}
-                        {{ m.form_row(form.tags) }}
-                        {{ m.form_row(form.summary, rows=4) }}
-                        {{ m.form_row(form.author) }}
-                        {{ m.form_row(form.date, placeholder='YYYY-mm-dd HH:MM:SS') }}
-                    </fieldset>
-
-                    <fieldset>
-                        <h3>{{ _('Images used in this blog') }}</h3>
+                    <input name="token" type="hidden" value="{{ token }}"/>
+                    {{ m.form_row(form.headline, class='validate') }}
+                    {% if not object %}
+                        {{ m.form_row(form.slug) }}
+                    {% endif %}
+                    {{ m.form_row(form.tags) }}
+                    {{ m.form_row(form.summary, class='materialize-textarea') }}
+                    {{ m.form_row(form.author, class='browser-default') }}
+                    {{ m.form_row(form.date, type='date', class='datepicker') }}
+                </div>
+                <div class="col s12 m6 l6 hide-on-med-and-down">
+                    <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
+                    <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
+                    <p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
+                    <p>{{ _('Send images less then') }} 200KB.</p>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <h5>{{ _('Images used in this blog') }}</h5>
                         {% if object %}
-                            {{ m.form_row(form.front) }}
+                            {{ m.form_row(form.front, class='browser-default') }}
                             {% for field in form.images %}
-                                <p class="upload" style="background-image: url({{ object.image_url(field.form.num.data) }}/small);">
-                                    {{ field.form.name.label }} {{ field.form.num(size=1, disabled='disabled') }} {{ field.form.name(size=30) }}
-                                    {{ field.form.delete }} {{ field.form.delete.label.text }}
-                                </p>
+                                <div class="row valign-wrapper">
+                                    <div class="col s1">
+                                        <img src="{{ object.image_url(field.form.num.data) }}/small">
+                                    </div>
+                                    <div class="col s1">
+                                        {{ field.form.num.label }}
+                                        {{ field.form.num(size=1, disabled='disabled') }}
+                                    </div>
+                                    <div class="col s8">
+                                        {{ field.form.name.label }}
+                                        {{ field.form.name(size=30) }}
+                                    </div>
+                                    <div class="col s2 valign bottom">
+                                        {{ field.form.delete(class='checkbox') }}
+                                        {{ field.form.delete.label }}
+                                    </div>
+                                </div>
                             {% endfor %}
                         {% endif %}
                         {% for field in form.newimages %}
-                            <p>
-                                {{ field.form.name.label }} {{ field.form.name }}
-                                {{ field.form.blob }}
-                                <span class="error C_{{ field.form.name.name }}"><!-- -->{{ field.form.name.errors|join(', ') }}</span>
-                            </p>
+                            <div class="row">
+                                <div class="col s12">
+                                    <p>
+                                        <div class="file-field input-field">
+                                            <div class="btn">
+                                                <span>{{ field.form.name.label.text }}</span>
+                                                {{ m.input(field.form.blob, class='validate') }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                    </p>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </fieldset>
 
-                    <fieldset>
-                        {{ form.body(rows=20) }}
-                        <p class="buttons">
-                            <span class="required">{{ _('Required field') }}</span>
-                            <button type="submit">{{ _('done') }}</button>
-                        </p>
-                    </fieldset>
-                </form>
-            </section>
-            <aside>
-                <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
-                <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
-                <p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
-                <p>{{ _('Send images less then') }} 200KB.</p>
-            </aside>
-        </article>
-    </div>
+                        {{ form.body(class='materialize-textarea') }}
+                        {{ form.body.label }}
+
+                        <div class="row">
+                            <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
+                            <div class="col s4"></div>
+                            <div class="col s4 right-align">
+                                <button class="btn waves-effect orange" type="submit">
+                                    {{ _('done') }}<i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
@@ -88,8 +122,13 @@
                 source: '/complete/Entry_tags'
             });
 
-            $('#main button').click(function() {
-                $('#overlay, #spinner').show();
+            $('select').material_select();
+            $('.datepicker').pickadate({
+                selectMonths: true,
+                selectYears: 5,
+                format: 'yyyy-mm-dd HH:MM:ss',
+                firstDay: 1,
+                hiddenName: true
             });
         });
     </script>

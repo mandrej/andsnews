@@ -1,20 +1,21 @@
 {% extends "entry/base.html" %}
-{% block title %}{{ super() }} - {{ _('Blog') }}{% endblock %}
 {% block paging %}
     {% with name='entry_all' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
-    <div id="gallery">
+    <div id="gallery" class="row">
         {% for object in objects %}
             <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
-                <h2>{{ object.headline }}
-                    <span>
-                        {{ object.author }},<br>
-                        {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                    </span>
-                </h2>
-                <p>{{ object.summary }}</p>
+                <div class="card waves-effect z-depth-0">
+                    <div class="card-content">
+                        <span class="card-title">{{ object.headline }}</span>
+                        {{ object.summary }}
+                        <span class="card-author">{{ object.author }},
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        </span>
+                    </div>
+                </div>
             </a>
         {% endfor %}
     </div>
@@ -27,14 +28,14 @@
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.blog',
-                width: 240,
+                width: 400,
                 gutter: 0
             });
             $container.infinitescroll({
                 binder: $(window),
                 itemSelector: '.blog',
                 nextSelector: '.next',
-                navSelector: "nav.paginator",
+                navSelector: ".pagination",
                 loading: { msg: $('#dummy') }
             }, function(data) {
                 $container.gridalicious('append', data);

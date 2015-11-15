@@ -1,25 +1,22 @@
-<div class="popup">
-	<h4>{{ _('Confirm') }}</h4>
-    <a class="close fa fa-times-circle fa-2x" title="{{ _('close') }}"></a>
-	<div class="content">
-        <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
-		<form id="deleteForm" action="{{ post_url }}" method="post">
-            <input name="token" type="hidden" value="{{ token }}"/>
-			<p>{{ _('Do you really want to delete') }}
-				{% if object.kind == 'Entry' %}
-					{{ _('Blog') }} &quot;{{ object.headline }}&quot;
-					{{ _('posted by') }}
-					<strong>{{ object.author }}</strong>?
-				{% elif object.kind == 'Photo' %}
-					{{ _('photo') }} &quot;{{ object.headline }}&quot;
-					{{ _('posted by') }}
-					<strong>{{ object.author }}</strong>?
-				{% endif %}
-			</p>
-		   	<p class="buttons">
-                <input type="hidden" name="next" value="{{ next }}"/>
-                <button type="submit">{{ _('Delete') }}</button>
-		   	</p>
-		</form>
-	</div>
-</div>
+<form id="deleteForm" action="{{ post_url }}" method="post">
+    <div class="modal-content">
+        <h4>{{ _('Confirm') }}</h4>
+        <input name="token" type="hidden" value="{{ token }}">
+        <p>{{ _('Do you really want to delete') }}
+            {% if object.kind == 'Entry' %}
+                {{ _('Blog') }} &quot;{{ object.headline }}&quot;
+                {{ _('posted by') }}
+                <strong>{{ object.author }}</strong>?
+            {% elif object.kind == 'Photo' %}
+                {{ _('photo') }} &quot;{{ object.headline }}&quot;
+                {{ _('posted by') }}
+                <strong>{{ object.author }}</strong>?
+            {% endif %}
+        </p>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn waves-effect orange">{{ _('Delete') }}</button>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
+    </div>
+</form>

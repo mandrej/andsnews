@@ -9,43 +9,68 @@
 {% block modals %}{% endblock %}
 
 {% block contents %}
-    <header class="admin">
+    <section>
         {% if phrase %}
-            <h2>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h2>
+            <h4>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h4>
         {% else %}
-            <h2>{{ _('Nothing to search for') }}</h2>
+            <h4>{{ _('Nothing to search for') }}</h4>
             <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>
         {% endif %}
-    </header>
-    <div id="gallery">
+    </section>
+    <ul id="gallery">
         {% for future in futures %}
             {% with object=future.get_result() %}
                 {% if object.kind == 'Photo' %}
                     <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" class="found thumbnail" >
-                        <img src="{{ object.serving_url }}=s400">
-                        <div class="title">{{ object.headline }}</div>
+                        <div class="card waves-effect z-depth-0">
+                            <div class="card-image">
+                                <img src="{{ object.serving_url }}=s400">
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title">{{ object.headline }}</span>
+                                <span class="card-author">{{ object.author }},
+                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                                </span>
+                            </div>
+                        </div>
                     </a>
                 {% elif object.kind == 'Entry' %}
                     <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="found blog">
-                        <h3>{{ object.headline }}
-                            <span>
-                                {{ object.author }},<br>
-                                {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                            </span>
-                        </h3>
-                        <p>{{ object.summary }}</p>
+                        <div class="card waves-effect z-depth-0">
+                            <div class="card-content">
+                                <span class="card-title">{{ object.headline }}</span>
+                                {{ object.summary }}
+                                <span class="card-author">{{ object.author }},
+                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                                </span>
+                            </div>
+                        </div>
                     </a>
                 {% endif %}
             {% endwith %}
         {% else %}
-            <div class="found blog">
-                {% if error %}
-                    <h3>{{ _('Error') }}: {{ error }}</h3>
-                {% else %}
-                    <h3>{{ _('No search results') }}</h3>
-                    <p>{{ _('Please try again') }}</p>
-                {% endif %}
-            </div>
+            {% if error %}
+                <div class="row">
+                    <div class="col s12 m6 l4">
+                        <div class="alert white">
+                            <i class="material-icons red-text">error</i>
+                            <p class="title">{{ _('Error') }}</p>
+                            <p>{{ error }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col s12 m6 l4">
+                        <div class="alert white">
+                            <i class="material-icons orange-text">warning</i>
+                            <p class="title">{{ _('No search results') }}</p>
+                            <p>{{ _('Please try again') }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
         {% endfor %}
     </div>
 {% endblock %}
@@ -57,8 +82,8 @@
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.found',
-                width: 240,
-                gutter: 10
+                width: 300,
+                gutter: 0
             });
         });
     </script>

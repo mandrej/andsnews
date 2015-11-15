@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import os
 import webapp2
-from jinja2.filters import environmentfilter, do_mark_safe
+from jinja2.filters import environmentfilter, do_mark_safe, do_truncate
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
@@ -225,6 +225,10 @@ def split(value, sep=','):
     return []
 
 
+def truncate(string, length=255, killwords=False):
+    return do_truncate(string, length, killwords)
+
+
 CONFIG = {
     'webapp2_extras.jinja2': {
         'globals': {
@@ -234,8 +238,6 @@ CONFIG = {
             'all_languages': LANGUAGES,
             'devel': DEVEL,
             'uri_for': webapp2.uri_for,
-            'prev_class': 'prev fa fa-angle-left',
-            'next_class': 'next fa fa-angle-right',
         },
         'filters': {
             'boolimage': boolimage,
@@ -248,6 +250,7 @@ CONFIG = {
             'timesince': timesince_jinja,
             'to_json': to_json,
             'split': split,
+            'truncate': truncate,
         },
         'environment_args': {
             'autoescape': True,

@@ -1,78 +1,113 @@
 {% extends "admin/base.html" %}
-{% block modals %}
-{{ super() }}
-<div id="graph" class="modal"></div>
-{% endblock %}
 
 {% block contents %}
-    <div id="gallery">
-        <section class="admin">
-            <h2 class="clearing">
-                <a href="{{ uri_for('photo_admin') }}" class="button left">
-                    Photo {{ photo_count }}
-                </a>
-                <a href="{{ uri_for('photo_add') }}" class="button right">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h2>
-            <div id="Photo_tags"></div>
-            <div id="Photo_author"></div>
-            <div id="Photo_date"></div>
-            <div id="Photo_model"></div>
-            <div id="Photo_lens"></div>
-            <div id="Photo_eqv"></div>
-            <div id="Photo_iso"></div>
-            <div id="Photo_color"></div>
-        </section>
-        <section class="admin">
-            <h2 class="clearing">
-                <a href="{{ uri_for('entry_admin') }}" class="button left">
-                    Entry {{ entry_count }}
-                </a>
-                <a href="{{ uri_for('entry_add') }}" class="button right">
-                    <i class="fa fa-plus-square"></i> Add
-                </a>
-            </h2>
-            <div id="Entry_tags"></div>
-            <div id="Entry_author"></div>
-            <div id="Entry_date"></div>
-        </section>
+    <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+            </div>
+        </div>
+    </nav>
+    <div id="gallery" class="row">
+        <div class="admin card z-depth-0">
+            <div class="card-action grey">
+                <div class="row">
+                    <div class="col s5">
+                        <a href="{{ uri_for('photo_admin') }}" class="btn waves-effect">
+                            <i class="material-icons left">edit</i>Photos
+                        </a>
+                    </div>
+                    <div class="col s3 center-align">
+                        <a href="{{ uri_for('photo_add') }}" class="btn-floating waves-effect waves-light orange">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <div class="col s4">
+                        <span class="badge">{{ photo_count }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div id="Photo_tags"></div>
+                <div id="Photo_author"></div>
+                <div id="Photo_date"></div>
+                <div id="Photo_model"></div>
+                <div id="Photo_lens"></div>
+                <div id="Photo_eqv"></div>
+                <div id="Photo_iso"></div>
+                <div id="Photo_color"></div>
+            </div>
+        </div>
 
-        <section class="admin">
-            <h2>Memcache statistics for	v.{{ version() }}</h2>
-            <dl class="w65em">
-                <dt>hit ratio</dt>
-                <dd>
-                    {{ '%0.1f'|format(hit_ratio) }}%
-                    ({{ stats.hits }} hits, {{ stats.misses }} misses)
-                </dd>
-            </dl>
-            <dl class="w65em">
-                <dt>size</dt>
-                <dd>{{ stats['items'] }} items,
-                    {{ stats.bytes|filesizeformat }}
-                </dd>
-            </dl>
-            <dl class="w65em">
-                <dt>oldest item</dt>
-                <dd>{{ oldest|timesince }} ago</dd>
-            </dl>
-        </section>
+        <div class="admin card z-depth-0">
+            <div class="card-action grey">
+                <div class="row">
+                    <div class="col s5">
+                        <a href="{{ uri_for('entry_admin') }}" class="btn waves-effect">
+                            <i class="material-icons left">edit</i>Entries</a>
+                    </div>
+                    <div class="col s3 center-align">
+                        <a href="{{ uri_for('entry_add') }}" class="btn-floating waves-effect waves-light orange">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <div class="col s4">
+                        <span class="badge">{{ entry_count }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div id="Entry_tags"></div>
+                <div id="Entry_author"></div>
+                <div id="Entry_date"></div>
+            </div>
+        </div>
 
-        {% if is_admin %}
-            <section class="admin">
-                <h2>MapReduce</h2>
-                <h4><a class="button" href="/mapreduce">Status</a></h4>
-                <h4>Full text index for
-                    <a class="button" href="{{ uri_for('datastore_background', job='photo_index') }}">photos</a>
-                    <a class="button" href="{{ uri_for('datastore_background', job='entry_index') }}">entries</a>
-                </h4>
-{#                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">#}
-{#                    Calculate photo palette</a></h4>#}
-{#                <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">#}
-{#                    Calculate photo dimension</a></h4>#}
-            </section>
-        {% endif %}
+        <div class="admin card z-depth-0 hide-on-med-and-down">
+            <div class="card-action grey">
+                <a href="{{ uri_for('counter_admin') }}" class="btn waves-effect">
+                    <i class="material-icons left">edit</i>Counters
+                </a>
+            </div>
+            <div class="card-content">
+                <span class="card-title">Memcache statistics</span>
+                <div class="row valign-wrapper">
+                    <div class="col s4 valign middle">hit ratio</div>
+                    <div class="col s8 right-align">
+                        {{ '%0.1f'|format(hit_ratio) }}%<br>
+                        ({{ stats.hits }} hits, {{ stats.misses }} misses)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4">size</div>
+                    <div class="col s8 right-align">
+                        {{ stats['items'] }} items,
+                        {{ stats.bytes|filesizeformat }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4">oldest item</div>
+                    <div class="col s8 right-align">
+                        {{ oldest|timesince }} ago
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{#            {% if is_admin %}#}
+{#                <section class="admin">#}
+{#                    <h2>MapReduce</h2>#}
+{#                    <h4><a class="button" href="/mapreduce">Status</a></h4>#}
+{#                    <h4>Full text index for#}
+{#                        <a class="button" href="{{ uri_for('datastore_background', job='photo_index') }}">photos</a>#}
+{#                        <a class="button" href="{{ uri_for('datastore_background', job='entry_index') }}">entries</a>#}
+{#                    </h4>#}
+    {#                <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">#}
+    {#                    Calculate photo palette</a></h4>#}
+    {#                <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">#}
+    {#                    Calculate photo dimension</a></h4>#}
+{#                </section>#}
+{#            {% endif %}#}
     </div>
 {% endblock %}
 {% block scripts %}
@@ -84,24 +119,27 @@
             function build() {
                 $.getJSON('/admin/memcache/', function(data) {
                     $.each(data, function(key, value) {
-                        var tmpl = '', title = key.split('_').pop() + ' cloud';
+                        var tmpl = '<div class="row valign-wrapper">', title = key.split('_').pop() + ' cloud';
                         if (value) {
-                            tmpl += '<button class="delete" type="submit" name="delete" value="' + key + '"><i class="fa fa-times"></i> delete</button>';
-                            tmpl += '<a class="graph button" href="/visualize/' + key + '"><i class="fa fa-eye"></i> graph</a>';
-                            tmpl += '<h4 class="ff">' + title + ' [+]</h4>';
-                            tmpl += '<div class="hide">';
+                            tmpl += '<div class="col s8 valign middle">' + title + '</div>';
+                            tmpl += '<div class="col s4 right-align">';
+                            tmpl += '<button class="btn-floating orange waves-effect" type="submit" name="delete" value="' + key + '"><i class="material-icons">delete</i></button>&nbsp;';
+                            tmpl += '<a class="graph btn-floating waves-effect" href="/visualize/' + key + '"><i class="material-icons">remove_red_eye</i></a>';
+                            tmpl += '</div></div>';
+                            tmpl += '<div class="row"><div class="col s12">';
                             $.each(value, function(name, count) {
-                                tmpl += '<dl><dt>' + name + '</dt>';
-                                tmpl += '<dd>' + count + '</dd></dl>';
+                                tmpl += '<div><span class="badge">' + count + '</span>' + name + '</div>';
                             });
+                            tmpl += '</div></div>';
                             tmpl += '</div>';
                         } else {
-                            tmpl += '<button type="submit" name="put" value="' + key + '"><i class="fa fa-cog"></i> create</button>';
-                            tmpl += '<h4>' + title + '</h4>';
+                            tmpl += '<div class="col s8 valign middle">' + title + '</div>';
+                            tmpl += '<div class="col s4 right-align">';
+                            tmpl += '<button class="btn-floating waves-effect" type="submit" name="put" value="' + key + '"><i class="material-icons">cached</i></button>';
+                            tmpl += '</div></div>';
                         }
                         $('#' + key).html(tmpl);
                     });
-                    $('.ff').collapseGroup();
                 });
             }
             build();
@@ -109,37 +147,32 @@
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.admin',
-                width: 360,
+                width: 400,
                 gutter: 0
             });
 
             $('.admin div').on('click', 'button', function() {
-                $('#spinner').show();
+                $('.progress').show();
                 var key = $(this).val(), method = $(this).attr('name');
                 $.ajax({
                     url: '/admin/memcache/' + key,
                     type: method,
                     dataType: 'json',
                     success: function(data) {
-                        $('#spinner').hide();
+                        $('.progress').hide();
                         build();
-                        $('.ff').unbind().collapseGroup();
                     }
                 });
             });
-            $('.admin div').on('click', 'a.graph', function(evt) {
+            $(document).on('click', 'a.graph', function(evt) {
                 evt.preventDefault();
-                $('#graph').load(this.href, function() {
-                    $('#overlay, #graph').show();
+                $('#graph').load(this.href, function () {
+                    $(this).openModal();
                 });
             });
-
-            $('#main button, #sidebar button').click(function() {
-                $('#overlay, #spinner').show();
+            $('.modal').on('click','a.modal-close', function(evt) {
+                $('#graph').closeModal();
             });
-
-            $('.ff').collapseGroup();
-            $('.zebra').colStyle();
         });
     </script>
 {% endblock %}

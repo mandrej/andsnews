@@ -1,46 +1,8 @@
 /**
- * Created by milan on 1/4/15.
+ * Created by milan on 11/12/15.
  */
 $(function() {
     "use strict";
-
-	$.fn.minus = function() {
-		$(this).html($(this).html().replace(/[+]/i, "−"));
-		return this
-	};
-	$.fn.plus = function() {
-        $(this).html($(this).html().replace(/[−]/i, "+"));
-		return this
-	};
-	/*
-        Expand/ Collapse items in a group,
-        one at the time, toggle +/− indicator
-	    $Version: 2009.08.04
-        Example: $('.ee').collapseGroup();
-                <h4 class="ee collapse">... [+|−]</h4>
-                <div class="hide">...</div>
-    */
-	$.fn.collapseGroup = function() {
-		var thisContexts = $(this);
-
-		return this.each(function() {
-			var $this = $(this);
-			var $next = $this.next();
-			$this.click(function() {
-				if ($next.is(':hidden')) {
-					$this.minus();
-					$next.slideDown();
-				} else {
-					$this.plus();
-					$next.slideUp();
-				}
-				thisContexts.not($this).each(function() {
-					$(this).plus();
-					$(this).next().slideUp();
-				});
-			})
-		})
-	};
 	/*
         Slugify field text
         $Version: 2008.06.17
@@ -102,24 +64,5 @@ $(function() {
             if (str) str = str.replace(/^.*(\?)/,'');
             return (str || document.location.search).replace(/(^\?)/,'').split("&").map(function(n){return n = n.split("="),this[n[0]] = n[1],this}.bind({}))[0];
         }
-    });
-});
-
-$(document).ready(function() {
-    // close
-    $('.modal').on('click', '.close', function (evt) {
-        evt.preventDefault();
-        $(this).parents('.modal').hide();
-        $('#overlay').hide();
-    });
-    // confirm
-    $(document).on('click', 'a.confirm', function (evt) {
-        evt.preventDefault();
-        $('#confirm').load(this.href, function () {
-            $('#overlay, #confirm').show();
-            $('.content button').click(function () {
-                $('#overlay, #spinner').show();
-            });
-        });
     });
 });

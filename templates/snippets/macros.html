@@ -1,26 +1,26 @@
-{% macro form_row(field) %}
-    <p>
-        {{ field.label(class='required' if field.flags.required else '') }}
-        {{ field(**kwargs) }}
-        {% if field.errors %}
-            <span class="error C_{{ field.name }}">{{ field.errors|join(', ') }}</span>
-        {% endif %}
-    </p>
-{% endmacro %}
-
-{% macro filter_title(filter) %}
-    {% if filter %}
-        {% if filter.field == 'tags' %}{{ filter.value }}{% endif %}
-        {% if filter.field == 'date' %}{{ filter.value }}{% endif %}
-        {% if filter.field == 'author' %}{{ filter.value }}{% endif %}
-        {% if filter.field == 'color' %}{{ _(filter.value) }}{% endif %}
-        {% if filter.field == 'model' %}{{ filter.value }}{% endif %}
-        {% if filter.field == 'lens' %}{{ filter.value }}{% endif %}
-        {% if filter.field == 'eqv' %}{{ filter.value }} mm{% endif %}
-        {% if filter.field == 'iso' %}{{ filter.value }} ASA{% endif %}
+{% macro input(field) %}
+    {{ field(**kwargs) }}
+    {% if field.errors %}
+        <span class="error C_{{ field.name }}">{{ field.errors|join(', ') }}</span>
     {% endif %}
 {% endmacro %}
 
-{% macro spinner() %}
-    {%- for n in range(1, 13) %}<div class="bar{{ n }}"></div>{% endfor -%}
+{% macro form_row(field) %}
+    <p>
+        {{ field.label(class='required' if field.flags.required else '') }}
+        {% call input(field, **kwargs) %}{% endcall %}
+    </p>
 {% endmacro %}
+
+{#{% macro filter_title(filter) %}#}
+{#    {% if filter %}#}
+{#        {% if filter.field == 'tags' %}{{ filter.value }}{% endif %}#}
+{#        {% if filter.field == 'date' %}{{ filter.value }}{% endif %}#}
+{#        {% if filter.field == 'author' %}{{ filter.value }}{% endif %}#}
+{#        {% if filter.field == 'color' %}{{ _(filter.value) }}{% endif %}#}
+{#        {% if filter.field == 'model' %}{{ filter.value }}{% endif %}#}
+{#        {% if filter.field == 'lens' %}{{ filter.value }}{% endif %}#}
+{#        {% if filter.field == 'eqv' %}{{ filter.value }} mm{% endif %}#}
+{#        {% if filter.field == 'iso' %}{{ filter.value }} ASA{% endif %}#}
+{#    {% endif %}#}
+{#{% endmacro %}#}

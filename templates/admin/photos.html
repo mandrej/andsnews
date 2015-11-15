@@ -1,34 +1,35 @@
 {% extends "admin/base.html" %}
+{% block title %}{{ _('Photos') }}{% endblock %}
 {% block paging %}
     {% with name='photo_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
 
 {% block contents %}
-    <div class="admin">
-        <h2>Photo administration
-            <a href="{{ uri_for('photo_add') }}" class="button abs_right">
-                <i class="fa fa-plus-square"></i> Add
-            </a>
-        </h2>
-
-        <section style="margin: 1rem 0;">
-            <div class="cloud">
+    <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
+                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+            </div>
+        </div>
+    </nav>
+    <section>
+        <div class="row valign-wrapper">
+            <div class="col s10">
                 {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                         href="{{ uri_for('photo_admin_filter', field='tags', value=item.name) }}">
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
-            </div>
-            <div class="cloud">
+                <div class="divider white"></div>
                 {% for item in author_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
                         href="{{ uri_for('photo_admin_filter', field='author', value=item.name) }}">
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
-            </div>
-            <div class="cloud">
+                <div class="divider white"></div>
                 {% for item in date_cloud|sort(attribute='name', reverse=True) %}
                     {% set selected = item.name == filter.value|int if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
@@ -36,16 +37,21 @@
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
-        </section>
+            <div class="col s2 valign middle center-align">
+                <a href="{{ uri_for('photo_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
 
-        <table class="zebra">
+        <table class="responsive-table highlight">
             <colgroup>
                 <col style="width: 50px;"/>
                 <col/>
                 <col style="width: 190px; text-align: right;"/>
                 <col style="width: 150px; text-align: right;"/>
                 <col style="width: 210px; text-align: right;"/>
-                <col style="width: 140px; text-align: right;"/>
+                <col style="width: 200px; text-align: right;"/>
             </colgroup>
             <thead>
                 <tr>
@@ -100,15 +106,36 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a class="button"
-                                   href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">edit</a>&nbsp;
-                                <a class="confirm button delete"
-                                   href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">delete</a>
+                                <a class="btn waves-effect" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+                                    <i class="material-icons">edit</i></a>
+                                <a class="confirm btn orange waves-effect" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                                    <i class="material-icons">delete</i></a>
                             </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            $(document).on('click', 'a.confirm', function (evt) {
+                evt.preventDefault();
+                $('#confirm').load(this.href, function () {
+                    $(this).openModal();
+                    $('.modal-footer button').click(function () {
+{#                        $('#overlay, #spinner').show();#}
+                    });
+                });
+            });
+            $('.modal').on('click','a.modal-close', function(evt) {
+                $('#confirm').closeModal();
+            });
+            $('table').colStyle();
+        });
+    </script>
 {% endblock %}

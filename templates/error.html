@@ -1,25 +1,22 @@
 {% extends "base.html" %}
-{% block background %}
-<body class="dark">
-{% endblock %}
-{% block title %}{{ super() }} - {{ error.status|default("500 Internal Server Error") }}{% endblock %}
+{% block title %}{{ error.status|default("500 Internal Server Error") }}{% endblock %}
 
 {% set attr = {
     'viewBox': '0 -50 100 100',
-    'fill': '#c00',
+    'fill': '#f44336',
     'font-size': '52',
     'dy': '.3em',
     'text': error.status_code|default(500)
 } %}
 {% set svg = "<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='{viewBox}'>\
-<text fill='{fill}' font-size='{font-size}' dy='{dy}'>{text}</text></svg>".format(**attr) %}
+<text fill='{fill}' font-family='sans' font-size='{font-size}' dy='{dy}'>{text}</text></svg>".format(**attr) %}
 
 {% block contents %}
-    <div class="page" style='background-image: url("data:image/svg+xml;utf8,{{ svg }}")'>
-        <h2>{{ error }}</h2>
+    <section style='background-image: url("data:image/svg+xml;utf8,{{ svg }}"); background-repeat: no-repeat; min-height: 40rem;'>
+        <h4>{{ error }}</h4>
         {% if path %}<pre>{{ path }}</pre>{% endif %}
         {% if lines %}<pre>{{ lines }}</pre>{% endif %}
-    </div>
+    </section>
 {% endblock %}
 
 {% block ga %}{% endblock %}

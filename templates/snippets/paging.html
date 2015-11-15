@@ -1,33 +1,29 @@
-{% macro _link(name, page, class) %}
-    {% set uriname='%s_filter' % name if filter else name %}
-    {% set qs='?find=%s&page=%s' % (phrase, page) if phrase else '?page=%s' % page %}
-
-    {% if filter %}
-        {% if slug %}
-            {% set url = uri_for(uriname, field=filter.field, value=filter.value, slug=slug) %}
-        {% else %}
-            {% set url = uri_for(uriname, field=filter.field, value=filter.value) %}
-        {% endif %}
+{% set uriname='%s_filter' % name if filter else name %}
+{% if filter %}
+    {% if slug %}
+        {% set url = uri_for(uriname, field=filter.field, value=filter.value, slug=slug) %}
     {% else %}
-        {% if slug %}
-            {% set url = uri_for(uriname, slug=slug) %}
-        {% else %}
-            {% set url = uri_for(uriname) %}
-        {% endif %}
+        {% set url = uri_for(uriname, field=filter.field, value=filter.value) %}
     {% endif %}
-
-    <a{{ {'href': '%s%s' % (url, qs), 'class': class}|xmlattr }}></a>
-{% endmacro %}
+{% else %}
+    {% if slug %}
+        {% set url = uri_for(uriname, slug=slug) %}
+    {% else %}
+        {% set url = uri_for(uriname) %}
+    {% endif %}
+{% endif %}
 
 {% if has_previous or has_next %}
     {% if has_previous %}
-        {{ _link(name, page - 1, prev_class) }}
+        {% set qs='?find=%s&page=%s' % (phrase, page - 1) if phrase else '?page=%s' % (page - 1) %}
+        <li class="waves-effect"><a{{ {'href': '%s%s' % (url, qs), 'class': 'prev'}|xmlattr }}><i class="material-icons">chevron_left</i></a></li>
     {% else %}
-        <span class="{{ prev_class }} na"></span>
+        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
     {% endif %}
     {% if has_next %}
-        {{ _link(name, page + 1, next_class) }}
+        {% set qs='?find=%s&page=%s' % (phrase, page + 1) if phrase else '?page=%s' % (page + 1) %}
+        <li class="waves-effect"><a{{ {'href': '%s%s' % (url, qs), 'class': 'next'}|xmlattr }}><i class="material-icons">chevron_right</i></a></li>
     {% else %}
-        <span class="{{ next_class }} na"></span>
+        <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
     {% endif %}
 {% endif %}

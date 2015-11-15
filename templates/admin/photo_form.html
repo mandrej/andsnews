@@ -1,83 +1,107 @@
 {% extends "admin/base.html" %}
+{% block title %}{{ _('Add new / change existing photo') }}{% endblock %}
 {% import "snippets/macros.html" as m %}
-{% block title %}{{ super() }} - {{ _('Add new / change existing photo') }}{% endblock %}
 
 {% block contents %}
-    <div class="admin">
-        <h2>{{ _('Add new / change existing photo') }}</h2>
-
-        <article>
-            <section>
+    <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
+                <a href="{{ uri_for('photo_admin') }}" class="breadcrumb">{{ _('Photos') }}</a>
+                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+            </div>
+        </div>
+    </nav>
+    <section>
+        <div class="row">
+            <div class="col s12 m6 l6">
                 {% if form.errors %}
-                    <div class="formerrors">
-                        <i class="fa fa-exclamation-triangle fa-3x pull-left" style="color: orange"></i>
-                        <p>{{ _('Please correct errors in') }}
-                        {{ form.errors|join(", ") }}.</p>
+                    <div class="alert white">
+                        <i class="material-icons red-text">error</i>
+                        <p class="title">{{ _('Please correct errors in') }}</p>
+                        <p>{{ form.errors|join(", ") }}.</p>
                     </div>
                 {% endif %}
 
                 {% if upload_url %}
                     <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
-                        <fieldset>
-                            <input name="token" type="hidden" value="{{ token }}"/>
-                            {{ m.form_row(form.headline) }}
-                            {{ m.form_row(form.slug) }}
-                            {{ m.form_row(form.tags) }}
-                            {{ m.form_row(form.author) }}
-                            {{ m.form_row(form.photo) }}
-                            <p class="buttons">
-                                <span class="required">{{ _('Required field') }}</span>
-                                <button type="submit">{{ _('upload') }}</button>
-                            </p>
-                        </fieldset>
+                        <input name="token" type="hidden" value="{{ token }}"/>
+                        {{ m.form_row(form.headline, class='validate') }}
+                        {{ m.form_row(form.slug, class='validate') }}
+                        {{ m.form_row(form.tags) }}
+                        {{ m.form_row(form.author, class='browser-default') }}
+                        <p>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>File</span>
+                                    {{ m.input(form.photo, class='validate') }}
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </p>
+                        <p class="right-align">
+                            <span class="required left">{{ _('Required field') }}</span>
+                            <button class="btn waves-effect orange" type="submit">
+                                {{ _('upload') }}<i class="material-icons right">cloud_upload</i>
+                            </button>
+                        </p>
                     </form>
                 {% endif %}
 
                 {% if object %}
                     <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
-                        <fieldset>
-                            <input name="token" type="hidden" value="{{ token }}"/>
-                            {{ m.form_row(form.headline) }}
-                            {{ m.form_row(form.tags) }}
-                            {{ m.form_row(form.author) }}
-                        </fieldset>
+                        <input name="token" type="hidden" value="{{ token }}"/>
+                        {{ m.form_row(form.headline, class='validate') }}
+                        {{ m.form_row(form.tags) }}
+                        {{ m.form_row(form.author, class='browser-default') }}
 
-                        <fieldset>
-                            <h3>EXIF {{ _('data') }}</h3>
-                            {{ m.form_row(form.model) }}
-                            {{ m.form_row(form.lens) }}
-                            {{ m.form_row(form.aperture) }}
-                            {{ m.form_row(form.shutter) }}
-                            {{ m.form_row(form.focal_length) }}
-                            {{ m.form_row(form.crop_factor) }}
-                            {{ m.form_row(form.iso) }}
-                            {{ m.form_row(form.date) }}
-                            <p class="buttons">
-                                <span class="required">{{ _('Required field') }}</span>
-                                <button type="submit">{{ _('done') }}</button>
-                            </p>
-                        </fieldset>
+                        <h5>EXIF {{ _('data') }}</h5>
+                        {{ m.form_row(form.model) }}
+                        {{ m.form_row(form.lens) }}
+                        <div class="row">
+                            <div class="col s4">{{ m.form_row(form.aperture) }}</div>
+                            <div class="col s4">{{ m.form_row(form.shutter) }}</div>
+                            <div class="col s4">{{ m.form_row(form.iso) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4">{{ m.form_row(form.focal_length) }}</div>
+                            <div class="col s4">{{ m.form_row(form.crop_factor) }}</div>
+                            <div class="col s4">{{ m.form_row(form.date, type='date', class='datepicker') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
+                            <div class="col s4"></div>
+                            <div class="col s4 right-align">
+                                <button class="btn waves-effect orange" type="submit">
+                                    {{ _('done') }}<i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 {% endif %}
-            </section>
-            <aside>
+            </div>
+            <div class="col s12 m6 l6 hide-on-med-and-down">
                 <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
                 <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
                 <p>{{ _('Forward slash is not allowed in any field. It will be stripped out automatically.') }}</p>
 
                 {% if object %}
-                    {% include "photo/crops.html" %}
                     <p><strong>{{ _('Date format') }} &quot;yyyy-mm-dd hh:mm:ss&quot;</strong></p>
-                    <h3><a id="draw" class="block button" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
-                        <i class="fa fa-th"></i> {{ _('Calculate palette') }}</a></h3>
+                    {% include "photo/crops.html" %}
+
+                    <a id="draw" class="btn waves-effect" href="{{ uri_for('palette', slug=object.key.string_id()) }}">
+                        <i class="material-icons right">palette</i>{{ _('Calculate palette') }}</a>
                     <div id="palette">
                         <table class="palette"></table>
                     </div>
                 {% endif %}
-            </aside>
-        </article>
-    </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
+
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/urlify.min.js"></script>
@@ -95,7 +119,6 @@
             $('button[type=submit]').click(function() {
                 $('#overlay, #spinner').show();
             });
-            $('.ff').collapseGroup();
 
             var palette_url;
             function write_palette(url) {
@@ -126,6 +149,19 @@
                         $('.url').attr('href', data.similar_url);
                     }
                 })
+            });
+
+            $('select').material_select();
+            $('.datepicker').pickadate({
+                selectMonths: true,
+                selectYears: 5,
+                format: 'yyyy-mm-dd HH:MM:ss',
+                firstDay: 1,
+                hiddenName: true
+            });
+            $('.modal-trigger').leanModal({
+                dismissible: true,
+                opacity: .2
             });
         })
     </script>

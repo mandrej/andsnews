@@ -1,22 +1,20 @@
 {% extends "base.html" %}
-
+{% block title %}{{ _('Blog') }}{% endblock %}
 {% block menu %}
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
     {% set _author = {'field': 'author', 'title': _('Authors')} %}
-    <ul>
-        <li><a href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a></li>
-        <li>
-            <a class="selected" href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a>
-            <div class="submenu">
-                {% for f in [_tags, _date, _author] %}
-                    <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>
-                    <div id="{{ f.field }}cloud" class="hide"></div>
-                {% endfor %}
-            </div>
-        </li>
-        <li><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></li>
-    </ul>
+    <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+    <li class="active">
+        <a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a>
+{#            <div class="submenu">#}
+{#                {% for f in [_tags, _date, _author] %}#}
+{#                    <a class="{{ f.field }} block collapse" href="/filter/Entry_{{ f.field }}">{{ f.title }} [+]</a>#}
+{#                    <div id="{{ f.field }}cloud" class="hide"></div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+    </li>
+    <li><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
 {% endblock %}
 
 {% block scripts %}

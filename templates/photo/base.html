@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-{% block background %}
-<body class="white">
-{% endblock %}
-
+{% block title %}{{ _('Photos') }}{% endblock %}
 {% block menu %}
     {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
     {% set _date = {'field': 'date', 'title': _('Dates')} %}
@@ -12,19 +9,13 @@
     {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
     {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
     {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
-    <ul>
-        <li>
-            <a class="selected" href="{{ uri_for('photo_all') }}">{{ _('Photos') }}</a>
-            <div class="submenu">
-                {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}
-                    <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>
-                    <div id="{{ f.field }}cloud" class="hide"></div>
-                {% endfor %}
-            </div>
-        </li>
-        <li><a href="{{ uri_for('entry_all') }}">{{ _('Blog') }}</a></li>
-        <li><a href="{{ uri_for('admin_all') }}">{{ _('Administration') }}</a></li>
-    </ul>
+    <li class="active"><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+{#            {% for f in [_tags, _date, _author, _color, _model, _lens, _eqv, _iso] %}#}
+{#                <a class="{{ f.field }} block collapse" href="/filter/Photo_{{ f.field }}">{{ f.title }} [+]</a>#}
+{#                <div id="{{ f.field }}cloud" class="hide"></div>#}
+{#            {% endfor %}#}
+    <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+    <li><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
 {% endblock %}
 
 {% block scripts %}
