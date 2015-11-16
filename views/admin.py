@@ -48,8 +48,9 @@ class Index(BaseHandler):
             hit_ratio = 100 * hits / all
         except ZeroDivisionError:
             hit_ratio = 0
-        data = {'photo_count': Photo.query().order(-Photo.date).count(),
-                'entry_count': Entry.query().order(-Entry.date).count(),
+        data = {'photo_count': Photo.query().count(),
+                'entry_count': Entry.query().count(),
+                'counter_count': Counter.query().count(),
                 'stats': stats,
                 'oldest': oldest,
                 'hit_ratio': hit_ratio}

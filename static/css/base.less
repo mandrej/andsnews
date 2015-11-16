@@ -1,6 +1,12 @@
 @import "swiper.css";
 body {
     background: #ddd;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+main {
+    flex: 1 0 auto;
 }
 header, main, footer {
     padding-left: 240px;
@@ -53,7 +59,7 @@ nav .brand-logo, .footer-copyright { padding: 0 32px; }
     @media only screen and (max-width: 992px) {
         .thumbnail, .blog, .admin { margin: 0 4px 8px 4px !important; }
     }
-    .admin .card-action .col .badge { font-size: 2rem; line-height: 36px; color: @black-trans; }
+    .admin .card-action .col .badge { position: relative; font-size: 2rem; color: @black-trans; }
 }
 
 article, section {
@@ -106,6 +112,15 @@ span.error { font-size: 0.8rem; color: @red; }
 .btn, .btn-flat { padding: 0 1rem; }
 .btn-large i { font-size: 3rem; }
 .card .card-action a { margin-right: 0; }
+@media only screen and (max-width: 992px) {
+    #searchForm {
+        .input-field {
+            label,
+            input[type=search] ~ .mdi-navigation-close,
+            input[type=search] ~ .material-icons { top: 0.8rem; }
+        }
+    }
+}
 
 .alert {
     margin: 1rem 0;
