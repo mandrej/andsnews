@@ -2,7 +2,7 @@
 {% block paging %}
     {% with %}
         {% set name='search' %}
-        {% set phrase=phrase %}
+        {% set phrase=phrase|urlencode() %}
         {% include 'snippets/paging.html' %}
     {% endwith %}
 {% endblock %}

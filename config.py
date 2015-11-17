@@ -1,13 +1,15 @@
+import os
+import sys
 import json
 import logging
+import webapp2
 from timeit import default_timer
 from datetime import datetime, timedelta
-
-import os
-import webapp2
+from urllib import quote as url_quote
 from jinja2.filters import environmentfilter, do_mark_safe, do_truncate
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
+PY2 = sys.version_info[0] == 2
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
@@ -91,6 +93,28 @@ CROPS = {
 ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,
        1000, 1250, 1600, 2000, 2500, 3200, 4000, 5000, 6400]
 LENGTHS = [8, 15, 20, 24, 28, 35, 50, 85, 105, 135, 200, 300, 400, 600]
+
+
+if not PY2:
+    unichr = chr
+    range_type = range
+    text_type = str
+    string_types = (str,)
+    integer_types = (int,)
+
+    iterkeys = lambda d: iter(d.keys())
+    itervalues = lambda d: iter(d.values())
+    iteritems = lambda d: iter(d.items())
+else:
+    unichr = unichr
+    text_type = unicode
+    range_type = xrange
+    string_types = (str, unicode)
+    integer_types = (int, long)
+
+    iterkeys = lambda d: d.iterkeys()
+    itervalues = lambda d: d.itervalues()
+    iteritems = lambda d: d.iteritems()
 
 
 def timeit(f):
@@ -229,6 +253,46 @@ def truncate(string, length=255, killwords=False):
     return do_truncate(string, length, killwords)
 
 
+def unicode_urlencode(obj, charset='utf-8', for_qs=False):
+    """URL escapes a single bytestring or unicode string with the
+    given charset if applicable to URL safe quoting under all rules
+    that need to be considered under all supported Python versions.
+
+    If non strings are provided they are converted to their unicode
+    representation first.
+    """
+    if not isinstance(obj, string_types):
+        obj = text_type(obj)
+    if isinstance(obj, text_type):
+        obj = obj.encode(charset)
+    safe = for_qs and b'' or b'/'
+    rv = text_type(url_quote(obj, safe))
+    if for_qs:
+        rv = rv.replace('%20', '+')
+    return rv
+
+
+def do_urlencode(value):
+    """Escape strings for use in URLs (uses UTF-8 encoding).  It accepts both
+    dictionaries and regular strings as well as pairwise iterables.
+
+    .. versionadded:: 2.7
+    """
+    itemiter = None
+    if isinstance(value, dict):
+        itemiter = iteritems(value)
+    elif not isinstance(value, string_types):
+        try:
+            itemiter = iter(value)
+        except TypeError:
+            pass
+    if itemiter is None:
+        return unicode_urlencode(value)
+    return u'&'.join(unicode_urlencode(k) + '=' +
+                     unicode_urlencode(v, for_qs=True)
+                     for k, v in itemiter)
+
+
 CONFIG = {
     'webapp2_extras.jinja2': {
         'globals': {
@@ -250,6 +314,7 @@ CONFIG = {
             'timesince': timesince_jinja,
             'to_json': to_json,
             'split': split,
+            'urlencode': do_urlencode,
             'truncate': truncate,
         },
         'environment_args': {
