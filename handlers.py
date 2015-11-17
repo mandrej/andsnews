@@ -297,25 +297,30 @@ class SearchPaginator(object):
 
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):
-        kind, field = mem_key.split('_')
-        items = Cloud(mem_key).get_list()
+        try:
+            kind, field = mem_key.split('_')
+        except ValueError:
+            logging.error('VALUEERROR need more than 1 value to unpack %s' % mem_key)
+            self.render_template('snippets/cloud.html', {})
+        else:
+            items = Cloud(mem_key).get_list()
 
-        if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
-            items = sorted(items, key=itemgetter('count'), reverse=True)
+            if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+                items = sorted(items, key=itemgetter('count'), reverse=True)
 
-        if field == 'date':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
-            items = sorted(items, key=itemgetter('name'), reverse=False)
-        elif field == 'color':
-            items = sorted(items, key=itemgetter('order'))
+            if field == 'date':
+                items = sorted(items, key=itemgetter('name'), reverse=True)
+            elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+                items = sorted(items, key=itemgetter('name'), reverse=False)
+            elif field == 'color':
+                items = sorted(items, key=itemgetter('order'))
 
-        self.render_template(
-            'snippets/cloud.html', {
-                'items': items,
-                'link': '%s_all_filter' % kind.lower(),
-                'field_name': field,
-                'filter': {'field': field, 'value': value} if (field and value) else None})
+            self.render_template(
+                'snippets/cloud.html', {
+                    'items': items,
+                    'link': '%s_all_filter' % kind.lower(),
+                    'field_name': field,
+                    'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
 class RenderGraph(BaseHandler):
