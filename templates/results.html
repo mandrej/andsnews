@@ -10,67 +10,65 @@
 
 {% block contents %}
     <section>
-        {% if phrase %}
+        {% if error %}
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="alert white">
+                        <i class="material-icons red-text">error</i>
+                        <p class="title">{{ _('Error') }}</p>
+                        <p>{{ error }}</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
             <h4>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h4>
-        {% else %}
-            <h4>{{ _('Nothing to search for') }}</h4>
-            <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>
+            <p>{{ _('You can use fields') }}: author, tags, year, month {{ _('and logical operators') }}: AND, OR {{ _('for example') }}: &quot;tags:milan AND month:11&quot;</p>
         {% endif %}
+{#        <div class="row">#}
+{#            <div class="col s12 m6 l6">#}
+{#                <div class="alert white">#}
+{#                    <i class="material-icons orange-text">warning</i>#}
+{#                    <p class="title">{{ _('No search results') }}</p>#}
+{#                    <p>{{ _('Please try again') }}</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        {% if phrase %}#}
+{#            #}
+{#        {% else %}#}
+{#            <h4>{{ _('Nothing to search for') }}</h4>#}
+{#            <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>#}
+{#        {% endif %}#}
+
     </section>
-    <ul id="gallery">
-        {% for future in futures %}
-            {% with object=future.get_result() %}
-                {% if object.kind == 'Photo' %}
-                    <a href="{{ uri_for('photo', slug=object.key.string_id()) }}" class="found thumbnail" >
-                        <div class="card waves-effect z-depth-0">
-                            <div class="card-image">
-                                <img src="{{ object.serving_url }}=s400">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title">{{ object.headline }}</span>
-                                <span class="card-author">{{ object.author }},
-                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                {% elif object.kind == 'Entry' %}
-                    <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="found blog">
-                        <div class="card waves-effect z-depth-0">
-                            <div class="card-content">
-                                <span class="card-title">{{ object.headline }}</span>
-                                {{ object.summary }}
-                                <span class="card-author">{{ object.author }},
-                                    {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                {% endif %}
-            {% endwith %}
-        {% else %}
-            {% if error %}
-                <div class="row">
-                    <div class="col s12 m6 l6">
-                        <div class="alert white">
-                            <i class="material-icons red-text">error</i>
-                            <p class="title">{{ _('Error') }}</p>
-                            <p>{{ error }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="row">
-                    <div class="col s12 m6 l6">
-                        <div class="alert white">
-                            <i class="material-icons orange-text">warning</i>
-                            <p class="title">{{ _('No search results') }}</p>
-                            <p>{{ _('Please try again') }}</p>
-                        </div>
-                    </div>
-                </div>
+    <div id="gallery">
+        {% for object in objects %}
+            {% if object.kind == 'Photo' %}
+                {% set url = uri_for('photo', slug=object.key.string_id()) %}
+                {% set cls = 'found thumbnail' %}
+            {% elif object.kind == 'Entry' %}
+                {% set url = uri_for('entry', slug=object.key.string_id()) %}
+                {% set cls = 'found blog' %}
             {% endif %}
 
+            <a{{ {'href': url, 'class': cls}|xmlattr }}>
+                <div class="card waves-effect z-depth-0">
+                    {% if object.kind == 'Photo' %}
+                        <div class="card-image">
+                            <img src="{{ object.serving_url }}=s400">
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        <span class="card-title">{{ object.headline }}</span>
+                        {% if object.kind == 'Entry' %}
+                             {{ object.summary }}
+                        {% endif %}
+                        <span class="card-author">{{ object.author }},
+                            {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
+                        </span>
+                    </div>
+                </div>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}
@@ -85,6 +83,15 @@
                 width: 300,
                 gutter: 0
             });
+{#            $container.infinitescroll({#}
+{#                binder: $(window),#}
+{#                itemSelector: '.found',#}
+{#                nextSelector: '.next',#}
+{#                navSelector: ".pagination",#}
+{#                loading: { msg: $('#dummy') }#}
+{#            }, function(data) {#}
+{#                $container.gridalicious('append', data);#}
+{#            });#}
         });
     </script>
 {% endblock %}

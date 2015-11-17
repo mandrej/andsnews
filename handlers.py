@@ -171,11 +171,11 @@ class Find(BaseHandler):
         find = self.request.get('find').strip()
         page = int(self.request.get('page', 1))
         paginator = SearchPaginator(find, per_page=PER_PAGE)
-        futures, number_found, has_next, error = paginator.page(page)
+        objects, number_found, has_next, error = paginator.page(page)
 
         self.render_template(
             'results.html', {
-                'futures': futures, 'phrase': find, 'number_found': number_found,
+                'objects': objects, 'phrase': find, 'number_found': number_found,
                 'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
 
 
@@ -265,7 +265,7 @@ class SearchPaginator(object):
         self.cache = memcache.get(self.id) or {}
 
     def page(self, num):
-        futures, has_next, number_found, error = [], False, 0, None
+        objects, has_next, number_found, error = [], False, 0, None
 
         if self.querystring:
             try:
@@ -285,14 +285,14 @@ class SearchPaginator(object):
             else:
                 number_found = found.number_found
                 keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
-                futures = ndb.get_multi_async(keys)
+                objects = ndb.get_multi(keys)
 
                 if found.cursor is not None:
                     has_next = True
                     self.cache[num + 1] = found.cursor.web_safe_string
                     memcache.set(self.id, self.cache, self.timeout)
 
-        return futures, number_found, has_next, error
+        return [x for x in objects if x is not None], number_found, has_next, error
 
 
 class RenderCloud(BaseHandler):
