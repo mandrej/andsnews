@@ -112,6 +112,9 @@ span.error { font-size: 0.8rem; color: @red; }
 .btn, .btn-flat { padding: 0 1rem; }
 .btn-large i { font-size: 3rem; }
 .card .card-action a { margin-right: 0; }
+.side-nav a {
+    font-size: 1.35rem;
+}
 @media only screen and (max-width: 992px) {
     #searchForm {
         .input-field {
@@ -119,6 +122,16 @@ span.error { font-size: 0.8rem; color: @red; }
             input[type=search] ~ .mdi-navigation-close,
             input[type=search] ~ .material-icons { top: 0.8rem; }
         }
+    }
+}
+
+@media only screen and (min-width: 993px) {
+    .drag-target {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        top: 0;
+        z-index: 998;
     }
 }
 
