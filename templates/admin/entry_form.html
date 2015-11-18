@@ -92,7 +92,7 @@
 
                         <div class="row">
                             <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
-                            <div class="col s4"></div>
+                            <div class="col s4">&nbsp;</div>
                             <div class="col s4 right-align">
                                 <button class="btn waves-effect orange" type="submit">
                                     {{ _('done') }}<i class="material-icons right">send</i>
@@ -120,6 +120,9 @@
             $('#tags').multicomplete({
                 minLength: 2,
                 source: '/complete/Entry_tags'
+            });
+            $('button[type=submit]').click(function() {
+                $('.progress').show();
             });
 
             $('select').material_select();

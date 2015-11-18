@@ -82,9 +82,12 @@ article {
         &.right { margin-left: 1rem; }
         .legend { margin: 0 0 1rem 0; }
     }
-    .exif a { color: #fff; }
+    .exif .color-invert {
+        filter: invert(100%);
+         -webkit-filter: invert(100%);
+    }
 }
-p .material-icons { vertical-align: bottom; }
+p .material-icons, a .material-icons { vertical-align: bottom; }
 
 .progress {
     position: absolute;
