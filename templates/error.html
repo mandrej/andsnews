@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ error.status|default("500 Internal Server Error") }}{% endblock %}
+{% block title %}{{ error.status|default("500 Server Error") }}{% endblock %}
 
 {% set attr = {
     'viewBox': '0 -50 100 100',

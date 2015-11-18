@@ -1,9 +1,9 @@
 {% extends "entry/base.html" %}
-{% block title %}{{ object.headline }}{% endblock %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
 
 {% block contents %}
     <article>
+        <h4>{{ object.headline }}</h4>
         <p>
             <a href="{{ uri_for('entry_all_filter', field='author', value=object.author) }}"
                 title="{{ _("author's blogs") }}">{{ object.author }}</a>,

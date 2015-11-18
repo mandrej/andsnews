@@ -24,7 +24,7 @@
     <header class="navbar-fixed">
         <nav class="grey darken-3">
             <div class="nav-wrapper">
-                <a href="/" class="brand-logo">{{ self.title() }}</a>
+                <a href="{{ uri_for('start') }}" class="brand-logo">{{ self.title() }}</a>
                 <ul class="pagination red">
                     {% block paging %}{% endblock %}
                 </ul>

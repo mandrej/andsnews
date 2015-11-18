@@ -1,5 +1,4 @@
 {% extends "admin/base.html" %}
-{% block title %}{{ _('Photos') }}{% endblock %}
 {% block paging %}
     {% with name='photo_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
@@ -9,7 +8,7 @@
         <div class="nav-wrapper">
             <div class="col s12">
                 <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
-                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+                <a href="#!" class="breadcrumb">{{ _('Photos') }}</a>
             </div>
         </div>
     </nav>
@@ -37,7 +36,7 @@
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
-            <div class="col s2 valign middle center-align">
+            <div class="col s2 valign middle right-align">
                 <a href="{{ uri_for('photo_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
                     <i class="material-icons">add</i>
                 </a>

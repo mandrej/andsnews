@@ -1,5 +1,4 @@
 {% extends "admin/base.html" %}
-{% block title %}Counters{% endblock %}
 {% block paging %}
     {% with name='counter_admin' %}{% include 'snippets/paging.html' %}{% endwith %}
 {% endblock %}
@@ -9,25 +8,26 @@
         <div class="nav-wrapper">
             <div class="col s12">
                 <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
-                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+                <a href="#!" class="breadcrumb">Counters</a>
             </div>
         </div>
     </nav>
     <section>
-        <p>
-            {% for name in ['Photo', 'Entry'] %}
-                {% set selected = name == filter.value if filter else False %}
-                <a class="{{ ['t6', 'selected' if selected]|css_classes }}"
-                   href="{{ uri_for('counter_admin_filter', field='forkind', value=name) }}">{{ name|lower }}</a>
-            {% endfor %}
-        </p>
-        <p>
-            {% for name in ['tags', 'date', 'author', 'color', 'model', 'lens', 'eqv', 'iso'] %}
-                {% set selected = name == filter.value if filter else False %}
-                <a class="{{ ['t4', 'selected' if selected]|css_classes }}"
-                   href="{{ uri_for('counter_admin_filter', field='field', value=name) }}">{{ name }}</a>
-            {% endfor %}
-        </p>
+        <div class="row valign-wrapper">
+            <div class="col s12">
+                {% for name in ['Photo', 'Entry'] %}
+                    {% set selected = name == filter.value if filter else False %}
+                    <a class="{{ ['t6', 'selected' if selected]|css_classes }}"
+                       href="{{ uri_for('counter_admin_filter', field='forkind', value=name) }}">{{ name|lower }}</a>
+                {% endfor %}
+                <div class="divider white"></div>
+                {% for name in ['tags', 'date', 'author', 'color', 'model', 'lens', 'eqv', 'iso'] %}
+                    {% set selected = name == filter.value if filter else False %}
+                    <a class="{{ ['t4', 'selected' if selected]|css_classes }}"
+                       href="{{ uri_for('counter_admin_filter', field='field', value=name) }}">{{ name }}</a>
+                {% endfor %}
+            </div>
+        </div>
 
         <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
             <input name="token" type="hidden" value="{{ token }}"/>

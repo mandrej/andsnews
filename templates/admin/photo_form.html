@@ -1,5 +1,4 @@
 {% extends "admin/base.html" %}
-{% block title %}{{ _('Add new / change existing photo') }}{% endblock %}
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
@@ -8,7 +7,7 @@
             <div class="col s12">
                 <a href="{{ uri_for('admin_all') }}" class="breadcrumb">{{ _('Administration') }}</a>
                 <a href="{{ uri_for('photo_admin') }}" class="breadcrumb">{{ _('Photos') }}</a>
-                <a href="#!" class="breadcrumb">{{ self.title() }}</a>
+                <a href="#!" class="breadcrumb">{{ _('Add new / change existing photo') }}</a>
             </div>
         </div>
     </nav>
