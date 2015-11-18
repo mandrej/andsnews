@@ -30,7 +30,6 @@ nav.red { position: relative !important; }
 .pagination li.disabled a { color: #000 !important; }
 main > .breadcrumb {
     padding-left: 32px;
-    //background: transparent;
     a {
         color: @black-trans;
         &:before { color: @black-trans; }
@@ -39,8 +38,28 @@ main > .breadcrumb {
 }
 
 #searchForm input { margin: 0; }
+nav .nav-wrapper i {
+    font-size: 2.7rem;
+    height: 56px;
+    line-height: 56px;
+}
+@media only screen and (min-width: 601px) {
+    nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+        height: 64px;
+        line-height: 64px;
+    }
+}
+.nav-wrapper .pagination {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: auto;
+    li { padding: 0; }
+}
 
 nav .brand-logo, .footer-copyright { padding: 0 32px; }
+nav .button-collapse i { padding: 0 1rem; }
+
 .card {
     margin: 0;
     display: block;
@@ -50,7 +69,7 @@ nav .brand-logo, .footer-copyright { padding: 0 32px; }
         .card-author { display: block; padding-top: 0.5rem; text-align: right; font-size: 0.8rem; line-height: normal; }
         .row { padding: 0.5rem 0; }
     }
-
+    .card-image .card-title { padding: 1rem; background: rgba(0, 0, 0, 0.5); font-weight: 400; }
 }
 #gallery {
     margin: 32px 16px 0 16px;
@@ -82,9 +101,12 @@ article {
         &.right { margin-left: 1rem; }
         .legend { margin: 0 0 1rem 0; }
     }
-    .exif .color-invert {
-        filter: invert(100%);
-         -webkit-filter: invert(100%);
+    .exif {
+        a { color: #000; font-weight: 400; }
+        .color-invert {
+            filter: invert(100%);
+            -webkit-filter: invert(100%);
+        }
     }
 }
 p .material-icons, a .material-icons { vertical-align: bottom; }

@@ -15,6 +15,7 @@
                     data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
                     <div class="card-image zoom">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                        <span class="card-title">{{ object.headline }}</span>
                     </div>
                     <div class="card-content exif" style="background-color: {{ object.hex }};">
                         {% include "photo/exif.html" %}
@@ -59,7 +60,7 @@
                     title = slide.data('title');
 
                 window.history.replaceState(location.pathname, '', slug);
-                $('.nav-wrapper > .brand-logo').text(title);
+{#                $('.nav-wrapper > .brand-logo').text(title);#}
                 $('html, body').animate({scrollTop: 0});
 
                 $('.zoom').trigger('zoom.destroy');

@@ -24,8 +24,8 @@
     <header class="navbar-fixed">
         <nav class="grey darken-3">
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo">{{ self.title() }}</a>
-                <ul class="pagination red hide-on-med-and-down" style="position: fixed; top: 0; right: 0;">
+                <a href="/" class="brand-logo">{{ self.title() }}</a>
+                <ul class="pagination red">
                     {% block paging %}{% endblock %}
                 </ul>
                 <div class="progress">
@@ -50,7 +50,7 @@
                         </form>
                     {% endblock %}
                 </div>
-                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                <a href="#" data-activates="nav-mobile" class="button-collapse red"><i class="material-icons">menu</i></a>
             </div>
         </nav>
     </header>
