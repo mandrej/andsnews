@@ -80,7 +80,6 @@ CROPS = {
     "Canon PowerShot A80": 4.6,
     "Canon IXUS 115 HS": 5.6,
     "google Nexus S": 8.8,
-    # "cell phone": 7.0  default
 }
 
 ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,

@@ -383,7 +383,7 @@ class Photo(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
-    crop_factor = ndb.FloatProperty(default=1.6)
+    crop_factor = ndb.FloatProperty(default=7.0)  # cell phone
     # calculated
     eqv = ndb.IntegerProperty()
     # RGB [86, 102, 102]
