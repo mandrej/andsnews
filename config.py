@@ -61,7 +61,7 @@ COLORS = {}
 for x in HUE + LUM:
     COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
 
-# math.sqrt(36**2 + 24**2) = 43.266615305567875 crop = 43.266615305567875/(0.28*25.4)
+# (math.sqrt(36**2 + 24**2))/25.4 = 1.703410051 (36x24 diagonal in) crop = 1.703410051/0.28 (sensor diagonal)
 CROPS = {
     "Contax 137 MD Quartz": 1.0,
     "Canon EOS 5D Mark III": 1.0,
@@ -79,15 +79,8 @@ CROPS = {
     "OLYMPUS IMAGING CORP. E-P1": 2.0,
     "Canon PowerShot A80": 4.6,
     "Canon IXUS 115 HS": 5.6,
-    "PENTACON Luxmedia 8403": 6.0,
-    "SONY DSC-T7": 6.0,
-    "SONY DSC-W110": 6.0,
-    "SAMSUNG SM-T520": 6.1,
-    "OLYMPUS IMAGING CORP. IR-500": 6.6,
-    "SAMSUNG GT-C3530": 7.0,
-    "LGE Nexus 4": 7.6,
-    "LGE Nexus 5": 7.6,
-    "google Nexus S": 8.8
+    "google Nexus S": 8.8,
+    # "cell phone": 7.0  default
 }
 
 ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,

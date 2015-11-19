@@ -198,7 +198,7 @@ class Edit(BaseHandler):
                 try:
                     form.crop_factor.data = CROPS[obj.model]
                 except KeyError:
-                    form.crop_factor.data = 1.6
+                    form.crop_factor.data = 7.0  # cell phone
 
         self.render_template('admin/photo_form.html', {
             'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})
