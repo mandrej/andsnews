@@ -195,10 +195,11 @@ class Edit(BaseHandler):
         if form is None:
             form = EditForm(obj=obj)
             if obj.model and obj.focal_length:
-                try:
-                    form.crop_factor.data = CROPS[obj.model]
-                except KeyError:
-                    pass
+                if obj.crop_factor is None:
+                    try:
+                        form.crop_factor.data = CROPS[obj.model]
+                    except KeyError:
+                        pass
 
         self.render_template('admin/photo_form.html', {
             'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})
