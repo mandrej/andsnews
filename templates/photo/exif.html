@@ -1,4 +1,6 @@
-<div class="row color-invert" style="color: {{ object.hex }};">
+{% set text_color = '#fff' if object.hls[1] < 50 else '#000' %}
+
+<div class="row" style="color: {{ text_color }};">
     <div class="col s12 m6">
         <div class="row">
             <div class="col s12">

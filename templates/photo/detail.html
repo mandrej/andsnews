@@ -11,8 +11,7 @@
     <article class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="card swiper-slide cover"
-                    data-title="{{ object.headline }}" data-dim="{{ object.dim }}" data-ratio="{{ object.ratio }}">
+                <div id="{{ object.key.string_id() }}" class="card swiper-slide cover">
                     <div class="card-image zoom">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
                         <span class="card-title">{{ object.headline }}</span>
@@ -56,11 +55,9 @@
             }
             function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
-                    slug = slide[0].id,
-                    title = slide.data('title');
+                    slug = slide[0].id;
 
                 window.history.replaceState(location.pathname, '', slug);
-{#                $('.nav-wrapper > .brand-logo').text(title);#}
                 $('html, body').animate({scrollTop: 0});
 
                 $('.zoom').trigger('zoom.destroy');
