@@ -66,7 +66,7 @@ def get_exif(buff):
     'EXIF Flash': (0x9209) Short=Flash did not fire @ 364,
         'EXIF FNumber': (0x829D) Ratio=16/5 @ 488,
         'EXIF FocalLength': (0x920A) Ratio=30 @ 568,
-    'EXIF FocalLengthIn35mmFilm': (0xA405) Short=45 @ 448,
+        'EXIF FocalLengthIn35mmFilm': (0xA405) Short=45 @ 448,
     'EXIF ImageUniqueID': (0xA420) ASCII=3030383036373531808E045635363034 @ 576,
         'EXIF ISOSpeedRatings': (0x8827) Short=100 @ 256,
     'EXIF MaxApertureValue': (0x9205) Ratio=97347/32767 @ 560,
@@ -411,7 +411,7 @@ class Photo(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
-    crop_factor = ndb.FloatProperty(default=7.0)  # cell phone
+    crop_factor = ndb.FloatProperty()
     # calculated
     eqv = ndb.IntegerProperty()
     # RGB [86, 102, 102]

@@ -11,6 +11,8 @@ from colormath.color_diff import delta_e_cmc
 from colormath.color_conversions import convert_color
 
 logging.getLogger("colormath").setLevel(logging.WARNING)
+logging.getLogger("color_objects").setLevel(logging.WARNING)
+logging.getLogger("color_conversions").setLevel(logging.WARNING)
 
 Color = namedtuple('Color', ['value', 'prominence'])
 Palette = namedtuple('Palette', 'colors bgcolor')

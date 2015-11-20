@@ -79,7 +79,15 @@ CROPS = {
     "OLYMPUS IMAGING CORP. E-P1": 2.0,
     "Canon PowerShot A80": 4.6,
     "Canon IXUS 115 HS": 5.6,
-    "google Nexus S": 8.8,
+    "PENTACON Luxmedia 8403": 6.0,
+    "SONY DSC-T7": 6.0,
+    "SONY DSC-W110": 6.0,
+    "SAMSUNG SM-T520": 6.1,
+    "OLYMPUS IMAGING CORP. IR-500": 6.6,
+    "SAMSUNG GT-C3530": 7.0,
+    "LGE Nexus 4": 7.6,
+    "LGE Nexus 5": 7.6,
+    "google Nexus S": 8.8
 }
 
 ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,

@@ -25,10 +25,6 @@
                 {% if upload_url %}
                     <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
                         <input name="token" type="hidden" value="{{ token }}"/>
-                        {{ m.form_row(form.headline, class='validate') }}
-                        {{ m.form_row(form.slug, class='validate') }}
-                        {{ m.form_row(form.tags) }}
-                        {{ m.form_row(form.author, class='browser-default') }}
                         <p>
                             <div class="file-field input-field">
                                 <div class="btn">
@@ -40,6 +36,10 @@
                                 </div>
                             </div>
                         </p>
+                        {{ m.form_row(form.headline, class='validate') }}
+                        {{ m.form_row(form.slug, class='validate') }}
+                        {{ m.form_row(form.tags) }}
+                        {{ m.form_row(form.author, class='browser-default') }}
                         <p class="right-align">
                             <span class="required left">{{ _('Required field') }}</span>
                             <button class="btn waves-effect orange" type="submit">
@@ -66,7 +66,7 @@
                         </div>
                         <div class="row">
                             <div class="col s4">{{ m.form_row(form.focal_length) }}</div>
-                            <div class="col s4">{{ m.form_row(form.crop_factor) }}</div>
+                            <div class="col s4">{{ m.form_row(form.crop_factor, class='validate') }}</div>
                             <div class="col s4">{{ m.form_row(form.date, type='date', class='datepicker') }}</div>
                         </div>
                         <div class="row">

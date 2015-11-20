@@ -25,7 +25,7 @@ header, main, footer {
     border: none;
     li { padding: 0; }
 }
-nav.red { position: relative !important; }
+nav nav { position: relative !important; }
 .pagination li a { color: #fff !important; }
 .pagination li.disabled a { color: #000 !important; }
 main > .breadcrumb {
@@ -59,6 +59,7 @@ nav .nav-wrapper i {
 
 nav .brand-logo, .footer-copyright { padding: 0 32px; }
 nav .button-collapse i { padding: 0 1rem; }
+.footer-copyright .material-icons { vertical-align: middle; }
 
 .card {
     margin: 0;
@@ -143,7 +144,9 @@ span.error { font-size: 0.8rem; color: @red; }
         }
     }
 }
-
+.modal .modal-content {
+    padding: 1rem;
+}
 @media only screen and (min-width: 993px) {
     .drag-target {
         height: 100%;
