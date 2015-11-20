@@ -22,10 +22,10 @@
 	{% endblock %}
 
     <header class="navbar-fixed">
-        <nav style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCI+CjxmaWx0ZXIgaWQ9Im4iIHg9IjAiIHk9IjAiPgo8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC43IiBudW1PY3RhdmVzPSIxMCIgc3RpdGNoVGlsZXM9InN0aXRjaCI+PC9mZVR1cmJ1bGVuY2U+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwMCI+PC9yZWN0Pgo8cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsdGVyPSJ1cmwoI24pIiBvcGFjaXR5PSIwLjQiPjwvcmVjdD4KPC9zdmc+');">
+        <nav class="grey darken-3">
             <div class="nav-wrapper">
                 <a href="{{ uri_for('start') }}" class="brand-logo">{{ self.title() }}</a>
-                <ul class="pagination deep-orange">
+                <ul class="pagination orange accent-2">
                     {% block paging %}{% endblock %}
                 </ul>
                 <div class="progress">
@@ -33,7 +33,7 @@
                 </div>
                 <div id="nav-mobile" class="side-nav collapsible fixed grey">
                     <ul>
-                        <li><nav class="deep-orange"><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
+                        <li><nav class="orange accent-2"><a href="{{ uri_for('start') }}" class="brand-logo grey-text text-darken-3">ANDрејевићи</a></nav></li>
                         {% block menu %}
                             <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
                             <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
@@ -50,7 +50,7 @@
                         </form>
                     {% endblock %}
                 </div>
-                <a href="#" data-activates="nav-mobile" class="button-collapse deep-orange"><i class="material-icons">menu</i></a>
+                <a href="#" data-activates="nav-mobile" class="button-collapse orange accent-2"><i class="material-icons">menu</i></a>
             </div>
         </nav>
     </header>
