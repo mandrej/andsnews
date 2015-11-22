@@ -6,7 +6,6 @@
         {% include 'snippets/paging.html' %}
     {% endwith %}
 {% endblock %}
-{% block modals %}{% endblock %}
 
 {% block contents %}
     <section>
@@ -24,21 +23,8 @@
             <h4>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h4>
             <p>{{ _('You can use fields') }}: author, tags, year, month {{ _('and logical operators') }}: AND, OR {{ _('for example') }}: &quot;tags:milan AND month:11&quot;</p>
         {% endif %}
-{#        <div class="row">#}
-{#            <div class="col s12 m6 l6">#}
-{#                <div class="alert white">#}
-{#                    <i class="material-icons orange-text">warning</i>#}
-{#                    <p class="title">{{ _('No search results') }}</p>#}
-{#                    <p>{{ _('Please try again') }}</p>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        {% if phrase %}#}
-{#            #}
-{#        {% else %}#}
 {#            <h4>{{ _('Nothing to search for') }}</h4>#}
 {#            <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>#}
-{#        {% endif %}#}
 
     </section>
     <div id="gallery">
@@ -83,15 +69,15 @@
                 width: 300,
                 gutter: 0
             });
-{#            $container.infinitescroll({#}
-{#                binder: $(window),#}
-{#                itemSelector: '.found',#}
-{#                nextSelector: '.next',#}
-{#                navSelector: ".pagination",#}
-{#                loading: { msg: $('#dummy') }#}
-{#            }, function(data) {#}
-{#                $container.gridalicious('append', data);#}
-{#            });#}
+            $container.infinitescroll({
+                binder: $(window),
+                itemSelector: '.found',
+                nextSelector: '.next',
+                navSelector: ".pagination",
+                loading: { msg: $('#dummy') }
+            }, function(data) {
+                $container.gridalicious('append', data);
+            });
         });
     </script>
 {% endblock %}
