@@ -11,4 +11,7 @@ pytz
 simplejson
 wtforms
 decorator.py
+static/font
+static/js
+static/sass
 *.pyc

@@ -10,7 +10,6 @@
     <meta http-equiv="Content-Security-Policy" content="script-src https: 'self' 'unsafe-inline' 'unsafe-eval'">
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
 	<title>{% block title %}ANDрејевићи{% endblock %}</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="/static/css/base.css" rel="stylesheet">
@@ -22,18 +21,18 @@
 	{% endblock %}
 
     <header class="navbar-fixed">
-        <nav class="grey darken-3">
+        <nav>
             <div class="nav-wrapper">
                 <a href="{{ uri_for('start') }}" class="brand-logo">{{ self.title() }}</a>
-                <ul class="pagination red">
+                <ul class="pagination">
                     {% block paging %}{% endblock %}
                 </ul>
                 <div class="progress">
                     <div class="indeterminate"></div>
                 </div>
-                <div id="nav-mobile" class="side-nav collapsible fixed grey">
+                <div id="nav-mobile" class="side-nav collapsible fixed">
                     <ul>
-                        <li><nav class="red"><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
+                        <li><nav><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
                         {% block menu %}
                             <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
                             <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
@@ -50,14 +49,14 @@
                         </form>
                     {% endblock %}
                 </div>
-                <a href="#" data-activates="nav-mobile" class="button-collapse red"><i class="material-icons">menu</i></a>
+                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>
         </nav>
     </header>
 
     <main>{% block contents %}{% endblock %}</main>
 
-    <footer class="page-footer grey darken-1 hide-on-med-and-down">
+    <footer class="page-footer hide-on-med-and-down">
         <div class="footer-copyright">
             <div class="row">
                 <div class="col l8">
@@ -67,7 +66,7 @@
                     <form id="langs" action="/setlang" method="post">
                         {% for code, lang in all_languages %}
                             <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                                'class': 'btn btn-flat waves-effect grey' if code == language_code else 'btn btn-flat waves-effect grey darken-2',
+                                'class': 'btn btn-flat waves-effect disabled' if code == language_code else 'btn btn-flat waves-effect',
                                 'title': lang}|xmlattr }}>{{ language(code) }}</button>
                         {% endfor %}
                     </form>
@@ -78,7 +77,7 @@
 
     {% block scripts %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+        <script src="/static/js/bin/materialize.min.js"></script>
         <script src="/static/scripts/jquery.grid-a-licious.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>
         <script src="/static/scripts/swiper.jquery.min.js"></script>

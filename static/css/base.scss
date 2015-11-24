@@ -1,0 +1,363 @@
+@charset "UTF-8";
+
+// Mixins
+@import "../sass/components/prefixer";
+@import "../sass/components/mixins";
+@import "../sass/components/color";
+
+// Variables
+@import "theme";
+//@import "../sass/components/variables";
+
+// Reset
+@import "../sass/components/normalize";
+
+// components
+@import "../sass/components/global";
+@import "../sass/components/icons-material-design";
+@import "../sass/components/grid";
+@import "../sass/components/navbar";
+@import "../sass/components/roboto";
+@import "../sass/components/typography";
+@import "../sass/components/cards";
+@import "../sass/components/toast";
+@import "../sass/components/tabs";
+@import "../sass/components/tooltip";
+@import "../sass/components/buttons";
+@import "../sass/components/dropdown";
+@import "../sass/components/waves";
+@import "../sass/components/modal";
+@import "../sass/components/collapsible";
+@import "../sass/components/chips";
+@import "../sass/components/materialbox";
+@import "../sass/components/form";
+@import "../sass/components/table_of_contents";
+@import "../sass/components/sideNav";
+@import "../sass/components/preloader";
+@import "../sass/components/slider";
+@import "../sass/components/date_picker/default.scss";
+@import "../sass/components/date_picker/default.date.scss";
+@import "../sass/components/date_picker/default.time.scss";
+
+@import "swiper";
+
+$body-bg-color: color("grey", "lighten-2");
+$navbar-bg-color: color("grey", "darken-3");
+$action-bg-color: color("grey", "lighten-1");
+
+body {
+  background-color: $body-bg-color;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+header, main, footer {
+  padding-left: 240px;
+  @media #{$medium-and-down} {
+    padding-left: 0;
+  }
+}
+
+main {
+  flex: 1 0 auto;
+  & > .breadcrumb {
+    padding-left: 32px;
+    a {
+      color: $off-black;
+      &:before {
+        color: $off-black;
+      }
+      &:last-child {
+        color: $off-black;
+      }
+    }
+  }
+}
+
+.side-nav.collapsible {
+  background-color: $sidenav-bg-color;
+  border: none;
+  li {
+    padding: 0;
+  }
+}
+
+header > nav {
+  background-color: $navbar-bg-color;
+  .button-collapse {
+    background-color: $primary-color;
+  }
+  nav {
+    background-color: $primary-color;
+    position: relative !important;
+  }
+}
+
+.pagination {
+  background-color: $primary-color;
+  li {
+    a {
+      color: #fff !important;
+    }
+  }
+  &.disabled {
+    a {
+      color: #000 !important;
+    }
+  }
+}
+
+#searchForm input {
+  margin: 0;
+}
+
+nav .nav-wrapper i {
+  font-size: 2.7rem;
+  height: 56px;
+  line-height: 56px;
+  @media #{$medium-and-up} {
+    height: 64px;
+    line-height: 64px;
+  }
+}
+
+.nav-wrapper .pagination {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: auto;
+  li {
+    padding: 0;
+  }
+}
+
+nav .brand-logo, .footer-copyright {
+  padding: 0 32px;
+}
+
+nav .button-collapse i {
+  padding: 0 1rem;
+}
+
+.footer-copyright .material-icons {
+  vertical-align: middle;
+}
+
+.card {
+  margin: 0;
+  display: block;
+  .card-action, .card-content {
+    padding: 1rem;
+    .card-title {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: normal;
+    }
+    .card-author {
+      display: block;
+      padding-top: 0.5rem;
+      text-align: right;
+      font-size: 0.8rem;
+      line-height: normal;
+    }
+  }
+  .card-image .card-title {
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
+  }
+}
+
+.admin .card-content .row {
+  padding: 0.5rem 0;
+}
+
+#gallery {
+  margin: 32px 16px 0 16px;
+  @media #{$medium-and-down} {
+    margin: 8px 4px 0;
+  }
+  .thumbnail, .blog, .admin {
+    display: block;
+    margin: 0 16px 32px 16px !important;
+    color: $off-black;
+    @media #{$medium-and-down} {
+      margin: 0 4px 8px 4px !important;
+    }
+  }
+  .admin .card-action {
+    background-color: $action-bg-color;
+  }
+  .admin .card-action .col .badge {
+    position: relative;
+    font-size: 2rem;
+    color: $off-black;
+  }
+}
+
+article, section {
+  margin: 32px !important;
+  @media #{$medium-and-down} {
+    margin: 8px !important;
+  }
+  table {
+    margin: 0 -0.5rem;
+    td, th {
+      padding: 0.5rem;
+    }
+  }
+}
+
+article {
+  table {
+    width: auto;
+    td {
+      vertical-align: top;
+    }
+  }
+  h4 {
+    clear: both;
+  }
+  figure {
+    margin: 0;
+    &.left {
+      margin-right: 1rem;
+    }
+    &.right {
+      margin-left: 1rem;
+    }
+    .legend {
+      margin: 0 0 1rem 0;
+    }
+  }
+  .exif a {
+    color: inherit;
+    font-weight: 400;
+  }
+}
+
+p .material-icons, a .material-icons {
+  vertical-align: bottom;
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  background-color: $primary-color;
+  height: 2px;
+  display: none;
+  .indeterminate {
+    background-color: $navbar-bg-color;
+  }
+}
+
+label.required {
+  color: $primary-color;
+}
+
+span.required {
+  color: $primary-color;
+  line-height: 36px;
+}
+
+span.error {
+  font-size: 0.8rem;
+  color: $primary-color;
+}
+
+.dot {
+  border-style: solid;
+  border-width: 1rem;
+  line-height: 0;
+  td & {
+    display: inline-block;
+  }
+}
+
+.row {
+  margin: 0 -0.75rem;
+}
+
+.btn, .btn-flat {
+  padding: 0 1rem;
+}
+
+.btn-floating {
+  padding: 0;
+}
+
+.btn-large i {
+  font-size: 3rem;
+}
+
+.card .card-action a {
+  margin-right: 0;
+}
+
+.side-nav a {
+  font-size: 1.35rem;
+}
+
+@media #{$small-and-down} {
+  #searchForm {
+    .input-field {
+      label,
+      input[type=search] ~ .mdi-navigation-close,
+      input[type=search] ~ .material-icons {
+        top: 0.8rem;
+      }
+    }
+  }
+}
+
+.modal .modal-content {
+  padding: 1rem;
+}
+
+@media #{$large-and-up} {
+  .drag-target {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    z-index: 998;
+  }
+}
+
+.alert {
+  margin: 1rem 0;
+  min-height: 7rem;
+  padding-left: 6rem;
+  position: relative;
+  .title {
+    margin: 0;
+    padding: 1rem 0 0;
+    font-size: 1.4rem;
+  }
+  .material-icons {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 4rem;
+    line-height: 6rem;
+  }
+}
+
+.ui-widget-content {
+  background-color: #fff !important;
+}
+
+.ui-menu .ui-menu-item {
+  list-style-image: none !important;
+}
+
+.ui-helper-hidden-accessible {
+  display: none !important;
+  visibility: hidden !important;
+}
