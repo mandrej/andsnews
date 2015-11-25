@@ -11,38 +11,38 @@ mapreduce:
       - name: shard_count
         default: 4
 
-- name: Calculate photo palette
-  mapper:
-    input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.background.calculate_palette
-    params:
-      - name: entity_kind
-        default: models.Photo
-      - name: processing_rate
-        default: 1
-      - name: shard_count
-        default: 4
-
-- name: Calculate photo dimension
-  mapper:
-    input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: views.background.calculate_dimension
-    params:
-      - name: entity_kind
-        default: models.Photo
-      - name: processing_rate
-        default: 1
-      - name: shard_count
-        default: 4
-
-#- name: Current fix
+#- name: Calculate photo palette
 #  mapper:
 #    input_reader: mapreduce.input_readers.DatastoreInputReader
-#    handler: views.background.current_fix
+#    handler: views.background.calculate_palette
 #    params:
 #      - name: entity_kind
 #        default: models.Photo
 #      - name: processing_rate
-#        default: 50
+#        default: 1
 #      - name: shard_count
 #        default: 4
+
+#- name: Calculate photo dimension
+#  mapper:
+#    input_reader: mapreduce.input_readers.DatastoreInputReader
+#    handler: views.background.calculate_dimension
+#    params:
+#      - name: entity_kind
+#        default: models.Photo
+#      - name: processing_rate
+#        default: 1
+#      - name: shard_count
+#        default: 4
+
+- name: Current fix
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: views.background.current_fix
+    params:
+      - name: entity_kind
+        default: models.Photo
+      - name: processing_rate
+        default: 50
+      - name: shard_count
+        default: 4

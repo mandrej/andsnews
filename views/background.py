@@ -24,8 +24,8 @@ def current_fix(entity):
     if entity.focal_length and entity.crop_factor:
         value = int(entity.focal_length * entity.crop_factor)
         entity.eqv = rounding(value, LENGTHS)
-    if entity.iso:
-        value = int(entity.iso)
-        entity.iso = rounding(value, ASA)
+    # if entity.iso:
+    #     value = int(entity.iso)
+    #     entity.iso = rounding(value, ASA)
 
     yield op.db.Put(entity)

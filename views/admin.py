@@ -183,7 +183,16 @@ JOBS = {
             "entity_kind": "models.Photo",
         },
         "shards": 4
-    }
+    },
+    "fix": {
+        "job_name": "current_fix",
+        "handler_spec": "views.background.current_fix",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
+    },
 }
 
 
