@@ -29,14 +29,14 @@ handlers:
   upload: static/images/favicon.ico
   mime_type: image/x-icon
 
-- url: /static/css/(.*)\.less
-  static_files: static/css/\1.less
-  upload: static/css/.*.less
+- url: /static/css/(.*\.(less|scss))$
+  static_files: static/css/\1
+  upload: static/css/.*\.(less|scss)$
   mime_type: text/css
 
-- url: /static/(.*)\.map
-  static_files: static/\1.map
-  upload: static/.*.map
+- url: /static/css/(.*)\.map
+  static_files: static/css/\1.map
+  upload: static/css/.*.map
   mime_type: application/json
 
 - url: /static
