@@ -64,9 +64,22 @@
                 }
             }
             function zoomify() {
-                $('.card-image').each(function () {
-                    new RTP.PinchZoom($(this));
-                });
+                if (is_touch_device()) {
+                    $('.card-image').each(function () {
+                        if (!$(this).parents('.pinch-zoom-container').length) {
+                            new RTP.PinchZoom($(this), {});
+                        }
+                    });
+                } else {
+                    $('.card-image').each(function () {
+                        if (!$(this).children('.zoomImg').length) {
+                            $(this).zoom({
+                                on: 'click',
+                                duration: 300
+                            });
+                        }
+                    });
+                }
             }
 
             function adjastView(sw) {
@@ -76,13 +89,13 @@
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
 
-                if (!is_touch_device()) {
-                    $('.card-image').trigger('zoom.destroy');
-                    slide.find('.card-image').zoom({
-                        on: 'click',
-                        duration: 300
-                    });
-                }
+{#                if (!is_touch_device()) {#}
+{#                    $('.card-image').trigger('zoom.destroy');#}
+{#                    slide.find('.card-image').zoom({#}
+{#                        on: 'click',#}
+{#                        duration: 300#}
+{#                    });#}
+{#                }#}
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -110,13 +123,13 @@
                 onSlideChangeEnd: adjastView
             });
 
-            if (is_touch_device()) {
+{#            if (is_touch_device()) {#}
                 zoomify();
-            } else {
-                $(window).on('resize', function() {
-                    $('.card-image').trigger('zoom.destroy');
-                });
-            }
+{#            } else {#}
+{#                $(window).on('resize', function() {#}
+{#                    $('.card-image').trigger('zoom.destroy');#}
+{#                });#}
+{#            }#}
             $('.pagination').hide();
         });
     </script>
