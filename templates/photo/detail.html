@@ -27,6 +27,7 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="/static/scripts/jquery.zoom.min.js"></script>
     <script src="/static/scripts/pinchzoom.min.js"></script>
     <script>
         $(function () {
@@ -38,6 +39,15 @@
                 pages = [];
 
             pages.push(parseInt(parameters.page));
+
+            function is_touch_device() {
+                try {
+                    document.createEvent("TouchEvent");
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
 
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
@@ -65,6 +75,14 @@
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
+
+                if (!is_touch_device()) {
+                    $('.card-image').trigger('zoom.destroy');
+                    slide.find('.card-image').zoom({
+                        on: 'click',
+                        duration: 300
+                    });
+                }
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -80,19 +98,25 @@
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
                         sw.appendSlide($page.find('.card'));
-                        zoomify();
+                        if (is_touch_device()) zoomify();
                     });
                 },
                 onReachBeginning: function(sw) {
                     getPage($('.prev').attr('href'), function($page) {
                         sw.prependSlide($page.find('.card').reverse());
-                        zoomify();
+                        if (is_touch_device()) zoomify();
                     });
                 },
                 onSlideChangeEnd: adjastView
             });
 
-            zoomify();
+            if (is_touch_device()) {
+                zoomify();
+            } else {
+                $(window).on('resize', function() {
+                    $('.card-image').trigger('zoom.destroy');
+                });
+            }
             $('.pagination').hide();
         });
     </script>
