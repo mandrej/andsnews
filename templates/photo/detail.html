@@ -12,8 +12,10 @@
         <div class="swiper-wrapper">
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}" class="card swiper-slide cover">
-                    <div class="card-image zoom">
-                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                    <div class="card-image">
+                        <div class="zoomer">
+                            <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                        </div>
                         <span class="card-title">{{ object.headline }}</span>
                     </div>
                     <div class="card-content exif" style="background-color: {{ object.hex }};">
@@ -27,7 +29,7 @@
 
 {% block scripts %}
     {{ super() }}
-{#    <script src="/static/scripts/jquery.zoom.min.js"></script>#}
+    <script src="/static/scripts/pinchzoom.min.js"></script>
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
@@ -53,18 +55,18 @@
                     pages.push(num);
                 }
             }
+            function zoomify() {
+                $('.zoomer').each(function () {
+                    new RTP.PinchZoom($(this), {tapZoomFactor: 6});
+                });
+            }
+
             function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id;
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
-
-{#                $('.zoom').trigger('zoom.destroy');#}
-{#                slide.find('.zoom').zoom({#}
-{#                    on: 'toggle',#}
-{#                    duration: 300#}
-{#                });#}
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -80,19 +82,19 @@
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
                         sw.appendSlide($page.find('.cover'));
+                        zoomify();
                     });
                 },
                 onReachBeginning: function(sw) {
                     getPage($('.prev').attr('href'), function($page) {
                         sw.prependSlide($page.find('.cover').reverse());
+                        zoomify();
                     });
                 },
                 onSlideChangeEnd: adjastView
             });
 
-{#            $(window).on('resize', function() {#}
-{#                $('.zoom').trigger('zoom.destroy');#}
-{#            });#}
+            zoomify();
             $('.pagination').hide();
         });
     </script>
