@@ -27,7 +27,7 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/static/scripts/jquery.zoom.min.js"></script>
+{#    <script src="/static/scripts/jquery.zoom.min.js"></script>#}
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
@@ -60,11 +60,11 @@
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
 
-                $('.zoom').trigger('zoom.destroy');
-                slide.find('.zoom').zoom({
-                    on: 'toggle',
-                    duration: 300
-                });
+{#                $('.zoom').trigger('zoom.destroy');#}
+{#                slide.find('.zoom').zoom({#}
+{#                    on: 'toggle',#}
+{#                    duration: 300#}
+{#                });#}
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -90,9 +90,9 @@
                 onSlideChangeEnd: adjastView
             });
 
-            $(window).on('resize', function() {
-                $('.zoom').trigger('zoom.destroy');
-            });
+{#            $(window).on('resize', function() {#}
+{#                $('.zoom').trigger('zoom.destroy');#}
+{#            });#}
             $('.pagination').hide();
         });
     </script>
