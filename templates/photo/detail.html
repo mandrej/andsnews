@@ -11,11 +11,9 @@
     <article class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="card swiper-slide cover">
+                <div id="{{ object.key.string_id() }}" class="card swiper-slide">
                     <div class="card-image">
-                        <div class="zoomer">
-                            <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
-                        </div>
+                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
                         <span class="card-title">{{ object.headline }}</span>
                     </div>
                     <div class="card-content exif" style="background-color: {{ object.hex }};">
@@ -33,7 +31,7 @@
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
-                ids = $('.cover').map(function() {
+                ids = $('.card').map(function() {
                     return this.id
                 }).get(),
                 index = $.inArray('{{ slug }}', ids),
@@ -56,8 +54,8 @@
                 }
             }
             function zoomify() {
-                $('.zoomer').each(function () {
-                    new RTP.PinchZoom($(this), {tapZoomFactor: 6});
+                $('.card-image').each(function () {
+                    new RTP.PinchZoom($(this));
                 });
             }
 
@@ -81,13 +79,13 @@
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
-                        sw.appendSlide($page.find('.cover'));
+                        sw.appendSlide($page.find('.card'));
                         zoomify();
                     });
                 },
                 onReachBeginning: function(sw) {
                     getPage($('.prev').attr('href'), function($page) {
-                        sw.prependSlide($page.find('.cover').reverse());
+                        sw.prependSlide($page.find('.card').reverse());
                         zoomify();
                     });
                 },
