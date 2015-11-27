@@ -11,9 +11,9 @@
     <article class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="card swiper-slide cover">
-                    <div class="card-image zoom">
-                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                <div id="{{ object.key.string_id() }}" class="card swiper-slide">
+                    <div class="card-image">
+                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0" draggable="false">
                         <span class="card-title">{{ object.headline }}</span>
                     </div>
                     <div class="card-content exif" style="background-color: {{ object.hex }};">
@@ -28,10 +28,11 @@
 {% block scripts %}
     {{ super() }}
     <script src="/static/scripts/jquery.zoom.min.js"></script>
+    <script src="/static/scripts/pinchzoom.min.js"></script>
     <script>
         $(function () {
             var parameters = $.getQueryParameters(),
-                ids = $('.cover').map(function() {
+                ids = $('.card').map(function() {
                     return this.id
                 }).get(),
                 index = $.inArray('{{ slug }}', ids),
@@ -39,10 +40,36 @@
 
             pages.push(parseInt(parameters.page));
 
+            function is_touch_device() {
+                try {
+                    document.createEvent("TouchEvent");
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function enable_zoom() {
+                if (is_touch_device()) {
+                    $('.card').not(":has('.pinch-zoom-container')").each(function() {
+                        new RTP.PinchZoom($(this).find('.card-image'), {
+                            tapZoomFactor: 4
+                        })
+                    });
+                } else {
+                    $('.card').not(":has('.zoomImg')").each(function() {
+                        $(this).find('.card-image').zoom({
+                            on: 'click',
+                            duration: 300
+                        });
+                    });
+                }
+            }
+
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
                 if (!isNaN(num) && $.inArray(num, pages) == -1) {
-{#                    TODO href is from pagination#}
+                    // TODO href is from pagination
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
@@ -59,12 +86,6 @@
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
-
-                $('.zoom').trigger('zoom.destroy');
-                slide.find('.zoom').zoom({
-                    on: 'toggle',
-                    duration: 300
-                });
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -79,20 +100,20 @@
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
-                        sw.appendSlide($page.find('.cover'));
+                        sw.appendSlide($page.find('.card'));
+                        enable_zoom();
                     });
                 },
                 onReachBeginning: function(sw) {
                     getPage($('.prev').attr('href'), function($page) {
-                        sw.prependSlide($page.find('.cover').reverse());
+                        sw.prependSlide($page.find('.card').reverse());
+                        enable_zoom();
                     });
                 },
                 onSlideChangeEnd: adjastView
             });
 
-            $(window).on('resize', function() {
-                $('.zoom').trigger('zoom.destroy');
-            });
+            enable_zoom();
             $('.pagination').hide();
         });
     </script>

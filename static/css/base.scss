@@ -167,6 +167,10 @@ nav .button-collapse i {
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.5);
     font-weight: 400;
+    img {
+      user-drag: none;
+      -webkit-user-drag: none;
+    }
   }
 }
 
