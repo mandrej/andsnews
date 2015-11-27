@@ -62,7 +62,7 @@ header, main, footer {
 main {
   flex: 1 0 auto;
   & > .breadcrumb {
-    padding-left: 32px;
+    padding-left: 20px;
     a {
       color: $off-black;
       &:before {
@@ -133,7 +133,7 @@ nav .nav-wrapper i {
 }
 
 nav .brand-logo, .footer-copyright {
-  padding: 0 32px;
+  padding: 0 20px;
 }
 
 nav .button-collapse i {
@@ -149,27 +149,22 @@ footer.page-footer {
 .card {
   margin: 0;
   display: block;
-  .card-action, .card-content {
-    padding: 1rem;
-    .card-title {
-      display: block;
-      font-size: 1.35rem;
-      font-weight: 400;
-      line-height: normal;
-    }
-    .card-author {
-      display: block;
-      padding-top: 0.5rem;
-      text-align: right;
-      font-size: 0.8rem;
-      line-height: normal;
-    }
+  .card-title {
+    display: block;
+    font-size: 1.35rem !important;
+    font-weight: 400;
+    line-height: normal !important;
+  }
+  .card-author {
+    display: block;
+    padding-top: 0.5rem;
+    text-align: right;
+    font-size: 0.8rem;
+    line-height: normal;
   }
   .card-image {
     .card-title {
-      padding: 1rem;
       background-color: rgba(0, 0, 0, 0.5);
-      font-weight: 400;
     }
     .swiper-lazy {
       display: block;
@@ -184,6 +179,12 @@ footer.page-footer {
       }
     }
   }
+  .card-reveal {
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
 }
 
 .admin .card-content .row {
@@ -191,13 +192,13 @@ footer.page-footer {
 }
 
 #gallery {
-  margin: 32px 16px 0 16px;
+  margin: 20px 10px 0 10px;
   @media #{$medium-and-down} {
     margin: 8px 4px 0;
   }
   .thumbnail, .blog, .admin {
     display: block;
-    margin: 0 16px 32px 16px !important;
+    margin: 0 10px 20px 10px !important;
     color: $off-black;
     @media #{$medium-and-down} {
       margin: 0 4px 8px 4px !important;
@@ -214,7 +215,7 @@ footer.page-footer {
 }
 
 article, section {
-  margin: 32px !important;
+  margin: 20px !important;
   @media #{$medium-and-down} {
     margin: 8px !important;
   }
@@ -250,15 +251,6 @@ article {
   }
 }
 
-.exif a {
-  color: inherit;
-  font-weight: 400;
-}
-
-p .material-icons, a .material-icons {
-  vertical-align: bottom;
-}
-
 .progress {
   position: absolute;
   bottom: 0;
@@ -288,11 +280,9 @@ span.error {
 
 .dot {
   border-style: solid;
-  border-width: 1rem;
+  border-width: 11px;
   line-height: 0;
-  td & {
-    display: inline-block;
-  }
+  font-size: 0;
 }
 
 .row {
@@ -364,6 +354,12 @@ span.error {
     font-size: 4rem;
     line-height: 6rem;
   }
+}
+
+.material-icons {
+  line-height: inherit;
+  font-size: inherit;
+  vertical-align: middle;
 }
 
 .ui-widget-content {

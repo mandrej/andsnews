@@ -11,12 +11,16 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
-                <div id="{{ object.key.string_id() }}" class="card swiper-slide">
+                <div id="{{ object.key.string_id() }}" class="card swiper-slide z-depth-0">
+                    <div class="card-content hide-on-small-only">
+                        <span class="card-title activator">{{ object.headline }}
+                            <i class="material-icons right">more_vert</i></span>
+                    </div>
                     <div class="card-image">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0" draggable="false">
-                        <span class="card-title">{{ object.headline }}</span>
+                        <span class="card-title hide-on-med-and-up">{{ object.headline }}</span>
                     </div>
-                    <div class="card-content exif hide-on-small-only" style="background-color: {{ object.hex }};">
+                    <div class="card-reveal exif hide-on-small-only">
                         {% include "photo/exif.html" %}
                     </div>
                 </div>
