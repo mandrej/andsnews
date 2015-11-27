@@ -13,7 +13,7 @@
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}" class="card swiper-slide">
                     <div class="card-image">
-                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
+                        <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0" draggable="false">
                         <span class="card-title">{{ object.headline }}</span>
                     </div>
                     <div class="card-content exif" style="background-color: {{ object.hex }};">
