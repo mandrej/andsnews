@@ -44,9 +44,9 @@
   -o-transition-property: -o-transform;
   -ms-transition-property: -ms-transform;
   transition-property: transform;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  //-webkit-box-sizing: content-box;
+  //-moz-box-sizing: content-box;
+  //box-sizing: content-box;
 }
 .swiper-container-android .swiper-slide,
 .swiper-wrapper {

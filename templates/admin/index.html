@@ -5,18 +5,18 @@
         <div class="admin card z-depth-0">
             <div class="card-action">
                 <div class="row valign-wrapper">
-                    <div class="col s5 valign middle">
+                    <div class="col s6 valign middle">
                         <a href="{{ uri_for('photo_admin') }}" class="btn btn-large waves-effect">
-                            <i class="material-icons left">edit</i>Photos
+                            Photos
                         </a>
                     </div>
-                    <div class="col s3 center-align">
+                    <div class="col s3 right-align valign middle">
+                        <span class="badge">{{ photo_count }}</span>
+                    </div>
+                    <div class="col s3 right-align">
                         <a href="{{ uri_for('photo_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
                             <i class="material-icons">add</i>
                         </a>
-                    </div>
-                    <div class="col s4 right-align valign middle">
-                        <span class="badge">{{ photo_count }}</span>
                     </div>
                 </div>
             </div>
@@ -35,17 +35,17 @@
         <div class="admin card z-depth-0">
             <div class="card-action">
                 <div class="row valign-wrapper">
-                    <div class="col s5 valign middle">
+                    <div class="col s6 valign middle">
                         <a href="{{ uri_for('entry_admin') }}" class="btn btn-large waves-effect">
-                            <i class="material-icons left">edit</i>Entries</a>
+                            Entries</a>
                     </div>
-                    <div class="col s3 center-align">
+                    <div class="col s3 right-align valign middle">
+                        <span class="badge">{{ entry_count }}</span>
+                    </div>
+                    <div class="col s3 right-align">
                         <a href="{{ uri_for('entry_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
                             <i class="material-icons">add</i>
                         </a>
-                    </div>
-                    <div class="col s4 right-align valign middle">
-                        <span class="badge">{{ entry_count }}</span>
                     </div>
                 </div>
             </div>
@@ -61,10 +61,10 @@
                 <div class="row valign-wrapper">
                     <div class="col s6 valign middle">
                         <a href="{{ uri_for('counter_admin') }}" class="btn btn-large waves-effect">
-                            <i class="material-icons left">edit</i>Counters
+                            Counters
                         </a>
                     </div>
-                    <div class="col s6 right-align valign middle">
+                    <div class="col s3 right-align valign middle">
                         <span class="badge">{{ counter_count }}</span>
                     </div>
                 </div>

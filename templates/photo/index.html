@@ -18,7 +18,7 @@
                     </div>
                     <div class="card-content">
                         <span class="card-title">{{ object.headline }}</span>
-                        <span class="card-author">{{ object.author }},
+                        <span class="card-author hide-on-small-only">{{ object.author }},
                             {% trans since=object.date|timesince %}{{ since }} ago{% endtrans %}
                         </span>
                     </div>

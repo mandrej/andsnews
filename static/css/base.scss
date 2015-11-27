@@ -139,7 +139,9 @@ nav .brand-logo, .footer-copyright {
 nav .button-collapse i {
   padding: 0 1rem;
 }
-
+footer.page-footer {
+  margin-top: 0;
+}
 .footer-copyright .material-icons {
   vertical-align: middle;
 }
@@ -163,13 +165,23 @@ nav .button-collapse i {
       line-height: normal;
     }
   }
-  .card-image .card-title {
-    padding: 1rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    font-weight: 400;
-    img {
+  .card-image {
+    .card-title {
+      padding: 1rem;
+      background-color: rgba(0, 0, 0, 0.5);
+      font-weight: 400;
+    }
+    .swiper-lazy {
+      display: block;
+      width: 100vw;
+      height: calc(100vh - 56px);
+      object-fit: cover;
       user-drag: none;
       -webkit-user-drag: none;
+      @media #{$medium-and-up} {
+        width: 100%;
+        height: auto;
+      }
     }
   }
 }
@@ -236,10 +248,11 @@ article {
       margin: 0 0 1rem 0;
     }
   }
-  .exif a {
-    color: inherit;
-    font-weight: 400;
-  }
+}
+
+.exif a {
+  color: inherit;
+  font-weight: 400;
 }
 
 p .material-icons, a .material-icons {

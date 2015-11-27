@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block contents %}
-    <article class="swiper-container">
+    <div class="swiper-container">
         <div class="swiper-wrapper">
             {% for object in objects %}
                 <div id="{{ object.key.string_id() }}" class="card swiper-slide">
@@ -16,13 +16,13 @@
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0" draggable="false">
                         <span class="card-title">{{ object.headline }}</span>
                     </div>
-                    <div class="card-content exif" style="background-color: {{ object.hex }};">
+                    <div class="card-content exif hide-on-small-only" style="background-color: {{ object.hex }};">
                         {% include "photo/exif.html" %}
                     </div>
                 </div>
             {% endfor %}
         </div>
-    </article>
+    </div>
 {% endblock %}
 
 {% block scripts %}
