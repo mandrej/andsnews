@@ -49,10 +49,27 @@
                 }
             }
 
+            function enable_zoom() {
+                if (is_touch_device()) {
+                    $('.card').not(":has('.pinch-zoom-container')").each(function() {
+                        new RTP.PinchZoom($(this).find('.card-image'), {
+                            tapZoomFactor: 4
+                        })
+                    });
+                } else {
+                    $('.card').not(":has('.zoomImg')").each(function() {
+                        $(this).find('.card-image').zoom({
+                            on: 'click',
+                            duration: 300
+                        });
+                    });
+                }
+            }
+
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
                 if (!isNaN(num) && $.inArray(num, pages) == -1) {
-{#                    TODO href is from pagination#}
+                    // TODO href is from pagination
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
@@ -63,39 +80,12 @@
                     pages.push(num);
                 }
             }
-            function zoomify() {
-                if (is_touch_device()) {
-                    $('.card-image').each(function () {
-                        if (!$(this).parents('.pinch-zoom-container').length) {
-                            new RTP.PinchZoom($(this), {});
-                        }
-                    });
-                } else {
-                    $('.card-image').each(function () {
-                        if (!$(this).children('.zoomImg').length) {
-                            $(this).zoom({
-                                on: 'click',
-                                duration: 300
-                            });
-                        }
-                    });
-                }
-            }
-
             function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id;
 
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
-
-{#                if (!is_touch_device()) {#}
-{#                    $('.card-image').trigger('zoom.destroy');#}
-{#                    slide.find('.card-image').zoom({#}
-{#                        on: 'click',#}
-{#                        duration: 300#}
-{#                    });#}
-{#                }#}
             }
             var horizontal = new Swiper('.swiper-container', {
                 direction: 'horizontal',
@@ -111,25 +101,19 @@
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
                         sw.appendSlide($page.find('.card'));
-                        if (is_touch_device()) zoomify();
+                        enable_zoom();
                     });
                 },
                 onReachBeginning: function(sw) {
                     getPage($('.prev').attr('href'), function($page) {
                         sw.prependSlide($page.find('.card').reverse());
-                        if (is_touch_device()) zoomify();
+                        enable_zoom();
                     });
                 },
                 onSlideChangeEnd: adjastView
             });
 
-{#            if (is_touch_device()) {#}
-                zoomify();
-{#            } else {#}
-{#                $(window).on('resize', function() {#}
-{#                    $('.card-image').trigger('zoom.destroy');#}
-{#                });#}
-{#            }#}
+            enable_zoom();
             $('.pagination').hide();
         });
     </script>
