@@ -32,11 +32,13 @@
                 </div>
                 <div id="nav-mobile" class="side-nav collapsible fixed">
                     <ul>
-                        <li><nav><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav></li>
+                        <li class="no-padding">
+                            <nav><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav>
+                        </li>
                         {% block menu %}
-                            <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
-                            <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
-                            <li><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
+                            <li class="no-padding"><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+                            <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+                            <li class="no-padding"><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
                         {% endblock %}
                     </ul>
                     {% block search %}
@@ -76,7 +78,7 @@
     </footer>
 
     {% block scripts %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="/static/js/bin/materialize.min.js"></script>
         <script src="/static/scripts/jquery.grid-a-licious.min.js"></script>
         <script src="/static/scripts/jquery.infinitescroll.min.js"></script>

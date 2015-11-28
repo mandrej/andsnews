@@ -78,9 +78,6 @@ main {
 .side-nav.collapsible {
   background-color: $sidenav-bg-color;
   border: none;
-  li {
-    padding: 0;
-  }
 }
 
 header > nav {
@@ -263,6 +260,10 @@ article {
     background-color: $navbar-bg-color;
   }
 }
+.hide {
+    display: block !important;
+}
+
 
 label.required {
   color: $primary-color;
@@ -278,11 +279,35 @@ span.error {
   color: $primary-color;
 }
 
+a.block {
+  display: block;
+  font-size: 1.35rem;
+}
+.cloud {
+  margin: 0;
+  $weight: 200;
+  $default_size: 1em;
+  @for $i from 1 through 8 {
+    a.t#{$i} {
+      font-size: $default_size + ($i - 1) / 10;
+      font-weight: $weight + ($i - 1) * 100;
+    }
+  }
+  .selected {
+    color: $error-color !important;
+  }
+}
+
+#colorcloud p {
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
+}
 .dot {
-  border-style: solid;
-  border-width: 11px;
-  line-height: 0;
-  font-size: 0;
+    font-size: 11px !important;
+	border-style: solid;
+	border-width: 1em;
+	line-height: 0;
 }
 
 .row {
@@ -325,13 +350,10 @@ span.error {
   padding: 1rem;
 }
 
-@media #{$large-and-up} {
-  .drag-target {
-    height: 100%;
+.drag-target {
+  width: 10px !important;
+  @media #{$large-and-up} {
     width: 0;
-    position: fixed;
-    top: 0;
-    z-index: 998;
   }
 }
 

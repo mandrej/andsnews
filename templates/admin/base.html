@@ -5,14 +5,20 @@
     <div id="confirm" class="modal bottom-sheet"></div>
 {% endblock %}
 {% block menu %}
-    <li><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
-    <li><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
-    <li class="active">
-        <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
+    <li class="no-padding"><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+    <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+    <li class="no-padding active">
+        <div class="row">
+            <div class="col s8">
+                <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
+            </div>
+            <div class="col s4 right-align">
+                {% if user %}
+                    <a href="/sign" class="waves-effect"><i class="material-icons">arrow_forward</i></a>
+                {% endif %}
+            </div>
+        </div>
     </li>
-    {% if user %}
-        <li><a href="/sign" class="waves-effect">{{ _('Log out') }}</a></li>
-    {% endif %}
 {% endblock %}
 
 {% block scripts %}
