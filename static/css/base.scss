@@ -4,14 +4,11 @@
 @import "../sass/components/prefixer";
 @import "../sass/components/mixins";
 @import "../sass/components/color";
-
 // Variables
 @import "theme";
 //@import "../sass/components/variables";
-
 // Reset
 @import "../sass/components/normalize";
-
 // components
 @import "../sass/components/global";
 @import "../sass/components/icons-material-design";
@@ -38,7 +35,6 @@
 @import "../sass/components/date_picker/default.scss";
 @import "../sass/components/date_picker/default.date.scss";
 @import "../sass/components/date_picker/default.time.scss";
-
 @import "swiper";
 
 $body-bg-color: color("grey", "lighten-2");
@@ -136,9 +132,11 @@ nav .brand-logo, .footer-copyright {
 nav .button-collapse i {
   padding: 0 1rem;
 }
+
 footer.page-footer {
   margin-top: 0;
 }
+
 .footer-copyright .material-icons {
   vertical-align: middle;
 }
@@ -260,10 +258,10 @@ article {
     background-color: $navbar-bg-color;
   }
 }
-.hide {
-    display: block !important;
-}
 
+.hide {
+  display: block !important;
+}
 
 label.required {
   color: $primary-color;
@@ -283,6 +281,7 @@ a.block {
   display: block;
   font-size: 1.35rem;
 }
+
 .cloud {
   margin: 0;
   $weight: 200;
@@ -299,15 +298,17 @@ a.block {
 }
 
 #colorcloud p {
-	display: flex;
-	flex-flow: row;
-	justify-content: space-between;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
 }
+
 .dot {
-    font-size: 11px !important;
-	border-style: solid;
-	border-width: 1em;
-	line-height: 0;
+  display: inline-block;
+  font-size: 11px !important;
+  border-style: solid;
+  border-width: 1em;
+  line-height: 0;
 }
 
 .row {
