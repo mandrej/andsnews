@@ -2,10 +2,11 @@
 {% block title %}{{ _('Blog') }}{% endblock %}
 
 {% block modals %}
-    {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
-    {% set _date = {'field': 'date', 'title': _('Dates')} %}
-    {% set _author = {'field': 'author', 'title': _('Authors')} %}
+    {{ super() }}
     <div id="filters" class="modal bottom-sheet">
+        {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+        {% set _date = {'field': 'date', 'title': _('Dates')} %}
+        {% set _author = {'field': 'author', 'title': _('Authors')} %}
         <div class="modal-content">
             <h4>{{ _('Filters') }}</h4>
             <div class="row">

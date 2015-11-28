@@ -1,4 +1,5 @@
 {% set uriname='%s_filter' % name if filter else name %}
+
 {% if filter %}
     {% if slug %}
         {% set url = uri_for(uriname, field=filter.field, value=filter.value, slug=slug) %}
@@ -13,17 +14,19 @@
     {% endif %}
 {% endif %}
 
-{% if has_previous or has_next %}
-    {% if has_previous %}
-        {% set qs='?find=%s&page=%s' % (phrase, page - 1) if phrase else '?page=%s' % (page - 1) %}
-        <li class="waves-effect"><a{{ {'href': '%s%s' % (url, qs), 'class': 'prev'}|xmlattr }}><i class="material-icons">chevron_left</i></a></li>
-{#    {% else %}#}
-{#        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>#}
-    {% endif %}
-    {% if has_next %}
-        {% set qs='?find=%s&page=%s' % (phrase, page + 1) if phrase else '?page=%s' % (page + 1) %}
-        <li class="waves-effect"><a{{ {'href': '%s%s' % (url, qs), 'class': 'next'}|xmlattr }}><i class="material-icons">chevron_right</i></a></li>
-{#    {% else %}#}
-{#        <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>#}
-    {% endif %}
+{% if has_previous %}
+    {% set qs='?find=%s&page=%s' % (phrase, page - 1) if phrase else '?page=%s' % (page - 1) %}
+    <li class="waves-effect">
+        <a{{ {'href': '%s%s' % (url, qs), 'class': 'prev'}|xmlattr }}>
+            <i class="material-icons">chevron_left</i>
+        </a>
+    </li>
+{% endif %}
+{% if has_next %}
+    {% set qs='?find=%s&page=%s' % (phrase, page + 1) if phrase else '?page=%s' % (page + 1) %}
+    <li class="waves-effect">
+        <a{{ {'href': '%s%s' % (url, qs), 'class': 'next'}|xmlattr }}>
+            <i class="material-icons">chevron_right</i>
+        </a>
+    </li>
 {% endif %}

@@ -2,15 +2,16 @@
 {% block title %}{{ _('Photos') }}{% endblock %}
 
 {% block modals %}
-    {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
-    {% set _date = {'field': 'date', 'title': _('Dates')} %}
-    {% set _author = {'field': 'author', 'title': _('Authors')} %}
-    {% set _color = {'field': 'color', 'title': _('Color')} %}
-    {% set _model = {'field': 'model', 'title': _('Camera model')} %}
-    {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
-    {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
-    {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+    {{ super() }}
     <div id="filters" class="modal bottom-sheet">
+        {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+        {% set _date = {'field': 'date', 'title': _('Dates')} %}
+        {% set _author = {'field': 'author', 'title': _('Authors')} %}
+        {% set _color = {'field': 'color', 'title': _('Color')} %}
+        {% set _model = {'field': 'model', 'title': _('Camera model')} %}
+        {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
+        {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
+        {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
         <div class="modal-content">
             <h4>{{ _('Filters') }}</h4>
             <div class="row">
