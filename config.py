@@ -169,7 +169,7 @@ def boolimage(value):
 
 @environmentfilter
 def css_classes(env, classes):
-    return u' '.join(unicode(x) for x in classes if x) or env.undefined(hint='No classes requested')
+    return ' '.join(x for x in classes if x) or env.undefined(hint='No classes requested')
 
 
 def filesizeformat(value, binary=False):

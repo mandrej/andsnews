@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html{{ {'lang': language(language_code)}|xmlattr }}>
 {% import "snippets/macros.html" as m %}
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
@@ -35,11 +36,7 @@
                         <li class="no-padding">
                             <nav><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav>
                         </li>
-                        {% block menu %}
-                            <li class="no-padding"><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
-                            <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
-                            <li class="no-padding"><a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a></li>
-                        {% endblock %}
+                        {% block menu %}{{ m.menu() }}{% endblock %}
                     </ul>
                     {% block search %}
                         <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">

@@ -19,3 +19,93 @@
         <a{{ {'href': url, 'title': title}|xmlattr }}>{{ text }}</a>
     </div>
 {% endmacro %}
+
+{% macro menu(kind=None, user=None) %}
+    {% if kind == 'photo' %}
+        <li class="no-padding active">
+            <div class="row">
+                <div class="col s8">
+                    <a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a>
+                </div>
+                <div class="col s4 right-align">
+                    <a href="#filters" class="waves-effect modal-trigger">
+                        <i class="material-icons left">filter_list</i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    {% else %}
+        <li class="no-padding"><a href="{{ uri_for('photo_all') }}" class="waves-effect">{{ _('Photos') }}</a></li>
+    {% endif %}
+    {% if kind == 'entry' %}
+        <li class="no-padding active">
+            <div class="row">
+                <div class="col s8">
+                    <a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a>
+                </div>
+                <div class="col s4 right-align">
+                    <a href="#filters" class="waves-effect modal-trigger">
+                        <i class="material-icons left">filter_list</i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    {% else %}
+        <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Blog') }}</a></li>
+    {% endif %}
+    {% if kind == 'admin' %}
+        <li class="no-padding active">
+            <div class="row">
+                <div class="col s8">
+                    <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
+                </div>
+                <div class="col s4 right-align">
+                    {% if user %}
+                        <a href="/sign" class="waves-effect"><i class="material-icons">exit_to_app</i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+    {% else %}
+        <li class="no-padding">
+            <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro filters_html(available, prefix) %}
+    <div id="filters" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4>{{ _('Filters') }}</h4>
+            <div class="row">
+                {% for f in available %}
+                    <div class="col s12 m6 l4">
+                        <a class="{{ f.field }} collapse" href="{{ prefix }}{{ f.field }}">{{ f.title }}</a>
+                        <div id="{{ f.field }}cloud" class="hidden"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro filters(kind=None) %}
+    {% set _tags = {'field': 'tags', 'title': _('Tags')} %}
+    {% set _date = {'field': 'date', 'title': _('Dates')} %}
+    {% set _author = {'field': 'author', 'title': _('Authors')} %}
+    {% set _color = {'field': 'color', 'title': _('Color')} %}
+    {% set _model = {'field': 'model', 'title': _('Camera model')} %}
+    {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
+    {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
+    {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
+
+    {% if kind == 'photo' %}
+        {{ filters_html([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], '/filter/Photo_') }}
+    {% endif %}
+    {% if kind == 'entry' %}
+        {{ filters_html([_tags, _date, _author], '/filter/Entry_') }}
+    {% endif %}
+{% endmacro %}
