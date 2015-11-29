@@ -107,7 +107,7 @@
         $(function() {
             $('button').click(function(evt) {
                 evt.preventDefault();
-{#                $('#overlay, #spinner').show();#}
+                $('#progress').show();
                 var row = $(this).closest('tr');
                 var url = '/admin/entries/';
                 var params = {'safe_key': row.attr('id'), 'action': $(this).attr('name'), 'token': token};
@@ -115,7 +115,7 @@
                 if (params['action'] == 'delete') {
                     var done = function(data) {
                         if (data.success == true) {
-{#                            $('#overlay, #spinner').hide();#}
+                            $('#progress').hide();
                             row.find('button[name=delete]').attr('disabled', 'disabled');
                             row.find('button[name=make]').removeAttr('disabled');
                         }
@@ -123,7 +123,7 @@
                 } else if (params['action'] == 'make') {
                     var done = function(data) {
                         if (data.success == true) {
-{#                            $('#overlay, #spinner').hide();#}
+                            $('#progress').hide();
                             row.find('button[name=make]').attr('disabled', 'disabled');
                             row.find('button[name=delete]').removeAttr('disabled');
                         }
@@ -137,7 +137,7 @@
                 $('#confirm').load(this.href, function () {
                     $(this).openModal();
                     $('.modal-footer button').click(function () {
-{#                        $('#overlay, #spinner').show();#}
+                        $('#progress').show();
                     });
                 });
             });

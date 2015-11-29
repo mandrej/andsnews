@@ -11,3 +11,11 @@
         {% call input(field, **kwargs) %}{% endcall %}
     </p>
 {% endmacro %}
+
+{% macro chip(url, classes=[], icon=None, title=None, text='') %}
+    {% set classes=['chip'] + classes %}
+    <div class="{{ classes|css_classes }}">
+        {% if icon %}{{ icon|safe }}{% endif %}
+        <a{{ {'href': url, 'title': title}|xmlattr }}>{{ text }}</a>
+    </div>
+{% endmacro %}

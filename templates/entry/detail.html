@@ -1,24 +1,18 @@
 {% extends "entry/base.html" %}
 {% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
+{% import "snippets/macros.html" as m %}
 
 {% block contents %}
     <article>
         <h4>{{ object.headline }}</h4>
-        <p>
-            <a href="{{ uri_for('entry_all_filter', field='author', value=object.author) }}"
-                title="{{ _("author's blogs") }}">{{ object.author }}</a>,
-            <time datetime='{{ object.date|to_datetime }}'>
-                {{ object.date|to_date }}</time>
-            {% for tag in object.tags %}
-                    {% if loop.first %}&nbsp;<i class="material-icons">local_offer</i>{% endif %}
-                <a href="{{ uri_for('entry_all_filter', field='tags', value=tag) }}" title="{{ tag }}">
-                    {{ tag }}</a>{% if not loop.last %},{% endif %}
-            {% endfor %}
-                &nbsp;<i class="material-icons">access_time</i>&nbsp;
-            <a href="{{ uri_for('entry_all_filter', field='date', value=object.year) }}"
-                title="{{ _('blogs sent same year') }}">{{ object.year }}</a>
-        </p>
-
+        {{ m.chip(url=uri_for('entry_all_filter', field='author', value=object.author),
+            title=_("author's blogs"), text=object.author) }}
+        {% for tag in object.tags %}
+            {{ m.chip(url=uri_for('entry_all_filter', field='tags', value=tag),
+                icon='<i class="material-icons">label</i>', text=tag) }}
+        {% endfor %}
+        {{ m.chip(url=uri_for('entry_all_filter', field='date', value=object.year),
+            title=_('blogs sent same year'), text=object.year) }}
         {{ object.body|safe }}
     </article>
 {% endblock %}

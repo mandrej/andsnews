@@ -259,8 +259,8 @@ article {
   }
 }
 
-.hide {
-  display: block !important;
+.hidden {
+  display: none;
 }
 
 label.required {
@@ -277,38 +277,55 @@ span.error {
   color: $primary-color;
 }
 
-a.block {
-  display: block;
-  font-size: 1.35rem;
-}
+.dot {
+    $default_size: 1.3rem;
+    display: inline-block;
+    vertical-align: middle;
+    border: $default_size / 2 solid;
+    line-height: 0;
+  }
 
-.cloud {
-  margin: 0;
-  $weight: 200;
-  $default_size: 1em;
+.chip {
+  $default_size: 1.3rem;
+  font-weight: 400;
+  display: inline-block;
+  margin: $default_size / 4 0;
+  height: 1.6 * $default_size;
+  line-height: 1.5 * $default_size;
+  font-size: $default_size;
+  background-color: color("grey", 'darken-1');
+  padding: 0 $default_size / 2;
+  border-radius: $default_size;
+  color: #fff;
+  a { color: #fff; vertical-align: middle; }
   @for $i from 1 through 8 {
-    a.t#{$i} {
+    &.fs#{$i} {
       font-size: $default_size + ($i - 1) / 10;
-      font-weight: $weight + ($i - 1) * 100;
     }
   }
-  .selected {
-    color: $error-color !important;
+  &.selected {
+    background-color: $error-color;
+  }
+  i.material-icons {
+    cursor: pointer;
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
+    font-size: $default_size;
+    line-height: 1.5 * $default_size;
+    padding: 0;
+    margin-right: $default_size / 3;
+  }
+  .dot {
+    margin-right: $default_size / 3;
+    border-radius: $default_size / 2;
   }
 }
 
-#colorcloud p {
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-}
 
-.dot {
-  display: inline-block;
-  font-size: 11px !important;
-  border-style: solid;
-  border-width: 1em;
-  line-height: 0;
+a.collapse {
+  display: block;
+  font-size: 1.35rem;
 }
 
 .row {
