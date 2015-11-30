@@ -33,13 +33,13 @@
                 var field = key.split('_').pop();
 
                 $('.hidden').hide();
-                $('#progress').show();
+                $('.progress').show();
                 $.ajax({
                     url: url,
                     context: cntx.next(),
                     success: function (snippet) {
                         $(this).html(snippet).slideDown();
-                        $('#progress').hide();
+                        $('.progress').hide();
                     }
                 });
             });
