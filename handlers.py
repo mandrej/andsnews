@@ -295,6 +295,22 @@ class SearchPaginator(object):
         return [x for x in objects if x is not None], number_found, has_next, error
 
 
+def cloud_limit(items):
+    if DEVEL:
+        return 0
+    else:
+        _curr = 0
+        _sum5 = sum((x['count'] for x in items)) * 0.05
+        if _sum5 < 1:
+            return 0
+        else:
+            _on_count = sorted(items, key=itemgetter('count'))
+            for item in _on_count:
+                _curr += item['count']
+                if _curr >= _sum5:
+                    return item['count']
+
+
 class RenderCloud(BaseHandler):
     def get(self, mem_key, value=None):
         try:
@@ -315,12 +331,13 @@ class RenderCloud(BaseHandler):
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))
 
-            logging.info(items)
+            limit = cloud_limit(items)
             self.render_template(
                 'snippets/cloud.html', {
                     'items': items,
                     'link': '%s_all_filter' % kind.lower(),
                     'field_name': field,
+                    'limit': limit,
                     'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
