@@ -332,6 +332,7 @@ class RenderCloud(BaseHandler):
                 items = sorted(items, key=itemgetter('order'))
 
             limit = cloud_limit(items)
+            logging.info('%s: %d' % (mem_key, limit))
             self.render_template(
                 'snippets/cloud.html', {
                     'items': items,
