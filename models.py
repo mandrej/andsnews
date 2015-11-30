@@ -238,6 +238,7 @@ class Cloud(object):
 
     def get_list(self):
         collection = self.get_cache() or self.make()
+        # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
         content = []
         if self.field == 'color':
             for k, count in collection.items():

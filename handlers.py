@@ -315,6 +315,7 @@ class RenderCloud(BaseHandler):
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))
 
+            logging.info(items)
             self.render_template(
                 'snippets/cloud.html', {
                     'items': items,

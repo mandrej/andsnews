@@ -1,19 +1,34 @@
 {% import "snippets/macros.html" as m %}
 {% if field_name in ['date', 'iso', 'eqv'] %} {# integers #}
     {% for item in items %}
-        {% set selected = item.name == filter.value|int if filter else False %}
-        {% set text = item.name %}
-        {% if field_name == 'iso' %}
-            {% set text = '%s ASA' % item.name %}
-        {% elif field_name == 'eqv' %}
-            {% set text = '%smm' % item.name %}
+        {% if not devel %}
+            {% if item.count > 1 %}
+                {% set selected = item.name == filter.value|int if filter else False %}
+                {% set text = item.name %}
+                {% if field_name == 'iso' %}
+                    {% set text = '%s ASA' % item.name %}
+                {% elif field_name == 'eqv' %}
+                    {% set text = '%smm' % item.name %}
+                {% endif %}
+                {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                    classes=['selected' if selected], text=text) }}
+{#                {{ m.chip(url=uri_for(link, field=field_name, value=item.name),#}
+{#                    classes=['fs%s' % item.size, 'selected' if selected], text=text) }}#}
+            {% endif %}
+        {% else %}
+            {% set selected = item.name == filter.value|int if filter else False %}
+            {% set text = item.name %}
+            {% if field_name == 'iso' %}
+                {% set text = '%s ASA' % item.name %}
+            {% elif field_name == 'eqv' %}
+                {% set text = '%smm' % item.name %}
+            {% endif %}
+            {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                classes=['selected' if selected], text=text) }}
         {% endif %}
-        {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
-            classes=['selected' if selected], text=text) }}
-{#        {{ m.chip(url=uri_for(link, field=field_name, value=item.name),#}
-{#            classes=['fs%s' % item.size, 'selected' if selected], text=text) }}#}
     {% endfor %}
 {% elif field_name =='color' %}
+{#    [{'field': 'color', 'order': '1', 'name': 'orange', 'hex': '#f90', 'count': 7}, ...#}
     {% for item in items %}
         {% if item.count > 0 %}
             {% set selected = item.name == filter.value if filter else False %}
@@ -22,10 +37,33 @@
                 classes=['selected' if selected], text=item.name) }}
         {% endif %}
     {% endfor %}
-{% else %} {# author, model, tags, lens #}
+{% elif field_name == 'tags' %} {# reducing tags #}
     {% for item in items %}
-        {% set selected = item.name == filter.value if filter else False %}
-        {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
-            classes=['selected' if selected], text=item.name) }}
+        {% if not devel %}
+            {% if item.count > 4 %}
+                {% set selected = item.name == filter.value if filter else False %}
+                {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                    classes=['selected' if selected], text=item.name) }}
+            {% endif %}
+        {% else %}
+            {% set selected = item.name == filter.value if filter else False %}
+            {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                classes=['selected' if selected], text=item.name) }}
+        {% endif %}
+    {% endfor %}
+{% else %} {# author, model, lens #}
+{#    [{'count': 3, 'name': 'Canon EOS 400D DIGITAL', 'size': 5}, ...#}
+    {% for item in items %}
+        {% if not devel %}
+            {% if item.count > 2 %}
+                {% set selected = item.name == filter.value if filter else False %}
+                {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                    classes=['selected' if selected], text=item.name) }}
+            {% endif %}
+        {% else %}
+            {% set selected = item.name == filter.value if filter else False %}
+            {{ m.chip(url=uri_for(link, field=field_name, value=item.name),
+                classes=['selected' if selected], text=item.name) }}
+        {% endif %}
     {% endfor %}
 {% endif %}
