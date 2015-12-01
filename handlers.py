@@ -296,6 +296,9 @@ class SearchPaginator(object):
 
 
 def cloud_limit(items):
+    """
+    Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    """
     if DEVEL:
         return 0
     else:
