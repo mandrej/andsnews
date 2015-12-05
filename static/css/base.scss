@@ -141,15 +141,23 @@ footer.page-footer {
   vertical-align: middle;
 }
 
+
+.card-title {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 24px;
+}
+
 .card {
   margin: 0;
   display: block;
+  .card-title {
+    @extend .card-title;
+  }
   .card-content {
     .card-title {
-      display: block;
-      font-size: 1.35rem;
-      font-weight: 400;
-      line-height: 24px;
+      @extend .card-title;
     }
     .card-author {
       display: block;
@@ -161,6 +169,7 @@ footer.page-footer {
   }
   .card-image {
     .card-title {
+      @extend .card-title;
       background-color: rgba(0, 0, 0, 0.5);
     }
     .swiper-lazy {
@@ -181,6 +190,10 @@ footer.page-footer {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    .card-title:first-child {
+      @extend .card-title;
+      padding-bottom: 20px;
+    }
   }
 }
 
