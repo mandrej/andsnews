@@ -57,7 +57,7 @@
                 if (is_touch_device()) {
                     $('.card').not(":has('.pinch-zoom-container')").each(function() {
                         new RTP.PinchZoom($(this).find('.card-image'), {
-                            tapZoomFactor: 4
+                            tapZoomFactor: 2
                         })
                     });
                 } else {
@@ -88,6 +88,7 @@
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id;
 
+                sw.update(true);
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
             }
@@ -98,10 +99,7 @@
                 grabCursor: true,
                 lazyLoading: true,
                 lazyLoadingInPrevNext: true,
-                onLazyImageReady: adjastView,
                 initialSlide: (index != -1)? index: 0,
-                observer: true,
-                observeParents: true,
                 onReachEnd: function(sw) {
                     getPage($('.next').attr('href'), function($page) {
                         sw.appendSlide($page.find('.card'));
@@ -114,6 +112,7 @@
                         enable_zoom();
                     });
                 },
+                onLazyImageReady: adjastView,
                 onSlideChangeEnd: adjastView
             });
 
