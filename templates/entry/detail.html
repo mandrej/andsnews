@@ -8,8 +8,7 @@
         {{ m.chip(url=uri_for('entry_all_filter', field='author', value=object.author),
             title=_("author's blogs"), text=object.author) }}
         {% for tag in object.tags %}
-            {{ m.chip(url=uri_for('entry_all_filter', field='tags', value=tag),
-                icon='<i class="material-icons">label</i>', text=tag) }}
+            {{ m.chip(url=uri_for('entry_all_filter', field='tags', value=tag), text=tag) }}
         {% endfor %}
         {{ m.chip(url=uri_for('entry_all_filter', field='date', value=object.year),
             title=_('blogs sent same year'), text=object.year) }}

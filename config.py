@@ -94,6 +94,14 @@ ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,
        1000, 1250, 1600, 2000, 2500, 3200, 4000, 5000, 6400]
 LENGTHS = [8, 15, 20, 24, 28, 35, 50, 85, 105, 135, 160, 200, 300, 400, 600]
 
+# LENGTHS = [
+#     {'name': _('Extreme Wide'), 'span': range(22)},
+#     {'name': _('Wide Angle'), 'span': range(22, 36)},
+#     {'name': _('Normal'), 'span': range(36, 71)},
+#     {'name': _('Medium Telephoto'), 'span': range(61, 136)},
+#     {'name': _('Telephoto'), 'span': range(136, 301)},
+# ]
+
 if not PY2:
     unichr = chr
     range_type = range

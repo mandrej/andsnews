@@ -144,18 +144,20 @@ footer.page-footer {
 .card {
   margin: 0;
   display: block;
-  .card-title {
-    display: block;
-    font-size: 1.35rem !important;
-    font-weight: 400;
-    line-height: normal !important;
-  }
-  .card-author {
-    display: block;
-    padding-top: 0.5rem;
-    text-align: right;
-    font-size: 0.8rem;
-    line-height: normal;
+  .card-content {
+    .card-title {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 24px;
+    }
+    .card-author {
+      display: block;
+      padding-top: 0.5rem;
+      text-align: right;
+      font-size: 0.8rem;
+      line-height: normal;
+    }
   }
   .card-image {
     .card-title {
@@ -277,30 +279,29 @@ span.error {
   color: $primary-color;
 }
 
+$chip_size: 1.25rem;
 .dot {
-    $default_size: 1.3rem;
     display: inline-block;
     vertical-align: middle;
-    border: $default_size / 2 solid;
+    border: $chip_size / 2 solid;
     line-height: 0;
   }
 
 .chip {
-  $default_size: 1.3rem;
   font-weight: 400;
   display: inline-block;
-  margin: $default_size / 4 0;
-  height: 1.6 * $default_size;
-  line-height: 1.5 * $default_size;
-  font-size: $default_size;
-  background-color: color("grey", 'darken-1');
-  padding: 0 $default_size / 2;
-  border-radius: $default_size;
+  margin: $chip_size / 4 0;
+  height: 1.6 * $chip_size;
+  line-height: 1.5 * $chip_size;
+  font-size: $chip_size;
+  background-color: color("grey", 'base');
+  padding: 0 $chip_size / 2;
+  border-radius: $chip_size;
   color: #fff;
   a { color: #fff; vertical-align: middle; }
   @for $i from 1 through 8 {
     &.fs#{$i} {
-      font-size: $default_size + ($i - 1) / 10;
+      font-size: $chip_size + ($i - 1) / 10;
     }
   }
   &.selected {
@@ -311,14 +312,14 @@ span.error {
     display: inline-block;
     float: none;
     vertical-align: middle;
-    font-size: $default_size;
-    line-height: 1.5 * $default_size;
+    font-size: $chip_size;
+    line-height: 1.5 * $chip_size;
     padding: 0;
-    margin-right: $default_size / 3;
+    margin-right: $chip_size / 3;
   }
   .dot {
-    margin-right: $default_size / 3;
-    border-radius: $default_size / 2;
+    margin-right: $chip_size / 3;
+    border-radius: $chip_size / 2;
   }
 }
 

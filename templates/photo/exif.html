@@ -1,33 +1,42 @@
-<span class="card-title">{{ object.headline }}<i class="material-icons right">close</i></span>
 {% import "snippets/macros.html" as m %}
 
-{{ m.chip(url=uri_for('photo_all_filter', field='model', value=object.model),
-    title=_('photos taken with same camera model'), text=object.model) }}
-{% if object.lens %}
-    {{ m.chip(url=uri_for('photo_all_filter', field='lens', value=object.lens),
-        title=_('photos taken with same lens'), text=object.lens) }}
+<span class="card-title">{{ object.headline }}<i class="material-icons right">close</i></span>
+{% if user %}
+    <span class="card-title">
+        <a href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
+            {{ _('Download') }} ({{ object|image_dimension }}, {{ object.size|filesizeformat }})
+            <i class="material-icons">file_download</i>
+        </a>
+    </span>
 {% endif %}
-{{ m.chip(url=uri_for('photo_all_filter', field='author', value=object.author),
-    title=_("author's photos"), text=object.author) }}
-{% for tag in object.tags %}
-    {{ m.chip(url=uri_for('photo_all_filter', field='tags', value=tag),
-        icon='<i class="material-icons">label</i>', text=tag) }}
-{% endfor %}
-{{ m.chip(url=uri_for('photo_all_filter', field='date', value=object.year),
-    title=_('photos taken same year'), text=object.year) }}
-{% if object.eqv %}
-    {{ m.chip(url=uri_for('photo_all_filter', field='eqv', value=object.eqv),
-        title=_('photos with same equvalent focal length'), text='%smm' % object.eqv) }}
-{% endif %}
-{% if object.iso %}
-    {{ m.chip(url=uri_for('photo_all_filter', field='iso', value=object.iso),
-        title=_('photos with same iso'), text='%s ASA' % object.iso) }}
-{% endif %}
-{{ m.chip(url=uri_for('photo_all_filter', field='color', value=object.color),
-    icon='<span class="dot" style="border-color: %s;"></span>' % object.hex,
-    title=_('photos with similar color'), text=_(object.color)) }}
 
 <div class="row">
+    <div class="col s12 m6">
+        {{ m.chip(url=uri_for('photo_all_filter', field='model', value=object.model),
+            title=_('photos taken with same camera model'), text=object.model) }}
+        {% if object.lens %}
+            {{ m.chip(url=uri_for('photo_all_filter', field='lens', value=object.lens),
+                title=_('photos taken with same lens'), text=object.lens) }}
+        {% endif %}
+        {{ m.chip(url=uri_for('photo_all_filter', field='author', value=object.author),
+            title=_("author's photos"), text=object.author) }}
+        {% for tag in object.tags %}
+            {{ m.chip(url=uri_for('photo_all_filter', field='tags', value=tag), text=tag) }}
+        {% endfor %}
+        {{ m.chip(url=uri_for('photo_all_filter', field='date', value=object.year),
+            title=_('photos taken same year'), text=object.year) }}
+        {% if object.eqv %}
+            {{ m.chip(url=uri_for('photo_all_filter', field='eqv', value=object.eqv),
+                title=_('photos with same equvalent focal length'), text='%smm' % object.eqv) }}
+        {% endif %}
+        {% if object.iso %}
+            {{ m.chip(url=uri_for('photo_all_filter', field='iso', value=object.iso),
+                title=_('photos with same iso'), text='%s ASA' % object.iso) }}
+        {% endif %}
+        {{ m.chip(url=uri_for('photo_all_filter', field='color', value=object.color),
+            icon='<span class="dot" style="border-color: %s;"></span>' % object.hex,
+            title=_('photos with similar color'), text=_(object.color)) }}
+    </div>
     <div class="col s12 m6">
         <div class="row">
             <div class="col s6">{{ _('Aperture') }}</div>
@@ -44,11 +53,4 @@
                 {{ object.date|to_datetime }}</time></div>
         </div>
     </div>
-    {% if user %}
-        <div class="col s12 m12">
-            <h5><a href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">
-                <i class="material-icons">file_download</i>
-                {{ _('Download') }} ({{ object|image_dimension }}, {{ object.size|filesizeformat }})</a></h5>
-        </div>
-    {% endif %}
 </div>
