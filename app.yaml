@@ -29,15 +29,20 @@ handlers:
   upload: static/images/favicon.ico
   mime_type: image/x-icon
 
-- url: /static/css/(.*\.(less|scss))$
-  static_files: static/css/\1
-  upload: static/css/.*\.(less|scss)$
+- url: /static/(.*\.(less|scss))$
+  static_files: static/\1
+  upload: static/.*\.(less|scss)$
   mime_type: text/css
 
-- url: /static/css/(.*)\.map
-  static_files: static/css/\1.map
-  upload: static/css/.*.map
+- url: /static/(.*\.map)$
+  static_files: static/\1
+  upload: static/.*\.map$
   mime_type: application/json
+
+- url: /static/font/(.*\.woff2)$
+  static_files: static/font/\1
+  upload: static/font/.*\.woff2$
+  mime_type: application/font-woff2
 
 - url: /static
   static_dir: static
