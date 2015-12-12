@@ -14,7 +14,7 @@
     </nav>
     <section>
         <div class="row valign-wrapper">
-            <div class="col s10">
+            <div class="col m9 hide-on-small-only">
                 {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
@@ -36,7 +36,7 @@
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
-            <div class="col s2 valign middle right-align">
+            <div class="col m3 s12 valign middle right-align">
                 <a href="{{ uri_for('photo_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
                     <i class="material-icons">add</i>
                 </a>
@@ -47,18 +47,18 @@
             <colgroup>
                 <col style="width: 50px;"/>
                 <col/>
-                <col style="width: 190px; text-align: right;"/>
+                <col class="hide-on-small-only" style="width: 190px; text-align: right;"/>
                 <col style="width: 150px; text-align: right;"/>
-                <col style="width: 210px; text-align: right;"/>
+                <col class="hide-on-small-only" style="width: 210px; text-align: right;"/>
                 <col style="width: 200px; text-align: right;"/>
             </colgroup>
             <thead>
                 <tr>
                     <th></th>
                     <th>headline</th>
-                    <th>blob info</th>
+                    <th class="hide-on-small-only">blob info</th>
                     <th>HLS</th>
-                    <th>color classification</th>
+                    <th class="hide-on-small-only">color classification</th>
                     <th></th>
                 </tr>
             </thead>
@@ -81,7 +81,7 @@
                                     {{ object.headline }}
                                 </a>
                             </td>
-                            <td>
+                            <td class="hide-on-small-only">
                                 {% if object.blob_key %}
                                     {{ True|boolimage }}
                                     {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
@@ -91,9 +91,11 @@
                             </td>
                             <td>
                                 <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
-                                {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                                <span class="hide-on-small-only">
+                                    {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                                </span>
                             </td>
-                            <td>
+                            <td class="hide-on-small-only">
                                 {% if object.color == object.hue %}
                                     <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
                                 {% endif %}

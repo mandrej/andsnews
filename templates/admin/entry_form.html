@@ -18,7 +18,7 @@
             <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
         {% endif %}
             <div class="row">
-                <div class="col s12 m6 l6">
+                <div class="col s12 m6">
                     {% if form.errors %}
                         <div class="alert white">
                             <i class="material-icons red-text">error</i>
@@ -37,66 +37,68 @@
                     {{ m.form_row(form.author, class='browser-default') }}
                     {{ m.form_row(form.date, type='date', class='datepicker') }}
                 </div>
-                <div class="col s12 m6 l6 hide-on-med-and-down">
+                <div class="col m6 hide-on-med-and-down">
                     <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
                     <p>{{ _('Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding.') }}</p>
                     <p>{{ _('Summary') }} {{ _('A brief presentation in a concise form') }}.</p>
                     <p>{{ _('Send images less then') }} 200KB.</p>
                 </div>
-                <div class="row">
-                    <div class="col s12">
-                        <h5>{{ _('Images used in this blog') }}</h5>
-                        {% if object %}
-                            {{ m.form_row(form.front, class='browser-default') }}
-                            {% for field in form.images %}
-                                <div class="row valign-wrapper">
-                                    <div class="col s1">
-                                        <img src="{{ object.image_url(field.form.num.data) }}/small">
-                                    </div>
-                                    <div class="col s1">
-                                        {{ field.form.num.label }}
-                                        {{ field.form.num(size=1, disabled='disabled') }}
-                                    </div>
-                                    <div class="col s8">
-                                        {{ field.form.name.label }}
-                                        {{ field.form.name(size=30) }}
-                                    </div>
-                                    <div class="col s2 valign bottom">
-                                        {{ field.form.delete(class='checkbox') }}
-                                        {{ field.form.delete.label }}
-                                    </div>
+                <div class="col s12">
+                    <h5>{{ _('Images used in this blog') }}</h5>
+                    {% if object %}
+                        {{ m.form_row(form.front, class='browser-default') }}
+                        {% for field in form.images %}
+                            <div class="row valign-wrapper">
+                                <div class="col s1">
+                                    <img src="{{ object.image_url(field.form.num.data) }}/small">
                                 </div>
-                            {% endfor %}
-                        {% endif %}
-                        {% for field in form.newimages %}
-                            <div class="row">
-                                <div class="col s12">
-                                    <p>
-                                        <div class="file-field input-field">
-                                            <div class="btn">
-                                                <span>{{ field.form.name.label.text }}</span>
-                                                {{ m.input(field.form.blob, class='validate') }}
-                                            </div>
-                                            <div class="file-path-wrapper">
-                                                <input class="file-path validate" type="text">
-                                            </div>
-                                        </div>
-                                    </p>
+                                <div class="col s1">
+                                    {{ field.form.num.label }}
+                                    {{ field.form.num(size=1, disabled='disabled') }}
+                                </div>
+                                <div class="col s8">
+                                    {{ field.form.name.label }}
+                                    {{ field.form.name(size=30) }}
+                                </div>
+                                <div class="col s2 valign bottom">
+                                    {{ field.form.delete(class='checkbox') }}
+                                    {{ field.form.delete.label }}
                                 </div>
                             </div>
                         {% endfor %}
-
-                        {{ form.body(class='materialize-textarea') }}
-                        {{ form.body.label }}
-
+                    {% endif %}
+                    {% for field in form.newimages %}
                         <div class="row">
-                            <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
-                            <div class="col s4">&nbsp;</div>
-                            <div class="col s4 right-align">
-                                <button class="btn waves-effect orange" type="submit">
-                                    {{ _('done') }}<i class="material-icons right">send</i>
-                                </button>
+                            <div class="col s12">
+                                <p>
+                                    <div class="file-field input-field">
+                                        <div class="btn">
+                                            <span>{{ field.form.name.label.text }}</span>
+                                            {{ m.input(field.form.blob, class='validate') }}
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </p>
                             </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form.body(class='materialize-textarea') }}
+                            {{ form.body.label }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
+                        <div class="col s4">&nbsp;</div>
+                        <div class="col s4 right-align">
+                            <button class="btn waves-effect orange" type="submit">
+                                {{ _('done') }}<i class="material-icons right">send</i>
+                            </button>
                         </div>
                     </div>
                 </div>

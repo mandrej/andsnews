@@ -14,7 +14,7 @@
     </nav>
     <section>
         <div class="row valign-wrapper">
-            <div class="col s10">
+            <div class="col m9 hide-on-small-only">
                 {% for item in tags_cloud|sort(attribute='name', reverse=False) %}
                     {% set selected = item.name == filter.value if filter else False %}
                     <a class="{{ ['t%s' % item.size, 'selected' if selected]|css_classes }}"
@@ -36,7 +36,7 @@
                         {{ item.name }}</a>&nbsp;
                 {% endfor %}
             </div>
-            <div class="col s2 valign middle right-align">
+            <div class="col m3 s12 valign middle right-align">
                 <a href="{{ uri_for('entry_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
                     <i class="material-icons">add</i>
                 </a>
@@ -49,22 +49,20 @@
                     <a class="btn waves-effect" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
                         <i class="material-icons left">edit</i>{{ object.headline }}
                     </a>
-                    <a class="confirm btn waves-effect orange right" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                    <a class="confirm btn waves-effect orange right hide-on-small-only" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
                         <i class="material-icons">delete</i></a>
-{#                    <a class="btn waves-effect" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">#}
-
                 </h5>
                 <table class="highlight">
                     <colgroup>
                         <col/>
-                        <col style="width: 300px;"/>
+                        <col class="hide-on-small-only" style="width: 300px;"/>
                         <col style="width: 180px; text-align: right;"/>
                         <col style="width: 160px; text-align: right;"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th>name</th>
-                            <th>keyname</th>
+                            <th class="hide-on-small-only">keyname</th>
                             <th>normal</th>
                             <th>thumbnail</th>
                         </tr>
@@ -73,7 +71,7 @@
                         {% for image in object.image_list %}
                             <tr id="{{ image.key.urlsafe() }}">
                                 <td>{{ image.name }}</td>
-                                <td>{{ image.key.string_id() }}</td>
+                                <td class="hide-on-small-only">{{ image.key.string_id() }}</td>
                                 <td>{{ image.blob|length|filesizeformat }}, {{ image.mime }}</td>
                                 <td>
                                     {% if image.small %}
