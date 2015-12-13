@@ -7,11 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1511\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-11-29 20:29+0100\n"
-"PO-Revision-Date: 2015-11-29 20:46+0100\n"
+"POT-Creation-Date: 2015-12-13 10:46+0100\n"
+"PO-Revision-Date: 2015-12-13 10:51+0100\n"
 "Last-Translator: Milan Andrejevic <milan.andrejevic@gmail.com>\n"
 "Language-Team: ands <milan.andrejevic@gmail.com>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -65,58 +66,58 @@ msgstr "средња"
 msgid "light"
 msgstr "светла"
 
-#: config.py:208
+#: config.py:216
 msgid "year"
 msgid_plural "years"
 msgstr[0] "године"
 msgstr[1] "године"
 msgstr[2] "године"
 
-#: config.py:209
+#: config.py:217
 msgid "month"
 msgid_plural "months"
 msgstr[0] "месеца"
 msgstr[1] "месеца"
 msgstr[2] "месеци"
 
-#: config.py:210
+#: config.py:218
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "недеље"
 msgstr[1] "недеље"
 msgstr[2] "недеља"
 
-#: config.py:211
+#: config.py:219
 msgid "day"
 msgid_plural "days"
 msgstr[0] "дана"
 msgstr[1] "дана"
 msgstr[2] "дана"
 
-#: config.py:212
+#: config.py:220
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "сата"
 msgstr[1] "сата"
 msgstr[2] "сати"
 
-#: config.py:213
+#: config.py:221
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "минута"
 msgstr[1] "минута"
 msgstr[2] "минута"
 
-#: config.py:226
+#: config.py:234
 msgid "minutes"
 msgstr "минута"
 
-#: config.py:231
+#: config.py:239
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr "%(number)d %(type)s"
 
-#: config.py:236
+#: config.py:244
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ", %(number)d %(type)s"
@@ -142,12 +143,21 @@ msgid "Please correct errors in"
 msgstr "Поправите грешке у"
 
 #: templates/admin/entry_form.html:41 templates/admin/photo_form.html:85
-msgid "Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses."
-msgstr "Обележје једнозначно представља слог. Мора почети словом и може садржати смао слова, бројеве, доњу или обичну црту. Користи се уместо URL адреса."
+msgid ""
+"Slug uniquely represent record. It must start with letter and may contain "
+"only letters, numbers, underscores or hyphens. It is used for URL "
+"addresses."
+msgstr ""
+"Обележје једнозначно представља слог. Мора почети словом и може садржати "
+"смао слова, бројеве, доњу или обичну црту. Користи се уместо URL адреса."
 
 #: templates/admin/entry_form.html:42 templates/admin/photo_form.html:86
-msgid "Tags determine record qualification to a group or a type of records. It is comma separated. Use english for wider understanding."
-msgstr "Ознаке одређују којој групи или типу слогова припада. Ознаке су одвојене запетом. Користи енглески за шире разумевање."
+msgid ""
+"Tags determine record qualification to a group or a type of records. It is "
+"comma separated. Use english for wider understanding."
+msgstr ""
+"Ознаке одређују којој групи или типу слогова припада. Ознаке су одвојене "
+"запетом. Користи енглески за шире разумевање."
 
 #: templates/admin/entry_form.html:43 views/entry.py:73 views/entry.py:88
 msgid "Summary"
@@ -161,16 +171,16 @@ msgstr "Кратка и сажета презентација"
 msgid "Send images less then"
 msgstr "Шаљите слике мање од"
 
-#: templates/admin/entry_form.html:48
+#: templates/admin/entry_form.html:47
 msgid "Images used in this blog"
 msgstr "Слике коришћене у овој белшци"
 
-#: templates/admin/entry_form.html:93 templates/admin/photo_form.html:44
+#: templates/admin/entry_form.html:96 templates/admin/photo_form.html:44
 #: templates/admin/photo_form.html:73
 msgid "Required field"
 msgstr "Обавезно поље"
 
-#: templates/admin/entry_form.html:97 templates/admin/photo_form.html:77
+#: templates/admin/entry_form.html:100 templates/admin/photo_form.html:77
 msgid "done"
 msgstr "заврши"
 
@@ -192,7 +202,9 @@ msgid "data"
 msgstr "подаци"
 
 #: templates/admin/photo_form.html:87
-msgid "Forward slash is not allowed in any field. It will be stripped out automatically."
+msgid ""
+"Forward slash is not allowed in any field. It will be stripped out "
+"automatically."
 msgstr "Коса црта није дозвољена ни у јеном пољу. Биће аутоматски избрисана."
 
 #: templates/admin/photo_form.html:90
@@ -207,61 +219,65 @@ msgstr "Израчунај палету"
 msgid "author's blogs"
 msgstr "ауторове белешке"
 
-#: templates/entry/detail.html:15
+#: templates/entry/detail.html:14
 msgid "blogs sent same year"
 msgstr "белешке послате исте године"
 
 #: templates/photo/crops.html:2
-msgid "Crop factor represent dimensional ratio between sensor and the 35 mm film camera (36x24mm)"
-msgstr "Crop factor је мера која представља однос између сензора вашег апарата и апарата са пуним форматом или  35 mm камером (36x24mm)"
+msgid ""
+"Crop factor represent dimensional ratio between sensor and the 35 mm film "
+"camera (36x24mm)"
+msgstr ""
+"Crop factor је мера која представља однос између сензора вашег апарата и "
+"апарата са пуним форматом или  35 mm камером (36x24mm)"
 
-#: templates/photo/exif.html:5
+#: templates/photo/exif.html:7
+msgid "Download"
+msgstr "Преузми"
+
+#: templates/photo/exif.html:16
 msgid "photos taken with same camera model"
 msgstr "фотографије снимљене истим апаратом"
 
-#: templates/photo/exif.html:8
+#: templates/photo/exif.html:19
 msgid "photos taken with same lens"
 msgstr "фотографије снимљене истим објективом"
 
-#: templates/photo/exif.html:11
+#: templates/photo/exif.html:22
 msgid "author's photos"
 msgstr "фотографије истог аутора"
 
-#: templates/photo/exif.html:17
+#: templates/photo/exif.html:27
 msgid "photos taken same year"
 msgstr "фотографије снимљене исте године"
 
-#: templates/photo/exif.html:20
+#: templates/photo/exif.html:30
 msgid "photos with same equvalent focal length"
 msgstr "фотографије са истом жижном даљином"
 
-#: templates/photo/exif.html:24
+#: templates/photo/exif.html:34
 msgid "photos with same iso"
 msgstr "фотографије са истом осетљивошћу"
 
-#: templates/photo/exif.html:28
+#: templates/photo/exif.html:38
 msgid "photos with similar color"
 msgstr "фотографије са сличном бојом"
 
-#: templates/photo/exif.html:33 views/photo.py:145
+#: templates/photo/exif.html:42 views/photo.py:145
 msgid "Aperture"
 msgstr "Бленда"
 
-#: templates/photo/exif.html:36 views/photo.py:146
+#: templates/photo/exif.html:45 views/photo.py:146
 msgid "Shutter speed"
 msgstr "Експозиција"
 
-#: templates/photo/exif.html:39 views/photo.py:147
+#: templates/photo/exif.html:48 views/photo.py:147
 msgid "Focal length"
 msgstr "Жижна даљина"
 
-#: templates/photo/exif.html:42 views/photo.py:143
+#: templates/photo/exif.html:51 views/photo.py:143
 msgid "Taken"
 msgstr "Снимљено"
-
-#: templates/photo/exif.html:51
-msgid "Download"
-msgstr "Преузми"
 
 #: templates/snippets/confirm.html:3
 msgid "Confirm"
@@ -324,8 +340,12 @@ msgid "Based od colorific color extraction in CIE 2000 color space"
 msgstr "Базарино на colorific ексракцији боја у CIE 2000 простору"
 
 #: templates/snippets/graph.html:14
-msgid "Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10"
-msgstr "Еквивалентна жижна даљина је рачуната на основу камере са пуним форматом сензора или 35 mm камере, заокружена на 10"
+msgid ""
+"Equivalent focal lengths are calculated for a full format sensor or 35 mm "
+"film camera, rounded to nearset 10"
+msgstr ""
+"Еквивалентна жижна даљина је рачуната на основу камере са пуним форматом "
+"сензора или 35 mm камере, заокружена на 10"
 
 #: templates/snippets/macros.html:79
 msgid "Filters"
@@ -387,69 +407,3 @@ msgstr "Изаберите фотографију."
 #: views/photo.py:149
 msgid "Crop factor"
 msgstr "Фактор"
-
-#~ msgid "Start"
-#~ msgstr "Старт"
-
-#~ msgid "Choose image"
-#~ msgstr "Затвори слику"
-
-#~ msgid "No images"
-#~ msgstr "Нема слика"
-
-#~ msgid "To choose images, you must send them first"
-#~ msgstr "Да би изабрали слику, прво је морате послати"
-
-#~ msgid "Download"
-#~ msgstr "Преузми"
-
-#~ msgid "Dominant color"
-#~ msgstr "Доминантна бојa"
-
-#~ msgid "Similar color"
-#~ msgstr "Cличнa бојa"
-
-#~ msgid "previous"
-#~ msgstr "претходна"
-
-#~ msgid "page"
-#~ msgstr "страна"
-
-#~ msgid "next"
-#~ msgstr "следећа"
-
-#~ msgid "teal"
-#~ msgstr "тиркиз"
-
-#~ msgid "purple"
-#~ msgstr "љубичаста"
-
-#~ msgid "pink"
-#~ msgstr "розе"
-
-#~ msgid "author's photos"
-#~ msgstr "ауторове фотографије"
-
-#~ msgid "photos taken same year"
-#~ msgstr "фотографије снимљене исте године"
-
-#~ msgid "see"
-#~ msgstr "види"
-
-#~ msgid "Menu"
-#~ msgstr "Мени"
-
-#~ msgid "Search"
-#~ msgstr "Тражи"
-
-#~ msgid "Log out"
-#~ msgstr "Излогујте се"
-
-#~ msgid "eqv"
-#~ msgstr "екв"
-
-#~ msgid "Color classification"
-#~ msgstr "Класификација"
-
-#~ msgid "close"
-#~ msgstr "затвори"

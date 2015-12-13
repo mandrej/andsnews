@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-11-29 20:29+0100\n"
+"POT-Creation-Date: 2015-12-13 10:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,52 +61,52 @@ msgstr ""
 msgid "light"
 msgstr ""
 
-#: config.py:208
+#: config.py:216
 msgid "year"
 msgid_plural "years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:209
+#: config.py:217
 msgid "month"
 msgid_plural "months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:210
+#: config.py:218
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:211
+#: config.py:219
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:212
+#: config.py:220
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:213
+#: config.py:221
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:226
+#: config.py:234
 msgid "minutes"
 msgstr ""
 
-#: config.py:231
+#: config.py:239
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr ""
 
-#: config.py:236
+#: config.py:244
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ""
@@ -156,16 +156,16 @@ msgstr ""
 msgid "Send images less then"
 msgstr ""
 
-#: templates/admin/entry_form.html:48
+#: templates/admin/entry_form.html:47
 msgid "Images used in this blog"
 msgstr ""
 
-#: templates/admin/entry_form.html:93 templates/admin/photo_form.html:44
+#: templates/admin/entry_form.html:96 templates/admin/photo_form.html:44
 #: templates/admin/photo_form.html:73
 msgid "Required field"
 msgstr ""
 
-#: templates/admin/entry_form.html:97 templates/admin/photo_form.html:77
+#: templates/admin/entry_form.html:100 templates/admin/photo_form.html:77
 msgid "done"
 msgstr ""
 
@@ -204,7 +204,7 @@ msgstr ""
 msgid "author's blogs"
 msgstr ""
 
-#: templates/entry/detail.html:15
+#: templates/entry/detail.html:14
 msgid "blogs sent same year"
 msgstr ""
 
@@ -214,52 +214,52 @@ msgid ""
 " camera (36x24mm)"
 msgstr ""
 
-#: templates/photo/exif.html:5
+#: templates/photo/exif.html:7
+msgid "Download"
+msgstr ""
+
+#: templates/photo/exif.html:16
 msgid "photos taken with same camera model"
 msgstr ""
 
-#: templates/photo/exif.html:8
+#: templates/photo/exif.html:19
 msgid "photos taken with same lens"
 msgstr ""
 
-#: templates/photo/exif.html:11
+#: templates/photo/exif.html:22
 msgid "author's photos"
 msgstr ""
 
-#: templates/photo/exif.html:17
+#: templates/photo/exif.html:27
 msgid "photos taken same year"
 msgstr ""
 
-#: templates/photo/exif.html:20
+#: templates/photo/exif.html:30
 msgid "photos with same equvalent focal length"
 msgstr ""
 
-#: templates/photo/exif.html:24
+#: templates/photo/exif.html:34
 msgid "photos with same iso"
 msgstr ""
 
-#: templates/photo/exif.html:28
+#: templates/photo/exif.html:38
 msgid "photos with similar color"
 msgstr ""
 
-#: templates/photo/exif.html:33 views/photo.py:145
+#: templates/photo/exif.html:42 views/photo.py:145
 msgid "Aperture"
 msgstr ""
 
-#: templates/photo/exif.html:36 views/photo.py:146
+#: templates/photo/exif.html:45 views/photo.py:146
 msgid "Shutter speed"
 msgstr ""
 
-#: templates/photo/exif.html:39 views/photo.py:147
+#: templates/photo/exif.html:48 views/photo.py:147
 msgid "Focal length"
 msgstr ""
 
-#: templates/photo/exif.html:42 views/photo.py:143
+#: templates/photo/exif.html:51 views/photo.py:143
 msgid "Taken"
-msgstr ""
-
-#: templates/photo/exif.html:51
-msgid "Download"
 msgstr ""
 
 #: templates/snippets/confirm.html:3
