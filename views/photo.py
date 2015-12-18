@@ -13,7 +13,7 @@ from models import Photo, incr_count, decr_count, range_names, rgb_hls
 from palette import rgb_to_hex
 from wtforms import Form, fields, validators
 from handlers import BaseHandler, csrf_protected, xss_protected, Paginator, EmailField, TagsField
-from config import CROPS, PHOTOS_PER_PAGE
+from config import CROPS, PHOTOS_PER_PAGE, PHOTOS_MAX_PAGE
 
 
 class Index(BaseHandler):
@@ -27,6 +27,7 @@ class Index(BaseHandler):
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
+                'max': PHOTOS_MAX_PAGE,
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('photo/index.html', data)
@@ -48,6 +49,7 @@ class Detail(BaseHandler):
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'slug': slug,
                 'page': page,
+                'max': PHOTOS_MAX_PAGE,
                 'has_next': has_next,
                 'has_previous': page > 1}
         self.render_template('photo/detail.html', data)

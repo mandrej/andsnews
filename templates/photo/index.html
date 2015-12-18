@@ -40,7 +40,7 @@
             });
             $container.infinitescroll({
                 binder: $(window),
-                maxPage: 3,
+                maxPage: parseInt('{{ max }}'),
                 itemSelector: '.thumbnail',
                 nextSelector: '.next',
                 navSelector: ".pagination",

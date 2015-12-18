@@ -35,14 +35,15 @@
     <script src="/static/scripts/pinchzoom.min.js"></script>
     <script>
         $(function () {
-            var parameters = $.getQueryParameters(),
+            var page = parseInt($.getQueryParameters().page),
                 ids = $('.card').map(function() {
                     return this.id
                 }).get(),
                 index = $.inArray('{{ slug }}', ids),
+                max = 2* parseInt('{{ max }}'),
                 pages = [];
 
-            pages.push(parseInt(parameters.page));
+            pages.push(page);
 
             function is_touch_device() {
                 try {
@@ -72,7 +73,7 @@
 
             function getPage(href, callback) {
                 var num = parseInt($.getQueryParameters(href).page);
-                if (!isNaN(num) && $.inArray(num, pages) == -1) {
+                if (!isNaN(num) && pages.length < max && $.inArray(num, pages) == -1) {
                     // TODO href is from pagination
                     $.get(href, function(response) {
                         var $page = $(response);
