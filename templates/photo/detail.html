@@ -40,7 +40,7 @@
                     return this.id
                 }).get(),
                 index = $.inArray('{{ slug }}', ids),
-                max = 2* parseInt('{{ max }}'),
+                max = parseInt('{{ max }}'),
                 pages = [];
 
             pages.push(page);
@@ -78,8 +78,8 @@
                     $.get(href, function(response) {
                         var $page = $(response);
                         callback($page);
-                        $('nav.pagination').replaceWith(function() {
-                            return $page.find('nav.pagination').hide();
+                        $('.pagination').replaceWith(function() {
+                            return $page.find('.pagination').hide();
                         });
                     });
                     pages.push(num);
