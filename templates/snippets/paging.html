@@ -1,31 +1,25 @@
-{% set uriname='%s_filter' % name if filter else name %}
-
 {% if filter %}
-    {% if slug %}
-        {% set url = uri_for(uriname, field=filter.field, value=filter.value, slug=slug) %}
-    {% else %}
-        {% set url = uri_for(uriname, field=filter.field, value=filter.value) %}
-    {% endif %}
+    {% set url = uri_for('%s_filter' % name, field=filter.field, value=filter.value) %}
 {% else %}
-    {% if slug %}
-        {% set url = uri_for(uriname, slug=slug) %}
-    {% else %}
-        {% set url = uri_for(uriname) %}
-    {% endif %}
+    {% set url = uri_for(name) %}
 {% endif %}
 
 {% if has_previous %}
-    {% set qs='?find=%s&page=%s' % (phrase, page - 1) if phrase else '?page=%s' % (page - 1) %}
+    {% set qs = {'page': page - 1} %}
+    {% if slug %}{% do qs.update({'slug': slug}) %}{% endif %}
+    {% if phrase %}{% do qs.update({'find': phrase}) %}{% endif %}
     <li class="waves-effect">
-        <a{{ {'href': '%s%s' % (url, qs), 'class': 'prev'}|xmlattr }}>
+        <a href="{{ url }}?{{ qs|urlencode }}" class="prev">
             <i class="material-icons">chevron_left</i>
         </a>
     </li>
 {% endif %}
 {% if has_next %}
-    {% set qs='?find=%s&page=%s' % (phrase, page + 1) if phrase else '?page=%s' % (page + 1) %}
+    {% set qs = {'page': page + 1} %}
+    {% if slug %}{% do qs.update({'slug': slug}) %}{% endif %}
+    {% if phrase %}{% do qs.update({'find': phrase}) %}{% endif %}
     <li class="waves-effect">
-        <a{{ {'href': '%s%s' % (url, qs), 'class': 'next'}|xmlattr }}>
+        <a href="{{ url }}?{{ qs|urlencode }}" class="next">
             <i class="material-icons">chevron_right</i>
         </a>
     </li>

@@ -20,6 +20,7 @@ class Index(BaseHandler):
     @xss_protected
     def get(self, field=None, value=None):
         page = int(self.request.get('page', 1))
+        slug = self.request.get('slug', None)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
@@ -30,28 +31,23 @@ class Index(BaseHandler):
                 'max': PHOTOS_MAX_PAGE,
                 'has_next': has_next,
                 'has_previous': page > 1}
-        self.render_template('photo/index.html', data)
+
+        if slug is not None:
+            data['slug'] = slug
+            self.render_template('photo/detail.html', data)
+        else:
+            self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):
-    @xss_protected
     def get(self, slug, field=None, value=None):
         obj = Photo.get_by_id(slug)
         if obj is None:
             self.abort(404)
 
-        page = int(self.request.get('page', -1))
-        query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(page) if page > 0 else ([obj], False)
-
-        data = {'objects': objects,
+        data = {'objects': [obj],
                 'filter': {'field': field, 'value': value} if (field and value) else None,
-                'slug': slug,
-                'page': page,
-                'max': PHOTOS_MAX_PAGE,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'slug': slug}
         self.render_template('photo/detail.html', data)
 
 

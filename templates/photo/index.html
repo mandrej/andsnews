@@ -7,11 +7,11 @@
     <div id="gallery">
         {% for object in objects %}
             {% if filter %}
-                {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
+                {% set url = uri_for('photo_all_filter', field=filter.field, value=filter.value) %}
             {% else %}
-                {% set url = uri_for('photo', slug=object.key.string_id()) %}
+                {% set url = uri_for('photo_all') %}
             {% endif %}
-            <a href="{{ url }}?page={{ page }}" class="thumbnail">
+            <a href="{{ url }}?{{ {'page': page, 'slug': object.key.string_id()}|urlencode }}" class="thumbnail">
                 <div class="card waves-effect z-depth-0">
                     <div class="card-image">
                         <img src="{{ object.serving_url }}=s400">
