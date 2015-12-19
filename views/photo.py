@@ -3,7 +3,7 @@ import json
 from collections import defaultdict, OrderedDict
 
 from google.appengine.ext.webapp import blobstore_handlers
-from google.appengine.ext import blobstore
+from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from PIL import Image
@@ -25,6 +25,9 @@ class Index(BaseHandler):
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
         objects, has_next = paginator.page(page)
 
+        if not objects:
+            self.abort(404)
+
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
@@ -41,11 +44,13 @@ class Index(BaseHandler):
 
 class Detail(BaseHandler):
     def get(self, slug, field=None, value=None):
-        obj = Photo.get_by_id(slug)
-        if obj is None:
+        key = ndb.Key(Photo, slug)
+        query = Photo.query_for(field, value)
+        objects = query.filter(Photo._key == key).fetch(1)
+        if not objects:
             self.abort(404)
 
-        data = {'objects': [obj],
+        data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'slug': slug}
         self.render_template('photo/detail.html', data)

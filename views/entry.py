@@ -24,6 +24,9 @@ class Index(BaseHandler):
         paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
         objects, has_next = paginator.page(page)
 
+        if not objects:
+            self.abort(404)
+
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
