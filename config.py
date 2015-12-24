@@ -99,7 +99,7 @@ LENGTHS = [8, 15, 20, 24, 28, 35, 50, 85, 105, 135, 160, 200, 300, 400, 600]
 #     {'name': _('Extreme Wide'), 'span': range(22)},
 #     {'name': _('Wide Angle'), 'span': range(22, 36)},
 #     {'name': _('Normal'), 'span': range(36, 71)},
-#     {'name': _('Medium Telephoto'), 'span': range(61, 136)},
+#     {'name': _('Medium Telephoto'), 'span': range(71, 136)},
 #     {'name': _('Telephoto'), 'span': range(136, 301)},
 # ]
 

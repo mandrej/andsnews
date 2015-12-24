@@ -2,8 +2,9 @@
 
 ### What is this repository for? ###
 
-* This is personal site for pictures and blog built using Google App Engine
-* Version 1502
+* This is personal site for photos and blog
+* Built using Google App Engine and python 2.7
+* Current version 1511
 
 ### How do I get set up? ###
 
