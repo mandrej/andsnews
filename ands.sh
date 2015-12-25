@@ -27,8 +27,7 @@ done
 
 if [ $update -ne 0 ]; then
     echo 'Deploy to Google'
-    # $python $appengine/appcfg.py update . &
+    # exec $python $appengine/appcfg.py update .
 else
     echo 'Running development server'
-    # $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ . &
-fi
+    exec $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
