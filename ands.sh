@@ -31,3 +31,4 @@ if [ $update -ne 0 ]; then
 else
     echo 'Running development server'
     exec $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
+fi
