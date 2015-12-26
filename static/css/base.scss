@@ -90,16 +90,6 @@ header > nav {
 
 .pagination {
   background-color: $primary-color;
-  li {
-    a {
-      color: #fff !important;
-    }
-  }
-  &.disabled {
-    a {
-      color: #000 !important;
-    }
-  }
 }
 
 #searchForm input {
@@ -319,7 +309,7 @@ $chip_size: 1.25rem;
     }
   }
   &.selected {
-    background-color: $error-color;
+    background-color: $link-color;
   }
   i.material-icons {
     cursor: pointer;

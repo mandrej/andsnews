@@ -20,9 +20,11 @@
     {% for item in items %}
         {% if item.count > limit %}
             {% set selected = item.name == filter.value if filter else False %}
-            {{ m.chip(url=uri_for(link, field=item.field, value=item.name),
+{#            {{ m.chip(url=uri_for(link, field=item.field, value=item.name),
                 icon='<span class="dot" style="border-color: %s;"></span>' % item.hex,
-                classes=['selected' if selected], text=item.name) }}
+                classes=['selected' if selected], text=item.name) }} #}
+            {{ m.chip(url=uri_for(link, field=item.field, value=item.name),
+                classes=['selected' if selected], text=_(item.name)) }}
         {% endif %}
     {% endfor %}
 {% elif field_name == 'tags' %} {# reducing tags #}

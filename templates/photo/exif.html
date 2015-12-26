@@ -33,8 +33,10 @@
             {{ m.chip(url=uri_for('photo_all_filter', field='iso', value=object.iso),
                 title=_('photos with same iso'), text='%s ASA' % object.iso) }}
         {% endif %}
-        {{ m.chip(url=uri_for('photo_all_filter', field='color', value=object.color),
+{#        {{ m.chip(url=uri_for('photo_all_filter', field='color', value=object.color),
             icon='<span class="dot" style="border-color: %s;"></span>' % object.hex,
+            title=_('photos with similar color'), text=_(object.color)) }} #}
+        {{ m.chip(url=uri_for('photo_all_filter', field='color', value=object.color),
             title=_('photos with similar color'), text=_(object.color)) }}
     </div>
     <div class="col s12 m6">

@@ -24,7 +24,7 @@
     <header class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <span class="brand-logo">{{ self.title() }}</span>
+                <span class="brand-logo orange-text">{{ self.title() }}</span>
                 <ul class="pagination">
                     {% block paging %}{% endblock %}
                 </ul>
@@ -34,7 +34,7 @@
                 <div id="nav-mobile" class="side-nav collapsible fixed">
                     <ul>
                         <li class="no-padding">
-                            <nav><a href="{{ uri_for('start') }}" class="brand-logo white-text">ANDрејевићи</a></nav>
+                            <nav><a href="{{ uri_for('start') }}" class="brand-logo">ANDрејевићи</a></nav>
                         </li>
                         {% block menu %}{{ m.menu() }}{% endblock %}
                     </ul>
