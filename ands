@@ -3,32 +3,19 @@ python=/home/milan/venv/ands/bin/python
 appengine=/home/milan/google_appengine
 work=/home/milan/work
 
-usage()
-{
-    echo 'usage: ./ands.sh options:<d|u>'
-    echo 'Use -d for development server, -u for deployment'
-}
-
-update=0
-
-while getopts 'du' opt
-do
-    case $opt in
-        d)
-            ;;
-        u)
-            update=1
-            ;;
-        *)
-            usage
-            exit 1
-    esac
-done
-
-if [ $update -ne 0 ]; then
-    echo 'Deploy to Google'
-    exec $python $appengine/appcfg.py update .
-else
-    echo 'Running development server'
-    exec $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
+if [[ $# -eq 0 ]] ; then
+    $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
+    exit 0
 fi
+
+case $1 in
+    update|rollback)
+        echo $"Google $1"
+        $python $appengine/appcfg.py $1 .
+        exit
+        ;;
+    *)
+        echo $"Usage: $0 Run development server"
+        echo $"Usage: $0 {update|rollback}"
+        exit 1
+esac
