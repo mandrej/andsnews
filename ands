@@ -5,7 +5,7 @@ work=/home/milan/work
 
 if [[ $# -eq 0 ]] ; then
     $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
-    exit 0
+    exit
 fi
 
 case $1 in

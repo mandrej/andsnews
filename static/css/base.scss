@@ -79,59 +79,74 @@ main {
 
 header > nav {
   background-color: $navbar-bg-color;
+  .brand-logo {
+    padding: 0 20px;
+  }
   .button-collapse {
+    color: #444;
     background-color: $primary-color;
+    i {
+      padding: 0 1rem;
+    }
+  }
+  .nav-wrapper {
+    i {
+      font-size: 2.7rem;
+      height: 56px;
+      line-height: 56px;
+      @media #{$medium-and-up} {
+        height: 64px;
+        line-height: 64px;
+      }
+    }
+    .pagination {
+      background-color: $primary-color;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: auto;
+      li {
+        padding: 0;
+      }
+    }
+    .progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      margin: 0;
+      background-color: $primary-color;
+      height: 2px;
+      display: none;
+      .indeterminate {
+        background-color: $navbar-bg-color;
+      }
+    }
   }
   nav {
     background-color: $primary-color;
     position: relative !important;
+    .brand-logo {
+      @media #{$medium-and-down} {
+        left: 0;
+        transform: translateX(0);
+      }
+    }
   }
-}
-
-.pagination {
-  background-color: $primary-color;
 }
 
 #searchForm input {
   margin: 0;
 }
 
-nav .nav-wrapper i {
-  font-size: 2.7rem;
-  height: 56px;
-  line-height: 56px;
-  @media #{$medium-and-up} {
-    height: 64px;
-    line-height: 64px;
-  }
-}
-
-.nav-wrapper .pagination {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: auto;
-  li {
-    padding: 0;
-  }
-}
-
-nav .brand-logo, .footer-copyright {
-  padding: 0 20px;
-}
-
-nav .button-collapse i {
-  padding: 0 1rem;
-}
-
 footer.page-footer {
   margin-top: 0;
+  .footer-copyright {
+    padding: 0 20px;
+    .material-icons {
+      vertical-align: middle;
+    }
+  }
 }
-
-.footer-copyright .material-icons {
-  vertical-align: middle;
-}
-
 
 .card-title {
   display: block;
@@ -249,19 +264,6 @@ article {
     .legend {
       margin: 0 0 1rem 0;
     }
-  }
-}
-
-.progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin: 0;
-  background-color: $primary-color;
-  height: 2px;
-  display: none;
-  .indeterminate {
-    background-color: $navbar-bg-color;
   }
 }
 
