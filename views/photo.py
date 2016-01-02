@@ -19,11 +19,11 @@ from config import CROPS, PHOTOS_PER_PAGE, PHOTOS_MAX_PAGE
 class Index(BaseHandler):
     @xss_protected
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         slug = self.request.get('slug', None)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(page)
+        objects, token = paginator.page(page)
 
         if not objects:
             self.abort(404)
@@ -32,8 +32,7 @@ class Index(BaseHandler):
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
                 'max': PHOTOS_MAX_PAGE,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'next': token}
 
         if slug is not None:
             data['slug'] = slug
@@ -115,7 +114,7 @@ class Palette(BaseHandler):
             incr_count('Photo', 'color', obj.color)
             self.render_json({
                 'success': True,
-                'similar_url': self.uri_for('photo_all_filter', page=1, field='color', value=obj.color)
+                'similar_url': self.uri_for('photo_all_filter', field='color', value=obj.color)
             })
         else:
             self.render_json({'success': False})
@@ -213,7 +212,7 @@ class Edit(BaseHandler):
         form = EditForm(formdata=self.request.POST)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('photo_admin', page=1)
+            self.redirect_to('photo_admin')
         else:
             self.render_template('admin/photo_form.html', {
                 'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})

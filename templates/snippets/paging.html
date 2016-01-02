@@ -4,22 +4,12 @@
     {% set url = uri_for(name) %}
 {% endif %}
 
-{% if has_previous %}
-    {% set qs = {'page': page - 1} %}
+{% if next %}
+    {% set qs = {'page': next} %}
     {% if slug %}{% do qs.update({'slug': slug}) %}{% endif %}
     {% if phrase %}{% do qs.update({'find': phrase}) %}{% endif %}
     <li class="waves-effect">
-        <a href="{{ url }}?{{ qs|urlencode }}" class="prev">
-            <i class="material-icons">chevron_left</i>
-        </a>
-    </li>
-{% endif %}
-{% if has_next %}
-    {% set qs = {'page': page + 1} %}
-    {% if slug %}{% do qs.update({'slug': slug}) %}{% endif %}
-    {% if phrase %}{% do qs.update({'find': phrase}) %}{% endif %}
-    <li class="waves-effect">
-        <a href="{{ url }}?{{ qs|urlencode }}" class="next">
+        <a href="{{ url|querystring(qs) }}" class="next">
             <i class="material-icons">chevron_right</i>
         </a>
     </li>

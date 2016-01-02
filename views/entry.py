@@ -19,19 +19,15 @@ SMALL = 60, 60
 class Index(BaseHandler):
     @xss_protected
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         query = Entry.query_for(field, value)
         paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
-        objects, has_next = paginator.page(page)
-
-        if not objects:
-            self.abort(404)
+        objects, token = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'next': token}
         self.render_template('entry/index.html', data)
 
 
@@ -110,7 +106,7 @@ class Add(BaseHandler):
         if form.validate():
             obj = Entry(id=form.slug.data)
             obj.add(form.data)
-            self.redirect_to('entry_admin', page=1)
+            self.redirect_to('entry_admin')
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
@@ -142,7 +138,7 @@ class Edit(BaseHandler):
         form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
-            self.redirect_to('entry_admin', page=1)
+            self.redirect_to('entry_admin')
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 

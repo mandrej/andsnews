@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <form action="{{ uri_for('counter_admin', page=page) }}" method="post">
+        <form action="{{ uri_for('counter_admin') }}" method="post">
             <input name="token" type="hidden" value="{{ token }}"/>
             <table class="highlight">
                 <colgroup>

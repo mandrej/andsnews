@@ -5,7 +5,7 @@ import logging
 import webapp2
 from timeit import default_timer
 from datetime import datetime, timedelta
-from urllib import quote as url_quote
+from urllib import urlencode, quote as url_quote
 from jinja2.filters import environmentfilter, do_mark_safe, do_truncate
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
 
@@ -177,6 +177,13 @@ def boolimage(value):
         return do_mark_safe('<i class="fa fa-minus-circle" style="color: #c00"></i>')
 
 
+def querystring(url, kwargs):
+    for k, v in kwargs.items():
+        if v is None:
+            del kwargs[k]
+    return '%s?%s' % (url, urlencode(kwargs))
+
+
 @environmentfilter
 def css_classes(env, classes):
     return ' '.join(x for x in classes if x) or env.undefined(hint='No classes requested')
@@ -323,6 +330,7 @@ CONFIG = {
             'timesince': timesince_jinja,
             'to_json': to_json,
             'split': split,
+            'querystring': querystring,
             'urlencode': do_urlencode,
             'truncate': truncate,
         },

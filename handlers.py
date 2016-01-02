@@ -4,7 +4,6 @@ import json
 import datetime
 import sys
 import traceback
-import hashlib
 import uuid
 import logging
 from operator import itemgetter
@@ -13,9 +12,10 @@ import webapp2
 from jinja2.filters import Markup
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import users, memcache, search, mail
+from google.appengine.api import users, search, mail
 from google.appengine.ext import ndb, blobstore
 from google.appengine.runtime import apiproxy_errors
+from google.appengine.datastore.datastore_query import Cursor
 
 from wtforms import widgets, fields
 from models import INDEX, Photo, Entry, Cloud, Graph
@@ -37,12 +37,7 @@ def csrf_protected(handler_method):
 def xss_protected(handler_method):
     def wrapper(self, *args, **kwargs):
         for key, val in self.request.params.items():
-            if key == 'page':
-                try:
-                    int(val)
-                except ValueError:
-                    self.abort(400)
-            elif key == 'find':
+            if key == 'find':
                 pass
             else:
                 if val != Markup.escape(val):
@@ -169,14 +164,19 @@ class Find(BaseHandler):
     @xss_protected
     def get(self):
         find = self.request.get('find').strip()
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         paginator = SearchPaginator(find, per_page=PER_PAGE)
-        objects, number_found, has_next, error = paginator.page(page)
+        objects, number_found, token, error = paginator.page(page)
 
         self.render_template(
             'results.html', {
-                'objects': objects, 'phrase': find, 'number_found': number_found,
-                'page': page, 'has_next': has_next, 'has_previous': page > 1, 'error': error})
+                'objects': objects,
+                'phrase': find,
+                'number_found': number_found,
+                'page': page,
+                'next': token,
+                'error': error}
+        )
 
 
 class DeleteHandler(BaseHandler):
@@ -211,46 +211,27 @@ class SaveAsHandler(BaseHandler):
 
 
 class Paginator(object):
-    timeout = TIMEOUT / 12  # 5 min
-
     def __init__(self, query, per_page=PER_PAGE):
         self.query = query
         self.per_page = per_page
-        # <str> repr(self.query)
-        self.id = hashlib.md5('{0}{1}'.format(self.query, self.per_page)).hexdigest()
-        self.cache = memcache.get(self.id) or {}
 
-    def page_keys(self, num):
-        if num < 1:
-            webapp2.abort(404)
+    def page(self, token=None):
+        cursor = None
+        if token is not None:
+            cursor = Cursor(urlsafe=token)
 
-        try:
-            cursor = self.cache[num - 1]
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
-        except (KeyError, TypeError):
-            offset = (num - 1) * self.per_page
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, offset=offset)
-
-        self.cache[num] = cursor
-        memcache.set(self.id, self.cache, self.timeout)
-        return keys, has_next
-
-    def page(self, num):
-        keys, has_next = self.page_keys(num)
+        keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
         objects = ndb.get_multi(keys)
         # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
-        return [x for x in objects if x is not None], has_next
+        return [x for x in objects if x is not None], cursor.urlsafe() if has_next else None
 
 
 class SearchPaginator(object):
-    timeout = TIMEOUT/12
-
     def __init__(self, querystring, per_page=PER_PAGE):
         self.querystring = querystring
         self.per_page = per_page
 
         self.options = {
-            'cursor': search.Cursor(),
             'limit': self.per_page,
             'ids_only': True,
             'sort_options': search.SortOptions(
@@ -261,19 +242,16 @@ class SearchPaginator(object):
                 ]
             )
         }
-        self.id = hashlib.md5(querystring).hexdigest()
-        self.cache = memcache.get(self.id) or {}
 
-    def page(self, num):
-        objects, has_next, number_found, error = [], False, 0, None
+    def page(self, token=None):
+        objects, next_token, number_found, error = [], None, 0, None
+        if token is not None:
+            self.options['cursor'] = search.Cursor(web_safe_string=token)
+        else:
+            self.options['cursor'] = search.Cursor()
 
         if self.querystring:
             try:
-                cursor = self.cache[num]
-            except KeyError:
-                cursor = None
-            try:
-                self.options['cursor'] = search.Cursor(web_safe_string=cursor)
                 query = search.Query(
                     query_string=self.querystring,
                     options=search.QueryOptions(**self.options)
@@ -288,16 +266,16 @@ class SearchPaginator(object):
                 objects = ndb.get_multi(keys)
 
                 if found.cursor is not None:
-                    has_next = True
-                    self.cache[num + 1] = found.cursor.web_safe_string
-                    memcache.set(self.id, self.cache, self.timeout)
+                    next_token = found.cursor.web_safe_string
 
-        return [x for x in objects if x is not None], number_found, has_next, error
+        return [x for x in objects if x is not None], number_found, next_token, error
 
 
 def cloud_limit(items):
     """
-    Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    Returns limit for the specific count. Show only if count > limit
+    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    :return: int
     """
     if DEVEL:
         return 0
@@ -378,11 +356,11 @@ class SiteMap(BaseHandler):
     def get(self):
         query = Photo.query().order(-Photo.date)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        photos, _ = paginator.page(1)
+        photos, _ = paginator.page()
 
         query = Entry.query().order(-Entry.date)
         paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
-        entries, _ = paginator.page(1)
+        entries, _ = paginator.page()
 
         data = {'photos': photos,
                 'entries': entries,

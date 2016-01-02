@@ -35,7 +35,7 @@
     <script src="/static/scripts/pinchzoom.min.js"></script>
     <script>
         $(function () {
-            var page = parseInt($.getQueryParameters().page),
+            var page = $.getQueryParameters().page,
                 ids = $('.card').map(function() {
                     return this.id
                 }).get(),
@@ -43,7 +43,9 @@
                 max = parseInt('{{ max }}'),
                 pages = [];
 
-            pages.push(page);
+            if (page !== undefined) {
+                pages.push(page);
+            }
 
             function is_touch_device() {
                 try {
@@ -71,20 +73,6 @@
                 }
             }
 
-            function getPage(href, callback) {
-                var num = parseInt($.getQueryParameters(href).page);
-                if (!isNaN(num) && pages.length < max && $.inArray(num, pages) == -1) {
-                    // TODO href is from pagination
-                    $.get(href, function(response) {
-                        var $page = $(response);
-                        callback($page);
-                        $('.pagination').replaceWith(function() {
-                            return $page.find('.pagination').hide();
-                        });
-                    });
-                    pages.push(num);
-                }
-            }
             function adjastView(sw) {
                 var slide = sw.slides.eq(sw.activeIndex),
                     slug = slide[0].id;
@@ -93,6 +81,25 @@
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
             }
+
+            function getPage(sw) {
+                var href = $('.next').attr('href');
+                if (href !== undefined) {
+                    var page = $.getQueryParameters(href).page;
+                    if ($.inArray(page, pages) == -1 && pages.length < max) {
+                        $.get(href, function(response) {
+                            var $page = $(response);
+                            sw.appendSlide($page.find('.card'));
+                            enable_zoom();
+                            $('.pagination').replaceWith(function() {
+                                return $page.find('.pagination').hide();
+                            });
+                        });
+                        pages.push(page);
+                    }
+                }
+            }
+
             var swiper = new Swiper('.swiper-container', {
                 loop: false,
                 keyboardControl: true,
@@ -101,18 +108,7 @@
                 lazyLoading: true,
                 lazyLoadingInPrevNext: true,
                 initialSlide: (index != -1)? index: 0,
-                onReachEnd: function(sw) {
-                    getPage($('.next').attr('href'), function($page) {
-                        sw.appendSlide($page.find('.card'));
-                        enable_zoom();
-                    });
-                },
-                onReachBeginning: function(sw) {
-                    getPage($('.prev').attr('href'), function($page) {
-                        sw.prependSlide($page.find('.card').reverse());
-                        enable_zoom();
-                    });
-                },
+                onReachEnd: getPage,
                 onLazyImageReady: adjastView,
                 onSlideChangeEnd: adjastView
             });

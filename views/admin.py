@@ -61,16 +61,15 @@ class Photos(BaseHandler):
     @login_required
     @xss_protected
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, has_next = paginator.page(page)
+        objects, token = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1,
+                'next': token,
                 'tags_cloud': Cloud('Photo_tags').get_list(),
                 'author_cloud': Cloud('Photo_author').get_list(),
                 'date_cloud': Cloud('Photo_date').get_list()}
@@ -81,16 +80,15 @@ class Entries(BaseHandler):
     @login_required
     @xss_protected
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         query = Entry.query_for(field, value)
         paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
-        objects, has_next = paginator.page(page)
+        objects, token = paginator.page(page)
 
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1,
+                'next': token,
                 'tags_cloud': Cloud('Entry_tags').get_list(),
                 'author_cloud': Cloud('Entry_author').get_list(),
                 'date_cloud': Cloud('Entry_date').get_list()}
@@ -119,22 +117,20 @@ class Counters(BaseHandler):
     @admin_required
     @xss_protected
     def get(self, field=None, value=None):
-        page = int(self.request.get('page', 1))
+        page = self.request.get('page', None)
         query = Counter.query_for(field, value)
         paginator = Paginator(query, per_page=20)
-        objects, has_next = paginator.page(page)
+        objects, token = paginator.page(page)
         data = {'objects': objects,
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
-                'has_next': has_next,
-                'has_previous': page > 1}
+                'next': token}
         self.render_template('admin/counters.html', data)
 
     @csrf_protected
-    def post(self, page=1):
+    def post(self):
         # cntx = ndb.get_context()
         # cntx.set_cache_policy(False)
-        page = int(page)
         if self.request.get('action:delete'):
             key = ndb.Key(urlsafe=self.request.get('action:delete'))
             key.delete()
@@ -144,7 +140,7 @@ class Counters(BaseHandler):
             obj = key.get()
             obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
-        self.redirect_to('counter_admin', page=page)
+        self.redirect_to('counter_admin')
 
 
 JOBS = {

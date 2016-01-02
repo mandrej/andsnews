@@ -66,18 +66,18 @@
                 {% for object in objects %}
                     {% if user == object.author or is_admin %}
                         {% if filter %}
-                            {% set url = uri_for('photo_filter', field=filter.field, value=filter.value, slug=object.key.string_id()) %}
+                            {% set url = uri_for('photo_all_filter', field=filter.field, value=filter.value) %}
                         {% else %}
-                            {% set url = uri_for('photo', slug=object.key.string_id()) %}
+                            {% set url = uri_for('photo_all') %}
                         {% endif %}
                         <tr>
                             <td>
-                                <a href="{{ url }}?&amp;page={{ page }}">
+                                <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}">
                                     <img src="{{ object.serving_url }}=s400" width="50"/>
                                 </a>
                             </td>
                             <td>
-                                <a href="{{ url }}?&amp;page={{ page }}">
+                                <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}">
                                     {{ object.headline }}
                                 </a>
                             </td>
