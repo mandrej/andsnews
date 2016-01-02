@@ -20,12 +20,14 @@
                 </div>
             </div>
         {% else %}
-            <h4>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h4>
-            <p>{{ _('You can use fields') }}: author, tags, year, month {{ _('and logical operators') }}: AND, OR {{ _('for example') }}: &quot;tags:milan AND month:11&quot;</p>
+            {% if phrase %}
+                <h4>{% trans count=number_found %}{{ count }} search result for '{{ phrase }}'{% pluralize %}{{ count }} search results for '{{ phrase }}'{% endtrans %}</h4>
+                <p>{{ _('You can use fields') }}: author, tags, year, month {{ _('and logical operators') }}: AND, OR {{ _('for example') }}: &quot;tags:milan AND month:11&quot;</p>
+            {% else %}
+                <h4>{{ _('Nothing to search for') }}</h4>
+                <p>{{ _('Please try something') }}. {{ _('You can use fields') }}: author, tags, year, month</p>
+            {% endif %}
         {% endif %}
-{#            <h4>{{ _('Nothing to search for') }}</h4>#}
-{#            <p>{{ _('Please try something') }}. {{ _('Fields used') }}: author, tags, year, month</p>#}
-
     </section>
     <div id="gallery">
         {% for object in objects %}

@@ -3,15 +3,9 @@
         <h4>{{ _('Confirm') }}</h4>
         <input name="token" type="hidden" value="{{ token }}">
         <p>{{ _('Do you really want to delete') }}
-            {% if object.kind == 'Entry' %}
-                {{ _('Blog') }} &quot;{{ object.headline }}&quot;
-                {{ _('posted by') }}
-                <strong>{{ object.author }}</strong>?
-            {% elif object.kind == 'Photo' %}
-                {{ _('photo') }} &quot;{{ object.headline }}&quot;
-                {{ _('posted by') }}
-                <strong>{{ object.author }}</strong>?
-            {% endif %}
+            &quot;{{ object.headline }}&quot;
+            {{ _('posted by') }}
+            <strong>{{ object.author }}</strong>?
         </p>
     </div>
     <div class="modal-footer">

@@ -10,7 +10,7 @@
 	<meta name="keywords" content="gae, google appengine, google app engine, webapp2, jinja2, python, html5, andrejevic">
     <meta http-equiv="Content-Security-Policy" content="script-src https: 'self' 'unsafe-inline' 'unsafe-eval'">
 	{% block meta %}<meta name="date" content="2008-03-01"/>{% endblock %}
-	<title>{% block title %}ANDрејевићи{% endblock %}</title>
+	<title>ANDрејевићи</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="/static/css/base.css" rel="stylesheet">
@@ -24,29 +24,28 @@
     <header class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <span class="brand-logo orange-text">{{ self.title() }}</span>
-                <ul class="pagination">
+                <a href="{{ uri_for('start') }}" class="brand-logo orange-text">ANDрејевићи</a>
+                <ul class="right pagination">
                     {% block paging %}{% endblock %}
                 </ul>
-                <div class="progress">
-                    <div class="indeterminate"></div>
-                </div>
-                <div id="nav-mobile" class="side-nav collapsible fixed">
-                    <ul>
-                        <li class="no-padding">
-                            <nav><a href="{{ uri_for('start') }}" class="brand-logo">ANDрејевићи</a></nav>
-                        </li>
-                        {% block menu %}{{ m.menu() }}{% endblock %}
-                    </ul>
+                <ul class="right hide-on-med-and-down">
                     {% block search %}
-                        <form id="searchForm" action="{{ uri_for('search', page=1) }}" method="get">
+                        <form id="searchForm" class="left" action="{{ uri_for('search', page=1) }}" method="get">
                             <div class="input-field">
-                                <input id="search" name="find" type="search" required>
+                                <input id="search" name="find" type="search">
                                 <label for="search"><i class="material-icons">search</i></label>
                                 <i class="material-icons">close</i>
                             </div>
                         </form>
                     {% endblock %}
+                    {% block menu %}{{ m.menu() }}{% endblock %}
+                </ul>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+                <div id="nav-mobile" class="side-nav">
+                    <ul>{{ self.menu() }}</ul>
+                    {{ self.search() }}
                 </div>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>

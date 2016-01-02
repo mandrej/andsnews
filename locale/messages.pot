@@ -1,14 +1,14 @@
 # Translations template for PROJECT.
-# Copyright (C) 2015 ORGANIZATION
+# Copyright (C) 2016 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-12-13 10:46+0100\n"
+"POT-Creation-Date: 2016-01-02 10:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,110 +17,108 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: config.py:36
+#: config.py:37
 msgid "english"
 msgstr ""
 
-#: config.py:36
+#: config.py:37
 msgid "serbian"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "red"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "orange"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "yellow"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "green"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "blue"
 msgstr ""
 
-#: config.py:39
+#: config.py:40
 msgid "violet"
 msgstr ""
 
-#: config.py:40
+#: config.py:41
 msgid "dark"
 msgstr ""
 
-#: config.py:40
+#: config.py:41
 msgid "medium"
 msgstr ""
 
-#: config.py:40
+#: config.py:41
 msgid "light"
 msgstr ""
 
-#: config.py:216
+#: config.py:218
 msgid "year"
 msgid_plural "years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:217
+#: config.py:219
 msgid "month"
 msgid_plural "months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:218
+#: config.py:220
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:219
+#: config.py:221
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:220
+#: config.py:222
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:221
+#: config.py:223
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: config.py:234
+#: config.py:236
 msgid "minutes"
 msgstr ""
 
-#: config.py:239
+#: config.py:241
 #, python-format
 msgid "%(number)d %(type)s"
 msgstr ""
 
-#: config.py:244
+#: config.py:246
 #, python-format
 msgid ", %(number)d %(type)s"
 msgstr ""
 
-#: templates/admin/base.html:2 templates/admin/entry_form.html:8
-#: templates/admin/photo_form.html:8 templates/snippets/macros.html:60
-#: templates/snippets/macros.html:71
+#: templates/admin/entry_form.html:8 templates/admin/photo_form.html:8
+#: templates/snippets/macros.html:40 templates/snippets/macros.html:44
 msgid "Administration"
 msgstr ""
 
-#: templates/admin/entry_form.html:9 templates/entry/base.html:2
-#: templates/snippets/confirm.html:7 templates/snippets/macros.html:44
-#: templates/snippets/macros.html:54
-msgid "Blog"
+#: templates/admin/entry_form.html:9 templates/snippets/macros.html:33
+#: templates/snippets/macros.html:36
+msgid "Texts"
 msgstr ""
 
 #: templates/admin/entry_form.html:10
@@ -144,7 +142,7 @@ msgid ""
 "is comma separated. Use english for wider understanding."
 msgstr ""
 
-#: templates/admin/entry_form.html:43 views/entry.py:73 views/entry.py:88
+#: templates/admin/entry_form.html:43 views/entry.py:76 views/entry.py:91
 msgid "Summary"
 msgstr ""
 
@@ -169,8 +167,8 @@ msgstr ""
 msgid "done"
 msgstr ""
 
-#: templates/admin/photo_form.html:9 templates/photo/base.html:2
-#: templates/snippets/macros.html:28 templates/snippets/macros.html:38
+#: templates/admin/photo_form.html:9 templates/snippets/macros.html:26
+#: templates/snippets/macros.html:29
 msgid "Photos"
 msgstr ""
 
@@ -242,23 +240,23 @@ msgstr ""
 msgid "photos with same iso"
 msgstr ""
 
-#: templates/photo/exif.html:38
+#: templates/photo/exif.html:40
 msgid "photos with similar color"
 msgstr ""
 
-#: templates/photo/exif.html:42 views/photo.py:145
+#: templates/photo/exif.html:44 views/photo.py:148
 msgid "Aperture"
 msgstr ""
 
-#: templates/photo/exif.html:45 views/photo.py:146
+#: templates/photo/exif.html:47 views/photo.py:149
 msgid "Shutter speed"
 msgstr ""
 
-#: templates/photo/exif.html:48 views/photo.py:147
+#: templates/photo/exif.html:50 views/photo.py:150
 msgid "Focal length"
 msgstr ""
 
-#: templates/photo/exif.html:51 views/photo.py:143
+#: templates/photo/exif.html:53 views/photo.py:146
 msgid "Taken"
 msgstr ""
 
@@ -270,51 +268,47 @@ msgstr ""
 msgid "Do you really want to delete"
 msgstr ""
 
-#: templates/snippets/confirm.html:8 templates/snippets/confirm.html:12
+#: templates/snippets/confirm.html:7
 msgid "posted by"
 msgstr ""
 
-#: templates/snippets/confirm.html:11
-msgid "photo"
-msgstr ""
-
-#: templates/snippets/confirm.html:19
+#: templates/snippets/confirm.html:13
 msgid "Delete"
 msgstr ""
 
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:96
-#: views/entry.py:71 views/entry.py:86 views/photo.py:124 views/photo.py:141
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:69
+#: views/entry.py:74 views/entry.py:89 views/photo.py:127 views/photo.py:144
 msgid "Tags"
 msgstr ""
 
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:97
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:70
 msgid "Dates"
 msgstr ""
 
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:98
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:71
 msgid "Authors"
 msgstr ""
 
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:99
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:72
 msgid "Color"
 msgstr ""
 
-#: templates/snippets/graph.html:2 templates/snippets/macros.html:100
-#: views/photo.py:144
+#: templates/snippets/graph.html:2 templates/snippets/macros.html:73
+#: views/photo.py:147
 msgid "Camera model"
 msgstr ""
 
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:101
-#: views/photo.py:150
+#: templates/snippets/graph.html:3 templates/snippets/macros.html:74
+#: views/photo.py:153
 msgid "Lens type"
 msgstr ""
 
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:102
+#: templates/snippets/graph.html:3 templates/snippets/macros.html:75
 msgid "Eqv. focal length"
 msgstr ""
 
-#: templates/snippets/graph.html:3 templates/snippets/macros.html:103
-#: views/photo.py:148
+#: templates/snippets/graph.html:3 templates/snippets/macros.html:76
+#: views/photo.py:151
 msgid "Sensitivity"
 msgstr ""
 
@@ -328,64 +322,64 @@ msgid ""
 " film camera, rounded to nearset 10"
 msgstr ""
 
-#: templates/snippets/macros.html:79
+#: templates/snippets/macros.html:52
 msgid "Filters"
 msgstr ""
 
-#: views/entry.py:51
+#: views/entry.py:54
 #, python-format
 msgid "This field is required if other \"%s\" present."
 msgstr ""
 
-#: views/entry.py:57
+#: views/entry.py:60
 msgid "New Image"
 msgstr ""
 
-#: views/entry.py:63
+#: views/entry.py:66
 msgid "Image"
 msgstr ""
 
-#: views/entry.py:65
+#: views/entry.py:68
 msgid "remove"
 msgstr ""
 
-#: views/entry.py:69 views/entry.py:85 views/photo.py:122 views/photo.py:140
+#: views/entry.py:72 views/entry.py:88 views/photo.py:125 views/photo.py:143
 msgid "Headline"
 msgstr ""
 
-#: views/entry.py:70 views/photo.py:123
+#: views/entry.py:73 views/photo.py:126
 msgid "Slug"
 msgstr ""
 
-#: views/entry.py:72 views/entry.py:87 views/photo.py:125 views/photo.py:142
+#: views/entry.py:75 views/entry.py:90 views/photo.py:128 views/photo.py:145
 msgid "Author"
 msgstr ""
 
-#: views/entry.py:74 views/entry.py:89
+#: views/entry.py:77 views/entry.py:92
 msgid "Posted"
 msgstr ""
 
-#: views/entry.py:75 views/entry.py:90
+#: views/entry.py:78 views/entry.py:93
 msgid "Article"
 msgstr ""
 
-#: views/entry.py:81 views/photo.py:131
+#: views/entry.py:84 views/photo.py:134
 msgid "Record with this slug already exist"
 msgstr ""
 
-#: views/entry.py:91
+#: views/entry.py:94
 msgid "Front image"
 msgstr ""
 
-#: views/photo.py:126
+#: views/photo.py:129
 msgid "Photo"
 msgstr ""
 
-#: views/photo.py:136
+#: views/photo.py:139
 msgid "Nothing to upload."
 msgstr ""
 
-#: views/photo.py:149
+#: views/photo.py:152
 msgid "Crop factor"
 msgstr ""
 

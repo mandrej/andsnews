@@ -6,7 +6,7 @@
 @import "components/color";
 // Variables
 @import "theme";
-// @import "components/variables";
+//@import "components/variables";
 // Reset
 @import "components/normalize";
 // components
@@ -42,18 +42,17 @@ $body-bg-color: color("grey", "lighten-2");
 $navbar-bg-color: color("grey", "darken-3");
 $action-bg-color: color("grey", "lighten-1");
 
+html {
+  @media only screen and (min-width: $large-screen) {
+    font-size: 14.5px;
+  }
+}
+
 body {
   background-color: $body-bg-color;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-}
-
-header, main, footer {
-  padding-left: 240px;
-  @media #{$medium-and-down} {
-    padding-left: 0;
-  }
 }
 
 main {
@@ -72,15 +71,29 @@ main {
   }
 }
 
-.side-nav.collapsible {
+#nav-mobile.side-nav {
   background-color: $sidenav-bg-color;
   border: none;
+  a {
+    font-size: 1.35rem;
+  }
 }
 
 header > nav {
   background-color: $navbar-bg-color;
   .brand-logo {
     padding: 0 20px;
+  }
+  ul {
+    li {
+      a {
+        font-size: 1.4rem;
+        padding: 0 20px;
+      }
+      &.active {
+        background-color: rgba(0,0,0,0.2);
+      }
+    }
   }
   .button-collapse {
     color: #444;
@@ -91,7 +104,7 @@ header > nav {
   }
   .nav-wrapper {
     i {
-      font-size: 2.7rem;
+      font-size: 40px;
       height: 56px;
       line-height: 56px;
       @media #{$medium-and-up} {
@@ -101,12 +114,12 @@ header > nav {
     }
     .pagination {
       background-color: $primary-color;
-      position: fixed;
-      top: 0;
-      right: 0;
       width: auto;
       li {
         padding: 0;
+        a {
+          padding: 0 15px;
+        }
       }
     }
     .progress {
@@ -119,16 +132,6 @@ header > nav {
       display: none;
       .indeterminate {
         background-color: $navbar-bg-color;
-      }
-    }
-  }
-  nav {
-    background-color: $primary-color;
-    position: relative !important;
-    .brand-logo {
-      @media #{$medium-and-down} {
-        left: 0;
-        transform: translateX(0);
       }
     }
   }
@@ -353,22 +356,6 @@ a.collapse {
 
 .card .card-action a {
   margin-right: 0;
-}
-
-.side-nav a {
-  font-size: 1.35rem;
-}
-
-@media #{$small-and-down} {
-  #searchForm {
-    .input-field {
-      label,
-      input[type=search] ~ .mdi-navigation-close,
-      input[type=search] ~ .material-icons {
-        top: 0.8rem;
-      }
-    }
-  }
 }
 
 .modal .modal-content {
