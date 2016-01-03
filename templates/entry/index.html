@@ -31,16 +31,25 @@
                 width: 400,
                 gutter: 0
             });
+
+            var load = true;
             $(window).scroll(function() {
-                if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                var scrollTop = $(window).scrollTop(),
+                    docHeight = $(document).height(),
+                    winHeight = $(window).height();
+
+                if (docHeight - scrollTop - winHeight < 200 && load) {
                     var href = $('.next').attr('href');
                     if (href !== undefined) {
+                        load = false;
                         $.get(href).done(function(response) {
                             var $page = $(response);
                             $container.gridalicious('append', $page.find('.blog'));
                             $('.pagination').replaceWith(function() {
                                 return $page.find('.pagination').hide();
                             });
+                        }).always(function() {
+                            load = true;
                         });
                     }
                 }
