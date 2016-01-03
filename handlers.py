@@ -12,7 +12,7 @@ import webapp2
 from jinja2.filters import Markup
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
-from google.appengine.api import users, search, mail
+from google.appengine.api import users, search, mail, datastore_errors
 from google.appengine.ext import ndb, blobstore
 from google.appengine.runtime import apiproxy_errors
 from google.appengine.datastore.datastore_query import Cursor
@@ -216,14 +216,17 @@ class Paginator(object):
         self.per_page = per_page
 
     def page(self, token=None):
-        cursor = None
-        if token is not None:
+        objects, next_token = [], None
+        try:
             cursor = Cursor(urlsafe=token)
+            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
+            # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
+            objects = ndb.get_multi(keys)
+            next_token = cursor.urlsafe()
+        except datastore_errors.Error, e:
+            logging.info('-----> %s' % e.message)
 
-        keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
-        objects = ndb.get_multi(keys)
-        # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
-        return [x for x in objects if x is not None], cursor.urlsafe() if has_next else None
+        return [x for x in objects if x is not None], next_token
 
 
 class SearchPaginator(object):
