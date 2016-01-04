@@ -49,7 +49,7 @@
 
                 if (docHeight - scrollTop - winHeight < 400 && load) {
                     var href = $('.next').attr('href');
-                    if (href !== undefined || count < max) {
+                    if (href !== undefined && count < max) {
                         load = false;
                         $.get(href).done(function(response) {
                             var $page = $(response);
