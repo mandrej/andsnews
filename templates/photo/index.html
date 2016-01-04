@@ -32,12 +32,13 @@
     {{ super() }}
     <script>
         $(function () {
-            var count = 1, max = parseInt('{{ nax }}');
+            var count = 1, max = parseInt('{{ max }}');
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.thumbnail',
                 width: 300,
-                gutter: 0
+                gutter: 0,
+                animate: true
             });
 
             var load = true;
@@ -46,7 +47,7 @@
                     docHeight = $(document).height(),
                     winHeight = $(window).height();
 
-                if (docHeight - scrollTop - winHeight < 200 && load) {
+                if (docHeight - scrollTop - winHeight < 400 && load) {
                     var href = $('.next').attr('href');
                     if (href !== undefined || count < max) {
                         load = false;
