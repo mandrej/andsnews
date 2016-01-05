@@ -442,7 +442,8 @@ class Photo(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month)]
+                search.NumberField(name='month', value=self.date.month),
+                search.TextField(name='model', value=self.model)]
         )
         INDEX.put(doc)
 
@@ -651,7 +652,8 @@ class Entry(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month)]
+                search.NumberField(name='month', value=self.date.month),
+                search.HtmlField(name='body', value=self.body)]
         )
         INDEX.put(doc)
 

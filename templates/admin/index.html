@@ -111,6 +111,17 @@
                             </a>
                         </div>
                     </div>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 valign middle">Full text index for</div>
+                        <div class="col s3 right-align">
+                            <a class="btn waves-effect" href="{{ uri_for('datastore_background', job='photo_index') }}">
+                                photos</a>
+                        </div>
+                        <div class="col s3 right-align">
+                            <a class="btn waves-effect" href="{{ uri_for('datastore_background', job='entry_index') }}">
+                                entries</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endif %}
@@ -124,10 +135,6 @@
 {#        </div>#}
 
 
-{#        <h4>Full text index for#}
-{#            <a class="button" href="{{ uri_for('datastore_background', job='photo_index') }}">photos</a>#}
-{#            <a class="button" href="{{ uri_for('datastore_background', job='entry_index') }}">entries</a>#}
-{#        </h4>#}
 {#        <h4><a class="button" href="{{ uri_for('datastore_background', job='palette') }}">#}
 {#            Calculate photo palette</a></h4>#}
 {#        <h4><a class="button" href="{{ uri_for('datastore_background', job='dimension') }}">#}
