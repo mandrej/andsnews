@@ -183,7 +183,7 @@
                 animate: true
             });
 
-            $('.admin div').on('click', 'button', function() {
+            $(document).on('click', 'button', function(evt) {
                 $('.progress').show();
                 var key = $(this).val(), method = $(this).attr('name');
                 $.ajax({
