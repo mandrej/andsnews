@@ -17,9 +17,7 @@
 	<link type="image/x-icon" rel="shortcut icon" href="/favicon.ico">
 </head>
 <body>
-    {% block modals %}
-        <div id="dummy"></div>
-	{% endblock %}
+    {% block modals %}{% endblock %}
 
     <header class="navbar-fixed">
         <nav>
@@ -30,7 +28,7 @@
                 </ul>
                 <ul class="right hide-on-med-and-down">
                     {% block search %}
-                        <form id="searchForm" class="left" action="{{ uri_for('search', page=1) }}" method="get">
+                        <form id="searchForm" class="left" action="{{ uri_for('search') }}" method="get">
                             <div class="input-field">
                                 <input id="search" name="find" type="search">
                                 <label for="search"><i class="material-icons">search</i></label>

@@ -42,12 +42,6 @@ $body-bg-color: color("grey", "lighten-2");
 $navbar-bg-color: color("grey", "darken-3");
 $action-bg-color: color("grey", "lighten-1");
 
-html {
-  @media only screen and (min-width: $large-screen) {
-    font-size: 14.5px;
-  }
-}
-
 body {
   background-color: $body-bg-color;
   display: flex;
@@ -118,7 +112,7 @@ header > nav {
       li {
         padding: 0;
         a {
-          padding: 0 15px;
+          padding: 0 14px;
         }
       }
     }
@@ -233,6 +227,25 @@ footer.page-footer {
   }
 }
 
+.modal {
+  .modal-content {
+    padding: 20px;
+    @media #{$medium-and-down} {
+      padding: 8px;
+    }
+  }
+  .modal-footer {
+    padding: 0 20px;
+    background-color: color('grey', 'base');
+    @media #{$medium-and-down} {
+      padding: 0 8px;
+    }
+    .btn, .btn-flat {
+      margin: 10px 0;
+    }
+  }
+}
+
 article, section {
   margin: 20px !important;
   @media #{$medium-and-down} {
@@ -307,7 +320,7 @@ $chip_size: 1.25rem;
   padding: 0 $chip_size / 2;
   border-radius: $chip_size;
   color: #fff;
-  a { color: #fff; vertical-align: middle; }
+  a { color: #fff; }
   @for $i from 1 through 8 {
     &.fs#{$i} {
       font-size: $chip_size + ($i - 1) / 10;
@@ -356,10 +369,6 @@ a.collapse {
 
 .card .card-action a {
   margin-right: 0;
-}
-
-.modal .modal-content {
-  padding: 1rem;
 }
 
 .drag-target {
