@@ -5,50 +5,55 @@
 
 <div class="modal-content">
     <span class="card-title">{{ titles[field_name] }}</span>
-    <div id="chart"></div>
-    {% if field_name == 'color' %}
-        <p><a href="http://99designs.com/tech-blog/blog/2012/05/11/color-analysis/" target="_blank">
-            {{ _('Based od colorific color extraction in CIE 2000 color space') }}</a>
-        </p>
-    {% elif field_name == 'eqv' %}
-        <p>{{ _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera, rounded to nearset 10') }}</p>
-    {% endif %}
-</div>
-<div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect btn-flat">close</a>
-</div>
+    <div class="row">
+        <div class="col m6 s12">
+            <div id="chart"></div>
+        </div>
+        <div class="col m6 hide-on-small-only">
+            {% if field_name == 'color' %}
+                <a href="http://99designs.com/tech-blog/blog/2012/05/11/color-analysis/" target="_blank">
+                    {{ _('Based od colorific color extraction in CIE 2000 color space') }}</a>
+            {% elif field_name == 'eqv' %}
+                {{ _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera') }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect btn-flat">close</a>
+    </div>
 
-<script>
-    var field_name = '{{ field_name }}';
-    var items = {{ items|to_json }};
-    var chartOptions = {
-        backgroundColor: 'transparent', pieSliceBorderColor: 'transparent',
-        fontSize: 12, fontName: 'Roboto',
-        chartArea: {top: 0, left: 20, height: 400},
-        legend: {
-            textStyle: {color: '#000'},
+    <script>
+        var field_name = '{{ field_name }}';
+        var items = {{ items|to_json }};
+        var chartOptions = {
+            backgroundColor: 'transparent', pieSliceBorderColor: 'transparent',
+            fontSize: 12, fontName: 'Roboto',
+            chartArea: {left: 0, height: 300},
+            legend: {
+                textStyle: {color: '#000'},
+            }
+        };
+
+        var suffix, colors = [];
+        var data = new google.visualization.DataTable();
+        switch(field_name) {
+            case 'eqv':
+                suffix = ' mm'; break;
+            case 'iso':
+                suffix = ' ASA'; break;
+            default:
+                suffix = '';
         }
-    };
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'count');
 
-    var suffix, colors = [];
-    var data = new google.visualization.DataTable();
-    switch(field_name) {
-        case 'eqv':
-            suffix = ' mm'; break;
-        case 'iso':
-            suffix = ' ASA'; break;
-        default:
-            suffix = '';
-    }
-    data.addColumn('string', 'name');
-    data.addColumn('number', 'count');
-
-    $.each(items, function(i, item) {
-        data.addRow([item.name + suffix, item.count]);
-        if (item.hex) colors.push(item.hex);
-    });
-    var chart = new google.visualization.PieChart($('#chart')[0]);
-    if (colors.length > 0) $.extend(chartOptions, {colors: colors});
-    chart.draw(data, chartOptions);
-    delete chartOptions['colors'];
-</script>
+        $.each(items, function(i, item) {
+            data.addRow([item.name + suffix, item.count]);
+            if (item.hex) colors.push(item.hex);
+        });
+        var chart = new google.visualization.PieChart($('#chart')[0]);
+        if (colors.length > 0) $.extend(chartOptions, {colors: colors});
+        chart.draw(data, chartOptions);
+        delete chartOptions['colors'];
+    </script>
+</div>
