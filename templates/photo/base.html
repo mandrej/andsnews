@@ -16,10 +16,9 @@
                 $('.hidden').hide();
                 $.ajax({
                     url: '/filter/Photo_' + filter.field + '/' + filter.value,
-                    context: $('#' + filter.field + 'cloud'),
-                    success: function(snippet) {
-                        $(this).html(snippet).slideDown();
-                    }
+                    context: $('#' + filter.field + 'cloud')})
+                .done(function(snippet) {
+                    $(this).html(snippet).slideDown();
                 });
             }
 
@@ -34,11 +33,10 @@
                 $('.progress').show();
                 $.ajax({
                     url: url,
-                    context: cntx.next(),
-                    success: function (snippet) {
-                        $(this).html(snippet).slideDown();
-                        $('.progress').hide();
-                    }
+                    context: cntx.next()})
+                .done(function (snippet) {
+                    $(this).html(snippet).slideDown();
+                    $('.progress').hide();
                 });
             });
             $('.modal-trigger').leanModal();
