@@ -21,13 +21,13 @@
 
     <script src="/static/scripts/d3.min.js"></script>
     <script>
-        var data = d3.entries({{ items|to_json }});
         var colors = {{ colors|to_json }};
         var field = '{{ field }}';
+        var data = d3.entries({{ items|to_json }});
 
-        var width = 250,
+        var width = 540,
             height = 250,
-            radius = Math.min(width, height) / 2;
+            radius = height / 2;
 
         var arc = d3.svg.arc()
             .outerRadius(radius)
@@ -36,14 +36,7 @@
         var pie = d3.layout.pie()
             .value(function(d) { return d.value; });
 
-        var svg = d3.select('#chart').append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
         var slice_color = d3.scale.category20();
-        var text_color = d3.scale.ordinal().range('#000');
         if (field == 'color') {
             var slice_colors = d3.nest().key(function(d) { return d.name; })
                 .rollup(function(v) { return v[0].hex; }).map(colors);
@@ -51,13 +44,30 @@
             slice_color = d3.scale.ordinal()
                 .domain(d3.keys(slice_colors))
                 .range(d3.values(slice_colors));
-
-            text_color = d3.scale.ordinal()
-                .domain(d3.keys(slice_colors))
-                .range(['#000', '#000', '#000', '#000', '#000', '#000', '#fff', '#fff', '#000']);
-
-{#            pie.sort(function(a, b) { return (a.order - b.order); })#}
         }
+
+        var svg = d3.select('#chart').append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate(' + height / 2 + ',' + height / 2 + ')');
+
+        var legendData = data.sort(function(a, b) { return b.value - a.value; }).slice(0, 9),
+            legendRectSize = 18,
+            legendSpacing = 4,
+            legendHeight = legendRectSize + legendSpacing,
+            offset = legendHeight * legendData.length / 2,
+            left = height / 2 + 10;
+
+        var legend = svg.selectAll('.legend')
+            .data(legendData)
+            .enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+                var top = i * legendHeight - offset;
+                return 'translate(' + left + ',' + top + ')';
+        });
 
         var g = svg.selectAll('.arc')
             .data(pie(data))
@@ -70,11 +80,16 @@
             .append('title')
             .text(function(d) { return d.data.key + ': ' + d.value; });
 
-        g.append('text')
-            .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
-            .attr('dy', '.35em')
-            .style('fill', function(d) { return text_color(d.data.key); })
-            .text(function(d) { return (d.value > 1)? d.data.key: ''; });
+        legend.append('rect')
+            .attr('width', legendRectSize)
+            .attr('height', legendRectSize)
+            .style('fill', function(d) { return slice_color(d.key); });
+
+        legend.append('text')
+            .attr('x', legendRectSize + legendSpacing)
+            .attr('y', legendRectSize - legendSpacing)
+            .text(function(d) { return d.key; });
+
     </script>
 </div>
 
