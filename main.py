@@ -1,6 +1,6 @@
 from webapp2 import WSGIApplication, Route
 
-from handlers import Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, RenderGraph, \
+from handlers import Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, \
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
@@ -34,12 +34,12 @@ app = WSGIApplication([
     Route(r'/admin/counters/<field:(forkind|field|value)>/<value>/',
           handler='views.admin.Counters', name='counter_admin_filter'),
     Route(r'/admin/memcache/', handler='views.admin.Cache', methods=['GET']),
-    Route(r'/admin/memcache/<mem_key>', handler='views.admin.Cache', methods=['PUT', 'DELETE']),
+    Route(r'/admin/memcache/<mem_key>', handler='views.admin.Cache'),
+    Route(r'/admin/pie/<mem_key>', handler='views.admin.RenderPie'),
     Route(r'/admin/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),
 
     Route(r'/filter/<mem_key>/<value>', handler=RenderCloud),
     Route(r'/filter/<mem_key>', handler=RenderCloud),
-    Route(r'/visualize/<mem_key>', handler=RenderGraph),
     Route(r'/complete/<mem_key>', handler=Complete),
 
     Route(r'/<field:tags>/graph', handler=DrawGraph),

@@ -4,7 +4,6 @@ Disallow: /search
 Disallow: /graph
 Disallow: /admin/
 Disallow: /filter/
-Disallow: /visualize/
 Disallow: /complete/
 Disallow: /*delete
 Disallow: /*download

@@ -327,24 +327,6 @@ class RenderCloud(BaseHandler):
                     'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
-class RenderGraph(BaseHandler):
-    def get(self, mem_key):
-        kind, field = mem_key.split('_')
-        items = Cloud(mem_key).get_list()
-
-        if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
-            items = sorted(items, key=itemgetter('count'), reverse=True)
-
-        if field == 'date':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('eqv', 'iso',):
-            items = sorted(items, key=itemgetter('name'), reverse=False)
-        elif field == 'color':
-            items = sorted(items, key=itemgetter('order'))
-
-        self.render_template('snippets/graph.html', {'items': items[:10], 'field_name': field})
-
-
 class Plain(BaseHandler):
     def get(self):
         self.render_template('graph.html', {})

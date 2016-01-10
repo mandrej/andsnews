@@ -10,13 +10,17 @@ from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
 from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, xss_protected, Paginator
-from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE
+from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, COLORS
 
 
 class Cache(BaseHandler):
-    def get(self):
-        data = dict(zip(KEYS, [None] * len(KEYS)))
-        data.update(memcache.get_multi(KEYS))
+    def get(self, mem_key=None):
+        if mem_key is not None:
+            data = memcache.get(mem_key)
+        else:
+            data = dict(zip(KEYS, [None] * len(KEYS)))
+            data.update(memcache.get_multi(KEYS))
+
         self.render_json(data)
 
     def put(self, mem_key):
@@ -27,6 +31,14 @@ class Cache(BaseHandler):
     def delete(self, mem_key):
         memcache.delete(mem_key)
         self.render_json(None)
+
+
+class RenderPie(BaseHandler):
+    def get(self, mem_key):
+        kind, field = mem_key.split('_')
+        data = memcache.get(mem_key)
+        self.render_template('snippets/graph.html', {
+            'items': data, 'colors': COLORS if field == 'color' else [], 'field': field})
 
 
 class Index(BaseHandler):
