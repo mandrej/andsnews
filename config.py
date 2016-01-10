@@ -41,27 +41,24 @@ COLOR_NAMES = (
     _('dark'), _('medium'), _('light')
 )
 # http://www.color-blindness.com/color-name-hue/
-# colors from _color.scss
 HUE = [
-    {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red',    'hex': '#f44336'},
-    {'span': range(13, 42),               'order': '1', 'name': 'orange', 'hex': '#ff9800'},
-    {'span': range(42, 70),               'order': '2', 'name': 'yellow', 'hex': '#ffeb3b'},
-    {'span': range(70, 167),              'order': '3', 'name': 'green',  'hex': '#4caf50'},
-    {'span': range(167, 252),             'order': '4', 'name': 'blue',   'hex': '#2196f3'},
-    {'span': range(252, 306),             'order': '5', 'name': 'violet', 'hex': '#9c27b0'}
+    {'span': range(306, 360) + range(13), 'order': '0', 'name': 'red',    'hex': '#c00'},
+    {'span': range(13, 42),               'order': '1', 'name': 'orange', 'hex': '#f90'},
+    {'span': range(42, 70),               'order': '2', 'name': 'yellow', 'hex': '#ff0'},
+    {'span': range(70, 167),              'order': '3', 'name': 'green',  'hex': '#0c0'},
+    {'span': range(167, 252),             'order': '4', 'name': 'blue',   'hex': '#06f'},
+    {'span': range(252, 306),             'order': '5', 'name': 'violet', 'hex': '#c0c'}
 ]
 LUM = [
-    {'span': range(0, 15),                'order': '6', 'name': 'dark',   'hex': '#212121'},
-    {'span': range(15, 70),               'order': '7', 'name': 'medium', 'hex': '#616161'},
-    {'span': range(70, 101),              'order': '8', 'name': 'light',  'hex': '#bdbdbd'}
+    {'span': range(0, 15),                'order': '6', 'name': 'dark',   'hex': '#111'},
+    {'span': range(15, 70),               'order': '7', 'name': 'medium', 'hex': '#555'},
+    {'span': range(70, 101),              'order': '8', 'name': 'light',  'hex': '#ccc'}
 ]
 SAT = [
     {'span': range(0, 6),                               'name': 'monochrome'},
     {'span': range(6, 101),                             'name': 'color'}
 ]
-COLORS = {}
-for x in HUE + LUM:
-    COLORS[x['name']] = dict((k, v) for k, v in x.items() if k != 'span')
+COLORS = HUE + LUM
 
 # (math.sqrt(36**2 + 24**2))/25.4 = 1.703410051 (36x24 diagonal in) crop = 1.703410051/0.28 (sensor diagonal)
 CROPS = {

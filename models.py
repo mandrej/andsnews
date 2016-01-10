@@ -242,7 +242,7 @@ class Cloud(object):
         content = []
         if self.field == 'color':
             for k, count in collection.items():
-                data = COLORS[k]
+                data = next((x for x in COLORS if x['name'] == k), None)
                 data.update({'count': count, 'field': self.field})
                 content.append(data)
         else:
@@ -596,10 +596,6 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def hls(self):
         return rgb_hls(self.rgb)
-
-    @webapp2.cached_property
-    def similar(self):
-        return COLORS[self.color]
 
     @classmethod
     def query_for(cls, field, value):
