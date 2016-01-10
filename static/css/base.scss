@@ -419,14 +419,18 @@ a.collapse {
 }
 
 // svg graph
-.arc {
-  text {
-    font-size: 12px;
-    font-family: Roboto, sans-serif;
-    text-anchor: middle;
-    pointer-events: none;
-  }
-  path {
-    stroke: #fff;
-  }
+text {
+  font-size: 12px;
+  font-family: "Roboto", sans-serif;
+  fill: $off-black;
+  pointer-events: none;
+}
+
+circle, path {
+  stroke: #fff;
+}
+
+.link {
+  stroke: #000;
+  stroke-opacity: 0.3;
 }
