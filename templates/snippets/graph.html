@@ -4,7 +4,7 @@
 } %}
 
 <div class="modal-content">
-    <span class="card-title">{{ titles[field_name] }}</span>
+    <span class="card-title">{{ titles[field] }}</span>
     <div class="row">
         <div class="col m6 s12">
             <div id="chart"></div>
@@ -19,39 +19,62 @@
         </div>
     </div>
 
+    <script src="/static/scripts/d3.min.js"></script>
     <script>
-        var field_name = '{{ field_name }}';
-        var items = {{ items|to_json }};
-        var chartOptions = {
-            backgroundColor: 'transparent', pieSliceBorderColor: 'transparent',
-            fontSize: 12, fontName: 'Roboto',
-            chartArea: {left: 0, top: 0, width: 300, height: 200},
-            legend: {
-                textStyle: {color: '#000'}
-            }
-        };
+        var data = d3.entries({{ items|to_json }});
+        var colors = {{ colors|to_json }};
+        var field = '{{ field }}';
 
-        var suffix, colors = [];
-        var data = new google.visualization.DataTable();
-        switch(field_name) {
-            case 'eqv':
-                suffix = ' mm'; break;
-            case 'iso':
-                suffix = ' ASA'; break;
-            default:
-                suffix = '';
+        var width = 250,
+            height = 250,
+            radius = Math.min(width, height) / 2;
+
+        var arc = d3.svg.arc()
+            .outerRadius(radius)
+            .innerRadius(radius/2);
+
+        var pie = d3.layout.pie()
+            .value(function(d) { return d.value; });
+
+        var svg = d3.select('#chart').append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+        var slice_color = d3.scale.category20();
+        var text_color = d3.scale.ordinal().range('#000');
+        if (field == 'color') {
+            var slice_colors = d3.nest().key(function(d) { return d.name; })
+                .rollup(function(v) { return v[0].hex; }).map(colors);
+
+            slice_color = d3.scale.ordinal()
+                .domain(d3.keys(slice_colors))
+                .range(d3.values(slice_colors));
+
+            text_color = d3.scale.ordinal()
+                .domain(d3.keys(slice_colors))
+                .range(['#000', '#000', '#000', '#000', '#000', '#000', '#fff', '#fff', '#000']);
+
+{#            pie.sort(function(a, b) { return (a.order - b.order); })#}
         }
-        data.addColumn('string', 'name');
-        data.addColumn('number', 'count');
 
-        $.each(items, function(i, item) {
-            data.addRow([item.name + suffix, item.count]);
-            if (item.hex) colors.push(item.hex);
-        });
-        var chart = new google.visualization.PieChart($('#chart')[0]);
-        if (colors.length > 0) $.extend(chartOptions, {colors: colors});
-        chart.draw(data, chartOptions);
-        delete chartOptions['colors'];
+        var g = svg.selectAll('.arc')
+            .data(pie(data))
+            .enter().append('g')
+            .attr('class', 'arc');
+
+        g.append('path')
+            .attr('d', arc)
+            .style('fill', function(d) { return slice_color(d.data.key); })
+            .append('title')
+            .text(function(d) { return d.data.key + ': ' + d.value; });
+
+        g.append('text')
+            .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
+            .attr('dy', '.35em')
+            .style('fill', function(d) { return text_color(d.data.key); })
+            .text(function(d) { return (d.value > 1)? d.data.key: ''; });
     </script>
 </div>
 

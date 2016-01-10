@@ -143,9 +143,7 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="https://www.google.com/jsapi"></script>
     <script>
-        google.load('visualization', '1', {packages: ['corechart']});
         $(function () {
             function build() {
                 $.getJSON('/admin/memcache/', function(data) {
@@ -155,7 +153,7 @@
                             tmpl += '<div class="col s8 valign middle">' + title + '</div>';
                             tmpl += '<div class="col s4 right-align">';
                             tmpl += '<button class="btn-floating orange waves-effect" type="submit" name="delete" value="' + key + '"><i class="material-icons">delete</i></button>&nbsp;';
-                            tmpl += '<a class="graph btn-floating waves-effect" href="/visualize/' + key + '"><i class="material-icons">visibility</i></a>';
+                            tmpl += '<a class="graph btn-floating waves-effect" href="/admin/pie/' + key + '"><i class="material-icons">visibility</i></a>';
                             tmpl += '</div></div>';
 {#                            tmpl += '<div class="row"><div class="col s12">';#}
 {#                            $.each(value, function(name, count) {#}
