@@ -228,6 +228,9 @@ footer.page-footer {
 }
 
 .modal {
+  &.bottom-sheet {
+    max-height: 60%;
+  }
   .modal-content {
     padding: 20px;
     @media #{$medium-and-down} {
