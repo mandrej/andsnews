@@ -46,14 +46,19 @@
     {% endif %}
 {% endmacro %}
 
-{% macro filters_html(available, prefix) %}
+{% macro filters_html(available, kind) %}
     <div id="filters" class="modal bottom-sheet">
         <div class="modal-content">
-            <span class="card-title">{{ _('Filters') }}</span>
+            <span class="card-title">{{ _('Filters') }}
+                <a href="{{ uri_for('%s_all' % kind) }}">
+                    <i class="material-icons right">clear_all</i>
+                </a>
+            </span>
             <div class="row">
                 {% for f in available %}
                     <div class="col s12 m6 l4">
-                        <a class="{{ f.field }} collapse" href="{{ prefix }}{{ f.field }}">{{ f.title }}</a>
+                        {% set url = '/filter/%s_%s' % (kind.capitalize(), f.field) %}
+                        <a class="{{ f.field }} collapse" href="{{ url }}">{{ f.title }}</a>
                         <div id="{{ f.field }}cloud" class="hidden"></div>
                     </div>
                 {% endfor %}
@@ -76,9 +81,9 @@
     {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
 
     {% if kind == 'photo' %}
-        {{ filters_html([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], '/filter/Photo_') }}
+        {{ filters_html([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], kind) }}
     {% endif %}
     {% if kind == 'entry' %}
-        {{ filters_html([_tags, _date, _author], '/filter/Entry_') }}
+        {{ filters_html([_tags, _date, _author], kind) }}
     {% endif %}
 {% endmacro %}
