@@ -27,7 +27,7 @@
                         </div>
                     {% endif %}
 
-                    <input name="token" type="hidden" value="{{ token }}"/>
+                    <input name="token" type="hidden" value="{{ session.csrf }}"/>
                     {{ m.form_row(form.headline, class='validate') }}
                     {% if not object %}
                         {{ m.form_row(form.slug) }}

@@ -30,7 +30,7 @@
         </div>
 
         <form action="{{ uri_for('counter_admin') }}" method="post">
-            <input name="token" type="hidden" value="{{ token }}"/>
+            <input name="token" type="hidden" value="{{ session.csrf }}"/>
             <table class="highlight">
                 <colgroup>
                     <col style="width: 80px;"/>

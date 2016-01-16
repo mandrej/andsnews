@@ -24,7 +24,7 @@
 
                 {% if upload_url %}
                     <form action="{{ upload_url }}" enctype="multipart/form-data" method="post">
-                        <input name="token" type="hidden" value="{{ token }}"/>
+                        <input name="token" type="hidden" value="{{ session.csrf }}"/>
                         <p>
                             <div class="file-field input-field">
                                 <div class="btn">
@@ -51,7 +51,7 @@
 
                 {% if object %}
                     <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
-                        <input name="token" type="hidden" value="{{ token }}"/>
+                        <input name="token" type="hidden" value="{{ session.csrf }}"/>
                         {{ m.form_row(form.headline, class='validate') }}
                         {{ m.form_row(form.tags) }}
                         {{ m.form_row(form.author, class='browser-default') }}

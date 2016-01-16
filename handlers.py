@@ -83,12 +83,6 @@ class BaseHandler(webapp2.RequestHandler):
     def is_admin(self):
         return users.is_current_user_admin()
 
-    @webapp2.cached_property
-    def csrf_token(self):
-        if self.session.get('csrf', None) is None:
-            self.session['csrf'] = uuid.uuid1().hex
-        return self.session.get('csrf')
-
     def handle_exception(self, exception, debug):
         template = 'error.html'
         if isinstance(exception, webapp2.HTTPException):
@@ -107,19 +101,21 @@ class BaseHandler(webapp2.RequestHandler):
             self.response.set_status(500)
 
     def render_template(self, filename, kwargs):
-        # http://effbot.org/zone/default-values.htm
         lang_code = self.session.get('lang_code', 'en_US')
+        self.session['lang_code'] = lang_code
         i18n.get_i18n().set_locale(lang_code)
+
+        if self.session.get('csrf', None) is None:
+            self.session['csrf'] = uuid.uuid1().hex
 
         if 'headers' in kwargs:
             self.response.headers = kwargs['headers']
             del kwargs['headers']
 
         kwargs.update({
-            'language_code': lang_code,
             'user': self.user,
             'is_admin': self.is_admin,
-            'token': self.csrf_token
+            'session': self.session
         })
         self.response.headers['X-XSS-Protection'] = '1;mode=block'
         self.response.write(self.jinja2.render_template(filename, **kwargs))

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{{ {'lang': language(language_code)}|xmlattr }}>
+<html{{ {'lang': language(session.lang_code)}|xmlattr }}>
 {% import "snippets/macros.html" as m %}
 
 <head>
@@ -62,7 +62,7 @@
                     <form id="langs" action="/setlang" method="post">
                         {% for code, lang in all_languages %}
                             <button{{ {'type': 'submit', 'name': 'language', 'value': code,
-                                'class': 'btn btn-flat waves-effect disabled' if code == language_code else 'btn btn-flat waves-effect',
+                                'class': 'btn btn-flat waves-effect disabled' if code == session.lang_code else 'btn btn-flat waves-effect',
                                 'title': lang}|xmlattr }}>{{ language(code) }}</button>
                         {% endfor %}
                     </form>
@@ -78,7 +78,6 @@
         <script src="/static/scripts/swiper.jquery.min.js"></script>
         <script src="/static/scripts/custom.min.js"></script>
         <script>
-            token = '{{ token }}';
             $(function () {
                 $(".button-collapse").sideNav();
             });
