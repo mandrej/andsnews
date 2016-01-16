@@ -180,8 +180,6 @@ footer.page-footer {
       width: 100vw;
       height: calc(100vh - 56px);
       object-fit: cover;
-      user-drag: none;
-      -webkit-user-drag: none;
       @media #{$medium-and-up} {
         width: 100%;
         height: auto;
