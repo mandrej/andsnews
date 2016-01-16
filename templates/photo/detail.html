@@ -14,7 +14,8 @@
                 <div id="{{ object.key.string_id() }}" class="card swiper-slide z-depth-0">
                     <div class="card-content hide-on-small-only">
                         <span class="card-title activator">{{ object.headline }}
-                            <i class="material-icons right">more_vert</i></span>
+                            <i class="material-icons right">more_vert</i>
+                        </span>
                     </div>
                     <div class="card-image">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0" draggable="false">
@@ -56,20 +57,20 @@
                 }
             }
 
-            function enable_zoom() {
+            function enable_zoom(slide) {
                 if (is_touch_device()) {
-                    $('.card').not(":has('.pinch-zoom-container')").each(function() {
-                        new RTP.PinchZoom($(this).find('.card-image'), {
+                    if (slide.find('.pinch-zoom-container').length == 0) {
+                        new RTP.PinchZoom(slide.find('.card-image'), {
                             tapZoomFactor: 2
-                        })
-                    });
+                        });
+                    }
                 } else {
-                    $('.card').not(":has('.zoomImg')").each(function() {
-                        $(this).find('.card-image').zoom({
+                    if (slide.find('.zoomImg').length == 0) {
+                        slide.find('.card-image').zoom({
                             on: 'click',
                             duration: 300
                         });
-                    });
+                    }
                 }
             }
 
@@ -78,6 +79,7 @@
                     slug = slide[0].id;
 
                 sw.update(true);
+                enable_zoom(slide);
                 window.history.replaceState(location.pathname, '', slug);
                 $('html, body').animate({scrollTop: 0});
             }
@@ -90,7 +92,6 @@
                         $.get(href, function(response) {
                             var $page = $(response);
                             sw.appendSlide($page.find('.card'));
-                            enable_zoom();
                             $('.pagination').replaceWith(function() {
                                 return $page.find('.pagination').hide();
                             });
@@ -113,7 +114,6 @@
                 onSlideChangeEnd: adjastView
             });
 
-            enable_zoom();
             $('.pagination').hide();
         });
     </script>
