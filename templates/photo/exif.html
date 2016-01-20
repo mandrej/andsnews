@@ -1,6 +1,6 @@
 {% import "snippets/macros.html" as m %}
 
-<span class="card-title">{{ object.headline }}<i class="material-icons right">close</i></span>
+<h4 class="card-title">{{ object.headline }}<i class="material-icons right">close</i></h4>
 {% if user %}
     <span class="card-title">
         <a href="{{ uri_for('download', safe_key=object.key.urlsafe()) }}">

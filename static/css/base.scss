@@ -191,10 +191,6 @@ footer.page-footer {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    .card-title:first-child {
-      @extend .card-title;
-      padding-bottom: 20px;
-    }
   }
 }
 
