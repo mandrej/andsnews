@@ -1,6 +1,6 @@
 <form id="deleteForm" action="{{ post_url }}" method="post">
     <div class="modal-content">
-        <span class="card-title">{{ _('Confirm') }}</span>
+        <h4 class="card-title">{{ _('Confirm') }}</h4>
         <input name="token" type="hidden" value="{{ session.csrf }}">
         <p>{{ _('Do you really want to delete') }}
             &quot;{{ object.headline }}&quot;

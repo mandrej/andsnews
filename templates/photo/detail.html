@@ -14,7 +14,8 @@
                 <div id="{{ object.key.string_id() }}" class="card swiper-slide z-depth-0">
                     <div class="card-content hide-on-small-only">
                         <span class="card-title activator">{{ object.headline }}
-                            <i class="material-icons right">more_vert</i></span>
+                            <i class="material-icons right">more_vert</i>
+                        </span>
                     </div>
                     <div class="card-image">
                         <img class="swiper-lazy" data-src="{{ object.serving_url }}=s0">
@@ -56,32 +57,6 @@
                 }
             }
 
-            function enable_zoom() {
-                if (is_touch_device()) {
-                    $('.card').not(":has('.pinch-zoom-container')").each(function() {
-                        new RTP.PinchZoom($(this).find('.card-image'), {
-                            tapZoomFactor: 2
-                        })
-                    });
-                } else {
-                    $('.card').not(":has('.zoomImg')").each(function() {
-                        $(this).find('.card-image').zoom({
-                            on: 'click',
-                            duration: 300
-                        });
-                    });
-                }
-            }
-
-            function adjastView(sw) {
-                var slide = sw.slides.eq(sw.activeIndex),
-                    slug = slide[0].id;
-
-                sw.update(true);
-                window.history.replaceState(location.pathname, '', slug);
-                $('html, body').animate({scrollTop: 0});
-            }
-
             function getPage(sw) {
                 var href = $('.next').attr('href');
                 if (href !== undefined) {
@@ -90,7 +65,6 @@
                         $.get(href, function(response) {
                             var $page = $(response);
                             sw.appendSlide($page.find('.card'));
-                            enable_zoom();
                             $('.pagination').replaceWith(function() {
                                 return $page.find('.pagination').hide();
                             });
@@ -109,11 +83,26 @@
                 lazyLoadingInPrevNext: true,
                 initialSlide: (index != -1)? index: 0,
                 onReachEnd: getPage,
-                onLazyImageReady: adjastView,
-                onSlideChangeEnd: adjastView
+                onLazyImageReady: function(sw, slide, image) {
+                    // maxZoom: image.naturalWidth / slide.offsetWidth
+                    if (is_touch_device()) {
+                        new RTP.PinchZoom($(slide).find('.card-image'), {
+                            tapZoomFactor: 2
+                        });
+                    } else {
+                        $(slide).find('.card-image').zoom({
+                            on: 'click',
+                            duration: 500
+                        });
+                    }
+                },
+                onSlideChangeEnd: function(sw) {
+                    var slug = sw.slides[sw.activeIndex].id;
+                    window.history.replaceState(location.pathname, '', slug);
+                    $('html, body').animate({scrollTop: 0});
+                }
             });
 
-            enable_zoom();
             $('.pagination').hide();
         });
     </script>
