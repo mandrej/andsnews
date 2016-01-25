@@ -48,8 +48,7 @@
                 <col style="width: 50px;"/>
                 <col/>
                 <col class="hide-on-small-only" style="width: 190px; text-align: right;"/>
-                <col style="width: 150px; text-align: right;"/>
-                <col class="hide-on-small-only" style="width: 210px; text-align: right;"/>
+                <col style="width: 200px; text-align: right;"/>
                 <col style="width: 200px; text-align: right;"/>
             </colgroup>
             <thead>
@@ -57,8 +56,7 @@
                     <th></th>
                     <th>headline</th>
                     <th class="hide-on-small-only">blob info</th>
-                    <th>HLS</th>
-                    <th class="hide-on-small-only">color classification</th>
+                    <th>Color</th>
                     <th></th>
                 </tr>
             </thead>
@@ -83,7 +81,6 @@
                             </td>
                             <td class="hide-on-small-only">
                                 {% if object.blob_key %}
-                                    {{ True|boolimage }}
                                     {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
                                 {% else %}
                                     {{ False|boolimage }}
@@ -93,18 +90,17 @@
                                 <span class="_hex dot" style="border-color: {{ object.hex }};">&nbsp;</span>
                                 <span class="hide-on-small-only">
                                     {% for c in object.hls %}{{ '%03d'|format(c) }} {% endfor %}
+                                    <br>
+                                    {% if object.color == object.hue %}
+                                        <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
+                                    {% endif %}
+                                    {% if object.color == object.lum %}
+                                        {{ object.hue }}, <strong>{{ object.lum }}</strong>, {{ object.sat }}
+                                    {% endif %}
+                                    {% if object.color == object.sat %}
+                                        {{ object.hue }}, {{ object.lum }}, <strong>{{ object.sat }}</strong>
+                                    {% endif %}
                                 </span>
-                            </td>
-                            <td class="hide-on-small-only">
-                                {% if object.color == object.hue %}
-                                    <strong>{{ object.hue }}</strong>, {{ object.lum }}, {{ object.sat }}
-                                {% endif %}
-                                {% if object.color == object.lum %}
-                                    {{ object.hue }}, <strong>{{ object.lum }}</strong>, {{ object.sat }}
-                                {% endif %}
-                                {% if object.color == object.sat %}
-                                    {{ object.hue }}, {{ object.lum }}, <strong>{{ object.sat }}</strong>
-                                {% endif %}
                             </td>
                             <td>
                                 <a class="btn waves-effect" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">

@@ -169,9 +169,9 @@ def image_dimension(obj):
 def boolimage(value):
     """ {{ object.key.name|incache|boolimage }} """
     if value is True:
-        return do_mark_safe('<i class="fa fa-check-circle" style="color: #060"></i>')
+        return do_mark_safe('<i class="material-icons green-text text-darken-2">check_circle</i>')
     else:
-        return do_mark_safe('<i class="fa fa-minus-circle" style="color: #c00"></i>')
+        return do_mark_safe('<i class="material-icons red-text text-darken-2">remove_circle</i>')
 
 
 def querystring(url, kwargs):
