@@ -496,7 +496,7 @@ class Photo(ndb.Model):
             self.dim_values()
             self.palette_values()
         except (blobstore.Error, Exception) as e:
-            blob_info.delete()
+            blobstore.delete(self.blob_key)
             return {'success': False, 'message': e.message}
         else:
             self.put()
@@ -569,8 +569,7 @@ class Photo(ndb.Model):
         obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        blob_info = blobstore.BlobInfo.get(obj.blob_key)
-        blob_info.delete()
+        blobstore.delete(obj.blob_key)
 
         decr_count(key.kind(), 'author', obj.author.nickname())
         decr_count(key.kind(), 'date', obj.year)

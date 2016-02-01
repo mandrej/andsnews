@@ -1,5 +1,6 @@
 import cgi
 import json
+import logging
 from collections import defaultdict, OrderedDict
 
 from google.appengine.ext.webapp import blobstore_handlers
@@ -166,6 +167,7 @@ class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
         if form.validate():
             # blob_info = blobstore.parse_blob_info(data['photo'])
             blob_info = self.get_uploads()[0]
+            # logging.error(form.data['photo']) FieldStorage('photo', u'SDIM4129.jpg')
             obj = Photo(id=form.slug.data)
             response = obj.add(form.data, blob_info)
             if response['success']:

@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 from urllib import urlencode, quote as url_quote
 from jinja2.filters import environmentfilter, do_mark_safe, do_truncate
 from webapp2_extras.i18n import ngettext, lazy_gettext as _
+from google.appengine.api import app_identity
 
+BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 PY2 = sys.version_info[0] == 2
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
