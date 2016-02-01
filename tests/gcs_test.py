@@ -15,7 +15,6 @@ class GCSTest(unittest.TestCase):
         print '-----------------'
         # print blobstore.BlobInfo.get(blob_key)  # None
         print blobstore.FileInfo(gcs_object_name).gs_object_name  # gcs_object_name
-        print blobstore.FileInfo(gcs_object_name).filename  # gcs_object_name
 
     def test_blobstore(self):
         obj = Photo.get_by_id('mirodjija')
