@@ -81,7 +81,7 @@
                             </td>
                             <td class="hide-on-small-only">
                                 {% if object.blob_key %}
-                                    {{ object.blob_info.size|filesizeformat }}, {{ object.blob_info.content_type }}
+                                    {{ object.size|filesizeformat }}
                                 {% else %}
                                     {{ False|boolimage }}
                                 {% endif %}

@@ -568,7 +568,6 @@ class Photo(ndb.Model):
     def _pre_delete_hook(cls, key):
         obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
-
         blobstore.delete(obj.blob_key)
 
         decr_count(key.kind(), 'author', obj.author.nickname())
@@ -583,10 +582,6 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def serving_url(self):
         return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-
-    @webapp2.cached_property
-    def blob_info(self):
-        return blobstore.BlobInfo.get(self.blob_key)
 
     @webapp2.cached_property
     def hex(self):
