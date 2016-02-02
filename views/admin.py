@@ -174,24 +174,6 @@ JOBS = {
         },
         "shards": 4
     },
-    "palette": {
-        "job_name": "calculate_palette",
-        "handler_spec": "views.background.calculate_palette",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
-    "dimension": {
-        "job_name": "calculate_dimension",
-        "handler_spec": "views.background.calculate_dimension",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
     "fix": {
         "job_name": "current_fix",
         "handler_spec": "views.background.current_fix",

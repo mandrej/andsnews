@@ -1,4 +1,3 @@
-import logging
 from mapreduce import operation as op
 import cloudstorage as gcs
 from google.appengine.ext import blobstore
@@ -7,16 +6,6 @@ from config import BUCKET
 
 def indexer(entity):
     entity.index_doc()
-
-
-def calculate_palette(entity):
-    entity.palette_values()
-    yield op.db.Put(entity)
-
-
-def calculate_dimension(entity):
-    entity.dim_values()
-    yield op.db.Put(entity)
 
 
 def current_fix(entity):

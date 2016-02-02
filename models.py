@@ -453,22 +453,37 @@ class Photo(ndb.Model):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
-    @webapp2.cached_property
-    def image_from_buffer(self):
-        return Image.open(StringIO(self.buffer))
+    def add(self, data):
+        fs = data['photo']  # FieldStorage('photo', u'SDIM4151.jpg')
+        if fs.done < 0:
+            return {'success': False, 'message': _('Upload interrupted')}
 
-    def exif_values(self):
-        exif = get_exif(self.buffer)
+        # Write to GCS
+        buff = fs.value
+        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
+        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+        with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
+            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+        # <class 'google.appengine.api.datastore_types.BlobKey'> or None
+        self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+
+        self.headline = data['headline']
+        # TODO Not all emails are gmail
+        self.author = users.User(email='%s@gmail.com' % data['author'])
+        self.tags = data['tags']
+
+        # Read EXIF
+        exif = get_exif(buff)
         for field, value in exif.items():
             setattr(self, field, value)
 
-    def dim_values(self):
-        self.dim = self.image_from_buffer.size  # (width, height) tuple
+        image_from_buffer = Image.open(StringIO(buff))
+        self.dim = image_from_buffer.size
+        stat = gcs.stat(object_name)
+        self.size = stat.st_size
 
-    def palette_values(self):
-        img = self.image_from_buffer
-        img.thumbnail((100, 100), Image.ANTIALIAS)
-        palette = extract_colors(img)
+        image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
+        palette = extract_colors(image_from_buffer)
         if palette.bgcolor:
             colors = [palette.bgcolor] + palette.colors
         else:
@@ -484,45 +499,17 @@ class Photo(ndb.Model):
 
         self.hue, self.lum, self.sat = range_names(self.rgb)
 
-    @staticmethod
-    def gcs_write(fs):
-        """ FieldStorage('photo', u'SDIM4151.jpg') """
-        if fs.done == -1:
-            return None
-        buff = fs.getfirst()
-        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
-        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-        with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
-            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-        return blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+        self.put()
 
-    def add(self, data):
-        try:
-            self.headline = data['headline']
-            # TODO Not all emails are gmail
-            self.author = users.User(email='%s@gmail.com' % data['author'])
-            self.blob_key = self.gcs_write(data['photo'])
-            self.size = 0  # blob_info.size
-            self.tags = data['tags']
-
-            self.exif_values()
-            self.dim_values()
-            self.palette_values()
-        except (blobstore.Error, Exception) as e:
-            blobstore.delete(self.blob_key)
-            return {'success': False, 'message': e.message}
-        else:
-            self.put()
-
-            incr_count(self.kind, 'author', self.author.nickname())
-            incr_count(self.kind, 'date', self.year)
-            update_tags(self.kind, None, self.tags)
-            for field in PHOTO_FIELDS:
-                value = getattr(self, field, None)
-                if value:
-                    incr_count(self.kind, field, value)
-            deferred.defer(self.index_doc)
-            return {'success': True}
+        incr_count(self.kind, 'author', self.author.nickname())
+        incr_count(self.kind, 'date', self.year)
+        update_tags(self.kind, None, self.tags)
+        for field in PHOTO_FIELDS:
+            value = getattr(self, field, None)
+            if value:
+                incr_count(self.kind, field, value)
+        deferred.defer(self.index_doc)
+        return {'success': True}
 
     def edit(self, data):
         old = self.author.nickname()

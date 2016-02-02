@@ -7,6 +7,7 @@ from google.appengine.ext import ndb, blobstore
 from webapp2_extras.i18n import lazy_gettext as _
 from webapp2_extras.appengine.users import login_required
 from PIL import Image
+from StringIO import StringIO
 
 from palette import extract_colors
 from models import Photo, incr_count, decr_count, range_names, rgb_hls
@@ -72,7 +73,7 @@ class Palette(BaseHandler):
         obj = Photo.get_by_id(slug)
         if obj is None:
             self.abort(404)
-        img = obj.image_from_buffer
+        img = Image.open(StringIO(obj.buffer))
         img.thumbnail((100, 100), Image.ANTIALIAS)
         palette = extract_colors(img)
         if palette.bgcolor:
