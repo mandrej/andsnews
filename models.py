@@ -486,17 +486,25 @@ class Photo(ndb.Model):
 
     @staticmethod
     def gcs_write(fs):
-        """ FieldStorage('photo', u'SDIM4151.jpg') """
+        """
+        Write file to Google Cloud Storage
+        :arg
+            fs: FieldStorage('photo', u'SDIM4151.jpg')
+            f.write(buff) <class 'cloudstorage.storage_api.StreamingBuffer'>
+        :returns
+            <class 'google.appengine.api.datastore_types.BlobKey'> or None
+        """
         if fs.done == -1:
             return None
-        buff = fs.getfirst()
+        buff = fs.value
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         write_retry_params = gcs.RetryParams(backoff_factor=1.1)
         with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
-            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+            f.write(buff)
         return blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
 
     def add(self, data):
+
         try:
             self.headline = data['headline']
             # TODO Not all emails are gmail
@@ -509,7 +517,8 @@ class Photo(ndb.Model):
             self.dim_values()
             self.palette_values()
         except (blobstore.Error, Exception) as e:
-            blobstore.delete(self.blob_key)
+            if self.blob_key is not None:
+                blobstore.delete(self.blob_key)
             return {'success': False, 'message': e.message}
         else:
             self.put()
