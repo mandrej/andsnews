@@ -32,7 +32,7 @@ class GCSTest(unittest.TestCase):
         blob_info = blobstore.BlobInfo.get(old_blob_key)
         blob_reader = blobstore.BlobReader(old_blob_key, buffer_size=1024*1024)
         buff = blob_reader.read(size=-1)
-        object_name = BUCKET + blob_info.filename  # format /bucket/object
+        object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
         write_retry_params = gcs.RetryParams(backoff_factor=1.1)
         with gcs.open(
             object_name,
@@ -50,4 +50,4 @@ class GCSTest(unittest.TestCase):
         image_url = images.get_serving_url(obj.blob_key)
         print image_url
         print '-----------------'
-        print blobstore.FileInfo(gcs_object_name).gcs_object_name  # /gs/andsnews.appspot.com/test.jpg
+        print blobstore.FileInfo(gcs_object_name).filename  # /gs/andsnews.appspot.com/test.jpg
