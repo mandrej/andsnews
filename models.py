@@ -7,6 +7,7 @@ import colorsys
 import itertools
 import collections
 import logging
+import cloudstorage as gcs
 from cStringIO import StringIO
 from decimal import *
 
@@ -17,7 +18,7 @@ from google.appengine.api import users, memcache, search, images
 
 from palette import extract_colors, rgb_to_hex
 from exifread import process_file
-from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT
+from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT, BUCKET
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
@@ -483,12 +484,24 @@ class Photo(ndb.Model):
 
         self.hue, self.lum, self.sat = range_names(self.rgb)
 
-    def add(self, data, blob_info):
+    def gcs_write(self, file):
+        buff, name = file.value, file.filename
+        object_name = BUCKET + '/' + name  # format /bucket/object
+        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+        with gcs.open(
+            object_name,
+            'w',
+            content_type='image/jpeg',
+            retry_params=write_retry_params) as f:
+            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+        return blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+
+    def add(self, data):
         try:
             self.headline = data['headline']
             # TODO Not all emails are gmail
             self.author = users.User(email='%s@gmail.com' % data['author'])
-            self.blob_key = blob_info.key()
+            self.blob_key = gcs_write(data['photo'])
             self.size = blob_info.size
             self.tags = data['tags']
 
