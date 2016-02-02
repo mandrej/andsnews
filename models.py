@@ -484,15 +484,15 @@ class Photo(ndb.Model):
 
         self.hue, self.lum, self.sat = range_names(self.rgb)
 
-    def gcs_write(self, file):
-        buff, name = file.value, file.filename
-        object_name = BUCKET + '/' + name  # format /bucket/object
+    @staticmethod
+    def gcs_write(fs):
+        """ FieldStorage('photo', u'SDIM4151.jpg') """
+        if fs.done == -1:
+            return None
+        buff = fs.getfirst()
+        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-        with gcs.open(
-            object_name,
-            'w',
-            content_type='image/jpeg',
-            retry_params=write_retry_params) as f:
+        with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
             f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
         return blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
 
@@ -501,8 +501,8 @@ class Photo(ndb.Model):
             self.headline = data['headline']
             # TODO Not all emails are gmail
             self.author = users.User(email='%s@gmail.com' % data['author'])
-            self.blob_key = gcs_write(data['photo'])
-            self.size = blob_info.size
+            self.blob_key = self.gcs_write(data['photo'])
+            self.size = 0  # blob_info.size
             self.tags = data['tags']
 
             self.exif_values()

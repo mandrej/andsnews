@@ -164,9 +164,6 @@ class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
-            # FieldStorage('photo', u'filename.jpg')
-            # blob_info = blobstore.parse_blob_info(form.data['photo'])
-            # blob_info = self.get_uploads()[0]
             obj = Photo(id=form.slug.data)
             response = obj.add(form.data)
             if response['success']:
