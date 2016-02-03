@@ -424,6 +424,7 @@ class Photo(ndb.Model):
     sat = ndb.StringProperty()
     # image dimension
     dim = ndb.IntegerProperty(repeated=True)  # width, height
+    filename = ndb.StringProperty()
 
     ratio = ndb.ComputedProperty(
         lambda self: self.dim[0] / self.dim[1] if self.dim and len(self.dim) == 2 else 1.5)
@@ -467,7 +468,7 @@ class Photo(ndb.Model):
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
             # <class 'google.appengine.api.datastore_types.BlobKey'> or None
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
-
+            self.filename = object_name
             stat = gcs.stat(object_name)
             self.size = stat.st_size
         except gcs.errors, e:

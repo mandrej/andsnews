@@ -55,8 +55,8 @@
                 <tr>
                     <th></th>
                     <th>headline</th>
-                    <th class="hide-on-small-only">blob info</th>
-                    <th>Color</th>
+                    <th class="hide-on-small-only">file info</th>
+                    <th>color</th>
                     <th></th>
                 </tr>
             </thead>
@@ -81,6 +81,7 @@
                             </td>
                             <td class="hide-on-small-only">
                                 {% if object.blob_key %}
+                                    {% if object.filename %}{{ object.filename }}<br>{% endif %}
                                     {{ object.size|filesizeformat }}
                                 {% else %}
                                     {{ False|boolimage }}
