@@ -156,10 +156,9 @@ class EditForm(Form):
 class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
     @login_required
     def get(self, form=None):
-        upload_url = self.uri_for('photo_add')
         if form is None:
             form = AddForm(author=self.user.nickname())
-        self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+        self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
 
     @csrf_protected
     def post(self):
@@ -170,12 +169,10 @@ class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
             if response['success']:
                 self.redirect_to('photo_edit', slug=obj.key.string_id())
             else:
-                upload_url = self.uri_for('photo_add')
                 form.photo.errors.append(response['message'])
-                self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+                self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
         else:
-            upload_url = blobstore.create_upload_url(self.uri_for('photo_add'))
-            self.render_template('admin/photo_form.html', {'form': form, 'upload_url': upload_url, 'filter': None})
+            self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
 
 
 def crop_dict():

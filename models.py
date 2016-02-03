@@ -458,58 +458,64 @@ class Photo(ndb.Model):
         if fs.done < 0:
             return {'success': False, 'message': _('Upload interrupted')}
 
-        # Write to GCS
-        buff = fs.value
-        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
-        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-        with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
-            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-        # <class 'google.appengine.api.datastore_types.BlobKey'> or None
-        self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+        # Write to GCS and get stat
+        try:
+            _buffer = fs.value
+            object_name = BUCKET + '/' + fs.filename  # format /bucket/object
+            write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+            with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
+                f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+            # <class 'google.appengine.api.datastore_types.BlobKey'> or None
+            self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
 
-        self.headline = data['headline']
-        # TODO Not all emails are gmail
-        self.author = users.User(email='%s@gmail.com' % data['author'])
-        self.tags = data['tags']
-
-        # Read EXIF
-        exif = get_exif(buff)
-        for field, value in exif.items():
-            setattr(self, field, value)
-
-        image_from_buffer = Image.open(StringIO(buff))
-        self.dim = image_from_buffer.size
-        stat = gcs.stat(object_name)
-        self.size = stat.st_size
-
-        image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
-        palette = extract_colors(image_from_buffer)
-        if palette.bgcolor:
-            colors = [palette.bgcolor] + palette.colors
+            stat = gcs.stat(object_name)
+            self.size = stat.st_size
+        except gcs.errors, e:
+            return {'success': False, 'message': e.message}
         else:
-            colors = palette.colors
+            self.headline = data['headline']
+            # TODO Not all emails are gmail
+            self.author = users.User(email='%s@gmail.com' % data['author'])
+            self.tags = data['tags']
 
-        max = 0
-        for c in colors:
-            h, l, s = rgb_hls(c.value)
-            criteria = s * c.prominence
-            if criteria >= max:  # saturation could be 0
-                max = criteria
-                self.rgb = c.value
+            # Read EXIF
+            exif = get_exif(_buffer)
+            for field, value in exif.items():
+                setattr(self, field, value)
 
-        self.hue, self.lum, self.sat = range_names(self.rgb)
+            # Set dim
+            image_from_buffer = Image.open(StringIO(_buffer))
+            self.dim = image_from_buffer.size
 
-        self.put()
+            # Calculate Pallette
+            image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
+            palette = extract_colors(image_from_buffer)
+            if palette.bgcolor:
+                colors = [palette.bgcolor] + palette.colors
+            else:
+                colors = palette.colors
 
-        incr_count(self.kind, 'author', self.author.nickname())
-        incr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, None, self.tags)
-        for field in PHOTO_FIELDS:
-            value = getattr(self, field, None)
-            if value:
-                incr_count(self.kind, field, value)
-        deferred.defer(self.index_doc)
-        return {'success': True}
+            _max = 0
+            for c in colors:
+                h, l, s = rgb_hls(c.value)
+                criteria = s * c.prominence
+                if criteria >= _max:  # saturation could be 0
+                    _max = criteria
+                    self.rgb = c.value
+            self.hue, self.lum, self.sat = range_names(self.rgb)
+
+            # SAVE EVERYTHING
+            self.put()
+
+            incr_count(self.kind, 'author', self.author.nickname())
+            incr_count(self.kind, 'date', self.year)
+            update_tags(self.kind, None, self.tags)
+            for field in PHOTO_FIELDS:
+                value = getattr(self, field, None)
+                if value:
+                    incr_count(self.kind, field, value)
+            deferred.defer(self.index_doc)
+            return {'success': True}
 
     def edit(self, data):
         old = self.author.nickname()
