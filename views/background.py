@@ -9,6 +9,7 @@ def indexer(entity):
 
 
 def current_fix(entity):
+    # NO NEED
     blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
     if blob_info is not None:
         blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)

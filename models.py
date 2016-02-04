@@ -469,8 +469,7 @@ class Photo(ndb.Model):
             # <class 'google.appengine.api.datastore_types.BlobKey'> or None
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
             self.filename = object_name
-            stat = gcs.stat(object_name)
-            self.size = stat.st_size
+            self.size = f.tell()
         except gcs.errors, e:
             return {'success': False, 'message': e.message}
         else:

@@ -13,13 +13,13 @@ from jinja2.filters import Markup
 from webapp2_extras import i18n, sessions, jinja2
 from webapp2_extras.appengine.users import login_required
 from google.appengine.api import users, search, mail, datastore_errors
-from google.appengine.ext import ndb, blobstore
+from google.appengine.ext import ndb
 from google.appengine.runtime import apiproxy_errors
 from google.appengine.datastore.datastore_query import Cursor
 
 from wtforms import widgets, fields
 from models import INDEX, Photo, Entry, Cloud, Graph
-from config import DEVEL, LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, MAIL_BODY, FAMILY, TIMEOUT
+from config import DEVEL, LANGUAGES, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, MAIL_BODY, FAMILY
 
 
 def csrf_protected(handler_method):
@@ -199,8 +199,7 @@ class SaveAsHandler(BaseHandler):
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
         obj = key.get()
-        blob_reader = blobstore.BlobReader(obj.blob_key, buffer_size=1024*1024)
-        buff = blob_reader.read(size=-1)
+        buff = obj.buffer
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
         logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
         self.response.write(buff)
