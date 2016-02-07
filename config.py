@@ -87,7 +87,8 @@ CROPS = {
     "OLYMPUS IMAGING CORP. IR-500": 6.6,
     "SAMSUNG GT-C3530": 7.0,
     "LGE Nexus 4": 7.6,
-    "LGE Nexus 5": 7.6,
+    "LGE Nexus 5": 5.4,
+    "LGE Nexus 5X": 3.9,
     "google Nexus S": 8.8
 }
 

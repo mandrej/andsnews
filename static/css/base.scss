@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 // Mixins
-// @import "components/prefixer";
+@import "components/prefixer";
 @import "components/mixins";
 @import "components/color";
 // Variables
@@ -39,7 +39,7 @@
 @import "swiper";
 
 $body-bg-color: color("grey", "lighten-2");
-$navbar-bg-color: color("grey", "darken-3");
+$navbar-bg-color: color("cyan", "darken-4");
 $action-bg-color: color("grey", "lighten-1");
 
 body {
@@ -137,6 +137,7 @@ header > nav {
 
 footer.page-footer {
   margin-top: 0;
+  z-index: 0;
   .footer-copyright {
     padding: 0 20px;
     .material-icons {
@@ -430,4 +431,22 @@ circle, path {
 .link {
   stroke: #000;
   stroke-opacity: 0.3;
+}
+
+.front-page {
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  .card-panel {
+    color: white;
+    background-color: rgba(0,0,0,.5);
+    a { color: white; }
+    .material-icons {
+      font-size: 8em;
+    }
+  }
 }

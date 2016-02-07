@@ -125,6 +125,11 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
+class FrontPage(BaseHandler):
+    def get(self):
+        self.render_template('index.html', {'object': Photo.latest()})
+
+
 class Complete(BaseHandler):
     def get(self, mem_key):
         cloud = Cloud(mem_key).get_list()

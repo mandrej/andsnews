@@ -604,6 +604,14 @@ class Photo(ndb.Model):
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
 
+    @classmethod
+    def latest(cls):
+        query = cls.query().order(-cls.date)
+        result = query.fetch(1)
+        if result:
+            return result[0]
+        return None
+
     def serialize(self):
         data = self.to_dict(exclude=(
             'blob_key', 'dim', 'size', 'ratio',

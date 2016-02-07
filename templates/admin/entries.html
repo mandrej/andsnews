@@ -37,7 +37,7 @@
                 {% endfor %}
             </div>
             <div class="col m3 s12 valign middle right-align">
-                <a href="{{ uri_for('entry_add') }}" class="btn-floating btn-large waves-effect waves-light orange">
+                <a href="{{ uri_for('entry_add') }}" class="btn-floating btn-large waves-effect orange">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -49,7 +49,7 @@
                     <a class="btn waves-effect" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
                         <i class="material-icons left">edit</i>{{ object.headline }}
                     </a>
-                    <a class="confirm btn waves-effect orange right hide-on-small-only" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
+                    <a class="confirm btn waves-effect right hide-on-small-only" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
                         <i class="material-icons">delete</i></a>
                 </h5>
                 <table class="highlight">

@@ -20,7 +20,7 @@
     </div>
 {% endmacro %}
 
-{% macro menu(kind=None, user=None) %}
+{% macro menu(kind=None) %}
     {% if kind == 'photo' %}
         <li class="active no-padding">
             <a href="#filters" class="waves-effect modal-trigger">{{ _('Photos') }}</a>
@@ -35,15 +35,9 @@
     {% else %}
         <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Texts') }}</a></li>
     {% endif %}
-    {% if kind == 'admin' and user %}
-        <li class="active no-padding">
-            <a href="/sign" class="waves-effect">{{ _('Administration') }}</a>
-        </li>
-    {% else %}
-        <li class="no-padding">
-            <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>
-        </li>
-    {% endif %}
+{#    <li class="no-padding">#}
+{#        <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>#}
+{#    </li>#}
 {% endmacro %}
 
 {% macro filters_html(available, kind) %}
@@ -65,7 +59,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn btn-flat">close</a>
+            <a href="#!" class="modal-action modal-close waves-effect btn btn-flat">close</a>
         </div>
     </div>
 {% endmacro %}

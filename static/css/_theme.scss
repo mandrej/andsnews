@@ -3,7 +3,7 @@ $primary-color: color("orange", "base") !default;
 $primary-color-light: lighten($primary-color, 15%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
 
-$secondary-color: color("teal", "lighten-1") !default;
+$secondary-color: color("cyan", "darken-4") !default;
 $success-color: color("green", "base") !default;
 $error-color: color("red", "base") !default;
 $link-color: color("deep-orange", "base") !default;
@@ -12,10 +12,10 @@ $link-color: color("deep-orange", "base") !default;
 $badge-bg-color: $secondary-color !default;
 
 /*** Buttons ***/
-$button-bg-color-disabled: #DFDFDF !default;
+$button-bg-color-disabled: color("grey", "base") !default;
 $button-color: $secondary-color !default;
-$button-color-disabled: #9F9F9F !default;
-$button-color-flat: #343434 !default;
+$button-color-disabled:  color("grey", "darken-4") !default;
+$button-color-flat: #color("grey", "base") !default;
 $button-color-raised: #fff !default;
 $button-floating-size: 37px !default;
 $button-height: 36px !default;

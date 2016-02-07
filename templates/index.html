@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    <div class="front-page valign-wrapper" style='background-image: url("{{ object.serving_url }}=s0")'>
+        <div class="container valign middle">
+            <div class="row">
+                <div class="col s12 l4 center-align">
+                    <div class="card-panel">
+                        <a href="{{ uri_for('photo_all') }}">
+                            <i class="material-icons">photo_camera</i>
+                            <span class="card-title">{{ _('Photos') }}</span>
+                        </a>
+                        <p>Pictures of my family, my family pictures and pictures</p>
+                    </div>
+                </div>
+                <div class="col s12 l4 center-align">
+                    <div class="card-panel">
+                        <a href="{{ uri_for('entry_all') }}">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span class="card-title">{{ _('Texts') }}</span>
+                        </a>
+                        <p>Personal opinion, thoughts, hobby, CV</p>
+                    </div>
+                </div>
+                <div class="col l4 center-align hide-on-small-only">
+                    <div class="card-panel">
+                        <a href="{{ uri_for('admin_all') }}">
+                            <i class="material-icons">settings</i>
+                            <span class="card-title">{{ _('Administration') }}</span>
+                        </a>
+                        <p>Site administration. Google account required</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
