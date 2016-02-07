@@ -86,4 +86,3 @@ builtins:
 skip_files:
 - ^(.*/)?.*\.py[co]$
 - ^(.*/)?\..*$
-- ^static/css/components/.*

@@ -138,25 +138,8 @@ def timeit(f):
     return wrapper
 
 
-def version():
-    return os.environ.get('CURRENT_VERSION_ID').split('.').pop(0)
-
-
 def language(code):
     return code.split('_')[0]
-
-
-def year():
-    date = datetime.now()
-    return date.strftime('%Y')
-
-
-def to_date(value, format='%Y-%m-%d'):
-    return value.strftime(format)
-
-
-def to_datetime(value, format='%Y-%m-%dT%H:%M:%S'):
-    return value.strftime(format)
 
 
 def image_url_by_num(obj, arg):
@@ -312,8 +295,10 @@ def do_urlencode(value):
 CONFIG = {
     'webapp2_extras.jinja2': {
         'globals': {
-            'year': year,
-            'version': version,
+            'year': datetime.now().year,
+            'just_date': '%Y-%m-%d',
+            'full_date': '%Y-%m-%dT%H:%M:%S',
+            'version': float(os.environ.get('CURRENT_VERSION_ID')),
             'language': language,
             'all_languages': LANGUAGES,
             'devel': DEVEL,
@@ -321,8 +306,6 @@ CONFIG = {
         },
         'filters': {
             'boolimage': boolimage,
-            'to_date': to_date,
-            'to_datetime': to_datetime,
             'image_url_by_num': image_url_by_num,
             'image_dimension': image_dimension,
             'css_classes': css_classes,

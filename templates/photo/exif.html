@@ -51,8 +51,8 @@
             <div class="col s6">{{ '%s mm' % object.focal_length if object.focal_length is not none else '---' }}</div>
 
             <div class="col s6">{{ _('Taken') }}</div>
-            <div class="col s6"><time datetime='{{ object.date|to_datetime }}'>
-                {{ object.date|to_datetime }}</time></div>
+            <div class="col s6"><time datetime='{{ object.date.strftime(full_date) }}'>
+                {{ object.date.strftime(full_date) }}</time></div>
         </div>
     </div>
 </div>

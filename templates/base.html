@@ -13,7 +13,7 @@
 	<title>ANDрејевићи</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="/static/css/base.css" rel="stylesheet">
+	<link href="/static/css/base.css?ver={{ version }}" rel="stylesheet">
 	<link type="image/x-icon" rel="shortcut icon" href="/favicon.ico">
 </head>
 <body>
@@ -56,7 +56,7 @@
         <div class="footer-copyright">
             <div class="row">
                 <div class="col l8">
-                    <i class="material-icons">copyright</i> АNDS 2008-{{ year() }} v.{{ version() }}
+                    <i class="material-icons">copyright</i> АNDS 2008-{{ year }} v.{{ '%.0f' % version }}
                 </div>
                 <div class="col l4 right-align">
                     <form id="langs" action="/setlang" method="post">

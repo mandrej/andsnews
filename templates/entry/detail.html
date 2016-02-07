@@ -1,5 +1,5 @@
 {% extends "entry/base.html" %}
-{% block meta %}<meta name="date" content="{{ object.date|to_date }}"/>{% endblock %}
+{% block meta %}<meta name="date" content="{{ object.date.strftime(just_date) }}"/>{% endblock %}
 {% import "snippets/macros.html" as m %}
 
 {% block contents %}
