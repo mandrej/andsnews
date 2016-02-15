@@ -43,14 +43,14 @@
 {% macro filters_html(available, kind) %}
     <div id="filters" class="modal bottom-sheet">
         <div class="modal-content">
-            <h4 class="card-title">{{ _('Filters') }}
-                <a href="{{ uri_for('%s_all' % kind) }}">
-                    <i class="large material-icons right">clear_all</i>
-                </a>
-            </h4>
+            <a href="{{ uri_for('%s_all' % kind) }}"
+                class="btn-floating btn-large waves-effect red right">
+                <i class="large material-icons">clear_all</i>
+            </a>
+            <class class="card-title">{{ _('Filters') }}</class>
             <div class="row">
                 {% for f in available %}
-                    <div class="col s12 m6 l4">
+                    <div class="col s12 m6">
                         {% set url = '/filter/%s_%s' % (kind.capitalize(), f.field) %}
                         <a class="{{ f.field }} collapse" href="{{ url }}">{{ f.title }}</a>
                         <div id="{{ f.field }}cloud" class="hidden"></div>
@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect btn btn-flat">close</a>
+            <a href="#!" class="modal-action modal-close waves-effect btn-flat">close</a>
         </div>
     </div>
 {% endmacro %}
