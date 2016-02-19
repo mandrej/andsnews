@@ -35,9 +35,6 @@
     {% else %}
         <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Texts') }}</a></li>
     {% endif %}
-{#    <li class="no-padding">#}
-{#        <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Administration') }}</a>#}
-{#    </li>#}
 {% endmacro %}
 
 {% macro filters_html(available, kind) %}
