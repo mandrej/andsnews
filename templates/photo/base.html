@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% import "snippets/macros.html" as m %}
+{% from "snippets/macros.html" import filters %}
 
 {% block modals %}
-    {{ m.filters('photo') }}
+    {{ filters('photo') }}
 {% endblock %}
 
-{% block menu %}{{ m.menu('photo') }}{% endblock %}
+{% block menu %}{{ menu('photo') }}{% endblock %}
 
 {% block scripts %}
     {{ super() }}

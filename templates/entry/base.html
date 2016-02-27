@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% import "snippets/macros.html" as m %}
+{% from "snippets/macros.html" import filters %}
 
 {% block modals %}
-    {{ m.filters('entry') }}
+    {{ filters('entry') }}
 {% endblock %}
 
-{% block menu %}{{ m.menu('entry') }}{% endblock %}
+{% block menu %}{{ menu('entry') }}{% endblock %}
 
 {% block scripts %}
     {{ super() }}

@@ -149,16 +149,15 @@ class SetLanguage(BaseHandler):
 
 class Sign(BaseHandler):
     def get(self):
-        referer = self.request.headers.get('Referer', self.uri_for('start'))
-        if referer.endswith('admin/'):
-            referer = self.uri_for('start')
+        referrer = self.request.headers.get('Referer', self.uri_for('start'))
         if users.get_current_user():
             self.session.pop('csrf', None)
-            dest_url = users.create_logout_url(referer)
-            logging.info('LOGGED IN AS %s' % users.get_current_user().email())
+            if referrer.endswith('admin/'):
+                referrer = self.uri_for('start')
+            url = users.create_logout_url(referrer)
         else:
-            dest_url = users.create_login_url(referer)
-        self.redirect(dest_url)
+            url = users.create_login_url(referrer)
+        self.redirect(url)
 
 
 class Find(BaseHandler):

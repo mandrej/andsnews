@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
+{% from "snippets/macros.html" import form_row, input %}
 
 {% block contents %}
     <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
@@ -28,14 +28,14 @@
                     {% endif %}
 
                     <input name="token" type="hidden" value="{{ session.csrf }}"/>
-                    {{ m.form_row(form.headline, class='validate') }}
+                    {{ form_row(form.headline, class='validate') }}
                     {% if not object %}
-                        {{ m.form_row(form.slug) }}
+                        {{ form_row(form.slug) }}
                     {% endif %}
-                    {{ m.form_row(form.tags) }}
-                    {{ m.form_row(form.summary, class='materialize-textarea') }}
-                    {{ m.form_row(form.author, class='browser-default') }}
-                    {{ m.form_row(form.date, type='date', class='datepicker') }}
+                    {{ form_row(form.tags) }}
+                    {{ form_row(form.summary, class='materialize-textarea') }}
+                    {{ form_row(form.author, class='browser-default') }}
+                    {{ form_row(form.date, type='date', class='datepicker') }}
                 </div>
                 <div class="col m6 hide-on-med-and-down">
                     <p>{{ _('Slug uniquely represent record. It must start with letter and may contain only letters, numbers, underscores or hyphens. It is used for URL addresses.') }}</p>
@@ -46,7 +46,7 @@
                 <div class="col s12">
                     <h5>{{ _('Images used in this blog') }}</h5>
                     {% if object %}
-                        {{ m.form_row(form.front, class='browser-default') }}
+                        {{ form_row(form.front, class='browser-default') }}
                         {% for field in form.images %}
                             <div class="row valign-wrapper">
                                 <div class="col s1">
@@ -74,7 +74,7 @@
                                     <div class="file-field input-field">
                                         <div class="btn">
                                             <span>{{ field.form.name.label.text }}</span>
-                                            {{ m.input(field.form.blob, class='validate') }}
+                                            {{ input(field.form.blob, class='validate') }}
                                         </div>
                                         <div class="file-path-wrapper">
                                             <input class="file-path validate" type="text">

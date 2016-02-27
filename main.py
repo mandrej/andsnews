@@ -49,6 +49,7 @@ app = WSGIApplication([
     Route(r'/<safe_key:[\w-]+>/delete', handler=DeleteHandler, name='delete'),
     Route('/search', handler=Find, name='search'),
     Route(r'/setlang', handler=SetLanguage),
+    # Route(r'/about', handler=FrontPage, name='front'),
     Route(r'/sign', handler=Sign),
     Route(r'/', handler='views.photo.Index', name='start'),
 ], config=CONFIG, debug=DEVEL)

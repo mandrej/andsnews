@@ -21,6 +21,11 @@
 {% endmacro %}
 
 {% macro menu(kind=None) %}
+{#    {% if kind == 'none' %}#}
+{#        <li class="active no-padding"><a href="{{ uri_for('front') }}" class="waves-effect">{{ _('About') }}</a></li>#}
+{#    {% else %}#}
+{#        <li class="no-padding"><a href="{{ uri_for('front') }}" class="waves-effect">{{ _('About') }}</a></li>#}
+{#    {% endif %}#}
     {% if kind == 'photo' %}
         <li class="active no-padding">
             <a href="#filters" class="waves-effect modal-trigger">{{ _('Photos') }}</a>
@@ -35,17 +40,38 @@
     {% else %}
         <li class="no-padding"><a href="{{ uri_for('entry_all') }}" class="waves-effect">{{ _('Texts') }}</a></li>
     {% endif %}
+    {% if user %}
+        {% if kind == 'admin' %}
+            <li class="active no-padding">
+                <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Admin') }}</a>
+            </li>
+        {% else %}
+            <li class="no-padding">
+                <a href="{{ uri_for('admin_all') }}" class="waves-effect">{{ _('Admin') }}</a>
+            </li>
+        {% endif %}
+    {% else %}
+        <li class="no-padding">
+            <a href="/sign" class="waves-effect">{{ _('Login') }}</a>
+        </li>
+    {% endif %}
 {% endmacro %}
 
 {% macro filters_html(available, kind) %}
     <div id="filters" class="modal bottom-sheet">
         <div class="modal-content">
-            <a href="{{ uri_for('%s_all' % kind) }}"
-                class="btn-floating btn-large waves-effect red right">
-                <i class="large material-icons">clear_all</i>
-            </a>
-            <class class="card-title">{{ _('Filters') }}</class>
-            <div class="row">
+            <div class="row valign-wrapper">
+                <div class="col s4">
+                    <span class="btn-floating waves-effect grey"><i class="material-icons">filter_list</i></span>
+                </div>
+                <div class="col s4 center-align valign middle card-title">{{ _('Filters') }}</div>
+                <div class="col s4">
+                    <a href="{{ uri_for('%s_all' % kind) }}"
+                        class="btn-floating waves-effect right"><i class="material-icons">clear_all</i>
+                    </a>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
                 {% for f in available %}
                     <div class="col s12 m6">
                         {% set url = '/filter/%s_%s' % (kind.capitalize(), f.field) %}

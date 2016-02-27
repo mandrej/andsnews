@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% import "snippets/macros.html" as m %}
+{% from "snippets/macros.html" import form_row, input %}
 
 {% block contents %}
     <nav class="breadcrumb grey lighten-3 hide-on-med-and-down z-depth-0">
@@ -25,22 +25,22 @@
                  {% if object %}
                      <form action="{{ uri_for('photo_edit', slug=object.key.string_id()) }}" method="post">
                         <input name="token" type="hidden" value="{{ session.csrf }}"/>
-                        {{ m.form_row(form.headline, class='validate') }}
-                        {{ m.form_row(form.tags) }}
-                        {{ m.form_row(form.author, class='browser-default') }}
+                        {{ form_row(form.headline, class='validate') }}
+                        {{ form_row(form.tags) }}
+                        {{ form_row(form.author, class='browser-default') }}
 
                         <h5>EXIF {{ _('data') }}</h5>
-                        {{ m.form_row(form.model) }}
-                        {{ m.form_row(form.lens) }}
+                        {{ form_row(form.model) }}
+                        {{ form_row(form.lens) }}
                         <div class="row">
-                            <div class="col s4">{{ m.form_row(form.aperture) }}</div>
-                            <div class="col s4">{{ m.form_row(form.shutter) }}</div>
-                            <div class="col s4">{{ m.form_row(form.iso) }}</div>
+                            <div class="col s4">{{ form_row(form.aperture) }}</div>
+                            <div class="col s4">{{ form_row(form.shutter) }}</div>
+                            <div class="col s4">{{ form_row(form.iso) }}</div>
                         </div>
                         <div class="row">
-                            <div class="col s4">{{ m.form_row(form.focal_length) }}</div>
-                            <div class="col s4">{{ m.form_row(form.crop_factor, class='validate') }}</div>
-                            <div class="col s4">{{ m.form_row(form.date, type='date', class='datepicker') }}</div>
+                            <div class="col s4">{{ form_row(form.focal_length) }}</div>
+                            <div class="col s4">{{ form_row(form.crop_factor, class='validate') }}</div>
+                            <div class="col s4">{{ form_row(form.date, type='date', class='datepicker') }}</div>
                         </div>
                         <div class="row">
                             <div class="col s4"><span class="required left">{{ _('Required field') }}</span></div>
@@ -59,17 +59,17 @@
                             <div class="file-field input-field">
                                 <div class="btn">
                                     <span>File</span>
-                                    {{ m.input(form.photo, class='validate') }}
+                                    {{ input(form.photo, class='validate') }}
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text">
                                 </div>
                             </div>
                         </p>
-                        {{ m.form_row(form.headline, class='validate') }}
-                        {{ m.form_row(form.slug, class='validate') }}
-                        {{ m.form_row(form.tags) }}
-                        {{ m.form_row(form.author, class='browser-default') }}
+                        {{ form_row(form.headline, class='validate') }}
+                        {{ form_row(form.slug, class='validate') }}
+                        {{ form_row(form.tags) }}
+                        {{ form_row(form.author, class='browser-default') }}
                         <p class="right-align">
                             <span class="required left">{{ _('Required field') }}</span>
                             <button class="btn waves-effect" type="submit">

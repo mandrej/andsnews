@@ -1,12 +1,11 @@
 {% extends "base.html" %}
-{% import "snippets/macros.html" as m %}
 
 {% block modals %}
     <div id="graph" class="modal bottom-sheet"></div>
     <div id="confirm" class="modal"></div>
 {% endblock %}
 
-{% block menu %}{{ m.menu('admin') }}{% endblock %}
+{% block menu %}{{ menu('admin') }}{% endblock %}
 
 {% block scripts %}
     {{ super() }}
