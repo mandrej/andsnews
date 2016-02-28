@@ -215,17 +215,9 @@ class Paginator(object):
         self.per_page = per_page
 
     def page(self, token=None):
-        objects, next_token = [], None
-        try:
-            cursor = Cursor(urlsafe=token)
-            keys, cursor, has_next = self.query.fetch_page(self.per_page, keys_only=True, start_cursor=cursor)
-            # get_multi returns a list whose items are either a Model instance or None if the key wasn't found.
-            objects = ndb.get_multi(keys)
-            if has_next:
-                next_token = cursor.urlsafe()
-        except datastore_errors.Error, e:
-            logging.info('-----> %s' % e.message)
-
+        cursor = Cursor(urlsafe=token)
+        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+        next_token = cursor.urlsafe() if has_next else None
         return [x for x in objects if x is not None], next_token
 
 
