@@ -32,7 +32,6 @@
     {{ super() }}
     <script>
         $(function () {
-            var count = 1, max = parseInt('{{ max }}');
             var $container = $('#gallery');
             $container.gridalicious({
                 selector: '.thumbnail',
@@ -41,27 +40,23 @@
                 animate: true
             });
 
-            var load = true;
+            var load = true,
+                max = +'{{ max }}',
+                links = [];
             $(window).scroll(function() {
-                var scrollTop = $(window).scrollTop(),
-                    docHeight = $(document).height(),
-                    winHeight = $(window).height();
-
-                if (docHeight - scrollTop - winHeight < 800 && load) {
-                    var href = $('.next').attr('href');
-                    if (href !== undefined && count < max) {
-                        load = false;
-                        $.get(href).done(function(response) {
-                            var $page = $(response);
-                            $container.gridalicious('append', $page.find('.thumbnail'));
-                            $('.pagination').replaceWith(function() {
-                                return $page.find('.pagination').hide();
-                            });
-                            count ++;
-                        }).always(function() {
-                            load = true;
+                var href = $('.next').attr('href');
+                if (href !== undefined && links.indexOf(href) == -1 && links.length < max && load) {
+                    load = false;
+                    $.get(href).done(function(response) {
+                        var $page = $(response);
+                        $container.gridalicious('append', $page.find('.thumbnail'));
+                        $('.pagination').replaceWith(function() {
+                            return $page.find('.pagination').hide();
                         });
-                    }
+                        links.push(href);
+                    }).always(function() {
+                        load = true;
+                    });
                 }
             });
         });
