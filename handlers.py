@@ -215,7 +215,11 @@ class Paginator(object):
         self.per_page = per_page
 
     def page(self, token=None):
-        cursor = Cursor(urlsafe=token)
+        try:
+            cursor = Cursor(urlsafe=token)
+        except datastore_errors.BadValueError:
+            cursor = None
+
         objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
         next_token = cursor.urlsafe() if has_next else None
         return [x for x in objects if x is not None], next_token
