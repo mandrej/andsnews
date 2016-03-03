@@ -586,7 +586,7 @@ class Photo(ndb.Model):
                 decr_count(key.kind(), field, value)
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    @webapp2.cached_property
+    @property
     def serving_url(self):
         return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
 
