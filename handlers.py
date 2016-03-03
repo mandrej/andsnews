@@ -218,7 +218,7 @@ class Paginator(object):
         try:
             cursor = Cursor(urlsafe=token)
         except datastore_errors.BadValueError:
-            cursor = None
+            webapp2.abort(404)
 
         objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
         next_token = cursor.urlsafe() if has_next else None
