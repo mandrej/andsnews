@@ -295,15 +295,21 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
 input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search],
 textarea.materialize-textarea {
   height: 2.5rem;
-  margin: 0;
+  margin: 0 0 0.5rem;
+  td & {
+    margin: 0;
+  }
 }
 
-label.required {
-  color: $link-color;
+label {
+  font-size: inherit;
+  &.required {
+    color: $error-color;
+  }
 }
 
 span.required {
-  color: $link-color;
+  color: $error-color;
   line-height: 36px;
 }
 
