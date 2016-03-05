@@ -3,9 +3,9 @@ import json
 from collections import defaultdict, OrderedDict
 
 from google.appengine.ext.webapp import blobstore_handlers
-from google.appengine.ext import ndb, blobstore
+from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required
+from webapp2_extras.appengine.users import login_required, admin_required
 from PIL import Image
 from StringIO import StringIO
 
@@ -154,7 +154,7 @@ class EditForm(Form):
 
 
 class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
-    @login_required
+    @admin_required
     def get(self, form=None):
         if form is None:
             form = AddForm(author=self.user.nickname())
@@ -183,7 +183,7 @@ def crop_dict():
 
 
 class Edit(BaseHandler):
-    @login_required
+    @admin_required
     def get(self, slug, form=None):
         obj = Photo.get_by_id(slug)
         if obj is None:

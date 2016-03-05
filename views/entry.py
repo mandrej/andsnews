@@ -5,7 +5,7 @@ import re
 from PIL import Image
 import webapp2
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required
+from webapp2_extras.appengine.users import login_required, admin_required
 from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
@@ -93,7 +93,7 @@ class EditForm(Form):
 
 
 class Add(BaseHandler):
-    @login_required
+    @admin_required
     def get(self, form=None):
         if form is None:
             form = AddForm()
@@ -118,7 +118,7 @@ def front_choices(obj):
 
 
 class Edit(BaseHandler):
-    @login_required
+    @admin_required
     def get(self, slug, form=None):
         obj = Entry.get_by_id(slug)
         if not any([self.is_admin, self.user == obj.author]):

@@ -70,7 +70,7 @@ class Index(BaseHandler):
 
 
 class Photos(BaseHandler):
-    @login_required
+    @admin_required
     @xss_protected
     def get(self, field=None, value=None):
         page = self.request.get('page', None)
@@ -89,7 +89,7 @@ class Photos(BaseHandler):
 
 
 class Entries(BaseHandler):
-    @login_required
+    @admin_required
     @xss_protected
     def get(self, field=None, value=None):
         page = self.request.get('page', None)
@@ -192,6 +192,7 @@ class DatastoreMapperPipeline(PipelineBase):
 
 
 class DatastoreBackground(BaseHandler):
+    @admin_required
     def get(self, job):
         try:
             JOBS[job]
