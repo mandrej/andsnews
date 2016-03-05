@@ -67,8 +67,6 @@ class Palette(BaseHandler):
         bgcolor=
             Color(value=(164, 14, 12), prominence=0.4356060606060606))
     """
-
-    @login_required
     def get(self, slug):
         obj = Photo.get_by_id(slug)
         if obj is None:

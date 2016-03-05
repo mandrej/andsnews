@@ -433,7 +433,7 @@ class Photo(ndb.Model):
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
 
-    @webapp2.cached_property
+    @property
     def kind(self):
         return self.key.kind()
 
@@ -586,15 +586,15 @@ class Photo(ndb.Model):
                 decr_count(key.kind(), field, value)
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    @property
-    def serving_url(self):
-        return images.get_serving_url_async(self.blob_key, crop=False, secure_url=True)
-
     @webapp2.cached_property
+    def serving_url(self):
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+
+    @property
     def hex(self):
         return rgb_to_hex(tuple(self.rgb))
 
-    @webapp2.cached_property
+    @property
     def hls(self):
         return rgb_hls(self.rgb)
 
@@ -645,7 +645,7 @@ class Entry(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     front = ndb.IntegerProperty(default=-1)
 
-    @webapp2.cached_property
+    @property
     def kind(self):
         return self.key.kind()
 

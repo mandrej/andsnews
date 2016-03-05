@@ -43,7 +43,7 @@
                 <div class="card waves-effect z-depth-0">
                     {% if object.kind == 'Photo' %}
                         <div class="card-image">
-                            <img src="{{ object.serving_url.get_result() }}=s400">
+                            <img src="{{ object.serving_url }}=s400">
                         </div>
                     {% endif %}
                     <div class="card-content">
