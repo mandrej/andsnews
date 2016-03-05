@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block contents %}
-    <div class="front-page valign-wrapper" style='background-image: url("{{ object.serving_url }}=s0")'>
+    <div class="front-page valign-wrapper" style='background-image: url("{{ object.serving_url.get_result() }}=s0")'>
         <div class="container valign middle">
             <div class="row">
                 <div class="col s12 l4 center-align">

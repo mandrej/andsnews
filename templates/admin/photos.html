@@ -71,7 +71,7 @@
                         <tr>
                             <td>
                                 <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}">
-                                    <img src="{{ object.serving_url }}=s400" width="50"/>
+                                    <img src="{{ object.serving_url.get_result() }}=s400" width="50"/>
                                 </a>
                             </td>
                             <td>

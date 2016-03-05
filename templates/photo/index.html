@@ -14,7 +14,7 @@
             <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}" class="thumbnail">
                 <div class="card waves-effect z-depth-0">
                     <div class="card-image">
-                        <img src="{{ object.serving_url }}=s400">
+                        <img src="{{ object.serving_url.get_result() }}=s400">
                     </div>
                     <div class="card-content">
                         <span class="card-title">{{ object.headline }}</span>
