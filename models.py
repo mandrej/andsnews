@@ -14,6 +14,7 @@ import webapp2
 from PIL import Image
 from google.appengine.api import users, memcache, search, images
 from google.appengine.ext import ndb, deferred, blobstore
+from google.appengine.runtime import apiproxy_errors
 from webapp2_extras.i18n import lazy_gettext as _
 
 import cloudstorage as gcs
@@ -590,8 +591,9 @@ class Photo(ndb.Model):
     def serving_url(self):
         try:
             return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except images.Error, e:
+        except (images.Error, apiproxy_errors.DeadlineExceededError), e:
             logging.error(e.message)
+        return None
 
     @property
     def hex(self):
