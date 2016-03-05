@@ -588,7 +588,10 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        try:
+            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except images.Error, e:
+            logging.error(e.message)
 
     @property
     def hex(self):
