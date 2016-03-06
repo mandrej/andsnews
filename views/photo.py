@@ -5,7 +5,7 @@ from collections import defaultdict, OrderedDict
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required, admin_required
+from webapp2_extras.appengine.users import admin_required
 from PIL import Image
 from StringIO import StringIO
 

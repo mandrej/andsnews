@@ -11,7 +11,7 @@ from operator import itemgetter
 import webapp2
 from jinja2.filters import Markup
 from webapp2_extras import i18n, sessions, jinja2
-from webapp2_extras.appengine.users import login_required
+from webapp2_extras.appengine.users import login_required, admin_required
 from google.appengine.api import users, search, mail, datastore_errors
 from google.appengine.ext import ndb
 from google.appengine.runtime import apiproxy_errors
@@ -180,7 +180,7 @@ class Find(BaseHandler):
 
 
 class DeleteHandler(BaseHandler):
-    @login_required
+    @admin_required
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
         next = self.request.headers.get('Referer', self.uri_for('start'))

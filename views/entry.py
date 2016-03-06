@@ -5,7 +5,7 @@ import re
 from PIL import Image
 import webapp2
 from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import login_required, admin_required
+from webapp2_extras.appengine.users import admin_required
 from google.appengine.ext import ndb
 
 from wtforms import Form, FormField, FieldList, fields, validators
