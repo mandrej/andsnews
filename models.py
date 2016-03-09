@@ -461,10 +461,17 @@ class Photo(ndb.Model):
         if fs.done < 0:
             return {'success': False, 'message': _('Upload interrupted')}
 
-        # Write to GCS and get stat
+        _buffer = fs.value
+        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
+        # Check  GCS stat exist first
         try:
-            _buffer = fs.value
-            object_name = BUCKET + '/' + fs.filename  # format /bucket/object
+            gcs.stat(object_name)
+            return {'success': False, 'message': _('File %s already exists' % fs.filename)}
+        except gcs.NotFoundError:
+            pass
+
+        # Write to GCS
+        try:
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)
             with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
