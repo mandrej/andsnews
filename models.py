@@ -1,5 +1,6 @@
 from __future__ import division
 
+import re
 import cgi
 import collections
 import colorsys
@@ -7,6 +8,7 @@ import datetime
 import itertools
 import logging
 import math
+import uuid
 from cStringIO import StringIO
 from decimal import *
 
@@ -466,7 +468,7 @@ class Photo(ndb.Model):
         # Check  GCS stat exist first
         try:
             gcs.stat(object_name)
-            return {'success': False, 'message': _('File %s already exists' % fs.filename)}
+            object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
 
