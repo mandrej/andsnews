@@ -14,4 +14,11 @@ wtforms
 decorator.py
 static/font/
 static/css/components/
+
+.tmp/
+dist/
+docs/
+app/bower_components/
+node_modules/
+
 *.pyc
