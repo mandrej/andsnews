@@ -27,15 +27,15 @@
 @import "components/collapsible";
 @import "components/chips";
 @import "components/materialbox";
-@import "components/form";
+@import "components/forms/forms";
 @import "components/table_of_contents";
 @import "components/sideNav";
 @import "components/preloader";
 @import "components/slider";
 @import "components/carousel";
-@import "components/date_picker/default.scss";
-@import "components/date_picker/default.date.scss";
-@import "components/date_picker/default.time.scss";
+@import "components/date_picker/default";
+@import "components/date_picker/default.date";
+@import "components/date_picker/default.time";
 @import "swiper";
 
 $body-bg-color: color("grey", "lighten-2");
@@ -281,6 +281,7 @@ article {
     &.right {
       margin-left: 1rem;
     }
+    img { width: 100%; }
     .legend {
       margin: 0 0 1rem 0;
     }

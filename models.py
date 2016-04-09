@@ -31,7 +31,7 @@ KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
 PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
-ENTRY_IMAGES = 10
+ENTRY_IMAGES = 20
 LOGARITHMIC, LINEAR = 1, 2
 
 

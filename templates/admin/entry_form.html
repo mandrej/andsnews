@@ -69,19 +69,21 @@
                     {% endif %}
                     {% for field in form.newimages %}
                         <div class="row">
-                            <div class="col s12">
-                                <p>
-                                    <div class="file-field input-field">
-                                        <div class="btn">
-                                            <span>{{ field.form.name.label.text }}</span>
-                                            {{ input(field.form.blob, class='validate') }}
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
-                                        </div>
-                                    </div>
-                                </p>
+                            <div class="col s4 offset-s2">
+                                {{ form_row(field.form.name) }}
                             </div>
+                            <div class="col s4">
+                                <div class="file-field input-field" style="margin-top: 35px">
+                                    <div class="btn">
+                                        <span>{{ field.form.name.label.text }}</span>
+                                        {{ input(field.form.blob, class='validate') }}
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s2">&nbsp;</div>
                         </div>
                     {% endfor %}
 
