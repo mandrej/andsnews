@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title></title>
+	<meta name="description" content="">
+
+	<!-- Mobile -->
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+	<!-- Chrome / Android -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="black">
+	<link rel="icon" href="icon.png">
+
+	<!-- Safari / iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
+
+	<!-- Web Components -->
+	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+    <link rel="import" href="elements/photo-index.html">
+    <!--<style is="custom-style" include="iron-flex iron-flex-alignment"></style>-->
+    <style is="custom-style">
+        body {
+			@apply(--layout-fullbleed);
+    		@apply(--layout-vertical);
+			@apply(--paper-font-common-base);
+		}
+    </style>
+</head>
+<body unresolved>
+    <template is="dom-bind">
+        <photo-index></photo-index>
+    </template>
+</body>
+</html>

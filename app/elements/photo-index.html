@@ -1,0 +1,150 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<!--<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">-->
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<dom-module id="photo-index">
+	<template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+		<style>
+			:host {
+				display: block;
+			}
+            paper-scroll-header-panel {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+			.photo {
+				padding: 8px;
+			}
+			iron-image {
+				width: 200px;
+				height: 200px;
+			}
+            .photo:hover .detail {
+                opacity: 1;
+            }
+            .photo > iron-image {
+                /*@apply(--layout-flex);*/
+            }
+            .photo > .detail {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+                color: white;
+                font-size: 20px;
+                font-weight: 100;
+                padding: 20px;
+                opacity: 0;
+                transition: opacity 0.1s;
+            }
+		</style>
+
+        <iron-ajax id="ajax"
+            auto
+            url="{{url}}"
+            handle-as="json"
+            on-response="handler"
+            loading="{{loadingPhotos}}"
+            debounce-duration="500">
+        </iron-ajax>
+
+         <paper-scroll-header-panel id="scrollpanel" fixed>
+			<paper-toolbar>
+				<div class="title">iron-scroll-threshold</div>
+				<div hidden$="[[!loadingPhotos]]">
+                    <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
+                </div>
+			</paper-toolbar>
+			<div class="content layout horizontal around-justified wrap">
+				<template is="dom-repeat" items="{{photos}}" scroll-target="document">
+                    <div class="photo" tabindex$="[[tabIndex]]">
+                        <iron-image src="{{item.serving_url}}=s200-c" preload sizing="cover"></iron-image>
+                        <!--<div class="detail">[[item.headline]]</div>-->
+                    </div>
+				</template>
+			</div>
+		 </paper-scroll-header-panel>
+
+        <!--<iron-list id="list" items="{{photos}}" as="photo" scroll-target="document" grid>-->
+			<!--<template>-->
+				<!--<div class="container">-->
+                    <!--<div class="photo" tabindex$="[[tabIndex]]">-->
+					    <!--<iron-image src="[[photo.serving_url]]=s400-c" preload sizing="cover"></iron-image>-->
+                        <!--<div class="detail">[[photo.headline]]</div>-->
+                    <!--</div>-->
+				<!--</div>-->
+			<!--</template>-->
+		<!--</iron-list>-->
+
+        <iron-scroll-threshold id="scrollTheshold"
+        	lower-threshold="500"
+        	on-lower-threshold="_loadMorePhotos"
+        	scroll-target="document">
+      	</iron-scroll-threshold>
+	</template>
+	<script>
+		Polymer({
+			is: 'photo-index',
+			properties: {
+                photos: {
+                    type: Array,
+                    value: []
+                },
+                page: {
+                    value: null,
+                    notify: true
+                },
+                loaded: {
+					type: Array,
+					value: []
+				},
+                filter_field: {
+                    value: null,
+                    notify: true
+                },
+                filter_value: {
+                    value: null,
+                    notify: true
+                },
+                loadingPhotos: Boolean,
+				url: {
+                    computed: '_url(filter_field, filter_value)'
+                }
+			},
+            _url: function(filter_field, filter_value) {
+                if (filter_field && filter_value) {
+                    return ['/photos', filter_field, filter_value, ''].join('/');
+                }
+                return ['/photos', ''].join('/');
+            },
+            _loadMorePhotos: function() {
+                if (this.$.ajax.lastRequest) {
+                    this.$.ajax.lastRequest.abort();
+                }
+                if (this.$.ajax.lastResponse && this.$.ajax.lastResponse.next) {
+                    this.$.ajax.params.page = this.$.ajax.lastResponse.next;
+                    this.$.ajax.generateRequest();
+                }
+            },
+			handler: function(request) {
+                var response = request.detail.response;
+                response.objects.forEach(function(item) {
+                    this.push('photos', item);
+                }, this);
+                this.$.scrollTheshold.clearTriggers();
+                // this.$.list.fire('iron-resize');
+			}
+		});
+	</script>
+</dom-module>

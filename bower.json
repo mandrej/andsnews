@@ -1,0 +1,23 @@
+{
+  "name": "ands",
+  "version": "0.0.0",
+  "homepage": "",
+  "description": "",
+  "authors": [
+    "milan.andrejevic@gmail.com"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0"
+  }
+}
