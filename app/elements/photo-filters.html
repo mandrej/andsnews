@@ -1,0 +1,84 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+
+<dom-module id="photo-filters">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            app-toolbar {
+                background-color: var(--google-blue-700);
+                color: white;
+                @apply(--paper-header-panel);
+            }
+            .content {
+                @apply(--layout-fullbleed);
+    		    @apply(--layout-vertical);
+                background: var(--primary-background-color);
+            }
+            .space {
+                @apply(--layout-flex);
+            }
+        </style>
+
+        <app-header-layout>
+            <app-header fixed>
+                <app-toolbar>
+                    <paper-icon-button icon="icons:menu" drawer-toggle=""></paper-icon-button>
+                    <div class="title">ANDS</div>
+                    <div class="space"></div>
+                    <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
+                </app-toolbar>
+            </app-header>
+
+            <div class="content">
+                <papar-listbox>
+                    <paper-item>By tag</paper-item>
+                    <paper-item>By authos</paper-item>
+                    <paper-item>By date</paper-item>
+                </papar-listbox>
+            </div>
+        </app-header-layout>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'photo-filters',
+            behaviors: [Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior],
+            properties: {
+                animationConfig: {
+                    value: function() {
+                        return {
+                            'entry': {
+                                name: 'slide-from-right-animation',
+                                node: this
+                            },
+                            'exit': {
+                                name: 'slide-right-animation',
+                                node: this
+                            }
+                        }
+                    }
+                }
+            },
+            _showIndex: function() {
+                this.fire('show-index');
+            }
+        })
+    </script>
+</dom-module>

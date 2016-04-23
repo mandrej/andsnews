@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 
@@ -11,24 +13,25 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+
 <dom-module id="photo-index">
 	<template>
-        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
 			:host {
 				display: block;
 			}
-            app-drawer {
-                --app-drawer-width: 200px;
-            }
-            app-header {
+            app-toolbar {
                 background-color: var(--google-blue-700);
                 color: white;
                 @apply(--paper-header-panel);
             }
             .content {
+                @apply(--layout-fullbleed);
     		    @apply(--layout-horizontal);
     		    @apply(--layout-wrap);
+                background: var(--primary-background-color);
             }
             .space {
                 @apply(--layout-flex);
@@ -39,7 +42,7 @@
 				height: 300px;
 			}
             @media (max-width: 1024px) {.photo{ width: 25%; height: 200px;} }
-            @media (max-width: 848px) { .photo{ width: 33.3333%; height: 150px;} }
+            @media (max-width: 848px) { .photo{ width: 33.333333%; height: 150px;} }
             @media (max-width: 600px) { .photo{ width: 50%; height: 200px;} }
             @media (max-width: 432px) { .photo{ width: 100%; height: 300px;} }
 			iron-image {
@@ -76,43 +79,53 @@
             debounce-duration="500">
         </iron-ajax>
 
-        <app-drawer-layout>
-            <app-drawer>
-                <app-toolbar>Photos</app-toolbar>
-            </app-drawer>
+        <app-header-layout>
+            <app-header fixed>
+                <app-toolbar>
+                    <paper-icon-button icon="icons:menu" drawer-toggle=""></paper-icon-button>
+                    <div class="title">ANDS</div>
+                    <div class="space"></div>
+                    <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
+                    <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
+                </app-toolbar>
+            </app-header>
 
-            <app-header-layout>
-                <app-header fixed>
-                    <app-toolbar>
-                        <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
-                        <div class="title">ANDS</div>
-                        <div class="space"></div>
-                        <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
-                        <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
-                    </app-toolbar>
-                </app-header>
-
-                <div class="content">
-                    <template is="dom-repeat" items="{{photos}}" scroll-target="document">
-                        <div class="photo" tabindex$="[[tabIndex]]">
-                            <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
-                            <div class="detail">[[item.headline]]</div>
-                        </div>
-                    </template>
-                </div>
-            </app-header-layout>
-        </app-drawer-layout>
+            <div class="content">
+                <template is="dom-repeat" items="{{photos}}" scroll-target="document">
+                    <div class="photo" tabindex$="[[tabIndex]]">
+                        <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
+                        <div class="detail">[[item.headline]]</div>
+                    </div>
+                </template>
+            </div>
+        </app-header-layout>
 
         <iron-scroll-threshold id="scrollTheshold"
-        	lower-threshold="500"
-        	on-lower-threshold="_loadMorePhotos"
-        	scroll-target="document">
-      	</iron-scroll-threshold>
+            lower-threshold="500"
+            on-lower-threshold="_loadMorePhotos"
+            scroll-target="document">
+        </iron-scroll-threshold>
 	</template>
+
 	<script>
 		Polymer({
 			is: 'photo-index',
+            behaviors: [Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior],
 			properties: {
+                animationConfig: {
+                    value: function() {
+                        return {
+                            'entry': {
+                                name: 'fade-in-animation',
+                                node: this
+                            },
+                            'exit': {
+                                name: 'fade-out-animation',
+                                node: this
+                            }
+                        }
+                    }
+                },
                 photos: {
                     type: Array,
                     value: []
@@ -155,7 +168,10 @@
                     this.push('photos', item);
                 }, this);
                 this.$.scrollTheshold.clearTriggers();
-			}
+			},
+            _showFilters: function() {
+                this.fire('show-filters');
+            }
 		});
 	</script>
 </dom-module>
