@@ -18,6 +18,7 @@
     "polymer": "Polymer/polymer#^1.4.0",
     "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "iron-elements": "PolymerElements/iron-elements#^1.0.10",
-    "neon-elements": "PolymerElements/neon-elements#^1.0.0"
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "app-layout": "PolymerLabs/app-layout#^0.0.15"
   }
 }

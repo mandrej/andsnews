@@ -3,9 +3,12 @@
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-<!--<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">-->
-<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="photo-index">
@@ -15,25 +18,41 @@
 			:host {
 				display: block;
 			}
-            paper-scroll-header-panel {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
+            app-drawer {
+                --app-drawer-width: 200px;
+            }
+            app-header {
+                /*width: 100%;*/
+                background-color: var(--google-blue-700);
+                color: white;
+                @apply(--paper-header-panel);
+            }
+            .content {
+                /*@apply(--layout-fullbleed);*/
+    		    @apply(--layout-horizontal);
+    		    @apply(--layout-wrap);
+            }
+            .space {
+                @apply(--layout-flex);
             }
 			.photo {
-				padding: 8px;
+                position: relative;
+                width: 20%;
+				height: 300px;
 			}
+            @media (max-width: 1024px) {.photo{ width: 25%; height: 200px;} }
+            @media (max-width: 848px) { .photo{ width: 33.3333%; height: 150px;} }
+            @media (max-width: 600px) { .photo{ width: 50%; height: 200px;} }
+            @media (max-width: 432px) { .photo{ width: 100%; height: 300px;} }
 			iron-image {
-				width: 200px;
-				height: 200px;
+				width: 100%;
+                height: 100%;
 			}
             .photo:hover .detail {
                 opacity: 1;
             }
             .photo > iron-image {
-                /*@apply(--layout-flex);*/
+                @apply(--layout-flex);
             }
             .photo > .detail {
                 position: absolute;
@@ -59,33 +78,32 @@
             debounce-duration="500">
         </iron-ajax>
 
-         <paper-scroll-header-panel id="scrollpanel" fixed>
-			<paper-toolbar>
-				<div class="title">iron-scroll-threshold</div>
-				<div hidden$="[[!loadingPhotos]]">
-                    <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
-                </div>
-			</paper-toolbar>
-			<div class="content layout horizontal around-justified wrap">
-				<template is="dom-repeat" items="{{photos}}" scroll-target="document">
-                    <div class="photo" tabindex$="[[tabIndex]]">
-                        <iron-image src="{{item.serving_url}}=s200-c" preload sizing="cover"></iron-image>
-                        <!--<div class="detail">[[item.headline]]</div>-->
-                    </div>
-				</template>
-			</div>
-		 </paper-scroll-header-panel>
+        <app-drawer-layout>
+            <app-drawer>
+                <app-toolbar>Photos</app-toolbar>
+            </app-drawer>
 
-        <!--<iron-list id="list" items="{{photos}}" as="photo" scroll-target="document" grid>-->
-			<!--<template>-->
-				<!--<div class="container">-->
-                    <!--<div class="photo" tabindex$="[[tabIndex]]">-->
-					    <!--<iron-image src="[[photo.serving_url]]=s400-c" preload sizing="cover"></iron-image>-->
-                        <!--<div class="detail">[[photo.headline]]</div>-->
-                    <!--</div>-->
-				<!--</div>-->
-			<!--</template>-->
-		<!--</iron-list>-->
+            <app-header-layout>
+                <app-header fixed>
+                    <app-toolbar>
+                        <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
+                        <div class="title">ANDS</div>
+                        <div class="space"></div>
+                        <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
+                        <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
+                    </app-toolbar>
+                </app-header>
+
+                <div class="content">
+                    <template is="dom-repeat" items="{{photos}}" scroll-target="document">
+                        <div class="photo" tabindex$="[[tabIndex]]">
+                            <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
+                            <div class="detail">[[item.headline]]</div>
+                        </div>
+                    </template>
+                </div>
+            </app-header-layout>
+        </app-drawer-layout>
 
         <iron-scroll-threshold id="scrollTheshold"
         	lower-threshold="500"
@@ -143,7 +161,6 @@
                     this.push('photos', item);
                 }, this);
                 this.$.scrollTheshold.clearTriggers();
-                // this.$.list.fire('iron-resize');
 			}
 		});
 	</script>
