@@ -22,13 +22,11 @@
                 --app-drawer-width: 200px;
             }
             app-header {
-                /*width: 100%;*/
                 background-color: var(--google-blue-700);
                 color: white;
                 @apply(--paper-header-panel);
             }
             .content {
-                /*@apply(--layout-fullbleed);*/
     		    @apply(--layout-horizontal);
     		    @apply(--layout-wrap);
             }
@@ -123,10 +121,6 @@
                     value: null,
                     notify: true
                 },
-                loaded: {
-					type: Array,
-					value: []
-				},
                 filter_field: {
                     value: null,
                     notify: true
