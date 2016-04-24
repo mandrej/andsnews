@@ -2,15 +2,18 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 
-<link rel="import" href="../bower_components/app-layout/app-layout.html">
-
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
-<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
@@ -19,47 +22,45 @@
     <template>
         <style>
             :host {
-                display: block;
-            }
-            app-toolbar {
-                background-color: var(--google-blue-700);
-                color: white;
-                @apply(--paper-header-panel);
+                /*display: block;*/
             }
             .content {
                 @apply(--layout-fullbleed);
     		    @apply(--layout-vertical);
                 background: var(--primary-background-color);
             }
-            .space {
-                @apply(--layout-flex);
-            }
         </style>
 
-        <app-header-layout>
-            <app-header fixed>
-                <app-toolbar>
-                    <paper-icon-button icon="icons:menu" drawer-toggle=""></paper-icon-button>
-                    <div class="title">ANDS</div>
-                    <div class="space"></div>
-                    <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
-                </app-toolbar>
-            </app-header>
+        <paper-drawer-panel>
+			<paper-header-panel drawer>
+				<paper-menu>
+                    <paper-item>Photos</paper-item>
+                </paper-menu>
+			</paper-header-panel>
 
-            <div class="content">
-                <papar-listbox>
-                    <paper-item>By tag</paper-item>
-                    <paper-item>By authos</paper-item>
-                    <paper-item>By date</paper-item>
-                </papar-listbox>
-            </div>
-        </app-header-layout>
+            <paper-header-panel main>
+                <paper-toolbar>
+                    <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
+                    <div class="title">ANDS</div>
+                    <div class="flex"></div>
+                    <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
+                </paper-toolbar>
+
+                <div class="content">
+                    <papar-listbox>
+                        <paper-item>By tag</paper-item>
+                        <paper-item>By authos</paper-item>
+                        <paper-item>By date</paper-item>
+                    </papar-listbox>
+                </div>
+            </paper-header-panel>
+        </paper-drawer-panel>
     </template>
 
     <script>
         Polymer({
             is: 'photo-filters',
-            behaviors: [Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior],
+            behaviors: [Polymer.NeonAnimatableBehavior],
             properties: {
                 animationConfig: {
                     value: function() {
