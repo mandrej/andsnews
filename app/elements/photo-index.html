@@ -30,6 +30,7 @@
             .content {
                 @apply(--layout-fullbleed);
     		    @apply(--layout-horizontal);
+    		    @apply(--layout-start-aligned);
     		    @apply(--layout-wrap);
                 background: var(--primary-background-color);
             }
@@ -78,12 +79,11 @@
                 <paper-toolbar>
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
                     <div class="title">ANDS</div>
-                    <div class="flex"></div>
                     <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="ajax"
+                <iron-ajax id="photo_ajax"
                     auto
                     url="{{url}}"
                     handle-as="json"
@@ -91,11 +91,9 @@
                     loading="{{loadingPhotos}}"
                     debounce-duration="500">
                 </iron-ajax>
+                <!--headers='{"cache-control": "no-cache"}'-->
 
-                <iron-scroll-threshold id="scrollTheshold"
-                    lower-threshold="500"
-                    on-lower-threshold="_loadMorePhotos">
-
+                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
                     <div class="content">
                         <template is="dom-repeat" items="{{photos}}">
                             <div class="photo" tabindex$="[[tabIndex]]">
@@ -145,28 +143,40 @@
                     notify: true
                 },
                 loadingPhotos: Boolean,
+                clearPhotos: {
+                    type: Boolean,
+                    value: true,
+                    notify: true
+                },
 				url: {
-                    computed: '_url(filter_field, filter_value)'
+                    computed: '_url(page, filter_field, filter_value)',
+                    notify: true
                 }
 			},
-            _url: function(filter_field, filter_value) {
+//            observers: ['_url(page, filter_field, filter_value)'],
+            _url: function(page, filter_field, filter_value) {
+                var url = ['/photos', ''].join('/');
                 if (filter_field && filter_value) {
-                    return ['/photos', filter_field, filter_value, ''].join('/');
+                    url = ['/photos', filter_field, filter_value, ''].join('/');
                 }
-                return ['/photos', ''].join('/');
+                if (page != null) url += '?page=' + page;
+                console.log(url);
+                return url;
             },
             _loadMorePhotos: function() {
-                console.log('LOAD MORE');
-                if (this.$.ajax.lastRequest) {
-                    this.$.ajax.lastRequest.abort();
+                if (this.$.photo_ajax.lastRequest) {
+                    this.$.photo_ajax.lastRequest.abort();
                 }
-                if (this.$.ajax.lastResponse && this.$.ajax.lastResponse.next) {
-                    this.$.ajax.params.page = this.$.ajax.lastResponse.next;
-                    this.$.ajax.generateRequest();
+                if (this.$.photo_ajax.lastResponse && this.$.photo_ajax.lastResponse.next) {
+                    this.page = this.$.photo_ajax.lastResponse.next;
+                    this.clearPhotos = false;
+                    this.fire('url-changed', true);
+//                    this.$.photo_ajax.generateRequest();
                 }
             },
 			handler: function(request) {
                 var response = request.detail.response;
+                if (this.clearPhotos) this.photos = [];
                 response.objects.forEach(function(item) {
                     this.push('photos', item);
                 }, this);

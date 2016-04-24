@@ -314,13 +314,19 @@ class RenderCloud(BaseHandler):
 
             limit = cloud_limit(items)
             logging.info('%s: %d' % (mem_key, limit))
-            self.render_template(
-                'snippets/cloud.html', {
-                    'items': items,
-                    'link': '%s_all_filter' % kind.lower(),
-                    'field_name': field,
-                    'limit': limit,
-                    'filter': {'field': field, 'value': value} if (field and value) else None})
+            # self.render_template(
+            #     'snippets/cloud.html', {
+            #         'items': items,
+            #         'link': '%s_all_filter' % kind.lower(),
+            #         'field_name': field,
+            #         'limit': limit,
+            #         'filter': {'field': field, 'value': value} if (field and value) else None})
+            self.render_json({
+                'items': items,
+                'link': '%s_all_filter' % kind.lower(),
+                'field_name': field,
+                'limit': limit,
+                'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
 class Plain(BaseHandler):

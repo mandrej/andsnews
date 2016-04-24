@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -22,12 +23,22 @@
     <template>
         <style>
             :host {
-                /*display: block;*/
+                display: block;
             }
             .content {
-                @apply(--layout-fullbleed);
-    		    @apply(--layout-vertical);
+                /*@apply(--layout-fullbleed);*/
+    		    /*@apply(--layout-vertical);*/
                 background: var(--primary-background-color);
+            }
+            .badge {
+                position: relative;
+                display: inline-block;
+                margin-right: 30px;
+                margin-bottom: 20px;
+            }
+            .badge > paper-badge {
+                top: -12px;
+                right: -12px;
             }
         </style>
 
@@ -46,12 +57,21 @@
                     <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
                 </paper-toolbar>
 
+                <iron-ajax id="photo_tags_ajax"
+                    auto
+                    url="/filter/Photo_tags"
+                    handle-as="json"
+                    last-response="{{response}}"
+                    debounce-duration="500">
+                </iron-ajax>
                 <div class="content">
-                    <papar-listbox>
-                        <paper-item>By tag</paper-item>
-                        <paper-item>By authos</paper-item>
-                        <paper-item>By date</paper-item>
-                    </papar-listbox>
+                    <h2>[[response.field_name]]</h2>
+                    <template is="dom-repeat" items="[[response.items]]">
+                        <div on-tap="_filter" class="badge">
+                            <span>[[item.name]]</span>
+                            <paper-badge label="[[item.count]]"></paper-badge>
+                        </div>
+                    </template>
                 </div>
             </paper-header-panel>
         </paper-drawer-panel>
@@ -77,7 +97,27 @@
                     }
                 }
             },
+            _filter: function(e) {
+                var model = e.model,
+                    photo_index = document.querySelector('photo-index'),
+                    photo_ajax = document.querySelector('#photo_ajax');
+
+                photo_index.filter_field = this.$.photo_tags_ajax.lastResponse.field_name;
+                photo_index.filter_value = model.item.name;
+                photo_index.clearPhotos = true;
+                photo_index.page = null;
+                photo_index.fire('url-changed', true);
+                this.fire('show-index');
+            },
             _showIndex: function() {
+                var photo_index = document.querySelector('photo-index'),
+                    photo_ajax = document.querySelector('#photo_ajax');
+
+                photo_index.filter_field = null;
+                photo_index.filter_value = null;
+                photo_index.clearPhotos = true;
+                photo_index.page = null;
+                photo_index.fire('url-changed', true);
                 this.fire('show-index');
             }
         })
