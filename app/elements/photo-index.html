@@ -28,13 +28,6 @@
 			:host {
 				display: block;
 			}
-            .content {
-                @apply(--layout-fullbleed);
-    		    @apply(--layout-horizontal);
-    		    @apply(--layout-start-aligned);
-    		    @apply(--layout-wrap);
-                background: var(--primary-background-color);
-            }
 			.photo {
                 position: relative;
                 width: 20%;
@@ -70,9 +63,6 @@
                 opacity: 0;
                 transition: opacity 0.1s;
             }
-            iron-swipeable-pages {
-                @apply(--layout-fullbleed);
-            }
             .swipe {
                 -moz-user-select: none;
                 -ms-user-select: none;
@@ -107,24 +97,31 @@
                 </iron-ajax>
                 <!--headers='{"cache-control": "no-cache"}'-->
 
-                <iron-scroll-threshold hidden$="{{showFull}}" id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
-                    <div class="content">
+                <div hidden$="{{showFull}}">
+                    <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                        <div class="layout fullbleed horizontal wrap start-aligned">
+                            <template is="dom-repeat" items="{{photos}}">
+                                <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
+                                    <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
+                                    <div class="detail">[[item.headline]]</div>
+                                </div>
+                            </template>
+                        </div>
+                    </iron-scroll-threshold>
+                </div>
+
+                <div hidden$="{{!showFull}}">
+                    <iron-swipeable-pages class="layout fullbleed vertical"
+                        selected="0" edgeSwipeSensitivity="35" threshold="0.1" id="swiper">
                         <template is="dom-repeat" items="{{photos}}">
-                            <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
-                                <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
-                                <div class="detail">[[item.headline]]</div>
+                            <!--<paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>-->
+                            <!--<div class="title">[[item.headline]]</div>-->
+                            <div class="swipe">
+                                <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
                             </div>
                         </template>
-                    </div>
-                </iron-scroll-threshold>
-
-                <iron-swipeable-pages hidden$="{{!showFull}}" selected="0" edgeSwipeSensitivity="35" threshold="0.1" id="swiper">
-                    <template is="dom-repeat" items="{{photos}}">
-                        <div class="swipe">
-                            <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                        </div>
-                    </template>
-                </iron-swipeable-pages>
+                    </iron-swipeable-pages>
+                </div>
             </paper-header-panel>
 		</paper-drawer-panel>
 	</template>
@@ -214,6 +211,9 @@
             _full: function(e) {
                 this.$.swiper.selected = e.model.index;
                 this.showFull = true;
+            },
+            _grid: function (e) {
+                this.showFull = false;
             }
 		});
 	</script>
