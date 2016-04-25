@@ -106,8 +106,8 @@
                     debounce-duration="500">
                 </iron-ajax>
 
-                <div hidden$="{{showFull}}" id="grid">
-                    <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                    <div hidden$="{{showFull}}" id="grid">
                         <div class="layout horizontal wrap start-aligned">
                             <template is="dom-repeat" items="{{photos}}">
                                 <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
@@ -117,33 +117,33 @@
                                 </div>
                             </template>
                         </div>
-                    </iron-scroll-threshold>
-                </div>
+                    </div>
 
-                <div hidden$="{{!showFull}}" id="full">
-                    <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="50" threshold="0.1" id="swiper">
-                        <template is="dom-repeat" items="{{photos}}">
-                            <div class="swipe">
-                                <paper-toolbar>
-                                    <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
-                                    <div class="title">[[item.headline]]</div>
-                                    <paper-icon-button icon="icons:more-vert" on-tap="_exif"></paper-icon-button>
-                                </paper-toolbar>
-                                <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-                                    <table>
-                                        <tr><td>date</td><td>[[item.date]]</td></tr>
-                                        <tr><td>author</td><td>[[item.author]]</td></tr>
-                                        <tr><td>model</td><td>[[item.model]]</td></tr>
-                                        <tr><td>lens</td><td>[[item.lens]]</td></tr>
-                                        <tr><td>eqv</td><td>[[item.eqv]]</td></tr>
-                                        <tr><td>iso</td><td>[[item.iso]]</td></tr>
-                                    </table>
-                                </paper-dialog>
-                                <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                            </div>
-                        </template>
-                    </iron-swipeable-pages>
-                </div>
+                    <div hidden$="{{!showFull}}" id="full">
+                        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="50" threshold="0.1" id="swiper">
+                            <template is="dom-repeat" items="{{photos}}">
+                                <div class="swipe">
+                                    <paper-toolbar>
+                                        <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
+                                        <div class="title">[[item.headline]]</div>
+                                        <paper-icon-button icon="icons:more-vert" on-tap="_exif"></paper-icon-button>
+                                    </paper-toolbar>
+                                    <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+                                        <table>
+                                            <tr><td>date</td><td>[[item.date]]</td></tr>
+                                            <tr><td>author</td><td>[[item.author]]</td></tr>
+                                            <tr><td>model</td><td>[[item.model]]</td></tr>
+                                            <tr><td>lens</td><td>[[item.lens]]</td></tr>
+                                            <tr><td>eqv</td><td>[[item.eqv]]</td></tr>
+                                            <tr><td>iso</td><td>[[item.iso]]</td></tr>
+                                        </table>
+                                    </paper-dialog>
+                                    <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
+                                </div>
+                            </template>
+                        </iron-swipeable-pages>
+                    </div>
+                </iron-scroll-threshold>
             </paper-header-panel>
 		</paper-drawer-panel>
 	</template>
@@ -204,7 +204,6 @@
                     url = ['/photos', filter_field, filter_value, ''].join('/');
                 }
                 if (page != null) url += '?page=' + page;
-                console.log(url);
                 return url;
             },
             _loadMorePhotos: function() {
@@ -230,13 +229,15 @@
                 this.fire('show-filters');
             },
             _full: function(e) {
-                this.$.swiper.selected = e.model.index;
+                this.$.swiper.set('selected', e.model.index);
                 this.menuToggle();
                 this.showFull = true;
+                this.$.scrollTheshold.set('horizontal', true);
             },
             _grid: function(e) {
                 this.menuToggle();
                 this.showFull = false;
+                this.$.scrollTheshold.set('horizontal', false);
             },
             _exif: function(e) {
                 var id = e.model.item.slug,
@@ -246,10 +247,11 @@
                 }
             },
             menuToggle: function() {
-                if (this.$.drawer.narrow && this.$.drawer.getBoundingClientRect().width < parseInt(this.$.drawer.responsiveWidth)) {
-//                    this.$.drawer.togglePanel();
+                var drawer = this.$.drawer;
+                if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
+//                    drawer.togglePanel();
                 } else {
-                    this.$.drawer.forceNarrow = !this.$.drawer.forceNarrow;
+                    drawer.forceNarrow = !drawer.forceNarrow;
                 }
             }
 		});
