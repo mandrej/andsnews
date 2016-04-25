@@ -106,7 +106,7 @@
                 photo_index.filter_value = model.item.name;
                 photo_index.clearPhotos = true;
                 photo_index.page = null;
-                photo_index.fire('url-changed', true);
+                photo_index.fire('url-changed');
                 this.fire('show-index');
             },
             _showIndex: function() {
@@ -117,7 +117,7 @@
                 photo_index.filter_value = null;
                 photo_index.clearPhotos = true;
                 photo_index.page = null;
-                photo_index.fire('url-changed', true);
+                photo_index.fire('url-changed');
                 this.fire('show-index');
             }
         })

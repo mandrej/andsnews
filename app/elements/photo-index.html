@@ -15,11 +15,13 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
-<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 
 <dom-module id="photo-index">
@@ -42,6 +44,7 @@
                 height: 100%;
 			}
             .photo {
+                position: relative;
                 cursor: pointer;
             }
             .photo:hover .detail {
@@ -55,7 +58,7 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+                background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.8));
                 color: white;
                 font-size: 20px;
                 font-weight: 100;
@@ -70,9 +73,16 @@
                 user-select: none;
                 cursor: default;
             }
+            paper-dialog {
+                position: fixed;
+                height: auto;
+                left: 0;
+                right: 0;
+                bottom: 50px;
+            }
 		</style>
 
-        <paper-drawer-panel>
+        <paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
 				<paper-menu>
                     <paper-item>Photos</paper-item>
@@ -80,7 +90,7 @@
 			</paper-header-panel>
 
 			<paper-header-panel main>
-                <paper-toolbar>
+                <paper-toolbar hidden$="{{showFull}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
                     <div class="title">ANDS</div>
                     <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
@@ -95,28 +105,40 @@
                     loading="{{loadingPhotos}}"
                     debounce-duration="500">
                 </iron-ajax>
-                <!--headers='{"cache-control": "no-cache"}'-->
 
-                <div hidden$="{{showFull}}">
+                <div hidden$="{{showFull}}" id="grid">
                     <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
-                        <div class="layout fullbleed horizontal wrap start-aligned">
+                        <div class="layout horizontal wrap start-aligned">
                             <template is="dom-repeat" items="{{photos}}">
                                 <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
-                                    <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
+                                    <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                                     <div class="detail">[[item.headline]]</div>
+                                    <paper-ripple></paper-ripple>
                                 </div>
                             </template>
                         </div>
                     </iron-scroll-threshold>
                 </div>
 
-                <div hidden$="{{!showFull}}">
-                    <iron-swipeable-pages class="layout fullbleed vertical"
-                        selected="0" edgeSwipeSensitivity="35" threshold="0.1" id="swiper">
+                <div hidden$="{{!showFull}}" id="full">
+                    <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="50" threshold="0.1" id="swiper">
                         <template is="dom-repeat" items="{{photos}}">
-                            <!--<paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>-->
-                            <!--<div class="title">[[item.headline]]</div>-->
                             <div class="swipe">
+                                <paper-toolbar>
+                                    <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
+                                    <div class="title">[[item.headline]]</div>
+                                    <paper-icon-button icon="icons:more-vert" on-tap="_exif"></paper-icon-button>
+                                </paper-toolbar>
+                                <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+                                    <table>
+                                        <tr><td>date</td><td>[[item.date]]</td></tr>
+                                        <tr><td>author</td><td>[[item.author]]</td></tr>
+                                        <tr><td>model</td><td>[[item.model]]</td></tr>
+                                        <tr><td>lens</td><td>[[item.lens]]</td></tr>
+                                        <tr><td>eqv</td><td>[[item.eqv]]</td></tr>
+                                        <tr><td>iso</td><td>[[item.iso]]</td></tr>
+                                    </table>
+                                </paper-dialog>
                                 <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
                             </div>
                         </template>
@@ -129,18 +151,18 @@
 	<script>
 		Polymer({
 			is: 'photo-index',
-            behaviors: [Polymer.NeonAnimatableBehavior],
+            behaviors: [Polymer.NeonAnimationBehavior],
 			properties: {
                 animationConfig: {
                     value: function() {
                         return {
                             'entry': {
                                 name: 'fade-in-animation',
-                                node: this
+                                node: this.$.grid
                             },
                             'exit': {
                                 name: 'fade-out-animation',
-                                node: this
+                                node: this.$.grid
                             }
                         }
                     }
@@ -176,7 +198,6 @@
                     notify: true
                 }
 			},
-//            observers: ['_url(page, filter_field, filter_value)'],
             _url: function(page, filter_field, filter_value) {
                 var url = ['/photos', ''].join('/');
                 if (filter_field && filter_value) {
@@ -193,7 +214,7 @@
                 if (this.$.photo_ajax.lastResponse && this.$.photo_ajax.lastResponse.next) {
                     this.page = this.$.photo_ajax.lastResponse.next;
                     this.clearPhotos = false;
-                    this.fire('url-changed', true);
+                    this.fire('url-changed');
 //                    this.$.photo_ajax.generateRequest();
                 }
             },
@@ -210,10 +231,26 @@
             },
             _full: function(e) {
                 this.$.swiper.selected = e.model.index;
+                this.menuToggle();
                 this.showFull = true;
             },
-            _grid: function (e) {
+            _grid: function(e) {
+                this.menuToggle();
                 this.showFull = false;
+            },
+            _exif: function(e) {
+                var id = e.model.item.slug,
+                    dialog = document.getElementById(id);
+                if (dialog) {
+                    dialog.open();
+                }
+            },
+            menuToggle: function() {
+                if (this.$.drawer.narrow && this.$.drawer.getBoundingClientRect().width < parseInt(this.$.drawer.responsiveWidth)) {
+//                    this.$.drawer.togglePanel();
+                } else {
+                    this.$.drawer.forceNarrow = !this.$.drawer.forceNarrow;
+                }
             }
 		});
 	</script>

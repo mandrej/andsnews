@@ -32,14 +32,12 @@
 	<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
     <style is="custom-style">
         body {
-			@apply(--layout-fullbleed);
-    		@apply(--layout-vertical);
 			@apply(--paper-font-common-base);
-			background: var(--primary-background-color);
+			background: #999 /*var(--primary-background-color);*/
 		}
     </style>
 </head>
-<body unresolved>
+<body class="layout fullbleed vertical" unresolved>
     <template is="dom-bind" id="app">
 		<neon-animated-pages class="flex" selected="[[selected]]">
 			<photo-index></photo-index>
