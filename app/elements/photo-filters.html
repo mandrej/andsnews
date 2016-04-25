@@ -26,19 +26,19 @@
                 display: block;
             }
             .content {
-                /*@apply(--layout-fullbleed);*/
-    		    /*@apply(--layout-vertical);*/
+                padding: 16px;
                 background: var(--primary-background-color);
             }
             .badge {
                 position: relative;
                 display: inline-block;
                 margin-right: 30px;
-                margin-bottom: 20px;
+                margin-top: 20px;
+                cursor: pointer;
             }
             .badge > paper-badge {
-                top: -12px;
-                right: -12px;
+                top: -16px;
+                right: -16px;
             }
         </style>
 
@@ -68,7 +68,7 @@
                     <h2>[[response.field_name]]</h2>
                     <template is="dom-repeat" items="[[response.items]]">
                         <div on-tap="_filter" class="badge">
-                            <span>[[item.name]]</span>
+                            <div>[[item.name]]</div>
                             <paper-badge label="[[item.count]]"></paper-badge>
                         </div>
                     </template>
