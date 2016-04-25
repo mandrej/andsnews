@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -69,6 +70,16 @@
                 opacity: 0;
                 transition: opacity 0.1s;
             }
+            iron-swipeable-pages {
+                @apply(--layout-fullbleed);
+            }
+            .swipe {
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
 		</style>
 
         <paper-drawer-panel>
@@ -96,16 +107,24 @@
                 </iron-ajax>
                 <!--headers='{"cache-control": "no-cache"}'-->
 
-                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                <iron-scroll-threshold hidden$="{{showFull}}" id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
                     <div class="content">
                         <template is="dom-repeat" items="{{photos}}">
-                            <div class="photo" tabindex$="[[tabIndex]]">
+                            <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
                                 <iron-image src="{{item.serving_url}}=s400" preload sizing="cover"></iron-image>
                                 <div class="detail">[[item.headline]]</div>
                             </div>
                         </template>
                     </div>
                 </iron-scroll-threshold>
+
+                <iron-swipeable-pages hidden$="{{!showFull}}" selected="0" edgeSwipeSensitivity="35" threshold="0.1" id="swiper">
+                    <template is="dom-repeat" items="{{photos}}">
+                        <div class="swipe">
+                            <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
+                        </div>
+                    </template>
+                </iron-swipeable-pages>
             </paper-header-panel>
 		</paper-drawer-panel>
 	</template>
@@ -146,6 +165,10 @@
                     notify: true
                 },
                 loadingPhotos: Boolean,
+                showFull: {
+                    type: Boolean,
+                    value: false
+                },
                 clearPhotos: {
                     type: Boolean,
                     value: true,
@@ -187,6 +210,10 @@
 			},
             _showFilters: function() {
                 this.fire('show-filters');
+            },
+            _full: function(e) {
+                this.$.swiper.selected = e.model.index;
+                this.showFull = true;
             }
 		});
 	</script>
