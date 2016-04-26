@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
@@ -32,7 +31,7 @@
                 background: var(--primary-background-color);
 			}
 			paper-header-panel[drawer] {
-				background: var(--paper-grey-100);
+				background: var(--paper-grey-200);
 			}
 			.photo {
                 position: relative;
@@ -43,17 +42,12 @@
             @media (max-width: 848px) { .photo{ width: 33.3333333%; height: 200px;} }
             @media (max-width: 600px) { .photo{ width: 50%; height: 300px;} }
             @media (max-width: 432px) { .photo{ width: 100%; height: 350px;} }
-			iron-image {
-				width: 100%;
-                height: 100%;
-			}
+			iron-image { width: 100%; height: 100%; }
             .photo {
                 position: relative;
                 cursor: pointer;
             }
-            .photo:hover .detail {
-                opacity: 1;
-            }
+            .photo:hover .detail { opacity: 1; }
             .photo > iron-image {
                 @apply(--layout-flex);
             }
@@ -107,20 +101,18 @@
                     handle-as="json"
                     on-response="handler"
                     loading="{{loadingPhotos}}"
-                    debounce-duration="500">
+                    debounce-duration="300">
                 </iron-ajax>
 
-                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
-                    <div hidden$="{{showFull}}" id="grid">
-                        <div class="layout horizontal wrap start-aligned">
-                            <template is="dom-repeat" items="{{photos}}">
-                                <div class="photo" on-tap="_full">
-                                    <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
-                                    <div class="detail">[[item.headline]]</div>
-                                    <paper-ripple></paper-ripple>
-                                </div>
-                            </template>
-                        </div>
+                <iron-scroll-threshold id="scrollTheshold" horizontal="false" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                    <div hidden$="{{showFull}}" class="layout horizontal wrap start-aligned" id="grid">
+                        <template is="dom-repeat" items="{{photos}}" index-as="index">
+                            <div class="photo" on-tap="_full">
+                                <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
+                                <div class="detail">[[item.headline]]</div>
+                                <paper-ripple></paper-ripple>
+                            </div>
+                        </template>
                     </div>
 
                     <div hidden$="{{!showFull}}" id="full">
@@ -171,32 +163,13 @@
                         }
                     }
                 },
-                photos: {
-                    type: Array,
-                    value: []
-                },
-                page: {
-                    value: null,
-                    notify: true
-                },
-                filter_field: {
-                    value: null,
-                    notify: true
-                },
-                filter_value: {
-                    value: null,
-                    notify: true
-                },
+                photos: { type: Array, value: [] },
+                page: { value: null, notify: true },
+                filter_field: { value: null, notify: true },
+                filter_value: { value: null, notify: true },
                 loadingPhotos: Boolean,
-                showFull: {
-                    type: Boolean,
-                    value: false
-                },
-                clearPhotos: {
-                    type: Boolean,
-                    value: true,
-                    notify: true
-                },
+                showFull: { type: Boolean, value: false },
+                clearPhotos: { type: Boolean, value: true, notify: true },
 				url: {
                     computed: '_url(page, filter_field, filter_value)',
                     notify: true
@@ -232,16 +205,17 @@
                 this.fire('show-filters');
             },
             _full: function(e) {
-				console.log(this.$.grid.tabIndex);
                 this.$.swiper.set('selected', e.model.index);
                 this.menuToggle();
                 this.showFull = true;
                 this.$.scrollTheshold.set('horizontal', true);
+                this.$.scrollTheshold.set('lower-threshold', 200);
             },
             _grid: function(e) {
                 this.menuToggle();
                 this.showFull = false;
                 this.$.scrollTheshold.set('horizontal', false);
+                this.$.scrollTheshold.set('lower-threshold', 500);
             },
             _exif: function(e) {
                 var id = e.model.item.slug,

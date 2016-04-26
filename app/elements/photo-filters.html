@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 
@@ -27,11 +26,9 @@
                 background: var(--primary-background-color);
             }
             paper-header-panel[drawer] {
-				background: var(--paper-grey-100);
+				background: var(--paper-grey-200);
 			}
-            .content {
-                padding: 16px;
-            }
+            .content { padding: 16px; }
             .badge {
                 position: relative;
                 display: inline-block;
@@ -65,7 +62,7 @@
                     url="http://127.0.0.1:8080/filter/Photo_tags"
                     handle-as="json"
                     last-response="{{response}}"
-                    debounce-duration="500">
+                    debounce-duration="300">
                 </iron-ajax>
                 <div class="content">
                     <h2>[[response.field_name]]</h2>
