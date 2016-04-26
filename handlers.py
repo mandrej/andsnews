@@ -122,7 +122,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     def render_json(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
-        # self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
+        self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 

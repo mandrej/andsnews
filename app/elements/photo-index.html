@@ -29,6 +29,10 @@
 		<style>
 			:host {
 				display: block;
+                background: var(--primary-background-color);
+			}
+			paper-header-panel[drawer] {
+				background: var(--paper-grey-100);
 			}
 			.photo {
                 position: relative;
@@ -82,7 +86,7 @@
             }
 		</style>
 
-        <paper-drawer-panel id="drawer">
+        <paper-drawer-panel id="drawer" edgeSwipeSensitivity="30">
 			<paper-header-panel drawer>
 				<paper-menu>
                     <paper-item>Photos</paper-item>
@@ -92,7 +96,7 @@
 			<paper-header-panel main>
                 <paper-toolbar hidden$="{{showFull}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDS</div>
+                    <div class="title">ANDрејевићи</div>
                     <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
@@ -110,7 +114,7 @@
                     <div hidden$="{{showFull}}" id="grid">
                         <div class="layout horizontal wrap start-aligned">
                             <template is="dom-repeat" items="{{photos}}">
-                                <div class="photo" tabindex$="[[tabIndex]]" on-tap="_full">
+                                <div class="photo" on-tap="_full">
                                     <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                                     <div class="detail">[[item.headline]]</div>
                                     <paper-ripple></paper-ripple>
@@ -120,7 +124,7 @@
                     </div>
 
                     <div hidden$="{{!showFull}}" id="full">
-                        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="50" threshold="0.1" id="swiper">
+                        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
                             <template is="dom-repeat" items="{{photos}}">
                                 <div class="swipe">
                                     <paper-toolbar>
@@ -199,9 +203,9 @@
                 }
 			},
             _url: function(page, filter_field, filter_value) {
-                var url = ['/photos', ''].join('/');
+                var url = ['http://127.0.0.1:8080/photos', ''].join('/');
                 if (filter_field && filter_value) {
-                    url = ['/photos', filter_field, filter_value, ''].join('/');
+                    url = ['http://127.0.0.1:8080/photos', filter_field, filter_value, ''].join('/');
                 }
                 if (page != null) url += '?page=' + page;
                 return url;
@@ -214,7 +218,6 @@
                     this.page = this.$.photo_ajax.lastResponse.next;
                     this.clearPhotos = false;
                     this.fire('url-changed');
-//                    this.$.photo_ajax.generateRequest();
                 }
             },
 			handler: function(request) {
@@ -229,6 +232,7 @@
                 this.fire('show-filters');
             },
             _full: function(e) {
+				console.log(this.$.grid.tabIndex);
                 this.$.swiper.set('selected', e.model.index);
                 this.menuToggle();
                 this.showFull = true;
