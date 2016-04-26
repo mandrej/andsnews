@@ -104,7 +104,7 @@
                     debounce-duration="300">
                 </iron-ajax>
 
-                <iron-scroll-threshold id="scrollTheshold" horizontal="false" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
                     <div hidden$="{{showFull}}" class="layout horizontal wrap start-aligned" id="grid">
                         <template is="dom-repeat" items="{{photos}}" index-as="index">
                             <div class="photo" on-tap="_full">
@@ -205,17 +205,17 @@
                 this.fire('show-filters');
             },
             _full: function(e) {
-                this.$.swiper.set('selected', e.model.index);
+                this.$.swiper.selected = e.model.index;
                 this.menuToggle();
                 this.showFull = true;
-                this.$.scrollTheshold.set('horizontal', true);
-                this.$.scrollTheshold.set('lower-threshold', 200);
+                this.$.scrollTheshold.horizontal = true;
+                this.$.scrollTheshold.lowerThreshold = 200;
             },
             _grid: function(e) {
                 this.menuToggle();
                 this.showFull = false;
-                this.$.scrollTheshold.set('horizontal', false);
-                this.$.scrollTheshold.set('lower-threshold', 500);
+                this.$.scrollTheshold.horizontal = false;
+                this.$.scrollTheshold.lowerThreshold = 500;
             },
             _exif: function(e) {
                 var id = e.model.item.slug,
