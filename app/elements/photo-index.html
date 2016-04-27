@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
@@ -147,9 +148,10 @@
 	<script>
 		Polymer({
 			is: 'photo-index',
-            behaviors: [Polymer.NeonAnimationBehavior],
+            behaviors: [Polymer.NeonAnimationBehavior, Polymer.IronScrollTargetBehavior],
 			properties: {
                 animationConfig: {
+					type: Object,
                     value: function() {
                         return {
                             'entry': {

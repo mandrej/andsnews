@@ -15,7 +15,7 @@ PY2 = sys.version_info[0] == 2
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 TIMEOUT = 3600  # 1 hour
 PER_PAGE = 12
-PHOTOS_PER_PAGE = 24
+PHOTOS_PER_PAGE = 12
 PHOTOS_MAX_PAGE = 4
 ENTRIES_PER_PAGE = 9
 ADMIN = 'milan.andrejevic@gmail.com'
