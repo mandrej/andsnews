@@ -24,10 +24,12 @@
     <link rel="import" href="bower_components/polymer/polymer.html">
     <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 	<link rel="import" href="bower_components/paper-styles/paper-styles.html">
-	<link rel="import" href="bower_components/neon-animation/neon-animated-pages.html">
+	
+	<link rel="import" href="bower_components/carbon-route/carbon-route.html">
+	<link rel="import" href="bower_components/carbon-route/carbon-location.html">
+	<link rel="import" href="bower_components/iron-selector/iron-selector.html">
 
-    <link rel="import" href="elements/photo-index.html">
-	<link rel="import" href="elements/photo-filters.html">
+    <link rel="import" href="elements/index-page.html">
 
     <style is="custom-style">
         body {
@@ -37,22 +39,22 @@
     </style>
 </head>
 <body class="layout fullbleed vertical" unresolved>
-    <template is="dom-bind" id="app">
-		<neon-animated-pages class="flex" selected="[[selected]]">
-			<photo-index></photo-index>
-			<photo-filters></photo-filters>
-		</neon-animated-pages>
+	<template is="dom-bind">
+		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
+		<carbon-route 
+			route="{{route}}" 
+			pattern="/:kind" 
+			data="{{data}}" 
+			tail="{{tail}}"></carbon-route>
 
-		<script>
-			var app = document.querySelector('#app');
-			app.selected = 0;
-			document.addEventListener('show-index', function(e) {
-				app.selected = 0;
-			});
-			document.addEventListener('show-filters', function(e) {
-				app.selected = 1;
-			})
-		</script>
-    </template>
+		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page">
+			<a kind-page="photo" href="#/photo">Photo</a>
+			<a kind-page="entry" href="#/entry">Entry</a>
+		</iron-selector>
+
+		<main>
+			<index-page kind="{{data.kind}}"></index-page>
+		</main>
+	</template>
 </body>
 </html>

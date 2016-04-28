@@ -18,13 +18,13 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 
-<dom-module id="photo-filters">
+<dom-module id="filter-page">
     <template>
         <style>
-            :host {
+            /*:host {
                 display: block;
                 background: var(--primary-background-color);
-            }
+            }*/
             paper-header-panel[drawer] {
 				background: var(--paper-grey-200);
 			}
@@ -41,6 +41,8 @@
                 right: -16px;
             }
         </style>
+
+        <h2FILTER {{kind}}</h2>
 
         <paper-drawer-panel>
 			<paper-header-panel drawer>
@@ -79,9 +81,10 @@
 
     <script>
         Polymer({
-            is: 'photo-filters',
+            is: 'filter-page',
             behaviors: [Polymer.NeonAnimatableBehavior],
             properties: {
+                kind: String,
                 animationConfig: {
                     type: Object,
                     value: function() {
