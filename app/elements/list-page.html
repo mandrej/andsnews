@@ -7,9 +7,6 @@
 				@apply(--paper-font-common-base);
                 background: var(--primary-background-color);
 			}
-			paper-header-panel[drawer] {
-				background: var(--paper-grey-200);
-			}
 			.photo {
                 position: relative;
                 width: 20%;
@@ -69,22 +66,22 @@
                 <paper-toolbar hidden$="{{showFull}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
                     <div class="title">ANDрејевићи</div>
-                    <paper-spinner active$="[[loadingPhotos]]"></paper-spinner>
+                    <paper-spinner active$="[[loading]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="photo_ajax"
+                <iron-ajax id="list_ajax"
                     auto
                     url="{{url}}"
                     handle-as="json"
                     on-response="handler"
-                    loading="{{loadingPhotos}}"
+                    loading="{{loading}}"
                     debounce-duration="300">
                 </iron-ajax>
 
-                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMorePhotos">
+                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
                     <div hidden$="{{showFull}}" class="layout horizontal wrap start-aligned" id="grid">
-                        <template is="dom-repeat" items="{{photos}}" index-as="index">
+                        <template is="dom-repeat" items="{{items}}" index-as="index">
                             <div class="photo" on-tap="_full">
                                 <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                                 <div class="detail">[[item.headline]]</div>
@@ -95,7 +92,7 @@
 
                     <div hidden$="{{!showFull}}" id="full">
                         <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
-                            <template is="dom-repeat" items="{{photos}}">
+                            <template is="dom-repeat" items="{{items}}">
                                 <div class="swipe">
                                     <paper-toolbar>
                                         <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
@@ -127,10 +124,6 @@
 			is: 'list-page',
             behaviors: [Polymer.NeonAnimationBehavior, Polymer.IronScrollTargetBehavior],
 			properties: {
-				kind: {
-					type: String,
-					observer: 'propertyChanged'
-				},
                 animationConfig: {
 					type: Object,
                     value: function() {
@@ -146,44 +139,45 @@
                         }
                     }
                 },
-                photos: { type: Array, value: [] },
+                items: { type: Array, value: [] },
                 page: { value: null, notify: true },
                 filter_field: { value: null, notify: true },
                 filter_value: { value: null, notify: true },
-                loadingPhotos: Boolean,
+                loading: Boolean,
                 showFull: { type: Boolean, value: false },
-                clearPhotos: { type: Boolean, value: true, notify: true },
+                clearItems: { type: Boolean, value: true, notify: true },
 				url: {
-                    computed: '_url(page, filter_field, filter_value)',
+                    computed: '_url(kind, page, filter_field, filter_value)',
                     notify: true
                 }
 			},
-			propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
-            _url: function(page, filter_field, filter_value) {
-                var url = ['http://127.0.0.1:8080/photos', ''].join('/');
+            _url: function(kind, page, filter_field, filter_value) {
+				var prefix = 'http://127.0.0.1:8080', sufix = '';
+				if (kind == 'photo') sufix = 'photos';
+				if (kind == 'entry') sufix = 'entries';
+                var url = [prefix, sufix, ''].join('/');
                 if (filter_field && filter_value) {
-                    url = ['http://127.0.0.1:8080/photos', filter_field, filter_value, ''].join('/');
+                    url = [prefix, sufix, filter_field, filter_value, ''].join('/');
                 }
                 if (page != null) url += '?page=' + page;
+				console.log(url);
                 return url;
             },
-            _loadMorePhotos: function() {
-                if (this.$.photo_ajax.lastRequest) {
-                    this.$.photo_ajax.lastRequest.abort();
+            _loadMore: function() {
+                if (this.$.list_ajax.lastRequest) {
+                    this.$.list_ajax.lastRequest.abort();
                 }
-                if (this.$.photo_ajax.lastResponse && this.$.photo_ajax.lastResponse.next) {
-                    this.page = this.$.photo_ajax.lastResponse.next;
-                    this.clearPhotos = false;
+                if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
+                    this.page = this.$.list_ajax.lastResponse.next;
+                    this.clearItems = false;
                     this.fire('url-changed');
                 }
             },
 			handler: function(request) {
                 var response = request.detail.response;
-                if (this.clearPhotos) this.photos = [];
+                if (this.clearItems) this.items = [];
                 response.objects.forEach(function(item) {
-                    this.push('photos', item);
+                    this.push('items', item);
                 }, this);
                 this.$.scrollTheshold.clearTriggers();
 			},

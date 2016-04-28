@@ -28,7 +28,8 @@ class Index(BaseHandler):
                 'filter': {'field': field, 'value': value} if (field and value) else None,
                 'page': page,
                 'next': token}
-        self.render_template('entry/index.html', data)
+        self.render_json(data)
+        # self.render_template('entry/index.html', data)
 
 
 class Detail(BaseHandler):

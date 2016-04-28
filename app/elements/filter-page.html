@@ -61,10 +61,6 @@
             is: 'filter-page',
             behaviors: [Polymer.NeonAnimatableBehavior],
             properties: {
-                kind: {
-					type: String,
-					observer: 'propertyChanged'
-				},
                 animationConfig: {
                     type: Object,
                     value: function() {
@@ -81,30 +77,27 @@
                     }
                 }
             },
-            propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
             _filter: function(e) {
                 var model = e.model,
-                    photo_index = document.querySelector('list-page'),
-                    photo_ajax = document.querySelector('#photo_ajax');
+                    list_page = document.querySelector('list-page'),
+                    list_ajax = document.querySelector('#list_ajax');
 
-                photo_index.filter_field = this.$.photo_tags_ajax.lastResponse.field_name;
-                photo_index.filter_value = model.item.name;
-                photo_index.clearPhotos = true;
-                photo_index.page = null;
-                photo_index.fire('url-changed');
+                list_page.filter_field = this.$.photo_tags_ajax.lastResponse.field_name;
+                list_page.filter_value = model.item.name;
+                list_page.clearItems = true;
+                list_page.page = null;
+                list_page.fire('url-changed');
                 this.fire('show-index');
             },
             _showIndex: function() {
-                var photo_index = document.querySelector('list-page'),
-                    photo_ajax = document.querySelector('#photo_ajax');
+                var list_page = document.querySelector('list-page'),
+                    list_ajax = document.querySelector('#list_ajax');
 
-                photo_index.filter_field = null;
-                photo_index.filter_value = null;
-                photo_index.clearPhotos = true;
-                photo_index.page = null;
-                photo_index.fire('url-changed');
+                list_page.filter_field = null;
+                list_page.filter_value = null;
+                list_page.clearItems = true;
+                list_page.page = null;
+                list_page.fire('url-changed');
                 this.fire('show-index');
             }
         })
