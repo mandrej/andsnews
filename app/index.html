@@ -24,7 +24,7 @@
     <link rel="import" href="bower_components/polymer/polymer.html">
     <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 	<link rel="import" href="bower_components/paper-styles/paper-styles.html">
-	
+
 	<link rel="import" href="bower_components/carbon-route/carbon-route.html">
 	<link rel="import" href="bower_components/carbon-route/carbon-location.html">
 	<link rel="import" href="bower_components/iron-selector/iron-selector.html">
@@ -38,23 +38,17 @@
 		}
     </style>
 </head>
-<body class="layout fullbleed vertical" unresolved>
+<body unresolved>
 	<template is="dom-bind">
 		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
-		<carbon-route 
-			route="{{route}}" 
-			pattern="/:kind" 
-			data="{{data}}" 
+		<carbon-route
+			route="{{route}}"
+			pattern="/:kind"
+			data="{{data}}"
 			tail="{{tail}}"></carbon-route>
 
-		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page">
-			<a kind-page="photo" href="#/photo">Photo</a>
-			<a kind-page="entry" href="#/entry">Entry</a>
-		</iron-selector>
-
-		<main>
-			<index-page kind="{{data.kind}}"></index-page>
-		</main>
+		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
+		<index-page kind="{{data.kind}}"></index-page>
 	</template>
 </body>
 </html>

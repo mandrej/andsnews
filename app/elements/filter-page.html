@@ -21,10 +21,10 @@
 <dom-module id="filter-page">
     <template>
         <style>
-            /*:host {
-                display: block;
+            :host {
+                @apply(--layout-fullbleed);
                 background: var(--primary-background-color);
-            }*/
+            }
             paper-header-panel[drawer] {
 				background: var(--paper-grey-200);
 			}
@@ -40,14 +40,17 @@
                 top: -16px;
                 right: -16px;
             }
+            .paper-item-link {
+				color: inherit;
+				text-decoration: none;
+			}
         </style>
-
-        <h2FILTER {{kind}}</h2>
 
         <paper-drawer-panel>
 			<paper-header-panel drawer>
 				<paper-menu>
-                    <paper-item>Photos</paper-item>
+                    <a class="paper-item-link" kind-page="photo" href="#/photo"><paper-item>Photos</paper-item></a>
+					<a class="paper-item-link" kind-page="entry" href="#/entry"><paper-item>Texts</paper-item></a>
                 </paper-menu>
 			</paper-header-panel>
 
@@ -55,7 +58,6 @@
                 <paper-toolbar>
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
                     <div class="title">ANDрејевићи</div>
-                    <div class="flex"></div>
                     <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
                 </paper-toolbar>
 
@@ -84,7 +86,10 @@
             is: 'filter-page',
             behaviors: [Polymer.NeonAnimatableBehavior],
             properties: {
-                kind: String,
+                kind: {
+					type: String,
+					observer: 'propertyChanged'
+				},
                 animationConfig: {
                     type: Object,
                     value: function() {
@@ -101,9 +106,12 @@
                     }
                 }
             },
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
             _filter: function(e) {
                 var model = e.model,
-                    photo_index = document.querySelector('photo-index'),
+                    photo_index = document.querySelector('list-page'),
                     photo_ajax = document.querySelector('#photo_ajax');
 
                 photo_index.filter_field = this.$.photo_tags_ajax.lastResponse.field_name;

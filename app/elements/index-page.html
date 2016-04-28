@@ -6,30 +6,29 @@
 
 <dom-module id="index-page">
 	<template>
-		<style>
-			:host {
-				display: block;
-			}
-		</style>
-
-		<h1>INDEX {{kind}}</h1>
-		
-		<neon-animated-pages class="flex" selected="[[selected]]">
+		<neon-animated-pages class="flex" selected="{{selected}}">
 			<list-page kind="{{kind}}"></list-page>
 			<filter-page kind="{{kind}}"></filter-page>
 		</neon-animated-pages>
 	</template>
+
 	<script>
 		Polymer({
 			is: 'index-page',
 			properties: {
-				kind: String,
 				selected: {
 					type: Number,
-					value: 0
+					value: 0,
+					observer: 'propertyChanged'
 				}
 			},
-			listeners: ['show-index', 'show-filters'],
+			propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			listeners: {
+				'show-index': 'showIndex',
+				'show-filters': 'showFilters'
+			},
 			showIndex: function() {
 				this.selected = 0;
 			},
@@ -38,16 +37,4 @@
 			}
 		});
 	</script>
-	<!-- <template is="dom-bind" id="app">
-		<script>
-			var app = document.querySelector('#app');
-			app.selected = 0;
-			document.addEventListener('show-index', function(e) {
-				app.selected = 0;
-			});
-			document.addEventListener('show-filters', function(e) {
-				app.selected = 1;
-			})
-		</script>
-    </template> -->
 </dom-module>
