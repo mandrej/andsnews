@@ -86,9 +86,7 @@
                 if (kind == 'photo') sufix = 'Photo_tags';
                 if (kind == 'entry') sufix = 'Entry_tags';
                 var url = [prefix, sufix].join('/');
-                console.log(url);
                 return url;
-                // /filter/Photo_tags
             },
             _filter: function(e) {
                 var model = e.model,

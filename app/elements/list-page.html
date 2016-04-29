@@ -135,7 +135,8 @@
                                         </paper-toolbar>
                                         <paper-card elevation="0" animated-shadow="false">
                                             <div class="card-content">
-                                                <div inner-h-t-m-l="[[item.body]]"></div>
+                                                <!--<div inner-h-t-m-l="[[item.body]]"></div>-->
+                                                <template is="juicy-html" content$="[[item.body]]"></template>
                                             </div>
                                         </paper-card>
                                     </div>

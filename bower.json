@@ -20,6 +20,7 @@
     "iron-elements": "PolymerElements/iron-elements#^1.0.10",
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "iron-swipeable-pages": "^1.2.3",
-    "carbon-route": "PolymerElements/carbon-route#^0.8.4"
+    "carbon-route": "PolymerElements/carbon-route#^0.8.4",
+    "juicy-html": "^1.1.0"
   }
 }
