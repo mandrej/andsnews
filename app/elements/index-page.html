@@ -19,6 +19,12 @@
 					observer: 'propertyChanged'
 				}
 			},
+			attached: function() {
+				if (this.route.path == null) {
+					this.set('kind', 'photo');
+					this.set('route.path', '/photo');
+				}
+			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
