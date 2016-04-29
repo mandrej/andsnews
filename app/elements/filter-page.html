@@ -36,9 +36,9 @@
                     <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="photo_tags_ajax"
+                <iron-ajax id="tags_ajax"
                     auto
-                    url="http://127.0.0.1:8080/filter/Photo_tags"
+                    url="{{url}}"
                     handle-as="json"
                     last-response="{{response}}"
                     debounce-duration="300">
@@ -75,14 +75,27 @@
                             }
                         }
                     }
+                },
+                url: {
+                    computed: '_url(kind)',
+                    notify: true
                 }
+            },
+            _url: function(kind) {
+                var prefix = 'filter', sufix = '';
+                if (kind == 'photo') sufix = 'Photo_tags';
+                if (kind == 'entry') sufix = 'Entry_tags';
+                var url = [prefix, sufix].join('/');
+                console.log(url);
+                return url;
+                // /filter/Photo_tags
             },
             _filter: function(e) {
                 var model = e.model,
                     list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.filter_field = this.$.photo_tags_ajax.lastResponse.field_name;
+                list_page.filter_field = this.$.tags_ajax.lastResponse.field_name;
                 list_page.filter_value = model.item.name;
                 list_page.clearItems = true;
                 list_page.page = null;
