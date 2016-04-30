@@ -2,8 +2,11 @@
 	<template>
 		<style is="custom-style" include="shared-styles"></style>
 		<style>
+			/*:host {
+				display: none;
+			}*/
 			:host {
-                @apply(--layout-fullbleed);
+				@apply(--layout-fullbleed);
 				@apply(--paper-font-common-base);
                 background: var(--primary-background-color);
 			}
@@ -65,7 +68,7 @@
 			<paper-header-panel main>
                 <paper-toolbar hidden$="{{showFull}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи {{kind}}|{{active}}|{{field}}|{{value}}</div>
+                    <div class="title">ANDрејевићи list-page {{kind}}|{{active}}|{{field}}|{{value}}</div>
                     <paper-spinner active$="[[loading]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
@@ -223,8 +226,10 @@
                 this.$.scrollTheshold.clearTriggers();
 			},
             _showFilters: function() {
-				// this.set('route.prefix', '/filter/Photo_tags');
-				// console.log(this.route);
+				this.set('route.prefix', '/filter/tags');
+				var filter_ajax = document.querySelector('#filter_ajax');
+				filter_ajax.fire('url-changed');
+				console.log(this.route);
                 this.fire('show-filters');
             },
             _full: function(e) {

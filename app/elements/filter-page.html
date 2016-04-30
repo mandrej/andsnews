@@ -2,6 +2,9 @@
     <template>
         <style is="custom-style" include="shared-styles"></style>
         <style>
+            /*:host {
+                display: none;
+            }*/
             :host {
                 @apply(--layout-fullbleed);
                 @apply(--paper-font-common-base);
@@ -32,12 +35,11 @@
             <paper-header-panel main>
                 <paper-toolbar>
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи {{kind}}|{{active}}|{{token}}</div>
+                    <div class="title">ANDрејевићи filter-page {{kind}}|{{active}}|{{token}}</div>
                     <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="tags_ajax"
-                    auto
+                <iron-ajax id="filter_ajax"
                     url="{{url}}"
                     handle-as="json"
                     last-response="{{response}}"
@@ -77,14 +79,14 @@
                     }
                 },
                 url: {
-                    computed: '_url(kind)',
+                    computed: '_url(kind, token)',
                     notify: true
                 }
             },
-            _url: function(kind) {
+            _url: function(kind, token) {
                 var prefix = 'filter', sufix = '';
-                if (kind == 'photo') sufix = 'Photo_tags';
-                if (kind == 'entry') sufix = 'Entry_tags';
+                if (kind == 'photo') sufix = 'Photo_' + token;
+                if (kind == 'entry') sufix = 'Entry_' + token;
                 var url = [prefix, sufix].join('/');
                 return url;
             },
@@ -93,7 +95,7 @@
                     list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.field = this.$.tags_ajax.lastResponse.field_name;
+                list_page.field = this.$.filter_ajax.lastResponse.field_name;
                 list_page.value = model.item.name;
                 list_page.clearItems = true;
                 list_page.page = null;

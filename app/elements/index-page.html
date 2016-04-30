@@ -14,6 +14,7 @@
 			route="{{route}}"
 			pattern="/filter/:token"
 			data="{{dataFilter}}"
+			tail="{{tailFilter}}"
 			active="{{activeFilter}}"></carbon-route>
 
 		<neon-animated-pages class="flex" selected="{{selected}}">
@@ -27,6 +28,7 @@
 			<filter-page
 				kind="{{kind}}"
 				token="{{dataFilter.token}}"
+				route="{{tailFilter}}"
 				active="{{activeFilter}}"></filter-page>
 		</neon-animated-pages>
 	</template>
@@ -53,6 +55,9 @@
 			},
 			showFilters: function() {
 				this.selected = 1;
+			},
+			propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
 			objectChanged: function(newValue, oldValue) {
 				console.log(newValue);
