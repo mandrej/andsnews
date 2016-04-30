@@ -3,9 +3,31 @@
 
 <dom-module id="index-page">
 	<template>
+        <carbon-route
+			route="{{route}}"
+			pattern="/:field/:value"
+			data="{{dataList}}"
+			tail="{{tailList}}"
+			active="{{activeList}}"></carbon-route>
+
+		<carbon-route
+			route="{{route}}"
+			pattern="/filter/:token"
+			data="{{dataFilter}}"
+			active="{{activeFilter}}"></carbon-route>
+
 		<neon-animated-pages class="flex" selected="{{selected}}">
-			<list-page kind="{{kind}}"></list-page>
-			<filter-page kind="{{kind}}"></filter-page>
+			<list-page
+				kind="{{kind}}"
+				field="{{dataList.field}}"
+				value="{{dataList.value}}"
+				route="{{tailList}}"
+				active="{{activeList}}"></list-page>
+
+			<filter-page
+				kind="{{kind}}"
+				token="{{dataFilter.token}}"
+				active="{{activeFilter}}"></filter-page>
 		</neon-animated-pages>
 	</template>
 
@@ -15,18 +37,12 @@
 			properties: {
 				selected: {
 					type: Number,
-					value: 0,
-					observer: 'propertyChanged'
+					value: 0
+				},
+				route: {
+					type: Object,
+					observer: 'objectChanged'
 				}
-			},
-			attached: function() {
-				if (this.route.path == null) {
-					this.set('kind', 'photo');
-					this.set('route.path', '/photo');
-				}
-			},
-			propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
 			listeners: {
 				'show-index': 'showIndex',
@@ -37,6 +53,9 @@
 			},
 			showFilters: function() {
 				this.selected = 1;
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
 			}
 		});
 	</script>

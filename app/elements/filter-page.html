@@ -4,7 +4,7 @@
         <style>
             :host {
                 @apply(--layout-fullbleed);
-				@apply(--paper-font-common-base);
+                @apply(--paper-font-common-base);
                 background: var(--primary-background-color);
             }
             .content { padding: 16px; }
@@ -24,15 +24,15 @@
         <paper-drawer-panel>
 			<paper-header-panel drawer>
 				<paper-menu>
-                    <a class="paper-item-link" kind-page="photo" href="#/photo"><paper-item>Photos</paper-item></a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry"><paper-item>Texts</paper-item></a>
+                    <a class="paper-item-link" kind-page="photo" href="#/photo/all/"><paper-item>Photos</paper-item></a>
+					<a class="paper-item-link" kind-page="entry" href="#/entry/all/"><paper-item>Texts</paper-item></a>
                 </paper-menu>
 			</paper-header-panel>
 
             <paper-header-panel main>
                 <paper-toolbar>
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи</div>
+                    <div class="title">ANDрејевићи {{kind}}|{{active}}|{{token}}</div>
                     <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
                 </paper-toolbar>
 
@@ -93,8 +93,8 @@
                     list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.filter_field = this.$.tags_ajax.lastResponse.field_name;
-                list_page.filter_value = model.item.name;
+                list_page.field = this.$.tags_ajax.lastResponse.field_name;
+                list_page.value = model.item.name;
                 list_page.clearItems = true;
                 list_page.page = null;
                 list_page.fire('url-changed');
@@ -104,10 +104,11 @@
                 var list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.filter_field = null;
-                list_page.filter_value = null;
+                list_page.field = 'all';
+                list_page.value = null;
                 list_page.clearItems = true;
                 list_page.page = null;
+                // list_page.route.path = '/all/';
                 list_page.fire('url-changed');
                 this.fire('show-index');
             }

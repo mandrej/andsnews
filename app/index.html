@@ -26,7 +26,7 @@
     <link rel="import" href="elements/index-page.html">
 </head>
 <body unresolved>
-	<template is="dom-bind">
+	<template is="dom-bind" id="app">
 		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
 		<carbon-route
 			route="{{route}}"
@@ -36,6 +36,15 @@
 
 		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
 		<index-page kind="{{data.kind}}" route="{{tail}}"></index-page>
+
+		<script>
+			var app = document.querySelector('#app');
+			if (!app.route.path) {
+				app.set('kind', 'photo');
+				app.set('route.path', '/photo/all/');
+			}
+			console.log(app.route);
+		</script>
 	</template>
 </body>
 </html>

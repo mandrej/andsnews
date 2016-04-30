@@ -57,15 +57,15 @@
         <paper-drawer-panel id="drawer" edgeSwipeSensitivity="30">
 			<paper-header-panel drawer>
 				<paper-menu>
-					<a class="paper-item-link" kind-page="photo" href="#/photo"><paper-item>Photos</paper-item></a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry"><paper-item>Texts</paper-item></a>
+					<a class="paper-item-link" kind-page="photo" href="#/photo/all/"><paper-item>Photos</paper-item></a>
+					<a class="paper-item-link" kind-page="entry" href="#/entry/all/"><paper-item>Texts</paper-item></a>
                 </paper-menu>
 			</paper-header-panel>
 
 			<paper-header-panel main>
                 <paper-toolbar hidden$="{{showFull}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи</div>
+                    <div class="title">ANDрејевићи {{kind}}|{{active}}|{{field}}|{{value}}</div>
                     <paper-spinner active$="[[loading]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
@@ -171,13 +171,14 @@
                 },
                 items: { type: Array, value: [] },
                 page: { value: null, notify: true },
-                filter_field: { value: null, notify: true },
-                filter_value: { value: null, notify: true },
+                kind: { type: String, notify: true, observer: 'propertyChanged' },
+                field: { type: String, notify: true, observer: 'propertyChanged' },
+                value: { type: String, notify: true, observer: 'propertyChanged' },
                 loading: Boolean,
                 showFull: { type: Boolean, value: false },
                 clearItems: { type: Boolean, value: true, notify: true },
 				url: {
-                    computed: '_url(kind, page, filter_field, filter_value)',
+                    computed: '_url(kind, page, field, value)',
                     notify: true
                 },
                 default: {
@@ -188,15 +189,19 @@
             _default: function(kind) {
                 return kind == 'photo';
             },
-            _url: function(kind, page, filter_field, filter_value) {
-				var prefix = '', sufix = '';
+            _url: function(kind, page, field, value) {
+				console.log(kind, page, field, value);
+				var url, prefix = '', sufix = '';
+
 				if (kind == 'photo') sufix = 'photos';
 				if (kind == 'entry') sufix = 'entries';
-                var url = [prefix, sufix, ''].join('/');
-                if (filter_field && filter_value) {
-                    url = [prefix, sufix, filter_field, filter_value, ''].join('/');
-                }
+				if (field == 'all') {
+					url = [prefix, sufix, ''].join('/');
+				} else if (field && value) {
+					url = [prefix, sufix, field, value, ''].join('/');
+				}
                 if (page != null) url += '?page=' + page;
+				console.log(url);
                 return url;
             },
             _loadMore: function() {
@@ -218,6 +223,8 @@
                 this.$.scrollTheshold.clearTriggers();
 			},
             _showFilters: function() {
+				// this.set('route.prefix', '/filter/Photo_tags');
+				// console.log(this.route);
                 this.fire('show-filters');
             },
             _full: function(e) {
@@ -247,7 +254,13 @@
                 } else {
                     drawer.forceNarrow = !drawer.forceNarrow;
                 }
-            }
+            },
+			propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
+			}
 		});
 	</script>
 </dom-module>
