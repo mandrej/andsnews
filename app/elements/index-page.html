@@ -3,59 +3,81 @@
 
 <dom-module id="index-page">
 	<template>
-        <carbon-route
-			route="{{route}}"
-			pattern="/:field/:value"
-			data="{{dataList}}"
-			tail="{{tailList}}"
-			active="{{activeList}}"></carbon-route>
+		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
 
 		<carbon-route
 			route="{{route}}"
-			pattern="/filter/:token"
+			pattern="/:kind"
+			data="{{dataKind}}"
+			tail="{{tailKind}}"
+			active="{{activeKind}}"></carbon-route>
+
+        <carbon-route
+			route="{{tailKind}}"
+			pattern="/:field/:value"
 			data="{{dataFilter}}"
 			tail="{{tailFilter}}"
 			active="{{activeFilter}}"></carbon-route>
 
-		<neon-animated-pages class="flex" selected="{{selected}}">
-			<list-page
-				kind="{{kind}}"
-				field="{{dataList.field}}"
-				value="{{dataList.value}}"
-				route="{{tailList}}"
-				active="{{activeList}}"></list-page>
+		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
 
-			<filter-page
-				kind="{{kind}}"
-				token="{{dataFilter.token}}"
+		<h1>{{activeKind}} {{activeFilter}}</h1>
+
+		<iron-pages selected="{{selected}}">
+			<list-page
+				kind="{{dataKind.kind}}"
+				field=""
+				value=""
+				route="{{tailKind}}"
+				active="{{activeKind}}"></list-page>
+
+			<list-page
+				kind="{{dataKind.kind}}"
+				field="{{dataFilter.field}}"
+				value="{{dataFilter.value}}"
 				route="{{tailFilter}}"
-				active="{{activeFilter}}"></filter-page>
-		</neon-animated-pages>
+				active="{{activeFilter}}"></list-page>
+		</iron-pages>
 	</template>
 
 	<script>
 		Polymer({
 			is: 'index-page',
+			attached: function() {
+				if (!this.route.path) {
+					this.set('dataKind.kind', 'photo');
+					this.set('route.path', '/photo');
+				}
+			},
 			properties: {
 				selected: {
 					type: Number,
-					value: 0
+					computed: '_selected(activeKind, activeFilter)',
+					// observer: 'propertyChanged'
 				},
 				route: {
 					type: Object,
 					observer: 'objectChanged'
 				}
 			},
-			listeners: {
-				'show-index': 'showIndex',
-				'show-filters': 'showFilters'
+			_selected: function(activeKind, activeFilter) {
+				console.log(activeKind, activeFilter);
+				if (activeKind && activeFilter) {
+					return 1;
+				} else {
+					return 0;
+				}
 			},
-			showIndex: function() {
-				this.selected = 0;
-			},
-			showFilters: function() {
-				this.selected = 1;
-			},
+			// listeners: {
+			// 	'show-index': 'showIndex',
+			// 	'show-filters': 'showFilters'
+			// },
+			// showIndex: function() {
+			// 	this.selected = 0;
+			// },
+			// showFilters: function() {
+			// 	this.selected = 1;
+			// },
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},

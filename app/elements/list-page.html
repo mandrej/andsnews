@@ -174,9 +174,9 @@
                 },
                 items: { type: Array, value: [] },
                 page: { value: null, notify: true },
-                kind: { type: String, notify: true, observer: 'propertyChanged' },
-                field: { type: String, notify: true, observer: 'propertyChanged' },
-                value: { type: String, notify: true, observer: 'propertyChanged' },
+                // kind: { type: String, notify: true, observer: 'propertyChanged' },
+                // field: { type: String, notify: true, observer: 'propertyChanged' },
+                // value: { type: String, notify: true, observer: 'propertyChanged' },
                 loading: Boolean,
                 showFull: { type: Boolean, value: false },
                 clearItems: { type: Boolean, value: true, notify: true },
@@ -189,6 +189,13 @@
                     notify: true
                 }
 			},
+			observers: ['_parametersChange(kind, field, value)'],
+			_parametersChange: function(kind, field, value) {
+				console.log('_parametersChange');
+				console.log(kind, field, value);
+				this.items = [];
+				// this.clearItems = true; // TODO
+			},
             _default: function(kind) {
                 return kind == 'photo';
             },
@@ -198,10 +205,10 @@
 
 				if (kind == 'photo') sufix = 'photos';
 				if (kind == 'entry') sufix = 'entries';
-				if (field == 'all') {
-					url = [prefix, sufix, ''].join('/');
-				} else if (field && value) {
+				if (field && value) {
 					url = [prefix, sufix, field, value, ''].join('/');
+				} else {
+					url = [prefix, sufix, ''].join('/');
 				}
                 if (page != null) url += '?page=' + page;
 				console.log(url);
