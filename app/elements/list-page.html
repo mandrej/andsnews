@@ -81,7 +81,7 @@
 
                 <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
                     <div hidden$="{{detailView}}" class="layout horizontal wrap start-aligned" id="grid">
-                        <template is="dom-if" if="{{showingPhotos}}">
+                        <template is="dom-if" if="{{showingPhotos}}" restamp="true">
                             <template is="dom-repeat" items="{{items}}" index-as="index">
                                 <div class="photo" on-tap="_showDetail">
                                     <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
@@ -90,7 +90,7 @@
                                 </div>
                             </template>
                         </template>
-                        <template is="dom-if" if={{!showingPhotos}}>
+                        <template is="dom-if" if={{!showingPhotos}} restamp="true">
                             <template is="dom-repeat" items="{{items}}" index-as="index">
                                 <paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
                                     <div class="card-content">
@@ -104,7 +104,7 @@
 
                     <div hidden$="{{!detailView}}" id="full">
                         <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
-                            <template is="dom-if" if="{{showingPhotos}}">
+                            <template is="dom-if" if="{{showingPhotos}}" restamp="true">
                                 <template is="dom-repeat" items="{{items}}">
                                     <div class="swipe">
                                         <paper-toolbar>
@@ -126,7 +126,7 @@
                                     </div>
                                 </template>
                             </template>
-                            <template is="dom-if" if={{!showingPhotos}}>
+                            <template is="dom-if" if={{!showingPhotos}} restamp="true">
                                 <template is="dom-repeat" items="{{items}}">
                                     <div class="swipe">
                                         <paper-toolbar>
@@ -135,7 +135,7 @@
                                         </paper-toolbar>
                                         <paper-card elevation="0" animated-shadow="false">
                                             <div class="card-content">
-                                                <!--<div inner-h-t-m-l="[[item.body]]"></div>-->
+                                                <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
                                                 <template is="juicy-html" content$="[[item.body]]"></template>
                                             </div>
                                         </paper-card>
@@ -208,9 +208,9 @@
                 return url;
             },
             _loadMore: function() {
-                // if (this.$.list_ajax.lastRequest) {
-                //     this.$.list_ajax.lastRequest.abort();
-                // }
+                if (this.$.list_ajax.lastRequest) {
+                    this.$.list_ajax.lastRequest.abort();
+                }
                 if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
                     this.page = this.$.list_ajax.lastResponse.next;
                     this.clearItems = false;

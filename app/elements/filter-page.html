@@ -8,24 +8,28 @@
                 background: var(--primary-background-color);
             }
             .content { padding: 16px; }
-            .badge {
-                position: relative;
-                display: inline-block;
-                margin-right: 30px;
-                margin-top: 20px;
-                cursor: pointer;
+            paper-button {
+                color: white;
+                font-size: 0.8em;
+                background-color: var(--paper-grey-500);
+                margin-bottom: 1em;
             }
-            .badge > paper-badge {
-                top: -16px;
-                right: -16px;
+            paper-button.selected {
+                background-color: var(--paper-red-500);
             }
         </style>
 
-        <iron-ajax id="filter_ajax"
-            auto
-            url="{{url}}"
+        <iron-ajax auto
+            url="{{_tags_url(kind)}}"
             handle-as="json"
-            last-response="{{response}}"
+            last-response="{{tags_response}}"
+            debounce-duration="300">
+        </iron-ajax>
+
+        <iron-ajax auto
+            url="{{_date_url(kind)}}"
+            handle-as="json"
+            last-response="{{date_response}}"
             debounce-duration="300">
         </iron-ajax>
 
@@ -45,12 +49,20 @@
                 </paper-toolbar>
 
                 <div class="content">
-                    <h2>[[response.field_name]]</h2>
-                    <template is="dom-repeat" items="[[response.items]]">
-                        <div on-tap="_showFilteredList" class="badge">
-                            <div>[[item.name]]</div>
-                            <paper-badge label="[[item.count]]"></paper-badge>
-                        </div>
+                    <h2>[[tags_response.field_name]]</h2>
+                    <template is="dom-repeat" items="[[tags_response.items]]">
+                        <paper-button class$="[[_check(item.name, value)]]"
+                            data-field$="[[tags_response.field_name]]" on-tap="_showFilteredList">
+                            [[item.name]] [[item.count]]
+                        </paper-button>
+                    </template>
+
+                    <h2>[[date_response.field_name]]</h2>
+                    <template is="dom-repeat" items="[[date_response.items]]">
+                        <paper-button class$="[[_check(item.name, value)]]"
+                            data-field$="[[date_response.field_name]]" on-tap="_showFilteredList">
+                            [[item.name]] [[item.count]]
+                        </paper-button>
                     </template>
                 </div>
             </paper-header-panel>
@@ -76,45 +88,40 @@
                             }
                         }
                     }
-                },
-                url: {
-                    computed: '_url(kind)',
-                    notify: true
                 }
             },
-            _url: function(kind) {
+            _tags_url: function(kind) {
                 var prefix = 'filter', sufix = '';
                 if (kind == 'photo') sufix = 'Photo_tags';
                 if (kind == 'entry') sufix = 'Entry_tags';
                 var url = [prefix, sufix].join('/');
                 return url;
             },
+            _date_url: function(kind) {
+                var prefix = 'filter', sufix = '';
+                if (kind == 'photo') sufix = 'Photo_date';
+                if (kind == 'entry') sufix = 'Entry_date';
+                var url = [prefix, sufix].join('/');
+                return url;
+            },
+            _check: function(current, selected) {
+                if (current == selected) return 'selected';
+            },
             _showFilteredList: function(e) {
                 var model = e.model,
-                    index_page = document.querySelector('index-page'),
-                    list_page = document.querySelector('list-page');
+                    index_page = document.querySelector('index-page');
 
                 index_page.set('data.kind', this.kind);
-                index_page.set('dataFilter.field', this.$.filter_ajax.lastResponse.field_name);
+                index_page.set('dataFilter.field', e.target.dataset.field);
                 index_page.set('dataFilter.value', model.item.name);
-                // index_page.set('route.path', ['', this.kind, this.$.filter_ajax.lastResponse.field_name, model.item.name].join('/'));
-
-                list_page.page = null;
-                list_page.clearItems = true;
-                // list_page.fire('url-changed');
                 this.fire('show-list');
             },
             _showList: function() {
-                var index_page = document.querySelector('index-page'),
-                    list_page = document.querySelector('list-page');
+                var index_page = document.querySelector('index-page');
 
                 index_page.set('data.kind', this.kind);
                 index_page.set('dataFilter.field', '');
                 index_page.set('dataFilter.value', '');
-
-                list_page.page = null;
-                list_page.clearItems = true;
-                // list_page.fire('url-changed');
                 this.fire('show-list');
             }
         })
