@@ -2,9 +2,6 @@
 	<template>
 		<style is="custom-style" include="shared-styles"></style>
 		<style>
-			/*:host {
-				display: none;
-			}*/
 			:host {
 				@apply(--layout-fullbleed);
 				@apply(--paper-font-common-base);
@@ -57,45 +54,45 @@
             }
 		</style>
 
+		<iron-ajax id="list_ajax"
+			auto
+			url="{{url}}"
+			handle-as="json"
+			on-response="handler"
+			loading="{{loading}}"
+			debounce-duration="300">
+		</iron-ajax>
+
         <paper-drawer-panel id="drawer" edgeSwipeSensitivity="30">
 			<paper-header-panel drawer>
 				<paper-menu>
-					<a class="paper-item-link" kind-page="photo" href="#/photo/all/"><paper-item>Photos</paper-item></a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry/all/"><paper-item>Texts</paper-item></a>
+					<a class="paper-item-link" kind-page="photo" href="#/photo"><paper-item>Photos</paper-item></a>
+					<a class="paper-item-link" kind-page="entry" href="#/entry"><paper-item>Texts</paper-item></a>
                 </paper-menu>
 			</paper-header-panel>
 
 			<paper-header-panel main>
-                <paper-toolbar hidden$="{{showFull}}">
+                <paper-toolbar hidden$="{{detailView}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи list-page {{kind}}|{{active}}|{{field}}|{{value}}</div>
+                    <div class="title">ANDрејевићи {{field}} {{value}}</div>
                     <paper-spinner active$="[[loading]]"></paper-spinner>
                     <paper-icon-button icon="icons:filter-list" on-tap="_showFilters"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="list_ajax"
-                    auto
-                    url="{{url}}"
-                    handle-as="json"
-                    on-response="handler"
-                    loading="{{loading}}"
-                    debounce-duration="300">
-                </iron-ajax>
-
                 <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
-                    <div hidden$="{{showFull}}" class="layout horizontal wrap start-aligned" id="grid">
-                        <template is="dom-if" if="{{default}}">
+                    <div hidden$="{{detailView}}" class="layout horizontal wrap start-aligned" id="grid">
+                        <template is="dom-if" if="{{showingPhotos}}">
                             <template is="dom-repeat" items="{{items}}" index-as="index">
-                                <div class="photo" on-tap="_full">
+                                <div class="photo" on-tap="_showDetail">
                                     <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                                     <div class="detail">[[item.headline]]</div>
                                     <paper-ripple></paper-ripple>
                                 </div>
                             </template>
                         </template>
-                        <template is="dom-if" if={{!default}}>
+                        <template is="dom-if" if={{!showingPhotos}}>
                             <template is="dom-repeat" items="{{items}}" index-as="index">
-                                <paper-card heading="[[item.headline]]" on-tap="_full" elevation="0" animated-shadow="false">
+                                <paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
                                     <div class="card-content">
                                         [[item.summary]]
                                     </div>
@@ -105,15 +102,15 @@
                         </template>
                     </div>
 
-                    <div hidden$="{{!showFull}}" id="full">
+                    <div hidden$="{{!detailView}}" id="full">
                         <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
-                            <template is="dom-if" if="{{default}}">
+                            <template is="dom-if" if="{{showingPhotos}}">
                                 <template is="dom-repeat" items="{{items}}">
                                     <div class="swipe">
                                         <paper-toolbar>
-                                            <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
+                                            <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                             <div class="title">[[item.headline]]</div>
-                                            <paper-icon-button icon="icons:more-vert" on-tap="_exif"></paper-icon-button>
+                                            <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
                                         </paper-toolbar>
                                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
                                             <table>
@@ -129,11 +126,11 @@
                                     </div>
                                 </template>
                             </template>
-                            <template is="dom-if" if={{!default}}>
+                            <template is="dom-if" if={{!showingPhotos}}>
                                 <template is="dom-repeat" items="{{items}}">
                                     <div class="swipe">
                                         <paper-toolbar>
-                                            <paper-icon-button icon="icons:chevron-left" on-tap="_grid"></paper-icon-button>
+                                            <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                             <div class="title">[[item.headline]]</div>
                                         </paper-toolbar>
                                         <paper-card elevation="0" animated-shadow="false">
@@ -174,29 +171,25 @@
                 },
                 items: { type: Array, value: [] },
                 page: { value: null, notify: true },
-                // kind: { type: String, notify: true, observer: 'propertyChanged' },
-                // field: { type: String, notify: true, observer: 'propertyChanged' },
-                // value: { type: String, notify: true, observer: 'propertyChanged' },
                 loading: Boolean,
-                showFull: { type: Boolean, value: false },
+                detailView: { type: Boolean, value: false },
                 clearItems: { type: Boolean, value: true, notify: true },
 				url: {
                     computed: '_url(kind, page, field, value)',
                     notify: true
                 },
-                default: {
-                    computed: '_default(kind)',
+                showingPhotos: {
+                    computed: '_showingPhotos(kind)',
                     notify: true
                 }
 			},
-			observers: ['_parametersChange(kind, field, value)'],
-			_parametersChange: function(kind, field, value) {
-				console.log('_parametersChange');
-				console.log(kind, field, value);
-				this.items = [];
-				// this.clearItems = true; // TODO
+			observers: ['_kindChanged(kind)'],
+			_kindChanged: function(kind) {
+				this.field = '';
+				this.value = '';
+				this.clearItems = true;
 			},
-            _default: function(kind) {
+            _showingPhotos: function(kind) {
                 return kind == 'photo';
             },
             _url: function(kind, page, field, value) {
@@ -215,9 +208,9 @@
                 return url;
             },
             _loadMore: function() {
-                if (this.$.list_ajax.lastRequest) {
-                    this.$.list_ajax.lastRequest.abort();
-                }
+                // if (this.$.list_ajax.lastRequest) {
+                //     this.$.list_ajax.lastRequest.abort();
+                // }
                 if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
                     this.page = this.$.list_ajax.lastResponse.next;
                     this.clearItems = false;
@@ -233,26 +226,22 @@
                 this.$.scrollTheshold.clearTriggers();
 			},
             _showFilters: function() {
-				this.set('route.prefix', '/filter/tags');
-				var filter_ajax = document.querySelector('#filter_ajax');
-				filter_ajax.fire('url-changed');
-				console.log(this.route);
                 this.fire('show-filters');
             },
-            _full: function(e) {
+            _showDetail: function(e) {
                 this.$.swiper.selected = e.model.index;
                 this.menuToggle();
-                this.showFull = true;
+                this.detailView = true;
                 this.$.scrollTheshold.horizontal = true;
                 this.$.scrollTheshold.lowerThreshold = 200;
             },
-            _grid: function(e) {
+            _showList: function(e) {
                 this.menuToggle();
-                this.showFull = false;
+                this.detailView = false;
                 this.$.scrollTheshold.horizontal = false;
                 this.$.scrollTheshold.lowerThreshold = 500;
             },
-            _exif: function(e) {
+            _showExif: function(e) {
                 var id = e.model.item.slug,
                     dialog = document.getElementById(id);
                 if (dialog) {

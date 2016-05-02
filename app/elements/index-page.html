@@ -1,5 +1,4 @@
 <link rel="import" href="list-page.html">
-<link rel="import" href="filter-page.html">
 
 <dom-module id="index-page">
 	<template>
@@ -8,81 +7,37 @@
 		<carbon-route
 			route="{{route}}"
 			pattern="/:kind"
-			data="{{dataKind}}"
-			tail="{{tailKind}}"
-			active="{{activeKind}}"></carbon-route>
+			data="{{data}}"
+			tail="{{tail}}"
+			active="{{active}}"></carbon-route>
 
-        <carbon-route
-			route="{{tailKind}}"
+		<carbon-route
+			route="{{tail}}"
 			pattern="/:field/:value"
 			data="{{dataFilter}}"
-			tail="{{tailFilter}}"
 			active="{{activeFilter}}"></carbon-route>
 
 		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
 
-		<h1>{{activeKind}} {{activeFilter}}</h1>
-
-		<iron-pages selected="{{selected}}">
-			<list-page
-				kind="{{dataKind.kind}}"
-				field=""
-				value=""
-				route="{{tailKind}}"
-				active="{{activeKind}}"></list-page>
-
-			<list-page
-				kind="{{dataKind.kind}}"
-				field="{{dataFilter.field}}"
-				value="{{dataFilter.value}}"
-				route="{{tailFilter}}"
-				active="{{activeFilter}}"></list-page>
-		</iron-pages>
+		<list-page
+			kind="{{data.kind}}"
+			field="{{dataFilter.field}}"
+			value="{{dataFilter.value}}"></list-page>
 	</template>
 
 	<script>
 		Polymer({
 			is: 'index-page',
 			attached: function() {
+				console.log(this.route);
 				if (!this.route.path) {
-					this.set('dataKind.kind', 'photo');
 					this.set('route.path', '/photo');
+					this.kind = 'photo';
 				}
-			},
-			properties: {
-				selected: {
-					type: Number,
-					computed: '_selected(activeKind, activeFilter)',
-					// observer: 'propertyChanged'
-				},
-				route: {
-					type: Object,
-					observer: 'objectChanged'
+				if (!this.field || !this.value) {
+					this.set('dataFilter.field', '');
+					this.set('dataFilter.value', '');
 				}
-			},
-			_selected: function(activeKind, activeFilter) {
-				console.log(activeKind, activeFilter);
-				if (activeKind && activeFilter) {
-					return 1;
-				} else {
-					return 0;
-				}
-			},
-			// listeners: {
-			// 	'show-index': 'showIndex',
-			// 	'show-filters': 'showFilters'
-			// },
-			// showIndex: function() {
-			// 	this.selected = 0;
-			// },
-			// showFilters: function() {
-			// 	this.selected = 1;
-			// },
-			propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
-			objectChanged: function(newValue, oldValue) {
-				console.log(newValue);
 			}
 		});
 	</script>
