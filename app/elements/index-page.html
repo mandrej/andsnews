@@ -1,4 +1,5 @@
 <link rel="import" href="list-page.html">
+<link rel="import" href="filter-page.html">
 
 <dom-module id="index-page">
 	<template>
@@ -19,17 +20,20 @@
 
 		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
 
-		<list-page
-			kind="{{data.kind}}"
-			field="{{dataFilter.field}}"
-			value="{{dataFilter.value}}"></list-page>
+		<neon-animated-pages class="flex" selected={{selected}}>
+			<list-page
+				kind="{{data.kind}}"
+				field="{{dataFilter.field}}"
+				value="{{dataFilter.value}}"></list-page>
+			
+			<filter-page kind="{{data.kind}}"></filter-page>
+		</neon-animated-pages>
 	</template>
 
 	<script>
 		Polymer({
 			is: 'index-page',
 			attached: function() {
-				console.log(this.route);
 				if (!this.route.path) {
 					this.set('route.path', '/photo');
 					this.kind = 'photo';
@@ -38,6 +42,22 @@
 					this.set('dataFilter.field', '');
 					this.set('dataFilter.value', '');
 				}
+			},
+			properties: {
+				selected: {
+					type: Number,
+					value: 0
+				}
+			},
+			listeners: {
+				'show-list': 'showList',
+				'show-filters': 'showFilters'
+			},
+			showList: function() {
+				this.selected = 0;
+			},
+			showFilters: function() {
+				this.selected = 1;
 			}
 		});
 	</script>

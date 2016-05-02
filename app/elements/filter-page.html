@@ -2,9 +2,6 @@
     <template>
         <style is="custom-style" include="shared-styles"></style>
         <style>
-            /*:host {
-                display: none;
-            }*/
             :host {
                 @apply(--layout-fullbleed);
                 @apply(--paper-font-common-base);
@@ -24,6 +21,14 @@
             }
         </style>
 
+        <iron-ajax id="filter_ajax"
+            auto
+            url="{{url}}"
+            handle-as="json"
+            last-response="{{response}}"
+            debounce-duration="300">
+        </iron-ajax>
+
         <paper-drawer-panel>
 			<paper-header-panel drawer>
 				<paper-menu>
@@ -35,20 +40,14 @@
             <paper-header-panel main>
                 <paper-toolbar>
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи filter-page {{kind}}|{{active}}|{{token}}</div>
-                    <paper-icon-button icon="icons:done" on-tap="_showIndex"></paper-icon-button>
+                    <div class="title">ANDрејевићи</div>
+                    <paper-icon-button icon="icons:done" on-tap="_showList"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-ajax id="filter_ajax"
-                    url="{{url}}"
-                    handle-as="json"
-                    last-response="{{response}}"
-                    debounce-duration="300">
-                </iron-ajax>
                 <div class="content">
                     <h2>[[response.field_name]]</h2>
                     <template is="dom-repeat" items="[[response.items]]">
-                        <div on-tap="_filter" class="badge">
+                        <div on-tap="_showFilteredList" class="badge">
                             <div>[[item.name]]</div>
                             <paper-badge label="[[item.count]]"></paper-badge>
                         </div>
@@ -79,40 +78,46 @@
                     }
                 },
                 url: {
-                    computed: '_url(kind, token)',
+                    computed: '_url(kind)',
                     notify: true
                 }
             },
-            _url: function(kind, token) {
+            _url: function(kind) {
                 var prefix = 'filter', sufix = '';
-                if (kind == 'photo') sufix = 'Photo_' + token;
-                if (kind == 'entry') sufix = 'Entry_' + token;
+                if (kind == 'photo') sufix = 'Photo_tags';
+                if (kind == 'entry') sufix = 'Entry_tags';
                 var url = [prefix, sufix].join('/');
                 return url;
             },
-            _filter: function(e) {
+            _showFilteredList: function(e) {
                 var model = e.model,
+                    index_page = document.querySelector('index-page'),
                     list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.field = this.$.filter_ajax.lastResponse.field_name;
-                list_page.value = model.item.name;
-                list_page.clearItems = true;
+                index_page.set('data.kind', this.kind);
+                index_page.set('dataFilter.field', this.$.filter_ajax.lastResponse.field_name);
+                index_page.set('dataFilter.value', model.item.name);
+                // index_page.set('route.path', ['', this.kind, this.$.filter_ajax.lastResponse.field_name, model.item.name].join('/'));
+
                 list_page.page = null;
-                list_page.fire('url-changed');
-                this.fire('show-index');
+                list_page.clearItems = true;
+                // list_page.fire('url-changed');
+                this.fire('show-list');
             },
-            _showIndex: function() {
-                var list_page = document.querySelector('list-page'),
+            _showList: function() {
+                var index_page = document.querySelector('index-page'),
+                    list_page = document.querySelector('list-page'),
                     list_ajax = document.querySelector('#list_ajax');
 
-                list_page.field = 'all';
-                list_page.value = null;
-                list_page.clearItems = true;
+                index_page.set('data.kind', this.kind);
+                index_page.set('dataFilter.field', '');
+                index_page.set('dataFilter.value', '');
+
                 list_page.page = null;
-                // list_page.route.path = '/all/';
-                list_page.fire('url-changed');
-                this.fire('show-index');
+                list_page.clearItems = true;
+                // list_page.fire('url-changed');
+                this.fire('show-list');
             }
         })
     </script>
