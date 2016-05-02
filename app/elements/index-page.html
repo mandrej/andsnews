@@ -16,6 +16,7 @@
 			route="{{tail}}"
 			pattern="/:field/:value"
 			data="{{dataFilter}}"
+			tail="{{tailFilter}}"
 			active="{{activeFilter}}"></carbon-route>
 
 		<iron-selector selected="{{data.kind}}" attr-for-selected="kind-page"></iron-selector>
@@ -24,8 +25,9 @@
 			<list-page
 				kind="{{data.kind}}"
 				field="{{dataFilter.field}}"
-				value="{{dataFilter.value}}"></list-page>
-			
+				value="{{dataFilter.value}}"
+				route="{{route}}"></list-page>
+
 			<filter-page kind="{{data.kind}}"></filter-page>
 		</neon-animated-pages>
 	</template>

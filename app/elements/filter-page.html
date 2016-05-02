@@ -92,8 +92,7 @@
             _showFilteredList: function(e) {
                 var model = e.model,
                     index_page = document.querySelector('index-page'),
-                    list_page = document.querySelector('list-page'),
-                    list_ajax = document.querySelector('#list_ajax');
+                    list_page = document.querySelector('list-page');
 
                 index_page.set('data.kind', this.kind);
                 index_page.set('dataFilter.field', this.$.filter_ajax.lastResponse.field_name);
@@ -107,8 +106,7 @@
             },
             _showList: function() {
                 var index_page = document.querySelector('index-page'),
-                    list_page = document.querySelector('list-page'),
-                    list_ajax = document.querySelector('#list_ajax');
+                    list_page = document.querySelector('list-page');
 
                 index_page.set('data.kind', this.kind);
                 index_page.set('dataFilter.field', '');

@@ -51,5 +51,5 @@ app = WSGIApplication([
     Route(r'/setlang', handler=SetLanguage),
     # Route(r'/about', handler=FrontPage, name='front'),
     Route(r'/sign', handler=Sign),
-    Route(r'/xxxxx', handler='views.photo.Index', name='start'),
+    Route(r'/', handler='views.photo.Index', name='start'),
 ], config=CONFIG, debug=DEVEL)
