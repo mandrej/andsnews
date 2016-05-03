@@ -5,6 +5,14 @@ from handlers import FrontPage, Complete, SetLanguage, Sign, Find, DeleteHandler
 from config import CONFIG, DEVEL
 
 app = WSGIApplication([
+    # REST API
+    Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
+    Route(r'/api/<kind:(photo|entry)>/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>',
+          handler='views.api.Collection'),
+
+    Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
+
+    ###
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),
     Route(r'/photos/<slug:[\w-]+>', handler='views.photo.Detail', name='photo'),
     Route(r'/photos/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>/<slug:[\w-]+>',

@@ -122,7 +122,6 @@ class BaseHandler(webapp2.RequestHandler):
 
     def render_json(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
-        self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
@@ -314,19 +313,13 @@ class RenderCloud(BaseHandler):
 
             limit = cloud_limit(items)
             logging.info('%s: %d' % (mem_key, limit))
-            # self.render_template(
-            #     'snippets/cloud.html', {
-            #         'items': items,
-            #         'link': '%s_all_filter' % kind.lower(),
-            #         'field_name': field,
-            #         'limit': limit,
-            #         'filter': {'field': field, 'value': value} if (field and value) else None})
-            self.render_json({
-                'items': items,
-                'link': '%s_all_filter' % kind.lower(),
-                'field_name': field,
-                'limit': limit,
-                'filter': {'field': field, 'value': value} if (field and value) else None})
+            self.render_template(
+                'snippets/cloud.html', {
+                    'items': items,
+                    'link': '%s_all_filter' % kind.lower(),
+                    'field_name': field,
+                    'limit': limit,
+                    'filter': {'field': field, 'value': value} if (field and value) else None})
 
 
 class Plain(BaseHandler):

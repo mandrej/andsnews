@@ -35,13 +35,11 @@ class Index(BaseHandler):
                 'max': PHOTOS_MAX_PAGE,
                 'next': token}
 
-        self.render_json(data)
-
-        # if slug is not None:
-        #     data['slug'] = slug
-        #     self.render_template('photo/detail.html', data)
-        # else:
-        #     self.render_template('photo/index.html', data)
+        if slug is not None:
+            data['slug'] = slug
+            self.render_template('photo/detail.html', data)
+        else:
+            self.render_template('photo/index.html', data)
 
 
 class Detail(BaseHandler):

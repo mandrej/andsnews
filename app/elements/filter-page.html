@@ -20,16 +20,9 @@
         </style>
 
         <iron-ajax auto
-            url="{{_tags_url(kind)}}"
+            url="{{_url(kind)}}"
             handle-as="json"
-            last-response="{{tags_response}}"
-            debounce-duration="300">
-        </iron-ajax>
-
-        <iron-ajax auto
-            url="{{_date_url(kind)}}"
-            handle-as="json"
-            last-response="{{date_response}}"
+            last-response="{{response}}"
             debounce-duration="300">
         </iron-ajax>
 
@@ -49,20 +42,14 @@
                 </paper-toolbar>
 
                 <div class="content">
-                    <h2>[[tags_response.field_name]]</h2>
-                    <template is="dom-repeat" items="[[tags_response.items]]">
-                        <paper-button class$="[[_check(item.name, value)]]"
-                            data-field$="[[tags_response.field_name]]" on-tap="_showFilteredList">
-                            [[item.name]] [[item.count]]
-                        </paper-button>
-                    </template>
-
-                    <h2>[[date_response.field_name]]</h2>
-                    <template is="dom-repeat" items="[[date_response.items]]">
-                        <paper-button class$="[[_check(item.name, value)]]"
-                            data-field$="[[date_response.field_name]]" on-tap="_showFilteredList">
-                            [[item.name]] [[item.count]]
-                        </paper-button>
+                    <template is="dom-repeat" items="[[response]]" as="row">
+                        <h2>[[row.field_name]]</h2>
+                        <template is="dom-repeat" items="[[row.items]]" as="rec">
+                            <paper-button class$="[[_check(rec.name, value)]]"
+                                data-field$="[[row.field_name]]" on-tap="_showFilteredList">
+                                [[rec.name]] [[rec.count]]
+                            </paper-button>
+                        </template>
                     </template>
                 </div>
             </paper-header-panel>
@@ -90,18 +77,10 @@
                     }
                 }
             },
-            _tags_url: function(kind) {
-                var prefix = 'filter', sufix = '';
-                if (kind == 'photo') sufix = 'Photo_tags';
-                if (kind == 'entry') sufix = 'Entry_tags';
+            _url: function(kind) {
+                var prefix = '/api/filter', sufix = kind;
                 var url = [prefix, sufix].join('/');
-                return url;
-            },
-            _date_url: function(kind) {
-                var prefix = 'filter', sufix = '';
-                if (kind == 'photo') sufix = 'Photo_date';
-                if (kind == 'entry') sufix = 'Entry_date';
-                var url = [prefix, sufix].join('/');
+                console.log(url);
                 return url;
             },
             _check: function(current, selected) {
@@ -112,8 +91,8 @@
                     index_page = document.querySelector('index-page');
 
                 index_page.set('data.kind', this.kind);
-                index_page.set('dataFilter.field', e.target.dataset.field);
-                index_page.set('dataFilter.value', model.item.name);
+                index_page.set('dataFilter.field', model.row.field_name);
+                index_page.set('dataFilter.value', model.rec.name);
                 this.fire('show-list');
             },
             _showList: function() {

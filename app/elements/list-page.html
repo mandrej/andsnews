@@ -56,7 +56,7 @@
 
 		<iron-ajax id="list_ajax"
 			auto
-			url="{{url}}"
+			url="{{_url(kind, page, field, value)}}"
 			handle-as="json"
 			on-response="handler"
 			loading="{{loading}}"
@@ -174,10 +174,6 @@
                 loading: Boolean,
                 detailView: { type: Boolean, value: false },
                 clearItems: { type: Boolean, value: true, notify: true },
-				url: {
-                    computed: '_url(kind, page, field, value)',
-                    notify: true
-                },
                 showingPhotos: {
                     computed: '_showingPhotos(kind)',
                     notify: true
@@ -193,15 +189,12 @@
                 return kind == 'photo';
             },
             _url: function(kind, page, field, value) {
-				console.log(kind, page, field, value);
-				var url, prefix = '', sufix = '';
+				var url, prefix = '/api', sufix = kind;
 
-				if (kind == 'photo') sufix = 'photos';
-				if (kind == 'entry') sufix = 'entries';
 				if (field && value) {
-					url = [prefix, sufix, field, value, ''].join('/');
+					url = [prefix, sufix, field, value].join('/');
 				} else {
-					url = [prefix, sufix, ''].join('/');
+					url = [prefix, sufix].join('/');
 				}
                 if (page != null) url += '?page=' + page;
 				console.log(url);
@@ -250,10 +243,13 @@
             },
             menuToggle: function() {
                 var drawer = this.$.drawer;
+				console.log(drawer.narrow);
+				console.log(drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth));
+
                 if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
 //                    drawer.togglePanel();
                 } else {
-                    drawer.forceNarrow = !drawer.forceNarrow;
+					drawer.forceNarrow = !drawer.forceNarrow;
                 }
             },
 			propertyChanged: function(newValue, oldValue) {
