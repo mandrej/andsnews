@@ -28,9 +28,19 @@
 
         <paper-drawer-panel>
 			<paper-header-panel drawer>
-				<paper-menu>
-                    <a class="paper-item-link" kind-page="photo" href="#/photo/all/"><paper-item>Photos</paper-item></a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry/all/"><paper-item>Texts</paper-item></a>
+                <paper-menu attr-for-selected="kind-page" selected="{{data.kind}}">
+					<a class="paper-item-link" kind-page="photo" href="#/photo">
+						<paper-item>
+							<iron-icon icon="image:photo-camera"></iron-icon>
+							<span>Photos</span>
+						</paper-item>
+					</a>
+					<a class="paper-item-link" kind-page="entry" href="#/entry">
+						<paper-item>
+							<iron-icon icon="icons:description"></iron-icon>
+							<span>Texts</span>
+						</paper-item>
+					</a>
                 </paper-menu>
 			</paper-header-panel>
 
@@ -87,12 +97,12 @@
                 if (current == selected) return 'selected';
             },
             _showFilteredList: function(e) {
-                var model = e.model,
-                    index_page = document.querySelector('index-page');
+                var index_page = document.querySelector('index-page');
 
                 index_page.set('data.kind', this.kind);
-                index_page.set('dataFilter.field', model.row.field_name);
-                index_page.set('dataFilter.value', model.rec.name);
+                index_page.set('dataFilter.field', e.model.row.field_name);
+                index_page.set('dataFilter.value', e.model.rec.name);
+                index_page.page = null;
                 this.fire('show-list');
             },
             _showList: function() {
@@ -101,6 +111,7 @@
                 index_page.set('data.kind', this.kind);
                 index_page.set('dataFilter.field', '');
                 index_page.set('dataFilter.value', '');
+                index_page.page = null;
                 this.fire('show-list');
             }
         })

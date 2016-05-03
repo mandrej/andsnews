@@ -4,7 +4,6 @@ from operator import itemgetter
 from google.appengine.ext import ndb
 from handlers import LazyEncoder, Paginator, cloud_limit
 from models import Cloud
-from config import PHOTOS_PER_PAGE, ENTRIES_PER_PAGE
 
 
 class RestHandler(webapp2.RequestHandler):
@@ -19,8 +18,7 @@ class Collection(RestHandler):
         page = self.request.get('page', None)
         model = ndb.Model._kind_map.get(kind.title())
         query = model.query_for(field, value)
-        per_page = PHOTOS_PER_PAGE if kind == 'photo' else ENTRIES_PER_PAGE
-        paginator = Paginator(query, per_page)
+        paginator = Paginator(query, per_page=24)
         objects, token = paginator.page(page)
 
         if not objects:
