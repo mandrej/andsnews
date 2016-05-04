@@ -19,19 +19,12 @@
 			tail="{{tailFilter}}"
 			active="{{activeFilter}}"></carbon-route>
 
-            <neon-animated-pages class="flex" selected={{selected}}>
-                <list-page
-                    page={{page}}
-                    kind="{{data.kind}}"
-                    field="{{dataFilter.field}}"
-                    value="{{dataFilter.value}}"
-                    route="{{route}}"></list-page>
-
-                <filter-page
-                    kind="{{data.kind}}"
-                    field="{{dataFilter.field}}"
-                    value="{{dataFilter.value}}"></filter-page>
-            </neon-animated-pages>
+        <list-page
+            page={{page}}
+            kind="{{data.kind}}"
+            field="{{dataFilter.field}}"
+            value="{{dataFilter.value}}"
+            route="{{route}}"></list-page>
 	</template>
 
 	<script>
@@ -48,21 +41,7 @@
 				}
 			},
 			properties: {
-				page: { value: null, notify: true },
-				selected: {
-					type: Number,
-					value: 0
-				}
-			},
-			listeners: {
-				'show-list': 'showList',
-				'show-filters': 'showFilters'
-			},
-			showList: function() {
-				this.selected = 0;
-			},
-			showFilters: function() {
-				this.selected = 1;
+				page: { value: null, notify: true }
 			}
 		});
 	</script>

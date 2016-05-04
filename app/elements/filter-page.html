@@ -3,9 +3,8 @@
         <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
-                @apply(--layout-fullbleed);
-                @apply(--paper-font-common-base);
-                background: var(--primary-background-color);
+                display: block;
+                background: #ccc;
             }
             .content { padding: 16px; }
             paper-button {
@@ -26,44 +25,19 @@
             debounce-duration="300">
         </iron-ajax>
 
-        <paper-drawer-panel>
-			<paper-header-panel drawer>
-                <paper-menu attr-for-selected="kind-page" selected="{{data.kind}}">
-					<a class="paper-item-link" kind-page="photo" href="#/photo">
-						<paper-item>
-							<iron-icon icon="image:photo-camera"></iron-icon>
-							<span>Photos</span>
-						</paper-item>
-					</a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry">
-						<paper-item>
-							<iron-icon icon="icons:description"></iron-icon>
-							<span>Texts</span>
-						</paper-item>
-					</a>
-                </paper-menu>
-			</paper-header-panel>
+        <template is="dom-repeat" items="[[response]]" as="row">
+            <paper-item>
+                <iron-icon icon="{{_whichIcon(row.field_name)}}"></iron-icon>
+                <span>[[row.field_name]]</span>
+            </<paper-item>
 
-            <paper-header-panel main>
-                <paper-toolbar>
-                    <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи</div>
-                    <paper-icon-button icon="icons:done" on-tap="_showList"></paper-icon-button>
-                </paper-toolbar>
-
-                <div class="content">
-                    <template is="dom-repeat" items="[[response]]" as="row">
-                        <h2>[[row.field_name]]</h2>
-                        <template is="dom-repeat" items="[[row.items]]" as="rec">
-                            <paper-button class$="[[_check(rec.name, value)]]"
-                                data-field$="[[row.field_name]]" on-tap="_showFilteredList">
-                                [[rec.name]] [[rec.count]]
-                            </paper-button>
-                        </template>
-                    </template>
-                </div>
-            </paper-header-panel>
-        </paper-drawer-panel>
+            <template is="dom-repeat" items="[[row.items]]" as="rec">
+                <span class$="[[_check(rec.name, value)]]"
+                    data-field$="[[row.field_name]]" on-tap="_showFilteredList">
+                    [[rec.name]]
+                </span>
+            </template>
+        </template>
     </template>
 
     <script>
@@ -92,6 +66,16 @@
                 var url = [prefix, sufix].join('/');
                 console.log(url);
                 return url;
+            },
+            _whichIcon: function(field) {
+                switch (field) {
+                    case 'tags':
+                        return 'icons:label';
+                    case 'date':
+                        return 'icons:date-range';
+                    case 'author':
+                        return 'social:person';
+                }
             },
             _check: function(current, selected) {
                 if (current == selected) return 'selected';
