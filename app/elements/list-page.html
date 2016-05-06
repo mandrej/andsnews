@@ -142,7 +142,7 @@
 			</paper-header-panel>
 
 			<paper-header-panel main>
-                <paper-toolbar hidden$="{{detailView}}">
+                <paper-toolbar hidden$="{{toggleView}}">
                     <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
                     <div class="title">ANDрејевићи {{field}} {{value}}</div>
                     <paper-spinner active$="[[loading]]"></paper-spinner>
@@ -150,29 +150,31 @@
                 </paper-toolbar>
 
                 <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
-                    <div hidden$="{{detailView}}" class="layout horizontal wrap start-aligned" id="grid">
-                        <template is="dom-if" if="{{showingPhotos}}" restamp="true">
-                            <template is="dom-repeat" items="{{items}}" index-as="index">
-                                <div class="photo" on-tap="_showDetail">
-                                    <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                                    <div class="detail">[[item.headline]]</div>
-                                    <paper-ripple></paper-ripple>
-                                </div>
-                            </template>
-                        </template>
-                        <template is="dom-if" if={{!showingPhotos}} restamp="true">
-                            <template is="dom-repeat" items="{{items}}" index-as="index">
-                                <paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
-                                    <div class="card-content">
-                                        [[item.summary]]
-                                    </div>
-                                    <paper-ripple></paper-ripple>
-                                </paper-card>
-                            </template>
-                        </template>
+                    <div hidden$="{{toggleView}}" id="grid">
+						<div class="layout horizontal wrap start-aligned">
+							<template is="dom-if" if="{{showingPhotos}}" restamp="true">
+								<template is="dom-repeat" items="{{items}}" index-as="index">
+									<div class="photo" on-tap="_showDetail">
+										<iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
+										<div class="detail">[[item.headline]]</div>
+										<paper-ripple></paper-ripple>
+									</div>
+								</template>
+							</template>
+							<template is="dom-if" if={{!showingPhotos}} restamp="true">
+								<template is="dom-repeat" items="{{items}}" index-as="index">
+									<paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
+										<div class="card-content">
+											[[item.summary]]
+										</div>
+										<paper-ripple></paper-ripple>
+									</paper-card>
+								</template>
+							</template>
+						</div>
                     </div>
 
-                    <div hidden$="{{!detailView}}" id="full">
+                    <div hidden$="{{!toggleView}}" id="full">
                         <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
                             <template is="dom-if" if="{{showingPhotos}}" restamp="true">
                                 <template is="dom-repeat" items="{{items}}">
@@ -241,7 +243,7 @@
                 },
                 items: { type: Array, value: [] },
                 loading: Boolean,
-                detailView: { type: Boolean, value: false },
+                toggleView: { type: Boolean, value: false },
                 showingPhotos: {
                     computed: '_showingPhotos(kind)',
                     notify: true
@@ -313,14 +315,14 @@
             },
 			_showList: function(e) {
                 this.menuToggle();
-                this.detailView = false;
+                this.toggleView = !this.toggleView;
                 this.$.scrollTheshold.horizontal = false;
                 this.$.scrollTheshold.lowerThreshold = 500;
             },
             _showDetail: function(e) {
                 this.$.swiper.selected = e.model.index;
                 this.menuToggle();
-                this.detailView = true;
+                this.toggleView = !this.toggleView;
                 this.$.scrollTheshold.horizontal = true;
                 this.$.scrollTheshold.lowerThreshold = 200;
             },
