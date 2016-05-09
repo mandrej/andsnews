@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="../styles/shared-styles.html">
 
 <dom-module id="list-detail">
@@ -68,7 +70,23 @@
     <script>
         Polymer({
             is: 'list-detail',
+            // behaviors: [Polymer.NeonAnimationBehavior],
             properties: {
+                // animationConfig: {
+				// 	type: Object,
+                //     value: function() {
+                //         return {
+                //             'entry': {
+                //                 name: 'scale-up-animation',
+                //                 node: this.selected
+                //             },
+                //             'exit': {
+                //                 name: 'scale-down-animation',
+                //                 node: this.selected
+                //             }
+                //         }
+                //     }
+                // },
                 items: {
                     type: Array,
                     value: []
@@ -88,7 +106,6 @@
             },
             _showList: function(e) {
                 this.selected = e.model.index;
-                this.fire('selected-changed');
                 this.fire('show-grid');
             },
             _showExif: function(e) {

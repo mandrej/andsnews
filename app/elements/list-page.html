@@ -15,8 +15,7 @@
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
+
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="./list-grid.html">
@@ -111,7 +110,7 @@
                     <paper-icon-button icon="icons:search" on-tap="_showSearch"></paper-icon-button>
                 </paper-toolbar>
 
-                <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
+                <iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
                     <div hidden$="{{toggleView}}" id="grid">
 						<list-grid
 							kind="{{kind}}"
@@ -133,26 +132,14 @@
 	<script>
 		Polymer({
 			is: 'list-page',
-            behaviors: [Polymer.NeonAnimationBehavior],
 			properties: {
-                // animationConfig: {
-				// 	type: Object,
-                //     value: function() {
-                //         return {
-                //             'entry': {
-                //                 name: 'fade-in-animation',
-                //                 node: this.$.grid
-                //             },
-                //             'exit': {
-                //                 name: 'fade-out-animation',
-                //                 node: this.$.grid
-                //             }
-                //         }
-                //     }
-                // },
                 items: { type: Array, value: [] },
                 loading: Boolean,
-                toggleView: { type: Boolean, value: false },
+                toggleView: {
+					type: Boolean,
+					value: false,
+					notify: true
+				},
 				clearItems: {
 					computed: '_clearItems(page)',
 					notify: true
@@ -160,8 +147,8 @@
 			},
 			observers: ['_kindChanged(kind)'],
 			listeners: {
-				'show-detail': '_showDetail',
-				'show-grid': '_showList'
+				'show-detail': '_toggleView',
+				'show-grid': '_toggleView'
 
 			},
 			_clearItems: function(page) {
@@ -220,26 +207,14 @@
 				this.value = '';
 				this.page = null;
 			},
-			_showList: function(e) {
-                this.menuToggle();
-                this.toggleView = !this.toggleView;
-                this.$.scrollTheshold.horizontal = false;
-                this.$.scrollTheshold.lowerThreshold = 500;
-            },
-            _showDetail: function(e) {
-                // this.$.swiper.selected = e.model.index;
-                this.menuToggle();
-                this.toggleView = !this.toggleView;
-                this.$.scrollTheshold.horizontal = true;
-                this.$.scrollTheshold.lowerThreshold = 200;
-            },
-			menuToggle: function() {
-                var drawer = this.$.drawer;
+			_toggleView: function(e) {
+				var drawer = this.$.drawer;
 				if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
 					// drawer.togglePanel();
                 } else {
 					drawer.forceNarrow = !drawer.forceNarrow;
 				}
+                this.toggleView = !this.toggleView;
             },
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
