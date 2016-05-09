@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
@@ -14,15 +13,14 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 <link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="./list-grid.html">
+<link rel="import" href="./list-detail.html">
 
 <dom-module id="list-page">
 	<template>
@@ -33,42 +31,6 @@
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
-			.photo {
-                position: relative;
-                width: 20%;
-				height: 200px;
-				cursor: pointer;
-			}
-            .photo:hover .detail { opacity: 1; }
-            .photo > iron-image {
-                @apply(--layout-flex);page
-            }
-            .photo > .detail {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.8));
-                color: white;
-                font-size: 20px;
-                font-weight: 100;
-                padding: 20px;
-                opacity: 0;
-                transition: opacity 0.1s;
-            }
-            @media (max-width: 1024px) {.photo{ width: 25%; height: 200px;} }
-            @media (max-width: 848px) { .photo{ width: 33.3333333%; height: 200px;} }
-            @media (max-width: 600px) { .photo{ width: 50%; height: 300px;} }
-            @media (max-width: 432px) { .photo{ width: 100%; height: 350px;} }
-
-			iron-image { width: 100%; height: 100%; }
-            .swipe {
-                -moz-user-select: none;
-                -ms-user-select: none;
-                -webkit-user-select: none;
-                user-select: none;
-                cursor: default;
-            }
             paper-dialog {
                 position: fixed;
                 height: auto;
@@ -151,70 +113,17 @@
 
                 <iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
                     <div hidden$="{{toggleView}}" id="grid">
-						<div class="layout horizontal wrap start-aligned">
-							<template is="dom-if" if="{{showingPhotos}}" restamp="true">
-								<template is="dom-repeat" items="{{items}}" index-as="index">
-									<div class="photo" on-tap="_showDetail">
-										<iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-										<div class="detail">[[item.headline]]</div>
-										<paper-ripple></paper-ripple>
-									</div>
-								</template>
-							</template>
-							<template is="dom-if" if={{!showingPhotos}} restamp="true">
-								<template is="dom-repeat" items="{{items}}" index-as="index">
-									<paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
-										<div class="card-content">
-											[[item.summary]]
-										</div>
-										<paper-ripple></paper-ripple>
-									</paper-card>
-								</template>
-							</template>
-						</div>
+						<list-grid
+							kind="{{kind}}"
+							selected="{{selected}}"
+							items="{{items}}"></list-grid>
                     </div>
 
-                    <div hidden$="{{!toggleView}}" id="full">
-                        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
-                            <template is="dom-if" if="{{showingPhotos}}" restamp="true">
-                                <template is="dom-repeat" items="{{items}}">
-                                    <div class="swipe">
-                                        <paper-toolbar>
-                                            <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
-                                            <div class="title">[[item.headline]]</div>
-                                            <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
-                                        </paper-toolbar>
-                                        <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-                                            <table>
-                                                <tr><td>date</td><td>[[item.date]]</td></tr>
-                                                <tr><td>author</td><td>[[item.author]]</td></tr>
-                                                <tr><td>model</td><td>[[item.model]]</td></tr>
-                                                <tr><td>lens</td><td>[[item.lens]]</td></tr>
-                                                <tr><td>eqv</td><td>[[item.eqv]]</td></tr>
-                                                <tr><td>iso</td><td>[[item.iso]]</td></tr>
-                                            </table>
-                                        </paper-dialog>
-                                        <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                                    </div>
-                                </template>
-                            </template>
-                            <template is="dom-if" if={{!showingPhotos}} restamp="true">
-                                <template is="dom-repeat" items="{{items}}">
-                                    <div class="swipe">
-                                        <paper-toolbar>
-                                            <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
-                                            <div class="title">[[item.headline]]</div>
-                                        </paper-toolbar>
-                                        <paper-card elevation="0" animated-shadow="false">
-                                            <div class="card-content">
-                                                <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
-                                                <template is="juicy-html" content$="[[item.body]]"></template>
-                                            </div>
-                                        </paper-card>
-                                    </div>
-                                </template>
-                            </template>
-                        </iron-swipeable-pages>
+                    <div hidden$="{{!toggleView}}" id="detail">
+						<list-detail
+							kind="{{kind}}"
+							selected="{{selected}}"
+							items="{{items}}"></list-detail>
                     </div>
                 </iron-scroll-threshold>
             </paper-header-panel>
@@ -226,34 +135,35 @@
 			is: 'list-page',
             behaviors: [Polymer.NeonAnimationBehavior],
 			properties: {
-                animationConfig: {
-					type: Object,
-                    value: function() {
-                        return {
-                            'entry': {
-                                name: 'fade-in-animation',
-                                node: this.$.grid
-                            },
-                            'exit': {
-                                name: 'fade-out-animation',
-                                node: this.$.grid
-                            }
-                        }
-                    }
-                },
+                // animationConfig: {
+				// 	type: Object,
+                //     value: function() {
+                //         return {
+                //             'entry': {
+                //                 name: 'fade-in-animation',
+                //                 node: this.$.grid
+                //             },
+                //             'exit': {
+                //                 name: 'fade-out-animation',
+                //                 node: this.$.grid
+                //             }
+                //         }
+                //     }
+                // },
                 items: { type: Array, value: [] },
                 loading: Boolean,
                 toggleView: { type: Boolean, value: false },
-                showingPhotos: {
-                    computed: '_showingPhotos(kind)',
-                    notify: true
-                },
 				clearItems: {
 					computed: '_clearItems(page)',
 					notify: true
 				}
 			},
 			observers: ['_kindChanged(kind)'],
+			listeners: {
+				'show-detail': '_showDetail',
+				'show-grid': '_showList'
+
+			},
 			_clearItems: function(page) {
 				if (page == null) return true;
 				return false;
@@ -302,17 +212,14 @@
                 this.value = '';
                 this.page = null;
 			},
-			_selectedFilter: function(current, selected) {
-                if (current == selected) return 'selected';
+			_selectedFilter: function(current, value) {
+                if (current == value) return 'selected';
             },
 			_kindChanged: function(kind) {
 				this.field = '';
 				this.value = '';
 				this.page = null;
 			},
-            _showingPhotos: function(kind) {
-                return kind == 'photo';
-            },
 			_showList: function(e) {
                 this.menuToggle();
                 this.toggleView = !this.toggleView;
@@ -320,18 +227,11 @@
                 this.$.scrollTheshold.lowerThreshold = 500;
             },
             _showDetail: function(e) {
-                this.$.swiper.selected = e.model.index;
+                // this.$.swiper.selected = e.model.index;
                 this.menuToggle();
                 this.toggleView = !this.toggleView;
                 this.$.scrollTheshold.horizontal = true;
                 this.$.scrollTheshold.lowerThreshold = 200;
-            },
-            _showExif: function(e) {
-                var id = e.model.item.slug,
-                    dialog = document.getElementById(id);
-                if (dialog) {
-                    dialog.open();
-                }
             },
 			menuToggle: function() {
                 var drawer = this.$.drawer;
