@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../styles/shared-styles.html">
 
@@ -12,7 +13,6 @@
         <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
-                @apply(--layout-fullbleed);
                 display: block;
             }
             .swipe {
@@ -25,7 +25,7 @@
             iron-image { width: 100%; height: 100%; }
         </style>
 
-        <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1" id="swiper">
+        <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-if" if="{{showingPhotos}}" restamp="true">
                 <template is="dom-repeat" items="{{items}}">
                     <div class="swipe">

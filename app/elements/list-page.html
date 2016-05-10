@@ -13,7 +13,9 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 <link rel="import" href="../styles/shared-styles.html">
@@ -29,7 +31,9 @@
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
-
+			neon-animated-pages {
+				@apply(--layout-fit);
+			}
 			paper-dialog {
 				position: fixed;
 				height: auto;
@@ -37,29 +41,33 @@
 				right: 0;
 				bottom: 50px;
 			}
-
 			.content {
 				margin: 0 16px;
 			}
-
 			.rec {
 				display: inline-block;
 				padding: 2px 4px;
 				margin: 0 8px 8px 0;
 				cursor: pointer;
 			}
-
 			.rec.activeFilterClass {
 				color: white;
 				background-color: var(--paper-red-500);
 			}
 		</style>
 
-		<iron-ajax id="list_ajax" auto url="{{_url(kind, page, field, value)}}" handle-as="json" on-response="handler" loading="{{loading}}" debounce-duration="300">
-		</iron-ajax>
+		<iron-ajax id="list_ajax" auto
+			url="{{_url(kind, page, field, value)}}"
+			handle-as="json"
+			on-response="handler"
+			loading="{{loading}}"
+			debounce-duration="300"></iron-ajax>
 
-		<iron-ajax auto url="{{_urlFilter(kind)}}" handle-as="json" last-response="{{response}}" debounce-duration="300">
-		</iron-ajax>
+		<iron-ajax auto
+			url="{{_urlFilter(kind)}}"
+			handle-as="json"
+			last-response="{{response}}"
+			debounce-duration="300"></iron-ajax>
 
 		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
@@ -84,7 +92,8 @@
 						<div class="layout horizontal wrap content">
 							<template is="dom-repeat" items="[[response]]" as="row">
 								<template is="dom-repeat" items="[[row.items]]" as="rec">
-									<span class$="rec [[_selectedFilter(rec.name, value)]]" data-field$="[[row.field_name]]" on-tap="_applyFilter">
+									<span class$="rec [[_selectedFilter(rec.name, value)]]"
+										data-field$="[[row.field_name]]" on-tap="_applyFilter">
 					                    [[rec.name]]
 					                </span>
 								</template>
@@ -103,7 +112,7 @@
 				</paper-toolbar>
 
 				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
-					<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
+					<neon-animated-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
 							data-view="grid"
@@ -115,7 +124,7 @@
 							data-view="detail"
 							selected="{{selected}}"
 							items="{{items}}"></list-detail>
-					</iron-pages>
+					</neon-animated-pages>
 				</iron-scroll-threshold>
 			</paper-header-panel>
 		</paper-drawer-panel>
