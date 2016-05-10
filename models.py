@@ -633,6 +633,7 @@ class Photo(ndb.Model):
             'rgb', 'sat', 'lum', 'hue', 'year',
             'aperture', 'shutter', 'focal_length', 'crop_factor'))
         data.update({
+            'kind': self.kind.lower(),
             'slug': self.key.string_id(),
             'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
@@ -766,6 +767,7 @@ class Entry(ndb.Model):
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
+            'kind': self.kind.lower(),
             'slug': self.key.string_id(),
             'url': webapp2.uri_for('entry', slug=self.key.string_id()),
         })

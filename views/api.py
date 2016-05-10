@@ -1,8 +1,9 @@
 import json
+import logging
 import webapp2
 from operator import itemgetter
 from google.appengine.ext import ndb
-from handlers import LazyEncoder, Paginator, cloud_limit
+from handlers import LazyEncoder, Paginator, SearchPaginator, cloud_limit
 from models import Cloud
 
 
@@ -24,12 +25,12 @@ class Collection(RestHandler):
         if not objects:
             self.abort(404)
 
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'next': token}
-
-        self.render(data)
+        self.render({
+            'objects': objects,
+            'filter': {'field': field, 'value': value} if (field and value) else None,
+            'page': page,
+            'next': token
+        })
 
 
 class KindFilter(RestHandler):
@@ -59,3 +60,20 @@ class KindFilter(RestHandler):
             })
 
         self.render(data)
+
+
+class Find(RestHandler):
+    def get(self):
+        find = self.request.get('find').strip()
+        page = self.request.get('page', None)
+        paginator = SearchPaginator(find, per_page=24)
+        objects, number_found, token, error = paginator.page(page)
+
+        self.render({
+            'objects': objects,
+            'phrase': find,
+            'number_found': number_found,
+            'page': page,
+            'next': token,
+            'error': error
+        })

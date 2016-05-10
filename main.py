@@ -11,6 +11,7 @@ app = WSGIApplication([
           handler='views.api.Collection'),
 
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
+    Route(r'/api/search', handler='views.api.Find'),
 
     ###
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),

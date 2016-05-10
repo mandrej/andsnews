@@ -18,6 +18,9 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="./list-grid.html">
 <link rel="import" href="./list-detail.html">
@@ -27,12 +30,13 @@
 		<style is="custom-style" include="shared-styles"></style>
 		<style>
 			:host {
-				@apply(--layout-fullbleed);
+				display: block;
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
 			neon-animated-pages {
-				@apply(--layout-fit);
+				@apply(--layout-fullbleed);
+				@apply(--layout-vertical);
 			}
 			paper-dialog {
 				position: fixed;
@@ -72,6 +76,13 @@
 		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
 				<paper-menu attr-for-selected="kind-page" selected="{{data.kind}}">
+					<paper-item>
+						<form is="iron-form" id="searchForm" method="get" action="/api/search?find={{find}}">
+							<!-- <iron-icon icon="icons:search"></iron-icon> -->
+							<!-- <paper-icon-button icon="icons:search" on-tap="_submit(event)"></paper-icon-button> -->
+							<input is="iron-input" bind-value="{{find}}" on-enter="_submit(event)">
+						</form>
+					</paper-item>
 					<a class="paper-item-link" kind-page="photo" href="#/photo">
 						<paper-item>
 							<iron-icon icon="image:photo-camera"></iron-icon>
@@ -108,7 +119,6 @@
 					<paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
 					<div class="title">ANDрејевићи {{field}} {{value}}</div>
 					<paper-spinner active$="[[loading]]"></paper-spinner>
-					<paper-icon-button icon="icons:search" on-tap="_showSearch"></paper-icon-button>
 				</paper-toolbar>
 
 				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
@@ -152,7 +162,8 @@
 			observers: ['_kindChanged(kind)'],
 			listeners: {
 				'show-detail': '_toggleView',
-				'show-grid': '_toggleView'
+				'show-grid': '_toggleView',
+				'iron-form-submit': '_searchResults'
 			},
 			_clearItems: function(page) {
 				if (page == null) return true;
@@ -225,6 +236,16 @@
 				} else {
 					this.$.switch.selected = 'grid';
 				}
+			},
+			_submit: function(e) {
+				var form = this.$.searchForm; // Polymer.dom(e).localTarget.parentElement;
+				form.sumbit();
+				// console.log(form);
+				// form.reset();
+			},
+			_searchResults: function(e) {
+				console.log(e.detail);
+				// console.log(JSON.stringify(e.detail));
 			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
