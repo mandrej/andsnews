@@ -29,45 +29,39 @@
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
-            paper-dialog {
-                position: fixed;
-                height: auto;
-                left: 0;
-                right: 0;
-                bottom: 50px;
-            }
+
+			paper-dialog {
+				position: fixed;
+				height: auto;
+				left: 0;
+				right: 0;
+				bottom: 50px;
+			}
+
 			.content {
 				margin: 0 16px;
 			}
+
 			.rec {
 				display: inline-block;
 				padding: 2px 4px;
 				margin: 0 8px 8px 0;
 				cursor: pointer;
 			}
-			.rec.selected {
+
+			.rec.activeFilterClass {
 				color: white;
-                background-color: var(--paper-red-500);
-            }
+				background-color: var(--paper-red-500);
+			}
 		</style>
 
-		<iron-ajax id="list_ajax"
-			auto
-			url="{{_url(kind, page, field, value)}}"
-			handle-as="json"
-			on-response="handler"
-			loading="{{loading}}"
-			debounce-duration="300">
+		<iron-ajax id="list_ajax" auto url="{{_url(kind, page, field, value)}}" handle-as="json" on-response="handler" loading="{{loading}}" debounce-duration="300">
 		</iron-ajax>
 
-		<iron-ajax auto
-            url="{{_urlFilter(kind)}}"
-            handle-as="json"
-            last-response="{{response}}"
-            debounce-duration="300">
-        </iron-ajax>
+		<iron-ajax auto url="{{_urlFilter(kind)}}" handle-as="json" last-response="{{response}}" debounce-duration="300">
+		</iron-ajax>
 
-        <paper-drawer-panel id="drawer">
+		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
 				<paper-menu attr-for-selected="kind-page" selected="{{data.kind}}">
 					<a class="paper-item-link" kind-page="photo" href="#/photo">
@@ -90,41 +84,40 @@
 						<div class="layout horizontal wrap content">
 							<template is="dom-repeat" items="[[response]]" as="row">
 								<template is="dom-repeat" items="[[row.items]]" as="rec">
-					                <span class$="rec [[_selectedFilter(rec.name, value)]]"
-					                    data-field$="[[row.field_name]]" on-tap="_applyFilter">
+									<span class$="rec [[_selectedFilter(rec.name, value)]]" data-field$="[[row.field_name]]" on-tap="_applyFilter">
 					                    [[rec.name]]
 					                </span>
-					            </template>
-					        </template>
+								</template>
+							</template>
 						</div>
 					</div>
-                </paper-menu>
+				</paper-menu>
 			</paper-header-panel>
 
 			<paper-header-panel main>
-                <paper-toolbar hidden$="{{toggleView}}">
-                    <paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-                    <div class="title">ANDрејевићи {{field}} {{value}}</div>
-                    <paper-spinner active$="[[loading]]"></paper-spinner>
-                    <paper-icon-button icon="icons:search" on-tap="_showSearch"></paper-icon-button>
-                </paper-toolbar>
+				<paper-toolbar hidden$="{{toggleView}}">
+					<paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
+					<div class="title">ANDрејевићи {{field}} {{value}}</div>
+					<paper-spinner active$="[[loading]]"></paper-spinner>
+					<paper-icon-button icon="icons:search" on-tap="_showSearch"></paper-icon-button>
+				</paper-toolbar>
 
-                <iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
-                    <div hidden$="{{toggleView}}" id="grid">
+				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
+					<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
+							data-view="grid"
 							selected="{{selected}}"
 							items="{{items}}"></list-grid>
-                    </div>
 
-                    <div hidden$="{{!toggleView}}" id="detail">
 						<list-detail
 							kind="{{kind}}"
+							data-view="detail"
 							selected="{{selected}}"
 							items="{{items}}"></list-detail>
-                    </div>
-                </iron-scroll-threshold>
-            </paper-header-panel>
+					</iron-pages>
+				</iron-scroll-threshold>
+			</paper-header-panel>
 		</paper-drawer-panel>
 	</template>
 
@@ -132,9 +125,12 @@
 		Polymer({
 			is: 'list-page',
 			properties: {
-                items: { type: Array, value: [] },
-                loading: Boolean,
-                toggleView: {
+				items: {
+					type: Array,
+					value: []
+				},
+				loading: Boolean,
+				toggleView: {
 					type: Boolean,
 					value: false,
 					notify: true
@@ -148,59 +144,58 @@
 			listeners: {
 				'show-detail': '_toggleView',
 				'show-grid': '_toggleView'
-
 			},
 			_clearItems: function(page) {
 				if (page == null) return true;
 				return false;
 			},
 			_url: function(kind, page, field, value) {
-				var url, prefix = '/api', sufix = kind;
+				var url, prefix = '/api',
+					sufix = kind;
 				if (field && value) {
 					url = [prefix, sufix, field, value].join('/');
 				} else {
 					url = [prefix, sufix].join('/');
 				}
-                if (page != null) url += '?page=' + page;
-				console.log(url);
-                return url;
-            },
-			_urlFilter: function(kind) {
-				var prefix = '/api/filter', sufix = kind;
-                var url = [prefix, sufix].join('/');
-                console.log(url);
-                return url;
+				if (page != null) url += '?page=' + page;
+				return url;
 			},
-            _loadMore: function() {
-                if (this.$.list_ajax.lastRequest) {
-                    this.$.list_ajax.lastRequest.abort();
-                }
-                if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
-                    this.page = this.$.list_ajax.lastResponse.next;
-                    this.fire('url-changed');
-                }
-            },
+			_urlFilter: function(kind) {
+				var prefix = '/api/filter',
+					sufix = kind;
+				var url = [prefix, sufix].join('/');
+				return url;
+			},
+			_loadMore: function() {
+				if (this.$.list_ajax.lastRequest) {
+					this.$.list_ajax.lastRequest.abort();
+				}
+				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
+					this.page = this.$.list_ajax.lastResponse.next;
+					this.fire('url-changed');
+				}
+			},
 			handler: function(request) {
-                var response = request.detail.response;
-                if (this.clearItems) this.items = [];
-                response.objects.forEach(function(item) {
-                    this.push('items', item);
-                }, this);
-                this.$.scrollTheshold.clearTriggers();
+				var response = request.detail.response;
+				if (this.clearItems) this.items = [];
+				response.objects.forEach(function(item) {
+					this.push('items', item);
+				}, this);
+				this.$.scrollTheshold.clearTriggers();
 			},
 			_applyFilter: function(e) {
-                this.field = e.model.row.field_name;
-                this.value = e.model.rec.name;
-                this.page = null;
-            },
+				this.field = e.model.row.field_name;
+				this.value = e.model.rec.name;
+				this.page = null;
+			},
 			_clearFilter: function() {
 				this.field = '';
-                this.value = '';
-                this.page = null;
+				this.value = '';
+				this.page = null;
 			},
 			_selectedFilter: function(current, value) {
-                if (current == value) return 'selected';
-            },
+				if (current == value) return 'activeFilterClass';
+			},
 			_kindChanged: function(kind) {
 				this.field = '';
 				this.value = '';
@@ -210,11 +205,16 @@
 				var drawer = this.$.drawer;
 				if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
 					// drawer.togglePanel();
-                } else {
+				} else {
 					drawer.forceNarrow = !drawer.forceNarrow;
 				}
-                this.toggleView = !this.toggleView;
-            },
+				this.toggleView = !this.toggleView;
+				if (this.toggleView) {
+					this.$.switch.selected = 'detail';
+				} else {
+					this.$.switch.selected = 'grid';
+				}
+			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
