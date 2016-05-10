@@ -195,11 +195,13 @@
 			_applyFilter: function(e) {
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
+				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
 				this.page = null;
 			},
 			_clearFilter: function() {
 				this.field = '';
 				this.value = '';
+				this.set('route.path', ['', this.kind].join('/'));
 				this.page = null;
 			},
 			_selectedFilter: function(current, value) {
