@@ -20,8 +20,8 @@
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-
 <link rel="import" href="../styles/shared-styles.html">
+
 <link rel="import" href="./list-grid.html">
 <link rel="import" href="./list-detail.html">
 
@@ -61,7 +61,7 @@
 		</style>
 
 		<iron-ajax id="list_ajax" auto
-			url="{{_url(kind, page, field, value)}}"
+			url="{{url}}"
 			handle-as="json"
 			on-response="handler"
 			loading="{{loading}}"
@@ -110,7 +110,7 @@
 						<iron-icon icon="icons:search"></iron-icon>
 						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
 						<paper-input id="inputSearch" placeholder="search"
-						value="{{find::inputSearch}}"></paper-input>
+							value="{{find::inputSearch}}"></paper-input>
 					</paper-item>
 
 				</paper-menu>
@@ -150,6 +150,10 @@
 					type: Array,
 					value: []
 				},
+				url: {
+					computed: '_url(kind, page, field, value)',
+					notify: true
+				},
 				loading: Boolean,
 				toggleView: {
 					type: Boolean,
@@ -181,20 +185,23 @@
 				return false;
 			},
 			_url: function(kind, page, field, value) {
-				var url, prefix = '/api',
-					sufix = kind;
-				if (field && value) {
-					url = [prefix, sufix, field, value].join('/');
+				var url, prefix = '/api';
+
+				if (kind == 'search' && field != '') {
+					url = [prefix, kind].join('/') + '?find=' + field;
+					if (page != null) url += '&page=' + page;
+				} else if (field && value) {
+					url = [prefix, kind, field, value].join('/');
+					if (page != null) url += '?page=' + page;
 				} else {
-					url = [prefix, sufix].join('/');
+					url = [prefix, kind].join('/');
+					if (page != null) url += '?page=' + page;
 				}
-				if (page != null) url += '?page=' + page;
 				return url;
 			},
 			_urlFilter: function(kind) {
-				var prefix = '/api/filter',
-					sufix = kind;
-				var url = [prefix, sufix].join('/');
+				var url, prefix = '/api/filter';
+				url = [prefix, kind].join('/');
 				return url;
 			},
 			_loadMore: function() {
@@ -249,11 +256,13 @@
 				}
 			},
 			_onSearch: function() {
+				console.log(this.field);
 				console.log(this.find);
-				this.field = '';
+				this.field = this.find;
 				this.value = '';
-				this.set('route.path', '/api/search?find=' + this.find);
+				this.set('route.path', '/search/' + this.field);
 				this.page = null;
+				this.fire('url-changed');
 			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

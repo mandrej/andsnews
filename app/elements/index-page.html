@@ -8,6 +8,7 @@
 	<template>
 		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
 
+		<!-- /(photo|entry|search) -->
 		<carbon-route
 			route="{{route}}"
 			pattern="/:kind"
@@ -17,17 +18,31 @@
 
 		<carbon-route
 			route="{{tail}}"
-			pattern="/:field/:value"
-			data="{{dataFilter}}"
-			tail="{{tailFilter}}"
-			active="{{activeFilter}}"></carbon-route>
+			pattern="/:field"
+			data="{{dataField}}"
+			tail="{{tailField}}"
+			active="{{activeField}}"></carbon-route>
+
+		<carbon-route
+			route="{{tailField}}"
+			pattern="/:value"
+			data="{{dataValue}}"
+			tail="{{tailValue}}"
+			active="{{activeValue}}"></carbon-route>
+
+		<!-- <pre>
+			kind	{{data.kind}}	{{active}}
+
+			field	{{dataField.field}}	{{activeField}}
+			value	{{dataValue.value}}	{{activeValue}}
+		</pre> -->
 
         <list-page
             page={{page}}
             kind="{{data.kind}}"
-            field="{{dataFilter.field}}"
-            value="{{dataFilter.value}}"
-            route="{{route}}"></list-page>
+            field="{{dataField.field}}"
+            value="{{dataValue.value}}"
+		    route="{{route}}"></list-page>
 	</template>
 
 	<script>
