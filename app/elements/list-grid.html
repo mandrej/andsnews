@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../styles/shared-styles.html">
 
@@ -17,7 +16,7 @@
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
             }
-            .photo {
+            .photo, .entry {
                 position: relative;
                 width: 20%;
 				height: 200px;
@@ -25,7 +24,19 @@
 			}
             .photo:hover .detail { opacity: 1; }
             .photo > iron-image {
-                @apply(--layout-flex);page
+                @apply(--layout-flex);
+            }
+            .entry {
+                background-color: var(--google-yellow-100);
+                @apply(--layout-vertical);
+                @apply(--layout-center-justified);
+            }
+            .entry > div {
+                margin: 16px;
+            }
+            .entry > .headline {
+                text-overflow: ellipsis;
+                @apply(--paper-font-headline);
             }
             .photo > .detail {
                 position: absolute;
@@ -40,31 +51,28 @@
                 opacity: 0;
                 transition: opacity 0.1s;
             }
-            @media (max-width: 1024px) {.photo{ width: 25%; height: 200px;} }
-            @media (max-width: 848px) { .photo{ width: 33.3333333%; height: 200px;} }
-            @media (max-width: 600px) { .photo{ width: 50%; height: 300px;} }
-            @media (max-width: 432px) { .photo{ width: 100%; height: 350px;} }
+            @media (max-width: 1024px) {.photo, .entry { width: 25%; height: 200px;} }
+            @media (max-width: 848px) { .photo, .entry { width: 33.3333333%; height: 200px;} }
+            @media (max-width: 600px) { .photo, .entry { width: 50%; height: 300px;} }
+            @media (max-width: 432px) { .photo, .entry { width: 100%; height: 350px;} }
 
 			iron-image { width: 100%; height: 100%; }
         </style>
 
-        <div hidden$="{{!showingPhotos}}" class="content">
+        <div class="content">
             <template is="dom-repeat" items="{{items}}" index-as="index">
-                <div class="photo" on-tap="_showDetail">
+                <div hidden$="[[!_showPhoto(item)]]" class="photo" on-tap="_showDetail">
                     <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
                     <div class="detail">[[item.headline]]</div>
                     <paper-ripple></paper-ripple>
                 </div>
-            </template>
-        </div>
-        <div hidden$="{{showingPhotos}}" class="content">
-            <template is="dom-repeat" items="{{items}}" index-as="index">
-                <paper-card heading="[[item.headline]]" on-tap="_showDetail" elevation="0" animated-shadow="false">
-                    <div class="card-content">
-                        [[item.summary]]
+                <div hidden$="[[_showPhoto(item)]]" class="entry" on-tap="_showDetail">
+                    <div class="self-center">
+                        <p class="headline">[[item.headline]]</p>
+                        <p>[[item.date]]</p>
                     </div>
                     <paper-ripple></paper-ripple>
-                </paper-card>
+                </div>
             </template>
         </div>
 
@@ -81,16 +89,13 @@
                     type: Number,
                     value: 0,
                     notify: true
-                },
-                showingPhotos: {
-                    computed: '_showingPhotos(kind)',
-                    notify: true
-                },
+                }
             },
-            _showingPhotos: function(kind) {
-                return kind == 'photo';
+            _showPhoto: function(item) {
+                return item.kind == 'photo';
             },
             _showDetail: function(e) {
+                console.log(e.model);
                 this.selected = e.model.index;
                 this.fire('show-detail');
             }

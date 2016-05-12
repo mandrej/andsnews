@@ -26,8 +26,8 @@
         </style>
 
         <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
-            <template is="dom-if" if="{{showingPhotos}}" restamp="true">
-                <template is="dom-repeat" items="{{items}}">
+            <template is="dom-repeat" items="{{items}}">
+                <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
                         <paper-toolbar>
                             <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
@@ -47,9 +47,7 @@
                         <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
                     </div>
                 </template>
-            </template>
-            <template is="dom-if" if={{!showingPhotos}} restamp="true">
-                <template is="dom-repeat" items="{{items}}">
+                <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
                         <paper-toolbar>
                             <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
@@ -79,17 +77,13 @@
                     type: Number,
                     value: 0,
                     notify: true
-                },
-                showingPhotos: {
-                    computed: '_showingPhotos(kind)',
-                    notify: true
-                },
+                }
             },
-            _showingPhotos: function(kind) {
-                return kind == 'photo';
+            _showPhoto: function(item) {
+                return item.kind == 'photo';
             },
             _showList: function(e) {
-                this.selected = e.model.index;
+                // this.selected = e.model.index;
                 this.fire('show-grid');
             },
             _showExif: function(e) {
