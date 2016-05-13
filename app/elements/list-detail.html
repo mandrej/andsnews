@@ -23,6 +23,11 @@
                 cursor: default;
             }
             iron-image { width: 100%; height: 100%; }
+            /* not working */
+            figure { margin 0.5em 0; }
+            figure.left { float: left; margin-right: 0.5em; }
+            figure.right { float: right; margin-left: 0.5em; }
+            figure img { width: 100%; }
         </style>
 
         <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
@@ -54,7 +59,7 @@
                             <div class="title">[[item.headline]]</div>
                         </paper-toolbar>
                         <paper-card elevation="0" animated-shadow="false">
-                            <div class="card-content">
+                            <div class="card-content" style="padding: 16px">
                                 <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
                                 <template is="juicy-html" content$="[[item.body]]"></template>
                             </div>

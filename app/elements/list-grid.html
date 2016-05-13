@@ -60,19 +60,23 @@
         </style>
 
         <div class="content">
-            <template is="dom-repeat" items="{{items}}" index-as="index">
-                <div hidden$="[[!_showPhoto(item)]]" class="photo" on-tap="_showDetail">
-                    <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                    <div class="detail">[[item.headline]]</div>
-                    <paper-ripple></paper-ripple>
-                </div>
-                <div hidden$="[[_showPhoto(item)]]" class="entry" on-tap="_showDetail">
-                    <div class="self-center">
-                        <p class="headline">[[item.headline]]</p>
-                        <p>[[item.date]]</p>
+            <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
+                <template is="dom-if" if="[[_showPhoto(item)]]">
+                    <div class="photo" on-tap="_showDetail">
+                        <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
+                        <div class="detail">[[item.headline]]</div>
+                        <paper-ripple></paper-ripple>
                     </div>
-                    <paper-ripple></paper-ripple>
-                </div>
+                </template>
+                <template is="dom-if" if="[[!_showPhoto(item)]]">
+                    <div class="entry" on-tap="_showDetail">
+                        <div class="self-center">
+                            <p class="headline">[[item.headline]]</p>
+                            <p>[[item.date]]</p>
+                        </div>
+                        <paper-ripple></paper-ripple>
+                    </div>
+                </template>
             </template>
         </div>
 
@@ -95,8 +99,9 @@
                 return item.kind == 'photo';
             },
             _showDetail: function(e) {
-                console.log(e.model);
-                this.selected = e.model.index;
+                // this.selected = e.model.index; without dom-if
+                var model = this.$.repeater.modelForElement(e.target);
+                this.selected = model.index;
                 this.fire('show-detail');
             }
         });

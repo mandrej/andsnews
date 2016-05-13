@@ -30,13 +30,6 @@
 			tail="{{tailValue}}"
 			active="{{activeValue}}"></carbon-route>
 
-		<!-- <pre>
-			kind	{{data.kind}}	{{active}}
-
-			field	{{dataField.field}}	{{activeField}}
-			value	{{dataValue.value}}	{{activeValue}}
-		</pre> -->
-
         <list-page
             page={{page}}
             kind="{{data.kind}}"
@@ -53,10 +46,6 @@
 					this.set('route.path', '/photo');
 					this.kind = 'photo';
 				}
-				// if (!this.field || !this.value) {
-				// 	this.set('dataFilter.field', '');
-				// 	this.set('dataFilter.value', '');
-				// }
 			},
 			properties: {
 				page: { value: null, notify: true }
