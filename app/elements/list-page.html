@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<!-- <link rel="import" href="../bower_components/iron-input/iron-input.html"> -->
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
@@ -38,12 +39,19 @@
 				@apply(--layout-fullbleed);
 				@apply(--layout-vertical);
 			}
+			paper-input {
+				--paper-input-container-input-color: var(--dark-theme-text-color);
+			}
 			paper-dialog {
 				position: fixed;
 				height: auto;
 				left: 0;
 				right: 0;
 				bottom: 50px;
+			}
+			.big {
+				--iron-icon-height: 32px;
+    			--iron-icon-width: 32px;
 			}
 			.content {
 				margin: 0 16px;
@@ -67,28 +75,36 @@
 			loading="{{loading}}"
 			debounce-duration="300"></iron-ajax>
 
-		<iron-ajax auto
+		<!-- <iron-ajax auto
 			url="{{_urlFilter(kind)}}"
 			handle-as="json"
 			last-response="{{response}}"
-			debounce-duration="300"></iron-ajax>
+			debounce-duration="300"></iron-ajax> -->
 
 		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
-				<paper-menu attr-for-selected="kind-page" selected="{{data.kind}}" class="fit">
-					<a class="paper-item-link" kind-page="photo" href="#/photo">
-						<paper-item>
-							<iron-icon icon="image:photo-camera"></iron-icon>
-							<span>Photos</span>
-						</paper-item>
-					</a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry">
-						<paper-item>
-							<iron-icon icon="icons:description"></iron-icon>
-							<span>Texts</span>
-						</paper-item>
-					</a>
-					<div class="layout vertical">
+				<paper-toolbar>
+					<iron-icon class="big" icon="icons:search" style="margin-right: 16px"></iron-icon>
+					<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+					<paper-input id="inputSearch" placeholder="search" no-label-float
+						value="{{search::input}}"></paper-input>
+				</paper-toolbar>
+
+				<paper-menu attr-for-selected="kind-page" selected="{{kind}}" class="fit">
+					<paper-item kind-page="photo">
+						<a class="paper-item-link" href="#/photo">
+							<iron-icon icon="image:photo-camera"></iron-icon> Photos
+						</a>
+					</paper-item>
+					<paper-item kind-page="entry">
+						<a class="paper-item-link" href="#/entry">
+							<iron-icon icon="icons:description"></iron-icon> Texts
+						</a>
+					</paper-item>
+					<div class="fixed-bottom">
+						<paper-item>АNDS 2008-2016 v.1602</paper-item>
+					</div>
+					<!-- <div class="layout vertical">
 						<paper-item on-tap="_clearFilter">
 							<iron-icon icon="icons:filter-list"></iron-icon>
 							<span>Filters</span>
@@ -103,15 +119,7 @@
 								</template>
 							</template>
 						</div>
-					</div>
-
-					<paper-item>
-						<!-- <iron-icon icon="icons:search"></iron-icon> -->
-						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-						<paper-input id="inputSearch" placeholder="search"
-							value="{{search::input}}"></paper-input>
-					</paper-item>
-
+					</div> -->
 				</paper-menu>
 			</paper-header-panel>
 
@@ -122,7 +130,7 @@
 					<paper-spinner active$="[[loading]]"></paper-spinner>
 				</paper-toolbar>
 
-				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
+				<iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
 					<neon-animated-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
@@ -198,11 +206,11 @@
 				}
 				return url;
 			},
-			_urlFilter: function(kind) {
-				var url, prefix = '/api/filter';
-				if (kind != 'search') url = [prefix, kind].join('/');
-				return url;
-			},
+			// _urlFilter: function(kind) {
+			// 	var url, prefix = '/api/filter';
+			// 	if (kind != 'search') url = [prefix, kind].join('/');
+			// 	return url;
+			// },
 			_loadMore: function() {
 				if (this.$.list_ajax.lastRequest) {
 					this.$.list_ajax.lastRequest.abort();
@@ -240,14 +248,19 @@
 				this.field = null;
 				this.value = null;
 				this.page = null;
+				this.search = null;
+				// this._toggleMenu();
 			},
-			_toggleView: function(e) {
+			_toggleMenu: function() {
 				var drawer = this.$.drawer;
 				if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
 					// drawer.togglePanel();
 				} else {
 					drawer.forceNarrow = !drawer.forceNarrow;
 				}
+			},
+			_toggleView: function(e) {
+				this._toggleMenu();
 				this.toggleView = !this.toggleView;
 				if (this.toggleView) {
 					this.$.switch.selected = 'detail';

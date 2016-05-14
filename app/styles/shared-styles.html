@@ -6,11 +6,6 @@
 <dom-module id="shared-styles">
     <template>
         <style>
-            body {
-                @apply(--layout-fullbleed);
-                @apply(--paper-font-common-base);
-                background: var(--primary-background-color);
-            }
             paper-header-panel[drawer] {
 				background: var(--paper-grey-300);
 			}
@@ -20,6 +15,7 @@
 			}
             paper-item iron-icon {
                 margin-right: 16px;
+                color: var(--light-theme-secondary-color);
             }
             .space {
                 @apply(--layout-flex);

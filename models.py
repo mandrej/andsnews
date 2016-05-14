@@ -630,12 +630,12 @@ class Photo(ndb.Model):
     def serialize(self):
         data = self.to_dict(exclude=(
             'blob_key', 'dim', 'size', 'ratio',
-            'rgb', 'sat', 'lum', 'hue', 'year',
+            'rgb', 'sat', 'lum', 'hue', 'year', 'filename',
             'aperture', 'shutter', 'focal_length', 'crop_factor'))
         data.update({
             'kind': self.kind.lower(),
             'slug': self.key.string_id(),
-            'url': webapp2.uri_for('photo', slug=self.key.string_id()),
+            # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
         })
         return data
