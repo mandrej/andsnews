@@ -21,11 +21,18 @@
 
 	<!-- Web Components -->
 	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-	<link rel="import" href="./bower_components/polymer/polymer.html">
-	<link rel="import" href="./bower_components/carbon-route/carbon-location.html">
-	<link rel="import" href="./bower_components/carbon-route/carbon-route.html">
+	<script>
+    	/* this script must run before Polymer is imported */
+    	window.Polymer = {
+      		dom: 'shadow',
+      		lazyRegister: true
+    	};
+  	</script>
+	<link rel="import" href="bower_components/polymer/polymer.html">
+	<link rel="import" href="bower_components/carbon-route/carbon-location.html">
+	<link rel="import" href="bower_components/carbon-route/carbon-route.html">
 
-    <link rel="import" href="./elements/list-page.html">
+    <link rel="import" href="elements/list-page.html">
 </head>
 <body class="fullbleed vertical" unresolved>
 	<dom-module id="index-page">
@@ -55,8 +62,7 @@
 				active="{{activeValue}}"></carbon-route>
 
 	        <list-page
-	            page={{page}}
-	            kind="{{data.kind}}"
+				kind="{{data.kind}}"
 	            field="{{dataField.field}}"
 	            value="{{dataValue.value}}"
 			    route="{{route}}"></list-page>
@@ -70,9 +76,6 @@
 						this.set('route.path', '/photo');
 						this.kind = 'photo';
 					}
-				},
-				properties: {
-					page: { value: null, notify: true }
 				}
 			});
 		</script>

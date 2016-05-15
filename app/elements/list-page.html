@@ -9,7 +9,6 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<!-- <link rel="import" href="../bower_components/iron-input/iron-input.html"> -->
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
@@ -23,8 +22,8 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../styles/shared-styles.html">
 
-<link rel="import" href="./list-grid.html">
-<link rel="import" href="./list-detail.html">
+<link rel="import" href="list-grid.html">
+<link rel="import" href="list-detail.html">
 
 <dom-module id="list-page">
 	<template>
@@ -35,9 +34,8 @@
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
-			neon-animated-pages {
-				@apply(--layout-fullbleed);
-				@apply(--layout-vertical);
+			neon-animated-pages, iron-scroll-threshold {
+				@apply(--layout-fit);
 			}
 			paper-input {
 				--paper-input-container-input-color: var(--dark-theme-text-color);
@@ -90,7 +88,7 @@
 						value="{{search::input}}"></paper-input>
 				</paper-toolbar>
 
-				<paper-menu attr-for-selected="kind-page" selected="{{kind}}" class="fit">
+				<paper-menu attr-for-selected="kind-page" selected="{{kind}}">
 					<paper-item kind-page="photo">
 						<a class="paper-item-link" href="#/photo">
 							<iron-icon icon="image:photo-camera"></iron-icon> Photos
@@ -101,9 +99,13 @@
 							<iron-icon icon="icons:description"></iron-icon> Texts
 						</a>
 					</paper-item>
-					<div class="fixed-bottom">
-						<paper-item>АNDS 2008-2016 v.1602</paper-item>
+
+					<div class="flex self-end" style="padding: 0 16px; font-size: 12px">
+						Use fields author, tags, year, month for searching:
+						year: 2016 tags: milan
+						АNDS 2008-2016 v.1602
 					</div>
+
 					<!-- <div class="layout vertical">
 						<paper-item on-tap="_clearFilter">
 							<iron-icon icon="icons:filter-list"></iron-icon>
@@ -153,6 +155,11 @@
 		Polymer({
 			is: 'list-page',
 			properties: {
+				page: {
+					type: String,
+					value: null,
+					notify: true
+				},
 				items: {
 					type: Array,
 					value: []
@@ -194,15 +201,15 @@
 			_url: function(kind, page, field, value) {
 				var url, prefix = '/api';
 
-				if (kind == 'search' && field != '') {
+				if (kind == 'search' && field) {
 					url = [prefix, kind].join('/') + '?find=' + field;
-					if (page != null) url += '&page=' + page;
+					if (page) url += '&page=' + page;
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
-					if (page != null) url += '?page=' + page;
+					if (page) url += '?page=' + page;
 				} else {
 					url = [prefix, kind].join('/');
-					if (page != null) url += '?page=' + page;
+					if (page) url += '?page=' + page;
 				}
 				return url;
 			},
@@ -249,7 +256,6 @@
 				this.value = null;
 				this.page = null;
 				this.search = null;
-				// this._toggleMenu();
 			},
 			_toggleMenu: function() {
 				var drawer = this.$.drawer;
