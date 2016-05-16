@@ -53,6 +53,9 @@
 			}
 			.content {
 				margin: 0 16px;
+                @apply(--layout-horizontal);
+                @apply(--layout-start-aligned);
+                @apply(--layout-wrap);
 			}
 			.rec {
 				display: inline-block;
@@ -73,11 +76,11 @@
 			loading="{{loading}}"
 			debounce-duration="300"></iron-ajax>
 
-		<!-- <iron-ajax auto
-			url="{{_urlFilter(kind)}}"
+		<iron-ajax auto
+			url="{{urlFilter}}"
 			handle-as="json"
 			last-response="{{response}}"
-			debounce-duration="300"></iron-ajax> -->
+			debounce-duration="300"></iron-ajax>
 
 		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
@@ -100,18 +103,17 @@
 						</a>
 					</paper-item>
 
-					<div class="flex self-end" style="padding: 0 16px; font-size: 12px">
-						Use fields author, tags, year, month for searching:
-						year: 2016 tags: milan
-						АNDS 2008-2016 v.1602
-					</div>
+					<!--<div class="flex self-end" style="padding: 0 16px; font-size: 12px">-->
+						<!--Use fields author, tags, year, month for searching:-->
+						<!--year: 2016 tags: milan-->
+						<!--АNDS 2008-2016 v.1602-->
+					<!--</div>-->
 
-					<!-- <div class="layout vertical">
+					<div class="layout vertical">
 						<paper-item on-tap="_clearFilter">
-							<iron-icon icon="icons:filter-list"></iron-icon>
-							<span>Filters</span>
+							<iron-icon icon="icons:filter-list"></iron-icon> Filters
 						</paper-item>
-						<div class="layout horizontal wrap content">
+						<div class="content">
 							<template is="dom-repeat" items="[[response]]" as="row">
 								<template is="dom-repeat" items="[[row.items]]" as="rec">
 									<span class$="rec [[_selectedFilter(rec.name, value)]]"
@@ -121,7 +123,7 @@
 								</template>
 							</template>
 						</div>
-					</div> -->
+					</div>
 				</paper-menu>
 			</paper-header-panel>
 
@@ -155,9 +157,14 @@
 		Polymer({
 			is: 'list-page',
 			properties: {
-				page: {
+                page: {
 					type: String,
-					value: null,
+                    value: null,
+					notify: true,
+					// observer: 'propertyChanged'
+				},
+                search: {
+					type: String,
 					notify: true
 				},
 				items: {
@@ -166,9 +173,14 @@
 				},
 				url: {
 					computed: '_url(kind, page, field, value)',
-					notify: true
+					notify: true,
+					observer: 'propertyChanged'
 				},
-				loading: Boolean,
+                urlFilter: {
+                    computed: '_urlFilter(kind)',
+                    notify: true,
+					observer: 'propertyChanged'
+                },
 				toggleView: {
 					type: Boolean,
 					value: false,
@@ -178,27 +190,24 @@
 					computed: '_clearItems(page)',
 					notify: true
 				},
-				search: {
-					type: String,
-					notify: true
-				},
 				targetSearch: {
 					type: Object,
 					value: function() {
 						return this.$.inputSearch
 					}
-				}
+				},
+				loading: Boolean
 			},
-			observers: ['_kindChanged(kind)'],
+            observers: [
+				'_kindChanged(kind)',
+				'_filterChanged(field, value)'
+			],
 			listeners: {
 				'show-detail': '_toggleView',
 				'show-grid': '_toggleView'
 			},
-			_clearItems: function(page) {
-				if (page == null) return true;
-				return false;
-			},
 			_url: function(kind, page, field, value) {
+				console.log('FIRE');
 				var url, prefix = '/api';
 
 				if (kind == 'search' && field) {
@@ -213,11 +222,11 @@
 				}
 				return url;
 			},
-			// _urlFilter: function(kind) {
-			// 	var url, prefix = '/api/filter';
-			// 	if (kind != 'search') url = [prefix, kind].join('/');
-			// 	return url;
-			// },
+			_urlFilter: function(kind) {
+				var url, prefix = '/api/filter';
+				if (kind == 'photo' || kind == 'entry') url = [prefix, kind].join('/');
+				return url;
+			},
 			_loadMore: function() {
 				if (this.$.list_ajax.lastRequest) {
 					this.$.list_ajax.lastRequest.abort();
@@ -227,6 +236,9 @@
 					this.fire('url-changed');
 				}
 			},
+			_clearItems: function(page) {
+				return !page;
+			},
 			handler: function(request) {
 				var response = request.detail.response;
 				if (this.clearItems) this.items = [];
@@ -235,27 +247,39 @@
 				}, this);
 				this.$.scrollTheshold.clearTriggers();
 			},
-			_applyFilter: function(e) {
-				this.field = e.model.row.field_name;
-				this.value = e.model.rec.name;
-				// TODO this.kind != search
-				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
-				this.page = null;
-			},
-			_clearFilter: function() {
-				this.field = null;
-				this.value = null;
-				this.set('route.path', ['', this.kind].join('/'));
-				this.page = null;
-			},
-			_selectedFilter: function(current, value) {
-				if (current == value) return 'activeFilterClass';
-			},
 			_kindChanged: function(kind) {
 				this.field = null;
 				this.value = null;
 				this.page = null;
 				this.search = null;
+			},
+			_filterChanged: function(field, value) {
+				this.fire('url-changed');
+			},
+			_applyFilter: function(e) {
+                // console.log(e);
+				this.field = e.model.row.field_name;
+				this.value = e.model.rec.name;
+                this.page = null;
+				// TODO this.kind != search
+				// console.log(this.kind, this.field, this.value);
+				// this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
+				// this.fire('url-changed');
+			},
+			_clearFilter: function() {
+				this.field = null;
+				this.value = null;
+                this.page = null;
+				this.set('route.path', ['', this.kind].join('/'));
+			},
+			_selectedFilter: function(current, value) {
+				if (current == value) return 'activeFilterClass';
+			},
+			_onSearch: function() {
+				this.field = this.search;
+				this.value = null;
+                this.page = null;
+				this.set('route.path', '/search/' + this.field);
 			},
 			_toggleMenu: function() {
 				var drawer = this.$.drawer;
@@ -273,13 +297,6 @@
 				} else {
 					this.$.switch.selected = 'grid';
 				}
-			},
-			_onSearch: function() {
-				this.field = this.search;
-				this.value = null;
-				this.set('route.path', '/search/' + this.field);
-				this.page = null;
-				this.fire('url-changed');
 			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

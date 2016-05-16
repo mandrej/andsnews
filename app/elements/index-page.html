@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
+
+<link rel="import" href="list-page.html">
+
+<dom-module id="index-page">
+	<template>
+		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
+
+		<!-- /(photo|entry|search) -->
+		<carbon-route
+			route="{{route}}"
+			pattern="/:kind"
+			data="{{data}}"
+			tail="{{tail}}"
+			active="{{active}}"></carbon-route>
+
+		<carbon-route
+			route="{{tail}}"
+			pattern="/:field"
+			data="{{dataField}}"
+			tail="{{tailField}}"
+			active="{{activeField}}"></carbon-route>
+
+		<carbon-route
+			route="{{tailField}}"
+			pattern="/:value"
+			data="{{dataValue}}"
+			tail="{{tailValue}}"
+			active="{{activeValue}}"></carbon-route>
+
+        <list-page
+            page={{page}}
+            kind="{{data.kind}}"
+            field="{{dataField.field}}"
+            value="{{dataValue.value}}"
+		    route="{{route}}"></list-page>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'index-page',
+			attached: function() {
+				if (!this.route.path) {
+					this.set('route.path', '/photo');
+					this.kind = 'photo';
+				}
+			},
+			properties: {
+				page: { value: null, notify: true }
+			}
+		});
+	</script>
+</dom-module>
