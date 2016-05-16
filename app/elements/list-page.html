@@ -22,8 +22,8 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../styles/shared-styles.html">
 
-<link rel="import" href="./list-grid.html">
-<link rel="import" href="./list-detail.html">
+<link rel="import" href="list-grid.html">
+<link rel="import" href="list-detail.html">
 
 <dom-module id="list-page">
 	<template>
@@ -34,9 +34,11 @@
 				@apply(--paper-font-common-base);
 				background: var(--primary-background-color);
 			}
-			neon-animated-pages {
-				@apply(--layout-fullbleed);
-				@apply(--layout-vertical);
+			neon-animated-pages, iron-scroll-threshold {
+				@apply(--layout-fit);
+			}
+			paper-input {
+				--paper-input-container-input-color: var(--dark-theme-text-color);
 			}
 			paper-dialog {
 				position: fixed;
@@ -45,8 +47,15 @@
 				right: 0;
 				bottom: 50px;
 			}
+			/*.big {
+				--iron-icon-height: 32px;
+    			--iron-icon-width: 32px;
+			}*/
 			.content {
 				margin: 0 16px;
+                @apply(--layout-horizontal);
+                @apply(--layout-start-aligned);
+                @apply(--layout-wrap);
 			}
 			.rec {
 				display: inline-block;
@@ -75,25 +84,30 @@
 
 		<paper-drawer-panel id="drawer">
 			<paper-header-panel drawer>
+				<paper-toolbar>
+					<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+					<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+					<paper-input id="inputSearch" placeholder="search" no-label-float
+						value="{{search::input}}"></paper-input>
+				</paper-toolbar>
+
 				<paper-menu attr-for-selected="kind-page" selected="{{data.kind}}" class="fit">
-					<a class="paper-item-link" kind-page="photo" href="#/photo">
-						<paper-item>
-							<iron-icon icon="image:photo-camera"></iron-icon>
-							<span>Photos</span>
-						</paper-item>
-					</a>
-					<a class="paper-item-link" kind-page="entry" href="#/entry">
-						<paper-item>
-							<iron-icon icon="icons:description"></iron-icon>
-							<span>Texts</span>
-						</paper-item>
-					</a>
+					<paper-item kind-page="photo">
+						<a href="#/photo" class="flex">
+							<iron-icon icon="image:photo-camera"></iron-icon>Photos
+						</a>
+					</paper-item>
+					<paper-item kind-page="entry">
+						<a href="#/entry" class="flex">
+							<iron-icon icon="icons:description"></iron-icon>Texts
+						</a>
+					</paper-item>
+
 					<div class="layout vertical">
 						<paper-item on-tap="_clearFilter">
-							<iron-icon icon="icons:filter-list"></iron-icon>
-							<span>Filters</span>
+							<iron-icon icon="icons:filter-list"></iron-icon>Filters
 						</paper-item>
-						<div class="layout horizontal wrap content">
+						<div class="content">
 							<template is="dom-repeat" items="[[response]]" as="row">
 								<template is="dom-repeat" items="[[row.items]]" as="rec">
 									<span class$="rec [[_selectedFilter(rec.name, value)]]"
@@ -104,15 +118,13 @@
 							</template>
 						</div>
 					</div>
-
-					<paper-item>
-						<!-- <iron-icon icon="icons:search"></iron-icon> -->
-						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-						<paper-input id="inputSearch" placeholder="search"
-							value="{{search::input}}"></paper-input>
-					</paper-item>
-
 				</paper-menu>
+				<!-- <div class="flex self-end" style="padding: 0 16px; font-size: 12px">
+					Use fields author, tags, year, month for searching:
+					year: 2016 tags: milan
+					АNDS 2008-2016 v.1602
+				</div> -->
+
 			</paper-header-panel>
 
 			<paper-header-panel main>
@@ -122,7 +134,7 @@
 					<paper-spinner active$="[[loading]]"></paper-spinner>
 				</paper-toolbar>
 
-				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
+				<iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
 					<neon-animated-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
@@ -151,9 +163,9 @@
 				},
 				url: {
 					computed: '_url(kind, page, field, value)',
-					notify: true
+					notify: true,
+					observer: 'propertyChanged'
 				},
-				loading: Boolean,
 				toggleView: {
 					type: Boolean,
 					value: false,
@@ -172,7 +184,8 @@
 					value: function() {
 						return this.$.inputSearch
 					}
-				}
+				},
+				loading: Boolean
 			},
 			observers: ['_kindChanged(kind)'],
 			listeners: {
@@ -180,27 +193,26 @@
 				'show-grid': '_toggleView'
 			},
 			_clearItems: function(page) {
-				if (page == null) return true;
-				return false;
+				return !page;
 			},
 			_url: function(kind, page, field, value) {
 				var url, prefix = '/api';
 
-				if (kind == 'search' && field != '') {
+				if (kind == 'search' && field != null) {
 					url = [prefix, kind].join('/') + '?find=' + field;
-					if (page != null) url += '&page=' + page;
+					if (!!page) url += '&page=' + page;
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
-					if (page != null) url += '?page=' + page;
+					if (!!page) url += '?page=' + page;
 				} else {
 					url = [prefix, kind].join('/');
-					if (page != null) url += '?page=' + page;
+					if (!!page) url += '?page=' + page;
 				}
 				return url;
 			},
 			_urlFilter: function(kind) {
 				var url, prefix = '/api/filter';
-				if (kind != 'search') url = [prefix, kind].join('/');
+				if (kind == 'photo' || kind == 'entry') url = [prefix, kind].join('/');
 				return url;
 			},
 			_loadMore: function() {
@@ -240,6 +252,7 @@
 				this.field = null;
 				this.value = null;
 				this.page = null;
+				this.search = null;
 			},
 			_toggleView: function(e) {
 				var drawer = this.$.drawer;

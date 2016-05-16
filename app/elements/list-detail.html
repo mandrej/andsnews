@@ -13,7 +13,7 @@
         <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
-                display: block;
+                @apply(--layout-fit);
             }
             .swipe {
                 -moz-user-select: none;
@@ -97,7 +97,7 @@
                 if (dialog) {
                     dialog.open();
                 }
-            },
+            }
         });
     </script>
 </dom-module>
