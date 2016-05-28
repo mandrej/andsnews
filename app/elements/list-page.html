@@ -32,7 +32,6 @@
 			:host {
 				display: block;
 				@apply(--paper-font-common-base);
-				background: var(--primary-background-color);
 			}
 			neon-animated-pages, iron-scroll-threshold {
 				@apply(--layout-fit);
@@ -47,10 +46,6 @@
 				right: 0;
 				bottom: 50px;
 			}
-			/*.big {
-				--iron-icon-height: 32px;
-    			--iron-icon-width: 32px;
-			}*/
 			.content {
 				margin: 0 16px;
                 @apply(--layout-horizontal);
@@ -91,22 +86,22 @@
 						value="{{search::input}}"></paper-input>
 				</paper-toolbar>
 
-				<paper-menu attr-for-selected="kind-page" selected="{{data.kind}}" class="fit">
-					<paper-item kind-page="photo">
+				<paper-menu attr-for-selected="kind-page" selected="[[kind]]" class="fit">
+					<paper-item kind-page="photo" on-tap="_kindChanged">
 						<a href="#/photo" class="flex">
 							<iron-icon icon="image:photo-camera"></iron-icon>Photos
 						</a>
 					</paper-item>
-					<paper-item kind-page="entry">
+					<paper-item kind-page="entry" on-tap="_kindChanged">
 						<a href="#/entry" class="flex">
 							<iron-icon icon="icons:description"></iron-icon>Texts
 						</a>
 					</paper-item>
 
-					<div class="layout vertical">
-						<paper-item on-tap="_clearFilter">
+					<!-- <div class="layout vertical"> -->
+						<!-- <paper-item on-tap="_clearFilter">
 							<iron-icon icon="icons:filter-list"></iron-icon>Filters
-						</paper-item>
+						</paper-item> -->
 						<div class="content">
 							<template is="dom-repeat" items="[[response]]" as="row">
 								<template is="dom-repeat" items="[[row.items]]" as="rec">
@@ -117,7 +112,7 @@
 								</template>
 							</template>
 						</div>
-					</div>
+					<!-- </div> -->
 				</paper-menu>
 				<!-- <div class="flex self-end" style="padding: 0 16px; font-size: 12px">
 					Use fields author, tags, year, month for searching:
@@ -187,6 +182,9 @@
 				},
 				loading: Boolean
 			},
+			init: function() {
+				this.fire('kind-changed');
+			},
 			observers: ['_kindChanged(kind)'],
 			listeners: {
 				'show-detail': '_toggleView',
@@ -249,7 +247,7 @@
 				if (current == value) return 'activeFilterClass';
 			},
 			_kindChanged: function(kind) {
-				this.field = null;
+				if (kind != 'search') this.field = null;
 				this.value = null;
 				this.page = null;
 				this.search = null;
@@ -273,7 +271,7 @@
 				this.value = null;
 				this.set('route.path', '/search/' + this.field);
 				this.page = null;
-				this.fire('url-changed');
+				// this.fire('url-changed');
 			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

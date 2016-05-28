@@ -1,34 +1,34 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 
 <link rel="import" href="list-page.html">
 
 <dom-module id="index-page">
 	<template>
-		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
+		<app-location route="{{route}}" use-hash-as-path></app-location>
 
 		<!-- /(photo|entry|search) -->
-		<carbon-route
+		<app-route
 			route="{{route}}"
 			pattern="/:kind"
 			data="{{data}}"
 			tail="{{tail}}"
-			active="{{active}}"></carbon-route>
+			active="{{active}}"></app-route>
 
-		<carbon-route
+		<app-route
 			route="{{tail}}"
 			pattern="/:field"
 			data="{{dataField}}"
 			tail="{{tailField}}"
-			active="{{activeField}}"></carbon-route>
+			active="{{activeField}}"></app-route>
 
-		<carbon-route
+		<app-route
 			route="{{tailField}}"
 			pattern="/:value"
 			data="{{dataValue}}"
 			tail="{{tailValue}}"
-			active="{{activeValue}}"></carbon-route>
+			active="{{activeValue}}"></app-route>
 
         <list-page
             page={{page}}

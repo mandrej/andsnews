@@ -769,6 +769,10 @@ class Entry(ndb.Model):
         data.update({
             'kind': self.kind.lower(),
             'slug': self.key.string_id(),
-            'url': webapp2.uri_for('entry', slug=self.key.string_id()),
+            # 'url': webapp2.uri_for('entry', slug=self.key.string_id()),
         })
+        if self.front >= 0:
+            data.update({
+                'front': self.image_url(self.front)
+            })
         return data

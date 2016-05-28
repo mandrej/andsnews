@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../styles/shared-styles.html">
 
@@ -10,6 +11,7 @@
         <style>
             :host {
                 display: block;
+                padding: 4px;
             }
             .content {
                 @apply(--layout-horizontal);
@@ -18,64 +20,50 @@
             }
             .photo, .entry {
                 position: relative;
-                width: 20%;
-				height: 200px;
+                width: 33.3333333%;
 				cursor: pointer;
 			}
-            .photo:hover .detail { opacity: 1; }
-            .photo > iron-image {
-                @apply(--layout-flex);
+            paper-card {
+                padding: 4px;
+                /*--paper-card-background-color: var(--google-yellow-100);*/
             }
-            .entry {
-                background-color: var(--google-yellow-100);
-                @apply(--layout-vertical);
-                @apply(--layout-center-justified);
+            .photo {
+                height: 250px;
+                /*--paper-card-header-color: #fff;*/
             }
-            .entry > div {
-                margin: 16px;
-            }
-            .entry > .headline {
-                text-overflow: ellipsis;
-                @apply(--paper-font-headline);
-            }
-            .photo > .detail {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.8));
-                color: white;
-                font-size: 20px;
-                font-weight: 100;
-                padding: 20px;
-                opacity: 0;
-                transition: opacity 0.1s;
-            }
-            @media (max-width: 1024px) {.photo, .entry { width: 25%; height: 200px;} }
-            @media (max-width: 848px) { .photo, .entry { width: 33.3333333%; height: 200px;} }
-            @media (max-width: 600px) { .photo, .entry { width: 50%; height: 300px;} }
-            @media (max-width: 432px) { .photo, .entry { width: 100%; height: 350px;} }
+            /*@media (max-width: 1024px) { .photo, .entry { width: 25%; } }*/
+            @media (max-width: 848px)  { .photo, .entry { width: 33.3333333%; } }
+            @media (max-width: 768px)  { .photo, .entry { width: 50%; } }
+            @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
 
-			iron-image { width: 100%; height: 100%; }
+            .photo iron-image {
+                width: 100%;
+                height: 100%;
+            }
+            .entry iron-image {
+                width: 100%;
+                height: 50px;
+            }
         </style>
 
         <div class="content">
             <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
-                    <div class="photo" on-tap="_showDetail">
-                        <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                        <div class="detail">[[item.headline]]</div>
+                    <paper-card class="photo" on-tap="_showDetail" elevation="0">
+                        <iron-image src="[[item.serving_url]]=s0" preload sizing="cover"></iron-image>
                         <paper-ripple></paper-ripple>
-                    </div>
+                    </paper-card>
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
-                    <div class="entry" on-tap="_showDetail">
-                        <div class="self-center">
-                            <p class="headline">[[item.headline]]</p>
-                            <p>[[item.date]]</p>
+                    <paper-card heading="[[item.headline]]" class="entry" elevation="0" on-tap="_showDetail">
+                        <div class="card-content">
+                            <template is="dom-if" if="[[item.front]]" restamp="true">
+                                <iron-image src="[[item.front]]/normal" preload sizing="cover"></iron-image>
+                            </template>
+                            [[item.summary]]
                         </div>
                         <paper-ripple></paper-ripple>
-                    </div>
+                    </paper-card>
                 </template>
             </template>
         </div>
@@ -101,6 +89,7 @@
             _showDetail: function(e) {
                 // this.selected = e.model.index; without dom-if
                 var model = this.$.repeater.modelForElement(e.target);
+                console.log(model.index);
                 this.selected = model.index;
                 this.fire('show-detail');
             }
