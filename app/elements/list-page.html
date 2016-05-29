@@ -78,7 +78,7 @@
 			debounce-duration="300"></iron-ajax>
 
 		<paper-drawer-panel id="drawer">
-			<paper-header-panel drawer>
+			<paper-header-panel class="flex" drawer>
 				<paper-toolbar>
 					<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
 					<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
@@ -98,28 +98,24 @@
 						</a>
 					</paper-item>
 
-					<!-- <div class="layout vertical"> -->
-						<!-- <paper-item on-tap="_clearFilter">
-							<iron-icon icon="icons:filter-list"></iron-icon>Filters
-						</paper-item> -->
-						<div class="content">
-							<template is="dom-repeat" items="[[response]]" as="row">
-								<template is="dom-repeat" items="[[row.items]]" as="rec">
-									<span class$="rec [[_selectedFilter(rec.name, value)]]"
-										data-field$="[[row.field_name]]" on-tap="_applyFilter">
-					                    [[rec.name]]
-					                </span>
-								</template>
+					<div class="content">
+						<template is="dom-repeat" items="[[response]]" as="row">
+							<template is="dom-repeat" items="[[row.items]]" as="rec">
+								<span class$="rec [[_selectedFilter(rec.name, value)]]"
+									data-field$="[[row.field_name]]" on-tap="_applyFilter">
+				                    [[rec.name]]
+				                </span>
 							</template>
-						</div>
-					<!-- </div> -->
+						</template>
+					</div>
+					<!-- <div class="content">
+						<p>
+							Use fields author, tags, year, month for searching:
+							year: 2016 tags: milan
+						</p>
+						<p>АNDS 2008-2016 v.1602</p>
+					</div> -->
 				</paper-menu>
-				<!-- <div class="flex self-end" style="padding: 0 16px; font-size: 12px">
-					Use fields author, tags, year, month for searching:
-					year: 2016 tags: milan
-					АNDS 2008-2016 v.1602
-				</div> -->
-
 			</paper-header-panel>
 
 			<paper-header-panel main>
@@ -182,9 +178,6 @@
 				},
 				loading: Boolean
 			},
-			init: function() {
-				this.fire('kind-changed');
-			},
 			observers: ['_kindChanged(kind)'],
 			listeners: {
 				'show-detail': '_toggleView',
@@ -210,8 +203,11 @@
 			},
 			_urlFilter: function(kind) {
 				var url, prefix = '/api/filter';
-				if (kind == 'photo' || kind == 'entry') url = [prefix, kind].join('/');
-				return url;
+				if (kind == 'photo' || kind == 'entry') {
+					return [prefix, kind].join('/');
+				} else {
+					this.response = null;
+				}
 			},
 			_loadMore: function() {
 				if (this.$.list_ajax.lastRequest) {
@@ -251,11 +247,12 @@
 				this.value = null;
 				this.page = null;
 				this.search = null;
+				this.items = [];
 			},
 			_toggleView: function(e) {
 				var drawer = this.$.drawer;
 				if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
-					// drawer.togglePanel();
+					// drawer.togglePanel();s
 				} else {
 					drawer.forceNarrow = !drawer.forceNarrow;
 				}

@@ -598,11 +598,11 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except (images.Error, apiproxy_errors.DeadlineExceededError), e:
-            logging.error(e.message)
-        return None
+        # try:
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        # except (images.Error, apiproxy_errors.DeadlineExceededError), e:
+        #     logging.error(e.message)
+        # return None
 
     @property
     def hex(self):
@@ -771,7 +771,7 @@ class Entry(ndb.Model):
             'slug': self.key.string_id(),
             # 'url': webapp2.uri_for('entry', slug=self.key.string_id()),
         })
-        if self.front >= 0:
+        if self.front != -1:
             data.update({
                 'front': self.image_url(self.front)
             })
