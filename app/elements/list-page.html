@@ -13,15 +13,14 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../styles/shared-styles.html">
 
+<link rel="import" href="list-filter.html">
 <link rel="import" href="list-grid.html">
 <link rel="import" href="list-detail.html">
 
@@ -33,7 +32,7 @@
 				display: block;
 				@apply(--paper-font-common-base);
 			}
-			neon-animated-pages, iron-scroll-threshold {
+			iron-pages, iron-scroll-threshold {
 				@apply(--layout-fit);
 			}
 			paper-input {
@@ -46,22 +45,6 @@
 				right: 0;
 				bottom: 50px;
 			}
-			.content {
-				margin: 0 16px;
-                @apply(--layout-horizontal);
-                @apply(--layout-start-aligned);
-                @apply(--layout-wrap);
-			}
-			.rec {
-				display: inline-block;
-				padding: 2px 4px;
-				margin: 0 8px 8px 0;
-				cursor: pointer;
-			}
-			.rec.activeFilterClass {
-				color: white;
-				background-color: var(--paper-red-500);
-			}
 		</style>
 
 		<iron-ajax id="list_ajax" auto
@@ -69,12 +52,6 @@
 			handle-as="json"
 			on-response="handler"
 			loading="{{loading}}"
-			debounce-duration="300"></iron-ajax>
-
-		<iron-ajax auto
-			url="{{_urlFilter(kind)}}"
-			handle-as="json"
-			last-response="{{response}}"
 			debounce-duration="300"></iron-ajax>
 
 		<paper-drawer-panel id="drawer">
@@ -98,16 +75,12 @@
 						</a>
 					</paper-item>
 
-					<div class="content">
-						<template is="dom-repeat" items="[[response]]" as="row">
-							<template is="dom-repeat" items="[[row.items]]" as="rec">
-								<span class$="rec [[_selectedFilter(rec.name, value)]]"
-									data-field$="[[row.field_name]]" on-tap="_applyFilter">
-				                    [[rec.name]]
-				                </span>
-							</template>
-						</template>
-					</div>
+					<list-filter
+						kind="[[kind]]"
+						field="{{field}}"
+						value="{{value}}"
+						route="{{route}}"></list-filter>
+
 					<!-- <div class="content">
 						<p>
 							Use fields author, tags, year, month for searching:
@@ -126,7 +99,7 @@
 				</paper-toolbar>
 
 				<iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
-					<neon-animated-pages selected="grid" attr-for-selected="data-view" id="switch">
+					<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
 							data-view="grid"
@@ -138,7 +111,7 @@
 							data-view="detail"
 							selected="{{selected}}"
 							items="{{items}}"></list-detail>
-					</neon-animated-pages>
+					</iron-pages>
 				</iron-scroll-threshold>
 			</paper-header-panel>
 		</paper-drawer-panel>
@@ -201,14 +174,6 @@
 				}
 				return url;
 			},
-			_urlFilter: function(kind) {
-				var url, prefix = '/api/filter';
-				if (kind == 'photo' || kind == 'entry') {
-					return [prefix, kind].join('/');
-				} else {
-					this.response = null;
-				}
-			},
 			_loadMore: function() {
 				if (this.$.list_ajax.lastRequest) {
 					this.$.list_ajax.lastRequest.abort();
@@ -225,22 +190,6 @@
 					this.push('items', item);
 				}, this);
 				this.$.scrollTheshold.clearTriggers();
-			},
-			_applyFilter: function(e) {
-				this.field = e.model.row.field_name;
-				this.value = e.model.rec.name;
-				// TODO this.kind != search
-				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
-				this.page = null;
-			},
-			_clearFilter: function() {
-				this.field = null;
-				this.value = null;
-				this.set('route.path', ['', this.kind].join('/'));
-				this.page = null;
-			},
-			_selectedFilter: function(current, value) {
-				if (current == value) return 'activeFilterClass';
 			},
 			_kindChanged: function(kind) {
 				if (kind != 'search') this.field = null;
@@ -266,9 +215,8 @@
 			_onSearch: function() {
 				this.field = this.search;
 				this.value = null;
-				this.set('route.path', '/search/' + this.field);
 				this.page = null;
-				// this.fire('url-changed');
+				this.set('route.path', '/search/' + this.field);
 			},
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

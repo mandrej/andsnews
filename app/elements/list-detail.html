@@ -34,7 +34,7 @@
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <paper-toolbar>
+                        <paper-toolbar hidden$="{{!toggleView}}">
                             <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                             <div class="title">[[item.headline]]</div>
                             <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
@@ -54,7 +54,7 @@
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
-                        <paper-toolbar>
+                        <paper-toolbar hidden$="{{!toggleView}}">
                             <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                             <div class="title">[[item.headline]]</div>
                         </paper-toolbar>

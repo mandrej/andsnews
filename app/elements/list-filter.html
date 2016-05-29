@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="list-filter">
+    <template>
+        <style is="custom-style" include="shared-styles"></style>
+        <style>
+            :host {
+                margin: 0 16px;
+                @apply(--layout-horizontal);
+                @apply(--layout-start-aligned);
+                @apply(--layout-wrap);
+            }
+            .rec {
+				display: inline-block;
+				padding: 2px 4px;
+				margin: 0 8px 8px 0;
+				cursor: pointer;
+			}
+			.rec.activeFilterClass {
+				color: white;
+				background-color: var(--paper-red-500);
+			}
+        </style>
+
+        <iron-ajax auto
+			url="{{_urlFilter(kind)}}"
+			handle-as="json"
+			last-response="{{response}}"
+			debounce-duration="300"></iron-ajax>
+
+        <template is="dom-repeat" items="[[response]]" as="row">
+            <template is="dom-repeat" items="[[row.items]]" as="rec">
+                <span class$="rec [[_selectedFilter(rec.name, value)]]"
+                    data-field$="[[row.field_name]]" on-tap="_applyFilter">
+                    [[rec.name]]
+                </span>
+            </template>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            is: 'list-filter',
+            _urlFilter: function(kind) {
+				var prefix = '/api/filter';
+				if (kind == 'photo' || kind == 'entry') {
+					return [prefix, kind].join('/');
+				} else {
+					this.response = null;
+				}
+			},
+            _applyFilter: function(e) {
+				this.field = e.model.row.field_name;
+				this.value = e.model.rec.name;
+                this.page = null;
+				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
+			},
+            _selectedFilter: function(current, value) {
+				if (current == value) return 'activeFilterClass';
+			},
+        });
+    </script>
+</dom-module>
