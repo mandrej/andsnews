@@ -1,15 +1,17 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
@@ -32,9 +34,7 @@
 				display: block;
 				@apply(--paper-font-common-base);
 			}
-			iron-pages, iron-scroll-threshold {
-				@apply(--layout-fit);
-			}
+
 			paper-input {
 				--paper-input-container-input-color: var(--dark-theme-text-color);
 			}
@@ -54,51 +54,49 @@
 			loading="{{loading}}"
 			debounce-duration="300"></iron-ajax>
 
-		<paper-drawer-panel id="drawer">
-			<paper-header-panel class="flex" drawer>
-				<paper-toolbar>
-					<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
-					<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-					<paper-input id="inputSearch" placeholder="search" no-label-float
+		<app-drawer-layout id="drawer">
+			<app-drawer>
+				<app-header fixed>
+					<app-toolbar>
+						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+						<paper-input id="inputSearch" placeholder="search" no-label-float
 						value="{{search::input}}"></paper-input>
-				</paper-toolbar>
+					</app-toolbar>
 
-				<paper-menu attr-for-selected="kind-page" selected="[[kind]]" class="fit">
-					<paper-item kind-page="photo" on-tap="_kindChanged">
-						<a href="#/photo" class="flex">
-							<iron-icon icon="image:photo-camera"></iron-icon>Photos
-						</a>
-					</paper-item>
-					<paper-item kind-page="entry" on-tap="_kindChanged">
-						<a href="#/entry" class="flex">
-							<iron-icon icon="icons:description"></iron-icon>Texts
-						</a>
-					</paper-item>
+					<app-toolbar>
+						<paper-menu attr-for-selected="kind-page" selected="[[kind]]" class="fit">
+							<paper-item kind-page="photo" on-tap="_kindChanged">
+								<a href="#/photo" class="flex">
+									<iron-icon icon="image:photo-camera"></iron-icon>Photos
+								</a>
+							</paper-item>
+							<paper-item kind-page="entry" on-tap="_kindChanged">
+								<a href="#/entry" class="flex">
+									<iron-icon icon="icons:description"></iron-icon>Texts
+								</a>
+							</paper-item>
 
-					<list-filter
-						kind="[[kind]]"
-						field="{{field}}"
-						value="{{value}}"
-						route="{{route}}"></list-filter>
+							<list-filter
+								kind="[[kind]]"
+								field="{{field}}"
+								value="{{value}}"
+								route="{{route}}"></list-filter>
+						</paper-menu>
+					</app-toolbar>
+				</app-header>
+			</app-drawer>
 
-					<!-- <div class="content">
-						<p>
-							Use fields author, tags, year, month for searching:
-							year: 2016 tags: milan
-						</p>
-						<p>АNDS 2008-2016 v.1602</p>
-					</div> -->
-				</paper-menu>
-			</paper-header-panel>
+			<app-header-layout>
+				<app-header fixed hidden$="{{toggleView}}">
+					<app-toolbar>
+						<paper-icon-button icon="icons:menu" drawer-toggle></paper-icon-button>
+						<div title>ANDрејевићи {{kind}} {{field}} {{value}}</div>
+						<paper-spinner active$="[[loading]]"></paper-spinner>
+					</app-toolbar>
+				</app-header>
 
-			<paper-header-panel main>
-				<paper-toolbar hidden$="{{toggleView}}">
-					<paper-icon-button icon="icons:menu" paper-drawer-toggle></paper-icon-button>
-					<div class="title">ANDрејевићи {{kind}} {{field}} {{value}}</div>
-					<paper-spinner active$="[[loading]]"></paper-spinner>
-				</paper-toolbar>
-
-				<iron-scroll-threshold id="scrollTheshold" lower-threshold="500" on-lower-threshold="_loadMore">
+				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
 					<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
 						<list-grid
 							kind="{{kind}}"
@@ -113,8 +111,8 @@
 							items="{{items}}"></list-detail>
 					</iron-pages>
 				</iron-scroll-threshold>
-			</paper-header-panel>
-		</paper-drawer-panel>
+			</app-header-layout>
+		</app-drawer-layout>
 	</template>
 
 	<script>
@@ -200,9 +198,7 @@
 			},
 			_toggleView: function(e) {
 				var drawer = this.$.drawer;
-				if (drawer.narrow && drawer.getBoundingClientRect().width < parseInt(drawer.responsiveWidth)) {
-					// drawer.togglePanel();s
-				} else {
+				if (drawer.getBoundingClientRect().width > parseInt(drawer.responsiveWidth)) {
 					drawer.forceNarrow = !drawer.forceNarrow;
 				}
 				this.toggleView = !this.toggleView;
