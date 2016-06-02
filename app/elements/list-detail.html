@@ -1,12 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="elements.html">
 
 <dom-module id="list-detail">
     <template>
@@ -28,10 +20,10 @@
             }
             iron-image { width: 100%; height: 100%; }
             /* not working */
-            figure { margin 0.5em 0; }
+            /*figure { margin 0.5em 0; }
             figure.left { float: left; margin-right: 0.5em; }
             figure.right { float: right; margin-left: 0.5em; }
-            figure img { width: 100%; }
+            figure img { width: 100%; }*/
         </style>
 
         <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
@@ -72,15 +64,16 @@
                 </template>
             </template>
         </iron-swipeable-pages>
-
     </template>
+
     <script>
         Polymer({
             is: 'list-detail',
             properties: {
                 items: {
                     type: Array,
-                    value: []
+                    value: [],
+                    notify: true
                 },
                 selected: {
                     type: Number,
@@ -101,7 +94,13 @@
                 if (dialog) {
                     dialog.open();
                 }
-            }
+            },
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
+			}
         });
     </script>
 </dom-module>

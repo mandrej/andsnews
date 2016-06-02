@@ -1,9 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="elements.html">
 
 <dom-module id="list-grid">
     <template>
@@ -20,7 +15,7 @@
             }
             .photo, .entry {
                 position: relative;
-                width: 33.3333333%;
+                width: 25%;
 				cursor: pointer;
 			}
             paper-card {
@@ -30,8 +25,7 @@
                 /*height: 250px;*/
                 --paper-card-header-color: #fff;
             }
-            /*@media (max-width: 1024px) { .photo, .entry { width: 25%; } }*/
-            @media (max-width: 848px)  { .photo, .entry { width: 33.3333333%; } }
+            @media (max-width: 1024px) { .photo, .entry { width: 33.3333333%; } }
             @media (max-width: 768px)  { .photo, .entry { width: 50%; } }
             @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
 
@@ -45,44 +39,103 @@
             }
         </style>
 
-        <div class="content">
-            <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
-                <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
-                    <paper-card heading="[[item.headline]]" image="[[item.serving_url]]=s400"
-                        class="photo" on-tap="_showDetail" elevation="0">
-                        <!-- <iron-image src="[[item.serving_url]]=s0" preload sizing="cover"></iron-image> -->
-                        <paper-ripple></paper-ripple>
-                    </paper-card>
-                </template>
-                <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
-                    <paper-card heading="[[item.headline]]" class="entry" elevation="0" on-tap="_showDetail">
-                        <div class="card-content">
-                            <template is="dom-if" if="[[item.front]]" restamp="true">
-                                <iron-image src="[[item.front]]/normal" preload sizing="cover"></iron-image>
-                            </template>
-                            [[item.summary]]
-                        </div>
-                        <paper-ripple></paper-ripple>
-                    </paper-card>
-                </template>
-            </template>
-        </div>
+        <iron-ajax id="list_ajax" auto
+			url="{{url}}"
+			handle-as="json"
+			on-response="handler"
+			loading="{{loading}}"
+			debounce-duration="300"></iron-ajax>
 
+        <iron-scroll-threshold id="scrollTheshold" on-lower-threshold="_loadMore">
+            <div class="content">
+                <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
+                    <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
+                        <paper-card heading="[[item.headline]]" image="[[item.serving_url]]=s400"
+                            class="photo" on-tap="_showDetail" elevation="0">
+                            <!-- <iron-image src="[[item.serving_url]]=s0" preload sizing="cover"></iron-image> -->
+                            <paper-ripple></paper-ripple>
+                        </paper-card>
+                    </template>
+                    <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
+                        <paper-card heading="[[item.headline]]" class="entry" elevation="0" on-tap="_showDetail">
+                            <div class="card-content">
+                                <template is="dom-if" if="[[item.front]]" restamp="true">
+                                    <iron-image src="[[item.front]]/normal" preload sizing="cover"></iron-image>
+                                </template>
+                                [[item.summary]]
+                            </div>
+                            <paper-ripple></paper-ripple>
+                        </paper-card>
+                    </template>
+                </template>
+            </div>
+        </iron-scroll-threshold>
     </template>
+
     <script>
         Polymer({
             is: 'list-grid',
             properties: {
                 items: {
                     type: Array,
-                    value: []
+                    value: [],
+                    notify: true
                 },
+                url: {
+					computed: '_url(kind, page, field, value)',
+					notify: true,
+					observer: 'propertyChanged'
+				},
+                loading: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+                clearItems: {
+					computed: '_clearItems(page)',
+					notify: true
+				},
                 selected: {
                     type: Number,
                     value: 0,
                     notify: true
                 }
             },
+            _url: function(kind, page, field, value) {
+				var url, prefix = '/api';
+
+				if (kind == 'search' && field != null) {
+					url = [prefix, kind].join('/') + '?find=' + field;
+					if (!!page) url += '&page=' + page;
+				} else if (field && value) {
+					url = [prefix, kind, field, value].join('/');
+					if (!!page) url += '?page=' + page;
+				} else {
+					url = [prefix, kind].join('/');
+					if (!!page) url += '?page=' + page;
+				}
+				return url;
+			},
+			_loadMore: function() {
+				if (this.$.list_ajax.lastRequest) {
+					this.$.list_ajax.lastRequest.abort();
+				}
+				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
+					this.page = this.$.list_ajax.lastResponse.next;
+					this.fire('url-changed');
+				}
+			},
+			handler: function(request) {
+				var response = request.detail.response;
+				if (this.clearItems) this.items = [];
+				response.objects.forEach(function(item) {
+					this.push('items', item);
+				}, this);
+				this.$.scrollTheshold.clearTriggers();
+			},
+            _clearItems: function(page) {
+				return !page;
+			},
             _showPhoto: function(item) {
                 return item.kind == 'photo';
             },
@@ -92,7 +145,13 @@
                 console.log(model.index);
                 this.selected = model.index;
                 this.fire('show-detail');
-            }
+            },
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
+			}
         });
     </script>
 </dom-module>

@@ -1,27 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/juicy-html/juicy-html.html">
-<link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../styles/shared-styles.html">
-
+<link rel="import" href="elements.html">
 <link rel="import" href="list-filter.html">
 <link rel="import" href="list-grid.html">
 <link rel="import" href="list-detail.html">
@@ -46,13 +23,6 @@
 				bottom: 50px;
 			}
 		</style>
-
-		<iron-ajax id="list_ajax" auto
-			url="{{url}}"
-			handle-as="json"
-			on-response="handler"
-			loading="{{loading}}"
-			debounce-duration="300"></iron-ajax>
 
 		<app-drawer-layout id="drawer">
 			<app-drawer>
@@ -96,21 +66,29 @@
 					</app-toolbar>
 				</app-header>
 
-				<iron-scroll-threshold id="scrollTheshold" lower-threshold="100" on-lower-threshold="_loadMore">
-					<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
-						<list-grid
-							kind="{{kind}}"
-							data-view="grid"
-							selected="{{selected}}"
-							items="{{items}}"></list-grid>
+				<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
+					<list-grid
+						page={{page}}
+						kind="{{kind}}"
+						field="{{field}}"
+			            value="{{value}}"
+						route="{{route}}"
+						data-view="grid"
+						selected="{{selected}}"
+						loading="{{loading}}"
+						items="{{items}}"></list-grid>
 
-						<list-detail
-							kind="{{kind}}"
-							data-view="detail"
-							selected="{{selected}}"
-							items="{{items}}"></list-detail>
-					</iron-pages>
-				</iron-scroll-threshold>
+					<list-detail
+						page={{page}}
+						kind="{{kind}}"
+						field="{{field}}"
+			            value="{{value}}"
+						route="{{route}}"
+						data-view="detail"
+						selected="{{selected}}"
+						loading="{{loading}}"
+						items="{{items}}"></list-detail>
+				</iron-pages>
 			</app-header-layout>
 		</app-drawer-layout>
 	</template>
@@ -121,20 +99,12 @@
 			properties: {
 				items: {
 					type: Array,
-					value: []
-				},
-				url: {
-					computed: '_url(kind, page, field, value)',
-					notify: true,
-					observer: 'propertyChanged'
+					value: [],
+					notify: true
 				},
 				toggleView: {
 					type: Boolean,
 					value: false,
-					notify: true
-				},
-				clearItems: {
-					computed: '_clearItems(page)',
 					notify: true
 				},
 				search: {
@@ -154,47 +124,12 @@
 				'show-detail': '_toggleView',
 				'show-grid': '_toggleView'
 			},
-			_clearItems: function(page) {
-				return !page;
-			},
-			_url: function(kind, page, field, value) {
-				var url, prefix = '/api';
-
-				if (kind == 'search' && field != null) {
-					url = [prefix, kind].join('/') + '?find=' + field;
-					if (!!page) url += '&page=' + page;
-				} else if (field && value) {
-					url = [prefix, kind, field, value].join('/');
-					if (!!page) url += '?page=' + page;
-				} else {
-					url = [prefix, kind].join('/');
-					if (!!page) url += '?page=' + page;
-				}
-				return url;
-			},
-			_loadMore: function() {
-				if (this.$.list_ajax.lastRequest) {
-					this.$.list_ajax.lastRequest.abort();
-				}
-				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
-					this.page = this.$.list_ajax.lastResponse.next;
-					this.fire('url-changed');
-				}
-			},
-			handler: function(request) {
-				var response = request.detail.response;
-				if (this.clearItems) this.items = [];
-				response.objects.forEach(function(item) {
-					this.push('items', item);
-				}, this);
-				this.$.scrollTheshold.clearTriggers();
-			},
 			_kindChanged: function(kind) {
 				if (kind != 'search') this.field = null;
 				this.value = null;
 				this.page = null;
 				this.search = null;
-				this.items = [];
+				// this.items = [];
 			},
 			_toggleView: function(e) {
 				var drawer = this.$.drawer;
