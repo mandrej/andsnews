@@ -6,7 +6,6 @@
         <style>
             :host {
                 display: block;
-                padding: 4px;
             }
             .content {
                 @apply(--layout-horizontal);
@@ -18,25 +17,41 @@
                 width: 25%;
 				cursor: pointer;
 			}
-            paper-card {
-                padding: 4px;
-            }
             .photo {
-                /*height: 250px;*/
-                --paper-card-header-color: #fff;
+                height: 250px;
             }
-            @media (max-width: 1024px) { .photo, .entry { width: 33.3333333%; } }
-            @media (max-width: 768px)  { .photo, .entry { width: 50%; } }
-            @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
-
-            /*.photo iron-image {
+            .photo .title {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: rgba(0,0,0,0.5);
+                color: white;
+                font-size: 20px;
+                padding: 20px;
+                opacity: 1;
+                transition: opacity 0.1s;
+            }
+            .photo iron-image {
                 width: 100%;
                 height: 100%;
-            }*/
+            }
+            .entry {
+                box-sizing: border-box;
+                padding: 20px;
+            }
+            .entry .title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
             .entry iron-image {
                 width: 100%;
                 height: 50px;
             }
+
+            @media (max-width: 1024px) { .photo, .entry { width: 33.3333333%; } }
+            @media (max-width: 768px)  { .photo, .entry { width: 50%; } }
+            @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
         </style>
 
         <iron-ajax id="list_ajax" auto
@@ -46,30 +61,32 @@
 			loading="{{loading}}"
 			debounce-duration="300"></iron-ajax>
 
-        <iron-scroll-threshold id="scrollTheshold" on-lower-threshold="_loadMore">
-            <div class="content">
-                <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
-                    <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
-                        <paper-card heading="[[item.headline]]" image="[[item.serving_url]]=s400"
-                            class="photo" on-tap="_showDetail" elevation="0">
-                            <!-- <iron-image src="[[item.serving_url]]=s0" preload sizing="cover"></iron-image> -->
-                            <paper-ripple></paper-ripple>
-                        </paper-card>
-                    </template>
-                    <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
-                        <paper-card heading="[[item.headline]]" class="entry" elevation="0" on-tap="_showDetail">
-                            <div class="card-content">
-                                <template is="dom-if" if="[[item.front]]" restamp="true">
-                                    <iron-image src="[[item.front]]/normal" preload sizing="cover"></iron-image>
-                                </template>
-                                [[item.summary]]
-                            </div>
-                            <paper-ripple></paper-ripple>
-                        </paper-card>
-                    </template>
+        <div class="content">
+            <template is="dom-repeat" items="{{items}}" scroll-target="document" index-as="index" id="repeater">
+                <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
+                    <div class="photo" on-tap="_showDetail">
+                        <iron-image src="[[item.serving_url]]=s400" preload sizing="cover"></iron-image>
+                        <div class="title">[[item.headline]]</div>
+                        <paper-ripple></paper-ripple>
+                    </div>
                 </template>
-            </div>
-        </iron-scroll-threshold>
+                <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
+                    <div class="entry" on-tap="_showDetail">
+                        <div class="title">[[item.headline]]</div>
+                        <template is="dom-if" if="[[item.front]]" restamp="true">
+                            <iron-image src="[[item.front]]/normal" preload fade sizing="cover"></iron-image>
+                        </template>
+                        [[item.summary]]
+                        <paper-ripple></paper-ripple>
+                    </div>
+                </template>
+            </template>
+        </div>
+
+        <iron-scroll-threshold id="scrollTheshold"
+            lower-threshold="500"
+            scroll-target="document"
+            on-lower-threshold="loadMore"></iron-scroll-threshold>
     </template>
 
     <script>
@@ -116,14 +133,8 @@
 				}
 				return url;
 			},
-			_loadMore: function() {
-				if (this.$.list_ajax.lastRequest) {
-					this.$.list_ajax.lastRequest.abort();
-				}
-				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
-					this.page = this.$.list_ajax.lastResponse.next;
-					this.fire('url-changed');
-				}
+            _clearItems: function(page) {
+				return !page;
 			},
 			handler: function(request) {
 				var response = request.detail.response;
@@ -133,8 +144,15 @@
 				}, this);
 				this.$.scrollTheshold.clearTriggers();
 			},
-            _clearItems: function(page) {
-				return !page;
+            loadMore: function() {
+				if (this.$.list_ajax.lastRequest) {
+					this.$.list_ajax.lastRequest.abort();
+				}
+				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
+					this.page = this.$.list_ajax.lastResponse.next;
+                    this.$.list_ajax.params = {page: this.page};
+					this.fire('url-changed');
+				}
 			},
             _showPhoto: function(item) {
                 return item.kind == 'photo';

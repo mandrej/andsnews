@@ -8,9 +8,6 @@
                 display: block;
                 height: 100vh;
             }
-            app-toolbar {
-                background-color: var(--paper-amber-200);
-            }
             .swipe {
                 -moz-user-select: none;
                 -ms-user-select: none;
@@ -35,6 +32,7 @@
                             <div title>[[item.headline]]</div>
                             <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
                         </app-toolbar>
+                        <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                             <table>
                                 <tr><td>date</td><td>[[item.date]]</td></tr>
@@ -45,7 +43,6 @@
                                 <tr><td>iso</td><td>[[item.iso]]</td></tr>
                             </table>
                         </paper-dialog>
-                        <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
                     </div>
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
