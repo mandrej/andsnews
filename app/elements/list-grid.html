@@ -93,6 +93,10 @@
         Polymer({
             is: 'list-grid',
             properties: {
+                page: { type: String, value: null, notify: true },
+				kind: { type: String, value: null, notify: true },
+				field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 items: {
                     type: Array,
                     value: [],
@@ -108,37 +112,29 @@
                     value: false,
                     notify: true
                 },
-                clearItems: {
-					computed: '_clearItems(page)',
-					notify: true
-				},
                 selected: {
                     type: Number,
                     value: 0,
                     notify: true
                 }
             },
+            observers: ['_url(kind, page, field, value)'],
             _url: function(kind, page, field, value) {
-				var url, prefix = '/api';
+				var prefix = '/api',
+                    url = [prefix, kind].join('/');
 
 				if (kind == 'search' && field != null) {
-					url = [prefix, kind].join('/') + '?find=' + field;
-					if (!!page) url += '&page=' + page;
+                    this.$.list_ajax.params.find = field;
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
-					if (!!page) url += '?page=' + page;
-				} else {
-					url = [prefix, kind].join('/');
-					if (!!page) url += '?page=' + page;
 				}
+                if (this.page) {
+                    this.$.list_ajax.params.page = this.page;
+                }
 				return url;
-			},
-            _clearItems: function(page) {
-				return !page;
 			},
 			handler: function(request) {
 				var response = request.detail.response;
-				if (this.clearItems) this.items = [];
 				response.objects.forEach(function(item) {
 					this.push('items', item);
 				}, this);
@@ -149,8 +145,18 @@
 					this.$.list_ajax.lastRequest.abort();
 				}
 				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
-					this.page = this.$.list_ajax.lastResponse.next;
-                    this.$.list_ajax.params = {page: this.page};
+                    var list_ajax = this.$.list_ajax;
+					this.page = list_ajax.lastResponse.next;
+                    // this is stupid !!!
+                    if (list_ajax.params.find) {
+                        list_ajax.params = {
+                            find: list_ajax.params.find,
+                            page: this.page
+                        }
+                    } else {
+                        list_ajax.params.page = this.page;
+                    }
+                    console.log(list_ajax.params);
 					this.fire('url-changed');
 				}
 			},

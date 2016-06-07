@@ -1,8 +1,29 @@
 <link rel="import" href="elements.html">
-<link rel="import" href="list-page.html">
+<link rel="import" href="list-filter.html">
+<link rel="import" href="list-grid.html">
+<link rel="import" href="list-detail.html">
 
 <dom-module id="index-page">
 	<template>
+		<style is="custom-style" include="shared-styles"></style>
+		<style>
+			:host {
+				display: block;
+				@apply(--paper-font-common-base);
+			}
+
+			paper-input {
+				--paper-input-container-input-color: var(--dark-theme-text-color);
+			}
+			paper-dialog {
+				position: fixed;
+				height: auto;
+				left: 0;
+				right: 0;
+				bottom: 50px;
+			}
+		</style>
+
 		<app-location route="{{route}}" use-hash-as-path></app-location>
 
 		<!-- /(photo|entry|search) -->
@@ -27,12 +48,74 @@
 			tail="{{tailValue}}"
 			active="{{activeValue}}"></app-route>
 
-        <list-page
-            page="{{page}}"
-            kind="{{data.kind}}"
-            field="{{dataField.field}}"
-            value="{{dataValue.value}}"
-		    route="{{route}}"></list-page>
+		<app-drawer-layout id="drawer">
+			<app-drawer>
+				<app-header fixed>
+					<app-toolbar>
+						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+						<paper-input id="inputSearch" placeholder="search" no-label-float
+						value="{{search::input}}"></paper-input>
+					</app-toolbar>
+
+					<app-toolbar>
+						<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="fit">
+							<paper-item kind-page="photo" on-tap="_resetFilter">
+								<a href="#/photo" class="flex">
+									<iron-icon icon="image:photo-camera"></iron-icon>Photos
+								</a>
+							</paper-item>
+							<paper-item kind-page="entry" on-tap="_resetFilter">
+								<a href="#/entry" class="flex">
+									<iron-icon icon="icons:description"></iron-icon>Texts
+								</a>
+							</paper-item>
+
+							<list-filter
+								page="{{page}}"
+								kind="[[data.kind]]"
+								field="{{dataField.field}}"
+								value="{{dataValue.value}}"
+								route="{{route}}"
+								items="{{items}}"></list-filter>
+						</paper-menu>
+					</app-toolbar>
+				</app-header>
+			</app-drawer>
+
+			<app-header-layout>
+				<app-header fixed hidden$="{{toggleView}}">
+					<app-toolbar>
+						<paper-icon-button icon="icons:menu" drawer-toggle></paper-icon-button>
+						<div title>ANDрејевићи {{kind}} {{field}} {{value}}</div>
+						<paper-spinner active$="[[loading]]"></paper-spinner>
+					</app-toolbar>
+				</app-header>
+
+				<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
+					<list-grid
+						page="{{page}}"
+						kind="{{data.kind}}"
+						field="{{dataField.field}}"
+			            value="{{dataValue.value}}"
+						route="{{route}}"
+						data-view="grid"
+						selected="{{selected}}"
+						loading="{{loading}}"
+						items="{{items}}"></list-grid>
+
+					<list-detail
+						page="{{page}}"
+						kind="{{data.kind}}"
+						field="{{dataField.field}}"
+						value="{{dataValue.value}}"
+						route="{{route}}"
+						data-view="detail"
+						selected="{{selected}}"
+						items="{{items}}"></list-detail>
+				</iron-pages>
+			</app-header-layout>
+		</app-drawer-layout>
 	</template>
 
 	<script>
@@ -45,8 +128,63 @@
 				}
 			},
 			properties: {
-				page: { value: null, notify: true }
-			}
+				page: { type: String, value: null, notify: true },
+				search: { type: String, value: null, notify: true },
+				items: {
+					type: Array,
+					value: [],
+					notify: true
+				},
+				toggleView: {
+					type: Boolean,
+					value: false,
+					notify: true
+				},
+				targetSearch: {
+					type: Object,
+					value: function() {
+						return this.$.inputSearch
+					}
+				},
+				loading: Boolean
+			},
+			listeners: {
+				'show-detail': '_toggleView',
+				'show-grid': '_toggleView'
+			},
+			_toggleView: function(e) {
+				var drawer = this.$.drawer;
+				if (drawer.getBoundingClientRect().width > parseInt(drawer.responsiveWidth)) {
+					drawer.forceNarrow = !drawer.forceNarrow;
+				}
+				this.toggleView = !this.toggleView;
+				if (this.toggleView) {
+					this.$.switch.selected = 'detail';
+				} else {
+					this.$.switch.selected = 'grid';
+				}
+			},
+			_resetFilter: function(e) {
+				this.page = null;
+				// if (this.data.kind != 'search') {
+					this.set('dataField.field', null);
+				// }
+				this.set('dataValue.value', null);
+				document.querySelector('list-grid').items = [];
+				var list_ajax = document.querySelector('#list_ajax')
+                delete list_ajax.params.page;
+                delete list_ajax.params.find;
+			},
+			_onSearch: function() {
+				this.page = null;
+				this.set('dataField.field', this.search);
+				this.set('dataValue.value', null);
+				document.querySelector('list-grid').items = [];
+				var list_ajax = document.querySelector('#list_ajax')
+                delete list_ajax.params.page;
+                // list_ajax.params.find = this.search;
+				this.set('route.path', '/search/' + this.search);
+			},
 		});
 	</script>
 </dom-module>

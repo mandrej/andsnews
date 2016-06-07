@@ -67,6 +67,10 @@
         Polymer({
             is: 'list-detail',
             properties: {
+                page: { type: String, value: null, notify: true },
+				kind: { type: String, value: null, notify: true },
+				field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 items: {
                     type: Array,
                     value: [],
