@@ -103,7 +103,7 @@
                     notify: true
                 },
                 url: {
-					computed: '_url(kind, page, field, value)',
+					computed: '_url(kind, field, value)',
 					notify: true,
 					observer: 'propertyChanged'
 				},
@@ -118,19 +118,16 @@
                     notify: true
                 }
             },
-            observers: ['_url(kind, page, field, value)'],
-            _url: function(kind, page, field, value) {
+            // observers: ['_url(kind, field, value)'],
+            _url: function(kind, field, value) {
 				var prefix = '/api',
                     url = [prefix, kind].join('/');
 
 				if (kind == 'search' && field != null) {
-                    this.$.list_ajax.params.find = field;
+                    this.$.list_ajax.params = {find: field};
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
 				}
-                if (this.page) {
-                    this.$.list_ajax.params.page = this.page;
-                }
 				return url;
 			},
 			handler: function(request) {
@@ -144,20 +141,19 @@
 				if (this.$.list_ajax.lastRequest) {
 					this.$.list_ajax.lastRequest.abort();
 				}
-				if (this.$.list_ajax.lastResponse && this.$.list_ajax.lastResponse.next) {
-                    var list_ajax = this.$.list_ajax;
-					this.page = list_ajax.lastResponse.next;
-                    // this is stupid !!!
+                var list_ajax = this.$.list_ajax;
+				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
                     if (list_ajax.params.find) {
                         list_ajax.params = {
-                            find: list_ajax.params.find,
-                            page: this.page
-                        }
+                            page: list_ajax.lastResponse.next,
+                            find: list_ajax.params.find
+                        };
                     } else {
-                        list_ajax.params.page = this.page;
+                        list_ajax.params = {
+                            page: list_ajax.lastResponse.next
+                        };
                     }
                     console.log(list_ajax.params);
-					this.fire('url-changed');
 				}
 			},
             _showPhoto: function(item) {
@@ -166,7 +162,6 @@
             _showDetail: function(e) {
                 // this.selected = e.model.index; without dom-if
                 var model = this.$.repeater.modelForElement(e.target);
-                console.log(model.index);
                 this.selected = model.index;
                 this.fire('show-detail');
             },

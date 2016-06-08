@@ -124,7 +124,9 @@
 			attached: function() {
 				if (!this.route.path) {
 					this.set('route.path', '/photo');
-					this.kind = 'photo';
+					this.set('data.kind', 'photo');
+					this.set('dataField.field', null);
+					this.set('dataValue.value', null);
 				}
 			},
 			properties: {
@@ -166,23 +168,17 @@
 			},
 			_resetFilter: function(e) {
 				this.page = null;
-				// if (this.data.kind != 'search') {
-					this.set('dataField.field', null);
-				// }
+				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
 				document.querySelector('list-grid').items = [];
-				var list_ajax = document.querySelector('#list_ajax')
-                delete list_ajax.params.page;
-                delete list_ajax.params.find;
+				document.querySelector('#list_ajax').params = {};
 			},
 			_onSearch: function() {
 				this.page = null;
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
 				document.querySelector('list-grid').items = [];
-				var list_ajax = document.querySelector('#list_ajax')
-                delete list_ajax.params.page;
-                // list_ajax.params.find = this.search;
+				delete document.querySelector('#list_ajax').params.page;
 				this.set('route.path', '/search/' + this.search);
 			},
 		});
