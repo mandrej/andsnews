@@ -72,7 +72,6 @@
 							</paper-item>
 
 							<list-filter
-								page="{{page}}"
 								kind="[[data.kind]]"
 								field="{{dataField.field}}"
 								value="{{dataValue.value}}"
@@ -94,7 +93,6 @@
 
 				<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
 					<list-grid
-						page="{{page}}"
 						kind="{{data.kind}}"
 						field="{{dataField.field}}"
 			            value="{{dataValue.value}}"
@@ -105,7 +103,6 @@
 						items="{{items}}"></list-grid>
 
 					<list-detail
-						page="{{page}}"
 						kind="{{data.kind}}"
 						field="{{dataField.field}}"
 						value="{{dataValue.value}}"
@@ -130,7 +127,6 @@
 				}
 			},
 			properties: {
-				page: { type: String, value: null, notify: true },
 				search: { type: String, value: null, notify: true },
 				items: {
 					type: Array,
@@ -167,14 +163,12 @@
 				}
 			},
 			_resetFilter: function(e) {
-				this.page = null;
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
 				document.querySelector('list-grid').items = [];
 				document.querySelector('#list_ajax').params = {};
 			},
 			_onSearch: function() {
-				this.page = null;
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
 				document.querySelector('list-grid').items = [];

@@ -41,7 +41,6 @@
         Polymer({
             is: 'list-filter',
             properties: {
-                page: { type: String, value: null, notify: true },
 				kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -55,11 +54,10 @@
 				}
 			},
             _applyFilter: function(e) {
-                this.page = null;
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
                 document.querySelector('list-grid').items = [];
-                document.querySelector('#list_ajax').params = {};
+                document.querySelector('#list_ajax').params = null;
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
 			},
             _selectedFilter: function(current, value) {

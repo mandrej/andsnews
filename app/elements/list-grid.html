@@ -93,7 +93,6 @@
         Polymer({
             is: 'list-grid',
             properties: {
-                page: { type: String, value: null, notify: true },
 				kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -138,9 +137,6 @@
 				this.$.scrollTheshold.clearTriggers();
 			},
             loadMore: function() {
-				if (this.$.list_ajax.lastRequest) {
-					this.$.list_ajax.lastRequest.abort();
-				}
                 var list_ajax = this.$.list_ajax;
 				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
                     if (list_ajax.params.find) {
