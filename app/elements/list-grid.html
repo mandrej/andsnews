@@ -141,7 +141,7 @@
                 //     list_ajax.lastRequest.abort();
                 // }
 				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
-                    if (list_ajax.params && list_ajax.params.find) {
+                    if (list_ajax.params) {
                         list_ajax.params.page = list_ajax.lastResponse.next;
                     } else {
                         list_ajax.params = {

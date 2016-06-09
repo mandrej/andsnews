@@ -35,7 +35,7 @@
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                             <table>
-                                <tr><td>date</td><td>[[item.date]]</td></tr>
+                                <tr><td>date</td><td>[[_dateFormat(item.date)]]</td></tr>
                                 <tr><td>author</td><td>[[item.author]]</td></tr>
                                 <tr><td>model</td><td>[[item.model]]</td></tr>
                                 <tr><td>lens</td><td>[[item.lens]]</td></tr>
@@ -76,6 +76,10 @@
             _showPhoto: function(item) {
                 return item.kind == 'photo';
             },
+            _dateFormat: function(value) {
+                return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
+                // return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
+            },
             _showList: function(e) {
                 this.fire('show-grid');
             },
@@ -88,4 +92,5 @@
             }
         });
     </script>
+    <script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
 </dom-module>
