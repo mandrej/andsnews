@@ -67,14 +67,6 @@
         Polymer({
             is: 'list-detail',
             properties: {
-				kind: { type: String, value: null, notify: true },
-				field: { type: String, value: null, notify: true },
-				value: { type: String, value: null, notify: true },
-                items: {
-                    type: Array,
-                    value: [],
-                    notify: true
-                },
                 selected: {
                     type: Number,
                     value: 0,
@@ -93,13 +85,7 @@
                 if (dialog) {
                     dialog.open();
                 }
-            },
-            propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
-			objectChanged: function(newValue, oldValue) {
-				console.log(newValue);
-			}
+            }
         });
     </script>
 </dom-module>

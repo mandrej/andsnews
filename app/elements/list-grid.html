@@ -59,7 +59,7 @@
 			handle-as="json"
 			on-response="handler"
 			loading="{{loading}}"
-			debounce-duration="300"></iron-ajax>
+			debounce-duration="100"></iron-ajax>
 
         <div class="content">
             <template is="dom-repeat" items="{{items}}" scroll-target="document" index-as="index" id="repeater">
@@ -117,7 +117,6 @@
                     notify: true
                 }
             },
-            // observers: ['_url(kind, field, value)'],
             _url: function(kind, field, value) {
 				var prefix = '/api',
                     url = [prefix, kind].join('/');
@@ -138,18 +137,19 @@
 			},
             loadMore: function() {
                 var list_ajax = this.$.list_ajax;
+                // if (list_ajax.lastRequest) {
+                //     list_ajax.lastRequest.abort();
+                // }
 				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
-                    if (list_ajax.params.find) {
-                        list_ajax.params = {
-                            page: list_ajax.lastResponse.next,
-                            find: list_ajax.params.find
-                        };
+                    if (list_ajax.params && list_ajax.params.find) {
+                        list_ajax.params.page = list_ajax.lastResponse.next;
                     } else {
                         list_ajax.params = {
                             page: list_ajax.lastResponse.next
                         };
                     }
                     console.log(list_ajax.params);
+                    list_ajax.generateRequest();
 				}
 			},
             _showPhoto: function(item) {

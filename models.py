@@ -635,7 +635,7 @@ class Photo(ndb.Model):
         data.update({
             'kind': self.kind.lower(),
             'slug': self.key.string_id(),
-            'url': webapp2.uri_for('photo', slug=self.key.string_id()),
+            # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
         })
         return data
