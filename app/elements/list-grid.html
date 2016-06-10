@@ -56,6 +56,7 @@
 
         <iron-ajax id="list_ajax" auto
 			url="{{url}}"
+            params="{}"
 			handle-as="json"
 			on-response="handler"
 			loading="{{loading}}"
@@ -122,7 +123,7 @@
                     url = [prefix, kind].join('/');
 
 				if (kind == 'search' && field != null) {
-                    this.$.list_ajax.params = {find: field};
+                    this.$.list_ajax.params.find = field;
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
 				}
@@ -137,17 +138,9 @@
 			},
             loadMore: function() {
                 var list_ajax = this.$.list_ajax;
-                // if (list_ajax.lastRequest) {
-                //     list_ajax.lastRequest.abort();
-                // }
+                // if (list_ajax.lastRequest) list_ajax.lastRequest.abort();
 				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
-                    if (list_ajax.params) {
-                        list_ajax.params.page = list_ajax.lastResponse.next;
-                    } else {
-                        list_ajax.params = {
-                            page: list_ajax.lastResponse.next
-                        };
-                    }
+                    list_ajax.params.page = list_ajax.lastResponse.next;
                     console.log(list_ajax.params);
                     list_ajax.generateRequest();
 				}

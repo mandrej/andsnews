@@ -93,18 +93,18 @@
 
 				<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
 					<list-grid
+						data-view="grid"
 						kind="{{data.kind}}"
 						field="{{dataField.field}}"
 			            value="{{dataValue.value}}"
 						route="{{route}}"
-						data-view="grid"
 						selected="{{selected}}"
 						loading="{{loading}}"
 						items="{{items}}"></list-grid>
 
 					<list-detail
-						route="{{route}}"
 						data-view="detail"
+						route="{{route}}"
 						selected="[[selected]]"
 						items="[[items]]"></list-detail>
 				</iron-pages>
