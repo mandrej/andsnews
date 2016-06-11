@@ -58,10 +58,10 @@
 				}
 			},
             _applyFilter: function(e) {
+                document.querySelector('#list_ajax').params = {};
+                this.items = [];
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
-                this.items = [];
-                document.querySelector('#list_ajax').params = {};
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
 			},
             _selectedFilter: function(current, value) {
