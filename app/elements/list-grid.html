@@ -236,7 +236,7 @@
 				// if (drawer.getBoundingClientRect().width > parseInt(drawer.responsiveWidth)) {
 				// 	drawer.forceNarrow = !drawer.forceNarrow;
 				// }
-                this.fire('show-detail');
+                this.fire('toggle_view');
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

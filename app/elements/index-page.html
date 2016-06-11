@@ -28,7 +28,9 @@
 			tail="{{tailValue}}"
 			active="{{activeValue}}"></app-route>
 
-		<iron-pages selected="grid" attr-for-selected="data-view" id="switch">
+		<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
+
+		<iron-pages selected="{{view}}" attr-for-selected="data-view">
 			<list-grid
 				data-view="grid"
 				kind="{{data.kind}}"
@@ -60,28 +62,22 @@
 				}
 			},
 			properties: {
+				view: {
+					type: String,
+					value: 'grid',
+					notify: true
+				},
 				items: {
 					type: Array,
 					value: [],
 					notify: true
 				},
-				toggleView: {
-					type: Boolean,
-					value: false,
-					notify: true
-				}
 			},
 			listeners: {
-				'show-detail': '_toggleView',
-				'show-grid': '_toggleView'
+				'toggle_view': '_toggleView'
 			},
 			_toggleView: function(e) {
-				this.toggleView = !this.toggleView;
-				if (this.toggleView) {
-					this.$.switch.selected = 'detail';
-				} else {
-					this.$.switch.selected = 'grid';
-				}
+				this.view = (this.view == 'grid') ? 'detail': 'grid';
 			},
 		});
 	</script>
