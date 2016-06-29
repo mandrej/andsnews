@@ -30,7 +30,7 @@
 
 		<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
 
-		<iron-pages selected="{{view}}" attr-for-selected="data-view">
+		<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
 			<list-grid
 				data-view="grid"
 				kind="{{data.kind}}"
@@ -46,7 +46,7 @@
 				route="{{route}}"
 				selected="[[selected]]"
 				items="[[items]]"></list-detail>
-		</iron-pages>
+		</neon-animated-pages>
 
 	</template>
 
@@ -78,7 +78,7 @@
 			},
 			_toggleView: function(e) {
 				this.view = (this.view == 'grid') ? 'detail': 'grid';
-			},
+			}
 		});
 	</script>
 </dom-module>

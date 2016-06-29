@@ -74,7 +74,37 @@
     <script>
         Polymer({
             is: 'list-detail',
+            behaviors: [
+                Polymer.NeonSharedElementAnimatableBehavior
+            ],
             properties: {
+                sharedElements: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'hero': this
+                        }
+                    }
+                },
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                toPage: this,
+                                timing: {
+                                    delay: 250
+                                }
+                            }],
+                            'exit': [{
+                                name: 'fade-out-animation',
+                                node: this
+                            }]
+                        }
+                    }
+                },
                 selected: {
                     type: Number,
                     value: 0,

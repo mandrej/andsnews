@@ -152,7 +152,22 @@
     <script>
         Polymer({
             is: 'list-grid',
+            behaviors: [
+                Polymer.NeonSharedElementAnimatableBehavior
+            ],
             properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'exit': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                fromPage: this
+                            }]
+                        }
+                    }
+                },
 				kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -232,10 +247,18 @@
                 // this.selected = e.model.index; without dom-if
                 var model = this.$.repeater.modelForElement(e.target);
                 this.selected = model.index;
-                var drawer = this.$.drawer;
+                // var drawer = this.$.drawer;
 				// if (drawer.getBoundingClientRect().width > parseInt(drawer.responsiveWidth)) {
 				// 	drawer.forceNarrow = !drawer.forceNarrow;
 				// }
+
+                var target = e.target;
+                while (target !== this && !target._templateInstance) {
+                    target = target.parentNode;
+                }
+                this.sharedElements = {
+                    'hero': target
+                };
                 this.fire('toggle_view');
             },
             propertyChanged: function(newValue, oldValue) {
