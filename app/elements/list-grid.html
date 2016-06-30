@@ -67,8 +67,8 @@
             @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
         </style>
 
-        <app-drawer-layout id="drawer">
-			<app-drawer>
+        <app-drawer-layout>
+			<app-drawer id="drawer">
 				<app-header fixed>
 					<app-toolbar>
 						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
@@ -232,6 +232,8 @@
                 this.items = [];
 				this.field = null;
 				this.value = null;
+                var drawer = this.$.drawer;
+                if (drawer.opened && !drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
                 this.$.list_ajax.params = {};
@@ -247,10 +249,6 @@
                 // this.selected = e.model.index; without dom-if
                 var model = this.$.repeater.modelForElement(e.target);
                 this.selected = model.index;
-                // var drawer = this.$.drawer;
-				// if (drawer.getBoundingClientRect().width > parseInt(drawer.responsiveWidth)) {
-				// 	drawer.forceNarrow = !drawer.forceNarrow;
-				// }
 
                 var target = e.target;
                 while (target !== this && !target._templateInstance) {
