@@ -75,31 +75,22 @@
         Polymer({
             is: 'list-detail',
             behaviors: [
-                Polymer.NeonSharedElementAnimatableBehavior
+                Polymer.NeonAnimationRunnerBehavior
             ],
             properties: {
-                sharedElements: {
-                    type: Object,
-                    value: function() {
-                        return {
-                            'hero': this
-                        }
-                    }
-                },
                 animationConfig: {
                     type: Object,
                     value: function() {
                         return {
                             'entry': [{
-                                name: 'hero-animation',
-                                id: 'hero',
-                                toPage: this,
+                                name: 'slide-from-right-animation',
+                                node: this,
                                 timing: {
-                                    delay: 250
+                                    delay: 50
                                 }
                             }],
                             'exit': [{
-                                name: 'fade-out-animation',
+                                name: 'slide-right-animation',
                                 node: this
                             }]
                         }
