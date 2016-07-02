@@ -235,7 +235,7 @@
                 var model = this.$.repeater.modelForElement(e.target);
                 this.selected = model.index;
 
-                this.fire('toggle_view');
+                document.querySelector('index-page').view = 'detail';
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
