@@ -8,7 +8,7 @@
                 display: block;
                 @apply(--paper-font-common-base);
             }
-            .content {
+            .grid {
                 @apply(--layout-horizontal);
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
@@ -55,42 +55,44 @@
             @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
         </style>
 
-        <div class="header">
-            <app-toolbar>
-                <paper-icon-button icon="icons:menu" drawer-toggle></paper-icon-button>
-                <div title>ANDрејевићи {{kind}} {{field}} {{value}}</div>
-                <paper-spinner active$="[[loading]]"></paper-spinner>
-            </app-toolbar>
-        </div>
-
-        <iron-ajax id="list_ajax" auto
-			url="{{url}}"
-            params="{}"
-			handle-as="json"
-			on-response="handler"
-			loading="{{loading}}"
-			debounce-duration="100"></iron-ajax>
-
         <div class="content">
-            <template is="dom-repeat" items="{{items}}" scroll-target="document" index-as="index" id="repeater">
-                <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
-                    <div class="photo" on-tap="_showDetail">
-                        <iron-image src="[[item.serving_url]]=s400" preload sizing="cover"></iron-image>
-                        <div class="title">[[item.headline]]</div>
-                        <paper-ripple></paper-ripple>
-                    </div>
+            <app-header fixed>
+                <app-toolbar>
+                    <paper-icon-button icon="icons:menu" on-tap="_menuToggle" drawer-toggle></paper-icon-button>
+                    <div title>ANDрејевићи {{kind}} {{field}} {{value}}</div>
+                    <paper-spinner active$="[[loading]]"></paper-spinner>
+                </app-toolbar>
+            </app-header>
+
+            <iron-ajax id="list_ajax" auto
+    			url="{{url}}"
+                params="{}"
+    			handle-as="json"
+    			on-response="handler"
+    			loading="{{loading}}"
+    			debounce-duration="100"></iron-ajax>
+
+            <div class="grid">
+                <template is="dom-repeat" items="{{items}}" scroll-target="document" index-as="index" id="repeater">
+                    <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
+                        <div class="photo" on-tap="_showDetail">
+                            <iron-image src="[[item.serving_url]]=s400" preload sizing="cover"></iron-image>
+                            <div class="title">[[item.headline]]</div>
+                            <paper-ripple></paper-ripple>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
+                        <div class="entry" on-tap="_showDetail">
+                            <div class="title">[[item.headline]]</div>
+                            <template is="dom-if" if="[[item.front]]" restamp="true">
+                                <iron-image src="[[item.front]]/normal" preload fade sizing="cover"></iron-image>
+                            </template>
+                            [[item.summary]]
+                            <paper-ripple></paper-ripple>
+                        </div>
+                    </template>
                 </template>
-                <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
-                    <div class="entry" on-tap="_showDetail">
-                        <div class="title">[[item.headline]]</div>
-                        <template is="dom-if" if="[[item.front]]" restamp="true">
-                            <iron-image src="[[item.front]]/normal" preload fade sizing="cover"></iron-image>
-                        </template>
-                        [[item.summary]]
-                        <paper-ripple></paper-ripple>
-                    </div>
-                </template>
-            </template>
+            </div>
         </div>
 
         <iron-scroll-threshold id="scrollTheshold"
@@ -165,6 +167,9 @@
                 this.selected = model.index;
 
                 document.querySelector('index-page').view = 'detail';
+            },
+            _menuToggle: function(e) {
+                this.fire('menu-toggle');
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

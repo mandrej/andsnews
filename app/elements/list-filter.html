@@ -63,6 +63,7 @@
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
+                this.fire('menu-toggle');
 			},
             _selectedFilter: function(current, value) {
 				if (current == value) return 'activeFilterClass';

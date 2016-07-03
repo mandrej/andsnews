@@ -72,12 +72,8 @@
 			</app-drawer>
 
 			<app-header-layout>
-				<app-header fixed>
-					<content select=".header"></content>
-				</app-header>
-
-				<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
 				<content select=".content">
+					<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
 					<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
 						<list-grid
 							data-view="grid"
@@ -122,9 +118,9 @@
 					}
 				},
 			},
+			listeners: {'menu-toggle': '_menuToggle'},
 			_resetFilter: function(e) {
-				// console.log(e.target.href);
-				// this.set('route.path', e.target.href);
+				document.querySelector('#list_ajax').params = {};
                 this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
@@ -133,10 +129,18 @@
                 if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
+				document.querySelector('#list_ajax').params = {};
                 this.items = [];
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
 				this.set('route.path', '/search/' + this.search);
+				this.fire('menu-toggle');
+			},
+			_menuToggle: function(e) {
+				var layout = this.$.layout;
+				if (!layout.drawer.persistent) {
+					layout.drawer.opened = !layout.drawer.opened;
+				}
 			},
 			_toggleDrawer: function(newValue, oldValue) {
 				var layout = this.$.layout;
