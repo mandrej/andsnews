@@ -142,7 +142,6 @@
 				return url;
 			},
 			handler: function(request) {
-                console.log(list_ajax.params);
 				var response = request.detail.response;
 				response.objects.forEach(function(item) {
 					this.push('items', item);
@@ -154,7 +153,6 @@
                 // if (list_ajax.lastRequest) list_ajax.lastRequest.abort();
 				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
                     list_ajax.params.page = list_ajax.lastResponse.next;
-
                     list_ajax.generateRequest();
 				}
 			},
