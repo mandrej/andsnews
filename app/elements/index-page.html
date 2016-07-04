@@ -132,7 +132,8 @@
                 if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
-				this.params = {};
+				this.set('params.find', null);
+				this.set('params.page', null);
                 this.items = [];
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
