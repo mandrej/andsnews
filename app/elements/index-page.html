@@ -64,6 +64,7 @@
 			                    kind="[[data.kind]]"
 			                    field="{{dataField.field}}"
 			                    value="{{dataValue.value}}"
+								params="{{params}}"
 			                    route="{{route}}"
 			                    items="{{items}}"></list-filter>
 						</paper-menu>
@@ -80,6 +81,7 @@
 							kind="{{data.kind}}"
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
+							params="{{params}}"
 							route="{{route}}"
 							selected="{{selected}}"
 							loading="{{loading}}"
@@ -120,7 +122,8 @@
 			},
 			listeners: {'menu-toggle': '_menuToggle'},
 			_resetFilter: function(e) {
-				document.querySelector('#list_ajax').params = {};
+				this.set('params.find', null);
+				this.set('params.page', null);
                 this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
@@ -129,7 +132,7 @@
                 if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
-				document.querySelector('#list_ajax').params = {};
+				this.params = {};
                 this.items = [];
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
