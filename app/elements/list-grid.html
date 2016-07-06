@@ -2,11 +2,13 @@
 
 <dom-module id="list-grid">
     <template>
-        <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
                 display: block;
-                @apply(--paper-font-common-base);
+            }
+            app-toolbar {
+                color: var(--dark-theme-text-color);
+                background-color: var(--dark-primary-color);
             }
             .grid {
                 @apply(--layout-horizontal);
@@ -55,7 +57,7 @@
             @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
         </style>
 
-        <div class="content">
+        <app-header-layout>
             <app-header fixed>
                 <app-toolbar>
                     <paper-icon-button icon="icons:menu" on-tap="_menuToggle" drawer-toggle></paper-icon-button>
@@ -93,7 +95,7 @@
                     </template>
                 </template>
             </div>
-        </div>
+        </app-header-layout>
 
         <iron-scroll-threshold id="scrollTheshold"
             lower-threshold="500"

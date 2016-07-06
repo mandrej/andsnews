@@ -5,12 +5,23 @@
 
 <dom-module id="index-page">
 	<template>
-		<style is="custom-style" include="shared-styles"></style>
 		<style>
 			:host {
 				display: block;
-				@apply(--paper-font-common-base);
+				min-height: 100vh;
 			}
+			app-toolbar {
+                color: var(--dark-theme-text-color);
+                background-color: var(--dark-primary-color);
+            }
+            paper-item a {
+				color: inherit;
+				text-decoration: none;
+			}
+            paper-item iron-icon {
+                margin-right: 16px;
+                color: var(--light-theme-secondary-color);
+            }
 			paper-input {
 				--paper-input-container-input-color: var(--dark-theme-text-color);
 			}
@@ -72,29 +83,25 @@
 				</app-header>
 			</app-drawer>
 
-			<app-header-layout>
-				<content select=".content">
-					<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
-					<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
-						<list-grid
-							data-view="grid"
-							kind="{{data.kind}}"
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							params="{{params}}"
-							route="{{route}}"
-							selected="{{selected}}"
-							loading="{{loading}}"
-							items="{{items}}"></list-grid>
+			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
+			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
+				<list-grid
+					data-view="grid"
+					kind="{{data.kind}}"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
+					route="{{route}}"
+					selected="{{selected}}"
+					loading="{{loading}}"
+					items="{{items}}"></list-grid>
 
-						<list-detail
-							data-view="detail"
-							route="{{route}}"
-							selected="[[selected]]"
-							items="[[items]]"></list-detail>
-					</neon-animated-pages>
-				</content>
-            </app-header-layout>
+				<list-detail
+					data-view="detail"
+					route="{{route}}"
+					selected="[[selected]]"
+					items="[[items]]"></list-detail>
+			</neon-animated-pages>
 		</app-drawer-layout>
 	</template>
 

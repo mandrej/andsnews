@@ -2,12 +2,14 @@
 
 <dom-module id="list-detail">
     <template>
-        <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
                 display: block;
                 height: 100vh;
-                @apply(--paper-font-common-base);
+            }
+            app-toolbar {
+                color: var(--dark-theme-text-color);
+                background-color: var(--dark-primary-color);
             }
             .swipe {
                 -moz-user-select: none;
@@ -16,7 +18,6 @@
                 user-select: none;
                 cursor: default;
             }
-            .content { height: calc(100vh - 64px); }
             iron-image { width: 100%; height: 100%; }
             paper-dialog {
                 position: fixed;
@@ -27,50 +28,50 @@
             }
         </style>
 
+        <app-header-layout>
+            <content></content>
+        </app-header-layout>
+
         <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
-                    <div class="swipe fit">
-                        <div class="content">
-                            <app-header fixed>
-                                <app-toolbar>
-                                    <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
-                                    <div title>[[item.headline]]</div>
-                                    <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
-                                </app-toolbar>
-                            </app-header>
+                    <div class="swipe">
+                        <app-header fixed>
+                            <app-toolbar>
+                                <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
+                                <div title>[[item.headline]]</div>
+                                <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
+                            </app-toolbar>
+                        </app-header>
 
-                            <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
-                            <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-                                <p>
-                                    [[_dateFormat(item.date)]]<br>
-                                    [[item.author]]<br><br>
-                                    [[item.model]]<br>
-                                    [[item.lens]]<br>
-                                    [[item.eqv]] mm<br>
-                                    [[item.iso]] ASA
-                                </p>
-                            </paper-dialog>
-                        </div>
+                        <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
+                        <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+                            <p>
+                                [[_dateFormat(item.date)]]<br>
+                                [[item.author]]<br><br>
+                                [[item.model]]<br>
+                                [[item.lens]]<br>
+                                [[item.eqv]] mm<br>
+                                [[item.iso]] ASA
+                            </p>
+                        </paper-dialog>
                     </div>
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
-                    <div class="swipe fit">
-                        <div class="content">
-                            <app-header fixed>
-                                <app-toolbar>
-                                    <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
-                                    <div title>[[item.headline]]</div>
-                                </app-toolbar>
-                            </app-header>
+                    <div class="swipe">
+                        <app-header fixed>
+                            <app-toolbar>
+                                <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
+                                <div title>[[item.headline]]</div>
+                            </app-toolbar>
+                        </app-header>
 
-                            <paper-card elevation="0" animated-shadow="false">
-                                <div class="card-content" style="padding: 16px">
-                                    <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
-                                    <template is="juicy-html" content$="[[item.body]]"></template>
-                                </div>
-                            </paper-card>
-                        </div>
+                        <paper-card elevation="0" animated-shadow="false">
+                            <div class="card-content" style="padding: 16px">
+                                <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
+                                <template is="juicy-html" content$="[[item.body]]"></template>
+                            </div>
+                        </paper-card>
                     </div>
                 </template>
             </template>
