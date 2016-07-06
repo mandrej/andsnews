@@ -137,7 +137,7 @@
                     notify: true
                 },
             },
-            observers: ['paramsChanged(params.page, params.find)'],
+            observers: ['paramsChanged(params.*)'],
             _url: function(kind, field, value) {
 				var prefix = '/api',
                     url = [prefix, kind].join('/');
@@ -183,9 +183,9 @@
 			objectChanged: function(newValue, oldValue) {
 				console.log(newValue);
 			},
-            paramsChanged: function(page, find) {
+            paramsChanged: function(obj) {
                 // this is object observer!
-                console.log({page: page, find:find});
+                console.log(obj.path + ' -> ' + this.get(obj.path));
             }
         });
     </script>
