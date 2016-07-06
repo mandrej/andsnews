@@ -9,7 +9,7 @@
             }
             app-toolbar {
                 color: var(--dark-theme-text-color);
-                background-color: var(--dark-primary-color);
+                background-color: var(--primary-color);
             }
             .swipe {
                 -moz-user-select: none;
@@ -28,9 +28,9 @@
             }
         </style>
 
-        <app-header-layout>
+        <!-- <app-header-layout>
             <content></content>
-        </app-header-layout>
+        </app-header-layout> -->
 
         <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-repeat" items="{{items}}">
