@@ -28,21 +28,25 @@
             }
         </style>
 
-        <!-- <app-header-layout>
-            <content></content>
-        </app-header-layout> -->
+        <iron-ajax id="list_ajax" auto
+            url="{{url}}"
+            params="{{params}}"
+            handle-as="json"
+            on-response="handler"
+            loading="{{loading}}"
+            debounce-duration="100"></iron-ajax>
 
-        <iron-swipeable-pages class="fit" selected="{{selected}}" edgeSwipeSensitivity="15" threshold="0.1">
+        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <app-header fixed>
+                        <!-- <app-header fixed>
                             <app-toolbar>
                                 <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                 <div title>[[item.headline]]</div>
                                 <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
                             </app-toolbar>
-                        </app-header>
+                        </app-header> -->
 
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
@@ -59,12 +63,12 @@
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
-                        <app-header fixed>
+                        <!-- <app-header fixed>
                             <app-toolbar>
                                 <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                 <div title>[[item.headline]]</div>
                             </app-toolbar>
-                        </app-header>
+                        </app-header> -->
 
                         <paper-card elevation="0" animated-shadow="false">
                             <div class="card-content" style="padding: 16px">
@@ -103,12 +107,57 @@
                         }
                     }
                 },
-                selected: {
-                    type: Number,
-                    value: 0,
+                kind: { type: String, value: null, notify: true },
+				field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
+                items: {
+                    type: Array,
+                    value: [],
                     notify: true
-                }
+                },
+                params: {
+                    type: Object,
+                    value: {},
+                    notify: true
+                },
+                url: {
+					computed: '_url(kind, field, value)',
+					notify: true,
+					observer: 'propertyChanged'
+				},
+                loading: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
             },
+            observers: ['paramsChanged(params.*)'],
+            _url: function(kind, field, value) {
+				var prefix = '/api',
+                    url = [prefix, kind].join('/');
+
+				if (kind == 'search' && field != null) {
+                    this.set('params.find', field);
+				} else if (field && value) {
+					url = [prefix, kind, field, value].join('/');
+				}
+				return url;
+			},
+			handler: function(request) {
+				var response = request.detail.response;
+				response.objects.forEach(function(item) {
+					this.push('items', item);
+				}, this);
+				// this.$.scrollTheshold.clearTriggers();
+			},
+            loadMore: function() {
+                var list_ajax = this.$.list_ajax;
+                // if (list_ajax.lastRequest) list_ajax.lastRequest.abort();
+				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
+                    this.set('params.page', list_ajax.lastResponse.next);
+                    // list_ajax.generateRequest();
+				}
+			},
             _showPhoto: function(item) {
                 return item.kind == 'photo';
             },
@@ -125,6 +174,16 @@
                 if (dialog) {
                     dialog.open();
                 }
+            },
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
+			},
+            paramsChanged: function(obj) {
+                // this is object observer!
+                console.log(obj.path + ' -> ' + this.get(obj.path));
             }
         });
     </script>

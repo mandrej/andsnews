@@ -5,21 +5,24 @@
         <style is="custom-style" include="shared-styles"></style>
         <style>
             :host {
-                margin: 0 16px;
                 @apply(--layout-horizontal);
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
             }
             .rec {
-				display: inline-block;
-				padding: 2px 4px;
-				margin: 0 8px 8px 0;
+                box-sizing: border-box;
+                position: relative;
+                width: 20%;
 				cursor: pointer;
+                padding: 16px;
 			}
 			.rec.activeFilterClass {
-				color: white;
+				color: var(--dark-theme-text-color);
 				background-color: var(--paper-red-500);
 			}
+            @media (max-width: 1024px) { .rec { width: 25%; } }
+            @media (max-width: 768px)  { .rec { width: 33.3333333%; } }
+            @media (max-width: 432px)  { .rec { width: 50%; } }
         </style>
 
         <iron-ajax auto
@@ -30,10 +33,10 @@
 
         <template is="dom-repeat" items="[[response]]" as="row">
             <template is="dom-repeat" items="[[row.items]]" as="rec">
-                <span class$="rec [[_selectedFilter(rec.name, value)]]"
+                <div class$="rec [[_selectedFilter(rec.name, value)]]"
                     data-field$="[[row.field_name]]" on-tap="_applyFilter">
                     [[rec.name]]
-                </span>
+                </div>
             </template>
         </template>
     </template>
@@ -63,7 +66,8 @@
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
-                this.fire('menu-toggle');
+                // this.fire('menu-toggle');
+                // document.querySelector('index-page').view = 'detail';
 			},
             _selectedFilter: function(current, value) {
 				if (current == value) return 'activeFilterClass';

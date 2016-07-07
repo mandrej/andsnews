@@ -8,23 +8,28 @@
 		<style>
 			:host {
 				display: block;
-				min-height: 100vh;
+				/*min-height: 100vh;*/
 				--primary-color: var(--paper-indigo-700);
 			}
-			app-toolbar {
-                color: var(--dark-theme-text-color);
+			app-header {
+      			position: fixed;
+      			top: 0;
+      			left: 0;
+      			width: 100%;
+      			height: 128px;
+				color: var(--dark-theme-text-color);
                 background-color: var(--primary-color);
-            }
-            paper-item a {
+				z-index: 1;
+          	}
+			app-toolbar a {
 				color: inherit;
 				text-decoration: none;
 			}
-            paper-item iron-icon {
-                margin-right: 16px;
-                color: var(--light-theme-secondary-color);
-            }
 			paper-input {
 				--paper-input-container-input-color: var(--dark-theme-text-color);
+			}
+			main {
+				padding-top: 128px;
 			}
 		</style>
 
@@ -50,43 +55,35 @@
 			tail="{{tailValue}}"
 			active="{{activeValue}}"></app-route>
 
-		<app-drawer-layout id="layout">
-			<app-drawer id="drawer">
-				<app-header fixed>
-					<app-toolbar>
-						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
-						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-						<paper-input id="inputSearch" placeholder="search" no-label-float
-						value="{{search::input}}"></paper-input>
-					</app-toolbar>
-					<app-toolbar>
-						<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="fit">
-							<paper-item kind-page="photo" on-tap="_resetFilter">
-				                <a href="#/photo" class="flex">
-				                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
-				                </a>
-				            </paper-item>
-				            <paper-item kind-page="entry" on-tap="_resetFilter">
-				                <a href="#/entry" class="flex">
-				                    <iron-icon icon="icons:description"></iron-icon>Texts
-				                </a>
-				            </paper-item>
+		<app-header condenses reveals fixed>
+			<app-toolbar>
+				<div title>[[data.kind]], [[dataField.field]], [[dataValue.value]]</div>
 
-							<list-filter
-			                    kind="[[data.kind]]"
-			                    field="{{dataField.field}}"
-			                    value="{{dataValue.value}}"
-								params="{{params}}"
-			                    route="{{route}}"
-			                    items="{{items}}"></list-filter>
-						</paper-menu>
-					</app-toolbar>
-				</app-header>
-			</app-drawer>
+				<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+				<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+				<paper-input id="inputSearch" placeholder="search" no-label-float
+				value="{{search::input}}"></paper-input>
 
+				<paper-spinner active$="[[loading]]"></paper-spinner>
+			</app-toolbar>
+	  		<app-toolbar primary>
+				<div title>
+					<paper-icon-button icon="icons:menu" on-tap="_menuToggle"></paper-icon-button>
+					ANDрејевићи
+				</div>
+				<a href="#/photo">
+					<paper-button on-tap="_resetFilter">Photos</paper-button>
+				</a>
+				<a href="#/entry">
+					<paper-button on-tap="_resetFilter">Texts</paper-button>
+				</a>
+			</app-toolbar>
+		</app-header>
+
+		<main>
 			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
 			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
-				<list-grid
+				<!-- <list-grid
 					data-view="grid"
 					kind="{{data.kind}}"
 					field="{{dataField.field}}"
@@ -95,15 +92,29 @@
 					route="{{route}}"
 					selected="{{selected}}"
 					loading="{{loading}}"
-					items="{{items}}"></list-grid>
+					items="{{items}}"></list-grid> -->
+
+				<list-filter
+					data-view="grid"
+					kind="[[data.kind]]"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
+					route="{{route}}"
+					items="{{items}}"></list-filter>
 
 				<list-detail
 					data-view="detail"
+					kind="{{data.kind}}"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
 					route="{{route}}"
-					selected="[[selected]]"
+					loading="{{loading}}"
 					items="[[items]]"></list-detail>
 			</neon-animated-pages>
-		</app-drawer-layout>
+
+		</main>
 	</template>
 
 	<script>
@@ -118,9 +129,13 @@
 				}
 			},
 			properties: {
-				view: { type: String, value: 'grid', notify: true, observer: '_toggleDrawer' },
+				// view: { type: String, value: 'grid', notify: true },
 				items: { type: Array, value: [], notify: true },
 				search: { type: String, value: null, notify: true },
+				view: {
+					computed: '_viewChanged(data.kind, dataField.field, dataValue.value)',
+					notify: true
+				},
 				targetSearch: {
 					type: Object,
 					value: function() {
@@ -128,16 +143,24 @@
 					}
 				},
 			},
-			listeners: {'menu-toggle': '_menuToggle'},
+			_viewChanged: function(kind, field, value) {
+				if (kind && field) {
+					return 'detail';
+				} else {
+					return 'grid';
+				}
+			},
+			// listeners: {'menu-toggle': '_menuToggle'},
 			_resetFilter: function(e) {
 				this.set('params.find', null);
 				this.set('params.page', null);
                 this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
+				// this.view = 'grid';
 
-				var layout = this.$.layout;
-                if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
+				// var layout = this.$.layout;
+                // if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
 				this.set('params.find', null);
@@ -146,18 +169,19 @@
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
 				this.set('route.path', '/search/' + this.search);
-				this.fire('menu-toggle');
+				// this.fire('menu-toggle');
+				this.view = 'detail';
 			},
-			_menuToggle: function(e) {
-				var layout = this.$.layout;
-				if (!layout.drawer.persistent) {
-					layout.drawer.opened = !layout.drawer.opened;
-				}
-			},
-			_toggleDrawer: function(newValue, oldValue) {
-				var layout = this.$.layout;
-				layout.forceNarrow = layout.drawer.persistent && newValue == 'detail';
-			}
+			// _menuToggle: function(e) {
+				// var layout = this.$.layout;
+				// if (!layout.drawer.persistent) {
+				// 	layout.drawer.opened = !layout.drawer.opened;
+				// }
+			// },
+			// _toggleDrawer: function(newValue, oldValue) {
+				// var layout = this.$.layout;
+				// layout.forceNarrow = layout.drawer.persistent && newValue == 'detail';
+			// }
 		});
 	</script>
 </dom-module>
