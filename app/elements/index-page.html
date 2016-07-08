@@ -70,12 +70,14 @@
 					<paper-icon-button icon="icons:menu" on-tap="_menuToggle"></paper-icon-button>
 					ANDрејевићи
 				</div>
-				<a href="#/photo" role="menuitem">
-					<paper-button on-tap="_resetFilter">Photos</paper-button>
-				</a>
-				<a href="#/entry" role="menuitem">
-					<paper-button on-tap="_resetFilter">Texts</paper-button>
-				</a>
+				<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]" class="layout horizontal">
+	                <a href="#/photo" kind-page="photo" on-tap="_resetFilter">
+						<paper-button>Photos</paper-button>
+					</a>
+	                <a href="#/entry" kind-page="entry" on-tap="_resetFilter">
+						<paper-button>Texts</paper-button>
+					</a>
+				</iron-selector>
 			</app-toolbar>
 		</app-header>
 
