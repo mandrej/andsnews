@@ -89,7 +89,7 @@
 					value="{{dataValue.value}}"
 					params="{{params}}"
 					route="{{route}}"
-					num="{{num}}"
+					start="{{start}}"
 					items="{{items}}"></list-filter>
 
 				<list-detail
@@ -99,7 +99,7 @@
 					value="{{dataValue.value}}"
 					params="{{params}}"
 					route="{{route}}"
-					num="{{num}}"
+					start="{{start}}"
 					loading="{{loading}}"
 					items="[[items]]"></list-detail>
 			</neon-animated-pages>
@@ -121,10 +121,11 @@
 			properties: {
 				// view: { type: String, value: 'grid', notify: true },
 				items: { type: Array, value: [], notify: true },
-				num: { type: Number, value: 0, notify: true },
+				start: { type: Number, value: 0, notify: true },
 				search: { type: String, value: null, notify: true },
 				view: {
 					computed: '_viewChanged(data.kind, dataField.field, dataValue.value)',
+					value: 'grid',
 					notify: true
 				},
 				targetSearch: {
@@ -137,9 +138,8 @@
 			_viewChanged: function(kind, field, value) {
 				if (kind && field) {
 					return 'detail';
-				} else {
-					return 'grid';
 				}
+				return 'grid';
 			},
 			// listeners: {'menu-toggle': '_menuToggle'},
 			_resetFilter: function(e) {
@@ -148,7 +148,7 @@
                 this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
-				this.num = 0;
+				this.start = 0;
 				// this.view = 'grid';
 
 				// var layout = this.$.layout;
@@ -162,7 +162,7 @@
 				this.set('dataValue.value', null);
 				this.set('route.path', '/search/' + this.search);
 				// this.fire('menu-toggle');
-				this.num = 0;
+				this.start = 0;
 				// this.view = 'detail';
 			},
 			// _menuToggle: function(e) {

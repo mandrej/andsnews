@@ -34,20 +34,18 @@
             handle-as="json"
             on-response="handler"
             loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+            debounce-duration="300"></iron-ajax>
 
-        <iron-swipeable-pages class="fit" selected="{{num}}" edgeSwipeSensitivity="15" threshold="0.1">
+        <iron-swipeable-pages class="fit" selected="{{start}}" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
                         <!-- <app-header fixed>
                             <app-toolbar>
-                                <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                 <div title>[[item.headline]]</div>
                                 <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
                             </app-toolbar>
                         </app-header> -->
-
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                             <p>
@@ -65,7 +63,6 @@
                     <div class="swipe">
                         <!-- <app-header fixed>
                             <app-toolbar>
-                                <paper-icon-button icon="icons:chevron-left" on-tap="_showList"></paper-icon-button>
                                 <div title>[[item.headline]]</div>
                             </app-toolbar>
                         </app-header> -->
@@ -80,6 +77,12 @@
                 </template>
             </template>
         </iron-swipeable-pages>
+
+        <iron-scroll-threshold id="scrollTheshold"
+            horizontal="true"
+            lower-threshold="500"
+            scroll-target="document"
+            on-lower-threshold="loadMore"></iron-scroll-threshold>
     </template>
 
     <script>
@@ -110,12 +113,12 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
-                num: { type: Number, value: 0, notify: true, observer: 'propertyChanged' },
                 items: {
                     type: Array,
                     value: [],
                     notify: true
                 },
+                start: { type: Number, value: 0, notify: true, observer: 'propertyChanged' },
                 params: {
                     type: Object,
                     value: {},
@@ -149,7 +152,7 @@
 				response.objects.forEach(function(item) {
 					this.push('items', item);
 				}, this);
-				// this.$.scrollTheshold.clearTriggers();
+				this.$.scrollTheshold.clearTriggers();
 			},
             loadMore: function() {
                 var list_ajax = this.$.list_ajax;

@@ -6,6 +6,8 @@ from google.appengine.ext import ndb
 from handlers import LazyEncoder, Paginator, SearchPaginator, cloud_limit
 from models import Cloud
 
+LIMIT = 12
+
 
 class RestHandler(webapp2.RequestHandler):
     def render(self, data):
@@ -19,7 +21,7 @@ class Collection(RestHandler):
         page = self.request.get('page', None)
         model = ndb.Model._kind_map.get(kind.title())
         query = model.query_for(field, value)
-        paginator = Paginator(query, per_page=24)
+        paginator = Paginator(query, per_page=LIMIT)
         objects, token = paginator.page(page)
 
         if not objects:
@@ -33,11 +35,10 @@ class Collection(RestHandler):
         })
 
 
-class KindFilter(RestHandler):
+class KindFilter(RestHandler):  # from handlers.RenderCloud
     def get(self, kind=None):
         fields = ['date', 'tags', 'author']
         model = ndb.Model._kind_map.get(kind.title())
-        logging.error(model)
         data = []
 
         for field in fields:
@@ -81,7 +82,7 @@ class Find(RestHandler):
     def get(self):
         find = self.request.get('find').strip()
         page = self.request.get('page', None)
-        paginator = SearchPaginator(find, per_page=24)
+        paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
 
         self.render({
