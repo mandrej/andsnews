@@ -36,6 +36,8 @@ class Collection(RestHandler):
 class KindFilter(RestHandler):
     def get(self, kind=None):
         fields = ['date', 'tags', 'author']
+        model = ndb.Model._kind_map.get(kind.title())
+        logging.error(model)
         data = []
 
         for field in fields:
@@ -51,6 +53,19 @@ class KindFilter(RestHandler):
                 items = sorted(items, key=itemgetter('name'), reverse=False)
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))
+
+            for item in items:
+                query = model.query_for(field, item['name'])
+                res = query.fetch(1)
+                try:
+                    obj = res[0]
+                except IndexError:
+                    pass
+                else:
+                    if kind == 'photo':
+                        item['repr_url'] = obj.serving_url + '=s400'
+                    elif kind == 'entry' and obj.front != -1:
+                        item['repr_url'] = obj.image_url(obj.front) + '/normal'
 
             limit = cloud_limit(items)
             data.append({

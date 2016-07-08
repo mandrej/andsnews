@@ -8,7 +8,6 @@
 		<style>
 			:host {
 				display: block;
-				/*min-height: 100vh;*/
 				--primary-color: var(--paper-indigo-700);
 			}
 			app-header {
@@ -71,10 +70,10 @@
 					<paper-icon-button icon="icons:menu" on-tap="_menuToggle"></paper-icon-button>
 					ANDрејевићи
 				</div>
-				<a href="#/photo">
+				<a href="#/photo" role="menuitem">
 					<paper-button on-tap="_resetFilter">Photos</paper-button>
 				</a>
-				<a href="#/entry">
+				<a href="#/entry" role="menuitem">
 					<paper-button on-tap="_resetFilter">Texts</paper-button>
 				</a>
 			</app-toolbar>
@@ -83,17 +82,6 @@
 		<main>
 			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
 			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
-				<!-- <list-grid
-					data-view="grid"
-					kind="{{data.kind}}"
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					params="{{params}}"
-					route="{{route}}"
-					selected="{{selected}}"
-					loading="{{loading}}"
-					items="{{items}}"></list-grid> -->
-
 				<list-filter
 					data-view="grid"
 					kind="[[data.kind]]"
@@ -101,6 +89,7 @@
 					value="{{dataValue.value}}"
 					params="{{params}}"
 					route="{{route}}"
+					num="{{num}}"
 					items="{{items}}"></list-filter>
 
 				<list-detail
@@ -110,6 +99,7 @@
 					value="{{dataValue.value}}"
 					params="{{params}}"
 					route="{{route}}"
+					num="{{num}}"
 					loading="{{loading}}"
 					items="[[items]]"></list-detail>
 			</neon-animated-pages>
@@ -131,6 +121,7 @@
 			properties: {
 				// view: { type: String, value: 'grid', notify: true },
 				items: { type: Array, value: [], notify: true },
+				num: { type: Number, value: 0, notify: true },
 				search: { type: String, value: null, notify: true },
 				view: {
 					computed: '_viewChanged(data.kind, dataField.field, dataValue.value)',
@@ -157,20 +148,22 @@
                 this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
+				this.num = 0;
 				// this.view = 'grid';
 
 				// var layout = this.$.layout;
                 // if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
 			_onSearch: function() {
-				this.set('params.find', null);
-				this.set('params.page', null);
+				// this.set('params.find', null);
+				// this.set('params.page', null);
                 this.items = [];
 				this.set('dataField.field', this.search);
 				this.set('dataValue.value', null);
 				this.set('route.path', '/search/' + this.search);
 				// this.fire('menu-toggle');
-				this.view = 'detail';
+				this.num = 0;
+				// this.view = 'detail';
 			},
 			// _menuToggle: function(e) {
 				// var layout = this.$.layout;

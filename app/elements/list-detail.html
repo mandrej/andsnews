@@ -18,8 +18,8 @@
                 user-select: none;
                 cursor: default;
             }
-            iron-image { width: 100%; height: 100%; }
-            paper-dialog {
+            .swipe iron-image { width: 100%; height: 100%; }
+            .swipe paper-dialog {
                 position: fixed;
                 height: auto;
                 left: 0;
@@ -36,7 +36,7 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
 
-        <iron-swipeable-pages class="fit" selected="0" edgeSwipeSensitivity="15" threshold="0.1">
+        <iron-swipeable-pages class="fit" selected="{{num}}" edgeSwipeSensitivity="15" threshold="0.1">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
@@ -110,6 +110,7 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
+                num: { type: Number, value: 0, notify: true, observer: 'propertyChanged' },
                 items: {
                     type: Array,
                     value: [],
@@ -164,9 +165,6 @@
             _dateFormat: function(value) {
                 return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
                 // return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
-            },
-            _showList: function(e) {
-                document.querySelector('index-page').view = 'grid';
             },
             _showExif: function(e) {
                 var id = e.model.item.slug,
