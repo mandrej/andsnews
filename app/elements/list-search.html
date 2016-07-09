@@ -1,0 +1,51 @@
+<dom-module id="list-search">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            paper-input {
+                display: inline-block;
+            }
+        </style>
+
+        <content>
+            <iron-icon icon="icons:search" style="margin-right: 8px"></iron-icon>
+            <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+            <paper-input id="inputSearch" placeholder="search" no-label-float
+                value="{{search::input}}"></paper-input>
+        </content>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'list-search',
+            properties: {
+                field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
+                items: {
+                    type: Array,
+                    value: [],
+                    notify: true
+                },
+                start: { type: Number, value: 0, notify: true },
+                search: { type: String, value: null, notify: true },
+                targetSearch: {
+					type: Object,
+					value: function() {
+						return this.$.inputSearch
+					}
+				},
+            },
+            _onSearch: function() {
+				this.field =this.search;
+				this.value = null;
+                this.items = [];
+				this.start = 0;
+                this.set('route.path', '/search/' + this.search);
+				var drawer = document.querySelector('#drawer');
+				drawer.close();
+			},
+        });
+    </script>
+</dom-module>

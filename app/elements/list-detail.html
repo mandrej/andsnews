@@ -24,7 +24,7 @@
                 height: auto;
                 left: 0;
                 right: 0;
-                bottom: 50px;
+                bottom: 128px;
             }
         </style>
 
@@ -40,12 +40,11 @@
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <!-- <app-header fixed>
-                            <app-toolbar>
-                                <div title>[[item.headline]]</div>
-                                <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
-                            </app-toolbar>
-                        </app-header> -->
+                        <app-toolbar>
+                            <div title>[[item.headline]]</div>
+                            <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
+                        </app-toolbar>
+
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                             <p>
@@ -61,11 +60,9 @@
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
-                        <!-- <app-header fixed>
-                            <app-toolbar>
-                                <div title>[[item.headline]]</div>
-                            </app-toolbar>
-                        </app-header> -->
+                        <app-toolbar>
+                            <div title>[[item.headline]]</div>
+                        </app-toolbar>
 
                         <paper-card elevation="0" animated-shadow="false">
                             <div class="card-content" style="padding: 16px">
@@ -118,7 +115,7 @@
                     value: [],
                     notify: true
                 },
-                start: { type: Number, value: 0, notify: true, observer: 'propertyChanged' },
+                start: { type: Number, value: 0, notify: true },
                 params: {
                     type: Object,
                     value: {},
@@ -137,7 +134,7 @@
             },
             observers: ['paramsChanged(params.*)'],
             _url: function(kind, field, value) {
-				var prefix = '/api', url;
+				var url, prefix = '/api';
 
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind].join('/')

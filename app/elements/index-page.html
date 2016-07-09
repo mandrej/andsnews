@@ -1,6 +1,6 @@
 <link rel="import" href="elements.html">
+<link rel="import" href="list-search.html">
 <link rel="import" href="list-filter.html">
-<link rel="import" href="list-grid.html">
 <link rel="import" href="list-detail.html">
 
 <dom-module id="index-page">
@@ -33,8 +33,7 @@
 				text-decoration: none;
 			}
 			app-drawer {
-				height: 100%;
-				/*height: calc(100vh + 128px);*/
+				min-height: 100vh;
 			}
 			paper-item a {
 				color: inherit;
@@ -50,7 +49,7 @@
 				top: 0;
 				left: 0;
 				font-size: 42px;
-				font-weight: 100;
+				font-weight: 300;
 				line-height: 64px;
 			}
 		</style>
@@ -81,11 +80,13 @@
 
 		<app-header condenses reveals fixed>
 			<app-toolbar hidden$="[[smallScreen]]">
-				<div title></div>
-				<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
-				<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-				<paper-input id="inputSearch" placeholder="search" no-label-float
-					value="{{search::input}}"></paper-input>
+				<div title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div>
+				<list-search
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					route="{{route}}"
+					start="{{start}}"
+					items="{{items}}"></list-search>
 
 				<paper-spinner active$="[[loading]]"></paper-spinner>
 			</app-toolbar>
@@ -106,11 +107,13 @@
 
 			<app-drawer id="drawer" swipe-open>
 				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
-					<paper-item kind-page="search">
-						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
-						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-						<paper-input id="inputSearch" placeholder="search" no-label-float
-							value="{{search::input}}"></paper-input>
+					<paper-item>
+						<list-search
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
+							route="{{route}}"
+							start="{{start}}"
+							items="{{items}}"></list-search>
 					</paper-item>
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/photo" class="flex">
@@ -165,20 +168,12 @@
 				}
 			},
 			properties: {
-				// view: { type: String, value: 'grid', notify: true },
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
-				search: { type: String, value: null, notify: true },
 				view: {
 					computed: '_viewChanged(data.kind, dataField.field, dataValue.value)',
 					value: 'grid',
 					notify: true
-				},
-				targetSearch: {
-					type: Object,
-					value: function() {
-						return this.$.inputSearch
-					}
 				},
 			},
 			_viewChanged: function(kind, field, value) {
@@ -187,44 +182,18 @@
 				}
 				return 'grid';
 			},
-			// listeners: {'menu-toggle': '_menuToggle'},
 			_resetFilter: function(e) {
 				this.set('params.find', null);
 				this.set('params.page', null);
-                this.items = [];
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
+				this.items = [];
 				this.start = 0;
 				var drawer = this.$.drawer;
 				drawer.close();
-				// this.view = 'grid';
-
-				// var layout = this.$.layout;
-                // if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
 			},
-			_onSearch: function() {
-				// this.set('params.find', null);
-				// this.set('params.page', null);
-                this.items = [];
-				this.set('dataField.field', this.search);
-				this.set('dataValue.value', null);
-				this.set('route.path', '/search/' + this.search);
-				// this.fire('menu-toggle');
-				this.start = 0;
-				var drawer = this.$.drawer;
-				drawer.close();
-				// this.view = 'detail';
-			},
-			// _menuToggle: function(e) {
-				// var layout = this.$.layout;
-				// if (!layout.drawer.persistent) {
-				// 	layout.drawer.opened = !layout.drawer.opened;
-				// }
-			// },
 			_drawerToggle: function() {
-				console.log('TAP');
-				var drawer = this.$.drawer;
-				drawer.toggle();
+				this.$.drawer.toggle();
 			}
 		});
 	</script>
