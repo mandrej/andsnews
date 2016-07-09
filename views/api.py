@@ -3,7 +3,7 @@ import logging
 import webapp2
 from operator import itemgetter
 from google.appengine.ext import ndb
-from handlers import LazyEncoder, Paginator, SearchPaginator, cloud_limit
+from handlers import LazyEncoder, Paginator, SearchPaginator
 from models import Cloud
 
 LIMIT = 12
@@ -35,6 +35,24 @@ class Collection(RestHandler):
         })
 
 
+def cloud_limit(items):
+    """
+    Returns limit for the specific count. Show only if count > limit
+    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    :return: int
+    """
+    _curr = 0
+    _sum5 = sum((x['count'] for x in items)) * 0.05
+    if _sum5 < 1:
+        return 0
+    else:
+        _on_count = sorted(items, key=itemgetter('count'))
+        for item in _on_count:
+            _curr += item['count']
+            if _curr >= _sum5:
+                return item['count']
+
+
 class KindFilter(RestHandler):  # from handlers.RenderCloud
     def get(self, kind=None):
         fields = ['date', 'tags', 'author']
@@ -43,7 +61,10 @@ class KindFilter(RestHandler):  # from handlers.RenderCloud
 
         for field in fields:
             mem_key = kind.title() + '_' + field
-            items = Cloud(mem_key).get_list()
+            cloud = Cloud(mem_key).get_list()
+
+            limit = cloud_limit(cloud)
+            items = [x for x in cloud if x['count'] > limit]
 
             if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
                 items = sorted(items, key=itemgetter('count'), reverse=True)
@@ -68,11 +89,9 @@ class KindFilter(RestHandler):  # from handlers.RenderCloud
                     elif kind == 'entry' and obj.front != -1:
                         item['repr_url'] = obj.image_url(obj.front) + '/normal'
 
-            limit = cloud_limit(items)
             data.append({
                 'field_name': field,
-                'items': items,
-                'limit': limit
+                'items': items
             })
 
         self.render(data)

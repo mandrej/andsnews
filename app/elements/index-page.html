@@ -52,6 +52,11 @@
 				font-weight: 300;
 				line-height: 64px;
 			}
+			h1 a {
+				background: -webkit-linear-gradient(#fff, #000);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -84,6 +89,7 @@
 				<list-search
 					field="{{dataField.field}}"
 					value="{{dataValue.value}}"
+					params="{{params}}"
 					route="{{route}}"
 					start="{{start}}"
 					items="{{items}}"></list-search>
@@ -111,6 +117,7 @@
 						<list-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
+							params="{{params}}"
 							route="{{route}}"
 							start="{{start}}"
 							items="{{items}}"></list-search>
@@ -189,8 +196,7 @@
 				this.set('dataValue.value', null);
 				this.items = [];
 				this.start = 0;
-				var drawer = this.$.drawer;
-				drawer.close();
+				this.$.drawer.close();
 			},
 			_drawerToggle: function() {
 				this.$.drawer.toggle();

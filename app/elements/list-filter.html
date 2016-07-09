@@ -51,7 +51,10 @@
                 <div class="rec"
                     data-field$="[[row.field_name]]" on-tap="_applyFilter">
                     <iron-image src="[[rec.repr_url]]" preload sizing="cover"></iron-image>
-                    <div class$="title [[_selectedFilter(rec.name, value)]]">[[rec.name]]</div>
+                    <div class$="title [[_selectedFilter(rec.name, value)]]">
+                        [[rec.name]]
+                        <span style="float: right">[[rec.count]]</span>
+                    </div>
                     <paper-ripple></paper-ripple>
                 </div>
             </template>

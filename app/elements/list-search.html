@@ -38,13 +38,13 @@
 				},
             },
             _onSearch: function() {
-				this.field =this.search;
+                this.set('params.find', this.search);
+				this.set('params.page', null);
 				this.value = null;
                 this.items = [];
 				this.start = 0;
                 this.set('route.path', '/search/' + this.search);
-				var drawer = document.querySelector('#drawer');
-				drawer.close();
+				document.querySelector('#drawer').close();
 			},
         });
     </script>
