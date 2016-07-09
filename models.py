@@ -187,40 +187,40 @@ def remove_doc(safe_key):
     INDEX.delete(safe_key)
 
 
-def _calculate_thresholds(min_weight, max_weight, steps):
-    delta = (max_weight - min_weight) / steps
-    return [min_weight + i * delta for i in range(1, steps + 1)]
-
-
-def _calculate_tag_weight(weight, max_weight, distribution):
-    if distribution == LINEAR or max_weight == 1:
-        return weight
-    elif distribution == LOGARITHMIC:
-        return math.log(weight) * max_weight / math.log(max_weight)
-    raise ValueError('Invalid distribution algorithm specified: %s.' % distribution)
-
-
-def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
-    """
-    tags:  {u'mihailo': 2L, u'urban': 2L, u'belgrade': 3L, u'macro': 5L, ...}
-    return [{'count': 2L, 'name': u'mihailo', 'size': 1},
-            {'count': 5L, 'name': u'macro', 'size': 7}, ...]
-    """
-    data = []
-    if len(tags) > 0:
-        counts = tags.values()
-        min_weight = float(min(counts))
-        max_weight = float(max(counts)) + 0.0000001
-        thresholds = _calculate_thresholds(min_weight, max_weight, steps)
-        for key, val in tags.items():
-            font_set = False
-            tag_weight = _calculate_tag_weight(val, max_weight, distribution)
-            for i in range(steps):
-                if not font_set and tag_weight <= thresholds[i]:
-                    data.append({'name': key, 'count': val, 'size': i + 1})
-                    font_set = True
-                    break
-    return data
+# def _calculate_thresholds(min_weight, max_weight, steps):
+#     delta = (max_weight - min_weight) / steps
+#     return [min_weight + i * delta for i in range(1, steps + 1)]
+#
+#
+# def _calculate_tag_weight(weight, max_weight, distribution):
+#     if distribution == LINEAR or max_weight == 1:
+#         return weight
+#     elif distribution == LOGARITHMIC:
+#         return math.log(weight) * max_weight / math.log(max_weight)
+#     raise ValueError('Invalid distribution algorithm specified: %s.' % distribution)
+#
+#
+# def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
+#     """
+#     tags:  {u'mihailo': 2L, u'urban': 2L, u'belgrade': 3L, u'macro': 5L, ...}
+#     return [{'count': 2L, 'name': u'mihailo', 'size': 1},
+#             {'count': 5L, 'name': u'macro', 'size': 7}, ...]
+#     """
+#     data = []
+#     if len(tags) > 0:
+#         counts = tags.values()
+#         min_weight = float(min(counts))
+#         max_weight = float(max(counts)) + 0.0000001
+#         thresholds = _calculate_thresholds(min_weight, max_weight, steps)
+#         for key, val in tags.items():
+#             font_set = False
+#             tag_weight = _calculate_tag_weight(val, max_weight, distribution)
+#             for i in range(steps):
+#                 if not font_set and tag_weight <= thresholds[i]:
+#                     data.append({'name': key, 'count': val, 'size': i + 1})
+#                     font_set = True
+#                     break
+#     return data
 
 
 class Cloud(object):
@@ -228,7 +228,7 @@ class Cloud(object):
         {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
 
         get_list:
-        [{'size': 4, 'count': 3, 'name': 'mihailo.genije'}, {'size': 8, 'count': 11, 'name': 'milan.andrejevic'}, ...]
+        [{'count': 3, 'name': 'mihailo.genije'}, {'count': 11, 'name': 'milan.andrejevic'}, ...]
     """
 
     def __init__(self, mem_key):
@@ -251,7 +251,10 @@ class Cloud(object):
                 data.update({'count': count, 'field': self.field})
                 content.append(data)
         else:
-            content = calculate_cloud(collection)
+            # content = calculate_cloud(collection)
+            for k, v in collection.items():
+                data = {'name': k, 'count': v}
+                content.append(data)
         return content
 
     def make(self):
