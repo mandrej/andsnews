@@ -8,27 +8,50 @@
 		<style>
 			:host {
 				display: block;
-				--primary-color: var(--paper-indigo-700);
 			}
+			main {
+				margin-top: 128px;
+			}
+			@media (max-width: 767px) {
+        		main {
+          			margin-top: 64px;
+				}
+        	}
 			app-header {
       			position: fixed;
       			top: 0;
       			left: 0;
       			width: 100%;
-      			height: 128px;
-				color: var(--dark-theme-text-color);
-                background-color: var(--primary-color);
+				color: var(--light-theme-text-color);
+                background-color: var(--light-theme-background-color);
 				z-index: 1;
           	}
 			app-toolbar a {
+				display: inline-block;
+				margin: 0 16px;
 				color: inherit;
 				text-decoration: none;
 			}
-			paper-input {
-				--paper-input-container-input-color: var(--dark-theme-text-color);
+			app-drawer {
+				height: 100%;
+				/*height: calc(100vh + 128px);*/
 			}
-			main {
-				padding-top: 128px;
+			paper-item a {
+				color: inherit;
+				text-decoration: none;
+			}
+            paper-item iron-icon {
+                margin-right: 16px;
+                color: var(--light-theme-secondary-color);
+            }
+			h1 {
+				margin: 0;
+				position: absolute;
+				top: 0;
+				left: 0;
+				font-size: 42px;
+				font-weight: 100;
+				line-height: 64px;
 			}
 		</style>
 
@@ -54,31 +77,53 @@
 			tail="{{tailValue}}"
 			active="{{activeValue}}"></app-route>
 
-		<app-header condenses reveals fixed>
-			<app-toolbar>
-				<div title>[[data.kind]], [[dataField.field]], [[dataValue.value]]</div>
+		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<app-header condenses reveals fixed>
+			<app-toolbar hidden$="[[smallScreen]]">
+				<div title></div>
 				<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
 				<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
 				<paper-input id="inputSearch" placeholder="search" no-label-float
-				value="{{search::input}}"></paper-input>
+					value="{{search::input}}"></paper-input>
 
 				<paper-spinner active$="[[loading]]"></paper-spinner>
 			</app-toolbar>
-	  		<app-toolbar primary>
-				<div title>
-					<paper-icon-button icon="icons:menu" on-tap="_menuToggle"></paper-icon-button>
-					ANDрејевићи
-				</div>
+	  		<app-toolbar hidden$="[[smallScreen]]" primary>
+				<h1 class="logo"><a href="/">ANDрејевићи</a></h1>
+				<div title></div>
 				<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]" class="layout horizontal">
-	                <a href="#/photo" kind-page="photo" on-tap="_resetFilter">
-						<paper-button>Photos</paper-button>
-					</a>
-	                <a href="#/entry" kind-page="entry" on-tap="_resetFilter">
-						<paper-button>Texts</paper-button>
-					</a>
+	                <a href="#/photo" kind-page="photo" on-tap="_resetFilter">Photos</a>
+	                <a href="#/entry" kind-page="entry" on-tap="_resetFilter">Texts</a>
 				</iron-selector>
 			</app-toolbar>
+			<app-toolbar hidden$="[[!smallScreen]]">
+				<paper-icon-button icon="icons:menu"
+					on-tap="_drawerToggle"></paper-icon-button>
+				<div title><a href="/">ANDрејевићи</a></div>
+				<paper-spinner active$="[[loading]]"></paper-spinner>
+			</app-toolbar>
+
+			<app-drawer id="drawer" swipe-open>
+				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
+					<paper-item kind-page="search">
+						<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+						<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+						<paper-input id="inputSearch" placeholder="search" no-label-float
+							value="{{search::input}}"></paper-input>
+					</paper-item>
+					<paper-item kind-page="photo" on-tap="_resetFilter">
+		                <a href="#/photo" class="flex">
+		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
+		                </a>
+		            </paper-item>
+		            <paper-item kind-page="entry" on-tap="_resetFilter">
+		                <a href="#/entry" class="flex">
+		                    <iron-icon icon="icons:description"></iron-icon>Texts
+		                </a>
+		            </paper-item>
+				</paper-menu>
+			</app-drawer>
 		</app-header>
 
 		<main>
@@ -105,7 +150,6 @@
 					loading="{{loading}}"
 					items="[[items]]"></list-detail>
 			</neon-animated-pages>
-
 		</main>
 	</template>
 
@@ -151,6 +195,8 @@
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
 				this.start = 0;
+				var drawer = this.$.drawer;
+				drawer.close();
 				// this.view = 'grid';
 
 				// var layout = this.$.layout;
@@ -165,6 +211,8 @@
 				this.set('route.path', '/search/' + this.search);
 				// this.fire('menu-toggle');
 				this.start = 0;
+				var drawer = this.$.drawer;
+				drawer.close();
 				// this.view = 'detail';
 			},
 			// _menuToggle: function(e) {
@@ -173,10 +221,11 @@
 				// 	layout.drawer.opened = !layout.drawer.opened;
 				// }
 			// },
-			// _toggleDrawer: function(newValue, oldValue) {
-				// var layout = this.$.layout;
-				// layout.forceNarrow = layout.drawer.persistent && newValue == 'detail';
-			// }
+			_drawerToggle: function() {
+				console.log('TAP');
+				var drawer = this.$.drawer;
+				drawer.toggle();
+			}
 		});
 	</script>
 </dom-module>

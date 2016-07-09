@@ -601,11 +601,11 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except (images.Error, apiproxy_errors.DeadlineExceededError), e:
-            logging.error(e.message)
-        return None
+        # try:
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        # except (images.Error, apiproxy_errors.DeadlineExceededError), e:
+        #     logging.error(e.message)
+        # return None
 
     @property
     def hex(self):
@@ -636,8 +636,9 @@ class Photo(ndb.Model):
             'rgb', 'sat', 'lum', 'hue', 'year',
             'aperture', 'shutter', 'focal_length', 'crop_factor'))
         data.update({
+            'kind': self.kind.lower(),
             'slug': self.key.string_id(),
-            'url': webapp2.uri_for('photo', slug=self.key.string_id()),
+            # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
         })
         return data
@@ -769,7 +770,12 @@ class Entry(ndb.Model):
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
+            'kind': self.kind.lower(),
             'slug': self.key.string_id(),
-            'url': webapp2.uri_for('entry', slug=self.key.string_id()),
+            # 'url': webapp2.uri_for('entry', slug=self.key.string_id()),
         })
+        if self.front != -1:
+            data.update({
+                'front': self.image_url(self.front)
+            })
         return data
