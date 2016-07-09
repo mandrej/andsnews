@@ -251,7 +251,10 @@ class Cloud(object):
                 data.update({'count': count, 'field': self.field})
                 content.append(data)
         else:
-            content = calculate_cloud(collection)
+            # content = calculate_cloud(collection)
+            for name, count in collection.items():
+                data = {'name': name, 'count': count}
+                content.append(data)
         return content
 
     def make(self):
