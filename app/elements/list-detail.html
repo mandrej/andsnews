@@ -36,12 +36,12 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
 
-        <iron-swipeable-pages class="fit" selected="{{start}}" edgeSwipeSensitivity="15" threshold="0.1">
+        <iron-swipeable-pages class="fit" selected="{{start}}">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
                         <app-toolbar>
-                            <div title>[[item.headline]]</div>
+                            <div main-title>[[item.headline]]</div>
                             <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
                         </app-toolbar>
 
@@ -61,7 +61,7 @@
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
                         <app-toolbar>
-                            <div title>[[item.headline]]</div>
+                            <div main-title>[[item.headline]]</div>
                         </app-toolbar>
 
                         <paper-card elevation="0" animated-shadow="false">
@@ -77,7 +77,7 @@
 
         <iron-scroll-threshold id="scrollTheshold"
             horizontal="true"
-            lower-threshold="500"
+            lower-threshold="2000"
             scroll-target="document"
             on-lower-threshold="loadMore"></iron-scroll-threshold>
     </template>
