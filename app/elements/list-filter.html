@@ -63,7 +63,36 @@
     <script>
         Polymer({
             is: 'list-filter',
+            behaviors: [
+                Polymer.NeonSharedElementAnimatableBehavior,
+                Polymer.NeonAnimationRunnerBehavior
+            ],
+            attached: function() {
+                this.addEventListener('dom-change', function(e) {
+                    var nodeList = this.querySelectorAll('.rec');
+                    this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(nodeList);
+                    this.animationConfig['entry'][1].nodes = this.animationConfig['entry'][0].nodes;
+                    this.playAnimation('entry');
+                });
+            },
             properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'cascaded-animation',
+                                animation: 'fade-in-animation',
+                                nodeDelay: 50
+                            }, {
+                                name: 'cascaded-animation',
+                                animation: 'transform-animation',
+                                transformFrom: 'translateY(-56px)',
+                                nodeDelay: 50
+                            }]
+                        }
+                    }
+                },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 items: {

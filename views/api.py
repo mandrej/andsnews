@@ -2,9 +2,11 @@ import json
 import logging
 import webapp2
 from operator import itemgetter
+from google.appengine.api import memcache
 from google.appengine.ext import ndb
 from handlers import LazyEncoder, Paginator, SearchPaginator
 from models import Cloud
+from config import TIMEOUT
 
 LIMIT = 12
 
@@ -53,12 +55,13 @@ def cloud_limit(items):
                 return item['count']
 
 
-class KindFilter(RestHandler):  # from handlers.RenderCloud
-    def get(self, kind=None):
-        fields = ['date', 'tags', 'author']
-        model = ndb.Model._kind_map.get(kind.title())
-        data = []
+def cloud_representation(kind):
+    fields = ['date', 'tags', 'author']
+    model = ndb.Model._kind_map.get(kind.title())
+    data = memcache.get('%s_representation' % kind)
 
+    if data is None:
+        data = []
         for field in fields:
             mem_key = kind.title() + '_' + field
             cloud = Cloud(mem_key).get_list()
@@ -93,7 +96,14 @@ class KindFilter(RestHandler):  # from handlers.RenderCloud
                 'field_name': field,
                 'items': items
             })
+        memcache.set('%s_representation' % kind, data, TIMEOUT * 2)
 
+    return data
+
+
+class KindFilter(RestHandler):  # from handlers.RenderCloud
+    def get(self, kind=None):
+        data = cloud_representation(kind)
         self.render(data)
 
 

@@ -94,10 +94,16 @@
                     value: function() {
                         return {
                             'entry': [{
+                                name: 'fade-in-animation',
+                                node: this,
+                                timing: {
+                                    delay: 150
+                                }
+                            }, {
                                 name: 'slide-from-right-animation',
                                 node: this,
                                 timing: {
-                                    delay: 50
+                                    delay: 150
                                 }
                             }],
                             'exit': [{
