@@ -6,12 +6,14 @@
             :host {
                 display: block;
                 height: 100vh;
+                position: relative;
             }
             app-toolbar {
                 color: var(--dark-theme-text-color);
                 background-color: var(--primary-color);
             }
             .swipe {
+                overflow: hidden;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
@@ -26,6 +28,19 @@
                 right: 0;
                 bottom: 128px;
             }
+            paper-dialog.info {
+                margin: 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                --paper-dialog-background-color: var(--google-yellow-300);
+                --paper-dialog-title: {
+                    font-size: var(--app-toolbar-font-size);
+                }
+            }
         </style>
 
         <iron-ajax id="list_ajax" auto
@@ -36,11 +51,9 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
 
-        <template is="dom-if" if="{{items}}" restamp="true">
-            <app-toolbar>
-                <div main-title>Nothing found</div>
-            </app-toolbar>
-        </template>
+        <paper-dialog id="message" class="info" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+            <h2>No entries</h2>
+        </paper-dialog>
 
         <iron-swipeable-pages class="fit" selected="{{start}}">
             <template is="dom-repeat" items="{{items}}">
@@ -52,7 +65,7 @@
                         </app-toolbar>
 
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
-                        <paper-dialog id="[[item.slug]]" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+                        <paper-dialog id="[[item.slug]]" entry-animation="slide-down-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
                                 [[item.author]]<br><br>
@@ -156,6 +169,10 @@
 			},
 			handler: function(request) {
 				var response = request.detail.response;
+                if (response.objects.length == 0) {
+                    var dialog = document.getElementById('message');
+                    dialog.open();
+                }
 				response.objects.forEach(function(item) {
 					this.push('items', item);
 				}, this);
