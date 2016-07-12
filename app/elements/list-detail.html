@@ -36,6 +36,12 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
 
+        <template is="dom-if" if="{{items}}" restamp="true">
+            <app-toolbar>
+                <div main-title>Nothing found</div>
+            </app-toolbar>
+        </template>
+
         <iron-swipeable-pages class="fit" selected="{{start}}">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
