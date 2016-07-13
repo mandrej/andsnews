@@ -45,24 +45,26 @@
 				text-transform: lowercase;
 			}
 			h1 {
-				margin: 0 0 0 16px;
-				position: absolute;
+				margin: 0;
+				/*position: absolute;
 				top: 0;
-				left: 0;
+				left: 0;*/
 				font-size: 36px;
 				font-weight: 300;
 				line-height: 64px;
+				white-space: nowrap;
+				width: calc(100% - 275px);
+				text-overflow: ellipsis;
+				/*background: -webkit-linear-gradient(#fff, #000);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;*/
 			}
 			@media (max-width: 767px) {
         		h1 {
           			margin-left: 64px;
+					width: calc(100% - 100px);
 				}
         	}
-			h1 a {
-				background: -webkit-linear-gradient(#fff, #000);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-			}
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -102,9 +104,23 @@
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky>
-				<paper-icon-button icon="icons:menu" hidden$="[[!smallScreen]]"
+				<template is="dom-if" if="{{detailView}}" restamp="true">
+					<paper-icon-button icon="icons:chevron-left" on-tap="_resetFilter"></paper-icon-button>
+				</template>
+				<template is="dom-if" if="{{!detailView}}" restamp="true">
+					<template is="dom-if" if="[[smallScreen]]" restamp="true">
+						<template>
+							<paper-icon-button icon="icons:menu" on-tap="_drawerToggle"></paper-icon-button>
+						</template>
+					</template>
+				</template>
+
+				<!-- <paper-icon-button icon="icons:menu" hidden$="[[!smallScreen]]"
 					on-tap="_drawerToggle"></paper-icon-button>
-				<h1 class="logo"><a href="/">ANDрејевићи</a></h1>
+				<paper-icon-button icon="icons:menu" hidden$="[[!smallScreen]]"
+					on-tap="_drawerToggle"></paper-icon-button> -->
+
+				<h1>{{headline}}</h1>
 				<div main-title></div>
 				<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]" hidden$="[[smallScreen]]">
 	                <a href="#/photo" kind-page="photo" on-tap="_resetFilter">
@@ -161,7 +177,8 @@
 					route="{{route}}"
 					start="{{start}}"
 					loading="{{loading}}"
-					items="[[items]]"></list-detail>
+					items="[[items]]"
+					headline="{{headline}}"></list-detail>
 			</neon-animated-pages>
 		</main>
 	</template>
@@ -180,6 +197,7 @@
 			properties: {
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
+				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				view: {
 					computed: '_viewChanged(data.kind, dataField.field)',
 					value: 'grid',
@@ -192,6 +210,9 @@
 				}
 				return 'grid';
 			},
+			detailView: function() {
+				return this.view == 'detail';
+			},
 			_resetFilter: function(e) {
 				this.set('params.find', null);
 				this.set('params.page', null);
@@ -199,6 +220,7 @@
 				this.set('dataValue.value', null);
 				this.items = [];
 				this.start = 0;
+				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 			},
 			_drawerToggle: function() {

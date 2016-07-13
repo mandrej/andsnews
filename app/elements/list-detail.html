@@ -55,14 +55,15 @@
             <h2>No entries</h2>
         </paper-dialog>
 
-        <iron-swipeable-pages class="fit" selected="{{start}}">
+        <iron-swipeable-pages class="fit" selected="{{start}}"
+            threshold="0.1" edge-swipe-sensitivity="35">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <app-toolbar>
+                        <!-- <app-toolbar>
                             <div main-title>[[item.headline]]</div>
                             <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
-                        </app-toolbar>
+                        </app-toolbar> -->
 
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="slide-down-animation" exit-animation="fade-out-animation">
@@ -79,9 +80,9 @@
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
-                        <app-toolbar>
+                        <!-- <app-toolbar>
                             <div main-title>[[item.headline]]</div>
-                        </app-toolbar>
+                        </app-toolbar> -->
 
                         <div style="padding: 16px">
                             <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
@@ -138,7 +139,8 @@
                     value: [],
                     notify: true
                 },
-                start: { type: Number, value: 0, notify: true },
+                start: { type: Number, value: 0, notify: true, observer: 'changeHeadline' },
+                headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: {
                     type: Object,
                     value: {},
@@ -156,6 +158,11 @@
                 },
             },
             observers: ['paramsChanged(params.*)'],
+            changeHeadline: function(newValue, oldValue) {
+                if (this.items.length > 0) {
+                    this.headline = this.items[newValue].headline;
+                }
+            },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';
 
@@ -172,11 +179,16 @@
                 if (response.objects.length == 0) {
                     var dialog = document.getElementById('message');
                     dialog.open();
+                } else {
+                    response.objects.forEach(function(item) {
+                        this.push('items', item);
+                    }, this);
+                    this.$.scrollTheshold.clearTriggers();
+
+                    if (this.headline == 'ANDрејевићи') {
+                        this.headline = this.items[this.start].headline;
+                    }
                 }
-				response.objects.forEach(function(item) {
-					this.push('items', item);
-				}, this);
-				this.$.scrollTheshold.clearTriggers();
 			},
             loadMore: function() {
                 var list_ajax = this.$.list_ajax;
