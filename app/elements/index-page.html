@@ -25,16 +25,12 @@
 				color: var(--light-theme-text-color);
                 background-color: var(--light-theme-background-color);
 				z-index: 1;
-
+				@apply(--shadow-elevation-4dp);
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
 				text-decoration: none;
 			}
-			app-toolbar[sticky] {
-				@apply(--shadow-elevation-4dp);
-			}
-
 			app-drawer {
 				min-height: 100vh;
 				top: 0;
@@ -118,8 +114,9 @@
 				<h1 main-title>{{headline}}</h1>
 
 				<template is="dom-if" if="[[detailView(view)]]">
-					<!-- for photo only -->
-					<paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
+					<template is="dom-if" if="[[_showPhoto(data.kind)]]">
+						<paper-icon-button icon="icons:more-vert" on-tap="showExif"></paper-icon-button>
+					</template>
 				</template>
 				<template is="dom-if" if="[[!detailView(view)]]">
 					<template is="dom-if" if="[[!smallScreen]]">
@@ -230,13 +227,11 @@
 			_drawerToggle: function() {
 				this.$.drawer.toggle();
 			},
-			_showExif: function(e) {
-				console.log(this.start);
-                // var id = e.model.item.slug,
-                //     dialog = document.getElementById(id);
-                // if (dialog) {
-                //     dialog.open();
-                // }
+			_showPhoto: function(kind) {
+				return kind == 'photo'
+			},
+			showExif: function(e) {
+				document.querySelector('list-detail').fire('show-exif');
             },
 		});
 	</script>

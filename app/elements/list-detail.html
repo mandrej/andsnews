@@ -60,13 +60,8 @@
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <!-- <app-toolbar>
-                            <div main-title>[[item.headline]]</div>
-                            <paper-icon-button icon="icons:more-vert" on-tap="_showExif"></paper-icon-button>
-                        </app-toolbar> -->
-
                         <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
-                        <paper-dialog id="[[item.slug]]" entry-animation="slide-down-animation" exit-animation="fade-out-animation">
+                        <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
                                 [[item.author]]<br><br>
@@ -80,10 +75,6 @@
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
                     <div class="swipe">
-                        <!-- <app-toolbar>
-                            <div main-title>[[item.headline]]</div>
-                        </app-toolbar> -->
-
                         <div style="padding: 16px">
                             <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
                             <template is="juicy-html" content$="[[item.body]]"></template>
@@ -158,6 +149,9 @@
                 },
             },
             observers: ['paramsChanged(params.*)'],
+            listeners: {
+                'show-exif': '_showExif'
+            },
             changeHeadline: function(newValue, oldValue) {
                 if (this.items.length > 0) {
                     this.headline = this.items[newValue].headline;
@@ -206,7 +200,8 @@
                 // return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
             },
             _showExif: function(e) {
-                var id = e.model.item.slug,
+                var id = e.target.items[this.start].slug,
+                    // id = e.model.item.slug,
                     dialog = document.getElementById(id);
                 if (dialog) {
                     dialog.open();
