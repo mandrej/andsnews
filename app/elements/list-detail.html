@@ -13,7 +13,6 @@
                 background-color: var(--primary-color);
             }
             .swipe {
-                overflow: hidden;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
@@ -88,7 +87,10 @@
                     <div class="swipe">
                         <div style="padding: 16px">
                             <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
-                            <template is="juicy-html" content$="[[item.body]]"></template>
+                            <!-- <template is="juicy-html" content$="[[item.body]]"></template> -->
+                            <marked-element markdown="[[item.body]]">
+                                <div class="markdown-html"></div>
+                            </marked-element>
                         </div>
                     </div>
                 </template>
