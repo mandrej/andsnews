@@ -41,6 +41,10 @@
                     font-size: var(--app-toolbar-font-size);
                 }
             }
+            paper-button {
+                color: var(--dark-theme-text-color);
+                background-color: var(--paper-red-500);
+            }
         </style>
 
         <iron-ajax id="list_ajax" auto
@@ -50,6 +54,8 @@
             on-response="handler"
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
+
+        <iron-request id="download_ajax"></iron-request>
 
         <paper-dialog id="message" class="info" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <h2>No entries</h2>
@@ -69,6 +75,11 @@
                                 [[item.lens]]<br>
                                 [[item.eqv]] mm<br>
                                 [[item.iso]] ASA
+                            </p>
+                            <p>
+                                <paper-button dialog-confirm on-tap="_Download" data-url="[[item.download_url]]">
+                                    <iron-icon icon="file-download"></iron-icon>Download
+                                </paper-button>
                             </p>
                         </paper-dialog>
                     </div>
@@ -206,6 +217,11 @@
                 if (dialog) {
                     dialog.open();
                 }
+            },
+            _Download: function(e) {
+                e.preventDefault();
+                var url = e.target.dataUrl,
+                    promise = this.$.download_ajax.send({url: url, method: 'GET'});
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

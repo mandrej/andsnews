@@ -14,7 +14,7 @@ LIMIT = 12
 class RestHandler(webapp2.RequestHandler):
     def render(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
-        self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
+        # self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
@@ -122,3 +122,12 @@ class Find(RestHandler):
             'next': token,
             'error': error
         })
+
+
+class Download(webapp2.RequestHandler):
+    def get(self, safe_key):
+        key = ndb.Key(urlsafe=safe_key)
+        obj = key.get()
+        buff = obj.buffer
+        self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
+        self.response.write(buff)

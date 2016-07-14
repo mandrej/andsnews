@@ -607,6 +607,10 @@ class Photo(ndb.Model):
         #     logging.error(e.message)
         # return None
 
+    @webapp2.cached_property
+    def download_url(self):
+        return webapp2.uri_for('download_url', safe_key=self.key.urlsafe())
+
     @property
     def hex(self):
         return rgb_to_hex(tuple(self.rgb))
@@ -640,6 +644,7 @@ class Photo(ndb.Model):
             'slug': self.key.string_id(),
             # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
+            'download_url': self.download_url
         })
         return data
 
