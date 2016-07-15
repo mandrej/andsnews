@@ -24,11 +24,14 @@
       			width: 100%;
 				color: var(--light-theme-text-color);
 				z-index: 1;
-				@apply(--shadow-elevation-2dp);
 				background-color: var(--light-theme-background-color);
-      			--app-header-background-front-layer: {
-					background-color: var(--paper-grey-500);
+				@apply(--shadow-elevation-2dp);
+      			/*--app-header-background-front-layer: {
+					background-color: var(--google-yellow-300);
       			};
+				--app-header-background-rear-layer: {
+        			background-color: var(--light-theme-background-color);
+      			};*/
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -42,6 +45,10 @@
 					padding: 0;
 				}
 			}
+			app-drawer app-toolbar {
+				background-color: var(--google-yellow-300);
+				@apply(--shadow-elevation-2dp);
+			}
             paper-item iron-icon {
                 margin-right: 16px;
                 color: var(--light-theme-secondary-color);
@@ -53,7 +60,6 @@
 				margin: 0;
 				font-size: 36px;
 				font-weight: 300;
-				line-height: 64px;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -93,11 +99,10 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-header condenses reveals fixed effects="waterfall blend-background">
+		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
 				<div main-title></div>
-
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky>
@@ -146,16 +151,10 @@
 			</app-toolbar>
 
 			<app-drawer id="drawer" swipe-open>
+				<app-toolbar>
+					<h1 main-title>ANDрејевићи</h1>
+				</app-toolbar>
 				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
-					<!-- <paper-item>
-						<list-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							params="{{params}}"
-							route="{{route}}"
-							start="{{start}}"
-							items="{{items}}"></list-search>
-					</paper-item> -->
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
@@ -172,7 +171,6 @@
 
 		<main>
 			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
-			<!-- <array-selector id="selector" items="{{items}}" selected="{{start}}"></array-selector> -->
 			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
 				<list-filter
 					data-view="grid"

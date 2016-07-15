@@ -7,9 +7,8 @@
                 display: block;
                 height: 100vh;
             }
-            app-toolbar {
-                color: var(--dark-theme-text-color);
-                background-color: var(--primary-color);
+            iron-swipeable-pages {
+                height: 100vh;
             }
             .swipe {
                 -moz-user-select: none;
@@ -19,21 +18,7 @@
                 cursor: default;
             }
             .swipe iron-image { width: 100%; height: 100%; }
-            .swipe paper-dialog {
-                position: fixed;
-                height: auto;
-                left: 0;
-                right: 0;
-                bottom: 128px;
-            }
             paper-dialog.info {
-                margin: 0;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                max-width: 100%;
-                box-shadow: none;
                 --paper-dialog-background-color: var(--google-yellow-300);
                 --paper-dialog-title: {
                     font-size: var(--app-toolbar-font-size);
@@ -50,7 +35,7 @@
                 max-width: 100%;
             }
             .markdown-html img[alt='Milan D. Andrejevic'] {
-                
+
             }
         </style>
 
@@ -65,15 +50,15 @@
         <iron-request id="download_ajax"></iron-request>
 
         <paper-dialog id="message" class="info" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-            <h2>No entries</h2>
+            <h2>Nothing found</h2>
+            <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="fit" selected="{{start}}"
-            threshold="0.1" edge-swipe-sensitivity="35">
+        <iron-swipeable-pages selected="{{start}}" is-gesture="true">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="{{item.serving_url}}=s0" preload fade sizing="cover"></iron-image>
+                        <iron-image src="{{item.serving_url}}=s0" on-tap="zoom" preload fade sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -92,14 +77,10 @@
                     </div>
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
-                    <div class="swipe">
-                        <div style="padding: 16px">
-                            <!-- <div inner-h-t-m-l="[[item.body]]"></div> -->
-                            <!-- <template is="juicy-html" content$="[[item.body]]"></template> -->
-                            <marked-element markdown="[[item.body]]">
-                                <div class="markdown-html"></div>
-                            </marked-element>
-                        </div>
+                    <div class="swipe" style="padding: 16px">
+                        <marked-element markdown="[[item.body]]">
+                            <div class="markdown-html"></div>
+                        </marked-element>
                     </div>
                 </template>
             </template>
@@ -161,7 +142,7 @@
                 url: {
 					computed: '_url(kind, field, value)',
 					notify: true,
-					observer: 'propertyChanged'
+					// observer: 'propertyChanged'
 				},
                 loading: {
                     type: Boolean,
@@ -169,7 +150,7 @@
                     notify: true
                 },
             },
-            observers: ['paramsChanged(params.*)'],
+            // observers: ['paramsChanged(params.*)'],
             listeners: {
                 'show-exif': '_showExif'
             },
@@ -227,6 +208,9 @@
                 if (dialog) {
                     dialog.open();
                 }
+            },
+            zoom: function(e) {
+                // console.log(e.target);
             },
             _Download: function(e) {
                 e.preventDefault();
