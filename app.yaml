@@ -21,8 +21,8 @@ libraries:
 
 handlers:
 - url: /
-  static_files: app/index.html
-  upload: app/index.html
+  static_files: app/build.html
+  upload: app/build.html
   secure: always
 
 - url: /robots.txt

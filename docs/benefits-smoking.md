@@ -70,11 +70,11 @@ Data from: 0045. University of Tasmania (Australia). Correy, J.; Newman, N. Curr
 Data from: 0429. Institute of Immunology and Experimental Therapy (Poland). Lange, A.
 "Effect of Smoking on Immunological Abnormalities in Asbestos Workers".
 
-*The WHO, in order to "prove" the dangers of ETS (Environmental Tobacco Smoke), financed the second largest study in the world on secondhand smoke.*
+> The WHO, in order to "prove" the dangers of ETS (Environmental Tobacco Smoke), financed the second largest study in the world on secondhand smoke.
 
-*But the study "backfired" and showed not only that there was no statistical risk of disease on passive smoking, but even a protective effect for those who are exposed to it.*
+> But the study "backfired" and showed not only that there was no statistical risk of disease on passive smoking, but even a protective effect for those who are exposed to it.
 
-*Not surprisingly, it is said that the WHO tried to hide the study from the media.*
+> Not surprisingly, it is said that the WHO tried to hide the study from the media.
 
 ### ...that in an Australian study, 91.8% of those who never smoked reported a long term illenss, while those who smoked reported 89.0%?
 

@@ -30,8 +30,9 @@ Certificate of passed Intermediate "C" in English
 
 ### Employment History
 
-**2010-present** [GroundLink](http://www.groundlink.com/), New York, USA</strong>, Belgrade Office, **Senior developer**
+**2010-present** [GroundLink](http://www.groundlink.com/), New York, USA, Belgrade Office, **Senior developer**
 
+- Pricing Configuration, Promotion codes app.
 - Development of bulk SMS application on Google App Engine using Twilio API
 - Development of application for monitoring driver position availability via stream using sockets and D3
 - Successfully built and maintained various application supporting company needs (Promotions, Lead times, Deals)
@@ -47,33 +48,16 @@ Certificate of passed Intermediate "C" in English
 
 **2000-2007** [European Dynamics](http://www.eurodyn.com/), Athens, Greece, CEETEL, now [Realaiz](http://realaiz.com/) Belgrade, **Web designer/ developer**
 
- - Successfully built and maintained various sites: Office of the ombudsman, Office of the information commissioner and Standards for Republic of Ireland, [Structural Funds](http://ec.europa.eu/regional_policy/funds/prord/sf_en.htm), [EUROSTAT](http://epp.eurostat.ec.europa.eu/portal/page/portal/eurostat/home/), [FEB](http://www.feb.ba/), [Unotex](http://www.unotex.co.ba/), [Pliva BIH](http://www.pliva.ba/), [Grawe BIH](http://www.grawe.ba/) and [Hotel Hondo](http://www.hotelhondo.ba/), [European Commission Internal Audit Service](http://ec.europa.eu/dgs/internal_audit/index_en.htm), [Court of Justice of the European Union](http://curia.eu.int/), [Directorate-General for Education and Culture](http://ec.europa.eu/dgs/education_culture/index_en.htm), <a href="http://www.erc.org.yu/">Ecological Resource Center Yugoslavia</a>, <a href="http://europa.eu/bulletin/en/welcome.htm">Bulletin &amp; General report of the European Union</a>, <a href="http://ec.europa.eu/youreurope/nav/en/citizens/index.html">Dialogue with Citizens</a>, <a href="http://ec.europa.eu/justice_home/index_en.htm">Justice and Home Affairs</a>, EUROPEAN PARLIAMENT FACT SHEETS, <a href="http://eur-lex.europa.eu/">EUR-Lex</a>, Interactive Well-Being, <a href="http://ec.europa.eu/youreurope/business/index_en.htm">One Stop Internet Shop for Business</a>, <a href="http://ec.europa.eu/enterprise/sectors/pressure-and-gas/documents/ped/">Pressure Equipment Directive</a>, <a href="http://publications.europa.eu/">EUROPA-Publications Office</a>
+ - Successfully built and maintained various sites: Office of the ombudsman, Office of the information commissioner and Standards for Republic of Ireland
+ - [Structural Funds](http://ec.europa.eu/regional_policy/funds/prord/sf_en.htm), [EUROSTAT](http://epp.eurostat.ec.europa.eu/portal/page/portal/eurostat/home/), [FEB](http://www.feb.ba/), [Unotex](http://www.unotex.co.ba/), [Pliva BIH](http://www.pliva.ba/), [Grawe BIH](http://www.grawe.ba/) and [Hotel Hondo](http://www.hotelhondo.ba/), [European Commission Internal Audit Service](http://ec.europa.eu/dgs/internal_audit/index_en.htm), [Court of Justice of the European Union](http://curia.eu.int/), [Directorate-General for Education and Culture](http://ec.europa.eu/dgs/education_culture/index_en.htm), [Ecological Resource Center Yugoslavia](http://www.erc.org.yu/), [Bulletin & General report of the European Union](http://europa.eu/bulletin/en/welcome.htm), [Dialogue with Citizens](http://ec.europa.eu/youreurope/nav/en/citizens/index.html), [Justice and Home Affairs](http://ec.europa.eu/justice_home/index_en.htm), EUROPEAN PARLIAMENT FACT SHEETS, [EUR-Lex](http://eur-lex.europa.eu/), Interactive Well-Being, [One Stop Internet Shop for Business](http://ec.europa.eu/youreurope/business/index_en.htm), [Pressure Equipment Directive](http://ec.europa.eu/enterprise/sectors/pressure-and-gas/documents/ped/), [EUROPA-Publications Office](http://publications.europa.eu/)
 
+**1999-2000** Zorka Pharma Sabac **NIR (near infra red) application engineer**
 
-   <tr>
-      <td>1999-2000</td>
-      <td><strong>Zorka Pharma Sabac</strong><br/>
-      NIR (near infra red) application engineer</td>
-   </tr>
-   <tr>
-      <td></td>
-      <td>
-         Establish statistical raw substances quality control by building mathematical models using muilt-dimensional statistical analasys of NIR spectra
-      </td>
-   </tr>
-   <tr>
-      <td>1980-1999</td>
-      <td><strong>Chemical Industries Zorka, Plant protection Department, Sabac</strong><br/>
-      R&amp;D engineer, Herbicide synthesis production manager, CTO, Chief engineer</td>
-   </tr>
-   <tr>
-      <td></td>
-      <td>
+- Establish statistical raw substances quality control by building mathematical models using muilt-dimensional statistical analasys of NIR spectra
 
-            Organization and managing of ISO 9000 and other technical documentation<br/>
-            Accurate tank volume calculation for horizontal cylindrical shells with ASME or torispherical heads using AutoCAD and MS Excel interpolation formula<br/>
-            Production established increase of Prometrine herbicide quality by 5 - 10%, quantity by 30%. Energy consumption lowered by 10%<br/>
-            Improving incineration efficiency for waste gases. Purchasing custom made pumps for highly toxic Dimethyl slulphate, hence lowering the environmental and spill hazard risks. Improved energy efficiency and lowering environmental impact for Prometrine herbicide suspension filtration and drying. Improving jet-milling efficiency for dry pesticide milling. Improving cyclone efficiency in sulfur milling.
-      </td>
-   </tr>
-</table>
+**1980-1999** Chemical Industries Zorka, Plant protection Department, Sabac, **R&D engineer, Herbicide synthesis production manager, CTO, Chief engineer**
+
+- Organization and managing of ISO 9000 and other technical documentation<br/>
+Accurate tank volume calculation for horizontal cylindrical shells with ASME or torispherical heads using AutoCAD and MS Excel interpolation formula
+- Production established increase of Prometrine herbicide quality by 5 - 10%, quantity by 30%. Energy consumption lowered by 10%
+- Improving incineration efficiency for waste gases. Purchasing custom made pumps for highly toxic Dimethyl slulphate, hence lowering the environmental and spill hazard risks. Improved energy efficiency and lowering environmental impact for Prometrine herbicide suspension filtration and drying. Improving jet-milling efficiency for dry pesticide milling. Improving cyclone efficiency in sulfur milling.
