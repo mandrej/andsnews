@@ -5,15 +5,14 @@
                 display: block;
             }
             paper-input {
-                display: inline-block;
+                width: 160px;
             }
         </style>
 
-        <iron-icon icon="icons:search" style="margin-right: 8px"></iron-icon>
+        <!-- <iron-icon icon="icons:search" style="margin-right: 8px"></iron-icon> -->
         <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
         <paper-input id="inputSearch" placeholder="search" no-label-float
-            value="{{search::input}}"></paper-input>
-
+        value="{{search::input}}"></paper-input>
     </template>
     <script>
         Polymer({

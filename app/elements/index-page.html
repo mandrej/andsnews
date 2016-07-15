@@ -23,9 +23,12 @@
       			left: 0;
       			width: 100%;
 				color: var(--light-theme-text-color);
-                background-color: var(--light-theme-background-color);
 				z-index: 1;
-				@apply(--shadow-elevation-4dp);
+				@apply(--shadow-elevation-2dp);
+				background-color: var(--light-theme-background-color);
+      			--app-header-background-front-layer: {
+					background-color: var(--paper-grey-500);
+      			};
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -54,12 +57,13 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				background: -webkit-linear-gradient(#fff, #000);
+				/*background: -webkit-linear-gradient(#fff, #000);
 				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
+				-webkit-text-fill-color: transparent;*/
 			}
 			@media (max-width: 767px) {
         		h1 {
+					margin: 0 12px;
 					font-size: 24px;
 				}
         	}
@@ -89,17 +93,11 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-header condenses fixed>
+		<app-header condenses reveals fixed effects="waterfall blend-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
 				<div main-title></div>
-				<list-search
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					params="{{params}}"
-					route="{{route}}"
-					start="{{start}}"
-					items="{{items}}"></list-search>
+
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky>
@@ -127,13 +125,6 @@
 							<a href="#/entry" kind-page="entry" on-tap="_resetFilter">
 								<paper-button>Texts</paper-button></a>
 						</iron-selector>
-					</template>
-				</template>
-			</app-toolbar>
-
-			<app-drawer id="drawer" swipe-open>
-				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
-					<paper-item>
 						<list-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
@@ -141,7 +132,30 @@
 							route="{{route}}"
 							start="{{start}}"
 							items="{{items}}"></list-search>
-					</paper-item>
+					</template>
+					<template is="dom-if" if="[[smallScreen]]">
+						<list-search
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
+							params="{{params}}"
+							route="{{route}}"
+							start="{{start}}"
+							items="{{items}}"></list-search>
+					</template>
+				</template>
+			</app-toolbar>
+
+			<app-drawer id="drawer" swipe-open>
+				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
+					<!-- <paper-item>
+						<list-search
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
+							params="{{params}}"
+							route="{{route}}"
+							start="{{start}}"
+							items="{{items}}"></list-search>
+					</paper-item> -->
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos

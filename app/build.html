@@ -14387,6 +14387,273 @@ this.fire('dom-change');
   </script>
 </dom-module>
 <script>
+  /**
+   * While scrolling down, fade in the rear background layer and fade out the front background
+   * layer (opacity interpolated based on scroll position).
+   */
+  Polymer.AppLayout.registerEffect('blend-background', {
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    setUp: function setUp() {
+      var fx = {};
+      fx.backgroundFrontLayer = this._getDOMRef('backgroundFrontLayer');
+      fx.backgroundRearLayer = this._getDOMRef('backgroundRearLayer');
+      fx.backgroundFrontLayer.style.willChange = 'opacity';
+      fx.backgroundFrontLayer.style.transform = 'translateZ(0)';
+      fx.backgroundRearLayer.style.willChange = 'opacity';
+      fx.backgroundRearLayer.style.transform = 'translateZ(0)';
+      fx.backgroundRearLayer.style.opacity = 0;
+      this._fxBlendBackground = fx;
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    run: function run(p, y) {
+      var fx = this._fxBlendBackground;
+      fx.backgroundFrontLayer.style.opacity = 1 - p;
+      fx.backgroundRearLayer.style.opacity = p;
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    tearDown: function tearDown() {
+      delete this._fxBlendBackground;
+    }
+  });
+</script>
+<script>
+  /**
+   * Upon scrolling past a threshold, fade in the rear background layer and fade out the front
+   * background layer (opacity CSS transitioned over time).
+   *
+   *
+   */
+  Polymer.AppLayout.registerEffect('fade-background', {
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    setUp: function setUp(config) {
+      var fx = {};
+      var duration = config.duration || '0.5s';
+      fx.backgroundFrontLayer = this._getDOMRef('backgroundFrontLayer');
+      fx.backgroundRearLayer = this._getDOMRef('backgroundRearLayer');
+      fx.backgroundFrontLayer.style.willChange = 'opacity';
+      fx.backgroundFrontLayer.style.webkitTransform = 'translateZ(0)';
+      fx.backgroundFrontLayer.style.transitionProperty = 'opacity';
+      fx.backgroundFrontLayer.style.transitionDuration = duration;
+      fx.backgroundRearLayer.style.willChange = 'opacity';
+      fx.backgroundRearLayer.style.webkitTransform = 'translateZ(0)';
+      fx.backgroundRearLayer.style.transitionProperty = 'opacity';
+      fx.backgroundRearLayer.style.transitionDuration = duration;
+      this._fxFadeBackground = fx;
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    run: function run(p, y) {
+      var fx = this._fxFadeBackground;
+      if (p >= 1) {
+        fx.backgroundFrontLayer.style.opacity = 0;
+        fx.backgroundRearLayer.style.opacity = 1;
+      } else {
+        fx.backgroundFrontLayer.style.opacity = 1;
+        fx.backgroundRearLayer.style.opacity = 0;
+      }
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    tearDown: function tearDown() {
+      delete this._fxFadeBackground;
+    }
+  });
+</script>
+<script>
+  /**
+   * Toggles the shadow property in app-header when content is scrolled to create a sense of depth
+   * between the element and the content underneath.
+   */
+  Polymer.AppLayout.registerEffect('waterfall', {
+    /**
+     *  @this Polymer.AppLayout.ElementWithBackground
+     */
+    run: function run(p, y) {
+      this.shadow = this.isOnScreen() && this.isContentBelow();
+    }
+  });
+</script>
+<script>
+  (function() {
+    function interpolate(progress, points, fn, ctx) {
+      fn.apply(ctx, points.map(function(point) {
+        return point[0] + (point[1] - point[0]) * progress;
+      }));
+    }
+
+    /**
+     * Transform the font size of a designated title element between two values based on the scroll
+     * position.
+     */
+    Polymer.AppLayout.registerEffect('resize-title', {
+      /** @this Polymer.AppLayout.ElementWithBackground */
+      setUp: function setUp() {
+        var title = this._getDOMRef('mainTitle');
+        var condensedTitle = this._getDOMRef('condensedTitle');
+
+        if (!condensedTitle) {
+          this._warn(this._logf('effects[resize-title]', 'undefined `condensed-title`'));
+          return false;
+        }
+        if (!title) {
+          this._warn(this._logf('effects[resize-title]', 'undefined `main-title`'));
+          return false;
+        }
+
+        condensedTitle.style.willChange = 'opacity';
+        title.style.willChange = 'opacity';
+        condensedTitle.style.webkitTransform = 'translateZ(0)';
+        title.style.webkitTransform = 'translateZ(0)';
+        condensedTitle.style.transform = 'translateZ(0)';
+        title.style.transform = 'translateZ(0)';
+
+        var titleClientRect = title.getBoundingClientRect();
+        var condensedTitleClientRect = condensedTitle.getBoundingClientRect();
+        var fx = {};
+
+        fx.scale = parseInt(window.getComputedStyle(condensedTitle)['font-size'], 10) /
+            parseInt(window.getComputedStyle(title)['font-size'], 10);
+        fx.titleDX = titleClientRect.left - condensedTitleClientRect.left;
+        fx.titleDY = titleClientRect.top - condensedTitleClientRect.top;
+        fx.condensedTitle = condensedTitle;
+        fx.title = title;
+
+        this._fxResizeTitle = fx;
+      },
+      /** @this PolymerElement */
+      run: function run(p, y) {
+        var fx = this._fxResizeTitle;
+        if (!this.condenses) {
+          y = 0;
+        }
+        if (p >= 1) {
+          fx.title.style.opacity = 0;
+          fx.condensedTitle.style.opacity = 1;
+        } else {
+          fx.title.style.opacity = 1;
+          fx.condensedTitle.style.opacity = 0;
+        }
+        interpolate(Math.min(1, p), [ [1, fx.scale], [0, -fx.titleDX], [y, y-fx.titleDY] ],
+          function(scale, translateX, translateY) {
+            this.transform('translate(' + translateX + 'px, ' + translateY + 'px) ' +
+                'scale3d(' + scale + ', ' + scale + ', 1)', fx.title);
+          }, this);
+      },
+      /** @this Polymer.AppLayout.ElementWithBackground */
+      tearDown: function tearDown() {
+        delete this._fxResizeTitle;
+      }
+    });
+  })();
+</script>
+<script>
+  /**
+   * Vertically translate the background based on a factor of the scroll position.
+   */
+  Polymer.AppLayout.registerEffect('parallax-background', {
+    /**
+     * @param {{scalar: string}} config
+     * @this Polymer.AppLayout.ElementWithBackground
+     */
+    setUp: function setUp(config) {
+      var fx = {};
+      var scalar = parseFloat(config.scalar);
+      fx.background = this._getDOMRef('background');
+      fx.backgroundFrontLayer = this._getDOMRef('backgroundFrontLayer');
+      fx.backgroundRearLayer = this._getDOMRef('backgroundRearLayer');
+      fx.deltaBg = fx.backgroundFrontLayer.offsetHeight - fx.background.offsetHeight;
+      if (fx.deltaBg === 0) {
+        if (isNaN(scalar)) {
+          scalar = 0.8;
+        }
+        fx.deltaBg = this._dHeight * scalar;
+      } else {
+        if (isNaN(scalar)) {
+          scalar = 1;
+        }
+        fx.deltaBg = fx.deltaBg * scalar;
+      }
+      this._fxParallaxBackground = fx;
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    run: function run(p, y) {
+      var fx = this._fxParallaxBackground;
+      this.transform('translate3d(0px, ' + (fx.deltaBg * Math.min(1, p)) + 'px, 0px)', fx.backgroundFrontLayer);
+      if (fx.backgroundRearLayer) {
+        this.transform('translate3d(0px, ' + (fx.deltaBg * Math.min(1, p)) + 'px, 0px)', fx.backgroundRearLayer);
+      }
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    tearDown: function tearDown() {
+      delete this._fxParallaxBackground;
+    }
+  });
+</script>
+<script>
+  /**
+   * Shorthand for the waterfall, resize-title, blend-background, and parallax-background effects.
+   */
+  Polymer.AppLayout.registerEffect('material', {
+    /**
+     * @this Polymer.AppLayout.ElementWithBackground
+     */
+    setUp: function setUp() {
+      this.effects = 'waterfall resize-title blend-background parallax-background';
+      return false;
+    }
+  });
+</script>
+<script>
+  /**
+   * Upon scrolling past a threshold, CSS transition the font size of a designated title element
+   * between two values.
+   */
+  Polymer.AppLayout.registerEffect('resize-snapped-title', {
+    /**
+     * @this Polymer.AppLayout.ElementWithBackground
+     */
+    setUp: function setUp(config) {
+      var title = this._getDOMRef('mainTitle');
+      var condensedTitle = this._getDOMRef('condensedTitle');
+      var duration = config.duration || '0.2s';
+      var fx = {};
+
+      if (!condensedTitle) {
+        this._warn(this._logf('effects[resize-snapped-title]', 'undefined `condensed-title`'));
+        return false;
+      }
+      if (!title) {
+        this._warn(this._logf('effects[resize-snapped-title]', 'undefined `main-title`'));
+        return false;
+      }
+
+      title.style.transitionProperty = 'opacity';
+      title.style.transitionDuration = duration;
+      condensedTitle.style.transitionProperty = 'opacity';
+      condensedTitle.style.transitionDuration = duration;
+      fx.condensedTitle = condensedTitle;
+      fx.title = title;
+      this._fxResizeSnappedTitle = fx;
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    run: function run(p, y) {
+      var fx = this._fxResizeSnappedTitle;
+      if (p > 0) {
+        fx.title.style.opacity = 0;
+        fx.condensedTitle.style.opacity = 1;
+      } else {
+        fx.title.style.opacity = 1;
+        fx.condensedTitle.style.opacity = 0;
+      }
+    },
+    /** @this Polymer.AppLayout.ElementWithBackground */
+    tearDown: function tearDown() {
+      var fx = this._fxResizeSnappedTitle;
+      fx.title.style.transition = '';
+      fx.condensedTitle.style.transition = '';
+      delete this._fxResizeSnappedTitle;
+    }
+  });
+</script>
+<script>
 
   /**
    * @param {!Function} selectCallback
@@ -29486,14 +29753,13 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 display: block;
             }
             paper-input {
-                display: inline-block;
+                width: 160px;
             }
         </style>
 
-        <iron-icon icon="icons:search" style="margin-right: 8px"></iron-icon>
+        
         <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
         <paper-input id="inputSearch" placeholder="search" no-label-float="" value="{{search::input}}"></paper-input>
-
     </template>
     <script>
         Polymer({
@@ -30575,9 +30841,12 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
       			left: 0;
       			width: 100%;
 				color: var(--light-theme-text-color);
-                background-color: var(--light-theme-background-color);
 				z-index: 1;
-				@apply(--shadow-elevation-4dp);
+				@apply(--shadow-elevation-2dp);
+				background-color: var(--light-theme-background-color);
+      			--app-header-background-front-layer: {
+					background-color: var(--paper-grey-500);
+      			};
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -30606,12 +30875,13 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				background: -webkit-linear-gradient(#fff, #000);
+				/*background: -webkit-linear-gradient(#fff, #000);
 				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
+				-webkit-text-fill-color: transparent;*/
 			}
 			@media (max-width: 767px) {
         		h1 {
+					margin: 0 12px;
 					font-size: 24px;
 				}
         	}
@@ -30626,11 +30896,11 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-header condenses="" fixed="">
+		<app-header condenses="" reveals="" fixed="" effects="waterfall blend-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			
 				<div main-title=""></div>
-				<list-search field="{{dataField.field}}" value="{{dataValue.value}}" params="{{params}}" route="{{route}}" start="{{start}}" items="{{items}}"></list-search>
+
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky="">
@@ -30658,15 +30928,17 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 							<a href="#/entry" kind-page="entry" on-tap="_resetFilter">
 								<paper-button>Texts</paper-button></a>
 						</iron-selector>
+						<list-search field="{{dataField.field}}" value="{{dataValue.value}}" params="{{params}}" route="{{route}}" start="{{start}}" items="{{items}}"></list-search>
+					</template>
+					<template is="dom-if" if="[[smallScreen]]">
+						<list-search field="{{dataField.field}}" value="{{dataValue.value}}" params="{{params}}" route="{{route}}" start="{{start}}" items="{{items}}"></list-search>
 					</template>
 				</template>
 			</app-toolbar>
 
 			<app-drawer id="drawer" swipe-open="">
 				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
-					<paper-item>
-						<list-search field="{{dataField.field}}" value="{{dataValue.value}}" params="{{params}}" route="{{route}}" start="{{start}}" items="{{items}}"></list-search>
-					</paper-item>
+					
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
