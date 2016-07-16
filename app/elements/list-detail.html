@@ -4,20 +4,27 @@
     <template>
         <style>
             :host {
-                display: block;
-                height: 100vh;
-            }
-            iron-swipeable-pages {
+                display: flex;
                 height: 100vh;
             }
             .swipe {
-                -moz-user-select: none;
+                /*-moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
                 user-select: none;
-                cursor: default;
+                cursor: default;*/
             }
-            .swipe iron-image { width: 100%; height: 100%; }
+            iron-image {
+                width: 100%;
+                height: 100%;
+            }
+            .swipe iron-image.zooming {
+                /*-webkit-transition: all 0.5s ease-in-out;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;*/
+            }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
                 --paper-dialog-title: {
@@ -34,9 +41,11 @@
             .markdown-html img {
                 max-width: 100%;
             }
-            .markdown-html img[alt='Milan D. Andrejevic'] {
-
+            .markdown-html h2, .markdown-html h3, .markdown-html strong {
+                font-weight: 500;
             }
+            /*.markdown-html img[alt='Milan D. Andrejevic'] {
+            }*/
         </style>
 
         <iron-ajax id="list_ajax" auto
@@ -54,11 +63,11 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages selected="{{start}}" is-gesture="true">
+        <iron-swipeable-pages class="flex" selected="{{start}}" is-gesture="true" id="swipe">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="{{item.serving_url}}=s0" on-tap="zoom" preload fade sizing="cover"></iron-image>
+                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" on-track="zoom" sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -87,7 +96,6 @@
         </iron-swipeable-pages>
 
         <iron-scroll-threshold id="scrollTheshold"
-            horizontal="true"
             lower-threshold="2000"
             scroll-target="document"
             on-lower-threshold="loadMore"></iron-scroll-threshold>
@@ -97,6 +105,7 @@
         Polymer({
             is: 'list-detail',
             behaviors: [
+                // Polymer.NeonAnimationBehavior,
                 Polymer.NeonAnimationRunnerBehavior
             ],
             properties: {
@@ -210,7 +219,35 @@
                 }
             },
             zoom: function(e) {
-                // console.log(e.target);
+                // console.log(e);
+                var swipe = this.$.swipe,
+                    width = swipe.offsetWidth,
+                    height = swipe.offsetHeight,
+                    elem = e.target.parentNode;
+                    dim = JSON.parse(elem.dataset.dim);
+
+                switch(e.detail.state) {
+                    case 'start':
+                        console.log('Tracking started!');
+                        swipe.edgeSwipeSensitivity = 100;
+                        swipe.style.touchAction = 'auto';
+                        elem.style.width = dim[0] + 'px';
+                        elem.style.height = dim[1] + 'px';
+                        break;
+                    case 'track':
+                        elem.style.left = - e.detail.x / width * dim[0] + e.detail.dx + 'px';
+                        elem.style.top = - e.detail.y / height * dim[1] + e.detail.dy + 'px';
+                        break;
+                    case 'end':
+                        elem.style.left = '0px';
+                        elem.style.top = '0px';
+                        console.log('Tracking ended!');
+                        swipe.style.touchAction = 'pan-y';
+                        elem.style.width = '100%';
+                        elem.style.height = '100%';
+                        swipe.edgeSwipeSensitivity = 0;
+                        break;
+                }
             },
             _Download: function(e) {
                 e.preventDefault();

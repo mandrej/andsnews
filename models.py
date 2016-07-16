@@ -644,6 +644,7 @@ class Photo(ndb.Model):
             'slug': self.key.string_id(),
             # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
+            'dim': self.dim,
             'download_url': self.download_url
         })
         return data

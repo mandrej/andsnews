@@ -21943,15 +21943,6 @@ if (!window.Promise) {
           observer: '_calculateElevation'
         }
       },
-
-      _calculateElevation: function() {
-        if (!this.raised) {
-          this._setElevation(0);
-        } else {
-          Polymer.PaperButtonBehaviorImpl._calculateElevation.apply(this);
-        }
-      }
-
       /**
       Fired when the animation finishes.
       This is useful if you want to wait until
@@ -21960,6 +21951,15 @@ if (!window.Promise) {
       @event transitionend
       Event param: {{node: Object}} detail Contains the animated node.
       */
+
+
+      _calculateElevation: function() {
+        if (!this.raised) {
+          this._setElevation(0);
+        } else {
+          Polymer.PaperButtonBehaviorImpl._calculateElevation.apply(this);
+        }
+      }
     });
   </script>
 </dom-module>
@@ -29920,9 +29920,8 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 display: block;
                 height: 100vh;
             }
-            app-toolbar {
-                color: var(--dark-theme-text-color);
-                background-color: var(--primary-color);
+            iron-swipeable-pages {
+                height: 100vh;
             }
             .swipe {
                 -moz-user-select: none;
@@ -29932,21 +29931,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 cursor: default;
             }
             .swipe iron-image { width: 100%; height: 100%; }
-            .swipe paper-dialog {
-                position: fixed;
-                height: auto;
-                left: 0;
-                right: 0;
-                bottom: 128px;
-            }
             paper-dialog.info {
-                margin: 0;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                max-width: 100%;
-                box-shadow: none;
                 --paper-dialog-background-color: var(--google-yellow-300);
                 --paper-dialog-title: {
                     font-size: var(--app-toolbar-font-size);
@@ -29963,7 +29948,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 max-width: 100%;
             }
             .markdown-html img[alt='Milan D. Andrejevic'] {
-                
+
             }
         </style>
 
@@ -29972,14 +29957,15 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
         <iron-request id="download_ajax"></iron-request>
 
         <paper-dialog id="message" class="info" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-            <h2>No entries</h2>
+            <h2>Nothing found</h2>
+            <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="fit" selected="{{start}}" threshold="0.1" edge-swipe-sensitivity="35">
+        <iron-swipeable-pages selected="{{start}}" is-gesture="true">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="{{item.serving_url}}=s0" preload="" fade="" sizing="cover"></iron-image>
+                        <iron-image src="{{item.serving_url}}=s0" on-tap="zoom" preload="" fade="" sizing="cover"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -29998,14 +29984,10 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                     </div>
                 </template>
                 <template is="dom-if" if="[[!_showPhoto(item)]]">
-                    <div class="swipe">
-                        <div style="padding: 16px">
-                            
-                            
-                            <marked-element markdown="[[item.body]]">
-                                <div class="markdown-html"></div>
-                            </marked-element>
-                        </div>
+                    <div class="swipe" style="padding: 16px">
+                        <marked-element markdown="[[item.body]]">
+                            <div class="markdown-html"></div>
+                        </marked-element>
                     </div>
                 </template>
             </template>
@@ -30063,7 +30045,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 url: {
 					computed: '_url(kind, field, value)',
 					notify: true,
-					observer: 'propertyChanged'
+					// observer: 'propertyChanged'
 				},
                 loading: {
                     type: Boolean,
@@ -30071,7 +30053,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                     notify: true
                 },
             },
-            observers: ['paramsChanged(params.*)'],
+            // observers: ['paramsChanged(params.*)'],
             listeners: {
                 'show-exif': '_showExif'
             },
@@ -30129,6 +30111,9 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 if (dialog) {
                     dialog.open();
                 }
+            },
+            zoom: function(e) {
+                // console.log(e.target);
             },
             _Download: function(e) {
                 e.preventDefault();
@@ -30842,11 +30827,14 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
       			width: 100%;
 				color: var(--light-theme-text-color);
 				z-index: 1;
-				@apply(--shadow-elevation-2dp);
 				background-color: var(--light-theme-background-color);
-      			--app-header-background-front-layer: {
-					background-color: var(--paper-grey-500);
+				@apply(--shadow-elevation-2dp);
+      			/*--app-header-background-front-layer: {
+					background-color: var(--google-yellow-300);
       			};
+				--app-header-background-rear-layer: {
+        			background-color: var(--light-theme-background-color);
+      			};*/
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -30860,6 +30848,10 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 					padding: 0;
 				}
 			}
+			app-drawer app-toolbar {
+				background-color: var(--google-yellow-300);
+				@apply(--shadow-elevation-2dp);
+			}
             paper-item iron-icon {
                 margin-right: 16px;
                 color: var(--light-theme-secondary-color);
@@ -30871,7 +30863,6 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 				margin: 0;
 				font-size: 36px;
 				font-weight: 300;
-				line-height: 64px;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -30896,11 +30887,10 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-header condenses="" reveals="" fixed="" effects="waterfall blend-background">
+		<app-header condenses="" waterfall="" fixed="" effects="waterfall blend-background parallax-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			
 				<div main-title=""></div>
-
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky="">
@@ -30937,8 +30927,10 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 			</app-toolbar>
 
 			<app-drawer id="drawer" swipe-open="">
+				<app-toolbar>
+					<h1 main-title="">ANDрејевићи</h1>
+				</app-toolbar>
 				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
-					
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
@@ -30955,7 +30947,6 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 
 		<main>
 			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
-			
 			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
 				<list-filter data-view="grid" kind="[[data.kind]]" field="{{dataField.field}}" value="{{dataValue.value}}" params="{{params}}" route="{{route}}" start="{{start}}" items="{{items}}"></list-filter>
 
