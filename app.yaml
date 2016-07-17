@@ -39,6 +39,10 @@ handlers:
   static_dir: app/bower_components
   secure: always
 
+- url: /node_modules/
+  static_dir: app/node_modules
+  secure: always
+
 - url: /elements/
   static_dir: app/elements
   secure: always
