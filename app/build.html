@@ -17594,58 +17594,6 @@ if (!window.Promise) {
 </script>
 
 
-<dom-module id="iron-pages" assetpath="bower_components/iron-pages/">
-
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-
-      :host > ::content > :not(.iron-selected) {
-        display: none !important;
-      }
-    </style>
-
-    <content></content>
-  </template>
-
-  <script>
-    Polymer({
-
-      is: 'iron-pages',
-
-      behaviors: [
-        Polymer.IronResizableBehavior,
-        Polymer.IronSelectableBehavior
-      ],
-
-      properties: {
-
-        // as the selected page is the only one visible, activateEvent
-        // is both non-sensical and problematic; e.g. in cases where a user
-        // handler attempts to change the page and the activateEvent
-        // handler immediately changes it back
-        activateEvent: {
-          type: String,
-          value: null
-        }
-
-      },
-
-      observers: [
-        '_selectedPageChanged(selected)'
-      ],
-
-      _selectedPageChanged: function(selected, old) {
-        this.async(this.notifyResize);
-      }
-    });
-
-  </script>
-</dom-module>
-
-
 <dom-module id="iron-swipeable-pages" assetpath="bower_components/iron-swipeable-pages/">
   <style>
     :host {
@@ -21943,15 +21891,6 @@ if (!window.Promise) {
           observer: '_calculateElevation'
         }
       },
-      /**
-      Fired when the animation finishes.
-      This is useful if you want to wait until
-      the ripple animation finishes to perform some action.
-
-      @event transitionend
-      Event param: {{node: Object}} detail Contains the animated node.
-      */
-
 
       _calculateElevation: function() {
         if (!this.raised) {
@@ -21960,6 +21899,15 @@ if (!window.Promise) {
           Polymer.PaperButtonBehaviorImpl._calculateElevation.apply(this);
         }
       }
+
+      /**
+      Fired when the animation finishes.
+      This is useful if you want to wait until
+      the ripple animation finishes to perform some action.
+
+      @event transitionend
+      Event param: {{node: Object}} detail Contains the animated node.
+      */
     });
   </script>
 </dom-module>
@@ -28264,36 +28212,6 @@ is separate from validation, and `allowed-pattern` does not affect how the input
   });
 
 </script>
-<script>
-
-  /**
-   * Use `Polymer.NeonSharedElementAnimatableBehavior` to implement elements containing shared element
-   * animations.
-   * @polymerBehavior Polymer.NeonSharedElementAnimatableBehavior
-   */
-  Polymer.NeonSharedElementAnimatableBehaviorImpl = {
-
-    properties: {
-
-      /**
-       * A map of shared element id to node.
-       */
-      sharedElements: {
-        type: Object,
-        value: {}
-      }
-
-    }
-
-  };
-
-  /** @polymerBehavior Polymer.NeonSharedElementAnimatableBehavior */
-  Polymer.NeonSharedElementAnimatableBehavior = [
-    Polymer.NeonAnimatableBehavior,
-    Polymer.NeonSharedElementAnimatableBehaviorImpl
-  ];
-
-</script>
 <script src="bower_components/marked/lib/marked.js">/**
  * marked - a markdown parser
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
@@ -29746,6 +29664,8 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 </script>
 
 
+
+
 <dom-module id="list-search" assetpath="elements/">
     <template>
         <style>
@@ -29835,7 +29755,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
         <iron-ajax auto="" url="{{_urlFilter(kind)}}" handle-as="json" last-response="{{response}}" debounce-duration="100"></iron-ajax>
 
         <template is="dom-repeat" items="[[response]]" as="row">
-            <template is="dom-repeat" items="[[row.items]]" as="rec">
+            <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="_repeatRender">
                 <div class="rec" data-field$="[[row.field_name]]" on-tap="_applyFilter">
                     <iron-image src="[[rec.repr_url]]" preload="" sizing="cover"></iron-image>
                     <div class$="title [[_selectedFilter(rec.name, value)]]">
@@ -29851,17 +29771,9 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
         Polymer({
             is: 'list-filter',
             behaviors: [
-                Polymer.NeonSharedElementAnimatableBehavior,
-                Polymer.NeonAnimationRunnerBehavior
+                Polymer.NeonAnimationBehavior,
+                Polymer.NeonAnimationRunnerBehavior,
             ],
-            attached: function() {
-                this.addEventListener('dom-change', function(e) {
-                    var nodeList = this.querySelectorAll('.rec');
-                    this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(nodeList);
-                    this.animationConfig['entry'][1].nodes = this.animationConfig['entry'][0].nodes;
-                    this.playAnimation('entry');
-                });
-            },
             properties: {
                 animationConfig: {
                     type: Object,
@@ -29910,6 +29822,12 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
             _selectedFilter: function(current, value) {
 				if (current == value) return 'activeFilterClass';
 			},
+            _repeatRender: function() {
+                var nodes = Polymer.dom(this.root).querySelectorAll('.rec');
+                this.animationConfig['entry'][0].nodes = nodes;
+                this.animationConfig['entry'][1].nodes = nodes;
+                this.playAnimation('entry');
+            }
         });
     </script>
 </dom-module>
@@ -29917,10 +29835,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
     <template>
         <style>
             :host {
-                display: block;
-                height: 100vh;
-            }
-            iron-swipeable-pages {
+                display: flex;
                 height: 100vh;
             }
             .swipe {
@@ -29930,7 +29845,13 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                 user-select: none;
                 cursor: default;
             }
-            .swipe iron-image { width: 100%; height: 100%; }
+            .swipe img {
+                max-width: 100%;
+            }
+            .swipe iron-image {
+                width: 100%;
+                height: 100%;
+            }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
                 --paper-dialog-title: {
@@ -29947,9 +29868,11 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
             .markdown-html img {
                 max-width: 100%;
             }
-            .markdown-html img[alt='Milan D. Andrejevic'] {
-
+            .markdown-html h2, .markdown-html h3, .markdown-html strong {
+                font-weight: 500;
             }
+            /*.markdown-html img[alt='Milan D. Andrejevic'] {
+            }*/
         </style>
 
         <iron-ajax id="list_ajax" auto="" url="{{url}}" params="{{params}}" handle-as="json" on-response="handler" loading="{{loading}}" debounce-duration="100"></iron-ajax>
@@ -29961,11 +29884,12 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages selected="{{start}}" is-gesture="true">
-            <template is="dom-repeat" items="{{items}}">
+        <iron-swipeable-pages class="flex" selected="{{start}}" is-gesture="true" id="swipe">
+            <template is="dom-repeat" items="{{items}}" on-dom-change="_bindZoom">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="{{item.serving_url}}=s0" on-tap="zoom" preload="" fade="" sizing="cover"></iron-image>
+                        
+                        <img class="pz" src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]">
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -29976,7 +29900,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                                 [[item.iso]] ASA
                             </p>
                             <p>
-                                <paper-button dialog-confirm="" on-tap="_Download" data-url="[[item.download_url]]">
+                                <paper-button dialog-confirm="" on-tap="_download" data-url="[[item.download_url]]">
                                     <iron-icon icon="file-download"></iron-icon>Download
                                 </paper-button>
                             </p>
@@ -29993,13 +29917,14 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
             </template>
         </iron-swipeable-pages>
 
-        <iron-scroll-threshold id="scrollTheshold" horizontal="true" lower-threshold="2000" scroll-target="document" on-lower-threshold="loadMore"></iron-scroll-threshold>
+        <iron-scroll-threshold id="scrollTheshold" lower-threshold="2000" scroll-target="document" on-lower-threshold="loadMore"></iron-scroll-threshold>
     </template>
 
     <script>
         Polymer({
             is: 'list-detail',
             behaviors: [
+                // Polymer.NeonAnimationBehavior,
                 Polymer.NeonAnimationRunnerBehavior
             ],
             properties: {
@@ -30066,7 +29991,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 				var url, prefix = '/api';
 
 				if (kind == 'search' && field != null) {
-                    url = [prefix, kind].join('/')
+                    url = [prefix, kind].join('/');
                     this.set('params.find', field);
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
@@ -30112,10 +30037,13 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
                     dialog.open();
                 }
             },
-            zoom: function(e) {
-                // console.log(e.target);
+            _bindZoom: function() {
+                var images = document.querySelectorAll('.pz');
+                images.forEach(function(elem, index) {
+                    new VanillaPinch(elem, { tapZoomFactor: 2 });
+                });
             },
-            _Download: function(e) {
+            _download: function(e) {
                 e.preventDefault();
                 var url = e.target.dataUrl,
                     promise = this.$.download_ajax.send({url: url, method: 'GET'});
@@ -30805,6 +30733,8 @@ doy:4}}),kg.defineLocale("zh-cn",{months:"一月_二月_三月_四月_五月_六
 // GB/T 7408-1994《数据元和交换格式·信息交换·日期和时间表示法》与ISO 8601:1988等效
 dow:1,// Monday is the first day of the week.
 doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),monthsShort:"1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split("_"),weekdays:"星期日_星期一_星期二_星期三_星期四_星期五_星期六".split("_"),weekdaysShort:"週日_週一_週二_週三_週四_週五_週六".split("_"),weekdaysMin:"日_一_二_三_四_五_六".split("_"),longDateFormat:{LT:"Ah點mm分",LTS:"Ah點m分s秒",L:"YYYY年MMMD日",LL:"YYYY年MMMD日",LLL:"YYYY年MMMD日Ah點mm分",LLLL:"YYYY年MMMD日ddddAh點mm分",l:"YYYY年MMMD日",ll:"YYYY年MMMD日",lll:"YYYY年MMMD日Ah點mm分",llll:"YYYY年MMMD日ddddAh點mm分"},meridiemParse:/凌晨|早上|上午|中午|下午|晚上/,meridiemHour:function(a,b){return 12===a&&(a=0),"凌晨"===b||"早上"===b||"上午"===b?a:"中午"===b?a>=11?a:a+12:"下午"===b||"晚上"===b?a+12:void 0},meridiem:function(a,b,c){var d=100*a+b;return 600>d?"凌晨":900>d?"早上":1130>d?"上午":1230>d?"中午":1800>d?"下午":"晚上"},calendar:{sameDay:"[今天]LT",nextDay:"[明天]LT",nextWeek:"[下]ddddLT",lastDay:"[昨天]LT",lastWeek:"[上]ddddLT",sameElse:"L"},ordinalParse:/\d{1,2}(日|月|週)/,ordinal:function(a,b){switch(b){case"d":case"D":case"DDD":return a+"日";case"M":return a+"月";case"w":case"W":return a+"週";default:return a}},relativeTime:{future:"%s內",past:"%s前",s:"幾秒",m:"1 分鐘",mm:"%d 分鐘",h:"1 小時",hh:"%d 小時",d:"1 天",dd:"%d 天",M:"1 個月",MM:"%d 個月",y:"1 年",yy:"%d 年"}}),kg);return sh.locale("en"),sh});</script>
+    <script src="node_modules/vanilla-pinch/dist/vanillapinchzoom.min.js">(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VanillaPinch=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}({1:[function(require,module,exports){"use strict";function ToObject(val){if(val==null){throw new TypeError("Object.assign cannot be called with null or undefined")}return Object(val)}module.exports=Object.assign||function(target,source){var from;var keys;var to=ToObject(target);for(var s=1;s<arguments.length;s++){from=arguments[s];keys=Object.keys(Object(from));for(var i=0;i<keys.length;i++){to[keys[i]]=from[keys[i]]}}return to}},{}],2:[function(require,module,exports){var assign=require("object-assign");function createEvent(name,data){data=data||{};if(window.CustomEvent){var event=new CustomEvent(name,{detail:data})}else{var event=document.createEvent("CustomEvent");event.initCustomEvent(name,true,true,data)}return event}function applyStyles(el,styles){Object.keys(styles).forEach(function(key){el.style[key]=styles[key]})}function sum(a,b){return a+b}function isCloseTo(value,expected){return value>expected-.01&&value<expected+.01}function detectGestures(el,target){var interaction=null,fingers=0,lastTouchStart=null,startTouches=null;function setInteraction(newInteraction,event){if(interaction!==newInteraction){if(interaction&&!newInteraction){switch(interaction){case"zoom":target.handleZoomEnd(event);break;case"drag":target.handleDragEnd(event);break}}switch(newInteraction){case"zoom":target.handleZoomStart(event);break;case"drag":target.handleDragStart(event);break}}interaction=newInteraction}function updateInteraction(event){if(fingers===2){setInteraction("zoom")}else if(fingers===1&&target.canDrag()){setInteraction("drag",event)}else{setInteraction(null,event)}}function targetTouches(touches){return Array.prototype.slice.call(touches).map(function(touch){return{x:touch.pageX,y:touch.pageY}})}function getDistance(a,b){var x,y;x=a.x-b.x;y=a.y-b.y;return Math.sqrt(x*x+y*y)}function calculateScale(startTouches,endTouches){var startDistance=getDistance(startTouches[0],startTouches[1]),endDistance=getDistance(endTouches[0],endTouches[1]);return endDistance/startDistance}function cancelEvent(event){event.stopPropagation();event.preventDefault()}function detectDoubleTap(event){var time=(new Date).getTime();if(fingers>1){lastTouchStart=null}if(time-lastTouchStart<300){cancelEvent(event);target.handleDoubleTap(event);switch(interaction){case"zoom":target.handleZoomEnd(event);break;case"drag":target.handleDragEnd(event);break}}if(fingers===1){lastTouchStart=time}}var firstMove=true;el.addEventListener("touchstart",function(event){if(target.enabled){firstMove=true;fingers=event.touches.length;detectDoubleTap(event)}});el.addEventListener("touchmove",function(event){if(target.enabled){if(firstMove){updateInteraction(event);if(interaction){cancelEvent(event)}startTouches=targetTouches(event.touches)}else{switch(interaction){case"zoom":target.handleZoom(event,calculateScale(startTouches,targetTouches(event.touches)));break;case"drag":target.handleDrag(event);break}if(interaction){cancelEvent(event);target.update()}}firstMove=false}});el.addEventListener("touchend",function(event){if(target.enabled){fingers=event.touches.length;updateInteraction(event)}})}function VanillaPinchZoom(el,options){this.el=el;this.zoomFactor=1;this.lastScale=1;this.offset={x:0,y:0};this.options=assign({},this.defaults,options);this.setupMarkup();this.bindEvents();this.update();this.enable()}VanillaPinchZoom.prototype={defaults:{tapZoomFactor:2,zoomOutFactor:1.3,animationDuration:300,animationInterval:5,maxZoom:4,minZoom:.5,lockDragAxis:false,use2d:true,updateAllElementStyles:false,zoomStartEventName:"pz_zoomstart",zoomEndEventName:"pz_zoomend",dragStartEventName:"pz_dragstart",dragEndEventName:"pz_dragend",doubleTapEventName:"pz_doubletap",zoomInEventName:"pz_zoomin",zoomOutEventName:"pz_zoomout"},handleDragStart:function(event){this.el.dispatchEvent(createEvent(this.options.dragStartEventName));this.stopAnimation();this.lastDragPosition=false;this.hasInteraction=true;this.handleDrag(event)},handleDrag:function(event){if(this.zoomFactor>1){var touch=this.getTouches(event)[0];this.drag(touch,this.lastDragPosition);this.offset=this.sanitizeOffset(this.offset);this.lastDragPosition=touch}},handleDragEnd:function(){this.el.dispatchEvent(createEvent(this.options.dragEndEventName));this.end()},handleZoomStart:function(event){this.el.dispatchEvent(createEvent(this.options.zoomStartEventName));this.el.dispatchEvent(createEvent(this.options.zoomInEventName,this.zoomFactor));this.stopAnimation();this.lastScale=1;this.nthZoom=0;this.lastZoomCenter=false;this.hasInteraction=true},handleZoom:function(event,newScale){var touchCenter=this.getTouchCenter(this.getTouches(event)),scale=newScale/this.lastScale;this.lastScale=newScale;this.nthZoom+=1;if(this.nthZoom>3){this.scale(scale,touchCenter);this.drag(touchCenter,this.lastZoomCenter)}this.lastZoomCenter=touchCenter},handleZoomEnd:function(){this.el.dispatchEvent(createEvent(this.options.zoomEndEventName));this.end()},handleDoubleTap:function(event){var center=this.getTouches(event)[0],zoomFactor=this.zoomFactor>1?1:this.options.tapZoomFactor,startZoomFactor=this.zoomFactor,updateProgress=function(progress){this.scaleTo(startZoomFactor+progress*(zoomFactor-startZoomFactor),center)}.bind(this);if(this.hasInteraction){return}if(startZoomFactor>zoomFactor){center=this.getCurrentZoomCenter()}this.animate(this.options.animationDuration,this.options.animationInterval,updateProgress,this.swing);this.el.dispatchEvent(createEvent(this.options.doubleTapEventName));if(startZoomFactor>zoomFactor){this.el.dispatchEvent(createEvent(this.options.zoomOutEventName,this.zoomFactor))}else{this.el.dispatchEvent(createEvent(this.options.zoomInEventName,this.zoomFactor))}},sanitizeOffset:function(offset){var maxX=(this.zoomFactor-1)*this.getContainerX(),maxY=(this.zoomFactor-1)*this.getContainerY(),maxOffsetX=Math.max(maxX,0),maxOffsetY=Math.max(maxY,0),minOffsetX=Math.min(maxX,0),minOffsetY=Math.min(maxY,0);return{x:Math.min(Math.max(offset.x,minOffsetX),maxOffsetX),y:Math.min(Math.max(offset.y,minOffsetY),maxOffsetY)}},scaleTo:function(zoomFactor,center){this.scale(zoomFactor/this.zoomFactor,center)},scale:function(scale,center){scale=this.scaleZoomFactor(scale);this.addOffset({x:(scale-1)*(center.x+this.offset.x),y:(scale-1)*(center.y+this.offset.y)})},scaleZoomFactor:function(scale){var originalZoomFactor=this.zoomFactor;this.zoomFactor*=scale;this.zoomFactor=Math.min(this.options.maxZoom,Math.max(this.zoomFactor,this.options.minZoom));return this.zoomFactor/originalZoomFactor},drag:function(center,lastCenter){if(lastCenter){if(this.options.lockDragAxis){if(Math.abs(center.x-lastCenter.x)>Math.abs(center.y-lastCenter.y)){this.addOffset({x:-(center.x-lastCenter.x),y:0})}else{this.addOffset({y:-(center.y-lastCenter.y),x:0})}}else{this.addOffset({y:-(center.y-lastCenter.y),x:-(center.x-lastCenter.x)})}}},getTouchCenter:function(touches){return this.getVectorAvg(touches)},getVectorAvg:function(vectors){return{x:vectors.map(function(v){return v.x}).reduce(sum)/vectors.length,y:vectors.map(function(v){return v.y}).reduce(sum)/vectors.length}},addOffset:function(offset){this.offset={x:this.offset.x+offset.x,y:this.offset.y+offset.y}},sanitize:function(){if(this.zoomFactor<this.options.zoomOutFactor){this.el.dispatchEvent(createEvent("pz_zoomout",this.zoomFactor));this.zoomOutAnimation()}else if(this.isInsaneOffset(this.offset)){this.sanitizeOffsetAnimation()}},isInsaneOffset:function(offset){var sanitizedOffset=this.sanitizeOffset(offset);return sanitizedOffset.x!==offset.x||sanitizedOffset.y!==offset.y},sanitizeOffsetAnimation:function(){var targetOffset=this.sanitizeOffset(this.offset),startOffset={x:this.offset.x,y:this.offset.y},updateProgress=function(progress){this.offset.x=startOffset.x+progress*(targetOffset.x-startOffset.x);this.offset.y=startOffset.y+progress*(targetOffset.y-startOffset.y);this.update()}.bind(this);this.animate(this.options.animationDuration,this.options.animationInterval,updateProgress,this.swing)},zoomOutAnimation:function(){var startZoomFactor=this.zoomFactor,zoomFactor=1,center=this.getCurrentZoomCenter(),updateProgress=function(progress){this.scaleTo(startZoomFactor+progress*(zoomFactor-startZoomFactor),center)}.bind(this);this.animate(this.options.animationDuration,this.options.animationInterval,updateProgress,this.swing)},updateAspectRatio:function(){this.setContainerY(this.getContainerX()/this.getAspectRatio())},getInitialZoomFactor:function(){return this.container.offsetWidth/this.el.offsetWidth},getAspectRatio:function(){return this.el.offsetWidth/this.el.offsetHeight},getCurrentZoomCenter:function(){var length=this.container.offsetWidth*this.zoomFactor,offsetLeft=this.offset.x,offsetRight=length-offsetLeft-this.container.offsetWidth,widthOffsetRatio=offsetLeft/offsetRight,centerX=widthOffsetRatio*this.container.offsetWidth/(widthOffsetRatio+1),height=this.container.offsetHeight*this.zoomFactor,offsetTop=this.offset.y,offsetBottom=height-offsetTop-this.container.offsetHeight,heightOffsetRatio=offsetTop/offsetBottom,centerY=heightOffsetRatio*this.container.offsetHeight/(heightOffsetRatio+1);if(offsetRight===0){centerX=this.container.offsetWidth}if(offsetBottom===0){centerY=this.container.offsetHeight}return{x:centerX,y:centerY}},canDrag:function(){return!isCloseTo(this.zoomFactor,1)},getTouches:function(event){var rect=this.container.getBoundingClientRect();var position={top:rect.top+document.body.scrollTop,left:rect.left+document.body.scrollLeft};return Array.prototype.slice.call(event.touches).map(function(touch){return{x:touch.pageX-position.left,y:touch.pageY-position.top}})},animate:function(duration,interval,framefn,timefn,callback){var startTime=(new Date).getTime(),renderFrame=function(){if(!this.inAnimation){return}var frameTime=(new Date).getTime()-startTime,progress=frameTime/duration;if(frameTime>=duration){framefn(1);if(callback){callback()}this.update();this.stopAnimation();this.update()}else{if(timefn){progress=timefn(progress)}framefn(progress);this.update();setTimeout(renderFrame,interval)}}.bind(this);this.inAnimation=true;renderFrame()},stopAnimation:function(){this.inAnimation=false},swing:function(p){return-Math.cos(p*Math.PI)/2+.5},getContainerX:function(){return this.container.offsetWidth},getContainerY:function(){return this.container.offsetHeight},setContainerY:function(y){return this.container.style.height=y+"px"},setupMarkup:function(){this.el.insertAdjacentHTML("beforebegin",'<div class="PinchZoom PinchZoom-container"></div>');this.container=this.el.parentNode.querySelector(".PinchZoom-container");this.container.appendChild(this.el);applyStyles(this.container,{overflow:"visible",position:"relative"});applyStyles(this.el,{webkitTransformOrigin:"0% 0%",mozTransformOrigin:"0% 0%",msTransformOrigin:"0% 0%",oTransformOrigin:"0% 0%",transformOrigin:"0% 0%",position:"absolute"})},end:function(){this.hasInteraction=false;this.sanitize();this.update()},bindEvents:function(){detectGestures(this.container,this);window.addEventListener("resize",this.update.bind(this),false);var images=this.el.querySelectorAll("img");for(var i=0;i<images.length;i++){images[i].addEventListener("load",this.update.bind(this))}},update:function(){var elStyles={};if(this.updatePlaned){return}this.updatePlaned=true;setTimeout(function(){this.updatePlaned=false;this.updateAspectRatio();var zoomFactor=this.getInitialZoomFactor()*this.zoomFactor,offsetX=-this.offset.x/zoomFactor,offsetY=-this.offset.y/zoomFactor,transform3d="scale3d("+zoomFactor+", "+zoomFactor+",1) "+"translate3d("+offsetX+"px,"+offsetY+"px,0px)",transform2d="scale("+zoomFactor+", "+zoomFactor+") "+"translate("+offsetX+"px,"+offsetY+"px)",removeClone=function(){if(this.clone){this.clone.parentNode.removeChild(this.clone);delete this.clone}}.bind(this);if(this.options.updateAllElementStyles){assign(elStyles,{webkitTransformOrigin:"0% 0%",mozTransformOrigin:"0% 0%",msTransformOrigin:"0% 0%",oTransformOrigin:"0% 0%",transformOrigin:"0% 0%",position:"absolute"})}if(!this.options.use2d||this.hasInteraction||this.inAnimation){this.is3d=true;removeClone();assign(elStyles,{webkitTransform:transform3d,oTransform:transform2d,msTransform:transform2d,mozTransform:transform2d,transform:transform3d});applyStyles(this.el,elStyles)}else{if(this.is3d){this.clone=this.el.cloneNode(true);this.clone.style.pointerEvents="none";this.container.appendChild(this.clone);setTimeout(removeClone,200)}assign(elStyles,{"webkit-transform":transform2d,oTransform:transform2d,msTransform:transform2d,mozTransform:transform2d,transform:transform2d});applyStyles(this.el,elStyles);this.is3d=false}}.bind(this),0)},enable:function(){this.enabled=true},disable:function(){this.enabled=false}};module.exports=VanillaPinchZoom},{"object-assign":1}]},{},[2])(2)});
+</script>
 </dom-module>
 <dom-module id="index-page" assetpath="elements/">
 	<template>
@@ -30890,7 +30820,7 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 		<app-header condenses="" waterfall="" fixed="" effects="waterfall blend-background parallax-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			
-				<div main-title=""></div>
+				<div main-title="">[[version]]</div>
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky="">
@@ -30942,6 +30872,7 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 		                </a>
 		            </paper-item>
 				</paper-menu>
+				<paper-item>[[version]]</paper-item>
 			</app-drawer>
 		</app-header>
 
@@ -30967,6 +30898,7 @@ doy:4}}),kg.defineLocale("zh-tw",{months:"一月_二月_三月_四月_五月_六
 				}
 			},
 			properties: {
+				version: { type: String, value: '201607181542'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },

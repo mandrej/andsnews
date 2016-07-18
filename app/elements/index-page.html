@@ -102,7 +102,7 @@
 		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
 			<app-toolbar hidden$="[[smallScreen]]">
     			<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
-				<div main-title></div>
+				<div main-title>[[version]]</div>
 				<paper-spinner active$="[[loading]]"></paper-spinner>
   			</app-toolbar>
 			<app-toolbar sticky>
@@ -166,6 +166,7 @@
 		                </a>
 		            </paper-item>
 				</paper-menu>
+				<paper-item>[[version]]</paper-item>
 			</app-drawer>
 		</app-header>
 
@@ -209,6 +210,7 @@
 				}
 			},
 			properties: {
+				version: { type: String, value: '201607181542'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },

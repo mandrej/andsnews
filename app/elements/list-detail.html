@@ -17,17 +17,10 @@
             .swipe img {
                 max-width: 100%;
             }
-            /*iron-image {
+            .swipe iron-image {
                 width: 100%;
                 height: 100%;
-            }*/
-            /*iron-image > div {
-                -webkit-transition: all 0.5s ease-in-out;
-                -moz-transition: all 0.5s ease-in-out;
-                -ms-transition: all 0.5s ease-in-out;
-                -o-transition: all 0.5s ease-in-out;
-                transition: all 0.5s ease-in-out;
-            }*/
+            }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
                 --paper-dialog-title: {
@@ -67,11 +60,11 @@
         </paper-dialog>
 
         <iron-swipeable-pages class="flex" selected="{{start}}" is-gesture="true" id="swipe">
-            <template is="dom-repeat" items="{{items}}">
+            <template is="dom-repeat" items="{{items}}" on-dom-change="_bindZoom">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <!-- <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" on-tap="zoomImage" sizing="cover"></iron-image> -->
-                        <img src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" on-tap="zoomImage">
+                        <!-- <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover" on-track="zoomImage"></iron-image> -->
+                        <img class="pz" src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]">
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -222,49 +215,11 @@
                     dialog.open();
                 }
             },
-            zoomImage: function(e) {
-                // console.log(e.target);
-                new VanillaPinch(e.target, {
-                    tapZoomFactor: 2
+            _bindZoom: function() {
+                var images = document.querySelectorAll('.pz');
+                images.forEach(function(elem, index) {
+                    new VanillaPinch(elem, { tapZoomFactor: 2 });
                 });
-            },
-            zoom: function(e) {
-                // console.log(e);
-                // var swipe = this.$.swipe,
-                //     width = swipe.offsetWidth,
-                //     height = swipe.offsetHeight,
-                //     elem = e.target;
-                //     dim = JSON.parse(elem.parentNode.dataset.dim);
-                //
-                // switch(e.detail.state) {
-                //     case 'start':
-                //         console.log('Tracking started!');
-                //         // swipe.edgeSwipeSensitivity = 300;
-                //         // swipe.style.touchAction = 'auto';
-                //         elem.style.width = dim[0] + 'px';
-                //         elem.style.height = dim[1] + 'px';
-                //         console.log(e.detail.x, e.detail.y);
-                //         // elem.style.left = - (dim[0] - width) / 2;
-                //         // elem.style.top = - (dim[1] - height) / 2;
-                //         // elem.style.backgroundSize = 'cover';
-                //         // elem.style.backgroundPosition = 'center center';
-                //         // elem.style.left = - e.detail.x + 'px';
-                //         // elem.style.top = - e.detail.y + 'px';
-                //         break;
-                //     case 'track':
-                //         elem.style.left = e.detail.dx + 'px';
-                //         elem.style.top = e.detail.dy + 'px';
-                //         break;
-                //     case 'end':
-                //         elem.style.left = '0px';
-                //         elem.style.top = '0px';
-                //         console.log('Tracking ended!');
-                //         // swipe.style.touchAction = 'pan-y';
-                //         elem.style.width = '100%';
-                //         elem.style.height = '100%';
-                //         // swipe.edgeSwipeSensitivity = 0;
-                //         break;
-                // }
             },
             _download: function(e) {
                 e.preventDefault();
