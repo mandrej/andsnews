@@ -8,18 +8,14 @@
                 height: 100vh;
             }
             .swipe {
-                /*-moz-user-select: none;
+                -moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
                 user-select: none;
-                cursor: default;*/
+                cursor: default;
             }
             .swipe img {
                 max-width: 100%;
-            }
-            .swipe iron-image {
-                width: 100%;
-                height: 100%;
             }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
@@ -62,9 +58,9 @@
         <iron-swipeable-pages class="flex" selected="{{start}}" is-gesture="true" id="swipe">
             <template is="dom-repeat" items="{{items}}" on-dom-change="_bindZoom">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
-                    <div class="swipe">
+                    <div class="swipe pz">
                         <!-- <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover" on-track="zoomImage"></iron-image> -->
-                        <img class="pz" src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]">
+                        <img src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]">
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>

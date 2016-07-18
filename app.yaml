@@ -21,8 +21,8 @@ libraries:
 
 handlers:
 - url: /
-  static_files: app/index.html
-  upload: app/index.html
+  static_files: app/2016071820.html
+  upload: app/2016071820.html
   secure: always
 
 - url: /robots.txt
