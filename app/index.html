@@ -11,23 +11,18 @@
 
 	<!-- Chrome / Android -->
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="black">
-	<link rel="icon" href="icon.png">
+	<meta name="theme-color" content="#fff">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="icon" href="/images/app-icon.png">
+	<link rel="shortcut icon" sizes="32x32" href="/images/app-icon-32.png">
 
-	<!-- Safari / iOS -->
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
-
-	<!-- Web Components -->
-	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-	<link rel="import" href="bower_components/polymer/polymer.html">
-
-	<!-- <script>
+	<script>
+		// setup Polymer option
 		window.Polymer = {
 			dom: 'shadow',
 			lazyRegister: true
 		};
+		// load webcomponents polyfills
 		(function() {
 			if ('registerElement' in document
 				&& 'import' in document.createElement('link')
@@ -37,10 +32,17 @@
 				// polyfill the platform!
 				var e = document.createElement('script');
 				e.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-				document.body.appendChild(e);
+				document.head.appendChild(e);
 			}
 		})();
-	</script> -->
+
+		// load pre-caching service worker
+		if ('serviceWorker' in navigator) {
+      		window.addEventListener('load', function() {
+        		// navigator.serviceWorker.register('/service-worker.js');
+      		});
+    	}
+	</script>
 
 	<style>
 		body {
@@ -56,7 +58,7 @@
     	}
 	</style>
 
-	<link rel="import" href="elements/index-page.html">
+	<link rel="import" href="src/index-page.html">
 </head>
 <body>
 	<index-page unresolved></index-page>

@@ -21,8 +21,8 @@ libraries:
 
 handlers:
 - url: /
-  static_files: app/2016071820.html
-  upload: app/2016071820.html
+  static_files: app/index.html
+  upload: app/index.html
   secure: always
 
 - url: /robots.txt
@@ -43,8 +43,8 @@ handlers:
   static_dir: app/node_modules
   secure: always
 
-- url: /elements/
-  static_dir: app/elements
+- url: /src/
+  static_dir: app/src
   secure: always
 
 - url: /images/
@@ -58,6 +58,18 @@ handlers:
 - url: /styles/
   static_dir: app/styles
   secure: always
+
+- url: /service-worker.js
+  static_files: build/bundled/service-worker.js
+  upload: build/bundled/service-worker.js
+  secure: always
+
+- url: /manifest.json
+  static_files: build/bundled/manifest.json
+  upload: build/bundled/manifest.json
+  secure: always
+
+####################################################
 
 - url: /static/(.*\.(less|scss))$
   static_files: static/\1

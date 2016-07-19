@@ -1,4 +1,13 @@
-<link rel="import" href="elements.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 
 <dom-module id="list-detail">
     <template>
@@ -7,6 +16,9 @@
                 display: flex;
                 height: 100vh;
             }
+            iron-swipeable-pages {
+                width: 100%;
+            }
             .swipe {
                 -moz-user-select: none;
                 -ms-user-select: none;
@@ -14,8 +26,9 @@
                 user-select: none;
                 cursor: default;
             }
-            .swipe img {
-                max-width: 100%;
+            .swipe iron-image {
+                width: 100%;
+                height: 100%;
             }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
@@ -59,8 +72,8 @@
             <template is="dom-repeat" items="{{items}}" on-dom-change="_bindZoom">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe pz">
-                        <!-- <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover" on-track="zoomImage"></iron-image> -->
-                        <img src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]">
+                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover"></iron-image>
+                        <!-- <img src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]"> -->
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
