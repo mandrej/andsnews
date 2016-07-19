@@ -99,31 +99,29 @@
 			route="{{route}}"
 			pattern="/:kind"
 			data="{{data}}"
-			tail="{{tail}}"
-			active="{{active}}"></app-route>
+			tail="{{tail}}"></app-route>
 
 		<app-route
 			route="{{tail}}"
 			pattern="/:field"
 			data="{{dataField}}"
-			tail="{{tailField}}"
-			active="{{activeField}}"></app-route>
+			tail="{{tailField}}"></app-route>
 
 		<app-route
 			route="{{tailField}}"
 			pattern="/:value"
-			data="{{dataValue}}"
-			tail="{{tailValue}}"
-			active="{{activeValue}}"></app-route>
+			data="{{dataValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
 		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
-			<app-toolbar hidden$="[[smallScreen]]">
-    			<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
-				<div main-title>[[version]]</div>
-				<paper-spinner active$="[[loading]]"></paper-spinner>
-  			</app-toolbar>
+			<template is="dom-if" if="[[!smallScreen]]">
+				<app-toolbar>
+					<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
+					<div main-title>[[version]]</div>
+					<paper-spinner active$="[[loading]]"></paper-spinner>
+				</app-toolbar>
+			</template>
 			<app-toolbar sticky>
 				<template is="dom-if" if="[[detailView(view)]]">
 					<paper-icon-button icon="icons:chevron-left" on-tap="_resetFilter"></paper-icon-button>
@@ -229,7 +227,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '2016071915'},
+				version: { type: String, value: '2016071921'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
@@ -238,6 +236,8 @@
 					value: 'grid',
 					notify: true
 				},
+				smallScreen: { type: Boolean, value: false, notify: true },
+				loading: { type: Boolean, value: false, notify: true },
 			},
 			_viewChanged: function(kind, field) {
 				if (kind && field) {

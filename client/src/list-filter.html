@@ -18,7 +18,6 @@
                 width: 20%;
                 height: 150px;
 				cursor: pointer;
-                background-color: var(--google-yellow-300);
 			}
             .rec iron-image {
                 width: 100%;
@@ -30,13 +29,14 @@
                 left: 0;
                 right: 0;
                 background-color: rgba(0,0,0,0.5);
+                /*background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);*/
                 color: var(--dark-theme-text-color);
                 font-size: 20px;
                 padding: 16px;
                 text-overflow: ellipsis;
             }
-            .title.activeFilterClass {
-				background-color: var(--paper-red-500);
+            paper-ripple {
+				color: var(--paper-red-500);
 			}
             @media (max-width: 1024px) { .rec { width: 25%; } }
             @media (max-width: 768px)  { .rec { width: 33.3333333%; } }
@@ -54,9 +54,8 @@
                 <div class="rec"
                     data-field$="[[row.field_name]]" on-tap="_applyFilter">
                     <iron-image src="[[rec.repr_url]]" preload sizing="cover"></iron-image>
-                    <div class$="title [[_selectedFilter(rec.name, value)]]">
-                        [[rec.name]]
-                        <span style="float: right">[[rec.count]]</span>
+                    <div class="title">
+                        [[rec.name]]<span style="float: right">[[rec.count]]</span>
                     </div>
                     <paper-ripple></paper-ripple>
                 </div>
@@ -88,6 +87,7 @@
                         }
                     }
                 },
+                kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 items: {
@@ -114,9 +114,6 @@
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
                 // this.fire('menu-toggle');
                 // document.querySelector('index-page').view = 'detail';
-			},
-            _selectedFilter: function(current, value) {
-				if (current == value) return 'activeFilterClass';
 			},
             _repeatRender: function() {
                 var nodes = Polymer.dom(this.root).querySelectorAll('.rec');

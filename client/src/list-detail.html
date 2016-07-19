@@ -225,7 +225,7 @@
                 }
             },
             _bindZoom: function() {
-                var images = document.querySelectorAll('.pz');
+                var images = this.shadowRoot.querySelectorAll('.pz');
                 images.forEach(function(elem, index) {
                     new VanillaPinch(elem, { tapZoomFactor: 2 });
                 });
