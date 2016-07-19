@@ -188,7 +188,7 @@
 			handler: function(request) {
 				var response = request.detail.response;
                 if (response.objects.length == 0) {
-                    var dialog = document.getElementById('message');
+                    var dialog = this.$.message;
                     dialog.open();
                 } else {
                     response.objects.forEach(function(item) {
@@ -219,7 +219,7 @@
             _showExif: function(e) {
                 var id = e.target.items[this.start].slug,
                     // id = e.model.item.slug,
-                    dialog = document.getElementById(id);
+                    dialog = this.$$('#' + id);
                 if (dialog) {
                     dialog.open();
                 }

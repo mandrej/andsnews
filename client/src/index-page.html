@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
@@ -227,7 +229,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '2016071914'},
+				version: { type: String, value: '2016071915'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
@@ -263,7 +265,7 @@
 				return kind == 'photo'
 			},
 			showExif: function(e) {
-				document.querySelector('list-detail').fire('show-exif');
+				this.$$('list-detail').fire('show-exif');
             },
 		});
 	</script>
