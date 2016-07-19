@@ -20,43 +20,16 @@ libraries:
   version: latest
 
 handlers:
-- url: /
-  static_files: client/index.html
-  upload: client/index.html
-  secure: always
-
-- url: /robots.txt
-  static_files: robots.txt
-  upload: /robots.txt
-  secure: always
-
-#- url: /favicon.ico
-#  static_files: app/favicon.ico
-#  upload: app/favicon.ico
-#  secure: always
-
 - url: /bower_components/
-  static_dir: client/bower_components
-  secure: always
-
-- url: /node_modules/
-  static_dir: client/node_modules
+  static_dir: client/build/bundled/bower_components
   secure: always
 
 - url: /src/
-  static_dir: client/src
+  static_dir: client/build/bundled/src
   secure: always
 
 - url: /images/
-  static_dir: client/images
-  secure: always
-
-- url: /scripts/
-  static_dir: client/scripts
-  secure: always
-
-- url: /styles/
-  static_dir: client/styles
+  static_dir: client/build/bundled/images
   secure: always
 
 - url: /service-worker.js
@@ -69,7 +42,22 @@ handlers:
   upload: client/build/bundled/manifest.json
   secure: always
 
+- url: /
+  static_files: client/build/bundled/index.html
+  upload: client/build/bundled/index.html
+  secure: always
+
 ####################################################
+
+- url: /robots.txt
+  static_files: robots.txt
+  upload: /robots.txt
+  secure: always
+
+#- url: /favicon.ico
+#  static_files: app/favicon.ico
+#  upload: app/favicon.ico
+#  secure: always
 
 - url: /static/(.*\.(less|scss))$
   static_files: static/\1

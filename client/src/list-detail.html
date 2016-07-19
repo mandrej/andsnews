@@ -225,10 +225,7 @@
                 }
             },
             _bindZoom: function() {
-                var images = this.shadowRoot.querySelectorAll('.pz');
-                images.forEach(function(elem, index) {
-                    new VanillaPinch(elem, { tapZoomFactor: 2 });
-                });
+                // TODO
             },
             _download: function(e) {
                 e.preventDefault();
@@ -248,5 +245,4 @@
         });
     </script>
     <script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
-    <script src="../node_modules/vanilla-pinch/dist/vanillapinchzoom.min.js"></script>
 </dom-module>
