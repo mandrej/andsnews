@@ -1,9 +1,0 @@
-{
-    "entrypoint": "app/index.html",
-    "shell": "app/src/index-page.html",
-    "fragments": [
-        "app/src/list-filter.html",
-        "app/src/list-detail.html",
-        "app/src/list-search.html"
-    ]
-}

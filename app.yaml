@@ -21,52 +21,52 @@ libraries:
 
 handlers:
 - url: /
-  static_files: app/index.html
-  upload: app/index.html
+  static_files: client/index.html
+  upload: client/index.html
   secure: always
 
 - url: /robots.txt
-  static_files: app/robots.txt
-  upload: app/robots.txt
+  static_files: robots.txt
+  upload: /robots.txt
   secure: always
 
-- url: /favicon.ico
-  static_files: app/favicon.ico
-  upload: app/favicon.ico
-  secure: always
+#- url: /favicon.ico
+#  static_files: app/favicon.ico
+#  upload: app/favicon.ico
+#  secure: always
 
 - url: /bower_components/
-  static_dir: app/bower_components
+  static_dir: client/bower_components
   secure: always
 
 - url: /node_modules/
-  static_dir: app/node_modules
+  static_dir: client/node_modules
   secure: always
 
 - url: /src/
-  static_dir: app/src
+  static_dir: client/src
   secure: always
 
 - url: /images/
-  static_dir: app/images
+  static_dir: client/images
   secure: always
 
 - url: /scripts/
-  static_dir: app/scripts
+  static_dir: client/scripts
   secure: always
 
 - url: /styles/
-  static_dir: app/styles
+  static_dir: client/styles
   secure: always
 
 - url: /service-worker.js
-  static_files: build/bundled/service-worker.js
-  upload: build/bundled/service-worker.js
+  static_files: client/build/bundled/service-worker.js
+  upload: client/build/bundled/service-worker.js
   secure: always
 
 - url: /manifest.json
-  static_files: build/bundled/manifest.json
-  upload: build/bundled/manifest.json
+  static_files: client/build/bundled/manifest.json
+  upload: client/build/bundled/manifest.json
   secure: always
 
 ####################################################
