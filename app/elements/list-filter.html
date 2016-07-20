@@ -1,0 +1,77 @@
+<link rel="import" href="elements.html">
+
+<dom-module id="list-filter">
+    <template>
+        <style is="custom-style" include="shared-styles"></style>
+        <style>
+            :host {
+                @apply(--layout-horizontal);
+                @apply(--layout-start-aligned);
+                @apply(--layout-wrap);
+            }
+            .rec {
+                box-sizing: border-box;
+                position: relative;
+                width: 20%;
+				cursor: pointer;
+                padding: 16px;
+			}
+			.rec.activeFilterClass {
+				color: var(--dark-theme-text-color);
+				background-color: var(--paper-red-500);
+			}
+            @media (max-width: 1024px) { .rec { width: 25%; } }
+            @media (max-width: 768px)  { .rec { width: 33.3333333%; } }
+            @media (max-width: 432px)  { .rec { width: 50%; } }
+        </style>
+
+        <iron-ajax auto
+			url="{{_urlFilter(kind)}}"
+			handle-as="json"
+			last-response="{{response}}"
+			debounce-duration="100"></iron-ajax>
+
+        <template is="dom-repeat" items="[[response]]" as="row">
+            <template is="dom-repeat" items="[[row.items]]" as="rec">
+                <div class$="rec [[_selectedFilter(rec.name, value)]]"
+                    data-field$="[[row.field_name]]" on-tap="_applyFilter">
+                    [[rec.name]]
+                </div>
+            </template>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            is: 'list-filter',
+            properties: {
+				field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
+                items: {
+                    type: Array,
+                    value: [],
+                    notify: true
+                },
+            },
+            _urlFilter: function(kind) {
+				var prefix = '/api/filter';
+				if (kind == 'photo' || kind == 'entry') {
+					return [prefix, kind].join('/');
+				} else {
+					this.response = null;
+				}
+			},
+            _applyFilter: function(e) {
+                this.set('params.page', null);
+                this.items = [];
+				this.field = e.model.row.field_name;
+				this.value = e.model.rec.name;
+				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
+                // this.fire('menu-toggle');
+                // document.querySelector('index-page').view = 'detail';
+			},
+            _selectedFilter: function(current, value) {
+				if (current == value) return 'activeFilterClass';
+			},
+        });
+    </script>
+</dom-module>

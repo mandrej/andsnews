@@ -1,41 +1,120 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
-
-<link rel="import" href="list-page.html">
+<link rel="import" href="elements.html">
+<link rel="import" href="list-filter.html">
+<link rel="import" href="list-grid.html">
+<link rel="import" href="list-detail.html">
 
 <dom-module id="index-page">
 	<template>
-		<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
+		<style>
+			:host {
+				display: block;
+				/*min-height: 100vh;*/
+				--primary-color: var(--paper-indigo-700);
+			}
+			app-header {
+      			position: fixed;
+      			top: 0;
+      			left: 0;
+      			width: 100%;
+      			height: 128px;
+				color: var(--dark-theme-text-color);
+                background-color: var(--primary-color);
+				z-index: 1;
+          	}
+			app-toolbar a {
+				color: inherit;
+				text-decoration: none;
+			}
+			paper-input {
+				--paper-input-container-input-color: var(--dark-theme-text-color);
+			}
+			main {
+				padding-top: 128px;
+			}
+		</style>
 
-		<!-- /(photo|entry|search) -->
-		<carbon-route
+		<app-location route="{{route}}" use-hash-as-path></app-location>
+		<app-route
 			route="{{route}}"
 			pattern="/:kind"
 			data="{{data}}"
 			tail="{{tail}}"
-			active="{{active}}"></carbon-route>
+			active="{{active}}"></app-route>
 
-		<carbon-route
+		<app-route
 			route="{{tail}}"
 			pattern="/:field"
 			data="{{dataField}}"
 			tail="{{tailField}}"
-			active="{{activeField}}"></carbon-route>
+			active="{{activeField}}"></app-route>
 
-		<carbon-route
+		<app-route
 			route="{{tailField}}"
 			pattern="/:value"
 			data="{{dataValue}}"
 			tail="{{tailValue}}"
-			active="{{activeValue}}"></carbon-route>
+			active="{{activeValue}}"></app-route>
 
-        <list-page
-            page={{page}}
-            kind="{{data.kind}}"
-            field="{{dataField.field}}"
-            value="{{dataValue.value}}"
-		    route="{{route}}"></list-page>
+		<app-header condenses reveals fixed>
+			<app-toolbar>
+				<div title>[[data.kind]], [[dataField.field]], [[dataValue.value]]</div>
+
+				<iron-icon icon="icons:search" style="margin-right: 16px"></iron-icon>
+				<iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+				<paper-input id="inputSearch" placeholder="search" no-label-float
+				value="{{search::input}}"></paper-input>
+
+				<paper-spinner active$="[[loading]]"></paper-spinner>
+			</app-toolbar>
+	  		<app-toolbar primary>
+				<div title>
+					<paper-icon-button icon="icons:menu" on-tap="_menuToggle"></paper-icon-button>
+					ANDрејевићи
+				</div>
+				<a href="#/photo">
+					<paper-button on-tap="_resetFilter">Photos</paper-button>
+				</a>
+				<a href="#/entry">
+					<paper-button on-tap="_resetFilter">Texts</paper-button>
+				</a>
+			</app-toolbar>
+		</app-header>
+
+		<main>
+			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
+			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
+				<!-- <list-grid
+					data-view="grid"
+					kind="{{data.kind}}"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
+					route="{{route}}"
+					selected="{{selected}}"
+					loading="{{loading}}"
+					items="{{items}}"></list-grid> -->
+
+				<list-filter
+					data-view="grid"
+					kind="[[data.kind]]"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
+					route="{{route}}"
+					items="{{items}}"></list-filter>
+
+				<list-detail
+					data-view="detail"
+					kind="{{data.kind}}"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					params="{{params}}"
+					route="{{route}}"
+					loading="{{loading}}"
+					items="[[items]]"></list-detail>
+			</neon-animated-pages>
+
+		</main>
 	</template>
 
 	<script>
@@ -44,12 +123,65 @@
 			attached: function() {
 				if (!this.route.path) {
 					this.set('route.path', '/photo');
-					this.kind = 'photo';
+					this.set('data.kind', 'photo');
+					this.set('dataField.field', null);
+					this.set('dataValue.value', null);
 				}
 			},
 			properties: {
-				page: { value: null, notify: true }
-			}
+				// view: { type: String, value: 'grid', notify: true },
+				items: { type: Array, value: [], notify: true },
+				search: { type: String, value: null, notify: true },
+				view: {
+					computed: '_viewChanged(data.kind, dataField.field, dataValue.value)',
+					notify: true
+				},
+				targetSearch: {
+					type: Object,
+					value: function() {
+						return this.$.inputSearch
+					}
+				},
+			},
+			_viewChanged: function(kind, field, value) {
+				if (kind && field) {
+					return 'detail';
+				} else {
+					return 'grid';
+				}
+			},
+			// listeners: {'menu-toggle': '_menuToggle'},
+			_resetFilter: function(e) {
+				this.set('params.find', null);
+				this.set('params.page', null);
+                this.items = [];
+				this.set('dataField.field', null);
+				this.set('dataValue.value', null);
+				// this.view = 'grid';
+
+				// var layout = this.$.layout;
+                // if (layout.drawer.opened && !layout.drawer.persistent) drawer.close();
+			},
+			_onSearch: function() {
+				this.set('params.find', null);
+				this.set('params.page', null);
+                this.items = [];
+				this.set('dataField.field', this.search);
+				this.set('dataValue.value', null);
+				this.set('route.path', '/search/' + this.search);
+				// this.fire('menu-toggle');
+				this.view = 'detail';
+			},
+			// _menuToggle: function(e) {
+				// var layout = this.$.layout;
+				// if (!layout.drawer.persistent) {
+				// 	layout.drawer.opened = !layout.drawer.opened;
+				// }
+			// },
+			// _toggleDrawer: function(newValue, oldValue) {
+				// var layout = this.$.layout;
+				// layout.forceNarrow = layout.drawer.persistent && newValue == 'detail';
+			// }
 		});
 	</script>
 </dom-module>

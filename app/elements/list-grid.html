@@ -1,8 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="elements.html">
 
 <dom-module id="list-grid">
     <template>
@@ -11,90 +7,164 @@
             :host {
                 display: block;
             }
-            .content {
+            app-toolbar {
+                color: var(--dark-theme-text-color);
+                background-color: var(--primary-color);
+            }
+            .grid {
                 @apply(--layout-horizontal);
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
             }
             .photo, .entry {
                 position: relative;
-                width: 20%;
-				height: 200px;
+                width: 25%;
 				cursor: pointer;
 			}
-            .photo:hover .detail { opacity: 1; }
-            .photo > iron-image {
-                @apply(--layout-flex);
+            .photo {
+                height: 250px;
             }
-            .entry {
-                background-color: var(--google-yellow-100);
-                @apply(--layout-vertical);
-                @apply(--layout-center-justified);
-            }
-            .entry > div {
-                margin: 16px;
-            }
-            .entry > .headline {
-                text-overflow: ellipsis;
-                @apply(--paper-font-headline);
-            }
-            .photo > .detail {
+            .photo .title {
                 position: absolute;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.8));
+                background-color: rgba(0,0,0,0.5);
                 color: white;
                 font-size: 20px;
-                font-weight: 100;
                 padding: 20px;
-                opacity: 0;
+                opacity: 1;
                 transition: opacity 0.1s;
             }
-            @media (max-width: 1024px) {.photo, .entry { width: 25%; height: 200px;} }
-            @media (max-width: 848px) { .photo, .entry { width: 33.3333333%; height: 200px;} }
-            @media (max-width: 600px) { .photo, .entry { width: 50%; height: 300px;} }
-            @media (max-width: 432px) { .photo, .entry { width: 100%; height: 350px;} }
+            .photo iron-image {
+                width: 100%;
+                height: 100%;
+            }
+            .entry {
+                box-sizing: border-box;
+                padding: 20px;
+            }
+            .entry .title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            .entry iron-image {
+                width: 100%;
+                height: 50px;
+            }
 
-			iron-image { width: 100%; height: 100%; }
+            @media (max-width: 1024px) { .photo, .entry { width: 33.3333333%; } }
+            @media (max-width: 768px)  { .photo, .entry { width: 50%; } }
+            @media (max-width: 432px)  { .photo, .entry { width: 100%; } }
         </style>
 
-        <div class="content">
-            <template is="dom-repeat" items="{{items}}" index-as="index" id="repeater">
-                <template is="dom-if" if="[[_showPhoto(item)]]">
-                    <div class="photo" on-tap="_showDetail">
-                        <iron-image src="{{item.serving_url}}=s0" sizing="cover"></iron-image>
-                        <div class="detail">[[item.headline]]</div>
-                        <paper-ripple></paper-ripple>
-                    </div>
-                </template>
-                <template is="dom-if" if="[[!_showPhoto(item)]]">
-                    <div class="entry" on-tap="_showDetail">
-                        <div class="self-center">
-                            <p class="headline">[[item.headline]]</p>
-                            <p>[[item.date]]</p>
+        <app-header-layout>
+            <app-header fixed>
+                <app-toolbar>
+                    <paper-icon-button icon="icons:menu" on-tap="_menuToggle" drawer-toggle></paper-icon-button>
+                    <div title>ANDрејевићи {{kind}} {{field}} {{value}}</div>
+                    <paper-spinner active$="[[loading]]"></paper-spinner>
+                </app-toolbar>
+            </app-header>
+
+            <iron-ajax id="list_ajax" auto
+    			url="{{url}}"
+                params="{{params}}"
+    			handle-as="json"
+    			on-response="handler"
+    			loading="{{loading}}"
+    			debounce-duration="100"></iron-ajax>
+
+            <div class="grid">
+                <template is="dom-repeat" items="{{items}}" scroll-target="document" index-as="index" id="repeater">
+                    <template is="dom-if" if="[[_showPhoto(item)]]" restamp="true">
+                        <div class="photo" on-tap="_showDetail">
+                            <iron-image src="[[item.serving_url]]=s400" preload sizing="cover"></iron-image>
+                            <div class="title">[[item.headline]]</div>
+                            <paper-ripple></paper-ripple>
                         </div>
-                        <paper-ripple></paper-ripple>
-                    </div>
+                    </template>
+                    <template is="dom-if" if="[[!_showPhoto(item)]]" restamp="true">
+                        <div class="entry" on-tap="_showDetail">
+                            <div class="title">[[item.headline]]</div>
+                            <template is="dom-if" if="[[item.front]]" restamp="true">
+                                <iron-image src="[[item.front]]/normal" preload fade sizing="cover"></iron-image>
+                            </template>
+                            [[item.summary]]
+                            <paper-ripple></paper-ripple>
+                        </div>
+                    </template>
                 </template>
-            </template>
-        </div>
+            </div>
+        </app-header-layout>
+
+        <iron-scroll-threshold id="scrollTheshold"
+            lower-threshold="500"
+            scroll-target="document"
+            on-lower-threshold="loadMore"></iron-scroll-threshold>
 
     </template>
+
     <script>
         Polymer({
             is: 'list-grid',
             properties: {
+				kind: { type: String, value: null, notify: true },
+				field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 items: {
                     type: Array,
-                    value: []
+                    value: [],
+                    notify: true
+                },
+                params: {
+                    type: Object,
+                    value: {},
+                    notify: true
+                },
+                url: {
+					computed: '_url(kind, field, value)',
+					notify: true,
+					observer: 'propertyChanged'
+				},
+                loading: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
                 },
                 selected: {
                     type: Number,
                     value: 0,
                     notify: true
-                }
+                },
             },
+            observers: ['paramsChanged(params.*)'],
+            _url: function(kind, field, value) {
+				var prefix = '/api',
+                    url = [prefix, kind].join('/');
+
+				if (kind == 'search' && field != null) {
+                    this.set('params.find', field);
+				} else if (field && value) {
+					url = [prefix, kind, field, value].join('/');
+				}
+				return url;
+			},
+			handler: function(request) {
+				var response = request.detail.response;
+				response.objects.forEach(function(item) {
+					this.push('items', item);
+				}, this);
+				this.$.scrollTheshold.clearTriggers();
+			},
+            loadMore: function() {
+                var list_ajax = this.$.list_ajax;
+                // if (list_ajax.lastRequest) list_ajax.lastRequest.abort();
+				if (list_ajax.lastResponse && list_ajax.lastResponse.next) {
+                    this.set('params.page', list_ajax.lastResponse.next);
+                    // list_ajax.generateRequest();
+				}
+			},
             _showPhoto: function(item) {
                 return item.kind == 'photo';
             },
@@ -102,7 +172,21 @@
                 // this.selected = e.model.index; without dom-if
                 var model = this.$.repeater.modelForElement(e.target);
                 this.selected = model.index;
-                this.fire('show-detail');
+
+                document.querySelector('index-page').view = 'detail';
+            },
+            _menuToggle: function(e) {
+                this.fire('menu-toggle');
+            },
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
+			objectChanged: function(newValue, oldValue) {
+				console.log(newValue);
+			},
+            paramsChanged: function(obj) {
+                // this is object observer!
+                console.log(obj.path + ' -> ' + this.get(obj.path));
             }
         });
     </script>

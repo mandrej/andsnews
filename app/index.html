@@ -22,58 +22,43 @@
 	<!-- Web Components -->
 	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 	<link rel="import" href="bower_components/polymer/polymer.html">
-	<link rel="import" href="bower_components/carbon-route/carbon-location.html">
-	<link rel="import" href="bower_components/carbon-route/carbon-route.html">
 
-    <link rel="import" href="elements/list-page.html">
+	<!-- <script>
+		window.Polymer = {
+			dom: 'shadow',
+			lazyRegister: true
+		};
+		(function() {
+			if ('registerElement' in document
+				&& 'import' in document.createElement('link')
+				&& 'content' in document.createElement('template')) {
+				// platform is good!
+			} else {
+				// polyfill the platform!
+				var e = document.createElement('script');
+				e.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+				document.body.appendChild(e);
+			}
+		})();
+	</script> -->
+
+	<style>
+		body {
+			margin: 0;
+	  		font-family: 'Roboto', 'Noto', sans-serif;
+	  		min-height: 100vh;
+		}
+		/* styling for render while resources are loading */
+		index-page[unresolved] {
+      		display: block;
+      		min-height: 100vh;
+            overflow: visible;
+    	}
+	</style>
+
+	<link rel="import" href="elements/index-page.html">
 </head>
-<body class="fullbleed vertical" unresolved>
-	<dom-module id="index-page">
-		<template>
-			<carbon-location route="{{route}}" use-hash-as-path></carbon-location>
-
-			<!-- /(photo|entry|search) -->
-			<carbon-route
-				route="{{route}}"
-				pattern="/:kind"
-				data="{{data}}"
-				tail="{{tail}}"
-				active="{{active}}"></carbon-route>
-
-			<carbon-route
-				route="{{tail}}"
-				pattern="/:field"
-				data="{{dataField}}"
-				tail="{{tailField}}"
-				active="{{activeField}}"></carbon-route>
-
-			<carbon-route
-				route="{{tailField}}"
-				pattern="/:value"
-				data="{{dataValue}}"
-				tail="{{tailValue}}"
-				active="{{activeValue}}"></carbon-route>
-
-	        <list-page
-				kind="{{data.kind}}"
-	            field="{{dataField.field}}"
-	            value="{{dataValue.value}}"
-			    route="{{route}}"></list-page>
-		</template>
-
-		<script>
-			Polymer({
-				is: 'index-page',
-				attached: function() {
-					if (!this.route.path) {
-						this.set('route.path', '/photo');
-						this.kind = 'photo';
-					}
-				}
-			});
-		</script>
-	</dom-module>
-
-	<index-page></index-page>
+<body>
+	<index-page unresolved></index-page>
 </body>
 </html>

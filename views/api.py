@@ -35,7 +35,7 @@ class Collection(RestHandler):
 
 class KindFilter(RestHandler):
     def get(self, kind=None):
-        fields = ['tags', 'date', 'author']
+        fields = ['date', 'tags', 'author']
         data = []
 
         for field in fields:
