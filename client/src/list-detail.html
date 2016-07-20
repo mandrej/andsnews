@@ -29,6 +29,10 @@
             .swipe iron-image {
                 width: 100%;
                 height: 100%;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;
             }
             paper-dialog.info {
                 --paper-dialog-background-color: var(--google-yellow-300);
@@ -68,12 +72,11 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="flex" selected="{{start}}" is-gesture="true" id="swipe">
-            <template is="dom-repeat" items="{{items}}" on-dom-change="_bindZoom">
+        <iron-swipeable-pages class="flex" selected="{{start}}" threshold="0" id="swipe">
+            <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe pz">
-                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover"></iron-image>
-                        <!-- <img src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]"> -->
+                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover" on-track="zoomImage"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -224,8 +227,44 @@
                     dialog.open();
                 }
             },
-            _bindZoom: function() {
-                // TODO
+            zoomImage: function(e) {
+                // console.log(e);
+                var swipe = this.$.swipe,
+                    width = swipe.offsetWidth,
+                    height = swipe.offsetHeight,
+                    elem = e.target,
+                    dim = JSON.parse(elem.dataset.dim);
+
+                switch(e.detail.state) {
+                    case 'start':
+                        console.log('Tracking started!');
+                        // swipe.edgeSwipeSensitivity = 100;
+                        // swipe.style.touchAction = 'auto';
+                        elem.style.width = dim[0] + 'px';
+                        elem.style.height = dim[1] + 'px';
+                        var newX = e.detail.x / width * dim[0];
+                        var newY = e.detail.y / height * dim[1];
+                        elem.style.left = e.detail.x - newX + 'px';
+                        elem.style.top = e.detail.y - newY + 'px';
+                        break;
+                    case 'track':
+                        var newX = e.detail.x / width * dim[0];
+                        var newY = e.detail.y / height * dim[1];
+                        elem.style.left = e.detail.x - newX + 'px';
+                        elem.style.top = e.detail.y - newY + 'px';
+                        // elem.style.left = - e.detail.x / width * dim[0] + e.detail.dx + 'px';
+                        // elem.style.top = - e.detail.y / height * dim[1] + e.detail.dy + 'px';
+                        break;
+                    case 'end':
+                        elem.style.width = '100%';
+                        elem.style.height = '100%';
+                        elem.style.left = '0px';
+                        elem.style.top = '0px';
+                        console.log('Tracking ended!');
+                        // swipe.style.touchAction = 'pan-y';
+                        // swipe.edgeSwipeSensitivity = 0;
+                        break;
+                }
             },
             _download: function(e) {
                 e.preventDefault();

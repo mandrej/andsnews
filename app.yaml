@@ -19,32 +19,34 @@ libraries:
 - name: numpy
   version: latest
 
+# client -> client/build/bundled
+
 handlers:
 - url: /bower_components/
-  static_dir: client/build/bundled/bower_components
+  static_dir: client/bower_components
   secure: always
 
 - url: /src/
-  static_dir: client/build/bundled/src
+  static_dir: client/src
   secure: always
 
 - url: /images/
-  static_dir: client/build/bundled/images
+  static_dir: client/images
   secure: always
 
 - url: /service-worker.js
-  static_files: client/build/bundled/service-worker.js
-  upload: client/build/bundled/service-worker.js
+  static_files: client/service-worker.js
+  upload: client/service-worker.js
   secure: always
 
 - url: /manifest.json
-  static_files: client/build/bundled/manifest.json
-  upload: client/build/bundled/manifest.json
+  static_files: client/manifest.json
+  upload: client/manifest.json
   secure: always
 
 - url: /
-  static_files: client/build/bundled/index.html
-  upload: client/build/bundled/index.html
+  static_files: client/index.html
+  upload: client/index.html
   secure: always
 
 ####################################################
