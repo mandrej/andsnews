@@ -13,6 +13,8 @@ app = WSGIApplication([
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
     Route(r'/api/search', handler='views.api.Find'),
 
+    Route(r'/api/download/<safe_key:[\w-]+>', handler='views.api.Download', name='download_url'),
+
     ###
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),
     Route(r'/photos/<slug:[\w-]+>', handler='views.photo.Detail', name='photo'),

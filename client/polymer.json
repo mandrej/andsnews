@@ -1,0 +1,9 @@
+{
+    "entrypoint": "index.html",
+    "shell": "src/index-page.html",
+    "fragments": [
+        "src/list-filter.html",
+        "src/list-detail.html",
+        "src/list-search.html"
+    ]
+}

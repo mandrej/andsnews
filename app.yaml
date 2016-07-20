@@ -1,5 +1,5 @@
 application: andsnews
-version: 1602
+version: 1607
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -20,40 +20,44 @@ libraries:
   version: latest
 
 handlers:
-- url: /
-  static_files: app/index.html
-  upload: app/index.html
-  secure: always
-
-- url: /robots.txt
-  static_files: app/robots.txt
-  upload: app/robots.txt
-  secure: always
-
-- url: /favicon.ico
-  static_files: app/favicon.ico
-  upload: app/favicon.ico
-  secure: always
-
 - url: /bower_components/
-  static_dir: app/bower_components
+  static_dir: client/build/bundled/bower_components
   secure: always
 
-- url: /elements/
-  static_dir: app/elements
+- url: /src/
+  static_dir: client/build/bundled/src
   secure: always
 
 - url: /images/
-  static_dir: app/images
+  static_dir: client/build/bundled/images
   secure: always
 
-- url: /scripts/
-  static_dir: app/scripts
+- url: /service-worker.js
+  static_files: client/build/bundled/service-worker.js
+  upload: client/build/bundled/service-worker.js
   secure: always
 
-- url: /styles/
-  static_dir: app/styles
+- url: /manifest.json
+  static_files: client/build/bundled/manifest.json
+  upload: client/build/bundled/manifest.json
   secure: always
+
+- url: /
+  static_files: client/build/bundled/index.html
+  upload: client/build/bundled/index.html
+  secure: always
+
+####################################################
+
+- url: /robots.txt
+  static_files: robots.txt
+  upload: /robots.txt
+  secure: always
+
+#- url: /favicon.ico
+#  static_files: app/favicon.ico
+#  upload: app/favicon.ico
+#  secure: always
 
 - url: /static/(.*\.(less|scss))$
   static_files: static/\1

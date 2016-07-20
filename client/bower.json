@@ -1,0 +1,25 @@
+{
+    "name": "ands",
+    "version": "0.0.0",
+    "homepage": "",
+    "description": "",
+    "authors": [
+        "milan.andrejevic@gmail.com"
+    ],
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+        "app-layout": "PolymerElements/app-layout#^0.9.0",
+        "app-route": "PolymerElements/app-route#^0.9.1",
+        "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+        "paper-elements": "PolymerElements/paper-elements#^1.0.7",
+        "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+        "iron-swipeable-pages": "^1.2.3",
+        "polymer": "Polymer/polymer#^1.4.0",
+        "moment": "^2.13.0",
+        "marked-element": "PolymerElements/marked-element#^1.1.3"
+    },
+    "devDependencies": {
+        "web-component-tester": "^4.0.0"
+    }
+}
