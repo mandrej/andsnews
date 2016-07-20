@@ -44,6 +44,11 @@ handlers:
   upload: client/manifest.json
   secure: always
 
+- url: /index.html
+  static_files: client/index.html
+  upload: client/index.html
+  secure: always
+
 - url: /
   static_files: client/index.html
   upload: client/index.html

@@ -72,7 +72,7 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="flex" selected="{{start}}" disabled="{{disabled}} "threshold="0" id="swipe">
+        <iron-swipeable-pages class="flex" selected="{{start}}" threshold="0" edge-swipe-sensitivity="{{sensitivity}}" id="swipe">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe pz">
@@ -151,7 +151,7 @@
                     notify: true
                 },
                 start: { type: Number, value: 0, notify: true, observer: 'changeHeadline' },
-                disabled: { type: Boolean, value: false, notify: true },
+                sensitivity: { type: Number, value: 0, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: {
                     type: Object,
@@ -236,38 +236,31 @@
                     elem = e.target,
                     dim = JSON.parse(elem.dataset.dim);
 
+                var newX = e.detail.x - e.detail.x / width * dim[0];
+                var newY = e.detail.y - e.detail.y / height * dim[1];
+
                 switch(e.detail.state) {
                     case 'start':
-                        this.disabled = true;
+                        this.sensitivity = 200;
                         elem.style.width = dim[0] + 'px';
                         elem.style.height = dim[1] + 'px';
-                        var newX = e.detail.x / width * dim[0];
-                        var newY = e.detail.y / height * dim[1];
-                        elem.style.left = e.detail.x - newX + 'px';
-                        elem.style.top = e.detail.y - newY + 'px';
+                        elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
                         break;
                     case 'track':
                         if (e.detail.x < 0 || e.detail.x > width || e.detail.y < 0 || e.detail.y > height) {
                             elem.style.width = '100%';
                             elem.style.height = '100%';
-                            elem.style.left = '0px';
-                            elem.style.top = '0px';
-                            this.disabled = false;
-                            // e.defaultPrevented = true;
-                            // e.detail.state = 'end';
+                            elem.style.transform = 'translate(0px, 0px)';
+                            this.sensitivity = 0;
                         } else {
-                            var newX = e.detail.x / width * dim[0];
-                            var newY = e.detail.y / height * dim[1];
-                            elem.style.left = e.detail.x - newX + 'px';
-                            elem.style.top = e.detail.y - newY + 'px';
+                            elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
                         }
                         break;
                     case 'end':
                         elem.style.width = '100%';
                         elem.style.height = '100%';
-                        elem.style.left = '0px';
-                        elem.style.top = '0px';
-                        this.disabled = false;
+                        elem.style.transform = 'translate(0px, 0px)';
+                        this.sensitivity = 0;
                         break;
                 }
             },
