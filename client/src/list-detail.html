@@ -68,7 +68,7 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="flex" selected="{{start}}" threshold="0" edge-swipe-sensitivity="{{sensitivity}}" id="swipe">
+        <iron-swipeable-pages class="flex" selected="{{start}}" threshold="0" disabled="{{disabled}}" id="swipe">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
@@ -147,7 +147,7 @@
                     notify: true
                 },
                 start: { type: Number, value: 0, notify: true, observer: 'changeHeadline' },
-                sensitivity: { type: Number, value: 0, notify: true },
+                disabled: { type: Boolean, value: false, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: {
                     type: Object,
@@ -225,43 +225,40 @@
                 }
             },
             zoomImage: function(e) {
-                // console.log(e);
                 var swipe = this.$.swipe,
                     width = swipe.offsetWidth,
                     height = swipe.offsetHeight,
                     elem = e.target,
                     dim = JSON.parse(elem.dataset.dim);
 
-                var speed = Math.max(Math.abs(e.detail.ddx), Math.abs(e.detail.ddy)) > 1;
-                var newX = e.detail.x - e.detail.x / width * dim[0];
-                var newY = e.detail.y - e.detail.y / height * dim[1];
+                var newX = e.detail.x - e.detail.x / width * dim[0],
+                    newY = e.detail.y - e.detail.y / height * dim[1];
 
                 switch(e.detail.state) {
                     case 'track':
-                        // console.log(speed);
-                        if (!speed) {
-                            if (elem.style.width != dim[0] + 'px') {
-                                elem.style.width = dim[0] + 'px';
-                                elem.style.height = dim[1] + 'px';
-                            }
-                            this.sensitivity = 200;
+                        if (this.disabled) {
+                            // move in progress
                             elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
+                        } else {
+                            if (Math.abs(e.detail.dx) > Math.abs(e.detail.dy)) {
+                                return; // swipe
+                            } else {
+                                // zoom
+                                if (elem.style.width != dim[0] + 'px') {
+                                    elem.style.width = dim[0] + 'px';
+                                    elem.style.height = dim[1] + 'px';
+                                }
+                                this.disabled = true;
+                                elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
+                                // elem.style.webkitTransition = 'all 300ms ease-in-out';
+                            }
                         }
-
-                        // if (e.detail.x < 0 || e.detail.x > width || e.detail.y < 0 || e.detail.y > height) {
-                        //     elem.style.width = '100%';
-                        //     elem.style.height = '100%';
-                        //     elem.style.transform = 'translate(0px, 0px)';
-                        //     this.sensitivity = 0;
-                        // } else {
-                        //     elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
-                        // }
                         break;
                     case 'end':
                         elem.style.width = '100%';
                         elem.style.height = '100%';
                         elem.style.transform = 'translate(0px, 0px)';
-                        this.sensitivity = 0;
+                        this.disabled = false;
                         break;
                 }
             },
