@@ -13,11 +13,11 @@
     <template>
         <style>
             :host {
-                display: flex;
-                height: 100vh;
+                display: block;
             }
             iron-swipeable-pages {
-                width: 100%;
+                width: 100vw;
+                height: 100vh;
             }
             .swipe {
                 -moz-user-select: none;
@@ -68,7 +68,7 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages class="flex" selected="{{start}}" threshold="0" disabled="{{disabled}}" id="swipe">
+        <iron-swipeable-pages selected="{{start}}" threshold="0" disabled="{{disabled}}" id="swipe">
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
@@ -101,7 +101,7 @@
         </iron-swipeable-pages>
 
         <iron-scroll-threshold id="scrollTheshold"
-            lower-threshold="2000"
+            lower-threshold="200"
             scroll-target="document"
             on-lower-threshold="loadMore"></iron-scroll-threshold>
     </template>

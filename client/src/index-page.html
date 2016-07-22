@@ -118,7 +118,7 @@
 			<template is="dom-if" if="[[!smallScreen]]">
 				<app-toolbar>
 					<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
-					<div main-title>[[version]]</div>
+					<div main-title>[[version]] [[start]]</div>
 					<paper-spinner active$="[[loading]]"></paper-spinner>
 				</app-toolbar>
 			</template>
@@ -227,7 +227,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '1607 21T23'},
+				version: { type: String, value: '1607 22'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
