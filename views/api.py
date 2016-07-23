@@ -56,11 +56,15 @@ def cloud_limit(items):
 
 
 def cloud_representation(kind):
-    fields = ['date', 'tags', 'author']
     model = ndb.Model._kind_map.get(kind.title())
     data = memcache.get('%s_representation' % kind)
 
     if data is None:
+        if kind == 'photo':
+            fields = ['date', 'tags', 'model']
+        elif kind == 'entry':
+            fields = ['date', 'tags', 'author']
+
         data = []
         for field in fields:
             mem_key = kind.title() + '_' + field

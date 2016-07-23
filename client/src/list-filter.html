@@ -1,12 +1,14 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
 <dom-module id="list-filter">
     <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
                 @apply(--layout-horizontal);
@@ -55,7 +57,10 @@
                     data-field$="[[row.field_name]]" on-tap="_applyFilter">
                     <iron-image src="[[rec.repr_url]]" preload sizing="cover"></iron-image>
                     <div class="title">
-                        [[rec.name]]<span style="float: right">[[rec.count]]</span>
+                        <div class="layout horizontal justified">
+                            <span class="self-center">[[rec.name]]</span>
+                            <span class="self-center">[[rec.count]]</span>
+                        </div>
                     </div>
                     <paper-ripple></paper-ripple>
                 </div>
