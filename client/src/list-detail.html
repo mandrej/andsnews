@@ -62,7 +62,8 @@
 
         <iron-request id="download_ajax"></iron-request>
 
-        <paper-dialog id="message" class="info" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <paper-dialog id="message" class="info"
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
             <p>Please try again</p>
         </paper-dialog>
@@ -104,7 +105,6 @@
         Polymer({
             is: 'list-detail',
             behaviors: [
-                // Polymer.NeonAnimationBehavior,
                 Polymer.NeonAnimationRunnerBehavior
             ],
             properties: {
@@ -186,6 +186,7 @@
 				var response = request.detail.response;
                 if (response.objects.length == 0) {
                     var dialog = this.$.message;
+                    dialog.fitInto = this.$.swipe;
                     dialog.open();
                 } else {
                     response.objects.forEach(function(item) {

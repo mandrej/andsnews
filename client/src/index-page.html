@@ -119,7 +119,7 @@
 		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
 			<template is="dom-if" if="[[!smallScreen]]">
 				<app-toolbar>
-					<!-- <div main-title>[[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]]</div> -->
+					<!-- [[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]] -->
 					<div main-title>[[version]]</div>
 					<paper-spinner active$="[[loading]]"></paper-spinner>
 				</app-toolbar>
@@ -191,7 +191,7 @@
 
 		<main>
 			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
-			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view">
+			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view" id="neon">
 				<list-filter
 					data-view="grid"
 					kind="[[data.kind]]"
@@ -251,6 +251,9 @@
 				return view == 'detail';
 			},
 			_resetFilter: function(e) {
+				if (this.data.kind == 'search') {
+					this.set('data.kind', 'photo');
+				}
 				this.set('params.find', null);
 				this.set('params.page', null);
 				this.set('dataField.field', null);

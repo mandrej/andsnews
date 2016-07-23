@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<!-- <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html"> -->
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 <dom-module id="list-search">
@@ -13,10 +14,10 @@
             }
         </style>
 
-        <!-- <iron-icon icon="icons:search" style="margin-right: 8px"></iron-icon> -->
         <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+        <!-- <paper-icon-button icon="search"></paper-icon-button> -->
         <paper-input id="inputSearch" placeholder="search" no-label-float
-        value="{{search::input}}"></paper-input>
+            value="{{search::value-changed}}"></paper-input>
     </template>
     <script>
         Polymer({
@@ -34,17 +35,22 @@
                 targetSearch: {
 					type: Object,
 					value: function() {
-						return this.$.inputSearch
+						return this.$.inputSearch;
 					}
 				},
             },
             _onSearch: function() {
-                this.set('params.find', this.search);
+                this.field = this.search;
+                this.search = null;
+                this.value = null;
+                this.set('params.find', this.field);
 				this.set('params.page', null);
-				this.value = null;
                 this.items = [];
 				this.start = 0;
-                this.set('route.path', '/search/' + this.search);
+                this.set('route.path', '/search/' + this.field);
+			},
+            propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
         });
     </script>
