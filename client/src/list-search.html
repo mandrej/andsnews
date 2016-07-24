@@ -47,7 +47,7 @@
 				this.set('params.page', null);
                 this.items = [];
 				this.start = 0;
-                this.set('route.path', '/search/' + this.field);
+                this.set('route.path', '/detail/search/' + this.field);
 			},
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));

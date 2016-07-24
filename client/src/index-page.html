@@ -84,9 +84,6 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				/*background: -webkit-linear-gradient(#fff, #000);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;*/
 			}
 			@media (max-width: 767px) {
         		h1 {
@@ -96,15 +93,32 @@
         	}
 		</style>
 
+		<!--
+		/:view
+		/grid	/:kind
+		/detail	/:kind	/:field	/:value
+		/detail	/search	/:field
+		/admin	/:kind
+		-->
+
 		<app-location route="{{route}}" use-hash-as-path></app-location>
-		<app-route
-			route="{{route}}"
-			pattern="/:kind"
-			data="{{data}}"
-			tail="{{tail}}"></app-route>
 
 		<app-route
-			route="{{tail}}"
+			route="{{route}}"
+			pattern="/:view"
+			data="{{dataView}}"
+			tail="{{tailView}}"
+			active="{{activeView}}"></app-route>
+
+		<app-route
+			route="{{tailView}}"
+			pattern="/:kind"
+			data="{{dataKind}}"
+			tail="{{tailKind}}"
+			active="{{activeKind}}"></app-route>
+
+		<app-route
+			route="{{tailKind}}"
 			pattern="/:field"
 			data="{{dataField}}"
 			tail="{{tailField}}"></app-route>
@@ -125,28 +139,23 @@
 				</app-toolbar>
 			</template>
 			<app-toolbar sticky>
-				<template is="dom-if" if="[[detailView(view)]]">
+				<template is="dom-if" if="[[_isDetail(dataView.view)]]">
 					<paper-icon-button icon="chevron-left" on-tap="_resetFilter"></paper-icon-button>
-				</template>
-				<template is="dom-if" if="[[!detailView(view)]]">
-					<template is="dom-if" if="[[smallScreen]]">
-						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-					</template>
-				</template>
-
-				<h1 main-title>{{headline}}</h1>
-
-				<template is="dom-if" if="[[detailView(view)]]">
-					<template is="dom-if" if="[[_showPhoto(data.kind)]]">
+					<h1 main-title>{{headline}}</h1>
+					<template is="dom-if" if="[[_isPhoto(data.kind)]]">
 						<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 					</template>
 				</template>
-				<template is="dom-if" if="[[!detailView(view)]]">
+				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+					<template is="dom-if" if="[[smallScreen]]">
+						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
+					</template>
+					<h1 main-title>{{headline}}</h1>
 					<template is="dom-if" if="[[!smallScreen]]">
 						<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]">
-							<a href="#/photo" kind-page="photo" on-tap="_resetFilter">
+							<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
 								<paper-button>Photos</paper-button></a>
-							<a href="#/entry" kind-page="entry" on-tap="_resetFilter">
+							<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
 								<paper-button>Texts</paper-button></a>
 						</iron-selector>
 						<list-search
@@ -175,12 +184,12 @@
 				</app-toolbar>
 				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
 					<paper-item kind-page="photo" on-tap="_resetFilter">
-		                <a href="#/photo" class="flex">
+		                <a href="#/grid/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
 		                </a>
 		            </paper-item>
 		            <paper-item kind-page="entry" on-tap="_resetFilter">
-		                <a href="#/entry" class="flex">
+		                <a href="#/grid/entry" class="flex">
 		                    <iron-icon icon="description"></iron-icon>Texts
 		                </a>
 		            </paper-item>
@@ -190,11 +199,11 @@
 		</app-header>
 
 		<main>
-			<app-scrollpos-control selected="{{view}}"></app-scrollpos-control>
-			<neon-animated-pages selected="{{view}}" attr-for-selected="data-view" id="neon">
+			<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view" id="neon">
 				<list-filter
 					data-view="grid"
-					kind="[[data.kind]]"
+					kind="[[dataKind.kind]]"
 					field="{{dataField.field}}"
 					value="{{dataValue.value}}"
 					params="{{params}}"
@@ -204,7 +213,7 @@
 
 				<list-detail
 					data-view="detail"
-					kind="{{data.kind}}"
+					kind="{{dataKind.kind}}"
 					field="{{dataField.field}}"
 					value="{{dataValue.value}}"
 					params="{{params}}"
@@ -222,42 +231,33 @@
 			is: 'index-page',
 			attached: function() {
 				if (!this.route.path) {
-					this.set('route.path', '/photo');
-					this.set('data.kind', 'photo');
+					this.set('route.path', '/grid/photo');
+					this.set('dataView.view', 'grid');
+					this.set('dataKind.kind', 'photo');
 					this.set('dataField.field', null);
 					this.set('dataValue.value', null);
 				}
 			},
 			properties: {
-				version: { type: String, value: '1607 24T11'},
+				version: { type: String, value: '1607 24'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
-				view: {
-					computed: '_viewChanged(data.kind, dataField.field)',
-					value: 'grid',
-					notify: true
-				},
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 			},
-			_viewChanged: function(kind, field) {
-				if (kind && field) {
-					return 'detail';
-				}
-				return 'grid';
-			},
-			detailView: function(view) {
+			_isDetail: function(view) {
 				return view == 'detail';
 			},
 			_resetFilter: function(e) {
-				if (this.data.kind == 'search') {
-					this.set('data.kind', 'photo');
+				if (this.dataKind.kind == 'search') {
+					this.set('dataKind.kind', 'photo');
 				}
-				this.set('params.find', null);
-				this.set('params.page', null);
+				this.set('route.path', ['', 'grid', this.dataKind.kind].join('/'));
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
+				this.set('params.find', null);
+				this.set('params.page', null);
 				this.items = [];
 				this.start = 0;
 				this.headline = 'ANDрејевићи'
@@ -266,7 +266,7 @@
 			_drawerToggle: function() {
 				this.$.drawer.toggle();
 			},
-			_showPhoto: function(kind) {
+			_isPhoto: function(kind) {
 				return kind == 'photo'
 			},
 			showExif: function(e) {
