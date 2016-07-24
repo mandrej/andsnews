@@ -9,20 +9,11 @@ module.exports = {
     navigateFallbackWhitelist: [/^(?!.*\.html$).*/],
     runtimeCaching: [{
         urlPattern: /\/api\/.*/,
-        handler: 'fastest',
+        handler: 'networkFirst',
         options: {
             cache: {
-                maxEntries: 10,
+                maxEntries: 20,
                 name: 'data-cache'
-            }
-        }
-    }, {
-        urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/.*/,
-        handler: 'cacheOnly',
-        options: {
-            cache: {
-                maxEntries: 100,
-                name: 'image-cache'
             }
         }
     }]
