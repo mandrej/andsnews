@@ -14,6 +14,9 @@
             :host {
                 display: block;
             }
+            ::-webkit-scrollbar {
+                display: none;
+            }
             iron-swipeable-pages {
                 width: 100vw;
                 height: 100vh;
@@ -72,7 +75,8 @@
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_showPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover" on-track="zoomImage"></iron-image>
+                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover"
+                            on-track="zoomImage"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>

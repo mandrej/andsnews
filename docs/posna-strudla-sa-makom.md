@@ -1,4 +1,4 @@
-![Posna štrudla sa makom](/entries/image/posna-strudla-sa-makom_0/normal "Posna štrudla sa makom")
+![Posna štrudla sa makom](https://storage.googleapis.com/andsnews.appspot.com/entry/posna-strudla-sa-makom_0.jpg "Posna štrudla sa makom")
 
 - Testo zamesiti od navedenih sastojaka
 - Ostaviti da se odmara 1 sat

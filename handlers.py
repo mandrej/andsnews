@@ -83,22 +83,22 @@ class BaseHandler(webapp2.RequestHandler):
     def is_admin(self):
         return users.is_current_user_admin()
 
-    def handle_exception(self, exception, debug):
-        template = 'error.html'
-        if isinstance(exception, webapp2.HTTPException):
-            data = {'error': exception, 'path': self.request.path_qs}
-            self.render_template(template, data)
-            self.response.set_status(exception.code)
-        else:
-            data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
-            if not DEVEL and not isinstance(exception, apiproxy_errors.OverQuotaError):
-                mail.AdminEmailMessage(
-                    sender='ANDS Outage <outage@andsnews.appspotmail.com>',
-                    subject='Server Error traceback',
-                    body=MAIL_BODY.format(**data)
-                ).send()
-            self.render_template(template, data)
-            self.response.set_status(500)
+    # def handle_exception(self, exception, debug):
+    #     template = 'error.html'
+    #     if isinstance(exception, webapp2.HTTPException):
+    #         data = {'error': exception, 'path': self.request.path_qs}
+    #         self.render_template(template, data)
+    #         self.response.set_status(exception.code)
+    #     else:
+    #         data = {'error': exception, 'lines': ''.join(traceback.format_exception(*sys.exc_info()))}
+    #         if not DEVEL and not isinstance(exception, apiproxy_errors.OverQuotaError):
+    #             mail.AdminEmailMessage(
+    #                 sender='ANDS Outage <outage@andsnews.appspotmail.com>',
+    #                 subject='Server Error traceback',
+    #                 body=MAIL_BODY.format(**data)
+    #             ).send()
+    #         self.render_template(template, data)
+    #         self.response.set_status(500)
 
     def render_template(self, filename, kwargs):
         lang_code = self.session.get('lang_code', 'en_US')
@@ -140,7 +140,7 @@ class Complete(BaseHandler):
 
 class SetLanguage(BaseHandler):
     def post(self):
-        next = self.request.headers.get('Referer', self.uri_for('start'))
+        next = '/'  # self.request.headers.get('Referer', self.uri_for('start'))
         language = self.request.get('language')
         if language in dict(LANGUAGES):
             self.session['lang_code'] = language
@@ -149,11 +149,11 @@ class SetLanguage(BaseHandler):
 
 class Sign(BaseHandler):
     def get(self):
-        referrer = self.request.headers.get('Referer', self.uri_for('start'))
+        referrer = '/' # self.request.headers.get('Referer', self.uri_for('start'))
         if users.get_current_user():
             self.session.pop('csrf', None)
             if referrer.endswith('admin/'):
-                referrer = self.uri_for('start')
+                referrer = '/'  # self.uri_for('start')
             url = users.create_logout_url(referrer)
         else:
             url = users.create_login_url(referrer)
@@ -183,7 +183,7 @@ class DeleteHandler(BaseHandler):
     @admin_required
     def get(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
-        next = self.request.headers.get('Referer', self.uri_for('start'))
+        next = '/'  # self.request.headers.get('Referer', self.uri_for('start'))
         obj = key.get()
         if not any([self.is_admin, self.user == obj.author]):
             self.abort(403)

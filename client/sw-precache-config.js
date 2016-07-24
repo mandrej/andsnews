@@ -16,5 +16,14 @@ module.exports = {
                 name: 'data-cache'
             }
         }
+    }, {
+        urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/.*/,
+        handler: 'cacheOnly',
+        options: {
+            cache: {
+                maxEntries: 100,
+                name: 'image-cache'
+            }
+        }
     }]
 };

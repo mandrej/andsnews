@@ -5,7 +5,7 @@ The corporate dress code policy is the foundation on which one can build its bus
 You are kindly invited to read them carefully and take them into consideration during your daily practice.
 
 ## At the company’s premises
-![Business Casual](/entries/image/smart-business-casual-dress-code_0/normal "Business Casual")
+![Business Casual](https://storage.googleapis.com/andsnews.appspot.com/entry/smart-business-casual-dress-code_0.jpg "Business Casual")
 
 ### Shirts, Tops, Blouses, and Jackets
 Acceptable: Casual shirts, dress shirts, sweaters, tops, golf-type shirts, t-shirts, sweatshirts, nice looking athletic tops, and turtlenecks are acceptable attire for work.

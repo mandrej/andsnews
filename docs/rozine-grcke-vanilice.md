@@ -1,5 +1,5 @@
 ## Priprema
-![Rozine grčke vanilice](/entries/image/rozine-grcke-vanilice_0/normal "Rozine grčke vanilice")
+![Rozine grčke vanilice](https://storage.googleapis.com/andsnews.appspot.com/entry/rozine-grcke-vanilice_0.jpg "Rozine grčke vanilice")
 
 - Mikserom umutiti margarin
 - Postepeno dodati ostale sastojke i sve dobro sjediniti

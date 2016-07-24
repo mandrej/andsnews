@@ -1,5 +1,5 @@
 ## Mrsna varijata
-![Mrsni mladenčići](/entries/image/mladencici_0/normal "Mrsni mladenčići")
+![Mrsni mladenčići](https://storage.googleapis.com/andsnews.appspot.com/entry/mladencici_0.jpg "Mrsni mladenčići")
 
 - U činiji umutiti žumanca, šećer, mileram, malo soli i naribanu koru limuna.
 - Buter dobro izmešati sa jednom kašikom brašna.
@@ -27,7 +27,7 @@ Za premazivanje malo meda
 Objavljeno na [Coolinarika.com](http://www.coolinarika.com/recept/mrsni-mladencici/)
 
 ## Posna varijanta
-![Patin kuvar iz 1939.god.](/entries/image/mladencici_1/normal "Patin kuvar iz 1939.god.")
+![Patin kuvar iz 1939.god.](https://storage.googleapis.com/andsnews.appspot.com/entry/mladencici_1.jpg "Patin kuvar iz 1939.god.")
 
 > U starinskim kućama običaj je da se mese i posni mladenčići, kad Mladenci padnu u sredu ili petak.
 

@@ -2,7 +2,7 @@ No lengthy discussions and essays here. No arguments. Just facts stated in a sim
 
 Enough lies about smoking. Enough exaggerations. The anti-tobacco cartel has made an industry out of frauds, and anti-smoking activists parrot those lies so much, they end up believing them themselves.
 
-![Lauren Bacall, Key Largo, 1948](/entries/image/benefits-smoking_0/normal "Lauren Bacall, Key Largo, 1948")
+![Lauren Bacall, Key Largo, 1948](https://storage.googleapis.com/andsnews.appspot.com/entry/benefits-smoking_0.jpg "Lauren Bacall, Key Largo, 1948")
 
 Read and memorize as many of these nuggets as you can. Next time somebody at the office, home, school, or even in the street bugs you with sentences such as: "you are harming me," or: "that stuff is going to kill you," play stupid and simply ask: "why?" Suck them into specifics. They'll either be lost, or start reciting, like tape recorders, the false information they either heard around, or are programmed to say. Then fire out your tidbits of information.
 

@@ -1,4 +1,4 @@
-![Adingflex](/entries/image/popravka-krova_0/normal "Adingflex")
+![Adingflex](https://storage.googleapis.com/andsnews.appspot.com/entry/popravka-krova_0.jpg "Adingflex")
 
 Ovaj odmor smo Mihailo i ja iskoristili da popravimo krov na nasoj kući u Mišićima. Krov nam je dosta bio propao posle prolećnih kiša u Crnoj Gori pa je popravka bila neohodna.
 
@@ -8,4 +8,4 @@ Stalno smo pratili vremensku prognozu jer na premaz nebi trebalo da padne kiša 
 
 Bilo je problema oko nabavke materijala, morali smo da ga kupimo u Budvi, jer u Baru su prodavci odlučili da je kraj sezone i da ne treba više nabavljati građevinski materijal. Prodaje se samo ono što se našlo na lageru. Ovo je već bilo tipično crnogorsko rezonovanje, koje nas stalno iznenađuje, iako smo mislili da nas nista više ne može iznenaditi.
 
-![Mehurići na novom krovu](/entries/image/popravka-krova_1/normal "Mehurići na novom krovu")
+![Mehurići na novom krovu](https://storage.googleapis.com/andsnews.appspot.com/entry/popravka-krova_1.jpg "Mehurići na novom krovu")
