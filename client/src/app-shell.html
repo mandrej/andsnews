@@ -94,11 +94,9 @@
 		</style>
 
 		<!--
-		/:view
-		/grid	/:kind
-		/detail	/:kind	/:field	/:value
-		/detail	/search	/:field
-		/admin	/:kind
+		/:view	/:kind	/:field	/:value
+		view:	grid, detail, admin
+		kind:	photo, entry, search
 		-->
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -133,7 +131,7 @@
 		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
 			<template is="dom-if" if="[[!smallScreen]]">
 				<app-toolbar>
-					<!-- [[data.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]] -->
+					<!-- [[dataKind.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]] -->
 					<div main-title>[[version]]</div>
 					<paper-spinner active$="[[loading]]"></paper-spinner>
 				</app-toolbar>
@@ -157,7 +155,7 @@
 				</template>
 				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
 					<template is="dom-if" if="[[!smallScreen]]">
-						<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]">
+						<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
 							<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
 								<paper-button>Photos</paper-button></a>
 							<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
@@ -187,7 +185,7 @@
 				<app-toolbar>
 					<h1 main-title>ANDрејевићи</h1>
 				</app-toolbar>
-				<paper-menu attr-for-selected="kind-page" selected="[[data.kind]]" class="layout vertical">
+				<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
 					<paper-item kind-page="photo" on-tap="_resetFilter">
 		                <a href="#/grid/photo" class="flex">
 		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos

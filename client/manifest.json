@@ -1,6 +1,6 @@
 {
-  "name": "My App",
-  "short_name": "My App",
+  "name": "Ands News",
+  "short_name": "ANDS",
     "icons": [{
       "src": "images/app-icon-32.png",
       "type": "image/png",
