@@ -6,7 +6,6 @@ module.exports = {
         '/images/*'
     ],
     navigateFallback: '/index.html',
-    navigateFallbackWhitelist: [/^(?!.*\.html$).*/],
     runtimeCaching: [{
         urlPattern: /\/api\/.*/,
         handler: 'fastest',
@@ -14,15 +13,6 @@ module.exports = {
             cache: {
                 maxEntries: 20,
                 name: 'data-cache'
-            }
-        }
-    }, {
-        urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/.*/,
-        handler: 'fastest',
-        options: {
-            cache: {
-                maxEntries: 200,
-                name: 'image-cache'
             }
         }
     }]
