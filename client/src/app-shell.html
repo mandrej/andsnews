@@ -19,11 +19,11 @@
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
-<link rel="import" href="list-search.html">
-<link rel="import" href="list-filter.html">
-<link rel="import" href="list-detail.html">
+<link rel="import" href="app-search.html">
+<link rel="import" href="grid-view.html">
+<link rel="import" href="detail-view.html">
 
-<dom-module id="index-page">
+<dom-module id="app-shell">
 	<template>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
@@ -141,16 +141,21 @@
 			<app-toolbar sticky>
 				<template is="dom-if" if="[[_isDetail(dataView.view)]]">
 					<paper-icon-button icon="chevron-left" on-tap="_resetFilter"></paper-icon-button>
-					<h1 main-title>{{headline}}</h1>
-					<template is="dom-if" if="[[_isPhoto(data.kind)]]">
-						<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-					</template>
 				</template>
 				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
 					<template is="dom-if" if="[[smallScreen]]">
 						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 					</template>
-					<h1 main-title>{{headline}}</h1>
+				</template>
+
+				<h1 main-title>{{headline}}</h1>
+
+				<template is="dom-if" if="[[_isDetail(dataView.view)]]">
+					<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
+						<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+					</template>
+				</template>
+				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
 					<template is="dom-if" if="[[!smallScreen]]">
 						<iron-selector attr-for-selected="kind-page" selected="[[data.kind]]">
 							<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
@@ -158,22 +163,22 @@
 							<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
 								<paper-button>Texts</paper-button></a>
 						</iron-selector>
-						<list-search
+						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
 							params="{{params}}"
 							route="{{route}}"
 							start="{{start}}"
-							items="{{items}}"></list-search>
+							items="{{items}}"></app-search>
 					</template>
 					<template is="dom-if" if="[[smallScreen]]">
-						<list-search
+						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
 							params="{{params}}"
 							route="{{route}}"
 							start="{{start}}"
-							items="{{items}}"></list-search>
+							items="{{items}}"></app-search>
 					</template>
 				</template>
 			</app-toolbar>
@@ -201,7 +206,7 @@
 		<main>
 			<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view" id="neon">
-				<list-filter
+				<grid-view
 					data-view="grid"
 					kind="[[dataKind.kind]]"
 					field="{{dataField.field}}"
@@ -209,9 +214,9 @@
 					params="{{params}}"
 					route="{{route}}"
 					start="{{start}}"
-					items="{{items}}"></list-filter>
+					items="{{items}}"></grid-view>
 
-				<list-detail
+				<detail-view
 					data-view="detail"
 					kind="{{dataKind.kind}}"
 					field="{{dataField.field}}"
@@ -221,14 +226,14 @@
 					start="{{start}}"
 					loading="{{loading}}"
 					items="[[items]]"
-					headline="{{headline}}"></list-detail>
+					headline="{{headline}}"></detail-view>
 			</neon-animated-pages>
 		</main>
 	</template>
 
 	<script>
 		Polymer({
-			is: 'index-page',
+			is: 'app-shell',
 			attached: function() {
 				if (!this.route.path) {
 					this.set('route.path', '/grid/photo');
@@ -239,7 +244,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '1607 24'},
+				version: { type: String, value: '1607 25'},
 				items: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
@@ -270,7 +275,7 @@
 				return kind == 'photo'
 			},
 			showExif: function(e) {
-				this.$$('list-detail').fire('show-exif');
+				this.$$('detail-view').fire('show-exif');
             },
 		});
 	</script>
