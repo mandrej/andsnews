@@ -94,9 +94,6 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
-                params: { type: Object, value: {}, notify: true },
-                items: { type: Array, value: [], notify: true },
-                start: { type: Number, value: 0, notify: true },
             },
             _urlFilter: function(kind) {
 				var prefix = '/api/filter';
@@ -109,11 +106,6 @@
             _applyFilter: function(e) {
 				this.field = e.model.row.field_name;
 				this.value = e.model.rec.name;
-
-                this.set('params.find', null);
-				this.set('params.page', null);
-				this.items = [];
-				this.start = 0;
 				this.set('route.path', ['', 'detail', this.kind, this.field, this.value].join('/'));
 			},
             _repeatRender: function() {

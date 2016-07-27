@@ -32,19 +32,11 @@
 						return this.$.inputSearch;
 					}
 				},
-                params: { type: Object, value: {}, notify: true },
-                items: { type: Array, value: [], notify: true },
-                start: { type: Number, value: 0, notify: true },
             },
             _onSearch: function() {
                 this.field = this.search;
                 this.search = null;
                 this.value = null;
-
-                this.set('params.find', null);
-				this.set('params.page', null);
-				this.items = [];
-				this.start = 0;
                 this.set('route.path', '/detail/search/' + this.field);
 			},
             propertyChanged: function(newValue, oldValue) {

@@ -148,7 +148,7 @@
                 url: {
 					computed: '_url(kind, field, value)',
 					notify: true,
-					// observer: 'propertyChanged'
+					observer: 'propertyChanged'
 				},
                 loading: {
                     type: Boolean,
@@ -178,7 +178,7 @@
 					url = [prefix, kind, field, value].join('/');
                     this.set('params.find', null);
 				}
-                
+
 				this.set('params.page', null);
 				this.items = [];
 				this.start = 0;
