@@ -166,6 +166,7 @@
 							value="{{dataValue.value}}"
 							params="{{params}}"
 							route="{{route}}"
+							params="{{params}}"
 							start="{{start}}"
 							items="{{items}}"></app-search>
 					</template>
@@ -175,6 +176,7 @@
 							value="{{dataValue.value}}"
 							params="{{params}}"
 							route="{{route}}"
+							params="{{params}}"
 							start="{{start}}"
 							items="{{items}}"></app-search>
 					</template>
@@ -210,6 +212,8 @@
 					field="{{dataField.field}}"
 					value="{{dataValue.value}}"
 					route="{{route}}"
+					params="{{params}}"
+					items="{{items}}"
 					start="{{start}}"></grid-view>
 
 				<detail-view
@@ -217,12 +221,12 @@
 					kind="{{dataKind.kind}}"
 					field="{{dataField.field}}"
 					value="{{dataValue.value}}"
-					params="{{params}}"
 					route="{{route}}"
-					start="{{start}}"
 					loading="{{loading}}"
+					headline="{{headline}}"
+					params="{{params}}"
 					items="[[items]]"
-					headline="{{headline}}"></detail-view>
+					start="{{start}}"></detail-view>
 			</neon-animated-pages>
 		</main>
 	</template>
@@ -240,12 +244,13 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '1607 25T23'},
-				items: { type: Array, value: [], notify: true },
-				start: { type: Number, value: 0, notify: true },
+				version: { type: String, value: '1607 27T11'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
+				params: { type: Object, value: {}, notify: true },
+                items: { type: Array, value: [], notify: true },
+                start: { type: Number, value: 0, notify: true },
 			},
 			_isDetail: function(view) {
 				return view == 'detail';
@@ -257,10 +262,12 @@
 				this.set('route.path', ['', 'grid', this.dataKind.kind].join('/'));
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
+
 				this.set('params.find', null);
 				this.set('params.page', null);
 				this.items = [];
 				this.start = 0;
+				
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 			},
