@@ -11,7 +11,7 @@ app = WSGIApplication([
           handler='views.api.Collection'),
 
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
-    Route(r'/api/search', handler='views.api.Find'),
+    Route(r'/api/search/<find>', handler='views.api.Find'),
 
     Route(r'/api/download/<safe_key:[\w-]+>', handler='views.api.Download', name='download_url'),
 

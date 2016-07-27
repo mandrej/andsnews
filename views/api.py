@@ -112,15 +112,14 @@ class KindFilter(RestHandler):  # from handlers.RenderCloud
 
 
 class Find(RestHandler):
-    def get(self):
-        find = self.request.get('find').strip()
+    def get(self, find):
         page = self.request.get('page', None)
         paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
 
         self.render({
             'objects': objects,
-            'phrase': find,
+            'phrase': find.strip(),
             'number_found': number_found,
             'page': page,
             'next': token,
