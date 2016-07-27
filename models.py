@@ -765,7 +765,7 @@ class Entry(ndb.Model):
         return Img.query(ancestor=self.key).order(Img.num)
 
     def image_url(self, num):
-        return '/entries/image/%s_%s' % (self.key.string_id(), num)
+        return 'https://storage.googleapis.com/andsnews.appspot.com/entry/%s_%s.jpg' % (self.key.string_id(), num)
 
     @classmethod
     def query_for(cls, field, value):

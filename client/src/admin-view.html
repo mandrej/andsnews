@@ -1,0 +1,203 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<!-- <link rel="import" href="../bower_components/iron-list/iron-list.html"> -->
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
+
+<dom-module id="admin-view">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style>
+            :host {
+                width: 100vw;
+                height: 100vh;
+                background-color: #eee;
+                padding-top: 16px;
+            }
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            /*iron-list {
+                padding-top: 16px;
+                @apply(--layout-fit);
+            }*/
+            .rec {
+                @apply(--layout-horizontal);
+                cursor: pointer;
+                padding: 16px;
+                border-bottom: 1px solid #ddd;
+            }
+            .img {
+                height: 50px;
+                width: 50px;
+                border-radius: 25px;
+                box-sizing: border-box;
+                background-color: #ddd;
+            }
+            .pad {
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+                padding: 0 16px;
+            }
+            .primary {
+                font-size: 16px;
+            }
+            .secondary {
+                font-size: 14px;
+            }
+            .dim {
+                color: gray;
+            }
+        </style>
+
+        <iron-ajax id="ajax"
+            url="{{url}}"
+            params="{{params}}"
+            handle-as="json"
+            on-response="handler"
+            loading="{{loading}}"
+            debounce-duration="100"></iron-ajax>
+
+        <paper-dialog id="message" class="info"
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+            <h2>Nothing found</h2>
+            <p>Please try again</p>
+        </paper-dialog>
+
+        <template is="dom-repeat" items="{{items}}">
+            <div class="rec">
+                <template is="dom-if" if="[[_isPhoto(item)]]">
+                    <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
+                </template>
+                <template is="dom-if" if="[[!_isPhoto(item)]]">
+                    <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
+                </template>
+                <div class="pad">
+                    <div class="primary">[[item.headline]]</div>
+                    <div class="secondary dim">[[item.author]]</div>
+                </div>
+            </div>
+        </template>
+
+        <!-- <iron-list items="[[items]]" as="item" selection-enabled="true" selected-item id="list">
+            <template>
+                <div class="rec" tabindex$="[[tabIndex]]">
+                    <template is="dom-if" if="[[_isPhoto(item)]]">
+                        <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
+                    </template>
+                    <template is="dom-if" if="[[!_isPhoto(item)]]">
+                        <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
+                    </template>
+                    <div class="pad">
+                        <div class="primary">[[item.headline]]</div>
+                        <div class="secondary dim">[[item.author]]</div>
+                    </div>
+                </div>
+            </template>
+        </iron-list> -->
+
+        <iron-scroll-threshold id="threshold"
+            lower-threshold="200"
+            scroll-target="document"
+            on-lower-threshold="loadMore"></iron-scroll-threshold>
+    </template>
+    <script>
+        Polymer({
+            is: 'admin-view',
+            behaviors: [
+                Polymer.NeonAnimationBehavior,
+                Polymer.NeonAnimationRunnerBehavior,
+            ],
+            attached: function() {
+                // for observer: 'activeChanged'
+                this.active = false;
+                this.active = true;
+            },
+            properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'fade-in-animation',
+                                node: this,
+                                timing: {
+                                    delay: 150
+                                }
+                            }, {
+                                name: 'slide-from-right-animation',
+                                node: this,
+                                timing: {
+                                    delay: 150
+                                }
+                            }],
+                            'exit': [{
+                                name: 'slide-right-animation',
+                                node: this
+                            }]
+                        }
+                    }
+                },
+                kind: { type: String, value: null, notify: true },
+                params: { type: Object, value: {}, notify: true },
+                items: { type: Array, value: [], notify: true },
+                url: {
+					computed: '_url(kind)',
+					notify: true,
+				},
+                loading: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+                active: { type: Boolean, value: false, notify: true, observer: 'activeChanged' }
+            },
+            observers: [
+                // 'paramsChanged(params.*)'
+            ],
+            _url: function(kind) {
+                var prefix = '/api';
+                return [prefix, kind].join('/');
+            },
+			handler: function(request) {
+				var response = request.detail.response;
+                if (response.objects.length == 0) {
+                    var dialog = this.$.message;
+                    dialog.fitInto = this.$.swipe;
+                    dialog.open();
+                } else {
+                    response.objects.forEach(function(item) {
+                        this.push('items', item);
+                    }, this);
+                    this.$.threshold.clearTriggers();
+                }
+			},
+            loadMore: function() {
+                var ajax = this.$.ajax;
+				if (ajax.lastResponse && ajax.lastResponse.next) {
+                    this.set('params.page', ajax.lastResponse.next);
+                    this.$.ajax.generateRequest();
+				}
+			},
+            _isPhoto: function(item) {
+                return item.kind == 'photo';
+            },
+            activeChanged: function(newValue, oldValue) {
+                this.set('params.page', null);
+                this.items = []; // TODO not working with iron-list
+                if (newValue) {
+                    this.$.ajax.generateRequest();
+                }
+			},
+            paramsChanged: function(obj) {
+                // this is object observer!
+                console.log(obj.path + ' -> ' + this.get(obj.path));
+            }
+        });
+    </script>
+</dom-module>

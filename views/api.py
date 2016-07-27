@@ -94,7 +94,7 @@ def cloud_representation(kind):
                     if kind == 'photo':
                         item['repr_url'] = obj.serving_url + '=s400'
                     elif kind == 'entry' and obj.front != -1:
-                        item['repr_url'] = obj.image_url(obj.front) + '/normal'
+                        item['repr_url'] = obj.image_url(obj.front)
 
             data.append({
                 'field_name': field,
