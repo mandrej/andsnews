@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
-<!-- <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html"> -->
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 <dom-module id="app-search">
@@ -15,9 +15,9 @@
         </style>
 
         <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
-        <!-- <paper-icon-button icon="search"></paper-icon-button> -->
-        <paper-input id="inputSearch" placeholder="search" no-label-float
-            value="{{search::value-changed}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        <!-- <paper-input id="inputSearch" placeholder="search" no-label-float
+            value="{{search::value-changed}}"></paper-input> -->
     </template>
     <script>
         Polymer({

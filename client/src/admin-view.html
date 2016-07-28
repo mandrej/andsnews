@@ -70,7 +70,7 @@
         </paper-dialog>
 
         <template is="dom-repeat" items="{{items}}">
-            <div class="rec">
+            <div class="rec" on-tap="editRec">
                 <template is="dom-if" if="[[_isPhoto(item)]]">
                     <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
                 </template>
@@ -186,6 +186,9 @@
 			},
             _isPhoto: function(item) {
                 return item.kind == 'photo';
+            },
+            editRec: function(e) {
+                console.log(e.model.item);
             },
             activeChanged: function(newValue, oldValue) {
                 this.set('params.page', null);

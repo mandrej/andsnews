@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
@@ -31,29 +32,26 @@
 			:host {
 				display: block;
 			}
-			main {
+			/*main {
 				margin-top: 128px;
-			}
-			@media (max-width: 767px) {
+			}*/
+			/*@media (max-width: 767px) {
         		main {
           			margin-top: 64px;
 				}
-        	}
+        	}*/
 			app-header {
-      			position: fixed;
+      			/*position: fixed;
       			top: 0;
       			left: 0;
-      			width: 100%;
+      			width: 100%;*/
 				color: var(--light-theme-text-color);
 				z-index: 1;
 				background-color: var(--light-theme-background-color);
-				@apply(--shadow-elevation-2dp);
-      			/*--app-header-background-front-layer: {
-					background-color: var(--google-yellow-300);
-      			};
 				--app-header-background-rear-layer: {
-        			background-color: var(--light-theme-background-color);
-      			};*/
+        			background-color: var(--google-yellow-300);
+      			};
+				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -63,6 +61,7 @@
 				min-height: 100vh;
 				top: 0;
 				bottom: 0;
+				z-index: 2;
 				--app-drawer-content-container: {
 					padding: 0;
 				}
@@ -78,13 +77,16 @@
 			paper-button {
 				text-transform: lowercase;
 			}
-			h1 {
+			h1, h4 {
 				margin: 0;
 				font-size: 36px;
 				font-weight: 300;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
+			}
+			[condensed-title] {
+				font-size: 24px;
 			}
 			@media (max-width: 767px) {
         		h1 {
@@ -129,121 +131,114 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-header condenses waterfall fixed effects="waterfall blend-background parallax-background">
-			<template is="dom-if" if="[[!smallScreen]]">
-				<app-toolbar>
-					<!-- [[dataKind.kind]], [[dataField.field]], [[dataValue.value]], [[view]], [[start]] -->
-					<div main-title>[[version]] [[dataView.view]]</div>
-					<paper-spinner active$="[[loading]]"></paper-spinner>
-				</app-toolbar>
-			</template>
-			<app-toolbar sticky>
-				<template is="dom-if" if="[[_isDetail(dataView.view)]]">
-					<paper-icon-button icon="chevron-left" on-tap="_resetFilter"></paper-icon-button>
-				</template>
-				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
-					<template is="dom-if" if="[[smallScreen]]">
-						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-					</template>
-				</template>
-
-				<h1 main-title>{{headline}}</h1>
-
-				<template is="dom-if" if="[[_isDetail(dataView.view)]]">
-					<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
-						<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-					</template>
-				</template>
-				<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
-					<template is="dom-if" if="[[!smallScreen]]">
-						<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-							<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
-								<paper-button>Photos</paper-button></a>
-							<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
-								<paper-button>Texts</paper-button></a>
-							<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
-								<a href="#/admin/photo" kind-page="photo" on-tap="_resetFilter">
-									<paper-button>Admin</paper-button></a>
-							</template>
-							<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
-								<a href="#/admin/entry" kind-page="entry" on-tap="_resetFilter">
-									<paper-button>Admin</paper-button></a>
-							</template>
-						</iron-selector>
-						<app-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							route="{{route}}"></app-search>
-					</template>
-					<template is="dom-if" if="[[smallScreen]]">
-						<app-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							route="{{route}}"></app-search>
-					</template>
-				</template>
+		<app-drawer id="drawer" swipe-open>
+			<app-toolbar>
+				<h1 main-title>ANDрејевићи</h1>
 			</app-toolbar>
-
-			<app-drawer id="drawer" swipe-open>
-				<app-toolbar>
-					<h1 main-title>ANDрејевићи</h1>
-				</app-toolbar>
-				<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
+			<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
+				<paper-item kind-page="photo" on-tap="_resetFilter">
+					<a href="#/grid/photo" class="flex">
+						<iron-icon icon="image:photo-camera"></iron-icon>Photos
+					</a>
+				</paper-item>
+				<paper-item kind-page="entry" on-tap="_resetFilter">
+					<a href="#/grid/entry" class="flex">
+						<iron-icon icon="description"></iron-icon>Texts
+					</a>
+				</paper-item>
+				<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
 					<paper-item kind-page="photo" on-tap="_resetFilter">
-		                <a href="#/grid/photo" class="flex">
-		                    <iron-icon icon="image:photo-camera"></iron-icon>Photos
-		                </a>
-		            </paper-item>
-		            <paper-item kind-page="entry" on-tap="_resetFilter">
-		                <a href="#/grid/entry" class="flex">
-		                    <iron-icon icon="description"></iron-icon>Texts
-		                </a>
-		            </paper-item>
-					<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
-						<paper-item kind-page="photo" on-tap="_resetFilter">
-			                <a href="#/admin/photo" class="flex">
-			                    <iron-icon icon="settings"></iron-icon>Admin
-			                </a>
-			            </paper-item>
+						<a href="#/admin/photo" class="flex">
+							<iron-icon icon="settings"></iron-icon>Admin
+						</a>
+					</paper-item>
+				</template>
+				<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
+					<paper-item kind-page="entry" on-tap="_resetFilter">
+						<a href="#/admin/entry" class="flex">
+							<iron-icon icon="settings"></iron-icon>Admin
+						</a>
+					</paper-item>
+				</template>
+			</paper-menu>
+			<paper-item>[[version]]</paper-item>
+		</app-drawer>
+
+		<app-header-layout>
+			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
+				<app-toolbar>
+					<template is="dom-if" if="[[_isDetail(dataView.view)]]">
+						<paper-icon-button icon="chevron-left" on-tap="_resetFilter"></paper-icon-button>
 					</template>
-					<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
-						<paper-item kind-page="entry" on-tap="_resetFilter">
-			                <a href="#/admin/entry" class="flex">
-			                    <iron-icon icon="settings"></iron-icon>Admin
-			                </a>
-			            </paper-item>
+					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+						<template is="dom-if" if="[[smallScreen]]">
+							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
+						</template>
 					</template>
-				</paper-menu>
-				<paper-item>[[version]]</paper-item>
-			</app-drawer>
-		</app-header>
+	  				<h4 condensed-title>{{headline}}</h4>
+					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+						<template is="dom-if" if="[[!smallScreen]]">
+							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
+								<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
+									<paper-button>Photos</paper-button></a>
+								<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
+									<paper-button>Texts</paper-button></a>
+								<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
+									<a href="#/admin/photo" kind-page="photo" on-tap="_resetFilter">
+										<paper-button>Admin</paper-button></a>
+								</template>
+								<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
+									<a href="#/admin/entry" kind-page="entry" on-tap="_resetFilter">
+										<paper-button>Admin</paper-button></a>
+								</template>
+							</iron-selector>
+						</template>
+						<app-search
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
+							route="{{route}}"></app-search>
+					</template>
+	    		</app-toolbar>
+	    		<app-toolbar>
+	      			<h1 main-title>{{headline}}</h1>
+					<template is="dom-if" if="[[_isDetail(dataView.view)]]">
+						<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
+							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+						</template>
+					</template>
+					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+						<paper-spinner active$="[[loading]]"></paper-spinner>
+					</template>
+	    		</app-toolbar>
+			</app-header>
 
-		<main>
-			<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-				<grid-view
-					data-view="grid"
-					kind="[[dataKind.kind]]"
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					route="{{route}}"
-					loading="{{loading}}"></grid-view>
+			<main>
+				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+					<grid-view
+						data-view="grid"
+						kind="[[dataKind.kind]]"
+						field="{{dataField.field}}"
+						value="{{dataValue.value}}"
+						route="{{route}}"
+						loading="{{loading}}"></grid-view>
 
-				<admin-view
-					data-view="admin"
-					kind="[[dataKind.kind]]"
-					active="{{_isActiveAdmin(dataView.view)}}"></admin-view>
+					<admin-view
+						data-view="admin"
+						kind="[[dataKind.kind]]"
+						active="{{_isActiveAdmin(dataView.view)}}"></admin-view>
 
-				<detail-view
-					data-view="detail"
-					kind="{{dataKind.kind}}"
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					route="{{route}}"
-					loading="{{loading}}"
-					headline="{{headline}}"></detail-view>
-			</neon-animated-pages>
-		</main>
+					<detail-view
+						data-view="detail"
+						kind="{{dataKind.kind}}"
+						field="{{dataField.field}}"
+						value="{{dataValue.value}}"
+						route="{{route}}"
+						loading="{{loading}}"
+						headline="{{headline}}"></detail-view>
+				</neon-animated-pages>
+			</main>
+		</app-header-layout>
 	</template>
 
 	<script>
