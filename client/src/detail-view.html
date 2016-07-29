@@ -144,16 +144,16 @@
                 },
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
-				value: { type: String, value: null, notify: true },
+				fieldValue: { type: String, value: null, notify: true },
                 disabled: { type: Boolean, value: false, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
                 start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 url: {
-					computed: '_url(kind, field, value)',
+					computed: '_url(kind, field, fieldValue)',
 					notify: true,
-					// observer: 'propertyChanged'
+					observer: 'propertyChanged'
 				},
                 loading: {
                     type: Boolean,
@@ -173,13 +173,13 @@
                     this.loadMore();
                 }
             },
-            _url: function(kind, field, value) {
+            _url: function(kind, field, fieldValue) {
 				var url, prefix = '/api';
 
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
-				} else if (field && value) {
-					url = [prefix, kind, field, value].join('/');
+				} else if (field && fieldValue) {
+					url = [prefix, kind, field, fieldValue].join('/');
 				}
 
 				this.set('params.page', null);
@@ -213,9 +213,9 @@
             _isPhoto: function(item) {
                 return item.kind == 'photo';
             },
-            _dateFormat: function(value) {
-                return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
-                // return moment(value, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
+            _dateFormat: function(str) {
+                return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
+                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
             },
             _showExif: function(e) {
                 var id = e.target.items[this.start].slug,

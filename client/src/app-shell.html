@@ -85,7 +85,7 @@
 		</style>
 
 		<!--
-		/:view	/:kind	/:field	/:value
+		/:view	/:kind	/:field	/:fieldValue
 		view:	grid, detail, admin
 		kind:	photo, entry, search
 		-->
@@ -114,7 +114,7 @@
 
 		<app-route
 			route="{{tailField}}"
-			pattern="/:value"
+			pattern="/:fieldValue"
 			data="{{dataValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
@@ -183,7 +183,7 @@
 						</template>
 						<app-search
 							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
+							fieldValue="{{dataValue.fieldValue}}"
 							route="{{route}}"></app-search>
 					</template>
 	    		</app-toolbar>
@@ -207,20 +207,20 @@
 						data-view="grid"
 						kind="[[dataKind.kind]]"
 						field="{{dataField.field}}"
-						value="{{dataValue.value}}"
+						fieldValue="{{dataValue.fieldValue}}"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
 					<admin-view
 						data-view="admin"
 						kind="[[dataKind.kind]]"
-						active="{{_isActiveAdmin(dataView.view)}}"></admin-view>
+						active="[[active]]"></admin-view>
 
 					<detail-view
 						data-view="detail"
 						kind="{{dataKind.kind}}"
 						field="{{dataField.field}}"
-						value="{{dataValue.value}}"
+						fieldValue="{{dataValue.fieldValue}}"
 						route="{{route}}"
 						loading="{{loading}}"
 						headline="{{headline}}"></detail-view>
@@ -238,7 +238,7 @@
 					this.set('dataView.view', 'grid');
 					this.set('dataKind.kind', 'photo');
 					this.set('dataField.field', null);
-					this.set('dataValue.value', null);
+					this.set('dataValue.fieldValue', null);
 				}
 			},
 			properties: {
@@ -246,6 +246,7 @@
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
+				active: { computed: '_isActiveAdmin(dataView.view)' },
 			},
 			_isDetail: function(view) {
 				return view == 'detail';
@@ -256,7 +257,7 @@
 				}
 				this.set('route.path', ['', 'grid', this.dataKind.kind].join('/'));
 				this.set('dataField.field', null);
-				this.set('dataValue.value', null);
+				this.set('dataValue.fieldValue', null);
 
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
