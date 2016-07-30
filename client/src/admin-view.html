@@ -124,17 +124,8 @@
                     value: function() {
                         return {
                             'entry': [{
-                                name: 'fade-in-animation',
-                                node: this,
-                                timing: {
-                                    delay: 150
-                                }
-                            }, {
                                 name: 'slide-from-right-animation',
-                                node: this,
-                                timing: {
-                                    delay: 150
-                                }
+                                node: this
                             }],
                             'exit': [{
                                 name: 'slide-right-animation',
@@ -157,9 +148,6 @@
                 },
                 active: { type: Boolean, value: false, notify: true, observer: 'activeChanged' }
             },
-            observers: [
-                // 'paramsChanged(params.*)'
-            ],
             _url: function(kind) {
                 var prefix = '/api';
                 return [prefix, kind].join('/');
@@ -190,6 +178,9 @@
             editRec: function(e) {
                 console.log(e.model.item);
             },
+            // isAdminView: function() {
+            //     return this.getAttribute('data-view') == 'admin';
+            // },
             activeChanged: function(newValue, oldValue) {
                 this.set('params.page', null);
                 this.items = []; // TODO not working with iron-list
@@ -197,10 +188,6 @@
                     this.$.ajax.generateRequest();
                 }
 			},
-            paramsChanged: function(obj) {
-                // this is object observer!
-                console.log(obj.path + ' -> ' + this.get(obj.path));
-            }
         });
     </script>
 </dom-module>
