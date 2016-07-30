@@ -54,7 +54,7 @@
                     }
                 },
                 field: { type: String, value: null, notify: true },
-				fieldValue: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 search: { type: String, value: null, notify: true },
                 targetSearch: {
 					type: Object,
@@ -88,7 +88,7 @@
             _onSearch: function() {
                 this.field = this.search;
                 this.search = null;
-                this.fieldValue = null;
+                this.value = null;
                 this.$.inputSearch.style.display = 'none';
                 this.$.button.setAttribute('icon', 'search');
                 this.playAnimation('exit');

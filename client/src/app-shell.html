@@ -85,7 +85,7 @@
 		</style>
 
 		<!--
-		/:view	/:kind	/:field	/:fieldValue
+		/:view	/:kind	/:field	/:value
 		view:	grid, detail, admin
 		kind:	photo, entry, search
 		-->
@@ -114,7 +114,7 @@
 
 		<app-route
 			route="{{tailField}}"
-			pattern="/:fieldValue"
+			pattern="/:value"
 			data="{{dataValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
@@ -183,7 +183,7 @@
 						</template>
 						<app-search
 							field="{{dataField.field}}"
-							fieldValue="{{dataValue.fieldValue}}"
+							value="{{dataValue.value}}"
 							route="{{route}}"></app-search>
 					</template>
 	    		</app-toolbar>
@@ -207,7 +207,7 @@
 						data-view="grid"
 						kind="[[dataKind.kind]]"
 						field="{{dataField.field}}"
-						fieldValue="{{dataValue.fieldValue}}"
+						value="{{dataValue.value}}"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
@@ -218,10 +218,9 @@
 
 					<detail-view
 						data-view="detail"
-						kind="{{dataKind.kind}}"
-						field="{{dataField.field}}"
-						fieldValue="{{dataValue.fieldValue}}"
-						route="{{route}}"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
 						loading="{{loading}}"
 						headline="{{headline}}"></detail-view>
 				</neon-animated-pages>
@@ -238,7 +237,7 @@
 					this.set('dataView.view', 'grid');
 					this.set('dataKind.kind', 'photo');
 					this.set('dataField.field', null);
-					this.set('dataValue.fieldValue', null);
+					this.set('dataValue.value', null);
 				}
 			},
 			properties: {
@@ -257,7 +256,7 @@
 				}
 				this.set('route.path', ['', 'grid', this.dataKind.kind].join('/'));
 				this.set('dataField.field', null);
-				this.set('dataValue.fieldValue', null);
+				this.set('dataValue.value', null);
 
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();

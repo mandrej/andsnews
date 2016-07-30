@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -13,6 +14,7 @@
 
 <dom-module id="detail-view">
     <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
                 width: 100vw;
@@ -80,8 +82,8 @@
             <template is="dom-repeat" items="{{items}}">
                 <template is="dom-if" if="[[_isPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="[[item.serving_url]]=s0" data-dim$="[[item.dim]]" sizing="cover"
-                            on-track="zoomImage"></iron-image>
+                        <iron-image src="[[item.serving_url]]=s0" sizing="cover"
+                            data-dim$="[[item.dim]]" on-track="zoomImage"></iron-image>
                         <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
@@ -143,15 +145,15 @@
                     }
                 },
                 kind: { type: String, value: null, notify: true },
-				field: { type: String, value: null, notify: true },
-				fieldValue: { type: String, value: null, notify: true },
+				// field: { type: String, value: null, notify: true },
+				// value: { type: String, value: null, notify: true, observer: 'propertyChanged' },
                 disabled: { type: Boolean, value: false, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
                 start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 url: {
-					computed: '_url(kind, field, fieldValue)',
+					computed: '_url(kind, field, value)',
 					notify: true,
 					observer: 'propertyChanged'
 				},
@@ -161,7 +163,7 @@
                     notify: true
                 },
             },
-            // observers: ['paramsChanged(params.*)'],
+            observers: ['objectChanged(params.*)'],
             listeners: {
                 'show-exif': '_showExif'
             },
@@ -173,13 +175,13 @@
                     this.loadMore();
                 }
             },
-            _url: function(kind, field, fieldValue) {
+            _url: function(kind, field, value) {
 				var url, prefix = '/api';
 
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
-				} else if (field && fieldValue) {
-					url = [prefix, kind, field, fieldValue].join('/');
+				} else if (field && value) {
+					url = [prefix, kind, field, value].join('/');
 				}
 
 				this.set('params.page', null);
@@ -271,10 +273,7 @@
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
-			objectChanged: function(newValue, oldValue) {
-				console.log(newValue);
-			},
-            paramsChanged: function(obj) {
+            objectChanged: function(obj) {
                 // this is object observer!
                 console.log(obj.path + ' -> ' + this.get(obj.path));
             }
