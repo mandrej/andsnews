@@ -638,7 +638,7 @@ class Photo(ndb.Model):
         data = self.to_dict(exclude=(
             'blob_key', 'dim', 'size', 'ratio',
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename',
-            'aperture', 'shutter', 'focal_length', 'crop_factor'))
+            'focal_length', 'crop_factor'))
         data.update({
             'kind': self.kind.lower(),
             'slug': self.key.string_id(),

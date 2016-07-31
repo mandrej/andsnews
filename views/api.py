@@ -44,9 +44,7 @@ class Record(RestHandler):
         if obj is None:
             self.abort(404)
 
-        self.render({
-            'obj': obj.serialize()
-        })
+        self.render(obj.serialize())
 
 
 def cloud_limit(items):

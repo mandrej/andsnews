@@ -26,6 +26,7 @@
 <link rel="import" href="detail-view.html">
 <link rel="import" href="admin-view.html">
 <link rel="import" href="form-photo.html">
+<!-- <link rel="import" href="form-entry.html"> -->
 
 <dom-module id="app-shell">
 	<template>
@@ -233,14 +234,25 @@
 					<admin-view
 						data-view="admin"
 						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						route="{{route}}"
 						loading="{{loading}}"
 					    active="[[_isAdminView(dataView.view]]"></admin-view>
 
-					<form-view
-						data-view="form"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-					    active="[[_isFormView(dataView.view]]"></form-view>
+					<template is="dom-if" if="[[_isFormView(dataView.view]]">
+						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+							<form-photo
+								data-view="form"
+								kind="[[dataKind.kind]]"
+								field="[[dataField.field]]"></form-photo>
+						</template>
+						<!-- <template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+							<form-entry
+								data-view="form"
+								kind="[[dataKind.kind]]"
+								field="[[dataField.field]]"></form-entry>
+						</template> -->
+					</template>
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>

@@ -9,23 +9,49 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                /*width: 100vw;*/
-                height: 100vh;
+                display: block;
                 background-color: #eee;
-                padding-top: 16px;
+            }
+            .container {
+                margin: 16px;
             }
         </style>
 
-        <form is="iron-form" id="form" method="post" action="/form/handler">
-            <paper-input name="name" label="name"></paper-input>
-            <input name="address">
-        </form>
+        <iron-ajax auto
+			url="{{_url(kind, field)}}"
+			handle-as="json"
+			last-response="{{obj}}"
+			debounce-duration="300"></iron-ajax>
+
+        <div class="container">
+            <form is="iron-form" id="form" method="post" action="/form/handler">
+                <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
+                <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
+                <!-- <datalist id="tags">
+                    <template is="dom-repeat" items="{{obj.tags}}" index-as="index">
+                        <option value="{{item}}"></option>
+                    </template>
+                </datalist>
+                <paper-input name="tags" label="tags" list id="tags"></paper-input> -->
+                <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
+                <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
+                <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
+                <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
+                <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
+                <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+            </form>
+        </div>
     </template>
     <script>
         Polymer({
             is: 'form-photo',
             properties: {
-                active: { type: Boolean, value: false, notify: true }
+                kind: { type: String, value: null, notify: true },
+				field: { type: String, value: null, notify: true },
+            },
+            _url: function(kind, field) {
+                var prefix = '/api';
+                return [prefix, kind, field].join('/');
             }
         });
     </script>
