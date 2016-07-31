@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -24,6 +25,7 @@
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
 <link rel="import" href="admin-view.html">
+<link rel="import" href="form-photo.html">
 
 <dom-module id="app-shell">
 	<template>
@@ -58,6 +60,10 @@
 				background-color: var(--google-yellow-300);
 				@apply(--shadow-elevation-2dp);
 			}
+			paper-fab {
+                --paper-fab-background: var(--google-yellow-300);
+                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
+            }
             paper-item iron-icon {
                 margin-right: 16px;
                 color: var(--light-theme-secondary-color);
@@ -195,7 +201,12 @@
 						</template>
 					</template>
 					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-						<paper-spinner active$="[[loading]]"></paper-spinner>
+						<template is="dom-if" if="[[_isAdminView(dataView.view)]]">
+							<paper-fab icon="add"></paper-fab>
+						</template>
+						<template is="dom-if" if="[[!_isAdminView(dataView.view)]]">
+							<paper-spinner active$="[[loading]]"></paper-spinner>
+						</template>
 					</template>
 	    		</app-toolbar>
 			</app-header>
@@ -211,12 +222,6 @@
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
-					<admin-view
-						data-view="admin"
-						kind="[[dataKind.kind]]"
-						loading="{{loading}}"
-						active="[[active]]"></admin-view>
-
 					<detail-view
 						data-view="detail"
 						kind="[[dataKind.kind]]"
@@ -224,6 +229,18 @@
 						value="[[dataValue.value]]"
 						loading="{{loading}}"
 						headline="{{headline}}"></detail-view>
+
+					<admin-view
+						data-view="admin"
+						kind="[[dataKind.kind]]"
+						loading="{{loading}}"
+					    active="[[_isAdminView(dataView.view]]"></admin-view>
+
+					<form-view
+						data-view="form"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+					    active="[[_isFormView(dataView.view]]"></form-view>
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>
@@ -242,11 +259,10 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '1607 27T13'},
+				version: { type: String, value: '1607 31T13'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
-				active: { computed: '_isAdminView(dataView.view)' },
 			},
 			resetFilter: function(e) {
 				if (this.dataKind.kind == 'search') {
@@ -264,6 +280,9 @@
 			},
 			_isAdminView: function(view) {
 				return view == 'admin';
+			},
+			_isFormView: function(view) {
+				return view == 'form';
 			},
 			_drawerToggle: function() {
 				this.$.drawer.toggle();

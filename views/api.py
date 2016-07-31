@@ -37,6 +37,18 @@ class Collection(RestHandler):
         })
 
 
+class Record(RestHandler):
+    def get(self, kind=None, slug=None):
+        model = ndb.Model._kind_map.get(kind.title())
+        obj = model.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
+
+        self.render({
+            'obj': obj.serialize()
+        })
+
+
 def cloud_limit(items):
     """
     Returns limit for the specific count. Show only if count > limit

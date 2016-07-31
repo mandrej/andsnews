@@ -21,10 +21,6 @@
             ::-webkit-scrollbar {
                 display: none;
             }
-            /*iron-list {
-                padding-top: 16px;
-                @apply(--layout-fit);
-            }*/
             .rec {
                 @apply(--layout-horizontal);
                 cursor: pointer;
@@ -126,15 +122,16 @@
             canFetch: function(active, kind) {
                 var prefix = '/api';
                 if (active) {
+                    this.url = [prefix, kind].join('/');
                     this.set('params.page', null);
                     this.items = [];
-                    this.url = [prefix, kind].join('/');
                     this.async(function() {
                         this.$.ajax.generateRequest();
-                    });
+                    })
                 }
             },
 			handler: function(request) {
+                if (this.$.ajax.lastRequest) this.$.ajax.lastRequest.abort();
 				var response = request.detail.response;
                 if (response.objects.length == 0) {
                     var dialog = this.$.message;
