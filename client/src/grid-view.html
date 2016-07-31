@@ -55,9 +55,9 @@
 			debounce-duration="100"></iron-ajax>
 
         <template is="dom-repeat" items="[[response]]" as="row">
-            <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="_repeatRender">
+            <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec"
-                    data-field$="[[row.field_name]]" on-tap="_applyFilter">
+                    data-field$="[[row.field_name]]" on-tap="applyFilter">
                     <iron-image src="[[rec.repr_url]]" preload sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">
@@ -107,12 +107,12 @@
 					this.response = null;
 				}
 			},
-            _applyFilter: function(e) {
+            applyFilter: function(e) {
 				this.field = e.model.row.field_name;
 				this.value = '' + e.model.rec.name;
 				this.set('route.path', ['', 'detail', this.kind, this.field, this.value].join('/'));
 			},
-            _repeatRender: function() {
+            repeatRender: function() {
                 var nodes = Polymer.dom(this.root).querySelectorAll('.rec');
                 this.animationConfig['entry'][0].nodes = nodes;
                 this.animationConfig['entry'][1].nodes = nodes;

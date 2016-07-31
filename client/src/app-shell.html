@@ -124,25 +124,25 @@
 				<h1 main-title>ANDрејевићи</h1>
 			</app-toolbar>
 			<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
-				<paper-item kind-page="photo" on-tap="_resetFilter">
+				<paper-item kind-page="photo" on-tap="resetFilter">
 					<a href="#/grid/photo" class="flex">
 						<iron-icon icon="image:photo-camera"></iron-icon>Photos
 					</a>
 				</paper-item>
-				<paper-item kind-page="entry" on-tap="_resetFilter">
+				<paper-item kind-page="entry" on-tap="resetFilter">
 					<a href="#/grid/entry" class="flex">
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
-					<paper-item kind-page="photo" on-tap="_resetFilter">
+				<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+					<paper-item kind-page="photo" on-tap="resetFilter">
 						<a href="#/admin/photo" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
 						</a>
 					</paper-item>
 				</template>
-				<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
-					<paper-item kind-page="entry" on-tap="_resetFilter">
+				<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+					<paper-item kind-page="entry" on-tap="resetFilter">
 						<a href="#/admin/entry" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
 						</a>
@@ -155,28 +155,28 @@
 		<app-header-layout>
 			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
 				<app-toolbar>
-					<template is="dom-if" if="[[_isDetail(dataView.view)]]">
-						<paper-icon-button icon="chevron-left" on-tap="_resetFilter"></paper-icon-button>
+					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
 					</template>
-					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
 						<template is="dom-if" if="[[smallScreen]]">
 							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 						</template>
 					</template>
 	  				<h4 condensed-title>{{headline}}</h4>
-					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-								<a href="#/grid/photo" kind-page="photo" on-tap="_resetFilter">
+								<a href="#/grid/photo" kind-page="photo" on-tap="resetFilter">
 									<paper-button>Photos</paper-button></a>
-								<a href="#/grid/entry" kind-page="entry" on-tap="_resetFilter">
+								<a href="#/grid/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
-									<a href="#/admin/photo" kind-page="photo" on-tap="_resetFilter">
+								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
-								<template is="dom-if" if="[[!_isPhoto(dataKind.kind)]]">
-									<a href="#/admin/entry" kind-page="entry" on-tap="_resetFilter">
+								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
 							</iron-selector>
@@ -189,12 +189,12 @@
 	    		</app-toolbar>
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
-					<template is="dom-if" if="[[_isDetail(dataView.view)]]">
-						<template is="dom-if" if="[[_isPhoto(dataKind.kind)]]">
+					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 						</template>
 					</template>
-					<template is="dom-if" if="[[!_isDetail(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
 						<paper-spinner active$="[[loading]]"></paper-spinner>
 					</template>
 	    		</app-toolbar>
@@ -245,12 +245,9 @@
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
-				active: { computed: '_isActiveAdmin(dataView.view)' },
+				active: { computed: '_isAdminView(dataView.view)' },
 			},
-			_isDetail: function(view) {
-				return view == 'detail';
-			},
-			_resetFilter: function(e) {
+			resetFilter: function(e) {
 				if (this.dataKind.kind == 'search') {
 					this.set('dataKind.kind', 'photo');
 				}
@@ -261,13 +258,16 @@
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 			},
-			_isActiveAdmin: function(view) {
+			_isDetailView: function(view) {
+				return view == 'detail';
+			},
+			_isAdminView: function(view) {
 				return view == 'admin';
 			},
 			_drawerToggle: function() {
 				this.$.drawer.toggle();
 			},
-			_isPhoto: function(kind) {
+			_isKindPhoto: function(kind) {
 				return kind == 'photo'
 			},
 			showExif: function(e) {

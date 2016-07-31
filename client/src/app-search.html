@@ -23,9 +23,9 @@
             }
         </style>
 
-        <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="_onSearch"></iron-a11y-keys>
+        <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="onSearch"></iron-a11y-keys>
         <div class="layout horizontal">
-            <paper-icon-button icon="search" on-tap="expand" id="button"></paper-icon-button>
+            <paper-icon-button icon="search" on-tap="expandWidget" id="button"></paper-icon-button>
             <paper-input id="inputSearch" placeholder="search" no-label-float
                 value="{{search::value-changed}}"></paper-input>
         </div>
@@ -76,7 +76,7 @@
                     this.set('route.path', '/detail/search/' + this.field);
                 }
             },
-            expand: function() {
+            expandWidget: function() {
                 if (this.$.inputSearch.style.display == 'block') {
                     this.$.inputSearch.style.display = 'none';
                     this.$.button.setAttribute('icon', 'search');
@@ -85,7 +85,7 @@
                     this.playAnimation('entry');
                 }
             },
-            _onSearch: function() {
+            onSearch: function() {
                 this.field = this.search;
                 this.search = null;
                 this.value = null;

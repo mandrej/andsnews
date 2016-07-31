@@ -71,10 +71,10 @@
 
         <template is="dom-repeat" items="{{items}}">
             <div class="rec" on-tap="editRec">
-                <template is="dom-if" if="[[_isPhoto(item)]]">
+                <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
                 </template>
-                <template is="dom-if" if="[[!_isPhoto(item)]]">
+                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
                     <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
                 </template>
                 <div class="pad">
@@ -87,10 +87,10 @@
         <!-- <iron-list items="[[items]]" as="item" selection-enabled="true" selected-item id="list">
             <template>
                 <div class="rec" tabindex$="[[tabIndex]]">
-                    <template is="dom-if" if="[[_isPhoto(item)]]">
+                    <template is="dom-if" if="[[_isKindPhoto(item)]]">
                         <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
                     </template>
-                    <template is="dom-if" if="[[!_isPhoto(item)]]">
+                    <template is="dom-if" if="[[!_isKindPhoto(item)]]">
                         <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
                     </template>
                     <div class="pad">
@@ -172,7 +172,7 @@
                     this.$.ajax.generateRequest();
 				}
 			},
-            _isPhoto: function(item) {
+            _isKindPhoto: function(item) {
                 return item.kind == 'photo';
             },
             editRec: function(e) {

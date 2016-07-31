@@ -80,7 +80,7 @@
 
         <iron-swipeable-pages selected="{{start}}" threshold="0" disabled="{{disabled}}" id="swipe">
             <template is="dom-repeat" items="{{items}}">
-                <template is="dom-if" if="[[_isPhoto(item)]]">
+                <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0" sizing="cover"
                             data-dim$="[[item.dim]]" on-track="zoomImage"></iron-image>
@@ -94,14 +94,14 @@
                                 [[item.iso]] ASA
                             </p>
                             <p>
-                                <paper-button dialog-confirm on-tap="_download" data-url="[[item.download_url]]">
+                                <paper-button dialog-confirm on-tap="downloadImg" data-url="[[item.download_url]]">
                                     <iron-icon icon="file-download"></iron-icon>Download
                                 </paper-button>
                             </p>
                         </paper-dialog>
                     </div>
                 </template>
-                <template is="dom-if" if="[[!_isPhoto(item)]]">
+                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
                     <div class="swipe" style="padding: 16px">
                         <marked-element markdown="[[item.body]]">
                             <div class="markdown-html"></div>
@@ -203,7 +203,7 @@
                     this.set('params.page', ajax.lastResponse.next);
 				}
 			},
-            _isPhoto: function(item) {
+            _isKindPhoto: function(item) {
                 return item.kind == 'photo';
             },
             _dateFormat: function(str) {
@@ -256,7 +256,7 @@
                         break;
                 }
             },
-            _download: function(e) {
+            downloadImg: function(e) {
                 e.preventDefault();
                 var url = e.target.dataUrl,
                     promise = this.$.download_ajax.send({url: url, method: 'GET'});
