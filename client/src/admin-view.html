@@ -50,7 +50,7 @@
             }
         </style>
 
-        <iron-ajax id="ajax"
+        <iron-ajax id="ajax" auto
             url="{{url}}"
             params="{{params}}"
             handle-as="json"
@@ -107,28 +107,35 @@
                         }
                     }
                 },
-                kind: { type: String, value: null, notify: true },
+                view: { type: String, value: null, notify: true },
+                kind: { type: String, value: null, notify: true, observer: 'kindChange' },
+                field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
-                url: { type: String, value: null, notify: true },
+                url: {
+					computed: '_url(view, kind, field, value)',
+					notify: true
+				},
                 loading: {
                     type: Boolean,
                     value: false,
                     notify: true
                 },
-                active: { type: Boolean, value: false, notify: true }
             },
-            observers: [ 'canFetch(active, kind)' ],
-            canFetch: function(active, kind) {
-                var prefix = '/api';
-                if (active) {
-                    this.url = [prefix, kind].join('/');
-                    this.set('params.page', null);
-                    this.items = [];
-                    this.async(function() {
-                        this.$.ajax.generateRequest();
-                    })
+            kindChange: function() {
+                this.set('params.page', null);
+				this.items = [];
+            },
+            _url: function(view, kind, field, value) {
+                var url, prefix = '/api';
+
+                if (view != 'admin') return url;
+                if (!(field && value) && kind != 'search') {
+                    url = [prefix, kind].join('/');
                 }
+
+				return url;
             },
 			handler: function(request) {
                 if (this.$.ajax.lastRequest) this.$.ajax.lastRequest.abort();
@@ -148,7 +155,6 @@
                 var ajax = this.$.ajax;
 				if (ajax.lastResponse && ajax.lastResponse.next) {
                     this.set('params.page', ajax.lastResponse.next);
-                    this.$.ajax.generateRequest();
 				}
 			},
             _isKindPhoto: function(item) {

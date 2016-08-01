@@ -217,6 +217,7 @@
 				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 					<grid-view
 						data-view="grid"
+						view="[[dataView.view]]"
 						kind="[[dataKind.kind]]"
 						field="{{dataField.field}}"
 						value="{{dataValue.value}}"
@@ -225,6 +226,7 @@
 
 					<detail-view
 						data-view="detail"
+						view="[[dataView.view]]"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
@@ -233,26 +235,27 @@
 
 					<admin-view
 						data-view="admin"
+						view="[[dataView.view]]"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
 						route="{{route}}"
-						loading="{{loading}}"
-					    active="[[_isAdminView(dataView.view]]"></admin-view>
+						loading="{{loading}}"></admin-view>
 
-					<template is="dom-if" if="[[_isFormView(dataView.view]]">
+					<!-- <template is="dom-if" if="[[_isFormView(dataView.view]]">
 						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 							<form-photo
 								data-view="form"
 								kind="[[dataKind.kind]]"
 								field="[[dataField.field]]"></form-photo>
 						</template>
-						<!-- <template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+						<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
 							<form-entry
 								data-view="form"
 								kind="[[dataKind.kind]]"
 								field="[[dataField.field]]"></form-entry>
-						</template> -->
-					</template>
+						</template>
+					</template> -->
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>

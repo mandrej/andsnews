@@ -49,7 +49,7 @@
         </style>
 
         <iron-ajax auto
-			url="{{_urlFilter(kind)}}"
+			url="{{url}}"
 			handle-as="json"
 			last-response="{{response}}"
 			debounce-duration="300"></iron-ajax>
@@ -95,17 +95,28 @@
                         }
                     }
                 },
-                kind: { type: String, value: null, notify: true },
+                view: { type: String, value: null, notify: true },
+                kind: { type: String, value: null, notify: true, observer: 'kindChange' },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
+                url: {
+					computed: '_url(view, kind, field, value)',
+					notify: true
+				},
             },
-            _urlFilter: function(kind) {
-				var prefix = '/api/filter';
-				if (kind == 'photo' || kind == 'entry') {
-					return [prefix, kind].join('/');
-				} else {
-					this.response = null;
-				}
+            kindChange: function() {
+                this.set('params.page', null);
+				this.items = [];
+            },
+            _url: function(view, kind, field, value) {
+				var url, prefix = '/api/filter';
+
+                if (view != 'grid') return url;
+                if (!(field && value) && kind != 'search') {
+                    url = [prefix, kind].join('/');
+                }
+
+				return url;
 			},
             applyFilter: function(e) {
 				this.field = e.model.row.field_name;

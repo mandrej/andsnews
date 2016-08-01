@@ -135,6 +135,7 @@
                         }
                     }
                 },
+                view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -144,7 +145,7 @@
                 items: { type: Array, value: [], notify: true },
                 start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 url: {
-					computed: '_url(kind, field, value)',
+					computed: '_url(view, kind, field, value)',
 					notify: true,
 					observer: 'propertyChanged'
 				},
@@ -154,7 +155,7 @@
                     notify: true
                 },
             },
-            observers: ['objectChanged(params.*)'],
+            // observers: ['objectChanged(params.*)'],
             listeners: {
                 'show-exif': '_showExif'
             },
@@ -166,9 +167,10 @@
                     this.loadMore();
                 }
             },
-            _url: function(kind, field, value) {
+            _url: function(view, kind, field, value) {
 				var url, prefix = '/api';
 
+                if (view != 'detail') return url;
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
 				} else if (field && value) {
