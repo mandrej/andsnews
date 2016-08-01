@@ -155,7 +155,10 @@
                     notify: true
                 },
             },
-            // observers: ['objectChanged(params.*)'],
+            observers: [
+                // 'objectChanged(params.*)',
+                'filterChange(field, value)'
+            ],
             listeners: {
                 'show-exif': '_showExif'
             },
@@ -167,6 +170,11 @@
                     this.loadMore();
                 }
             },
+            filterChange: function(field, value) {
+                this.set('params.page', null);
+				this.items = [];
+				this.start = 0;
+            },
             _url: function(view, kind, field, value) {
 				var url, prefix = '/api';
 
@@ -176,10 +184,6 @@
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
 				}
-
-				this.set('params.page', null);
-				this.items = [];
-				this.start = 0;
 				return url;
 			},
 			handler: function(request) {

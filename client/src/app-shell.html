@@ -25,8 +25,7 @@
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
 <link rel="import" href="admin-view.html">
-<link rel="import" href="form-photo.html">
-<!-- <link rel="import" href="form-entry.html"> -->
+<link rel="import" href="form-view.html">
 
 <dom-module id="app-shell">
 	<template>
@@ -95,6 +94,13 @@
 		/:view	/:kind	/:field	/:value
 		view:	grid, detail, admin
 		kind:	photo, entry, search
+
+		new patterns: https://www.polymer-project.org/1.0/articles/routing.html
+		/:kind					grid view		/photo
+		/:kind/:field/:value	detail view		/photo/date/2015
+		/search/:find			detail view		/search/ana
+		/admin/:kind			admin view		/admin/photo
+		/admin/:kind/:slug		form view		/admin/photo/wet-red
 		-->
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -242,20 +248,13 @@
 						route="{{route}}"
 						loading="{{loading}}"></admin-view>
 
-					<!-- <template is="dom-if" if="[[_isFormView(dataView.view]]">
-						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-							<form-photo
-								data-view="form"
-								kind="[[dataKind.kind]]"
-								field="[[dataField.field]]"></form-photo>
-						</template>
-						<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
-							<form-entry
-								data-view="form"
-								kind="[[dataKind.kind]]"
-								field="[[dataField.field]]"></form-entry>
-						</template>
-					</template> -->
+					<form-view
+						data-view="form"
+						view="[[dataView.view]]"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
+						route="{{route}}"></form-view>
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>

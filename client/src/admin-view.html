@@ -134,7 +134,6 @@
                 if (!(field && value) && kind != 'search') {
                     url = [prefix, kind].join('/');
                 }
-
 				return url;
             },
 			handler: function(request) {
@@ -161,7 +160,6 @@
                 return item.kind == 'photo';
             },
             editRec: function(e) {
-                console.log(e.model.item);
                 this.field = e.model.item.slug;
                 this.value = null;
                 this.set('route.path', ['', 'form', this.kind, this.field].join('/'));
