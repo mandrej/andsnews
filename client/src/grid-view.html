@@ -96,24 +96,20 @@
                     }
                 },
                 view: { type: String, value: null, notify: true },
-                kind: { type: String, value: null, notify: true, observer: 'kindChange' },
+                kind: { type: String, value: null, notify: true, },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 start: { type: Number, value: 0, notify: true },
                 url: {
-					computed: '_url(view, kind, field, value)',
+					computed: '_url(view, kind)',
 					notify: true
 				},
             },
-            kindChange: function() {
-                this.set('params.page', null);
-				this.items = [];
-            },
-            _url: function(view, kind, field, value) {
+            _url: function(view, kind) {
 				var url, prefix = '/api/filter';
 
                 if (view != 'grid') return url;
-                if (!(field && value) && kind != 'search') {
+                if (kind != 'search') {
                     url = [prefix, kind].join('/');
                 }
 				return url;

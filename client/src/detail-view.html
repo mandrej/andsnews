@@ -155,25 +155,8 @@
                     notify: true
                 },
             },
-            observers: [
-                // 'objectChanged(params.*)',
-                'filterChange(field, value)'
-            ],
             listeners: {
                 'show-exif': '_showExif'
-            },
-            changeIndex: function(newValue, oldValue) {
-                if (this.items.length > 0) {
-                    this.headline = this.items[newValue].headline;
-                }
-                if (this.items.length - newValue < 3) {
-                    this.loadMore();
-                }
-            },
-            filterChange: function(field, value) {
-                this.set('params.page', null);
-				this.items = [];
-				this.start = 0;
             },
             _url: function(view, kind, field, value) {
 				var url, prefix = '/api';
@@ -184,6 +167,9 @@
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
 				}
+                this.set('params.page', null);
+				this.items = [];
+				this.start = 0;
 				return url;
 			},
 			handler: function(request) {
@@ -209,6 +195,15 @@
                     this.set('params.page', ajax.lastResponse.next);
 				}
 			},
+            changeIndex: function(newValue, oldValue) {
+                if (!this.items) return;
+                if (this.items.length > 0) {
+                    this.headline = this.items[newValue].headline;
+                }
+                if (this.items.length - newValue < 3) {
+                    this.loadMore();
+                }
+            },
             _isKindPhoto: function(item) {
                 return item.kind == 'photo';
             },
