@@ -18,7 +18,7 @@
         </style>
 
         <iron-ajax auto
-			url="{{_url(view, kind, field, value)}}"
+			url="{{_url(view, kind, slug)}}"
 			handle-as="json"
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
@@ -49,13 +49,13 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
             },
-            _url: function(view, kind, field, value) {
+            _url: function(view, kind, slug) {
                 var url, prefix = '/api';
 
                 if (view != 'form') return url;
-                if (field && !value && kind != 'search' ) {
-                    url = [prefix, kind, field].join('/');
-                }
+                // if (field && !value && kind != 'search' ) {
+                    url = [prefix, kind, slug].join('/');
+                // }
                 return url;
             }
         });

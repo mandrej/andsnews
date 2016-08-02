@@ -53,8 +53,7 @@
                         }
                     }
                 },
-                field: { type: String, value: null, notify: true },
-				value: { type: String, value: null, notify: true },
+                find: { type: String, value: null, notify: true },
                 search: { type: String, value: null, notify: true },
                 targetSearch: {
 					type: Object,
@@ -73,7 +72,7 @@
                 } else {
                     this.$.inputSearch.style.display = 'none';
                     this.$.button.setAttribute('icon', 'search');
-                    this.set('route.path', '/detail/search/' + this.field);
+                    this.set('route.path', '/search/' + this.field);
                 }
             },
             expandWidget: function() {
@@ -86,9 +85,8 @@
                 }
             },
             onSearch: function() {
-                this.field = this.search;
+                this.find = this.search;
                 this.search = null;
-                this.value = null;
                 this.$.inputSearch.style.display = 'none';
                 this.$.button.setAttribute('icon', 'search');
                 this.playAnimation('exit');

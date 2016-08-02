@@ -198,8 +198,7 @@
 							</iron-selector>
 						</template>
 						<app-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
+							find="{{dataFind.find}}"
 							route="{{route}}"></app-search>
 					</template>
 	    		</app-toolbar>
@@ -252,9 +251,8 @@
 					<form-view
 						data-view="form"
 						view="[[activeView]]"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
+						kind="[[dataAdmin.kind]]"
+						slug="[[dataForm.slug]]"
 						route="{{route}}"></form-view>
 				</neon-animated-pages>
 			</main>
@@ -278,19 +276,30 @@
 				loading: { type: Boolean, value: false, notify: true },
 				activeGrid: { type: Boolean, value: false },
 				activeFilter: { type: Boolean, value: false },
+				activeFind: { type: Boolean, value: false },
 				activeAdmin: { type: Boolean, value: false },
 				activeForm: { type: Boolean, value: false },
-				activeView: { type: String, computed: '_activeView(activeGrid, activeFilter, activeAdmin, activeForm)', notify: true },
+				activeView: {
+					type: String,
+					computed: '_activeView(activeGrid, activeFilter, activeFind, activeAdmin, activeForm)',
+					notify: true
+				},
 			},
-			_activeView: function(activeGrid, activeFilter, activeAdmin, activeForm) {
-				if (activeGrid && !activeFilter) {
-					return 'grid';
+			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
+				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
+				var result = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm];
+				console.log(parseInt(result.join(''), 2)); // binary
+
+				if (activeGrid && activeFilter && activeAdmin && activeForm) {
+					return 'form';
+				} else if (activeGrid && activeFind) {
+					return 'detail';
+				} else if (activeGrid && activeAdmin) {
+					return 'admin';
 				} else if (activeGrid && activeFilter) {
 					return 'detail';
-				} else if (activeAdmin && !activeForm) {
-					return 'admin';
-				} else if (activeAdmin && activeForm) {
-					return 'form';
+				} else if (activeGrid) {
+					return 'grid';
 				}
 			},
 			resetFilter: function(e) {
