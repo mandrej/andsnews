@@ -99,6 +99,7 @@
                 kind: { type: String, value: null, notify: true, observer: 'kindChange' },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
+                start: { type: Number, value: 0, notify: true },
                 url: {
 					computed: '_url(view, kind, field, value)',
 					notify: true

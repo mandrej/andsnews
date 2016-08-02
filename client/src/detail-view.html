@@ -139,11 +139,11 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
+                start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 disabled: { type: Boolean, value: false, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
-                start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 url: {
 					computed: '_url(view, kind, field, value)',
 					notify: true,
