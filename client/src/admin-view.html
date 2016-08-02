@@ -108,13 +108,13 @@
                     }
                 },
                 view: { type: String, value: null, notify: true },
-                kind: { type: String, value: null, notify: true, observer: 'kindChange' },
+                kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
                 url: {
-					computed: '_url(view, kind, field, value)',
+					computed: '_url(view, kind)',
 					notify: true
 				},
                 loading: {
@@ -123,17 +123,17 @@
                     notify: true
                 },
             },
-            kindChange: function() {
-                this.set('params.page', null);
-				this.items = [];
-            },
-            _url: function(view, kind, field, value) {
+            // kindChange: function() {
+            //     this.set('params.page', null);
+			// 	this.items = [];
+            // },
+            _url: function(view, kind) {
                 var url, prefix = '/api';
 
                 if (view != 'admin') return url;
-                if (!(field && value) && kind != 'search') {
+                // if (!(field && value) && kind != 'search') {
                     url = [prefix, kind].join('/');
-                }
+                // }
 				return url;
             },
 			handler: function(request) {

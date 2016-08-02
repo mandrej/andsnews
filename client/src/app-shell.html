@@ -91,11 +91,7 @@
 		</style>
 
 		<!--
-		/:view	/:kind	/:field	/:value
-		view:	grid, detail, admin
-		kind:	photo, entry, search
-
-		new patterns: https://www.polymer-project.org/1.0/articles/routing.html
+		https://www.polymer-project.org/1.0/articles/routing.html
 		/:kind					grid view		/photo
 		/:kind/:field/:value	detail view		/photo/date/2015
 		/search/:find			detail view		/search/ana
@@ -107,28 +103,35 @@
 
 		<app-route
 			route="{{route}}"
-			pattern="/:view"
-			data="{{dataView}}"
-			tail="{{tailView}}"
-			active="{{activeView}}"></app-route>
-
-		<app-route
-			route="{{tailView}}"
 			pattern="/:kind"
-			data="{{dataKind}}"
-			tail="{{tailKind}}"
-			active="{{activeKind}}"></app-route>
+			data="{{dataGrid}}"
+			tail="{{tailGrid}}"
+			active="{{activeGrid}}"></app-route>
 
 		<app-route
-			route="{{tailKind}}"
-			pattern="/:field"
-			data="{{dataField}}"
-			tail="{{tailField}}"></app-route>
+			route="{{tailGrid}}"
+			pattern="/:field/:value"
+			data="{{dataFilter}}"
+			active="{{activeFilter}}"></app-route>
 
 		<app-route
-			route="{{tailField}}"
-			pattern="/:value"
-			data="{{dataValue}}"></app-route>
+			route="{{route}}"
+			pattern="/search/:find"
+			data="{{dataFind}}"
+			active="{{activeFind}}"></app-route>
+
+		<app-route
+			route="{{route}}"
+			pattern="/admin/:kind"
+			data="{{dataAdmin}}"
+			tail="{{tailAdmin}}"
+			active="{{activeAdmin}}"></app-route>
+
+		<app-route
+			route="{{tailAdmin}}"
+			pattern="/:slug"
+			data="{{dataForm}}"
+			active="{{activeForm}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
@@ -138,23 +141,23 @@
 			</app-toolbar>
 			<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
 				<paper-item kind-page="photo" on-tap="resetFilter">
-					<a href="#/grid/photo" class="flex">
+					<a href="#/photo" class="flex">
 						<iron-icon icon="image:photo-camera"></iron-icon>Photos
 					</a>
 				</paper-item>
 				<paper-item kind-page="entry" on-tap="resetFilter">
-					<a href="#/grid/entry" class="flex">
+					<a href="#/entry" class="flex">
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+				<template is="dom-if" if="[[_isKindPhoto(dataAdmin.kind)]]">
 					<paper-item kind-page="photo" on-tap="resetFilter">
 						<a href="#/admin/photo" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
 						</a>
 					</paper-item>
 				</template>
-				<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+				<template is="dom-if" if="[[!_isKindPhoto(dataAdmin.kind)]]">
 					<paper-item kind-page="entry" on-tap="resetFilter">
 						<a href="#/admin/entry" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
@@ -168,27 +171,27 @@
 		<app-header-layout>
 			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
 				<app-toolbar>
-					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+					<template is="dom-if" if="[[_isDetailView(activeView)]]">
 						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
 					</template>
-					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[smallScreen]]">
 							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 						</template>
 					</template>
 	  				<h4 condensed-title>{{headline}}</h4>
-					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-								<a href="#/grid/photo" kind-page="photo" on-tap="resetFilter">
+								<a href="#/photo" kind-page="photo" on-tap="resetFilter">
 									<paper-button>Photos</paper-button></a>
-								<a href="#/grid/entry" kind-page="entry" on-tap="resetFilter">
+								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+								<template is="dom-if" if="[[_isKindPhoto(dataAdmin.kind)]]">
 									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
-								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+								<template is="dom-if" if="[[!_isKindPhoto(dataAdmin.kind)]]">
 									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
@@ -202,16 +205,16 @@
 	    		</app-toolbar>
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
-					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+					<template is="dom-if" if="[[_isDetailView(activeView)]]">
+						<template is="dom-if" if="[[_isKindPhoto(dataGrid.kind)]]">
 							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 						</template>
 					</template>
-					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-						<template is="dom-if" if="[[_isAdminView(dataView.view)]]">
+					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
+						<template is="dom-if" if="[[_isAdminView(activeView)]]">
 							<paper-fab icon="add"></paper-fab>
 						</template>
-						<template is="dom-if" if="[[!_isAdminView(dataView.view)]]">
+						<template is="dom-if" if="[[!_isAdminView(activeView)]]">
 							<paper-spinner active$="[[loading]]"></paper-spinner>
 						</template>
 					</template>
@@ -219,40 +222,36 @@
 			</app-header>
 
 			<main>
-				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+				<app-scrollpos-control selected="{{activeView}}"></app-scrollpos-control>
+				<neon-animated-pages selected="{{activeView}}" attr-for-selected="data-view">
 					<grid-view
 						data-view="grid"
-						view="[[dataView.view]]"
-						kind="[[dataKind.kind]]"
-						field="{{dataField.field}}"
-						value="{{dataValue.value}}"
+						view="[[activeView]]"
+						kind="[[dataGrid.kind]]"
 						start="{{start}}"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
 					<detail-view
 						data-view="detail"
-						view="[[dataView.view]]"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
+						view="[[activeView]]"
+						kind="[[dataGrid.kind]]"
+						field="[[dataFilter.field]]"
+						value="[[dataFilter.value]]"
 						start="{{start}}"
 						loading="{{loading}}"
 						headline="{{headline}}"></detail-view>
 
 					<admin-view
 						data-view="admin"
-						view="[[dataView.view]]"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
+						view="[[activeView]]"
+						kind="[[dataAdmin.kind]]"
 						route="{{route}}"
 						loading="{{loading}}"></admin-view>
 
 					<form-view
 						data-view="form"
-						view="[[dataView.view]]"
+						view="[[activeView]]"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
@@ -267,11 +266,8 @@
 			is: 'app-shell',
 			attached: function() {
 				if (!this.route.path) {
-					this.set('route.path', '/grid/photo');
-					this.set('dataView.view', 'grid');
-					this.set('dataKind.kind', 'photo');
-					this.set('dataField.field', null);
-					this.set('dataValue.value', null);
+					this.set('route.path', '/photo');
+					this.set('dataGrid.kind', 'photo');
 				}
 			},
 			properties: {
@@ -280,21 +276,35 @@
 				start: { type: Number, value: 0, notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
+				activeGrid: { type: Boolean, value: false },
+				activeFilter: { type: Boolean, value: false },
+				activeAdmin: { type: Boolean, value: false },
+				activeForm: { type: Boolean, value: false },
+				activeView: { type: String, computed: '_activeView(activeGrid, activeFilter, activeAdmin, activeForm)', notify: true },
+			},
+			_activeView: function(activeGrid, activeFilter, activeAdmin, activeForm) {
+				if (activeGrid && !activeFilter) {
+					return 'grid';
+				} else if (activeGrid && activeFilter) {
+					return 'detail';
+				} else if (activeAdmin && !activeForm) {
+					return 'admin';
+				} else if (activeAdmin && activeForm) {
+					return 'form';
+				}
 			},
 			resetFilter: function(e) {
-				if (this.dataKind.kind == 'search') {
-					this.set('dataKind.kind', 'photo');
-				}
-				this.set('dataField.field', null);
-				this.set('dataValue.value', null);
+				// if (this.dataFind.find == 'search') {
+				// 	this.set('dataKind.kind', 'photo');
+				// }
+				// this.set('dataField.field', null);
+				// this.set('dataValue.value', null);
 
 				this.headline = 'ANDрејевићи'
 				this.start = 0;
 				this.$.drawer.close();
 
-				this.async(function() {
-					this.set('route.path', ['', 'grid', this.dataKind.kind].join('/'));
-				})
+				this.set('route.path', ['', this.dataGrid.kind].join('/'));
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';

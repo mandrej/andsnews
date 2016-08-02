@@ -109,15 +109,16 @@
 				var url, prefix = '/api/filter';
 
                 if (view != 'grid') return url;
-                if (kind != 'search') {
+                // if (kind != 'search') {
                     url = [prefix, kind].join('/');
-                }
+                // }
 				return url;
 			},
             applyFilter: function(e) {
 				this.field = e.model.row.field_name;
 				this.value = '' + e.model.rec.name;
-				this.set('route.path', ['', 'detail', this.kind, this.field, this.value].join('/'));
+                this.start = 0;
+				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
 			},
             repeatRender: function() {
                 var nodes = Polymer.dom(this.root).querySelectorAll('.rec');
