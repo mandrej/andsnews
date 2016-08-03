@@ -123,18 +123,11 @@
                     notify: true
                 },
             },
-            // kindChange: function() {
-            //     this.set('params.page', null);
-			// 	this.items = [];
-            // },
             _url: function(view, kind) {
-                var url, prefix = '/api';
-
-                if (view != 'admin') return url;
-                // if (!(field && value) && kind != 'search') {
-                    url = [prefix, kind].join('/');
-                // }
-				return url;
+                if (view != 'admin') return;
+                this.set('params.page', null);
+				this.items = [];
+                return ['/api', kind].join('/');
             },
 			handler: function(request) {
                 if (this.$.ajax.lastRequest) this.$.ajax.lastRequest.abort();

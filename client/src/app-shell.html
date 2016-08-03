@@ -202,6 +202,8 @@
 						</template>
 						<app-search
 							find="{{dataFind.find}}"
+							field="[[dataFilter.field]]"
+							value="{{dataFilter.value}}"
 							route="{{route}}"></app-search>
 					</template>
 	    		</app-toolbar>
@@ -286,7 +288,7 @@
 				},
 			},
 			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
-				// console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
+				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
 				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 
@@ -300,9 +302,9 @@
 				}
 			},
 			resetFilter: function(e) {
-				// if (this.dataFind.find == 'search') {
-				// 	this.set('dataKind.kind', 'photo');
-				// }
+				if (this.dataGrid.kind == 'search') {
+					this.set('dataGrid.kind', 'photo');
+				}
 				// this.set('dataField.field', null);
 				// this.set('dataValue.value', null);
 
