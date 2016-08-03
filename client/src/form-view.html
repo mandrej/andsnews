@@ -34,11 +34,13 @@
                 </datalist>
                 <paper-input name="tags" label="tags" list id="tags"></paper-input> -->
                 <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
-                <!-- <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
-                <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
-                <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
-                <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input> -->
+                <template is="dom-if" if="[[_isKindPhoto(obj)]]">
+                    <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
+                    <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
+                    <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
+                    <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
+                    <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+                </template>
             </form>
         </div>
     </template>
@@ -57,7 +59,10 @@
                     url = [prefix, kind, slug].join('/');
                 // }
                 return url;
-            }
+            },
+            _isKindPhoto: function(item) {
+                return item.kind == 'photo';
+            },
         });
     </script>
 </dom-module>
