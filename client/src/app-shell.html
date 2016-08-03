@@ -103,19 +103,6 @@
 
 		<app-route
 			route="{{route}}"
-			pattern="/:kind"
-			data="{{dataGrid}}"
-			tail="{{tailGrid}}"
-			active="{{activeGrid}}"></app-route>
-
-		<app-route
-			route="{{tailGrid}}"
-			pattern="/:field/:value"
-			data="{{dataFilter}}"
-			active="{{activeFilter}}"></app-route>
-
-		<app-route
-			route="{{route}}"
 			pattern="/search/:find"
 			data="{{dataFind}}"
 			active="{{activeFind}}"></app-route>
@@ -132,6 +119,19 @@
 			pattern="/:slug"
 			data="{{dataForm}}"
 			active="{{activeForm}}"></app-route>
+
+		<app-route
+			route="{{route}}"
+			pattern="/:kind"
+			data="{{dataGrid}}"
+			tail="{{tailGrid}}"
+			active="{{activeGrid}}"></app-route>
+
+		<app-route
+			route="{{tailGrid}}"
+			pattern="/:field/:value"
+			data="{{dataFilter}}"
+			active="{{activeFilter}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
@@ -271,7 +271,6 @@
 			properties: {
 				version: { type: String, value: '1607 31T13'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
-				start: { type: Number, value: 0, notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				activeGrid: { type: Boolean, value: false },
@@ -286,20 +285,17 @@
 				},
 			},
 			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
-				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
-				var result = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm];
-				console.log(parseInt(result.join(''), 2)); // binary
+				// console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
+				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
+					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 
-				if (activeGrid && activeFilter && activeAdmin && activeForm) {
-					return 'form';
-				} else if (activeGrid && activeFind) {
-					return 'detail';
-				} else if (activeGrid && activeAdmin) {
-					return 'admin';
-				} else if (activeGrid && activeFilter) {
-					return 'detail';
-				} else if (activeGrid) {
-					return 'grid';
+				switch (result) {
+					case 16: return 'grid';
+					case 18: return 'admin';
+					case 20: return 'detail'; // from search
+					case 24: return 'detail';
+					case 27: return 'form';
+					default: return 'grid';
 				}
 			},
 			resetFilter: function(e) {
@@ -310,7 +306,6 @@
 				// this.set('dataValue.value', null);
 
 				this.headline = 'ANDрејевићи'
-				this.start = 0;
 				this.$.drawer.close();
 
 				this.set('route.path', ['', this.dataGrid.kind].join('/'));
