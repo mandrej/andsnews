@@ -169,7 +169,9 @@
 				}
                 this.set('params.page', null);
 				this.items = [];
-				this.start = 0;
+                this.async(function() {
+                    this.start = 0;
+                })
 				return url;
 			},
 			handler: function(request) {
