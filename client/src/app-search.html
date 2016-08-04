@@ -53,7 +53,6 @@
                         }
                     }
                 },
-                find: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
                 value: { type: String, value: null, notify: true },
                 search: { type: String, value: null, notify: true },
@@ -85,14 +84,13 @@
                 }
             },
             onSearch: function() {
-                this.find = this.search;
-                this.field = this.find;
-                this.value = null; // cannot set this
+                this.field = this.search;
+                this.value = null;
                 this.search = null;
                 this.$.inputSearch.style.display = 'none';
                 this.$.button.setAttribute('icon', 'search');
+                this.playAnimation('exit');
                 this.set('route.path', '/search/' + this.field);
-                // this.playAnimation('exit');
 			},
         });
     </script>

@@ -84,7 +84,7 @@
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0" sizing="cover"
                             data-dim$="[[item.dim]]" on-track="zoomImage"></iron-image>
-                        <paper-dialog id="[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                        <paper-dialog id="D[[item.slug]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                             <p>
                                 [[_dateFormat(item.date)]]<br>
                                 [[item.author]]<br><br>
@@ -217,7 +217,7 @@
             _showExif: function(e) {
                 var id = e.target.items[this.start].slug,
                     // id = e.model.item.slug,
-                    dialog = this.$$('#' + id);
+                    dialog = this.$$('#D' + id);
                 if (dialog) {
                     dialog.open();
                 }

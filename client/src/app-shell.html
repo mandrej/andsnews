@@ -103,12 +103,6 @@
 
 		<app-route
 			route="{{route}}"
-			pattern="/search/:find"
-			data="{{dataFind}}"
-			active="{{activeFind}}"></app-route>
-
-		<app-route
-			route="{{route}}"
 			pattern="/admin/:kind"
 			data="{{dataAdmin}}"
 			tail="{{tailAdmin}}"
@@ -123,14 +117,21 @@
 		<app-route
 			route="{{route}}"
 			pattern="/:kind"
-			data="{{dataGrid}}"
+			data="{{dataKind}}"
 			tail="{{tailGrid}}"
 			active="{{activeGrid}}"></app-route>
 
 		<app-route
 			route="{{tailGrid}}"
-			pattern="/:field/:value"
-			data="{{dataFilter}}"
+			pattern="/:field"
+			data="{{dataField}}"
+			tail="{{tailField}}"
+			active="{{activeFind}}"></app-route>
+
+		<app-route
+			route="{{tailField}}"
+			pattern="/:value"
+			data="{{dataValue}}"
 			active="{{activeFilter}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
@@ -172,7 +173,8 @@
 			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
 				<app-toolbar>
 					<template is="dom-if" if="[[_isDetailView(activeView)]]">
-						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
+						<paper-icon-button icon="chevron-lef// this.$.inputSearch.style.display = 'none';
+                // this.$.button.setAttribute('icon', 'search');t" on-tap="resetFilter"></paper-icon-button>
 					</template>
 					<!-- <template is="dom-if" if="[[_isFormView(activeView)]]">
 						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
@@ -190,27 +192,26 @@
 									<paper-button>Photos</paper-button></a>
 								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isKindPhoto(dataGrid.kind)]]">
+								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
-								<template is="dom-if" if="[[!_isKindPhoto(dataGrid.kind)]]">
+								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
 									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
 							</iron-selector>
 						</template>
 						<app-search
-							find="{{dataFind.find}}"
-							field="{{dataFilter.field}}"
-							value="{{dataFilter.value}}"
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
 							route="{{route}}"></app-search>
 					</template>
 	    		</app-toolbar>
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
 					<template is="dom-if" if="[[_isDetailView(activeView)]]">
-						<template is="dom-if" if="[[_isKindPhoto(dataGrid.kind)]]">
+						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 						</template>
 					</template>
@@ -231,16 +232,16 @@
 					<grid-view
 						data-view="grid"
 						view="[[activeView]]"
-						kind="[[dataGrid.kind]]"
+						kind="[[dataKind.kind]]"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
 					<detail-view
 						data-view="detail"
 						view="[[activeView]]"
-						kind="[[dataGrid.kind]]"
-						field="[[dataFilter.field]]"
-						value="[[dataFilter.value]]"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
 						loading="{{loading}}"
 						headline="{{headline}}"></detail-view>
 
@@ -268,8 +269,10 @@
 			attached: function() {
 				if (!this.route.path) {
 					this.set('route.path', '/photo');
-					this.set('dataGrid.kind', 'photo');
+					this.set('dataKind.kind', 'photo');
 				}
+				this.set('dataField.field', null);
+				this.set('dataValue.value', null);
 			},
 			properties: {
 				version: { type: String, value: '1607 31T13'},
@@ -294,24 +297,23 @@
 
 				switch (result) {
 					case 16: return 'grid';
-					case 18: return 'admin';
 					case 20: return 'detail'; // from search
-					case 24: return 'detail';
-					case 27: return 'form';
+					case 22: return 'admin';
+					case 28: return 'detail'; // filter
+					case 31: return 'form';
 					default: return 'grid';
 				}
 			},
 			resetFilter: function(e) {
-				if (this.dataGrid.kind == 'search') {
-					this.set('dataGrid.kind', 'photo');
+				if (this.dataKind.kind == 'search') {
+					this.set('dataKind.kind', 'photo');
 				}
-				// this.set('dataField.field', null);
-				// this.set('dataValue.value', null);
-
+				this.set('dataField.field', null);
+				this.set('dataValue.value', null);
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 
-				this.set('route.path', ['', this.dataGrid.kind].join('/'));
+				this.set('route.path', ['', this.dataKind.kind].join('/'));
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';

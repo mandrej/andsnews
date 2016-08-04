@@ -49,7 +49,7 @@
         </style>
 
         <iron-ajax auto
-			url="{{url}}"
+			url="[[_url(view, kind)]]"
 			handle-as="json"
 			last-response="{{response}}"
 			debounce-duration="300"></iron-ajax>
@@ -97,19 +97,10 @@
                 kind: { type: String, value: null, notify: true, },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
-                url: {
-					computed: '_url(view, kind)',
-					notify: true
-				},
             },
             _url: function(view, kind) {
-				var url, prefix = '/api/filter';
-
-                if (view != 'grid') return url;
-                // if (kind != 'search') {
-                    url = [prefix, kind].join('/');
-                // }
-				return url;
+                if (view != 'grid') return;
+                return ['/api/filter', kind].join('/');
 			},
             applyFilter: function(e) {
 				this.field = e.model.row.field_name;
