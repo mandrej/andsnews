@@ -9,7 +9,10 @@ app = WSGIApplication([
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
     Route(r'/api/<kind:(photo|entry)>/<field:(model|iso|eqv|lens|tags|date|author|color)>/<value>',
           handler='views.api.Collection'),
-    Route(r'/api/<kind:(photo|entry)>/<slug:[\w-]+>', handler='views.api.Record'),
+    Route(r'/api/<kind:(photo|entry)>/<slug:[\w-]+>', handler='views.api.Record', methods=['GET']),
+
+    Route(r'/api/entry/<slug:[\w-]+>', handler='views.api.EntryForm', methods=['PUT', 'POST']),
+    Route(r'/api/photo/<slug:[\w-]+>', handler='views.api.PhotoForm', methods=['PUT', 'POST']),
 
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
     Route(r'/api/search/<find>', handler='views.api.Find'),

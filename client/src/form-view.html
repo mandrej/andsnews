@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="form-view">
     <template>
@@ -24,7 +26,7 @@
 			debounce-duration="300"></iron-ajax>
 
         <div class="container">
-            <form is="iron-form" id="form" method="post" action="/form/handler">
+            <form is="iron-form" id="form" method="put" action="/api/{{kind}}/{{slug}}">
                 <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
                 <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
                 <!-- <datalist id="tags">
@@ -34,12 +36,24 @@
                 </datalist>
                 <paper-input name="tags" label="tags" list id="tags"></paper-input> -->
                 <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
+
+                <p style="text-align: right;">
+                    <paper-button on-tap="_submit">Submit</paper-button>
+                    <paper-button on-tap="_reset">Reset</paper-button>
+                </p>
+
                 <template is="dom-if" if="[[_isKindPhoto(obj)]]">
+                    <paper-input name="photo" label="photo" value="{{obj.filename}}" type="file"></paper-input>
+
                     <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
                     <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
                     <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
                     <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
                     <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+                </template>
+                <template is="dom-if" if="[[!_isKindPhoto(obj)]]">
+                    <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
+                    <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
                 </template>
             </form>
         </div>
@@ -52,17 +66,18 @@
 				field: { type: String, value: null, notify: true },
             },
             _url: function(view, kind, slug) {
-                var url, prefix = '/api';
-
-                if (view != 'form') return url;
-                // if (field && !value && kind != 'search' ) {
-                    url = [prefix, kind, slug].join('/');
-                // }
-                return url;
+                if (view != 'form') return;
+                return ['/api', kind, slug].join('/');
             },
             _isKindPhoto: function(item) {
                 return item.kind == 'photo';
             },
+            _reset: function(e) {
+                this.$.form.reset();
+            },
+            _submit: function(e) {
+                this.$.form.submit();
+            }
         });
     </script>
 </dom-module>

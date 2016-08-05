@@ -5,7 +5,7 @@ from operator import itemgetter
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
 from handlers import LazyEncoder, Paginator, SearchPaginator
-from models import Cloud
+from models import Cloud, Entry, Photo
 from config import TIMEOUT
 
 LIMIT = 12
@@ -135,6 +135,22 @@ class Find(RestHandler):
             'next': token,
             'error': error
         })
+
+
+class EntryForm(RestHandler):
+    def put(self, slug):
+        obj = Entry.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
+        logging.error(dict(self.request.params))
+
+
+class PhotoForm(RestHandler):
+    def put(self, slug):
+        obj = Photo.get_by_id(slug)
+        if obj is None:
+            self.abort(404)
+        logging.error(dict(self.request.params))
 
 
 class Download(webapp2.RequestHandler):
