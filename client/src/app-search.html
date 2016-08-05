@@ -71,13 +71,16 @@
                     this.$.button.setAttribute('icon', 'clear');
                     this.$.inputSearch.focus();
                 } else {
-
+                    this.$.inputSearch.style.display = 'none';
+                    this.$.button.setAttribute('icon', 'search');
                 }
             },
             expandWidget: function() {
                 if (this.$.inputSearch.style.display == 'block') {
                     this.$.inputSearch.style.display = 'none';
                     this.$.button.setAttribute('icon', 'search');
+                    this.field = null;
+                    this.value = null;
                 } else {
                     this.$.inputSearch.style.display = 'block';
                     this.playAnimation('entry');
@@ -87,8 +90,6 @@
                 this.field = this.search;
                 this.value = null;
                 this.search = null;
-                this.$.inputSearch.style.display = 'none';
-                this.$.button.setAttribute('icon', 'search');
                 this.playAnimation('exit');
                 this.set('route.path', '/search/' + this.field);
 			},

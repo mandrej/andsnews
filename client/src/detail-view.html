@@ -147,7 +147,7 @@
                 url: {
 					computed: '_url(view, kind, field, value)',
 					notify: true,
-					// observer: 'propertyChanged'
+					observer: 'propertyChanged'
 				},
                 loading: {
                     type: Boolean,
@@ -159,7 +159,6 @@
                 'show-exif': '_showExif'
             },
             _url: function(view, kind, field, value) {
-                console.log(view, kind, field, value);
 				var url, prefix = '/api';
 
                 if (view != 'detail') return url;
