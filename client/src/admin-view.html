@@ -153,7 +153,7 @@
                 return item.kind == 'photo';
             },
             editRec: function(e) {
-                this.field = e.model.item.slug;
+                this.field = e.model.item.safe_key;
                 this.value = null;
                 this.set('route.path', ['', 'admin', this.kind, this.field].join('/'));
             },

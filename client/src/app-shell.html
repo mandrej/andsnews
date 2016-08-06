@@ -96,7 +96,7 @@
 		/:kind/:field/:value	detail view		/photo/date/2015
 		/search/:find			detail view		/search/ana
 		/admin/:kind			admin view		/admin/photo
-		/admin/:kind/:slug		form view		/admin/photo/wet-red
+		/admin/:kind/:safe_key	form view		/admin/photo/agxkZXZ-YW5kc25ld3NyGgsSBVBob3RvIg9uYXNlLXBsYXZvLW9rY2UM
 		-->
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -110,7 +110,7 @@
 
 		<app-route
 			route="{{tailAdmin}}"
-			pattern="/:slug"
+			pattern="/:safe_key"
 			data="{{dataForm}}"
 			active="{{activeForm}}"></app-route>
 
@@ -216,7 +216,7 @@
 					</template>
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[_isAdminView(activeView)]]">
-							<paper-fab icon="add"></paper-fab>
+							<paper-fab icon="add" on-tap="addRecord"></paper-fab>
 						</template>
 						<template is="dom-if" if="[[!_isAdminView(activeView)]]">
 							<paper-spinner active$="[[loading]]"></paper-spinner>
@@ -255,7 +255,7 @@
 						data-view="form"
 						view="[[activeView]]"
 						kind="[[dataAdmin.kind]]"
-						slug="[[dataForm.slug]]"
+						safe_key="[[dataForm.safe_key]]"
 						route="{{route}}"></form-view>
 				</neon-animated-pages>
 			</main>
@@ -270,8 +270,8 @@
 					this.set('route.path', '/photo');
 					this.set('dataKind.kind', 'photo');
 				}
-				this.set('dataField.field', null);
-				this.set('dataValue.value', null);
+				// this.set('dataField.field', null);
+				// this.set('dataValue.value', null);
 			},
 			properties: {
 				version: { type: String, value: '1608 05T11'},
@@ -332,6 +332,9 @@
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
             },
+			addRecord: function() {
+				this.set('route.path', ['', 'admin', this.dataAdmin.kind, 'add'].join('/'));
+			}
 		});
 	</script>
 </dom-module>

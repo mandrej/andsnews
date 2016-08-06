@@ -3,7 +3,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<!-- <link rel="import" href="../bower_components/paper-input/paper-input-container.html"> -->
+<link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="form-view">
@@ -17,43 +19,84 @@
             .container {
                 margin: 16px;
             }
+            h1 {
+                font-weight: 300;
+            }
+            paper-button {
+                color: var(--dark-theme-base-color);
+                background-color: var(--primary-color);
+            }
         </style>
 
         <iron-ajax auto
-			url="{{_url(view, kind, slug)}}"
+			url="{{_url(view, kind, safe_key)}}"
 			handle-as="json"
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
 
         <div class="container">
-            <form is="iron-form" id="form" method="put" action="/api/{{kind}}/{{slug}}">
-                <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
-                <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
-                <!-- <datalist id="tags">
-                    <template is="dom-repeat" items="{{obj.tags}}" index-as="index">
-                        <option value="{{item}}"></option>
+
+            <form is="iron-form" id="form">
+                <template is="dom-if" if="[[_isAdd(safe_key)]]">
+                    <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+                        <h1>[[_edit_add(safe_key)]] [[kind]]</h1>
+
+                        <vaadin-upload
+                            target="/api/{{kind}}/add"
+                            method="POST"
+                            max-files="1"
+                            on-upload-response="_uploadResponse"
+                            accept="image/*"></vaadin-upload>
                     </template>
-                </datalist>
-                <paper-input name="tags" label="tags" list id="tags"></paper-input> -->
-                <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
 
-                <p style="text-align: right;">
-                    <paper-button on-tap="_submit">Submit</paper-button>
-                    <paper-button on-tap="_reset">Reset</paper-button>
-                </p>
+                    <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                        <div class="layout horizontal center justified">
+                            <h1 class="self-center">[[_edit_add(safe_key)]] [[kind]]</h1>
+                            <div class="self-center">
+                                <paper-button on-tap="_reset">Reset</paper-button>
+                                <paper-button on-tap="_submit">Submit</paper-button>
+                            </div>
+                        </div>
 
-                <template is="dom-if" if="[[_isKindPhoto(obj)]]">
-                    <paper-input name="photo" label="photo" value="{{obj.filename}}" type="file"></paper-input>
+                        <paper-input name="headline" label="headline"></paper-input>
+                        <paper-input name="author" label="author"></paper-input>
+                        <paper-input name="tags" label="tags"></paper-input>
 
-                    <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
-                    <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
-                    <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                    <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
-                    <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+                        <paper-textarea name="summary" label="summary"></paper-textarea>
+                        <paper-textarea name="body" label="body"></paper-textarea>
+                    </template>
                 </template>
-                <template is="dom-if" if="[[!_isKindPhoto(obj)]]">
-                    <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
-                    <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
+
+                <template is="dom-if" if="[[!_isAdd(safe_key)]]">
+                    <div class="layout horizontal center justified">
+                        <h1 class="self-center">[[_edit_add(safe_key)]] [[kind]]</h1>
+                        <div class="self-center">
+                            <paper-button on-tap="_reset">Reset</paper-button>
+                            <paper-button on-tap="_submit">Submit</paper-button>
+                        </div>
+                    </div>
+
+                    <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
+                    <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
+                    <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
+
+                    <template is="dom-if" if="[[_isItemPhoto(obj)]]">
+                        <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
+                        <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
+                        <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
+                        <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
+                        <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+
+                        <paper-input name="focal_length" label="focal_length" value="{{obj.focal_length}}"></paper-input>
+                        <paper-input name="crop_factor" label="crop_factor" value="{{obj.crop_factor}}"></paper-input>
+                        <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
+                    </template>
+
+                    <template is="dom-if" if="[[!_isItemPhoto(obj)]]">
+                        <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
+                        <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
+                        <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
+                    </template>
                 </template>
             </form>
         </div>
@@ -63,20 +106,46 @@
             is: 'form-view',
             properties: {
                 kind: { type: String, value: null, notify: true },
-				field: { type: String, value: null, notify: true },
+                safe_key: { type: String, value: null, notify: true },
             },
-            _url: function(view, kind, slug) {
-                if (view != 'form') return;
-                return ['/api', kind, slug].join('/');
+            _url: function(view, kind, safe_key) {
+                if (view != 'form' || safe_key == 'add') return;
+                return ['/api', kind, safe_key].join('/');
             },
-            _isKindPhoto: function(item) {
+            _isKindPhoto: function(kind) {
+                return kind == 'photo';
+            },
+            _isItemPhoto: function(item) {
                 return item.kind == 'photo';
+            },
+            _isAdd: function(safe_key) {
+                return safe_key == 'add';
+            },
+            _edit_add: function(safe_key) {
+                return this._isAdd(safe_key) ? 'add' : 'edit';
             },
             _reset: function(e) {
                 this.$.form.reset();
             },
+            _uploadResponse: function(e) {
+                var res = JSON.parse(e.detail.xhr.responseText);
+                console.log(res);
+                this.safe_key = res.safe_key
+                // this.set('route.path', ['', 'admin', this.kind, this.safe_key].join('/'));
+            },
             _submit: function(e) {
-                this.$.form.submit();
+                var form = this.$.form,
+                    method, action;
+                if (this.safe_key == 'add') {
+                    method = 'post';
+                    action = ['/api', this.kind, 'add'].join('/');
+                } else {
+                    method = 'put';
+                    action = ['/api', this.kind, this.safe_key].join('/');
+                }
+                form.setAttribute('method', method);
+                form.setAttribute('action', action);
+                form.submit();
             }
         });
     </script>
