@@ -226,6 +226,7 @@ class PhotoForm(RestHandler):
         if obj is None:
             self.abort(404)
         data = dict(self.request.params)
+        logging.error(data)
         obj.edit(data)
 
 

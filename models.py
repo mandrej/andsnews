@@ -542,16 +542,18 @@ class Photo(ndb.Model):
         del data['author']
 
         old = self.date
-        new = data['date']
+        new = datetime.datetime.strptime(data['date'], '%Y-%m-%dT%H:%M:%S')  # 2016-05-21T15:37:59
         if old != new:
             decr_count(self.kind, 'date', self.year)
             incr_count(self.kind, 'date', new.year)
         else:
             del data['date']
 
-        update_tags(self.kind, self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-        del data['tags']
+        if 'tags' in data:
+            tags = map(unicode.strip, data['tags'].split(','))
+            update_tags(self.kind, self.tags, tags)
+            self.tags = sorted(tags)
+            del data['tags']
 
         if data['focal_length']:
             old = self.focal_length

@@ -2,9 +2,9 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<!-- <link rel="import" href="../bower_components/paper-input/paper-input-container.html"> -->
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
@@ -25,6 +25,12 @@
             paper-button {
                 color: var(--dark-theme-base-color);
                 background-color: var(--primary-color);
+                text-transform: lowercase;
+            }
+            vaadin-upload {
+                --vaadin-upload-button-add: {
+                    text-transform: lowercase;
+                }
             }
         </style>
 
@@ -43,7 +49,6 @@
 
                         <vaadin-upload
                             target="/api/{{kind}}/add"
-                            method="POST"
                             max-files="1"
                             on-upload-response="_uploadResponse"
                             accept="image/*"></vaadin-upload>
@@ -79,6 +84,7 @@
                     <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
                     <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
                     <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
+                    <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
 
                     <template is="dom-if" if="[[_isItemPhoto(obj)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
@@ -89,13 +95,11 @@
 
                         <paper-input name="focal_length" label="focal_length" value="{{obj.focal_length}}"></paper-input>
                         <paper-input name="crop_factor" label="crop_factor" value="{{obj.crop_factor}}"></paper-input>
-                        <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
                     </template>
 
                     <template is="dom-if" if="[[!_isItemPhoto(obj)]]">
                         <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
                         <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
-                        <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
                     </template>
                 </template>
             </form>
@@ -131,7 +135,7 @@
                 var res = JSON.parse(e.detail.xhr.responseText);
                 console.log(res);
                 this.safe_key = res.safe_key
-                // this.set('route.path', ['', 'admin', this.kind, this.safe_key].join('/'));
+                this.set('route.path', ['', 'admin', this.kind, this.safe_key].join('/'));
             },
             _submit: function(e) {
                 var form = this.$.form,
