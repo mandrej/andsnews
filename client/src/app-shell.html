@@ -96,7 +96,7 @@
 		/:kind/:field/:value	detail view		/photo/date/2015
 		/search/:find			detail view		/search/ana
 		/admin/:kind			admin view		/admin/photo
-		/admin/:kind/:safe_key	form view		/admin/photo/agxkZXZ-YW5kc25ld3NyGgsSBVBob3RvIg9uYXNlLXBsYXZvLW9rY2UM
+		/admin/:kind/:safekey	form view		/admin/photo/agxkZXZ-YW5kc25ld3NyGgsSBVBob3RvIg9uYXNlLXBsYXZvLW9rY2UM
 		-->
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -110,7 +110,7 @@
 
 		<app-route
 			route="{{tailAdmin}}"
-			pattern="/:safe_key"
+			pattern="/:safekey"
 			data="{{dataForm}}"
 			active="{{activeForm}}"></app-route>
 
@@ -255,7 +255,7 @@
 						data-view="form"
 						view="[[activeView]]"
 						kind="[[dataAdmin.kind]]"
-						safe_key="[[dataForm.safe_key]]"
+						safekey="[[dataForm.safekey]]"
 						route="{{route}}"></form-view>
 				</neon-animated-pages>
 			</main>

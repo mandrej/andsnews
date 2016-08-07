@@ -35,7 +35,7 @@
         </style>
 
         <iron-ajax auto
-			url="{{_url(view, kind, safe_key)}}"
+			url="{{_url(view, kind, safekey)}}"
 			handle-as="json"
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
@@ -43,9 +43,9 @@
         <div class="container">
 
             <form is="iron-form" id="form">
-                <template is="dom-if" if="[[_isAdd(safe_key)]]">
+                <template is="dom-if" if="[[_isAdd(safekey)]]">
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                        <h1>[[_edit_add(safe_key)]] [[kind]]</h1>
+                        <h1>[[_edit_add(safekey)]] [[kind]]</h1>
 
                         <vaadin-upload
                             target="/api/{{kind}}/add"
@@ -56,7 +56,7 @@
 
                     <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
                         <div class="layout horizontal center justified">
-                            <h1 class="self-center">[[_edit_add(safe_key)]] [[kind]]</h1>
+                            <h1 class="self-center">[[_edit_add(safekey)]] [[kind]]</h1>
                             <div class="self-center">
                                 <paper-button on-tap="_reset">Reset</paper-button>
                                 <paper-button on-tap="_submit">Submit</paper-button>
@@ -72,9 +72,9 @@
                     </template>
                 </template>
 
-                <template is="dom-if" if="[[!_isAdd(safe_key)]]">
+                <template is="dom-if" if="[[!_isAdd(safekey)]]">
                     <div class="layout horizontal center justified">
-                        <h1 class="self-center">[[_edit_add(safe_key)]] [[kind]]</h1>
+                        <h1 class="self-center">[[_edit_add(safekey)]] [[kind]]</h1>
                         <div class="self-center">
                             <paper-button on-tap="_reset">Reset</paper-button>
                             <paper-button on-tap="_submit">Submit</paper-button>
@@ -110,11 +110,11 @@
             is: 'form-view',
             properties: {
                 kind: { type: String, value: null, notify: true },
-                safe_key: { type: String, value: null, notify: true },
+                safekey: { type: String, value: null, notify: true },
             },
-            _url: function(view, kind, safe_key) {
-                if (view != 'form' || safe_key == 'add') return;
-                return ['/api', kind, safe_key].join('/');
+            _url: function(view, kind, safekey) {
+                if (view != 'form' || safekey == 'add') return;
+                return ['/api', kind, safekey].join('/');
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';
@@ -122,11 +122,11 @@
             _isItemPhoto: function(item) {
                 return item.kind == 'photo';
             },
-            _isAdd: function(safe_key) {
-                return safe_key == 'add';
+            _isAdd: function(safekey) {
+                return safekey == 'add';
             },
-            _edit_add: function(safe_key) {
-                return this._isAdd(safe_key) ? 'add' : 'edit';
+            _edit_add: function(safekey) {
+                return this._isAdd(safekey) ? 'add' : 'edit';
             },
             _reset: function(e) {
                 this.$.form.reset();
@@ -134,18 +134,18 @@
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText);
                 console.log(res);
-                this.safe_key = res.safe_key
-                this.set('route.path', ['', 'admin', this.kind, this.safe_key].join('/'));
+                this.safekey = res.safekey
+                this.set('route.path', ['', 'admin', this.kind, this.safekey].join('/'));
             },
             _submit: function(e) {
                 var form = this.$.form,
                     method, action;
-                if (this.safe_key == 'add') {
+                if (this.safekey == 'add') {
                     method = 'post';
                     action = ['/api', this.kind, 'add'].join('/');
                 } else {
                     method = 'put';
-                    action = ['/api', this.kind, this.safe_key].join('/');
+                    action = ['/api', this.kind, this.safekey].join('/');
                 }
                 form.setAttribute('method', method);
                 form.setAttribute('action', action);

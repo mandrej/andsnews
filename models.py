@@ -643,7 +643,7 @@ class Photo(ndb.Model):
             'focal_length', 'crop_factor'))
         data.update({
             'kind': self.kind.lower(),
-            'safe_key': self.key.urlsafe(),
+            'safekey': self.key.urlsafe(),
             # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
             'dim': self.dim,
@@ -779,7 +779,7 @@ class Entry(ndb.Model):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
             'kind': self.kind.lower(),
-            'safe_key': self.key.urlsafe(),
+            'safekey': self.key.urlsafe(),
             # 'url': webapp2.uri_for('entry', slug=self.key.string_id()),
         })
         if self.front != -1:

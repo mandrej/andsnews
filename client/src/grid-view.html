@@ -108,7 +108,7 @@
 				this.set('route.path', ['', this.kind, this.field, this.value].join('/'));
 			},
             repeatRender: function() {
-                var nodes = Polymer.dom(this.root).querySelectorAll('.rec')
+                var nodes = Polymer.dom(this.shadowRoot).querySelectorAll('.rec')
                 this.animationConfig['entry'][0].nodes = nodes;
                 this.animationConfig['entry'][1].nodes = nodes;
                 this.playAnimation('entry');
