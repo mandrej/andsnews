@@ -542,7 +542,7 @@ class Photo(ndb.Model):
         del data['author']
 
         old = self.date
-        new = datetime.datetime.strptime(data['date'], '%Y-%m-%dT%H:%M:%S')  # 2016-05-21T15:37:59
+        new = data['date']
         if old != new:
             decr_count(self.kind, 'date', self.year)
             incr_count(self.kind, 'date', new.year)

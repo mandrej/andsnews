@@ -6,6 +6,8 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="form-view">
@@ -40,6 +42,12 @@
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
 
+        <iron-ajax auto
+			url="/complete/Photo_lens"
+			handle-as="json"
+			last-response="{{lens_cloud}}"
+			debounce-duration="300"></iron-ajax>
+
         <div class="container">
 
             <form is="iron-form" id="form">
@@ -64,7 +72,11 @@
                         </div>
 
                         <paper-input name="headline" label="headline"></paper-input>
-                        <paper-input name="author" label="author"></paper-input>
+                        <vaadin-combo-box
+                            name="author"
+                            label="author"
+                            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com"]'>
+                            </vaadin-combo-box>
                         <paper-input name="tags" label="tags"></paper-input>
 
                         <paper-textarea name="summary" label="summary"></paper-textarea>
@@ -82,13 +94,30 @@
                     </div>
 
                     <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
-                    <paper-input name="author" label="author" value="{{obj.author}}"></paper-input>
+                    <vaadin-combo-box
+                        required
+                        auto-validate
+                        name="author"
+                        label="author"
+                        allow-custom-value="true"
+                        items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com"]'
+                        value="{{obj.author}}"></vaadin-combo-box>
                     <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
-                    <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
+                    <vaadin-date-picker
+                        name="date"
+                        label="date"
+                        value="{{_dateFormat(obj.date)}}"></vaadin-date-picker>
 
                     <template is="dom-if" if="[[_isItemPhoto(obj)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
-                        <paper-input name="lens" label="lens" value="{{obj.lens}}"></paper-input>
+                        <vaadin-combo-box
+                            name="lens"
+                            label="lens"
+                            allow-custom-value="true"
+                            items="{{lens_cloud}}"
+                            item-label-path="id"
+                            item-value-path="value"
+                            value="{{obj.lens}}"></vaadin-combo-box>
                         <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
                         <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
                         <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
@@ -112,6 +141,10 @@
                 kind: { type: String, value: null, notify: true },
                 safekey: { type: String, value: null, notify: true },
             },
+            // listeners: {
+            //     'on_iron-form-presubmit': '_alterData',
+            //     'on_iron-form-submit': '_submitData'
+            // },
             _url: function(view, kind, safekey) {
                 if (view != 'form' || safekey == 'add') return;
                 return ['/api', kind, safekey].join('/');
@@ -128,6 +161,9 @@
             _edit_add: function(safekey) {
                 return this._isAdd(safekey) ? 'add' : 'edit';
             },
+            _dateFormat: function(str) {
+                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD');
+            },
             _reset: function(e) {
                 this.$.form.reset();
             },
@@ -137,6 +173,14 @@
                 this.safekey = res.safekey
                 this.set('route.path', ['', 'admin', this.kind, this.safekey].join('/'));
             },
+            // _alterData: function(e) {
+            //     var date = this.request.params['date'];
+            //     this.request.params['date'] = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DDTHH:mm:ss');
+            //     console.log(this.request.params['date']);
+            // },
+            // _submitData: function(e) {
+            //     console.log(e.detail);
+            // },
             _submit: function(e) {
                 var form = this.$.form,
                     method, action;
@@ -149,8 +193,12 @@
                 }
                 form.setAttribute('method', method);
                 form.setAttribute('action', action);
+
+                var json = form.serialize();
+                console.log(json);
                 form.submit();
             }
         });
     </script>
+    <script src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>

@@ -210,7 +210,8 @@
                 return item.kind == 'photo';
             },
             _dateFormat: function(str) {
-                return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
+                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
+                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
                 // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
             },
             _showExif: function(e) {
@@ -272,5 +273,5 @@
             }
         });
     </script>
-    <script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>

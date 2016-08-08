@@ -4,6 +4,7 @@ import json
 import uuid
 import logging
 import webapp2
+import datetime
 import cloudstorage as gcs
 from operator import itemgetter
 from PIL import Image
@@ -226,6 +227,7 @@ class PhotoForm(RestHandler):
         if obj is None:
             self.abort(404)
         data = dict(self.request.params)
+        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
         logging.error(data)
         obj.edit(data)
 
