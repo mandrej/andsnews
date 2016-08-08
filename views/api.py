@@ -49,6 +49,7 @@ class Collection(RestHandler):
 class Record(RestHandler):
     def get(self, kind=None, safe_key=None):
         obj = ndb.Key(urlsafe=safe_key).get()
+        logging.error(obj)
         if obj is None:
             self.abort(404)
 
@@ -212,13 +213,14 @@ class PhotoForm(RestHandler):
             # SAVE EVERYTHING
             obj.put()
 
-            incr_count(Photo, 'author', obj.author.nickname())
-            incr_count(Photo, 'date', obj.year)
-            for field in PHOTO_FIELDS:
-                value = getattr(obj, field, None)
-                if value:
-                    incr_count(Photo, field, value)
-            deferred.defer(obj.index_doc)
+            # TODO _MAX_KEYPART_BYTES, idorname ValueError: Key name strings must be non-empty strings up to 500 bytes
+            # incr_count(Photo, 'author', obj.author.nickname())
+            # incr_count(Photo, 'date', obj.year)
+            # for field in PHOTO_FIELDS:
+            #     value = getattr(obj, field, None)
+            #     if value:
+            #         incr_count(Photo, field, value)
+            # deferred.defer(obj.index_doc)
 
             self.render({'success': True, 'safe_key':  obj.key.urlsafe()})
 
@@ -226,8 +228,16 @@ class PhotoForm(RestHandler):
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
+
         data = dict(self.request.params)
+        # alter data
+        # {u'lens': u'', u'author': u'milan.andrejevic@gmail.com', u'date': datetime.datetime(2016, 2, 26, 0, 0),
+        # u'model': u'SIGMA dp2 Quattro', u'aperture': 3.2, u'focal_length': 30.0, u'iso': 100, u'shutter': u'1/60',
+        # u'headline': u'SDIM4308.jpg'}
         data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
+        data['focal_length'] = float(data['focal_length'])
+        data['aperture'] = float(data['aperture'])
+        data['iso'] = int(data['iso'])
         logging.error(data)
         obj.edit(data)
 

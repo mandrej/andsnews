@@ -167,9 +167,11 @@
             },
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText);
-                console.log(res);
-                this.safekey = res.safekey
-                this.set('route.path', ['', 'admin', this.kind, this.safekey].join('/'));
+                console.log(res, this.kind);
+                if (res.success) {
+                    this.safekey = res.safe_key;
+                    this.set('route.path', ['', 'admin', this.kind, this.safekey].join('/'));
+                }
             },
             // _alterData: function(e) {
             //     var date = this.request.params['date'];
@@ -181,16 +183,19 @@
             // },
             _submit: function(e) {
                 var form = this.$.form,
-                    method, action;
+                    method, action, contentType;
                 if (this.safekey == 'add') {
                     method = 'post';
                     action = ['/api', this.kind, 'add'].join('/');
+                    contentType = 'multipart/form-data';
                 } else {
                     method = 'put';
                     action = ['/api', this.kind, this.safekey].join('/');
+                    contentType = 'application/json';
                 }
                 form.setAttribute('method', method);
                 form.setAttribute('action', action);
+                form.setAttribute('content-type', contentType);
 
                 var json = form.serialize();
                 console.log(json);

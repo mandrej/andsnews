@@ -89,9 +89,8 @@
                                 [[_dateFormat(item.date)]]<br>
                                 [[item.author]]<br><br>
                                 [[item.model]]<br>
-                                [[item.lens]]<br>
-                                <br>
-                                [[item.iso]] ASA
+                                [[item.lens]] ([[item.focal_length]]mm)<br>
+                                f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
                             </p>
                             <p>
                                 <paper-button dialog-confirm on-tap="downloadImg" data-url="[[item.download_url]]">
