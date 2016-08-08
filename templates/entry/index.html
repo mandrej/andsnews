@@ -6,7 +6,7 @@
 {% block contents %}
     <div id="gallery" class="row">
         {% for object in objects %}
-            <a href="{{ uri_for('entry', slug=object.key.string_id()) }}" class="blog">
+            <a href="{{ uri_for('entry', safe_key= object.key.urlsafe()) }}" class="blog">
                 <div class="card waves-effect z-depth-0">
                     <div class="card-content">
                         <span class="card-title">{{ object.headline }}</span>

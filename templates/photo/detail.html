@@ -2,7 +2,7 @@
 {% block paging %}
     {% with %}
         {% set name='photo_all' %}
-        {% set slug=slug %}
+        {% set safe_key=safe_key %}
         {% include 'snippets/paging.html' %}
     {% endwith %}
 {% endblock %}
@@ -38,9 +38,9 @@
         $(function () {
             var page = $.getQueryParameters().page,
                 ids = $('.card').map(function() {
-                    return this.id
+                    return this.safe_key
                 }).get(),
-                index = $.inArray('{{ slug }}', ids),
+                index = $.inArray('{{ safe_key }}', ids),
                 max = parseInt('{{ max }}'),
                 pages = [];
 
@@ -97,8 +97,8 @@
                     }
                 },
                 onSlideChangeEnd: function(sw) {
-                    var slug = sw.slides[sw.activeIndex].id;
-                    window.history.replaceState(location.pathname, '', slug);
+                    var safe_key = sw.slides[sw.activeIndex].safe_key;
+                    window.history.replaceState(location.pathname, '', safe_key);
                     $('html, body').animate({scrollTop: 0});
                 }
             });

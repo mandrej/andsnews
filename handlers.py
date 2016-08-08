@@ -301,12 +301,12 @@ class RenderCloud(BaseHandler):
         else:
             items = Cloud(mem_key).get_list()
 
-            if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            if field in ('tags', 'author', 'model', 'lens', 'iso',):
                 items = sorted(items, key=itemgetter('count'), reverse=True)
 
             if field == 'date':
                 items = sorted(items, key=itemgetter('name'), reverse=True)
-            elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            elif field in ('tags', 'author', 'model', 'lens', 'iso',):
                 items = sorted(items, key=itemgetter('name'), reverse=False)
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))

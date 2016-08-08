@@ -94,11 +94,10 @@
     {% set _color = {'field': 'color', 'title': _('Color')} %}
     {% set _model = {'field': 'model', 'title': _('Camera model')} %}
     {% set _lens = {'field': 'lens', 'title': _('Lens type')} %}
-    {% set _eqv = {'field': 'eqv', 'title': _('Eqv. focal length')} %}
     {% set _iso = {'field': 'iso', 'title': _('Sensitivity')} %}
 
     {% if kind == 'photo' %}
-        {{ filters_html([_tags, _date, _author, _color, _model, _lens, _eqv, _iso], kind) }}
+        {{ filters_html([_tags, _date, _author, _color, _model, _lens, _iso], kind) }}
     {% endif %}
     {% if kind == 'entry' %}
         {{ filters_html([_tags, _date, _author], kind) }}

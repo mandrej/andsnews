@@ -32,10 +32,10 @@
     <div id="gallery">
         {% for object in objects %}
             {% if object.kind == 'Photo' %}
-                {% set url = uri_for('photo', slug=object.key.string_id()) %}
+                {% set url = uri_for('photo', safe_key= object.key.urlsafe()) %}
                 {% set cls = 'found thumbnail' %}
             {% elif object.kind == 'Entry' %}
-                {% set url = uri_for('entry', slug=object.key.string_id()) %}
+                {% set url = uri_for('entry', safe_key= object.key.urlsafe()) %}
                 {% set cls = 'found blog' %}
             {% endif %}
 

@@ -90,7 +90,7 @@
                                 [[item.author]]<br><br>
                                 [[item.model]]<br>
                                 [[item.lens]]<br>
-                                [[item.eqv]] mm<br>
+                                <br>
                                 [[item.iso]] ASA
                             </p>
                             <p>
@@ -215,7 +215,7 @@
                 // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
             },
             _showExif: function(e) {
-                var id = e.target.items[this.start].safekey, // id = e.model.item.slug,
+                var id = e.target.items[this.start].safekey,
                     dialog = this.$$('#' + id);
                 if (dialog) {
                     dialog.open();

@@ -6,7 +6,7 @@
 
 {% if next %}
     {% set qs = {'page': next} %}
-    {% if slug %}{% do qs.update({'slug': slug}) %}{% endif %}
+    {% if safe_key %}{% do qs.update({'safe_key': safe_key}) %}{% endif %}
     {% if phrase %}{% do qs.update({'find': phrase}) %}{% endif %}
     <li class="waves-effect">
         <a href="{{ url|querystring(qs) }}" class="next">

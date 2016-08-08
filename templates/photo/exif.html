@@ -16,10 +16,6 @@
         {% endfor %}
         {{ chip(url=uri_for('photo_all_filter', field='date', value=object.year),
             title=_('photos taken same year'), text=object.year) }}
-        {% if object.eqv %}
-            {{ chip(url=uri_for('photo_all_filter', field='eqv', value=object.eqv),
-                title=_('photos with same equvalent focal length'), text='%smm' % object.eqv) }}
-        {% endif %}
         {% if object.iso %}
             {{ chip(url=uri_for('photo_all_filter', field='iso', value=object.iso),
                 title=_('photos with same iso'), text='%s ASA' % object.iso) }}

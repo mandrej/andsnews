@@ -46,7 +46,7 @@
         {% for object in objects %}
             {% if user == object.author or is_admin %}
                 <h5>
-                    <a class="btn waves-effect" href="{{ uri_for('entry_edit', slug=object.key.string_id()) }}">
+                    <a class="btn waves-effect" href="{{ uri_for('entry_edit', safe_key= object.key.urlsafe()) }}">
                         <i class="material-icons left">edit</i>{{ object.headline }}
                     </a>
                     <a class="confirm btn waves-effect right hide-on-small-only" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">

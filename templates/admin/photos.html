@@ -70,12 +70,12 @@
                         {% endif %}
                         <tr>
                             <td>
-                                <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}">
+                                <a href="{{ url|querystring({'page': page, 'safe_key': object.key.urlsafe()}) }}">
                                     <img src="{{ object.serving_url }}=s400" width="50"/>
                                 </a>
                             </td>
                             <td>
-                                <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}">
+                                <a href="{{ url|querystring({'page': page, 'safe_key': object.key.urlsafe()}) }}">
                                     {{ object.headline }}
                                 </a>
                             </td>
@@ -104,7 +104,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a class="btn waves-effect" href="{{ uri_for('photo_edit', slug=object.key.string_id()) }}">
+                                <a class="btn waves-effect" href="{{ uri_for('photo_edit', safe_key= object.key.urlsafe()) }}">
                                     <i class="material-icons">edit</i></a>
                                 <a class="confirm btn waves-effect" href="{{ uri_for('delete', safe_key=object.key.urlsafe()) }}">
                                     <i class="material-icons">delete</i></a>

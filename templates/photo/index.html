@@ -11,7 +11,7 @@
             {% else %}
                 {% set url = uri_for('photo_all') %}
             {% endif %}
-            <a href="{{ url|querystring({'page': page, 'slug': object.key.string_id()}) }}" class="thumbnail">
+            <a href="{{ url|querystring({'page': page, 'safe_key': object.key.urlsafe()}) }}" class="thumbnail">
                 <div class="card waves-effect z-depth-0">
                     <div class="card-image">
                         <img src="{{ object.serving_url }}=s400">

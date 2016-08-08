@@ -14,7 +14,7 @@ from google.appengine.ext import ndb, blobstore, deferred
 from handlers import LazyEncoder, Paginator, SearchPaginator
 from models import Cloud, Entry, Photo, get_exif, rgb_hls, range_names, incr_count, decr_count, update_tags, rounding, PHOTO_FIELDS
 from palette import extract_colors
-from config import TIMEOUT, LENGTHS
+from config import TIMEOUT
 
 LIMIT = 12
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
@@ -91,12 +91,12 @@ def cloud_representation(kind):
             limit = cloud_limit(cloud)
             items = [x for x in cloud if x['count'] > limit]
 
-            if field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            if field in ('tags', 'author', 'model', 'lens', 'iso',):
                 items = sorted(items, key=itemgetter('count'), reverse=True)
 
             if field == 'date':
                 items = sorted(items, key=itemgetter('name'), reverse=True)
-            elif field in ('tags', 'author', 'model', 'lens', 'eqv', 'iso',):
+            elif field in ('tags', 'author', 'model', 'lens', 'iso',):
                 items = sorted(items, key=itemgetter('name'), reverse=False)
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))

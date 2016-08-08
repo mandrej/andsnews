@@ -1,14 +1,12 @@
 {% from "snippets/macros.html" import chip %}
 
-{% if field_name in ['date', 'iso', 'eqv'] %} {# integers #}
+{% if field_name in ['date', 'iso'] %} {# integers #}
     {% for item in items %}
         {% if item.count > limit %}
             {% set selected = item.name == filter.value|int if filter else False %}
             {% set text = item.name %}
             {% if field_name == 'iso' %}
                 {% set text = '%s ASA' % item.name %}
-            {% elif field_name == 'eqv' %}
-                {% set text = '%smm' % item.name %}
             {% endif %}
             {{ chip(url=uri_for(link, field=field_name, value=item.name),
                 classes=['selected' if selected], text=text) }}

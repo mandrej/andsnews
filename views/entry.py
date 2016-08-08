@@ -32,8 +32,8 @@ class Index(BaseHandler):
 
 
 class Detail(BaseHandler):
-    def get(self, slug):
-        obj = Entry.get_by_id(slug)
+    def get(self, safe_key):
+        obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
         self.render_template('entry/detail.html', {'object': obj, 'filter': None})
@@ -66,18 +66,12 @@ class ImgEditForm(Form):
 
 class AddForm(Form):
     headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
-    slug = fields.StringField(_('Slug'), validators=[validators.DataRequired()])
     tags = TagsField(_('Tags'), description='Comma separated values')
     author = fields.StringField(_('Author'), validators=[validators.DataRequired()])
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
     newimages = FieldList(FormField(ImgAddForm))
-
-    @staticmethod
-    def validate_slug(form, field):
-        if Entry.get_by_id(field.data):
-            raise validators.ValidationError(_('Record with this slug already exist'))
 
 
 class EditForm(Form):
@@ -104,7 +98,7 @@ class Add(BaseHandler):
     def post(self):
         form = AddForm(formdata=self.request.POST)
         if form.validate():
-            obj = Entry(id=form.slug.data)
+            obj = Entry(headline=form.headline.data)
             obj.add(form.data)
             self.redirect_to('entry_admin')
         else:
@@ -119,8 +113,8 @@ def front_choices(obj):
 
 class Edit(BaseHandler):
     @admin_required
-    def get(self, slug, form=None):
-        obj = Entry.get_by_id(slug)
+    def get(self, safe_key, form=None):
+        obj = ndb.Key(urlsafe=safe_key).get()
         if not any([self.is_admin, self.user == obj.author]):
             self.abort(403)
         if form is None:
@@ -132,8 +126,8 @@ class Edit(BaseHandler):
         self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
-    def post(self, slug):
-        obj = Entry.get_by_id(slug)
+    def post(self, safe_key):
+        obj = ndb.Key(urlsafe=safe_key).get()
         form = EditForm(formdata=self.request.POST)
         form.front.choices = front_choices(obj)
         if form.validate():

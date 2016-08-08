@@ -7,7 +7,6 @@ import colorsys
 import datetime
 import itertools
 import logging
-import math
 import uuid
 from cStringIO import StringIO
 from decimal import *
@@ -16,11 +15,10 @@ import webapp2
 from PIL import Image
 from google.appengine.api import users, memcache, search, images
 from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.runtime import apiproxy_errors
 from webapp2_extras.i18n import lazy_gettext as _
 
 import cloudstorage as gcs
-from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT, BUCKET
+from config import COLORS, ASA, HUE, LUM, SAT, TIMEOUT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
 
@@ -30,7 +28,7 @@ INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
-PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
+PHOTO_FIELDS = ('model', 'lens', 'iso', 'color',)
 ENTRY_IMAGES = 20
 LOGARITHMIC, LINEAR = 1, 2
 
@@ -131,10 +129,6 @@ def get_exif(buff):
     if 'EXIF FocalLength' in tags:
         getcontext().prec = 2
         data['focal_length'] = float(Decimal(eval(tags['EXIF FocalLength'].printable)))
-
-    if all(tag in tags for tag in ['EXIF FocalLengthIn35mmFilm', 'EXIF FocalLength']):
-        data['crop_factor'] = round(
-            float(Decimal(tags['EXIF FocalLengthIn35mmFilm'].printable)) / data['focal_length'], 1)
 
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
@@ -420,9 +414,7 @@ class Photo(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
-    crop_factor = ndb.FloatProperty()
     # calculated
-    eqv = ndb.IntegerProperty()
     # RGB [86, 102, 102]
     rgb = ndb.IntegerProperty(repeated=True)
     # HLS names
@@ -447,7 +439,7 @@ class Photo(ndb.Model):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                # search.TextField(name='slug', value=tokenize(self.key.string_id())), TODO transliterate headline
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
@@ -487,7 +479,6 @@ class Photo(ndb.Model):
         except gcs.errors, e:
             return {'success': False, 'message': e.message}
         else:
-            self.headline = data['headline']
             # TODO Not all emails are gmail
             self.author = users.User(email='%s@gmail.com' % data['author'])
             self.tags = data['tags']
@@ -561,15 +552,6 @@ class Photo(ndb.Model):
             if old != new:
                 self.focal_length = new
             del data['focal_length']
-        if data['crop_factor']:
-            old = self.crop_factor
-            new = round(data['crop_factor'], 1)
-            if old != new:
-                self.crop_factor = new
-            del data['crop_factor']
-        if self.focal_length and self.crop_factor:
-            value = int(self.focal_length * self.crop_factor)
-            data['eqv'] = rounding(value, LENGTHS)
 
         for field, value in data.items():
             if field in PHOTO_FIELDS:
@@ -639,12 +621,10 @@ class Photo(ndb.Model):
     def serialize(self):
         data = self.to_dict(exclude=(
             'blob_key', 'dim', 'size', 'ratio',
-            'rgb', 'sat', 'lum', 'hue', 'year', 'filename',
-            'focal_length', 'crop_factor'))
+            'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
             'kind': self.kind.lower(),
             'safekey': self.key.urlsafe(),
-            # 'url': webapp2.uri_for('photo', slug=self.key.string_id()),
             'serving_url': self.serving_url,
             'dim': self.dim,
             'download_url': self.download_url
@@ -679,7 +659,7 @@ class Entry(ndb.Model):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                # search.TextField(name='slug', value=tokenize(self.key.string_id())),
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
@@ -779,8 +759,7 @@ class Entry(ndb.Model):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
             'kind': self.kind.lower(),
-            'safekey': self.key.urlsafe(),
-            # 'url': webapp2.uri_for('entry', slug=self.key.string_id()),
+            'safekey': self.key.urlsafe()
         })
         if self.front != -1:
             data.update({

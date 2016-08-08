@@ -13,7 +13,7 @@
     </nav>
     <section>
         {% if object %}
-            <form action="{{ uri_for('entry_edit', slug=object.key.string_id()) }}" enctype="multipart/form-data"  method="post">
+            <form action="{{ uri_for('entry_edit', safe_key= object.key.urlsafe()) }}" enctype="multipart/form-data"  method="post">
         {% else %}
             <form action="{{ uri_for('entry_add') }}" enctype="multipart/form-data" method="post">
         {% endif %}
@@ -29,9 +29,6 @@
 
                     <input name="token" type="hidden" value="{{ session.csrf }}"/>
                     {{ form_row(form.headline, class='validate') }}
-                    {% if not object %}
-                        {{ form_row(form.slug) }}
-                    {% endif %}
                     {{ form_row(form.tags) }}
                     {{ form_row(form.summary, class='materialize-textarea') }}
                     {{ form_row(form.author, class='browser-default') }}
@@ -113,7 +110,6 @@
     <script src="/static/scripts/urlify.min.js"></script>
     <script>
         $(function() {
-            $('#headline').slugify();
             $('#images img').click(function(evt) {
                 evt.preventDefault();
                 src = $(this).attr('src').replace('small', 'normal');
