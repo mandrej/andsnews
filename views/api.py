@@ -27,6 +27,12 @@ class RestHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
+class Suggest(RestHandler):
+    def get(self, mem_key):
+        cloud = Cloud(mem_key).get()
+        self.render(cloud.keys())
+
+
 class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
         page = self.request.get('page', None)

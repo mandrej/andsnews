@@ -6,6 +6,9 @@ from config import CONFIG, DEVEL
 
 app = WSGIApplication([
     # REST API
+    Route(r'/api/suggest/<mem_key>', handler='views.api.Suggest'),
+    Route(r'/api/multi_suggest/<mem_key>', handler='views.api.MultiSuggest'),
+
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
     Route(r'/api/<kind:(photo|entry)>/<field:(model|iso|lens|tags|date|author|color)>/<value>',
           handler='views.api.Collection'),

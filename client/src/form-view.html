@@ -43,9 +43,15 @@
 			debounce-duration="300"></iron-ajax>
 
         <iron-ajax auto
-			url="/complete/Photo_lens"
+			url="/api/suggest/Photo_lens"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
+			debounce-duration="300"></iron-ajax>
+
+        <iron-ajax auto
+			url="/api/suggest/Photo_tags"
+			handle-as="json"
+			last-response="{{tags_cloud}}"
 			debounce-duration="300"></iron-ajax>
 
         <div class="container">
@@ -71,10 +77,12 @@
                             </div>
                         </div>
 
-                        <paper-input name="headline" label="headline"></paper-input>
+                        <paper-input name="headline" required label="headline"></paper-input>
                         <vaadin-combo-box
                             name="author"
                             label="author"
+                            allow-custom-value="true"
+                            pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                             items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com"]'>
                             </vaadin-combo-box>
                         <paper-input name="tags" label="tags"></paper-input>
@@ -93,13 +101,14 @@
                         </div>
                     </div>
 
-                    <paper-input name="headline" label="headline" value="{{obj.headline}}"></paper-input>
+                    <paper-input name="headline" required label="headline" value="{{obj.headline}}"></paper-input>
                     <vaadin-combo-box
                         required
                         auto-validate
                         name="author"
                         label="author"
                         allow-custom-value="true"
+                        pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com"]'
                         value="{{obj.author}}"></vaadin-combo-box>
                     <paper-input name="tags" label="tags" value="{{obj.tags}}"></paper-input>
@@ -115,13 +124,11 @@
                             label="lens"
                             allow-custom-value="true"
                             items="{{lens_cloud}}"
-                            item-label-path="id"
-                            item-value-path="value"
                             value="{{obj.lens}}"></vaadin-combo-box>
-                        <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                        <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
-                        <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
-                        <paper-input name="focal_length" label="focal_length" value="{{obj.focal_length}}"></paper-input>
+                        <paper-input name="aperture" readonly label="aperture" value="{{obj.aperture}}"></paper-input>
+                        <paper-input name="shutter" readonly label="shutter" value="{{obj.shutter}}"></paper-input>
+                        <paper-input name="iso" readonly label="iso" value="{{obj.iso}}"></paper-input>
+                        <paper-input name="focal_length" readonly label="focal_length" value="{{obj.focal_length}}"></paper-input>
                     </template>
 
                     <template is="dom-if" if="[[!_isItemPhoto(obj)]]">

@@ -147,7 +147,7 @@ class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
     @admin_required
     def get(self, form=None):
         if form is None:
-            form = AddForm(author=self.user.nickname())
+            form = AddForm(author=self.user)
         self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
 
     @csrf_protected

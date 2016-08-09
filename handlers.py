@@ -205,7 +205,7 @@ class SaveAsHandler(BaseHandler):
         obj = key.get()
         buff = obj.buffer
         self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
-        logging.info('%s downloaded %s.jpg' % (self.user.nickname(), key.string_id()))
+        logging.info('%s downloaded %s.jpg' % (self.user, key.string_id()))
         self.response.write(buff)
 
 
@@ -356,7 +356,7 @@ class EmailField(fields.SelectField):
         email = user.email()
         if email not in FAMILY:
             FAMILY.append(email)
-        self.choices = [(users.User(x).nickname(), x) for x in FAMILY]
+        self.choices = [(users.User(x), x) for x in FAMILY]
 
 
 class TagsField(fields.StringField):

@@ -45,8 +45,7 @@ def filter_param(field, value):
     if field == 'date':
         field = 'year'
     elif field == 'author':
-        # TODO Not all emails are gmail
-        value = users.User(email='%s@gmail.com' % value)
+        value = users.User(email=value)
     try:
         value = int(value)
     except (ValueError, TypeError):
@@ -235,6 +234,9 @@ class Cloud(object):
     def get_cache(self):
         return memcache.get(self.mem_key)
 
+    def get(self):
+        return self.get_cache() or self.make()
+
     def get_list(self):
         collection = self.get_cache() or self.make()
         # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
@@ -285,8 +287,6 @@ class Cloud(object):
         properties = (getattr(x, prop, None) for x in query)  # generator
         if prop == 'tags':
             properties = list(itertools.chain(*properties))
-        elif prop == 'author':
-            properties = [x.nickname() for x in properties]
         tally = collections.Counter(filter(None, properties))  # filter out None
 
         collection = dict(tally.items())
@@ -437,7 +437,7 @@ class Photo(ndb.Model):
             doc_id=self.key.urlsafe(),
             fields=[
                 # search.TextField(name='slug', value=tokenize(self.key.string_id())), TODO transliterate headline
-                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                # search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
@@ -501,7 +501,7 @@ class Photo(ndb.Model):
             # SAVE EVERYTHING
             self.put()
 
-            incr_count(self.kind, 'author', self.author.nickname())
+            incr_count(self.kind, 'author', self.author)
             update_tags(self.kind, None, self.tags)
             for field in PHOTO_FIELDS:
                 value = getattr(self, field, None)
@@ -511,11 +511,10 @@ class Photo(ndb.Model):
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
-        old = self.author.nickname()
+        old = self.author
         new = data['author']
         if new != old:
-            # TODO Not all emails are gmail
-            self.author = users.User(email='%s@gmail.com' % new)
+            self.author = users.User(email=new)
             decr_count(self.kind, 'author', old)
             incr_count(self.kind, 'author', new)
         del data['author']
@@ -562,7 +561,7 @@ class Photo(ndb.Model):
         deferred.defer(remove_doc, key.urlsafe())
         blobstore.delete(obj.blob_key)
 
-        decr_count(key.kind(), 'author', obj.author.nickname())
+        decr_count(key.kind(), 'author', obj.author)
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
         for field in PHOTO_FIELDS:
@@ -648,7 +647,7 @@ class Entry(ndb.Model):
             doc_id=self.key.urlsafe(),
             fields=[
                 # search.TextField(name='slug', value=tokenize(self.key.string_id())),
-                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                # search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
@@ -676,7 +675,7 @@ class Entry(ndb.Model):
                 img.mime = obj['blob'].headers['Content-Type']
                 img.put()
 
-        incr_count(self.kind, 'author', self.author.nickname())
+        incr_count(self.kind, 'author', self.author)
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
         deferred.defer(self.index_doc)
@@ -724,7 +723,7 @@ class Entry(ndb.Model):
         obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count(key.kind(), 'author', obj.author.nickname())
+        decr_count(key.kind(), 'author', obj.author)
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
 
