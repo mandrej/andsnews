@@ -356,7 +356,7 @@ class EmailField(fields.SelectField):
         email = user.email()
         if email not in FAMILY:
             FAMILY.append(email)
-        self.choices = [(users.User(x), x) for x in FAMILY]
+        self.choices = [(users.User(email=x).email(), x) for x in FAMILY]
 
 
 class TagsField(fields.StringField):

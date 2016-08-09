@@ -287,6 +287,8 @@ class Cloud(object):
         properties = (getattr(x, prop, None) for x in query)  # generator
         if prop == 'tags':
             properties = list(itertools.chain(*properties))
+        elif prop == 'author':
+            properties = [x.email() for x in properties]
         tally = collections.Counter(filter(None, properties))  # filter out None
 
         collection = dict(tally.items())
@@ -501,7 +503,7 @@ class Photo(ndb.Model):
             # SAVE EVERYTHING
             self.put()
 
-            incr_count(self.kind, 'author', self.author)
+            incr_count(self.kind, 'author', self.author.email())
             update_tags(self.kind, None, self.tags)
             for field in PHOTO_FIELDS:
                 value = getattr(self, field, None)
@@ -511,7 +513,7 @@ class Photo(ndb.Model):
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
-        old = self.author
+        old = self.author.email()
         new = data['author']
         if new != old:
             self.author = users.User(email=new)
@@ -561,7 +563,7 @@ class Photo(ndb.Model):
         deferred.defer(remove_doc, key.urlsafe())
         blobstore.delete(obj.blob_key)
 
-        decr_count(key.kind(), 'author', obj.author)
+        decr_count(key.kind(), 'author', obj.author.email())
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
         for field in PHOTO_FIELDS:
@@ -675,7 +677,7 @@ class Entry(ndb.Model):
                 img.mime = obj['blob'].headers['Content-Type']
                 img.put()
 
-        incr_count(self.kind, 'author', self.author)
+        incr_count(self.kind, 'author', self.author.email())
         incr_count(self.kind, 'date', self.year)
         update_tags(self.kind, None, self.tags)
         deferred.defer(self.index_doc)
@@ -723,7 +725,7 @@ class Entry(ndb.Model):
         obj = key.get()
         deferred.defer(remove_doc, key.urlsafe())
 
-        decr_count(key.kind(), 'author', obj.author)
+        decr_count(key.kind(), 'author', obj.author.email())
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
 

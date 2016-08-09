@@ -1,13 +1,12 @@
 from webapp2 import WSGIApplication, Route
 
-from handlers import FrontPage, Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, \
+from handlers import Complete, SetLanguage, Sign, Find, DeleteHandler, RenderCloud, \
     Plain, DrawGraph, SiteMap, SaveAsHandler
 from config import CONFIG, DEVEL
 
 app = WSGIApplication([
     # REST API
     Route(r'/api/suggest/<mem_key>', handler='views.api.Suggest'),
-    Route(r'/api/multi_suggest/<mem_key>', handler='views.api.MultiSuggest'),
 
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
     Route(r'/api/<kind:(photo|entry)>/<field:(model|iso|lens|tags|date|author|color)>/<value>',
@@ -22,7 +21,8 @@ app = WSGIApplication([
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
     Route(r'/api/search/<find>', handler='views.api.Find'),
 
-    Route(r'/api/download/<safe_key:[\w-]+>', handler='views.api.Download', name='download_url'),
+    Route(r'/api/delete/<safe_key>', handler='views.api.Delete', methods=['DELETE']),
+    Route(r'/api/download/<safe_key>', handler='views.api.Download', name='download_url'),
 
     ###
     Route(r'/photos/', handler='views.photo.Index', name='photo_all'),
