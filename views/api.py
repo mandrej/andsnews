@@ -159,85 +159,29 @@ class PhotoForm(RestHandler):
     def post(self):
         data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
         fs = data['file']
-        if fs.done < 0:
-            self.render({'success': False, 'message': 'Upload interrupted'})
-
-        _buffer = fs.value
-        object_name = BUCKET + '/' + fs.filename  # format /bucket/object
-        # Check  GCS stat exist first
-        try:
-            gcs.stat(object_name)
-            object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
-        except gcs.NotFoundError:
-            pass
-
-        # Write to GCS
-        try:
-            write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-            with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
-                f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-            # <class 'google.appengine.api.datastore_types.BlobKey'> or None
-            blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
-            size = f.tell()
-        except gcs.errors, e:
-            self.render({'success': False, 'message':  e.message})
-        else:
-            obj = Photo(headline=fs.filename, blob_key=blob_key, filename=object_name, size=size)
-
-            # Read EXIF
-            exif = get_exif(_buffer)
-            for field, value in exif.items():
-                setattr(obj, field, value)
-
-            # Set dim
-            image_from_buffer = Image.open(StringIO(_buffer))
-            obj.dim = image_from_buffer.size
-
-            # Calculate Pallette
-            image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
-            palette = extract_colors(image_from_buffer)
-            if palette.bgcolor:
-                colors = [palette.bgcolor] + palette.colors
-            else:
-                colors = palette.colors
-
-            _max = 0
-            for c in colors:
-                h, l, s = rgb_hls(c.value)
-                criteria = s * c.prominence
-                if criteria >= _max:  # saturation could be 0
-                    _max = criteria
-                    obj.rgb = c.value
-            obj.hue, obj.lum, obj.sat = range_names(obj.rgb)
-
-            # SAVE EVERYTHING
-            obj.put()
-
-            # TODO _MAX_KEYPART_BYTES, idorname ValueError: Key name strings must be non-empty strings up to 500 bytes
-            # incr_count(Photo, 'author', obj.author.nickname())
-            # incr_count(Photo, 'date', obj.year)
-            # for field in PHOTO_FIELDS:
-            #     value = getattr(obj, field, None)
-            #     if value:
-            #         incr_count(Photo, field, value)
-            # deferred.defer(obj.index_doc)
-
-            self.render({'success': True, 'safe_key':  obj.key.urlsafe()})
+        obj = Photo(headline=fs.filename)
+        res = obj.add(fs)
+        self.render(res)
 
     def put(self, kind=None, safe_key=None):
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
 
-        data = dict(self.request.params)
+        # empty strings to None
+        values = map(lambda x: x if x != '' else None, self.request.params.values())
+        data = dict(zip(self.request.params.keys(), values))
         # alter data
         # {u'lens': u'', u'author': u'milan.andrejevic@gmail.com', u'date': datetime.datetime(2016, 2, 26, 0, 0),
         # u'model': u'SIGMA dp2 Quattro', u'aperture': 3.2, u'focal_length': 30.0, u'iso': 100, u'shutter': u'1/60',
         # u'headline': u'SDIM4308.jpg'}
         data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
-        data['focal_length'] = float(data['focal_length'])
-        data['aperture'] = float(data['aperture'])
-        data['iso'] = int(data['iso'])
+        if data['focal_length']:
+            data['focal_length'] = float(data['focal_length'])
+        if data['aperture']:
+            data['aperture'] = float(data['aperture'])
+        if data['iso']:
+            data['iso'] = int(data['iso'])
         logging.error(data)
         obj.edit(data)
 

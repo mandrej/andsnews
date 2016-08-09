@@ -425,9 +425,6 @@ class Photo(ndb.Model):
     dim = ndb.IntegerProperty(repeated=True)  # width, height
     filename = ndb.StringProperty()
 
-    ratio = ndb.ComputedProperty(
-        lambda self: self.dim[0] / self.dim[1] if self.dim and len(self.dim) == 2 else 1.5)
-
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
 
@@ -453,11 +450,7 @@ class Photo(ndb.Model):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
-    def add(self, data):
-        fs = data['photo']  # FieldStorage('photo', u'SDIM4151.jpg')
-        if fs.done < 0:
-            return {'success': False, 'message': _('Upload interrupted')}
-
+    def add(self, fs):
         _buffer = fs.value
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         # Check  GCS stat exist first
@@ -479,10 +472,6 @@ class Photo(ndb.Model):
         except gcs.errors, e:
             return {'success': False, 'message': e.message}
         else:
-            # TODO Not all emails are gmail
-            self.author = users.User(email='%s@gmail.com' % data['author'])
-            self.tags = data['tags']
-
             # Read EXIF
             exif = get_exif(_buffer)
             for field, value in exif.items():
@@ -513,14 +502,13 @@ class Photo(ndb.Model):
             self.put()
 
             incr_count(self.kind, 'author', self.author.nickname())
-            incr_count(self.kind, 'date', self.year)
             update_tags(self.kind, None, self.tags)
             for field in PHOTO_FIELDS:
                 value = getattr(self, field, None)
                 if value:
                     incr_count(self.kind, field, value)
             deferred.defer(self.index_doc)
-            return {'success': True}
+            return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
         old = self.author.nickname()

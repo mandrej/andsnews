@@ -167,10 +167,11 @@
             },
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText);
-                console.log(res, this.kind);
                 if (res.success) {
                     this.safekey = res.safe_key;
-                    this.set('route.path', ['', 'admin', this.kind, this.safekey].join('/'));
+                    this.set('route.path', ['/admin', this.kind, this.safekey].join('/'));
+                } else {
+                    console.log(res.message);
                 }
             },
             // _alterData: function(e) {
