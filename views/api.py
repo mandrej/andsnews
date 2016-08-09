@@ -178,9 +178,6 @@ class PhotoForm(RestHandler):
         values = map(lambda x: x if x != '' else None, self.request.params.values())
         data = dict(zip(self.request.params.keys(), values))
         # alter data
-        # {u'lens': u'', u'author': u'milan.andrejevic@gmail.com', u'date': datetime.datetime(2016, 2, 26, 0, 0),
-        # u'model': u'SIGMA dp2 Quattro', u'aperture': 3.2, u'focal_length': 30.0, u'iso': 100, u'shutter': u'1/60',
-        # u'headline': u'SDIM4308.jpg'}
         data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
         if data['focal_length']:
             data['focal_length'] = float(data['focal_length'])
@@ -190,6 +187,12 @@ class PhotoForm(RestHandler):
             data['iso'] = int(data['iso'])
         logging.error(data)
         obj.edit(data)
+
+
+class Delete(RestHandler):
+    def delete(self, safe_key):
+        key = ndb.Key(urlsafe=safe_key)
+        key.delete()
 
 
 class Download(webapp2.RequestHandler):

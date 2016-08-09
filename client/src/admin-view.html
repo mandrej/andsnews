@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
@@ -48,6 +49,10 @@
             .dim {
                 color: gray;
             }
+            paper-button {
+                background-color: var(--paper-grey-400);
+                text-transform: lowercase;
+            }
         </style>
 
         <iron-ajax id="ajax" auto
@@ -58,6 +63,8 @@
             loading="{{loading}}"
             debounce-duration="300"></iron-ajax>
 
+        <iron-request id="delete_ajax"></iron-request>
+
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
@@ -65,17 +72,20 @@
         </paper-dialog>
 
         <template is="dom-repeat" items="{{items}}">
-            <div class="rec" on-tap="editRec">
-                <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                    <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
-                </template>
-                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                    <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
-                </template>
-                <div class="pad">
+            <div class="rec">
+                <div on-tap="editRec">
+                    <template is="dom-if" if="[[_isKindPhoto(item)]]">
+                        <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
+                    </template>
+                    <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+                        <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
+                    </template>
+                </div>
+                <div on-tap="editRec" class="pad">
                     <div class="primary">[[item.headline]]</div>
                     <div class="secondary dim">[[item.author]]</div>
                 </div>
+                <paper-button on-tap="deleteRec">Delete</paper-button>
             </div>
         </template>
 
@@ -156,6 +166,10 @@
                 this.field = e.model.item.safekey;
                 this.value = null;
                 this.set('route.path', ['', 'admin', this.kind, this.field].join('/'));
+            },
+            deleteRec: function(e) {
+                var url = '/api/delete/' + e.model.item.safekey,
+                    promise = this.$.delete_ajax.send({url: url, method: 'DELETE'});
             },
         });
     </script>
