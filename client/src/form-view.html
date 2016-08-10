@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-select/paper-select.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
@@ -139,10 +140,14 @@
                             allow-custom-value="true"
                             items="{{lens_cloud}}"
                             value="{{obj.lens}}"></vaadin-combo-box>
-                        <paper-input name="aperture" readonly label="aperture" value="{{obj.aperture}}"></paper-input>
-                        <paper-input name="shutter" readonly label="shutter" value="{{obj.shutter}}"></paper-input>
-                        <paper-input name="iso" readonly label="iso" value="{{obj.iso}}"></paper-input>
-                        <paper-input name="focal_length" readonly label="focal_length" value="{{obj.focal_length}}"></paper-input>
+                        <div class="layout horizontal">
+                            <paper-input name="aperture" readonly label="aperture" value="{{obj.aperture}}"></paper-input>
+                            <paper-input name="shutter" readonly label="shutter" value="{{obj.shutter}}"></paper-input>
+                        </div>
+                        <div class="layout horizontal">
+                            <paper-input name="iso" readonly label="iso" value="{{obj.iso}}"></paper-input>
+                            <paper-input name="focal_length" readonly label="focal_length" value="{{obj.focal_length}}"></paper-input>
+                        </div>
                     </template>
 
                     <template is="dom-if" if="[[!_isItemPhoto(obj)]]">

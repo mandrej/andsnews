@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-swipeable-container/iron-swipeable-container.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -72,21 +73,20 @@
         </paper-dialog>
 
         <template is="dom-repeat" items="{{items}}">
-            <div class="rec">
-                <div on-tap="editRec">
+            <iron-swipeable-container on-iron-swipe="deleteRec">
+                <div class="rec" on-tap="editRec">
                     <template is="dom-if" if="[[_isKindPhoto(item)]]">
                         <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
                     </template>
                     <template is="dom-if" if="[[!_isKindPhoto(item)]]">
                         <iron-image class="img" src="[[item.front]]" sizing="cover"></iron-image>
                     </template>
+                    <div class="pad">
+                        <div class="primary">[[item.headline]]</div>
+                        <div class="secondary dim">[[item.author]]</div>
+                    </div>
                 </div>
-                <div on-tap="editRec" class="pad">
-                    <div class="primary">[[item.headline]]</div>
-                    <div class="secondary dim">[[item.author]]</div>
-                </div>
-                <paper-button on-tap="deleteRec">Delete</paper-button>
-            </div>
+            </iron-swipeable-container>
         </template>
 
         <iron-scroll-threshold id="threshold"
