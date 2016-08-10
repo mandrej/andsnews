@@ -41,7 +41,7 @@
         </style>
 
         <iron-ajax auto
-			url="{{_url(view, kind, safekey)}}"
+			url="{{_url(view, kind, safekey, isAuthorized)}}"
 			handle-as="json"
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
@@ -162,12 +162,17 @@
         Polymer({
             is: 'form-view',
             properties: {
+                isAuthorized: { type: Boolean, value: false, notify: true },
                 kind: { type: String, value: null, notify: true },
                 safekey: { type: String, value: null, notify: true },
             },
-            _url: function(view, kind, safekey) {
+            _url: function(view, kind, safekey, isAuthorized) {
                 if (view != 'form' || safekey == 'add') return;
-                return ['/api', kind, safekey].join('/');
+                if (isAuthorized) {
+                    return ['/api', kind, safekey].join('/');
+                } else{
+                    console.log('Not Authorized');
+                }
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';

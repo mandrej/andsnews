@@ -1,7 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -55,6 +58,9 @@
 				--app-drawer-content-container: {
 					padding: 0;
 				}
+			}
+			google-signin {
+				display: block;
 			}
 			app-drawer app-toolbar {
 				background-color: var(--google-yellow-300);
@@ -132,6 +138,20 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<paper-dialog id="google"
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<h2>Google authorization</h2>
+			<google-signin
+				brand="google-plus"
+				height="tall"
+				width="wide"
+				client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
+
+			<google-signin-aware
+				is-authorized="{{isAuthorized}}"
+				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+        </paper-dialog>
+
 		<app-drawer id="drawer" swipe-open>
 			<app-toolbar>
 				<h1 main-title>ANDрејевићи</h1>
@@ -179,7 +199,9 @@
 							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 						</template>
 					</template>
+
 	  				<h4 condensed-title>{{headline}}</h4>
+
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
@@ -187,11 +209,11 @@
 									<paper-button>Photos</paper-button></a>
 								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+								<template is="dom-if" if="[[_isKindPhoto(dataAdmin.kind)]]">
 									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
-								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
+								<template is="dom-if" if="[[!_isKindPhoto(dataAdmin.kind)]]">
 									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
@@ -205,6 +227,7 @@
 	    		</app-toolbar>
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
+
 					<template is="dom-if" if="[[_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
@@ -236,6 +259,7 @@
 						headline="{{headline}}"></detail-view>
 
 					<admin-view
+						is-authorized="{{isAuthorized}}"
 						data-view="admin"
 						view="[[activeView]]"
 						kind="[[dataAdmin.kind]]"
@@ -243,6 +267,7 @@
 						loading="{{loading}}"></admin-view>
 
 					<form-view
+						is-authorized="{{isAuthorized}}"
 						data-view="form"
 						view="[[activeView]]"
 						kind="[[dataAdmin.kind]]"
@@ -268,6 +293,7 @@
 				version: { type: String, value: '160810'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
+				isAuthorized: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				activeGrid: { type: Boolean, value: false },
 				activeFilter: { type: Boolean, value: false },
@@ -303,7 +329,15 @@
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 
-				this.set('route.path', ['', this.dataKind.kind].join('/'));
+				if (this.dataKind.kind == 'admin') {
+					if (this.isAuthorized) {
+						this.set('route.path', ['', this.dataAdmin.kind].join('/'));
+					} else {
+						this.$$('#google').open();
+					}
+				} else {
+					this.set('route.path', ['', this.dataKind.kind].join('/'));
+				}
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';
@@ -319,6 +353,11 @@
 			},
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
+            },
+			handleSignIn: function(response) {
+				console.log(response);
+                var user = gapi.auth2.getAuthInstance()['currentUser'].get();
+                console.log('User name: ' + user.getBasicProfile().getName());
             },
 		});
 	</script>

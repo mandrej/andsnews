@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-swipeable-container/iron-swipeable-container.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -16,7 +15,7 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                width: 100vw;
+                display: block;
                 height: 100vh;
                 background-color: #eee;
                 padding-top: 16px;
@@ -27,8 +26,8 @@
             paper-fab {
                 --paper-fab-background: var(--google-yellow-300);
                 --paper-fab-keyboard-focus-background: var(--google-yellow-700);
-                position: fixed;
-                top: 144px;
+                position: absolute;
+                top: 16px;
                 right: 16px;
             }
             .rec {
@@ -63,18 +62,6 @@
                 text-transform: lowercase;
             }
         </style>
-
-        <google-signin
-            brand="google"
-            width="iconOnly"
-            height="tall"
-            theme="light"
-            client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
-        <google-signin-aware
-            scopes
-            is-authorized="{{isAuthorized}}"
-            need-additional-auth="{{needAdditionalAuth}}"
-            on-google-signin-aware-success="handleSignIn"></google-signin-aware>
 
         <iron-ajax id="ajax" auto
             url="{{url}}"
@@ -140,7 +127,6 @@
                     }
                 },
                 isAuthorized: { type: Boolean, value: false, notify: true },
-                needAdditionalAuth: { type: Boolean, value: true, notify: true },
                 view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
@@ -156,10 +142,6 @@
                     value: false,
                     notify: true
                 },
-            },
-            handleSignIn: function(response) {
-                var user = gapi.auth2.getAuthInstance()['currentUser'].get();
-                console.log('User name: ' + user.getBasicProfile().getName());
             },
             _url: function(view, kind, isAuthorized) {
                 if (view != 'admin') return;
