@@ -311,8 +311,9 @@
 				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 
-				if (!this.isAuthorized) {
-					if (activeAdmin || activeForm) {
+				if (activeAdmin || activeForm) {
+					console.log('hit', this.isAuthorized);
+					if (!this.isAuthorized) {
 						this.$$('#google').open();
 					}
 				}
