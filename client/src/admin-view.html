@@ -23,6 +23,13 @@
             ::-webkit-scrollbar {
                 display: none;
             }
+            paper-fab {
+                --paper-fab-background: var(--google-yellow-300);
+                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
+                position: fixed;
+                right: 16px;
+                bottom: 16px;
+            }
             .rec {
                 @apply(--layout-horizontal);
                 cursor: pointer;
@@ -71,6 +78,8 @@
             <h2>Nothing found</h2>
             <p>Please try again</p>
         </paper-dialog>
+
+        <paper-fab icon="add" on-tap="addRecord"></paper-fab>
 
         <template is="dom-repeat" items="{{items}}">
             <iron-swipeable-container on-iron-swipe="deleteRec">
@@ -165,8 +174,11 @@
             editRec: function(e) {
                 this.field = e.model.item.safekey;
                 this.value = null;
-                this.set('route.path', ['', 'admin', this.kind, this.field].join('/'));
+                this.set('route.path', ['/admin', this.kind, this.field].join('/'));
             },
+            addRecord: function() {
+				this.set('route.path', ['/admin', this.kind, 'add'].join('/'));
+			},
             deleteRec: function(e) {
                 var url = '/api/delete/' + e.model.item.safekey,
                     promise = this.$.delete_ajax.send({url: url, method: 'DELETE'});

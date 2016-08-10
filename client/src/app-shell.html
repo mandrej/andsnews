@@ -60,10 +60,6 @@
 				background-color: var(--google-yellow-300);
 				@apply(--shadow-elevation-2dp);
 			}
-			paper-fab {
-                --paper-fab-background: var(--google-yellow-300);
-                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
-            }
             paper-item iron-icon {
                 margin-right: 16px;
                 color: var(--light-theme-secondary-color);
@@ -215,12 +211,7 @@
 						</template>
 					</template>
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
-						<template is="dom-if" if="[[_isAdminView(activeView)]]">
-							<paper-fab icon="add" on-tap="addRecord"></paper-fab>
-						</template>
-						<template is="dom-if" if="[[!_isAdminView(activeView)]]">
-							<paper-spinner active$="[[loading]]"></paper-spinner>
-						</template>
+						<paper-spinner active$="[[loading]]"></paper-spinner>
 					</template>
 	    		</app-toolbar>
 			</app-header>
@@ -317,9 +308,6 @@
 			_isDetailView: function(view) {
 				return view == 'detail';
 			},
-			_isAdminView: function(view) {
-				return view == 'admin';
-			},
 			_isFormView: function(view) {
 				return view == 'form';
 			},
@@ -332,9 +320,6 @@
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
             },
-			addRecord: function() {
-				this.set('route.path', ['', 'admin', this.dataAdmin.kind, 'add'].join('/'));
-			}
 		});
 	</script>
 </dom-module>
