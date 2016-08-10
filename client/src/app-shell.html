@@ -142,7 +142,7 @@
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<h2>Google authorization</h2>
 			<google-signin
-				brand="google-plus"
+				brand="google"
 				height="tall"
 				width="wide"
 				client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
@@ -167,14 +167,14 @@
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<template is="dom-if" if="[[_isKindPhoto(dataAdmin.kind)]]">
+				<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 					<paper-item kind-page="photo" on-tap="resetFilter">
 						<a href="#/admin/photo" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
 						</a>
 					</paper-item>
 				</template>
-				<template is="dom-if" if="[[!_isKindPhoto(dataAdmin.kind)]]">
+				<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
 					<paper-item kind-page="entry" on-tap="resetFilter">
 						<a href="#/admin/entry" class="flex">
 							<iron-icon icon="settings"></iron-icon>Admin
@@ -209,11 +209,11 @@
 									<paper-button>Photos</paper-button></a>
 								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isKindPhoto(dataAdmin.kind)]]">
+								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
 									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
-								<template is="dom-if" if="[[!_isKindPhoto(dataAdmin.kind)]]">
+								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
 									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
 										<paper-button>Admin</paper-button></a>
 								</template>
@@ -311,6 +311,12 @@
 				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 
+				if (!this.isAuthorized) {
+					if (activeAdmin || activeForm) {
+						this.$$('#google').open();
+					}
+				}
+
 				switch (result) {
 					case 16: return 'grid';
 					case 20: return 'detail'; // from search
@@ -329,15 +335,7 @@
 				this.headline = 'ANDрејевићи'
 				this.$.drawer.close();
 
-				if (this.dataKind.kind == 'admin') {
-					if (this.isAuthorized) {
-						this.set('route.path', ['', this.dataAdmin.kind].join('/'));
-					} else {
-						this.$$('#google').open();
-					}
-				} else {
-					this.set('route.path', ['', this.dataKind.kind].join('/'));
-				}
+				this.set('route.path', ['', this.dataKind.kind].join('/'));
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';
@@ -355,9 +353,11 @@
 				this.$$('detail-view').fire('show-exif');
             },
 			handleSignIn: function(response) {
-				console.log(response);
                 var user = gapi.auth2.getAuthInstance()['currentUser'].get();
-                console.log('User name: ' + user.getBasicProfile().getName());
+				console.log(user.getBasicProfile().getId());
+				console.log(user.getBasicProfile().getName());
+				console.log(user.getBasicProfile().getEmail());
+				console.log(user.getBasicProfile().getImageUrl());
             },
 		});
 	</script>
