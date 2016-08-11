@@ -73,6 +73,11 @@
 			paper-button {
 				text-transform: lowercase;
 			}
+			.avatar {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+			}
 			h1, h4 {
 				margin: 0;
 				font-size: 36px;
@@ -138,8 +143,7 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<paper-dialog id="google"
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+		<paper-dialog id="google" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<h2>Google authorization</h2>
 			<google-signin
 				brand="google"
@@ -155,6 +159,7 @@
 		<app-drawer id="drawer" swipe-open>
 			<app-toolbar>
 				<h1 main-title>ANDрејевићи</h1>
+				<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
 			</app-toolbar>
 			<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
 				<paper-item kind-page="photo" on-tap="resetFilter">
@@ -233,8 +238,11 @@
 							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 						</template>
 					</template>
-					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
-						<paper-spinner active$="[[loading]]"></paper-spinner>
+					<template is="dom-if" if="[[!smallScreen]]">
+						<template is="dom-if" if="[[!_isDetailView(activeView)]]">
+							<paper-spinner active$="[[loading]]"></paper-spinner>
+							<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
+						</template>
 					</template>
 	    		</app-toolbar>
 			</app-header>
@@ -294,6 +302,7 @@
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
+				user: { type: Object, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				activeGrid: { type: Boolean, value: false },
 				activeFilter: { type: Boolean, value: false },
@@ -306,19 +315,16 @@
 					notify: true
 				},
 			},
+			listeners: {
+                'show-google': '_showGoogle',
+				'close-google': '_closeGoogle'
+            },
 			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
 				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
 				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 
-				if (activeAdmin || activeForm) {
-					console.log('hit', this.isAuthorized);
-					if (!this.isAuthorized) {
-						this.$$('#google').open();
-					}
-				}
-
-				switch (result) {
+ 				switch (result) {
 					case 16: return 'grid';
 					case 20: return 'detail'; // from search
 					case 22: return 'admin';
@@ -353,13 +359,34 @@
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
             },
+			_showGoogle: function() {
+				if (!this.isAuthorized) {
+					this.$.google.open();
+				}
+			},
+			_closeGoogle: function() {
+				var dialog = this.$.google;
+				if (dialog.opened && this.isAuthorized) {
+					dialog.close();
+				}
+			},
 			handleSignIn: function(response) {
-                var user = gapi.auth2.getAuthInstance()['currentUser'].get();
-				console.log(user.getBasicProfile().getId());
-				console.log(user.getBasicProfile().getName());
-				console.log(user.getBasicProfile().getEmail());
-				console.log(user.getBasicProfile().getImageUrl());
+                this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+				// console.log(.getBasicProfile().getId());
+				// console.log(.getBasicProfile().getName());
+				// console.log(.getBasicProfile().getEmail());
+				// console.log(.getBasicProfile().getImageUrl());
             },
+			userImg: function(user) {
+				if (user) return user.getBasicProfile().getImageUrl();
+				return ''
+			},
+			handleSignOut: function() {
+				if (this.user) {
+					this.user.disconnect();
+					this.user = null;
+				}
+			}
 		});
 	</script>
 </dom-module>

@@ -171,7 +171,7 @@
                 if (isAuthorized) {
                     return ['/api', kind, safekey].join('/');
                 } else{
-                    console.log('Not Authorized');
+                    Polymer.dom().querySelector('app-shell').fire('show-google');
                 }
             },
             _isKindPhoto: function(kind) {

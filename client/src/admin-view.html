@@ -150,7 +150,7 @@
                     this.items = [];
                     return ['/api', kind].join('/');
                 } else{
-                    console.log('Not Authorized');
+                    Polymer.dom().querySelector('app-shell').fire('show-google');
                 }
             },
 			handler: function(request) {
