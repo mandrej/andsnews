@@ -47,19 +47,18 @@
 			debounce-duration="300"></iron-ajax>
 
         <iron-ajax auto
-			url="/api/suggest/Photo_lens"
+			url="{{_lenscomplete(kind)}}"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
 			debounce-duration="300"></iron-ajax>
 
         <iron-ajax auto
-			url="/api/suggest/Photo_tags"
+			url="{{_tagscomplete(kind)}}"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
 			debounce-duration="300"></iron-ajax>
 
         <div class="container">
-
             <form is="iron-form" id="form">
                 <template is="dom-if" if="[[_isAdd(safekey)]]">
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
@@ -152,6 +151,7 @@
 
                     <template is="dom-if" if="[[!_isItemPhoto(obj)]]">
                         <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
+                        <paper-textarea name="front_img" label="front image" value="{{obj.front_img}}"></paper-textarea>
                         <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
                     </template>
                 </template>
@@ -173,6 +173,12 @@
                 } else{
                     Polymer.dom().querySelector('app-shell').fire('show-google');
                 }
+            },
+            _tagscomplete: function(kind) {
+                if (kind) return '/api/suggest/' + this.capitalize(kind) + '_tags';
+            },
+            _lenscomplete: function(kind) {
+                if (kind == 'photo') return '/api/suggest/Photo_lens';
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';
@@ -234,6 +240,9 @@
             addItem: function(e) {
                 var input = (e.detail.value || '').trim();
                 e.detail.value = input;
+            },
+            capitalize: function(string) {
+                return string[0].toUpperCase() + string.slice(1);
             },
         });
     </script>

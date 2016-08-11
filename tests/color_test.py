@@ -10,14 +10,6 @@ from config import HUE
 
 
 class ColorTest(unittest.TestCase):
-    def test_export(self):
-        query = Photo.query()
-        for obj in query:
-            h, l, s = obj.hls
-            color = HSLColor(h, s / 100.0, l / 100.0)
-            values = color.get_value_tuple()
-            print '{0},{1},{2},{3}'.format(obj.key.string_id(), *values)
-
     def test_mean(self):
         colors = []
         query = Photo.query()

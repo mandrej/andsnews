@@ -88,7 +88,7 @@ def cloud_representation(kind):
         if kind == 'photo':
             fields = ['date', 'tags', 'model']
         elif kind == 'entry':
-            fields = ['date', 'tags', 'author']
+            fields = ['date', 'tags']
 
         data = []
         for field in fields:
@@ -118,8 +118,8 @@ def cloud_representation(kind):
                 else:
                     if kind == 'photo':
                         item['repr_url'] = obj.serving_url + '=s400'
-                    elif kind == 'entry' and obj.front != -1:
-                        item['repr_url'] = obj.image_url(obj.front)
+                    elif kind == 'entry':
+                        item['repr_url'] = obj.front_img
 
             data.append({
                 'field_name': field,
@@ -158,7 +158,10 @@ class EntryForm(RestHandler):
         if obj is None:
             self.abort(404)
         data = dict(self.request.params)
+        # alter data
+        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
         logging.error(data)
+        obj.edit(data)
 
 
 class PhotoForm(RestHandler):

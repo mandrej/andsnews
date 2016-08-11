@@ -435,17 +435,18 @@ class Photo(ndb.Model):
         return self.key.kind()
 
     def index_doc(self):
-        doc = search.Document(
-            doc_id=self.key.urlsafe(),
-            fields=[
-                # search.TextField(name='slug', value=tokenize(self.key.string_id())), TODO transliterate headline
-                # search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
-                search.TextField(name='tags', value=' '.join(self.tags)),
-                search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month),
-                search.TextField(name='model', value=self.model)]
-        )
-        INDEX.put(doc)
+        pass
+        # doc = search.Document(
+        #     doc_id=self.key.urlsafe(),
+        #     fields=[
+        #         search.TextField(name='slug', value=tokenize(self.key.string_id())), TODO transliterate headline
+        #         search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+        #         search.TextField(name='tags', value=' '.join(self.tags)),
+        #         search.NumberField(name='year', value=self.year),
+        #         search.NumberField(name='month', value=self.date.month),
+        #         search.TextField(name='model', value=self.model)]
+        # )
+        # INDEX.put(doc)
 
     @webapp2.cached_property
     def buffer(self):
@@ -504,7 +505,6 @@ class Photo(ndb.Model):
             self.put()
 
             incr_count(self.kind, 'author', self.author.email())
-            update_tags(self.kind, None, self.tags)
             for field in PHOTO_FIELDS:
                 value = getattr(self, field, None)
                 if value:
@@ -588,10 +588,6 @@ class Photo(ndb.Model):
     def hex(self):
         return rgb_to_hex(tuple(self.rgb))
 
-    @property
-    def hls(self):
-        return rgb_hls(self.rgb)
-
     @classmethod
     def query_for(cls, field, value):
         """[FilterNode('color', '=', 'pink')]"""
@@ -638,24 +634,25 @@ class Entry(ndb.Model):
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
     year = ndb.ComputedProperty(lambda self: self.date.year)
-    front = ndb.IntegerProperty(default=-1)
+    front_img = ndb.StringProperty()
 
     @property
     def kind(self):
         return self.key.kind()
 
     def index_doc(self):
-        doc = search.Document(
-            doc_id=self.key.urlsafe(),
-            fields=[
-                # search.TextField(name='slug', value=tokenize(self.key.string_id())),
-                # search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
-                search.TextField(name='tags', value=' '.join(self.tags)),
-                search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month),
-                search.HtmlField(name='body', value=self.body)]
-        )
-        INDEX.put(doc)
+        pass
+        # doc = search.Document(
+        #     doc_id=self.key.urlsafe(),
+        #     fields=[
+        #         search.TextField(name='slug', value=tokenize(self.key.string_id())),
+        #         search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+        #         search.TextField(name='tags', value=' '.join(self.tags)),
+        #         search.NumberField(name='year', value=self.year),
+        #         search.NumberField(name='month', value=self.date.month),
+        #         search.HtmlField(name='body', value=self.body)]
+        # )
+        # INDEX.put(doc)
 
     def add(self, data):
         self.headline = data['headline']
@@ -663,23 +660,17 @@ class Entry(ndb.Model):
         self.date = data['date']
         self.body = data['body']
         self.tags = data['tags']
+        self.front_img = data['front_img']
         self.put()
-
-        for indx, obj in enumerate(data['newimages']):
-            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
-                img = Img(
-                    parent=self.key,
-                    id='%s_%s' % (self.key.string_id(), indx),
-                    num=indx,
-                    name=obj['name'],
-                    blob=obj['blob'].value
-                )
-                img.mime = obj['blob'].headers['Content-Type']
-                img.put()
 
         incr_count(self.kind, 'author', self.author.email())
         incr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, None, self.tags)
+        if 'tags' in data:
+            tags = map(unicode.strip, data['tags'].split(','))
+            update_tags(self.kind, None, tags)
+            self.tags = sorted(tags)
+            del data['tags']
+
         deferred.defer(self.index_doc)
 
     def edit(self, data):
@@ -687,36 +678,19 @@ class Entry(ndb.Model):
         self.summary = data['summary']
         self.date = data['date']
         self.body = data['body']
-        self.front = data['front']
-
-        for indx, obj in enumerate(data['images']):
-            id = '%s_%s' % (self.key.string_id(), indx)
-            if obj['delete']:
-                key = ndb.Key('Entry', self.key.string_id(), 'Img', id)
-                key.delete()
-                if indx == self.front:
-                    self.front = -1
-
-        for indx, obj in enumerate(data['newimages'], start=self.image_list.count()):
-            id = '%s_%s' % (self.key.string_id(), indx)
-            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
-                img = Img(
-                    parent=self.key,
-                    id=id,
-                    num=indx,
-                    name=obj['name'],
-                    blob=obj['blob'].value
-                )
-                img.mime = obj['blob'].headers['Content-Type']
-                img.put()
+        self.front_img = data['front_img']
 
         old = self.date
         new = data['date']
         if old != new:
             decr_count(self.kind, 'date', self.year)
             incr_count(self.kind, 'date', new.year)
-        update_tags(self.kind, self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
+
+        if 'tags' in data:
+            tags = map(unicode.strip, data['tags'].split(','))
+            update_tags(self.kind, self.tags, tags)
+            self.tags = sorted(tags)
+            del data['tags']
 
         self.put()
 
@@ -731,13 +705,6 @@ class Entry(ndb.Model):
 
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
-    @property
-    def image_list(self):
-        return Img.query(ancestor=self.key).order(Img.num)
-
-    def image_url(self, num):
-        return 'https://storage.googleapis.com/andsnews.appspot.com/entry/%s_%s.jpg' % (self.key.string_id(), num)
-
     @classmethod
     def query_for(cls, field, value):
         f = filter_param(field, value)
@@ -750,8 +717,4 @@ class Entry(ndb.Model):
             'kind': self.kind.lower(),
             'safekey': self.key.urlsafe()
         })
-        if self.front != -1:
-            data.update({
-                'front': self.image_url(self.front)
-            })
         return data
