@@ -41,49 +41,6 @@
                     <p>{{ _('Send images less then') }} 200KB.</p>
                 </div>
                 <div class="col s12">
-                    <h5>{{ _('Images used in this blog') }}</h5>
-                    {% if object %}
-                        {{ form_row(form.front, class='browser-default') }}
-                        {% for field in form.images %}
-                            <div class="row valign-wrapper">
-                                <div class="col s1">
-                                    <img src="{{ object.image_url(field.form.num.data) }}/small">
-                                </div>
-                                <div class="col s1">
-                                    {{ field.form.num.label }}
-                                    {{ field.form.num(size=1, disabled='disabled') }}
-                                </div>
-                                <div class="col s8">
-                                    {{ field.form.name.label }}
-                                    {{ field.form.name(size=30) }}
-                                </div>
-                                <div class="col s2 valign bottom">
-                                    {{ field.form.delete(class='checkbox') }}
-                                    {{ field.form.delete.label }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    {% for field in form.newimages %}
-                        <div class="row">
-                            <div class="col s4 offset-s2">
-                                {{ form_row(field.form.name) }}
-                            </div>
-                            <div class="col s4">
-                                <div class="file-field input-field" style="margin-top: 35px">
-                                    <div class="btn">
-                                        <span>{{ field.form.name.label.text }}</span>
-                                        {{ input(field.form.blob, class='validate') }}
-                                    </div>
-                                    <div class="file-path-wrapper">
-                                        <input class="file-path validate" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col s2">&nbsp;</div>
-                        </div>
-                    {% endfor %}
-
                     <div class="row">
                         <div class="col s12">
                             {{ form.body(class='materialize-textarea') }}

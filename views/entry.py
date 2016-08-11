@@ -71,7 +71,6 @@ class AddForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    newimages = FieldList(FormField(ImgAddForm))
 
 
 class EditForm(Form):
@@ -81,9 +80,6 @@ class EditForm(Form):
     summary = fields.TextAreaField(_('Summary'), validators=[validators.DataRequired()])
     date = fields.DateTimeField(_('Posted'), validators=[validators.DataRequired()])
     body = fields.TextAreaField(_('Article'), validators=[validators.DataRequired()])
-    front = fields.SelectField(_('Front image'), coerce=int)
-    images = FieldList(FormField(ImgEditForm), min_entries=0, max_entries=ENTRY_IMAGES)
-    newimages = FieldList(FormField(ImgAddForm))
 
 
 class Add(BaseHandler):
@@ -91,7 +87,6 @@ class Add(BaseHandler):
     def get(self, form=None):
         if form is None:
             form = AddForm()
-            form.newimages.append_entry()
         self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
     @csrf_protected
@@ -105,12 +100,6 @@ class Add(BaseHandler):
             self.render_template('admin/entry_form.html', {'form': form, 'object': None, 'filter': None})
 
 
-def front_choices(obj):
-    choices = [(img.num, img.name) for img in obj.image_list]
-    choices.insert(0, (-1, '---'))
-    return choices
-
-
 class Edit(BaseHandler):
     @admin_required
     def get(self, safe_key, form=None):
@@ -119,17 +108,12 @@ class Edit(BaseHandler):
             self.abort(403)
         if form is None:
             form = EditForm(obj=obj)
-            form.front.choices = front_choices(obj)
-            for img in obj.image_list:
-                form.images.append_entry(img)
-            form.newimages.append_entry()
         self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
 
     @csrf_protected
     def post(self, safe_key):
         obj = ndb.Key(urlsafe=safe_key).get()
         form = EditForm(formdata=self.request.POST)
-        form.front.choices = front_choices(obj)
         if form.validate():
             obj.edit(form.data)
             self.redirect_to('entry_admin')
