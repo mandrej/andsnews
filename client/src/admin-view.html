@@ -79,15 +79,15 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <paper-fab icon="add" on-tap="addRecord"></paper-fab>
+        <paper-fab hidden$="{{!isAuthorized}}" icon="add" on-tap="addRecord"></paper-fab>
 
         <template is="dom-repeat" items="{{items}}">
             <iron-swipeable-container on-iron-swipe="deleteRec">
                 <div class="rec" on-tap="editRec">
-                    <template is="dom-if" if="[[_isKindPhoto(item)]]">
+                    <template is="dom-if" if="[[_isItemPhoto(item)]]">
                         <iron-image class="img" src="[[item.serving_url]]=s100" sizing="cover"></iron-image>
                     </template>
-                    <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+                    <template is="dom-if" if="[[!_isItemPhoto(item)]]">
                         <iron-image class="img" src="[[item.front_img]]" sizing="cover"></iron-image>
                     </template>
                     <div class="pad">
@@ -173,7 +173,7 @@
                     this.set('params.page', ajax.lastResponse.next);
 				}
 			},
-            _isKindPhoto: function(item) {
+            _isItemPhoto: function(item) {
                 return item.kind == 'photo';
             },
             editRec: function(e) {

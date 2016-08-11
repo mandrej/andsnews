@@ -317,7 +317,7 @@
 			},
 			listeners: {
                 'show-google': '_showGoogle',
-				'close-google': '_closeGoogle'
+				'google-signin-success': '_closeGoogle'
             },
 			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
 				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
@@ -360,15 +360,10 @@
 				this.$$('detail-view').fire('show-exif');
             },
 			_showGoogle: function() {
-				if (!this.isAuthorized) {
-					this.$.google.open();
-				}
+				this.$.google.open();
 			},
 			_closeGoogle: function() {
-				var dialog = this.$.google;
-				if (dialog.opened && this.isAuthorized) {
-					dialog.close();
-				}
+				this.$.google.close();
 			},
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
