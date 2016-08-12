@@ -33,7 +33,8 @@ FAMILY = [
     'mihailo.genije@gmail.com',
     'svetlana.andrejevic@gmail.com',
     'ana.devic@gmail.com',
-    'dannytaboo@gmail.com'
+    'dannytaboo@gmail.com',
+    'zile.zikson@gmail.com',
 ]
 LANGUAGES = (
     ('en_US', _('english')), ('sr_RS', _('serbian')),

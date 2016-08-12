@@ -92,7 +92,7 @@
                                 f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
                             </p>
                             <p>
-                                <paper-button dialog-confirm on-tap="downloadImg" data-url="[[item.download_url]]">
+                                <paper-button dialog-confirm on-tap="downloadImg" data-url="/api/download/[[item.safekey]]">
                                     <iron-icon icon="file-download"></iron-icon>Download
                                 </paper-button>
                             </p>

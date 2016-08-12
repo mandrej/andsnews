@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
@@ -41,22 +42,32 @@
         </style>
 
         <iron-ajax auto
-			url="{{_url(view, kind, safekey, isAuthorized)}}"
+			url="[[_url(view, kind, safekey, isAuthorized)]]"
 			handle-as="json"
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
 
-        <iron-ajax auto
-			url="{{_lenscomplete(kind)}}"
+        <iron-ajax id="lenscomplete"
+			url="[[_urlLensCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
 			debounce-duration="300"></iron-ajax>
 
-        <iron-ajax auto
-			url="{{_tagscomplete(kind)}}"
+        <iron-localstorage
+            name="/api/suggest/Photo_lens"
+            value="{{lens_cloud}}"
+            on-iron-localstorage-load-empty="_requestLensCloud"></iron-localstorage>
+
+        <iron-ajax id="tagscomplete"
+			url="[[_urlTagsCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
 			debounce-duration="300"></iron-ajax>
+
+        <iron-localstorage
+            name="[[_urlTagsCloud(view, kind)]]"
+            value="{{tags_cloud}}"
+            on-iron-localstorage-load-empty="_requestTagsCloud"></iron-localstorage>
 
         <div class="container">
             <form is="iron-form" id="form">
@@ -163,6 +174,7 @@
             is: 'form-view',
             properties: {
                 isAuthorized: { type: Boolean, value: false, notify: true },
+                view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 safekey: { type: String, value: null, notify: true },
             },
@@ -174,11 +186,19 @@
                     Polymer.dom().querySelector('app-shell').fire('show-google');
                 }
             },
-            _tagscomplete: function(kind) {
+            _urlTagsCloud: function(view, kind) {
+                if (view != 'form') return;
                 if (kind) return '/api/suggest/' + this.capitalize(kind) + '_tags';
             },
-            _lenscomplete: function(kind) {
+            _urlLensCloud: function(view, kind) {
+                if (view != 'form') return;
                 if (kind == 'photo') return '/api/suggest/Photo_lens';
+            },
+            _requestLensCloud: function() {
+                this.$.lenscomplete.generateRequest();
+            },
+            _requestTagsCloud: function() {
+                this.$.tagscomplete.generateRequest();
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';

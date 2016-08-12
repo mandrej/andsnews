@@ -605,14 +605,12 @@ class Photo(ndb.Model):
 
     def serialize(self):
         data = self.to_dict(exclude=(
-            'blob_key', 'dim', 'size', 'ratio',
+            'blob_key', 'size', 'ratio', 'crop_factor',
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
             'kind': self.kind.lower(),
             'safekey': self.key.urlsafe(),
-            'serving_url': self.serving_url,
-            'dim': self.dim,
-            'download_url': self.download_url
+            'serving_url': self.serving_url
         })
         return data
 

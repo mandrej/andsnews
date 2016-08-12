@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
@@ -48,11 +49,16 @@
             @media (max-width: 432px)  { .rec { width: calc(100% / 2); } }
         </style>
 
-        <iron-ajax auto
+        <iron-ajax id="ajax"
 			url="[[_url(view, kind)]]"
 			handle-as="json"
 			last-response="{{response}}"
 			debounce-duration="300"></iron-ajax>
+
+        <iron-localstorage
+            name="[[_url(view, kind)]]"
+            value="{{response}}"
+            on-iron-localstorage-load-empty="_requestData"></iron-localstorage>
 
         <template is="dom-repeat" items="[[response]]" as="row">
             <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="repeatRender">
@@ -97,11 +103,17 @@
                 kind: { type: String, value: null, notify: true, },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
+                response: { type: Object }
             },
             _url: function(view, kind) {
                 if (view != 'grid') return;
-                return ['/api/filter', kind].join('/');
+                if (kind == 'photo' || kind == 'entry') {
+                    return ['/api/filter', kind].join('/');
+                }
 			},
+            _requestData: function() {
+                this.$.ajax.generateRequest();
+            },
             applyFilter: function(e) {
 				this.field = e.model.row.field_name;
 				this.value = '' + e.model.rec.name;
