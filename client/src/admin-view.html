@@ -79,7 +79,9 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <paper-fab hidden$="{{!isAuthorized}}" icon="add" on-tap="addRecord"></paper-fab>
+        <div hidden$="{{!isAuthorized}}">
+            <paper-fab icon="add" on-tap="addRecord"></paper-fab>
+        </div>
 
         <template is="dom-repeat" items="{{items}}">
             <iron-swipeable-container on-iron-swipe="deleteRec">
@@ -150,6 +152,7 @@
                     this.items = [];
                     return ['/api', kind].join('/');
                 } else{
+                    this.items = [];
                     Polymer.dom().querySelector('app-shell').fire('show-google');
                 }
             },

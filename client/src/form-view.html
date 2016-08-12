@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
@@ -47,27 +46,17 @@
 			last-response="{{obj}}"
 			debounce-duration="300"></iron-ajax>
 
-        <iron-ajax id="lenscomplete"
+        <iron-ajax auto
 			url="[[_urlLensCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
 			debounce-duration="300"></iron-ajax>
 
-        <iron-localstorage
-            name="/api/suggest/Photo_lens"
-            value="{{lens_cloud}}"
-            on-iron-localstorage-load-empty="_requestLensCloud"></iron-localstorage>
-
-        <iron-ajax id="tagscomplete"
+        <iron-ajax auto
 			url="[[_urlTagsCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
 			debounce-duration="300"></iron-ajax>
-
-        <iron-localstorage
-            name="[[_urlTagsCloud(view, kind)]]"
-            value="{{tags_cloud}}"
-            on-iron-localstorage-load-empty="_requestTagsCloud"></iron-localstorage>
 
         <div class="container">
             <form is="iron-form" id="form">
@@ -193,12 +182,6 @@
             _urlLensCloud: function(view, kind) {
                 if (view != 'form') return;
                 if (kind == 'photo') return '/api/suggest/Photo_lens';
-            },
-            _requestLensCloud: function() {
-                this.$.lenscomplete.generateRequest();
-            },
-            _requestTagsCloud: function() {
-                this.$.tagscomplete.generateRequest();
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';
