@@ -86,9 +86,9 @@ def cloud_representation(kind):
 
     if data is None:
         if kind == 'photo':
-            fields = ['date', 'tags', 'model']
+            fields = ('date', 'tags', 'model')
         elif kind == 'entry':
-            fields = ['date', 'tags']
+            fields = ('date', 'tags')
 
         data = []
         for field in fields:
@@ -98,24 +98,16 @@ def cloud_representation(kind):
             limit = cloud_limit(cloud)
             items = [x for x in cloud if x['count'] > limit]
 
-            if field in ('tags', 'author', 'model', 'lens', 'iso',):
-                items = sorted(items, key=itemgetter('count'), reverse=True)
-
             if field == 'date':
                 items = sorted(items, key=itemgetter('name'), reverse=True)
-            elif field in ('tags', 'author', 'model', 'lens', 'iso',):
+            elif field in ('tags', 'author', 'model', 'lens', 'iso'):
                 items = sorted(items, key=itemgetter('name'), reverse=False)
             elif field == 'color':
                 items = sorted(items, key=itemgetter('order'))
 
             for item in items:
-                query = model.query_for(field, item['name'])
-                res = query.fetch(1)
-                try:
-                    obj = res[0]
-                except IndexError:
-                    pass
-                else:
+                obj = model.latest_for(field, item['name'])
+                if obj is not None:
                     if kind == 'photo':
                         item['repr_url'] = obj.serving_url + '=s400'
                     elif kind == 'entry':

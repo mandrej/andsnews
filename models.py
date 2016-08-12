@@ -596,8 +596,8 @@ class Photo(ndb.Model):
         return cls.query(*filters).order(-cls.date)
 
     @classmethod
-    def latest(cls):
-        query = cls.query().order(-cls.date)
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
         result = query.fetch(1)
         if result:
             return result[0]
