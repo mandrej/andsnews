@@ -709,6 +709,14 @@ class Entry(ndb.Model):
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
 
+    @classmethod
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        result = query.fetch(1)
+        if result:
+            return result[0]
+        return None
+
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
