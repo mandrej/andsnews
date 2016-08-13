@@ -64,7 +64,7 @@
         </style>
 
         <iron-ajax id="ajax" auto
-            url="{{url}}"
+            url="{{_url(view, kind, isAuthorized)}}"
             params="{{params}}"
             handle-as="json"
             on-response="handler"
@@ -135,10 +135,6 @@
 				value: { type: String, value: null, notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
-                url: {
-					computed: '_url(view, kind, isAuthorized)',
-					notify: true
-				},
                 loading: {
                     type: Boolean,
                     value: false,

@@ -110,13 +110,18 @@
 
 		<app-route
 			route="{{route}}"
-			pattern="/admin/:kind"
-			data="{{dataAdmin}}"
-			tail="{{tailAdmin}}"
-			active="{{activeAdmin}}"></app-route>
+			pattern="/admin"
+			tail="{{tailAdmin}}"></app-route>
 
 		<app-route
 			route="{{tailAdmin}}"
+			pattern="/:kind"
+			data="{{dataAdmin}}"
+			tail="{{tailKindAdmin}}"
+			active="{{activeAdmin}}"></app-route>
+
+		<app-route
+			route="{{tailKindAdmin}}"
 			pattern="/:safekey"
 			data="{{dataForm}}"
 			active="{{activeForm}}"></app-route>
@@ -125,11 +130,11 @@
 			route="{{route}}"
 			pattern="/:kind"
 			data="{{dataKind}}"
-			tail="{{tailGrid}}"
-			active="{{activeGrid}}"></app-route>
+			tail="{{tailKind}}"
+			active="{{activeKind}}"></app-route>
 
 		<app-route
-			route="{{tailGrid}}"
+			route="{{tailKind}}"
 			pattern="/:field"
 			data="{{dataField}}"
 			tail="{{tailField}}"
@@ -161,7 +166,7 @@
 				<h1 main-title>ANDрејевићи</h1>
 				<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
 			</app-toolbar>
-			<paper-menu attr-for-selected="kind-page" selected="[[dataKind.kind]]" class="layout vertical">
+			<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
 				<paper-item kind-page="photo" on-tap="resetFilter">
 					<a href="#/photo" class="flex">
 						<iron-icon icon="image:photo-camera"></iron-icon>Photos
@@ -294,8 +299,7 @@
 					this.set('route.path', '/photo');
 					this.set('dataKind.kind', 'photo');
 				}
-				// this.set('dataField.field', null);
-				// this.set('dataValue.value', null);
+				this.set('dataValue.value', null);
 			},
 			properties: {
 				version: { type: String, value: '160810'},
@@ -304,33 +308,38 @@
 				isAuthorized: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
-				activeGrid: { type: Boolean, value: false },
-				activeFilter: { type: Boolean, value: false },
-				activeFind: { type: Boolean, value: false },
-				activeAdmin: { type: Boolean, value: false },
-				activeForm: { type: Boolean, value: false },
-				activeView: {
-					type: String,
-					computed: '_activeView(activeGrid, activeFilter, activeFind, activeAdmin, activeForm)',
-					notify: true
-				},
+				activeView: { type: String, value: 'grid', notify: true },
 			},
 			listeners: {
                 'show-google': '_showGoogle',
 				'google-signin-success': '_closeGoogle'
             },
-			_activeView: function(activeGrid, activeFilter, activeFind, activeAdmin, activeForm) {
-				console.log(+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm);
-				var active = [+ activeGrid, + activeFilter, + activeFind, + activeAdmin, + activeForm],
+			observers: [
+				'viewChanged(activeForm, activeAdmin, activeFilter, activeFind, activeKind)'
+			],
+			viewChanged: function(activeForm, activeAdmin, activeFilter, activeFind, activeKind) {
+				var active = [+ activeForm, + activeAdmin, + activeFilter, + activeFind, + activeKind],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
-
- 				switch (result) {
-					case 16: return 'grid';
-					case 20: return 'detail'; // from search
-					case 22: return 'admin';
-					case 28: return 'detail'; // filter
-					case 31: return 'form';
-					default: return 'grid';
+				console.log(active.join(' '), ' = ', result);
+				switch (result) {
+					case 1:
+						this.activeView = 'grid';
+						break;
+					case 3:
+						this.activeView = 'detail'; // search
+						break;
+					case 7:
+						this.activeView = 'detail'; // filter
+						break;
+					case 11:
+						this.activeView = 'admin';
+						break;
+					case 31:
+						this.activeView = 'form';
+						break;
+					default:
+						this.activeView = 'grid';
+						break;
 				}
 			},
 			resetFilter: function(e) {
@@ -381,7 +390,11 @@
 					this.user.disconnect();
 					this.user = null;
 				}
-			}
+			},
+			objectChanged: function(obj) {
+                // this is object observer!
+				console.log(obj.path + ' -> ' + this.get(obj.path));
+            }
 		});
 	</script>
 </dom-module>

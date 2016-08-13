@@ -62,7 +62,7 @@
         </style>
 
         <iron-ajax id="ajax" auto
-            url="{{url}}"
+            url="{{_url(view, kind, field, value)}}"
             params="{{params}}"
             handle-as="json"
             on-response="handler"
@@ -142,11 +142,6 @@
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 items: { type: Array, value: [], notify: true },
-                url: {
-					computed: '_url(view, kind, field, value)',
-					notify: true,
-					observer: 'propertyChanged'
-				},
                 loading: {
                     type: Boolean,
                     value: false,
@@ -265,10 +260,6 @@
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},
-            objectChanged: function(obj) {
-                // this is object observer!
-                console.log(obj.path + ' -> ' + this.get(obj.path));
-            }
         });
     </script>
     <script src="../bower_components/moment/min/moment.min.js"></script>
