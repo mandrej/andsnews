@@ -7,21 +7,16 @@ from config import CONFIG, DEVEL
 app = WSGIApplication([
     # REST API
     Route(r'/api/suggest/<mem_key>', handler='views.api.Suggest'),
+    Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
+    Route(r'/api/search/<find>', handler='views.api.Find'),
 
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
     Route(r'/api/<kind:(photo|entry)>/<field:(model|iso|lens|tags|date|author|color)>/<value>',
           handler='views.api.Collection'),
 
-    Route(r'/api/<kind:(photo|entry)>/<safe_key>', handler='views.api.Record', methods=['GET']),
-    Route(r'/api/entry/add', handler='views.api.EntryForm', methods=['POST']),
-    Route(r'/api/photo/add', handler='views.api.PhotoForm', methods=['POST']),
-    Route(r'/api/entry/<safe_key>', handler='views.api.EntryForm', methods=['PUT']),
-    Route(r'/api/photo/<safe_key>', handler='views.api.PhotoForm', methods=['PUT']),
-
-    Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
-    Route(r'/api/search/<find>', handler='views.api.Find'),
-
-    Route(r'/api/delete/<safe_key>', handler='views.api.Delete', methods=['DELETE']),
+    Route(r'/api/<kind:(photo|entry)>/add', handler='views.api.Rest', methods=['GET', 'POST']),
+    Route(r'/api/<kind:(photo|entry)>/edit/<safe_key>', handler='views.api.Rest', methods=['GET', 'PUT']),
+    Route(r'/api/delete/<safe_key>', handler='views.api.Rest', methods=['DELETE']),
     Route(r'/api/download/<safe_key>', handler='views.api.Download', name='download_url'),
 
     ###

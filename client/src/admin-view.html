@@ -23,13 +23,6 @@
             ::-webkit-scrollbar {
                 display: none;
             }
-            paper-fab {
-                --paper-fab-background: var(--google-yellow-300);
-                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
-                position: absolute;
-                top: 16px;
-                right: 16px;
-            }
             .rec {
                 @apply(--layout-horizontal);
                 cursor: pointer;
@@ -78,10 +71,6 @@
             <h2>Nothing found</h2>
             <p>Please try again</p>
         </paper-dialog>
-
-        <div hidden$="{{!isAuthorized}}">
-            <paper-fab icon="add" on-tap="addRecord"></paper-fab>
-        </div>
 
         <template is="dom-repeat" items="{{items}}">
             <iron-swipeable-container on-iron-swipe="deleteRec">
@@ -142,7 +131,7 @@
                 },
             },
             _url: function(view, kind, isAuthorized) {
-                if (view != 'admin') return;
+                if (view != 'list') return;
                 if (isAuthorized) {
                     this.set('params.page', null);
                     this.items = [];

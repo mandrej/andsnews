@@ -91,11 +91,6 @@
                                 [[item.lens]] ([[item.focal_length]]mm)<br>
                                 f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
                             </p>
-                            <p>
-                                <paper-button dialog-confirm on-tap="downloadImg" data-url="/api/download/[[item.safekey]]">
-                                    <iron-icon icon="file-download"></iron-icon>Download
-                                </paper-button>
-                            </p>
                         </paper-dialog>
                     </div>
                 </template>
@@ -149,7 +144,8 @@
                 },
             },
             listeners: {
-                'show-exif': '_showExif'
+                'show-exif': '_showExif',
+                'edit-record': '_editRecord',
             },
             _url: function(view, kind, field, value) {
 				var url, prefix = '/api';
@@ -169,6 +165,7 @@
 			},
 			handler: function(request) {
 				var response = request.detail.response;
+                // if (!response.objects) return;
                 if (response.objects.length == 0) {
                     var dialog = this.$.message;
                     dialog.fitInto = this.$.swipe;
@@ -252,11 +249,11 @@
                         break;
                 }
             },
-            downloadImg: function(e) {
-                e.preventDefault();
-                var url = e.target.dataUrl,
-                    promise = this.$.download_ajax.send({url: url, method: 'GET'});
-            },
+            // downloadImg: function(e) {
+            //     e.preventDefault();
+            //     var url = e.target.dataUrl,
+            //         promise = this.$.download_ajax.send({url: url, method: 'GET'});
+            // },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},

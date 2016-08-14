@@ -1,0 +1,62 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<dom-module id="admin-shell">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style>
+            :host {
+                display: block;
+                height: 100vh;
+                background-color: #eee;
+            }
+            .container {
+                margin: 16px;
+            }
+            h1 {
+				margin: 0;
+				font-size: 24px;
+				font-weight: 300;
+			}
+            a {
+                text-decoration: none;
+            }
+            paper-button {
+                color: var(--dark-theme-base-color);
+                background-color: var(--primary-color);
+                text-transform: lowercase;
+			}
+        </style>
+
+        <div class="container">
+            <h1>Google authorization</h1>
+			<google-signin
+				brand="google"
+				height="tall"
+				width="wide"
+				client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
+
+			<google-signin-aware
+				is-authorized="{{isAuthorized}}"
+				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'admin-shell',
+            properties: {
+                isAuthorized: { type: Boolean, value: false, notify: true },
+                user: { type: Object, notify: true },
+            },
+            handleSignIn: function(response) {
+                this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+				// .getBasicProfile().getId();
+				// .getBasicProfile().getName();
+				// .getBasicProfile().getEmail();
+				// .getBasicProfile().getImageUrl();
+            },
+        });
+    </script>
+</dom-module>

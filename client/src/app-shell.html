@@ -3,8 +3,6 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -27,7 +25,7 @@
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
-<link rel="import" href="admin-view.html">
+<link rel="import" href="admin-shell.html">
 <link rel="import" href="form-view.html">
 
 <dom-module id="app-shell">
@@ -59,9 +57,6 @@
 					padding: 0;
 				}
 			}
-			google-signin {
-				display: block;
-			}
 			app-drawer app-toolbar {
 				background-color: var(--google-yellow-300);
 				@apply(--shadow-elevation-2dp);
@@ -78,6 +73,10 @@
 				height: 50px;
 				border-radius: 50%;
 			}
+			paper-fab {
+                --paper-fab-background: var(--google-yellow-300);
+                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
+            }
 			h1, h4 {
 				margin: 0;
 				font-size: 36px;
@@ -89,6 +88,9 @@
 			[condensed-title] {
 				font-size: 24px;
 			}
+			[hidden] {
+				display: none !important;
+			}
 			@media (max-width: 767px) {
         		h1 {
 					margin: 0 12px;
@@ -97,34 +99,7 @@
         	}
 		</style>
 
-		<!--
-		https://www.polymer-project.org/1.0/articles/routing.html
-		/:kind					grid view		/photo
-		/:kind/:field/:value	detail view		/photo/date/2015
-		/search/:find			detail view		/search/ana
-		/admin/:kind			admin view		/admin/photo
-		/admin/:kind/:safekey	form view		/admin/photo/agxkZXZ-YW5kc25ld3NyGgsSBVBob3RvIg9uYXNlLXBsYXZvLW9rY2UM
-		-->
-
 		<app-location route="{{route}}" use-hash-as-path></app-location>
-
-		<app-route
-			route="{{route}}"
-			pattern="/admin"
-			tail="{{tailAdmin}}"></app-route>
-
-		<app-route
-			route="{{tailAdmin}}"
-			pattern="/:kind"
-			data="{{dataAdmin}}"
-			tail="{{tailKindAdmin}}"
-			active="{{activeAdmin}}"></app-route>
-
-		<app-route
-			route="{{tailKindAdmin}}"
-			pattern="/:safekey"
-			data="{{dataForm}}"
-			active="{{activeForm}}"></app-route>
 
 		<app-route
 			route="{{route}}"
@@ -148,19 +123,6 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<paper-dialog id="google" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<h2>Google authorization</h2>
-			<google-signin
-				brand="google"
-				height="tall"
-				width="wide"
-				client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
-
-			<google-signin-aware
-				is-authorized="{{isAuthorized}}"
-				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
-        </paper-dialog>
-
 		<app-drawer id="drawer" swipe-open>
 			<app-toolbar>
 				<h1 main-title>ANDрејевићи</h1>
@@ -177,20 +139,11 @@
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-					<paper-item kind-page="photo" on-tap="resetFilter">
-						<a href="#/admin/photo" class="flex">
-							<iron-icon icon="settings"></iron-icon>Admin
-						</a>
-					</paper-item>
-				</template>
-				<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
-					<paper-item kind-page="entry" on-tap="resetFilter">
-						<a href="#/admin/entry" class="flex">
-							<iron-icon icon="settings"></iron-icon>Admin
-						</a>
-					</paper-item>
-				</template>
+				<paper-item kind-page="admin" on-tap="resetFilter">
+					<a href="#/admin" class="flex">
+						<iron-icon icon="settings"></iron-icon>Admin
+					</a>
+				</paper-item>
 			</paper-menu>
 			<paper-item>[[version]]</paper-item>
 		</app-drawer>
@@ -201,9 +154,6 @@
 					<template is="dom-if" if="[[_isDetailView(activeView)]]">
 						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
 					</template>
-					<!-- <template is="dom-if" if="[[_isFormView(activeView)]]">
-						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
-					</template> -->
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[smallScreen]]">
 							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
@@ -212,6 +162,19 @@
 
 	  				<h4 condensed-title>{{headline}}</h4>
 
+					<template is="dom-if" if="[[_isDetailView(activeView)]]">
+						<div hidden$="{{!isAuthorized}}" class="layout horizontal">
+				            <paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
+							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+							</template>
+				            <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+				        </div>
+						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+						</template>
+					</template>
+
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
@@ -219,14 +182,8 @@
 									<paper-button>Photos</paper-button></a>
 								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
 									<paper-button>Texts</paper-button></a>
-								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-									<a href="#/admin/photo" kind-page="photo" on-tap="resetFilter">
-										<paper-button>Admin</paper-button></a>
-								</template>
-								<template is="dom-if" if="[[!_isKindPhoto(dataKind.kind)]]">
-									<a href="#/admin/entry" kind-page="entry" on-tap="resetFilter">
-										<paper-button>Admin</paper-button></a>
-								</template>
+								<a href="#/admin" kind-page="admin" on-tap="resetFilter">
+									<paper-button>Admin</paper-button></a>
 							</iron-selector>
 						</template>
 						<app-search
@@ -238,16 +195,13 @@
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
 
-					<template is="dom-if" if="[[_isDetailView(activeView)]]">
-						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-						</template>
-					</template>
-					<template is="dom-if" if="[[!smallScreen]]">
-						<template is="dom-if" if="[[!_isDetailView(activeView)]]">
+					<template is="dom-if" if="[[_isGridView(activeView)]]">
+						<div hidden$="{{!isAuthorized}}">
+							<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+				        </div>
+						<!-- <template is="dom-if" if="[[!smallScreen]]">
 							<paper-spinner active$="[[loading]]"></paper-spinner>
-							<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
-						</template>
+						</template> -->
 					</template>
 	    		</app-toolbar>
 			</app-header>
@@ -269,23 +223,26 @@
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
 						loading="{{loading}}"
-						headline="{{headline}}"></detail-view>
+						headline="{{headline}}"
+						route="{{route}}"></detail-view>
 
-					<admin-view
-						is-authorized="{{isAuthorized}}"
+					<admin-shell
 						data-view="admin"
-						view="[[activeView]]"
-						kind="[[dataAdmin.kind]]"
-						route="{{route}}"
-						loading="{{loading}}"></admin-view>
-
-					<form-view
+						view="{{activeView}}"
 						is-authorized="{{isAuthorized}}"
+						user="{{user}}"
+						route="{{tailKind}}"></admin-shell>
+
+					<!-- /:kind/add | /:kind/edit/:value -->
+					<form-view
 						data-view="form"
 						view="[[activeView]]"
-						kind="[[dataAdmin.kind]]"
-						safekey="[[dataForm.safekey]]"
+						is-authorized="{{isAuthorized}}"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
 						route="{{route}}"></form-view>
+
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>
@@ -299,7 +256,7 @@
 					this.set('route.path', '/photo');
 					this.set('dataKind.kind', 'photo');
 				}
-				this.set('dataValue.value', null);
+				// this.set('dataValue.value', null);
 			},
 			properties: {
 				version: { type: String, value: '160810'},
@@ -308,39 +265,62 @@
 				isAuthorized: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
-				activeView: { type: String, value: 'grid', notify: true },
+				activeView: { type: String, value: 'grid', notify: true, observer: 'propertyChanged' },
 			},
-			listeners: {
-                'show-google': '_showGoogle',
-				'google-signin-success': '_closeGoogle'
-            },
 			observers: [
-				'viewChanged(activeForm, activeAdmin, activeFilter, activeFind, activeKind)'
+				'viewChanged(activeFilter, activeFind, activeKind, dataKind.kind, dataField.field, dataValue.value)'
 			],
-			viewChanged: function(activeForm, activeAdmin, activeFilter, activeFind, activeKind) {
-				var active = [+ activeForm, + activeAdmin, + activeFilter, + activeFind, + activeKind],
+			viewChanged: function(activeFilter, activeFind, activeKind, kind, field, value) {
+				var active = [+ activeFilter, + activeFind, + activeKind],
 					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
 				console.log(active.join(' '), ' = ', result);
-				switch (result) {
-					case 1:
-						this.activeView = 'grid';
-						break;
-					case 3:
-						this.activeView = 'detail'; // search
-						break;
-					case 7:
-						this.activeView = 'detail'; // filter
-						break;
-					case 11:
-						this.activeView = 'admin';
-						break;
-					case 31:
+
+				if (activeFilter && activeFind && activeKind) {
+					if (field == 'edit' && value) {
 						this.activeView = 'form';
-						break;
-					default:
+					} else {
+						this.activeView = 'detail'; // filter
+					}
+				} else if (activeFind && activeKind) {
+					if (field == 'add') {
+						this.activeView = 'form';
+					} else{
+						this.activeView = 'detail'; // search
+					}
+				} else if (activeKind) {
+					if (kind == 'admin') {
+						this.activeView = 'admin';
+					} else {
 						this.activeView = 'grid';
-						break;
+					}
 				}
+
+				// switch (result) {
+				// 	case 1:
+				// 		if (dataKind.kind == 'admin') {
+				// 			this.activeView = 'admin';
+				// 		} else {
+				// 			this.activeView = 'grid';
+				// 		}
+				// 		break;
+				// 	case 3:
+				// 		if (dataField.field == 'add') {
+				// 			this.activeView = 'form';
+				// 		} else{
+				// 			this.activeView = 'detail'; // search
+				// 		}
+				// 		break;
+				// 	case 7:
+				// 		if (dataField.field == 'edit' && dataValue.value) {
+				// 			this.activeView = 'form';
+				// 		} else {
+				// 			this.activeView = 'detail'; // filter
+				// 		}
+				// 		break;
+				// 	default:
+				// 		this.activeView = 'grid';
+				// 		break;
+				// }
 			},
 			resetFilter: function(e) {
 				if (this.dataKind.kind == 'search') {
@@ -352,6 +332,9 @@
 				this.$.drawer.close();
 
 				this.set('route.path', ['', this.dataKind.kind].join('/'));
+			},
+			_isGridView: function(view) {
+				return view == 'grid'
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';
@@ -365,36 +348,45 @@
 			_isKindPhoto: function(kind) {
 				return kind == 'photo'
 			},
-			showExif: function(e) {
-				this.$$('detail-view').fire('show-exif');
-            },
-			_showGoogle: function() {
-				this.$.google.open();
+			handleSignOut: function() {
+				if (this.user) {
+					this.user.disconnect();
+					this.isAuthorized = false;
+					this.user = null;
+				}
 			},
-			_closeGoogle: function() {
-				this.$.google.close();
-			},
-			handleSignIn: function(response) {
-                this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-				// console.log(.getBasicProfile().getId());
-				// console.log(.getBasicProfile().getName());
-				// console.log(.getBasicProfile().getEmail());
-				// console.log(.getBasicProfile().getImageUrl());
-            },
 			userImg: function(user) {
 				if (user) return user.getBasicProfile().getImageUrl();
 				return ''
 			},
-			handleSignOut: function() {
-				if (this.user) {
-					this.user.disconnect();
-					this.user = null;
-				}
+			addRecord: function(e) {
+
 			},
+			deleteRecord: function(e) {
+
+			},
+			downloadPhoto: function(e) {
+
+			},
+			editRecord: function(e) {
+				var detailView = this.$$('detail-view'),
+					safekey = detailView.items[detailView.start].safekey;
+				// this.dataField.field = 'edit';
+				// this.dataValue.value = safekey;
+                // detailView.set('params.page', null);
+				console.log(['', this.dataKind.kind, 'edit', safekey].join('/'));
+				this.set('route.path', ['', this.dataKind.kind, 'edit', safekey].join('/'));
+			},
+			showExif: function(e) {
+				this.$$('detail-view').fire('show-exif');
+            },
 			objectChanged: function(obj) {
                 // this is object observer!
 				console.log(obj.path + ' -> ' + this.get(obj.path));
-            }
+            },
+			propertyChanged: function(newValue, oldValue) {
+				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+			},
 		});
 	</script>
 </dom-module>

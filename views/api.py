@@ -1,19 +1,13 @@
 import os
-import re
 import json
-import uuid
 import logging
 import webapp2
 import datetime
-import cloudstorage as gcs
 from operator import itemgetter
-from PIL import Image
-from cStringIO import StringIO
 from google.appengine.api import users, memcache, app_identity
 from google.appengine.ext import ndb, blobstore, deferred
 from handlers import LazyEncoder, Paginator, SearchPaginator
-from models import Cloud, Entry, Photo, get_exif, rgb_hls, range_names, incr_count, decr_count, update_tags, rounding, PHOTO_FIELDS
-from palette import extract_colors
+from models import Cloud, Entry, Photo
 from config import TIMEOUT
 
 LIMIT = 12
@@ -50,16 +44,6 @@ class Collection(RestHandler):
             'page': page,
             'next': token
         })
-
-
-class Record(RestHandler):
-    def get(self, kind=None, safe_key=None):
-        obj = ndb.Key(urlsafe=safe_key).get()
-        logging.error(obj)
-        if obj is None:
-            self.abort(404)
-
-        self.render(obj)
 
 
 def cloud_limit(items):
@@ -144,19 +128,13 @@ class Find(RestHandler):
         })
 
 
-class EntryForm(RestHandler):
-    def put(self, kind=None, safe_key=None):
+class Rest(RestHandler):
+    def get(self, kind=None, safe_key=None):
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
-        data = dict(self.request.params)
-        # alter data
-        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
-        logging.error(data)
-        obj.edit(data)
+        self.render(obj)
 
-
-class PhotoForm(RestHandler):
     def post(self):
         data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
         fs = data['file']
@@ -169,22 +147,29 @@ class PhotoForm(RestHandler):
         if obj is None:
             self.abort(404)
 
-        # empty strings to None
-        values = map(lambda x: x if x != '' else None, self.request.params.values())
-        data = dict(zip(self.request.params.keys(), values))
-        # alter data
-        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
-        if data['focal_length']:
-            data['focal_length'] = float(data['focal_length'])
-        if data['aperture']:
-            data['aperture'] = float(data['aperture'])
-        if data['iso']:
-            data['iso'] = int(data['iso'])
-        logging.error(data)
+        if kind == 'photo':
+            # empty strings to None
+            values = map(lambda x: x if x != '' else None, self.request.params.values())
+            data = dict(zip(self.request.params.keys(), values))
+            # alter data
+            data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
+            if data['focal_length']:
+                data['focal_length'] = float(data['focal_length'])
+            if data['aperture']:
+                data['aperture'] = float(data['aperture'])
+            if data['iso']:
+                data['iso'] = int(data['iso'])
+
+        elif kind == 'entry':
+            values = map(lambda x: x if x != '' else None, self.request.params.values())
+            data = dict(zip(self.request.params.keys(), values))
+            data = dict(self.request.params)
+            # alter data
+            data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
+            logging.error(data)
+
         obj.edit(data)
 
-
-class Delete(RestHandler):
     def delete(self, safe_key):
         key = ndb.Key(urlsafe=safe_key)
         key.delete()
