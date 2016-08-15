@@ -62,7 +62,7 @@
             <form is="iron-form" id="form">
                 <template is="dom-if" if="[[_isAdd(field)]]">
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                        <h1>[[_edit_add(field)]] [[kind]]</h1>
+                        <h1>[[_headline(field)]] [[kind]]</h1>
 
                         <vaadin-upload
                             target="/api/{{kind}}/add"
@@ -73,7 +73,7 @@
 
                     <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
                         <div class="layout horizontal center justified">
-                            <h1 class="self-center">[[_edit_add(field)]] [[kind]]</h1>
+                            <h1 class="self-center">[[_headline(field)]] [[kind]]</h1>
                             <div class="self-center">
                                 <paper-button on-tap="_reset">Reset</paper-button>
                                 <paper-button on-tap="_submit">Submit</paper-button>
@@ -102,7 +102,7 @@
 
                 <template is="dom-if" if="[[!_isAdd(field)]]">
                     <div class="layout horizontal center justified">
-                        <h1 class="self-center">[[_edit_add(field)]] [[kind]]</h1>
+                        <h1 class="self-center">[[_headline(field)]] [[kind]]</h1>
                         <div class="self-center">
                             <paper-button on-tap="_reset">Reset</paper-button>
                             <paper-button on-tap="_submit">Submit</paper-button>
@@ -163,6 +163,7 @@
             is: 'form-view',
             properties: {
                 isAuthorized: { type: Boolean, value: false, notify: true },
+                headline: { type: String, value: 'ANDрејевићи', notify: true },
                 view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
@@ -197,7 +198,7 @@
             _isAdd: function(field) {
                 return field == 'add';
             },
-            _edit_add: function(field) {
+            _headline: function(field) {
                 return this._isAdd(field) ? 'add' : 'edit';
             },
             _dateFormat: function(str) {

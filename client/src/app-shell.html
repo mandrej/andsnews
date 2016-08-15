@@ -105,21 +105,18 @@
 			route="{{route}}"
 			pattern="/:kind"
 			data="{{dataKind}}"
-			tail="{{tailKind}}"
-			active="{{activeKind}}"></app-route>
+			tail="{{tailKind}}"></app-route>
 
 		<app-route
 			route="{{tailKind}}"
 			pattern="/:field"
 			data="{{dataField}}"
-			tail="{{tailField}}"
-			active="{{activeFind}}"></app-route>
+			tail="{{tailField}}"></app-route>
 
 		<app-route
 			route="{{tailField}}"
 			pattern="/:value"
-			data="{{dataValue}}"
-			active="{{activeFilter}}"></app-route>
+			data="{{dataValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
@@ -231,7 +228,7 @@
 						view="{{activeView}}"
 						is-authorized="{{isAuthorized}}"
 						user="{{user}}"
-						route="{{tailKind}}"></admin-shell>
+						route="{{route}}"></admin-shell>
 
 					<!-- /:kind/add | /:kind/edit/:value -->
 					<form-view
@@ -241,6 +238,7 @@
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
+						headline="{{headline}}"
 						route="{{route}}"></form-view>
 
 				</neon-animated-pages>
@@ -268,59 +266,30 @@
 				activeView: { type: String, value: 'grid', notify: true, observer: 'propertyChanged' },
 			},
 			observers: [
-				'viewChanged(activeFilter, activeFind, activeKind, dataKind.kind, dataField.field, dataValue.value)'
+				'viewChanged(dataKind.kind, dataField.field, dataValue.value)'
 			],
-			viewChanged: function(activeFilter, activeFind, activeKind, kind, field, value) {
-				var active = [+ activeFilter, + activeFind, + activeKind],
-					result = parseInt(active.join(''), 2); // TODO: binary -> decimal
-				console.log(active.join(' '), ' = ', result);
+			viewChanged: function(kind, field, value) {
+				console.log(kind, field, value);
 
-				if (activeFilter && activeFind && activeKind) {
-					if (field == 'edit' && value) {
+				if (kind && field && value) {
+					if (field == 'edit') {
 						this.activeView = 'form';
 					} else {
-						this.activeView = 'detail'; // filter
+						this.activeView = 'detail';
 					}
-				} else if (activeFind && activeKind) {
-					if (field == 'add') {
+				} else if (kind && field) {
+					if (kind == 'search') {
+						this.activeView = 'detail';
+					} else if (field == 'add') {
 						this.activeView = 'form';
-					} else{
-						this.activeView = 'detail'; // search
 					}
-				} else if (activeKind) {
+				} else if (kind) {
 					if (kind == 'admin') {
 						this.activeView = 'admin';
 					} else {
 						this.activeView = 'grid';
 					}
 				}
-
-				// switch (result) {
-				// 	case 1:
-				// 		if (dataKind.kind == 'admin') {
-				// 			this.activeView = 'admin';
-				// 		} else {
-				// 			this.activeView = 'grid';
-				// 		}
-				// 		break;
-				// 	case 3:
-				// 		if (dataField.field == 'add') {
-				// 			this.activeView = 'form';
-				// 		} else{
-				// 			this.activeView = 'detail'; // search
-				// 		}
-				// 		break;
-				// 	case 7:
-				// 		if (dataField.field == 'edit' && dataValue.value) {
-				// 			this.activeView = 'form';
-				// 		} else {
-				// 			this.activeView = 'detail'; // filter
-				// 		}
-				// 		break;
-				// 	default:
-				// 		this.activeView = 'grid';
-				// 		break;
-				// }
 			},
 			resetFilter: function(e) {
 				if (this.dataKind.kind == 'search') {
@@ -374,7 +343,7 @@
 				// this.dataField.field = 'edit';
 				// this.dataValue.value = safekey;
                 // detailView.set('params.page', null);
-				console.log(['', this.dataKind.kind, 'edit', safekey].join('/'));
+				// console.log(['', this.dataKind.kind, 'edit', safekey].join('/'));
 				this.set('route.path', ['', this.dataKind.kind, 'edit', safekey].join('/'));
 			},
 			showExif: function(e) {
@@ -382,7 +351,7 @@
             },
 			objectChanged: function(obj) {
                 // this is object observer!
-				console.log(obj.path + ' -> ' + this.get(obj.path));
+				if (obj && obj.path) console.log(obj.path + ' -> ' + this.get(obj.path));
             },
 			propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
