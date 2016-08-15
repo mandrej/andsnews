@@ -126,17 +126,17 @@
 				<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
 			</app-toolbar>
 			<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
-				<paper-item kind-page="photo" on-tap="resetFilter">
+				<paper-item kind-page="photo">
 					<a href="#/photo" class="flex">
 						<iron-icon icon="image:photo-camera"></iron-icon>Photos
 					</a>
 				</paper-item>
-				<paper-item kind-page="entry" on-tap="resetFilter">
+				<paper-item kind-page="entry">
 					<a href="#/entry" class="flex">
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<paper-item kind-page="admin" on-tap="resetFilter">
+				<paper-item kind-page="admin">
 					<a href="#/admin" class="flex">
 						<iron-icon icon="settings"></iron-icon>Admin
 					</a>
@@ -175,11 +175,11 @@
 					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-								<a href="#/photo" kind-page="photo" on-tap="resetFilter">
+								<a href="#/photo" kind-page="photo">
 									<paper-button>Photos</paper-button></a>
-								<a href="#/entry" kind-page="entry" on-tap="resetFilter">
+								<a href="#/entry" kind-page="entry">
 									<paper-button>Texts</paper-button></a>
-								<a href="#/admin" kind-page="admin" on-tap="resetFilter">
+								<a href="#/admin" kind-page="admin">
 									<paper-button>Admin</paper-button></a>
 							</iron-selector>
 						</template>
@@ -340,11 +340,9 @@
 			editRecord: function(e) {
 				var detailView = this.$$('detail-view'),
 					safekey = detailView.items[detailView.start].safekey;
-				// this.dataField.field = 'edit';
-				// this.dataValue.value = safekey;
-                // detailView.set('params.page', null);
-				// console.log(['', this.dataKind.kind, 'edit', safekey].join('/'));
-				this.set('route.path', ['', this.dataKind.kind, 'edit', safekey].join('/'));
+				this.async(function() {
+					this.set('route.path', ['', this.dataKind.kind, 'edit', safekey].join('/'));
+				}, 100);
 			},
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
