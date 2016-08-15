@@ -69,8 +69,6 @@
             loading="{{loading}}"
             debounce-duration="300"></iron-ajax>
 
-        <iron-request id="download_ajax"></iron-request>
-
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
@@ -249,11 +247,6 @@
                         break;
                 }
             },
-            // downloadImg: function(e) {
-            //     e.preventDefault();
-            //     var url = e.target.dataUrl,
-            //         promise = this.$.download_ajax.send({url: url, method: 'GET'});
-            // },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
 			},

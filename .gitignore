@@ -10,8 +10,10 @@ networkx
 pipeline
 pytz
 simplejson
+transliterate
 wtforms
 decorator.py
+six.py
 static/font/
 static/css/components/
 *.pyc

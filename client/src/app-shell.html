@@ -230,7 +230,6 @@
 						user="{{user}}"
 						route="{{route}}"></admin-shell>
 
-					<!-- /:kind/add | /:kind/edit/:value -->
 					<form-view
 						data-view="form"
 						view="[[activeView]]"
@@ -335,7 +334,9 @@
 
 			},
 			downloadPhoto: function(e) {
-
+				var detailView = this.$$('detail-view'),
+					safekey = detailView.items[detailView.start].safekey;
+				window.location.href = '/api/download/' + safekey;
 			},
 			editRecord: function(e) {
 				var detailView = this.$$('detail-view'),

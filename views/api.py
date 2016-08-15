@@ -4,6 +4,7 @@ import logging
 import webapp2
 import datetime
 from operator import itemgetter
+from transliterate import slugify
 from google.appengine.api import users, memcache, app_identity
 from google.appengine.ext import ndb, blobstore, deferred
 from handlers import LazyEncoder, Paginator, SearchPaginator
@@ -180,5 +181,10 @@ class Download(webapp2.RequestHandler):
         key = ndb.Key(urlsafe=safe_key)
         obj = key.get()
         buff = obj.buffer
-        self.response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % key.string_id()
+        self.response.headers = {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
+        }
+        # self.response.headers['Content-Disposition'] = 'attachment; filename=download.jpg'
+        # self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.write(buff)
