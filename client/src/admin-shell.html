@@ -25,20 +25,14 @@
             }
             paper-button {
                 color: var(--dark-theme-base-color);
-                background-color: var(--primary-color);
                 text-transform: lowercase;
 			}
         </style>
 
         <div class="container">
-            <h1>Google authorization</h1>
-			<google-signin
-				brand="google"
-				height="tall"
-				width="wide"
-				client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"></google-signin>
-
-			<google-signin-aware
+            <paper-button id="button" on-tap="signGoogle">Google Sign-In</paper-button></a>
+			<google-signin-aware id="aware"
+                client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
 				is-authorized="{{isAuthorized}}"
 				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
         </div>
@@ -47,16 +41,36 @@
         Polymer({
             is: 'admin-shell',
             properties: {
-                isAuthorized: { type: Boolean, value: false, notify: true },
+                isAuthorized: { type: Boolean, value: false, notify: true, observer: 'toggle' },
                 user: { type: Object, notify: true },
+            },
+            signGoogle: function() {
+                if (this.isAuthorized) {
+                    this.user.disconnect();
+					this.isAuthorized = false;
+        			this.user = null;
+                    gapi.auth2.getAuthInstance().signOut();
+                } else {
+                    this.$.aware.signIn();
+                }
             },
             handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+                console.log(this.user.getBasicProfile().getName());
 				// .getBasicProfile().getId();
 				// .getBasicProfile().getName();
 				// .getBasicProfile().getEmail();
 				// .getBasicProfile().getImageUrl();
             },
+            toggle: function(newValue) {
+                if (newValue) {
+                    this.$.button.style.backgroundColor = '#3f51b5'; //var(--primary-color)
+                    this.$.button.innerText = 'Google Sign-Out';
+                } else {
+                    this.$.button.style.backgroundColor = '#f44336'; //var(--paper-red-500)
+                    this.$.button.innerText = 'Google Sign-In';
+                }
+            }
         });
     </script>
 </dom-module>

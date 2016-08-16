@@ -21,6 +21,7 @@
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
 
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
@@ -272,6 +273,7 @@
 			],
 			viewChanged: function(kind, field, value) {
 				console.log(kind, field, value);
+				if (this.$.drawer.opened) this.$.drawer.close();
 
 				if (kind && field && value) {
 					if (field == 'edit') {
@@ -300,7 +302,6 @@
 				this.set('dataField.field', null);
 				this.set('dataValue.value', null);
 				this.headline = 'ANDрејевићи'
-				this.$.drawer.close();
 
 				this.set('route.path', ['', this.dataKind.kind].join('/'));
 			},
@@ -325,13 +326,16 @@
 					this.isAuthorized = false;
 					this.user = null;
 				}
+				gapi.auth2.getAuthInstance().signOut();
 			},
 			userImg: function(user) {
 				if (user) return user.getBasicProfile().getImageUrl();
 				return ''
 			},
 			addRecord: function(e) {
-
+				this.async(function() {
+					this.set('route.path', ['', this.dataKind.kind, 'add'].join('/'));
+				}, 100);
 			},
 			deleteRecord: function(e) {
 
