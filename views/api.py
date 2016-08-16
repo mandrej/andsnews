@@ -4,7 +4,7 @@ import logging
 import webapp2
 import datetime
 from operator import itemgetter
-from transliterate import slugify
+from slugify import slugify
 from google.appengine.api import users, memcache, app_identity
 from google.appengine.ext import ndb, blobstore, deferred
 from handlers import LazyEncoder, Paginator, SearchPaginator
