@@ -2,6 +2,9 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
 <dom-module id="admin-shell">
     <template>
@@ -40,7 +43,26 @@
     <script>
         Polymer({
             is: 'admin-shell',
+            behaviors: [
+                Polymer.NeonAnimationBehavior,
+                Polymer.NeonAnimationRunnerBehavior,
+            ],
             properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'slide-from-right-animation',
+                                node: this
+                            }],
+                            'exit': [{
+                                name: 'slide-right-animation',
+                                node: this
+                            }]
+                        }
+                    }
+                },
                 isAuthorized: { type: Boolean, value: false, notify: true, observer: 'toggle' },
                 user: { type: Object, notify: true },
             },
