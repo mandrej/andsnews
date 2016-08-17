@@ -11,4 +11,4 @@ class TransliterateTest(unittest.TestCase):
         print slugify(u'Мишићи')
 
     def test3(self):
-        print slugify(u'Misici')
+        print slugify(u'Ђоле с лоптом')
