@@ -37,10 +37,6 @@
                     text-transform: lowercase;
                 }
             }
-            /*paper-select .selected-item {
-                color: #000;
-                background-color: #666;
-            }*/
         </style>
 
         <iron-ajax auto
@@ -134,7 +130,7 @@
                         label="date"
                         value="{{_dateFormat(obj.date)}}"></vaadin-date-picker>
 
-                    <template is="dom-if" if="[[_isItemPhoto(obj)]]">
+                    <template is="dom-if" if="[[_isKindPhoto(kind)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
                         <vaadin-combo-box
                             name="lens"
@@ -152,7 +148,7 @@
                         </div>
                     </template>
 
-                    <template is="dom-if" if="[[!_isItemPhoto(obj)]]">
+                    <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
                         <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
                         <paper-textarea name="front_img" label="front image" value="{{obj.front_img}}"></paper-textarea>
                         <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
@@ -185,7 +181,6 @@
                     }
                 },
                 isAuthorized: { type: Boolean, value: false, notify: true },
-                headline: { type: String, value: 'ANDрејевићи', notify: true },
                 view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
@@ -194,9 +189,7 @@
             _url: function(view, kind, field, value, isAuthorized) {
                 if (view != 'form') return;
                 if (isAuthorized) {
-                    if (field == 'add') {
-                        return ['/api', kind, field].join('/');
-                    } else if (field == 'edit') {
+                    if (field == 'edit') {
                         return ['/api', kind, field, value].join('/');
                     }
                 } else{
@@ -213,9 +206,6 @@
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';
-            },
-            _isItemPhoto: function(item) {
-                return item.kind == 'photo';
             },
             _isAdd: function(field) {
                 return field == 'add';

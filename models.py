@@ -529,11 +529,9 @@ class Photo(ndb.Model):
         else:
             del data['date']
 
-        if 'tags' in data:
-            tags = map(unicode.strip, data['tags'].split(','))
-            update_tags(self.kind, self.tags, tags)
-            self.tags = sorted(tags)
-            del data['tags']
+        update_tags(self.kind, self.tags, data['tags'])
+        self.tags = sorted(data['tags'])
+        del data['tags']
 
         if data['focal_length']:
             old = self.focal_length
@@ -653,7 +651,6 @@ class Entry(ndb.Model):
         # INDEX.put(doc)
 
     def add(self, data):
-        self.headline = data['headline']
         self.summary = data['summary']
         self.date = data['date']
         self.body = data['body']
@@ -663,12 +660,7 @@ class Entry(ndb.Model):
 
         incr_count(self.kind, 'author', self.author.email())
         incr_count(self.kind, 'date', self.year)
-        if 'tags' in data:
-            tags = map(unicode.strip, data['tags'].split(','))
-            update_tags(self.kind, None, tags)
-            self.tags = sorted(tags)
-            del data['tags']
-
+        update_tags(self.kind, None, self.tags)
         deferred.defer(self.index_doc)
 
     def edit(self, data):
@@ -683,12 +675,8 @@ class Entry(ndb.Model):
         if old != new:
             decr_count(self.kind, 'date', self.year)
             incr_count(self.kind, 'date', new.year)
-
-        if 'tags' in data:
-            tags = map(unicode.strip, data['tags'].split(','))
-            update_tags(self.kind, self.tags, tags)
-            self.tags = sorted(tags)
-            del data['tags']
+        update_tags(self.kind, self.tags, data['tags'])
+        self.tags = sorted(data['tags'])
 
         self.put()
 

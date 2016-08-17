@@ -104,6 +104,12 @@
 
 		<app-route
 			route="{{route}}"
+			pattern="/:view"
+			data="{{dataView}}"
+			tail="{{tailView}}"></app-route>
+
+		<app-route
+			route="{{tailView}}"
 			pattern="/:kind"
 			data="{{dataKind}}"
 			tail="{{tailKind}}"></app-route>
@@ -128,12 +134,12 @@
 			</app-toolbar>
 			<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
 				<paper-item kind-page="photo">
-					<a href="#/photo" class="flex">
+					<a href="#/grid/photo" class="flex">
 						<iron-icon icon="image:photo-camera"></iron-icon>Photos
 					</a>
 				</paper-item>
 				<paper-item kind-page="entry">
-					<a href="#/entry" class="flex">
+					<a href="#/grid/entry" class="flex">
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
@@ -149,10 +155,7 @@
 		<app-header-layout>
 			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
 				<app-toolbar>
-					<template is="dom-if" if="[[_isDetailView(activeView)]]">
-						<paper-icon-button icon="chevron-left" on-tap="resetFilter"></paper-icon-button>
-					</template>
-					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
+					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
 						<template is="dom-if" if="[[smallScreen]]">
 							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 						</template>
@@ -160,7 +163,7 @@
 
 	  				<h4 condensed-title>{{headline}}</h4>
 
-					<template is="dom-if" if="[[_isDetailView(activeView)]]">
+					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
 						<div hidden$="{{!isAuthorized}}" class="layout horizontal">
 				            <paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
 							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
@@ -173,12 +176,12 @@
 						</template>
 					</template>
 
-					<template is="dom-if" if="[[!_isDetailView(activeView)]]">
+					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
 						<template is="dom-if" if="[[!smallScreen]]">
 							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-								<a href="#/photo" kind-page="photo">
+								<a href="#/grid/photo" kind-page="photo">
 									<paper-button>Photos</paper-button></a>
-								<a href="#/entry" kind-page="entry">
+								<a href="#/grid/entry" kind-page="entry">
 									<paper-button>Texts</paper-button></a>
 								<a href="#/admin" kind-page="admin">
 									<paper-button>Admin</paper-button></a>
@@ -193,7 +196,7 @@
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
 
-					<template is="dom-if" if="[[_isGridView(activeView)]]">
+					<template is="dom-if" if="[[_isGridView(dataView.view)]]">
 						<div hidden$="{{!isAuthorized}}">
 							<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
 				        </div>
@@ -205,18 +208,16 @@
 			</app-header>
 
 			<main>
-				<app-scrollpos-control selected="{{activeView}}"></app-scrollpos-control>
-				<neon-animated-pages selected="{{activeView}}" attr-for-selected="data-view">
+				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 					<grid-view
 						data-view="grid"
-						view="[[activeView]]"
 						kind="[[dataKind.kind]]"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
 					<detail-view
 						data-view="detail"
-						view="[[activeView]]"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
@@ -226,14 +227,13 @@
 
 					<admin-shell
 						data-view="admin"
-						view="{{activeView}}"
 						is-authorized="{{isAuthorized}}"
 						user="{{user}}"
 						route="{{route}}"></admin-shell>
 
 					<form-view
 						data-view="form"
-						view="[[activeView]]"
+						view="[[dataView.view]]"
 						is-authorized="{{isAuthorized}}"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
@@ -251,10 +251,8 @@
 			is: 'app-shell',
 			attached: function() {
 				if (!this.route.path) {
-					this.set('route.path', '/photo');
-					this.set('dataKind.kind', 'photo');
+					this.set('route.path', '/grid/photo');
 				}
-				// this.set('dataValue.value', null);
 			},
 			properties: {
 				version: { type: String, value: '160810'},
@@ -262,48 +260,18 @@
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
+				dataView: { type: Object, value: {view: null} },
 				dataKind: { type: Object, value: {kind: null} },
 				dataField: { type: Object, value: {field: null} },
 				dataValue: { type: Object, value: {value: null} },
 				loading: { type: Boolean, value: false, notify: true },
-				activeView: { type: String, value: 'grid', notify: true, observer: 'propertyChanged' },
 			},
 			observers: [
-				'viewChanged(dataKind.kind, dataField.field, dataValue.value)'
+				'viewChanged(dataView.view)'
 			],
-			viewChanged: function(kind, field, value) {
-				console.log(kind, field, value);
+			viewChanged: function(view) {
 				if (this.$.drawer.opened) this.$.drawer.close();
-
-				if (kind && field && value) {
-					if (field == 'edit') {
-						this.activeView = 'form';
-					} else {
-						this.activeView = 'detail';
-					}
-				} else if (kind && field) {
-					if (kind == 'search') {
-						this.activeView = 'detail';
-					} else if (field == 'add') {
-						this.activeView = 'form';
-					}
-				} else if (kind) {
-					if (kind == 'admin') {
-						this.activeView = 'admin';
-					} else {
-						this.activeView = 'grid';
-					}
-				}
-			},
-			resetFilter: function(e) {
-				if (this.dataKind.kind == 'search') {
-					this.set('dataKind.kind', 'photo');
-				}
-				this.set('dataField.field', null);
-				this.set('dataValue.value', null);
 				this.headline = 'ANDрејевићи'
-
-				this.set('route.path', ['', this.dataKind.kind].join('/'));
 			},
 			_isGridView: function(view) {
 				return view == 'grid'
@@ -334,8 +302,8 @@
 			},
 			addRecord: function(e) {
 				this.async(function() {
-					this.set('route.path', ['', this.dataKind.kind, 'add'].join('/'));
-				}, 100);
+					this.set('route.path', ['', 'form', this.dataKind.kind, 'add'].join('/'));
+				}, 200);
 			},
 			deleteRecord: function(e) {
 
@@ -349,8 +317,8 @@
 				var detailView = this.$$('detail-view'),
 					obj = detailView.items[detailView.start];
 				this.async(function() {
-					this.set('route.path', ['', obj.kind, 'edit', obj.safekey].join('/'));
-				}, 100);
+					this.set('route.path', ['', 'form', obj.kind, 'edit', obj.safekey].join('/'));
+				}, 200);
 			},
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');

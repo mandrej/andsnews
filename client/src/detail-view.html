@@ -62,7 +62,7 @@
         </style>
 
         <iron-ajax id="ajax" auto
-            url="{{_url(view, kind, field, value)}}"
+            url="{{_url(kind, field, value)}}"
             params="{{params}}"
             handle-as="json"
             on-response="handler"
@@ -126,7 +126,6 @@
                         }
                     }
                 },
-                view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -145,10 +144,9 @@
                 'show-exif': '_showExif',
                 'edit-record': '_editRecord',
             },
-            _url: function(view, kind, field, value) {
+            _url: function(kind, field, value) {
 				var url, prefix = '/api';
 
-                if (view != 'detail') return url;
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
 				} else if (field && value) {
@@ -163,7 +161,7 @@
 			},
 			handler: function(request) {
 				var response = request.detail.response;
-                // if (!response.objects) return;
+                if (!response.objects) return;
                 if (response.objects.length == 0) {
                     var dialog = this.$.message;
                     dialog.fitInto = this.$.swipe;

@@ -136,11 +136,29 @@ class Rest(RestHandler):
             self.abort(404)
         self.render(obj)
 
-    def post(self):
+    def post(self, kind=None):
         data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
-        fs = data['file']
-        obj = Photo(headline=fs.filename)
-        res = obj.add(fs)
+        if kind == 'photo':
+            fs = data['file']
+            obj = Photo(headline=fs.filename)
+            res = obj.add(fs)
+        else:
+            obj = Entry(headline=data['headline'])
+            # fix tags
+            if 'tags' in data:
+                if data['tags'].strip() != '':
+                    tags = map(unicode.strip, data['tags'].split(','))
+                else:
+                    tags = []
+            else:
+                tags = []
+            data['tags'] = tags
+            # fix empty values
+            values = map(lambda x: x if x != '' else None, data.values())
+            data = dict(zip(data.keys(), values))
+            res = obj.add(data)
+
+
         self.render(res)
 
     def put(self, kind=None, safe_key=None):
@@ -148,12 +166,23 @@ class Rest(RestHandler):
         if obj is None:
             self.abort(404)
 
+        data = self.request.params
+        # fix tags
+        if 'tags' in data:
+            if data['tags'].strip() != '':
+                tags = map(unicode.strip, data['tags'].split(','))
+            else:
+                tags = []
+        else:
+            tags = []
+        data['tags'] = tags
+        # fix empty values
+        values = map(lambda x: x if x != '' else None, data.values())
+        data = dict(zip(data.keys(), values))
+        # fix date
+        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
+
         if kind == 'photo':
-            # empty strings to None
-            values = map(lambda x: x if x != '' else None, self.request.params.values())
-            data = dict(zip(self.request.params.keys(), values))
-            # alter data
-            data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
             if data['focal_length']:
                 data['focal_length'] = float(data['focal_length'])
             if data['aperture']:
@@ -162,11 +191,6 @@ class Rest(RestHandler):
                 data['iso'] = int(data['iso'])
 
         elif kind == 'entry':
-            values = map(lambda x: x if x != '' else None, self.request.params.values())
-            data = dict(zip(self.request.params.keys(), values))
-            data = dict(self.request.params)
-            # alter data
-            data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
             logging.error(data)
 
         obj.edit(data)
