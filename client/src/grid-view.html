@@ -111,9 +111,14 @@
                     }
                 },
                 kind: { type: String, value: null, notify: true, },
+                field: { type: String, value: null, notify: true },
+				value: { type: String, value: null, notify: true },
                 items: { type: Array, value: [], notify: true },
             },
             _url: function(kind) {
+                // clear previous filter
+                this.field = null;
+                this.value = null;
                 // var dataView = Polymer.dom().querySelector('app-shell').dataView;
                 this.items = [];
                 if (kind == 'photo') {

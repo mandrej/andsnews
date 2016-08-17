@@ -210,9 +210,18 @@
 			<main>
 				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+
+					<admin-shell
+						data-view="admin"
+						is-authorized="{{isAuthorized}}"
+						user="{{user}}"
+						route="{{route}}"></admin-shell>
+
 					<grid-view
 						data-view="grid"
 						kind="[[dataKind.kind]]"
+						field="{{dataField.field}}"
+						value="{{dataValue.value}}"
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
@@ -224,12 +233,6 @@
 						loading="{{loading}}"
 						headline="{{headline}}"
 						route="{{route}}"></detail-view>
-
-					<admin-shell
-						data-view="admin"
-						is-authorized="{{isAuthorized}}"
-						user="{{user}}"
-						route="{{route}}"></admin-shell>
 
 					<form-view
 						data-view="form"

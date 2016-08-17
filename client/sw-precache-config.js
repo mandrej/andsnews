@@ -11,7 +11,8 @@ module.exports = {
         handler: 'networkFirst',
         options: {
             cache: {
-                maxEntries: 20,
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24,
                 name: 'data-cache'
             }
         }
