@@ -31,13 +31,21 @@ class Suggest(RestHandler):
 class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
         page = self.request.get('page', None)
-        model = ndb.Model._kind_map.get(kind.title())
-        query = model.query_for(field, value)
-        paginator = Paginator(query, per_page=LIMIT)
-        objects, token = paginator.page(page)
 
-        if not objects:
-            self.abort(404)
+        # EXCEPTION
+        if kind == 'entry' and field == 'show':
+            obj = ndb.Key(urlsafe=value).get()
+            if obj is None:
+                self.abort(404)
+            objects = [obj]
+            token = None
+        else:
+            model = ndb.Model._kind_map.get(kind.title())
+            query = model.query_for(field, value)
+            paginator = Paginator(query, per_page=LIMIT)
+            objects, token = paginator.page(page)
+            if not objects:
+                self.abort(404)
 
         self.render({
             'objects': objects,
