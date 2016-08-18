@@ -9,6 +9,7 @@ app = WSGIApplication([
     Route(r'/api/suggest/<mem_key>', handler='views.api.Suggest'),
     Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
     Route(r'/api/search/<find>', handler='views.api.Find'),
+    Route(r'/api/memcache', handler='views.api.Cache', methods=['GET']),
 
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
     Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|model|author|show)>/<value>',

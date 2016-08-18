@@ -12,6 +12,8 @@ from models import Cloud, Entry, Photo
 from config import TIMEOUT
 
 LIMIT = 12
+KEYS = ('Photo_date', 'Photo_tags', 'Photo_model',
+        'Entry_date', 'Entry_tags', 'Entry_author')
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 
 
@@ -135,6 +137,23 @@ class Find(RestHandler):
             'next': token,
             'error': error
         })
+
+
+class Cache(RestHandler):
+    def get(self):
+        data = dict(zip(KEYS, [None] * len(KEYS)))
+        data.update(memcache.get_multi(KEYS))
+
+        array = []
+        for key in KEYS:
+            tmp = []
+            val = data[key]
+            if val is not None:
+                for k, v in val.items():
+                    tmp.append({"name": k, "count": v})
+            array.append({"key": key, "value": tmp})
+
+        self.render(array)
 
 
 class Rest(RestHandler):

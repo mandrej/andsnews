@@ -145,15 +145,14 @@
             },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';
-
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
 				} else if (field && value) {
 					url = [prefix, kind, field, value].join('/');
 				}
-                this.set('params.page', null);
                 this.items = [];
                 this.async(function() {
+                    this.set('params.page', null);
                     this.start = 0;
                 });
 				return url;

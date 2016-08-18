@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
@@ -37,6 +38,27 @@
                 client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
 				is-authorized="{{isAuthorized}}"
 				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+
+            <iron-ajax auto
+    			url="/api/memcache"
+    			handle-as="json"
+                last-response="{{memcache}}"
+    			debounce-duration="300"></iron-ajax>
+
+            <template is="dom-repeat" items="[[memcache]]" as="item">
+                <ul>
+                    <li>
+                        [[item.key]]
+                        <template is="dom-repeat" items="[[item.value]]" as="rec">
+                            <ul>
+                                <li>
+                                    [[rec.name]] [[rec.count]]
+                                </li>
+                            </ul>
+                        </template>
+                    </li>
+                </ul>
+            </template>
         </div>
     </template>
     <script>
