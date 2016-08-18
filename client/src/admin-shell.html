@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
@@ -18,8 +19,8 @@
             .container {
                 margin: 16px;
             }
-            h1 {
-				margin: 0;
+            h2 {
+				/*margin: 0;*/
 				font-size: 24px;
 				font-weight: 300;
 			}
@@ -28,8 +29,30 @@
             }
             paper-button {
                 color: var(--dark-theme-base-color);
+                background-color: var(--primary-color);
                 text-transform: lowercase;
 			}
+            paper-checkbox.green {
+                /*align-self: center;*/
+                /*border: 1px solid var(--paper-green-200);*/
+                /*margin-bottom: 0 16px;*/
+                /*padding: 16px 0;*/
+
+                /*--paper-checkbox-checked-color: var(--paper-green-500);
+                --paper-checkbox-checked-ink-color: var(--paper-green-500);
+                --paper-checkbox-unchecked-color: var(--paper-green-900);
+                --paper-checkbox-unchecked-ink-color: var(--paper-green-900);
+                --paper-checkbox-label-color: var(--paper-green-500);*/
+                --paper-checkbox-label-spacing: 0;
+                --paper-checkbox-margin: 0 16px 8px 0;
+                --paper-checkbox-vertical-align: top;
+            }
+            paper-checkbox .subtitle {
+                display: block;
+                /*font-size: 0.8em;*/
+                margin: 2px 16px 16px 0;
+                /*max-width: 150px;*/
+            }
         </style>
 
         <div class="container">
@@ -45,20 +68,19 @@
                 last-response="{{memcache}}"
     			debounce-duration="300"></iron-ajax>
 
-            <template is="dom-repeat" items="[[memcache]]" as="item">
-                <ul>
-                    <li>
+            <h2>Clouds</h2>
+            <div class="layout vertical">
+                <template is="dom-repeat" items="[[memcache]]" as="item">
+                    <paper-checkbox checked="[[_hasValue(item)]]" class="green">
                         [[item.key]]
-                        <template is="dom-repeat" items="[[item.value]]" as="rec">
-                            <ul>
-                                <li>
-                                    [[rec.name]] [[rec.count]]
-                                </li>
-                            </ul>
-                        </template>
-                    </li>
-                </ul>
-            </template>
+                        <span class="subtitle">
+                            <template is="dom-repeat" items="[[item.value]]" as="rec">
+                                [[rec.name]]
+                            </template>
+                        </span>
+                    </paper-checkbox>
+                </template>
+            </div>
         </div>
     </template>
     <script>
@@ -113,6 +135,9 @@
                     this.$.button.style.backgroundColor = '#f44336'; //var(--paper-red-500)
                     this.$.button.innerText = 'Google Sign-In';
                 }
+            },
+            _hasValue: function(item) {
+                return item.value.length;
             }
         });
     </script>
