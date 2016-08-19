@@ -13,31 +13,33 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                display: block;
+                @apply(--layout-horizontal);
+                @apply(--layout-start-aligned);
+                @apply(--layout-wrap);
                 height: 100vh;
             }
-            .container {
-                margin: 16px;
-            }
             h2 {
-				/*margin: 0;*/
+				margin-top: 0;
 				font-size: 24px;
 				font-weight: 300;
 			}
             a {
                 text-decoration: none;
             }
+            .card {
+                margin: 16px;
+                position: relative;
+                box-sizing: border-box;
+            }
+            @media (max-width: 1024px) { .card { width: calc(100% / 3); } }
+            @media (max-width: 768px)  { .card { width: calc(100% / 2); } }
+            @media (max-width: 432px)  { .card { width: 100%; } }
             paper-button {
                 color: var(--dark-theme-base-color);
                 background-color: var(--primary-color);
                 text-transform: lowercase;
 			}
-            paper-checkbox.green {
-                /*align-self: center;*/
-                /*border: 1px solid var(--paper-green-200);*/
-                /*margin-bottom: 0 16px;*/
-                /*padding: 16px 0;*/
-
+            paper-checkbox {
                 /*--paper-checkbox-checked-color: var(--paper-green-500);
                 --paper-checkbox-checked-ink-color: var(--paper-green-500);
                 --paper-checkbox-unchecked-color: var(--paper-green-900);
@@ -47,38 +49,26 @@
                 --paper-checkbox-margin: 0 16px 8px 0;
                 --paper-checkbox-vertical-align: top;
             }
-            paper-checkbox .subtitle {
-                display: block;
-                /*font-size: 0.8em;*/
-                margin: 2px 16px 16px 0;
-                /*max-width: 150px;*/
-            }
         </style>
 
-        <div class="container">
-            <paper-button id="button" on-tap="signGoogle">Google Sign-In</paper-button></a>
-			<google-signin-aware id="aware"
-                client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
-				is-authorized="{{isAuthorized}}"
-				on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+        <google-signin-aware id="aware"
+            client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
+            is-authorized="{{isAuthorized}}"
+            on-google-signin-aware-success="handleSignIn"></google-signin-aware>
 
-            <iron-ajax auto
-    			url="/api/memcache"
-    			handle-as="json"
-                last-response="{{memcache}}"
-    			debounce-duration="300"></iron-ajax>
+        <iron-request id="rebuild_ajax"></iron-request>
 
-            <h2>Clouds</h2>
+        <div class="card">
             <div class="layout vertical">
-                <template is="dom-repeat" items="[[memcache]]" as="item">
-                    <paper-checkbox checked="[[_hasValue(item)]]" class="green">
-                        [[item.key]]
-                        <span class="subtitle">
-                            <template is="dom-repeat" items="[[item.value]]" as="rec">
-                                [[rec.name]]
-                            </template>
-                        </span>
-                    </paper-checkbox>
+                <paper-button id="button" on-tap="signGoogle">Google Sign-In</paper-button></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Memcache</h2>
+            <div class="layout vertical">
+                <template is="dom-repeat" items="[[memkeys]]" as="item">
+                    <paper-checkbox on-tap="rebuild">[[item]]</paper-checkbox>
                 </template>
             </div>
         </div>
@@ -108,6 +98,10 @@
                 },
                 isAuthorized: { type: Boolean, value: false, notify: true, observer: 'toggle' },
                 user: { type: Object, notify: true },
+                memkeys: {type: Array },
+            },
+            ready: function() {
+                this.memkeys = ['Photo_date', 'Photo_tags', 'Photo_model'];
             },
             signGoogle: function() {
                 if (this.isAuthorized) {
@@ -121,7 +115,7 @@
             },
             handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-                console.log(this.user.getBasicProfile().getName());
+                // console.log(this.user.getBasicProfile().getName());
 				// .getBasicProfile().getId();
 				// .getBasicProfile().getName();
 				// .getBasicProfile().getEmail();
@@ -136,8 +130,9 @@
                     this.$.button.innerText = 'Google Sign-In';
                 }
             },
-            _hasValue: function(item) {
-                return item.value.length;
+            rebuild: function(e) {
+                console.log(e.model.item);
+                this.$.rebuild_ajax.send({url: '/api/memcache/' + e.model.item, method: 'PUT'});
             }
         });
     </script>
