@@ -34,7 +34,7 @@ class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
         page = self.request.get('page', None)
 
-        # EXCEPTION
+        # SPECIFIC
         if kind == 'entry' and field == 'show':
             obj = ndb.Key(urlsafe=value).get()
             if obj is None:

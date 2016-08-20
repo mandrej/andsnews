@@ -2,9 +2,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
 <dom-module id="grid-view">
@@ -40,9 +40,6 @@
                 padding: 16px;
                 text-overflow: ellipsis;
             }
-            paper-ripple {
-				color: #fff;
-			}
             @media (max-width: 1024px) { .rec { width: calc(100% / 4); } }
             @media (max-width: 768px)  { .rec { width: calc(100% / 3); } }
             @media (max-width: 432px)  { .rec { width: calc(100% / 2); } }
@@ -52,7 +49,7 @@
 			url="[[_url(kind)]]"
 			handle-as="json"
             on-response="handler"
-			debounce-duration="300"></iron-ajax>
+            debounce-duration="100"></iron-ajax>
 
         <template is="dom-if" if="[[_isKindPhoto(kind)]]">
             <template is="dom-repeat" items="[[items]]" as="row">
@@ -66,13 +63,12 @@
                                 <span class="self-center">[[rec.count]]</span>
                             </div>
                         </div>
-                        <paper-ripple></paper-ripple>
                     </div>
                 </template>
             </template>
         </template>
 
-        <!--EXCEPTION-->
+        <!--SPECIFIC-->
         <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
@@ -82,7 +78,6 @@
                             <span class="self-center">[[rec.headline]]</span>
                         </div>
                     </div>
-                    <paper-ripple></paper-ripple>
                 </div>
             </template>
         </template>
@@ -91,8 +86,9 @@
         Polymer({
             is: 'grid-view',
             behaviors: [
-                Polymer.NeonAnimationBehavior,
+                Polymer.NeonAnimatableBehavior,
                 Polymer.NeonAnimationRunnerBehavior,
+                Polymer.NeonSharedElementAnimatableBehavior
             ],
             properties: {
                 animationConfig: {
@@ -106,7 +102,12 @@
                                 name: 'cascaded-animation',
                                 animation: 'transform-animation',
                                 transformFrom: 'translateY(-56px)'
-                            }]
+                            }],
+                            'exit': {
+                                name: 'hero-animation',
+                                id: 'hero',
+                                fromPage: this
+                            }
                         }
                     }
                 },
@@ -119,7 +120,6 @@
                 // clear previous filter
                 this.field = null;
                 this.value = null;
-                // var dataView = Polymer.dom().querySelector('app-shell').dataView;
                 this.items = [];
                 if (kind == 'photo') {
                     return ['/api/filter', kind].join('/');
@@ -143,10 +143,22 @@
                 return kind == 'photo';
             },
             applyFilter: function(e) {
+                var target = e.target;
+                while (target !== this && !target._templateInstance) {
+                    target = target.parentNode;
+                }
+                console.log(target.querySelector('iron-image'));
+                this.sharedElements = { hero: target.querySelector('iron-image') };
 				this.set('route.path', ['', 'detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
 			},
             showDetail: function(e) {
-                // EXCEPTION
+                // SPECIFIC
+                var target = e.target;
+                while (target !== this && !target._templateInstance) {
+                    target = target.parentNode;
+                }
+                console.log(target);
+                this.sharedElements = { hero: target };
                 this.set('route.path', ['', 'detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
