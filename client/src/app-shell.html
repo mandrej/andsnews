@@ -8,6 +8,7 @@
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
@@ -19,9 +20,7 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
 
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
@@ -230,6 +229,8 @@
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
+						records="{{records}}"
+						start="{{start}}"
 						loading="{{loading}}"
 						headline="{{headline}}"
 						route="{{route}}"></detail-view>
@@ -241,7 +242,7 @@
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
-						headline="{{headline}}"
+						obj="{{obj}}"
 						route="{{route}}"></form-view>
 
 				</neon-animated-pages>
@@ -268,6 +269,9 @@
 				dataField: { type: Object, value: {field: null} },
 				dataValue: { type: Object, value: {value: null} },
 				loading: { type: Boolean, value: false, notify: true },
+				records: { type: Array, value: [], notify: true },
+				start: { type: Number, value: 0, notify: true },
+				obj: { type: Object },
 			},
 			observers: [
 				'viewChanged(dataView.view)'
@@ -275,6 +279,8 @@
 			viewChanged: function(view) {
 				if (this.$.drawer.opened) this.$.drawer.close();
 				this.headline = 'ANDрејевићи'
+				this.records = [];
+				this.start = 0;
 			},
 			_isGridView: function(view) {
 				return view == 'grid'
@@ -303,6 +309,9 @@
 				if (user) return user.getBasicProfile().getImageUrl();
 				return ''
 			},
+			downloadPhoto: function(e) {
+				window.location.href = '/api/download/' + this.records[this.start].safekey;
+			},
 			addRecord: function(e) {
 				this.async(function() {
 					this.set('route.path', ['', 'form', this.dataKind.kind, 'add'].join('/'));
@@ -311,16 +320,10 @@
 			deleteRecord: function(e) {
 
 			},
-			downloadPhoto: function(e) {
-				var detailView = this.$$('detail-view'),
-					safekey = detailView.items[detailView.start].safekey;
-				window.location.href = '/api/download/' + safekey;
-			},
 			editRecord: function(e) {
-				var detailView = this.$$('detail-view'),
-					obj = detailView.items[detailView.start];
+				this.obj = this.records[this.start];
 				this.async(function() {
-					this.set('route.path', ['', 'form', obj.kind, 'edit', obj.safekey].join('/'));
+					this.set('route.path', ['', 'form', this.obj.kind, 'edit', this.obj.safekey].join('/'));
 				}, 200);
 			},
 			showExif: function(e) {
