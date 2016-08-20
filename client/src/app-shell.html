@@ -241,10 +241,10 @@
 						data-view="form"
 						view="[[dataView.view]]"
 						is-authorized="{{isAuthorized}}"
+						user="{{user}}"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
-						obj="{{obj}}"
 						route="{{route}}"></form-view>
 
 				</neon-animated-pages>
@@ -276,7 +276,6 @@
 				loading: { type: Boolean, value: false, notify: true },
 				records: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
-				obj: { type: Object },
 			},
 			observers: [
 				'viewChanged(dataView.view, dataKind.kind, dataField.field, dataValue.value)'
@@ -329,9 +328,9 @@
 
 			},
 			editRecord: function(e) {
-				this.obj = this.records[this.start];
+				var obj = this.records[this.start];
 				this.async(function() {
-					this.set('route.path', ['', 'form', this.obj.kind, 'edit', this.obj.safekey].join('/'));
+					this.set('route.path', ['', 'form', obj.kind, 'edit', obj.safekey].join('/'));
 				}, 200);
 			},
 			showExif: function(e) {

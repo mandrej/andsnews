@@ -146,7 +146,7 @@ class Cache(RestHandler):
         self.render(cloud.get_cache())
 
 
-class Rest(RestHandler):
+class Crud(RestHandler):
     def get(self, kind=None, safe_key=None):
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
@@ -183,7 +183,7 @@ class Rest(RestHandler):
         if obj is None:
             self.abort(404)
 
-        data = self.request.params
+        data = dict(self.request.params)
         # fix tags
         if 'tags' in data:
             if data['tags'].strip() != '':

@@ -504,7 +504,7 @@ class Photo(ndb.Model):
             # SAVE EVERYTHING
             self.put()
 
-            incr_count(self.kind, 'author', self.author.email())
+            # incr_count(self.kind, 'author', self.author.email())
             for field in PHOTO_FIELDS:
                 value = getattr(self, field, None)
                 if value:
@@ -513,11 +513,12 @@ class Photo(ndb.Model):
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
-        old = self.author.email()
+        old = self.author.email() if self.author else None
         new = data['author']
         if new != old:
             self.author = users.User(email=new)
-            decr_count(self.kind, 'author', old)
+            if old:
+                decr_count(self.kind, 'author', old)
             incr_count(self.kind, 'author', new)
         del data['author']
 
