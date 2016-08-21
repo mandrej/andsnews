@@ -112,7 +112,7 @@ def cloud_representation(kind):
                 'field_name': field,
                 'items': items
             })
-        memcache.set('%s_representation' % kind, data, TIMEOUT * 2)
+        memcache.set('%s_representation' % kind, data, 10 * 60)
 
     return data
 

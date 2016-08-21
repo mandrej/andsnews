@@ -239,7 +239,8 @@ class Cloud(object):
         return self.get_cache() or self.make()
 
     def get_list(self):
-        collection = self.get_cache() or self.make()
+        # collection = self.get_cache() or self.make()
+        collection = self.make()
         # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
         content = []
         if self.field == 'color':

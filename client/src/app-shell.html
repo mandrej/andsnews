@@ -323,11 +323,13 @@
 			},
 			addRecord: function(e) {
 				this.async(function() {
+					this.value = null;
 					this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 				}, 200);
 			},
 			deleteRecord: function(e) {
-				var obj = this.records.splice(this.start, 1)[0];
+				var obj = this.splice('records', this.start, 1)[0];
+				this.start ++;
 				this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
 			},
 			editRecord: function(e) {
