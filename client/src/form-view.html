@@ -47,13 +47,13 @@
 			url="[[_urlLensCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
-			debounce-duration="300"></iron-ajax>
+			debounce-duration="100"></iron-ajax>
 
         <iron-ajax auto
 			url="[[_urlTagsCloud(view, kind)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
-			debounce-duration="300"></iron-ajax>
+			debounce-duration="100"></iron-ajax>
 
         <div class="container">
             <form is="iron-form" id="form">
@@ -175,12 +175,9 @@
             },
             _url: function(view, kind, field, value, isAuthorized) {
                 if (view != 'form') return;
-                if (isAuthorized) {
-                    if (field == 'edit') {
-                        return ['/api', kind, field, value].join('/');
-                    }
-                } else{
-                    Polymer.dom().querySelector('app-shell').fire('show-google');
+                if (!isAuthorized) return;
+                if (field == 'edit') {
+                    return ['/api', kind, field, value].join('/');
                 }
             },
             _urlTagsCloud: function(view, kind) {

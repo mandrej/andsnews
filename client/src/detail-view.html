@@ -66,7 +66,7 @@
             handle-as="json"
             on-response="handler"
             loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+            debounce-duration="200"></iron-ajax>
 
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
@@ -149,8 +149,7 @@
                 },
             },
             listeners: {
-                'show-exif': '_showExif',
-                'edit-record': '_editRecord',
+                'show-exif': '_showExif'
             },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';

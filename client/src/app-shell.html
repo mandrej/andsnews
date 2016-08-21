@@ -321,7 +321,7 @@
 			},
 			addRecord: function(e) {
 				this.async(function() {
-					this.set('route.path', ['', 'form', this.dataKind.kind, 'add'].join('/'));
+					this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 				}, 200);
 			},
 			deleteRecord: function(e) {
@@ -330,7 +330,7 @@
 			editRecord: function(e) {
 				var obj = this.records[this.start];
 				this.async(function() {
-					this.set('route.path', ['', 'form', obj.kind, 'edit', obj.safekey].join('/'));
+					this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
 				}, 200);
 			},
 			showExif: function(e) {
