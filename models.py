@@ -21,6 +21,7 @@ import cloudstorage as gcs
 from config import COLORS, ASA, HUE, LUM, SAT, TIMEOUT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
+from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
@@ -402,7 +403,7 @@ def update_tags(kind, old, new):
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
-    author = ndb.UserProperty(auto_current_user_add=True)
+    author = ndb.UserProperty()
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
     size = ndb.IntegerProperty()
@@ -436,17 +437,17 @@ class Photo(ndb.Model):
 
     def index_doc(self):
         pass
-        # doc = search.Document(
-        #     doc_id=self.key.urlsafe(),
-        #     fields=[
-        #         search.TextField(name='slug', value=tokenize(self.key.string_id())), TODO transliterate headline
-        #         search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
-        #         search.TextField(name='tags', value=' '.join(self.tags)),
-        #         search.NumberField(name='year', value=self.year),
-        #         search.NumberField(name='month', value=self.date.month),
-        #         search.TextField(name='model', value=self.model)]
-        # )
-        # INDEX.put(doc)
+        doc = search.Document(
+            doc_id=self.key.urlsafe(),
+            fields=[
+                search.TextField(name='slug', value=tokenize(slugify(self.headline))),
+                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                search.TextField(name='tags', value=' '.join(self.tags)),
+                search.NumberField(name='year', value=self.year),
+                search.NumberField(name='month', value=self.date.month),
+                search.TextField(name='model', value=self.model)]
+        )
+        INDEX.put(doc)
 
     @webapp2.cached_property
     def buffer(self):
@@ -509,7 +510,7 @@ class Photo(ndb.Model):
                 value = getattr(self, field, None)
                 if value:
                     incr_count(self.kind, field, value)
-            deferred.defer(self.index_doc)
+            # deferred.defer(self.index_doc)
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -555,6 +556,7 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
         self.put()
+        deferred.defer(self.index_doc)
 
     @classmethod
     def _pre_delete_hook(cls, key):
@@ -625,7 +627,7 @@ class Img(ndb.Model):
 
 class Entry(ndb.Model):
     headline = ndb.StringProperty(required=True)
-    author = ndb.UserProperty(auto_current_user_add=True)
+    author = ndb.UserProperty()
     summary = ndb.StringProperty(required=True)
     body = ndb.TextProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
@@ -639,17 +641,17 @@ class Entry(ndb.Model):
 
     def index_doc(self):
         pass
-        # doc = search.Document(
-        #     doc_id=self.key.urlsafe(),
-        #     fields=[
-        #         search.TextField(name='slug', value=tokenize(self.key.string_id())),
-        #         search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
-        #         search.TextField(name='tags', value=' '.join(self.tags)),
-        #         search.NumberField(name='year', value=self.year),
-        #         search.NumberField(name='month', value=self.date.month),
-        #         search.HtmlField(name='body', value=self.body)]
-        # )
-        # INDEX.put(doc)
+        doc = search.Document(
+            doc_id=self.key.urlsafe(),
+            fields=[
+                search.TextField(name='slug', value=tokenize(slugify(self.headline))),
+                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                search.TextField(name='tags', value=' '.join(self.tags)),
+                search.NumberField(name='year', value=self.year),
+                search.NumberField(name='month', value=self.date.month),
+                search.HtmlField(name='body', value=self.body)]
+        )
+        INDEX.put(doc)
 
     def add(self, data):
         self.summary = data['summary']
@@ -680,6 +682,7 @@ class Entry(ndb.Model):
         self.tags = sorted(data['tags'])
 
         self.put()
+        deferred.defer(self.index_doc)
 
     @classmethod
     def _pre_delete_hook(cls, key):
