@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
@@ -15,7 +14,6 @@
                 @apply(--layout-horizontal);
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
-                height: 100vh;
             }
             h2 {
 				margin-top: 0;
@@ -26,18 +24,23 @@
                 text-decoration: none;
             }
             .card {
-                margin: 16px;
+                padding: 16px;
                 position: relative;
                 box-sizing: border-box;
+                width: 50%;
             }
-            @media (max-width: 1024px) { .card { width: calc(100% / 3); } }
-            @media (max-width: 768px)  { .card { width: calc(100% / 2); } }
-            @media (max-width: 432px)  { .card { width: 100%; } }
+            @media (max-width: 768px)  { .card { width: 100%; } }
             paper-button {
                 color: var(--dark-theme-base-color);
                 background-color: var(--primary-color);
                 text-transform: lowercase;
 			}
+            #google {
+                background-color: var(--paper-red-500)
+			}
+            #google[active] {
+                background-color: var(--primary-color);
+            }
             paper-checkbox {
                 /*--paper-checkbox-checked-color: var(--paper-green-500);
                 --paper-checkbox-checked-ink-color: var(--paper-green-500);
@@ -58,16 +61,16 @@
         <iron-request id="rebuild_ajax"></iron-request>
 
         <div class="card">
-            <div class="layout vertical">
-                <paper-button id="button" on-tap="signGoogle">Google Sign-In</paper-button></a>
+            <div class="flex">
+                <paper-button toggles active="[[isAuthorized]]" id="google" on-tap="signGoogle">Google Sign In</paper-button></a>
             </div>
         </div>
 
         <div class="card">
             <h2>Memcache</h2>
-            <div class="layout vertical">
+            <div class="flex">
                 <template is="dom-repeat" items="[[memkeys]]" as="item">
-                    <paper-checkbox on-tap="rebuild">[[item]]</paper-checkbox>
+                    <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
                 </template>
             </div>
         </div>
@@ -94,7 +97,7 @@
                         }
                     }
                 },
-                isAuthorized: { type: Boolean, value: false, notify: true, observer: 'toggle' },
+                isAuthorized: { type: Boolean, value: false, notify: true },
                 user: { type: Object, notify: true },
                 memkeys: {type: Array },
             },
@@ -107,29 +110,20 @@
 					this.isAuthorized = false;
         			this.user = null;
                     gapi.auth2.getAuthInstance().signOut();
+                    this.$.google.innerText = 'Google Sign-In';
                 } else {
                     this.$.aware.signIn();
                 }
             },
             handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-                // console.log(this.user.getBasicProfile().getName());
-				// .getBasicProfile().getId();
+                this.$.google.innerText = this.user.getBasicProfile().getName() + ' Sign-Out';
+				console.log(this.user.getBasicProfile().getId());
 				// .getBasicProfile().getName();
 				// .getBasicProfile().getEmail();
 				// .getBasicProfile().getImageUrl();
             },
-            toggle: function(newValue) {
-                if (newValue) {
-                    this.$.button.style.backgroundColor = '#3f51b5'; //var(--primary-color)
-                    this.$.button.innerText = 'Google Sign-Out';
-                } else {
-                    this.$.button.style.backgroundColor = '#f44336'; //var(--paper-red-500)
-                    this.$.button.innerText = 'Google Sign-In';
-                }
-            },
             rebuild: function(e) {
-                console.log(e.model.item);
                 this.$.rebuild_ajax.send({url: '/api/memcache/' + e.model.item, method: 'PUT'});
             }
         });

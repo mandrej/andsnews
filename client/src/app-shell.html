@@ -10,7 +10,7 @@
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -128,6 +128,8 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<iron-request id="delete_ajax"></iron-request>
+
 		<app-drawer id="drawer" swipe-open>
 			<app-toolbar>
 				<h1 main-title>ANDрејевићи</h1>
@@ -241,7 +243,7 @@
 						data-view="form"
 						view="[[dataView.view]]"
 						is-authorized="{{isAuthorized}}"
-						user="{{user}}"
+						user="[[user]]"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
@@ -325,7 +327,8 @@
 				}, 200);
 			},
 			deleteRecord: function(e) {
-
+				var obj = this.records.splice(this.start, 1)[0];
+				this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
 			},
 			editRecord: function(e) {
 				var obj = this.records[this.start];

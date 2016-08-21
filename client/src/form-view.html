@@ -105,7 +105,7 @@
                         allow-custom-value="true"
                         pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                        value="{{obj.author}}"></vaadin-combo-box>
+                        value="{{_getEmail(obj)}}"></vaadin-combo-box>
                     <paper-select
                         name="tags"
                         label="tags"
@@ -168,6 +168,7 @@
                     }
                 },
                 isAuthorized: { type: Boolean, value: false, notify: true },
+                user: { type: Object, notify: true },
                 view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
@@ -194,6 +195,9 @@
             _isAdd: function(field) {
                 return field == 'add';
             },
+            _getEmail: function(obj) {
+                return (obj.author) ? obj.author : this.user.getBasicProfile().getEmail();
+            },
             _dateFormat: function(str) {
                 return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD');
             },
@@ -203,8 +207,7 @@
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText);
                 if (res.success) {
-                    this.value = res.safe_key;
-                    this.set('route.path', ['', this.kind, 'edit', this.value].join('/'));
+                    this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
                 } else {
                     console.log(res.message);
                 }
@@ -225,7 +228,6 @@
                 form.setAttribute('action', action);
                 form.setAttribute('content-type', contentType);
 
-                // form.author = this.user.getBasicProfile().getEmail();
                 var json = form.serialize();
                 console.log(json);
                 form.submit();
