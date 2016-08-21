@@ -38,12 +38,9 @@
 				display: block;
 			}
 			app-header {
-				color: var(--light-theme-text-color);
+				color: #212121;
 				z-index: 1;
-				background-color: var(--light-theme-background-color);
-				/*--app-header-background-rear-layer: {
-					background-color: var(--google-yellow-300);
-      			};*/
+				background-color: #fff;
 				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
@@ -60,12 +57,13 @@
 				}
 			}
 			app-drawer app-toolbar {
-				background-color: var(--google-yellow-300);
+				color: #212121;
+				background-color: #fff;
 				@apply(--shadow-elevation-2dp);
 			}
             paper-item iron-icon {
                 margin-right: 16px;
-                color: var(--light-theme-secondary-color);
+                color: #737373;
             }
 			paper-button {
 				text-transform: lowercase;
@@ -76,8 +74,8 @@
 				border-radius: 50%;
 			}
 			paper-fab {
-                --paper-fab-background: var(--google-yellow-300);
-                --paper-fab-keyboard-focus-background: var(--google-yellow-700);
+                --paper-fab-background: #f4b400;
+                --paper-fab-keyboard-focus-background: #fce8b2;
             }
 			h1, h4 {
 				margin: 0;
