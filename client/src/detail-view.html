@@ -15,9 +15,10 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                display: block;
+                width: 100vw;
                 height: 100vh;
             }
+            * { box-sizing: border-box;  }
             ::-webkit-scrollbar {
                 display: none;
             }
@@ -50,6 +51,9 @@
             }
             .markdown-html h2, .markdown-html h3, .markdown-html strong {
                 font-weight: 500;
+            }
+            .markdown-html a {
+                color: #3367d6;
             }
             /*.markdown-html img[alt='Milan D. Andrejevic'] {
             }*/

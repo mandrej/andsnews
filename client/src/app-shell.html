@@ -77,6 +77,22 @@
                 --paper-fab-background: #f4b400;
                 --paper-fab-keyboard-focus-background: #fce8b2;
             }
+			main {
+				position: relative;
+				height: 100vh;
+			}
+			#spinner {
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+			paper-spinner {
+				width: 100px;
+				height: 100px;
+				--paper-spinner-stroke-width: 8px;
+			}
 			h1, h4 {
 				margin: 0;
 				font-size: 36px;
@@ -201,14 +217,14 @@
 						<div hidden$="{{!isAuthorized}}">
 							<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
 				        </div>
-						<!-- <template is="dom-if" if="[[!smallScreen]]">
-							<paper-spinner active$="[[loading]]"></paper-spinner>
-						</template> -->
 					</template>
 	    		</app-toolbar>
 			</app-header>
 
-			<main>
+			<main id="main">
+				<div id="spinner" class="layout horizontal center-justified">
+					<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+				</div>
 				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 
