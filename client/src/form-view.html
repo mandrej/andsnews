@@ -30,12 +30,29 @@
                 background-color: #3367d6;
                 text-transform: lowercase;
             }
+            paper-input {
+                --paper-input-container-color: #212121;
+                --paper-input-container-focus-color: #3367d6;
+                --paper-input-container-invalid-color: #db4437;
+                --paper-input-container: {
+                    padding: 4px 0;
+                }
+            }
             vaadin-upload {
                 --error-color: #db4437;
                 --vaadin-upload-button-add: {
                     color: #fff;
                     background-color: #3367d6;
                     text-transform: lowercase;
+                }
+            }
+            vaadin-combo-box {
+                --paper-input-container-color: #212121;
+                --paper-input-container-focus-color: #3367d6;
+            }
+            vaadin-date-picker {
+                --vaadin-date-picker-calendar-cell-selected: {
+                    background-color: #3367d6;
                 }
             }
         </style>

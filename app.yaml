@@ -1,9 +1,9 @@
 application: andsnews
-version: 160810
+version: 160822
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: 7d
+default_expiration: 1d
 
 libraries:
 - name: PIL

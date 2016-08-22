@@ -73,11 +73,18 @@
 				height: 50px;
 				border-radius: 50%;
 			}
+			.add {
+				position: fixed;
+				top: 100px;
+				right: 30px;
+				z-index: 10;
+			}
 			paper-fab {
                 --paper-fab-background: #f4b400;
                 --paper-fab-keyboard-focus-background: #fce8b2;
             }
 			main {
+				background: #fff;
 				position: relative;
 				height: 100vh;
 			}
@@ -169,6 +176,12 @@
 			<paper-item>[[version]]</paper-item>
 		</app-drawer>
 
+		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
+			<div hidden$="{{!isAuthorized}}" class="add">
+				<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+			</div>
+		</template>
+
 		<app-header-layout>
 			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
 				<app-toolbar>
@@ -212,12 +225,6 @@
 	    		</app-toolbar>
 	    		<app-toolbar>
 	      			<h1 main-title>{{headline}}</h1>
-
-					<template is="dom-if" if="[[_isGridView(dataView.view)]]">
-						<div hidden$="{{!isAuthorized}}">
-							<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
-				        </div>
-					</template>
 	    		</app-toolbar>
 			</app-header>
 

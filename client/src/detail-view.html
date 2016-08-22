@@ -15,7 +15,7 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                width: 100vw;
+                display: block;
                 height: 100vh;
             }
             * { box-sizing: border-box;  }
@@ -26,6 +26,7 @@
                 @apply(--layout-fit);
             }
             .swipe {
+                width: 100vw;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
