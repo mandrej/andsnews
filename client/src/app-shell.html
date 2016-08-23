@@ -74,10 +74,16 @@
 				border-radius: 50%;
 			}
 			.add {
-				position: fixed;
+				/*http://stackoverflow.com/questions/6794000/fixed-position-but-relative-to-container*/
+				position: absolute;
+				width: calc(56px + 28px);
 				top: 100px;
-				right: 30px;
+				right: 0;
 				z-index: 10;
+			}
+			.fixed {
+				width: calc(56px + 28px);
+				position: fixed;
 			}
 			paper-fab {
                 --paper-fab-background: #f4b400;
@@ -178,7 +184,9 @@
 
 		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
 			<div hidden$="{{!isAuthorized}}" class="add">
-				<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+				<div class="fixed">
+					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+				</div>
 			</div>
 		</template>
 
