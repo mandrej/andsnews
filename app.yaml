@@ -1,5 +1,5 @@
 application: andsnews
-version: 160822
+version: 160823
 runtime: python27
 api_version: 1
 threadsafe: true
