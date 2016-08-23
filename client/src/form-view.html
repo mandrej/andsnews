@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
@@ -55,13 +56,16 @@
                     background-color: #3367d6;
                 }
             }
+            paper-toast {
+
+            }
         </style>
 
         <iron-ajax auto
 			url="[[_url(view, kind, field, value, isAuthorized)]]"
 			handle-as="json"
 			last-response="{{obj}}"
-			debounce-duration="100"></iron-ajax>
+			debounce-duration="300"></iron-ajax>
 
         <iron-ajax auto
 			url="[[_urlLensCloud(view, kind)]]"
@@ -75,8 +79,10 @@
 			last-response="{{tags_cloud}}"
 			debounce-duration="100"></iron-ajax>
 
+        <paper-toast id="toast"></paper-toast>
+
         <div class="container">
-            <form is="iron-form" id="form">
+            <form is="iron-form" on-iron-form-response="_responseHandler" id="form">
                 <template is="dom-if" if="[[_isAdd(field)]]">
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
                         <vaadin-upload
@@ -225,11 +231,22 @@
             //     this.$.form.reset();
             // },
             _uploadResponse: function(e) {
-                var res = JSON.parse(e.detail.xhr.responseText);
+                var res = JSON.parse(e.detail.xhr.responseText),
+                    toast = this.$.toast;
                 if (res.success) {
+                    toast.setAttribute('text', 'Image successfully uploaded');
+                    toast.open();
                     this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
                 } else {
-                    console.log(res.message);
+                    toast.setAttribute('text', res.message);
+                    toast.open();
+                }
+            },
+            _responseHandler: function(e) {
+                if (e.detail.xhr.status == 200) {
+                    var toast = this.$.toast;
+                    toast.setAttribute('text', 'Record successfully created / updated')
+                    toast.open();
                 }
             },
             _submit: function(e) {
@@ -249,7 +266,6 @@
                 form.setAttribute('content-type', contentType);
 
                 var json = form.serialize();
-                console.log(json);
                 form.submit();
             },
             inputChanged: function(e) {

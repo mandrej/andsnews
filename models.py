@@ -685,7 +685,7 @@ class Entry(ndb.Model):
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
 
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
+        # ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     @classmethod
     def query_for(cls, field, value):

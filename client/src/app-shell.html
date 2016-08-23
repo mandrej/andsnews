@@ -360,6 +360,7 @@
 				var obj = this.splice('records', this.start, 1)[0];
 				this.start ++;
 				this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
+				// this.notifySplices('records', obj);
 			},
 			editRecord: function(e) {
 				var obj = this.records[this.start];
