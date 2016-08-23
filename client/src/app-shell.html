@@ -24,6 +24,12 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 
+<link rel="import" href="app-search.html">
+<link rel="import" href="grid-view.html">
+<link rel="import" href="detail-view.html">
+<link rel="import" href="admin-shell.html">
+<link rel="import" href="form-view.html">
+
 <dom-module id="app-shell">
 	<template>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
@@ -287,13 +293,6 @@
 				if (!this.route.path) {
 					this.set('route.path', '/grid/photo');
 				}
-			},
-			ready: function() {
-				this.importHref('/src/grid-view.html?' + this.version);
-				this.importHref('/src/app-search.html?' + this.version);
-				this.importHref('/src/detail-view.html?' + this.version);
-				this.importHref('/src/form-view.html?' + this.version);
-				this.importHref('/src/admin-shell.html?' + this.version);
 			},
 			properties: {
 				version: { type: String, value: '16082323'},
