@@ -82,17 +82,17 @@
         <paper-toast id="toast"></paper-toast>
 
         <div class="container">
-            <form is="iron-form" on-iron-form-response="_responseHandler" id="form">
-                <template is="dom-if" if="[[_isAdd(field)]]">
-                    <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                        <vaadin-upload
-                            target="/api/{{kind}}/add"
-                            max-files="1"
-                            on-upload-response="_uploadResponse"
-                            accept="image/*"></vaadin-upload>
-                    </template>
+            <template is="dom-if" if="[[_isAdd(field)]]">
+                <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+                    <vaadin-upload
+                        target="/api/{{kind}}/add"
+                        max-files="1"
+                        on-upload-response="_uploadResponse"
+                        accept="image/*"></vaadin-upload>
+                </template>
 
-                    <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                    <form is="iron-form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add" id="form">
                         <div class="layout horizontal end-justified">
                             <paper-button on-tap="_submit">Submit</paper-button>
                         </div>
@@ -114,10 +114,12 @@
 
                         <paper-textarea name="summary" label="summary"></paper-textarea>
                         <paper-textarea name="body" label="body"></paper-textarea>
-                    </template>
+                    </form>
                 </template>
+            </template>
 
-                <template is="dom-if" if="[[!_isAdd(field)]]">
+            <template is="dom-if" if="[[!_isAdd(field)]]">
+                <form is="iron-form" on-iron-form-presubmit="_preSubmit" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/edit/[[value]]" id="form">
                     <div class="layout horizontal end-justified">
                         <paper-button on-tap="_submit">Submit</paper-button>
                     </div>
@@ -167,8 +169,8 @@
                         <paper-textarea name="front_img" label="front image" value="{{obj.front_img}}"></paper-textarea>
                         <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
                     </template>
-                </template>
-            </form>
+                </form>
+            </template>
         </div>
     </template>
     <script>
@@ -243,29 +245,24 @@
                 }
             },
             _responseHandler: function(e) {
+                console.log(e.detail.xhr);
+                var toast = this.$.toast;
                 if (e.detail.xhr.status == 200) {
-                    var toast = this.$.toast;
                     toast.setAttribute('text', 'Record successfully created / updated')
-                    toast.open();
                 }
+                // else {
+                //     toast.setAttribute('text', e.detail.xhr.)
+                // }
+                toast.open();
+            },
+            _preSubmit: function() {
+                var form = this.$$('#form');
+                form.request.method = 'put'; // PUT SENDS URL PARAMETERS!
             },
             _submit: function(e) {
-                var form = this.$.form,
-                    method, action, contentType;
-                if (this.field == 'add') {
-                    method = 'post';
-                    action = ['/api', this.kind, 'add'].join('/');
-                    contentType = 'multipart/form-data';
-                } else {
-                    method = 'put';
-                    action = ['/api', this.kind, this.field, this.value].join('/');
-                    contentType = 'application/json';
-                }
-                form.setAttribute('method', method);
-                form.setAttribute('action', action);
-                form.setAttribute('content-type', contentType);
-
-                var json = form.serialize();
+                var form = this.$$('#form');
+                // var json = form.serialize();
+                // console.log(json);
                 form.submit();
             },
             inputChanged: function(e) {

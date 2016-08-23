@@ -207,8 +207,8 @@ class Crud(RestHandler):
             if data['iso']:
                 data['iso'] = int(data['iso'])
 
-        elif kind == 'entry':
-            logging.error(data)
+        # elif kind == 'entry':
+        #     logging.error(data)
 
         obj.edit(data)
 
