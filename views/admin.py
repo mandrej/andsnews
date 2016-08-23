@@ -8,7 +8,6 @@ from webapp2_extras.appengine.users import login_required, admin_required
 from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
-from views.entry import make_thumbnail
 from handlers import BaseHandler, csrf_protected, xss_protected, Paginator
 from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, COLORS
 
@@ -115,9 +114,6 @@ class Entries(BaseHandler):
             obj.small = None
             obj.put()
             data = {'success': True}
-        elif params['action'] == 'make':
-            buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
-            data = {'success': True, 'small': filesizeformat(len(buff))}
         self.render_json(data)
 
 

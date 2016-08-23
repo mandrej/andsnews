@@ -32,7 +32,6 @@ app = WSGIApplication([
     Route(r'/entries/', handler='views.entry.Index', name='entry_all'),
     Route(r'/entries/<field:(tags|date|author)>/<value>/',
           handler='views.entry.Index', name='entry_all_filter'),
-    Route(r'/entries/image/<safe_key>/<size:(small|normal)>', handler='views.entry.thumb', name='entry_image'),
     Route(r'/entries/<safe_key>', handler='views.entry.Detail', name='entry'),
 
     Route(r'/admin/', handler='views.admin.Index', name='admin_all'),

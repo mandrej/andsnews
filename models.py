@@ -617,15 +617,6 @@ class Photo(ndb.Model):
         return data
 
 
-class Img(ndb.Model):
-    # parent Entry
-    name = ndb.StringProperty()
-    num = ndb.IntegerProperty(default=0)
-    blob = ndb.BlobProperty(default=None)
-    small = ndb.BlobProperty(default=None)
-    mime = ndb.StringProperty(default='image/jpeg')
-
-
 class Entry(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty()

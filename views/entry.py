@@ -119,37 +119,3 @@ class Edit(BaseHandler):
             self.redirect_to('entry_admin')
         else:
             self.render_template('admin/entry_form.html', {'form': form, 'object': obj, 'filter': None})
-
-
-def make_thumbnail(kind, slug, size, mime='image/jpeg'):
-    m = re.match(r'(.+)_\d', slug)
-    obj = ndb.Key(kind, m.group(1), 'Img', slug).get()
-    if obj is None:
-        webapp2.abort(404)
-
-    buff = obj.blob
-    if size == 'normal':
-        return buff, str(obj.mime)
-    if size == 'small' and obj.small is not None:
-        return obj.small, mime
-
-    im = Image.open(StringIO(buff))
-    output = StringIO()
-
-    im.thumbnail(SMALL, Image.ANTIALIAS)
-    im.save(output, format='JPEG')
-
-    obj.small = output.getvalue()
-    output.close()
-    obj.put()
-    return obj.small, mime
-
-
-def thumb(request, slug, size):
-    out, mime = make_thumbnail('Entry', slug, size)
-    response = webapp2.Response(content_type=mime)
-    response.headers['Cache-Control'] = 'public, max-age=%s' % (TIMEOUT * 600)
-    # if size == 'normal':
-    #     response.headers['Content-Disposition'] = 'inline; filename=%s' % slug
-    response.write(out)
-    return response
