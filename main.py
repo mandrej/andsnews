@@ -30,6 +30,6 @@ app = WSGIApplication([
     Route(r'/admin/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),
 
     Route(r'/sitemap.xml', handler=SiteMap),
-    # Route(r'/sign', handler=Sign),
+    Route(r'/sign', handler=Sign),
     # Route(r'/', handler='views.photo.Index', name='start'),
 ], config=CONFIG, debug=DEVEL)

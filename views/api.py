@@ -9,7 +9,6 @@ from google.appengine.api import users, memcache, app_identity
 from google.appengine.ext import ndb, blobstore, deferred
 from handlers import LazyEncoder, Paginator, SearchPaginator
 from models import Cloud, Entry, Photo
-from config import TIMEOUT
 
 LIMIT = 12
 KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
@@ -174,7 +173,6 @@ class Crud(RestHandler):
             values = map(lambda x: x if x != '' else None, data.values())
             data = dict(zip(data.keys(), values))
             res = obj.add(data)
-
 
         self.render(res)
 

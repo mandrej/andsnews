@@ -92,7 +92,9 @@
                 </template>
 
                 <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-                    <form is="iron-form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add" id="form">
+                    <form is="iron-form"
+                        on-iron-form-response="_responseHandler"
+                        method="post" action$="/api/[[kind]]/add" id="form">
                         <div class="layout horizontal end-justified">
                             <paper-button on-tap="_submit">Submit</paper-button>
                         </div>
@@ -245,15 +247,11 @@
                 }
             },
             _responseHandler: function(e) {
-                console.log(e.detail.xhr);
                 var toast = this.$.toast;
                 if (e.detail.xhr.status == 200) {
-                    toast.setAttribute('text', 'Record successfully created / updated')
+                    toast.setAttribute('text', 'Record successfully created / updated');
+                    toast.open();
                 }
-                // else {
-                //     toast.setAttribute('text', e.detail.xhr.)
-                // }
-                toast.open();
             },
             _preSubmit: function() {
                 var form = this.$$('#form');
