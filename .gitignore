@@ -10,7 +10,6 @@ networkx
 pipeline
 pytz
 simplejson
-wtforms
 decorator.py
 static/font/
 static/css/components/

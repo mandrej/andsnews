@@ -104,24 +104,6 @@ def language(code):
     return code.split('_')[0]
 
 
-def image_url_by_num(obj, arg):
-    """ {{ object|image_url_by_num:form.initial.ORDER }}/small
-        {{ object|image_url_by_num:object.front }}/small """
-    return obj.image_url(arg)
-
-
-def image_dimension(obj):
-    return '{0} x {1}'.format(*obj.dim)
-
-
-def boolimage(value):
-    """ {{ object.key.name|incache|boolimage }} """
-    if value is True:
-        return do_mark_safe('<i class="material-icons green-text text-darken-2">check_circle</i>')
-    else:
-        return do_mark_safe('<i class="material-icons red-text text-darken-2">remove_circle</i>')
-
-
 def querystring(url, kwargs):
     for k, v in kwargs.items():
         if v is None:
@@ -267,9 +249,6 @@ CONFIG = {
             'uri_for': webapp2.uri_for,
         },
         'filters': {
-            'boolimage': boolimage,
-            'image_url_by_num': image_url_by_num,
-            'image_dimension': image_dimension,
             'css_classes': css_classes,
             'filesizeformat': filesizeformat,
             'timesince': timesince_jinja,

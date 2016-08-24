@@ -49,50 +49,26 @@ handlers:
   upload: client/index.html
   secure: always
 
+- url: /robots.txt
+  static_files: client/robots.txt
+  upload: client/robots.txt
+  secure: always
+
 - url: /
   static_files: client/index.html
   upload: client/index.html
   secure: always
 
-####################################################
-
-- url: /robots.txt
-  static_files: robots.txt
-  upload: /robots.txt
+- url: /api/.*
+  script: main.app
   secure: always
+
+####################################################
 
 #- url: /favicon.ico
 #  static_files: app/favicon.ico
 #  upload: app/favicon.ico
 #  secure: always
-
-- url: /static/(.*\.(less|scss))$
-  static_files: static/\1
-  upload: static/.*\.(less|scss)$
-  mime_type: text/css
-
-- url: /static/(.*\.map)$
-  static_files: static/\1
-  upload: static/.*\.map$
-  mime_type: application/json
-
-- url: /static/font/(.*\.ttf)$
-  static_files: static/font/\1
-  upload: static/font/.*\.ttf$
-  mime_type: font/ttf
-  expiration: 1000d
-
-- url: /static/font/(.*\.woff2)$
-  static_files: static/font/\1
-  upload: static/font/.*\.woff2$
-  mime_type: application/font-woff2
-  expiration: 1000d
-
-- url: /static/font/(.*\.eot)$
-  static_files: static/font/\1
-  upload: static/font/.*\.eot$
-  mime_type: application/vnd.ms-fontobject
-  expiration: 1000d
 
 - url: /static
   static_dir: static
@@ -105,10 +81,7 @@ handlers:
   login: admin
   script: aeta.main.APP
 
-#- url: /stats.*
-#  script: google.appengine.ext.appstats.ui.app
-
-- url: /.*
+- url: /admin/.*
   script: main.app
   secure: always
 

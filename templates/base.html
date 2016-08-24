@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html{{ {'lang': language(session.lang_code)}|xmlattr }}>
-{% from "snippets/macros.html" import menu with context %}
 
 <head>
 	<meta charset="utf-8">
@@ -26,24 +25,8 @@
                 <ul class="right pagination">
                     {% block paging %}{% endblock %}
                 </ul>
-                <ul class="right hide-on-med-and-down">
-                    {% block search %}
-                        <form id="searchForm" class="left" action="{{ uri_for('search') }}" method="get">
-                            <div class="input-field">
-                                <input id="search" name="find" type="search">
-                                <label for="search"><i class="material-icons">search</i></label>
-                                <i class="material-icons">close</i>
-                            </div>
-                        </form>
-                    {% endblock %}
-                    {% block menu %}{{ menu() }}{% endblock %}
-                </ul>
                 <div class="progress">
                     <div class="indeterminate"></div>
-                </div>
-                <div id="nav-mobile" class="side-nav">
-                    <ul>{{ self.menu() }}</ul>
-                    {{ self.search() }}
                 </div>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>

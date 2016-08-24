@@ -2,59 +2,6 @@
 
 {% block contents %}
     <div id="gallery" class="row">
-        <div class="admin card z-depth-0">
-            <div class="card-action">
-                <div class="row valign-wrapper">
-                    <div class="col s6 valign middle">
-                        <a href="{{ uri_for('photo_admin') }}" class="btn btn-large waves-effect">
-                            Photos
-                        </a>
-                    </div>
-                    <div class="col s3 right-align valign middle">
-                        <span class="badge">{{ photo_count }}</span>
-                    </div>
-                    <div class="col s3 right-align">
-                        <a href="{{ uri_for('photo_add') }}" class="btn-floating btn-large waves-effect amber">
-                            <i class="material-icons">add</i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-content">
-                <div id="Photo_tags"></div>
-                <div id="Photo_author"></div>
-                <div id="Photo_date"></div>
-                <div id="Photo_model"></div>
-                <div id="Photo_lens"></div>
-                <div id="Photo_iso"></div>
-                <div id="Photo_color"></div>
-            </div>
-        </div>
-
-        <div class="admin card z-depth-0">
-            <div class="card-action">
-                <div class="row valign-wrapper">
-                    <div class="col s6 valign middle">
-                        <a href="{{ uri_for('entry_admin') }}" class="btn btn-large waves-effect">
-                            Entries</a>
-                    </div>
-                    <div class="col s3 right-align valign middle">
-                        <span class="badge">{{ entry_count }}</span>
-                    </div>
-                    <div class="col s3 right-align">
-                        <a href="{{ uri_for('entry_add') }}" class="btn-floating btn-large waves-effect amber">
-                            <i class="material-icons">add</i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-content">
-                <div id="Entry_tags"></div>
-                <div id="Entry_author"></div>
-                <div id="Entry_date"></div>
-            </div>
-        </div>
-
         <div class="admin card z-depth-0 hide-on-med-and-down">
             <div class="card-action">
                 <div class="row valign-wrapper">
