@@ -8,10 +8,6 @@ default_expiration: 1d
 libraries:
 - name: PIL
   version: latest
-- name: jinja2
-  version: latest
-- name: markupsafe
-  version: latest
 - name: webapp2
   version: latest
 - name: webob
@@ -70,9 +66,6 @@ handlers:
 
 ####################################################
 
-- url: /static
-  static_dir: static
-
 - url: /mapreduce(/.*)?
   login: admin
   script: mapreduce.main.APP
@@ -80,14 +73,6 @@ handlers:
 - url: /tests/.*
   login: admin
   script: aeta.main.APP
-
-- url: /admin/.*
-  script: main.app
-  secure: always
-
-- url: /sign
-  script: main.app
-  secure: always
 
 inbound_services:
 - warmup

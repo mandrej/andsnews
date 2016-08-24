@@ -1,7 +1,6 @@
 from __future__ import division
 
 import re
-import cgi
 import collections
 import colorsys
 import datetime
@@ -15,7 +14,6 @@ import webapp2
 from PIL import Image
 from google.appengine.api import users, memcache, search, images
 from google.appengine.ext import ndb, deferred, blobstore
-from webapp2_extras.i18n import lazy_gettext as _
 
 import cloudstorage as gcs
 from config import COLORS, ASA, HUE, LUM, SAT, TIMEOUT, BUCKET
@@ -30,7 +28,6 @@ KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
 PHOTO_FIELDS = ('model', 'lens', 'iso', 'color',)
-ENTRY_IMAGES = 20
 LOGARITHMIC, LINEAR = 1, 2
 
 
@@ -179,42 +176,6 @@ def tokenize(phrase):
 
 def remove_doc(safe_key):
     INDEX.delete(safe_key)
-
-
-# def _calculate_thresholds(min_weight, max_weight, steps):
-#     delta = (max_weight - min_weight) / steps
-#     return [min_weight + i * delta for i in range(1, steps + 1)]
-#
-#
-# def _calculate_tag_weight(weight, max_weight, distribution):
-#     if distribution == LINEAR or max_weight == 1:
-#         return weight
-#     elif distribution == LOGARITHMIC:
-#         return math.log(weight) * max_weight / math.log(max_weight)
-#     raise ValueError('Invalid distribution algorithm specified: %s.' % distribution)
-#
-#
-# def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
-#     """
-#     tags:  {u'mihailo': 2L, u'urban': 2L, u'belgrade': 3L, u'macro': 5L, ...}
-#     return [{'count': 2L, 'name': u'mihailo', 'size': 1},
-#             {'count': 5L, 'name': u'macro', 'size': 7}, ...]
-#     """
-#     data = []
-#     if len(tags) > 0:
-#         counts = tags.values()
-#         min_weight = float(min(counts))
-#         max_weight = float(max(counts)) + 0.0000001
-#         thresholds = _calculate_thresholds(min_weight, max_weight, steps)
-#         for key, val in tags.items():
-#             font_set = False
-#             tag_weight = _calculate_tag_weight(val, max_weight, distribution)
-#             for i in range(steps):
-#                 if not font_set and tag_weight <= thresholds[i]:
-#                     data.append({'name': key, 'count': val, 'size': i + 1})
-#                     font_set = True
-#                     break
-#     return data
 
 
 class Cloud(object):

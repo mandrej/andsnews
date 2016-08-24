@@ -41,17 +41,6 @@ def xss_protected(handler_method):
     return wrapper
 
 
-class LazyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, ndb.Model):
-            return obj.serialize()
-        elif isinstance(obj, datetime.datetime):
-            return obj.isoformat()
-        elif isinstance(obj, users.User):
-            return obj.email()
-        return obj
-
-
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
         self.session_store = sessions.get_store(request=self.request)
@@ -98,10 +87,6 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.headers['X-XSS-Protection'] = '1;mode=block'
         self.response.write(self.jinja2.render_template(filename, **kwargs))
 
-    def render_json(self, data):
-        self.response.content_type = 'application/json; charset=utf-8'
-        self.response.write(json.dumps(data, cls=LazyEncoder))
-
 
 class Sign(BaseHandler):
     def get(self):
@@ -114,67 +99,6 @@ class Sign(BaseHandler):
         else:
             url = users.create_login_url(referrer)
         self.redirect(url)
-
-
-class Paginator(object):
-    def __init__(self, query, per_page=PER_PAGE):
-        self.query = query
-        self.per_page = per_page
-
-    def page(self, token=None):
-        try:
-            cursor = Cursor(urlsafe=token)
-        except datastore_errors.BadValueError:
-            webapp2.abort(404)
-
-        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
-        next_token = cursor.urlsafe() if has_next else None
-        return [x for x in objects if x is not None], next_token
-
-
-class SearchPaginator(object):
-    def __init__(self, querystring, per_page=PER_PAGE):
-        self.querystring = querystring
-        self.per_page = per_page
-
-        self.options = {
-            'limit': self.per_page,
-            'ids_only': True,
-            'sort_options': search.SortOptions(
-                expressions=[
-                    search.SortExpression(
-                        expression='year * 12 + month',
-                        direction=search.SortExpression.DESCENDING, default_value=2030*12)
-                ]
-            )
-        }
-
-    def page(self, token=None):
-        objects, next_token, number_found, error = [], None, 0, None
-        if token is not None:
-            self.options['cursor'] = search.Cursor(web_safe_string=token)
-        else:
-            self.options['cursor'] = search.Cursor()
-
-        if self.querystring:
-            try:
-                query = search.Query(
-                    query_string=self.querystring,
-                    options=search.QueryOptions(**self.options)
-                )
-                found = INDEX.search(query)
-                results = found.results
-            except search.Error as e:
-                error = e.message
-            else:
-                number_found = found.number_found
-                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
-                objects = ndb.get_multi(keys)
-
-                if found.cursor is not None:
-                    next_token = found.cursor.web_safe_string
-
-        return [x for x in objects if x is not None], number_found, next_token, error
 
 
 def cloud_limit(items):

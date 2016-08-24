@@ -11,6 +11,4 @@ pipeline
 pytz
 simplejson
 decorator.py
-static/font/
-static/css/components/
 *.pyc

@@ -1,4 +1,4 @@
-Babel==2.1.1
+#Babel==2.1.1
 beautifulsoup4==4.4.1
 colormath==2.1.0
 decorator==4.0.6
@@ -17,4 +17,4 @@ Pillow==3.0.0
 pytz==2015.7
 simplejson==3.8.1
 six==1.10.0
-WTForms==2.0.2
+#WTForms==2.0.2
