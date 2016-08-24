@@ -35,12 +35,19 @@
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
 			:host {
+				--app-background-color: #ffffff;
+				--app-primary-color: #3367d6;
+        		--app-secondary-color: #f4b400;
+        		--app-secondary-light: #f2d279;
+        		--app-alert-color: #db4437;
+        		--app-grey-color: #737373;
+        		--app-text-color: #212121;
 				display: block;
 			}
 			app-header {
-				color: #212121;
+				color: var(--app-text-color);
 				z-index: 1;
-				background-color: #fff;
+				background-color: var(--app-background-color);
 				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
@@ -57,13 +64,13 @@
 				}
 			}
 			app-drawer app-toolbar {
-				color: #212121;
-				background-color: #fff;
+				color: var(--app-text-color);
+				background-color: var(--app-background-color);
 				@apply(--shadow-elevation-2dp);
 			}
             paper-item iron-icon {
                 margin-right: 16px;
-                color: #737373;
+                color: var(--app-grey-color);
             }
 			paper-button {
 				text-transform: lowercase;
@@ -86,11 +93,11 @@
 				position: fixed;
 			}
 			paper-fab {
-                --paper-fab-background: #f4b400;
-                --paper-fab-keyboard-focus-background: #fce8b2;
+                --paper-fab-background: var(--app-secondary-color);
+                --paper-fab-keyboard-focus-background: var(--app-secondary-light);
             }
 			main {
-				background: #fff;
+				background: var(--app-background-color);
 				position: relative;
 				height: 100vh;
 			}
@@ -295,7 +302,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '16082323'},
+				version: { type: String, value: '160824'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },

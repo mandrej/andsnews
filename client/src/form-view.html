@@ -27,33 +27,33 @@
                 font-weight: 300;
             }
             paper-button {
-                color: #fff;
-                background-color: #3367d6;
+                color: var(--app-background-color);
+                background-color: var(--app-primary-color);
                 text-transform: lowercase;
             }
             paper-input {
-                --paper-input-container-color: #212121;
-                --paper-input-container-focus-color: #3367d6;
-                --paper-input-container-invalid-color: #db4437;
+                --paper-input-container-color: var(--app-text-color);
+                --paper-input-container-focus-color: var(--app-primary-color);
+                --paper-input-container-invalid-color: var(--app-alert-color);
                 --paper-input-container: {
                     padding: 4px 0;
                 }
             }
             vaadin-upload {
-                --error-color: #db4437;
+                --error-color: var(--app-alert-color);
                 --vaadin-upload-button-add: {
-                    color: #fff;
-                    background-color: #3367d6;
+                    color: var(--app-background-color);
+                    background-color: var(--app-primary-color);
                     text-transform: lowercase;
                 }
             }
             vaadin-combo-box {
-                --paper-input-container-color: #212121;
-                --paper-input-container-focus-color: #3367d6;
+                --paper-input-container-color: var(--app-text-color);
+                --paper-input-container-focus-color: var(--app-primary-color);
             }
             vaadin-date-picker {
                 --vaadin-date-picker-calendar-cell-selected: {
-                    background-color: #3367d6;
+                    background-color: var(--app-primary-color);
                 }
             }
             paper-toast {
