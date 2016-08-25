@@ -8,12 +8,43 @@ from slugify import slugify
 from google.appengine.api import users, search, memcache, app_identity, datastore_errors
 from google.appengine.ext import ndb, blobstore, deferred
 from google.appengine.datastore.datastore_query import Cursor
+from mapreduce.base_handler import PipelineBase
+from mapreduce.mapper_pipeline import MapperPipeline
 from models import Cloud, Photo, Entry, INDEX
 from config import DEVEL
 
 LIMIT = 12 if DEVEL else 48
 KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+JOBS = {
+    "photo_index": {
+        "job_name": "full_photo_index",
+        "handler_spec": "views.background.indexer",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
+    },
+    "entry_index": {
+        "job_name": "full_entry_index",
+        "handler_spec": "views.background.indexer",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Entry",
+        },
+        "shards": 4
+    },
+    "fix": {
+        "job_name": "current_fix",
+        "handler_spec": "views.background.current_fix",
+        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
+        "params": {
+            "entity_kind": "models.Photo",
+        },
+        "shards": 4
+    },
+}
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -299,3 +330,22 @@ class Download(webapp2.RequestHandler):
         # self.response.headers['Content-Disposition'] = 'attachment; filename=download.jpg'
         # self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.write(buff)
+
+
+class DatastoreMapperPipeline(PipelineBase):
+    def run(self, job_name):
+        yield MapperPipeline(**JOBS[job_name])
+
+
+class DatastoreBackground(webapp2.RequestHandler):
+    def get(self, job):
+        try:
+            JOBS[job]
+        except KeyError:
+            self.abort(404)
+        else:
+            pipeline = DatastoreMapperPipeline(job)
+            logging.error(pipeline)
+            pipeline.start()
+            redirect_url = "%s/status?root=%s" % (pipeline.base_path, pipeline.pipeline_id)
+            self.redirect(redirect_url)
