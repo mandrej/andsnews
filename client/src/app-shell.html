@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
@@ -55,7 +56,6 @@
 				text-decoration: none;
 			}
 			app-drawer {
-				min-height: 100vh;
 				top: 0;
 				bottom: 0;
 				z-index: 2;
@@ -74,11 +74,6 @@
             }
 			paper-button {
 				text-transform: lowercase;
-			}
-			.avatar {
-				width: 50px;
-				height: 50px;
-				border-radius: 50%;
 			}
 			.add {
 				/*http://stackoverflow.com/questions/6794000/fixed-position-but-relative-to-container*/
@@ -162,12 +157,16 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<google-signin-aware id="aware"
+            client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
+            is-authorized="{{isAuthorized}}"
+            on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+
 		<iron-request id="delete_ajax"></iron-request>
 
 		<app-drawer id="drawer" swipe-open>
 			<app-toolbar>
-				<h1 main-title>ANDрејевићи</h1>
-				<img class="avatar" on-tap="handleSignOut" src="[[userImg(user)]]">
+				<h1 condensed-title>ANDрејевићи</h1>
 			</app-toolbar>
 			<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
 				<paper-item kind-page="photo">
@@ -180,13 +179,20 @@
 						<iron-icon icon="description"></iron-icon>Texts
 					</a>
 				</paper-item>
-				<!-- <paper-item kind-page="admin">
-					<a href="#/admin" class="flex">
-						<iron-icon icon="settings"></iron-icon>Admin
-					</a>
-				</paper-item> -->
 			</paper-menu>
-			<paper-item>[[version]]</paper-item>
+
+			<template is="dom-if" if="{{isAuthorized}}">
+				<paper-item on-tap="_signOut">
+					<iron-icon icon="settings"></iron-icon>[[userName(user)]]
+				</paper-item>
+			</template>
+			<template is="dom-if" if="{{!isAuthorized}}">
+				<paper-item on-tap="_signIn">
+					<iron-icon icon="settings"></iron-icon>Google Sign-In
+				</paper-item>
+			</template>
+
+			<paper-item>ver.[[version]]</paper-item>
 		</app-drawer>
 
 		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
@@ -198,12 +204,10 @@
 		</template>
 
 		<app-header-layout>
-			<app-header condenses reveals fixed effects="waterfall resize-title blend-background parallax-background">
+			<app-header condenses reveals fixed effects="waterfall resize-title">
 				<app-toolbar>
 					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-						<template is="dom-if" if="[[smallScreen]]">
-							<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-						</template>
+						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
 					</template>
 
 	  				<h4 condensed-title>{{headline}}</h4>
@@ -228,8 +232,6 @@
 									<paper-button>Photos</paper-button></a>
 								<a href="#/grid/entry" kind-page="entry">
 									<paper-button>Texts</paper-button></a>
-								<!-- <a href="#/admin" kind-page="admin">
-									<paper-button>Admin</paper-button></a> -->
 							</iron-selector>
 						</template>
 						<app-search
@@ -253,7 +255,6 @@
 					<admin-shell
 						data-view="admin"
 						is-authorized="{{isAuthorized}}"
-						user="{{user}}"
 						route="{{route}}"></admin-shell>
 
 					<grid-view
@@ -342,7 +343,10 @@
 			_isKindPhoto: function(kind) {
 				return kind == 'photo'
 			},
-			handleSignOut: function() {
+			_signIn: function() {
+                this.$.aware.signIn();
+            },
+			_signOut: function() {
 				if (this.user) {
 					this.user.disconnect();
 					this.isAuthorized = false;
@@ -350,9 +354,16 @@
 				}
 				gapi.auth2.getAuthInstance().signOut();
 			},
-			userImg: function(user) {
-				if (user) return user.getBasicProfile().getImageUrl();
-				return ''
+			handleSignIn: function(response) {
+                this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+                this.$.google.innerText = this.user.getBasicProfile().getName() + ' Sign-Out';
+				// console.log(this.user.getBasicProfile().getId());
+				// .getBasicProfile().getName();
+				// .getBasicProfile().getEmail();
+				// .getBasicProfile().getImageUrl();
+            },
+			userName: function(user) {
+				return user.getBasicProfile().getName();
 			},
 			downloadPhoto: function(e) {
 				window.location.href = '/api/download/' + this.records[this.start].safekey;

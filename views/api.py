@@ -179,42 +179,39 @@ def cloud_limit(items):
 
 def cloud_representation(kind):
     model = ndb.Model._kind_map.get(kind.title())
-    data = memcache.get('%s_representation' % kind)
 
-    if data is None:
-        if kind == 'photo':
-            fields = ('date', 'tags', 'model')
-        elif kind == 'entry':
-            fields = ('date', 'tags')
+    if kind == 'photo':
+        fields = ('date', 'tags', 'model')
+    elif kind == 'entry':
+        fields = ('date', 'tags')
 
-        data = []
-        for field in fields:
-            mem_key = kind.title() + '_' + field
-            cloud = Cloud(mem_key).get_list()
+    data = []
+    for field in fields:
+        mem_key = kind.title() + '_' + field
+        cloud = Cloud(mem_key).get_list()
 
-            limit = cloud_limit(cloud)
-            items = [x for x in cloud if x['count'] > limit]
+        limit = cloud_limit(cloud)
+        items = [x for x in cloud if x['count'] > limit]
 
-            if field == 'date':
-                items = sorted(items, key=itemgetter('name'), reverse=True)
-            elif field in ('tags', 'author', 'model', 'lens', 'iso'):
-                items = sorted(items, key=itemgetter('name'), reverse=False)
-            elif field == 'color':
-                items = sorted(items, key=itemgetter('order'))
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        elif field in ('tags', 'author', 'model', 'lens', 'iso'):
+            items = sorted(items, key=itemgetter('name'), reverse=False)
+        elif field == 'color':
+            items = sorted(items, key=itemgetter('order'))
 
-            for item in items:
-                obj = model.latest_for(field, item['name'])
-                if obj is not None:
-                    if kind == 'photo':
-                        item['repr_url'] = obj.serving_url + '=s400'
-                    elif kind == 'entry':
-                        item['repr_url'] = obj.front_img
+        for item in items:
+            obj = model.latest_for(field, item['name'])
+            if obj is not None:
+                if kind == 'photo':
+                    item['repr_url'] = obj.serving_url + '=s400'
+                elif kind == 'entry':
+                    item['repr_url'] = obj.front_img
 
-            data.append({
-                'field_name': field,
-                'items': items
-            })
-        memcache.set('%s_representation' % kind, data, 2 * 3600)
+        data.append({
+            'field_name': field,
+            'items': items
+        })
 
     return data
 
