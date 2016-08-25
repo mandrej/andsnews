@@ -1,9 +1,8 @@
 application: andsnews
-version: 160824
+version: 160825
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: 1d
 
 libraries:
 - name: PIL
@@ -15,7 +14,7 @@ libraries:
 - name: numpy
   version: latest
 
-# client -> client/build/bundled
+# client -> client/build/unbundled
 
 handlers:
 - url: /bower_components/

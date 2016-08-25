@@ -16,13 +16,14 @@ from google.appengine.api import users, memcache, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
 import cloudstorage as gcs
-from config import COLORS, ASA, HUE, LUM, SAT, TIMEOUT, BUCKET
+from config import COLORS, ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
 from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
+TIMEOUT = 3600  # 1 hour
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',

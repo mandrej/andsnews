@@ -10,11 +10,8 @@ import webapp2
 from jinja2.filters import Markup
 from webapp2_extras import i18n, sessions, jinja2
 from google.appengine.api import users, search, mail, datastore_errors
-from google.appengine.ext import ndb
-from google.appengine.datastore.datastore_query import Cursor
-
 from models import INDEX, Photo, Entry
-from config import DEVEL, PER_PAGE, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, FAMILY
+from config import DEVEL
 
 
 def csrf_protected(handler_method):

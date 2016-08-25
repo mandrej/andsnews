@@ -3,15 +3,7 @@ from google.appengine.api import app_identity
 
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
-TIMEOUT = 3600  # 1 hour
-FAMILY = [
-    'milan.andrejevic@gmail.com',
-    'mihailo.genije@gmail.com',
-    'svetlana.andrejevic@gmail.com',
-    'ana.devic@gmail.com',
-    'dannytaboo@gmail.com',
-    'zile.zikson@gmail.com',
-]
+
 COLOR_NAMES = (
     'red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'
 )
