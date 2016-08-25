@@ -53,7 +53,8 @@
             is-authorized="{{isAuthorized}}"
             on-google-signin-aware-success="handleSignIn"></google-signin-aware>
 
-        <iron-request id="rebuild_ajax"></iron-request>
+        <iron-ajax id="rebuild_ajax" method="PUT"></iron-ajax>
+        <iron-ajax id="background_ajax" method="GET"></iron-ajax>
 
         <div class="card">
             <div class="flex">
@@ -66,6 +67,16 @@
             <div class="flex">
                 <template is="dom-repeat" items="[[memkeys]]" as="item">
                     <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
+                </template>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Mapreduce</h2>
+            <div class="flex">
+                <!-- <paper-button on-tap="background" style="margin-bottom: 8px">Status</paper-button> -->
+                <template is="dom-repeat" items="[[jobs]]" as="item">
+                    <paper-button on-tap="background" style="margin-bottom: 8px">[[item]]</paper-button>
                 </template>
             </div>
         </div>
@@ -95,9 +106,11 @@
                 isAuthorized: { type: Boolean, value: false, notify: true },
                 user: { type: Object, notify: true },
                 memkeys: {type: Array },
+                jobs: {type: Array },
             },
             ready: function() {
                 this.memkeys = ['Photo_date', 'Photo_tags', 'Photo_model'];
+                this.jobs = ['fix', 'photo_index', 'entry_index'];
             },
             signGoogle: function() {
                 if (this.isAuthorized) {
@@ -119,8 +132,14 @@
 				// .getBasicProfile().getImageUrl();
             },
             rebuild: function(e) {
-                this.$.rebuild_ajax.send({url: '/api/memcache/' + e.model.item, method: 'PUT'});
-            }
+                this.$.rebuild_ajax.url = '/api/memcache/' + e.model.item;
+                this.$.rebuild_ajax.generateRequest();
+            },
+            background: function(e) {
+                // window.location = '/mapreduce/status';
+                this.$.background_ajax.url = '/api/background/' + e.model.item;
+                this.$.background_ajax.generateRequest();
+            },
         });
     </script>
 </dom-module>
