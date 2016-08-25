@@ -17,6 +17,7 @@ app = WSGIApplication([
     Route(r'/api/download/<safe_key>', handler='views.api.Download', name='download_url'),
 
     Route(r'/api/memcache/<mem_key>', handler='views.api.Cache', methods=['PUT']),
+    Route(r'/api/background/<job>', handler='views.api.DatastoreBackground'),
     # REST API
 
     # Route(r'/admin/', handler='views.admin.Index', name='admin_all'),
