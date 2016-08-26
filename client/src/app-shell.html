@@ -46,6 +46,15 @@
         		--app-text-color: #212121;
 				display: block;
 			}
+			app-drawer {
+				-moz-user-select: none;
+                -ms-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+			}
+			app-drawer app-toolbar {
+				background-color: var(--app-secondary-color);
+			}
 			app-header {
 				color: var(--app-text-color);
 				z-index: 1;

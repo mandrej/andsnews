@@ -26,7 +26,6 @@
                 @apply(--layout-fit);
             }
             .swipe {
-                width: 100vw;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
@@ -74,13 +73,16 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages selected="{{start}}" threshold="0" disabled="{{disabled}}" id="swipe">
+        <iron-swipeable-pages selected="{{start}}" threshold="0.01" disabled="{{disabled}}" id="swipe">
             <template is="dom-repeat" items="{{records}}">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0" sizing="cover"
                             data-dim$="[[item.dim]]" on-track="zoomImage"></iron-image>
-                        <paper-dialog id="[[item.safekey]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                        <paper-dialog id="[[item.safekey]]"
+                            entry-animation="fade-in-animation"
+                            exit-animation="fade-out-animation">
+                            <h2>[[item.headline]]</h2>
                             <p>
                                 [[_dateFormat(item.date)]]<br>
                                 [[item.author]]<br><br>
