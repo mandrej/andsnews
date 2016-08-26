@@ -356,7 +356,6 @@
 			},
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-                this.$.google.innerText = this.user.getBasicProfile().getName() + ' Sign-Out';
 				// console.log(this.user.getBasicProfile().getId());
 				// .getBasicProfile().getName();
 				// .getBasicProfile().getEmail();

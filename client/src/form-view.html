@@ -6,7 +6,6 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-select/paper-select.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
-<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -50,14 +49,6 @@
             vaadin-combo-box {
                 --paper-input-container-color: var(--app-text-color);
                 --paper-input-container-focus-color: var(--app-primary-color);
-            }
-            vaadin-date-picker {
-                --vaadin-date-picker-calendar-cell-selected: {
-                    background-color: var(--app-primary-color);
-                }
-            }
-            paper-toast {
-
             }
         </style>
 
@@ -143,10 +134,7 @@
                         on-adding-item="addItem"
                         bind-value="{{obj.tags}}"
                         multiple unique nonmatching select-on-blur></paper-select>
-                    <vaadin-date-picker
-                        name="date"
-                        label="date"
-                        value="{{_dateFormat(obj.date)}}"></vaadin-date-picker>
+                    <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
 
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
@@ -228,9 +216,6 @@
             _getEmail: function(obj) {
                 return (obj.author) ? obj.author : this.user.getBasicProfile().getEmail();
             },
-            _dateFormat: function(str) {
-                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD');
-            },
             // _reset: function(e) {
             //     this.$.form.reset();
             // },
@@ -282,5 +267,4 @@
             },
         });
     </script>
-    <script src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>
