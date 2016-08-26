@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
@@ -49,24 +50,10 @@
 				color: var(--app-text-color);
 				z-index: 1;
 				background-color: var(--app-background-color);
-				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
 				text-decoration: none;
-			}
-			app-drawer {
-				top: 0;
-				bottom: 0;
-				z-index: 2;
-				--app-drawer-content-container: {
-					padding: 0;
-				}
-			}
-			app-drawer app-toolbar {
-				color: var(--app-text-color);
-				background-color: var(--app-background-color);
-				@apply(--shadow-elevation-2dp);
 			}
             paper-item iron-icon {
                 margin-right: 16px;
@@ -110,14 +97,14 @@
 			}
 			h1, h4 {
 				margin: 0;
-				font-size: 36px;
+				font-size: 24px;
 				font-weight: 300;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
-			[condensed-title] {
-				font-size: 24px;
+			h4 {
+				font-size: 16px;
 			}
 			[hidden] {
 				display: none !important;
@@ -164,37 +151,6 @@
 
 		<iron-request id="delete_ajax"></iron-request>
 
-		<app-drawer id="drawer" swipe-open>
-			<app-toolbar>
-				<h1 condensed-title>ANDрејевићи</h1>
-			</app-toolbar>
-			<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
-				<paper-item kind-page="photo">
-					<a href="#/grid/photo" class="flex">
-						<iron-icon icon="image:photo-camera"></iron-icon>Photos
-					</a>
-				</paper-item>
-				<paper-item kind-page="entry">
-					<a href="#/grid/entry" class="flex">
-						<iron-icon icon="description"></iron-icon>Texts
-					</a>
-				</paper-item>
-			</paper-menu>
-
-			<template is="dom-if" if="{{isAuthorized}}">
-				<paper-item on-tap="_signOut">
-					<iron-icon icon="settings"></iron-icon>[[userName(user)]]
-				</paper-item>
-			</template>
-			<template is="dom-if" if="{{!isAuthorized}}">
-				<paper-item on-tap="_signIn">
-					<iron-icon icon="settings"></iron-icon>Google Sign-In
-				</paper-item>
-			</template>
-
-			<paper-item>ver.[[version]]</paper-item>
-		</app-drawer>
-
 		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
 			<div hidden$="{{!isAuthorized}}" class="add">
 				<div class="fixed">
@@ -203,92 +159,110 @@
 			</div>
 		</template>
 
-		<app-header-layout>
-			<app-header condenses reveals fixed effects="waterfall resize-title">
+		<app-drawer-layout fullbleed>
+			<app-drawer id="drawer" swipe-open>
 				<app-toolbar>
-					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-						<paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-					</template>
+					<h4 main-title>ver.[[version]]</h4>
+				</app-toolbar>
+				<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page" class="layout vertical">
+					<paper-item kind-page="photo">
+						<a href="#/grid/photo" class="flex">
+							<iron-icon icon="image:photo-camera"></iron-icon>Photos
+						</a>
+					</paper-item>
+					<paper-item kind-page="entry">
+						<a href="#/grid/entry" class="flex">
+							<iron-icon icon="description"></iron-icon>Texts
+						</a>
+					</paper-item>
+				</paper-menu>
 
-	  				<h4 condensed-title>{{headline}}</h4>
+				<template is="dom-if" if="{{isAuthorized}}">
+					<paper-item on-tap="_signOut">
+						<iron-icon icon="settings"></iron-icon>[[userName(user)]]
+					</paper-item>
+				</template>
+				<template is="dom-if" if="{{!isAuthorized}}">
+					<paper-item on-tap="_signIn">
+						<iron-icon icon="settings"></iron-icon>Google Sign-In
+					</paper-item>
+				</template>
+			</app-drawer>
 
-					<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-						<div hidden$="{{!isAuthorized}}" class="layout horizontal">
-				            <paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
+			<app-header-layout>
+				<app-header fixed>
+					<app-toolbar>
+						<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+
+		  				<h1 main-title>{{headline}}</h1>
+
+						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+							<div hidden$="{{!isAuthorized}}" class="layout horizontal">
+					            <paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
+								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+								</template>
+					            <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+					        </div>
 							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 							</template>
-				            <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-				        </div>
-						<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-							<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 						</template>
-					</template>
 
-					<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-						<template is="dom-if" if="[[!smallScreen]]">
-							<iron-selector attr-for-selected="kind-page" selected="[[dataKind.kind]]">
-								<a href="#/grid/photo" kind-page="photo">
-									<paper-button>Photos</paper-button></a>
-								<a href="#/grid/entry" kind-page="entry">
-									<paper-button>Texts</paper-button></a>
-							</iron-selector>
+						<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
+							<app-search
+								field="{{dataField.field}}"
+								value="{{dataValue.value}}"
+								route="{{route}}"></app-search>
 						</template>
-						<app-search
+		    		</app-toolbar>
+				</app-header>
+
+				<main id="main">
+					<div id="spinner" class="layout horizontal center-justified">
+						<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+					</div>
+					<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+
+						<admin-shell
+							data-view="admin"
+							is-authorized="{{isAuthorized}}"
+							route="{{route}}"></admin-shell>
+
+						<grid-view
+							data-view="grid"
+							kind="[[dataKind.kind]]"
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
-							route="{{route}}"></app-search>
-					</template>
-	    		</app-toolbar>
-	    		<app-toolbar>
-	      			<h1 main-title>{{headline}}</h1>
-	    		</app-toolbar>
-			</app-header>
+							route="{{route}}"
+							loading="{{loading}}"></grid-view>
 
-			<main id="main">
-				<div id="spinner" class="layout horizontal center-justified">
-					<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-				</div>
-				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+						<detail-view
+							data-view="detail"
+							kind="[[dataKind.kind]]"
+							field="[[dataField.field]]"
+							value="[[dataValue.value]]"
+							records="{{records}}"
+							start="{{start}}"
+							loading="{{loading}}"
+							headline="{{headline}}"
+							route="{{route}}"></detail-view>
 
-					<admin-shell
-						data-view="admin"
-						is-authorized="{{isAuthorized}}"
-						route="{{route}}"></admin-shell>
+						<form-view
+							data-view="form"
+							view="[[dataView.view]]"
+							is-authorized="{{isAuthorized}}"
+							user="[[user]]"
+							kind="[[dataKind.kind]]"
+							field="[[dataField.field]]"
+							value="[[dataValue.value]]"
+							route="{{route}}"></form-view>
 
-					<grid-view
-						data-view="grid"
-						kind="[[dataKind.kind]]"
-						field="{{dataField.field}}"
-						value="{{dataValue.value}}"
-						route="{{route}}"
-						loading="{{loading}}"></grid-view>
-
-					<detail-view
-						data-view="detail"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
-						records="{{records}}"
-						start="{{start}}"
-						loading="{{loading}}"
-						headline="{{headline}}"
-						route="{{route}}"></detail-view>
-
-					<form-view
-						data-view="form"
-						view="[[dataView.view]]"
-						is-authorized="{{isAuthorized}}"
-						user="[[user]]"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
-						route="{{route}}"></form-view>
-
-				</neon-animated-pages>
-			</main>
-		</app-header-layout>
+					</neon-animated-pages>
+				</main>
+			</app-header-layout>
+		</app-drawer-layout>
 	</template>
 
 	<script>
@@ -323,7 +297,7 @@
 				this.debounce('viewChanged', function() {
 					console.log(view, kind, field, value);
 				}, 100);
-				if (this.$.drawer.opened) this.$.drawer.close();
+				if (this.$.drawer.opened && !this.$.drawer.persistent) this.$.drawer.close();
 				this.headline = 'ANDрејевићи';
 				this.records = [];
 				this.start = 0;
@@ -336,9 +310,6 @@
 			},
 			_isFormView: function(view) {
 				return view == 'form';
-			},
-			_drawerToggle: function() {
-				this.$.drawer.toggle();
 			},
 			_isKindPhoto: function(kind) {
 				return kind == 'photo'
