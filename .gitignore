@@ -8,7 +8,5 @@ graphy
 mapreduce
 networkx
 pipeline
-pytz
-simplejson
 decorator.py
 *.pyc
