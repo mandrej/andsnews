@@ -3,14 +3,13 @@ import json
 import logging
 import webapp2
 import datetime
-from operator import itemgetter
 from slugify import slugify
-from google.appengine.api import users, search, memcache, app_identity, datastore_errors
-from google.appengine.ext import ndb, blobstore, deferred
+from google.appengine.api import users, search, app_identity, datastore_errors
+from google.appengine.ext import ndb
 from google.appengine.datastore.datastore_query import Cursor
 from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
-from models import Cloud, Photo, Entry, INDEX
+from models import Cloud, cloud_representation, Photo, Entry, INDEX
 from config import DEVEL
 
 LIMIT = 12 if DEVEL else 48
@@ -159,66 +158,14 @@ class Collection(RestHandler):
         })
 
 
-def cloud_limit(items):
-    """
-    Returns limit for the specific count. Show only if count > limit
-    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
-    :return: int
-    """
-    _curr = 0
-    _sum5 = sum((x['count'] for x in items)) * 0.05
-    if _sum5 < 1:
-        return 0
-    else:
-        _on_count = sorted(items, key=itemgetter('count'))
-        for item in _on_count:
-            _curr += item['count']
-            if _curr >= _sum5:
-                return item['count']
-
-
-def cloud_representation(kind):
-    model = ndb.Model._kind_map.get(kind.title())
-
-    if kind == 'photo':
-        fields = ('date', 'tags', 'model')
-    elif kind == 'entry':
-        fields = ('date', 'tags')
-
-    data = []
-    for field in fields:
-        mem_key = kind.title() + '_' + field
-        cloud = Cloud(mem_key).get_list()
-
-        limit = cloud_limit(cloud)
-        items = [x for x in cloud if x['count'] > limit]
-
-        if field == 'date':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('tags', 'author', 'model', 'lens', 'iso'):
-            items = sorted(items, key=itemgetter('name'), reverse=False)
-        elif field == 'color':
-            items = sorted(items, key=itemgetter('order'))
-
-        for item in items:
-            obj = model.latest_for(field, item['name'])
-            if obj is not None:
-                if kind == 'photo':
-                    item['repr_url'] = obj.serving_url + '=s400'
-                elif kind == 'entry':
-                    item['repr_url'] = obj.front_img
-
-        data.append({
-            'field_name': field,
-            'items': items
-        })
-
-    return data
-
-
-class KindFilter(RestHandler):  # from handlers.RenderCloud
+class KindFilter(RestHandler):
     def get(self, kind=None):
-        data = cloud_representation(kind)
+        if kind == 'photo':
+            fields = ['date', 'tags', 'model']
+        elif kind == 'entry':
+            fields = ['date', 'tags']
+
+        data = cloud_representation(kind, fields)
         self.render(data)
 
 
@@ -324,8 +271,6 @@ class Download(webapp2.RequestHandler):
             'Content-Type': 'image/jpeg',
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
-        # self.response.headers['Content-Disposition'] = 'attachment; filename=download.jpg'
-        # self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.write(buff)
 
 

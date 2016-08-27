@@ -28,11 +28,6 @@ indexes:
   - name: date
     direction: desc
 
-- kind: Img
-  ancestor: yes
-  properties:
-  - name: num
-
 - kind: Photo
   properties:
   - name: author
@@ -52,17 +47,6 @@ indexes:
 - kind: Photo
   properties:
   - name: color
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
-  - name: eqv
-  - name: date
-
-- kind: Photo
-  properties:
-  - name: eqv
   - name: date
     direction: desc
 

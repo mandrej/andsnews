@@ -16,6 +16,7 @@ from google.appengine.api import users, memcache, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
 import cloudstorage as gcs
+from operator import itemgetter
 from config import COLORS, ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
@@ -23,7 +24,7 @@ from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
-TIMEOUT = 3600  # 1 hour
+TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
         'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
@@ -179,6 +180,57 @@ def remove_doc(safe_key):
     INDEX.delete(safe_key)
 
 
+def cloud_limit(items):
+    """
+    Returns limit for the specific count. Show only if count > limit
+    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    :return: int
+    """
+    _curr = 0
+    _sum5 = sum((x['count'] for x in items)) * 0.05
+    if _sum5 < 1:
+        return 0
+    else:
+        _on_count = sorted(items, key=itemgetter('count'))
+        for item in _on_count:
+            _curr += item['count']
+            if _curr >= _sum5:
+                return item['count']
+
+
+def cloud_representation(kind, fields):
+    model = ndb.Model._kind_map.get(kind.title())
+    data = []
+    for field in fields:
+        mem_key = kind.title() + '_' + field
+        cloud = Cloud(mem_key).get_list()
+
+        limit = cloud_limit(cloud)
+        items = [x for x in cloud if x['count'] > limit]
+
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        elif field in ('tags', 'author', 'model', 'lens', 'iso'):
+            items = sorted(items, key=itemgetter('name'), reverse=False)
+        elif field == 'color':
+            items = sorted(items, key=itemgetter('order'))
+
+        for item in items:
+            obj = model.latest_for(field, item['name'])
+            if obj is not None:
+                if kind == 'photo':
+                    item['repr_url'] = obj.serving_url + '=s400'
+                elif kind == 'entry':
+                    item['repr_url'] = obj.front_img
+
+        data.append({
+            'field_name': field,
+            'items': items
+        })
+
+    return data
+
+
 class Cloud(object):
     """ cache dictionary collections on unique values and it's counts
         {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
@@ -192,7 +244,7 @@ class Cloud(object):
         self.kind, self.field = mem_key.split('_', 1)
 
     def set_cache(self, collection):
-        memcache.set(self.mem_key, collection, TIMEOUT * 2)
+        memcache.set(self.mem_key, collection, TIMEOUT * 5)
 
     def get_cache(self):
         return memcache.get(self.mem_key)
@@ -201,8 +253,7 @@ class Cloud(object):
         return self.get_cache() or self.make()
 
     def get_list(self):
-        # collection = self.get_cache() or self.make()
-        collection = self.make()
+        collection = self.get_cache() or self.make()
         # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
         content = []
         if self.field == 'color':
