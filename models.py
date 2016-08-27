@@ -305,6 +305,7 @@ class Cloud(object):
         elif prop == 'author':
             properties = [x.email() for x in properties]
         tally = collections.Counter(filter(None, properties))  # filter out None
+        # Counter({2015: 17, 2014: 15, 2016: 9, 2013: 8, 2012: 6})
 
         collection = dict(tally.items())
         self.set_cache(collection)

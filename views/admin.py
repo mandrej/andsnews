@@ -8,7 +8,7 @@ from webapp2_extras.appengine.users import login_required, admin_required
 from mapreduce.base_handler import PipelineBase
 from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
-from handlers import BaseHandler, csrf_protected, xss_protected, Paginator
+from handlers import BaseHandler, csrf_protected, xss_protected
 
 
 class Cache(BaseHandler):

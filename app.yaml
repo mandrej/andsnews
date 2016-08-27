@@ -55,6 +55,10 @@ handlers:
   upload: client/robots.txt
   secure: always
 
+- url: /mapreduce(/.*)?
+  login: admin
+  script: mapreduce.main.APP
+
 - url: /
   static_files: client/index.html
   upload: client/index.html
@@ -65,10 +69,6 @@ handlers:
   secure: always
 
 ####################################################
-
-- url: /mapreduce(/.*)?
-  login: admin
-  script: mapreduce.main.APP
 
 - url: /tests/.*
   login: admin

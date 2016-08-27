@@ -97,7 +97,7 @@
             },
             ready: function() {
                 this.memkeys = ['Photo_date', 'Photo_tags', 'Photo_model'];
-                this.jobs = ['fix', 'photo_index', 'entry_index'];
+                this.jobs = ['photo_index', 'entry_index'];
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/memcache/' + e.model.item;
