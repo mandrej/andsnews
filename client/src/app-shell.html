@@ -54,11 +54,13 @@
 			}
 			app-drawer app-toolbar {
 				background-color: var(--app-secondary-color);
+				@apply(--shadow-elevation-2dp);
 			}
 			app-header {
 				color: var(--app-text-color);
 				z-index: 1;
 				background-color: var(--app-background-color);
+				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
 				color: inherit;
@@ -206,14 +208,15 @@
 		  				<h1 main-title>{{headline}}</h1>
 
 						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-							<div hidden$="{{!isAuthorized}}" class="layout horizontal">
-					            <paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
-								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+							<template is="dom-if" if="{{isAuthorized}}">
+								<template is="dom-if" if="{{isAdmin}}">
+									<paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
+									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
 								</template>
-					            <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-					        </div>
+							</template>
+
 							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
 								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 							</template>
 						</template>
@@ -286,11 +289,12 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160825'},
+				version: { type: String, value: '160827'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
+				isAdmin: { type: Boolean, value: false, notify: true },
 				dataView: { type: Object, value: {view: null} },
 				dataKind: { type: Object, value: {kind: null} },
 				dataField: { type: Object, value: {field: null} },
@@ -331,14 +335,17 @@
 					this.user.disconnect();
 					this.isAuthorized = false;
 					this.user = null;
+					this.isAdmin = false;
 				}
 				gapi.auth2.getAuthInstance().signOut();
 			},
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+				if (this.user.getBasicProfile().getEmail() == 'milan.andrejevic@gmail.com') {
+					this.isAdmin = true;
+				}
 				// console.log(this.user.getBasicProfile().getId());
 				// .getBasicProfile().getName();
-				// .getBasicProfile().getEmail();
 				// .getBasicProfile().getImageUrl();
             },
 			userName: function(user) {
