@@ -56,7 +56,9 @@
                 <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="repeatRender">
                     <div class="rec"
                         data-field$="[[row.field_name]]" on-tap="applyFilter">
-                        <iron-image src="[[rec.repr_url]]" sizing="cover"></iron-image>
+                        <iron-image src="[[rec.repr_url]]"
+                            placeholder="data:image/gif;base64,R0lGODlhAQABAPABAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            preload sizing="cover"></iron-image>
                         <div class="title">
                             <div class="layout horizontal justified">
                                 <span class="self-center">[[rec.name]]</span>
@@ -72,7 +74,9 @@
         <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
-                    <iron-image src="[[rec.front_img]]" sizing="cover"></iron-image>
+                    <iron-image src="[[rec.front_img]]"
+                        placeholder="data:image/gif;base64,R0lGODlhAQABAPABAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        preload sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">
                             <span class="self-center">[[rec.headline]]</span>
