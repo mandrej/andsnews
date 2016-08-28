@@ -151,7 +151,8 @@
 		<app-route
 			route="{{tailField}}"
 			pattern="/:value"
-			data="{{dataValue}}"></app-route>
+			data="{{dataValue}}"
+			tail="{{tailValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
@@ -289,7 +290,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160827'},
+				version: { type: String, value: '160828'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -309,7 +310,7 @@
 			viewChanged: function(view, kind, field, value) {
 				this.debounce('viewChanged', function() {
 					console.log(view, kind, field, value);
-				}, 100);
+				}, 300);
 				if (this.$.drawer.opened && !this.$.drawer.persistent) this.$.drawer.close();
 				this.headline = 'ANDрејевићи';
 				this.records = [];
@@ -355,10 +356,8 @@
 				window.location.href = '/api/download/' + this.records[this.start].safekey;
 			},
 			addRecord: function(e) {
-				this.async(function() {
-					this.value = null;
-					this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
-				}, 200);
+				this.set('dataValue', null);
+				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 			},
 			deleteRecord: function(e) {
 				var obj = this.splice('records', this.start, 1)[0];
@@ -368,9 +367,7 @@
 			},
 			editRecord: function(e) {
 				var obj = this.records[this.start];
-				this.async(function() {
-					this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
-				}, 200);
+				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
 			},
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');

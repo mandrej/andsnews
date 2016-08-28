@@ -59,13 +59,13 @@
 			debounce-duration="300"></iron-ajax>
 
         <iron-ajax auto
-			url="[[_urlLensCloud(view, kind)]]"
+			url="[[_urlLensCloud(view, kind, field)]]"
 			handle-as="json"
 			last-response="{{lens_cloud}}"
 			debounce-duration="100"></iron-ajax>
 
         <iron-ajax auto
-			url="[[_urlTagsCloud(view, kind)]]"
+			url="[[_urlTagsCloud(view, kind, field)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
 			debounce-duration="100"></iron-ajax>
@@ -78,7 +78,7 @@
                 <template is="dom-if" if="[[_isKindPhoto(kind)]]">
                     <vaadin-upload id="upload"
                         target="/api/{{kind}}/add"
-                        max-files="1"
+                        max-files="10"
                         on-upload-response="_uploadResponse"
                         accept="image/*"></vaadin-upload>
                 </template>
@@ -200,13 +200,19 @@
                     return ['/api', kind, field, value].join('/');
                 }
             },
-            _urlTagsCloud: function(view, kind) {
-                if (view != 'form') return;
-                if (kind) return '/api/suggest/' + this.capitalize(kind) + '_tags';
+            _urlTagsCloud: function(view, kind, field) {
+                if (view == 'form' && kind == 'photo' && field == 'edit') {
+                    return '/api/suggest/Photo_tags';
+                } else if (view == 'form' && kind == 'entry') {
+                    return '/api/suggest/Entry_tags';
+                }
+                return;
             },
-            _urlLensCloud: function(view, kind) {
-                if (view != 'form') return;
-                if (kind == 'photo') return '/api/suggest/Photo_lens';
+            _urlLensCloud: function(view, kind, field) {
+                if (view == 'form' && kind == 'photo' && field == 'edit') {
+                    return '/api/suggest/Photo_lens';
+                }
+                return;
             },
             _isKindPhoto: function(kind) {
                 return kind == 'photo';
@@ -227,7 +233,7 @@
                 if (res.success) {
                     toast.setAttribute('text', 'Image successfully uploaded');
                     toast.open();
-                    this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
+                    // this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
                 } else {
                     toast.setAttribute('text', res.message);
                     toast.open();

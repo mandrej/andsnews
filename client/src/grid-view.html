@@ -49,8 +49,7 @@
 			url="[[_url(kind)]]"
 			handle-as="json"
             on-response="handler"
-            loading="{{loading}}"
-            debounce-duration="200"></iron-ajax>
+            loading="{{loading}}"></iron-ajax>
 
         <template is="dom-if" if="[[_isKindPhoto(kind)]]">
             <template is="dom-repeat" items="[[items]]" as="row">
