@@ -68,7 +68,7 @@
             handle-as="json"
             on-response="handler"
             loading="{{loading}}"
-            debounce-duration="200"></iron-ajax>
+            debounce-duration="100"></iron-ajax>
 
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
@@ -159,9 +159,8 @@
             },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';
-                // if (this.records.length != 0) {
-                    this.records = [];
-                // }
+                this.records = [];
+
 				if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
 				} else if (field && value) {
