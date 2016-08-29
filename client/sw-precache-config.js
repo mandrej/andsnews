@@ -8,7 +8,7 @@ module.exports = {
     navigateFallback: '/index.html',
     runtimeCaching: [{
         urlPattern: /\/api\/.*/,
-        handler: 'networkFirst',
+        handler: 'fastest',
         options: {
             cache: {
                 maxEntries: 50,

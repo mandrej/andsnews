@@ -3,7 +3,6 @@ version: 160825
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: 1m
 
 libraries:
 - name: PIL
@@ -60,8 +59,8 @@ handlers:
   script: mapreduce.main.APP
 
 - url: /
-  static_files: client/index.html
-  upload: client/index.html
+  static_files: client/build/unbundled/index.html
+  upload: client/build/unbundled/index.html
   secure: always
 
 - url: /api/.*
