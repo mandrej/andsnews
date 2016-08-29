@@ -288,7 +288,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160829'},
+				version: { type: String, value: '16082917'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -308,11 +308,10 @@
 			viewChanged: function(view, kind, field, value) {
 				this.debounce('viewChanged', function() {
 					console.log(view, kind, field, value);
+					this.start = 0;
 				}, 300);
-				if (this.$.drawer.opened && !this.$.drawer.persistent) this.$.drawer.close();
 				this.headline = 'ANDрејевићи';
-				this.records = [];
-				this.start = 0;
+				if (this.$.drawer.opened && !this.$.drawer.persistent) this.$.drawer.close();
 			},
 			_isGridView: function(view) {
 				return view == 'grid'

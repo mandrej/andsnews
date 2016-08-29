@@ -148,23 +148,21 @@
                 return kind == 'photo';
             },
             applyFilter: function(e) {
-                var target = e.target,
-                    random = ('' + Math.random()).substring(2);
+                var target = e.target;
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
                 this.sharedElements = { 'hero': target.querySelector('iron-image') };
-                this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/') + '?' + random);
+                this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
 			},
             showDetail: function(e) {
                 // SPECIFIC
-                var target = e.target,
-                    random = ('' + Math.random()).substring(2);
+                var target = e.target;
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
                 this.sharedElements = { 'hero': target };
-                this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/') + '?' + random);
+                this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
                 var nodes = Polymer.dom(this.shadowRoot).querySelectorAll('.rec')
