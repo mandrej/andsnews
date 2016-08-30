@@ -15,15 +15,14 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                display: block;
-                height: 100vh;
+                @apply(--layout-fullbleed);
+                @apply(--layout-vertical);
             }
-            * { box-sizing: border-box;  }
             ::-webkit-scrollbar {
                 display: none;
             }
             iron-swipeable-pages {
-                @apply(--layout-fit);
+                @apply(--layout-flex);
             }
             .swipe {
                 -moz-user-select: none;
@@ -76,13 +75,18 @@
             <p>Please try again</p>
         </paper-dialog>
 
-        <iron-swipeable-pages selected="{{start}}" threshold="0.01" disabled="{{disabled}}" id="swipe">
+        <iron-swipeable-pages id="swipe"
+            selected="{{start}}"
+            fallback-selection="0"
+            threshold="0.1"
+            on-track="zoomImage"
+            disabled="{{disabled}}">
             <template is="dom-repeat" items="{{records}}">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0" sizing="contain"
                             position="left top"
-                            data-dim$="[[item.dim]]" on-track="zoomImage"></iron-image>
+                            data-dim$="[[item.dim]]"></iron-image>
                         <paper-dialog id="[[item.safekey]]"
                             entry-animation="fade-in-animation"
                             exit-animation="fade-out-animation">
