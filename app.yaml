@@ -3,6 +3,7 @@ version: 160825
 runtime: python27
 api_version: 1
 threadsafe: true
+default_expiration: "0s"
 
 libraries:
 - name: PIL

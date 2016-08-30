@@ -115,9 +115,7 @@ class Collection(RestHandler):
             model = ndb.Model._kind_map.get(kind.title())
             query = model.query_for(field, value)
             paginator = Paginator(query, per_page=LIMIT)
-            objects, token = paginator.page(page)
-            if not objects:
-                self.abort(404)
+            objects, token = paginator.page(page)  # [], None
 
         self.render({
             'objects': objects,

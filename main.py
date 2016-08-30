@@ -8,7 +8,7 @@ app = WSGIApplication([
     Route(r'/api/search/<find>', handler='views.api.Find'),
 
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
-    Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|model|author|show)>/<value>',
+    Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|color|model|author|show)>/<value>',
           handler='views.api.Collection'),
 
     Route(r'/api/<kind:(photo|entry)>/add', handler='views.api.Crud', methods=['GET', 'POST']),

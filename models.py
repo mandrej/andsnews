@@ -518,6 +518,7 @@ class Photo(ndb.Model):
             self.hue, self.lum, self.sat = range_names(self.rgb)
 
             # SAVE EVERYTHING
+            self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 
             # incr_count(self.kind, 'author', self.author.email())
@@ -526,6 +527,7 @@ class Photo(ndb.Model):
                 if value:
                     incr_count(self.kind, field, value)
             # deferred.defer(self.index_doc)
+            update_tags(self.kind, None, self.tags)
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
