@@ -84,8 +84,11 @@
             <template is="dom-repeat" items="{{records}}">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
-                        <iron-image src="[[item.serving_url]]=s0" sizing="contain"
-                            position="left top"
+                        <iron-image src="[[item.serving_url]]=s0"
+                            placeholder="data:image/gif;R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                            preload fade
+                            sizing="contain"
+                            position="top left"
                             data-dim$="[[item.dim]]"></iron-image>
                         <paper-dialog id="[[item.safekey]]"
                             entry-animation="fade-in-animation"
