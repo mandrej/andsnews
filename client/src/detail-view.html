@@ -79,13 +79,14 @@
             selected="{{start}}"
             fallback-selection="0"
             threshold="0.1"
+            on-iron-select="ironSelect"
             on-track="zoomImage"
             disabled="{{disabled}}">
             <template is="dom-repeat" items="{{records}}">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0"
-                            placeholder="data:image/gif;R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                            placeholder="data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
                             preload fade
                             sizing="contain"
                             position="top left"
@@ -187,10 +188,6 @@
                     response.objects.forEach(function(item) {
                         this.push('records', item);
                     }, this);
-
-                    if (this.headline == 'ANDрејевићи') {
-                        this.headline = this.records[this.start].headline;
-                    }
                 }
 			},
             loadMore: function() {
@@ -200,14 +197,12 @@
                     this.set('params.page', ajax.lastResponse.next);
 				}
 			},
+            ironSelect: function(e) {
+                this.headline = e.detail.item._templateInstance.__data__.item.headline;
+            },
             changeIndex: function(start) {
-                if (!this.records) return;
-                if (this.records.length > 0) {
-                    this.headline = this.records[start].headline;
-
-                    if (this.records.length - start < 3) {
-                        this.loadMore();
-                    }
+                if (this.records.length - start < 3) {
+                    this.loadMore();
                 }
             },
             _isKindPhoto: function(item) {
