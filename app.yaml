@@ -60,8 +60,8 @@ handlers:
   script: mapreduce.main.APP
 
 - url: /
-  static_files: client/build/unbundled/index.html
-  upload: client/build/unbundled/index.html
+  static_files: client/index.html
+  upload: client/index.html
   secure: always
 
 - url: /api/.*
