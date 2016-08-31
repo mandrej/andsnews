@@ -66,8 +66,7 @@
             params="{{params}}"
             handle-as="json"
             on-response="handler"
-            loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+            loading="{{loading}}"></iron-ajax>
 
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
@@ -86,7 +85,7 @@
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0"
-                            placeholder="data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            style="background-color: #fff"
                             preload fade
                             sizing="contain"
                             position="top left"
@@ -198,6 +197,7 @@
 				}
 			},
             ironSelect: function(e) {
+                // Polymer.dom(e.detail.item).querySelector('iron-image').src = e.detail.item._templateInstance.__data__.item.serving_url + '=s0';
                 this.headline = e.detail.item._templateInstance.__data__.item.headline;
             },
             changeIndex: function(start) {

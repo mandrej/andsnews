@@ -308,10 +308,18 @@
 			viewChanged: function(view, kind, field, value) {
 				this.debounce('viewChanged', function() {
 					console.log(view, kind, field, value);
-					this.start = 0;
 				}, 100);
+
 				this.headline = 'ANDрејевићи';
-				if (this.$.drawer.opened && !this.$.drawer.persistent) this.$.drawer.close();
+				this.start = 0;
+				
+				if (view == 'grid') {
+					field = null;
+					value = null;
+				}
+				if (this.$.drawer.opened && !this.$.drawer.persistent) {
+					this.$.drawer.close();
+				}
 			},
 			_isGridView: function(view) {
 				return view == 'grid'
