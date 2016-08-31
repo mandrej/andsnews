@@ -10,7 +10,7 @@ from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, cloud_representation, Photo, Entry, INDEX
 from config import DEVEL
 
-LIMIT = 12 if DEVEL else 48
+LIMIT = 12
 KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 
