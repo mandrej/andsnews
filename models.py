@@ -199,7 +199,7 @@ def cloud_limit(items):
 
 
 def cloud_representation(kind, fields):
-    model = ndb.Model._kind_map.get(kind.title())
+    # model = ndb.Model._kind_map.get(kind.title())
     data = []
     for field in fields:
         mem_key = kind.title() + '_' + field
@@ -215,13 +215,13 @@ def cloud_representation(kind, fields):
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
 
-        for item in items:
-            obj = model.latest_for(field, item['name'])
-            if obj is not None:
-                if kind == 'photo':
-                    item['repr_url'] = obj.serving_url + '=s400'
-                elif kind == 'entry':
-                    item['repr_url'] = obj.front_img
+        # for item in items:
+        #     obj = model.latest_for(field, item['name'])
+        #     if obj is not None:
+        #         if kind == 'photo':
+        #             item['repr_url'] = obj.serving_url
+        #         elif kind == 'entry':
+        #             item['repr_url'] = obj.front_img
 
         data.append({
             'field_name': field,
@@ -315,9 +315,15 @@ class Cloud(object):
             key_name = '%s||%s||%s' % (self.kind, self.field, value)
             params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
             obj = Counter.get_or_insert(key_name, **params)
-            if obj.count != count:
-                obj.count = count
-                obj.put_async()
+
+            latest = model.latest_for(obj.field, obj.value)
+            if obj.forkind == 'Photo':
+                obj.repr_url = latest.serving_url
+            elif obj.forkind == 'Entry':
+                obj.repr_url = latest.front_img
+
+            obj.count = count
+            obj.put_async()
 
         return collection
 
@@ -371,6 +377,7 @@ class Counter(ndb.Model):
     field = ndb.StringProperty(required=True)
     value = ndb.GenericProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
+    repr_url = ndb.StringProperty()
 
     @classmethod
     def query_for(cls, field, value):
@@ -389,6 +396,14 @@ def update_counter(delta, args):
         params = dict(zip(('forkind', 'field', 'value'), args))
 
         obj = Counter.get_or_insert(key_name, **params)
+
+        model = ndb.Model._kind_map.get(obj.forkind)
+        latest = model.latest_for(obj.field, obj.value)
+        if obj.forkind == 'Photo':
+            obj.repr_url = latest.serving_url
+        elif obj.forkind == 'Entry':
+            obj.repr_url = latest.front_img
+
         obj.count += delta
         obj.put()
 
@@ -451,7 +466,6 @@ class Photo(ndb.Model):
         return self.key.kind()
 
     def index_doc(self):
-        pass
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
@@ -648,7 +662,6 @@ class Entry(ndb.Model):
         return self.key.kind()
 
     def index_doc(self):
-        pass
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
