@@ -156,7 +156,7 @@ class Cache(RestHandler):
     def put(self, mem_key):
         cloud = Cloud(mem_key)
         cloud.rebuild()
-        self.render(cloud.get_cache())
+        self.render(cloud.get_list())
 
 
 class Crud(RestHandler):

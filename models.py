@@ -235,14 +235,8 @@ class Cloud(object):
         self.mem_key = mem_key
         self.kind, self.field = mem_key.split('_', 1)
 
-    def set_cache(self, collection):
-        memcache.set(self.mem_key, collection, TIMEOUT * 5)  # 5 min
-
-    def get_cache(self):
-        return memcache.get(self.mem_key)
-
     def get(self):
-        return self.get_cache() or self.make()
+        return self.make()
 
     def get_list(self):
         collection = self.get()
@@ -266,25 +260,8 @@ class Cloud(object):
         for counter in query:
             if counter.count > 0:
                 collection[counter.value] = {'count': counter.count, 'repr_url': counter.repr_url}
-        self.set_cache(collection)
         # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         return collection
-
-    @ndb.toplevel
-    def update(self, key, count, repr_url):
-        # update cache. works only when key, delta changed
-        # {'still life': {'count': 8, 'repr_url': '...'}, ...}
-        collection = self.get_cache()
-        if collection is not None:
-            collection[key]['count'] = count
-            collection[key]['repr_url'] = repr_url
-
-            if collection[key]['count'] > 0:
-                self.set_cache(collection)
-            else:
-                entity_key = ndb.Key('Counter', '%s||%s||%s' % (self.kind, self.field, key))
-                entity_key.delete_async()
-                del collection[key]
 
     @ndb.toplevel
     def rebuild(self):
@@ -301,11 +278,7 @@ class Cloud(object):
         tally = collections.Counter(filter(None, properties))  # filter out None
         # Counter({2015: 17, 2014: 15, 2016: 9, 2013: 8, 2012: 6})
 
-        collection = dict(tally.items())
-        self.set_cache(collection)
-
-        # repair counters async with toplevel
-        for value, count in collection.items():
+        for value, count in tally.items():
             key_name = '%s||%s||%s' % (self.kind, self.field, value)
             params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
             obj = Counter.get_or_insert(key_name, **params)
@@ -318,8 +291,6 @@ class Cloud(object):
 
             obj.count = count
             obj.put_async()
-
-        return collection
 
 
 class Graph(object):
@@ -400,10 +371,6 @@ def update_counter(delta, args):
 
         obj.count += delta
         obj.put()
-
-        mem_key = '{forkind}_{field}'.format(**params)
-        cloud = Cloud(mem_key)
-        cloud.update(params['value'], obj.count, obj.repr_url)
 
 
 def incr_count(*args):
