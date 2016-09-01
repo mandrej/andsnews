@@ -279,12 +279,14 @@ class Cloud(object):
 
     @ndb.toplevel
     def update(self, key, delta):
+        # update cache. works only when key, delta changed
         collection = self.get_cache()
         if collection is not None:
             if key in collection:
                 collection[key] += delta
             else:
                 collection[key] = delta
+
             if collection[key] > 0:
                 self.set_cache(collection)
             else:
