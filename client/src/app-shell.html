@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -124,6 +125,16 @@
 					font-size: 24px;
 				}
         	}
+			paper-dialog {
+				max-width: 400px;
+                --paper-dialog-title: {
+                    white-space: normal;
+                    font-size: var(--app-toolbar-font-size);
+                }
+            }
+			paper-dialog paper-button {
+				color: var(--app-text-color);
+			}
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -158,6 +169,13 @@
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
             on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+
+		<paper-dialog id="confirm" modal
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+            <h2>Are you sure?</h2>
+			<paper-button dialog-dismiss>Cancel</paper-button>
+			<paper-button dialog-confirm autofocus>OK</paper-button>
+        </paper-dialog>
 
 		<iron-request id="delete_ajax"></iron-request>
 
@@ -209,7 +227,7 @@
 						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
 							<template is="dom-if" if="{{isAuthorized}}">
 								<template is="dom-if" if="{{isAdmin}}">
-									<paper-icon-button icon="clear" on-tap="deleteRecord"></paper-icon-button>
+									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
 									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
 								</template>
 							</template>
@@ -288,7 +306,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160831'},
+				version: { type: String, value: '160901'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -302,6 +320,9 @@
 				records: { type: Array, value: [], notify: true },
 				start: { type: Number, value: 0, notify: true },
 			},
+			listeners: {
+				'iron-overlay-closed': 'deleteRecord'
+			},
 			observers: [
 				'viewChanged(dataView.view, dataKind.kind, dataField.field, dataValue.value)'
 			],
@@ -312,7 +333,7 @@
 
 				this.headline = 'ANDрејевићи';
 				this.start = 0;
-				
+
 				if (view == 'grid') {
 					field = null;
 					value = null;
@@ -365,10 +386,15 @@
 				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 			},
 			deleteRecord: function(e) {
-				var obj = this.splice('records', this.start, 1)[0];
-				this.start ++;
-				this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
-				// this.notifySplices('records', obj);
+				if (e.detail.confirmed) {
+					var obj = this.splice('records', this.start, 1)[0];
+					this.start ++;
+					this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
+					// this.notifySplices('records', obj);
+				}
+			},
+			confirmDelete: function(e) {
+				this.$.confirm.open();
 			},
 			editRecord: function(e) {
 				var obj = this.records[this.start];
