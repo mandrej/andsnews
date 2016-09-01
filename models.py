@@ -199,11 +199,11 @@ def cloud_limit(items):
 
 
 def cloud_representation(kind, fields):
-    # model = ndb.Model._kind_map.get(kind.title())
     data = []
     for field in fields:
         mem_key = kind.title() + '_' + field
         cloud = Cloud(mem_key).get_list()
+        # [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
 
         limit = cloud_limit(cloud)
         items = [x for x in cloud if x['count'] > limit]
@@ -215,14 +215,6 @@ def cloud_representation(kind, fields):
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
 
-        # for item in items:
-        #     obj = model.latest_for(field, item['name'])
-        #     if obj is not None:
-        #         if kind == 'photo':
-        #             item['repr_url'] = obj.serving_url
-        #         elif kind == 'entry':
-        #             item['repr_url'] = obj.front_img
-
         data.append({
             'field_name': field,
             'items': items
@@ -233,10 +225,10 @@ def cloud_representation(kind, fields):
 
 class Cloud(object):
     """ cache dictionary collections on unique values and it's counts
-        {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
+        {'still life': {'count': 8, 'repr_url': '...'}, ...}
 
         get_list:
-        [{'count': 3, 'name': 'mihailo.genije'}, {'count': 11, 'name': 'milan.andrejevic'}, ...]
+        [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
     """
 
     def __init__(self, mem_key):
@@ -244,7 +236,7 @@ class Cloud(object):
         self.kind, self.field = mem_key.split('_', 1)
 
     def set_cache(self, collection):
-        memcache.set(self.mem_key, collection, TIMEOUT * 5)
+        memcache.set(self.mem_key, collection, TIMEOUT * 5)  # 5 min
 
     def get_cache(self):
         return memcache.get(self.mem_key)
@@ -253,19 +245,19 @@ class Cloud(object):
         return self.get_cache() or self.make()
 
     def get_list(self):
-        # collection = self.get_cache() or self.make()
-        collection = self.make()
-        # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
+        collection = self.get()
+
         content = []
         if self.field == 'color':
-            for k, count in collection.items():
+            for k, d in collection.items():
                 data = next((x for x in COLORS if x['name'] == k), None)
-                data.update({'count': count, 'field': self.field})
+                data.update({'count': d['count'], 'field': self.field, 'repr_url': d['repr_url']})
                 content.append(data)
         else:
-            for k, v in collection.items():
-                data = {'name': k, 'count': v}
+            for k, d in collection.items():
+                data = {'name': k, 'count': d['count'], 'repr_url': d['repr_url']}
                 content.append(data)
+
         return content
 
     def make(self):
@@ -273,24 +265,21 @@ class Cloud(object):
         query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
         for counter in query:
             if counter.count > 0:
-                # TODO fix dicionary
-                collection[counter.value] = counter.count
-                # collection['repr_url'] = counter.repr_url
-        logging.error(collection)
+                collection[counter.value] = {'count': counter.count, 'repr_url': counter.repr_url}
         self.set_cache(collection)
+        # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         return collection
 
     @ndb.toplevel
-    def update(self, key, delta):
+    def update(self, key, count, repr_url):
         # update cache. works only when key, delta changed
+        # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         collection = self.get_cache()
         if collection is not None:
-            if key in collection:
-                collection[key] += delta
-            else:
-                collection[key] = delta
+            collection[key]['count'] = count
+            collection[key]['repr_url'] = repr_url
 
-            if collection[key] > 0:
+            if collection[key]['count'] > 0:
                 self.set_cache(collection)
             else:
                 entity_key = ndb.Key('Counter', '%s||%s||%s' % (self.kind, self.field, key))
@@ -414,7 +403,7 @@ def update_counter(delta, args):
 
         mem_key = '{forkind}_{field}'.format(**params)
         cloud = Cloud(mem_key)
-        cloud.update(params['value'], delta)
+        cloud.update(params['value'], obj.count, obj.repr_url)
 
 
 def incr_count(*args):
