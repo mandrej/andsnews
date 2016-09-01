@@ -253,7 +253,8 @@ class Cloud(object):
         return self.get_cache() or self.make()
 
     def get_list(self):
-        collection = self.get_cache() or self.make()
+        # collection = self.get_cache() or self.make()
+        collection = self.make()
         # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
         content = []
         if self.field == 'color':
@@ -262,7 +263,6 @@ class Cloud(object):
                 data.update({'count': count, 'field': self.field})
                 content.append(data)
         else:
-            # content = calculate_cloud(collection)
             for k, v in collection.items():
                 data = {'name': k, 'count': v}
                 content.append(data)
@@ -273,7 +273,10 @@ class Cloud(object):
         query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
         for counter in query:
             if counter.count > 0:
+                # TODO fix dicionary
                 collection[counter.value] = counter.count
+                # collection['repr_url'] = counter.repr_url
+        logging.error(collection)
         self.set_cache(collection)
         return collection
 
