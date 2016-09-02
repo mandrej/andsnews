@@ -163,12 +163,12 @@ class BackgroundIndex(RestHandler):
         if kind == 'photo':
             indexer = Indexer()
             indexer.KIND = Photo
-            deferred.defer(indexer.run)
+            deferred.defer(indexer.run, batch_size=10, _queue='background')
 
         elif kind == 'entry':
             indexer = Indexer()
             indexer.KIND = Entry
-            deferred.defer(indexer.run)
+            deferred.defer(indexer.run, batch_size=10, _queue='background')
 
 
 class Crud(RestHandler):

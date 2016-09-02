@@ -1,3 +1,4 @@
+import logging
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import DeadlineExceededError
 
@@ -67,7 +68,7 @@ class Mapper(object):
             # Write any unfinished updates to the datastore.
             self._batch_write()
             # Queue a new task to pick up where we left off.
-            deferred.defer(self._continue, start_key, batch_size)
+            deferred.defer(self._continue, start_key, batch_size, _queue='background')
             return
         self.finish()
 
@@ -75,4 +76,4 @@ class Mapper(object):
 class Indexer(Mapper):
     def map(self, entity):
         entity.index_doc()
-        return [], []
+        return [entity], []

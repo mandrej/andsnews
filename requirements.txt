@@ -1,9 +1,7 @@
-GoogleAppEngineCloudStorageClient==1.9.22.1
-Pillow==3.3.1
-argparse==1.2.1
 colormath==2.1.0
 decorator==4.0.6
-funcsigs==0.4
+ExifRead==2.1.2
+GoogleAppEngineCloudStorageClient==1.9.22.1
 networkx==1.9.1
 numpy==1.9.2
-wsgiref==0.1.2
+Pillow==3.3.1
