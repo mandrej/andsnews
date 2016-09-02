@@ -5,8 +5,6 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 
-from mapreduce.base_handler import PipelineBase
-from mapreduce.mapper_pipeline import MapperPipeline
 from models import Photo, Entry, Counter, Cloud, KEYS
 from handlers import BaseHandler, csrf_protected, xss_protected
 
@@ -89,53 +87,3 @@ class Counters(BaseHandler):
             obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
         self.redirect_to('counter_admin')
-
-
-JOBS = {
-    "photo_index": {
-        "job_name": "full_photo_index",
-        "handler_spec": "views.background.indexer",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
-    "entry_index": {
-        "job_name": "full_entry_index",
-        "handler_spec": "views.background.indexer",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Entry",
-        },
-        "shards": 4
-    },
-    "fix": {
-        "job_name": "current_fix",
-        "handler_spec": "views.background.current_fix",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
-}
-
-
-class DatastoreMapperPipeline(PipelineBase):
-    def run(self, job_name):
-        yield MapperPipeline(**JOBS[job_name])
-
-
-class DatastoreBackground(BaseHandler):
-    @admin_required
-    def get(self, job):
-        try:
-            JOBS[job]
-        except KeyError:
-            self.abort(404)
-        else:
-            pipeline = DatastoreMapperPipeline(job)
-            pipeline.start()
-            redirect_url = "%s/status?root=%s" % (pipeline.base_path, pipeline.pipeline_id)
-            self.redirect(redirect_url)

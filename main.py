@@ -20,14 +20,6 @@ app = WSGIApplication([
     Route(r'/api/index/<kind>', handler='views.api.BackgroundIndex'),
     # REST API
 
-    # Route(r'/admin/', handler='views.admin.Index', name='admin_all'),
-    # Route(r'/admin/counters/', handler='views.admin.Counters', name='counter_admin'),
-    # Route(r'/admin/counters/<field:(forkind|field|value)>/<value>/',
-    #       handler='views.admin.Counters', name='counter_admin_filter'),
-    # Route(r'/admin/memcache/', handler='views.admin.Cache', methods=['GET']),
-    # Route(r'/admin/memcache/<mem_key>', handler='views.admin.Cache'),
-    # Route(r'/admin/background/<job>', handler='views.admin.DatastoreBackground', name='datastore_background'),
-    #
     # Route(r'/sitemap.xml', handler=SiteMap),
     # Route(r'/sign', handler=Sign),
     # Route(r'/', handler='views.photo.Index', name='start'),

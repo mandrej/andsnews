@@ -364,10 +364,11 @@ def update_counter(delta, args):
 
         model = ndb.Model._kind_map.get(obj.forkind)
         latest = model.latest_for(obj.field, obj.value)
-        if obj.forkind == 'Photo':
-            obj.repr_url = latest.serving_url
-        elif obj.forkind == 'Entry':
-            obj.repr_url = latest.front_img
+        if latest is not None:
+            if obj.forkind == 'Photo':
+                obj.repr_url = latest.serving_url
+            elif obj.forkind == 'Entry':
+                obj.repr_url = latest.front_img
 
         obj.count += delta
         obj.put()

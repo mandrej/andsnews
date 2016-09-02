@@ -1,12 +1,8 @@
 .idea/
 aeta
-babel
 cloudstorage
 colormath
 exifread
-graphy
-mapreduce
 networkx
-pipeline
 decorator.py
 *.pyc
