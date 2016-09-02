@@ -47,11 +47,11 @@
             }
         </style>
 
-        <iron-ajax id="rebuild_ajax" method="PUT"></iron-ajax>
-        <iron-ajax id="background_ajax" method="GET"></iron-ajax>
+        <iron-ajax id="rebuild_ajax"></iron-ajax>
+        <iron-ajax id="background_ajax"></iron-ajax>
 
         <div class="card">
-            <h2>Memcache</h2>
+            <h2>Rebuild Counters</h2>
             <div class="flex">
                 <template is="dom-repeat" items="[[memkeys]]" as="item">
                     <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
@@ -60,10 +60,9 @@
         </div>
 
         <div class="card">
-            <h2>Mapreduce</h2>
+            <h2>Background Indexer</h2>
             <div class="flex">
-                <!-- <paper-button on-tap="background" style="margin-bottom: 8px">Status</paper-button> -->
-                <template is="dom-repeat" items="[[jobs]]" as="item">
+                <template is="dom-repeat" items="[[kinds]]" as="item">
                     <paper-button on-tap="background" style="margin-bottom: 8px">[[item]]</paper-button>
                 </template>
             </div>
@@ -97,15 +96,14 @@
             },
             ready: function() {
                 this.memkeys = ['Photo_date', 'Photo_tags', 'Photo_model'];
-                this.jobs = ['photo_index', 'entry_index'];
+                this.kinds = ['photo', 'entry'];
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/memcache/' + e.model.item;
                 this.$.rebuild_ajax.generateRequest();
             },
             background: function(e) {
-                // window.location = '/mapreduce/status';
-                this.$.background_ajax.url = '/api/background/' + e.model.item;
+                this.$.background_ajax.url = '/api/index/' + e.model.item;
                 this.$.background_ajax.generateRequest();
             },
         });

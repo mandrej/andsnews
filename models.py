@@ -263,7 +263,7 @@ class Cloud(object):
         # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         return collection
 
-    @ndb.toplevel
+    # @ndb.toplevel
     def rebuild(self):
         prop = self.field
         if self.field == 'date':
@@ -434,8 +434,7 @@ class Photo(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month),
-                search.TextField(name='model', value=self.model)]
+                search.NumberField(name='month', value=self.date.month)]
         )
         INDEX.put(doc)
 

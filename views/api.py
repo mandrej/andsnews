@@ -5,10 +5,10 @@ import webapp2
 import datetime
 from slugify import slugify
 from google.appengine.api import users, search, app_identity, datastore_errors
-from google.appengine.ext import ndb
+from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, cloud_representation, Photo, Entry, INDEX
-from config import DEVEL
+from mapper import Mapper, Indexer
 
 LIMIT = 12
 KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
@@ -152,11 +152,23 @@ class Find(RestHandler):
         })
 
 
-class Cache(RestHandler):
-    def put(self, mem_key):
+class CounterRebuild(RestHandler):
+    def get(self, mem_key):
         cloud = Cloud(mem_key)
-        cloud.rebuild()
-        self.render(cloud.get_list())
+        deferred.defer(cloud.rebuild)
+
+
+class BackgroundIndex(RestHandler):
+    def get(self, kind):
+        if kind == 'photo':
+            indexer = Indexer()
+            indexer.KIND = Photo
+            deferred.defer(indexer.run)
+
+        elif kind == 'entry':
+            indexer = Indexer()
+            indexer.KIND = Entry
+            deferred.defer(indexer.run)
 
 
 class Crud(RestHandler):

@@ -16,7 +16,8 @@ app = WSGIApplication([
     Route(r'/api/delete/<safe_key>', handler='views.api.Crud', methods=['DELETE']),
     Route(r'/api/download/<safe_key>', handler='views.api.Download', name='download_url'),
 
-    Route(r'/api/memcache/<mem_key>', handler='views.api.Cache', methods=['PUT']),
+    Route(r'/api/memcache/<mem_key>', handler='views.api.CounterRebuild'),
+    Route(r'/api/index/<kind>', handler='views.api.BackgroundIndex'),
     # REST API
 
     # Route(r'/admin/', handler='views.admin.Index', name='admin_all'),
