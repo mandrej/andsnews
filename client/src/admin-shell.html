@@ -50,23 +50,25 @@
         <iron-ajax id="rebuild_ajax"></iron-ajax>
         <iron-ajax id="background_ajax"></iron-ajax>
 
-        <div class="card">
-            <h2>Rebuild Counters</h2>
-            <div class="flex">
-                <template is="dom-repeat" items="[[memkeys]]" as="item">
-                    <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
-                </template>
+        <template is="dom-if" if="{{isAdmin}}">
+            <div class="card">
+                <h2>Rebuild Counters</h2>
+                <div class="flex">
+                    <template is="dom-repeat" items="[[counters]]" as="item">
+                        <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
+                    </template>
+                </div>
             </div>
-        </div>
 
-        <div class="card">
-            <h2>Background Indexer</h2>
-            <div class="flex">
-                <template is="dom-repeat" items="[[kinds]]" as="item">
-                    <paper-button on-tap="background" style="margin-bottom: 8px">[[item]]</paper-button>
-                </template>
+            <div class="card">
+                <h2>Background Indexer</h2>
+                <div class="flex">
+                    <template is="dom-repeat" items="[[kinds]]" as="item">
+                        <paper-button on-tap="background" style="margin-bottom: 8px">[[item]]</paper-button>
+                    </template>
+                </div>
             </div>
-        </div>
+        </template>
     </template>
     <script>
         Polymer({
@@ -90,12 +92,12 @@
                         }
                     }
                 },
-                isAuthorized: { type: Boolean, value: false, notify: true },
-                memkeys: {type: Array },
+                isAdmin: { type: Boolean, value: false, notify: true },
+                counters: {type: Array },
                 jobs: {type: Array },
             },
             ready: function() {
-                this.memkeys = ['Photo_date', 'Photo_tags', 'Photo_model'];
+                this.counters = ['Photo_date', 'Photo_tags', 'Photo_model'];
                 this.kinds = ['photo', 'entry'];
             },
             rebuild: function(e) {

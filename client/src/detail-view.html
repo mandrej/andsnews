@@ -34,6 +34,7 @@
             .swipe iron-image {
                 width: 100%;
                 height: 100%;
+                transition: all 0.3s ease-in-out;
             }
             paper-dialog {
                 --paper-dialog-title: {
@@ -77,19 +78,17 @@
         <iron-swipeable-pages id="swipe"
             selected="{{start}}"
             fallback-selection="0"
-            threshold="0.1"
+            threshold="0.01"
             on-iron-select="ironSelect"
-            on-track="zoomImage"
             disabled="{{disabled}}">
             <template is="dom-repeat" items="{{records}}">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0"
+                            data-dim$="[[item.dim]]"
                             style="background-color: #fff"
-                            preload fade
-                            sizing="contain"
-                            position="top left"
-                            data-dim$="[[item.dim]]"></iron-image>
+                            sizing="cover"
+                            preload fade></iron-image>
                         <paper-dialog id="[[item.safekey]]"
                             entry-animation="fade-in-animation"
                             exit-animation="fade-out-animation">
@@ -162,7 +161,8 @@
                 },
             },
             listeners: {
-                'show-exif': '_showExif'
+                'show-exif': '_showExif',
+                'zoom-photo': '_zoomPhoto',
             },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';
@@ -221,42 +221,20 @@
                     dialog.open();
                 }
             },
-            zoomImage: function(e) {
+            _zoomPhoto: function() {
                 var swipe = this.$.swipe,
                     width = swipe.offsetWidth,
                     height = swipe.offsetHeight,
-                    elem = e.target,
-                    dim = JSON.parse(elem.dataset.dim);
+                    img = swipe.querySelector('.iron-selected iron-image'),
+                    dim = JSON.parse(img.dataset.dim),
+                    tracking;
 
-                var newX = e.detail.x - e.detail.x / width * dim[0],
-                    newY = e.detail.y - e.detail.y / height * dim[1];
-
-                switch(e.detail.state) {
-                    case 'track':
-                        if (this.disabled) {
-                            // move in progress
-                            elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
-                        } else {
-                            if (Math.abs(e.detail.dx) > Math.abs(e.detail.dy)) {
-                                return; // swipe
-                            } else {
-                                // zoom
-                                if (elem.style.width != dim[0] + 'px') {
-                                    elem.style.width = dim[0] + 'px';
-                                    elem.style.height = dim[1] + 'px';
-                                }
-                                this.disabled = true;
-                                elem.style.transform = 'translate(' + newX + 'px, ' + newY + 'px)';
-                                // elem.style.webkitTransition = 'all 300ms ease-in-out';
-                            }
-                        }
-                        break;
-                    case 'end':
-                        elem.style.width = '100%';
-                        elem.style.height = '100%';
-                        elem.style.transform = 'translate(0px, 0px)';
-                        this.disabled = false;
-                        break;
+                if (img.style.width != dim[0] + 'px') {
+                    img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
+                    this.disabled = true;
+                } else {
+                    img.style.cssText = 'width: 100%; height: 100%';
+                    this.disabled = false;
                 }
             },
             propertyChanged: function(newValue, oldValue) {
