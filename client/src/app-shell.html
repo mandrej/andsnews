@@ -307,7 +307,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160903'},
+				version: { type: String, value: '160904'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -386,6 +386,13 @@
 				this.set('dataValue', null);
 				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 			},
+			editRecord: function(e) {
+				var obj = this.records[this.start];
+				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
+			},
+			confirmDelete: function(e) {
+				this.$.confirm.open();
+			},
 			deleteRecord: function(e) {
 				if (e.detail.confirmed) {
 					var obj = this.splice('records', this.start, 1)[0];
@@ -393,13 +400,6 @@
 					this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
 					// this.notifySplices('records', obj);
 				}
-			},
-			confirmDelete: function(e) {
-				this.$.confirm.open();
-			},
-			editRecord: function(e) {
-				var obj = this.records[this.start];
-				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
 			},
 			showExif: function(e) {
 				this.$$('detail-view').fire('show-exif');
@@ -409,11 +409,7 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
-				if (target.icon == 'zoom-in') {
-					target.icon = 'zoom-out';
-				} else {
-					target.icon = 'zoom-in';
-				}
+				target.icon = (target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
 				this.$$('detail-view').fire('zoom-photo');
 			},
 			objectChanged: function(obj) {

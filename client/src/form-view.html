@@ -25,6 +25,9 @@
             h1 {
                 font-weight: 300;
             }
+            a {
+                color: var(--app-primary-color);
+            }
             paper-button {
                 color: var(--app-background-color);
                 background-color: var(--app-primary-color);
@@ -70,7 +73,6 @@
 			last-response="{{tags_cloud}}"
 			debounce-duration="100"></iron-ajax>
 
-
         <div class="container" id="container">
             <paper-toast id="toast" horizontal-align="right"></paper-toast>
 
@@ -81,6 +83,9 @@
                         max-files="10"
                         on-upload-response="_uploadResponse"
                         accept="image/*"></vaadin-upload>
+                    <p>
+                        Continue with editing of <a href="#/detail/photo/tags/new">uploaded files</a>.
+                    </p>
                 </template>
 
                 <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
@@ -96,7 +101,6 @@
                             name="author"
                             label="author"
                             allow-custom-value="true"
-                            pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                             items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
                             </vaadin-combo-box>
                             <paper-select
@@ -125,7 +129,6 @@
                         name="author"
                         label="author"
                         allow-custom-value="true"
-                        pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
                         value="{{_getEmail(obj)}}"></vaadin-combo-box>
                     <paper-select
@@ -223,9 +226,6 @@
             _getEmail: function(obj) {
                 return (obj.author) ? obj.author : this.user.getBasicProfile().getEmail();
             },
-            // _reset: function(e) {
-            //     this.$.form.reset();
-            // },
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText),
                     toast = this.$.toast;
