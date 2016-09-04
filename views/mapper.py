@@ -1,7 +1,9 @@
 import logging
+import itertools
+import collections
 from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import DeadlineExceededError
-
+from models import Counter
 
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).
@@ -75,5 +77,49 @@ class Mapper(object):
 
 class Indexer(Mapper):
     def map(self, entity):
-        entity.index_doc()
         return [entity], []
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            entity.index_doc()
+        self.to_put = []
+
+
+class Builder(Mapper):
+    FIELD = None
+    VALUES = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def _batch_write(self):
+        prop = self.FIELD
+        if self.FIELD == 'date':
+            prop = 'year'
+
+        values = (getattr(x, prop, None) for x in self.to_put)
+        if prop == 'tags':
+            values = list(itertools.chain(*values))
+        elif prop == 'author':
+            values = [x.email() for x in values]
+
+        self.VALUES.extend(values)
+        self.to_put = []
+
+    def finish(self):
+        values = filter(None, self.VALUES)  # filter out None
+        tally = collections.Counter(values)
+        for value, count in tally.items():
+            kind = self.KIND._class_name()
+            key_name = '%s||%s||%s' % (kind, self.FIELD, value)
+            params = dict(zip(('forkind', 'field', 'value'), [kind, self.FIELD, value]))
+            obj = Counter.get_or_insert(key_name, **params)
+
+            latest = self.KIND.latest_for(obj.field, obj.value)
+            if obj.forkind == 'Photo':
+                obj.repr_url = latest.serving_url if latest else None
+            elif obj.forkind == 'Entry':
+                obj.repr_url = latest.front_img if latest else None
+
+            obj.count = count
+            obj.put()

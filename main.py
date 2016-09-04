@@ -16,8 +16,8 @@ app = WSGIApplication([
     Route(r'/api/delete/<safe_key>', handler='views.api.Crud', methods=['DELETE']),
     Route(r'/api/download/<safe_key>', handler='views.api.Download', name='download_url'),
 
-    Route(r'/api/memcache/<mem_key>', handler='views.api.CounterRebuild'),
-    Route(r'/api/index/<kind>', handler='views.api.BackgroundIndex'),
+    Route(r'/api/index/<kind>', handler='views.api.BackgroundIndex', methods=['POST']),
+    Route(r'/api/rebuild/<mem_key>', handler='views.api.BackgroundBuild', methods=['POST']),
     # REST API
 
     # Route(r'/sitemap.xml', handler=SiteMap),

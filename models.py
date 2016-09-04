@@ -264,33 +264,33 @@ class Cloud(object):
         return collection
 
     # @ndb.toplevel
-    def rebuild(self):
-        prop = self.field
-        if self.field == 'date':
-            prop = 'year'
-        model = ndb.Model._kind_map.get(self.kind)  # TODO REMEMBER THIS
-        query = model.query()
-        properties = (getattr(x, prop, None) for x in query)  # generator
-        if prop == 'tags':
-            properties = list(itertools.chain(*properties))
-        elif prop == 'author':
-            properties = [x.email() for x in properties]
-        tally = collections.Counter(filter(None, properties))  # filter out None
-        # Counter({2015: 17, 2014: 15, 2016: 9, 2013: 8, 2012: 6})
-
-        for value, count in tally.items():
-            key_name = '%s||%s||%s' % (self.kind, self.field, value)
-            params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
-            obj = Counter.get_or_insert(key_name, **params)
-
-            latest = model.latest_for(obj.field, obj.value)
-            if obj.forkind == 'Photo':
-                obj.repr_url = latest.serving_url
-            elif obj.forkind == 'Entry':
-                obj.repr_url = latest.front_img
-
-            obj.count = count
-            obj.put_async()
+    # def rebuild(self):
+    #     prop = self.field
+    #     if self.field == 'date':
+    #         prop = 'year'
+    #     model = ndb.Model._kind_map.get(self.kind)  # TODO REMEMBER THIS
+    #     query = model.query()
+    #     properties = (getattr(x, prop, None) for x in query)  # generator
+    #     if prop == 'tags':
+    #         properties = list(itertools.chain(*properties))
+    #     elif prop == 'author':
+    #         properties = [x.email() for x in properties]
+    #     tally = collections.Counter(filter(None, properties))  # filter out None
+    #     # Counter({2015: 17, 2014: 15, 2016: 9, 2013: 8, 2012: 6})
+    #
+    #     for value, count in tally.items():
+    #         key_name = '%s||%s||%s' % (self.kind, self.field, value)
+    #         params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
+    #         obj = Counter.get_or_insert(key_name, **params)
+    #
+    #         latest = model.latest_for(obj.field, obj.value)
+    #         if obj.forkind == 'Photo':
+    #             obj.repr_url = latest.serving_url
+    #         elif obj.forkind == 'Entry':
+    #             obj.repr_url = latest.front_img
+    #
+    #         obj.count = count
+    #         obj.put_async()
 
 
 class Graph(object):

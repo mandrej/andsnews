@@ -47,8 +47,8 @@
             }
         </style>
 
-        <iron-ajax id="rebuild_ajax"></iron-ajax>
-        <iron-ajax id="background_ajax"></iron-ajax>
+        <iron-ajax id="rebuild_ajax" method="POST"></iron-ajax>
+        <iron-ajax id="background_ajax" method="POST"></iron-ajax>
 
         <template is="dom-if" if="{{isAdmin}}">
             <div class="card">
@@ -101,7 +101,7 @@
                 this.kinds = ['photo', 'entry'];
             },
             rebuild: function(e) {
-                this.$.rebuild_ajax.url = '/api/memcache/' + e.model.item;
+                this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
                 this.$.rebuild_ajax.generateRequest();
             },
             background: function(e) {

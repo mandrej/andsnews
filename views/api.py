@@ -8,7 +8,7 @@ from google.appengine.api import users, search, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, cloud_representation, Photo, Entry, INDEX
-from mapper import Mapper, Indexer
+from mapper import Indexer, Builder
 
 LIMIT = 12
 KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
@@ -152,14 +152,8 @@ class Find(RestHandler):
         })
 
 
-class CounterRebuild(RestHandler):
-    def get(self, mem_key):
-        cloud = Cloud(mem_key)
-        deferred.defer(cloud.rebuild)
-
-
 class BackgroundIndex(RestHandler):
-    def get(self, kind):
+    def post(self, kind):
         if kind == 'photo':
             indexer = Indexer()
             indexer.KIND = Photo
@@ -169,6 +163,20 @@ class BackgroundIndex(RestHandler):
             indexer = Indexer()
             indexer.KIND = Entry
             deferred.defer(indexer.run, batch_size=10, _queue='background')
+
+
+class BackgroundBuild(RestHandler):
+    def post(self, mem_key):
+        kind, field = mem_key.split('_', 1)
+
+        builder = Builder()
+        if kind == 'Photo':  # Title case!
+            builder.KIND = Photo
+        elif kind == 'Entry':
+            builder.KIND = Entry
+        builder.VALUES = []
+        builder.FIELD = field
+        deferred.defer(builder.run, batch_size=10, _queue='background')
 
 
 class Crud(RestHandler):
