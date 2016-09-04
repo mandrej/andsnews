@@ -2,8 +2,10 @@ import logging
 import itertools
 import collections
 from google.appengine.ext import ndb, deferred
+from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
 from models import Counter
+
 
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).
@@ -66,7 +68,7 @@ class Mapper(object):
                 # Record the last entity we processed.
                 start_key = entity.key
             self._batch_write()
-        except DeadlineExceededError:
+        except (Timeout, DeadlineExceededError):
             # Write any unfinished updates to the datastore.
             self._batch_write()
             # Queue a new task to pick up where we left off.

@@ -4,7 +4,7 @@ queue:
   bucket_size: 5
 
 - name: background
-  rate: 30/m
+  rate: 10/m
   bucket_size: 5
 
 - name: errors
