@@ -13,7 +13,6 @@
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -177,8 +176,6 @@
 			<paper-button dialog-confirm autofocus>OK</paper-button>
         </paper-dialog>
 
-		<iron-request id="delete_ajax"></iron-request>
-
 		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
 			<div hidden$="{{!isAuthorized}}" class="add">
 				<div class="fixed">
@@ -274,7 +271,6 @@
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
 							records="{{records}}"
-							start="{{start}}"
 							loading="{{loading}}"
 							headline="{{headline}}"
 							route="{{route}}"></detail-view>
@@ -319,7 +315,6 @@
 				dataValue: { type: Object, value: {value: null} },
 				loading: { type: Boolean, value: false, notify: true },
 				records: { type: Array, value: [], notify: true },
-				start: { type: Number, value: 0, notify: true },
 			},
 			listeners: {
 				'iron-overlay-closed': 'deleteRecord'
@@ -341,7 +336,6 @@
 				}, 100);
 				// do on every change
 				this.headline = 'ANDрејевићи';
-				this.start = 0;
 			},
 			_isGridView: function(view) {
 				return view == 'grid'
@@ -380,25 +374,21 @@
 				if (user) return user.getBasicProfile().getName();
 			},
 			downloadPhoto: function(e) {
-				window.location.href = '/api/download/' + this.records[this.start].safekey;
+				this.$$('detail-view').fire('download-photo');
 			},
 			addRecord: function(e) {
 				this.set('dataValue', null);
 				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
 			},
 			editRecord: function(e) {
-				var obj = this.records[this.start];
-				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
+				this.$$('detail-view').fire('edit-record');
 			},
 			confirmDelete: function(e) {
 				this.$.confirm.open();
 			},
 			deleteRecord: function(e) {
 				if (e.detail.confirmed) {
-					var obj = this.splice('records', this.start, 1)[0];
-					this.start ++;
-					this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
-					// this.notifySplices('records', obj);
+					this.$$('detail-view').fire('delete-record');
 				}
 			},
 			showExif: function(e) {

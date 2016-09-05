@@ -69,6 +69,8 @@
             on-response="handler"
             loading="{{loading}}"></iron-ajax>
 
+        <iron-request id="delete_ajax"></iron-request>
+
         <paper-dialog id="message" class="info"
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
@@ -76,7 +78,7 @@
         </paper-dialog>
 
         <iron-swipeable-pages id="swipe"
-            selected="{{start}}"
+            selected="0"
             fallback-selection="0"
             threshold="0.01"
             on-iron-select="ironSelect"
@@ -149,7 +151,6 @@
                 kind: { type: String, value: null, notify: true },
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
-                start: { type: Number, value: 0, notify: true, observer: 'changeIndex' },
                 disabled: { type: Boolean, value: false, notify: true },
                 headline: { type: String, notify: true },
                 params: { type: Object, value: {}, notify: true },
@@ -163,6 +164,9 @@
             listeners: {
                 'show-exif': '_showExif',
                 'zoom-photo': '_zoomPhoto',
+                'download-photo': '_downloadPhoto',
+                'edit-record': '_editRecord',
+                'delete-record': '_deleteRecord',
             },
             _url: function(kind, field, value) {
 				var url, prefix = '/api';
@@ -199,9 +203,8 @@
             ironSelect: function(e) {
                 // Polymer.dom(e.detail.item).querySelector('iron-image').src = e.detail.item._templateInstance.__data__.item.serving_url + '=s0';
                 this.headline = e.detail.item._templateInstance.__data__.item.headline;
-            },
-            changeIndex: function(start) {
-                if (this.records.length - start < 3) {
+                var index = this.$.swipe.selected;
+                if (this.records.length - index < 3) {
                     this.loadMore();
                 }
             },
@@ -214,7 +217,8 @@
                 // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
             },
             _showExif: function(e) {
-                var id = e.target.records[this.start].safekey,
+                var index = this.$.swipe.selected;
+                var id = e.target.records[index].safekey,
                     dialog = this.$$('#' + id);
                 if (dialog) {
                     dialog.fitInto = this.$.swipe;
@@ -236,6 +240,22 @@
                     img.style.cssText = 'width: 100%; height: 100%';
                     this.disabled = false;
                 }
+            },
+            _downloadPhoto: function() {
+                var index = this.$.swipe.selected;
+				window.location.href = '/api/download/' + this.records[index].safekey;
+            },
+            _editRecord: function() {
+                var index = this.$.swipe.selected,
+		            obj = this.records[index];
+				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
+            },
+            _deleteRecord: function() {
+                var index = this.$.swipe.selected,
+                    obj = this.splice('records', index, 1)[0];
+                // this.start ++;
+                this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
+                this.notifySplices('records', obj);
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
