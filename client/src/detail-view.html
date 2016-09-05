@@ -83,7 +83,7 @@
             threshold="0.01"
             on-iron-select="ironSelect"
             disabled="{{disabled}}">
-            <template is="dom-repeat" items="{{records}}">
+            <template is="dom-repeat" items="{{records}}" initial-count="1">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <div class="swipe">
                         <iron-image src="[[item.serving_url]]=s0"
@@ -152,7 +152,7 @@
 				field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 disabled: { type: Boolean, value: false, notify: true },
-                headline: { type: String, notify: true },
+                headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 records: { type: Array, value: [], notify: true },
                 loading: {
@@ -253,9 +253,8 @@
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,
                     obj = this.splice('records', index, 1)[0];
-                // this.start ++;
                 this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
-                this.notifySplices('records', obj);
+                // this.notifySplices('records', obj);
             },
             propertyChanged: function(newValue, oldValue) {
 				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
