@@ -307,7 +307,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160904'},
+				version: { type: String, value: '160905'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -329,19 +329,19 @@
 			],
 			viewChanged: function(view, kind, field, value) {
 				this.debounce('viewChanged', function() {
+					// do once after debounce
+					if (view == 'grid') {
+						field = null;
+						value = null;
+					}
+					if (this.$.drawer.opened && !this.$.drawer.persistent) {
+						this.$.drawer.close();
+					}
 					console.log(view, kind, field, value);
 				}, 100);
-
+				// do on every change
 				this.headline = 'ANDрејевићи';
 				this.start = 0;
-
-				if (view == 'grid') {
-					field = null;
-					value = null;
-				}
-				if (this.$.drawer.opened && !this.$.drawer.persistent) {
-					this.$.drawer.close();
-				}
 			},
 			_isGridView: function(view) {
 				return view == 'grid'

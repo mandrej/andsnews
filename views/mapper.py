@@ -53,6 +53,7 @@ class Mapper(object):
         q = self.get_query()
         # If we're resuming, pick up where we left off last time.
         if start_key:
+            logging.info('NEXT KEY %s' % start_key)
             key_prop = getattr(self.KIND, '_key')
             q = q.filter(key_prop > start_key)
         # Keep updating records until we run out of time.
