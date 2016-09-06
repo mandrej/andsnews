@@ -9,7 +9,7 @@ from models import Photo, Entry, Counter, Cloud
 from handlers import BaseHandler, csrf_protected, xss_protected
 
 KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
-        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
+        'Photo_model', 'Photo_lens', 'Photo_iso', 'Photo_color',
         'Entry_tags', 'Entry_author', 'Entry_date']
 
 

@@ -28,6 +28,7 @@ TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_EXIF_FIELDS = ('model', 'lens', 'iso', 'color')
 PHOTO_FILTER_FIELDS = ('date', 'tags', 'model')
+ENTRY_FILTER_FIELDS = ('date', 'tags')
 LOGARITHMIC, LINEAR = 1, 2
 
 
@@ -354,32 +355,26 @@ def update_counter(delta, args):
 
         obj = Counter.get_or_insert(key_name, **params)
 
-        # model = ndb.Model._kind_map.get(obj.forkind)
-        # latest = model.latest_for(obj.field, obj.value)
-        # if latest is not None:
-        #     if obj.forkind == 'Photo':
+        # if obj.field in PHOTO_FILTER_FIELDS:
+        #     latest = Photo.latest_for(obj.field, obj.value)
+        #     if latest is not None:
+        #         logging.error('UPDATE %s %s' % (obj.field, obj.value))
         #         obj.repr_url = latest.serving_url
-        #     elif obj.forkind == 'Entry':
-        #         obj.repr_url = latest.front_img
 
         obj.count += delta
         obj.put()
 
 
 def update_repr_url(pairs):
-    logging.error(pairs)
     # PHOTO SPECIFIC
-    for p in pairs:
-        latest = Photo.latest_for(p[0], p[1])
+    logging.error(pairs)
+    for field, value in pairs:
+        latest = Photo.latest_for(field, value)
+        counter = Counter.get_or_insert('Photo||%s||%s' % (field, value))
         if latest is not None:
-            counter = Counter.get_or_insert('Photo||%s||%s' % (p[0], p[1]))
-            logging.error('UPDATE COUNTER FOR %s %s' % (p[0], p[1]))
-            url = latest.serving_url
-            if counter.repr_url != url:
-                counter.repr_url = url
-                logging.error('PUT %s %s' % (p[0], p[1]))
-                counter.put()
-
+            counter.repr_url = latest.serving_url
+            logging.error('SAVE %s %s %s' % (field, value, counter.count))
+            counter.put()
 
 
 def incr_count(*args):
@@ -446,6 +441,25 @@ class Photo(ndb.Model):
                 search.NumberField(name='month', value=self.date.month)]
         )
         INDEX.put(doc)
+
+    def changed_pairs(self):
+        """
+        List of changed field, value pairs
+        [('date', '2016'), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
+        """
+        pairs = []
+        for field in PHOTO_FILTER_FIELDS:
+            prop = field
+            if field == 'date':
+                prop = 'year'
+            value = getattr(self, prop, None)
+            if value:
+                if isinstance(value, (list, tuple)):
+                    for v in value:
+                        pairs.append((field, str(v)))
+                else:
+                    pairs.append((field, str(value)))
+        return pairs
 
     @webapp2.cached_property
     def buffer(self):
@@ -558,21 +572,9 @@ class Photo(ndb.Model):
         self.put()
         deferred.defer(self.index_doc)
 
-        pairs = []
-        for field in PHOTO_FILTER_FIELDS:
-            prop = field
-            if field == 'date':
-                prop = 'year'
-            value = getattr(self, prop, None)
-            if value:
-                if isinstance(value, (list, tuple)):
-                    for v in value:
-                        pairs.append((field, str(v)))
-                else:
-                    pairs.append((field, str(value)))
-
+        # pairs = self.changed_pairs()
         # deferred.defer(update_repr_url, pairs)
-        update_repr_url(pairs)
+        # update_repr_url(pairs)
 
     @classmethod
     def _pre_delete_hook(cls, key):
@@ -588,29 +590,14 @@ class Photo(ndb.Model):
             if value:
                 decr_count(key.kind(), field, value)
 
-        # pairs = []
-        # for field in PHOTO_FILTER_FIELDS:
-        #     prop = field
-        #     if field == 'date':
-        #         prop = 'year'
-        #     value = getattr(obj, prop, None)
-        #     if value:
-        #         if isinstance(value, (list, tuple)):
-        #             for v in value:
-        #                 pairs.append((field, v))
-        #             else:
-        #                 pairs.append((field, value))
-
+        # pairs = obj.changed_pairs()
         ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
         # deferred.defer(update_repr_url, pairs)
+        # update_repr_url(pairs)
 
     @webapp2.cached_property
     def serving_url(self):
-        # try:
         return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        # except (images.Error, apiproxy_errors.DeadlineExceededError), e:
-        #     logging.error(e.message)
-        # return None
 
     @webapp2.cached_property
     def download_url(self):
@@ -713,8 +700,6 @@ class Entry(ndb.Model):
         decr_count(key.kind(), 'author', obj.author.email())
         decr_count(key.kind(), 'date', obj.year)
         update_tags(key.kind(), obj.tags, None)
-
-        # ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
 
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
