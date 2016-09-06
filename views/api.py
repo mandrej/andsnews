@@ -7,11 +7,10 @@ from slugify import slugify
 from google.appengine.api import users, search, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, cloud_representation, Photo, Entry, INDEX
+from models import Cloud, cloud_representation, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS
 from mapper import Indexer, Builder
 
 LIMIT = 12
-KEYS = ('Photo_date', 'Photo_tags', 'Photo_model')
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 
 
@@ -112,8 +111,7 @@ class Collection(RestHandler):
             objects = [obj]
             token = None
         else:
-            model = ndb.Model._kind_map.get(kind.title())
-            query = model.query_for(field, value)
+            query = Photo.query_for(field, value)
             paginator = Paginator(query, per_page=LIMIT)
             objects, token = paginator.page(page)  # [], None
 
@@ -128,9 +126,7 @@ class Collection(RestHandler):
 class KindFilter(RestHandler):
     def get(self, kind=None):
         if kind == 'photo':
-            fields = ['date', 'tags', 'model']
-        elif kind == 'entry':
-            fields = ['date', 'tags']
+            fields = PHOTO_FILTER_FIELDS
 
         data = cloud_representation(kind, fields)
         self.render(data)

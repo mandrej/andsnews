@@ -90,9 +90,10 @@
                 </template>
 
                 <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-                    <form is="iron-form"
+                    <form is="iron-form" id="form"
                         on-iron-form-response="_responseHandler"
-                        method="post" action$="/api/[[kind]]/add" id="form">
+                        method="post"
+                        action$="/api/[[kind]]/add">
                         <div class="layout horizontal end-justified">
                             <paper-button on-tap="_submit">Submit</paper-button>
                         </div>
@@ -118,7 +119,11 @@
             </template>
 
             <template is="dom-if" if="[[!_isAdd(field)]]">
-                <form is="iron-form" on-iron-form-presubmit="_preSubmit" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/edit/[[value]]" id="form">
+                <form is="iron-form" id="form"
+                    on-iron-form-presubmit="_preSubmit"
+                    on-iron-form-response="_responseHandler"
+                    method="post"
+                    action$="/api/[[kind]]/edit/[[value]]">
                     <div class="layout horizontal end-justified">
                         <paper-button on-tap="_submit">Submit</paper-button>
                     </div>

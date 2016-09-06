@@ -5,8 +5,12 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 
-from models import Photo, Entry, Counter, Cloud, KEYS
+from models import Photo, Entry, Counter, Cloud
 from handlers import BaseHandler, csrf_protected, xss_protected
+
+KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
+        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
+        'Entry_tags', 'Entry_author', 'Entry_date']
 
 
 class Cache(BaseHandler):
