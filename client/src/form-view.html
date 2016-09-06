@@ -17,7 +17,8 @@
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
-                display: block;
+                @apply(--layout-fullbleed);
+                @apply(--layout-vertical);
             }
             .container {
                 padding: 16px;
@@ -29,12 +30,12 @@
                 color: var(--app-primary-color);
             }
             paper-button {
-                color: var(--app-background-color);
+                color: var(--app-light-color);
                 background-color: var(--app-primary-color);
                 text-transform: lowercase;
             }
             paper-input {
-                --paper-input-container-color: var(--app-text-color);
+                --paper-input-container-color: var(--app-dark-color);
                 --paper-input-container-focus-color: var(--app-primary-color);
                 --paper-input-container-invalid-color: var(--app-alert-color);
                 --paper-input-container: {
@@ -44,13 +45,13 @@
             vaadin-upload {
                 --error-color: var(--app-alert-color);
                 --vaadin-upload-button-add: {
-                    color: var(--app-background-color);
+                    color: var(--app-light-color);
                     background-color: var(--app-primary-color);
                     text-transform: lowercase;
                 }
             }
             vaadin-combo-box {
-                --paper-input-container-color: var(--app-text-color);
+                --paper-input-container-color: var(--app-dark-color);
                 --paper-input-container-focus-color: var(--app-primary-color);
             }
         </style>
@@ -149,12 +150,12 @@
                             items="{{lens_cloud}}"
                             value="{{obj.lens}}"></vaadin-combo-box>
                         <div class="layout horizontal">
-                            <paper-input name="aperture" readonly label="aperture" value="{{obj.aperture}}"></paper-input>
-                            <paper-input name="shutter" readonly label="shutter" value="{{obj.shutter}}"></paper-input>
+                            <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
+                            <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
                         </div>
                         <div class="layout horizontal">
-                            <paper-input name="iso" readonly label="iso" value="{{obj.iso}}"></paper-input>
-                            <paper-input name="focal_length" readonly label="focal_length" value="{{obj.focal_length}}"></paper-input>
+                            <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
+                            <paper-input name="focal_length" label="focal_length" value="{{obj.focal_length}}"></paper-input>
                         </div>
                     </template>
 
