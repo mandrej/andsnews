@@ -7,7 +7,7 @@ from slugify import slugify
 from google.appengine.api import users, search, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, cloud_representation, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS
+from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS
 from mapper import Indexer, Builder
 
 LIMIT = 12
@@ -129,7 +129,7 @@ class KindFilter(RestHandler):
         if kind == 'photo':
             fields = PHOTO_FILTER_FIELDS
 
-        data = cloud_representation(kind, fields)
+        data = sorting_filters(kind, fields)
         self.render(data)
 
 

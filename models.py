@@ -197,7 +197,7 @@ def cloud_limit(items):
                 return item['count']
 
 
-def cloud_representation(kind, fields):
+def sorting_filters(kind, fields):
     data = []
     for field in fields:
         mem_key = kind.title() + '_' + field
@@ -360,18 +360,19 @@ def update_counter(delta, args):
 
 
 def update_repr_url(new_pairs, old_pairs):
-    # PHOTO SPECIFIC
-    logging.error(set(new_pairs) | set(old_pairs))
+    # PHOTO ONLY
     for field, value in set(new_pairs) | set(old_pairs):  # union
         latest = Photo.latest_for(field, value)
+
+        key_name = 'Photo||%s||%s' % (field, value)
         params = dict(zip(('forkind', 'field', 'value'), ('Photo', field, value)))
-        counter = Counter.get_or_insert('Photo||%s||%s' % (field, value), **params)
+        counter = Counter.get_or_insert(key_name, **params)
 
         if latest is not None:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
             counter.put()
-            logging.error('UPDATE %s %s %s' % (field, value, counter.count))
+            logging.info('UPDATE %s %s %s' % (field, value, counter.count))
 
 
 def incr_count(*args):
@@ -524,7 +525,7 @@ class Photo(ndb.Model):
             update_tags(self.kind, None, self.tags)
 
             new_pairs = self.changed_pairs()
-            update_repr_url(new_pairs, [])
+            deferred.defer(update_repr_url, new_pairs, [])
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -575,8 +576,7 @@ class Photo(ndb.Model):
         deferred.defer(self.index_doc)
 
         new_pairs = self.changed_pairs()
-        # deferred.defer(update_repr_url, pairs)
-        update_repr_url(new_pairs, old_pairs)
+        deferred.defer(update_repr_url, new_pairs, old_pairs)
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe())
@@ -592,8 +592,7 @@ class Photo(ndb.Model):
 
         old_pairs = self.changed_pairs()
         self.key.delete()
-        # deferred.defer(update_repr_url, pairs)
-        update_repr_url([], old_pairs)
+        deferred.defer(update_repr_url, [], old_pairs)
 
     @webapp2.cached_property
     def serving_url(self):
