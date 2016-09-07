@@ -111,7 +111,8 @@ class Collection(RestHandler):
             objects = [obj]
             token = None
         else:
-            query = Photo.query_for(field, value)
+            model = ndb.Model._kind_map.get(kind.title())
+            query = model.query_for(field, value)
             paginator = Paginator(query, per_page=LIMIT)
             objects, token = paginator.page(page)  # [], None
 
@@ -241,8 +242,13 @@ class Crud(RestHandler):
         obj.edit(data)
 
     def delete(self, safe_key):
-        key = ndb.Key(urlsafe=safe_key)
-        key.delete()
+        # key = ndb.Key(urlsafe=safe_key)
+        # key.delete()
+        obj = ndb.Key(urlsafe=safe_key).get()
+        if obj is None:
+            self.abort(404)
+
+        obj.delete()
 
 
 class Download(webapp2.RequestHandler):

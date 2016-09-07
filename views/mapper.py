@@ -119,10 +119,9 @@ class Builder(Mapper):
             obj = Counter.get_or_insert(key_name, **params)
 
             latest = self.KIND.latest_for(obj.field, obj.value)
-            if obj.forkind == 'Photo':
-                obj.repr_url = latest.serving_url if latest else None
-            elif obj.forkind == 'Entry':
-                obj.repr_url = latest.front_img if latest else None
+            if latest is not None:
+                obj.repr_stamp = latest.date
+                obj.repr_url = latest.serving_url
 
             obj.count = count
             obj.put()

@@ -341,6 +341,7 @@ class Counter(ndb.Model):
     field = ndb.StringProperty(required=True)
     value = ndb.GenericProperty(required=True)  # could be int as str
     count = ndb.IntegerProperty(default=0)
+    repr_stamp = ndb.DateTimeProperty()
     repr_url = ndb.StringProperty()
 
 
@@ -355,26 +356,42 @@ def update_counter(delta, args):
 
         obj = Counter.get_or_insert(key_name, **params)
 
-        # if obj.field in PHOTO_FILTER_FIELDS:
+        # if obj.forkind and obj.field in PHOTO_FILTER_FIELDS:
         #     latest = Photo.latest_for(obj.field, obj.value)
-        #     if latest is not None:
+        #     if latest is not None and latest.date > obj.repr_stamp:
         #         logging.error('UPDATE %s %s' % (obj.field, obj.value))
         #         obj.repr_url = latest.serving_url
+        #         obj.repr_stamp = latest.date
 
         obj.count += delta
         obj.put()
 
 
-def update_repr_url(pairs):
+def update_repr_url(new_pairs, old_pairs):
     # PHOTO SPECIFIC
-    logging.error(pairs)
-    for field, value in pairs:
+    logging.error(new_pairs)
+    logging.error(old_pairs)
+    for field, value in new_pairs:
         latest = Photo.latest_for(field, value)
-        counter = Counter.get_or_insert('Photo||%s||%s' % (field, value))
+        params = dict(zip(('forkind', 'field', 'value'), ('Photo', field, value)))
+        counter = Counter.get_or_insert('Photo||%s||%s' % (field, value), **params)
+
         if latest is not None:
+            counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
-            logging.error('SAVE %s %s %s' % (field, value, counter.count))
             counter.put()
+            logging.error('NEW %s %s %s' % (field, value, counter.count))
+
+    for field, value in old_pairs:
+        latest = Photo.latest_for(field, value)
+        params = dict(zip(('forkind', 'field', 'value'), ('Photo', field, value)))
+        counter = Counter.get_or_insert('Photo||%s||%s' % (field, value), **params)
+
+        if latest is not None:
+            counter.repr_stamp = latest.date
+            counter.repr_url = latest.serving_url
+            counter.put()
+            logging.error('OLD %s %s %s' % (field, value, counter.count))
 
 
 def incr_count(*args):
@@ -525,9 +542,14 @@ class Photo(ndb.Model):
                     incr_count(self.kind, field, value)
             # deferred.defer(self.index_doc)
             update_tags(self.kind, None, self.tags)
+
+            new_pairs = self.changed_pairs()
+            update_repr_url(new_pairs, [])
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
+        old_pairs = self.changed_pairs()
+
         old = self.author.email() if self.author else None
         new = data['author']
         if new != old:
@@ -572,28 +594,27 @@ class Photo(ndb.Model):
         self.put()
         deferred.defer(self.index_doc)
 
-        # pairs = self.changed_pairs()
+        new_pairs = self.changed_pairs()
         # deferred.defer(update_repr_url, pairs)
-        # update_repr_url(pairs)
+        update_repr_url(new_pairs, old_pairs)
 
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
-        blobstore.delete(obj.blob_key)
+    def delete(self):
+        deferred.defer(remove_doc, self.key.urlsafe())
+        blobstore.delete(self.blob_key)
 
-        decr_count(key.kind(), 'author', obj.author.email())
-        decr_count(key.kind(), 'date', obj.year)
-        update_tags(key.kind(), obj.tags, None)
+        decr_count(self.kind, 'author', self.author.email())
+        decr_count(self.kind, 'date', self.year)
+        update_tags(self.kind, self.tags, None)
         for field in PHOTO_EXIF_FIELDS:
-            value = getattr(obj, field)
+            value = getattr(self, field)
             if value:
-                decr_count(key.kind(), field, value)
+                decr_count(self.kind, field, value)
 
-        # pairs = obj.changed_pairs()
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
+        old_pairs = self.changed_pairs()
+        self.key.delete()
+        # ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
         # deferred.defer(update_repr_url, pairs)
-        # update_repr_url(pairs)
+        update_repr_url([], old_pairs)
 
     @webapp2.cached_property
     def serving_url(self):
@@ -692,14 +713,28 @@ class Entry(ndb.Model):
         self.put()
         deferred.defer(self.index_doc)
 
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
+    def delete(self):
+        deferred.defer(remove_doc, self.key.urlsafe())
 
-        decr_count(key.kind(), 'author', obj.author.email())
-        decr_count(key.kind(), 'date', obj.year)
-        update_tags(key.kind(), obj.tags, None)
+        decr_count(self.kind, 'author', self.author.email())
+        decr_count(self.kind, 'date', self.year)
+        update_tags(self.kind, self.tags, None)
+        self.key.delete()
+        # ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
+
+    @classmethod
+    def query_for(cls, field, value):
+        f = filter_param(field, value)
+        filters = [cls._properties[k] == v for k, v in f.items()]
+        return cls.query(*filters).order(-cls.date)
+
+    @classmethod
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        result = query.fetch(1)
+        if result:
+            return result[0]
+        return None
 
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
