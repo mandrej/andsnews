@@ -248,7 +248,7 @@ class Crud(RestHandler):
         if obj is None:
             self.abort(404)
 
-        obj.delete()
+        obj.remove()
 
 
 class Download(webapp2.RequestHandler):
