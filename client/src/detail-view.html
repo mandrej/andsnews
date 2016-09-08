@@ -34,6 +34,10 @@
             .swipe iron-image {
                 width: 100%;
                 height: 100%;
+                /*left: 50%;
+                top: 50%;
+                -webkit-transform: translate3d(-50%, -50%, 0);
+                transform: translate3d(-50%, -50%, 0);*/
                 transition: all 0.3s ease-in-out;
             }
             paper-dialog {
@@ -230,8 +234,7 @@
                     width = swipe.offsetWidth,
                     height = swipe.offsetHeight,
                     img = swipe.querySelector('.iron-selected iron-image'),
-                    dim = JSON.parse(img.dataset.dim),
-                    tracking;
+                    dim = JSON.parse(img.dataset.dim);
 
                 if (img.style.width != dim[0] + 'px') {
                     img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';

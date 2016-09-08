@@ -242,8 +242,6 @@ class Crud(RestHandler):
         obj.edit(data)
 
     def delete(self, safe_key):
-        # key = ndb.Key(urlsafe=safe_key)
-        # key.delete()
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
