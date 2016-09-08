@@ -75,18 +75,18 @@ indexes:
 - kind: Photo
   properties:
   - name: model
-  - name: tags
+  - name: date
+
+- kind: Photo
+  properties:
+  - name: model
   - name: date
     direction: desc
 
 - kind: Photo
   properties:
   - name: model
-  - name: date
-
-- kind: Photo
-  properties:
-  - name: model
+  - name: tags
   - name: date
     direction: desc
 

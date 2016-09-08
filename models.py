@@ -359,7 +359,8 @@ def update_counter(delta, args):
         obj.put()
 
 
-def update_repr_url(new_pairs, old_pairs):
+@ndb.toplevel
+def update_representation(new_pairs, old_pairs):
     # PHOTO ONLY
     for field, value in set(new_pairs) | set(old_pairs):  # union
         latest = Photo.latest_for(field, value)
@@ -371,7 +372,7 @@ def update_repr_url(new_pairs, old_pairs):
         if latest is not None:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
-            counter.put()
+            counter.put_async()
             logging.info('UPDATE %s %s %s' % (field, value, counter.count))
 
 
@@ -514,9 +515,11 @@ class Photo(ndb.Model):
 
             # SAVE EVERYTHING
             self.tags = ['new']  # ARTIFICIAL TAG
+            self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
             self.put()
 
-            # incr_count(self.kind, 'author', self.author.email())
+            incr_count(self.kind, 'author', self.author.email())
+            incr_count(self.kind, 'date', self.year)  # should be in PHOTO_EXIF_FIELDS?
             for field in PHOTO_EXIF_FIELDS:
                 value = getattr(self, field, None)
                 if value:
@@ -525,7 +528,7 @@ class Photo(ndb.Model):
             update_tags(self.kind, None, self.tags)
 
             new_pairs = self.changed_pairs()
-            deferred.defer(update_repr_url, new_pairs, [])
+            deferred.defer(update_representation, new_pairs, [])
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -576,7 +579,7 @@ class Photo(ndb.Model):
         deferred.defer(self.index_doc)
 
         new_pairs = self.changed_pairs()
-        deferred.defer(update_repr_url, new_pairs, old_pairs)
+        deferred.defer(update_representation, new_pairs, old_pairs)
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe())
@@ -592,7 +595,7 @@ class Photo(ndb.Model):
 
         old_pairs = self.changed_pairs()
         self.key.delete()
-        deferred.defer(update_repr_url, [], old_pairs)
+        deferred.defer(update_representation, [], old_pairs)
 
     @webapp2.cached_property
     def serving_url(self):
