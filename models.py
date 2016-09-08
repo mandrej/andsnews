@@ -362,18 +362,23 @@ def update_counter(delta, args):
 @ndb.toplevel
 def update_representation(new_pairs, old_pairs):
     # PHOTO ONLY
+    queries = []
+    key_names = []
+    params = []
     for field, value in set(new_pairs) | set(old_pairs):  # union
-        latest = Photo.latest_for(field, value)
+        queries.append(Photo.query_for(field, value))
+        key_names.append('Photo||%s||%s' % (field, value))
+        params.append(dict(zip(('forkind', 'field', 'value'), ('Photo', field, value))))
 
-        key_name = 'Photo||%s||%s' % (field, value)
-        params = dict(zip(('forkind', 'field', 'value'), ('Photo', field, value)))
-        counter = Counter.get_or_insert(key_name, **params)
+    for i, query in enumerate(queries):
+        latest = query.get()
+        counter = Counter.get_or_insert(key_names[i], **params[i])
 
-        if latest is not None:
+        if latest is not None and latest.date != counter.repr_stamp:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
             counter.put_async()
-            logging.info('UPDATE %s %s %s' % (field, value, counter.count))
+            logging.info('UPDATE %s %s' % (key_names[i], counter.count))
 
 
 def incr_count(*args):
@@ -619,10 +624,7 @@ class Photo(ndb.Model):
     @classmethod
     def latest_for(cls, field, value):
         query = cls.query_for(field, value)
-        result = query.fetch(1)
-        if result:
-            return result[0]
-        return None
+        return query.get()
 
     def serialize(self):
         data = self.to_dict(exclude=(
