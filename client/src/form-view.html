@@ -10,7 +10,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 
 <dom-module id="form-view">
     <template>
@@ -84,9 +85,7 @@
                         max-files="10"
                         on-upload-response="_uploadResponse"
                         accept="image/*"></vaadin-upload>
-                    <p>
-                        Continue with editing of <a href="#/detail/photo/tags/new">uploaded files</a>.
-                    </p>
+                    <p>Continue editing of <a href="#/detail/photo/tags/new">uploaded files</a>.</p>
                 </template>
 
                 <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
@@ -177,19 +176,29 @@
         Polymer({
             is: 'form-view',
             behaviors: [
-                Polymer.NeonAnimationBehavior
+                Polymer.NeonAnimatableBehavior,
+                Polymer.NeonSharedElementAnimatableBehavior
             ],
             properties: {
+                sharedElements: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'hero': this.$.container,
+                        }
+                    }
+                },
                 animationConfig: {
                     type: Object,
                     value: function() {
                         return {
                             'entry': [{
-                                name: 'slide-from-right-animation',
-                                node: this
+                                name: 'hero-animation',
+                                id: 'hero',
+                                toPage: this
                             }],
                             'exit': [{
-                                name: 'slide-right-animation',
+                                name: 'fade-out-animation',
                                 node: this
                             }]
                         }

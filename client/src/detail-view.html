@@ -146,8 +146,9 @@
                                 toPage: this
                             }],
                             'exit': [{
-                                name: 'slide-right-animation',
-                                node: this
+                                name: 'hero-animation',
+                                id: 'hero',
+                                fromPage: this
                             }]
                         }
                     }
@@ -205,7 +206,6 @@
 				}
 			},
             ironSelect: function(e) {
-                // Polymer.dom(e.detail.item).querySelector('iron-image').src = e.detail.item._templateInstance.__data__.item.serving_url + '=s0';
                 this.headline = e.detail.item._templateInstance.__data__.item.headline;
                 var index = this.$.swipe.selected;
                 if (this.records.length - index < 3) {
