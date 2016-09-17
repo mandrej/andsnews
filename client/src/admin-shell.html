@@ -1,7 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
@@ -9,41 +10,13 @@
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
-            :host {
-                @apply(--layout-horizontal);
-                @apply(--layout-start-aligned);
-                @apply(--layout-wrap);
-            }
-            h2 {
-				margin-top: 0;
-				font-size: 24px;
-				font-weight: 300;
-			}
-            a {
-                text-decoration: none;
-            }
-            .card {
+            .horizontal-section-container {
                 padding: 16px;
-                position: relative;
-                box-sizing: border-box;
-                width: 50%;
             }
-            @media (max-width: 768px)  { .card { width: 100%; } }
-            paper-button {
-                color: var(--app-light-color);
-                background-color: var(--app-primary-color);
-                text-transform: lowercase;
-			}
-            #google {
-                background-color: var(--app-alert-color);
-			}
-            #google[active] {
-                background-color: var(--app-primary-color);
-            }
-            paper-checkbox {
-                --paper-checkbox-label-spacing: 0;
-                --paper-checkbox-margin: 0 16px 8px 0;
-                --paper-checkbox-vertical-align: top;
+            paper-item {
+                --paper-item: {
+                    cursor: pointer;
+                };
             }
         </style>
 
@@ -51,21 +24,27 @@
         <iron-ajax id="background_ajax" method="POST"></iron-ajax>
 
         <template is="dom-if" if="{{isAdmin}}">
-            <div class="card">
-                <h2>Rebuild Counters</h2>
-                <div class="flex">
-                    <template is="dom-repeat" items="[[counters]]" as="item">
-                        <paper-button on-tap="rebuild" style="margin-bottom: 8px">[[item]]</paper-button>
-                    </template>
+            <div class="horizontal-section-container">
+                <div>
+                    <h4>Rebuild Counters</h4>
+                    <div class="horizontal-section">
+                        <paper-listbox multi>
+                            <template is="dom-repeat" items="[[counters]]" as="item">
+                                <paper-item on-tap="rebuild">[[item]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h2>Background Indexer</h2>
-                <div class="flex">
-                    <template is="dom-repeat" items="[[kinds]]" as="item">
-                        <paper-button on-tap="background" style="margin-bottom: 8px">[[item]]</paper-button>
-                    </template>
+                <div>
+                    <h4>Background Indexer</h4>
+                    <div class="horizontal-section">
+                        <paper-listbox multi>
+                            <template is="dom-repeat" items="[[kinds]]" as="item">
+                                <paper-item on-tap="background">[[item]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </div>
                 </div>
             </div>
         </template>
