@@ -26,8 +26,7 @@ logging.getLogger("exifread").setLevel(logging.WARNING)
 
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-PHOTO_EXIF_FIELDS = ('model', 'lens', 'iso', 'color')
-PHOTO_FILTER_FIELDS = ('date', 'tags', 'model')
+PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
 ENTRY_FILTER_FIELDS = ('date', 'tags')
 LOGARITHMIC, LINEAR = 1, 2
 
@@ -310,7 +309,7 @@ class Graph(object):
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.StringProperty(required=True)  # stringify year
+    value = ndb.GenericProperty(required=True)  # stringify year StringProperty
     count = ndb.IntegerProperty(default=0)
     repr_stamp = ndb.DateTimeProperty()
     repr_url = ndb.StringProperty()
@@ -338,8 +337,9 @@ def update_representation(new_pairs, old_pairs):
     params = []
     for field, value in set(new_pairs) | set(old_pairs):  # union
         queries.append(Photo.query_for(field, value))
-        key_names.append('Photo||%s||%s' % (field, value))
-        params.append(dict(zip(('forkind', 'field', 'value'), ('Photo', field, value))))
+        args = ('Photo', field, str(value))  # stringify year
+        key_names.append('%s||%s||%s' % args)
+        params.append(dict(zip(('forkind', 'field', 'value'), **args)))
 
     for i, query in enumerate(queries):
         latest = query.get()
@@ -429,7 +429,7 @@ class Photo(ndb.Model):
                     for v in value:
                         pairs.append((field, str(v)))
                 else:
-                    pairs.append((field, str(value)))
+                    pairs.append((field, str(value)))  # stringify year
         return pairs
 
     @webapp2.cached_property
@@ -492,7 +492,7 @@ class Photo(ndb.Model):
 
             incr_count('Photo', 'author', self.author.email())
             incr_count('Photo', 'date', self.year)
-            for field in PHOTO_EXIF_FIELDS:
+            for field in PHOTO_FILTER_FIELDS:
                 value = getattr(self, field, None)
                 if value:
                     incr_count('Photo', field, value)
@@ -535,7 +535,7 @@ class Photo(ndb.Model):
             del data['focal_length']
 
         for field, value in data.items():
-            if field in PHOTO_EXIF_FIELDS:
+            if field in PHOTO_FILTER_FIELDS:
                 old = getattr(self, field)
                 new = data.get(field)
                 if old != new:
@@ -560,7 +560,7 @@ class Photo(ndb.Model):
         decr_count('Photo', 'author', self.author.email())
         decr_count('Photo', 'date', self.year)
         update_tags('Photo', self.tags, None)
-        for field in PHOTO_EXIF_FIELDS:
+        for field in PHOTO_FILTER_FIELDS:
             value = getattr(self, field)
             if value:
                 decr_count('Photo', field, value)

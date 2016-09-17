@@ -110,13 +110,12 @@ class Builder(Mapper):
         self.to_put = []
 
     def finish(self):
-        # filter out None, stringify year
-        values = map(str, filter(None, self.VALUES))
+        values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
         for value, count in tally.items():
-            kind = self.KIND._class_name()
-            key_name = '%s||%s||%s' % (kind, self.FIELD, value)
-            params = dict(zip(('forkind', 'field', 'value'), [kind, self.FIELD, value]))
+            args = (self.KIND._class_name(), self.FIELD, str(value))  # stringify year
+            key_name = '%s||%s||%s' % args
+            params = dict(zip(('forkind', 'field', 'value'), args))
             obj = Counter.get_or_insert(key_name, **params)
 
             latest = self.KIND.latest_for(obj.field, obj.value)
