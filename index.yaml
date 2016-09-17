@@ -32,61 +32,17 @@ indexes:
   properties:
   - name: author
   - name: date
-
-- kind: Photo
-  properties:
-  - name: author
-  - name: date
     direction: desc
 
 - kind: Photo
   properties:
   - name: color
   - name: date
-
-- kind: Photo
-  properties:
-  - name: color
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
-  - name: iso
-  - name: date
-
-- kind: Photo
-  properties:
-  - name: iso
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
-  - name: lens
-  - name: date
-
-- kind: Photo
-  properties:
-  - name: lens
-  - name: date
     direction: desc
 
 - kind: Photo
   properties:
   - name: model
-  - name: date
-
-- kind: Photo
-  properties:
-  - name: model
-  - name: date
-    direction: desc
-
-- kind: Photo
-  properties:
-  - name: model
-  - name: tags
   - name: date
     direction: desc
 
@@ -94,17 +50,7 @@ indexes:
   properties:
   - name: tags
   - name: date
-
-- kind: Photo
-  properties:
-  - name: tags
-  - name: date
     direction: desc
-
-- kind: Photo
-  properties:
-  - name: year
-  - name: date
 
 - kind: Photo
   properties:
