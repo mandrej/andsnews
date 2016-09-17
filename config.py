@@ -30,7 +30,4 @@ COLORS = HUE + LUM
 ASA = [50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800,
        1000, 1250, 1600, 2000, 2500, 3200, 4000, 5000, 6400]
 
-CONFIG = {
-    'webapp2_extras.sessions': {'secret_key': 'kTlR8YMGAMkL7L9JilpgADfh8MRFz2fkeBJ6+VM9FD4=', 'session_max_age': 86400}
-}
 # < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;
