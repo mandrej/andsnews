@@ -262,35 +262,6 @@ class Cloud(object):
         # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         return collection
 
-    # @ndb.toplevel
-    # def rebuild(self):
-    #     prop = self.field
-    #     if self.field == 'date':
-    #         prop = 'year'
-    #     model = ndb.Model._kind_map.get(self.kind)  # TODO REMEMBER THIS
-    #     query = model.query()
-    #     properties = (getattr(x, prop, None) for x in query)  # generator
-    #     if prop == 'tags':
-    #         properties = list(itertools.chain(*properties))
-    #     elif prop == 'author':
-    #         properties = [x.email() for x in properties]
-    #     tally = collections.Counter(filter(None, properties))  # filter out None
-    #     # Counter({2015: 17, 2014: 15, 2016: 9, 2013: 8, 2012: 6})
-    #
-    #     for value, count in tally.items():
-    #         key_name = '%s||%s||%s' % (self.kind, self.field, value)
-    #         params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
-    #         obj = Counter.get_or_insert(key_name, **params)
-    #
-    #         latest = model.latest_for(obj.field, obj.value)
-    #         if obj.forkind == 'Photo':
-    #             obj.repr_url = latest.serving_url
-    #         elif obj.forkind == 'Entry':
-    #             obj.repr_url = latest.front_img
-    #
-    #         obj.count = count
-    #         obj.put_async()
-
 
 class Graph(object):
     def __init__(self, field):
@@ -339,7 +310,7 @@ class Graph(object):
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.GenericProperty(required=True)  # could be int as str
+    value = ndb.StringProperty(required=True)  # stringify year
     count = ndb.IntegerProperty(default=0)
     repr_stamp = ndb.DateTimeProperty()
     repr_url = ndb.StringProperty()
@@ -352,7 +323,7 @@ def update_counter(delta, args):
         logging.error(args)
     else:
         key_name = '%s||%s||%s' % args
-        params = dict(zip(('forkind', 'field', 'value'), args))
+        params = dict(zip(('forkind', 'field', 'value'), map(str, args)))  # stringify year
 
         obj = Counter.get_or_insert(key_name, **params)
         obj.count += delta
@@ -429,10 +400,6 @@ class Photo(ndb.Model):
 
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
-
-    @property
-    def kind(self):
-        return self.key.kind()
 
     def index_doc(self):
         doc = search.Document(
@@ -523,14 +490,14 @@ class Photo(ndb.Model):
             self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
             self.put()
 
-            incr_count(self.kind, 'author', self.author.email())
-            incr_count(self.kind, 'date', self.year)  # should be in PHOTO_EXIF_FIELDS?
+            incr_count('Photo', 'author', self.author.email())
+            incr_count('Photo', 'date', self.year)
             for field in PHOTO_EXIF_FIELDS:
                 value = getattr(self, field, None)
                 if value:
-                    incr_count(self.kind, field, value)
+                    incr_count('Photo', field, value)
             # deferred.defer(self.index_doc)
-            update_tags(self.kind, None, self.tags)
+            update_tags('Photo', None, self.tags)
 
             new_pairs = self.changed_pairs()
             deferred.defer(update_representation, new_pairs, [])
@@ -544,19 +511,19 @@ class Photo(ndb.Model):
         if new != old:
             self.author = users.User(email=new)
             if old:
-                decr_count(self.kind, 'author', old)
-            incr_count(self.kind, 'author', new)
+                decr_count('Photo', 'author', old)
+            incr_count('Photo', 'author', new)
         del data['author']
 
         old = self.date
         new = data['date']
         if old != new:
-            decr_count(self.kind, 'date', self.year)
-            incr_count(self.kind, 'date', new.year)
+            decr_count('Photo', 'date', self.year)
+            incr_count('Photo', 'date', new.year)
         else:
             del data['date']
 
-        update_tags(self.kind, self.tags, data['tags'])
+        update_tags('Photo', self.tags, data['tags'])
         self.tags = sorted(data['tags'])
         del data['tags']
 
@@ -573,9 +540,9 @@ class Photo(ndb.Model):
                 new = data.get(field)
                 if old != new:
                     if old:
-                        decr_count(self.kind, field, old)
+                        decr_count('Photo', field, old)
                     if new:
-                        incr_count(self.kind, field, new)
+                        incr_count('Photo', field, new)
                     setattr(self, field, new)
             else:
                 setattr(self, field, value)
@@ -590,13 +557,13 @@ class Photo(ndb.Model):
         deferred.defer(remove_doc, self.key.urlsafe())
         blobstore.delete(self.blob_key)
 
-        decr_count(self.kind, 'author', self.author.email())
-        decr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, self.tags, None)
+        decr_count('Photo', 'author', self.author.email())
+        decr_count('Photo', 'date', self.year)
+        update_tags('Photo', self.tags, None)
         for field in PHOTO_EXIF_FIELDS:
             value = getattr(self, field)
             if value:
-                decr_count(self.kind, field, value)
+                decr_count('Photo', field, value)
 
         old_pairs = self.changed_pairs()
         self.key.delete()
@@ -631,7 +598,7 @@ class Photo(ndb.Model):
             'blob_key', 'size', 'ratio', 'crop_factor',
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
-            'kind': self.kind.lower(),
+            'kind': 'photo',
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url
         })
@@ -647,10 +614,6 @@ class Entry(ndb.Model):
     date = ndb.DateTimeProperty()
     year = ndb.ComputedProperty(lambda self: self.date.year)
     front_img = ndb.StringProperty()
-
-    @property
-    def kind(self):
-        return self.key.kind()
 
     def index_doc(self):
         doc = search.Document(
@@ -673,9 +636,9 @@ class Entry(ndb.Model):
         self.front_img = data['front_img']
         self.put()
 
-        incr_count(self.kind, 'author', self.author.email())
-        incr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, None, self.tags)
+        incr_count('Entry', 'author', self.author.email())
+        incr_count('Entry', 'date', self.year)
+        update_tags('Entry', None, self.tags)
         deferred.defer(self.index_doc)
 
     def edit(self, data):
@@ -688,9 +651,9 @@ class Entry(ndb.Model):
         old = self.date
         new = data['date']
         if old != new:
-            decr_count(self.kind, 'date', self.year)
-            incr_count(self.kind, 'date', new.year)
-        update_tags(self.kind, self.tags, data['tags'])
+            decr_count('Entry', 'date', self.year)
+            incr_count('Entry', 'date', new.year)
+        update_tags('Entry', self.tags, data['tags'])
         self.tags = sorted(data['tags'])
 
         self.put()
@@ -699,9 +662,9 @@ class Entry(ndb.Model):
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe())
 
-        decr_count(self.kind, 'author', self.author.email())
-        decr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, self.tags, None)
+        decr_count('Entry', 'author', self.author.email())
+        decr_count('Entry', 'date', self.year)
+        update_tags('Entry', self.tags, None)
         self.key.delete()
 
     @classmethod
@@ -721,7 +684,7 @@ class Entry(ndb.Model):
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
-            'kind': self.kind.lower(),
+            'kind': 'entry',
             'safekey': self.key.urlsafe()
         })
         return data

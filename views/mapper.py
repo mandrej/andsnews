@@ -110,7 +110,8 @@ class Builder(Mapper):
         self.to_put = []
 
     def finish(self):
-        values = filter(None, self.VALUES)  # filter out None
+        # filter out None, stringify year
+        values = map(str, filter(None, self.VALUES))
         tally = collections.Counter(values)
         for value, count in tally.items():
             kind = self.KIND._class_name()
