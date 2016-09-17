@@ -35,9 +35,9 @@
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
 			:host {
-				--app-primary-color: #3367d6;
-        		--app-secondary-color: #f4b400;
-        		--app-alert-color: #db4437;
+				--app-primary-color: #465bed;
+        		--app-secondary-color: #edd846;
+        		--app-alert-color: #ed465b;
 				--app-light-color: #ffffff;
         		--app-grey-color: #737373;
         		--app-dark-color: #212121;
@@ -48,9 +48,12 @@
                 -webkit-user-select: none;
                 user-select: none;
 			}
+			app-drawer > div {
+				height: 100%;
+			}
 			app-drawer app-toolbar {
-				color: var(--app-light-color);
-				background-color: var(--app-dark-color);
+				color: #000;
+				background-color: var(--app-primary-color);
 				@apply(--shadow-elevation-2dp);
 			}
 			app-header {
@@ -61,6 +64,9 @@
 			app-toolbar a, paper-item a {
 				color: inherit;
 				text-decoration: none;
+			}
+			paper-menu {
+				background-color: transparent;
 			}
             paper-item iron-icon {
                 margin-right: 16px;
@@ -182,7 +188,7 @@
 
 		<app-drawer-layout responsive-width="768px">
 			<app-drawer id="drawer" swipe-open>
-				<div class="layout vertical" style="height: 100%">
+				<div class="layout vertical">
 					<app-toolbar>
 						<h4 main-title>© ANDS [[version]] 2008-2016</h4>
 					</app-toolbar>
@@ -306,7 +312,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160910'},
+				version: { type: String, value: '160917'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
