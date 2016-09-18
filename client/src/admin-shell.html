@@ -20,13 +20,11 @@
 			}
         </style>
 
-        <iron-ajax id="rebuild_ajax" method="POST"></iron-ajax>
-        <iron-ajax id="reindex_ajax" method="POST"></iron-ajax>
-        <!-- <iron-ajax id="channel_ajax"
-            auto
-            url="/maintenance"
-            on-response="handler"
-            method="POST"></iron-ajax> -->
+        <!-- on-response="rebuildHandler" -->
+        <iron-ajax id="rebuild_ajax"
+            method="POST"></iron-ajax>
+        <iron-ajax id="reindex_ajax"
+            method="POST"></iron-ajax>
 
         <template is="dom-if" if="{{isAdmin}}">
             <div class="container">
@@ -46,12 +44,16 @@
             </div>
         </template>
     </template>
+
+    <!-- <script src="/_ah/channel/jsapi"></script> -->
+    <!-- <script src="https://talkgadget.google.com/talkgadget/channel.js"></script> -->
     <script>
         Polymer({
             is: 'admin-shell',
             behaviors: [
                 Polymer.NeonAnimationBehavior
             ],
+            socket: null,
             properties: {
                 animationConfig: {
                     type: Object,
@@ -69,7 +71,6 @@
                     }
                 },
                 user: { type: Object, notify: true },
-                // token: { type: String, notify: true, observer: 'channelOpen' },
                 isAdmin: { type: Boolean, value: false, notify: true },
                 counters: {type: Array },
                 jobs: {type: Array },
@@ -79,16 +80,18 @@
                                  'Entry_date', 'Entry_tags', 'Entry_author'];
                 this.kinds = ['photo', 'entry'];
             },
-            handler: function(req) {
-                console.log(req);
-				var resp = req.detail.response;
+            rebuildHandler: function(req) {
+                var resp = req.detail.response;
+                var channel = new goog.appengine.Channel(resp.token);
+                this.socket = channel.open();
+                this.socket.onopen = this.onOpen.bind(this);
+                this.socket.onmessage = this.onMessage.bind(this);
 			},
-            channelOpen: function(token) {
-                channel = new goog.appengine.Channel(' + token + ');
-                socket = channel.open();
-                socket.onopen = function() { console.log('Socket open'); };
-                socket.onerror = function() { console.log('Socket error'); };
-                socket.onclose = function() { console.log('Socket closed'); };
+            onOpen: function (e) {
+                this.fire('onopen');
+            },
+            onMessage: function (e) {
+                this.fire('onmessage', e.data);
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
@@ -102,5 +105,4 @@
             },
         });
     </script>
-    <!-- <script src="/_ah/channel/jsapi"></script> -->
 </dom-module>
