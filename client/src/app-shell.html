@@ -263,6 +263,7 @@
 
 						<admin-shell
 							data-view="maintenance"
+							user="[[user]]"
 							is-admin="{{isAdmin}}"
 							route="{{route}}"></admin-shell>
 
@@ -385,7 +386,6 @@
 				if (this.user.getBasicProfile().getEmail() == 'milan.andrejevic@gmail.com') {
 					this.isAdmin = true;
 				}
-				// console.log(this.user.getBasicProfile().getId());
 				// .getBasicProfile().getName();
 				// .getBasicProfile().getImageUrl();
             },

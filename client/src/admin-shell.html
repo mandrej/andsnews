@@ -1,8 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
@@ -10,41 +9,39 @@
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
-            .horizontal-section-container {
+            .container {
                 padding: 16px;
             }
-            paper-item {
-                --paper-item: {
-                    cursor: pointer;
-                };
-            }
+            paper-button {
+                color: var(--app-light-color);
+                background-color: var(--app-primary-color);
+                text-transform: lowercase;
+                margin-bottom: 8px;
+			}
         </style>
 
         <iron-ajax id="rebuild_ajax" method="POST"></iron-ajax>
-        <iron-ajax id="background_ajax" method="POST"></iron-ajax>
+        <iron-ajax id="reindex_ajax" method="POST"></iron-ajax>
+        <!-- <iron-ajax id="channel_ajax"
+            auto
+            url="/maintenance"
+            on-response="handler"
+            method="POST"></iron-ajax> -->
 
         <template is="dom-if" if="{{isAdmin}}">
-            <div class="horizontal-section-container">
-                <div>
-                    <h4>Rebuild Counters</h4>
-                    <div class="horizontal-section">
-                        <paper-listbox multi>
-                            <template is="dom-repeat" items="[[counters]]" as="item">
-                                <paper-item on-tap="rebuild">[[item]]</paper-item>
-                            </template>
-                        </paper-listbox>
-                    </div>
+            <div class="container">
+                <h4>Rebuild Counters</h4>
+                <div class="layout horizontal wrap">
+                    <template is="dom-repeat" items="[[counters]]" as="item">
+                        <paper-button on-tap="rebuild">[[item]]</paper-button>
+                    </template>
                 </div>
 
-                <div>
-                    <h4>Background Indexer</h4>
-                    <div class="horizontal-section">
-                        <paper-listbox multi>
-                            <template is="dom-repeat" items="[[kinds]]" as="item">
-                                <paper-item on-tap="background">[[item]]</paper-item>
-                            </template>
-                        </paper-listbox>
-                    </div>
+                <h4>Background Indexer</h4>
+                <div class="layout horizontal wrap">
+                    <template is="dom-repeat" items="[[kinds]]" as="item">
+                        <paper-button on-tap="reindex">Reindex [[item]]</paper-button>
+                    </template>
                 </div>
             </div>
         </template>
@@ -71,6 +68,8 @@
                         }
                     }
                 },
+                user: { type: Object, notify: true },
+                // token: { type: String, notify: true, observer: 'channelOpen' },
                 isAdmin: { type: Boolean, value: false, notify: true },
                 counters: {type: Array },
                 jobs: {type: Array },
@@ -80,14 +79,28 @@
                                  'Entry_date', 'Entry_tags', 'Entry_author'];
                 this.kinds = ['photo', 'entry'];
             },
+            handler: function(req) {
+                console.log(req);
+				var resp = req.detail.response;
+			},
+            channelOpen: function(token) {
+                channel = new goog.appengine.Channel(' + token + ');
+                socket = channel.open();
+                socket.onopen = function() { console.log('Socket open'); };
+                socket.onerror = function() { console.log('Socket error'); };
+                socket.onclose = function() { console.log('Socket closed'); };
+            },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
+                this.$.rebuild_ajax.params = {user_id: this.user.getBasicProfile().getId()};
                 this.$.rebuild_ajax.generateRequest();
             },
-            background: function(e) {
-                this.$.background_ajax.url = '/api/index/' + e.model.item;
-                this.$.background_ajax.generateRequest();
+            reindex: function(e) {
+                this.$.reindex_ajax.url = '/api/index/' + e.model.item;
+                this.$.reindex_ajax.params = {user_id: this.user.getBasicProfile().getId()};
+                this.$.reindex_ajax.generateRequest();
             },
         });
     </script>
+    <!-- <script src="/_ah/channel/jsapi"></script> -->
 </dom-module>

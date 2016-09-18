@@ -4,7 +4,7 @@ import logging
 import webapp2
 import datetime
 from slugify import slugify
-from google.appengine.api import users, search, app_identity, datastore_errors
+from google.appengine.api import users, search, channel, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS, ENTRY_FILTER_FIELDS
@@ -153,20 +153,26 @@ class Find(RestHandler):
 
 class BackgroundIndex(RestHandler):
     def post(self, kind):
+        user_id = self.request.params.get('user_id', None)
         if kind == 'photo':
             indexer = Indexer()
             indexer.KIND = Photo
-            deferred.defer(indexer.run, batch_size=10, _queue='background')
+            task = deferred.defer(indexer.run, batch_size=10, _queue='background')
 
         elif kind == 'entry':
             indexer = Indexer()
             indexer.KIND = Entry
-            deferred.defer(indexer.run, batch_size=10, _queue='background')
+            task = deferred.defer(indexer.run, batch_size=10, _queue='background')
+
+        if user_id is not None:
+            token = channel.create_channel(user_id)
+            self.render({'task': task.name, 'token': token})
 
 
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
+        user_id = self.request.params.get('user_id', None)
 
         builder = Builder()
         if kind == 'Photo':  # Title case!
@@ -175,7 +181,11 @@ class BackgroundBuild(RestHandler):
             builder.KIND = Entry
         builder.VALUES = []
         builder.FIELD = field
-        deferred.defer(builder.run, batch_size=10, _queue='background')
+
+        task = deferred.defer(builder.run, batch_size=10, _queue='background')
+        if user_id is not None:
+            token = channel.create_channel(user_id)
+            self.render({'task': task.name, 'token': token})
 
 
 class Crud(RestHandler):
