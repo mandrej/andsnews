@@ -339,7 +339,7 @@ def update_representation(new_pairs, old_pairs):
         queries.append(Photo.query_for(field, value))
         args = ('Photo', field, str(value))  # stringify year
         key_names.append('%s||%s||%s' % args)
-        params.append(dict(zip(('forkind', 'field', 'value'), **args)))
+        params.append(dict(zip(('forkind', 'field', 'value'), args)))
 
     for i, query in enumerate(queries):
         latest = query.get()
