@@ -35,10 +35,6 @@ handlers:
   static_dir: client/images
   secure: always
 
-- url: /js/
-  static_dir: client/js
-  secure: always
-
 - url: /service-worker.js
   static_files: client/service-worker.js
   upload: client/service-worker.js

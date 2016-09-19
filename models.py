@@ -401,11 +401,13 @@ class Photo(ndb.Model):
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
 
+    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
+
     def index_doc(self):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(slugify(self.headline))),
+                search.TextField(name='slug', value=tokenize(self.slug)),
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
@@ -615,11 +617,13 @@ class Entry(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     front_img = ndb.StringProperty()
 
+    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
+
     def index_doc(self):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(slugify(self.headline))),
+                search.TextField(name='slug', value=tokenize(self.slug)),
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),

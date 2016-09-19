@@ -85,15 +85,16 @@ class Indexer(Mapper):
         return [entity], []
 
     def _batch_write(self):
-        channel_name = '%s_index' % self.KIND._class_name()
+        channel_name = '%s_index' % self.KIND._class_name().lower()
         for entity in self.to_put:
             entity.index_doc()
-            channel.send_message(channel_name, json.dumps({'message': '%s indexed' % entity.headline}))
+            channel.send_message(channel_name, json.dumps({'message': '%s' % entity.slug}))
         self.to_put = []
 
     def finish(self):
-        channel_name = '%s_index' % self.KIND._class_name()
+        channel_name = '%s_index' % self.KIND._class_name().lower()
         channel.send_message(channel_name, json.dumps({'message': 'END'}))
+
 
 class Builder(Mapper):
     FIELD = None
@@ -139,5 +140,5 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            channel.send_message(channel_name, json.dumps({'message': '%s %s' % (key_name, count)}))
+            channel.send_message(channel_name, json.dumps({'message': '%s %s' % (value, count)}))
         channel.send_message(channel_name, json.dumps({'message': 'END'}))

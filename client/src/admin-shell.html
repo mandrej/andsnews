@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
@@ -27,8 +28,10 @@
             on-response="channelHandler"
             method="POST"></iron-ajax>
 
-        <template is="dom-if" if="{{isAdmin}}">
-            <div class="container">
+        <div class="container" id="container">
+            <paper-toast id="toast" fit-into="{{container}}" horizontal-align="right"></paper-toast>
+
+            <template is="dom-if" if="{{isAdmin}}">
                 <h4>Rebuild Counters</h4>
                 <div class="layout horizontal wrap">
                     <template is="dom-repeat" items="[[counters]]" as="item">
@@ -42,11 +45,10 @@
                         <paper-button on-tap="reindex">Reindex [[item]]</paper-button>
                     </template>
                 </div>
-            </div>
-        </template>
+            </template>
+        </div>
     </template>
 
-    <script src="/js/channel.js"></script>
     <script>
         Polymer({
             is: 'admin-shell',
@@ -82,7 +84,6 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-
                 if (!(resp.token in this.channels)) {
                     // {token: socket, token: socket}
                     var channel = new goog.appengine.Channel(resp.token);
@@ -93,10 +94,14 @@
                 }
 			},
             onMessage: function (e, token) {
-                var msg = e.data;
-                console.log(msg);
-                if (msg.message == 'END') {
-                    this.channels[token].readyState = 3;
+                var resp = JSON.parse(e.data);
+                var toast = this.$.toast;
+
+                toast.setAttribute('text', resp.message);
+                toast.open();
+
+                if (resp.message == 'END') {
+                    this.channels[token].readyState = 3; // close socket
                     delete this.channels[token];
                 }
             },
