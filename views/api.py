@@ -153,39 +153,35 @@ class Find(RestHandler):
 
 class BackgroundIndex(RestHandler):
     def post(self, kind):
-        user_id = self.request.params.get('user_id', None)
         if kind == 'photo':
             indexer = Indexer()
             indexer.KIND = Photo
-            task = deferred.defer(indexer.run, batch_size=10, _queue='background')
 
         elif kind == 'entry':
             indexer = Indexer()
             indexer.KIND = Entry
-            task = deferred.defer(indexer.run, batch_size=10, _queue='background')
 
-        if user_id is not None:
-            token = channel.create_channel(user_id)
-            self.render({'task': task.name, 'token': token})
+        token = channel.create_channel('%s_index' % kind, duration_minutes=10)
+        deferred.defer(indexer.run, batch_size=10, _queue='background')
+        self.render({'token': token})
 
 
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
-        user_id = self.request.params.get('user_id', None)
 
         builder = Builder()
         if kind == 'Photo':  # Title case!
             builder.KIND = Photo
         elif kind == 'Entry':
             builder.KIND = Entry
+
         builder.VALUES = []
         builder.FIELD = field
 
-        task = deferred.defer(builder.run, batch_size=10, _queue='background')
-        if user_id is not None:
-            token = channel.create_channel(user_id)
-            self.render({'task': task.name, 'token': token})
+        token = channel.create_channel(mem_key, duration_minutes=10)
+        deferred.defer(builder.run, batch_size=10, _queue='background')
+        self.render({'token': token})
 
 
 class Crud(RestHandler):

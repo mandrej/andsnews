@@ -35,6 +35,10 @@ handlers:
   static_dir: client/images
   secure: always
 
+- url: /js/
+  static_dir: client/js
+  secure: always
+
 - url: /service-worker.js
   static_files: client/service-worker.js
   upload: client/service-worker.js
@@ -55,13 +59,13 @@ handlers:
   upload: client/robots.txt
   secure: always
 
+- url: /api/.*
+  script: main.app
+  secure: always
+
 - url: /
   static_files: client/index.html
   upload: client/index.html
-  secure: always
-
-- url: /api/.*
-  script: main.app
   secure: always
 
 ####################################################

@@ -1,7 +1,9 @@
+import json
 import logging
 import itertools
 import collections
 from google.appengine.ext import ndb, deferred
+from google.appengine.api import channel
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
 from models import Counter
@@ -83,10 +85,15 @@ class Indexer(Mapper):
         return [entity], []
 
     def _batch_write(self):
+        channel_name = '%s_index' % self.KIND._class_name()
         for entity in self.to_put:
             entity.index_doc()
+            channel.send_message(channel_name, json.dumps({'message': '%s indexed' % entity.headline}))
         self.to_put = []
 
+    def finish(self):
+        channel_name = '%s_index' % self.KIND._class_name()
+        channel.send_message(channel_name, json.dumps({'message': 'END'}))
 
 class Builder(Mapper):
     FIELD = None
@@ -112,8 +119,10 @@ class Builder(Mapper):
     def finish(self):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
+        kind = self.KIND._class_name()
+        channel_name = '%s_%s' % (kind, self.FIELD)
         for value, count in tally.items():
-            args = (self.KIND._class_name(), self.FIELD, str(value))  # stringify year
+            args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
             params = dict(zip(('forkind', 'field', 'value'), args))
             obj = Counter.get_or_insert(key_name, **params)
@@ -129,3 +138,6 @@ class Builder(Mapper):
 
             obj.count = count
             obj.put()
+
+            channel.send_message(channel_name, json.dumps({'message': '%s %s' % (key_name, count)}))
+        channel.send_message(channel_name, json.dumps({'message': 'END'}))

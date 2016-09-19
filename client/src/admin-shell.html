@@ -20,10 +20,11 @@
 			}
         </style>
 
-        <!-- on-response="rebuildHandler" -->
         <iron-ajax id="rebuild_ajax"
+            on-response="channelHandler"
             method="POST"></iron-ajax>
         <iron-ajax id="reindex_ajax"
+            on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <template is="dom-if" if="{{isAdmin}}">
@@ -45,15 +46,13 @@
         </template>
     </template>
 
-    <!-- <script src="/_ah/channel/jsapi"></script> -->
-    <!-- <script src="https://talkgadget.google.com/talkgadget/channel.js"></script> -->
+    <script src="/js/channel.js"></script>
     <script>
         Polymer({
             is: 'admin-shell',
             behaviors: [
                 Polymer.NeonAnimationBehavior
             ],
-            socket: null,
             properties: {
                 animationConfig: {
                     type: Object,
@@ -73,6 +72,7 @@
                 user: { type: Object, notify: true },
                 isAdmin: { type: Boolean, value: false, notify: true },
                 counters: {type: Array },
+                channels: { type: Object, value: {} },
                 jobs: {type: Array },
             },
             ready: function() {
@@ -80,27 +80,32 @@
                                  'Entry_date', 'Entry_tags', 'Entry_author'];
                 this.kinds = ['photo', 'entry'];
             },
-            rebuildHandler: function(req) {
+            channelHandler: function(req) {
                 var resp = req.detail.response;
-                var channel = new goog.appengine.Channel(resp.token);
-                this.socket = channel.open();
-                this.socket.onopen = this.onOpen.bind(this);
-                this.socket.onmessage = this.onMessage.bind(this);
+
+                if (!(resp.token in this.channels)) {
+                    // {token: socket, token: socket}
+                    var channel = new goog.appengine.Channel(resp.token);
+                    this.channels[resp.token] = channel.open();
+                    this.channels[resp.token].onmessage = function(e) {
+                        return this.onMessage(e, resp.token);
+                    }.bind(this);
+                }
 			},
-            onOpen: function (e) {
-                this.fire('onopen');
-            },
-            onMessage: function (e) {
-                this.fire('onmessage', e.data);
+            onMessage: function (e, token) {
+                var msg = e.data;
+                console.log(msg);
+                if (msg.message == 'END') {
+                    this.channels[token].readyState = 3;
+                    delete this.channels[token];
+                }
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
-                this.$.rebuild_ajax.params = {user_id: this.user.getBasicProfile().getId()};
                 this.$.rebuild_ajax.generateRequest();
             },
             reindex: function(e) {
                 this.$.reindex_ajax.url = '/api/index/' + e.model.item;
-                this.$.reindex_ajax.params = {user_id: this.user.getBasicProfile().getId()};
                 this.$.reindex_ajax.generateRequest();
             },
         });
