@@ -83,28 +83,28 @@
                 this.kinds = ['photo', 'entry'];
             },
             channelHandler: function(req) {
-                // var resp = req.detail.response;
-                // if (!(resp.token in this.channels)) {
-                //     // {token: socket, token: socket}
-                //     var channel = new goog.appengine.Channel(resp.token);
-                //     this.channels[resp.token] = channel.open();
-                //     this.channels[resp.token].onmessage = function(e) {
-                //         return this.onMessage(e, resp.token);
-                //     }.bind(this);
-                // }
+                var resp = req.detail.response;
+                if (!('goog' in window)) return;
+                if (!(resp.token in this.channels)) {
+                    // {token: socket, token: socket}
+                    var channel = new goog.appengine.Channel(resp.token);
+                    this.channels[resp.token] = channel.open();
+                    this.channels[resp.token].onmessage = function(e) {
+                        return this.onMessage(e, resp.token);
+                    }.bind(this);
+                }
 			},
-            // onMessage: function (e, token) {
-            //     var resp = JSON.parse(e.data);
-            //     var toast = this.$.toast;
-            //
-            //     toast.setAttribute('text', resp.message);
-            //     toast.open();
-            //
-            //     if (resp.message == 'END') {
-            //         this.channels[token].readyState = 3; // close socket
-            //         delete this.channels[token];
-            //     }
-            // },
+            onMessage: function (e, token) {
+                var resp = JSON.parse(e.data),
+                    toast = this.$.toast;
+
+                toast.setAttribute('text', resp.message);
+                toast.open();
+                if (resp.message == 'END') {
+                    this.channels[token].readyState = 3; // close socket
+                    delete this.channels[token];
+                }
+            },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
                 this.$.rebuild_ajax.generateRequest();

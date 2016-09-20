@@ -91,9 +91,9 @@ class Indexer(Mapper):
             channel.send_message(channel_name, json.dumps({'message': '%s' % entity.slug}))
         self.to_put = []
 
-    # def finish(self):
-    #     channel_name = '%s_index' % self.KIND._class_name().lower()
-    #     channel.send_message(channel_name, json.dumps({'message': 'END'}))
+    def finish(self):
+        channel_name = '%s_index' % self.KIND._class_name().lower()
+        channel.send_message(channel_name, json.dumps({'message': 'END'}))
 
 
 class Builder(Mapper):
@@ -121,7 +121,7 @@ class Builder(Mapper):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
         kind = self.KIND._class_name()
-        # channel_name = '%s_%s' % (kind, self.FIELD)
+        channel_name = '%s_%s' % (kind, self.FIELD)
         for value, count in tally.items():
             args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
@@ -140,5 +140,5 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            # channel.send_message(channel_name, json.dumps({'message': '%s %s' % (value, count)}))
-        # channel.send_message(channel_name, json.dumps({'message': 'END'}))
+            channel.send_message(channel_name, json.dumps({'message': '%s %s' % (value, count)}))
+        channel.send_message(channel_name, json.dumps({'message': 'END'}))
