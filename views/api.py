@@ -7,7 +7,7 @@ from slugify import slugify
 from google.appengine.api import users, search, channel, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS, ENTRY_FILTER_FIELDS
+from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS
 from mapper import Indexer, Builder
 
 LIMIT = 12
@@ -128,8 +128,6 @@ class KindFilter(RestHandler):
     def get(self, kind=None):
         if kind == 'photo':
             fields = PHOTO_FILTER_FIELDS
-        elif kind == 'entry':
-            fields = ENTRY_FILTER_FIELDS
 
         data = sorting_filters(kind, fields)
         self.render(data)
@@ -197,7 +195,7 @@ class Crud(RestHandler):
             fs = data['file']
             obj = Photo(headline=fs.filename)
             res = obj.add(fs)
-        else:
+        elif kind == 'entry':
             obj = Entry(headline=data['headline'])
             # fix tags
             if 'tags' in data:
@@ -208,6 +206,11 @@ class Crud(RestHandler):
             else:
                 tags = []
             data['tags'] = tags
+            # fix author
+            if 'author' in data:
+                email = data['author']
+                data['author'] = users.User(email=email)
+
             # fix empty values
             values = map(lambda x: x if x != '' else None, data.values())
             data = dict(zip(data.keys(), values))
@@ -229,7 +232,12 @@ class Crud(RestHandler):
                 tags = []
         else:
             tags = []
-        data['tags'] = tags
+        data['tags'] = sorted(tags)
+        # fix author
+        if 'author' in data:
+            email = data['author']
+            data['author'] = users.User(email=email)
+
         # fix empty values
         values = map(lambda x: x if x != '' else None, data.values())
         data = dict(zip(data.keys(), values))
@@ -238,7 +246,7 @@ class Crud(RestHandler):
 
         if kind == 'photo':
             if data['focal_length']:
-                data['focal_length'] = float(data['focal_length'])
+                data['focal_length'] = round(float(data['focal_length']), 1)
             if data['aperture']:
                 data['aperture'] = float(data['aperture'])
             if data['iso']:

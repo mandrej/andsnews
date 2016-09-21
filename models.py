@@ -27,8 +27,9 @@ logging.getLogger("exifread").setLevel(logging.WARNING)
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
-ENTRY_FILTER_FIELDS = ('date', 'tags')
-LOGARITHMIC, LINEAR = 1, 2
+PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
+PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'color')
+ENTRY_COUNTER_FIELDS = ('date', 'tags', 'author')
 
 
 def rounding(val, values):
@@ -360,15 +361,32 @@ def decr_count(*args):
     deferred.defer(update_counter, -1, args)
 
 
-def update_tags(kind, old, new):
-    old_tags = set(old or [])
-    new_tags = set(new or [])
-    if old_tags - new_tags:
-        for name in list(old_tags - new_tags):
-            decr_count(kind, 'tags', name)
-    if new_tags - old_tags:
-        for name in list(new_tags - old_tags):
-            incr_count(kind, 'tags', name)
+def update_counter_field(old, new, kind, field):
+    if field == 'tags':
+        old_tags = set(old or [])
+        new_tags = set(new or [])
+        if old_tags - new_tags:
+            for name in list(old_tags - new_tags):
+                decr_count(kind, field, name)
+        if new_tags - old_tags:
+            for name in list(new_tags - old_tags):
+                incr_count(kind, field, name)
+    else:
+        if old != new:
+            if old:
+                if field == 'author':
+                    decr_count(kind, field, old.email())
+                elif field == 'date':
+                    decr_count(kind, field, old.year)
+                else:
+                    decr_count(kind, field, old)
+            if new:
+                if field == 'author':
+                    incr_count(kind, field, new.email())
+                elif field == 'date':
+                    incr_count(kind, field, new.year)
+                else:
+                    incr_count(kind, field, new)
 
 
 class Photo(ndb.Model):
@@ -488,18 +506,13 @@ class Photo(ndb.Model):
             self.hue, self.lum, self.sat = range_names(self.rgb)
 
             # SAVE EVERYTHING
-            self.tags = ['new']  # ARTIFICIAL TAG
             self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
+            self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 
-            incr_count('Photo', 'author', self.author.email())
-            incr_count('Photo', 'date', self.year)
-            for field in PHOTO_FILTER_FIELDS:
+            for field in PHOTO_COUNTER_FIELDS:
                 value = getattr(self, field, None)
-                if value:
-                    incr_count('Photo', field, value)
-            # deferred.defer(self.index_doc)
-            update_tags('Photo', None, self.tags)
+                update_counter_field(None, value, 'Photo', field)
 
             new_pairs = self.changed_pairs()
             deferred.defer(update_representation, new_pairs, [])
@@ -508,47 +521,19 @@ class Photo(ndb.Model):
     def edit(self, data):
         old_pairs = self.changed_pairs()
 
-        old = self.author.email() if self.author else None
-        new = data['author']
-        if new != old:
-            self.author = users.User(email=new)
-            if old:
-                decr_count('Photo', 'author', old)
-            incr_count('Photo', 'author', new)
-        del data['author']
+        for field in PHOTO_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, data[field], 'Photo', field)
 
-        old = self.date
-        new = data['date']
-        if old != new:
-            decr_count('Photo', 'date', self.year)
-            incr_count('Photo', 'date', new.year)
-        else:
-            del data['date']
-
-        update_tags('Photo', self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-        del data['tags']
-
-        if data['focal_length']:
-            old = self.focal_length
-            new = round(data['focal_length'], 1)
-            if old != new:
-                self.focal_length = new
-            del data['focal_length']
-
-        for field, value in data.items():
-            if field in PHOTO_FILTER_FIELDS:
-                old = getattr(self, field)
-                new = data.get(field)
-                if old != new:
-                    if old:
-                        decr_count('Photo', field, old)
-                    if new:
-                        incr_count('Photo', field, new)
-                    setattr(self, field, new)
-            else:
-                setattr(self, field, value)
-
+        self.headline = data['headline']
+        self.author = data['author']
+        self.tags = data['tags']
+        self.model = data['model']
+        self.aperture = data['aperture']
+        self.shutter = data['shutter']
+        self.focal_length = data['focal_length']
+        self.iso = data['iso']
+        self.date = data['date']
         self.put()
         deferred.defer(self.index_doc)
 
@@ -559,13 +544,9 @@ class Photo(ndb.Model):
         deferred.defer(remove_doc, self.key.urlsafe())
         blobstore.delete(self.blob_key)
 
-        decr_count('Photo', 'author', self.author.email())
-        decr_count('Photo', 'date', self.year)
-        update_tags('Photo', self.tags, None)
-        for field in PHOTO_FILTER_FIELDS:
-            value = getattr(self, field)
-            if value:
-                decr_count('Photo', field, value)
+        for field in PHOTO_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, None, 'Photo', field)
 
         old_pairs = self.changed_pairs()
         self.key.delete()
@@ -633,42 +614,44 @@ class Entry(ndb.Model):
         INDEX.put(doc)
 
     def add(self, data):
+        self.headline = data['headline']
+        self.author = data['author']
         self.summary = data['summary']
-        self.date = data['date']
         self.body = data['body']
         self.tags = data['tags']
+        self.date = data['date']
         self.front_img = data['front_img']
         self.put()
 
-        incr_count('Entry', 'author', self.author.email())
-        incr_count('Entry', 'date', self.year)
-        update_tags('Entry', None, self.tags)
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(None, value, 'Entry', field)
+
         deferred.defer(self.index_doc)
 
     def edit(self, data):
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, data[field], 'Entry', field)
+
         self.headline = data['headline']
+        self.author = data['author']
         self.summary = data['summary']
-        self.date = data['date']
         self.body = data['body']
+        self.tags = data['tags']
+        self.date = data['date']
         self.front_img = data['front_img']
-
-        old = self.date
-        new = data['date']
-        if old != new:
-            decr_count('Entry', 'date', self.year)
-            incr_count('Entry', 'date', new.year)
-        update_tags('Entry', self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-
         self.put()
+
         deferred.defer(self.index_doc)
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe())
 
-        decr_count('Entry', 'author', self.author.email())
-        decr_count('Entry', 'date', self.year)
-        update_tags('Entry', self.tags, None)
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, None, 'Entry', field)
+
         self.key.delete()
 
     @classmethod
