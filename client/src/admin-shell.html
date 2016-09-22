@@ -22,7 +22,7 @@
                 color: var(--app-light-color);
                 background-color: var(--app-primary-color);
                 text-transform: lowercase;
-                margin: 0 0 16px 0;
+                margin: 0 16px   16px 0;
 			}
         </style>
 
@@ -38,10 +38,10 @@
                 horizontal-align="right"></paper-toast>
 
             <template is="dom-if" if="{{isAdmin}}">
-                <div class="layout horizontal">
+                <div class="layout horizontal justified wrap">
                     <div>
                         <h4>Photo counters</h4>
-                        <div class="layout horizontal justified wrap">
+                        <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[photoCounters]]" as="item">
                                 <paper-button on-tap="rebuild">[[item]]</paper-button>
@@ -53,7 +53,7 @@
 
                     <div>
                         <h4>Entry counters</h4>
-                        <div class="layout horizontal justified wrap">
+                        <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[entryCounters]]" as="item">
                                 <paper-button on-tap="rebuild">[[item]]</paper-button>
