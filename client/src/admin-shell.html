@@ -13,11 +13,16 @@
             .container {
                 padding: 16px;
             }
+            paper-toast {
+                --paper-toast-color: var(--app-light-color);
+                --paper-toast-background-color: var(--app-dark-color);
+            }
             paper-button {
+                width: 135px;
                 color: var(--app-light-color);
                 background-color: var(--app-primary-color);
                 text-transform: lowercase;
-                margin-bottom: 8px;
+                margin: 0 0 16px 0;
 			}
         </style>
 
@@ -29,21 +34,34 @@
             method="POST"></iron-ajax>
 
         <div class="container" id="container">
-            <paper-toast id="toast" fit-into="{{container}}" horizontal-align="right"></paper-toast>
+            <paper-toast id="toast" fit-into="{{container}}"
+                horizontal-align="right"></paper-toast>
 
             <template is="dom-if" if="{{isAdmin}}">
-                <h4>Rebuild Counters</h4>
-                <div class="layout horizontal wrap">
-                    <template is="dom-repeat" items="[[counters]]" as="item">
-                        <paper-button on-tap="rebuild">[[item]]</paper-button>
-                    </template>
-                </div>
+                <div class="layout horizontal">
+                    <div>
+                        <h4>Photo counters</h4>
+                        <div class="layout horizontal justified wrap">
+                            <template is="dom-repeat"
+                                items="[[photoCounters]]" as="item">
+                                <paper-button on-tap="rebuild">[[item]]</paper-button>
+                            </template>
+                        </div>
+                        <h4>Photo index</h4>
+                        <paper-button on-tap="reindex(photo)">Reindex</paper-button>
+                    </div>
 
-                <h4>Background Indexer</h4>
-                <div class="layout horizontal wrap">
-                    <template is="dom-repeat" items="[[kinds]]" as="item">
-                        <paper-button on-tap="reindex">Reindex [[item]]</paper-button>
-                    </template>
+                    <div>
+                        <h4>Entry counters</h4>
+                        <div class="layout horizontal justified wrap">
+                            <template is="dom-repeat"
+                                items="[[entryCounters]]" as="item">
+                                <paper-button on-tap="rebuild">[[item]]</paper-button>
+                            </template>
+                        </div>
+                        <h4>Entry index</h4>
+                        <paper-button on-tap="reindex(entry)">Reindex</paper-button>
+                    </div>
                 </div>
             </template>
         </div>
@@ -55,6 +73,10 @@
             behaviors: [
                 Polymer.NeonAnimationBehavior
             ],
+            ready: function() {
+                this.photoCounters = ['Photo_date', 'Photo_tags', 'Photo_model', 'Photo_author', 'Photo_color'];
+                this.entryCounters = ['Entry_date', 'Entry_tags', 'Entry_author'];
+            },
             properties: {
                 animationConfig: {
                     type: Object,
@@ -77,11 +99,6 @@
                 channels: { type: Object, value: {} },
                 jobs: {type: Array },
             },
-            ready: function() {
-                this.counters = ['Photo_date', 'Photo_tags', 'Photo_model', 'Photo_author', 'Photo_color',
-                                 'Entry_date', 'Entry_tags', 'Entry_author'];
-                this.kinds = ['photo', 'entry'];
-            },
             channelHandler: function(req) {
                 var resp = req.detail.response;
                 if (!('goog' in window)) return;
@@ -99,7 +116,7 @@
                     toast = this.$.toast;
 
                 toast.setAttribute('text', resp.message);
-                toast.open();
+                if (!toast.opened) toast.open();
                 if (resp.message == 'END') {
                     this.channels[token].readyState = 3; // close socket
                     delete this.channels[token];
