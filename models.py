@@ -243,8 +243,8 @@ class Cloud(object):
         content = []
         if self.field == 'color':
             for k, d in collection.items():
-                data = next((x for x in COLORS if x['name'] == k), None)
-                data.update({'count': d['count'], 'field': self.field, 'repr_url': d['repr_url']})
+                data = next(({'name': x['name'], 'order': x['order']} for x in COLORS if x['name'] == k), None)
+                data.update({'count': d['count'], 'repr_url': d['repr_url']})
                 content.append(data)
         else:
             for k, d in collection.items():
@@ -263,48 +263,48 @@ class Cloud(object):
         return collection
 
 
-class Graph(object):
-    def __init__(self, field):
-        self.field = field
-        self.mem_key = '%s_graph' % field
-
-    def get_json(self):
-        collection = memcache.get(self.mem_key)
-        if collection is None:
-            query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
-                                                               'katarina', 'iva', 'masa', 'djordje']))
-            res = [x.tags for x in query]
-            flat = reduce(lambda x, y: x + y, res)
-
-            tally = {}
-            for name in flat:
-                if name in tally:
-                    tally[name] += 1
-                else:
-                    tally[name] = 1
-
-            i = 0
-            nodes = []
-            items = {}
-            for name, count in tally.items():
-                items[name] = i
-                nodes.append({'name': name, 'index': i, 'count': count})
-                i += 1
-
-            links = []
-            pairs = itertools.combinations(items.keys(), 2)
-            for x, y in pairs:
-                i = 0
-                for tags in res:
-                    intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
-                    i += intersection == {x, y}
-                if i > 0:
-                    links.append({'source': items[x], 'target': items[y], 'value': i})
-
-            collection = {'nodes': nodes, 'links': links}
-            memcache.set(self.mem_key, collection, TIMEOUT * 12)
-
-        return collection
+# class Graph(object):
+#     def __init__(self, field):
+#         self.field = field
+#         self.mem_key = '%s_graph' % field
+#
+#     def get_json(self):
+#         collection = memcache.get(self.mem_key)
+#         if collection is None:
+#             query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
+#                                                                'katarina', 'iva', 'masa', 'djordje']))
+#             res = [x.tags for x in query]
+#             flat = reduce(lambda x, y: x + y, res)
+#
+#             tally = {}
+#             for name in flat:
+#                 if name in tally:
+#                     tally[name] += 1
+#                 else:
+#                     tally[name] = 1
+#
+#             i = 0
+#             nodes = []
+#             items = {}
+#             for name, count in tally.items():
+#                 items[name] = i
+#                 nodes.append({'name': name, 'index': i, 'count': count})
+#                 i += 1
+#
+#             links = []
+#             pairs = itertools.combinations(items.keys(), 2)
+#             for x, y in pairs:
+#                 i = 0
+#                 for tags in res:
+#                     intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
+#                     i += intersection == {x, y}
+#                 if i > 0:
+#                     links.append({'source': items[x], 'target': items[y], 'value': i})
+#
+#             collection = {'nodes': nodes, 'links': links}
+#             memcache.set(self.mem_key, collection, TIMEOUT * 12)
+#
+#         return collection
 
 
 class Counter(ndb.Model):

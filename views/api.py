@@ -7,7 +7,8 @@ from slugify import slugify
 from google.appengine.api import users, search, channel, app_identity, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER_FIELDS
+from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
+    PHOTO_FILTER_FIELDS, PHOTO_COUNTER_FIELDS, ENTRY_COUNTER_FIELDS
 from mapper import Indexer, Builder
 
 LIMIT = 12
@@ -275,3 +276,18 @@ class Download(webapp2.RequestHandler):
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
         self.response.write(buff)
+
+
+class Info(RestHandler):
+    def get(self):
+        data = {
+            'photo': {
+                'count': Photo.query().count(),
+                'counters': ['Photo_%s' % x for x in PHOTO_COUNTER_FIELDS]
+            },
+            'entry': {
+                'count': Entry.query().count(),
+                'counters': ['Entry_%s' % x for x in ENTRY_COUNTER_FIELDS]
+            }
+        }
+        self.render(data)

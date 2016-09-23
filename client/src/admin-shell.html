@@ -24,7 +24,24 @@
                 text-transform: lowercase;
                 margin: 0 16px   16px 0;
 			}
+            paper-button.sec {
+                color: var(--app-dark-color);
+                background-color: var(--app-secondary-color);
+            }
+            h1, h4 {
+				margin: 0;
+				font-size: 24px;
+				font-weight: 400;
+				white-space: nowrap;
+			}
+            h4 {
+                font-size: 16px;
+            }
         </style>
+
+        <iron-ajax auto
+            url="/api/info"
+            last-response="{{info}}"></iron-ajax>
 
         <iron-ajax id="rebuild_ajax"
             on-response="channelHandler"
@@ -40,27 +57,29 @@
             <template is="dom-if" if="{{isAdmin}}">
                 <div class="layout horizontal justified wrap">
                     <div>
-                        <h4>Photo counters</h4>
+                        <h1>Photo [[info.photo.count]]</h1>
+                        <h4>Counters</h4>
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
-                                items="[[photoCounters]]" as="item">
+                                items="[[info.photo.counters]]" as="item">
                                 <paper-button on-tap="rebuild">[[item]]</paper-button>
                             </template>
                         </div>
-                        <h4>Photo index</h4>
-                        <paper-button on-tap="reindex(photo)">Reindex</paper-button>
+
+                        <paper-button class="sec" on-tap="reindex(photo)">Photo Reindex</paper-button>
                     </div>
 
                     <div>
-                        <h4>Entry counters</h4>
+                        <h1>Entry [[info.entry.count]]</h1>
+                        <h4>Counters</h4>
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
-                                items="[[entryCounters]]" as="item">
+                                items="[[info.entry.counters]]" as="item">
                                 <paper-button on-tap="rebuild">[[item]]</paper-button>
                             </template>
                         </div>
-                        <h4>Entry index</h4>
-                        <paper-button on-tap="reindex(entry)">Reindex</paper-button>
+
+                        <paper-button class="sec" on-tap="reindex(entry)">Entry Reindex</paper-button>
                     </div>
                 </div>
             </template>
@@ -73,10 +92,6 @@
             behaviors: [
                 Polymer.NeonAnimationBehavior
             ],
-            ready: function() {
-                this.photoCounters = ['Photo_date', 'Photo_tags', 'Photo_model', 'Photo_author', 'Photo_color'];
-                this.entryCounters = ['Entry_date', 'Entry_tags', 'Entry_author'];
-            },
             properties: {
                 animationConfig: {
                     type: Object,
@@ -93,6 +108,7 @@
                         }
                     }
                 },
+                info: { type: Object },
                 user: { type: Object, notify: true },
                 isAdmin: { type: Boolean, value: false, notify: true },
                 counters: {type: Array },
