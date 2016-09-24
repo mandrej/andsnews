@@ -160,7 +160,9 @@ class BackgroundIndex(RestHandler):
             indexer = Indexer()
             indexer.KIND = Entry
 
-        token = channel.create_channel('%s_index' % kind, duration_minutes=10)
+        indexer.CHANNEL_NAME = '%s_index' % kind
+
+        token = channel.create_channel(indexer.CHANNEL_NAME, duration_minutes=10)
         deferred.defer(indexer.run, batch_size=10, _queue='background')
         self.render({'token': token})
 
@@ -177,8 +179,9 @@ class BackgroundBuild(RestHandler):
 
         builder.VALUES = []
         builder.FIELD = field
+        builder.CHANNEL_NAME = mem_key
 
-        token = channel.create_channel(mem_key, duration_minutes=10)
+        token = channel.create_channel(builder.CHANNEL_NAME, duration_minutes=10)
         deferred.defer(builder.run, batch_size=10, _queue='background')
         self.render({'token': token})
 
