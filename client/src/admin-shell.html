@@ -132,8 +132,6 @@
                 var resp = JSON.parse(e.data),
                     toast = this.$.toast;
 
-                console.log(primaryTextColor);
-
                 toast.setAttribute('text', resp.message);
                 toast.style.backgroundColor = '#212121';
                 if (!toast.opened) toast.open();
