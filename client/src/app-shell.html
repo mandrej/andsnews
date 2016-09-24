@@ -35,12 +35,16 @@
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
 			:host {
-				--app-primary-color: #465bed;
-        		--app-secondary-color: #edd846;
-        		--app-alert-color: #ed465b;
-				--app-light-color: #ffffff;
-        		--app-grey-color: #737373;
-        		--app-dark-color: #212121;
+				--primary-text-color: #212121;
+				--primary-background-color: #ffffff;
+				--secondary-text-color: #757575;
+				--disabled-text-color: #9b9b9b;
+				--divider-color: #dbdbdb;
+				--error-color: #dd2c00;
+				--primary-color: #3f51b5;
+				--light-primary-color: #c5cae9;
+				--dark-primary-color: #303f9f;
+				--accent-color: #ff9800;
 			}
 			app-drawer {
 				-moz-user-select: none;
@@ -52,13 +56,13 @@
 				height: 100%;
 			}
 			app-drawer app-toolbar {
-				color: #000;
-				background-color: var(--app-primary-color);
+				color: var(--primary-background-color);
+				background-color: var(--primary-text-color);
 				@apply(--shadow-elevation-2dp);
 			}
 			app-header {
-				color: var(--app-dark-color);
-				background-color: var(--app-light-color);
+				color: var(--primary-text-color);
+				background-color: var(--primary-background-color);
 				@apply(--shadow-elevation-2dp);
           	}
 			app-toolbar a, paper-item a {
@@ -70,7 +74,7 @@
 			}
             paper-item iron-icon {
                 margin-right: 16px;
-                color: var(--app-grey-color);
+                color: var(--secondary-text-color);
             }
 			paper-button {
 				text-transform: lowercase;
@@ -88,10 +92,10 @@
 				position: fixed;
 			}
 			paper-fab {
-                --paper-fab-background: var(--app-secondary-color);
+                --paper-fab-background: var(--accent-color);
             }
 			main {
-				height: 100vh;
+				height: calc(100vh - 64px);
 				position: relative;
 			}
 			#spinner {
@@ -130,11 +134,11 @@
 				max-width: 400px;
                 --paper-dialog-title: {
                     white-space: normal;
-                    font-size: var(--app-toolbar-font-size);
+                    font-size: 20px;
                 }
             }
 			paper-dialog paper-button {
-				color: var(--app-dark-color);
+				color: var(--primary-text-color);
 			}
 		</style>
 
@@ -313,7 +317,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '160923'},
+				version: { type: String, value: '160924'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },

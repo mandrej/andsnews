@@ -17,10 +17,10 @@
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
-            :host {
+            /*:host {
                 @apply(--layout-fullbleed);
                 @apply(--layout-vertical);
-            }
+            }*/
             .container {
                 padding: 16px;
             }
@@ -28,32 +28,31 @@
                 font-weight: 300;
             }
             a {
-                color: var(--app-primary-color);
+                color: var(--primary-color);
             }
             paper-button {
-                color: var(--app-light-color);
-                background-color: var(--app-primary-color);
+                background-color: var(--accent-color);
                 text-transform: lowercase;
             }
             paper-input {
-                --paper-input-container-color: var(--app-dark-color);
-                --paper-input-container-focus-color: var(--app-primary-color);
-                --paper-input-container-invalid-color: var(--app-alert-color);
+                --paper-input-container-color: var(--primary-text-color);
+                --paper-input-container-focus-color: var(--primary-color);
+                --paper-input-container-invalid-color: var(--error-color);
                 --paper-input-container: {
                     padding: 4px 0;
                 }
             }
             vaadin-upload {
-                --error-color: var(--app-alert-color);
                 --vaadin-upload-button-add: {
-                    color: var(--app-light-color);
-                    background-color: var(--app-primary-color);
-                    text-transform: lowercase;
+                    font-size: inherit;
+                    color: var(--primary-text-color);
+                    background-color: var(--accent-color);
+                    @apply(--shadow-elevation-2dp);
                 }
             }
             vaadin-combo-box {
-                --paper-input-container-color: var(--app-dark-color);
-                --paper-input-container-focus-color: var(--app-primary-color);
+                --paper-input-container-color: var(--primary-text-color);
+                --paper-input-container-focus-color: var(--primary-color);
             }
         </style>
 
@@ -80,12 +79,12 @@
 
             <template is="dom-if" if="[[_isAdd(field)]]">
                 <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                    <vaadin-upload id="upload"
+                    <vaadin-upload id="upload" style="padding: 16px 0"
                         target="/api/{{kind}}/add"
                         max-files="10"
                         on-upload-response="_uploadResponse"
                         accept="image/*"></vaadin-upload>
-                    <p>Continue editing of <a href="#/detail/photo/tags/new">uploaded files</a>.</p>
+                    <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
                 </template>
 
                 <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
@@ -94,7 +93,7 @@
                         method="post"
                         action$="/api/[[kind]]/add">
                         <div class="layout horizontal end-justified">
-                            <paper-button on-tap="_submit">Submit</paper-button>
+                            <paper-button on-tap="_submit" raised>Submit</paper-button>
                         </div>
 
                         <paper-input name="headline" required label="headline"></paper-input>
@@ -124,7 +123,7 @@
                     method="post"
                     action$="/api/[[kind]]/edit/[[value]]">
                     <div class="layout horizontal end-justified">
-                        <paper-button on-tap="_submit">Submit</paper-button>
+                        <paper-button on-tap="_submit" raised>Submit</paper-button>
                     </div>
 
                     <paper-input name="headline" required label="headline" value="{{obj.headline}}"></paper-input>

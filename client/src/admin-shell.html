@@ -14,20 +14,15 @@
                 padding: 16px;
             }
             paper-toast {
-                --paper-toast-color: var(--app-light-color);
-                --paper-toast-background-color: var(--app-dark-color);
+                --paper-toast-color: var(--primary-background-color);
+                --paper-toast-background-color: var(--primary-text-color);
             }
             paper-button {
                 width: 135px;
-                color: var(--app-light-color);
-                background-color: var(--app-primary-color);
+                background-color: var(--accent-color);
                 text-transform: lowercase;
                 margin: 0 16px   16px 0;
 			}
-            paper-button.sec {
-                color: var(--app-dark-color);
-                background-color: var(--app-secondary-color);
-            }
             h1, h4 {
 				margin: 0;
 				font-size: 24px;
@@ -62,11 +57,11 @@
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.photo.counters]]" as="item">
-                                <paper-button on-tap="rebuild">[[item]]</paper-button>
+                                <paper-button on-tap="rebuild" raised>[[item]]</paper-button>
                             </template>
                         </div>
 
-                        <paper-button class="sec" on-tap="reindex(photo)">Photo Reindex</paper-button>
+                        <paper-button on-tap="reindex(photo)" raised>Photo Reindex</paper-button>
                     </div>
 
                     <div>
@@ -75,11 +70,11 @@
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.entry.counters]]" as="item">
-                                <paper-button on-tap="rebuild">[[item]]</paper-button>
+                                <paper-button on-tap="rebuild" raised>[[item]]</paper-button>
                             </template>
                         </div>
 
-                        <paper-button class="sec" on-tap="reindex(entry)">Entry Reindex</paper-button>
+                        <paper-button on-tap="reindex(entry)" raised>Entry Reindex</paper-button>
                     </div>
                 </div>
             </template>

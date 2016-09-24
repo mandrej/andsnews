@@ -22,7 +22,7 @@
                 display: none;
             }
             iron-swipeable-pages {
-                @apply(--layout-flex);
+                height: 100%;
             }
             .swipe {
                 -moz-user-select: none;
@@ -60,7 +60,7 @@
                 font-weight: 500;
             }
             .markdown-html a {
-                color: var(--app-primary-color);
+                color: var(--primary-color);
             }
             /*.markdown-html img[alt='Milan D. Andrejevic'] {
             }*/
@@ -110,9 +110,9 @@
                     </div>
                 </template>
                 <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                    <div class="swipe" style="padding: 16px">
+                    <div class="swipe">
                         <marked-element markdown="[[item.body]]">
-                            <div class="markdown-html"></div>
+                            <div class="markdown-html" style="padding: 16px"></div>
                         </marked-element>
                     </div>
                 </template>
