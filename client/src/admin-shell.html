@@ -18,7 +18,7 @@
                 --paper-toast-background-color: var(--primary-text-color);
             }
             paper-button {
-                width: 135px;
+                width: 150px;
                 color: var(--primary-background-color);
                 background-color: var(--primary-color);
                 text-transform: lowercase;
@@ -26,6 +26,9 @@
 			}
             paper-button.accent {
                 background-color: var(--accent-color);
+            }
+            paper-button[toggles][active] {
+                background: var(--secondary-text-color);
             }
             h1, h4 {
 				margin: 0;
@@ -50,8 +53,7 @@
             method="POST"></iron-ajax>
 
         <div class="container" id="container">
-            <paper-toast id="toast" fit-into="{{container}}"
-                horizontal-align="right"></paper-toast>
+            <paper-toast id="toast" horizontal-align="right"></paper-toast>
 
             <template is="dom-if" if="{{isAdmin}}">
                 <div class="layout horizontal justified wrap">
@@ -61,11 +63,11 @@
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.photo.counters]]" as="item">
-                                <paper-button on-tap="rebuild" raised>[[item]]</paper-button>
+                                <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
                             </template>
                         </div>
 
-                        <paper-button on-tap="reindex(photo)" class="accent" raised>Photo Reindex</paper-button>
+                        <paper-button on-tap="reindex" data-kind="photo" class="accent" toggles raised>Photo Reindex</paper-button>
                     </div>
 
                     <div>
@@ -74,11 +76,11 @@
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.entry.counters]]" as="item">
-                                <paper-button on-tap="rebuild" raised>[[item]]</paper-button>
+                                <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
                             </template>
                         </div>
 
-                        <paper-button on-tap="reindex(entry)" class="accent" raised>Entry Reindex</paper-button>
+                        <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
                     </div>
                 </div>
             </template>
@@ -130,9 +132,13 @@
                 var resp = JSON.parse(e.data),
                     toast = this.$.toast;
 
+                console.log(primaryTextColor);
+
                 toast.setAttribute('text', resp.message);
+                toast.style.backgroundColor = '#212121';
                 if (!toast.opened) toast.open();
                 if (resp.message == 'END') {
+                    toast.style.backgroundColor = '#dd2c00';
                     this.channels[token].readyState = 3; // close socket
                     delete this.channels[token];
                 }
@@ -142,7 +148,7 @@
                 this.$.rebuild_ajax.generateRequest();
             },
             reindex: function(e) {
-                this.$.reindex_ajax.url = '/api/index/' + e.model.item;
+                this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
                 this.$.reindex_ajax.generateRequest();
             },
         });
