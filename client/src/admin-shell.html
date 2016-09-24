@@ -6,12 +6,18 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 
+<link rel="import" href="shared-styles.html">
+
 <dom-module id="admin-shell">
     <template>
+        <style is="custom-style" include="shared-styles"></style>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             .container {
                 padding: 16px;
+            }
+            h1 {
+                margin-bottom: 0.5em;
             }
             paper-toast {
                 --paper-toast-color: var(--primary-background-color);
@@ -19,9 +25,6 @@
             }
             paper-button {
                 width: 150px;
-                color: var(--primary-background-color);
-                background-color: var(--primary-color);
-                text-transform: lowercase;
                 margin: 0 16px 16px 0;
 			}
             paper-button.accent {
@@ -29,15 +32,6 @@
             }
             paper-button[toggles][active] {
                 background: var(--secondary-text-color);
-            }
-            h1, h4 {
-				margin: 0;
-				font-size: 24px;
-				font-weight: 400;
-				white-space: nowrap;
-			}
-            h4 {
-                font-size: 16px;
             }
         </style>
 
@@ -59,7 +53,6 @@
                 <div class="layout horizontal justified wrap">
                     <div>
                         <h1>Photo [[info.photo.count]]</h1>
-                        <h4>Counters</h4>
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.photo.counters]]" as="item">
@@ -72,7 +65,6 @@
 
                     <div>
                         <h1>Entry [[info.entry.count]]</h1>
-                        <h4>Counters</h4>
                         <div class="layout horizontal wrap">
                             <template is="dom-repeat"
                                 items="[[info.entry.counters]]" as="item">
@@ -137,7 +129,8 @@
                 if (!toast.opened) toast.open();
                 if (resp.message == 'END') {
                     toast.style.backgroundColor = '#dd2c00';
-                    this.channels[token].readyState = 3; // close socket
+                    // this.channels[token].readyState = 3; // close socket
+                    this.channels[token].close(); // close socket
                     delete this.channels[token];
                 }
             },

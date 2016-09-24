@@ -11,8 +11,11 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 
+<link rel="import" href="shared-styles.html">
+
 <dom-module id="detail-view">
     <template>
+        <style is="custom-style" include="shared-styles"></style>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
             :host {
@@ -41,20 +44,12 @@
                 transform: translate3d(-50%, -50%, 0);*/
                 transition: all 0.3s ease-in-out;
             }
-            paper-dialog {
-                --paper-dialog-title: {
-                    white-space: normal;
-                    font-size: var(--app-toolbar-font-size);
-                }
-            }
             paper-dialog.info {
                 max-width: 400px;
-                --paper-dialog-background-color: var(--app-secondary-light);
             }
-            paper-dialog paper-button {
-                background-color: var(--divider-color);
-                text-transform: lowercase;
-			}
+            paper-button {
+                margin-top: 8px;
+            }
             .markdown-html * {
                 font-family: 'Roboto', 'Noto', sans-serif;
             }
@@ -111,7 +106,7 @@
                                 [[item.lens]] ([[item.focal_length]]mm)<br>
                                 f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
                             </p>
-                            <p class="layout horizontal justified">
+                            <div class="layout horizontal wrap">
                                 <paper-button on-tap="applyFilter"
                                     data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
                                 <template is="dom-repeat" items="[[item.tags]]" as="tag">
@@ -120,7 +115,7 @@
                                 </template>
                                 <paper-button on-tap="applyFilter"
                                     data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
-                            </p>
+                            </div>
                         </paper-dialog>
                     </div>
                 </template>

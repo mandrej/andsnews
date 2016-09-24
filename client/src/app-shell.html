@@ -24,6 +24,7 @@
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
+<link rel="import" href="shared-styles.html">
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
@@ -32,20 +33,9 @@
 
 <dom-module id="app-shell">
 	<template>
+		<style is="custom-style" include="shared-styles"></style>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
-			:host {
-				--primary-text-color: #212121;
-				--primary-background-color: #ffffff;
-				--secondary-text-color: #757575;
-				--disabled-text-color: #9b9b9b;
-				--divider-color: #dbdbdb;
-				--error-color: #dd2c00;
-				--primary-color: #3f51b5;
-				--light-primary-color: #c5cae9;
-				--dark-primary-color: #303f9f;
-				--accent-color: #ff9800;
-			}
 			app-drawer {
 				-moz-user-select: none;
                 -ms-user-select: none;
@@ -57,9 +47,9 @@
 				height: 100%;
 			}
 			app-drawer app-toolbar {
-				color: var(--primary-background-color);
-				background-color: var(--primary-text-color);
-				@apply(--shadow-elevation-2dp);
+				color: var(--secondary-text-color);
+				background-color: var(--divider-color);
+				@apply(--shadow-none);
 			}
 			app-header {
 				color: var(--primary-text-color);
@@ -77,10 +67,6 @@
                 margin-right: 16px;
                 color: var(--secondary-text-color);
             }
-			paper-dialog paper-button {
-				background-color: var(--divider-color);
-				text-transform: lowercase;
-			}
 			.add {
 				/*http://stackoverflow.com/questions/6794000/fixed-position-but-relative-to-container*/
 				position: absolute;
@@ -113,18 +99,9 @@
 				--paper-spinner-stroke-width: 8px;
 			}
 			h1, h4 {
-				margin: 0;
-				font-size: 24px;
-				font-weight: 300;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-			}
-			h4 {
-				font-size: 16px;
-			}
-			[hidden] {
-				display: none !important;
 			}
 			@media (max-width: 767px) {
         		h1 {

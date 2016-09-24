@@ -13,34 +13,23 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 
+<link rel="import" href="shared-styles.html">
+
 <dom-module id="form-view">
     <template>
+        <style is="custom-style" include="shared-styles"></style>
         <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
         <style>
-            /*:host {
-                @apply(--layout-fullbleed);
-                @apply(--layout-vertical);
-            }*/
             .container {
                 padding: 16px;
             }
-            h1 {
-                font-weight: 300;
-            }
-            a {
-                color: var(--primary-color);
-            }
             paper-button {
                 background-color: var(--accent-color);
-                text-transform: lowercase;
             }
             paper-input {
                 --paper-input-container-color: var(--primary-text-color);
                 --paper-input-container-focus-color: var(--primary-color);
                 --paper-input-container-invalid-color: var(--error-color);
-                --paper-input-container: {
-                    padding: 4px 0;
-                }
             }
             vaadin-upload {
                 --vaadin-upload-button-add: {
@@ -51,7 +40,6 @@
                 }
             }
             vaadin-combo-box {
-                padding: 4px 0;
                 --paper-input-container-color: var(--primary-text-color);
                 --paper-input-container-focus-color: var(--primary-color);
             }
@@ -156,9 +144,10 @@
                                 value="{{obj.lens}}"></vaadin-combo-box>
                             <paper-input name="focal_length" label="focal_length [mm]" value="{{obj.focal_length}}"></paper-input>
                             <paper-input name="iso" label="iso [ASA]" value="{{obj.iso}}"></paper-input>
-                            <paper-input readonly name="color" label="color" value="{{obj.color}}"></paper-input>
                             <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                            <paper-input name="shutter" label="shutter [sec]" value="{{obj.shutter}}"></paper-input>
+                            <paper-input name="shutter" label="shutter [s]" value="{{obj.shutter}}"></paper-input>
+                            <input type="hidden" name="color" value="{{obj.color}}">
+                            <paper-input disabled label="color" value="{{obj.color}}"></paper-input>
                         </div>
                     </template>
 
