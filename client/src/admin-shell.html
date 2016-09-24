@@ -19,10 +19,14 @@
             }
             paper-button {
                 width: 135px;
-                background-color: var(--accent-color);
+                color: var(--primary-background-color);
+                background-color: var(--primary-color);
                 text-transform: lowercase;
-                margin: 0 16px   16px 0;
+                margin: 0 16px 16px 0;
 			}
+            paper-button.accent {
+                background-color: var(--accent-color);
+            }
             h1, h4 {
 				margin: 0;
 				font-size: 24px;
@@ -61,7 +65,7 @@
                             </template>
                         </div>
 
-                        <paper-button on-tap="reindex(photo)" raised>Photo Reindex</paper-button>
+                        <paper-button on-tap="reindex(photo)" class="accent" raised>Photo Reindex</paper-button>
                     </div>
 
                     <div>
@@ -74,7 +78,7 @@
                             </template>
                         </div>
 
-                        <paper-button on-tap="reindex(entry)" raised>Entry Reindex</paper-button>
+                        <paper-button on-tap="reindex(entry)" class="accent" raised>Entry Reindex</paper-button>
                     </div>
                 </div>
             </template>

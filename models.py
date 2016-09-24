@@ -28,7 +28,7 @@ TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
 PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
-PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'color')
+PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
 ENTRY_COUNTER_FIELDS = ('date', 'tags', 'author')
 
 
@@ -582,6 +582,7 @@ class Photo(ndb.Model):
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
             'kind': 'photo',
+            'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url
         })
@@ -672,6 +673,7 @@ class Entry(ndb.Model):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
             'kind': 'entry',
+            'year': str(self.year),
             'safekey': self.key.urlsafe()
         })
         return data

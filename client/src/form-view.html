@@ -51,6 +51,7 @@
                 }
             }
             vaadin-combo-box {
+                padding: 4px 0;
                 --paper-input-container-color: var(--primary-text-color);
                 --paper-input-container-focus-color: var(--primary-color);
             }
@@ -146,20 +147,18 @@
 
                     <template is="dom-if" if="[[_isKindPhoto(kind)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
-                        <vaadin-combo-box
-                            name="lens"
-                            label="lens"
-                            allow-custom-value="true"
-                            items="{{lens_cloud}}"
-                            value="{{obj.lens}}"></vaadin-combo-box>
-                        <div class="layout horizontal">
-                            <paper-input name="focal_length" label="focal_length" value="{{obj.focal_length}}"></paper-input>
-                            <paper-input name="iso" label="iso" value="{{obj.iso}}"></paper-input>
-                        </div>
-                        <div class="layout horizontal">
-                            <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                            <paper-input name="shutter" label="shutter" value="{{obj.shutter}}"></paper-input>
+                        <div class="layout horizontal justified wrap">
+                            <vaadin-combo-box
+                                name="lens"
+                                label="lens"
+                                allow-custom-value="true"
+                                items="{{lens_cloud}}"
+                                value="{{obj.lens}}"></vaadin-combo-box>
+                            <paper-input name="focal_length" label="focal_length [mm]" value="{{obj.focal_length}}"></paper-input>
+                            <paper-input name="iso" label="iso [ASA]" value="{{obj.iso}}"></paper-input>
                             <paper-input readonly name="color" label="color" value="{{obj.color}}"></paper-input>
+                            <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
+                            <paper-input name="shutter" label="shutter [sec]" value="{{obj.shutter}}"></paper-input>
                         </div>
                     </template>
 

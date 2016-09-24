@@ -51,6 +51,7 @@
                 -ms-user-select: none;
                 -webkit-user-select: none;
                 user-select: none;
+				@apply(--shadow-elevation-2dp);
 			}
 			app-drawer > div {
 				height: 100%;
@@ -76,7 +77,8 @@
                 margin-right: 16px;
                 color: var(--secondary-text-color);
             }
-			paper-button {
+			paper-dialog paper-button {
+				background-color: var(--divider-color);
 				text-transform: lowercase;
 			}
 			.add {
@@ -137,9 +139,6 @@
                     font-size: 20px;
                 }
             }
-			paper-dialog paper-button {
-				color: var(--primary-text-color);
-			}
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -178,8 +177,10 @@
 		<paper-dialog id="confirm" modal
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Are you sure?</h2>
-			<paper-button dialog-dismiss>Cancel</paper-button>
-			<paper-button dialog-confirm autofocus>OK</paper-button>
+			<div class="layout horizontal">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<paper-button dialog-confirm autofocus>OK</paper-button>
+			</div>
         </paper-dialog>
 
 		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
