@@ -23,14 +23,6 @@
             .container {
                 padding: 16px;
             }
-            paper-button {
-                background-color: var(--accent-color);
-            }
-            paper-input {
-                --paper-input-container-color: var(--primary-text-color);
-                --paper-input-container-focus-color: var(--primary-color);
-                --paper-input-container-invalid-color: var(--error-color);
-            }
             vaadin-upload {
                 --vaadin-upload-button-add: {
                     font-size: inherit;
@@ -82,7 +74,7 @@
                         method="post"
                         action$="/api/[[kind]]/add">
                         <div class="layout horizontal end-justified">
-                            <paper-button on-tap="_submit" raised>Submit</paper-button>
+                            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
                         </div>
 
                         <paper-input name="headline" required label="headline"></paper-input>
@@ -112,7 +104,7 @@
                     method="post"
                     action$="/api/[[kind]]/edit/[[value]]">
                     <div class="layout horizontal end-justified">
-                        <paper-button on-tap="_submit" raised>Submit</paper-button>
+                        <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
                     </div>
 
                     <paper-input name="headline" required label="headline" value="{{obj.headline}}"></paper-input>

@@ -41,21 +41,19 @@
                 -ms-user-select: none;
                 -webkit-user-select: none;
                 user-select: none;
-				@apply(--shadow-elevation-2dp);
 			}
 			app-drawer > div {
 				height: 100%;
-			}
-			app-drawer app-toolbar {
-				color: var(--secondary-text-color);
 				background-color: var(--divider-color);
-				@apply(--shadow-none);
 			}
-			app-header {
+			app-toolbar {
 				color: var(--primary-text-color);
-				background-color: var(--primary-background-color);
+				background-color: var(--dark-primary-color);
 				@apply(--shadow-elevation-2dp);
-          	}
+			}
+			app-header app-toolbar {
+				background-color: var(--primary-background-color);
+			}
 			app-toolbar a, paper-item a {
 				color: inherit;
 				text-decoration: none;
