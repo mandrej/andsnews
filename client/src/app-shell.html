@@ -36,7 +36,57 @@
 		<style is="custom-style" include="shared-styles"></style>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
-			app-drawer {
+			app-toolbar {
+				color: #fff;
+				font-size: 36px;
+				font-weight: 300;
+			}
+			[main-title] {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: center;
+			}
+			.nav {
+				margin: 0;
+				padding: 0;
+				font-size: 24px;
+			}
+			.nav li {
+				display: inline-block;
+				list-style: none;
+			}
+			.nav a {
+				display: inline-block;
+				/*line-height: 64px;*/
+				text-decoration: none;
+				color: black;
+				font-weight: 300;
+				margin: 0 10px;
+			}
+			.nav a:hover {
+				/*color: #444;*/
+				/*border-bottom: 1px solid #999;*/
+			}
+			.add {
+				position: absolute;
+				width: calc(56px + 28px);
+				top: 100px;
+				right: 0;
+				z-index: 10;
+			}
+			.fixed {
+				width: calc(56px + 28px);
+				position: fixed;
+			}
+			#spinner {
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+			/*app-drawer {
 				-moz-user-select: none;
                 -ms-user-select: none;
                 -webkit-user-select: none;
@@ -66,7 +116,6 @@
                 color: var(--secondary-text-color);
             }
 			.add {
-				/*http://stackoverflow.com/questions/6794000/fixed-position-but-relative-to-container*/
 				position: absolute;
 				width: calc(56px + 28px);
 				top: 100px;
@@ -113,7 +162,7 @@
                     white-space: normal;
                     font-size: 20px;
                 }
-            }
+            }*/
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -166,7 +215,92 @@
 			</div>
 		</template>
 
-		<app-drawer-layout responsive-width="768px">
+		<app-header reveals effects="waterfall">
+			<app-toolbar>
+				<div main-title></div>
+				<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
+					<app-search
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					route="{{route}}"></app-search>
+				</template>
+			</app-toolbar>
+
+			<app-toolbar>
+				<div main-title>{{headline}}</div>
+			</app-toolbar>
+
+			<app-toolbar sticky>
+				<div class="layout horizontal justified" style="line-height: 64px; background-color: rgba(255, 255, 255, 0.5);">
+					<ul role="navigation" class="nav">
+						<li><a href="#/grid/photo">Photos</a></li>
+						<li><a href="#/grid/entry">Texts</a></li>
+					</ul>
+					<div>
+						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+							<template is="dom-if" if="{{isAuthorized}}">
+								<template is="dom-if" if="{{isAdmin}}">
+									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
+									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+								</template>
+							</template>
+
+							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+							</template>
+						</template>
+					</div>
+				</div>
+			</app-toolbar>
+
+		</app-header>
+
+		<main id="main">
+			<!-- <div id="spinner" class="layout horizontal center-justified">
+				<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+			</div>
+			<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control> -->
+
+			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+				<admin-shell
+					data-view="maintenance"
+					user="[[user]]"
+					is-admin="{{isAdmin}}"
+					route="{{route}}"></admin-shell>
+
+				<grid-view
+					data-view="grid"
+					kind="[[dataKind.kind]]"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					route="{{route}}"
+					loading="{{loading}}"></grid-view>
+
+				<detail-view
+					data-view="detail"
+					kind="[[dataKind.kind]]"
+					field="[[dataField.field]]"
+					value="[[dataValue.value]]"
+					records="{{records}}"
+					loading="{{loading}}"
+					headline="{{headline}}"
+					route="{{route}}"></detail-view>
+
+				<form-view
+					data-view="form"
+					view="[[dataView.view]]"
+					is-authorized="{{isAuthorized}}"
+					user="[[user]]"
+					kind="[[dataKind.kind]]"
+					field="[[dataField.field]]"
+					value="[[dataValue.value]]"
+					route="{{route}}"></form-view>
+			</neon-animated-pages>
+		</main>
+
+		<!-- <app-drawer-layout responsive-width="768px">
 			<app-drawer id="drawer" swipe-open>
 				<div class="layout vertical">
 					<app-toolbar>
@@ -278,7 +412,7 @@
 					</neon-animated-pages>
 				</main>
 			</app-header-layout>
-		</app-drawer-layout>
+		</app-drawer-layout> -->
 	</template>
 
 	<script>
