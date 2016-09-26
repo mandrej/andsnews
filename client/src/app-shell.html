@@ -7,14 +7,10 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -36,102 +32,73 @@
 		<style is="custom-style" include="shared-styles"></style>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
+			app-header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 192px;
+				background-color: var(--primary-color);
+				--app-header-background-front-layer: {
+					background-image: url(../images/md.jpg);
+        			background-position: top center;
+      			};
+			}
 			app-toolbar {
-				color: #fff;
+				color: var(--primary-background-color);
+			}
+			app-toolbar.tall {
+				height: 64px;
+				line-height: 64px;
+				font-size: 24px;
+				color: var(--primary-text-color);
+			}
+			h1 {
+				margin: 0;
 				font-size: 36px;
 				font-weight: 300;
-			}
-			[main-title] {
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				text-align: center;
 			}
-			.nav {
+			h4 {
+				margin: 0;
+				font-size: 16px;
+				font-weight: 300;
+			}
+			app-toolbar a {
+				display: inline-block;
+				color: inherit;
+				line-height: 48px;
+				text-decoration: none;
+				text-transform: lowercase;
+			}
+			.navigation {
 				margin: 0;
 				padding: 0;
-				font-size: 24px;
+
 			}
-			.nav li {
+			.navigation li {
 				display: inline-block;
 				list-style: none;
 			}
-			.nav a {
+			.navigation a {
 				display: inline-block;
-				/*line-height: 64px;*/
 				text-decoration: none;
 				color: black;
-				font-weight: 300;
-				margin: 0 10px;
-			}
-			.nav a:hover {
-				/*color: #444;*/
-				/*border-bottom: 1px solid #999;*/
+				margin-right: 1em;
 			}
 			.add {
 				position: absolute;
 				width: calc(56px + 28px);
-				top: 100px;
+				top: 164px;
 				right: 0;
 				z-index: 10;
 			}
 			.fixed {
 				width: calc(56px + 28px);
 				position: fixed;
-			}
-			#spinner {
-				position: absolute;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				right: 0;
-			}
-			/*app-drawer {
-				-moz-user-select: none;
-                -ms-user-select: none;
-                -webkit-user-select: none;
-                user-select: none;
-			}
-			app-drawer > div {
-				height: 100%;
-				background-color: var(--divider-color);
-			}
-			app-toolbar {
-				color: var(--primary-text-color);
-				background-color: var(--dark-primary-color);
-				@apply(--shadow-elevation-2dp);
-			}
-			app-header app-toolbar {
-				background-color: var(--primary-background-color);
-			}
-			app-toolbar a, paper-item a {
-				color: inherit;
-				text-decoration: none;
-			}
-			paper-menu {
-				background-color: transparent;
-			}
-            paper-item iron-icon {
-                margin-right: 16px;
-                color: var(--secondary-text-color);
-            }
-			.add {
-				position: absolute;
-				width: calc(56px + 28px);
-				top: 100px;
-				right: 0;
-				z-index: 10;
-			}
-			.fixed {
-				width: calc(56px + 28px);
-				position: fixed;
-			}
-			paper-fab {
-                --paper-fab-background: var(--accent-color);
-            }
-			main {
-				height: calc(100vh - 64px);
-				position: relative;
 			}
 			#spinner {
 				position: absolute;
@@ -145,15 +112,9 @@
 				height: 100px;
 				--paper-spinner-stroke-width: 8px;
 			}
-			h1, h4 {
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
 			@media (max-width: 767px) {
-        		h1 {
-					margin: 0 12px;
-					font-size: 24px;
+				app-toolbar.tall {
+					font-size: 18px;
 				}
         	}
 			paper-dialog {
@@ -162,7 +123,7 @@
                     white-space: normal;
                     font-size: 20px;
                 }
-            }*/
+            }
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -215,204 +176,102 @@
 			</div>
 		</template>
 
-		<app-header reveals effects="waterfall">
-			<app-toolbar>
-				<div main-title></div>
-				<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-					<app-search
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					route="{{route}}"></app-search>
-				</template>
-			</app-toolbar>
-
-			<app-toolbar>
-				<div main-title>{{headline}}</div>
-			</app-toolbar>
-
-			<app-toolbar sticky>
-				<div class="layout horizontal justified" style="line-height: 64px; background-color: rgba(255, 255, 255, 0.5);">
-					<ul role="navigation" class="nav">
-						<li><a href="#/grid/photo">Photos</a></li>
-						<li><a href="#/grid/entry">Texts</a></li>
-					</ul>
-					<div>
-						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+		<app-header-layout>
+			<app-header condenses fixed effects="waterfall blend-background parallax-background">
+				<app-toolbar>
+					<div class="layout horizontal justified" style="width: 100%">
+						<div>
 							<template is="dom-if" if="{{isAuthorized}}">
-								<template is="dom-if" if="{{isAdmin}}">
-									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
-									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-								</template>
+								<a href="#" on-tap="_signOut">[[userName(user)]]</a>
 							</template>
-
-							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+							<template is="dom-if" if="{{!isAuthorized}}">
+								<a href="#" on-tap="_signIn">Google Sign-In</a>
 							</template>
-						</template>
-					</div>
-				</div>
-			</app-toolbar>
-
-		</app-header>
-
-		<main id="main">
-			<!-- <div id="spinner" class="layout horizontal center-justified">
-				<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-			</div>
-			<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control> -->
-
-			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-				<admin-shell
-					data-view="maintenance"
-					user="[[user]]"
-					is-admin="{{isAdmin}}"
-					route="{{route}}"></admin-shell>
-
-				<grid-view
-					data-view="grid"
-					kind="[[dataKind.kind]]"
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					route="{{route}}"
-					loading="{{loading}}"></grid-view>
-
-				<detail-view
-					data-view="detail"
-					kind="[[dataKind.kind]]"
-					field="[[dataField.field]]"
-					value="[[dataValue.value]]"
-					records="{{records}}"
-					loading="{{loading}}"
-					headline="{{headline}}"
-					route="{{route}}"></detail-view>
-
-				<form-view
-					data-view="form"
-					view="[[dataView.view]]"
-					is-authorized="{{isAuthorized}}"
-					user="[[user]]"
-					kind="[[dataKind.kind]]"
-					field="[[dataField.field]]"
-					value="[[dataValue.value]]"
-					route="{{route}}"></form-view>
-			</neon-animated-pages>
-		</main>
-
-		<!-- <app-drawer-layout responsive-width="768px">
-			<app-drawer id="drawer" swipe-open>
-				<div class="layout vertical">
-					<app-toolbar>
-						<h4 main-title>© ANDS [[version]] 2008-2016</h4>
-					</app-toolbar>
-					<paper-menu selected="[[dataKind.kind]]" attr-for-selected="kind-page"
-						class="layout vertical">
-						<paper-item kind-page="photo">
-							<a href="#/grid/photo" class="flex">
-								<iron-icon icon="image:photo-camera"></iron-icon>Photos
-							</a>
-						</paper-item>
-						<paper-item kind-page="entry">
-							<a href="#/grid/entry" class="flex">
-								<iron-icon icon="description"></iron-icon>Texts
-							</a>
-						</paper-item>
-					</paper-menu>
-
-					<div class="flex"></div>
-
-					<div style="padding: 16px 0">
-						<template is="dom-if" if="{{isAuthorized}}">
-							<paper-item on-tap="_signOut" class="flex">
-								<iron-icon icon="settings"></iron-icon>[[userName(user)]]
-							</paper-item>
-						</template>
-						<template is="dom-if" if="{{!isAuthorized}}">
-							<paper-item on-tap="_signIn" class="flex">
-								<iron-icon icon="settings"></iron-icon>Google Sign-In
-							</paper-item>
-						</template>
-					</div>
-				</div>
-			</app-drawer>
-
-			<app-header-layout>
-				<app-header fixed>
-					<app-toolbar>
-						<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-
-		  				<h1 main-title>{{headline}}</h1>
-
-						<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-							<template is="dom-if" if="{{isAuthorized}}">
-								<template is="dom-if" if="{{isAdmin}}">
-									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
-									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-								</template>
-							</template>
-
-							<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-							</template>
-						</template>
-
-						<template is="dom-if" if="[[!_isDetailView(dataView.view)]]">
-							<app-search
-								field="{{dataField.field}}"
-								value="{{dataValue.value}}"
-								route="{{route}}"></app-search>
-						</template>
-		    		</app-toolbar>
-				</app-header>
-
-				<main id="main">
-					<div id="spinner" class="layout horizontal center-justified">
-						<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-					</div>
-					<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-
-						<admin-shell
-							data-view="maintenance"
-							user="[[user]]"
-							is-admin="{{isAdmin}}"
-							route="{{route}}"></admin-shell>
-
-						<grid-view
-							data-view="grid"
-							kind="[[dataKind.kind]]"
+						</div>
+						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
-							route="{{route}}"
-							loading="{{loading}}"></grid-view>
+							route="{{route}}"></app-search>
+					</div>
+				</app-toolbar>
 
-						<detail-view
-							data-view="detail"
-							kind="[[dataKind.kind]]"
-							field="[[dataField.field]]"
-							value="[[dataValue.value]]"
-							records="{{records}}"
-							loading="{{loading}}"
-							headline="{{headline}}"
-							route="{{route}}"></detail-view>
+				<app-toolbar>
+					<h1 main-title>{{headline}}</h1>
+				</app-toolbar>
 
-						<form-view
-							data-view="form"
-							view="[[dataView.view]]"
-							is-authorized="{{isAuthorized}}"
-							user="[[user]]"
-							kind="[[dataKind.kind]]"
-							field="[[dataField.field]]"
-							value="[[dataValue.value]]"
-							route="{{route}}"></form-view>
+				<app-toolbar class="tall" sticky>
+					<div class="layout horizontal justified" style="width: 100%">
+						<ul role="navigation" class="navigation">
+							<li><a href="#/grid/photo">Photos</a></li>
+							<li><a href="#/grid/entry">Texts</a></li>
+						</ul>
 
-					</neon-animated-pages>
-				</main>
-			</app-header-layout>
-		</app-drawer-layout> -->
+						<div>
+							<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+								<template is="dom-if" if="{{isAuthorized}}">
+									<template is="dom-if" if="{{isAdmin}}">
+										<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
+										<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+									</template>
+								</template>
+
+								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+									<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+									<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+								</template>
+							</template>
+						</div>
+					</div>
+				</app-toolbar>
+			</app-header>
+
+			<main id="main">
+				<div id="spinner" class="layout horizontal center-justified">
+					<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+				</div>
+				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+
+				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+					<admin-shell
+						data-view="maintenance"
+						user="[[user]]"
+						is-admin="{{isAdmin}}"
+						route="{{route}}"></admin-shell>
+
+					<grid-view
+						data-view="grid"
+						kind="[[dataKind.kind]]"
+						field="{{dataField.field}}"
+						value="{{dataValue.value}}"
+						route="{{route}}"
+						loading="{{loading}}"></grid-view>
+
+					<detail-view
+						data-view="detail"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
+						records="{{records}}"
+						loading="{{loading}}"
+						headline="{{headline}}"
+						route="{{route}}"></detail-view>
+
+					<form-view
+						data-view="form"
+						view="[[dataView.view]]"
+						is-authorized="{{isAuthorized}}"
+						user="[[user]]"
+						kind="[[dataKind.kind]]"
+						field="[[dataField.field]]"
+						value="[[dataValue.value]]"
+						route="{{route}}"></form-view>
+				</neon-animated-pages>
+			</main>
+		</app-header-layout>
+
+		<!--TODO <h4 main-title>© ANDS [[version]] 2008-2016</h4> -->
+
 	</template>
 
 	<script>
@@ -465,9 +324,6 @@
 							this.set('dataValue.value', null);
 							break;
 					}
-					if (this.$.drawer.opened && !this.$.drawer.persistent) {
-						this.$.drawer.close();
-					}
 				}, 100);
 				// do on every change
 			},
@@ -486,7 +342,7 @@
 			_signIn: function() {
                 this.$.aware.signIn();
             },
-			_signOut: function() {
+			_signOut: function(e) {
 				if (this.user) {
 					this.user.disconnect();
 					this.isAuthorized = false;

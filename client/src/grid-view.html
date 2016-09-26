@@ -20,9 +20,6 @@
                 @apply(--layout-start-aligned);
                 @apply(--layout-wrap);
             }
-            ::-webkit-scrollbar {
-                display: none;
-            }
             .rec {
                 position: relative;
                 width: 20%;
@@ -74,7 +71,6 @@
             </template>
         </template>
 
-        <!--SPECIFIC-->
         <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
