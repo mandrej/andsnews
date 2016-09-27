@@ -79,7 +79,6 @@
 				display: inline-block;
 				text-decoration: none;
 				color: var(--primary-background-color);
-				padding: 8px;
 			}
 			.add {
 				position: absolute;
@@ -183,12 +182,18 @@
 				<app-toolbar class="sticky" sticky>
 					<div class="layout horizontal justified" style="width: 100%">
 						<ul role="navigation" class="navigation">
-							<li><a href="#/grid/photo">
-								<iron-icon icon="image:photo-camera"></iron-icon>
-								<span hidden$="{{smallScreen}}">Photos</span></a></li>
-							<li><a href="#/grid/entry">
-								<iron-icon icon="description"></iron-icon>
-								<span hidden$="{{smallScreen}}">Texts</span></a></li>
+							<li>
+								<a href="#/grid/photo">
+									<paper-icon-button icon="image:photo-camera"></paper-icon-button>
+									<span hidden$="{{smallScreen}}">Photos</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/grid/entry">
+									<paper-icon-button icon="description"></paper-icon-button>
+									<span hidden$="{{smallScreen}}">Texts</span>
+								</a>
+							</li>
 						</ul>
 
 						<div>
