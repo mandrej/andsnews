@@ -61,24 +61,23 @@
 			}
 			app-toolbar a {
 				display: inline-block;
-				color: inherit;
-				line-height: 48px;
+				color: var(--primary-background-color);
 				text-decoration: none;
 				text-transform: lowercase;
+			}
+			app-toolbar a img.thumbnail {
+				display: inherit;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
 			}
 			.navigation {
 				margin: 0;
 				padding: 0;
-
 			}
 			.navigation li {
 				display: inline-block;
 				list-style: none;
-			}
-			.navigation a {
-				display: inline-block;
-				text-decoration: none;
-				color: var(--primary-background-color);
 			}
 			.add {
 				position: absolute;
@@ -169,7 +168,14 @@
 			<app-header condenses fixed effects="waterfall blend-background parallax-background">
 				<app-toolbar>
 					<div class="layout horizontal justified" style="width: 100%">
-						<a href="#" on-tap="_sign">[[userName(user)]]</a>
+						<template is="dom-if" if="{{isAuthorized}}">
+						  	<a class="self-center" href="#" on-tap="_sign">
+								<img class="thumbnail" src="[[userImg(user)]]">
+							</a>
+						</template>
+						<template is="dom-if" if="{{!isAuthorized}}">
+						  	<a class="self-center" href="#" on-tap="_sign">Sign-In</a>
+						</template>
 						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
@@ -300,18 +306,24 @@
 					// do once after debounce
 					switch (view) {
 						case 'grid':
-							this.headline = 'ANDрејевићи';
 							this.set('dataField.field', null);
 							this.set('dataValue.value', null);
+							this.async(function() {
+								this.headline = 'ANDрејевићи';
+							});
 							break;
 						case 'form':
-							this.headline = 'Form';
+							this.async(function() {
+								this.headline = 'Form';
+							});
 							break;
 						case 'maintenance':
-							this.headline = 'Admin';
 							this.set('dataKind.kind', null);
 							this.set('dataField.field', null);
 							this.set('dataValue.value', null);
+							this.async(function() {
+								this.headline = 'Admin';
+							});
 							break;
 					}
 				}, 100);
@@ -345,15 +357,12 @@
 				if (this.user.getBasicProfile().getEmail() == 'milan.andrejevic@gmail.com') {
 					this.isAdmin = true;
 				}
-				// .getBasicProfile().getName();
-				// .getBasicProfile().getImageUrl();
             },
 			userName: function(user) {
-				if (user) {
-					return user.getBasicProfile().getName();
-				} else {
-					return 'Sign-In';
-				}
+				if (user) return user.getBasicProfile().getName();
+			},
+			userImg: function(user) {
+				if (user) return user.getBasicProfile().getImageUrl();
 			},
 			downloadPhoto: function(e) {
 				this.$$('detail-view').fire('download-photo');
