@@ -33,21 +33,13 @@
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
 		<style>
 			app-header {
-				/*position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 192px;*/
-				/*background-color: var(--primary-color);*/
-				/*--app-header-background-front-layer: {*/
-					background-image: url(../images/md.jpg);
-        			background-position: top center;
-      			/*};*/
+				background-image: url(../images/md.jpg);
+    			background-position: top center;
 			}
 			app-toolbar {
 				color: var(--primary-background-color);
 			}
-			app-toolbar.tall {
+			app-toolbar.sticky {
 				height: 64px;
 				line-height: 64px;
 				font-size: 24px;
@@ -86,8 +78,8 @@
 			.navigation a {
 				display: inline-block;
 				text-decoration: none;
-				color: black;
-				margin-right: 1em;
+				color: var(--primary-background-color);
+				padding: 8px;
 			}
 			.add {
 				position: absolute;
@@ -112,11 +104,6 @@
 				height: 100px;
 				--paper-spinner-stroke-width: 8px;
 			}
-			@media (max-width: 767px) {
-				app-toolbar.tall {
-					font-size: 18px;
-				}
-        	}
 			paper-dialog {
 				max-width: 400px;
                 --paper-dialog-title: {
@@ -124,6 +111,9 @@
                     font-size: 20px;
                 }
             }
+			paper-icon-button {
+				color: var(--primary-background-color);
+			}
 		</style>
 
 		<app-location route="{{route}}" use-hash-as-path></app-location>
@@ -180,30 +170,25 @@
 			<app-header condenses fixed effects="waterfall blend-background parallax-background">
 				<app-toolbar>
 					<div class="layout horizontal justified" style="width: 100%">
-						<div>
-							<template is="dom-if" if="{{isAuthorized}}">
-								<a href="#" on-tap="_signOut">[[userName(user)]]</a>
-							</template>
-							<template is="dom-if" if="{{!isAuthorized}}">
-								<a href="#" on-tap="_signIn">Google Sign-In</a>
-							</template>
-						</div>
+						<a href="#" on-tap="_sign">[[userName(user)]]</a>
 						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
 							route="{{route}}"></app-search>
 					</div>
 				</app-toolbar>
-
 				<app-toolbar>
 					<h1 main-title>{{headline}}</h1>
 				</app-toolbar>
-
-				<app-toolbar class="tall" sticky>
+				<app-toolbar class="sticky" sticky>
 					<div class="layout horizontal justified" style="width: 100%">
 						<ul role="navigation" class="navigation">
-							<li><a href="#/grid/photo">Photos</a></li>
-							<li><a href="#/grid/entry">Texts</a></li>
+							<li><a href="#/grid/photo">
+								<iron-icon icon="image:photo-camera"></iron-icon>
+								<span hidden$="{{smallScreen}}">Photos</span></a></li>
+							<li><a href="#/grid/entry">
+								<iron-icon icon="description"></iron-icon>
+								<span hidden$="{{smallScreen}}">Texts</span></a></li>
 						</ul>
 
 						<div>
@@ -339,17 +324,16 @@
 			_isKindPhoto: function(kind) {
 				return kind == 'photo'
 			},
-			_signIn: function() {
-                this.$.aware.signIn();
-            },
-			_signOut: function(e) {
+			_sign: function() {
 				if (this.user) {
 					this.user.disconnect();
 					this.isAuthorized = false;
 					this.user = null;
 					this.isAdmin = false;
+					gapi.auth2.getAuthInstance().signOut();
+				} else {
+					this.$.aware.signIn();
 				}
-				gapi.auth2.getAuthInstance().signOut();
 			},
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
@@ -360,7 +344,11 @@
 				// .getBasicProfile().getImageUrl();
             },
 			userName: function(user) {
-				if (user) return user.getBasicProfile().getName();
+				if (user) {
+					return user.getBasicProfile().getName();
+				} else {
+					return 'Sign-In';
+				}
 			},
 			downloadPhoto: function(e) {
 				this.$$('detail-view').fire('download-photo');
