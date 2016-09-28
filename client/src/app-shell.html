@@ -265,9 +265,6 @@
 				</neon-animated-pages>
 			</main>
 		</app-header-layout>
-
-		<!--TODO <h4 main-title>© ANDS [[version]] 2008-2016</h4> -->
-
 	</template>
 
 	<script>
@@ -322,7 +319,7 @@
 							this.set('dataField.field', null);
 							this.set('dataValue.value', null);
 							this.async(function() {
-								this.headline = 'Admin';
+								this.headline = 'Admin v.' + this.version;
 							});
 							break;
 					}
