@@ -23,7 +23,7 @@
             .rec {
                 position: relative;
                 width: 20%;
-                height: 150px;
+                height: 200px;
 				cursor: pointer;
 			}
             .rec iron-image {
@@ -41,9 +41,9 @@
                 padding: 16px;
                 text-overflow: ellipsis;
             }
-            @media (max-width: 1024px) { .rec { width: calc(100% / 4); } }
-            @media (max-width: 768px)  { .rec { width: calc(100% / 3); } }
-            @media (max-width: 432px)  { .rec { width: calc(100% / 2); } }
+            @media (max-width: 1024px) { .rec { width: calc(100% / 4); height: 250px; } }
+            @media (max-width: 768px)  { .rec { width: calc(100% / 3); height: 240px; } }
+            @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: 200px; } }
         </style>
 
         <iron-ajax auto

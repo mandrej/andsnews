@@ -156,85 +156,86 @@
 			</div>
         </paper-dialog>
 
-		<template is="dom-if" if="[[_isGridView(dataView.view)]]">
-			<div hidden$="{{!isAuthorized}}" class="add">
-				<div class="fixed">
-					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+		<div style="max-width: 1024px; margin: 0 auto; position: relative">
+			<template is="dom-if" if="[[_isGridView(dataView.view)]]">
+				<div hidden$="{{!isAuthorized}}" class="add">
+					<div class="fixed">
+						<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+					</div>
 				</div>
-			</div>
-		</template>
+			</template>
 
-		<app-header-layout fullbleed>
-			<app-header condenses fixed effects="waterfall blend-background parallax-background">
-				<app-toolbar>
-					<div class="layout horizontal justified" style="width: 100%">
-						<template is="dom-if" if="{{isAuthorized}}">
-						  	<a class="self-center" href="#" on-tap="_sign">
-								<img class="thumbnail" src="[[userImg(user)]]">
-							</a>
-						</template>
-						<template is="dom-if" if="{{!isAuthorized}}">
-						  	<a class="self-center" href="#" on-tap="_sign">Sign-In</a>
-						</template>
-						<app-search
+			<app-header-layout>
+				<app-header condenses fixed effects="waterfall blend-background parallax-background">
+					<app-toolbar>
+						<div class="layout horizontal justified" style="width: 100%">
+							<template is="dom-if" if="{{isAuthorized}}">
+								<a class="self-center" href="#" on-tap="_sign">
+									<img class="thumbnail" src="[[userImg(user)]]">
+								</a>
+							</template>
+							<template is="dom-if" if="{{!isAuthorized}}">
+								<a class="self-center" href="#" on-tap="_sign">Sign-In</a>
+							</template>
+							<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
 							route="{{route}}"></app-search>
-					</div>
-				</app-toolbar>
-				<app-toolbar>
-					<h1 main-title>{{headline}}</h1>
-				</app-toolbar>
-				<app-toolbar class="sticky" sticky>
-					<div class="layout horizontal justified" style="width: 100%">
-						<ul role="navigation" class="navigation">
-							<li>
-								<a href="#/grid/photo">
-									<paper-icon-button icon="image:photo-camera"></paper-icon-button>
-									<span hidden$="{{smallScreen}}">Photos</span>
-								</a>
-							</li>
-							<li>
-								<a href="#/grid/entry">
-									<paper-icon-button icon="description"></paper-icon-button>
-									<span hidden$="{{smallScreen}}">Texts</span>
-								</a>
-							</li>
-						</ul>
+						</div>
+					</app-toolbar>
+					<app-toolbar>
+						<h1 main-title>{{headline}}</h1>
+					</app-toolbar>
+					<app-toolbar class="sticky" sticky>
+						<div class="layout horizontal justified" style="width: 100%">
+							<ul role="navigation" class="navigation">
+								<li>
+									<a href="#/grid/photo">
+										<paper-icon-button icon="image:photo-camera"></paper-icon-button>
+										<span hidden$="{{smallScreen}}">Photos</span>
+									</a>
+								</li>
+								<li>
+									<a href="#/grid/entry">
+										<paper-icon-button icon="description"></paper-icon-button>
+										<span hidden$="{{smallScreen}}">Texts</span>
+									</a>
+								</li>
+							</ul>
 
-						<div>
-							<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-								<template is="dom-if" if="{{isAuthorized}}">
-									<template is="dom-if" if="{{isAdmin}}">
-										<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
-										<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+							<div>
+								<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
+									<template is="dom-if" if="{{isAuthorized}}">
+										<template is="dom-if" if="{{isAdmin}}">
+											<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
+											<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+										</template>
+									</template>
+
+									<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+										<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+										<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+										<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 									</template>
 								</template>
-
-								<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
-									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-									<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-									<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-								</template>
-							</template>
+							</div>
 						</div>
+					</app-toolbar>
+				</app-header>
+
+				<main id="main">
+					<div id="spinner" class="layout horizontal center-justified">
+						<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
 					</div>
-				</app-toolbar>
-			</app-header>
+					<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
-			<main id="main">
-				<div id="spinner" class="layout horizontal center-justified">
-					<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-				</div>
-				<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-
-				<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-					<admin-shell
+					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+						<admin-shell
 						data-view="maintenance"
 						is-admin="{{isAdmin}}"
 						route="{{route}}"></admin-shell>
 
-					<grid-view
+						<grid-view
 						data-view="grid"
 						kind="[[dataKind.kind]]"
 						field="{{dataField.field}}"
@@ -242,7 +243,7 @@
 						route="{{route}}"
 						loading="{{loading}}"></grid-view>
 
-					<detail-view
+						<detail-view
 						data-view="detail"
 						kind="[[dataKind.kind]]"
 						field="[[dataField.field]]"
@@ -252,7 +253,7 @@
 						headline="{{headline}}"
 						route="{{route}}"></detail-view>
 
-					<form-view
+						<form-view
 						data-view="form"
 						view="[[dataView.view]]"
 						is-authorized="{{isAuthorized}}"
@@ -261,9 +262,11 @@
 						field="[[dataField.field]]"
 						value="[[dataValue.value]]"
 						route="{{route}}"></form-view>
-				</neon-animated-pages>
-			</main>
-		</app-header-layout>
+					</neon-animated-pages>
+				</main>
+			</app-header-layout>
+		</div>
+
 	</template>
 
 	<script>
