@@ -9,7 +9,7 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
     PHOTO_FILTER_FIELDS, PHOTO_COUNTER_FIELDS, ENTRY_COUNTER_FIELDS
-from mapper import Indexer, Builder
+from mapper import Indexer, Builder, Fixer
 
 LIMIT = 12
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
@@ -164,6 +164,18 @@ class BackgroundIndex(RestHandler):
 
         token = channel.create_channel(indexer.CHANNEL_NAME, duration_minutes=10)
         deferred.defer(indexer.run, batch_size=10, _queue='background')
+        self.render({'token': token})
+
+
+class BackgroundFix(RestHandler):
+    def post(self, kind):
+        fixer = Fixer()
+        fixer.KIND = Photo
+        fixer.DATE_LESS_THEN = datetime.datetime.strptime('2016-01-31T00:00:00', '%Y-%m-%dT%H:%M:%S')
+        fixer.CHANNEL_NAME = '%s_fix' % kind
+
+        token = channel.create_channel(fixer.CHANNEL_NAME, duration_minutes=10)
+        deferred.defer(fixer.run, batch_size=10, _queue='background')
         self.render({'token': token})
 
 

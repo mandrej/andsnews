@@ -43,6 +43,9 @@
         <iron-ajax id="reindex_ajax"
             on-response="channelHandler"
             method="POST"></iron-ajax>
+            <iron-ajax id="fix_ajax"
+                on-response="channelHandler"
+                method="POST"></iron-ajax>
 
         <div class="container" id="container">
             <paper-toast id="toast" horizontal-align="right"></paper-toast>
@@ -59,6 +62,7 @@
                         </div>
 
                         <paper-button on-tap="reindex" data-kind="photo" class="accent" toggles raised>Photo Reindex</paper-button>
+                        <paper-button on-tap="fix" data-kind="photo" class="accent" toggles raised>Migration</paper-button>
                     </div>
 
                     <div>
@@ -125,7 +129,7 @@
                 toast.style.backgroundColor = '#212121';
                 if (!toast.opened) toast.open();
                 if (resp.message == 'END') {
-                    toast.style.backgroundColor = '#dd2c00';
+                    toast.style.backgroundColor = '#dc2128';
                     // this.channels[token].readyState = 3; // close socket
                     this.channels[token].close(); // close socket
                     delete this.channels[token];
@@ -138,6 +142,10 @@
             reindex: function(e) {
                 this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
                 this.$.reindex_ajax.generateRequest();
+            },
+            fix: function(e) {
+                this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
+                this.$.fix_ajax.generateRequest();
             },
         });
     </script>

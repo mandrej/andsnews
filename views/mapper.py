@@ -1,4 +1,6 @@
+import re
 import json
+import uuid
 import logging
 import itertools
 import collections
@@ -98,6 +100,53 @@ class Indexer(Mapper):
         channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
 
+class Fixer(Mapper):
+    CHANNEL_NAME = None
+    DATE_LESS_THEN = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def get_query(self):
+        """Returns a query over the specified kind, with any appropriate filters applied."""
+        q = self.KIND.query(self.KIND.date < self.DATE_LESS_THEN)
+        return q
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
+            if blob_info is not None:
+                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % blob_info.filename}))
+                # blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
+                # buff = blob_reader.read(size=-1)
+                # object_name = BUCKET + blob_info.filename  # format /bucket/object
+                #
+                # # Check  GCS stat exist first
+                # try:
+                #     gcs.stat(object_name)
+                #     object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
+                # except gcs.NotFoundError:
+                #     pass
+                #
+                # write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+                # with gcs.open(
+                #         object_name,
+                #         'w',
+                #         content_type=blob_info.content_type,
+                #         retry_params=write_retry_params) as f:
+                #     f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+                #
+                # gcs_object_name = '/gs' + object_name
+                # entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
+                # entity.put()
+
+            # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
+        self.to_put = []
+
+    def finish(self):
+        channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+
+
 class Builder(Mapper):
     FIELD = None
     VALUES = None
@@ -146,20 +195,20 @@ class Builder(Mapper):
         channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
 
-# def current_fix(entity):
-#     blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-#     if blob_info is not None:
-#         blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
-#         buff = blob_reader.read(size=-1)
-#         object_name = BUCKET + blob_info.filename  # format /bucket/object
-#         write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-#         with gcs.open(
-#             object_name,
-#             'w',
-#             content_type=blob_info.content_type,
-#             retry_params=write_retry_params) as f:
-#             f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-#
-#         gcs_object_name = '/gs' + object_name
-#         entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
-#         yield op.db.Put(entity)
+def current_fix(entity):
+    blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
+    if blob_info is not None:
+        blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
+        buff = blob_reader.read(size=-1)
+        object_name = BUCKET + blob_info.filename  # format /bucket/object
+        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+        with gcs.open(
+            object_name,
+            'w',
+            content_type=blob_info.content_type,
+            retry_params=write_retry_params) as f:
+            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+
+        gcs_object_name = '/gs' + object_name
+        entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
+        yield op.db.Put(entity)

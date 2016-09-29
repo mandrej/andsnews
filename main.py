@@ -17,5 +17,6 @@ app = WSGIApplication([
 
     Route(r'/api/info', handler='views.api.Info'),
     Route(r'/api/index/<kind>', handler='views.api.BackgroundIndex', methods=['POST']),
+    Route(r'/api/fix/<kind>', handler='views.api.BackgroundFix', methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler='views.api.BackgroundBuild', methods=['POST']),
 ], debug=DEVEL)
