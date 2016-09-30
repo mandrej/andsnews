@@ -117,7 +117,7 @@ class Fixer(Mapper):
             if blob_info and blob_info.filename:
                 blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
                 buff = blob_reader.read(size=-1)
-                object_name = BUCKET + blob_info.filename  # format /bucket/object
+                object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
                 # Check  GCS stat exist first
                 try:
                     gcs.stat(object_name)

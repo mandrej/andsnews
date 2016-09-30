@@ -171,8 +171,8 @@ class BackgroundFix(RestHandler):
     def post(self, kind):
         fixer = Fixer()
         fixer.KIND = Photo
-        fixer.DATE_START = datetime.datetime.strptime('2008-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
-        fixer.DATE_END = datetime.datetime.strptime('2008-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+        fixer.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
+        fixer.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
         fixer.CHANNEL_NAME = '%s_fix' % kind
 
         token = channel.create_channel(fixer.CHANNEL_NAME, duration_minutes=10)
