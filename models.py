@@ -476,7 +476,7 @@ class Photo(ndb.Model):
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
             self.filename = object_name
             self.size = f.tell()
-        except gcs.errors, e:
+        except gcs.errors as e:
             return {'success': False, 'message': e.message}
         else:
             # Read EXIF

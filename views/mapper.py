@@ -102,45 +102,47 @@ class Indexer(Mapper):
 
 class Fixer(Mapper):
     CHANNEL_NAME = None
-    DATE_LESS_THEN = None
+    DATE_START = None
+    DATE_END = None
 
     def map(self, entity):
         return [entity], []
 
     def get_query(self):
-        """Returns a query over the specified kind, with any appropriate filters applied."""
-        q = self.KIND.query(self.KIND.date < self.DATE_LESS_THEN)
-        return q
+        return self.KIND.query(self.KIND.date < self.DATE_END, self.KIND.date >= self.DATE_START)
 
     def _batch_write(self):
         for entity in self.to_put:
             blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-            if blob_info is not None:
-                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % blob_info.filename}))
-                # blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
-                # buff = blob_reader.read(size=-1)
-                # object_name = BUCKET + blob_info.filename  # format /bucket/object
-                #
-                # # Check  GCS stat exist first
-                # try:
-                #     gcs.stat(object_name)
-                #     object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
-                # except gcs.NotFoundError:
-                #     pass
-                #
-                # write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-                # with gcs.open(
-                #         object_name,
-                #         'w',
-                #         content_type=blob_info.content_type,
-                #         retry_params=write_retry_params) as f:
-                #     f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-                #
-                # gcs_object_name = '/gs' + object_name
-                # entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
-                # entity.put()
+            if blob_info and blob_info.filename:
+                blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
+                buff = blob_reader.read(size=-1)
+                object_name = BUCKET + blob_info.filename  # format /bucket/object
+                # Check  GCS stat exist first
+                try:
+                    gcs.stat(object_name)
+                    object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
+                except gcs.NotFoundError:
+                    pass
 
-            # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
+                try:
+                    write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+                    with gcs.open(
+                            object_name,
+                            'w',
+                            content_type=blob_info.content_type,
+                            retry_params=write_retry_params) as f:
+                        f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+
+                    gcs_object_name = '/gs' + object_name
+                    entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
+                    entity.put()
+                except gcs.errors as e:
+                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
+                else:
+                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s DONE' % entity.slug}))
+            else:
+                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s SKIPPED' % entity.slug}))
         self.to_put = []
 
     def finish(self):
@@ -194,21 +196,3 @@ class Builder(Mapper):
             channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
         channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
-
-def current_fix(entity):
-    blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-    if blob_info is not None:
-        blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024*1024)
-        buff = blob_reader.read(size=-1)
-        object_name = BUCKET + blob_info.filename  # format /bucket/object
-        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-        with gcs.open(
-            object_name,
-            'w',
-            content_type=blob_info.content_type,
-            retry_params=write_retry_params) as f:
-            f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-
-        gcs_object_name = '/gs' + object_name
-        entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
-        yield op.db.Put(entity)
