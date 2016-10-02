@@ -114,7 +114,8 @@ class Fixer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-            if blob_info and blob_info.filename:
+            if blob_info and entity.filename is None:
+                logging.info(u'{} {}'.format(blob_info.filename, blob_info.content_type))
                 blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
                 buff = blob_reader.read(size=-1)
                 object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
@@ -134,15 +135,19 @@ class Fixer(Mapper):
                             retry_params=write_retry_params) as f:
                         f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
 
-                    gcs_object_name = '/gs' + object_name
-                    entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key(gcs_object_name))
+                    # delete old blob key
+                    blobstore.delete(entity.blob_key)
+                    # write new blob key
+                    entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+                    entity.filename = object_name
                     entity.put()
+
                 except gcs.errors as e:
                     channel.send_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
                 else:
-                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s DONE' % entity.slug}))
+                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
             else:
-                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s SKIPPED' % entity.slug}))
+                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
         self.to_put = []
 
     def finish(self):

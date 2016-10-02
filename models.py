@@ -466,7 +466,6 @@ class Photo(ndb.Model):
             object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
-
         # Write to GCS
         try:
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)

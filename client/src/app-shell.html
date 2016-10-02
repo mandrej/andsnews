@@ -231,37 +231,37 @@
 
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
-						data-view="maintenance"
-						is-admin="{{isAdmin}}"
-						route="{{route}}"></admin-shell>
+							data-view="maintenance"
+							is-admin="{{isAdmin}}"
+							route="{{route}}"></admin-shell>
 
 						<grid-view
-						data-view="grid"
-						kind="[[dataKind.kind]]"
-						field="{{dataField.field}}"
-						value="{{dataValue.value}}"
-						route="{{route}}"
-						loading="{{loading}}"></grid-view>
+							data-view="grid"
+							kind="[[dataKind.kind]]"
+							field="{{dataField.field}}"
+							value="{{dataValue.value}}"
+							route="{{route}}"
+							loading="{{loading}}"></grid-view>
 
 						<detail-view
-						data-view="detail"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
-						records="{{records}}"
-						loading="{{loading}}"
-						headline="{{headline}}"
-						route="{{route}}"></detail-view>
+							data-view="detail"
+							kind="[[dataKind.kind]]"
+							field="[[dataField.field]]"
+							value="[[dataValue.value]]"
+							records="{{records}}"
+							loading="{{loading}}"
+							headline="{{headline}}"
+							route="{{route}}"></detail-view>
 
 						<form-view
-						data-view="form"
-						view="[[dataView.view]]"
-						is-authorized="{{isAuthorized}}"
-						user="[[user]]"
-						kind="[[dataKind.kind]]"
-						field="[[dataField.field]]"
-						value="[[dataValue.value]]"
-						route="{{route}}"></form-view>
+							data-view="form"
+							view="[[dataView.view]]"
+							is-authorized="{{isAuthorized}}"
+							user="[[user]]"
+							kind="[[dataKind.kind]]"
+							field="[[dataField.field]]"
+							value="[[dataValue.value]]"
+							route="{{route}}"></form-view>
 					</neon-animated-pages>
 				</main>
 			</app-header-layout>
