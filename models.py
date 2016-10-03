@@ -1,10 +1,8 @@
 from __future__ import division
 
 import re
-import collections
 import colorsys
 import datetime
-import itertools
 import logging
 import uuid
 from cStringIO import StringIO
@@ -12,7 +10,7 @@ from decimal import *
 
 import webapp2
 from PIL import Image
-from google.appengine.api import users, memcache, search, images
+from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
 import cloudstorage as gcs

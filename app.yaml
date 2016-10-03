@@ -18,6 +18,16 @@ libraries:
 # client -> client/build/unbundled
 
 handlers:
+- url: /favicon.ico
+  static_files: client/favicon.ico
+  upload: client/favicon.ico
+  secure: always
+
+- url: /robots\.txt
+  static_files: client/robots.txt
+  upload: client/robots.txt
+  secure: always
+
 - url: /bower_components/
   static_dir: client/bower_components
   secure: always
@@ -26,33 +36,18 @@ handlers:
   static_dir: client/src
   secure: always
 
-- url: /favicon.ico
-  static_files: client/favicon.ico
-  upload: client/favicon.ico
-  secure: always
-
 - url: /images/
   static_dir: client/images
   secure: always
 
-- url: /service-worker.js
+- url: /service-worker\.js
   static_files: client/service-worker.js
   upload: client/service-worker.js
   secure: always
 
-- url: /manifest.json
+- url: /manifest\.json
   static_files: client/manifest.json
   upload: client/manifest.json
-  secure: always
-
-- url: /index.html
-  static_files: client/index.html
-  upload: client/index.html
-  secure: always
-
-- url: /robots.txt
-  static_files: client/robots.txt
-  upload: client/robots.txt
   secure: always
 
 - url: /api/.*
