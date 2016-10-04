@@ -529,6 +529,7 @@ class Photo(ndb.Model):
         self.aperture = data['aperture']
         self.shutter = data['shutter']
         self.focal_length = data['focal_length']
+        self.lens = data['lens']
         self.iso = data['iso']
         self.date = data['date']
         self.put()
