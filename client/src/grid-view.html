@@ -107,11 +107,6 @@
                                 animation: 'transform-animation',
                                 transformFrom: 'translateY(-56px)'
                             }],
-                            'exit': {
-                                name: 'hero-animation',
-                                id: 'hero',
-                                fromPage: this
-                            }
                         }
                     }
                 },
@@ -152,6 +147,12 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
+
+                this.animationConfig['exit'] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this
+                };
                 this.sharedElements = { 'hero': target.querySelector('iron-image') };
                 this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
 			},
@@ -161,6 +162,12 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
+
+                this.animationConfig['exit'] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this
+                };
                 this.sharedElements = { 'hero': target };
                 this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },

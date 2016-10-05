@@ -146,11 +146,6 @@
                                 name: 'hero-animation',
                                 id: 'hero',
                                 toPage: this
-                            }],
-                            'exit': [{
-                                name: 'hero-animation',
-                                id: 'hero',
-                                fromPage: this
                             }]
                         }
                     }
@@ -267,6 +262,12 @@
             _editRecord: function() {
                 var index = this.$.swipe.selected,
 		            obj = this.records[index];
+
+                this.animationConfig['exit'] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this
+                };
 				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
             },
             _deleteRecord: function() {
