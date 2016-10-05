@@ -212,7 +212,7 @@
 										</template>
 									</template>
 
-									<template is="dom-if" if="[[_isKindPhoto(dataKind.kind)]]">
+									<template is="dom-if" if="[[_isKindPhoto(itemKind)]]">
 										<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
 										<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
 										<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
@@ -249,6 +249,7 @@
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
 							records="{{records}}"
+							item-kind="{{itemKind}}"
 							loading="{{loading}}"
 							headline="{{headline}}"
 							route="{{route}}"></detail-view>
@@ -281,7 +282,7 @@
 				}
 			},
 			properties: {
-				version: { type: String, value: '161003'},
+				version: { type: String, value: '161005'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -293,6 +294,7 @@
 				dataValue: { type: Object, value: {value: null} },
 				loading: { type: Boolean, value: false, notify: true },
 				records: { type: Array, value: [], notify: true },
+				itemKind: { type: String, value: 'photo', notify: true },
 			},
 			listeners: {
 				'iron-overlay-closed': 'deleteRecord'
@@ -338,7 +340,7 @@
 				return view == 'form';
 			},
 			_isKindPhoto: function(kind) {
-				return kind == 'photo'
+				return kind == 'photo';
 			},
 			_sign: function() {
 				if (this.user) {

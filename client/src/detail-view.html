@@ -162,6 +162,7 @@
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 records: { type: Array, value: [], notify: true },
+                itemKind: { type: String, value: 'photo', notify: true },
                 loading: {
                     type: Boolean,
                     value: false,
@@ -208,8 +209,11 @@
 				}
 			},
             ironSelect: function(e) {
-                this.headline = e.detail.item._templateInstance.__data__.item.headline;
-                var index = this.$.swipe.selected;
+                var index = this.$.swipe.selected,
+                    // item = this.records[index],
+                    item = e.detail.item._templateInstance.item;
+                this.set('headline', item.headline);
+                this.set('itemKind', item.kind);
                 if (this.records.length - index < 3) {
                     this.loadMore();
                 }
