@@ -58,17 +58,17 @@
         <div class="container" id="container">
             <paper-toast id="toast" fit-into="{{container}}" horizontal-align="right"></paper-toast>
 
-            <template is="dom-if" if="[[_isAdd(field)]]">
-                <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+            <div hidden$="[[!_isAdd(field)]]">
+                <div hidden$="[[!_isKindPhoto(kind)]]">
                     <vaadin-upload id="upload" style="padding: 16px 0"
                         target="/api/{{kind}}/add"
                         max-files="10"
                         on-upload-response="_uploadResponse"
                         accept="image/*"></vaadin-upload>
                     <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
-                </template>
+                </div>
 
-                <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                <div hidden$="[[_isKindPhoto(kind)]]">
                     <form is="iron-form" id="form"
                         on-iron-form-response="_responseHandler"
                         method="post"
@@ -94,10 +94,10 @@
                         <paper-textarea name="summary" label="summary"></paper-textarea>
                         <paper-textarea name="body" label="body"></paper-textarea>
                     </form>
-                </template>
-            </template>
+                </div>
+            </div>
 
-            <template is="dom-if" if="[[!_isAdd(field)]]">
+            <div hidden$="[[_isAdd(field)]]">
                 <form is="iron-form" id="form"
                     on-iron-form-presubmit="_preSubmit"
                     on-iron-form-response="_responseHandler"
@@ -125,7 +125,7 @@
                         multiple unique nonmatching select-on-blur></paper-select>
                     <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
 
-                    <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+                    <div hidden$="[[!_isKindPhoto(kind)]]">
                         <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
                         <div class="layout horizontal justified wrap">
                             <vaadin-combo-box
@@ -141,15 +141,15 @@
                             <input type="hidden" name="color" value="{{obj.color}}">
                             <paper-input disabled label="color" value="{{obj.color}}"></paper-input>
                         </div>
-                    </template>
+                    </div>
 
-                    <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                    <div hidden$="[[_isKindPhoto(kind)]]">
                         <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
                         <paper-textarea name="front_img" label="front image" value="{{obj.front_img}}"></paper-textarea>
                         <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
-                    </template>
+                    </div>
                 </form>
-            </template>
+            </div>
         </div>
     </template>
     <script>

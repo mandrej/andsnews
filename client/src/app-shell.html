@@ -157,30 +157,24 @@
         </paper-dialog>
 
 		<div style="max-width: 1280px; margin: 0 auto; position: relative">
-			<template is="dom-if" if="[[_isGridView(dataView.view)]]">
-				<div hidden$="{{!isAuthorized}}" class="add">
-					<div class="fixed">
-						<paper-fab icon="add" on-tap="addRecord"></paper-fab>
-					</div>
+			<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
+				<div class="fixed">
+					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
 				</div>
-			</template>
+			</div>
 
 			<app-header-layout>
 				<app-header condenses fixed effects="waterfall blend-background parallax-background">
 					<app-toolbar>
 						<div class="layout horizontal justified" style="width: 100%">
-							<template is="dom-if" if="{{isAuthorized}}">
-								<a class="self-center" href="#" on-tap="_sign">
-									<img class="thumbnail" src="[[userImg(user)]]">
-								</a>
-							</template>
-							<template is="dom-if" if="{{!isAuthorized}}">
-								<a class="self-center" href="#" on-tap="_sign">Sign-In</a>
-							</template>
+							<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+								<img class="thumbnail" src="[[userImg(user)]]">
+							</a>
+							<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
 							<app-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							route="{{route}}"></app-search>
+								field="{{dataField.field}}"
+								value="{{dataValue.value}}"
+								route="{{route}}"></app-search>
 						</div>
 					</app-toolbar>
 					<app-toolbar>
@@ -203,21 +197,12 @@
 								</li>
 							</ul>
 
-							<div>
-								<template is="dom-if" if="[[_isDetailView(dataView.view)]]">
-									<template is="dom-if" if="{{isAuthorized}}">
-										<template is="dom-if" if="{{isAdmin}}">
-											<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
-											<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-										</template>
-									</template>
-
-									<template is="dom-if" if="[[_isKindPhoto(itemKind)]]">
-										<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-										<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-										<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-									</template>
-								</template>
+							<div hidden$="[[!_isDetailView(dataView.view)]]">
+								<paper-icon-button hidden$="[[!isAdmin]]" icon="clear" on-tap="confirmDelete"></paper-icon-button>
+								<paper-icon-button hidden$="[[!isAdmin]]" icon="create" on-tap="editRecord"></paper-icon-button>
+								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="more-vert" on-tap="showExif"></paper-icon-button>
 							</div>
 						</div>
 					</app-toolbar>
@@ -330,8 +315,8 @@
 				}, 100);
 				// do on every change
 			},
-			_isGridView: function(view) {
-				return view == 'grid'
+			_canAddRecord: function(view, loggedin) {
+				return view == 'grid' && loggedin;
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';
