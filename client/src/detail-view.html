@@ -143,11 +143,11 @@
                     type: Object,
                     value: function() {
                         return {
-                            'entry': [{
+                            'entry': {
                                 name: 'hero-animation',
                                 id: 'hero',
                                 toPage: this
-                            }]
+                            }
                         }
                     }
                 },
@@ -263,7 +263,6 @@
             _editRecord: function() {
                 var index = this.$.swipe.selected,
 		            obj = this.records[index];
-
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
