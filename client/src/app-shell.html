@@ -21,6 +21,7 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="app-data.html">
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
@@ -142,6 +143,9 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<app-data key="authorized" data="{{isAuthorized}}"></app-data>
+		<app-data key="admin" data="{{isAdmin}}"></app-data>
+
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
@@ -198,11 +202,15 @@
 							</ul>
 
 							<div hidden$="[[!_isDetailView(dataView.view)]]">
-								<paper-icon-button hidden$="[[!isAdmin]]" icon="clear" on-tap="confirmDelete"></paper-icon-button>
-								<paper-icon-button hidden$="[[!isAdmin]]" icon="create" on-tap="editRecord"></paper-icon-button>
-								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-								<paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="more-vert" on-tap="showExif"></paper-icon-button>
+								<span hidden$="[[!isAdmin]]">
+									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
+									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+								</span>
+								<span hidden$="[[!_isKindPhoto(itemKind)]]">
+									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+									<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+									<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+								</span>
 							</div>
 						</div>
 					</app-toolbar>
@@ -217,7 +225,6 @@
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
 							data-view="maintenance"
-							is-admin="{{isAdmin}}"
 							route="{{route}}"></admin-shell>
 
 						<grid-view
@@ -242,7 +249,6 @@
 						<form-view
 							data-view="form"
 							view="[[dataView.view]]"
-							is-authorized="{{isAuthorized}}"
 							user="[[user]]"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
@@ -340,7 +346,7 @@
 			},
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-				if (this.user.getBasicProfile().getEmail() == 'milan.andrejevic@gmail.com') {
+				if (this.user.getBasicProfile().getId() == '109964680393846534577') {
 					this.isAdmin = true;
 				}
             },
@@ -372,11 +378,7 @@
 				this.$$('detail-view').fire('show-exif');
             },
 			zoomPhoto: function(e) {
-				var target = e.target;
-                while (target !== this && !target._templateInstance) {
-                    target = target.parentNode;
-                }
-				target.icon = (target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
+				e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
 				this.$$('detail-view').fire('zoom-photo');
 			},
 			objectChanged: function(obj) {
