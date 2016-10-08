@@ -95,6 +95,21 @@
                 Polymer.NeonSharedElementAnimatableBehavior
             ],
             properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'cascaded-animation',
+                                animation: 'fade-in-animation'
+                            }, {
+                                name: 'cascaded-animation',
+                                animation: 'transform-animation',
+                                transformFrom: 'translateY(-56px)'
+                            }],
+                        }
+                    }
+                },
                 kind: { type: String, value: null, notify: true, },
                 field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
@@ -111,6 +126,7 @@
                 } else if (kind == 'entry') {
                     return ['/api', kind].join('/');
                 }
+                return;
 			},
             handler: function(request) {
 				var response = request.detail.response,
@@ -132,12 +148,11 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
-                this.animationConfig = {
-                    'exit': {
-                        name: 'hero-animation',
-                        id: 'hero',
-                        fromPage: this
-                    }
+
+                this.animationConfig['exit'] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this
                 };
                 this.sharedElements = { 'hero': target.querySelector('iron-image') };
                 this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
@@ -148,30 +163,19 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
-                this.animationConfig = {
-                    'exit': {
-                        name: 'hero-animation',
-                        id: 'hero',
-                        fromPage: this
-                    }
+
+                this.animationConfig['exit'] = {
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this
                 };
                 this.sharedElements = { 'hero': target };
                 this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
                 var nodes = Polymer.dom(this.shadowRoot).querySelectorAll('.rec')
-                this.animationConfig = {
-                    'entry': [{
-                        name: 'cascaded-animation',
-                        animation: 'fade-in-animation',
-                        nodes: nodes
-                    }, {
-                        name: 'cascaded-animation',
-                        animation: 'transform-animation',
-                        transformFrom: 'translateY(-56px)',
-                        nodes: nodes
-                    }]
-                };
+                this.animationConfig['entry'][0].nodes = nodes;
+                this.animationConfig['entry'][1].nodes = nodes;
                 this.playAnimation('entry');
             },
         });

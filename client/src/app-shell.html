@@ -103,13 +103,6 @@
 				height: 100px;
 				--paper-spinner-stroke-width: 8px;
 			}
-			paper-dialog {
-				max-width: 400px;
-                --paper-dialog-title: {
-                    white-space: normal;
-                    font-size: 20px;
-                }
-            }
 			paper-icon-button {
 				color: var(--primary-background-color);
 			}
@@ -151,14 +144,29 @@
             is-authorized="{{isAuthorized}}"
             on-google-signin-aware-success="handleSignIn"></google-signin-aware>
 
-		<paper-dialog id="confirm" modal
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+		<paper-dialog id="deleteDialog" modal
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+			on-iron-overlay-closed="deleteRecord">
             <h2>Are you sure?</h2>
-			<div class="layout horizontal">
+			<div class="layout horizontal center-justified">
 				<paper-button dialog-dismiss>Cancel</paper-button>
 				<paper-button dialog-confirm autofocus>OK</paper-button>
 			</div>
         </paper-dialog>
+
+		<paper-dialog id="authorizationDialog" modal
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<h2>Authorization Required</h2>
+            <p>Please Sign-In with your Google Account</p>
+            <div class="layout horizontal center-justified">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
+            </div>
+        </paper-dialog>
+
+		<div id="spinner" class="layout horizontal center-justified">
+			<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+		</div>
 
 		<div style="max-width: 1280px; margin: 0 auto; position: relative">
 			<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
@@ -217,9 +225,6 @@
 				</app-header>
 
 				<main id="main">
-					<div id="spinner" class="layout horizontal center-justified">
-						<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-					</div>
 					<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
@@ -249,7 +254,6 @@
 						<form-view
 							data-view="form"
 							view="[[dataView.view]]"
-							user="[[user]]"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
@@ -272,8 +276,11 @@
 					this.set('route.path', '/grid/photo');
 				}
 			},
+			observers: [
+				'viewChanged(dataView.view)'
+			],
 			properties: {
-				version: { type: String, value: '161007'},
+				version: { type: String, value: '161008'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },
@@ -287,12 +294,6 @@
 				records: { type: Array, value: [], notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 			},
-			listeners: {
-				'iron-overlay-closed': 'deleteRecord'
-			},
-			observers: [
-				'viewChanged(dataView.view)'
-			],
 			viewChanged: function(view) {
 				this.debounce('viewChanged', function() {
 					// do once after debounce
@@ -305,11 +306,17 @@
 							});
 							break;
 						case 'form':
+							if (!this.isAuthorized) {
+								this.$.authorizationDialog.open();
+							}
 							this.async(function() {
 								this.headline = 'Form';
 							});
 							break;
 						case 'maintenance':
+							if (!this.isAuthorized) {
+								this.$.authorizationDialog.open();
+							}
 							this.set('dataKind.kind', null);
 							this.set('dataField.field', null);
 							this.set('dataValue.value', null);
@@ -319,7 +326,7 @@
 							break;
 					}
 				}, 100);
-				// do on every change
+			// do on every change
 			},
 			_canAddRecord: function(view, loggedin) {
 				return view == 'grid' && loggedin;
@@ -367,7 +374,7 @@
 				this.$$('detail-view').fire('edit-record');
 			},
 			confirmDelete: function(e) {
-				this.$.confirm.open();
+				this.$.deleteDialog.open();
 			},
 			deleteRecord: function(e) {
 				if (e.detail.confirmed) {

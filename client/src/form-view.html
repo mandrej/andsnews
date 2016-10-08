@@ -58,12 +58,12 @@
 			last-response="{{tags_cloud}}"
 			debounce-duration="100"></iron-ajax>
 
-        <div class="container" id="container">
+        <div hidden$="[[!isAuthorized]]" class="container" id="container">
             <paper-toast id="toast" fit-into="{{container}}" horizontal-align="right"></paper-toast>
 
             <template is="dom-if" if="[[_isAdd(field)]]">
                 <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                    <vaadin-upload id="upload" style="padding: 16px 0"
+                    <vaadin-upload id="upload" style="padding: 16px"
                         target="/api/{{kind}}/add"
                         max-files="10"
                         on-upload-response="_uploadResponse"
@@ -118,7 +118,7 @@
                         label="author"
                         allow-custom-value="true"
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                        value="{{_getEmail(obj)}}"></vaadin-combo-box>
+                        value="{{obj.author}}"></vaadin-combo-box>
                     <paper-select
                         name="tags"
                         label="tags"
@@ -188,7 +188,6 @@
                         }
                     }
                 },
-                user: { type: Object, notify: true },
                 view: { type: String, value: null, notify: true },
                 kind: { type: String, value: null, notify: true },
                 field: { type: String, value: null, notify: true },
@@ -220,9 +219,6 @@
             },
             _isAdd: function(field) {
                 return field == 'add';
-            },
-            _getEmail: function(obj) {
-                return (obj.author) ? obj.author : this.user.getBasicProfile().getEmail();
             },
             _uploadResponse: function(e) {
                 var res = JSON.parse(e.detail.xhr.responseText),
