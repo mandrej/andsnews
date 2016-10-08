@@ -9,7 +9,6 @@
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -135,9 +134,6 @@
 			tail="{{tailValue}}"></app-route>
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-
-		<iron-localstorage name="admin" value="{{isAdmin}}"></iron-localstorage>
-		<iron-localstorage name="authorized" value="{{isAuthorized}}"></iron-localstorage>
 
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
