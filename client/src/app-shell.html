@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -21,7 +22,6 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="app-data.html">
 <link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
@@ -136,8 +136,8 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
-		<app-data key="authorized" data="{{isAuthorized}}"></app-data>
-		<app-data key="admin" data="{{isAdmin}}"></app-data>
+		<iron-localstorage name="admin" value="{{isAdmin}}"></iron-localstorage>
+		<iron-localstorage name="authorized" value="{{isAuthorized}}"></iron-localstorage>
 
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
@@ -157,6 +157,16 @@
 		<paper-dialog id="authorizationDialog" modal
             entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<h2>Authorization Required</h2>
+            <p>Please Sign-In with your Google Account</p>
+            <div class="layout horizontal center-justified">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="administrationDialog" modal
+            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<h2>Administrator Required</h2>
             <p>Please Sign-In with your Google Account</p>
             <div class="layout horizontal center-justified">
 				<paper-button dialog-dismiss>Cancel</paper-button>
@@ -230,6 +240,7 @@
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
 							data-view="maintenance"
+							is-admin="{{isAdmin}}"
 							route="{{route}}"></admin-shell>
 
 						<grid-view
@@ -253,6 +264,7 @@
 
 						<form-view
 							data-view="form"
+							is-authorized="{{isAuthorized}}"
 							view="[[dataView.view]]"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
@@ -314,8 +326,8 @@
 							});
 							break;
 						case 'maintenance':
-							if (!this.isAuthorized) {
-								this.$.authorizationDialog.open();
+							if (!this.isAdmin) {
+								this.$.administrationDialog.open();
 							}
 							this.set('dataKind.kind', null);
 							this.set('dataField.field', null);
@@ -343,9 +355,9 @@
 			_sign: function() {
 				if (this.user) {
 					this.user.disconnect();
-					this.isAuthorized = false;
+					this.set('isAdmin', false);
+					this.set('isAuthorized', false);
 					this.user = null;
-					this.isAdmin = false;
 					gapi.auth2.getAuthInstance().signOut();
 				} else {
 					this.$.aware.signIn();
@@ -354,7 +366,7 @@
 			handleSignIn: function(response) {
                 this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
 				if (this.user.getBasicProfile().getId() == '109964680393846534577') {
-					this.isAdmin = true;
+					this.set('isAdmin', true);
 				}
             },
 			userName: function(user) {
