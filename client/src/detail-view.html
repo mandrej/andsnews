@@ -6,12 +6,12 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/marked-element/marked-element.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="item-view.html">
 
 <dom-module id="detail-view">
     <template>
@@ -25,42 +25,10 @@
             iron-swipeable-pages {
                 @apply(--layout-flex);
             }
-            .swipe {
-                -moz-user-select: none;
-                -ms-user-select: none;
-                -webkit-user-select: none;
-                user-select: none;
-                cursor: default;
-            }
-            .swipe iron-image {
-                width: 100%;
-                height: 100%;
-                transition: all 0.3s ease-in-out;
-            }
-            paper-dialog.info {
-                max-width: 400px;
-            }
-            paper-button {
-                margin-top: 8px;
-            }
-            .markdown-html * {
-                font-family: 'Roboto', 'Noto', sans-serif;
-            }
-            .markdown-html img {
-                max-width: 100%;
-            }
-            .markdown-html h2, .markdown-html h3, .markdown-html strong {
-                font-weight: 500;
-            }
-            .markdown-html a {
-                color: var(--primary-color);
-            }
-            /*.markdown-html img[alt='Milan D. Andrejevic'] {
-            }*/
         </style>
 
-        <iron-ajax id="ajax" auto
-            url="{{_url(kind, field, value)}}"
+        <iron-ajax id="ajax"
+            auto url="{{_url(kind, field, value)}}"
             params="{{params}}"
             handle-as="json"
             on-response="handler"
@@ -68,8 +36,7 @@
 
         <iron-request id="delete_ajax"></iron-request>
 
-        <paper-dialog id="message" class="info"
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+        <paper-dialog id="message" class="info" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
             <p>Please try again</p>
         </paper-dialog>
@@ -77,48 +44,9 @@
         <iron-swipeable-pages id="swipe"
             selected="0"
             fallback-selection="0"
-            threshold="0.1"
-            on-iron-select="ironSelect"
-            disabled="{{disabled}}">
-            <template is="dom-repeat" items="{{records}}" initial-count="1">
-                <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                    <div class="swipe">
-                        <iron-image src="[[item.serving_url]]=s0"
-                            data-dim$="[[item.dim]]"
-                            style="background-color: #fff"
-                            sizing="cover"
-                            preload fade></iron-image>
-                        <paper-dialog id="[[item.safekey]]"
-                            entry-animation="fade-in-animation"
-                            exit-animation="fade-out-animation">
-                            <h2>[[item.headline]]</h2>
-                            <p>
-                                [[_dateFormat(item.date)]]<br>
-                                [[item.author]]<br><br>
-                                [[item.model]]<br>
-                                [[item.lens]] ([[item.focal_length]]mm)<br>
-                                f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
-                            </p>
-                            <div class="layout horizontal wrap">
-                                <paper-button on-tap="applyFilter"
-                                    data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
-                                <template is="dom-repeat" items="[[item.tags]]" as="tag">
-                                    <paper-button on-tap="applyFilter"
-                                        data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
-                                </template>
-                                <paper-button on-tap="applyFilter"
-                                    data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
-                            </div>
-                        </paper-dialog>
-                    </div>
-                </template>
-                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                    <div class="swipe">
-                        <marked-element markdown="[[item.body]]">
-                            <div class="markdown-html" style="padding: 16px"></div>
-                        </marked-element>
-                    </div>
-                </template>
+            threshold="0.1">
+            <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
+                <item-view item="{{item}}" route="{{route}}"></item-view>
             </template>
         </iron-swipeable-pages>
     </template>
@@ -135,7 +63,7 @@
                     type: Object,
                     value: function() {
                         return {
-                            'hero': this.$.swipe,
+                            'hero': this
                         }
                     }
                 },
@@ -152,40 +80,32 @@
                     }
                 },
                 kind: { type: String, value: null, notify: true },
-				field: { type: String, value: null, notify: true },
-				value: { type: String, value: null, notify: true },
-                disabled: { type: Boolean, value: false, notify: true },
+                field: { type: String, value: null, notify: true },
+                value: { type: String, value: null, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 records: { type: Array, value: [], notify: true },
                 itemKind: { type: String, value: 'photo', notify: true },
-                loading: {
-                    type: Boolean,
-                    value: false,
-                    notify: true
-                },
+                loading: { type: Boolean, value: false, notify: true },
             },
             listeners: {
-                'show-exif': '_showExif',
-                'zoom-photo': '_zoomPhoto',
-                'download-photo': '_downloadPhoto',
                 'edit-record': '_editRecord',
                 'delete-record': '_deleteRecord',
             },
             _url: function(kind, field, value) {
-				var url, prefix = '/api';
+                var url, prefix = '/api';
                 this.records = [];
 
-				if (kind == 'search' && field != null) {
+                if (kind == 'search' && field != null) {
                     url = [prefix, kind, field].join('/');
-				} else if (field && value) {
-					url = [prefix, kind, field, value].join('/');
-				}
+                } else if (field && value) {
+                    url = [prefix, kind, field, value].join('/');
+                }
                 this.set('params.page', null);
-				return url;
-			},
-			handler: function(request) {
-				var response = request.detail.response;
+                return url;
+            },
+            handler: function(request) {
+                var response = request.detail.response;
                 if (!response.objects) return;
                 if (response.objects.length == 0) {
                     var dialog = this.$.message;
@@ -196,90 +116,46 @@
                         this.push('records', item);
                     }, this);
                 }
-			},
+            },
             loadMore: function() {
                 var ajax = this.$.ajax;
                 // if (ajax.lastRequest) ajax.lastRequest.abort();
-				if (ajax.lastResponse && ajax.lastResponse.next) {
+                if (ajax.lastResponse && ajax.lastResponse.next) {
                     this.set('params.page', ajax.lastResponse.next);
-				}
-			},
-            ironSelect: function(e) {
-                var index = this.$.swipe.selected,
-                    // item = this.records[index],
-                    item = e.detail.item._templateInstance.item;
-                this.set('headline', item.headline);
-                this.set('itemKind', item.kind);
-                if (this.records.length - index < 3) {
-                    this.loadMore();
                 }
             },
-            _isKindPhoto: function(item) {
-                return item.kind == 'photo';
-            },
-            _dateFormat: function(str) {
-                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
-                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
-                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
-            },
-            _showExif: function(e) {
-                var index = this.$.swipe.selected;
-                var id = e.target.records[index].safekey,
-                    dialog = this.$$('#' + id);
-                if (dialog) {
-                    dialog.fitInto = this.$.swipe;
-                    dialog.open();
-                }
-            },
-            _zoomPhoto: function() {
-                var swipe = this.$.swipe,
-                    width = swipe.offsetWidth,
-                    height = swipe.offsetHeight,
-                    img = swipe.querySelector('.iron-selected iron-image'),
-                    dim = JSON.parse(img.dataset.dim);
-
-                if (img.style.width != dim[0] + 'px') {
-                    img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
-                    this.disabled = true;
-                } else {
-                    img.style.cssText = 'width: 100%; height: 100%';
-                    this.disabled = false;
-                }
-            },
-            applyFilter: function(e) {
-                var target = e.target;
-                var field = target.dataset.field,
-                    value = target.dataset.fieldValue;
-                while (target !== this && !target._templateInstance) {
-                    target = target.parentNode;
-                }
-                this.sharedElements = { 'hero': target.querySelector('iron-image') };
-                this.set('route.path', ['/detail', this.kind, field, value].join('/'));
-			},
-            _downloadPhoto: function() {
-                var index = this.$.swipe.selected;
-				window.location.href = '/api/download/' + this.records[index].safekey;
-            },
+            // ironSelect: function(e) {
+            //     var index = this.$.swipe.selected,
+            //         // item = this.records[index],
+            //         item = e.detail.item._templateInstance.item;
+            //     this.set('headline', item.headline);
+            //     this.set('itemKind', item.kind);
+            //     if (this.records.length - index < 3) {
+            //         this.loadMore();
+            //     }
+            // },
             _editRecord: function() {
                 var index = this.$.swipe.selected,
-		            obj = this.records[index];
+                    obj = this.records[index];
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
                     fromPage: this
                 };
-				this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
+                this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
             },
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,
                     obj = this.splice('records', index, 1)[0];
-                this.$.delete_ajax.send({url: '/api/delete/' + obj.safekey, method: 'DELETE'});
+                this.$.delete_ajax.send({
+                    url: '/api/delete/' + obj.safekey,
+                    method: 'DELETE'
+                });
                 // this.notifySplices('records', obj);
             },
             propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
+                console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+            },
         });
     </script>
-    <script src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>

@@ -6,6 +6,7 @@
         "src/grid-view.html",
         "src/app-search.html",
         "src/detail-view.html",
+        "src/item-view.html",
         "src/form-view.html",
         "src/admin-shell.html"
     ],

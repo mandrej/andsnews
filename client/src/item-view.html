@@ -1,0 +1,195 @@
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="item-view">
+    <template>
+        <style is="custom-style" include="shared-styles"></style>
+        <style>
+            :host {
+
+            }
+            neon-animated-pages {
+                @apply(--layout-fullbleed);
+                @apply(--layout-vertical);
+            }
+            .swipe {
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+            iron-image {
+                width: 100%;
+                height: 100%;
+                transition: all 0.3s ease-in-out;
+            }
+            paper-dialog.info {
+                max-width: 400px;
+            }
+            paper-button {
+                margin-top: 8px;
+            }
+            .markdown-html * {
+                font-family: 'Roboto', 'Noto', sans-serif;
+            }
+            .markdown-html img {
+                max-width: 100%;
+            }
+            .markdown-html h2,
+            .markdown-html h3,
+            .markdown-html strong {
+                font-weight: 500;
+            }
+            .markdown-html a {
+                color: var(--primary-color);
+            }
+            /*.markdown-html img[alt='Milan D. Andrejevic'] {
+        }*/
+        </style>
+
+        <template is="dom-if" if="[[_isKindPhoto(item)]]">
+            <neon-animated-pages selected="0">
+                <div class="swipe">
+                    <iron-image
+                    src="[[item.serving_url]]=s0"
+                    data-dim$="[[item.dim]]"
+                    style="background-color: #fff"
+                    sizing="cover"
+                    preload fade></iron-image>
+                    <paper-dialog entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                        <h2>[[item.headline]]</h2>
+                        <p>
+                            [[_dateFormat(item.date)]]
+                            <br>[[item.author]]
+                            <br>
+                            <br>[[item.model]]
+                            <br>[[item.lens]] ([[item.focal_length]]mm)
+                            <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
+                        </p>
+                        <div class="layout horizontal wrap">
+                            <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
+                            <template is="dom-repeat" items="[[item.tags]]" as="tag">
+                                <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
+                            </template>
+                            <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
+                        </div>
+                    </paper-dialog>
+                </div>
+
+                <form is="iron-form" id="form"
+                    on-iron-form-presubmit="_preSubmit"
+                    on-iron-form-response="_responseHandler"
+                    method="post"
+                    action$="/api/[[kind]]/edit/[[value]]">
+                    <div class="layout horizontal end-justified">
+                        <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+                    </div>
+
+                    <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+                    <vaadin-combo-box
+                        required
+                        auto-validate
+                        name="author"
+                        label="author"
+                        allow-custom-value="true"
+                        items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+                        value="{{item.author}}"></vaadin-combo-box>
+                    <paper-select
+                        name="tags"
+                        label="tags"
+                        on-input-changed="inputChanged"
+                        on-adding-item="addItem"
+                        bind-value="{{item.tags}}"
+                        multiple unique nonmatching select-on-blur></paper-select>
+
+                    <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
+                    <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
+
+                    <div class="layout horizontal justified wrap">
+                        <vaadin-combo-box
+                            name="lens"
+                            label="lens"
+                            allow-custom-value="true"
+                            items="{{lens_cloud}}"
+                            value="{{item.lens}}"></vaadin-combo-box>
+
+                        <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
+                        <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
+                        <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
+                        <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
+                        <input type="hidden" name="color" value="{{item.color}}">
+                        <paper-input disabled label="color" value="{{item.color}}"></paper-input>
+                    </div>
+                </form>
+            </neon-animated-pages>
+        </template>
+
+        <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+            <marked-element markdown="[[item.body]]">
+                <div class="markdown-html" style="padding: 16px"></div>
+            </marked-element>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            is: 'item-view',
+            properties: {
+                item: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            listeners: {
+                'show-exif': '_showExif',
+                'zoom-photo': '_zoomPhoto',
+                'download-photo': '_downloadPhoto',
+            },
+            _isKindPhoto: function(item) {
+                return item.kind == 'photo';
+            },
+            _showExif: function() {
+                var dialog = Polymer.dom(this.root).querySelector('paper-dialog');
+                if (dialog) {
+                    dialog.open();
+                }
+            },
+            _zoomPhoto: function() {
+                var img = Polymer.dom(this.root).querySelector('iron-image'),
+                    dim = JSON.parse(img.dataset.dim);
+
+                if (img.style.width != dim[0] + 'px') {
+                    img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
+                } else {
+                    img.style.cssText = 'width: 100%; height: 100%';
+                }
+            },
+            _downloadPhoto: function() {
+                window.location.href = '/api/download/' + this.item.safekey;
+            },
+            applyFilter: function(e) {
+                var target = e.target,
+                    field = target.dataset.field,
+                    value = target.dataset.fieldValue;
+                // while (target !== this && !target._templateInstance) {
+                //     target = target.parentNode;
+                // }
+                // this.sharedElements = {
+                //     'hero': target.querySelector('iron-image')
+                // };
+                this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
+            },
+            _dateFormat: function(str) {
+                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
+                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
+                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
+            },
+        });
+    </script>
+    <script src="../bower_components/moment/min/moment.min.js"></script>
+</dom-module>

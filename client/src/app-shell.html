@@ -25,7 +25,7 @@
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
 <link rel="import" href="admin-shell.html">
-<link rel="import" href="form-view.html">
+<!-- <link rel="import" href="form-view.html"> -->
 
 <dom-module id="app-shell">
 	<template>
@@ -258,14 +258,14 @@
 							headline="{{headline}}"
 							route="{{route}}"></detail-view>
 
-						<form-view
+						<!-- <form-view
 							data-view="form"
 							is-authorized="{{isAuthorized}}"
 							view="[[dataView.view]]"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
-							route="{{route}}"></form-view>
+							route="{{route}}"></form-view> -->
 					</neon-animated-pages>
 				</main>
 			</app-header-layout>
@@ -371,9 +371,6 @@
 			userImg: function(user) {
 				if (user) return user.getBasicProfile().getImageUrl();
 			},
-			downloadPhoto: function(e) {
-				this.$$('detail-view').fire('download-photo');
-			},
 			addRecord: function(e) {
 				this.set('dataValue.value', null);
 				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
@@ -390,11 +387,14 @@
 				}
 			},
 			showExif: function(e) {
-				this.$$('detail-view').fire('show-exif');
+				this.$$('detail-view').$$('.iron-selected').fire('show-exif');
             },
 			zoomPhoto: function(e) {
 				e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
-				this.$$('detail-view').fire('zoom-photo');
+				this.$$('detail-view').$$('.iron-selected').fire('zoom-photo');
+			},
+			downloadPhoto: function(e) {
+				this.$$('detail-view').$$('.iron-selected').fire('download-photo');
 			},
 			objectChanged: function(obj) {
                 // this is object observer!
