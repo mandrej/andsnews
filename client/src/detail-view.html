@@ -44,6 +44,7 @@
         <iron-swipeable-pages id="swipe"
             selected="0"
             fallback-selection="0"
+            on-iron-select="ironSelect"
             threshold="0.1">
             <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
                 <item-view
@@ -127,23 +128,20 @@
                     this.set('params.page', ajax.lastResponse.next);
                 }
             },
-            // ironSelect: function(e) {
-            //     var index = this.$.swipe.selected,
-            //         // item = this.records[index],
-            //         item = e.detail.item._templateInstance.item;
-            //     this.set('headline', item.headline);
-            //     this.set('itemKind', item.kind);
-            //     if (this.records.length - index < 3) {
-            //         this.loadMore();
-            //     }
-            // },
+            ironSelect: function(e) {
+                this.debounce('ironSelect', function() {
+                    var index = this.$.swipe.selected,
+                    item = this.records[index];
+                    // item = e.detail.item._templateInstance.item;
+                    this.set('headline', item.headline);
+                    this.set('itemKind', item.kind);
+                    if (this.records.length - index < 3) {
+                        this.loadMore();
+                    }
+                }, 100);
+            },
             _editRecord: function() {
                 this.$$('item-view.iron-selected').view = 'form';
-                // this.animationConfig['exit'] = {
-                //     name: 'hero-animation',
-                //     id: 'hero',
-                //     fromPage: this
-                // };
                 // this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
             },
             _deleteRecord: function() {
