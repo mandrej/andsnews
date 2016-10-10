@@ -38,18 +38,6 @@
         </style>
 
         <iron-ajax auto
-			url="[[_url(view, kind, field, value, isAuthorized)]]"
-			handle-as="json"
-			last-response="{{obj}}"
-			debounce-duration="100"></iron-ajax>
-
-        <iron-ajax auto
-			url="[[_urlLensCloud(view, kind, field)]]"
-			handle-as="json"
-			last-response="{{lens_cloud}}"
-			debounce-duration="100"></iron-ajax>
-
-        <iron-ajax auto
 			url="[[_urlTagsCloud(view, kind, field)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
@@ -96,60 +84,6 @@
                     </form>
                 </template>
             </template>
-
-            <template is="dom-if" if="[[!_isAdd(field)]]">
-                <form is="iron-form" id="form"
-                    on-iron-form-presubmit="_preSubmit"
-                    on-iron-form-response="_responseHandler"
-                    method="post"
-                    action$="/api/[[kind]]/edit/[[value]]">
-                    <div class="layout horizontal end-justified">
-                        <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-                    </div>
-
-                    <paper-input name="headline" required label="headline" value="{{obj.headline}}"></paper-input>
-                    <vaadin-combo-box
-                        required
-                        auto-validate
-                        name="author"
-                        label="author"
-                        allow-custom-value="true"
-                        items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                        value="{{obj.author}}"></vaadin-combo-box>
-                    <paper-select
-                        name="tags"
-                        label="tags"
-                        on-input-changed="inputChanged"
-                        on-adding-item="addItem"
-                        bind-value="{{obj.tags}}"
-                        multiple unique nonmatching select-on-blur></paper-select>
-                    <paper-input name="date" label="date" value="{{obj.date}}"></paper-input>
-
-                    <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                        <paper-input name="model" label="model" value="{{obj.model}}"></paper-input>
-                        <div class="layout horizontal justified wrap">
-                            <vaadin-combo-box
-                                name="lens"
-                                label="lens"
-                                allow-custom-value="true"
-                                items="{{lens_cloud}}"
-                                value="{{obj.lens}}"></vaadin-combo-box>
-                            <paper-input name="focal_length" label="focal_length [mm]" value="{{obj.focal_length}}"></paper-input>
-                            <paper-input name="iso" label="iso [ASA]" value="{{obj.iso}}"></paper-input>
-                            <paper-input name="aperture" label="aperture" value="{{obj.aperture}}"></paper-input>
-                            <paper-input name="shutter" label="shutter [s]" value="{{obj.shutter}}"></paper-input>
-                            <input type="hidden" name="color" value="{{obj.color}}">
-                            <paper-input disabled label="color" value="{{obj.color}}"></paper-input>
-                        </div>
-                    </template>
-
-                    <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-                        <paper-textarea name="summary" label="summary" value="{{obj.summary}}"></paper-textarea>
-                        <paper-textarea name="front_img" label="front image" value="{{obj.front_img}}"></paper-textarea>
-                        <paper-textarea name="body" label="body" value="{{obj.body}}"></paper-textarea>
-                    </template>
-                </form>
-            </template>
         </div>
     </template>
     <script>
@@ -190,24 +124,11 @@
                 field: { type: String, value: null, notify: true },
                 value: { type: String, value: null, notify: true },
             },
-            _url: function(view, kind, field, value, isAuthorized) {
-                if (view != 'form') return;
-                if (!isAuthorized) return;
-                if (field == 'edit') {
-                    return ['/api', kind, field, value].join('/');
-                }
-            },
             _urlTagsCloud: function(view, kind, field) {
                 if (view == 'form' && kind == 'photo' && field == 'edit') {
                     return '/api/suggest/Photo_tags';
                 } else if (view == 'form' && kind == 'entry') {
                     return '/api/suggest/Entry_tags';
-                }
-                return;
-            },
-            _urlLensCloud: function(view, kind, field) {
-                if (view == 'form' && kind == 'photo' && field == 'edit') {
-                    return '/api/suggest/Photo_lens';
                 }
                 return;
             },
@@ -237,11 +158,11 @@
                 }
             },
             _preSubmit: function() {
-                var form = this.$$('#form');
+                var form = this.$.form;
                 form.request.method = 'put'; // PUT SENDS URL PARAMETERS!
             },
             _submit: function(e) {
-                var form = this.$$('#form');
+                var form = this.$.form;
                 // var json = form.serialize();
                 // console.log(json);
                 form.submit();
@@ -259,9 +180,6 @@
             addItem: function(e) {
                 var input = (e.detail.value || '').trim();
                 e.detail.value = input;
-            },
-            capitalize: function(string) {
-                return string[0].toUpperCase() + string.slice(1);
             },
         });
     </script>

@@ -46,7 +46,10 @@
             fallback-selection="0"
             threshold="0.1">
             <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
-                <item-view item="{{item}}" route="{{route}}"></item-view>
+                <item-view
+                    item="{{item}}"
+                    is-authorized="{{isAuthorized}}"
+                    route="{{route}}"></item-view>
             </template>
         </iron-swipeable-pages>
     </template>
@@ -135,14 +138,13 @@
             //     }
             // },
             _editRecord: function() {
-                var index = this.$.swipe.selected,
-                    obj = this.records[index];
-                this.animationConfig['exit'] = {
-                    name: 'hero-animation',
-                    id: 'hero',
-                    fromPage: this
-                };
-                this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
+                this.$$('item-view.iron-selected').view = 'form';
+                // this.animationConfig['exit'] = {
+                //     name: 'hero-animation',
+                //     id: 'hero',
+                //     fromPage: this
+                // };
+                // this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
             },
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,

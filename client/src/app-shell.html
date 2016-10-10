@@ -25,7 +25,7 @@
 <link rel="import" href="grid-view.html">
 <link rel="import" href="detail-view.html">
 <link rel="import" href="admin-shell.html">
-<!-- <link rel="import" href="form-view.html"> -->
+<link rel="import" href="form-view.html">
 
 <dom-module id="app-shell">
 	<template>
@@ -249,6 +249,7 @@
 
 						<detail-view
 							data-view="detail"
+							is-authorized="{{isAuthorized}}"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
@@ -258,14 +259,14 @@
 							headline="{{headline}}"
 							route="{{route}}"></detail-view>
 
-						<!-- <form-view
+						<form-view
 							data-view="form"
 							is-authorized="{{isAuthorized}}"
 							view="[[dataView.view]]"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
-							route="{{route}}"></form-view> -->
+							route="{{route}}"></form-view>
 					</neon-animated-pages>
 				</main>
 			</app-header-layout>
