@@ -144,11 +144,11 @@
                 return kind == 'photo';
             },
             applyFilter: function(e) {
+                // photo
                 var target = e.target;
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
-
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
@@ -158,12 +158,11 @@
                 this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
 			},
             showDetail: function(e) {
-                // SPECIFIC
+                // entry
                 var target = e.target;
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
-
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
