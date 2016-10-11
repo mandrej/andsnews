@@ -49,6 +49,7 @@
             <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
                 <item-view
                     item="{{item}}"
+                    is-admin="{{isAdmin}}"
                     is-authorized="{{isAuthorized}}"
                     route="{{route}}"></item-view>
             </template>
@@ -128,14 +129,15 @@
                     this.set('params.page', ajax.lastResponse.next);
                 }
             },
-            ironSelect: function(e) {
+            ironSelect: function() {
                 this.debounce('ironSelect', function() {
                     var index = this.$.swipe.selected,
-                    item = this.records[index];
-                    // item = e.detail.item._templateInstance.item;
-                    this.set('headline', item.headline);
-                    this.set('itemKind', item.kind);
-                    if (this.records.length - index < 3) {
+                        item = this.records[index];
+                    if (item) {
+                        this.set('headline', item.headline);
+                        this.set('itemKind', item.kind);
+                    }
+                    if (this.records.length - index < 5) {
                         this.loadMore();
                     }
                 }, 100);

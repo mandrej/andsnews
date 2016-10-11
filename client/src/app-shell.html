@@ -217,7 +217,7 @@
 
 							<div hidden$="[[!_isDetailView(dataView.view)]]">
 								<span hidden$="[[!isAdmin]]">
-									<paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button>
+									<!-- <paper-icon-button icon="clear" on-tap="confirmDelete"></paper-icon-button> -->
 									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
 								</span>
 								<span hidden$="[[!_isKindPhoto(itemKind)]]">
@@ -250,6 +250,7 @@
 						<detail-view
 							data-view="detail"
 							is-authorized="{{isAuthorized}}"
+							is-admin="{{isAdmin}}"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
@@ -285,11 +286,14 @@
 					this.set('route.path', '/grid/photo');
 				}
 			},
+			listeners: {
+				'confirm-delete': 'confirmDelete'
+			},
 			observers: [
 				'viewChanged(dataView.view)'
 			],
 			properties: {
-				version: { type: String, value: '161008'},
+				version: { type: String, value: '161011'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				isAuthorized: { type: Boolean, value: false, notify: true },

@@ -81,15 +81,14 @@
             on-iron-overlay-closed="changeView"></paper-toast>
 
         <neon-animated-pages selected="[[view]]" attr-for-selected="data-view"
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+            entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <div data-view="display" class="swipe">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
                     <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
-                        style="background-color: #fff"
-                        sizing="cover"
-                        preload fade></iron-image>
+                        placeholder="[[item.serving_url]]=s50"
+                        sizing="cover" preload fade></iron-image>
                     <paper-dialog entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                         <h2>[[item.headline]]</h2>
                         <p>
@@ -122,9 +121,15 @@
                 on-iron-form-response="_responseHandler"
                 action$="/api/[[item.kind]]/edit/[[item.safekey]]"
                 method="post">
-                <div class="layout horizontal end-justified">
-                    <paper-button on-tap="_cancel" raised>Cancel</paper-button>
-                    <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+
+                <div class="layout horizontal justified">
+                    <template is="dom-if" if="{{isAdmin}}">
+                        <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+                    </template>
+                    <div>
+                        <paper-button on-tap="_cancel" raised>Cancel</paper-button>
+                        <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+                    </div>
                 </div>
 
                 <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
@@ -176,6 +181,7 @@
             is: 'item-view',
             properties: {
                 item: { type: Object, notify: true },
+                isAdmin: { type: Boolean, value: false, notify: true },
                 isAuthorized: { type: Boolean, value: false, notify: true },
                 view: { type: String, value: 'display', notify: true },
             },
@@ -195,10 +201,6 @@
                 if (view == 'form' && item.kind == 'photo') {
                     return '/api/suggest/Photo_lens';
                 }
-            },
-            headlineChanged: function(headline) {
-                console.log(headline);
-                this.headline = headline;
             },
             _responseHandler: function(e) {
                 var toast = this.$.toast;
@@ -224,6 +226,9 @@
             _cancel: function(e) {
                 this.view = 'display';
             },
+            _remove: function(e) {
+				Polymer.dom().querySelector('app-shell').fire('confirm-delete');
+			},
             inputChanged: function(e) {
                 var input = (e.detail.value || '').trim().toLowerCase();
                 if (input) {
