@@ -4,6 +4,7 @@ import re
 import colorsys
 import datetime
 import logging
+import base64
 import uuid
 from cStringIO import StringIO
 from decimal import *
@@ -456,6 +457,14 @@ class Photo(ndb.Model):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
+    # @webapp2.cached_property
+    @property
+    def thumb64(self):
+        im = Image.open(StringIO(self.buffer))
+        thumb = im.resize(map(int, [x * 0.02 for x in self.dim]), Image.NEAREST)
+        return base64.b64encode(thumb.tobytes())
+        # return thumb.tobytes().encode('base64')
+
     def add(self, fs):
         _buffer = fs.value
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
@@ -487,7 +496,7 @@ class Photo(ndb.Model):
             self.dim = image_from_buffer.size
 
             # Calculate Pallette
-            image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
+            image_from_buffer.thumbnail((100, 100), Image.NEAREST)
             palette = extract_colors(image_from_buffer)
             if palette.bgcolor:
                 colors = [palette.bgcolor] + palette.colors
@@ -583,7 +592,8 @@ class Photo(ndb.Model):
             'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
-            'serving_url': self.serving_url
+            'serving_url': self.serving_url,
+            'thumb64': self.thumb64
         })
         return data
 

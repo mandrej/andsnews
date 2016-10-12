@@ -84,11 +84,12 @@
             entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <div data-view="display" class="swipe">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                    <iron-image
+                    <img src="data:image/jpeg;base64,[[item.thumb64]]">
+                    <!-- <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
-                        placeholder="[[item.serving_url]]=s50"
-                        sizing="cover" preload fade></iron-image>
+                        placeholder="data:image/jpeg;base64,[[item.thumb64]]"
+                        sizing="cover" preload fade></iron-image> -->
                     <paper-dialog entry-animation="fade-in-animation" exit-animation="fade-out-animation">
                         <h2>[[item.headline]]</h2>
                         <p>
