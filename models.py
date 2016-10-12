@@ -211,6 +211,7 @@ def sorting_filters(kind, fields):
             items = sorted(items, key=itemgetter('name'), reverse=False)
         elif field == 'color':
             items = sorted(items, key=itemgetter('order'))
+            map(lambda d: d.pop('order'), items)
 
         data.append({
             'field_name': field,
