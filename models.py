@@ -496,7 +496,7 @@ class Photo(ndb.Model):
             self.dim = image_from_buffer.size
 
             # Calculate Pallette
-            image_from_buffer.thumbnail((100, 100), Image.NEAREST)
+            image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
             palette = extract_colors(image_from_buffer)
             if palette.bgcolor:
                 colors = [palette.bgcolor] + palette.colors
