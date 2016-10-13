@@ -457,13 +457,13 @@ class Photo(ndb.Model):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
-    # @webapp2.cached_property
-    @property
+    @webapp2.cached_property
     def thumb64(self):
+        _buffer = StringIO()
         im = Image.open(StringIO(self.buffer))
-        thumb = im.resize(map(int, [x * 0.02 for x in self.dim]), Image.NEAREST)
-        return base64.b64encode(thumb.tobytes())
-        # return thumb.tobytes().encode('base64')
+        im.thumbnail((50, 50), Image.ANTIALIAS)
+        im.save(_buffer, format=im.format)
+        return base64.b64encode(_buffer.getvalue())
 
     def add(self, fs):
         _buffer = fs.value
