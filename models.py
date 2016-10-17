@@ -461,7 +461,7 @@ class Photo(ndb.Model):
     def thumb64(self):
         _buffer = StringIO()
         im = Image.open(StringIO(self.buffer))
-        im.thumbnail((50, 50), Image.ANTIALIAS)
+        im.thumbnail((25, 25), Image.ANTIALIAS)
         im.save(_buffer, format=im.format)
         return base64.b64encode(_buffer.getvalue())
 
