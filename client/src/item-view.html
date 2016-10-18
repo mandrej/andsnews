@@ -32,8 +32,13 @@
                 cursor: default;
             }
             iron-image {
-                width: 100%;
-                height: 100%;
+                /*width: 100%;
+                height: 100%;*/
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
                 transition: all 0.3s ease-in-out;
             }
             paper-button {
@@ -253,14 +258,23 @@
                 }
             },
             _zoomPhoto: function() {
-                var img = Polymer.dom(this.root).querySelector('iron-image'),
+                var img = this.root.querySelector('iron-image'),
                     dim = JSON.parse(img.dataset.dim);
 
-                if (img.style.width != dim[0] + 'px') {
-                    img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
-                } else {
-                    img.style.cssText = 'width: 100%; height: 100%';
-                }
+                // var scale = Math.min(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
+                // if (img.style.transform) {
+                //     img.removeAttribute('style');
+                // } else {
+                //     img.style.transform = 'scale(' + scale + ')';
+                // }
+
+                // if (img.style.width != dim[0] + 'px') {
+                //     img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
+                // } else {
+                //     img.style.cssText = 'width: 100%; height: 100%';
+                // }
+
+                img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px; top: 50%; left: 50%; transform: translate(-50%, -50%)';
             },
             _downloadPhoto: function() {
                 window.location.href = '/api/download/' + this.item.safekey;
