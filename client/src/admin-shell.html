@@ -35,12 +35,13 @@
         </style>
 
         <iron-ajax auto
-            url="/api/info"
+            url="[[_url(view, isAdmin)]]"
             last-response="{{info}}"></iron-ajax>
 
         <iron-ajax id="rebuild_ajax"
             on-response="channelHandler"
             method="POST"></iron-ajax>
+
         <iron-ajax id="reindex_ajax"
             on-response="channelHandler"
             method="POST"></iron-ajax>
@@ -113,10 +114,17 @@
                         }
                     }
                 },
+                view: { type: String, value: '', notify: true },
+                isAdmin: { type: Boolean, value: false, notify: true },
                 info: { type: Object },
                 counters: {type: Array },
                 channels: { type: Object, value: {} },
                 jobs: {type: Array },
+            },
+            _url: function(view, isAdmin) {
+                if (view == 'maintenance' && isAdmin) {
+                    return '/api/info';
+                }
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;

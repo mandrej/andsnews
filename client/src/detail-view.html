@@ -28,7 +28,8 @@
         </style>
 
         <iron-ajax id="ajax"
-            auto url="{{_url(kind, field, value)}}"
+            auto
+            url="{{_url(kind, field, value)}}"
             params="{{params}}"
             handle-as="json"
             on-response="handler"

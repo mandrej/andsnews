@@ -235,11 +235,13 @@
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
 							data-view="maintenance"
+							view="[[dataView.view]]"
 							is-admin="{{isAdmin}}"
 							route="{{route}}"></admin-shell>
 
 						<grid-view
 							data-view="grid"
+							view="[[dataView.view]]"
 							kind="[[dataKind.kind]]"
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
@@ -261,8 +263,8 @@
 
 						<form-view
 							data-view="form"
-							is-authorized="{{isAuthorized}}"
 							view="[[dataView.view]]"
+							is-authorized="{{isAuthorized}}"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"

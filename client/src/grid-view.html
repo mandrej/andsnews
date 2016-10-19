@@ -47,7 +47,7 @@
         </style>
 
         <iron-ajax auto
-			url="[[_url(kind)]]"
+			url="[[_url(kind, view)]]"
 			handle-as="json"
             on-response="handler"
             loading="{{loading}}"></iron-ajax>
@@ -76,7 +76,7 @@
                 <div class="rec" on-tap="showDetail">
                     <iron-image src="[[rec.front_img]]"
                         placeholder="data:image/gif;base64,R0lGODlhAQABAPABAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                        preload fade sizing="cover"></iron-image>
+                        preload sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">
                             <span class="self-center">[[rec.headline]]</span>
@@ -110,23 +110,25 @@
                         }
                     }
                 },
+                view: { type: String, value: '', notify: true },
                 kind: { type: String, value: null, notify: true, },
                 field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 items: { type: Array, value: [], notify: true },
                 loading: { type: Boolean, value: false, notify: true },
             },
-            _url: function(kind) {
-                // clear previous filter
-                this.field = null;
-                this.value = null;
-                this.items = [];
-                if (kind == 'photo') {
-                    return ['/api/filter', kind].join('/');
-                } else if (kind == 'entry') {
-                    return ['/api', kind].join('/');
+            _url: function(kind, view) {
+                if (view == 'grid') {
+                    // clear previous filter
+                    this.field = null;
+                    this.value = null;
+                    this.items = [];
+                    if (kind == 'photo') {
+                        return ['/api/filter', kind].join('/');
+                    } else if (kind == 'entry') {
+                        return ['/api', kind].join('/');
+                    }
                 }
-                return;
 			},
             handler: function(request) {
 				var response = request.detail.response,
