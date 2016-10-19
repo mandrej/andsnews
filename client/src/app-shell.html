@@ -311,38 +311,28 @@
 				disableSwipe: { type: Boolean, value: false, notify: true },
 			},
 			viewChanged: function(view) {
-				this.debounce('viewChanged', function() {
-					// do once after debounce
-					switch (view) {
-						case 'grid':
-							this.set('dataField.field', null);
-							this.set('dataValue.value', null);
-							this.async(function() {
-								this.headline = 'ANDрејевићи';
-							});
-							break;
-						case 'form':
-							if (!this.isAuthorized) {
-								this.$.authorizationDialog.open();
-							}
-							this.async(function() {
-								this.headline = 'Form';
-							});
-							break;
-						case 'maintenance':
-							if (!this.isAdmin) {
-								this.$.administrationDialog.open();
-							}
-							this.set('dataKind.kind', null);
-							this.set('dataField.field', null);
-							this.set('dataValue.value', null);
-							this.async(function() {
-								this.headline = 'Admin v.' + this.version;
-							});
-							break;
-					}
-				}, 100);
-			// do on every change
+				switch (view) {
+					case 'grid':
+						this.set('dataField.field', null);
+						this.set('dataValue.value', null);
+						this.headline = 'ANDрејевићи';
+						break;
+					case 'form':
+						if (!this.isAuthorized) {
+							this.$.authorizationDialog.open();
+						}
+						this.headline = 'Form';
+						break;
+					case 'maintenance':
+						if (!this.isAdmin) {
+							this.$.administrationDialog.open();
+						}
+						this.set('dataKind.kind', null);
+						this.set('dataField.field', null);
+						this.set('dataValue.value', null);
+						this.headline = 'Admin v.' + this.version;
+						break;
+				}
 			},
 			_canAddRecord: function(view, loggedin) {
 				return view == 'grid' && loggedin;

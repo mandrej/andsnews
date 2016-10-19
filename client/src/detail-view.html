@@ -134,17 +134,15 @@
                 }
             },
             ironSelect: function() {
-                this.debounce('ironSelect', function() {
-                    var index = this.$.swipe.selected,
-                        item = this.records[index];
-                    if (item) {
-                        this.set('headline', item.headline);
-                        this.set('itemKind', item.kind);
-                    }
-                    if (this.records.length - index < 5) {
-                        this.loadMore();
-                    }
-                }, 100);
+                var index = this.$.swipe.selected,
+                    item = this.records[index];
+                if (item) {
+                    this.set('headline', item.headline);
+                    this.set('itemKind', item.kind);
+                }
+                if (this.records.length - index < 5) {
+                    this.loadMore();
+                }
             },
             _editRecord: function() {
                 Polymer.dom().querySelector('app-shell').disableSwipe = true;
