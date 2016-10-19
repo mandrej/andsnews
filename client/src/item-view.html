@@ -75,7 +75,7 @@
 
         <paper-toast id="toast"
             horizontal-align="right"
-            on-iron-overlay-closed="changeView"></paper-toast>
+            on-iron-overlay-closed="_viewDisplay"></paper-toast>
 
         <neon-animated-pages selected="[[view]]" attr-for-selected="data-view"
             entry-animation="fade-in-animation" exit-animation="fade-out-animation">
@@ -124,7 +124,7 @@
                         <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
                     </template>
                     <div>
-                        <paper-button on-tap="_cancel" raised>Cancel</paper-button>
+                        <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
                         <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
                     </div>
                 </div>
@@ -206,7 +206,8 @@
                     toast.open();
                 }
             },
-            changeView: function() {
+            _viewDisplay: function() {
+                Polymer.dom().querySelector('app-shell').disableSwipe = false;
                 this.view = 'display';
             },
             _preSubmit: function() {
@@ -219,9 +220,6 @@
                 // var json = form.serialize();
                 // console.log(json);
                 form.submit();
-            },
-            _cancel: function(e) {
-                this.view = 'display';
             },
             _remove: function(e) {
 				Polymer.dom().querySelector('app-shell').fire('confirm-delete');
@@ -247,7 +245,7 @@
                 return item.kind == 'photo';
             },
             _showExif: function() {
-                var dialog = Polymer.dom(this.root).querySelector('paper-dialog');
+                var dialog = this.root.querySelector('paper-dialog');
                 if (dialog) {
                     dialog.open();
                 }
@@ -264,8 +262,10 @@
                 // }
 
                 if (img.style.width != dim[0] + 'px') {
+                    Polymer.dom().querySelector('app-shell').disableSwipe = true;
                     img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
                 } else {
+                    Polymer.dom().querySelector('app-shell').disableSwipe = false;
                     img.style.cssText = 'width: 100%; height: 100%';
                 }
             },

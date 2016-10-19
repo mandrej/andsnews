@@ -174,7 +174,7 @@
                 this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
-                var nodes = Polymer.dom(this.shadowRoot).querySelectorAll('.rec')
+                var nodes = this.root.querySelectorAll('.rec')
                 this.animationConfig['entry'][0].nodes = nodes;
                 this.animationConfig['entry'][1].nodes = nodes;
                 this.playAnimation('entry');

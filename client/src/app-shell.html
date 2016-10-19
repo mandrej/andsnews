@@ -252,6 +252,7 @@
 							data-view="detail"
 							is-authorized="{{isAuthorized}}"
 							is-admin="{{isAdmin}}"
+							disable-swipe="{{disableSwipe}}"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
@@ -307,6 +308,7 @@
 				loading: { type: Boolean, value: false, notify: true },
 				records: { type: Array, value: [], notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
+				disableSwipe: { type: Boolean, value: false, notify: true },
 			},
 			viewChanged: function(view) {
 				this.debounce('viewChanged', function() {
