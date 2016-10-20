@@ -23,9 +23,6 @@
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./app-search.html">
 <link rel="import" href="./grid-view.html">
-<link rel="import" href="./detail-view.html">
-<link rel="import" href="./admin-shell.html">
-<link rel="import" href="./form-view.html">
 
 <dom-module id="app-shell">
 	<template>
@@ -292,7 +289,7 @@
 				'confirm-delete': 'confirmDelete'
 			},
 			observers: [
-				'viewChanged(dataView.view)'
+				'viewChanged(dataView.view, isAuthorized, isAdmin)'
 			],
 			properties: {
 				version: { type: String, value: '161017'},
@@ -310,29 +307,38 @@
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
 			},
-			viewChanged: function(view) {
-				switch (view) {
-					case 'grid':
-						this.set('dataField.field', null);
-						this.set('dataValue.value', null);
-						this.headline = 'ANDрејевићи';
-						break;
-					case 'form':
-						if (!this.isAuthorized) {
-							this.$.authorizationDialog.open();
-						}
-						this.headline = 'Form';
-						break;
-					case 'maintenance':
-						if (!this.isAdmin) {
-							this.$.administrationDialog.open();
-						}
-						this.set('dataKind.kind', null);
-						this.set('dataField.field', null);
-						this.set('dataValue.value', null);
-						this.headline = 'Admin v.' + this.version;
-						break;
-				}
+			viewChanged: function(view, isAuthorized, isAdmin) {
+				this.debounce('viewChanged', function() {
+					switch (view) {
+						case 'grid':
+							this.set('dataField.field', null);
+							this.set('dataValue.value', null);
+							this.headline = 'ANDрејевићи';
+							break;
+						case 'detail':
+							Polymer.Base.importHref('src/detail-view.html');
+							break;
+						case 'form':
+							this.headline = 'Form';
+
+							var dialog = this.$.authorizationDialog;
+							Polymer.Base.importHref('src/form-view.html', function() {
+								if (!isAuthorized) dialog.open();
+							});
+							break;
+						case 'maintenance':
+							this.set('dataKind.kind', null);
+							this.set('dataField.field', null);
+							this.set('dataValue.value', null);
+							this.headline = 'Admin v.' + this.version;
+
+							var dialog = this.$.administrationDialog;
+							Polymer.Base.importHref('src/admin-shell.html', function() {
+								if (!isAdmin) dialog.open();
+							});
+							break;
+					}
+				}, 100);
 			},
 			_canAddRecord: function(view, loggedin) {
 				return view == 'grid' && loggedin;
