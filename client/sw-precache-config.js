@@ -11,8 +11,8 @@ module.exports = {
         handler: 'fastest',
         options: {
             cache: {
-                maxEntries: 50,
-                maxAgeSeconds: 10 * 60,
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60,
                 name: 'data-cache'
             }
         }
