@@ -10,7 +10,6 @@
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -26,9 +25,7 @@
 
 <dom-module id="app-shell">
 	<template>
-		<style is="custom-style" include="shared-styles"></style>
-		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
-		<style>
+		<style include="shared-styles iron-flex iron-flex-alignment">
 			app-header {
 				background-image: url(../images/md.jpg);
     			background-position: top center;
