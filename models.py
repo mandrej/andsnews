@@ -459,6 +459,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def thumb64(self):
+        # too slow
         _buffer = StringIO()
         im = Image.open(StringIO(self.buffer))
         im.thumbnail((25, 25), Image.ANTIALIAS)
@@ -593,7 +594,7 @@ class Photo(ndb.Model):
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
-            'thumb64': self.thumb64
+            # 'thumb64': self.thumb64
         })
         return data
 

@@ -55,7 +55,7 @@
                     <div class="rec"
                         data-field$="[[row.field_name]]" on-tap="applyFilter">
                         <iron-image src="[[rec.repr_url]]=s400"
-                            placeholder="data:image/gif;base64,R0lGODlhAQABAPABAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            style="background-color: #fff"
                             preload fade sizing="cover"></iron-image>
                         <div class="title">
                             <div class="layout horizontal justified">
@@ -72,8 +72,8 @@
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
                     <iron-image src="[[rec.front_img]]"
-                        placeholder="data:image/gif;base64,R0lGODlhAQABAPABAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                        preload sizing="cover"></iron-image>
+                        style="background-color: #000"
+                        preload fade sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">
                             <span class="self-center">[[rec.headline]]</span>
@@ -148,13 +148,13 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
+                this.sharedElements = { 'hero': target.querySelector('iron-image') };
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
                     fromPage: this
                 };
-                this.sharedElements = { 'hero': target.querySelector('iron-image') };
-                this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
+                 this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
 			},
             showDetail: function(e) {
                 // entry
@@ -162,12 +162,12 @@
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
+                this.sharedElements = { 'hero': target };
                 this.animationConfig['exit'] = {
                     name: 'hero-animation',
                     id: 'hero',
                     fromPage: this
                 };
-                this.sharedElements = { 'hero': target };
                 this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
