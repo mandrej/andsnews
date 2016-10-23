@@ -16,4 +16,8 @@
 ### Deployment instructions ###
 
 * Create application on [Google Developers Console](https://console.developers.google.com/project)
+* Switch to /client
+* $> bower update
+* $> polymer build
+* Replace client -> client/build/unbundled in app.yaml
 * Deploy on Google infrastructure

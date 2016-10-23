@@ -1,16 +1,12 @@
 application: andsnews
-version: 1602
+version: 1610
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: 7d
+default_expiration: "0s"
 
 libraries:
 - name: PIL
-  version: latest
-- name: jinja2
-  version: latest
-- name: markupsafe
   version: latest
 - name: webapp2
   version: latest
@@ -19,61 +15,55 @@ libraries:
 - name: numpy
   version: latest
 
+# client -> client/build/unbundled
+
 handlers:
+- url: /favicon.ico
+  static_files: client/favicon.ico
+  upload: client/favicon.ico
+  secure: always
+
 - url: /robots\.txt
-  static_files: robots.txt
-  upload: robots.txt
+  static_files: client/robots.txt
+  upload: client/robots.txt
+  secure: always
 
-- url: /favicon\.ico
-  static_files: static/images/favicon.ico
-  upload: static/images/favicon.ico
-  mime_type: image/x-icon
+- url: /bower_components/
+  static_dir: client/bower_components
+  secure: always
 
-- url: /static/(.*\.(less|scss))$
-  static_files: static/\1
-  upload: static/.*\.(less|scss)$
-  mime_type: text/css
+- url: /src/
+  static_dir: client/src
+  secure: always
 
-- url: /static/(.*\.map)$
-  static_files: static/\1
-  upload: static/.*\.map$
-  mime_type: application/json
+- url: /images/
+  static_dir: client/images
+  secure: always
 
-- url: /static/font/(.*\.ttf)$
-  static_files: static/font/\1
-  upload: static/font/.*\.ttf$
-  mime_type: font/ttf
-  expiration: 1000d
+- url: /service-worker\.js
+  static_files: client/service-worker.js
+  upload: client/service-worker.js
+  secure: always
 
-- url: /static/font/(.*\.woff2)$
-  static_files: static/font/\1
-  upload: static/font/.*\.woff2$
-  mime_type: application/font-woff2
-  expiration: 1000d
+- url: /manifest\.json
+  static_files: client/manifest.json
+  upload: client/manifest.json
+  secure: always
 
-- url: /static/font/(.*\.eot)$
-  static_files: static/font/\1
-  upload: static/font/.*\.eot$
-  mime_type: application/vnd.ms-fontobject
-  expiration: 1000d
+- url: /api/.*
+  script: main.app
+  secure: always
 
-- url: /static
-  static_dir: static
+- url: /
+  static_files: client/index.html
+  upload: client/index.html
+  secure: always
 
-- url: /mapreduce(/.*)?
-  login: admin
-  script: mapreduce.main.APP
+####################################################
 
 - url: /tests/.*
   login: admin
   script: aeta.main.APP
-
-#- url: /stats.*
-#  script: google.appengine.ext.appstats.ui.app
-
-- url: /.*
-  script: main.app
-  secure: always
 
 inbound_services:
 - warmup
@@ -83,6 +73,6 @@ builtins:
 #- appstats: on
 #- remote_api: on
 
-skip_files:
-- ^(.*/)?.*\.py[co]$
-- ^(.*/)?\..*$
+#skip_files:
+#- ^(.*/)?.*\.py[co]$
+#- ^(.*/)?\..*$

@@ -1,0 +1,167 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
+
+<link rel="import" href="./shared-styles.html">
+
+<dom-module id="admin-shell">
+    <template>
+        <style include="shared-styles">
+            .container {
+                padding: 16px;
+            }
+            h1 {
+                margin-bottom: 0.5em;
+                font-weight: 300;
+            }
+            paper-toast {
+                --paper-toast-color: var(--primary-background-color);
+                --paper-toast-background-color: var(--primary-text-color);
+            }
+            paper-button {
+                width: 150px;
+                margin: 0 16px 16px 0;
+			}
+            paper-button[toggles][active] {
+                background: var(--secondary-text-color);
+            }
+        </style>
+
+        <iron-ajax auto
+            url="[[_url(view, isAdmin)]]"
+            last-response="{{info}}"></iron-ajax>
+
+        <iron-ajax id="rebuild_ajax"
+            on-response="channelHandler"
+            method="POST"></iron-ajax>
+
+        <iron-ajax id="reindex_ajax"
+            on-response="channelHandler"
+            method="POST"></iron-ajax>
+            <iron-ajax id="fix_ajax"
+                on-response="channelHandler"
+                method="POST"></iron-ajax>
+
+        <div class="container" id="container">
+            <paper-toast id="toast" horizontal-align="right"></paper-toast>
+
+            <div hidden$="[[!isAdmin]]" class="layout horizontal justified wrap">
+                <div>
+                    <h1>Photo [[info.photo.count]]</h1>
+                    <div class="layout horizontal wrap">
+                        <template is="dom-repeat"
+                            items="[[info.photo.counters]]" as="item">
+                            <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+                        </template>
+                    </div>
+
+                    <paper-button on-tap="reindex" data-kind="photo" class="accent" toggles raised>Photo Reindex</paper-button>
+                    <paper-button disabled on-tap="fix" data-kind="photo" class="accent" toggles raised>Migration</paper-button>
+                </div>
+
+                <div>
+                    <h1>Entry [[info.entry.count]]</h1>
+                    <div class="layout horizontal wrap">
+                        <template is="dom-repeat"
+                            items="[[info.entry.counters]]" as="item">
+                            <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+                        </template>
+                    </div>
+
+                    <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'admin-shell',
+            behaviors: [
+                Polymer.NeonAnimatableBehavior,
+                Polymer.NeonSharedElementAnimatableBehavior
+            ],
+            properties: {
+                sharedElements: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'hero': this.$.container,
+                        }
+                    }
+                },
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                toPage: this
+                            }],
+                            'exit': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                fromPage: this
+                            }]
+                        }
+                    }
+                },
+                view: { type: String, value: '', notify: true },
+                isAdmin: { type: Boolean, value: false, notify: true },
+                info: { type: Object },
+                counters: {type: Array },
+                channels: { type: Object, value: {} },
+                jobs: {type: Array },
+            },
+            _url: function(view, isAdmin) {
+                if (view == 'maintenance' && isAdmin) {
+                    return '/api/info';
+                }
+            },
+            channelHandler: function(req) {
+                var resp = req.detail.response;
+                if (!('goog' in window)) return;
+                if (!(resp.token in this.channels)) {
+                    // {token: socket, token: socket}
+                    var channel = new goog.appengine.Channel(resp.token);
+                    this.channels[resp.token] = channel.open();
+                    this.channels[resp.token].onmessage = function(e) {
+                        return this.onMessage(e, resp.token);
+                    }.bind(this);
+                }
+			},
+            onMessage: function (e, token) {
+                var resp = JSON.parse(e.data),
+                    toast = this.$.toast;
+
+                toast.setAttribute('text', resp.message);
+                toast.style.backgroundColor = '#212121';
+                if (!toast.opened) toast.open();
+                if (resp.message == 'END') {
+                    toast.style.backgroundColor = '#dc2128';
+                    this.channels[token].readyState = 3; // close socket
+                    // this.channels[token].close(); // close socket
+                    delete this.channels[token];
+                }
+            },
+            rebuild: function(e) {
+                this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
+                this.$.rebuild_ajax.generateRequest();
+            },
+            reindex: function(e) {
+                this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
+                this.$.reindex_ajax.generateRequest();
+            },
+            fix: function(e) {
+                this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
+                this.$.fix_ajax.generateRequest();
+            },
+        });
+    </script>
+</dom-module>

@@ -3,6 +3,10 @@ queue:
   rate: 5/s
   bucket_size: 5
 
+- name: background
+  rate: 10/m
+  bucket_size: 5
+
 - name: errors
   rate: 1/m
   bucket_size: 1

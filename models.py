@@ -1,38 +1,34 @@
 from __future__ import division
 
 import re
-import cgi
-import collections
 import colorsys
 import datetime
-import itertools
 import logging
-import math
+import base64
 import uuid
 from cStringIO import StringIO
 from decimal import *
 
 import webapp2
 from PIL import Image
-from google.appengine.api import users, memcache, search, images
+from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.runtime import apiproxy_errors
-from webapp2_extras.i18n import lazy_gettext as _
 
 import cloudstorage as gcs
-from config import COLORS, ASA, LENGTHS, HUE, LUM, SAT, TIMEOUT, BUCKET
+from operator import itemgetter
+from config import COLORS, ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
+from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
+TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
-        'Photo_model', 'Photo_lens', 'Photo_eqv', 'Photo_iso', 'Photo_color',
-        'Entry_tags', 'Entry_author', 'Entry_date']
-PHOTO_FIELDS = ('model', 'lens', 'eqv', 'iso', 'color',)
-ENTRY_IMAGES = 20
-LOGARITHMIC, LINEAR = 1, 2
+PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
+PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
+PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
+ENTRY_COUNTER_FIELDS = ('date', 'tags', 'author')
 
 
 def rounding(val, values):
@@ -47,8 +43,7 @@ def filter_param(field, value):
     if field == 'date':
         field = 'year'
     elif field == 'author':
-        # TODO Not all emails are gmail
-        value = users.User(email='%s@gmail.com' % value)
+        value = users.User(email=value)
     try:
         value = int(value)
     except (ValueError, TypeError):
@@ -132,10 +127,6 @@ def get_exif(buff):
         getcontext().prec = 2
         data['focal_length'] = float(Decimal(eval(tags['EXIF FocalLength'].printable)))
 
-    if all(tag in tags for tag in ['EXIF FocalLengthIn35mmFilm', 'EXIF FocalLength']):
-        data['crop_factor'] = round(
-            float(Decimal(tags['EXIF FocalLengthIn35mmFilm'].printable)) / data['focal_length'], 1)
-
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
         value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
@@ -187,74 +178,79 @@ def remove_doc(safe_key):
     INDEX.delete(safe_key)
 
 
-# def _calculate_thresholds(min_weight, max_weight, steps):
-#     delta = (max_weight - min_weight) / steps
-#     return [min_weight + i * delta for i in range(1, steps + 1)]
-#
-#
-# def _calculate_tag_weight(weight, max_weight, distribution):
-#     if distribution == LINEAR or max_weight == 1:
-#         return weight
-#     elif distribution == LOGARITHMIC:
-#         return math.log(weight) * max_weight / math.log(max_weight)
-#     raise ValueError('Invalid distribution algorithm specified: %s.' % distribution)
-#
-#
-# def calculate_cloud(tags, steps=8, distribution=LOGARITHMIC):
-#     """
-#     tags:  {u'mihailo': 2L, u'urban': 2L, u'belgrade': 3L, u'macro': 5L, ...}
-#     return [{'count': 2L, 'name': u'mihailo', 'size': 1},
-#             {'count': 5L, 'name': u'macro', 'size': 7}, ...]
-#     """
-#     data = []
-#     if len(tags) > 0:
-#         counts = tags.values()
-#         min_weight = float(min(counts))
-#         max_weight = float(max(counts)) + 0.0000001
-#         thresholds = _calculate_thresholds(min_weight, max_weight, steps)
-#         for key, val in tags.items():
-#             font_set = False
-#             tag_weight = _calculate_tag_weight(val, max_weight, distribution)
-#             for i in range(steps):
-#                 if not font_set and tag_weight <= thresholds[i]:
-#                     data.append({'name': key, 'count': val, 'size': i + 1})
-#                     font_set = True
-#                     break
-#     return data
+def cloud_limit(items):
+    """
+    Returns limit for the specific count. Show only if count > limit
+    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
+    :return: int
+    """
+    _curr = 0
+    _sum5 = sum((x['count'] for x in items)) * 0.05
+    if _sum5 < 1:
+        return 0
+    else:
+        _on_count = sorted(items, key=itemgetter('count'))
+        for item in _on_count:
+            _curr += item['count']
+            if _curr >= _sum5:
+                return item['count']
+
+
+def sorting_filters(kind, fields):
+    data = []
+    for field in fields:
+        mem_key = kind.title() + '_' + field
+        cloud = Cloud(mem_key).get_list()
+        # [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
+
+        limit = cloud_limit(cloud)
+        items = [x for x in cloud if x['count'] > limit]
+
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        elif field in ('tags', 'author', 'model', 'lens', 'iso'):
+            items = sorted(items, key=itemgetter('name'), reverse=False)
+        elif field == 'color':
+            items = sorted(items, key=itemgetter('order'))
+            map(lambda d: d.pop('order'), items)
+
+        data.append({
+            'field_name': field,
+            'items': items
+        })
+
+    return data
 
 
 class Cloud(object):
     """ cache dictionary collections on unique values and it's counts
-        {u'mihailo': 5, u'milos': 1, u'iva': 8, u'belgrade': 2, u'urban': 1, u'macro': 1, u'wedding': 3, ...}
+        {'still life': {'count': 8, 'repr_url': '...'}, ...}
 
         get_list:
-        [{'count': 3, 'name': 'mihailo.genije'}, {'count': 11, 'name': 'milan.andrejevic'}, ...]
+        [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
     """
 
     def __init__(self, mem_key):
         self.mem_key = mem_key
         self.kind, self.field = mem_key.split('_', 1)
 
-    def set_cache(self, collection):
-        memcache.set(self.mem_key, collection, TIMEOUT * 2)
-
-    def get_cache(self):
-        return memcache.get(self.mem_key)
+    def get(self):
+        return self.make()
 
     def get_list(self):
-        collection = self.get_cache() or self.make()
-        # {'iva': 1, 'milan': 1, 'svetlana': 1, 'urban': 1, 'portrait': 2, 'djordje': 2, 'belgrade': 1}
+        collection = self.get()
+
         content = []
         if self.field == 'color':
-            for k, count in collection.items():
-                data = next((x for x in COLORS if x['name'] == k), None)
-                data.update({'count': count, 'field': self.field})
+            for k, d in collection.items():
+                data = next(({'name': x['name'], 'order': x['order']} for x in COLORS if x['name'] == k), None)
+                data.update({'count': d['count'], 'repr_url': d['repr_url']})
                 content.append(data)
         else:
-            # content = calculate_cloud(collection)
-            for k, v in collection.items():
-                data = {'name': k, 'count': v}
+            for k, d in collection.items():
+                data = {'name': k, 'count': d['count'], 'repr_url': d['repr_url']}
                 content.append(data)
+
         return content
 
     def make(self):
@@ -262,109 +258,62 @@ class Cloud(object):
         query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
         for counter in query:
             if counter.count > 0:
-                collection[counter.value] = counter.count
-        self.set_cache(collection)
-        return collection
-
-    @ndb.toplevel
-    def update(self, key, delta):
-        collection = self.get_cache()
-        if collection is not None:
-            if key in collection:
-                collection[key] += delta
-            else:
-                collection[key] = delta
-            if collection[key] > 0:
-                self.set_cache(collection)
-            else:
-                entity_key = ndb.Key('Counter', '%s||%s||%s' % (self.kind, self.field, key))
-                entity_key.delete_async()
-                del collection[key]
-
-    @ndb.toplevel
-    def rebuild(self):
-        prop = self.field
-        if self.field == 'date':
-            prop = 'year'
-        model = ndb.Model._kind_map.get(self.kind)  # TODO REMEMBER THIS
-        query = model.query()
-        properties = (getattr(x, prop, None) for x in query)  # generator
-        if prop == 'tags':
-            properties = list(itertools.chain(*properties))
-        elif prop == 'author':
-            properties = [x.nickname() for x in properties]
-        tally = collections.Counter(filter(None, properties))  # filter out None
-
-        collection = dict(tally.items())
-        self.set_cache(collection)
-
-        # repair counters async with toplevel
-        for value, count in collection.items():
-            key_name = '%s||%s||%s' % (self.kind, self.field, value)
-            params = dict(zip(('forkind', 'field', 'value'), [self.kind, self.field, value]))
-            obj = Counter.get_or_insert(key_name, **params)
-            if obj.count != count:
-                obj.count = count
-                obj.put_async()
-
+                collection[counter.value] = {'count': counter.count, 'repr_url': counter.repr_url}
+        # {'still life': {'count': 8, 'repr_url': '...'}, ...}
         return collection
 
 
-class Graph(object):
-    def __init__(self, field):
-        self.field = field
-        self.mem_key = '%s_graph' % field
-
-    def get_json(self):
-        collection = memcache.get(self.mem_key)
-        if collection is None:
-            query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
-                                                               'katarina', 'iva', 'masa', 'djordje']))
-            res = [x.tags for x in query]
-            flat = reduce(lambda x, y: x + y, res)
-
-            tally = {}
-            for name in flat:
-                if name in tally:
-                    tally[name] += 1
-                else:
-                    tally[name] = 1
-
-            i = 0
-            nodes = []
-            items = {}
-            for name, count in tally.items():
-                items[name] = i
-                nodes.append({'name': name, 'index': i, 'count': count})
-                i += 1
-
-            links = []
-            pairs = itertools.combinations(items.keys(), 2)
-            for x, y in pairs:
-                i = 0
-                for tags in res:
-                    intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
-                    i += intersection == {x, y}
-                if i > 0:
-                    links.append({'source': items[x], 'target': items[y], 'value': i})
-
-            collection = {'nodes': nodes, 'links': links}
-            memcache.set(self.mem_key, collection, TIMEOUT * 12)
-
-        return collection
+# class Graph(object):
+#     def __init__(self, field):
+#         self.field = field
+#         self.mem_key = '%s_graph' % field
+#
+#     def get_json(self):
+#         collection = memcache.get(self.mem_key)
+#         if collection is None:
+#             query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
+#                                                                'katarina', 'iva', 'masa', 'djordje']))
+#             res = [x.tags for x in query]
+#             flat = reduce(lambda x, y: x + y, res)
+#
+#             tally = {}
+#             for name in flat:
+#                 if name in tally:
+#                     tally[name] += 1
+#                 else:
+#                     tally[name] = 1
+#
+#             i = 0
+#             nodes = []
+#             items = {}
+#             for name, count in tally.items():
+#                 items[name] = i
+#                 nodes.append({'name': name, 'index': i, 'count': count})
+#                 i += 1
+#
+#             links = []
+#             pairs = itertools.combinations(items.keys(), 2)
+#             for x, y in pairs:
+#                 i = 0
+#                 for tags in res:
+#                     intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
+#                     i += intersection == {x, y}
+#                 if i > 0:
+#                     links.append({'source': items[x], 'target': items[y], 'value': i})
+#
+#             collection = {'nodes': nodes, 'links': links}
+#             memcache.set(self.mem_key, collection, TIMEOUT * 12)
+#
+#         return collection
 
 
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.GenericProperty(required=True)  # could be int as str
+    value = ndb.GenericProperty(required=True)  # stringify year StringProperty
     count = ndb.IntegerProperty(default=0)
-
-    @classmethod
-    def query_for(cls, field, value):
-        f = filter_param(field, value)
-        filters = [cls._properties[k] == v for k, v in f.items()]
-        return cls.query(*filters)
+    repr_stamp = ndb.DateTimeProperty()
+    repr_url = ndb.StringProperty()
 
 
 def update_counter(delta, args):
@@ -374,15 +323,34 @@ def update_counter(delta, args):
         logging.error(args)
     else:
         key_name = '%s||%s||%s' % args
-        params = dict(zip(('forkind', 'field', 'value'), args))
+        params = dict(zip(('forkind', 'field', 'value'), map(str, args)))  # stringify year
 
         obj = Counter.get_or_insert(key_name, **params)
         obj.count += delta
         obj.put()
 
-        mem_key = '{forkind}_{field}'.format(**params)
-        cloud = Cloud(mem_key)
-        cloud.update(params['value'], delta)
+
+@ndb.toplevel
+def update_representation(new_pairs, old_pairs):
+    # PHOTO ONLY
+    queries = []
+    key_names = []
+    params = []
+    for field, value in set(new_pairs) | set(old_pairs):  # union
+        queries.append(Photo.query_for(field, value))
+        args = ('Photo', field, str(value))  # stringify year
+        key_names.append('%s||%s||%s' % args)
+        params.append(dict(zip(('forkind', 'field', 'value'), args)))
+
+    for i, query in enumerate(queries):
+        latest = query.get()
+        counter = Counter.get_or_insert(key_names[i], **params[i])
+
+        if latest is not None and latest.date != counter.repr_stamp:
+            counter.repr_stamp = latest.date
+            counter.repr_url = latest.serving_url
+            counter.put_async()
+            logging.info('UPDATE %s %s' % (key_names[i], counter.count))
 
 
 def incr_count(*args):
@@ -393,20 +361,37 @@ def decr_count(*args):
     deferred.defer(update_counter, -1, args)
 
 
-def update_tags(kind, old, new):
-    old_tags = set(old or [])
-    new_tags = set(new or [])
-    if old_tags - new_tags:
-        for name in list(old_tags - new_tags):
-            decr_count(kind, 'tags', name)
-    if new_tags - old_tags:
-        for name in list(new_tags - old_tags):
-            incr_count(kind, 'tags', name)
+def update_counter_field(old, new, kind, field):
+    if field == 'tags':
+        old_tags = set(old or [])
+        new_tags = set(new or [])
+        if old_tags - new_tags:
+            for name in list(old_tags - new_tags):
+                decr_count(kind, field, name)
+        if new_tags - old_tags:
+            for name in list(new_tags - old_tags):
+                incr_count(kind, field, name)
+    else:
+        if old != new:
+            if old:
+                if field == 'author':
+                    decr_count(kind, field, old.email())
+                elif field == 'date':
+                    decr_count(kind, field, old.year)
+                else:
+                    decr_count(kind, field, old)
+            if new:
+                if field == 'author':
+                    incr_count(kind, field, new.email())
+                elif field == 'date':
+                    incr_count(kind, field, new.year)
+                else:
+                    incr_count(kind, field, new)
 
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
-    author = ndb.UserProperty(auto_current_user_add=True)
+    author = ndb.UserProperty()
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
     size = ndb.IntegerProperty()
@@ -420,9 +405,7 @@ class Photo(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
-    crop_factor = ndb.FloatProperty()
     # calculated
-    eqv = ndb.IntegerProperty()
     # RGB [86, 102, 102]
     rgb = ndb.IntegerProperty(repeated=True)
     # HLS names
@@ -433,39 +416,56 @@ class Photo(ndb.Model):
     dim = ndb.IntegerProperty(repeated=True)  # width, height
     filename = ndb.StringProperty()
 
-    ratio = ndb.ComputedProperty(
-        lambda self: self.dim[0] / self.dim[1] if self.dim and len(self.dim) == 2 else 1.5)
-
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
 
-    @property
-    def kind(self):
-        return self.key.kind()
+    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
 
     def index_doc(self):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                search.TextField(name='slug', value=tokenize(self.slug)),
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month),
-                search.TextField(name='model', value=self.model)]
+                search.NumberField(name='month', value=self.date.month)]
         )
         INDEX.put(doc)
+
+    def changed_pairs(self):
+        """
+        List of changed field, value pairs
+        [('date', '2016'), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
+        """
+        pairs = []
+        for field in PHOTO_FILTER_FIELDS:
+            prop = field
+            if field == 'date':
+                prop = 'year'
+            value = getattr(self, prop, None)
+            if value:
+                if isinstance(value, (list, tuple)):
+                    for v in value:
+                        pairs.append((field, str(v)))
+                else:
+                    pairs.append((field, str(value)))  # stringify year
+        return pairs
 
     @webapp2.cached_property
     def buffer(self):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
-    def add(self, data):
-        fs = data['photo']  # FieldStorage('photo', u'SDIM4151.jpg')
-        if fs.done < 0:
-            return {'success': False, 'message': _('Upload interrupted')}
+    @webapp2.cached_property
+    def thumb64(self):
+        _buffer = StringIO()
+        im = Image.open(StringIO(self.buffer))
+        im.thumbnail((25, 25), Image.ANTIALIAS)
+        im.save(_buffer, format=im.format)
+        return base64.b64encode(_buffer.getvalue())
 
+    def add(self, fs):
         _buffer = fs.value
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         # Check  GCS stat exist first
@@ -474,7 +474,6 @@ class Photo(ndb.Model):
             object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
-
         # Write to GCS
         try:
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)
@@ -484,14 +483,9 @@ class Photo(ndb.Model):
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
             self.filename = object_name
             self.size = f.tell()
-        except gcs.errors, e:
+        except gcs.errors as e:
             return {'success': False, 'message': e.message}
         else:
-            self.headline = data['headline']
-            # TODO Not all emails are gmail
-            self.author = users.User(email='%s@gmail.com' % data['author'])
-            self.tags = data['tags']
-
             # Read EXIF
             exif = get_exif(_buffer)
             for field, value in exif.items():
@@ -519,101 +513,64 @@ class Photo(ndb.Model):
             self.hue, self.lum, self.sat = range_names(self.rgb)
 
             # SAVE EVERYTHING
+            self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
+            self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 
-            incr_count(self.kind, 'author', self.author.nickname())
-            incr_count(self.kind, 'date', self.year)
-            update_tags(self.kind, None, self.tags)
-            for field in PHOTO_FIELDS:
+            for field in PHOTO_COUNTER_FIELDS:
                 value = getattr(self, field, None)
-                if value:
-                    incr_count(self.kind, field, value)
-            deferred.defer(self.index_doc)
-            return {'success': True}
+                update_counter_field(None, value, 'Photo', field)
+
+            new_pairs = self.changed_pairs()
+            deferred.defer(update_representation, new_pairs, [])
+            return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
-        old = self.author.nickname()
-        new = data['author']
-        if new != old:
-            # TODO Not all emails are gmail
-            self.author = users.User(email='%s@gmail.com' % new)
-            decr_count(self.kind, 'author', old)
-            incr_count(self.kind, 'author', new)
-        del data['author']
+        old_pairs = self.changed_pairs()
 
-        old = self.date
-        new = data['date']
-        if old != new:
-            decr_count(self.kind, 'date', self.year)
-            incr_count(self.kind, 'date', new.year)
-        else:
-            del data['date']
+        for field in PHOTO_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, data[field], 'Photo', field)
 
-        update_tags(self.kind, self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-        del data['tags']
-
-        if data['focal_length']:
-            old = self.focal_length
-            new = round(data['focal_length'], 1)
-            if old != new:
-                self.focal_length = new
-            del data['focal_length']
-        if data['crop_factor']:
-            old = self.crop_factor
-            new = round(data['crop_factor'], 1)
-            if old != new:
-                self.crop_factor = new
-            del data['crop_factor']
-        if self.focal_length and self.crop_factor:
-            value = int(self.focal_length * self.crop_factor)
-            data['eqv'] = rounding(value, LENGTHS)
-
-        for field, value in data.items():
-            if field in PHOTO_FIELDS:
-                old = getattr(self, field)
-                new = data.get(field)
-                if old != new:
-                    if old:
-                        decr_count(self.kind, field, old)
-                    if new:
-                        incr_count(self.kind, field, new)
-                    setattr(self, field, new)
-            else:
-                setattr(self, field, value)
-
+        self.headline = data['headline']
+        self.author = data['author']
+        self.tags = data['tags']
+        self.model = data['model']
+        self.aperture = data['aperture']
+        self.shutter = data['shutter']
+        self.focal_length = data['focal_length']
+        self.lens = data['lens']
+        self.iso = data['iso']
+        self.date = data['date']
         self.put()
+        deferred.defer(self.index_doc)
 
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
-        blobstore.delete(obj.blob_key)
+        new_pairs = self.changed_pairs()
+        deferred.defer(update_representation, new_pairs, old_pairs)
 
-        decr_count(key.kind(), 'author', obj.author.nickname())
-        decr_count(key.kind(), 'date', obj.year)
-        update_tags(key.kind(), obj.tags, None)
-        for field in PHOTO_FIELDS:
-            value = getattr(obj, field)
-            if value:
-                decr_count(key.kind(), field, value)
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
+    def remove(self):
+        deferred.defer(remove_doc, self.key.urlsafe())
+        blobstore.delete(self.blob_key)
+
+        for field in PHOTO_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, None, 'Photo', field)
+
+        old_pairs = self.changed_pairs()
+        self.key.delete()
+        deferred.defer(update_representation, [], old_pairs)
 
     @webapp2.cached_property
     def serving_url(self):
-        try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except (images.Error, apiproxy_errors.DeadlineExceededError), e:
-            logging.error(e.message)
-        return None
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+
+    @webapp2.cached_property
+    def download_url(self):
+        return webapp2.uri_for('download_url', safe_key=self.key.urlsafe())
 
     @property
     def hex(self):
         return rgb_to_hex(tuple(self.rgb))
-
-    @property
-    def hls(self):
-        return rgb_hls(self.rgb)
 
     @classmethod
     def query_for(cls, field, value):
@@ -623,54 +580,41 @@ class Photo(ndb.Model):
         return cls.query(*filters).order(-cls.date)
 
     @classmethod
-    def latest(cls):
-        query = cls.query().order(-cls.date)
-        result = query.fetch(1)
-        if result:
-            return result[0]
-        return None
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        return query.get()
 
     def serialize(self):
         data = self.to_dict(exclude=(
-            'blob_key', 'dim', 'size', 'ratio',
-            'rgb', 'sat', 'lum', 'hue', 'year',
-            'aperture', 'shutter', 'focal_length', 'crop_factor'))
+            'blob_key', 'size', 'ratio', 'crop_factor',
+            'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
-            'slug': self.key.string_id(),
-            'url': webapp2.uri_for('photo', slug=self.key.string_id()),
+            'kind': 'photo',
+            'year': str(self.year),
+            'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
+            'thumb64': self.thumb64
         })
         return data
 
 
-class Img(ndb.Model):
-    # parent Entry
-    name = ndb.StringProperty()
-    num = ndb.IntegerProperty(default=0)
-    blob = ndb.BlobProperty(default=None)
-    small = ndb.BlobProperty(default=None)
-    mime = ndb.StringProperty(default='image/jpeg')
-
-
 class Entry(ndb.Model):
     headline = ndb.StringProperty(required=True)
-    author = ndb.UserProperty(auto_current_user_add=True)
+    author = ndb.UserProperty()
     summary = ndb.StringProperty(required=True)
     body = ndb.TextProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
     date = ndb.DateTimeProperty()
     year = ndb.ComputedProperty(lambda self: self.date.year)
-    front = ndb.IntegerProperty(default=-1)
+    front_img = ndb.StringProperty()
 
-    @property
-    def kind(self):
-        return self.key.kind()
+    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
 
     def index_doc(self):
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
-                search.TextField(name='slug', value=tokenize(self.key.string_id())),
+                search.TextField(name='slug', value=tokenize(self.slug)),
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
@@ -681,84 +625,44 @@ class Entry(ndb.Model):
 
     def add(self, data):
         self.headline = data['headline']
+        self.author = data['author']
         self.summary = data['summary']
-        self.date = data['date']
         self.body = data['body']
         self.tags = data['tags']
+        self.date = data['date']
+        self.front_img = data['front_img']
         self.put()
 
-        for indx, obj in enumerate(data['newimages']):
-            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
-                img = Img(
-                    parent=self.key,
-                    id='%s_%s' % (self.key.string_id(), indx),
-                    num=indx,
-                    name=obj['name'],
-                    blob=obj['blob'].value
-                )
-                img.mime = obj['blob'].headers['Content-Type']
-                img.put()
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(None, value, 'Entry', field)
 
-        incr_count(self.kind, 'author', self.author.nickname())
-        incr_count(self.kind, 'date', self.year)
-        update_tags(self.kind, None, self.tags)
         deferred.defer(self.index_doc)
 
     def edit(self, data):
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, data[field], 'Entry', field)
+
         self.headline = data['headline']
+        self.author = data['author']
         self.summary = data['summary']
-        self.date = data['date']
         self.body = data['body']
-        self.front = data['front']
-
-        for indx, obj in enumerate(data['images']):
-            id = '%s_%s' % (self.key.string_id(), indx)
-            if obj['delete']:
-                key = ndb.Key('Entry', self.key.string_id(), 'Img', id)
-                key.delete()
-                if indx == self.front:
-                    self.front = -1
-
-        for indx, obj in enumerate(data['newimages'], start=self.image_list.count()):
-            id = '%s_%s' % (self.key.string_id(), indx)
-            if obj['name'] and isinstance(obj['blob'], cgi.FieldStorage):
-                img = Img(
-                    parent=self.key,
-                    id=id,
-                    num=indx,
-                    name=obj['name'],
-                    blob=obj['blob'].value
-                )
-                img.mime = obj['blob'].headers['Content-Type']
-                img.put()
-
-        old = self.date
-        new = data['date']
-        if old != new:
-            decr_count(self.kind, 'date', self.year)
-            incr_count(self.kind, 'date', new.year)
-        update_tags(self.kind, self.tags, data['tags'])
-        self.tags = sorted(data['tags'])
-
+        self.tags = data['tags']
+        self.date = data['date']
+        self.front_img = data['front_img']
         self.put()
 
-    @classmethod
-    def _pre_delete_hook(cls, key):
-        obj = key.get()
-        deferred.defer(remove_doc, key.urlsafe())
+        deferred.defer(self.index_doc)
 
-        decr_count(key.kind(), 'author', obj.author.nickname())
-        decr_count(key.kind(), 'date', obj.year)
-        update_tags(key.kind(), obj.tags, None)
+    def remove(self):
+        deferred.defer(remove_doc, self.key.urlsafe())
 
-        ndb.delete_multi([x.key for x in ndb.Query(ancestor=key) if x.key != key])
+        for field in ENTRY_COUNTER_FIELDS:
+            value = getattr(self, field, None)
+            update_counter_field(value, None, 'Entry', field)
 
-    @property
-    def image_list(self):
-        return Img.query(ancestor=self.key).order(Img.num)
-
-    def image_url(self, num):
-        return '/entries/image/%s_%s' % (self.key.string_id(), num)
+        self.key.delete()
 
     @classmethod
     def query_for(cls, field, value):
@@ -766,10 +670,19 @@ class Entry(ndb.Model):
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
 
+    @classmethod
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        result = query.fetch(1)
+        if result:
+            return result[0]
+        return None
+
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))
         data.update({
-            'slug': self.key.string_id(),
-            'url': webapp2.uri_for('entry', slug=self.key.string_id()),
+            'kind': 'entry',
+            'year': str(self.year),
+            'safekey': self.key.urlsafe()
         })
         return data

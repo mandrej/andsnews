@@ -1,6 +1,6 @@
 {% set titles = {
     'tags': _('Tags'), 'date': _('Dates'), 'author': _('Authors'), 'color': _('Color'), 'model': _('Camera model'),
-    'lens': _('Lens type'), 'eqv': _('Eqv. focal length'), 'iso': _('Sensitivity')
+    'lens': _('Lens type'), 'iso': _('Sensitivity')
 } %}
 
 <div class="modal-content">
@@ -13,8 +13,6 @@
             {% if field_name == 'color' %}
                 <a href="http://99designs.com/tech-blog/blog/2012/05/11/color-analysis/" target="_blank">
                     {{ _('Based od colorific color extraction in CIE 2000 color space') }}</a>
-            {% elif field_name == 'eqv' %}
-                {{ _('Equivalent focal lengths are calculated for a full format sensor or 35 mm film camera') }}
             {% endif %}
         </div>
     </div>

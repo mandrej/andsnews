@@ -1,59 +1,14 @@
 import cgi
 import json
-from collections import defaultdict, OrderedDict
 
-from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext import ndb
-from webapp2_extras.i18n import lazy_gettext as _
-from webapp2_extras.appengine.users import admin_required
 from PIL import Image
 from StringIO import StringIO
 
 from palette import extract_colors
-from models import Photo, incr_count, decr_count, range_names, rgb_hls
+from models import incr_count, decr_count, range_names, rgb_hls
 from palette import rgb_to_hex
-from wtforms import Form, fields, validators
-from handlers import BaseHandler, csrf_protected, xss_protected, Paginator, EmailField, TagsField
-from config import CROPS, PHOTOS_PER_PAGE, PHOTOS_MAX_PAGE
-
-
-class Index(BaseHandler):
-    @xss_protected
-    def get(self, field=None, value=None):
-        page = self.request.get('page', None)
-        slug = self.request.get('slug', None)
-        query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, token = paginator.page(page)
-
-        if not objects:
-            self.abort(404)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'max': PHOTOS_MAX_PAGE,
-                'next': token}
-
-        if slug is not None:
-            data['slug'] = slug
-            self.render_template('photo/detail.html', data)
-        else:
-            self.render_template('photo/index.html', data)
-
-
-class Detail(BaseHandler):
-    def get(self, slug, field=None, value=None):
-        key = ndb.Key(Photo, slug)
-        query = Photo.query_for(field, value)
-        objects = query.filter(Photo._key == key).fetch(1)
-        if not objects:
-            self.abort(404)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'slug': slug}
-        self.render_template('photo/detail.html', data)
+from handlers import BaseHandler
 
 
 class Palette(BaseHandler):
@@ -67,8 +22,8 @@ class Palette(BaseHandler):
         bgcolor=
             Color(value=(164, 14, 12), prominence=0.4356060606060606))
     """
-    def get(self, slug):
-        obj = Photo.get_by_id(slug)
+    def get(self, safe_key):
+        obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
         img = Image.open(StringIO(obj.buffer))
@@ -92,14 +47,14 @@ class Palette(BaseHandler):
 
         self.render_json(data)
 
-    def post(self, slug):
+    def post(self, safe_key):
         def characterise(hue, lum, sat):
             if lum in ('dark', 'light',) or sat == 'monochrome':
                 return lum
             else:
                 return hue
 
-        obj = Photo.get_by_id(slug)
+        obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.render_json({'success': False})
         new_rgb = json.loads(self.request.get('rgb'))
@@ -117,96 +72,3 @@ class Palette(BaseHandler):
             })
         else:
             self.render_json({'success': False})
-
-
-class AddForm(Form):
-    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
-    slug = fields.StringField(_('Slug'), validators=[validators.DataRequired()])
-    tags = TagsField(_('Tags'), description='Comma separated values')
-    author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    photo = fields.FileField(_('Photo'))
-
-    @staticmethod
-    def validate_slug(form, field):
-        if Photo.get_by_id(field.data):
-            raise validators.ValidationError(_('Record with this slug already exist'))
-
-    @staticmethod
-    def validate_photo(form, field):
-        if not isinstance(field.data, cgi.FieldStorage):
-            raise validators.ValidationError(_('Nothing to upload.'))
-
-
-class EditForm(Form):
-    headline = fields.StringField(_('Headline'), validators=[validators.DataRequired()])
-    tags = TagsField(_('Tags'), description='Comma separated values')
-    author = EmailField(_('Author'), validators=[validators.DataRequired()])
-    date = fields.DateTimeField(_('Taken'), validators=[validators.DataRequired()])
-    model = fields.StringField(_('Camera model'))
-    aperture = fields.FloatField(_('Aperture'), validators=[validators.Optional()])
-    shutter = fields.StringField(_('Shutter speed'))
-    focal_length = fields.FloatField(_('Focal length'))
-    iso = fields.IntegerField('%s (ISO)' % _('Sensitivity'), validators=[validators.Optional()])
-    crop_factor = fields.FloatField(_('Crop factor'))
-    lens = fields.StringField(_('Lens type'))
-
-
-class Add(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
-    @admin_required
-    def get(self, form=None):
-        if form is None:
-            form = AddForm(author=self.user.nickname())
-        self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
-
-    @csrf_protected
-    def post(self):
-        form = AddForm(formdata=self.request.POST)
-        if form.validate():
-            obj = Photo(id=form.slug.data)
-            response = obj.add(form.data)
-            if response['success']:
-                self.redirect_to('photo_edit', slug=obj.key.string_id())
-            else:
-                form.photo.errors.append(response['message'])
-                self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
-        else:
-            self.render_template('admin/photo_form.html', {'form': form, 'filter': None})
-
-
-def crop_dict():
-    v = defaultdict(list)
-    for key, value in sorted(CROPS.iteritems()):
-        v[value].append(key)
-    return OrderedDict(sorted(v.items()))
-
-
-class Edit(BaseHandler):
-    @admin_required
-    def get(self, slug, form=None):
-        obj = Photo.get_by_id(slug)
-        if obj is None:
-            self.abort(404)
-        if not any([self.is_admin, self.user == obj.author]):
-            self.abort(403)
-        if form is None:
-            form = EditForm(obj=obj)
-            if obj.model and obj.focal_length:
-                if obj.crop_factor is None:
-                    try:
-                        form.crop_factor.data = CROPS[obj.model]
-                    except KeyError:
-                        pass
-
-        self.render_template('admin/photo_form.html', {
-            'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})
-
-    @csrf_protected
-    def post(self, slug):
-        obj = Photo.get_by_id(slug)
-        form = EditForm(formdata=self.request.POST)
-        if form.validate():
-            obj.edit(form.data)
-            self.redirect_to('photo_admin')
-        else:
-            self.render_template('admin/photo_form.html', {
-                'form': form, 'object': obj, 'filter': None, 'crops': crop_dict()})

@@ -1,0 +1,184 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-select/paper-select.html">
+<link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
+
+<link rel="import" href="./shared-styles.html">
+
+<dom-module id="form-view">
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+            .container {
+                padding: 16px;
+            }
+            vaadin-upload {
+                --vaadin-upload-button-add: {
+                    font-size: inherit;
+                    color: var(--primary-text-color);
+                    background-color: var(--accent-color);
+                    @apply(--shadow-elevation-2dp);
+                }
+            }
+            vaadin-combo-box {
+                --paper-input-container-color: var(--primary-text-color);
+                --paper-input-container-focus-color: var(--primary-color);
+            }
+        </style>
+
+        <iron-ajax auto
+			url="[[_urlTagsCloud(view, kind, field)]]"
+			handle-as="json"
+			last-response="{{tags_cloud}}"
+			debounce-duration="100"></iron-ajax>
+
+        <div hidden$="[[!isAuthorized]]" class="container" id="container">
+            <paper-toast id="toast" fit-into="{{container}}" horizontal-align="right"></paper-toast>
+
+            <template is="dom-if" if="[[_isAdd(field)]]">
+                <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+                    <vaadin-upload id="upload" style="padding: 16px"
+                        target="/api/{{kind}}/add"
+                        max-files="10"
+                        on-upload-response="_uploadResponse"
+                        accept="image/*"></vaadin-upload>
+                    <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
+                </template>
+
+                <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                    <form is="iron-form" id="form"
+                        on-iron-form-response="_responseHandler"
+                        method="post"
+                        action$="/api/[[kind]]/add">
+                        <div class="layout horizontal end-justified">
+                            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+                        </div>
+
+                        <paper-input name="headline" required label="headline"></paper-input>
+                        <vaadin-combo-box
+                            name="author"
+                            label="author"
+                            allow-custom-value="true"
+                            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
+                            </vaadin-combo-box>
+                            <paper-select
+                                name="tags"
+                                label="tags"
+                                on-input-changed="inputChanged"
+                                on-adding-item="addItem"
+                                multiple unique nonmatching select-on-blur></paper-select>
+
+                        <paper-textarea name="summary" label="summary"></paper-textarea>
+                        <paper-textarea name="body" label="body"></paper-textarea>
+                    </form>
+                </template>
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'form-view',
+            behaviors: [
+                Polymer.NeonAnimatableBehavior,
+                Polymer.NeonSharedElementAnimatableBehavior
+            ],
+            properties: {
+                sharedElements: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'hero': this.$.container,
+                        }
+                    }
+                },
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                toPage: this
+                            }],
+                            'exit': [{
+                                name: 'hero-animation',
+                                id: 'hero',
+                                fromPage: this
+                            }]
+                        }
+                    }
+                },
+                view: { type: String, value: null, notify: true },
+                kind: { type: String, value: null, notify: true },
+                field: { type: String, value: null, notify: true },
+                value: { type: String, value: null, notify: true },
+            },
+            _urlTagsCloud: function(view, kind, field) {
+                if (view == 'form' && kind == 'photo' && field == 'edit') {
+                    return '/api/suggest/Photo_tags';
+                } else if (view == 'form' && kind == 'entry') {
+                    return '/api/suggest/Entry_tags';
+                }
+                return;
+            },
+            _isKindPhoto: function(kind) {
+                return kind == 'photo';
+            },
+            _isAdd: function(field) {
+                return field == 'add';
+            },
+            _uploadResponse: function(e) {
+                var res = JSON.parse(e.detail.xhr.responseText),
+                    toast = this.$.toast;
+                if (res.success) {
+                    toast.setAttribute('text', 'Image successfully uploaded');
+                    toast.open();
+                    // this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
+                } else {
+                    toast.setAttribute('text', res.message);
+                    toast.open();
+                }
+            },
+            _responseHandler: function(e) {
+                var toast = this.$.toast;
+                if (e.detail.xhr.status == 200) {
+                    toast.setAttribute('text', 'Record successfully created / updated');
+                    toast.open();
+                }
+            },
+            _preSubmit: function() {
+                var form = this.$.form;
+                form.request.method = 'put'; // PUT SENDS URL PARAMETERS!
+            },
+            _submit: function(e) {
+                var form = this.$.form;
+                // var json = form.serialize();
+                // console.log(json);
+                form.submit();
+            },
+            inputChanged: function(e) {
+                var input = (e.detail.value || '').trim().toLowerCase();
+                if (input) {
+                    e.target.options = this.tags_cloud.filter(function(item) {
+                        return item.toLowerCase().indexOf(input) === 0;
+                    });
+                } else {
+                    e.target.options = [];
+                }
+            },
+            addItem: function(e) {
+                var input = (e.detail.value || '').trim();
+                e.detail.value = input;
+            },
+        });
+    </script>
+</dom-module>

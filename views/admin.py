@@ -5,12 +5,12 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from webapp2_extras.appengine.users import login_required, admin_required
 
-from mapreduce.base_handler import PipelineBase
-from mapreduce.mapper_pipeline import MapperPipeline
-from models import Photo, Entry, Counter, Cloud, KEYS
-from views.entry import make_thumbnail
-from handlers import BaseHandler, csrf_protected, xss_protected, Paginator
-from config import filesizeformat, PHOTOS_PER_PAGE, ENTRIES_PER_PAGE, COLORS
+from models import Photo, Entry, Counter, Cloud
+from handlers import BaseHandler, csrf_protected, xss_protected
+
+KEYS = ['Photo_tags', 'Photo_author', 'Photo_date',
+        'Photo_model', 'Photo_lens', 'Photo_iso', 'Photo_color',
+        'Entry_tags', 'Entry_author', 'Entry_date']
 
 
 class Cache(BaseHandler):
@@ -33,14 +33,6 @@ class Cache(BaseHandler):
         self.render_json(None)
 
 
-class RenderPie(BaseHandler):
-    def get(self, mem_key):
-        kind, field = mem_key.split('_')
-        data = memcache.get(mem_key)
-        self.render_template('snippets/graph.html', {
-            'items': data, 'colors': COLORS if field == 'color' else [], 'field': field})
-
-
 class Index(BaseHandler):
     @login_required
     def get(self):
@@ -60,65 +52,11 @@ class Index(BaseHandler):
             hit_ratio = 100 * hits / all
         except ZeroDivisionError:
             hit_ratio = 0
-        data = {'photo_count': Photo.query().count(),
-                'entry_count': Entry.query().count(),
-                'counter_count': Counter.query().count(),
+        data = {'counter_count': Counter.query().count(),
                 'stats': stats,
                 'oldest': oldest,
                 'hit_ratio': hit_ratio}
         self.render_template('admin/index.html', data)
-
-
-class Photos(BaseHandler):
-    @admin_required
-    @xss_protected
-    def get(self, field=None, value=None):
-        page = self.request.get('page', None)
-        query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        objects, token = paginator.page(page)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'next': token,
-                'tags_cloud': Cloud('Photo_tags').get_list(),
-                'author_cloud': Cloud('Photo_author').get_list(),
-                'date_cloud': Cloud('Photo_date').get_list()}
-        self.render_template('admin/photos.html', data)
-
-
-class Entries(BaseHandler):
-    @admin_required
-    @xss_protected
-    def get(self, field=None, value=None):
-        page = self.request.get('page', None)
-        query = Entry.query_for(field, value)
-        paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
-        objects, token = paginator.page(page)
-
-        data = {'objects': objects,
-                'filter': {'field': field, 'value': value} if (field and value) else None,
-                'page': page,
-                'next': token,
-                'tags_cloud': Cloud('Entry_tags').get_list(),
-                'author_cloud': Cloud('Entry_author').get_list(),
-                'date_cloud': Cloud('Entry_date').get_list()}
-        self.render_template('admin/entries.html', data)
-
-    @csrf_protected
-    def post(self):
-        params = dict(self.request.POST)
-        key = ndb.Key(urlsafe=params['safe_key'])
-        if params['action'] == 'delete':
-            obj = key.get()
-            obj.small = None
-            obj.put()
-            data = {'success': True}
-        elif params['action'] == 'make':
-            buff, mime = make_thumbnail('Entry', key.string_id(), 'small')
-            data = {'success': True, 'small': filesizeformat(len(buff))}
-        self.render_json(data)
 
 
 class Counters(BaseHandler):
@@ -153,53 +91,3 @@ class Counters(BaseHandler):
             obj.count = int(self.request.get('count.%s' % input_id))
             obj.put()
         self.redirect_to('counter_admin')
-
-
-JOBS = {
-    "photo_index": {
-        "job_name": "full_photo_index",
-        "handler_spec": "views.background.indexer",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
-    "entry_index": {
-        "job_name": "full_entry_index",
-        "handler_spec": "views.background.indexer",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Entry",
-        },
-        "shards": 4
-    },
-    "fix": {
-        "job_name": "current_fix",
-        "handler_spec": "views.background.current_fix",
-        "input_reader_spec": "mapreduce.input_readers.DatastoreInputReader",
-        "params": {
-            "entity_kind": "models.Photo",
-        },
-        "shards": 4
-    },
-}
-
-
-class DatastoreMapperPipeline(PipelineBase):
-    def run(self, job_name):
-        yield MapperPipeline(**JOBS[job_name])
-
-
-class DatastoreBackground(BaseHandler):
-    @admin_required
-    def get(self, job):
-        try:
-            JOBS[job]
-        except KeyError:
-            self.abort(404)
-        else:
-            pipeline = DatastoreMapperPipeline(job)
-            pipeline.start()
-            redirect_url = "%s/status?root=%s" % (pipeline.base_path, pipeline.pipeline_id)
-            self.redirect(redirect_url)
