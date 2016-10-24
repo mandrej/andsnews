@@ -98,6 +98,7 @@
                             <template is="dom-repeat" items="[[item.tags]]" as="tag">
                                 <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
                             </template>
+                            <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]">[[item.model]]</paper-button>
                             <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
                         </div>
                     </paper-dialog>
