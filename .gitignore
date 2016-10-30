@@ -3,6 +3,9 @@ aeta
 cloudstorage
 colormath
 exifread
+googleapiclient
+httplib2
 networkx
+oauth2client
 decorator.py
 *.pyc

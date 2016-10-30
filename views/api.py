@@ -1,10 +1,9 @@
-import os
 import json
 import logging
 import webapp2
 import datetime
 from slugify import slugify
-from google.appengine.api import users, search, channel, app_identity, datastore_errors
+from google.appengine.api import users, search, channel, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
@@ -12,7 +11,6 @@ from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
 from mapper import Indexer, Builder, Fixer
 
 LIMIT = 12
-BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 
 
 class LazyEncoder(json.JSONEncoder):

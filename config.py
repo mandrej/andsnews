@@ -1,6 +1,14 @@
 import os
 from google.appengine.api import app_identity
 
+FIREBASE = {
+    "apiKey": "AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M",
+    "authDomain": "andsnews.firebaseapp.com",
+    "databaseURL": "https://andsnews.firebaseio.com",
+    "storageBucket": "andsnews.appspot.com",
+    "messagingSenderId": "719127177629"
+}
+
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 
