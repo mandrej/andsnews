@@ -8,4 +8,5 @@ httplib2
 networkx
 oauth2client
 decorator.py
+six.py
 *.pyc

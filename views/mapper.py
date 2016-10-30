@@ -9,6 +9,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import channel
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
+from fireapi import send_firebase_message
 from models import Counter
 from config import BUCKET
 
@@ -93,11 +94,13 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
-            channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
+            # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
+            send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
         self.to_put = []
 
     def finish(self):
-        channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
 
 class Fixer(Mapper):
@@ -143,15 +146,19 @@ class Fixer(Mapper):
                     entity.put()
 
                 except gcs.errors as e:
-                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
+                    # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
+                    send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
                 else:
-                    channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
+                    # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
+                    send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
             else:
-                channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
+                # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
+                send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
         self.to_put = []
 
     def finish(self):
-        channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
 
 class Builder(Mapper):
@@ -198,6 +205,9 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
-        channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+            # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
+            send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
+
+        # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 

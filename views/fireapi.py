@@ -1,6 +1,7 @@
 import time
 import json
 import base64
+import logging
 import httplib2
 from google.appengine.api import app_identity
 from oauth2client.client import GoogleCredentials
@@ -24,7 +25,7 @@ def _get_http():
     return http
 
 
-def _send_firebase_message(u_id, message=None):
+def send_firebase_message(u_id, message=None):
     """Updates data in firebase. If a message is provided, then it updates
      the data at /channels/<channel_id> with the message using the PATCH
      http method. If no message is provided, then the data at this location
@@ -61,6 +62,14 @@ def create_custom_token(uid, valid_minutes=60):
         'iat': now,
         'exp': now + (valid_minutes * 60),
     }))
+    logging.error({
+        'iss': client_email,
+        'sub': client_email,
+        'aud': _IDENTITY_ENDPOINT,
+        'uid': uid,  # the important parameter, as it will be the channel id
+        'iat': now,
+        'exp': now + (valid_minutes * 60),
+    })
     # add standard header to identify this as a JWT
     header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
     to_sign = '{}.{}'.format(header, payload)

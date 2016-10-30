@@ -9,6 +9,7 @@ from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
     PHOTO_FILTER_FIELDS, PHOTO_COUNTER_FIELDS, ENTRY_COUNTER_FIELDS
 from mapper import Indexer, Builder, Fixer
+from fireapi import create_custom_token
 
 LIMIT = 12
 
@@ -160,9 +161,10 @@ class BackgroundIndex(RestHandler):
 
         indexer.CHANNEL_NAME = '%s_index' % kind
 
-        token = channel.create_channel(indexer.CHANNEL_NAME, duration_minutes=10)
+        # token = channel.create_channel(indexer.CHANNEL_NAME, duration_minutes=10)
+        token = create_custom_token(indexer.CHANNEL_NAME, valid_minutes=10)
         deferred.defer(indexer.run, batch_size=10, _queue='background')
-        self.render({'token': token})
+        self.render({'channelId': indexer.CHANNEL_NAME, 'token': token})
 
 
 class BackgroundFix(RestHandler):
@@ -173,9 +175,10 @@ class BackgroundFix(RestHandler):
         fixer.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
         fixer.CHANNEL_NAME = '%s_fix' % kind
 
-        token = channel.create_channel(fixer.CHANNEL_NAME, duration_minutes=10)
+        # token = channel.create_channel(fixer.CHANNEL_NAME, duration_minutes=10)
+        token = create_custom_token(fixer.CHANNEL_NAME, valid_minutes=10)
         deferred.defer(fixer.run, batch_size=10, _queue='background')
-        self.render({'token': token})
+        self.render({'channelId': fixer.CHANNEL_NAME, 'token': token})
 
 
 class BackgroundBuild(RestHandler):
@@ -192,9 +195,10 @@ class BackgroundBuild(RestHandler):
         builder.FIELD = field
         builder.CHANNEL_NAME = mem_key
 
-        token = channel.create_channel(builder.CHANNEL_NAME, duration_minutes=10)
+        # token = channel.create_channel(builder.CHANNEL_NAME, duration_minutes=10)
+        token = create_custom_token(builder.CHANNEL_NAME, valid_minutes=10)
         deferred.defer(builder.run, batch_size=10, _queue='background')
-        self.render({'token': token})
+        self.render({'channelId': builder.CHANNEL_NAME, 'token': token})
 
 
 class Crud(RestHandler):

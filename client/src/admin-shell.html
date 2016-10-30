@@ -80,6 +80,19 @@
         </div>
     </template>
 
+    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M",
+            authDomain: "andsnews.firebaseapp.com",
+            databaseURL: "https://andsnews.firebaseio.com",
+            storageBucket: "andsnews.appspot.com",
+            messagingSenderId: "719127177629"
+        };
+        firebase.initializeApp(config);
+    </script>
+
     <script>
         Polymer({
             is: 'admin-shell',
@@ -127,29 +140,40 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-                if (!('goog' in window)) return;
+                console.log(resp);
+                // if (!('goog' in window)) return;
                 if (!(resp.token in this.channels)) {
+                    firebase.auth().signInWithCustomToken(resp.token).catch(function(error) {
+                        console.log('Login Failed!', error.code);
+                        console.log('Error message: ', error.message);
+                    });
                     // {token: socket, token: socket}
-                    var channel = new goog.appengine.Channel(resp.token);
-                    this.channels[resp.token] = channel.open();
-                    this.channels[resp.token].onmessage = function(e) {
-                        return this.onMessage(e, resp.token);
-                    }.bind(this);
+                    // var channel = new goog.appengine.Channel(resp.token);
+                    var channel = firebase.database().ref('channels/' + resp.channelId);;
+                    this.channels[resp.token] = channel;
+                    channel.on('value', function(data) {
+                        console.log(data);
+                        // this.onMessage(data.val());
+                    });
+                    // this.channels[resp.token].onmessage = function(e) {
+                    //     return this.onMessage(e, resp.token);
+                    // }.bind(this);
                 }
 			},
-            onMessage: function (e, token) {
-                var resp = JSON.parse(e.data),
-                    toast = this.$.toast;
-
-                toast.setAttribute('text', resp.message);
-                toast.style.backgroundColor = '#212121';
-                if (!toast.opened) toast.open();
-                if (resp.message == 'END') {
-                    toast.style.backgroundColor = '#dc2128';
-                    this.channels[token].readyState = 3; // close socket
-                    // this.channels[token].close(); // close socket
-                    delete this.channels[token];
-                }
+            onMessage: function (value) {
+                console.log(value);
+                // var resp = JSON.parse(e.data),
+                //     toast = this.$.toast;
+                //
+                // toast.setAttribute('text', resp.message);
+                // toast.style.backgroundColor = '#212121';
+                // if (!toast.opened) toast.open();
+                // if (resp.message == 'END') {
+                //     toast.style.backgroundColor = '#dc2128';
+                //     this.channels[token].readyState = 3; // close socket
+                //     // this.channels[token].close(); // close socket
+                //     delete this.channels[token];
+                // }
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
