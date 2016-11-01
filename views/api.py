@@ -186,21 +186,21 @@ class BackgroundBuild(RestHandler):
         kind, field = mem_key.split('_', 1)
         userId = self.request.params.get('userId', None)
 
-        if userId is not None:
-            builder = Builder()
-            if kind == 'Photo':  # Title case!
-                builder.KIND = Photo
-            elif kind == 'Entry':
-                builder.KIND = Entry
+        # if userId is not None:
+        builder = Builder()
+        if kind == 'Photo':  # Title case!
+            builder.KIND = Photo
+        elif kind == 'Entry':
+            builder.KIND = Entry
 
-            builder.VALUES = []
-            builder.FIELD = field
-            builder.CHANNEL_NAME = mem_key
+        builder.VALUES = []
+        builder.FIELD = field
+        builder.CHANNEL_NAME = mem_key
 
-            # token = channel.create_channel(builder.CHANNEL_NAME, duration_minutes=10)
-            # token = create_custom_token(builder.CHANNEL_NAME, valid_minutes=10)
-            deferred.defer(builder.run, batch_size=10, _queue='background')
-            # self.render({'channelId': builder.CHANNEL_NAME})
+        # token = channel.create_channel(builder.CHANNEL_NAME, duration_minutes=10)
+        # token = create_custom_token(builder.CHANNEL_NAME, valid_minutes=10)
+        deferred.defer(builder.run, batch_size=10, _queue='background')
+        self.render({'channelId': builder.CHANNEL_NAME})
 
 
 class Crud(RestHandler):

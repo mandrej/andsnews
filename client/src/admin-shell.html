@@ -37,6 +37,7 @@
             last-response="{{info}}"></iron-ajax>
 
         <iron-ajax id="rebuild_ajax"
+            on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <iron-ajax id="reindex_ajax"
@@ -90,11 +91,6 @@
             messagingSenderId: "719127177629"
         };
         firebase.initializeApp(config);
-
-        channel = firebase.database().ref('channels/Photo_date');;
-        channel.on('value', function(data) {
-            console.log(data);
-        });
     </script>
 
     <script>
@@ -146,6 +142,11 @@
             channelHandler: function(req) {
                 var resp = req.detail.response;
                 console.log(resp);
+                var channel = firebase.database().ref('channels/' + resp.channelId);
+                console.log(channel);
+                channel.on('value', function(data) {
+                    console.log(data.val());
+                });
                 // if (!('goog' in window)) return;
                 // if (!(resp.token in this.channels)) {
                     // firebase.auth().signInWithCustomToken(resp.token).catch(function(error) {

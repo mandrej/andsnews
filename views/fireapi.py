@@ -32,6 +32,9 @@ def send_firebase_message(u_id, message=None):
      is deleted using the DELETE http method
      """
     url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
+    logging.error(u_id)
+    logging.error(message)
+    logging.error(url)
 
     if message:
         return _get_http().request(url, 'PATCH', body=message)
