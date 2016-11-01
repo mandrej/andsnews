@@ -50,6 +50,7 @@ def create_custom_token(uid, valid_minutes=60):
     # use the app_identity service from google.appengine.api to get the
     # project's service account email automatically
     client_email = app_identity.get_service_account_name()
+    client_email = '719127177629-kj465gnojm872d0lja037j4ki50foa1t@developer.gserviceaccount.com'
 
     now = int(time.time())
     # encode the required claims
@@ -62,14 +63,6 @@ def create_custom_token(uid, valid_minutes=60):
         'iat': now,
         'exp': now + (valid_minutes * 60),
     }))
-    logging.error({
-        'iss': client_email,
-        'sub': client_email,
-        'aud': _IDENTITY_ENDPOINT,
-        'uid': uid,  # the important parameter, as it will be the channel id
-        'iat': now,
-        'exp': now + (valid_minutes * 60),
-    })
     # add standard header to identify this as a JWT
     header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
     to_sign = '{}.{}'.format(header, payload)

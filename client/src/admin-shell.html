@@ -127,6 +127,7 @@
                     }
                 },
                 view: { type: String, value: '', notify: true },
+                user: { type: Object, notify: true },
                 isAdmin: { type: Boolean, value: false, notify: true },
                 info: { type: Object },
                 counters: {type: Array },
@@ -177,6 +178,7 @@
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
+                this.$.rebuild_ajax.params = {'userId': this.user.getBasicProfile().getId()};
                 this.$.rebuild_ajax.generateRequest();
             },
             reindex: function(e) {
