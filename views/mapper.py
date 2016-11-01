@@ -206,8 +206,8 @@ class Builder(Mapper):
             obj.put()
 
             # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
-            send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
+            send_firebase_message(self.CHANNEL_NAME, '%s %s' % (value, count))
 
         # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
-        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        send_firebase_message(self.CHANNEL_NAME, 'END')
 

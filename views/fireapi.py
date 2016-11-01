@@ -50,7 +50,6 @@ def create_custom_token(uid, valid_minutes=60):
     # use the app_identity service from google.appengine.api to get the
     # project's service account email automatically
     client_email = app_identity.get_service_account_name()
-    client_email = '719127177629-kj465gnojm872d0lja037j4ki50foa1t@developer.gserviceaccount.com'
 
     now = int(time.time())
     # encode the required claims
