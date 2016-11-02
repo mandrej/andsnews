@@ -1,13 +1,11 @@
 import time
 import json
-import jwt
 import base64
 import logging
 import httplib2
-import Crypto.PublicKey.RSA as RSA
 from google.appengine.api import app_identity
 from oauth2client.client import GoogleCredentials
-from config import FIREBASE, SERVICE_ACCOUNT
+from config import FIREBASE
 
 _FIREBASE_SCOPES = [
     'https://www.googleapis.com/auth/firebase.database',
@@ -36,7 +34,6 @@ def send_firebase_message(u_id, message=None):
     url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
     logging.error(u_id)
     logging.error(message)
-    logging.error(url)
 
     if message:
         return _get_http().request(url, 'PATCH', body=message)
@@ -54,25 +51,22 @@ def create_custom_token(uid, valid_minutes=60):
 
     # use the app_identity service from google.appengine.api to get the
     # project's service account email automatically
-    # client_email = app_identity.get_service_account_name()
-    private_key = RSA.importKey("-----BEGIN PRIVATE KEY-----\n...")
+    client_email = app_identity.get_service_account_name()
 
     now = int(time.time())
-    exp = now + (valid_minutes * 60)
     # encode the required claims
     # per https://firebase.google.com/docs/auth/server/create-custom-tokens
-    payload = {
-        'iss': SERVICE_ACCOUNT,
-        'sub': SERVICE_ACCOUNT,
+    payload = base64.b64encode(json.dumps({
+        'iss': client_email,
+        'sub': client_email,
         'aud': _IDENTITY_ENDPOINT,
         'uid': uid,  # the important parameter, as it will be the channel id
         'iat': now,
-    }
-    logging.error(jwt.generate_jwt(payload, private_key, "RS256", exp))
-    return jwt.generate_jwt(payload, private_key, "RS256", exp)
+        'exp': now + (valid_minutes * 60),
+    }))
     # add standard header to identify this as a JWT
-    # header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
-    # to_sign = '{}.{}'.format(header, payload)
-    # # Sign the jwt using the built in app_identity service
-    # return '{}.{}'.format(to_sign, base64.b64encode(
-    #     app_identity.sign_blob(to_sign)[1]))
+    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
+    to_sign = '{}.{}'.format(header, payload)
+    # Sign the jwt using the built in app_identity service
+    return '{}.{}'.format(to_sign, base64.b64encode(
+        app_identity.sign_blob(to_sign)[1]))

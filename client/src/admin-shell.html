@@ -182,8 +182,7 @@
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
-                // this.$.rebuild_ajax.params = {'userId': this.user.getBasicProfile().getEmail()};
-                this.$.rebuild_ajax.params = {'userId': 'milan'};
+                this.$.rebuild_ajax.params = {'userId': this.user.getBasicProfile().getId()};
                 this.$.rebuild_ajax.generateRequest();
             },
             reindex: function(e) {
