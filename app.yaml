@@ -14,6 +14,10 @@ libraries:
   version: latest
 - name: numpy
   version: latest
+- name: ssl
+  version: 2.7.11
+- name: pycrypto
+  version: 2.6
 
 # client -> client/build/unbundled
 
@@ -76,3 +80,6 @@ builtins:
 #skip_files:
 #- ^(.*/)?.*\.py[co]$
 #- ^(.*/)?\..*$
+
+env_variables:
+  FIREBASE_PROJECT_ID: 'andsnews'

@@ -5,6 +5,7 @@ colormath
 exifread
 googleapiclient
 httplib2
+jwt
 networkx
 oauth2client
 decorator.py

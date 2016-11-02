@@ -9,6 +9,8 @@ FIREBASE = {
     "messagingSenderId": "719127177629"
 }
 
+SERVICE_ACCOUNT = 'andsnews@appspot.gserviceaccount.com'
+
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 
