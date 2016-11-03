@@ -16,6 +16,30 @@ _IDENTITY_ENDPOINT = ('https://identitytoolkit.googleapis.com/'
                       'google.identity.identitytoolkit.v1.IdentityToolkit')
 
 
+class Firebase(object):
+    def __init__(self, path):
+        self.root = FIREBASE['databaseURL']
+        self.path = path
+
+    def get(self, id):
+        return self._request('GET', id)
+
+    def _get_http(self):
+        http = httplib2.Http()
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(FB_SERVICE_ACCOUNT, scopes=_FIREBASE_SCOPES)
+        creds.authorize(http)
+        return http
+
+    def _request(self, method, **kwargs):
+        if 'payload' in kwargs:
+            kwargs['payload'] = json.dumps(kwargs['payload'])
+
+        url = self.root
+        url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
+        response, content = self._get_http().request(url, method=method, body=kwargs['payload'])
+        return json.loads(response.content)
+
+
 def _get_http():
     """Provides an authed http object."""
     http = httplib2.Http()
