@@ -141,11 +141,11 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-                console.log(resp);
+                // console.log(resp);
                 var channel = firebase.database().ref('channels/' + resp.channelId);
-                console.log(channel);
-                channel.on('value', function(data) {
-                    console.log(data.val());
+                // console.log(channel);
+                channel.on('child_added', function(data) {
+                    console.log(data.key, data.val());
                 });
                 // if (!('goog' in window)) return;
                 // if (!(resp.token in this.channels)) {

@@ -17,12 +17,17 @@ _IDENTITY_ENDPOINT = ('https://identitytoolkit.googleapis.com/'
 
 
 class Firebase(object):
-    def __init__(self, path):
-        self.root = FIREBASE['databaseURL']
-        self.path = path
+    """
+    fb = Firebase('channels')
+    fb.post(path='Photo_date', payload='2016: 10')
+    """
+    def __init__(self, path=None):
+        self.url = FIREBASE['databaseURL']
+        if path:
+            self.url += '/' + path
 
-    def get(self, id):
-        return self._request('GET', id)
+    def post(self, **kwargs):
+        return self._request('POST', **kwargs)
 
     def _get_http(self):
         http = httplib2.Http()
@@ -31,13 +36,16 @@ class Firebase(object):
         return http
 
     def _request(self, method, **kwargs):
+        url = self.url
+        if 'path' in kwargs:
+            url += '/' + kwargs['path']
         if 'payload' in kwargs:
             kwargs['payload'] = json.dumps(kwargs['payload'])
 
-        url = self.root
-        url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
-        response, content = self._get_http().request(url, method=method, body=kwargs['payload'])
-        return json.loads(response.content)
+        response, content = self._get_http().request('%s.json' % url, method=method, body=kwargs['payload'])
+        # logging.error(response)
+        # logging.error(content)
+        return json.loads(content)
 
 
 def _get_http():
