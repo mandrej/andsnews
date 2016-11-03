@@ -4,8 +4,9 @@ import base64
 import logging
 import httplib2
 from google.appengine.api import app_identity
-from oauth2client.client import GoogleCredentials
-from config import FIREBASE
+# from oauth2client.client import GoogleCredentials
+from oauth2client.service_account import ServiceAccountCredentials
+from config import FIREBASE, FB_SERVICE_ACCOUNT
 
 _FIREBASE_SCOPES = [
     'https://www.googleapis.com/auth/firebase.database',
@@ -20,9 +21,23 @@ def _get_http():
     http = httplib2.Http()
     # Use application default credentials to make the Firebase calls
     # https://firebase.google.com/docs/reference/rest/database/user-auth
-    creds = GoogleCredentials.get_application_default().create_scoped(_FIREBASE_SCOPES)
+    # creds = GoogleCredentials.get_application_default().create_scoped(_FIREBASE_SCOPES)
+    # creds.authorize(http)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(FB_SERVICE_ACCOUNT, scopes=_FIREBASE_SCOPES)
     creds.authorize(http)
     return http
+
+
+def firebase_put(u_id, message=None):
+    url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
+    response, content = _get_http().request(url, method='PUT', body=message)
+    return json.loads(content)
+
+
+def firebase_post(u_id, message=None):
+    url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
+    response, content = _get_http().request(url, method='POST', body=message)
+    return json.loads(content)
 
 
 def send_firebase_message(u_id, message=None):

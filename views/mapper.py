@@ -9,7 +9,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api import channel
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from fireapi import send_firebase_message
+from fireapi import send_firebase_message, firebase_put, firebase_post
 from models import Counter
 from config import BUCKET
 
@@ -206,8 +206,8 @@ class Builder(Mapper):
             obj.put()
 
             # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
-            send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
+            firebase_post(self.CHANNEL_NAME, json.dumps({'message': '%s %s' % (value, count)}))
 
         # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
-        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        firebase_post(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
 
