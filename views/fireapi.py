@@ -60,18 +60,6 @@ def _get_http():
     return http
 
 
-def firebase_put(u_id, message=None):
-    url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
-    response, content = _get_http().request(url, method='PUT', body=message)
-    return json.loads(content)
-
-
-def firebase_post(u_id, message=None):
-    url = '{}/channels/{}.json'.format(FIREBASE['databaseURL'], u_id)
-    response, content = _get_http().request(url, method='POST', body=message)
-    return json.loads(content)
-
-
 def send_firebase_message(u_id, message=None):
     """Updates data in firebase. If a message is provided, then it updates
      the data at /channels/<channel_id> with the message using the PATCH

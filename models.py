@@ -44,10 +44,9 @@ def filter_param(field, value):
         field = 'year'
     elif field == 'author':
         value = users.User(email=value)
-    try:
+    elif field in ('year', 'iso'):
         value = int(value)
-    except (ValueError, TypeError):
-        pass
+
     return {field: value}
 
 

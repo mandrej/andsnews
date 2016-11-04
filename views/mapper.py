@@ -9,7 +9,7 @@ import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from fireapi import send_firebase_message, firebase_put, firebase_post, Firebase
+from fireapi import send_firebase_message, Firebase
 from models import Counter
 from config import BUCKET
 
@@ -209,8 +209,6 @@ class Builder(Mapper):
             obj.put()
 
             self.FB.post(path=self.CHANNEL_NAME, payload='%s: %s' % (value, count))
-            # firebase_post(self.CHANNEL_NAME, json.dumps('%s: %s' % (value, count)))
 
         self.FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
-        # firebase_post(self.CHANNEL_NAME, json.dumps('END: %s' % datetime.datetime.now()))
 
