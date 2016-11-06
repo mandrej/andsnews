@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
@@ -129,6 +130,15 @@
 
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
+		<firebase-app
+	        app="{{firebase}}"
+	        name="andsnews"
+	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+	        auth-domain="andsnews.firebaseapp.com"
+	        database-url="https://andsnews.firebaseio.com"
+	        storage-bucket="andsnews.appspot.com"
+	        messaging-sender-id="719127177629"></firebase-app>
+
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
@@ -232,6 +242,7 @@
 							view="[[dataView.view]]"
 							user="{{user}}"
 							is-admin="{{isAdmin}}"
+							firebase="{{firebase}}"
 							route="{{route}}"></admin-shell>
 
 						<grid-view
@@ -304,6 +315,7 @@
 				records: { type: Array, value: [], notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
+				firebase: { type: Object, notify: true },
 			},
 			viewChanged: function(view, isAuthorized, isAdmin) {
 				this.debounce('viewChanged', function() {

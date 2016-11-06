@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<!-- <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html"> -->
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
@@ -38,29 +39,47 @@
             @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: 180px; } }
         </style>
 
-        <iron-ajax auto
+        <!-- <iron-ajax auto
 			url="[[_url(kind, view)]]"
 			handle-as="json"
             on-response="handler"
             loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+            debounce-duration="100"></iron-ajax> -->
+
+        <firebase-query
+            app-name="andsnews"
+            path="/Photo/date"
+            data="{{data}}"></firebase-query>
+
+        <!-- <firebase-query
+            app-name="andsnews"
+            path="/Photo/tags"
+            data="{{data}}"></firebase-query> -->
+
+        <!-- <firebase-query
+            app-name="andsnews"
+            path="/Photo/model"
+            data="{{data}}"></firebase-query> -->
+
+        <!-- <firebase-query
+            app-name="andsnews"
+            path="/Photo/color"
+            data="{{data}}"></firebase-query> -->
 
         <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[items]]" as="row">
-                <template is="dom-repeat" items="[[row.items]]" as="rec" on-dom-change="repeatRender">
-                    <div class="rec"
-                        data-field$="[[row.field_name]]" on-tap="applyFilter">
-                        <iron-image src="[[rec.repr_url]]=s400"
-                            style="background-color: #fff"
-                            preload fade sizing="cover"></iron-image>
-                        <div class="title">
-                            <div class="layout horizontal justified">
-                                <span class="self-center">[[rec.name]]</span>
-                                <span class="self-center">[[rec.count]]</span>
-                            </div>
+            <template is="dom-repeat" items="[[data]]" as="rec" on-dom-change="repeatRender">
+                <div class="rec"
+                    data-field="date" on-tap="applyFilter">
+                    <iron-image src="[[rec.repr_url]]=s400"
+                        style="background-color: #fff"
+                        preload fade sizing="cover"></iron-image>
+                    <div class="title">
+                        <div class="layout horizontal justified">
+                            <span class="self-center">[[rec.value]]</span>
+                            <span class="self-center">[[rec.count]]</span>
                         </div>
                     </div>
-                </template>
+                </div>
             </template>
         </div>
 
@@ -108,7 +127,7 @@
                 field: { type: String, value: null, notify: true },
 				value: { type: String, value: null, notify: true },
                 items: { type: Array, value: [], notify: true },
-                loading: { type: Boolean, value: false, notify: true },
+                // loading: { type: Boolean, value: false, notify: true },
             },
             _url: function(kind, view) {
                 if (view == 'grid') {

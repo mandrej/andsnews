@@ -33,15 +33,6 @@
             }
         </style>
 
-        <firebase-app
-            app="{{app}}"
-            name="andsnews"
-            api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-            auth-domain="andsnews.firebaseapp.com"
-            database-url="https://andsnews.firebaseio.com"
-            storage-bucket="andsnews.appspot.com"
-            messaging-sender-id="719127177629"></firebase-app>
-
         <iron-ajax auto
             url="[[_url(view, isAdmin)]]"
             last-response="{{info}}"></iron-ajax>
@@ -129,7 +120,7 @@
                 info: { type: Object },
                 counters: {type: Array },
                 path: { type: String, notify: true },
-                app: { type: Object, notify: true },
+                firebase: { type: Object, notify: true },
                 messages: {type: Array, notify: true },
                 jobs: {type: Array },
             },
@@ -141,7 +132,7 @@
             channelHandler: function(req) {
                 var resp = req.detail.response;
                 this.path = resp.path;
-                var ref = this.app.database().ref(resp.path);
+                var ref = this.firebase.database().ref(resp.path);
                 var self = this;
                 ref.on('child_added', function(data) {
                     self.onMessage(data.val());
