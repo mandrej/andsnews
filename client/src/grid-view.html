@@ -46,25 +46,30 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax> -->
 
-        <firebase-query
-            app-name="andsnews"
-            path="/Photo/date"
-            data="{{data}}"></firebase-query>
-
-        <!-- <firebase-query
-            app-name="andsnews"
-            path="/Photo/tags"
-            data="{{data}}"></firebase-query> -->
-
-        <!-- <firebase-query
-            app-name="andsnews"
-            path="/Photo/model"
-            data="{{data}}"></firebase-query> -->
-
         <!-- <firebase-query
             app-name="andsnews"
             path="/Photo/color"
+            order-by-child="count"
+            limit-to-last="5"
             data="{{data}}"></firebase-query> -->
+        <!-- <firebase-query
+            app-name="andsnews"
+            path="/Photo/model"
+            order-by-child="count"
+            limit-to-last="5"
+            data="{{data}}"></firebase-query> -->
+        <firebase-query
+            app-name="andsnews"
+            path="/Photo/tags"
+            order-by-child="count"
+            limit-to-last="5"
+            data="{{data}}"></firebase-query>
+        <firebase-query
+            app-name="andsnews"
+            path="/Photo/date"
+            order-by-child="count"
+            limit-to-last="5"
+            data="{{data}}"></firebase-query>
 
         <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
             <template is="dom-repeat" items="[[data]]" as="rec" on-dom-change="repeatRender">
