@@ -193,11 +193,10 @@ class BackgroundBuild(RestHandler):
 
             builder.VALUES = []
             builder.FIELD = field
-            builder.CHANNEL_NAME = mem_key
 
-            token = create_custom_token(builder.CHANNEL_NAME, valid_minutes=10)
+            token = create_custom_token(mem_key, valid_minutes=10)
             deferred.defer(builder.run, batch_size=10, _queue='background')
-            self.render({'channelId': builder.CHANNEL_NAME, 'token': token})
+            self.render({'path': mem_key.replace('_', '/'), 'token': token})
 
 
 class Crud(RestHandler):

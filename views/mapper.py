@@ -162,10 +162,10 @@ class Fixer(Mapper):
 
 
 class Builder(Mapper):
+    KIND = None  # ndb model
     FIELD = None
     VALUES = None
-    CHANNEL_NAME = None
-    FB = Firebase('channels')
+    FB = Firebase(KIND)
 
     def map(self, entity):
         return [entity], []
@@ -190,6 +190,9 @@ class Builder(Mapper):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
         kind = self.KIND._class_name()
+
+        if not self.FB.get(path=kind):
+            self.FB.put(path=kind)
         for value, count in tally.items():
             args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
@@ -208,7 +211,15 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            self.FB.post(path=self.CHANNEL_NAME, payload='%s: %s' % (value, count))
+            key = str(value).replace(' ', '%20').replace('.', ',')
+            path = '%s/%s/%s' % (kind, self.FIELD, key)
+            self.FB.put(path=path, payload={
+                'value': value,
+                'count': count,
+                'repr_url': obj.repr_url,
+                'repr_stamp': obj.repr_stamp.isoformat()
+            })
 
-        self.FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
+        # self.FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
+        # self.FB.post(path=self.CHANNEL_NAME, payload={'end': '%s' % datetime.datetime.now()})
 

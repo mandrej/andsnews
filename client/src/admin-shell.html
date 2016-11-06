@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -31,6 +32,15 @@
                 background: var(--secondary-text-color);
             }
         </style>
+
+        <firebase-app
+            app="{{app}}"
+            name="andsnews"
+            api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+            auth-domain="andsnews.firebaseapp.com"
+            database-url="https://andsnews.firebaseio.com"
+            storage-bucket="andsnews.appspot.com"
+            messaging-sender-id="719127177629"></firebase-app>
 
         <iron-ajax auto
             url="[[_url(view, isAdmin)]]"
@@ -80,19 +90,6 @@
         </div>
     </template>
 
-    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M",
-            authDomain: "andsnews.firebaseapp.com",
-            databaseURL: "https://andsnews.firebaseio.com",
-            storageBucket: "andsnews.appspot.com",
-            messagingSenderId: "719127177629"
-        };
-        firebase.initializeApp(config);
-    </script>
-
     <script>
         Polymer({
             is: 'admin-shell',
@@ -131,7 +128,9 @@
                 isAdmin: { type: Boolean, value: false, notify: true },
                 info: { type: Object },
                 counters: {type: Array },
-                channels: { type: Object, value: {} },
+                path: { type: String, notify: true },
+                app: { type: Object, notify: true },
+                messages: {type: Array, notify: true },
                 jobs: {type: Array },
             },
             _url: function(view, isAdmin) {
@@ -141,10 +140,11 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-                var channel = firebase.database().ref('channels/' + resp.channelId);
-                // console.log(channel);
-                channel.on('child_added', function(data) {
-                    console.log(data.key, data.val());
+                this.path = resp.path;
+                var ref = this.app.database().ref(resp.path);
+                var self = this;
+                ref.on('child_added', function(data) {
+                    self.onMessage(data.val());
                 });
                 // if (!(resp.token in this.channels)) {
                     // firebase.auth().signInWithCustomToken(resp.token).catch(function(error) {
@@ -164,11 +164,10 @@
                     // }.bind(this);
                 // }
 			},
-            onMessage: function (value) {
-                // var resp = JSON.parse(e.data),
-                //     toast = this.$.toast;
-                //
-                // toast.setAttribute('text', resp.message);
+            onMessage: function (data) {
+                var toast = this.$.toast;
+                toast.setAttribute('text', data.value);
+                toast.open();
                 // toast.style.backgroundColor = '#212121';
                 // if (!toast.opened) toast.open();
                 // if (resp.message == 'END') {

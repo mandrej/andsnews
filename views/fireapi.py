@@ -26,12 +26,22 @@ class Firebase(object):
         if path:
             self.url += '/' + path
 
+    def get(self, **kwargs):
+        return self._request('GET', **kwargs)
+
+    def put(self, **kwargs):
+        return self._request('PUT', **kwargs)
+
     def post(self, **kwargs):
         return self._request('POST', **kwargs)
+
+    def delete(self, **kwargs):
+        return self._request('DELETE', **kwargs)
 
     def _get_http(self):
         http = httplib2.Http()
         creds = ServiceAccountCredentials.from_json_keyfile_dict(FB_SERVICE_ACCOUNT, scopes=_FIREBASE_SCOPES)
+        # logging.error(creds.service_account_email) fb-service-account-for-andsnew@andsnews.iam.gserviceaccount.com
         creds.authorize(http)
         return http
 
@@ -41,8 +51,11 @@ class Firebase(object):
             url += '/' + kwargs['path']
         if 'payload' in kwargs:
             kwargs['payload'] = json.dumps(kwargs['payload'])
+        else:
+            kwargs['payload'] = None
 
-        response, content = self._get_http().request('%s.json' % url, method=method, body=kwargs['payload'])
+            # logging.error('%s.json' % url)
+        response, content = self._get_http().request('%s.json?print=pretty' % url, method=method, body=kwargs['payload'])
         # logging.error(response)
         # logging.error(content)
         return json.loads(content)
