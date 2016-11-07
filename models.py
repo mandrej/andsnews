@@ -19,6 +19,7 @@ from operator import itemgetter
 from config import COLORS, ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
+from views.fireapi import Firebase
 from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
@@ -40,11 +41,13 @@ def filter_param(field, value):
         assert (field and value)
     except AssertionError:
         return {}
+
     if field == 'date':
         field = 'year'
+        value = int(value)
     elif field == 'author':
         value = users.User(email=value)
-    elif field in ('year', 'iso'):
+    elif field == 'iso':
         value = int(value)
 
     return {field: value}
@@ -328,6 +331,17 @@ def update_counter(delta, args):
         obj.count += delta
         obj.put()
 
+        # firebase
+        fb = Firebase(params['forkind'])
+        key = str(obj.value).replace(' ', '%20').replace('.', ',')
+        path = '%s/%s/%s' % (params['forkind'], params['field'], key)
+        fb.put(path=path, payload={
+            'kind': params['forkind'].lower(),
+            'field_name': params['field'],
+            'value': params['value'],
+            'count': obj.count
+        })
+
 
 @ndb.toplevel
 def update_representation(new_pairs, old_pairs):
@@ -350,6 +364,15 @@ def update_representation(new_pairs, old_pairs):
             counter.repr_url = latest.serving_url
             counter.put_async()
             logging.info('UPDATE %s %s' % (key_names[i], counter.count))
+
+            # firebase
+            fb = Firebase(params['forkind'])
+            key = str(counter.value).replace(' ', '%20').replace('.', ',')
+            path = '%s/%s/%s' % (params['forkind'], params['field'], key)
+            fb.patch(path=path, payload={
+                'repr_url': counter.repr_url,
+                'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
+            })
 
 
 def incr_count(*args):

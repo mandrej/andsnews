@@ -1,6 +1,7 @@
 import re
 import json
 import uuid
+import time
 import logging
 import datetime
 import itertools
@@ -191,8 +192,8 @@ class Builder(Mapper):
         tally = collections.Counter(values)
         kind = self.KIND._class_name()
 
-        if not self.FB.get(path=kind):
-            self.FB.put(path=kind)
+        # if not self.FB.get(path=kind):
+        self.FB.put(path=kind)
         for value, count in tally.items():
             args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
@@ -214,10 +215,12 @@ class Builder(Mapper):
             key = str(value).replace(' ', '%20').replace('.', ',')
             path = '%s/%s/%s' % (kind, self.FIELD, key)
             self.FB.put(path=path, payload={
+                'kind': kind.lower(),
+                'field_name': self.FIELD,
                 'value': value,
                 'count': count,
                 'repr_url': obj.repr_url,
-                'repr_stamp': obj.repr_stamp.isoformat()
+                'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
             })
 
         # self.FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())

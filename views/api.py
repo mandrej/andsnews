@@ -3,7 +3,7 @@ import logging
 import webapp2
 import datetime
 from slugify import slugify
-from google.appengine.api import users, search, channel, datastore_errors
+from google.appengine.api import users, search, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, \

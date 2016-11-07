@@ -46,12 +46,12 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax> -->
 
-        <!-- <firebase-query
+        <firebase-query
             app-name="andsnews"
             path="/Photo/color"
             order-by-child="count"
             limit-to-last="5"
-            data="{{data}}"></firebase-query> -->
+            data="{{data}}"></firebase-query>
         <!-- <firebase-query
             app-name="andsnews"
             path="/Photo/model"
@@ -67,7 +67,7 @@
         <firebase-query
             app-name="andsnews"
             path="/Photo/date"
-            order-by-child="count"
+            order-by-child="repr_stamp"
             limit-to-last="5"
             data="{{data}}"></firebase-query>
 
@@ -164,7 +164,8 @@
             },
             applyFilter: function(e) {
                 // photo
-                var target = e.target;
+                var target = e.target,
+                    rec = e.model.rec;
                 while (target !== this && !target._templateInstance) {
                     target = target.parentNode;
                 }
@@ -174,7 +175,7 @@
                     id: 'hero',
                     fromPage: this
                 };
-                 this.set('route.path', ['/detail', this.kind, e.model.row.field_name, '' + e.model.rec.name].join('/'));
+                this.set('route.path', ['/detail', rec.kind, rec.field_name, '' + rec.value].join('/'));
 			},
             showDetail: function(e) {
                 // entry
