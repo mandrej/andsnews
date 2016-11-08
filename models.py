@@ -355,11 +355,11 @@ def update_representation(new_pairs, old_pairs):
         key_names.append('%s||%s||%s' % args)
         params.append(dict(zip(('forkind', 'field', 'value'), args)))
 
+    payload = {}
     for i, query in enumerate(queries):
         latest = query.get()
         counter = Counter.get_or_insert(key_names[i], **params[i])
 
-        payload = {}
         if latest is not None and latest.date != counter.repr_stamp:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
@@ -376,7 +376,7 @@ def update_representation(new_pairs, old_pairs):
             #     'repr_url': counter.repr_url,
             #     'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
             # })
-
+    logging.eroro(payload)
     FB.patch(path='photo.json', payload=payload)
 
 
