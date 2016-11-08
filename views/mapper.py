@@ -208,7 +208,7 @@ class Builder(Mapper):
             obj.put()
 
             key = str(value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s.json' % (kind, self.FIELD, key)
+            path = '%s/%s/%s.json' % (kind.lower(), self.FIELD, key)
             FB.put(path=path, payload={
                 'kind': kind.lower(),
                 'field_name': self.FIELD,

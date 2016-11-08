@@ -48,25 +48,25 @@
 
         <firebase-query
             app-name="andsnews"
-            path="/Photo/color"
+            path="/[[kind]]/color"
             order-by-child="count"
             limit-to-last="5"
             data="{{data}}"></firebase-query>
         <!-- <firebase-query
             app-name="andsnews"
-            path="/Photo/model"
+            path="/[[kind]]/model"
             order-by-child="count"
             limit-to-last="5"
             data="{{data}}"></firebase-query> -->
         <firebase-query
             app-name="andsnews"
-            path="/Photo/tags"
+            path="/[[kind]]/tags"
             order-by-child="count"
             limit-to-last="5"
             data="{{data}}"></firebase-query>
         <firebase-query
             app-name="andsnews"
-            path="/Photo/date"
+            path="/[[kind]]/date"
             order-by-child="repr_stamp"
             limit-to-last="5"
             data="{{data}}"></firebase-query>

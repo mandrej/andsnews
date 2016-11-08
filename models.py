@@ -332,6 +332,16 @@ def update_counter(delta, args):
         obj.count += delta
         obj.put()
 
+        # firebase
+        key = str(obj.value).replace(' ', '%20').replace('.', ',')
+        path = '%s/%s/%s.json' % (obj.forkind.lower(), obj.field, key)
+        FB.patch(path=path, payload={
+            'kind': obj.forkind.lower(),
+            'field_name': obj.field,
+            'value': obj.value,
+            'count': obj.count
+        })
+
 
 @ndb.toplevel
 def update_representation(new_pairs, old_pairs):
@@ -357,12 +367,8 @@ def update_representation(new_pairs, old_pairs):
 
             # firebase
             key = str(counter.value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s.json' % (counter.forkind, counter.field, key)
-            FB.put(path=path, payload={
-                'kind': counter.forkind.lower(),
-                'field_name': counter.field,
-                'value': counter.value,
-                'count': counter.count,
+            path = '%s/%s/%s.json' % (counter.forkind.lower(), counter.field, key)
+            FB.patch(path=path, payload={
                 'repr_url': counter.repr_url,
                 'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
             })

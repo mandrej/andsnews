@@ -30,6 +30,9 @@ class Firebase(object):
     def put(self, **kwargs):
         return self._request('PUT', **kwargs)
 
+    def patch(self, **kwargs):
+        return self._request('PATCH', **kwargs)
+
     def post(self, **kwargs):
         return self._request('POST', **kwargs)
 
