@@ -1,17 +1,15 @@
 import re
 import json
 import uuid
-import time
 import logging
-import datetime
 import itertools
 import collections
 import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from fireapi import send_firebase_message, Firebase
-from models import Counter
+from fireapi import send_firebase_message
+from models import Counter, FB
 from config import BUCKET
 
 
@@ -166,7 +164,6 @@ class Builder(Mapper):
     KIND = None  # ndb model
     FIELD = None
     VALUES = None
-    FB = Firebase(KIND)
 
     def map(self, entity):
         return [entity], []
@@ -192,8 +189,6 @@ class Builder(Mapper):
         tally = collections.Counter(values)
         kind = self.KIND._class_name()
 
-        # if not self.FB.get(path=kind):
-        self.FB.put(path=kind)
         for value, count in tally.items():
             args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
@@ -213,8 +208,8 @@ class Builder(Mapper):
             obj.put()
 
             key = str(value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s' % (kind, self.FIELD, key)
-            self.FB.put(path=path, payload={
+            path = '%s/%s/%s.json' % (kind, self.FIELD, key)
+            FB.put(path=path, payload={
                 'kind': kind.lower(),
                 'field_name': self.FIELD,
                 'value': value,
@@ -223,6 +218,6 @@ class Builder(Mapper):
                 'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
             })
 
-        # self.FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
-        # self.FB.post(path=self.CHANNEL_NAME, payload={'end': '%s' % datetime.datetime.now()})
+        # FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
+        # FB.post(path=self.CHANNEL_NAME, payload={'end': '%s' % datetime.datetime.now()})
 

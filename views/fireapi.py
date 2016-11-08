@@ -21,19 +21,14 @@ class Firebase(object):
     fb = Firebase('channels')
     fb.post(path='Photo_date', payload='2016: 10')
     """
-    def __init__(self, path=None):
+    def __init__(self):
         self.url = FIREBASE['databaseURL']
-        if path:
-            self.url += '/' + path
 
     def get(self, **kwargs):
         return self._request('GET', **kwargs)
 
     def put(self, **kwargs):
         return self._request('PUT', **kwargs)
-
-    def patch(self, **kwargs):
-        return self._request('PATCH', **kwargs)
 
     def post(self, **kwargs):
         return self._request('POST', **kwargs)
@@ -57,10 +52,10 @@ class Firebase(object):
         else:
             kwargs['payload'] = None
 
-            # logging.error('%s.json' % url)
-        response, content = self._get_http().request('%s.json?print=pretty' % url, method=method, body=kwargs['payload'])
+        logging.error('%s %s' % (method, url))
+        response, content = self._get_http().request('%s?print=pretty' % url, method=method, body=kwargs['payload'])
         # logging.error(response)
-        # logging.error(content)
+        logging.error(content)
         return json.loads(content)
 
 

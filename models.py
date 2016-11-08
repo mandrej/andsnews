@@ -30,6 +30,7 @@ PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
 PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
 PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
 ENTRY_COUNTER_FIELDS = ('date', 'tags', 'author')
+FB = Firebase()
 
 
 def rounding(val, values):
@@ -331,17 +332,6 @@ def update_counter(delta, args):
         obj.count += delta
         obj.put()
 
-        # firebase
-        fb = Firebase(params['forkind'])
-        key = str(obj.value).replace(' ', '%20').replace('.', ',')
-        path = '%s/%s/%s' % (params['forkind'], params['field'], key)
-        fb.put(path=path, payload={
-            'kind': params['forkind'].lower(),
-            'field_name': params['field'],
-            'value': params['value'],
-            'count': obj.count
-        })
-
 
 @ndb.toplevel
 def update_representation(new_pairs, old_pairs):
@@ -366,10 +356,13 @@ def update_representation(new_pairs, old_pairs):
             logging.info('UPDATE %s %s' % (key_names[i], counter.count))
 
             # firebase
-            fb = Firebase(params['forkind'])
             key = str(counter.value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s' % (params['forkind'], params['field'], key)
-            fb.patch(path=path, payload={
+            path = '%s/%s/%s.json' % (counter.forkind, counter.field, key)
+            FB.put(path=path, payload={
+                'kind': counter.forkind.lower(),
+                'field_name': counter.field,
+                'value': counter.value,
+                'count': counter.count,
                 'repr_url': counter.repr_url,
                 'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
             })
