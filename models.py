@@ -359,19 +359,25 @@ def update_representation(new_pairs, old_pairs):
         latest = query.get()
         counter = Counter.get_or_insert(key_names[i], **params[i])
 
+        payload = {}
         if latest is not None and latest.date != counter.repr_stamp:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
             counter.put_async()
             logging.info('UPDATE %s %s' % (key_names[i], counter.count))
 
-            # firebase
             key = str(counter.value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s.json' % (counter.forkind.lower(), counter.field, key)
-            FB.patch(path=path, payload={
-                'repr_url': counter.repr_url,
-                'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
-            })
+            payload['%s/%s/repr_url' % (counter.field, key)] = counter.repr_url
+            payload['%s/%s/repr_stamp' % (counter.field, key)] = - int(counter.repr_stamp.strftime("%s"))
+
+            # firebase
+            # path = '%s/%s/%s.json' % (counter.forkind.lower(), counter.field, key)
+            # FB.patch(path=path, payload={
+            #     'repr_url': counter.repr_url,
+            #     'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
+            # })
+
+    FB.patch(path='photo.json', payload=payload)
 
 
 def incr_count(*args):
