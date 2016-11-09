@@ -319,28 +319,24 @@ class Counter(ndb.Model):
     repr_url = ndb.StringProperty()
 
 
-def update_counter(delta, args):
-    try:
-        assert len(args) == 3
-    except AssertionError:
-        logging.error(args)
-    else:
-        key_name = '%s||%s||%s' % args
-        params = dict(zip(('forkind', 'field', 'value'), map(str, args)))  # stringify year
+def update_counter(delta, *args):
+    key_name = '%s||%s||%s' % args
+    params = dict(zip(('forkind', 'field', 'value'), map(str, args)))  # stringify year
 
-        obj = Counter.get_or_insert(key_name, **params)
-        obj.count += delta
-        obj.put()
+    obj = Counter.get_or_insert(key_name, **params)
+    obj.count += delta
+    obj.put()
 
-        # firebase
-        key = str(obj.value).replace(' ', '%20').replace('.', ',')
-        path = '%s/%s/%s.json' % (obj.forkind.lower(), obj.field, key)
-        FB.patch(path=path, payload={
-            'kind': obj.forkind.lower(),
-            'field_name': obj.field,
-            'value': obj.value,
-            'count': obj.count
-        })
+    # firebase
+    key = str(obj.value).replace(' ', '%20').replace('.', ',')
+    path = '%s/%s/%s.json' % (obj.forkind.lower(), obj.field, key)
+    payload = {
+        'kind': obj.forkind.lower(),
+        'field_name': obj.field,
+        'value': obj.value,
+        'count': obj.count
+    }
+    deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
 
 
 @ndb.toplevel
@@ -376,16 +372,8 @@ def update_representation(new_pairs, old_pairs):
             #     'repr_url': counter.repr_url,
             #     'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
             # })
-    logging.eroro(payload)
-    FB.patch(path='photo.json', payload=payload)
-
-
-def incr_count(*args):
-    deferred.defer(update_counter, 1, args)
-
-
-def decr_count(*args):
-    deferred.defer(update_counter, -1, args)
+    logging.error(payload)
+    deferred.defer(FB.patch, path='photo.json', payload=payload, _queue='background')
 
 
 def update_counter_field(old, new, kind, field):
@@ -394,26 +382,26 @@ def update_counter_field(old, new, kind, field):
         new_tags = set(new or [])
         if old_tags - new_tags:
             for name in list(old_tags - new_tags):
-                decr_count(kind, field, name)
+                update_counter(-1, kind, field, name)
         if new_tags - old_tags:
             for name in list(new_tags - old_tags):
-                incr_count(kind, field, name)
+                update_counter(1, kind, field, name)
     else:
         if old != new:
             if old:
                 if field == 'author':
-                    decr_count(kind, field, old.email())
+                    update_counter(-1, kind, field, old.email())
                 elif field == 'date':
-                    decr_count(kind, field, old.year)
+                    update_counter(-1, kind, field, old.year)
                 else:
-                    decr_count(kind, field, old)
+                    update_counter(-1, kind, field, old)
             if new:
                 if field == 'author':
-                    incr_count(kind, field, new.email())
+                    update_counter(1, kind, field, new.email())
                 elif field == 'date':
-                    incr_count(kind, field, new.year)
+                    update_counter(1, kind, field, new.year)
                 else:
-                    incr_count(kind, field, new)
+                    update_counter(1, kind, field, new)
 
 
 class Photo(ndb.Model):

@@ -6,7 +6,7 @@ from PIL import Image
 from StringIO import StringIO
 
 from palette import extract_colors
-from models import incr_count, decr_count, range_names, rgb_hls
+from models import range_names, rgb_hls
 from palette import rgb_to_hex
 from handlers import BaseHandler
 
@@ -61,11 +61,11 @@ class Palette(BaseHandler):
         new_range_names = range_names(new_rgb)
         new_color = characterise(*new_range_names)
         if new_rgb != obj.rgb or new_color != obj.color:
-            decr_count('Photo', 'color', obj.color)
+            # decr_count('Photo', 'color', obj.color)
             obj.rgb = new_rgb
             obj.hue, obj.lum, obj.sat = new_range_names
             obj.put()
-            incr_count('Photo', 'color', obj.color)
+            # incr_count('Photo', 'color', obj.color)
             self.render_json({
                 'success': True,
                 'similar_url': self.uri_for('photo_all_filter', field='color', value=obj.color)
