@@ -327,16 +327,15 @@ def update_counter(delta, *args):
     obj.count += delta
     obj.put()
 
-    # firebase
-    key = str(obj.value).replace(' ', '%20').replace('.', ',')
-    path = '%s/%s/%s.json' % (obj.forkind.lower(), obj.field, key)
-    payload = {
-        'kind': obj.forkind.lower(),
-        'field_name': obj.field,
-        'value': obj.value,
-        'count': obj.count
-    }
-    deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
+    if obj.field in PHOTO_FILTER_FIELDS:
+        key = str(obj.value).replace(' ', '%20').replace('.', ',')
+        path = 'photo/%s.json' % key
+        payload = {
+            'field_name': obj.field,
+            'value': obj.value,
+            'count': obj.count
+        }
+        deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
 
 
 @ndb.toplevel
@@ -351,7 +350,6 @@ def update_representation(new_pairs, old_pairs):
         key_names.append('%s||%s||%s' % args)
         params.append(dict(zip(('forkind', 'field', 'value'), args)))
 
-    payload = {}
     for i, query in enumerate(queries):
         latest = query.get()
         counter = Counter.get_or_insert(key_names[i], **params[i])
@@ -362,18 +360,14 @@ def update_representation(new_pairs, old_pairs):
             counter.put_async()
             logging.info('UPDATE %s %s' % (key_names[i], counter.count))
 
-            key = str(counter.value).replace(' ', '%20').replace('.', ',')
-            payload['%s/%s/repr_url' % (counter.field, key)] = counter.repr_url
-            payload['%s/%s/repr_stamp' % (counter.field, key)] = - int(counter.repr_stamp.strftime("%s"))
-
-            # firebase
-            # path = '%s/%s/%s.json' % (counter.forkind.lower(), counter.field, key)
-            # FB.patch(path=path, payload={
-            #     'repr_url': counter.repr_url,
-            #     'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
-            # })
-    logging.error(payload)
-    deferred.defer(FB.patch, path='photo.json', payload=payload, _queue='background')
+            if counter.field in PHOTO_FILTER_FIELDS:
+                key = str(counter.value).replace(' ', '%20').replace('.', ',')
+                path = 'photo/%s.json' % key
+                payload = {
+                    'repr_url': counter.repr_url,
+                    'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
+                }
+                deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
 
 
 def update_counter_field(old, new, kind, field):

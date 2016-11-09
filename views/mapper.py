@@ -9,7 +9,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
 from fireapi import send_firebase_message
-from models import Counter, FB
+from models import Counter, PHOTO_FILTER_FIELDS, FB
 from config import BUCKET
 
 
@@ -207,16 +207,16 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            key = str(value).replace(' ', '%20').replace('.', ',')
-            path = '%s/%s/%s.json' % (kind.lower(), self.FIELD, key)
-            FB.put(path=path, payload={
-                'kind': kind.lower(),
-                'field_name': self.FIELD,
-                'value': value,
-                'count': count,
-                'repr_url': obj.repr_url,
-                'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
-            })
+            if self.FIELD in PHOTO_FILTER_FIELDS:
+                key = str(value).replace(' ', '%20').replace('.', ',')
+                path = 'photo/%s.json' % key
+                FB.put(path=path, payload={
+                    'field_name': self.FIELD,
+                    'value': value,
+                    'count': count,
+                    'repr_url': obj.repr_url,
+                    'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
+                })
 
         # FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
         # FB.post(path=self.CHANNEL_NAME, payload={'end': '%s' % datetime.datetime.now()})
