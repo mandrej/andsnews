@@ -325,17 +325,17 @@ def update_counter(delta, *args):
 
     obj = Counter.get_or_insert(key_name, **params)
     obj.count += delta
-    obj.put()
+    obj.put_async()
 
-    if obj.field in PHOTO_FILTER_FIELDS:
-        key = str(obj.value).replace(' ', '%20').replace('.', ',')
-        path = '%s/%s.json' % (obj.field, key)
-        payload = {
-            'field_name': obj.field,
-            'value': obj.value,
-            'count': obj.count
-        }
-        FB.patch(path=path, payload=payload)
+    # if obj.field in PHOTO_FILTER_FIELDS:
+    #     key = str(obj.value).replace(' ', '%20').replace('.', ',')
+    #     path = '%s/%s.json' % (obj.field, key)
+    #     payload = {
+    #         'field_name': obj.field,
+    #         'value': obj.value,
+    #         'count': obj.count
+    #     }
+    #     FB.patch(path=path, payload=payload)
 
 
 def update_representation(new_pairs, old_pairs):
@@ -356,17 +356,17 @@ def update_representation(new_pairs, old_pairs):
         if latest is not None and latest.date != obj.repr_stamp:
             obj.repr_stamp = latest.date
             obj.repr_url = latest.serving_url
-            obj.put()
+            obj.put_async()
             logging.info('UPDATE %s %s' % (key_names[i], obj.count))
 
-            if obj.field in PHOTO_FILTER_FIELDS:
-                key = str(obj.value).replace(' ', '%20').replace('.', ',')
-                path = '%s/%s.json' % (obj.field, key)
-                payload = {
-                    'repr_url': obj.repr_url,
-                    'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
-                }
-                FB.patch(path=path, payload=payload)
+            # if obj.field in PHOTO_FILTER_FIELDS:
+            #     key = str(obj.value).replace(' ', '%20').replace('.', ',')
+            #     path = '%s/%s.json' % (obj.field, key)
+            #     payload = {
+            #         'repr_url': obj.repr_url,
+            #         'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
+            #     }
+            #     FB.patch(path=path, payload=payload)
 
 
 def update_counter_field(old, new, kind, field):
@@ -375,26 +375,26 @@ def update_counter_field(old, new, kind, field):
         new_tags = set(new or [])
         if old_tags - new_tags:
             for name in list(old_tags - new_tags):
-                update_counter(-1, kind, field, name)
+                deferred.defer(update_counter, -1, kind, field, name, _queue='background')
         if new_tags - old_tags:
             for name in list(new_tags - old_tags):
-                update_counter(1, kind, field, name)
+                deferred.defer(update_counter, 1, kind, field, name, _queue='background')
     else:
         if old != new:
             if old:
                 if field == 'author':
-                    update_counter(-1, kind, field, old.email())
+                    deferred.defer(update_counter, -1, kind, field, old.email(), _queue='background')
                 elif field == 'date':
-                    update_counter(-1, kind, field, old.year)
+                    deferred.defer(update_counter, -1, kind, field, old.year, _queue='background')
                 else:
-                    update_counter(-1, kind, field, old)
+                    deferred.defer(update_counter, -1, kind, field, old, _queue='background')
             if new:
                 if field == 'author':
-                    update_counter(1, kind, field, new.email())
+                    deferred.defer(update_counter, 1, kind, field, new.email(), _queue='background')
                 elif field == 'date':
-                    update_counter(1, kind, field, new.year)
+                    deferred.defer(update_counter, 1, kind, field, new.year, _queue='background')
                 else:
-                    update_counter(1, kind, field, new)
+                    deferred.defer(update_counter, 1, kind, field, new, _queue='background')
 
 
 class Photo(ndb.Model):
@@ -531,7 +531,7 @@ class Photo(ndb.Model):
                 update_counter_field(None, value, 'Photo', field)
 
             new_pairs = self.changed_pairs()
-            update_representation(new_pairs, [])
+            deferred.defer(update_representation, new_pairs, [], _queue='background')
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -552,13 +552,13 @@ class Photo(ndb.Model):
         self.iso = data['iso']
         self.date = data['date']
         self.put()
-        deferred.defer(self.index_doc)
+        deferred.defer(self.index_doc, _queue='background')
 
         new_pairs = self.changed_pairs()
-        update_representation(new_pairs, old_pairs)
+        deferred.defer(update_representation, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
-        deferred.defer(remove_doc, self.key.urlsafe())
+        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         blobstore.delete(self.blob_key)
 
         for field in PHOTO_COUNTER_FIELDS:
@@ -567,7 +567,7 @@ class Photo(ndb.Model):
 
         old_pairs = self.changed_pairs()
         self.key.delete()
-        update_representation([], old_pairs)
+        deferred.defer(update_representation, [], old_pairs, _queue='background')
 
     @webapp2.cached_property
     def serving_url(self):
@@ -646,7 +646,7 @@ class Entry(ndb.Model):
             value = getattr(self, field, None)
             update_counter_field(None, value, 'Entry', field)
 
-        deferred.defer(self.index_doc)
+        deferred.defer(self.index_doc, _queue='background')
 
     def edit(self, data):
         for field in ENTRY_COUNTER_FIELDS:
@@ -662,10 +662,10 @@ class Entry(ndb.Model):
         self.front_img = data['front_img']
         self.put()
 
-        deferred.defer(self.index_doc)
+        deferred.defer(self.index_doc, _queue='background')
 
     def remove(self):
-        deferred.defer(remove_doc, self.key.urlsafe())
+        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
 
         for field in ENTRY_COUNTER_FIELDS:
             value = getattr(self, field, None)

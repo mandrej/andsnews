@@ -15,6 +15,7 @@
         <style include="shared-styles">
             .container {
                 padding: 16px;
+                padding-bottom: 54px;
             }
             h1 {
                 margin-bottom: 0.5em;
@@ -38,19 +39,22 @@
             last-response="{{info}}"></iron-ajax>
 
         <iron-ajax id="rebuild_ajax"
+            content-type="application/json"
             on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <iron-ajax id="reindex_ajax"
+            content-type="application/json"
             on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <iron-ajax id="fix_ajax"
+            content-type="application/json"
             on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <div class="container" id="container">
-            <paper-toast id="toast" horizontal-align="right"></paper-toast>
+            <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
             <div hidden$="[[!isAdmin]]" class="layout horizontal justified wrap">
                 <div>
@@ -119,10 +123,7 @@
                 isAdmin: { type: Boolean, value: false, notify: true },
                 info: { type: Object },
                 counters: {type: Array },
-                path: { type: String, notify: true },
                 firebase: { type: Object, notify: true },
-                messages: {type: Array, notify: true },
-                jobs: {type: Array },
             },
             _url: function(view, isAdmin) {
                 if (view == 'maintenance' && isAdmin) {
@@ -131,10 +132,9 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-                this.path = resp.path;
-                var ref = this.firebase.database().ref(resp.path);
+                var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
                 var self = this;
-                ref.on('child_added', function(data) {
+                ref.on('value', function(data) {
                     self.onMessage(data.val());
                 });
                 // if (!(resp.token in this.channels)) {
@@ -157,28 +157,28 @@
 			},
             onMessage: function (data) {
                 var toast = this.$.toast;
-                toast.setAttribute('text', data.value);
+                toast.fitInto = this.$.container;
+                toast.setAttribute('text', data);
+                if (data.startsWith('END')) {
+                    toast.style.backgroundColor = '#dc2128';
+                } else {
+                    toast.style.backgroundColor = '#212121';
+                }
                 toast.open();
-                // toast.style.backgroundColor = '#212121';
-                // if (!toast.opened) toast.open();
-                // if (resp.message == 'END') {
-                //     toast.style.backgroundColor = '#dc2128';
-                //     this.channels[token].readyState = 3; // close socket
-                //     // this.channels[token].close(); // close socket
-                //     delete this.channels[token];
-                // }
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
-                this.$.rebuild_ajax.params = {'userId': this.user.getBasicProfile().getId()};
+                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.rebuild_ajax.generateRequest();
             },
             reindex: function(e) {
                 this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
+                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.reindex_ajax.generateRequest();
             },
             fix: function(e) {
                 this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
+                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.fix_ajax.generateRequest();
             },
         });

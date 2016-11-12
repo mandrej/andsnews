@@ -139,6 +139,8 @@
 	        storage-bucket="andsnews.appspot.com"
 	        messaging-sender-id="719127177629"></firebase-app>
 
+		<!-- <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError"> -->
+
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
@@ -380,10 +382,14 @@
 					this.set('isAdmin', true);
 				}
             },
+			handleError: function(e) {
+				console.log(e);
+			},
 			userName: function(user) {
-				if (user) return user.getBasicProfile().getName();
+				if (user) return user.getBasicProfile().getGivenName();
 			},
 			userImg: function(user) {
+				console.log(user.getBasicProfile().getImageUrl());
 				if (user) return user.getBasicProfile().getImageUrl();
 			},
 			addRecord: function(e) {

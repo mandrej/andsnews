@@ -1,15 +1,14 @@
 import re
-import json
 import uuid
 import logging
 import itertools
+import datetime
 import collections
 import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from fireapi import send_firebase_message
-from models import Counter, PHOTO_FILTER_FIELDS, FB
+from models import Counter, FB
 from config import BUCKET
 
 
@@ -93,13 +92,11 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
-            # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
-            send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': '%s' % entity.slug}))
+            FB.put(path=self.CHANNEL_NAME, payload='INDEX %s' % entity.slug)
         self.to_put = []
 
     def finish(self):
-        # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
-        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
 
 
 class Fixer(Mapper):
@@ -145,22 +142,19 @@ class Fixer(Mapper):
                     entity.put()
 
                 except gcs.errors as e:
-                    # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
-                    send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': e.message}))
+                    FB.put(path=self.CHANNEL_NAME, payload=e.message)
                 else:
-                    # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
-                    send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': u'{} DONE'.format(entity.slug)}))
+                    FB.put(path=self.CHANNEL_NAME, payload='DONE %s' % entity.slug)
             else:
-                # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
-                send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': u'{} SKIPPED'.format(entity.slug)}))
+                FB.put(path=self.CHANNEL_NAME, payload='SKIPPED %s' % entity.slug)
         self.to_put = []
 
     def finish(self):
-        # channel.send_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
-        send_firebase_message(self.CHANNEL_NAME, json.dumps({'message': 'END'}))
+        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
 
 
 class Builder(Mapper):
+    CHANNEL_NAME = None
     KIND = None  # ndb model
     FIELD = None
     VALUES = None
@@ -178,8 +172,6 @@ class Builder(Mapper):
             values = list(itertools.chain(*values))
         elif prop == 'author':
             values = [x.email() for x in values]
-        # elif prop == 'lens':
-        #     values = map(str, values)  # 1007 DP2Q lens TODO check this
 
         self.VALUES.extend(values)
         self.to_put = []
@@ -188,7 +180,6 @@ class Builder(Mapper):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
         kind = self.KIND._class_name()
-
         for value, count in tally.items():
             args = (kind, self.FIELD, str(value))  # stringify year
             key_name = '%s||%s||%s' % args
@@ -207,17 +198,17 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            if self.FIELD in PHOTO_FILTER_FIELDS:
-                key = str(value).replace(' ', '%20').replace('.', ',')
-                path = '%s/%s.json' % (self.FIELD, key)
-                FB.put(path=path, payload={
-                    'field_name': self.FIELD,
-                    'value': value,
-                    'count': count,
-                    'repr_url': obj.repr_url,
-                    'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
-                })
+            FB.put(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
 
-        # FB.post(path=self.CHANNEL_NAME, payload='END: %s' % datetime.datetime.now())
-        # FB.post(path=self.CHANNEL_NAME, payload={'end': '%s' % datetime.datetime.now()})
+            # if self.FIELD in PHOTO_FILTER_FIELDS:
+            #     key = str(value).replace(' ', '%20').replace('.', ',')
+            #     path = '%s/%s.json' % (self.FIELD, key)
+            #     FB.put(path=path, payload={
+            #         'field_name': self.FIELD,
+            #         'value': value,
+            #         'count': count,
+            #         'repr_url': obj.repr_url,
+            #         'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
+            #     })
 
+        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
