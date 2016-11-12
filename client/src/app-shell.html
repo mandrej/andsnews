@@ -190,7 +190,8 @@
 					<app-toolbar>
 						<div class="layout horizontal justified" style="width: 100%">
 							<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-								<img class="thumbnail" src="[[userImg(user)]]">
+								[[userName(user)]]
+								<!-- <img class="thumbnail" src="[[userImg(user)]]"> -->
 							</a>
 							<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
 							<app-search

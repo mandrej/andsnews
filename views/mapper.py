@@ -209,7 +209,7 @@ class Builder(Mapper):
 
             if self.FIELD in PHOTO_FILTER_FIELDS:
                 key = str(value).replace(' ', '%20').replace('.', ',')
-                path = 'photo/%s.json' % key
+                path = '%s/%s.json' % (self.FIELD, key)
                 FB.put(path=path, payload={
                     'field_name': self.FIELD,
                     'value': value,

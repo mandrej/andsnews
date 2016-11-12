@@ -329,16 +329,15 @@ def update_counter(delta, *args):
 
     if obj.field in PHOTO_FILTER_FIELDS:
         key = str(obj.value).replace(' ', '%20').replace('.', ',')
-        path = 'photo/%s.json' % key
+        path = '%s/%s.json' % (obj.field, key)
         payload = {
             'field_name': obj.field,
             'value': obj.value,
             'count': obj.count
         }
-        deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
+        FB.patch(path=path, payload=payload)
 
 
-@ndb.toplevel
 def update_representation(new_pairs, old_pairs):
     # PHOTO ONLY
     queries = []
@@ -352,22 +351,22 @@ def update_representation(new_pairs, old_pairs):
 
     for i, query in enumerate(queries):
         latest = query.get()
-        counter = Counter.get_or_insert(key_names[i], **params[i])
+        obj = Counter.get_or_insert(key_names[i], **params[i])
 
-        if latest is not None and latest.date != counter.repr_stamp:
-            counter.repr_stamp = latest.date
-            counter.repr_url = latest.serving_url
-            counter.put_async()
-            logging.info('UPDATE %s %s' % (key_names[i], counter.count))
+        if latest is not None and latest.date != obj.repr_stamp:
+            obj.repr_stamp = latest.date
+            obj.repr_url = latest.serving_url
+            obj.put()
+            logging.info('UPDATE %s %s' % (key_names[i], obj.count))
 
-            if counter.field in PHOTO_FILTER_FIELDS:
-                key = str(counter.value).replace(' ', '%20').replace('.', ',')
-                path = 'photo/%s.json' % key
+            if obj.field in PHOTO_FILTER_FIELDS:
+                key = str(obj.value).replace(' ', '%20').replace('.', ',')
+                path = '%s/%s.json' % (obj.field, key)
                 payload = {
-                    'repr_url': counter.repr_url,
-                    'repr_stamp': - int(counter.repr_stamp.strftime("%s"))
+                    'repr_url': obj.repr_url,
+                    'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
                 }
-                deferred.defer(FB.patch, path=path, payload=payload, _queue='background')
+                FB.patch(path=path, payload=payload)
 
 
 def update_counter_field(old, new, kind, field):
@@ -532,7 +531,7 @@ class Photo(ndb.Model):
                 update_counter_field(None, value, 'Photo', field)
 
             new_pairs = self.changed_pairs()
-            deferred.defer(update_representation, new_pairs, [])
+            update_representation(new_pairs, [])
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -556,7 +555,7 @@ class Photo(ndb.Model):
         deferred.defer(self.index_doc)
 
         new_pairs = self.changed_pairs()
-        deferred.defer(update_representation, new_pairs, old_pairs)
+        update_representation(new_pairs, old_pairs)
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe())
@@ -568,7 +567,7 @@ class Photo(ndb.Model):
 
         old_pairs = self.changed_pairs()
         self.key.delete()
-        deferred.defer(update_representation, [], old_pairs)
+        update_representation([], old_pairs)
 
     @webapp2.cached_property
     def serving_url(self):
