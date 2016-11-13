@@ -118,12 +118,6 @@
                         }
                     }
                 },
-                view: { type: String, value: '', notify: true },
-                user: { type: Object, notify: true },
-                isAdmin: { type: Boolean, value: false, notify: true },
-                info: { type: Object },
-                counters: {type: Array },
-                firebase: { type: Object, notify: true },
             },
             _url: function(view, isAdmin) {
                 if (view == 'maintenance' && isAdmin) {
@@ -158,13 +152,15 @@
             onMessage: function (data) {
                 var toast = this.$.toast;
                 toast.fitInto = this.$.container;
-                toast.setAttribute('text', data);
-                if (data.startsWith('END')) {
-                    toast.style.backgroundColor = '#dc2128';
-                } else {
-                    toast.style.backgroundColor = '#212121';
+                if (data) {
+                    toast.setAttribute('text', data);
+                    if (data.startsWith('END')) {
+                        toast.style.backgroundColor = '#dc2128';
+                    } else {
+                        toast.style.backgroundColor = '#212121';
+                    }
+                    toast.open();
                 }
-                toast.open();
             },
             rebuild: function(e) {
                 this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;

@@ -85,9 +85,6 @@
                         }
                     }
                 },
-                kind: { type: String, value: null, notify: true },
-                field: { type: String, value: null, notify: true },
-                value: { type: String, value: null, notify: true },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 records: { type: Array, value: [], notify: true },
@@ -146,7 +143,6 @@
             _editRecord: function() {
                 Polymer.dom().querySelector('app-shell').disableSwipe = true;
                 this.$$('item-view.iron-selected').view = 'form';
-                // this.set('route.path', ['/form', obj.kind, 'edit', obj.safekey].join('/'));
             },
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,

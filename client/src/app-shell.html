@@ -139,8 +139,6 @@
 	        storage-bucket="andsnews.appspot.com"
 	        messaging-sender-id="719127177629"></firebase-app>
 
-		<!-- <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError"> -->
-
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
@@ -265,7 +263,6 @@
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
 							value="[[dataValue.value]]"
-							records="{{records}}"
 							item-kind="{{itemKind}}"
 							loading="{{loading}}"
 							headline="{{headline}}"
@@ -301,21 +298,17 @@
 				'confirm-delete': 'confirmDelete'
 			},
 			observers: [
-				'viewChanged(dataView.view, isAuthorized, isAdmin)'
+				'viewChanged(dataView.view, isAuthorized, isAdmin)',
+				'pathChanged(route.path)'
 			],
 			properties: {
 				version: { type: String, value: '161113'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
-				isAuthorized: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
 				isAdmin: { type: Boolean, value: false, notify: true },
-				dataView: { type: Object, value: {view: null} },
-				dataKind: { type: Object, value: {kind: null} },
-				dataField: { type: Object, value: {field: null} },
-				dataValue: { type: Object, value: {value: null} },
+				route: { type: Object, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
-				records: { type: Array, value: [], notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
 				firebase: { type: Object, notify: true },
@@ -416,6 +409,9 @@
 			},
 			downloadPhoto: function(e) {
 				this.$$('detail-view').$$('.iron-selected').fire('download-photo');
+			},
+			pathChanged: function(path) {
+				console.log(path);
 			},
 			objectChanged: function(obj) {
                 // this is object observer!
