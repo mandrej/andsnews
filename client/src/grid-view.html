@@ -39,7 +39,7 @@
         </style>
 
         <iron-ajax auto
-			url="[[_url(kind, view)]]"
+			url="[[_url(kind)]]"
 			handle-as="json"
             on-response="handler"
             loading="{{loading}}"
@@ -106,7 +106,8 @@
                 items: { type: Array, value: [], notify: true },
                 loading: { type: Boolean, value: false, notify: true },
             },
-            _url: function(kind, view) {
+            _url: function(kind) {
+                var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'grid') {
                     // clear previous filter
                     this.field = null;

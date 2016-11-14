@@ -36,7 +36,7 @@
         </style>
 
         <iron-ajax auto
-			url="[[_urlTagsCloud(view, kind, field)]]"
+			url="[[_urlTagsCloud(kind, field)]]"
 			handle-as="json"
 			last-response="{{tags_cloud}}"
 			debounce-duration="100"></iron-ajax>
@@ -118,7 +118,8 @@
                     }
                 },
             },
-            _urlTagsCloud: function(view, kind, field) {
+            _urlTagsCloud: function(kind, field) {
+                var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'form' && kind == 'photo' && field == 'edit') {
                     return '/api/suggest/Photo_tags';
                 } else if (view == 'form' && kind == 'entry') {

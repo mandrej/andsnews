@@ -240,7 +240,6 @@
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
 							data-view="maintenance"
-							view="[[dataView.view]]"
 							user="{{user}}"
 							is-admin="{{isAdmin}}"
 							firebase="{{firebase}}"
@@ -248,7 +247,6 @@
 
 						<grid-view
 							data-view="grid"
-							view="[[dataView.view]]"
 							kind="[[dataKind.kind]]"
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
@@ -270,7 +268,6 @@
 
 						<form-view
 							data-view="form"
-							view="[[dataView.view]]"
 							is-authorized="{{isAuthorized}}"
 							kind="[[dataKind.kind]]"
 							field="[[dataField.field]]"
@@ -298,22 +295,20 @@
 				'confirm-delete': 'confirmDelete'
 			},
 			observers: [
-				'viewChanged(dataView.view, isAuthorized, isAdmin)',
-				'pathChanged(route.path)'
+				'viewChanged(dataView.view)',
+				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '161113'},
+				version: { type: String, value: '161114'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
 				isAdmin: { type: Boolean, value: false, notify: true },
-				route: { type: Object, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
-				firebase: { type: Object, notify: true },
 			},
-			viewChanged: function(view, isAuthorized, isAdmin) {
+			viewChanged: function(view) {
 				this.debounce('viewChanged', function() {
 					switch (view) {
 						case 'grid':
@@ -329,7 +324,7 @@
 
 							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/form-view.html', function() {
-								if (!isAuthorized) dialog.open();
+								if (!this.isAuthorized) dialog.open();
 							});
 							break;
 						case 'maintenance':
@@ -340,7 +335,7 @@
 
 							var dialog = this.$.administrationDialog;
 							Polymer.Base.importHref('src/admin-shell.html', function() {
-								if (!isAdmin) dialog.open();
+								if (!this.isAdmin) dialog.open();
 							});
 							break;
 					}

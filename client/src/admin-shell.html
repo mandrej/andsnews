@@ -35,7 +35,7 @@
         </style>
 
         <iron-ajax auto
-            url="[[_url(view, isAdmin)]]"
+            url="[[_url(isAdmin)]]"
             last-response="{{info}}"></iron-ajax>
 
         <iron-ajax id="rebuild_ajax"
@@ -119,7 +119,8 @@
                     }
                 },
             },
-            _url: function(view, isAdmin) {
+            _url: function(isAdmin) {
+                var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'maintenance' && isAdmin) {
                     return '/api/info';
                 }
