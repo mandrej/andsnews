@@ -101,6 +101,7 @@ class Suggest(RestHandler):
 class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
         page = self.request.get('page', None)
+        token = None
 
         # SPECIFIC
         if kind == 'entry' and field == 'show':
@@ -108,7 +109,6 @@ class Collection(RestHandler):
             if obj is None:
                 self.abort(404)
             objects = [obj]
-            token = None
         else:
             model = ndb.Model._kind_map.get(kind.title())
             query = model.query_for(field, value)

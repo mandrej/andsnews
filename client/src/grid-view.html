@@ -110,8 +110,8 @@
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'grid') {
                     // clear previous filter
-                    this.field = null;
-                    this.value = null;
+                    // this.field = null;
+                    // this.value = null;
                     this.items = [];
                     if (kind == 'photo') {
                         return ['/api/filter', kind].join('/');
