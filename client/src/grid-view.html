@@ -43,7 +43,7 @@
 			handle-as="json"
             on-response="handler"
             loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+            debounce-duration="150"></iron-ajax>
 
         <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
             <template is="dom-repeat" items="[[items]]" as="row">
@@ -110,8 +110,8 @@
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'grid') {
                     // clear previous filter
-                    // this.field = null;
-                    // this.value = null;
+                    this.field = null;
+                    this.value = null;
                     this.items = [];
                     if (kind == 'photo') {
                         return ['/api/filter', kind].join('/');
@@ -164,7 +164,7 @@
                 this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
-                var nodes = this.root.querySelectorAll('.rec')
+                var nodes = this.root.querySelectorAll('.rec');
                 this.animationConfig['entry'][0].nodes = nodes;
                 this.animationConfig['entry'][1].nodes = nodes;
                 this.playAnimation('entry');

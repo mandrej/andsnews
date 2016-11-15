@@ -299,7 +299,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '161114'},
+				version: { type: String, value: '161115'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
@@ -337,7 +337,7 @@
 							});
 							break;
 					}
-				}, 300);
+				}, 100); // shorter or equal then grid ajax
 			},
 			_canAddRecord: function(view, loggedin) {
 				return view == 'grid' && loggedin;
