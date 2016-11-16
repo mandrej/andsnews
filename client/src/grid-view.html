@@ -39,7 +39,7 @@
         </style>
 
         <iron-ajax auto
-			url="[[_url(kind)]]"
+			url="[[_url(kind, field, value)]]"
 			handle-as="json"
             on-response="handler"
             loading="{{loading}}"
@@ -51,7 +51,7 @@
                     <div class="rec"
                         data-field$="[[row.field_name]]" on-tap="applyFilter">
                         <iron-image src="[[rec.repr_url]]=s400"
-                            style="background-color: #fff"
+                            style="background-color: #525b66"
                             preload fade sizing="cover"></iron-image>
                         <div class="title">
                             <div class="layout horizontal justified">
@@ -68,7 +68,7 @@
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
                     <iron-image src="[[rec.front_img]]"
-                        style="background-color: #000"
+                        style="background-color: #525b66"
                         preload fade sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">
@@ -106,12 +106,12 @@
                 items: { type: Array, value: [], notify: true },
                 loading: { type: Boolean, value: false, notify: true },
             },
-            _url: function(kind) {
+            _url: function(kind, field, value) {
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'grid') {
                     // clear previous filter
-                    this.field = null;
-                    this.value = null;
+                    field = null;
+                    value = null;
                     this.items = [];
                     if (kind == 'photo') {
                         return ['/api/filter', kind].join('/');

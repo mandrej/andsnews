@@ -2,12 +2,10 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
@@ -128,17 +126,6 @@
 			data="{{dataValue}}"
 			tail="{{tailValue}}"></app-route>
 
-		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-
-		<firebase-app
-	        app="{{firebase}}"
-	        name="andsnews"
-	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-	        auth-domain="andsnews.firebaseapp.com"
-	        database-url="https://andsnews.firebaseio.com"
-	        storage-bucket="andsnews.appspot.com"
-	        messaging-sender-id="719127177629"></firebase-app>
-
 		<google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
@@ -178,15 +165,18 @@
 			<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
 		</div>
 
-		<div style="max-width: 1280px; margin: 0 auto; position: relative">
+		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
+		<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+
+		<div style="max-width: 1280px; margin: 0 auto">
 			<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
 				<div class="fixed">
 					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
 				</div>
 			</div>
 
-			<app-header-layout>
-				<app-header condenses fixed effects="waterfall blend-background parallax-background">
+			<app-header-layout fullbleed>
+				<app-header fixed condenses>
 					<app-toolbar>
 						<div class="layout horizontal justified" style="width: 100%">
 							<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
@@ -235,14 +225,11 @@
 				</app-header>
 
 				<main id="main">
-					<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-
 					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 						<admin-shell
 							data-view="maintenance"
 							user="{{user}}"
 							is-admin="{{isAdmin}}"
-							firebase="{{firebase}}"
 							route="{{route}}"></admin-shell>
 
 						<grid-view

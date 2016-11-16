@@ -34,6 +34,15 @@
             }
         </style>
 
+        <firebase-app
+	        app="{{firebase}}"
+	        name="andsnews"
+	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+	        auth-domain="andsnews.firebaseapp.com"
+	        database-url="https://andsnews.firebaseio.com"
+	        storage-bucket="andsnews.appspot.com"
+	        messaging-sender-id="719127177629"></firebase-app>
+
         <iron-ajax auto
             url="[[_url(isAdmin)]]"
             last-response="{{info}}"></iron-ajax>

@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -17,12 +16,8 @@
 <dom-module id="detail-view">
     <template>
         <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                @apply(--layout-fullbleed);
-                @apply(--layout-vertical);
-            }
             iron-swipeable-pages {
-                @apply(--layout-flex);
+                height: 100vh;
             }
         </style>
 
@@ -52,7 +47,6 @@
                 <item-view
                     item="{{item}}"
                     is-admin="{{isAdmin}}"
-                    is-authorized="{{isAuthorized}}"
                     route="{{route}}"></item-view>
             </template>
         </iron-swipeable-pages>

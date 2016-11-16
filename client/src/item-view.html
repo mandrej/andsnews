@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-select/paper-select.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
 <link rel="import" href="./shared-styles.html">
@@ -81,9 +82,10 @@
                     <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
-                        style="background-color: #fff"
-                        sizing="cover" preload fade></iron-image>
-                    <paper-dialog entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                        style="background-color: #525b66"
+                        position="top"
+                        sizing="contain" preload fade></iron-image>
+                    <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                         <h2>[[item.headline]]</h2>
                         <p>
                             [[_dateFormat(item.date)]]
@@ -111,64 +113,66 @@
                 </div>
             </div>
 
-            <form data-view="form" is="iron-form" id="form" style="padding: 16px;"
-                on-iron-form-presubmit="_preSubmit"
-                on-iron-form-response="_responseHandler"
-                action$="/api/[[item.kind]]/edit/[[item.safekey]]"
-                method="post">
+            <div data-view="form" style="padding: 16px">
+                <form data-view="form" is="iron-form" id="form"s
+                    on-iron-form-presubmit="_preSubmit"
+                    on-iron-form-response="_responseHandler"
+                    action$="/api/[[item.kind]]/edit/[[item.safekey]]"
+                    method="post">
 
-                <div class="layout horizontal justified">
-                    <template is="dom-if" if="{{isAdmin}}">
-                        <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+                    <div class="layout horizontal justified">
+                        <template is="dom-if" if="{{isAdmin}}">
+                            <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+                        </template>
+                        <div>
+                            <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
+                            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+                        </div>
+                    </div>
+
+                    <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+                    <vaadin-combo-box
+                        required
+                        auto-validate
+                        name="author"
+                        label="author"
+                        allow-custom-value="true"
+                        items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+                        value="{{item.author}}"></vaadin-combo-box>
+                    <paper-select
+                        name="tags"
+                        label="tags"
+                        on-input-changed="inputChanged"
+                        on-adding-item="addItem"
+                        bind-value="{{inputSet(item)}}"
+                        multiple unique nonmatching select-on-blur></paper-select>
+                    <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
+
+                    <template is="dom-if" if="[[_isKindPhoto(item)]]">
+                        <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
+                        <div class="layout horizontal justified wrap">
+                            <vaadin-combo-box
+                                name="lens"
+                                label="lens"
+                                allow-custom-value="true"
+                                items="{{lens_cloud}}"
+                                value="{{item.lens}}"></vaadin-combo-box>
+                            <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
+                            <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
+                            <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
+                            <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
+                            <input type="hidden" name="color" value="{{item.color}}">
+                            <paper-input disabled label="color" value="{{item.color}}"></paper-input>
+                        </div>
                     </template>
-                    <div>
-                        <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
-                        <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-                    </div>
-                </div>
 
-                <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
-                <vaadin-combo-box
-                    required
-                    auto-validate
-                    name="author"
-                    label="author"
-                    allow-custom-value="true"
-                    items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                    value="{{item.author}}"></vaadin-combo-box>
-                <paper-select
-                    name="tags"
-                    label="tags"
-                    on-input-changed="inputChanged"
-                    on-adding-item="addItem"
-                    bind-value="{{inputSet(item)}}"
-                    multiple unique nonmatching select-on-blur></paper-select>
-                <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
-
-                <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                    <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
-                    <div class="layout horizontal justified wrap">
-                        <vaadin-combo-box
-                            name="lens"
-                            label="lens"
-                            allow-custom-value="true"
-                            items="{{lens_cloud}}"
-                            value="{{item.lens}}"></vaadin-combo-box>
-                        <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
-                        <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
-                        <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
-                        <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
-                        <input type="hidden" name="color" value="{{item.color}}">
-                        <paper-input disabled label="color" value="{{item.color}}"></paper-input>
-                    </div>
-                </template>
-
-                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                    <paper-textarea name="summary" label="summary" value="{{item.summary}}"></paper-textarea>
-                    <paper-textarea name="front_img" label="front image" value="{{item.front_img}}"></paper-textarea>
-                    <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
-                </template>
-            </form>
+                    <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+                        <paper-textarea name="summary" label="summary" value="{{item.summary}}"></paper-textarea>
+                        <paper-textarea name="front_img" label="front image" value="{{item.front_img}}"></paper-textarea>
+                        <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
+                    </template>
+                </form>
+            </div>
         </neon-animated-pages>
     </template>
     <script>
