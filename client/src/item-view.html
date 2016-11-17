@@ -78,39 +78,43 @@
         <neon-animated-pages selected="[[view]]" attr-for-selected="data-view"
             entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <div data-view="display" class="swipe">
-                <div hidden$="[[!_isKindPhoto(item)]]" style="height: 100%">
-                    <iron-image
+                <template is="dom-if" if="[[_isKindPhoto(item)]]">
+                    <div style="height: 100%">
+                        <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
                         style="background-color: #525b66"
                         position="top"
                         sizing="contain" preload fade></iron-image>
-                    <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-                        <h2>[[item.headline]]</h2>
-                        <p>
-                            [[_dateFormat(item.date)]]
-                            <br>[[item.author]]
-                            <br>
-                            <br>[[item.model]]
-                            <br>[[item.lens]] ([[item.focal_length]]mm)
-                            <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
-                        </p>
-                        <div class="layout horizontal wrap">
-                            <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
-                            <template is="dom-repeat" items="[[item.tags]]" as="tag">
-                                <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
-                            </template>
-                            <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]">[[item.model]]</paper-button>
-                            <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
-                        </div>
-                    </paper-dialog>
-                </div>
+                        <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+                            <h2>[[item.headline]]</h2>
+                            <p>
+                                [[_dateFormat(item.date)]]
+                                <br>[[item.author]]
+                                <br>
+                                <br>[[item.model]]
+                                <br>[[item.lens]] ([[item.focal_length]]mm)
+                                <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
+                            </p>
+                            <div class="layout horizontal wrap">
+                                <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
+                                <template is="dom-repeat" items="[[item.tags]]" as="tag">
+                                    <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
+                                </template>
+                                <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]">[[item.model]]</paper-button>
+                                <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
+                            </div>
+                        </paper-dialog>
+                    </div>
+                </template>
 
-                <div hidden$="[[_isKindPhoto(item)]]" style="height: 100%">
-                    <marked-element markdown="[[item.body]]">
-                        <div class="markdown-html" style="padding: 16px"></div>
-                    </marked-element>
-                </div>
+                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+                    <div style="height: 100%">
+                        <marked-element markdown="[[item.body]]">
+                            <div class="markdown-html" style="padding: 16px"></div>
+                        </marked-element>
+                    </div>
+                </template>
             </div>
 
             <div data-view="form" style="padding: 16px">
@@ -275,12 +279,6 @@
                 var target = e.target,
                     field = target.dataset.field,
                     value = target.dataset.fieldValue;
-                // while (target !== this && !target._templateInstance) {
-                //     target = target.parentNode;
-                // }
-                // this.sharedElements = {
-                //     'hero': target.querySelector('iron-image')
-                // };
                 this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
             },
             _dateFormat: function(str) {

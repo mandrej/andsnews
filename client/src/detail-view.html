@@ -6,9 +6,6 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
-<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./item-view.html">
@@ -55,31 +52,7 @@
     <script>
         Polymer({
             is: 'detail-view',
-            behaviors: [
-                Polymer.NeonAnimatableBehavior,
-                Polymer.NeonSharedElementAnimatableBehavior
-            ],
             properties: {
-                sharedElements: {
-                    type: Object,
-                    value: function() {
-                        return {
-                            'hero': this
-                        }
-                    }
-                },
-                animationConfig: {
-                    type: Object,
-                    value: function() {
-                        return {
-                            'entry': {
-                                name: 'hero-animation',
-                                id: 'hero',
-                                toPage: this
-                            }
-                        }
-                    }
-                },
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
                 records: { type: Array, notify: true },
@@ -136,8 +109,14 @@
                 }
             },
             _editRecord: function() {
-                Polymer.dom().querySelector('app-shell').disableSwipe = true;
-                this.$$('item-view.iron-selected').view = 'form';
+                var currentView = this.$$('item-view.iron-selected').view;
+                if (currentView == 'display') {
+                    Polymer.dom().querySelector('app-shell').disableSwipe = true;
+                    this.$$('item-view.iron-selected').view = 'form';
+                } else {
+                    Polymer.dom().querySelector('app-shell').disableSwipe = false;
+                    this.$$('item-view.iron-selected').view = 'display';
+                }
             },
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,
