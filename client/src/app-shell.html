@@ -168,7 +168,7 @@
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 		<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
-		<div style="max-width: 1280px; margin: 0 auto">
+		<div style="max-width: 1280px; margin: 0 auto; position: relative">
 			<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
 				<div class="fixed">
 					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
