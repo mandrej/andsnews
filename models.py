@@ -602,6 +602,7 @@ class Photo(ndb.Model):
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
+            'hex': self.hex,
             # 'thumb64': self.thumb64
         })
         return data

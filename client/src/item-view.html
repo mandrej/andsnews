@@ -19,6 +19,9 @@
 <dom-module id="item-view">
     <template>
         <style include="shared-styles iron-flex iron-flex-alignment">
+            :host {
+                background: #fff;
+            }
             neon-animated-pages {
                 height: 100%;
             }
@@ -83,7 +86,7 @@
                         <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
-                        style="background-color: #525b66"
+                        style="background-color: [[item.hex]]"
                         position="top"
                         sizing="contain" preload fade></iron-image>
                         <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation">
