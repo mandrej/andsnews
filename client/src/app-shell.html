@@ -168,102 +168,98 @@
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 		<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
-		<div style="max-width: 1280px; margin: 0 auto; position: relative">
-			<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
-				<div class="fixed">
-					<paper-fab icon="add" on-tap="addRecord"></paper-fab>
-				</div>
+		<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
+			<div class="fixed">
+				<paper-fab icon="add" on-tap="addRecord"></paper-fab>
 			</div>
+		</div>
 
-			<app-header-layout>
-				<app-header fixed condenses>
-					<app-toolbar>
-						<div class="layout horizontal justified" style="width: 100%">
-							<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-								[[userName(user)]]
-								<!-- <img class="thumbnail" src="[[userImg(user)]]"> -->
-							</a>
-							<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-							<app-search
-								field="{{dataField.field}}"
-								value="{{dataValue.value}}"
-								route="{{route}}"></app-search>
-						</div>
-					</app-toolbar>
-					<app-toolbar>
-						<h1 main-title>{{headline}}</h1>
-					</app-toolbar>
-					<app-toolbar class="sticky" sticky>
-						<div class="layout horizontal justified" style="width: 100%">
-							<ul role="navigation" class="navigation">
-								<li>
-									<a href="#/grid/photo">
-										<paper-icon-button icon="image:photo-camera"></paper-icon-button>
-										<span hidden$="{{smallScreen}}">Photos</span>
-									</a>
-								</li>
-								<li>
-									<a href="#/grid/entry">
-										<paper-icon-button icon="description"></paper-icon-button>
-										<span hidden$="{{smallScreen}}">Texts</span>
-									</a>
-								</li>
-							</ul>
-
-							<div hidden$="[[!_isDetailView(dataView.view)]]">
-								<span hidden$="[[!isAdmin]]">
-									<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-								</span>
-								<span hidden$="[[!_isKindPhoto(itemKind)]]">
-									<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-									<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-									<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
-								</span>
-							</div>
-						</div>
-					</app-toolbar>
-				</app-header>
-
-				<main id="main">
-					<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-						<admin-shell
-							data-view="maintenance"
-							user="{{user}}"
-							is-admin="{{isAdmin}}"
-							route="{{route}}"></admin-shell>
-
-						<grid-view
-							data-view="grid"
-							kind="[[dataKind.kind]]"
+		<app-header-layout>
+			<app-header fixed condenses>
+				<app-toolbar>
+					<div class="layout horizontal justified" style="width: 100%">
+						<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+							[[userName(user)]]
+							<!-- <img class="thumbnail" src="[[userImg(user)]]"> -->
+						</a>
+						<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
+						<app-search
 							field="{{dataField.field}}"
 							value="{{dataValue.value}}"
-							route="{{route}}"
-							loading="{{loading}}"></grid-view>
+							route="{{route}}"></app-search>
+					</div>
+				</app-toolbar>
+				<app-toolbar>
+					<h1 main-title>{{headline}}</h1>
+				</app-toolbar>
+				<app-toolbar class="sticky" sticky>
+					<div class="layout horizontal justified" style="width: 100%">
+						<ul role="navigation" class="navigation">
+							<li>
+								<a href="#/grid/photo">
+									<paper-icon-button icon="image:photo-camera"></paper-icon-button>
+									<span hidden$="{{smallScreen}}">Photos</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/grid/entry">
+									<paper-icon-button icon="description"></paper-icon-button>
+									<span hidden$="{{smallScreen}}">Texts</span>
+								</a>
+							</li>
+						</ul>
 
-						<detail-view
-							data-view="detail"
-							is-authorized="{{isAuthorized}}"
-							is-admin="{{isAdmin}}"
-							disable-swipe="{{disableSwipe}}"
-							kind="[[dataKind.kind]]"
-							field="[[dataField.field]]"
-							value="[[dataValue.value]]"
-							item-kind="{{itemKind}}"
-							loading="{{loading}}"
-							headline="{{headline}}"
-							route="{{route}}"></detail-view>
+						<div hidden$="[[!_isDetailView(dataView.view)]]">
+							<span hidden$="[[!isAdmin]]">
+								<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+							</span>
+							<span hidden$="[[!_isKindPhoto(itemKind)]]">
+								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
+								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+							</span>
+						</div>
+					</div>
+				</app-toolbar>
+			</app-header>
 
-						<form-view
-							data-view="form"
-							is-authorized="{{isAuthorized}}"
-							kind="[[dataKind.kind]]"
-							field="[[dataField.field]]"
-							value="[[dataValue.value]]"
-							route="{{route}}"></form-view>
-					</neon-animated-pages>
-				</main>
-			</app-header-layout>
-		</div>
+			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+				<admin-shell
+					data-view="maintenance"
+					user="{{user}}"
+					is-admin="{{isAdmin}}"
+					route="{{route}}"></admin-shell>
+
+				<grid-view
+					data-view="grid"
+					kind="[[dataKind.kind]]"
+					field="{{dataField.field}}"
+					value="{{dataValue.value}}"
+					route="{{route}}"
+					loading="{{loading}}"></grid-view>
+
+				<detail-view
+					data-view="detail"
+					is-authorized="{{isAuthorized}}"
+					is-admin="{{isAdmin}}"
+					disable-swipe="{{disableSwipe}}"
+					kind="[[dataKind.kind]]"
+					field="[[dataField.field]]"
+					value="[[dataValue.value]]"
+					item-kind="{{itemKind}}"
+					loading="{{loading}}"
+					headline="{{headline}}"
+					route="{{route}}"></detail-view>
+
+				<form-view
+					data-view="form"
+					is-authorized="{{isAuthorized}}"
+					kind="[[dataKind.kind]]"
+					field="[[dataField.field]]"
+					value="[[dataValue.value]]"
+					route="{{route}}"></form-view>
+			</neon-animated-pages>
+		</app-header-layout>
 	</template>
 
 	<script>
@@ -282,7 +278,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '161122'},
+				version: { type: String, value: '161124'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },

@@ -121,7 +121,7 @@
             </div>
 
             <div data-view="form" style="padding: 16px">
-                <form data-view="form" is="iron-form" id="form"s
+                <form data-view="form" is="iron-form" id="form"
                     on-iron-form-presubmit="_preSubmit"
                     on-iron-form-response="_responseHandler"
                     action$="/api/[[item.kind]]/edit/[[item.safekey]]"
@@ -207,6 +207,7 @@
             },
             _responseHandler: function(e) {
                 var toast = this.$.toast;
+                toast.fitInto = this.$.form;
                 if (e.detail.xhr.status == 200) {
                     toast.setAttribute('text', 'Record successfully created / updated');
                     toast.open();

@@ -80,6 +80,18 @@
             line-height: 1.5;
             background-color: #3f4448;
         }
+        html, body {
+            height: 100vh;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        .max {
+            max-width: 1280px;
+            margin: 0 auto;
+            height: inherit;
+            position: relative;
+        }
         ::-webkit-scrollbar {
             display: none;
         }
@@ -87,6 +99,8 @@
 </head>
 
 <body>
-    <app-shell></app-shell>
+    <div class="max">
+        <app-shell></app-shell>
+    </div>
 </body>
 </html>
