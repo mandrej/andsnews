@@ -16,7 +16,7 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./app-search.html">
@@ -25,6 +25,10 @@
 <dom-module id="app-shell">
 	<template>
 		<style include="shared-styles iron-flex iron-flex-alignment">
+			:host {
+				display: block;
+				position: relative;
+			}
 			app-header {
 				background-image: url(../images/md.jpg);
     			background-position: top center;
@@ -71,17 +75,6 @@
 			.navigation li {
 				display: inline-block;
 				list-style: none;
-			}
-			.add {
-				position: absolute;
-				width: calc(56px + 28px);
-				top: 164px;
-				right: 0;
-				z-index: 10;
-			}
-			.fixed {
-				width: calc(56px + 28px);
-				position: fixed;
 			}
 			#spinner {
 				position: absolute;
@@ -168,19 +161,12 @@
 		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 		<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
-		<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]" class="add">
-			<div class="fixed">
-				<paper-fab icon="add" on-tap="addRecord"></paper-fab>
-			</div>
-		</div>
-
 		<app-header-layout>
-			<app-header fixed condenses>
+			<app-header shadow reveals condenses>
 				<app-toolbar>
 					<div class="layout horizontal justified" style="width: 100%">
 						<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
 							[[userName(user)]]
-							<!-- <img class="thumbnail" src="[[userImg(user)]]"> -->
 						</a>
 						<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
 						<app-search
@@ -207,6 +193,12 @@
 									<span hidden$="{{smallScreen}}">Texts</span>
 								</a>
 							</li>
+							<li hidden$="[[!isAdmin]]">
+								<a href="#/maintenance">
+									<paper-icon-button icon="settings"></paper-icon-button>
+									<span hidden$="{{smallScreen}}">Admin</span>
+								</a>
+							</li>
 						</ul>
 
 						<div hidden$="[[!_isDetailView(dataView.view)]]">
@@ -220,10 +212,14 @@
 							</span>
 						</div>
 					</div>
+
+					<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
+						<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+					</div>
 				</app-toolbar>
 			</app-header>
 
-			<neon-animated-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+			<iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 				<admin-shell
 					data-view="maintenance"
 					user="{{user}}"
@@ -258,7 +254,7 @@
 					field="[[dataField.field]]"
 					value="[[dataValue.value]]"
 					route="{{route}}"></form-view>
-			</neon-animated-pages>
+			</iron-pages>
 		</app-header-layout>
 	</template>
 
@@ -323,9 +319,6 @@
 			},
 			_isDetailView: function(view) {
 				return view == 'detail';
-			},
-			_isFormView: function(view) {
-				return view == 'form';
 			},
 			_isKindPhoto: function(kind) {
 				return kind == 'photo';
