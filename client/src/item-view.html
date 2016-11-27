@@ -187,7 +187,7 @@
             },
             listeners: {
                 'show-exif': '_showExif',
-                'zoom-photo': '_zoomPhoto',
+                // 'zoom-photo': '_zoomPhoto',
                 'download-photo': '_downloadPhoto',
             },
             _urlTagsCloud: function(view, item) {
@@ -258,7 +258,7 @@
                 var img = this.root.querySelector('iron-image'),
                     dim = JSON.parse(img.dataset.dim);
 
-                // var scale = Math.min(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
+                // var scale = Math.max(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
                 // if (img.style.transform) {
                 //     img.removeAttribute('style');
                 // } else {

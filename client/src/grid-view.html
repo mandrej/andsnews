@@ -17,8 +17,8 @@
             }
             .rec {
                 position: relative;
-                width: 20%;
-                height: 240px;
+                width: 20vw;
+                height: 20vw;
 				cursor: pointer;
 			}
             .rec iron-image {
@@ -36,9 +36,11 @@
                 padding: 16px;
                 text-overflow: ellipsis;
             }
-            @media (max-width: 1024px) { .rec { width: calc(100% / 4); height: 240px; } }
-            @media (max-width: 768px)  { .rec { width: calc(100% / 3); height: 210px; } }
-            @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: 180px; } }
+            @media (max-width: 1440px) { .rec { width: calc(100vw / 6); height: calc(100vw / 6); } }
+            @media (max-width: 1280px) { .rec { width: calc(100vw / 5); height: calc(100vw / 5); } }
+            @media (max-width: 1024px) { .rec { width: calc(100vw / 4); height: calc(100vw / 4); } }
+            @media (max-width: 768px)  { .rec { width: calc(100vw / 3); height: calc(100vw / 3); } }
+            @media (max-width: 432px)  { .rec { width: calc(100vw / 2); height: calc(100vw / 2); } }
         </style>
 
         <iron-ajax auto
