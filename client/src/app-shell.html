@@ -207,14 +207,14 @@
 							</span>
 							<span hidden$="[[!_isKindPhoto(itemKind)]]">
 								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
-								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+								<!-- <paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button> -->
 								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
 							</span>
 						</div>
 					</div>
 
 					<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-						<paper-fab icon="add" on-tap="addRecord"></paper-fab>
+						<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
 					</div>
 				</app-toolbar>
 			</app-header>
@@ -274,7 +274,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '161124'},
+				version: { type: String, value: '161127'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
