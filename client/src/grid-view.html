@@ -41,6 +41,9 @@
             @media (max-width: 1024px) { .rec { width: calc(100vw / 4); height: calc(100vw / 4); } }
             @media (max-width: 768px)  { .rec { width: calc(100vw / 3); height: calc(100vw / 3); } }
             @media (max-width: 432px)  { .rec { width: calc(100vw / 2); height: calc(100vw / 2); } }
+            iron-image {
+                background-color: var(--secondary-text-color);
+            }
         </style>
 
         <iron-ajax auto
@@ -56,7 +59,6 @@
                     <div class="rec"
                         data-field$="[[row.field_name]]" on-tap="applyFilter">
                         <iron-image src="[[rec.repr_url]]=s400"
-                            style="background-color: #3f4448"
                             preload fade sizing="cover"></iron-image>
                         <div class="title">
                             <div class="layout horizontal justified">
@@ -73,7 +75,6 @@
             <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
                 <div class="rec" on-tap="showDetail">
                     <iron-image src="[[rec.front_img]]"
-                        style="background-color: #3f4448"
                         preload fade sizing="cover"></iron-image>
                     <div class="title">
                         <div class="layout horizontal justified">

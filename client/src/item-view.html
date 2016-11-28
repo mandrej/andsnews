@@ -21,6 +21,7 @@
             :host {
                 display: block;
                 position: relative;
+                height: 100vh;
                 background-color: var(--primary-background-color);
             }
             .swipe {
@@ -35,6 +36,7 @@
                 width: 100%;
                 height: 100%;
                 transition: all 0.3s ease-in-out;
+                background-color: var(--secondary-text-color);
             }
             paper-button {
                 margin-top: 8px;
@@ -84,7 +86,6 @@
                     <iron-image
                         src="[[item.serving_url]]=s0"
                         data-dim$="[[item.dim]]"
-                        style="background-color: #3f4448"
                         position="top"
                         sizing="contain" preload fade></iron-image>
                     <paper-dialog

@@ -3,8 +3,8 @@
     "short_name": "ANDS",
     "start_url": "/",
     "display": "standalone",
-    "theme_color": "#65696c",
-    "background_color": "#65696c",
+    "theme_color": "#757575",
+    "background_color": "#757575",
     "icons": [{
         "src": "images/manifest/icon-192x192.png",
         "sizes": "192x192",
