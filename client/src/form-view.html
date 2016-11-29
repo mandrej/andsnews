@@ -4,7 +4,8 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../bower_components/paper-select/paper-select.html">
+<link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete.html">
+<link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -32,7 +33,7 @@
                     @apply(--shadow-elevation-2dp);
                 }
             }
-            vaadin-combo-box {
+            paper-input, vaadin-combo-box, paper-input-autocomplete-chips {
                 --paper-input-container-color: var(--primary-text-color);
                 --paper-input-container-focus-color: var(--primary-color);
             }
@@ -73,12 +74,13 @@
                             allow-custom-value="true"
                             items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
                             </vaadin-combo-box>
-                            <paper-select
-                                name="tags"
-                                label="tags"
-                                on-input-changed="inputChanged"
-                                on-adding-item="addItem"
-                                multiple unique nonmatching select-on-blur></paper-select>
+                        <paper-input-autocomplete-chips id="tags"
+                            name="tags"
+                            label="tags"
+                            local-candidates="{{listObjects(tags_cloud)}}"
+                            selected-objects="{{listObjects(item)}}"
+                            allow-select-unknown-token
+                            animated no-chip-image></paper-input-autocomplete-chips>
 
                         <paper-textarea name="summary" label="summary"></paper-textarea>
                         <paper-textarea name="body" label="body"></paper-textarea>
@@ -128,29 +130,36 @@
                     toast.open();
                 }
             },
+            listObjects: function(obj) {
+                var list = [];
+                if (obj.tags) {
+                    obj.tags.forEach(function(tag) {
+                        list.push({'text': tag});
+                    });
+                } else {
+                    obj.forEach(function(tag) {
+                        list.push({'text': tag});
+                    });
+                }
+                return list;
+            },
             _preSubmit: function() {
-                var form = this.$.form;
-                form.request.method = 'put'; // PUT SENDS URL PARAMETERS!
+                var form = this.$.form,
+                    tagsInput = this.$.tags.selectedObjects,
+                    tags = [];
+                tagsInput.forEach(function(item) {
+                    tags.push(item.text);
+                })
+                form.request.body['tags'] = tags.join(',');
+                // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
+                form.request.method = 'put';
             },
             _submit: function(e) {
+                // _submit calls _preSubmit
                 var form = this.$.form;
                 // var json = form.serialize();
                 // console.log(json);
                 form.submit();
-            },
-            inputChanged: function(e) {
-                var input = (e.detail.value || '').trim().toLowerCase();
-                if (input) {
-                    e.target.options = this.tags_cloud.filter(function(item) {
-                        return item.toLowerCase().indexOf(input) === 0;
-                    });
-                } else {
-                    e.target.options = [];
-                }
-            },
-            addItem: function(e) {
-                var input = (e.detail.value || '').trim();
-                e.detail.value = input;
             },
         });
     </script>

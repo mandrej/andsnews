@@ -20,7 +20,6 @@
     "marked-element": "PolymerElements/marked-element#^1.1.3",
     "vaadin-upload": "^1.0.3",
     "vaadin-combo-box": "^1.1.2",
-    "paper-select": "^0.2.5",
     "google-signin": "GoogleWebComponents/google-signin#^1.3.6",
     "polymerfire": "firebase/polymerfire#^0.10.2",
     "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.29.2"

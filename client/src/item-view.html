@@ -9,7 +9,7 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../bower_components/paper-select/paper-select.html">
+<link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
@@ -58,7 +58,7 @@
             }
             /*.markdown-html img[alt='Milan D. Andrejevic'] {
             }*/
-            vaadin-combo-box {
+            paper-input, vaadin-combo-box, paper-input-autocomplete-chips {
                 --paper-input-container-color: var(--primary-text-color);
                 --paper-input-container-focus-color: var(--primary-color);
             }
@@ -121,7 +121,7 @@
 
             <div data-view="form" style="padding: 16px">
                 <form data-view="form" is="iron-form" id="form"
-                    on-iron-form-presubmit="_preSubmit"
+
                     on-iron-form-response="_responseHandler"
                     action$="/api/[[item.kind]]/edit/[[item.safekey]]"
                     method="post">
@@ -145,12 +145,11 @@
                         allow-custom-value="true"
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
                         value="{{item.author}}"></vaadin-combo-box>
-                    <paper-input-autocomplete-chips
+                    <paper-input-autocomplete-chips id="tags"
                         name="tags"
                         label="tags"
                         local-candidates="{{listObjects(tags_cloud)}}"
                         selected-objects="{{listObjects(item)}}"
-                        token-accept-key-codes="32,188"
                         allow-select-unknown-token
                         animated no-chip-image></paper-input-autocomplete-chips>
                     <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
@@ -189,6 +188,7 @@
                 view: { type: String, value: 'display', notify: true },
             },
             listeners: {
+                'iron-form-presubmit': '_preSubmit',
                 'show-exif': '_showExif',
                 'zoom-photo': '_zoomPhoto',
                 'download-photo': '_downloadPhoto',
@@ -217,43 +217,37 @@
                 Polymer.dom().querySelector('app-shell').disableSwipe = false;
                 this.view = 'display';
             },
-            _preSubmit: function() {
-                var form = this.$.form;
+            _preSubmit: function(e) {
+                var form = this.$.form,
+                    tagsInput = this.$.tags.selectedObjects,
+                    tags = [];
+                tagsInput.forEach(function(item) {
+                    tags.push(item.text);
+                })
+                form.request.body['tags'] = tags.join(',');
+                // console.log(form.request.body);
                 // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
                 form.request.method = 'put';
             },
             _submit: function(e) {
+                // _submit calls _preSubmit
                 var form = this.$.form;
-                var json = form.serialize();
-                console.log(json);
-                // form.submit();
+                // var json = form.serialize();
+                // console.log(json);
+                form.submit();
             },
             _remove: function(e) {
 				Polymer.dom().querySelector('app-shell').fire('confirm-delete');
 			},
-            // inputChanged: function(e) {
-            //     var input = (e.detail.value || '').trim().toLowerCase();
-            //     if (input) {
-            //         e.target.options = this.tags_cloud.filter(function(item) {
-            //             return item.toLowerCase().indexOf(input) === 0;
-            //         });
-            //     } else {
-            //         e.target.options = [];
-            //     }
-            // },
-            // addItem: function(e) {
-            //     var input = (e.detail.value || '').trim();
-            //     e.detail.value = input;
-            // },
             listObjects: function(obj) {
                 var list = [];
                 if (obj.tags) {
                     obj.tags.forEach(function(tag) {
-                        list.push({'text': tag})
+                        list.push({'text': tag});
                     });
                 } else {
                     obj.forEach(function(tag) {
-                        list.push({'text': tag})
+                        list.push({'text': tag});
                     });
                 }
                 return list;
