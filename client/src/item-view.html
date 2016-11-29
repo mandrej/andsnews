@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-select/paper-select.html">
+<link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
@@ -144,13 +145,14 @@
                         allow-custom-value="true"
                         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
                         value="{{item.author}}"></vaadin-combo-box>
-                    <paper-select
+                    <paper-input-autocomplete-chips
                         name="tags"
                         label="tags"
-                        on-input-changed="inputChanged"
-                        on-adding-item="addItem"
-                        bind-value="{{inputSet(item)}}"
-                        multiple unique nonmatching select-on-blur></paper-select>
+                        local-candidates="{{listObjects(tags_cloud)}}"
+                        selected-objects="{{listObjects(item)}}"
+                        token-accept-key-codes="32,188"
+                        allow-select-unknown-token
+                        animated no-chip-image></paper-input-autocomplete-chips>
                     <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
 
                     <template is="dom-if" if="[[_isKindPhoto(item)]]">
@@ -222,29 +224,39 @@
             },
             _submit: function(e) {
                 var form = this.$.form;
-                // var json = form.serialize();
-                // console.log(json);
-                form.submit();
+                var json = form.serialize();
+                console.log(json);
+                // form.submit();
             },
             _remove: function(e) {
 				Polymer.dom().querySelector('app-shell').fire('confirm-delete');
 			},
-            inputChanged: function(e) {
-                var input = (e.detail.value || '').trim().toLowerCase();
-                if (input) {
-                    e.target.options = this.tags_cloud.filter(function(item) {
-                        return item.toLowerCase().indexOf(input) === 0;
+            // inputChanged: function(e) {
+            //     var input = (e.detail.value || '').trim().toLowerCase();
+            //     if (input) {
+            //         e.target.options = this.tags_cloud.filter(function(item) {
+            //             return item.toLowerCase().indexOf(input) === 0;
+            //         });
+            //     } else {
+            //         e.target.options = [];
+            //     }
+            // },
+            // addItem: function(e) {
+            //     var input = (e.detail.value || '').trim();
+            //     e.detail.value = input;
+            // },
+            listObjects: function(obj) {
+                var list = [];
+                if (obj.tags) {
+                    obj.tags.forEach(function(tag) {
+                        list.push({'text': tag})
                     });
                 } else {
-                    e.target.options = [];
+                    obj.forEach(function(tag) {
+                        list.push({'text': tag})
+                    });
                 }
-            },
-            addItem: function(e) {
-                var input = (e.detail.value || '').trim();
-                e.detail.value = input;
-            },
-            inputSet: function(item) {
-                return item.tags;
+                return list;
             },
             _isKindPhoto: function(item) {
                 return item.kind == 'photo';
