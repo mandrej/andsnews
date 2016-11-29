@@ -13,6 +13,7 @@
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/paper-chip/paper-chip.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -41,6 +42,9 @@
             }
             paper-button {
                 margin-top: 8px;
+            }
+            paper-chip {
+                cursor: pointer;
             }
             .markdown-html * {
                 font-family: 'Roboto', 'Noto', sans-serif;
@@ -102,12 +106,16 @@
                             <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
                         </p>
                         <div class="layout horizontal wrap">
-                            <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]">[[item.year]]</paper-button>
+                            <paper-chip label="[[item.year]]" no-image
+                                on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]"></paper-chip>
                             <template is="dom-repeat" items="[[item.tags]]" as="tag">
-                                <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
+                                <paper-chip label="[[tag]]" no-image
+                                    on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]"></paper-chip>
                             </template>
-                            <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]">[[item.model]]</paper-button>
-                            <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]">[[item.color]]</paper-button>
+                            <paper-chip label="[[item.model]]" no-image
+                                on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]"></paper-chip>
+                            <paper-chip label="[[item.color]]" no-image
+                                on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]"></paper-chip>
                         </div>
                     </paper-dialog>
                 </template>
