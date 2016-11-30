@@ -29,6 +29,6 @@
     "web-component-tester": "^4.3.1"
   },
   "resolutions": {
-    "paper-input": "^1.0.0"
+    "paper-input": "^1.1.3"
   }
 }
