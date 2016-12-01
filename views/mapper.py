@@ -92,7 +92,7 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
-            FB.post(path=self.CHANNEL_NAME, payload='INDEX %s' % entity.slug)
+            FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.slug)
         self.to_put = []
 
     def finish(self):
@@ -108,7 +108,7 @@ class Unbound(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             if entity.serving_url == DUMMY_GIF:
-                FB.post(path=self.CHANNEL_NAME, payload='UNBOUND %s' % entity.filename)
+                FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
                 # entity.remove()
         self.to_put = []
 

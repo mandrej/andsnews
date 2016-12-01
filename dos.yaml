@@ -1,5 +1,7 @@
 blacklist:
   - subnet: 188.143.232.0/24
-    description: comment spammer
+    description: comment spammer (Russia)
   - subnet: 103.224.250.78
-    description: Fckeditor/editor/filemanager/browser
+    description: Fckeditor/editor/filemanager/browser (Hong Kong)
+  - subnet: 178.137.87.242
+    description: wordpress (Ukraine)
