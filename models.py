@@ -572,11 +572,13 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
+        url = DUMMY_GIF
         try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except images.ObjectNotFoundError:
+            url = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except (images.ObjectNotFoundError, images.TransformationError), e:
             # raise _ToImagesError(e, readable_blob_key)
-            return DUMMY_GIF
+            logging.error(e.message)
+        return url
 
     @webapp2.cached_property
     def download_url(self):
