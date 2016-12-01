@@ -158,7 +158,7 @@
             },
             reindex: function(e) {
                 this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
-                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.reindex_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.reindex_ajax.generateRequest();
             },
             unbound: function(e) {
@@ -168,7 +168,7 @@
             },
             fix: function(e) {
                 this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
-                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.fix_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.fix_ajax.generateRequest();
             },
         });
