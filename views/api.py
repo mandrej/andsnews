@@ -8,7 +8,7 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
     PHOTO_FILTER_FIELDS, PHOTO_COUNTER_FIELDS, ENTRY_COUNTER_FIELDS
-from mapper import Indexer, Builder, Fixer
+from mapper import Indexer, Unbound, Builder, Fixer
 
 LIMIT = 12
 
@@ -153,33 +153,46 @@ class BackgroundIndex(RestHandler):
         user_id = self.request.json.get('userId', None)
         if user_id is not None:
             if kind == 'photo':
-                indexer = Indexer()
-                indexer.KIND = Photo
+                runner = Indexer()
+                runner.KIND = Photo
 
             elif kind == 'entry':
-                indexer = Indexer()
-                indexer.KIND = Entry
+                runner = Indexer()
+                runner.KIND = Entry
 
-            indexer.CHANNEL_NAME = '%s_index.json' % kind
+            runner.CHANNEL_NAME = '%s_index.json' % kind
 
-            # token = create_custom_token(indexer.CHANNEL_NAME, valid_minutes=10)
-            deferred.defer(indexer.run, batch_size=10, _queue='background')
-            self.render({'channelId': indexer.CHANNEL_NAME})
+            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+            self.render({'channelId': runner.CHANNEL_NAME})
+
+
+class BackgroundUnbound(RestHandler):
+    def post(self, kind):
+        user_id = self.request.json.get('userId', None)
+        if kind == 'photo' and user_id is not None:
+            runner = Unbound()
+            runner.KIND = Photo
+            runner.CHANNEL_NAME = '%s_unbound.json' % kind
+
+            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+            self.render({'channelId': runner.CHANNEL_NAME})
 
 
 class BackgroundFix(RestHandler):
     def post(self, kind):
         user_id = self.request.json.get('userId', None)
-        if user_id is not None:
-            fixer = Fixer()
-            fixer.KIND = Photo
-            fixer.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
-            fixer.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
-            fixer.CHANNEL_NAME = '%s_fix.json' % kind
+        if kind == 'photo' and user_id is not None:
+            runner = Fixer()
+            runner.KIND = Photo
+            runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
+            runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+            runner.CHANNEL_NAME = '%s_fix.json' % kind
 
-            # token = create_custom_token(fixer.CHANNEL_NAME, valid_minutes=10)
-            deferred.defer(fixer.run, batch_size=10, _queue='background')
-            self.render({'channelId': fixer.CHANNEL_NAME})
+            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+            self.render({'channelId': runner.CHANNEL_NAME})
 
 
 class BackgroundBuild(RestHandler):
@@ -188,19 +201,19 @@ class BackgroundBuild(RestHandler):
         user_id = self.request.json.get('userId', None)
 
         if user_id is not None:
-            builder = Builder()
+            runner = Builder()
             if kind == 'Photo':  # Title case!
-                builder.KIND = Photo
+                runner.KIND = Photo
             elif kind == 'Entry':
-                builder.KIND = Entry
+                runner.KIND = Entry
 
-            builder.VALUES = []
-            builder.FIELD = field
-            builder.CHANNEL_NAME = '%s.json' % mem_key
+            runner.VALUES = []
+            runner.FIELD = field
+            runner.CHANNEL_NAME = '%s.json' % mem_key
 
             # token = create_custom_token(mem_key, valid_minutes=10)
-            deferred.defer(builder.run, batch_size=10, _queue='background')
-            self.render({'channelId': builder.CHANNEL_NAME})
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+            self.render({'channelId': runner.CHANNEL_NAME})
 
 
 class Crud(RestHandler):

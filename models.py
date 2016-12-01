@@ -24,6 +24,7 @@ from slugify import slugify
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
+DUMMY_GIF = 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
@@ -571,7 +572,11 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        try:
+            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except images.ObjectNotFoundError:
+            # raise _ToImagesError(e, readable_blob_key)
+            return DUMMY_GIF
 
     @webapp2.cached_property
     def download_url(self):

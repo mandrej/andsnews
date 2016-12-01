@@ -8,7 +8,7 @@ import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from models import Counter, FB
+from models import DUMMY_GIF, Counter, FB
 from config import BUCKET
 
 
@@ -92,11 +92,28 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
-            FB.put(path=self.CHANNEL_NAME, payload='INDEX %s' % entity.slug)
+            FB.post(path=self.CHANNEL_NAME, payload='INDEX %s' % entity.slug)
         self.to_put = []
 
     def finish(self):
-        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+
+
+class Unbound(Mapper):
+    CHANNEL_NAME = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            if entity.serving_url == DUMMY_GIF:
+                FB.post(path=self.CHANNEL_NAME, payload='UNBOUND %s' % entity.filename)
+                # entity.remove()
+        self.to_put = []
+
+    def finish(self):
+        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
 
 
 class Fixer(Mapper):
@@ -142,15 +159,15 @@ class Fixer(Mapper):
                     entity.put()
 
                 except gcs.errors as e:
-                    FB.put(path=self.CHANNEL_NAME, payload=e.message)
+                    FB.post(path=self.CHANNEL_NAME, payload=e.message)
                 else:
-                    FB.put(path=self.CHANNEL_NAME, payload='DONE %s' % entity.slug)
+                    FB.post(path=self.CHANNEL_NAME, payload='DONE %s' % entity.slug)
             else:
-                FB.put(path=self.CHANNEL_NAME, payload='SKIPPED %s' % entity.slug)
+                FB.post(path=self.CHANNEL_NAME, payload='SKIPPED %s' % entity.slug)
         self.to_put = []
 
     def finish(self):
-        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
 
 
 class Builder(Mapper):
@@ -198,7 +215,7 @@ class Builder(Mapper):
             obj.count = count
             obj.put()
 
-            FB.put(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
+            FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
 
             # if self.FIELD in PHOTO_FILTER_FIELDS:
             #     key = str(value).replace(' ', '%20').replace('.', ',')
@@ -211,4 +228,4 @@ class Builder(Mapper):
             #         'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
             #     })
 
-        FB.put(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

@@ -59,6 +59,11 @@
             on-response="channelHandler"
             method="POST"></iron-ajax>
 
+        <iron-ajax id="unbound_ajax"
+            content-type="application/json"
+            on-response="channelHandler"
+            method="POST"></iron-ajax>
+
         <iron-ajax id="fix_ajax"
             content-type="application/json"
             on-response="channelHandler"
@@ -78,6 +83,7 @@
                     </div>
 
                     <paper-button on-tap="reindex" data-kind="photo" class="accent" toggles raised>Photo Reindex</paper-button>
+                    <paper-button on-tap="unbound" data-kind="photo" class="accent" toggles raised>Photo Unbound</paper-button>
                     <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
                 </div>
 
@@ -111,7 +117,7 @@
                 var resp = req.detail.response;
                 var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
                 var self = this;
-                ref.on('value', function(data) {
+                ref.on('child_added', function(data) {
                     self.onMessage(data.val());
                 });
                 // if (!(resp.token in this.channels)) {
@@ -154,6 +160,11 @@
                 this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
                 this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
                 this.$.reindex_ajax.generateRequest();
+            },
+            unbound: function(e) {
+                this.$.unbound_ajax.url = '/api/unbound/' + e.target.dataset.kind;
+                this.$.unbound_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.unbound_ajax.generateRequest();
             },
             fix: function(e) {
                 this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
