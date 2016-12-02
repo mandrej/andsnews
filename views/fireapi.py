@@ -50,7 +50,7 @@ class Firebase(object):
         else:
             kwargs['payload'] = None
 
-        # logging.error('%s %s' % (method, url))
-        response, content = self._get_http().request('%s?print=pretty' % url, method=method, body=kwargs['payload'])
+        # self._get_http().request('%s?print=pretty' % url, method=method, body=kwargs['payload'])
+        response, content = self._get_http().request('%s' % url, method=method, body=kwargs['payload'])
         # logging.error(response.status)
         return json.loads(content)

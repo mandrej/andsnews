@@ -23,7 +23,7 @@
                 background-color: var(--primary-background-color);
             }
             .container {
-                padding: 16px;
+                padding: 16px 16px 56px 16px;
             }
             vaadin-upload {
                 --vaadin-upload-button-add: {
@@ -46,7 +46,7 @@
 			debounce-duration="100"></iron-ajax>
 
         <div hidden$="[[!isAuthorized]]" class="container" id="container">
-            <paper-toast id="toast" horizontal-align="right"></paper-toast>
+            <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
             <template is="dom-if" if="[[_isAdd(field)]]">
                 <template is="dom-if" if="[[_isKindPhoto(kind)]]">

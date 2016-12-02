@@ -272,7 +272,8 @@ class Crud(RestHandler):
         values = map(lambda x: x if x != '' else None, data.values())
         data = dict(zip(data.keys(), values))
         # fix date
-        data['date'] = datetime.datetime.strptime(data['date'], '%Y-%m-%dT%H:%M:%S')
+        dt = data['date'].strip().split('.')[0]  # no milis
+        data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
 
         if kind == 'photo':
             if data['focal_length']:

@@ -38,6 +38,14 @@ def rounding(val, values):
     return min(values, key=lambda x: abs(x - val))
 
 
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Y', suffix)
+
+
 def filter_param(field, value):
     try:
         assert (field and value)
@@ -609,7 +617,7 @@ class Photo(ndb.Model):
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
-            'hex': self.hex,
+            'size': sizeof_fmt(self.size),
             # 'thumb64': self.thumb64
         })
         return data

@@ -17,7 +17,7 @@
                 background-color: var(--primary-background-color);
             }
             .container {
-                padding: 16px;
+                padding: 16px 16px 56px 16px;
             }
             h1 {
                 margin-bottom: 0.5em;
@@ -55,7 +55,7 @@
             method="POST"></iron-ajax>
 
         <div class="container" id="container">
-            <paper-toast id="toast" horizontal-align="right"></paper-toast>
+            <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
             <div hidden$="[[!isAdmin]]" class="layout horizontal justified wrap">
                 <div>

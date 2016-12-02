@@ -206,9 +206,8 @@
 								<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
 							</span>
 							<span hidden$="[[!_isKindPhoto(itemKind)]]">
-								<paper-icon-button icon="file-download" on-tap="downloadPhoto"></paper-icon-button>
 								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-								<paper-icon-button icon="more-vert" on-tap="showExif"></paper-icon-button>
+								<paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
 							</span>
 						</div>
 					</div>
@@ -274,7 +273,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '161130'},
+				version: { type: String, value: '161203'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
@@ -347,7 +346,6 @@
 				if (user) return user.getBasicProfile().getGivenName();
 			},
 			userImg: function(user) {
-				console.log(user.getBasicProfile().getImageUrl());
 				if (user) return user.getBasicProfile().getImageUrl();
 			},
 			addRecord: function(e) {
@@ -365,15 +363,14 @@
 					this.$$('detail-view').fire('delete-record');
 				}
 			},
-			showExif: function(e) {
-				this.$$('detail-view').$$('.iron-selected').fire('show-exif');
+			showInfo: function(e) {
+				this.$$('detail-view').$$('.iron-selected').fire('show-info');
             },
 			zoomPhoto: function(e) {
+				var itemView = this.$$('detail-view').$$('.iron-selected');
 				e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
-				this.$$('detail-view').$$('.iron-selected').fire('zoom-photo');
-			},
-			downloadPhoto: function(e) {
-				this.$$('detail-view').$$('.iron-selected').fire('download-photo');
+				if (itemView.view != 'display') itemView.view = 'display';
+				itemView.fire('zoom-photo');
 			},
 			pathChanged: function(path) {
 				console.log(path);

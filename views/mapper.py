@@ -216,6 +216,7 @@ class Builder(Mapper):
             obj.put()
 
             FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
+            # {u'name': u'-KY2t7eU1rYDMnwPTapZ'} <type 'dict'>
 
             # if self.FIELD in PHOTO_FILTER_FIELDS:
             #     key = str(value).replace(' ', '%20').replace('.', ',')
