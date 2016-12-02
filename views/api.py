@@ -162,9 +162,8 @@ class BackgroundIndex(RestHandler):
 
             runner.CHANNEL_NAME = '%s_index.json' % kind
 
-            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME})
+            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundUnbound(RestHandler):
@@ -175,9 +174,8 @@ class BackgroundUnbound(RestHandler):
             runner.KIND = Photo
             runner.CHANNEL_NAME = '%s_unbound.json' % kind
 
-            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME})
+            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundFix(RestHandler):
@@ -190,9 +188,8 @@ class BackgroundFix(RestHandler):
             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
             runner.CHANNEL_NAME = '%s_fix.json' % kind
 
-            # token = create_custom_token(runner.CHANNEL_NAME, valid_minutes=10)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME})
+            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundBuild(RestHandler):
@@ -211,9 +208,8 @@ class BackgroundBuild(RestHandler):
             runner.FIELD = field
             runner.CHANNEL_NAME = '%s.json' % mem_key
 
-            # token = create_custom_token(mem_key, valid_minutes=10)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME})
+            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class Crud(RestHandler):

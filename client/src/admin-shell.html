@@ -49,22 +49,7 @@
             url="[[_url(isAdmin)]]"
             last-response="{{info}}"></iron-ajax>
 
-        <iron-ajax id="rebuild_ajax"
-            content-type="application/json"
-            on-response="channelHandler"
-            method="POST"></iron-ajax>
-
-        <iron-ajax id="reindex_ajax"
-            content-type="application/json"
-            on-response="channelHandler"
-            method="POST"></iron-ajax>
-
-        <iron-ajax id="unbound_ajax"
-            content-type="application/json"
-            on-response="channelHandler"
-            method="POST"></iron-ajax>
-
-        <iron-ajax id="fix_ajax"
+        <iron-ajax id="xhr"
             content-type="application/json"
             on-response="channelHandler"
             method="POST"></iron-ajax>
@@ -115,28 +100,12 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
+                if (resp.userId != this.user.getBasicProfile().getId()) return;
                 var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
                 var self = this;
                 ref.on('child_added', function(data) {
                     self.onMessage(data.val());
                 });
-                // if (!(resp.token in this.channels)) {
-                    // firebase.auth().signInWithCustomToken(resp.token).catch(function(error) {
-                    //     console.log('Login Failed!', error.code);
-                    //     console.log('Error message: ', error.message);
-                    // });
-                    // {token: socket, token: socket}
-                    // var channel = new goog.appengine.Channel(resp.token);
-                    // var channel = firebase.database().ref('channels/' + resp.channelId);;
-                    // this.channels[resp.token] = channel;
-                    // channel.on('value', function(data) {
-                        // console.log(data);
-                        // this.onMessage(data.val());
-                    // });
-                    // this.channels[resp.token].onmessage = function(e) {
-                    //     return this.onMessage(e, resp.token);
-                    // }.bind(this);
-                // }
 			},
             onMessage: function (data) {
                 var toast = this.$.toast;
@@ -152,24 +121,24 @@
                 }
             },
             rebuild: function(e) {
-                this.$.rebuild_ajax.url = '/api/rebuild/' + e.model.item;
-                this.$.rebuild_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
-                this.$.rebuild_ajax.generateRequest();
+                this.$.xhr.url = '/api/rebuild/' + e.model.item;
+                this.$.xhr.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.xhr.generateRequest();
             },
             reindex: function(e) {
-                this.$.reindex_ajax.url = '/api/index/' + e.target.dataset.kind;
-                this.$.reindex_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
-                this.$.reindex_ajax.generateRequest();
+                this.$.xhr.url = '/api/index/' + e.target.dataset.kind;
+                this.$.xhr.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.xhr.generateRequest();
             },
             unbound: function(e) {
-                this.$.unbound_ajax.url = '/api/unbound/' + e.target.dataset.kind;
-                this.$.unbound_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
-                this.$.unbound_ajax.generateRequest();
+                this.$.xhr.url = '/api/unbound/' + e.target.dataset.kind;
+                this.$.xhr.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.xhr.generateRequest();
             },
             fix: function(e) {
-                this.$.fix_ajax.url = '/api/fix/' + e.target.dataset.kind;
-                this.$.fix_ajax.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
-                this.$.fix_ajax.generateRequest();
+                this.$.xhr.url = '/api/fix/' + e.target.dataset.kind;
+                this.$.xhr.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
+                this.$.xhr.generateRequest();
             },
         });
     </script>
