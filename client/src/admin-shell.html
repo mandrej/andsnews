@@ -57,31 +57,31 @@
         <div class="container" id="container">
             <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
-            <div hidden$="[[!isAdmin]]" class="layout horizontal justified wrap">
+            <div hidden$="[[!isAdmin]]" class="layout vertical wrap">
                 <div>
                     <h1>Photo [[info.photo.count]]</h1>
-                    <div class="layout horizontal wrap">
+                    <div class="layout horizontal justified wrap">
                         <template is="dom-repeat"
                             items="[[info.photo.counters]]" as="item">
                             <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
                         </template>
-                    </div>
 
-                    <paper-button disabled on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-                    <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-                    <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
+                        <paper-button disabled on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
+                        <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
+                        <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
+                    </div>
                 </div>
 
                 <div>
                     <h1>Entry [[info.entry.count]]</h1>
-                    <div class="layout horizontal wrap">
+                    <div class="layout horizontal justified wrap">
                         <template is="dom-repeat"
                             items="[[info.entry.counters]]" as="item">
                             <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
                         </template>
-                    </div>
 
-                    <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
+                        <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
+                    </div>
                 </div>
             </div>
         </div>
