@@ -320,7 +320,7 @@ def update_filters(new_pairs, old_pairs):
         # if (field, value) in new_pairs:
         #     payload['{}/{}'.format(key, 'count')] += 1
 
-    for field, value in set(new_pairs) ^ set(old_pairs):
+    for field, value in set(new_pairs) | set(old_pairs):
         # stamp = datetime.datetime(year=1970, month=1, day=1).isoformat()
 
         # key = '{}'.format(hashlib.md5(str(value)).hexdigest())

@@ -210,6 +210,8 @@ class Builder(Mapper):
             obj.repr_stamp = repr_stamp
             obj.put()
 
+            FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
+
             # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
             # path = '{}/{}.json'.format(self.CHANNEL_NAME, key)
             # order = 2000 - value if self.FIELD == 'date' else '{}{}'.format(PHOTO_FILTER[self.FIELD], value)
