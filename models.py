@@ -278,10 +278,10 @@ class Cloud(object):
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
-    value = ndb.GenericProperty(required=True)  # stringify year StringProperty
+    value = ndb.GenericProperty(required=True)
     count = ndb.IntegerProperty(default=0)
-    repr_stamp = ndb.DateTimeProperty()
-    repr_url = ndb.StringProperty()
+    repr_stamp = ndb.DateTimeProperty(required=True)
+    repr_url = ndb.StringProperty(required=True)
 
 
 def update_filters(new_pairs, old_pairs):
@@ -485,17 +485,17 @@ class Photo(ndb.Model):
         self.iso = data['iso']
         self.date = data['date']
         self.put()
-        deferred.defer(self.index_doc, _queue='background')
 
         new_pairs = self.changed_pairs()
+        deferred.defer(self.index_doc, _queue='background')
         deferred.defer(update_filters, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
-        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         blobstore.delete(self.blob_key)
-
         old_pairs = self.changed_pairs()
         self.key.delete()
+
+        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(update_filters, [], old_pairs, _queue='background')
 
     @webapp2.cached_property
@@ -592,8 +592,8 @@ class Entry(ndb.Model):
         deferred.defer(self.index_doc, _queue='background')
 
     def remove(self):
-        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         self.key.delete()
+        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
 
     @classmethod
     def query_for(cls, field, value):
