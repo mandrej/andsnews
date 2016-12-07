@@ -1,6 +1,7 @@
 import re
 import uuid
 import logging
+import hashlib
 import itertools
 import datetime
 import collections
@@ -8,7 +9,7 @@ import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from models import DUMMY_GIF, Counter, FB
+from models import DUMMY_GIF, PHOTO_FILTER, Counter, FB
 from config import BUCKET
 
 
@@ -196,37 +197,30 @@ class Builder(Mapper):
     def finish(self):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
-        kind = self.KIND._class_name()
         for value, count in tally.items():
-            args = (kind, self.FIELD, str(value))  # stringify year
-            key_name = '%s||%s||%s' % args
-            params = dict(zip(('forkind', 'field', 'value'), args))
-            obj = Counter.get_or_insert(key_name, **params)
-
-            latest = self.KIND.latest_for(obj.field, obj.value)
+            latest = self.KIND.latest_for(self.FIELD, value)
             if latest is not None:
-                if obj.forkind == 'Photo':
-                    obj.repr_url = latest.serving_url
-                elif obj.forkind == 'Entry':
-                    obj.repr_url = latest.front_img
+                repr_url = latest.serving_url
+                repr_stamp = latest.date
 
-                obj.repr_stamp = latest.date
-
+            key_name = 'Photo||{}||{}'.format(self.FIELD, str(value))
+            obj = Counter.get_or_insert(key_name, forkind="Photo", field=self.FIELD, value=value)
             obj.count = count
+            obj.repr_url = repr_url
+            obj.repr_stamp = repr_stamp
             obj.put()
 
             FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
-            # {u'name': u'-KY2t7eU1rYDMnwPTapZ'} <type 'dict'>
 
-            # if self.FIELD in PHOTO_FILTER_FIELDS:
-            #     key = str(value).replace(' ', '%20').replace('.', ',')
-            #     path = '%s/%s.json' % (self.FIELD, key)
-            #     FB.put(path=path, payload={
-            #         'field_name': self.FIELD,
-            #         'value': value,
-            #         'count': count,
-            #         'repr_url': obj.repr_url,
-            #         'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
-            #     })
+            # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
+            # path = '{}/{}.json'.format(self.CHANNEL_NAME, key)
+            # order = 2000 - value if self.FIELD == 'date' else '{}{}'.format(PHOTO_FILTER[self.FIELD], value)
+            # FB.put(path=path, payload={
+            #     'order': order,
+            #     'field_name': self.FIELD,
+            #     'value': value,
+            #     'count': count,
+            #     'repr_url': repr_url,
+            #     'repr_stamp': repr_stamp
+            # })
 
-        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

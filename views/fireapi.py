@@ -2,7 +2,7 @@ import json
 import logging
 import httplib2
 from oauth2client.service_account import ServiceAccountCredentials
-from config import FIREBASE, FB_SERVICE_ACCOUNT
+from config import DEVEL, FIREBASE, FB_SERVICE_ACCOUNT
 
 _FIREBASE_SCOPES = [
     'https://www.googleapis.com/auth/firebase.database',
@@ -53,4 +53,5 @@ class Firebase(object):
         # self._get_http().request('%s?print=pretty' % url, method=method, body=kwargs['payload'])
         response, content = self._get_http().request('%s' % url, method=method, body=kwargs['payload'])
         # logging.error(response.status)
+        # logging.error(content)
         return json.loads(content)
