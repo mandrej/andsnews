@@ -1,11 +1,11 @@
 from __future__ import division
 
 import re
-import colorsys
-import datetime
-import logging
-import base64
 import uuid
+import logging
+import hashlib
+import datetime
+import colorsys
 from cStringIO import StringIO
 from decimal import *
 
@@ -21,16 +21,16 @@ from exifread import process_file
 from palette import extract_colors, rgb_to_hex
 from views.fireapi import Firebase
 from slugify import slugify
+from config import DEVEL
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
 DUMMY_GIF = 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER_FIELDS = ('date', 'tags', 'model', 'color')
-PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
-PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
-ENTRY_COUNTER_FIELDS = ('date', 'tags', 'author')
+PHOTO_FILTER = {'date': 10, 'tags': 20, 'model': 30, 'color': 40}
+# PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
+# PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
 FB = Firebase()
 
 
@@ -208,9 +208,9 @@ def cloud_limit(items):
                 return item['count']
 
 
-def sorting_filters(kind, fields):
+def sorting_filters(kind):
     data = []
-    for field in fields:
+    for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
         mem_key = kind.title() + '_' + field
         cloud = Cloud(mem_key).get_list()
         # [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
@@ -275,50 +275,6 @@ class Cloud(object):
         return collection
 
 
-# class Graph(object):
-#     def __init__(self, field):
-#         self.field = field
-#         self.mem_key = '%s_graph' % field
-#
-#     def get_json(self):
-#         collection = memcache.get(self.mem_key)
-#         if collection is None:
-#             query = Photo.query(getattr(Photo, self.field).IN(['milan', 'svetlana', 'ana', 'mihailo', 'milos',
-#                                                                'katarina', 'iva', 'masa', 'djordje']))
-#             res = [x.tags for x in query]
-#             flat = reduce(lambda x, y: x + y, res)
-#
-#             tally = {}
-#             for name in flat:
-#                 if name in tally:
-#                     tally[name] += 1
-#                 else:
-#                     tally[name] = 1
-#
-#             i = 0
-#             nodes = []
-#             items = {}
-#             for name, count in tally.items():
-#                 items[name] = i
-#                 nodes.append({'name': name, 'index': i, 'count': count})
-#                 i += 1
-#
-#             links = []
-#             pairs = itertools.combinations(items.keys(), 2)
-#             for x, y in pairs:
-#                 i = 0
-#                 for tags in res:
-#                     intersection = set(tags) & {x, y}  # set literals back-ported from Python 3.x
-#                     i += intersection == {x, y}
-#                 if i > 0:
-#                     links.append({'source': items[x], 'target': items[y], 'value': i})
-#
-#             collection = {'nodes': nodes, 'links': links}
-#             memcache.set(self.mem_key, collection, TIMEOUT * 12)
-#
-#         return collection
-
-
 class Counter(ndb.Model):
     forkind = ndb.StringProperty(required=True)
     field = ndb.StringProperty(required=True)
@@ -328,82 +284,63 @@ class Counter(ndb.Model):
     repr_url = ndb.StringProperty()
 
 
-def update_counter(delta, *args):
-    key_name = '%s||%s||%s' % args
-    params = dict(zip(('forkind', 'field', 'value'), map(str, args)))  # stringify year
+def update_filters(new_pairs, old_pairs):
+    payload = {}
 
-    obj = Counter.get_or_insert(key_name, **params)
-    obj.count += delta
-    obj.put_async()
+    if new_pairs and old_pairs:  # EDIT
+        pairs = set(new_pairs) ^ set(old_pairs)
+    elif new_pairs:  # ADD
+        pairs = set(new_pairs)
+    elif old_pairs:  # DEL
+        pairs = set(old_pairs)
 
-    # if obj.field in PHOTO_FILTER_FIELDS:
-    #     key = str(obj.value).replace(' ', '%20').replace('.', ',')
-    #     path = '%s/%s.json' % (obj.field, key)
-    #     payload = {
-    #         'field_name': obj.field,
-    #         'value': obj.value,
-    #         'count': obj.count
-    #     }
-    #     FB.patch(path=path, payload=payload)
+    for field, value in pairs:
+        # count = 0
 
+        key_name = 'Photo||{}||{}'.format(field, value)
+        obj = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
+        if (field, value) in old_pairs:
+            obj.count -= 1
+        if (field, value) in new_pairs:
+            obj.count += 1
+        obj.put()
 
-def update_representation(new_pairs, old_pairs):
-    # PHOTO ONLY
-    queries = []
-    key_names = []
-    params = []
-    for field, value in set(new_pairs) | set(old_pairs):  # union
-        queries.append(Photo.query_for(field, value))
-        args = ('Photo', field, str(value))  # stringify year
-        key_names.append('%s||%s||%s' % args)
-        params.append(dict(zip(('forkind', 'field', 'value'), args)))
+        # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
+        # path = '{}/{}.json'.format('DEVEL' if DEVEL else 'PROD', key)
+        # obj = FB.get(path=path)  # <type 'dict'>
+        # if obj and obj['count']:
+        #     count = obj['count']
+        #
+        # payload['{}/{}'.format(key, 'value')] = value
+        # payload['{}/{}'.format(key, 'field_name')] = field
+        # payload['{}/{}'.format(key, 'order')] = 2000 - value \
+        #     if field == 'date' else '{}{}'.format(PHOTO_FILTER[field], value)
+        # if (field, value) in old_pairs:
+        #     payload['{}/{}'.format(key, 'count')] -= 1
+        # if (field, value) in new_pairs:
+        #     payload['{}/{}'.format(key, 'count')] += 1
 
-    for i, query in enumerate(queries):
-        latest = query.get()
-        obj = Counter.get_or_insert(key_names[i], **params[i])
+    for field, value in set(new_pairs) ^ set(old_pairs):
+        # stamp = datetime.datetime(year=1970, month=1, day=1).isoformat()
 
-        if latest is not None and latest.date != obj.repr_stamp:
+        # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
+        # path = '{}/{}.json'.format('DEVEL' if DEVEL else 'PROD', key)
+        # obj = FB.get(path=path)  # <type 'dict'>
+
+        key_name = 'Photo||{}||{}'.format(field, value)
+        obj = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
+        stamp = obj.repr_stamp
+        # stamp = obj['repr_stamp']
+
+        latest = Photo.query_for(field, value).get()
+        if latest is not None and stamp != latest.date:
             obj.repr_stamp = latest.date
             obj.repr_url = latest.serving_url
-            obj.put_async()
-            logging.info('UPDATE %s %s' % (key_names[i], obj.count))
+            obj.put()
+            # payload['{}/{}'.format(key, 'repr_url')] = latest.serving_url
+            # payload['{}/{}'.format(key, 'repr_stamp')] = latest.date.replace(microsecond=0).isoformat()
 
-            # if obj.field in PHOTO_FILTER_FIELDS:
-            #     key = str(obj.value).replace(' ', '%20').replace('.', ',')
-            #     path = '%s/%s.json' % (obj.field, key)
-            #     payload = {
-            #         'repr_url': obj.repr_url,
-            #         'repr_stamp': - int(obj.repr_stamp.strftime("%s"))
-            #     }
-            #     FB.patch(path=path, payload=payload)
-
-
-def update_counter_field(old, new, kind, field):
-    if field == 'tags':
-        old_tags = set(old or [])
-        new_tags = set(new or [])
-        if old_tags - new_tags:
-            for name in list(old_tags - new_tags):
-                deferred.defer(update_counter, -1, kind, field, name, _queue='background')
-        if new_tags - old_tags:
-            for name in list(new_tags - old_tags):
-                deferred.defer(update_counter, 1, kind, field, name, _queue='background')
-    else:
-        if old != new:
-            if old:
-                if field == 'author':
-                    deferred.defer(update_counter, -1, kind, field, old.email(), _queue='background')
-                elif field == 'date':
-                    deferred.defer(update_counter, -1, kind, field, old.year, _queue='background')
-                else:
-                    deferred.defer(update_counter, -1, kind, field, old, _queue='background')
-            if new:
-                if field == 'author':
-                    deferred.defer(update_counter, 1, kind, field, new.email(), _queue='background')
-                elif field == 'date':
-                    deferred.defer(update_counter, 1, kind, field, new.year, _queue='background')
-                else:
-                    deferred.defer(update_counter, 1, kind, field, new, _queue='background')
+    # FB.patch(path='{}.json'.format('DEVEL' if DEVEL else 'PROD'), payload=payload)
 
 
 class Photo(ndb.Model):
@@ -456,7 +393,7 @@ class Photo(ndb.Model):
         [('date', '2016'), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
         """
         pairs = []
-        for field in PHOTO_FILTER_FIELDS:
+        for field in PHOTO_FILTER.keys():
             prop = field
             if field == 'date':
                 prop = 'year'
@@ -465,6 +402,10 @@ class Photo(ndb.Model):
                 if isinstance(value, (list, tuple)):
                     for v in value:
                         pairs.append((field, str(v)))
+                elif isinstance(value, users.User):
+                    pairs.append((field, value.email()))
+                elif isinstance(value, int):
+                    pairs.append((field, value))
                 else:
                     pairs.append((field, str(value)))  # stringify year
         return pairs
@@ -473,15 +414,6 @@ class Photo(ndb.Model):
     def buffer(self):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
-
-    @webapp2.cached_property
-    def thumb64(self):
-        # too slow
-        _buffer = StringIO()
-        im = Image.open(StringIO(self.buffer))
-        im.thumbnail((25, 25), Image.ANTIALIAS)
-        im.save(_buffer, format=im.format)
-        return base64.b64encode(_buffer.getvalue())
 
     def add(self, fs):
         _buffer = fs.value
@@ -535,20 +467,12 @@ class Photo(ndb.Model):
             self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 
-            for field in PHOTO_COUNTER_FIELDS:
-                value = getattr(self, field, None)
-                update_counter_field(None, value, 'Photo', field)
-
             new_pairs = self.changed_pairs()
-            deferred.defer(update_representation, new_pairs, [], _queue='background')
+            deferred.defer(update_filters, new_pairs, [], _queue='background')
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
         old_pairs = self.changed_pairs()
-
-        for field in PHOTO_COUNTER_FIELDS:
-            value = getattr(self, field, None)
-            update_counter_field(value, data[field], 'Photo', field)
 
         self.headline = data['headline']
         self.author = data['author']
@@ -564,19 +488,15 @@ class Photo(ndb.Model):
         deferred.defer(self.index_doc, _queue='background')
 
         new_pairs = self.changed_pairs()
-        deferred.defer(update_representation, new_pairs, old_pairs, _queue='background')
+        deferred.defer(update_filters, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         blobstore.delete(self.blob_key)
 
-        for field in PHOTO_COUNTER_FIELDS:
-            value = getattr(self, field, None)
-            update_counter_field(value, None, 'Photo', field)
-
         old_pairs = self.changed_pairs()
         self.key.delete()
-        deferred.defer(update_representation, [], old_pairs, _queue='background')
+        deferred.defer(update_filters, [], old_pairs, _queue='background')
 
     @webapp2.cached_property
     def serving_url(self):
@@ -618,7 +538,6 @@ class Photo(ndb.Model):
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
             'size': sizeof_fmt(self.size),
-            # 'thumb64': self.thumb64
         })
         return data
 
@@ -658,17 +577,9 @@ class Entry(ndb.Model):
         self.front_img = data['front_img']
         self.put()
 
-        for field in ENTRY_COUNTER_FIELDS:
-            value = getattr(self, field, None)
-            update_counter_field(None, value, 'Entry', field)
-
         deferred.defer(self.index_doc, _queue='background')
 
     def edit(self, data):
-        for field in ENTRY_COUNTER_FIELDS:
-            value = getattr(self, field, None)
-            update_counter_field(value, data[field], 'Entry', field)
-
         self.headline = data['headline']
         self.author = data['author']
         self.summary = data['summary']
@@ -682,26 +593,14 @@ class Entry(ndb.Model):
 
     def remove(self):
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
-
-        for field in ENTRY_COUNTER_FIELDS:
-            value = getattr(self, field, None)
-            update_counter_field(value, None, 'Entry', field)
-
         self.key.delete()
 
     @classmethod
     def query_for(cls, field, value):
+        """[FilterNode('color', '=', 'pink')]"""
         f = filter_param(field, value)
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
-
-    @classmethod
-    def latest_for(cls, field, value):
-        query = cls.query_for(field, value)
-        result = query.fetch(1)
-        if result:
-            return result[0]
-        return None
 
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))

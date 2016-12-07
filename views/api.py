@@ -6,8 +6,7 @@ from slugify import slugify
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, sorting_filters, Photo, Entry, INDEX, \
-    PHOTO_FILTER_FIELDS, PHOTO_COUNTER_FIELDS, ENTRY_COUNTER_FIELDS
+from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER
 from mapper import Indexer, Unbound, Builder, Fixer
 
 LIMIT = 12
@@ -125,10 +124,7 @@ class Collection(RestHandler):
 
 class KindFilter(RestHandler):
     def get(self, kind=None):
-        if kind == 'photo':
-            fields = PHOTO_FILTER_FIELDS
-
-        data = sorting_filters(kind, fields)
+        data = sorting_filters(kind)
         self.render(data)
 
 
@@ -313,11 +309,7 @@ class Info(RestHandler):
         data = {
             'photo': {
                 'count': Photo.query().count(),
-                'counters': ['Photo_%s' % x for x in PHOTO_COUNTER_FIELDS]
-            },
-            'entry': {
-                'count': Entry.query().count(),
-                'counters': ['Entry_%s' % x for x in ENTRY_COUNTER_FIELDS]
+                'counters': ['Photo_%s' % x for x in PHOTO_FILTER.keys()]
             }
         }
         self.render(data)
