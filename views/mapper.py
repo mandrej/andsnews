@@ -210,7 +210,7 @@ class Builder(Mapper):
             obj.repr_stamp = repr_stamp
             obj.put()
 
-            FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
+            # FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
 
             # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
             # path = '{}/{}.json'.format(self.CHANNEL_NAME, key)
@@ -224,3 +224,4 @@ class Builder(Mapper):
             #     'repr_stamp': repr_stamp
             # })
 
+        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

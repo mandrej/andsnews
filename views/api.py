@@ -3,6 +3,7 @@ import logging
 import webapp2
 import datetime
 from slugify import slugify
+from operator import itemgetter
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
@@ -306,10 +307,11 @@ class Download(webapp2.RequestHandler):
 
 class Info(RestHandler):
     def get(self):
+        fields = [x[0] for x in sorted(PHOTO_FILTER.items(), key=itemgetter(1))]
         data = {
             'photo': {
                 'count': Photo.query().count(),
-                'counters': ['Photo_%s' % x for x in PHOTO_FILTER.keys()]
+                'counters': ['Photo_%s' % x for x in fields]
             }
         }
         self.render(data)
