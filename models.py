@@ -285,32 +285,22 @@ class Counter(ndb.Model):
 
 
 def update_filters(new_pairs, old_pairs):
-    if new_pairs and old_pairs:  # EDIT
-        pairs = set(new_pairs) ^ set(old_pairs)
-    elif new_pairs:  # ADD
-        pairs = set(new_pairs)
-    elif old_pairs:  # DEL
-        pairs = set(old_pairs)
-
-    for field, value in pairs:
+    for field, value in set(new_pairs) | set(old_pairs):
         key_name = 'Photo||{}||{}'.format(field, value)
-        counter = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
+        counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
+
         if (field, value) in old_pairs:
             counter.count -= 1
         if (field, value) in new_pairs:
             counter.count += 1
-        counter.put()
 
-    for field, value in set(new_pairs) | set(old_pairs):
-        key_name = 'Photo||{}||{}'.format(field, value)
-        counter = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
-
-        latest = Photo.query_for(field, value).get()
-        if latest is not None and latest.date > counter.repr_stamp:
+        latest = Photo.latest_for(field, value)
+        if latest is not None:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
-            counter.put()
-            logging.error(key_name)
+
+        counter.put()
+        logging.error(key_name)
 
 
 class Photo(ndb.Model):
