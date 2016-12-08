@@ -285,8 +285,6 @@ class Counter(ndb.Model):
 
 
 def update_filters(new_pairs, old_pairs):
-    payload = {}
-
     if new_pairs and old_pairs:  # EDIT
         pairs = set(new_pairs) ^ set(old_pairs)
     elif new_pairs:  # ADD
@@ -295,52 +293,24 @@ def update_filters(new_pairs, old_pairs):
         pairs = set(old_pairs)
 
     for field, value in pairs:
-        # count = 0
-
         key_name = 'Photo||{}||{}'.format(field, value)
-        obj = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
+        counter = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
         if (field, value) in old_pairs:
-            obj.count -= 1
+            counter.count -= 1
         if (field, value) in new_pairs:
-            obj.count += 1
-        obj.put()
+            counter.count += 1
+        counter.put()
 
-        # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
-        # path = '{}/{}.json'.format('DEVEL' if DEVEL else 'PROD', key)
-        # obj = FB.get(path=path)  # <type 'dict'>
-        # if obj and obj['count']:
-        #     count = obj['count']
-        #
-        # payload['{}/{}'.format(key, 'value')] = value
-        # payload['{}/{}'.format(key, 'field_name')] = field
-        # payload['{}/{}'.format(key, 'order')] = 2000 - value \
-        #     if field == 'date' else '{}{}'.format(PHOTO_FILTER[field], value)
-        # if (field, value) in old_pairs:
-        #     payload['{}/{}'.format(key, 'count')] -= 1
-        # if (field, value) in new_pairs:
-        #     payload['{}/{}'.format(key, 'count')] += 1
-
-    for field, value in set(new_pairs) ^ set(old_pairs):
-        # stamp = datetime.datetime(year=1970, month=1, day=1).isoformat()
-
-        # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
-        # path = '{}/{}.json'.format('DEVEL' if DEVEL else 'PROD', key)
-        # obj = FB.get(path=path)  # <type 'dict'>
-
+    for field, value in set(new_pairs) | set(old_pairs):
         key_name = 'Photo||{}||{}'.format(field, value)
-        obj = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
-        stamp = obj.repr_stamp
-        # stamp = obj['repr_stamp']
+        counter = Counter.get_or_insert(key_name, forkind="Photo", field=field, value=value)
 
         latest = Photo.query_for(field, value).get()
-        if latest is not None and stamp != latest.date:
-            obj.repr_stamp = latest.date
-            obj.repr_url = latest.serving_url
-            obj.put()
-            # payload['{}/{}'.format(key, 'repr_url')] = latest.serving_url
-            # payload['{}/{}'.format(key, 'repr_stamp')] = latest.date.replace(microsecond=0).isoformat()
-
-    # FB.patch(path='{}.json'.format('DEVEL' if DEVEL else 'PROD'), payload=payload)
+        if latest is not None and latest.date > counter.repr_stamp:
+            counter.repr_stamp = latest.date
+            counter.repr_url = latest.serving_url
+            counter.put()
+            logging.error(key_name)
 
 
 class Photo(ndb.Model):
