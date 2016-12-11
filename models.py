@@ -371,6 +371,9 @@ class Photo(ndb.Model):
         blobstore.delete(self.blob_key)
         self.key.delete()
 
+        context = ndb.get_context()
+        context.clear_cache()
+
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(update_filters, [], old_pairs, _queue='background')
 
