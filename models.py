@@ -3,7 +3,6 @@ from __future__ import division
 import re
 import uuid
 import logging
-import hashlib
 import datetime
 import colorsys
 from cStringIO import StringIO
@@ -15,13 +14,11 @@ from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
 import cloudstorage as gcs
-from operator import itemgetter
-from config import COLORS, ASA, HUE, LUM, SAT, BUCKET
+from config import ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
 from views.fireapi import Firebase
 from slugify import slugify
-from config import DEVEL
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 
@@ -30,7 +27,6 @@ TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = {'date': 10, 'tags': 20, 'model': 30, 'color': 40}
 # PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
-# PHOTO_COUNTER_FIELDS = ('date', 'tags', 'author', 'model', 'lens', 'color')
 FB = Firebase()
 
 
@@ -188,91 +184,6 @@ def tokenize(phrase):
 
 def remove_doc(safe_key):
     INDEX.delete(safe_key)
-
-
-def cloud_limit(items):
-    """
-    Returns limit for the specific count. Show only if count > limit
-    :param items: dict {Photo_tags: 10, _date: 119, _eqv: 140, _iso: 94, _author: 66, _lens: 23, _model: 18, _color: 73
-    :return: int
-    """
-    _curr = 0
-    _sum5 = sum((x['count'] for x in items)) * 0.05
-    if _sum5 < 1:
-        return 0
-    else:
-        _on_count = sorted(items, key=itemgetter('count'))
-        for item in _on_count:
-            _curr += item['count']
-            if _curr >= _sum5:
-                return item['count']
-
-
-def sorting_filters(kind):
-    data = []
-    for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
-        mem_key = kind.title() + '_' + field
-        cloud = Cloud(mem_key).get_list()
-        # [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
-
-        limit = cloud_limit(cloud)
-        items = [x for x in cloud if x['count'] > limit]
-
-        if field == 'date':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        elif field in ('tags', 'author', 'model', 'lens', 'iso'):
-            items = sorted(items, key=itemgetter('name'), reverse=False)
-        elif field == 'color':
-            items = sorted(items, key=itemgetter('order'))
-            map(lambda d: d.pop('order'), items)
-
-        data.append({
-            'field_name': field,
-            'items': items
-        })
-
-    return data
-
-
-class Cloud(object):
-    """ cache dictionary collections on unique values and it's counts
-        {'still life': {'count': 8, 'repr_url': '...'}, ...}
-
-        get_list:
-        [{'count': 1, 'name': 'montenegro', 'repr_url': '...'}, ...]
-    """
-
-    def __init__(self, mem_key):
-        self.mem_key = mem_key
-        self.kind, self.field = mem_key.split('_', 1)
-
-    def get(self):
-        return self.make()
-
-    def get_list(self):
-        collection = self.get()
-
-        content = []
-        if self.field == 'color':
-            for k, d in collection.items():
-                data = next(({'name': x['name'], 'order': x['order']} for x in COLORS if x['name'] == k), None)
-                data.update({'count': d['count'], 'repr_url': d['repr_url']})
-                content.append(data)
-        else:
-            for k, d in collection.items():
-                data = {'name': k, 'count': d['count'], 'repr_url': d['repr_url']}
-                content.append(data)
-
-        return content
-
-    def make(self):
-        collection = {}
-        query = Counter.query(Counter.forkind == self.kind, Counter.field == self.field)
-        for counter in query:
-            if counter.count > 0:
-                collection[counter.value] = {'count': counter.count, 'repr_url': counter.repr_url}
-        # {'still life': {'count': 8, 'repr_url': '...'}, ...}
-        return collection
 
 
 class Counter(ndb.Model):
@@ -455,8 +366,9 @@ class Photo(ndb.Model):
         deferred.defer(update_filters, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
-        blobstore.delete(self.blob_key)
         old_pairs = self.changed_pairs()
+
+        blobstore.delete(self.blob_key)
         self.key.delete()
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')

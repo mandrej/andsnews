@@ -7,7 +7,7 @@ from operator import itemgetter
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Cloud, sorting_filters, Photo, Entry, INDEX, PHOTO_FILTER
+from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
 from mapper import Indexer, Unbound, Builder, Fixer
 
 LIMIT = 12
@@ -94,8 +94,9 @@ class RestHandler(webapp2.RequestHandler):
 
 class Suggest(RestHandler):
     def get(self, mem_key):
-        cloud = Cloud(mem_key).get()
-        self.render(cloud.keys())
+        kind, field = mem_key.split('_')
+        query = Counter.query(Counter.forkind == kind, Counter.field == field)
+        self.render([counter.value for counter in query])
 
 
 class Collection(RestHandler):
@@ -123,10 +124,22 @@ class Collection(RestHandler):
         })
 
 
-class KindFilter(RestHandler):
-    def get(self, kind=None):
-        data = sorting_filters(kind)
-        self.render(data)
+class PhotoFilters(RestHandler):
+    def get(self):
+        collection = []
+        for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
+            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+            items = ({
+                'field_name': field,
+                'count': counter.count,
+                'name': counter.value,
+                'repr_url': counter.repr_url} for counter in query
+            )
+            if field == 'date':
+                items = sorted(items, key=itemgetter('name'), reverse=True)
+            collection.extend(items)
+
+        self.render(collection)
 
 
 class Find(RestHandler):

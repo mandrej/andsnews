@@ -1,7 +1,6 @@
 import re
 import uuid
 import logging
-import hashlib
 import itertools
 import datetime
 import collections
@@ -9,7 +8,7 @@ import cloudstorage as gcs
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
-from models import DUMMY_GIF, PHOTO_FILTER, Counter, FB
+from models import DUMMY_GIF, Counter, FB
 from config import BUCKET
 
 

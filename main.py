@@ -3,7 +3,7 @@ from config import DEVEL
 
 app = WSGIApplication([
     Route(r'/api/suggest/<mem_key>', handler='views.api.Suggest'),
-    Route(r'/api/filter/<kind:(photo|entry)>', handler='views.api.KindFilter'),
+    Route(r'/api/filters', handler='views.api.PhotoFilters'),
     Route(r'/api/search/<find>', handler='views.api.Find'),
 
     Route(r'/api/<kind:(photo|entry)>', handler='views.api.Collection'),
