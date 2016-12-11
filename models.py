@@ -196,24 +196,25 @@ class Counter(ndb.Model):
 
 
 def update_filters(new_pairs, old_pairs):
-    queries = []
+    context = ndb.get_context()
+    context.clear_cache()
+
     counters = []
     for field, value in set(new_pairs) | set(old_pairs):
-        queries.append(Photo.query_for(field, value))
         key_name = 'Photo||{}||{}'.format(field, value)
         counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
+
         if (field, value) in old_pairs:
             counter.count -= 1
         if (field, value) in new_pairs:
             counter.count += 1
 
-        counters.append(counter)
-
-    for i, query in enumerate(queries):
-        latest = query.get()
+        latest = Photo.latest_for(field, value)
         if latest is not None:
-            counters[i].repr_stamp = latest.date
-            counters[i].repr_url = latest.serving_url
+            counter.repr_stamp = latest.date
+            counter.repr_url = latest.serving_url
+
+        counters.append(counter)
 
     ndb.put_multi(counters)
 
@@ -370,9 +371,6 @@ class Photo(ndb.Model):
 
         blobstore.delete(self.blob_key)
         self.key.delete()
-
-        context = ndb.get_context()
-        context.clear_cache()
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(update_filters, [], old_pairs, _queue='background')
