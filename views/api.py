@@ -129,12 +129,20 @@ class PhotoFilters(RestHandler):
         collection = []
         for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
             query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-            items = ({
-                'field_name': field,
-                'count': counter.count,
-                'name': counter.value,
-                'repr_url': counter.repr_url} for counter in query
-            )
+            _sum = 0
+            items = []
+            for counter in query:
+                _sum += counter.count
+                items.append({
+                    'field_name': field,
+                    'count': counter.count,
+                    'name': counter.value,
+                    'repr_url': counter.repr_url})
+
+            significance = _sum * 0.05
+            for item in items:
+                item['show'] = item['count'] > significance
+
             if field == 'date':
                 items = sorted(items, key=itemgetter('name'), reverse=True)
             collection.extend(items)

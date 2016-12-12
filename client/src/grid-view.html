@@ -124,8 +124,7 @@
                 }
 			},
             _filtering: function(rec) {
-                if (rec.count > 3) return true;
-                return false;
+                return rec.show;
             },
             handler: function(request) {
 				var response = request.detail.response,
