@@ -70,7 +70,7 @@ inbound_services:
 
 builtins:
 - deferred: on
-- appstats: on
+#- appstats: on
 #- remote_api: on
 
 #skip_files:
