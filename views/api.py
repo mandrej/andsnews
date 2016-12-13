@@ -10,8 +10,10 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
 from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
 from mapper import Indexer, Unbound, Builder, Fixer
+from config import DEVEL
 
 LIMIT = 12
+PERCENTILE = 50 if DEVEL else 80
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -142,7 +144,7 @@ class PhotoFilters(RestHandler):
                 items = sorted(items, key=itemgetter('name'), reverse=True)
             collection.extend(items)
 
-        limit = np.percentile([d['count'] for d in collection], 80)
+        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
         for item in collection:
             item['show'] = item['count'] > int(limit)
 
