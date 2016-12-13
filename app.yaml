@@ -19,35 +19,35 @@ libraries:
 
 handlers:
 - url: /favicon.ico
-  static_files: client/favicon.ico
-  upload: client/favicon.ico
+  static_files: client/build/unbundled/favicon.ico
+  upload: client/build/unbundled/favicon.ico
   secure: always
 
 - url: /robots\.txt
-  static_files: client/robots.txt
-  upload: client/robots.txt
+  static_files: client/build/unbundled/robots.txt
+  upload: client/build/unbundled/robots.txt
   secure: always
 
 - url: /bower_components/
-  static_dir: client/bower_components
+  static_dir: client/build/unbundled/bower_components
   secure: always
 
 - url: /src/
-  static_dir: client/src
+  static_dir: client/build/unbundled/src
   secure: always
 
 - url: /images/
-  static_dir: client/images
+  static_dir: client/build/unbundled/images
   secure: always
 
 - url: /service-worker\.js
-  static_files: client/service-worker.js
-  upload: client/service-worker.js
+  static_files: client/build/unbundled/service-worker.js
+  upload: client/build/unbundled/service-worker.js
   secure: always
 
 - url: /manifest\.json
-  static_files: client/manifest.json
-  upload: client/manifest.json
+  static_files: client/build/unbundled/manifest.json
+  upload: client/build/unbundled/manifest.json
   secure: always
 
 - url: /api/.*
@@ -55,8 +55,8 @@ handlers:
   secure: always
 
 - url: /
-  static_files: client/index.html
-  upload: client/index.html
+  static_files: client/build/unbundled/index.html
+  upload: client/build/unbundled/index.html
   secure: always
 
 ####################################################

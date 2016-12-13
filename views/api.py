@@ -142,7 +142,7 @@ class PhotoFilters(RestHandler):
                 items = sorted(items, key=itemgetter('name'), reverse=True)
             collection.extend(items)
 
-        limit = np.percentile([d['count'] for d in collection], 50)
+        limit = np.percentile([d['count'] for d in collection], 80)
         for item in collection:
             item['show'] = item['count'] > int(limit)
 
