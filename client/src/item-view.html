@@ -97,7 +97,7 @@
 			debounce-duration="100"></iron-ajax>
 
 
-        <neon-animated-pages selected="[[view]]" attr-for-selected="data-view"
+        <neon-animated-pages selected="[[view]]" attr-for-selected="data-view" id="neon"
             entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <div data-view="display" class="swipe">
                 <template is="dom-if" if="[[_isKindPhoto(item)]]">
@@ -290,7 +290,7 @@
                 }
             },
             _zoomPhoto: function() {
-                var img = this.root.querySelector('iron-image'),
+                var img = this.$.neon.querySelector('iron-image'),
                     dim = JSON.parse(img.dataset.dim);
 
                 // var scale = Math.max(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
