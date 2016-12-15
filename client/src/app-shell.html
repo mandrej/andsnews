@@ -8,7 +8,8 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<!-- <link rel="import" href="../bower_components/google-signin/google-signin.html"> -->
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -119,10 +120,25 @@
 			data="{{dataValue}}"
 			tail="{{tailValue}}"></app-route>
 
-		<google-signin-aware id="aware"
+		<firebase-app
+	        app="{{firebase}}"
+	        name="andsnews"
+	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+	        auth-domain="andsnews.firebaseapp.com"
+	        database-url="https://andsnews.firebaseio.com"
+	        storage-bucket="andsnews.appspot.com"
+	        messaging-sender-id="719127177629"></firebase-app>
+
+        <firebase-auth id="auth"
+			app="{{firebase}}"
+			user="{{user}}"
+			signed-in="{{isAuthorized}}"
+			provider="google"></firebase-auth>
+
+		<!-- <google-signin-aware id="aware"
             client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
             is-authorized="{{isAuthorized}}"
-            on-google-signin-aware-success="handleSignIn"></google-signin-aware>
+            on-google-signin-aware-success="handleSignIn"></google-signin-aware> -->
 
 		<paper-dialog id="deleteDialog" modal
             entry-animation="scale-up-animation" exit-animation="fade-out-animation"
@@ -221,8 +237,8 @@
 			<iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 				<admin-shell
 					data-view="maintenance"
-					
 					is-admin="{{isAdmin}}"
+					firebase="{{firebase}}"
 					route="{{route}}"></admin-shell>
 
 				<grid-view
@@ -276,11 +292,16 @@
 				version: { type: String, value: '1612.15'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
-				user: { type: Object, notify: true },
+				user: { type: Object, notify: true, observer: 'isUserAdmin' },
 				isAdmin: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
+			},
+			isUserAdmin: function(user) {
+				this.debounce('isUserAdmin', function() {
+					this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
+				}, 300);
 			},
 			viewChanged: function(view, isAuthorized, isAdmin) {
 				this.debounce('viewChanged', function() {
@@ -324,29 +345,29 @@
 			},
 			_sign: function() {
 				if (this.user) {
-					this.user.disconnect();
-					this.set('isAdmin', false);
-					this.set('isAuthorized', false);
-					this.user = null;
-					gapi.auth2.getAuthInstance().signOut();
+					this.$.auth.signOut();
 				} else {
-					this.$.aware.signIn();
+					this.$.auth.signInWithPopup()
+		    			.then(function(response) {
+							console.log(response);
+							// response.credential.accessToken
+							// response.user.uid
+						}).catch(function(error) {
+							console.log(error);
+						});
 				}
 			},
-			handleSignIn: function(response) {
-                this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-				if (this.user.getBasicProfile().getId() == '109964680393846534577') {
-					this.set('isAdmin', true);
-				}
-            },
-			handleError: function(e) {
-				console.log(e);
-			},
+			// handleSignIn: function(response) {
+            //     this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+			// 	if (this.user.getBasicProfile().getId() == '109964680393846534577') {
+			// 		this.set('isAdmin', true);
+			// 	}
+            // },
 			userName: function(user) {
-				if (user) return user.getBasicProfile().getGivenName();
+				if (user) return user.displayName;
 			},
 			userImg: function(user) {
-				if (user) return user.getBasicProfile().getImageUrl();
+				if (user) return user.photoURL;
 			},
 			addRecord: function(e) {
 				this.set('dataValue.value', null);

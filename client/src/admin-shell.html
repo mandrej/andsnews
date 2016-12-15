@@ -1,9 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -39,17 +36,6 @@
                 background: var(--secondary-text-color);
             }
         </style>
-
-        <firebase-app
-	        app="{{firebase}}"
-	        name="andsnews"
-	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-	        auth-domain="andsnews.firebaseapp.com"
-	        database-url="https://andsnews.firebaseio.com"
-	        storage-bucket="andsnews.appspot.com"
-	        messaging-sender-id="719127177629"></firebase-app>
-
-        <!-- <firebase-auth id="auth" user="{{user}}" provider="google"></firebase-auth> -->
 
         <!-- <firebase-document
             app="{{firebase}}"
@@ -109,15 +95,6 @@
             properties: {
                 user: { type: Object, notify: true },
             },
-            attached: function() {
-                // this.$.auth.signInWithPopup()
-                //     .then(function(response) {
-                //         console.log(response);
-                //         // optionally handle a successful login
-                //     }).catch(function(error) {
-                //         // unsuccessful authentication response here
-                //     });
-            },
             _url: function(isAdmin) {
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'maintenance' && isAdmin) {
@@ -154,11 +131,6 @@
                 toast.fitInto = this.$.container;
                 if (data) {
                     toast.setAttribute('text', data.detail.message.notification.body);
-                    // if (data.startsWith('END')) {
-                    //     toast.style.backgroundColor = '#dc2128';
-                    // } else {
-                    //     toast.style.backgroundColor = '#212121';
-                    // }
                     toast.open();
                 }
             },
@@ -166,8 +138,7 @@
                 // this.token = this.user.getAuthResponse().access_token;
                 // this.user.uid = this.user.getBasicProfile().getId();
                 var self = this;
-                this.$.messaging.requestPermission().then(function(x) {
-                    console.log(x);
+                this.$.messaging.requestPermission().then(function() {
                     console.log(self.user);
                     console.log(self.token);
                     // permission was granted

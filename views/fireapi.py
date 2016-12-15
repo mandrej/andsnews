@@ -60,6 +60,8 @@ class Firebase(object):
 def push_message(token, message=''):
     """
         Firebase Cloud Messaging Server
+        content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
+            "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
     """
     url = 'https://fcm.googleapis.com/fcm/send'
     headers = {
@@ -75,6 +77,6 @@ def push_message(token, message=''):
     }
     http = httplib2.Http()
     response, content = http.request(url, 'POST', body=json.dumps(payload), headers=headers)
-    logging.error(response.status)
-    logging.error(content)
+    # logging.error(response.status)
+    # logging.error(content)
     return json.loads(content)
