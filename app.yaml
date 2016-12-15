@@ -45,6 +45,11 @@ handlers:
   upload: client/service-worker.js
   secure: always
 
+- url: /firebase-messaging-sw\.js
+  static_files: client/firebase-messaging-sw.js
+  upload: client/firebase-messaging-sw.js
+  secure: always
+
 - url: /manifest\.json
   static_files: client/manifest.json
   upload: client/manifest.json

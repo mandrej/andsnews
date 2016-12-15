@@ -214,9 +214,9 @@ class BackgroundFix(RestHandler):
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
-        user_id = self.request.json.get('userId', None)
+        token = self.request.json.get('token', None)
 
-        if user_id is not None:
+        if token is not None:
             runner = Builder()
             if kind == 'Photo':  # Title case!
                 runner.KIND = Photo
@@ -225,10 +225,10 @@ class BackgroundBuild(RestHandler):
 
             runner.VALUES = []
             runner.FIELD = field
-            runner.CHANNEL_NAME = '%s.json' % mem_key
+            runner.TOKEN = token
 
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
+            self.render({'token': token})
 
 
 class Crud(RestHandler):

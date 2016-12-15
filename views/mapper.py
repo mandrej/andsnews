@@ -9,6 +9,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.runtime import DeadlineExceededError
 from models import DUMMY_GIF, Counter, FB
+from views.fireapi import push_message
 from config import BUCKET
 
 
@@ -171,7 +172,7 @@ class Fixer(Mapper):
 
 
 class Builder(Mapper):
-    CHANNEL_NAME = None
+    TOKEN = None
     KIND = None  # ndb model
     FIELD = None
     VALUES = None
@@ -223,4 +224,5 @@ class Builder(Mapper):
             #     'repr_stamp': repr_stamp
             # })
 
-        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        push_message(self.TOKEN, 'FINISHED at %s' % datetime.datetime.now())
+        # FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

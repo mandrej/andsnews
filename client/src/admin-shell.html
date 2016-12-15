@@ -1,6 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -45,6 +48,18 @@
 	        database-url="https://andsnews.firebaseio.com"
 	        storage-bucket="andsnews.appspot.com"
 	        messaging-sender-id="719127177629"></firebase-app>
+
+        <!-- <firebase-auth id="auth" user="{{user}}" provider="google"></firebase-auth> -->
+
+        <!-- <firebase-document
+            app="{{firebase}}"
+            path="/users/[[user.uid]]/token"
+            data="[[token]]"></firebase-document> -->
+
+        <firebase-messaging id="messaging"
+            app="{{firebase}}"
+            token="{{token}}"
+            on-message="handleMessage"></firebase-messaging>
 
         <iron-ajax auto
             url="[[_url(isAdmin)]]"
@@ -92,6 +107,16 @@
         Polymer({
             is: 'admin-shell',
             properties: {
+                user: { type: Object, notify: true },
+            },
+            attached: function() {
+                // this.$.auth.signInWithPopup()
+                //     .then(function(response) {
+                //         console.log(response);
+                //         // optionally handle a successful login
+                //     }).catch(function(error) {
+                //         // unsuccessful authentication response here
+                //     });
             },
             _url: function(isAdmin) {
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
@@ -101,12 +126,13 @@
             },
             channelHandler: function(req) {
                 var resp = req.detail.response;
-                if (resp.userId != this.user.getBasicProfile().getId()) return;
-                var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
-                var self = this;
-                ref.on('child_added', function(data) {
-                    self.onMessage(data.val());
-                });
+                console.log(resp);
+                // if (resp.userId != this.user.getBasicProfile().getId()) return;
+                // var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
+                // var self = this;
+                // ref.on('child_added', function(data) {
+                //     self.onMessage(data.val());
+                // });
 			},
             onMessage: function (data) {
                 var toast = this.$.toast;
@@ -121,10 +147,36 @@
                     toast.open();
                 }
             },
+            handleMessage: function(data) {
+                console.log(data.detail.message.notification.body);
+                // console.log(arguments);
+                var toast = this.$.toast;
+                toast.fitInto = this.$.container;
+                if (data) {
+                    toast.setAttribute('text', data.detail.message.notification.body);
+                    // if (data.startsWith('END')) {
+                    //     toast.style.backgroundColor = '#dc2128';
+                    // } else {
+                    //     toast.style.backgroundColor = '#212121';
+                    // }
+                    toast.open();
+                }
+            },
             rebuild: function(e) {
-                this.$.xhr.url = '/api/rebuild/' + e.model.item;
-                this.$.xhr.body = JSON.stringify({'userId': this.user.getBasicProfile().getId()});
-                this.$.xhr.generateRequest();
+                // this.token = this.user.getAuthResponse().access_token;
+                // this.user.uid = this.user.getBasicProfile().getId();
+                var self = this;
+                this.$.messaging.requestPermission().then(function(x) {
+                    console.log(x);
+                    console.log(self.user);
+                    console.log(self.token);
+                    // permission was granted
+                    self.$.xhr.url = '/api/rebuild/' + e.model.item;
+                    self.$.xhr.body = JSON.stringify({'token': self.token});
+                    self.$.xhr.generateRequest();
+                }, function(err) {
+                    // permission was denied
+                });
             },
             reindex: function(e) {
                 this.$.xhr.url = '/api/index/' + e.target.dataset.kind;

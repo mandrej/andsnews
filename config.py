@@ -6,7 +6,8 @@ FIREBASE = {
     "authDomain": "andsnews.firebaseapp.com",
     "databaseURL": "https://andsnews.firebaseio.com",
     "storageBucket": "andsnews.appspot.com",
-    "messagingSenderId": "719127177629"
+    "messagingSenderId": "719127177629",
+    "messagingServerKey": "AAAAp29R6Z0:APA91bEsmfN6-ZywxP05Xpw-Ooto5FwTyXjgxRcqDllaTo6Kay3y8wnB-1QcwBt1-iQvoPt2p8wwp0JmKz4xWHST-pAQyrAivyTT-RFXasRYGmT09rP6oMuW95XHEi-HANZgzljuA-4i4Gh44den43zooddq5uSjBA"
 }
 
 FB_SERVICE_ACCOUNT = {

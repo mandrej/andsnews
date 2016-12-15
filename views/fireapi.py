@@ -55,3 +55,26 @@ class Firebase(object):
         # logging.error(response.status)
         # logging.error(content)
         return json.loads(content)
+
+
+def push_message(token, message=''):
+    """
+        Firebase Cloud Messaging Server
+    """
+    url = 'https://fcm.googleapis.com/fcm/send'
+    headers = {
+        'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
+        'Content-Type': 'application/json',
+    }
+    payload = {
+        "to": token,
+        "notification": {
+            "title": "ands",
+            "body": message
+        }
+    }
+    http = httplib2.Http()
+    response, content = http.request(url, 'POST', body=json.dumps(payload), headers=headers)
+    logging.error(response.status)
+    logging.error(content)
+    return json.loads(content)
