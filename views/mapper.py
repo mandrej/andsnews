@@ -210,6 +210,8 @@ class Builder(Mapper):
             obj.repr_stamp = repr_stamp
             obj.put()
 
+            push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
+
             # FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
 
             # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
@@ -224,5 +226,5 @@ class Builder(Mapper):
             #     'repr_stamp': repr_stamp
             # })
 
-        push_message(self.TOKEN, 'FINISHED at %s' % datetime.datetime.now())
+        push_message(self.TOKEN, 'END at %s' % datetime.datetime.now())
         # FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

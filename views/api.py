@@ -226,9 +226,10 @@ class BackgroundBuild(RestHandler):
             runner.VALUES = []
             runner.FIELD = field
             runner.TOKEN = token
+            # runner.CHANNEL_NAME = '%s.json' % mem_key
 
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'token': token})
+            # self.render({'token': token})
 
 
 class Crud(RestHandler):

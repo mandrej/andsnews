@@ -37,11 +37,6 @@
             }
         </style>
 
-        <!-- <firebase-document
-            app="{{firebase}}"
-            path="/users/[[user.uid]]/token"
-            data="[[token]]"></firebase-document> -->
-
         <firebase-messaging id="messaging"
             app="{{firebase}}"
             token="{{token}}"
@@ -53,7 +48,6 @@
 
         <iron-ajax id="xhr"
             content-type="application/json"
-            on-response="channelHandler"
             method="POST"></iron-ajax>
 
         <div class="container" id="container">
@@ -92,40 +86,35 @@
     <script>
         Polymer({
             is: 'admin-shell',
-            properties: {
-                user: { type: Object, notify: true },
-            },
             _url: function(isAdmin) {
                 var view = Polymer.dom().querySelector('app-shell').dataView.view;
                 if (view == 'maintenance' && isAdmin) {
                     return '/api/info';
                 }
             },
-            channelHandler: function(req) {
-                var resp = req.detail.response;
-                console.log(resp);
-                // if (resp.userId != this.user.getBasicProfile().getId()) return;
-                // var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
-                // var self = this;
-                // ref.on('child_added', function(data) {
-                //     self.onMessage(data.val());
-                // });
-			},
-            onMessage: function (data) {
-                var toast = this.$.toast;
-                toast.fitInto = this.$.container;
-                if (data) {
-                    toast.setAttribute('text', data);
-                    if (data.startsWith('END')) {
-                        toast.style.backgroundColor = '#dc2128';
-                    } else {
-                        toast.style.backgroundColor = '#212121';
-                    }
-                    toast.open();
-                }
-            },
+            // channelHandler: function(req) {
+            //     var resp = req.detail.response;
+            //     if (resp.userId != this.user.getBasicProfile().getId()) return;
+            //     var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
+            //     var self = this;
+            //     ref.on('child_added', function(data) {
+            //         self.onMessage(data.val());
+            //     });
+			// },
+            // onMessage: function (data) {
+            //     var toast = this.$.toast;
+            //     toast.fitInto = this.$.container;
+            //     if (data) {
+            //         toast.setAttribute('text', data);
+            //         if (data.startsWith('END')) {
+            //             toast.style.backgroundColor = '#dc2128';
+            //         } else {
+            //             toast.style.backgroundColor = '#212121';
+            //         }
+            //         toast.open();
+            //     }
+            // },
             handleMessage: function(data) {
-                console.log(data.detail.message.notification.body);
                 // console.log(arguments);
                 var toast = this.$.toast;
                 toast.fitInto = this.$.container;
@@ -135,18 +124,12 @@
                 }
             },
             rebuild: function(e) {
-                // this.token = this.user.getAuthResponse().access_token;
-                // this.user.uid = this.user.getBasicProfile().getId();
-                var self = this;
                 this.$.messaging.requestPermission().then(function() {
-                    console.log(self.user);
-                    console.log(self.token);
-                    // permission was granted
-                    self.$.xhr.url = '/api/rebuild/' + e.model.item;
-                    self.$.xhr.body = JSON.stringify({'token': self.token});
-                    self.$.xhr.generateRequest();
-                }, function(err) {
-                    // permission was denied
+                    this.$.xhr.url = '/api/rebuild/' + e.model.item;
+                    this.$.xhr.body = JSON.stringify({'token': this.token});
+                    this.$.xhr.generateRequest();
+                }.bind(this), function(err) {
+                    console.log(err);
                 });
             },
             reindex: function(e) {

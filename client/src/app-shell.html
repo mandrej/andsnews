@@ -280,6 +280,13 @@
 				if (!this.route.path) {
 					this.set('route.path', '/grid/photo');
 				}
+				this.firebase.auth().onAuthStateChanged(function(user) {
+  					if (user) {
+						this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
+  					} else {
+						this.isAdmin = false;
+  					}
+				}.bind(this));
 			},
 			listeners: {
 				'confirm-delete': 'confirmDelete'
@@ -292,16 +299,11 @@
 				version: { type: String, value: '1612.15'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
-				user: { type: Object, notify: true, observer: 'isUserAdmin' },
+				user: { type: Object, notify: true },
 				isAdmin: { type: Boolean, value: false, notify: true },
 				loading: { type: Boolean, value: false, notify: true },
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
-			},
-			isUserAdmin: function(user) {
-				this.debounce('isUserAdmin', function() {
-					this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
-				}, 300);
 			},
 			viewChanged: function(view, isAuthorized, isAdmin) {
 				this.debounce('viewChanged', function() {
@@ -349,7 +351,6 @@
 				} else {
 					this.$.auth.signInWithPopup()
 		    			.then(function(response) {
-							console.log(response);
 							// response.credential.accessToken
 							// response.user.uid
 						}).catch(function(error) {
