@@ -76,7 +76,7 @@ def push_message(token, message=''):
         }
     }
     http = httplib2.Http()
-    response, content = http.request(url, 'POST', body=json.dumps(payload), headers=headers)
+    response, content = http.request(url, method='POST', body=json.dumps(payload), headers=headers)
     # logging.error(response.status)
     # logging.error(content)
-    return json.loads(content)
+    # return json.loads(content)

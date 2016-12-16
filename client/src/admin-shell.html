@@ -42,6 +42,12 @@
             token="{{token}}"
             on-message="handleMessage"></firebase-messaging>
 
+        <firebase-document
+            log="true"
+            app="{{firebase}}"
+            path="/users/[[user.uid]]"
+            data="[[token]]"></firebase-document>
+
         <iron-ajax auto
             url="[[_url(isAdmin)]]"
             last-response="{{info}}"></iron-ajax>
@@ -114,23 +120,31 @@
             //         toast.open();
             //     }
             // },
-            handleMessage: function(data) {
+            handleMessage: function(e) {
                 // console.log(arguments);
                 var toast = this.$.toast;
                 toast.fitInto = this.$.container;
-                if (data) {
-                    toast.setAttribute('text', data.detail.message.notification.body);
-                    toast.open();
-                }
+                toast.setAttribute('text', e.detail.message.notification.body);
+                toast.open();
             },
             rebuild: function(e) {
-                this.$.messaging.requestPermission().then(function() {
+                if (this.token) {
                     this.$.xhr.url = '/api/rebuild/' + e.model.item;
                     this.$.xhr.body = JSON.stringify({'token': this.token});
                     this.$.xhr.generateRequest();
-                }.bind(this), function(err) {
-                    console.log(err);
-                });
+                } else {
+                    this.$.messaging.requestPermission().then(function() {
+                        this.$.xhr.url = '/api/rebuild/' + e.model.item;
+                        this.$.xhr.body = JSON.stringify({'token': this.token});
+                        this.$.xhr.generateRequest();
+
+                        this.firebase.database().ref('users/' + this.user.uid).set({
+                            token: this.token
+                        });
+                    }.bind(this), function(err) {
+                        console.log(err);
+                    });
+                }
             },
             reindex: function(e) {
                 this.$.xhr.url = '/api/index/' + e.target.dataset.kind;

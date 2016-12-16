@@ -132,6 +132,7 @@
         <firebase-auth id="auth"
 			app="{{firebase}}"
 			user="{{user}}"
+			online="{{online}}"
 			signed-in="{{isAuthorized}}"
 			provider="google"></firebase-auth>
 
@@ -182,7 +183,7 @@
 				<app-toolbar>
 					<div class="layout horizontal justified" style="width: 100%">
 						<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-							[[userName(user)]]
+							<img class="thumbnail" src="[[userImg(user)]]">
 						</a>
 						<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
 						<app-search
@@ -237,6 +238,7 @@
 			<iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
 				<admin-shell
 					data-view="maintenance"
+					user="{{user}}"
 					is-admin="{{isAdmin}}"
 					firebase="{{firebase}}"
 					route="{{route}}"></admin-shell>
