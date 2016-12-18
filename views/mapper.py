@@ -12,6 +12,8 @@ from models import DUMMY_GIF, Counter, FB
 from views.fireapi import push_message
 from config import BUCKET
 
+END_MSG = '*** END ***'
+
 
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).
@@ -85,7 +87,7 @@ class Mapper(object):
 
 
 class Indexer(Mapper):
-    CHANNEL_NAME = None
+    TOKEN = None
 
     def map(self, entity):
         return [entity], []
@@ -93,15 +95,15 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
-            FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.slug)
+            push_message(self.TOKEN, entity.slug)
         self.to_put = []
 
     def finish(self):
-        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        push_message(self.TOKEN, END_MSG)
 
 
 class Unbound(Mapper):
-    CHANNEL_NAME = None
+    TOKEN = None
 
     def map(self, entity):
         return [entity], []
@@ -109,16 +111,17 @@ class Unbound(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             if entity.serving_url == DUMMY_GIF:
-                FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
+                push_message(self.TOKEN, '{}'.format(entity.filename))
+                # FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
                 # entity.remove()
         self.to_put = []
 
     def finish(self):
-        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        push_message(self.TOKEN, END_MSG)
 
 
 class Fixer(Mapper):
-    CHANNEL_NAME = None
+    TOKEN = None
     DATE_START = None
     DATE_END = None
 
@@ -160,15 +163,15 @@ class Fixer(Mapper):
                     entity.put()
 
                 except gcs.errors as e:
-                    FB.post(path=self.CHANNEL_NAME, payload=e.message)
+                    push_message(self.TOKEN, e.message)
                 else:
-                    FB.post(path=self.CHANNEL_NAME, payload='DONE %s' % entity.slug)
+                    push_message(self.TOKEN, 'DONE {}'.format(entity.slug))
             else:
-                FB.post(path=self.CHANNEL_NAME, payload='SKIPPED %s' % entity.slug)
+                push_message(self.TOKEN, 'SKIPPED {}'.format(entity.slug))
         self.to_put = []
 
     def finish(self):
-        FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())
+        push_message(self.TOKEN, END_MSG)
 
 
 class Builder(Mapper):
@@ -226,5 +229,5 @@ class Builder(Mapper):
             #     'repr_stamp': repr_stamp
             # })
 
-        push_message(self.TOKEN, 'END at %s' % datetime.datetime.now())
+        push_message(self.TOKEN, END_MSG)
         # FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

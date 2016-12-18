@@ -169,29 +169,26 @@ class Find(RestHandler):
 
 class BackgroundIndex(RestHandler):
     def post(self, kind):
-        user_id = self.request.json.get('userId', None)
-        if user_id is not None:
-            if kind == 'photo':
-                runner = Indexer()
-                runner.KIND = Photo
+        token = self.request.json.get('token', None)
+        if token is not None:
+            runner = Indexer()
 
+            if kind == 'photo':
+                runner.KIND = Photo
             elif kind == 'entry':
-                runner = Indexer()
                 runner.KIND = Entry
 
-            runner.CHANNEL_NAME = '%s_index.json' % kind
-
+            runner.TOKEN = token
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundUnbound(RestHandler):
     def post(self, kind):
-        user_id = self.request.json.get('userId', None)
-        if kind == 'photo' and user_id is not None:
+        token = self.request.json.get('token', None)
+        if kind == 'photo' and token is not None:
             runner = Unbound()
             runner.KIND = Photo
-            runner.CHANNEL_NAME = '%s_unbound.json' % kind
+            runner.TOKEN = token
 
             deferred.defer(runner.run, batch_size=10, _queue='background')
             self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
@@ -199,13 +196,13 @@ class BackgroundUnbound(RestHandler):
 
 class BackgroundFix(RestHandler):
     def post(self, kind):
-        user_id = self.request.json.get('userId', None)
-        if kind == 'photo' and user_id is not None:
+        token = self.request.json.get('token', None)
+        if kind == 'photo' and token is not None:
             runner = Fixer()
             runner.KIND = Photo
             runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
-            runner.CHANNEL_NAME = '%s_fix.json' % kind
+            runner.TOKEN = token
 
             deferred.defer(runner.run, batch_size=10, _queue='background')
             self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
@@ -215,7 +212,6 @@ class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
         token = self.request.json.get('token', None)
-
         if token is not None:
             runner = Builder()
             if kind == 'Photo':  # Title case!
