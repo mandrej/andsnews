@@ -20,7 +20,8 @@ from palette import extract_colors, rgb_to_hex
 from slugify import slugify
 from views.fireapi import Firebase
 
-logging.getLogger("exifread").setLevel(logging.WARNING)
+logger = logging.getLogger('modules')
+logger.setLevel(level=logging.DEBUG)
 
 DUMMY_GIF = 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 TIMEOUT = 60  # 1 minute
@@ -371,7 +372,7 @@ class Photo(ndb.Model):
 
         blobstore.delete(self.blob_key)
         self.key.delete()
-
+        # TODO not working properly
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(update_filters, [], old_pairs, _queue='background')
 
@@ -382,7 +383,7 @@ class Photo(ndb.Model):
             url = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
         except (images.ObjectNotFoundError, images.TransformationError), e:
             # raise _ToImagesError(e, readable_blob_key)
-            logging.error(e.message)
+            logger.error(e.message)
         return url
 
     @webapp2.cached_property
