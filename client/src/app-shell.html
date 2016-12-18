@@ -8,7 +8,6 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
-<!-- <link rel="import" href="../bower_components/google-signin/google-signin.html"> -->
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -137,11 +136,6 @@
 			online="{{online}}"
 			signed-in="{{isAuthorized}}"
 			provider="google"></firebase-auth>
-
-		<!-- <google-signin-aware id="aware"
-            client-id="719127177629-l03racul4r8fsvs31l4fonlk51k04t92.apps.googleusercontent.com"
-            is-authorized="{{isAuthorized}}"
-            on-google-signin-aware-success="handleSignIn"></google-signin-aware> -->
 
 		<paper-dialog id="deleteDialog" modal
             entry-animation="scale-up-animation" exit-animation="fade-out-animation"
@@ -300,7 +294,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '1612.15'},
+				version: { type: String, value: '1612.18'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
@@ -362,12 +356,6 @@
 						});
 				}
 			},
-			// handleSignIn: function(response) {
-            //     this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-			// 	if (this.user.getBasicProfile().getId() == '109964680393846534577') {
-			// 		this.set('isAdmin', true);
-			// 	}
-            // },
 			userName: function(user) {
 				if (user) return user.displayName;
 			},
