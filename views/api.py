@@ -1,16 +1,18 @@
-import json
-import logging
-import webapp2
 import datetime
-import numpy as np
-from slugify import slugify
+import json
 from operator import itemgetter
+
+import numpy as np
+import webapp2
 from google.appengine.api import users, search, datastore_errors
-from google.appengine.ext import ndb, deferred
 from google.appengine.datastore.datastore_query import Cursor
-from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
+from google.appengine.ext import ndb, deferred
+
+from config import DEVEL, START_MSG
 from mapper import Indexer, Unbound, Builder, Fixer
-from config import DEVEL
+from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
+from slugify import slugify
+from views.fireapi import push_message
 
 LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
@@ -179,6 +181,7 @@ class BackgroundIndex(RestHandler):
                 runner.KIND = Entry
 
             runner.TOKEN = token
+            push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
@@ -190,8 +193,8 @@ class BackgroundUnbound(RestHandler):
             runner.KIND = Photo
             runner.TOKEN = token
 
+            push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundFix(RestHandler):
@@ -204,8 +207,8 @@ class BackgroundFix(RestHandler):
             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
             runner.TOKEN = token
 
+            push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            self.render({'channelId': runner.CHANNEL_NAME, 'userId': user_id})
 
 
 class BackgroundBuild(RestHandler):
@@ -224,8 +227,8 @@ class BackgroundBuild(RestHandler):
             runner.TOKEN = token
             # runner.CHANNEL_NAME = '%s.json' % mem_key
 
+            push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
-            # self.render({'token': token})
 
 
 class Crud(RestHandler):

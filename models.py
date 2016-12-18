@@ -1,13 +1,13 @@
 from __future__ import division
 
-import re
-import uuid
-import logging
-import datetime
 import colorsys
+import datetime
+import logging
+import uuid
 from cStringIO import StringIO
 from decimal import *
 
+import re
 import webapp2
 from PIL import Image
 from google.appengine.api import users, search, images
@@ -17,8 +17,8 @@ import cloudstorage as gcs
 from config import ASA, HUE, LUM, SAT, BUCKET
 from exifread import process_file
 from palette import extract_colors, rgb_to_hex
-from views.fireapi import Firebase
 from slugify import slugify
+from views.fireapi import Firebase
 
 logging.getLogger("exifread").setLevel(logging.WARNING)
 

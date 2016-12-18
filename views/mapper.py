@@ -1,18 +1,17 @@
-import re
-import uuid
-import logging
-import itertools
-import datetime
 import collections
-import cloudstorage as gcs
-from google.appengine.ext import ndb, deferred, blobstore
-from google.appengine.api.datastore_errors import Timeout
-from google.appengine.runtime import DeadlineExceededError
-from models import DUMMY_GIF, Counter, FB
-from views.fireapi import push_message
-from config import BUCKET
+import itertools
+import logging
+import uuid
 
-END_MSG = '*** END ***'
+import re
+from google.appengine.api.datastore_errors import Timeout
+from google.appengine.ext import ndb, deferred, blobstore
+from google.appengine.runtime import DeadlineExceededError
+
+import cloudstorage as gcs
+from config import BUCKET, END_MSG
+from models import DUMMY_GIF, Counter
+from views.fireapi import push_message
 
 
 class Mapper(object):

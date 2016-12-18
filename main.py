@@ -1,4 +1,5 @@
 from webapp2 import WSGIApplication, Route
+
 from config import DEVEL
 
 app = WSGIApplication([

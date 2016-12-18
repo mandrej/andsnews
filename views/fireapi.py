@@ -1,8 +1,8 @@
 import json
-import logging
+
 import httplib2
+from config import FIREBASE, FB_SERVICE_ACCOUNT
 from oauth2client.service_account import ServiceAccountCredentials
-from config import DEVEL, FIREBASE, FB_SERVICE_ACCOUNT
 
 _FIREBASE_SCOPES = [
     'https://www.googleapis.com/auth/firebase.database',

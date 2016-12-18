@@ -27,6 +27,8 @@ SERVICE_ACCOUNT = 'andsnews@appspot.gserviceaccount.com'
 
 BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
+START_MSG = '*** START ***'
+END_MSG = '*** END ***'
 
 COLOR_NAMES = (
     'red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'
