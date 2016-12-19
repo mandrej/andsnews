@@ -37,12 +37,20 @@
             }
         </style>
 
+        <firebase-auth id="auth"
+			app-name="andsnews"
+			user="{{user}}"
+			online="{{online}}"
+			signed-in="{{isAuthorized}}"
+			provider="google"></firebase-auth>
+
         <firebase-messaging id="messaging"
             app-name="andsnews"
             token="{{token}}"
             on-message="handleMessage"></firebase-messaging>
 
         <firebase-document
+            log="true"
             app-name="andsnews"
             path="/users/[[user.uid]]/token"
             data="{{token}}"></firebase-document>
