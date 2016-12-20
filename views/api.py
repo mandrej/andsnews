@@ -1,6 +1,7 @@
 import datetime
 import json
 from operator import itemgetter
+from urlparse import urlparse
 
 import numpy as np
 import webapp2
@@ -16,7 +17,10 @@ from views.fireapi import push_message
 
 LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
-
+TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
+TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
+<priority>0.3</priority></url>"""
 
 class LazyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -129,27 +133,33 @@ class Collection(RestHandler):
         })
 
 
+def available_filters():
+    collection = []
+    for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
+        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+        items = []
+        for counter in query:
+            items.append({
+                'field_name': field,
+                'count': counter.count,
+                'name': counter.value,
+                'repr_url': counter.repr_url,
+                'repr_stamp': counter.repr_stamp})
+
+        if field == 'date':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        collection.extend(items)
+
+    limit = np.percentile([d['count'] for d in collection], PERCENTILE)
+    for item in collection:
+        item['show'] = item['count'] > int(limit)
+
+    return collection
+
+
 class PhotoFilters(RestHandler):
     def get(self):
-        collection = []
-        for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
-            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-            items = []
-            for counter in query:
-                items.append({
-                    'field_name': field,
-                    'count': counter.count,
-                    'name': counter.value,
-                    'repr_url': counter.repr_url})
-
-            if field == 'date':
-                items = sorted(items, key=itemgetter('name'), reverse=True)
-            collection.extend(items)
-
-        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
-        for item in collection:
-            item['show'] = item['count'] > int(limit)
-
+        collection = available_filters()
         self.render(collection)
 
 
@@ -325,6 +335,22 @@ class Download(webapp2.RequestHandler):
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
         self.response.write(buff)
+
+
+class SiteMap(webapp2.RequestHandler):
+    def get(self):
+        collection = available_filters()
+        out = ''
+        for f in collection:
+            url = 'https://ands.appspot.com/#/detail/photo/{}/{}'.format(f['field_name'], f['name'])
+            out += TEMPLATE_ROW.format(**{
+                'loc': url.replace('&', '&amp;'),
+                'lastmod': f['repr_stamp'].isoformat()
+            })
+        self.response.headers = {
+            'Content-Type': 'application/xml'
+        }
+        self.response.write(TEMPLATE_WRAPPER.format(out))
 
 
 class Info(RestHandler):

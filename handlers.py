@@ -117,19 +117,3 @@ def cloud_limit(items):
                 _curr += item['count']
                 if _curr >= _sum5:
                     return item['count']
-
-
-class SiteMap(BaseHandler):
-    def get(self):
-        query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=PHOTOS_PER_PAGE)
-        photos, _ = paginator.page()
-
-        query = Entry.query().order(-Entry.date)
-        paginator = Paginator(query, per_page=ENTRIES_PER_PAGE)
-        entries, _ = paginator.page()
-
-        data = {'photos': photos,
-                'entries': entries,
-                'headers': [('Content-Type', 'application/xml')]}
-        self.render_template('urlset.xml', data)
