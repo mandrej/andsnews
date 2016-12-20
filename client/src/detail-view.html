@@ -31,7 +31,7 @@
             loading="{{loading}}"
             debounce-duration="100"></iron-ajax>
 
-        <iron-request id="delete_ajax"></iron-request>
+        <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
         <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
             <h2>Nothing found</h2>
@@ -124,11 +124,11 @@
             },
             _deleteRecord: function() {
                 var index = this.$.swipe.selected,
-                    obj = this.splice('records', index, 1)[0];
-                this.$.delete_ajax.send({
-                    url: '/api/delete/' + obj.safekey,
-                    method: 'DELETE'
-                });
+                    obj = this.splice('records', index, 1)[0],
+                    xhr = this.$.delete_ajax;
+
+                xhr.url = '/api/delete/' + obj.safekey;
+                xhr.generateRequest();
                 // this.notifySplices('records', obj);
             },
             propertyChanged: function(newValue, oldValue) {

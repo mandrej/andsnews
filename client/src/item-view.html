@@ -115,7 +115,7 @@
                 </template>
             </div>
 
-            <div data-view="info" style="margin: 16px">
+            <div data-view="info" style="padding: 16px">
                 <h2>[[item.headline]]</h2>
                 <paper-button on-tap="_downloadPhoto" class="white">
                     Download ([[item.size]])
@@ -143,7 +143,7 @@
                 </div>
             </div>
 
-            <div data-view="form" style="margin: 16px; padding-bottom: 56px;">
+            <div data-view="form" style="padding: 16px; padding-bottom: 56px;">
                 <form data-view="form" is="iron-form" id="form"
                     on-iron-form-response="_responseHandler"
                     action$="/api/[[item.kind]]/edit/[[item.safekey]]"

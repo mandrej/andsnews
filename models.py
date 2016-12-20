@@ -3,11 +3,12 @@ from __future__ import division
 import colorsys
 import datetime
 import logging
+import re
+import time
 import uuid
 from cStringIO import StringIO
 from decimal import *
 
-import re
 import webapp2
 from PIL import Image
 from google.appengine.api import users, search, images
@@ -200,8 +201,12 @@ def update_filters(new_pairs, old_pairs):
     context = ndb.get_context()
     context.clear_cache()
 
-    counters = []
+    futures = []
     for field, value in set(new_pairs) | set(old_pairs):
+        futures.append(Photo.query_for(field, value).get_async())
+
+    counters = []
+    for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
         key_name = 'Photo||{}||{}'.format(field, value)
         counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
 
@@ -210,8 +215,8 @@ def update_filters(new_pairs, old_pairs):
         if (field, value) in new_pairs:
             counter.count += 1
 
-        latest = Photo.latest_for(field, value)
-        if latest is not None:
+        latest = futures[i].get_result()
+        if latest:
             counter.repr_stamp = latest.date
             counter.repr_url = latest.serving_url
 
@@ -372,7 +377,8 @@ class Photo(ndb.Model):
 
         blobstore.delete(self.blob_key)
         self.key.delete()
-        # TODO not working properly
+        time.sleep(3)
+
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(update_filters, [], old_pairs, _queue='background')
 

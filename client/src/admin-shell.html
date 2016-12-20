@@ -125,10 +125,11 @@
                 toast.open();
             },
             callAjax: function(url) {
+                var xhr = this.$.xhr;
                 this.$.messaging.requestPermission().then(function() {
-                    this.$.xhr.url = url;
-                    this.$.xhr.body = JSON.stringify({'token': this.token});
-                    this.$.xhr.generateRequest();
+                    xhr.url = url;
+                    xhr.body = JSON.stringify({'token': this.token});
+                    xhr.generateRequest();
                 }.bind(this), function(err) {
                     console.log(err);
                 });
