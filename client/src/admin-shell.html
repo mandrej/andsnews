@@ -53,7 +53,7 @@
             log="true"
             app-name="andsnews"
             path="/users/[[user.uid]]/token"
-            data="{{token}}"></firebase-document>
+            data="[[token]]"></firebase-document>
 
         <iron-ajax auto
             url="[[_url(isAdmin)]]"
