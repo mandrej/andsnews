@@ -22,5 +22,5 @@ app = WSGIApplication([
     Route(r'/api/fix/<kind>', handler='views.api.BackgroundFix', methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler='views.api.BackgroundBuild', methods=['POST']),
 
-    Route(r'/api/sitemap.xml', handler='views.api.SiteMap'),
+    Route(r'/sitemap.xml', handler='views.api.SiteMap'),
 ], debug=DEVEL)

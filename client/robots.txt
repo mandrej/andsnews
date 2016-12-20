@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /api
 
-Sitemap: https://ands.appspot.com/api/sitemap.xml
+Sitemap: https://ands.appspot.com/sitemap.xml

@@ -1,7 +1,6 @@
 import datetime
 import json
 from operator import itemgetter
-from urlparse import urlparse
 
 import numpy as np
 import webapp2
@@ -21,6 +20,7 @@ TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
 TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
 <priority>0.3</priority></url>"""
+
 
 class LazyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -345,7 +345,7 @@ class SiteMap(webapp2.RequestHandler):
             url = 'https://ands.appspot.com/#/detail/photo/{}/{}'.format(f['field_name'], f['name'])
             out += TEMPLATE_ROW.format(**{
                 'loc': url.replace('&', '&amp;'),
-                'lastmod': f['repr_stamp'].isoformat()
+                'lastmod': f['repr_stamp'].strftime('%Y-%m-%d')
             })
         self.response.headers = {
             'Content-Type': 'application/xml'
