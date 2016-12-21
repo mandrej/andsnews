@@ -1,6 +1,7 @@
 import datetime
 import json
 from operator import itemgetter
+from urlparse import urlparse
 
 import numpy as np
 import webapp2
@@ -339,14 +340,16 @@ class Download(webapp2.RequestHandler):
 
 class SiteMap(webapp2.RequestHandler):
     def get(self):
+        p = urlparse(webapp2.uri_for('sitemap', _full=True))
         collection = available_filters()
         out = ''
         for f in collection:
-            url = 'https://ands.appspot.com/#/detail/photo/{}/{}'.format(f['field_name'], f['name'])
-            out += TEMPLATE_ROW.format(**{
-                'loc': url.replace('&', '&amp;'),
-                'lastmod': f['repr_stamp'].strftime('%Y-%m-%d')
-            })
+            if f['show']:
+                url = '{}://{}/#/detail/photo/{}/{}'.format(p.scheme, p.netloc, f['field_name'], f['name'])
+                out += TEMPLATE_ROW.format(**{
+                    'loc': url.replace('&', '&amp;'),
+                    'lastmod': f['repr_stamp'].strftime('%Y-%m-%d')
+                })
         self.response.headers = {
             'Content-Type': 'application/xml'
         }
