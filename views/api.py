@@ -340,7 +340,7 @@ class Download(webapp2.RequestHandler):
 
 class SiteMap(webapp2.RequestHandler):
     def get(self):
-        p = urlparse(webapp2.uri_for('sitemap', _full=True))
+        p = urlparse(self.uri_for('sitemap', _full=True))
         collection = available_filters()
         out = ''
         for f in collection:
