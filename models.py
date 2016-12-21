@@ -198,8 +198,8 @@ class Counter(ndb.Model):
 
 
 def update_filters(new_pairs, old_pairs):
-    context = ndb.get_context()
-    context.clear_cache()
+    # context = ndb.get_context()
+    # context.clear_cache()
 
     futures = []
     for field, value in set(new_pairs) | set(old_pairs):
