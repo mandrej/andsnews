@@ -1,9 +1,8 @@
-application: andsnews
 version: 1612
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: "0s"
+#default_expiration: "0s"
 
 libraries:
 - name: PIL
@@ -18,6 +17,11 @@ libraries:
 # client -> client/build/unbundled
 
 handlers:
+- url: /
+  static_files: client/index.html
+  upload: client/index.html
+  secure: always
+
 - url: /favicon.ico
   static_files: client/favicon.ico
   upload: client/favicon.ico
@@ -26,18 +30,6 @@ handlers:
 - url: /robots\.txt
   static_files: client/robots.txt
   upload: client/robots.txt
-  secure: always
-
-- url: /bower_components/
-  static_dir: client/bower_components
-  secure: always
-
-- url: /src/
-  static_dir: client/src
-  secure: always
-
-- url: /images/
-  static_dir: client/images
   secure: always
 
 - url: /service-worker\.js
@@ -55,6 +47,18 @@ handlers:
   upload: client/manifest.json
   secure: always
 
+- url: /src/
+  static_dir: client/src
+  secure: always
+
+- url: /images/
+  static_dir: client/images
+  secure: always
+
+- url: /bower_components/
+  static_dir: client/bower_components
+  secure: always
+
 - url: /api/.*
   script: main.app
   secure: always
@@ -62,13 +66,6 @@ handlers:
 - url: /sitemap\.xml
   script: main.app
   secure: always
-
-- url: /
-  static_files: client/index.html
-  upload: client/index.html
-  secure: always
-
-####################################################
 
 - url: /tests/.*
   login: admin
@@ -82,6 +79,7 @@ builtins:
 #- appstats: on
 #- remote_api: on
 
-#skip_files:
-#- ^(.*/)?.*\.py[co]$
-#- ^(.*/)?\..*$
+skip_files:
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?\..*$
