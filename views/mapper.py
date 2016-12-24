@@ -15,6 +15,7 @@ from views.fireapi import Firebase, push_message
 
 FB = Firebase()
 
+
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).
     KIND = None
