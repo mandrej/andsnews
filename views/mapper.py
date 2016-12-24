@@ -3,16 +3,17 @@ import itertools
 import logging
 import uuid
 
+import cloudstorage as gcs
 import re
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
-import cloudstorage as gcs
 from config import BUCKET, END_MSG
 from models import DUMMY_GIF, Counter
-from views.fireapi import push_message
+from views.fireapi import Firebase, push_message
 
+FB = Firebase()
 
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).

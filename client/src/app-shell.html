@@ -157,16 +157,6 @@
             </div>
         </paper-dialog>
 
-        <paper-dialog id="administrationDialog" modal
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<h2>Administrator Required</h2>
-            <p>Please Sign-In with your Google Account</p>
-            <div class="layout horizontal center-justified">
-				<paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
-            </div>
-        </paper-dialog>
-
 		<div id="spinner" class="layout horizontal center-justified">
 			<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
 		</div>
@@ -293,7 +283,7 @@
 				// 'pathChanged(route.path)'
 			],
 			properties: {
-				version: { type: String, value: '1612.20'},
+				version: { type: String, value: '1612.24'},
 				headline: { type: String, value: 'ANDрејевићи', notify: true },
 				smallScreen: { type: Boolean, value: false, notify: true },
 				user: { type: Object, notify: true },
@@ -325,7 +315,7 @@
 							this.set('dataField.field', null);
 							this.set('dataValue.value', null);
 							this.headline = 'Admin v.' + this.version;
-							var dialog = this.$.administrationDialog;
+							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/admin-shell.html', function() {
 								if (!isAdmin) dialog.open();
 							});

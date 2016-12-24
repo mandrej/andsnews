@@ -3,23 +3,22 @@ from __future__ import division
 import colorsys
 import datetime
 import logging
-import re
 import time
 import uuid
 from cStringIO import StringIO
 from decimal import *
 
+import cloudstorage as gcs
+import re
 import webapp2
 from PIL import Image
+from exifread import process_file
 from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
-import cloudstorage as gcs
 from config import ASA, HUE, LUM, SAT, BUCKET
-from exifread import process_file
 from palette import extract_colors, rgb_to_hex
 from slugify import slugify
-from views.fireapi import Firebase
 
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
@@ -29,7 +28,6 @@ TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = {'date': 10, 'tags': 20, 'model': 30, 'color': 40}
 # PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
-FB = Firebase()
 
 
 def rounding(val, values):

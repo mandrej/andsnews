@@ -1,8 +1,9 @@
+application: andsnews
 version: 1612
 runtime: python27
 api_version: 1
 threadsafe: true
-#default_expiration: "0s"
+default_expiration: "0s"
 
 libraries:
 - name: PIL
@@ -83,3 +84,4 @@ skip_files:
 - ^(.*/)?.*~$
 - ^(.*/)?.*\.py[co]$
 - ^(.*/)?\..*$
+#- (?!^client/build/unbundled)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from slugify import slugify
+from models import tokenize
 
 
 class TransliterateTest(unittest.TestCase):
@@ -12,3 +13,6 @@ class TransliterateTest(unittest.TestCase):
 
     def test3(self):
         print slugify(u'Ђоле с лоптом')
+
+    def testTokenze(self):
+        print tokenize('masa-gleda-u-tv-preko-knjige')

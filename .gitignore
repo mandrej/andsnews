@@ -1,15 +1,5 @@
 .idea/
-aeta
-cloudstorage
-colormath
-exifread
-googleapiclient
-pyasn1
-pyasn1_modules
-rsa
-httplib2
-networkx
-oauth2client
+lib/
 decorator.py
 six.py
 *.pyc

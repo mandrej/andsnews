@@ -1,6 +1,6 @@
 import unittest
 
-from models import Cloud, rounding
+from models import rounding
 from config import ASA
 
 
