@@ -1,13 +1,11 @@
 import datetime
 import json
-import logging
 from operator import itemgetter
 from urlparse import urlparse
 
 import numpy as np
 import webapp2
 from google.appengine.api import users, search, datastore_errors
-from google.appengine.api.app_identity import app_identity
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 
@@ -163,7 +161,6 @@ def available_filters():
 
 class PhotoFilters(RestHandler):
     def get(self):
-        logging.error(app_identity.get_application_id())
         collection = available_filters()
         self.render(collection)
 
