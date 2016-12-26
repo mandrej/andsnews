@@ -82,6 +82,13 @@ builtins:
 
 skip_files:
 - ^(.*/)?.*~$
-- ^(.*/)?.*\.py[co]$
 - ^(.*/)?\..*$
-#- (?!^client/build/unbundled)
+- ^(.*/)?.*\.py[co]$
+- ^docs
+- ^client/src
+- ^client/test
+- ^client/images
+- ^client/build/bundled
+- ^client/bower_components
+- ^gae-test-skip-files\.py
+#- (?!^unbundled)
