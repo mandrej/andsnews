@@ -88,4 +88,3 @@ skip_files:
 - ^client/build/bundled
 - ^client/(src|test|images)
 - ^client/bower_components
-- ^gae-test-skip-files\.py
