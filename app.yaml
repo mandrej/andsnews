@@ -88,3 +88,4 @@ skip_files:
 - ^client/build/bundled
 - ^client/(src|test|images)
 - ^client/bower_components
+- ^lib/endpoints_proto_datastore
