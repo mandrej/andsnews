@@ -279,7 +279,7 @@
 				'confirm-delete': 'confirmDelete'
 			},
 			observers: [
-				'viewChanged(dataView.view, isAuthorized, isAdmin)',
+				'viewChanged(dataView.view)',
 				// 'pathChanged(route.path)'
 			],
 			properties: {
@@ -292,7 +292,7 @@
 				itemKind: { type: String, value: 'photo', notify: true },
 				disableSwipe: { type: Boolean, value: false, notify: true },
 			},
-			viewChanged: function(view, isAuthorized, isAdmin) {
+			viewChanged: function(view) {
 				this.debounce('viewChanged', function() {
 					switch (view) {
 						case 'grid':
@@ -307,7 +307,7 @@
 							this.headline = 'Form';
 							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/form-view.html', function() {
-								if (!isAuthorized) dialog.open();
+								if (!this.isAuthorized) dialog.open();
 							});
 							break;
 						case 'maintenance':
@@ -317,11 +317,11 @@
 							this.headline = 'Admin v.' + this.version;
 							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/admin-shell.html', function() {
-								if (!isAdmin) dialog.open();
+								if (!this.isAdmin) dialog.open();
 							});
 							break;
 					}
-				}, 100); // shorter or equal then grid ajax
+				}, 0); // shorter or equal then grid ajax
 			},
 			_canAddRecord: function(view, loggedin) {
 				return view == 'grid' && loggedin;
