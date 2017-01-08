@@ -114,8 +114,7 @@ class Collection(RestHandler):
         page = self.request.get('page', None)
         token = None
 
-        # SPECIFIC
-        if kind == 'entry' and field == 'show':
+        if kind == 'entry' and value:
             obj = ndb.Key(urlsafe=value).get()
             if obj is None:
                 self.abort(404)

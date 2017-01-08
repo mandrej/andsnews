@@ -308,7 +308,7 @@
 							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/form-view.html', function() {
 								if (!this.isAuthorized) dialog.open();
-							});
+							}.bind(this), null, true);
 							break;
 						case 'maintenance':
 							this.set('dataKind.kind', null);
@@ -318,7 +318,7 @@
 							var dialog = this.$.authorizationDialog;
 							Polymer.Base.importHref('src/admin-shell.html', function() {
 								if (!this.isAdmin) dialog.open();
-							});
+							}.bind(this), null, true);
 							break;
 					}
 				}, 0); // shorter or equal then grid ajax

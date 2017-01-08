@@ -9,7 +9,7 @@ app = WSGIApplication([
     Route(r'/api/search/<find>', handler=api.Find),
 
     Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),
-    Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|color|model|author|show)>/<value>',
+    Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|color|model|author|key)>/<value>',
           handler=api.Collection),
 
     Route(r'/api/<kind:(photo|entry)>/add', handler=api.Crud, methods=['GET', 'POST']),

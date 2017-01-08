@@ -147,7 +147,7 @@
 			},
             showDetail: function(e) {
                 // entry
-                this.set('route.path', ['/detail', this.kind, 'show', e.model.rec.safekey].join('/'));
+                this.set('route.path', ['/detail', this.kind, 'key', e.model.rec.safekey].join('/'));
             },
             repeatRender: function() {
                 var nodes = this.root.querySelectorAll('.rec');
