@@ -151,10 +151,12 @@ def available_filters():
             items = sorted(items, key=itemgetter('name'), reverse=True)
         collection.extend(items)
 
+    current = datetime.datetime.now().year
     if collection:
         limit = np.percentile([d['count'] for d in collection], PERCENTILE)
         for item in collection:
-            item['show'] = item['count'] > int(limit)
+            item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
+                else item['count'] > int(limit)
 
     return collection
 
