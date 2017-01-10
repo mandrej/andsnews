@@ -50,6 +50,9 @@
                 cursor: pointer;
                 margin-right: 8px;
             }
+            paper-chip.accent {
+                --paper-chip-background-color: var(--accent-color);
+            }
             .markdown-html * {
                 font-family: 'Roboto', 'Noto', sans-serif;
             }
@@ -96,7 +99,6 @@
 			last-response="{{lens_cloud}}"
 			debounce-duration="100"></iron-ajax>
 
-
         <neon-animated-pages selected="[[view]]" attr-for-selected="data-view" id="neon"
             entry-animation="fade-in-animation" exit-animation="fade-out-animation">
             <div data-view="display" class="swipe">
@@ -131,14 +133,18 @@
                 </p>
                 <div class="layout horizontal wrap">
                     <paper-chip label="[[item.year]]" no-image
+                        class$="[[activeFilter('date', item.year, filter)]]"
                         on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]"></paper-chip>
                     <template is="dom-repeat" items="[[item.tags]]" as="tag">
                         <paper-chip label="[[tag]]" no-image
+                            class$="[[activeFilter('tags', tag, filter)]]"
                             on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]"></paper-chip>
                     </template>
                     <paper-chip label="[[item.model]]" no-image
+                        class$="[[activeFilter('model', item.model, filter)]]"
                         on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]"></paper-chip>
                     <paper-chip label="[[item.color]]" no-image
+                        class$="[[activeFilter('color', item.color, filter)]]"
                         on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]"></paper-chip>
                 </div>
             </div>
@@ -310,6 +316,9 @@
             },
             _downloadPhoto: function() {
                 window.location.href = '/api/download/' + this.item.safekey;
+            },
+            activeFilter: function(field, value, filter) {
+                return (filter[field] == value) ? 'accent' : '';
             },
             applyFilter: function(e) {
                 var target = e.target,

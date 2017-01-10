@@ -111,7 +111,7 @@ class Suggest(RestHandler):
 
 class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
-        page = self.request.get('page', None)
+        page = self.request.get('_page', None)
         token = None
 
         if kind == 'entry' and value:
@@ -128,8 +128,8 @@ class Collection(RestHandler):
         self.render({
             'objects': objects,
             'filter': {'field': field, 'value': value} if (field and value) else None,
-            'page': page,
-            'next': token
+            '_page': page,
+            '_next': token
         })
 
 
@@ -168,7 +168,7 @@ class PhotoFilters(RestHandler):
 
 class Find(RestHandler):
     def get(self, find):
-        page = self.request.get('page', None)
+        page = self.request.get('_page', None)
         paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
 
@@ -176,8 +176,8 @@ class Find(RestHandler):
             'objects': objects,
             'phrase': find.strip(),
             'number_found': number_found,
-            'page': page,
-            'next': token,
+            '_page': page,
+            '_next': token,
             'error': error
         })
 

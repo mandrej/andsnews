@@ -48,6 +48,7 @@
                 <item-view
                     item="{{item}}"
                     is-admin="{{isAdmin}}"
+                    filter="[[filter]]"
                     route="{{route}}"></item-view>
             </template>
         </iron-swipeable-pages>
@@ -59,6 +60,7 @@
             properties: {
                 headline: { type: String, value: 'ANDрејевићи', notify: true },
                 params: { type: Object, value: {}, notify: true },
+                filter: { type: Object, value: {}, notify: true },
                 records: { type: Array, notify: true },
                 itemKind: { type: String, value: 'photo', notify: true },
                 loading: { type: Boolean, value: false, notify: true },
@@ -77,7 +79,7 @@
                 } else if (field && value) {
                     url = [prefix, kind, field, value].join('/');
                 }
-                this.set('params.page', null);
+                this.set('params._page', null);
                 return url;
             },
             handler: function(request) {
@@ -92,13 +94,15 @@
                     response.objects.forEach(function(item) {
                         this.push('records', item);
                     }, this);
+                    this.filter = {};
+                    this.filter[response.filter.field] = response.filter.value;
                 }
             },
             loadMore: function() {
                 var ajax = this.$.ajax;
                 // if (ajax.lastRequest) ajax.lastRequest.abort();
-                if (ajax.lastResponse && ajax.lastResponse.next) {
-                    this.set('params.page', ajax.lastResponse.next);
+                if (ajax.lastResponse && ajax.lastResponse._next) {
+                    this.set('params._page', ajax.lastResponse._next);
                 }
             },
             ironSelect: function() {
