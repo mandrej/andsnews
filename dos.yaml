@@ -5,3 +5,7 @@ blacklist:
     description: Fckeditor/editor/filemanager/browser (Hong Kong)
   - subnet: 178.137.87.242
     description: wordpress (Ukraine)
+  - subnet: 191.252.45.199
+    description: wordpress (Brazil)
+  - subnet: 199.182.169.238
+    description: wordpress (US)
