@@ -98,7 +98,7 @@ class SearchPaginator(object):
 class RestHandler(webapp2.RequestHandler):
     def render(self, data):
         self.response.content_type = 'application/json; charset=utf-8'
-        # self.response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5000'
+        # self.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
