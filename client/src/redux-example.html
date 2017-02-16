@@ -1,11 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="redux-store.html">
+<link rel="import" href="./redux-store.html">
 
 <dom-module id="redux-example">
   <template>
     <h3>You have [[friendCount]] friends.</h3>
     <input id="field" type="text">
-    <button on-tap="addFriend"></button>
+    <button on-tap="addFriend">ADD</button>
     <ul>
       <template is="dom-repeat" items={{friends}} as=friend>
         <li>[[friend]]</li>

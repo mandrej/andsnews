@@ -2,16 +2,16 @@
 
 <script>
   const initialStore = {
-    freinds = []
+    friends: []
   }
 
   const reducer = (state, action) => {
     if (!state) return initialStore;
     switch (action.type) {
       case 'ADD_FRIEND':
-        const freinds = state.freinds.slice(0);
-        freinds.push(action.payload)
-        return Object.assign({}, state, {freinds: freinds})
+        const friends = state.friends.slice(0);
+        friends.push(action.payload)
+        return Object.assign({}, state, {friends: friends})
     }
   }
 

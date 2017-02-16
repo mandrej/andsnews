@@ -22,7 +22,8 @@
     "vaadin-combo-box": "^1.1.2",
     "polymerfire": "firebase/polymerfire#^0.10.2",
     "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.29.2",
-    "paper-chip": "WebPaperElements/paper-chip#^1.0.11"
+    "paper-chip": "WebPaperElements/paper-chip#^1.0.11",
+    "polymer-redux": "^0.4.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.3.1"

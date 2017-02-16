@@ -1,62 +1,72 @@
 <dom-module id="shared-styles">
-    <template>
-        <style>
-            :root {
-                --primary-text-color:       #212121;
-                --primary-background-color: #ffffff;
-                --secondary-text-color:     #757575;
-                --disabled-text-color:      #9b9b9b;
-                --divider-color:            #bdbdbd;
-                --error-color:              #dc2128;
-                --dark-primary-color:       #325f6a;
-                --primary-color:            #3e7683;
-                --light-primary-color:      #198997;
-                --accent-color:             #ff9800;
-            }
-            ::-webkit-scrollbar {
-                display: none;
-            }
-            [hidden] {
-				display: none !important;
-			}
-            *:focus {
-                outline: none;
-            }
-            a {
-                color: var(--dark-primary-color);
-            }
-            paper-dialog {
-				max-width: 400px;
-                --paper-dialog-title: {
-                    white-space: normal;
-                    font-size: 20px;
-                }
-            }
-            paper-button {
-                color: var(--primary-background-color);
-                background-color: var(--primary-color);
-                text-transform: lowercase;
-			}
-            paper-fab, paper-button.accent {
-                color: var(--primary-text-color);
-                background-color: var(--accent-color);
-            }
-            paper-dialog paper-button {
-                color: var(--primary-text-color);
-                background-color: var(--divider-color);
-                text-transform: lowercase;
-			}
-            paper-input {
-                --paper-input-container-color: var(--primary-text-color);
-                --paper-input-container-focus-color: var(--accent-color);
-                --paper-input-container-invalid-color: var(--error-color);
-            }
-        </style>
+  <template>
+    <style>
+      :root {
+        --primary-text-color: #212121;
+        --primary-background-color: #ffffff;
+        --secondary-text-color: #757575;
+        --disabled-text-color: #9b9b9b;
+        --divider-color: #bdbdbd;
+        --error-color: #dc2128;
+        --dark-primary-color: #325f6a;
+        --primary-color: #3e7683;
+        --light-primary-color: #198997;
+        --accent-color: #ff9800;
+      }
 
-    </template>
-    <script>
-        Polymer({
-            is: 'shared-styles'
-        });
-    </script>
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      *:focus {
+        outline: none;
+      }
+
+      a {
+        color: var(--dark-primary-color);
+      }
+
+      paper-dialog {
+        max-width: 400px;
+        --paper-dialog-title: {
+          white-space: normal;
+          font-size: 20px;
+        }
+      }
+
+      paper-button {
+        color: var(--primary-background-color);
+        background-color: var(--primary-color);
+        text-transform: lowercase;
+      }
+
+      paper-fab,
+      paper-button.accent {
+        color: var(--primary-text-color);
+        background-color: var(--accent-color);
+      }
+
+      paper-dialog paper-button {
+        color: var(--primary-text-color);
+        background-color: var(--divider-color);
+        text-transform: lowercase;
+      }
+
+      paper-input {
+        --paper-input-container-color: var(--primary-text-color);
+        --paper-input-container-focus-color: var(--accent-color);
+        --paper-input-container-invalid-color: var(--error-color);
+      }
+    </style>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'shared-styles'
+    });
+  </script>
 </dom-module>

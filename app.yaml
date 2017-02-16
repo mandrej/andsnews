@@ -60,6 +60,10 @@ handlers:
   static_dir: client/bower_components
   secure: always
 
+- url: /node_modules/
+  static_dir: client/node_modules
+  secure: always
+
 - url: /api/.*
   script: main.app
   secure: always
