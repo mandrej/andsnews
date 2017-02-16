@@ -11,133 +11,125 @@
 <link rel="import" href="./item-view.html">
 
 <dom-module id="detail-view">
-    <template>
-        <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                display: block;
-                position: relative;
-            }
-            iron-swipeable-pages {
-                height: 100vh;
-            }
-        </style>
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+      }
 
-        <iron-ajax id="ajax"
-            auto
-            url="{{_url(kind, field, value)}}"
-            params="{{params}}"
-            handle-as="json"
-            on-response="handler"
-            loading="{{loading}}"
-            debounce-duration="100"></iron-ajax>
+      iron-swipeable-pages {
+        height: 100vh;
+      }
+    </style>
 
-        <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
+    <iron-ajax id="ajax" auto
+      url="{{_url(kind, field, value)}}"
+      params="{{params}}"
+      handle-as="json"
+      on-response="handler"
+      loading="{{loading}}"
+      debounce-duration="100"></iron-ajax>
 
-        <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-            <h2>Nothing found</h2>
-            <p>Please try again</p>
-        </paper-dialog>
+      <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-        <iron-swipeable-pages id="swipe"
-            selected="0"
-            fallback-selection="0"
-            on-iron-select="ironSelect"
-            disabled="{{disableSwipe}}"
-            threshold="0">
-            <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
-                <item-view
-                    item="{{item}}"
-                    is-admin="{{isAdmin}}"
-                    filter="[[filter]]"
-                    route="{{route}}"></item-view>
-            </template>
+      <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+        <h2>Nothing found</h2>
+        <p>Please try again</p>
+      </paper-dialog>
+
+      <iron-swipeable-pages id="swipe" selected="0" fallback-selection="0" on-iron-select="ironSelect" disabled="{{disableSwipe}}"
+        threshold="0">
+        <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
+          <item-view item="{{item}}" is-admin="{{isAdmin}}" filter="[[filter]]" route="{{route}}"></item-view>
+        </template>
         </iron-swipeable-pages>
-    </template>
+  </template>
 
-    <script>
-        Polymer({
-            is: 'detail-view',
-            properties: {
-                headline: { type: String, value: 'ANDрејевићи', notify: true },
-                params: { type: Object, value: {}, notify: true },
-                filter: { type: Object, value: {}, notify: true },
-                records: { type: Array, notify: true },
-                itemKind: { type: String, value: 'photo', notify: true },
-                loading: { type: Boolean, value: false, notify: true },
-                disableSwipe: { type: Boolean, value: false, notify: true },
-            },
-            listeners: {
-                'edit-record': '_editRecord',
-                'delete-record': '_deleteRecord',
-            },
-            _url: function(kind, field, value) {
-                var url, prefix = '/api';
-                this.records = [];
+  <script>
+    Polymer({
+      is: 'detail-view',
+      properties: {
+        headline: { type: String, value: 'ANDрејевићи', notify: true },
+        params: { type: Object, value: {}, notify: true },
+        filter: { type: Object, value: {}, notify: true },
+        records: { type: Array, notify: true },
+        itemKind: { type: String, value: 'photo', notify: true },
+        loading: { type: Boolean, value: false, notify: true },
+        disableSwipe: { type: Boolean, value: false, notify: true },
+      },
+      listeners: {
+        'edit-record': '_editRecord',
+        'delete-record': '_deleteRecord',
+      },
+      _url: function (kind, field, value) {
+        var url, prefix = '/api';
+        this.records = [];
 
-                if (kind == 'search' && field != null) {
-                    url = [prefix, kind, field].join('/');
-                } else if (field && value) {
-                    url = [prefix, kind, field, value].join('/');
-                }
-                this.set('params._page', null);
-                return url;
-            },
-            handler: function(request) {
-                Polymer.dom().querySelector('app-shell').disableSwipe = false;
-                var response = request.detail.response;
-                if (!response.objects) return;
-                if (response.objects.length == 0) {
-                    var dialog = this.$.message;
-                    dialog.fitInto = this.$.swipe;
-                    dialog.open();
-                } else {
-                    response.objects.forEach(function(item) {
-                        this.push('records', item);
-                    }, this);
-                    this.filter = {};
-                    this.filter[response.filter.field] = response.filter.value;
-                }
-            },
-            loadMore: function() {
-                var ajax = this.$.ajax;
-                // if (ajax.lastRequest) ajax.lastRequest.abort();
-                if (ajax.lastResponse && ajax.lastResponse._next) {
-                    this.set('params._page', ajax.lastResponse._next);
-                }
-            },
-            ironSelect: function() {
-                var index = this.$.swipe.selected,
-                    item = this.records[index];
-                if (item) {
-                    this.set('headline', item.headline);
-                    this.set('itemKind', item.kind);
-                }
-                if (this.records.length - index < 5) {
-                    this.loadMore();
-                }
-            },
-            _editRecord: function() {
-                var currentView = this.$$('item-view.iron-selected').view;
-                if (currentView == 'display') {
-                    Polymer.dom().querySelector('app-shell').disableSwipe = true;
-                    this.$$('item-view.iron-selected').view = 'form';
-                } else {
-                    Polymer.dom().querySelector('app-shell').disableSwipe = false;
-                    this.$$('item-view.iron-selected').view = 'display';
-                }
-            },
-            _deleteRecord: function() {
-                var index = this.$.swipe.selected,
-                    obj = this.splice('records', index, 1)[0],
-                    xhr = this.$.delete_ajax;
+        if (kind == 'search' && field != null) {
+          url = [prefix, kind, field].join('/');
+        } else if (field && value) {
+          url = [prefix, kind, field, value].join('/');
+        }
+        this.set('params._page', null);
+        return url;
+      },
+      handler: function (request) {
+        Polymer.dom().querySelector('app-shell').disableSwipe = false;
+        var response = request.detail.response;
+        if (!response.objects) return;
+        if (response.objects.length == 0) {
+          var dialog = this.$.message;
+          dialog.fitInto = this.$.swipe;
+          dialog.open();
+        } else {
+          response.objects.forEach(function (item) {
+            this.push('records', item);
+          }, this);
+          this.filter = {};
+          this.filter[response.filter.field] = response.filter.value;
+        }
+      },
+      loadMore: function () {
+        var ajax = this.$.ajax;
+        // if (ajax.lastRequest) ajax.lastRequest.abort();
+        if (ajax.lastResponse && ajax.lastResponse._next) {
+          this.set('params._page', ajax.lastResponse._next);
+        }
+      },
+      ironSelect: function () {
+        var index = this.$.swipe.selected,
+          item = this.records[index];
+        if (item) {
+          this.set('headline', item.headline);
+          this.set('itemKind', item.kind);
+        }
+        if (this.records.length - index < 5) {
+          this.loadMore();
+        }
+      },
+      _editRecord: function () {
+        var currentView = this.$$('item-view.iron-selected').view;
+        if (currentView == 'display') {
+          Polymer.dom().querySelector('app-shell').disableSwipe = true;
+          this.$$('item-view.iron-selected').view = 'form';
+        } else {
+          Polymer.dom().querySelector('app-shell').disableSwipe = false;
+          this.$$('item-view.iron-selected').view = 'display';
+        }
+      },
+      _deleteRecord: function () {
+        var index = this.$.swipe.selected,
+          obj = this.splice('records', index, 1)[0],
+          xhr = this.$.delete_ajax;
 
-                xhr.url = '/api/delete/' + obj.safekey;
-                xhr.generateRequest();
-                // this.notifySplices('records', obj);
-            },
-            propertyChanged: function(newValue, oldValue) {
-                console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-            },
-        });
-    </script>
+        xhr.url = '/api/delete/' + obj.safekey;
+        xhr.generateRequest();
+        // this.notifySplices('records', obj);
+      },
+      propertyChanged: function (newValue, oldValue) {
+        console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+      },
+    });
+  </script>
 </dom-module>

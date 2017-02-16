@@ -24,367 +24,372 @@
 <link rel="import" href="./grid-view.html">
 
 <dom-module id="app-shell">
-	<template>
-		<style include="shared-styles iron-flex iron-flex-alignment">
-			:host {
-				display: block;
-				position: relative;
-			}
-			app-header {
-				background-image: url(../images/md.jpg);
-    			background-position: top center;
-			}
-			app-toolbar {
-				color: var(--primary-background-color);
-			}
-			app-toolbar.sticky {
-				height: 64px;
-				line-height: 64px;
-				font-size: 24px;
-				color: var(--primary-text-color);
-			}
-			h1 {
-				margin: 0;
-				font-size: 36px;
-				font-weight: 300;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				text-align: center;
-			}
-			h4 {
-				margin: 0;
-				font-size: 16px;
-				font-weight: 300;
-			}
-			app-toolbar a {
-				display: inline-block;
-				color: var(--primary-background-color);
-				text-decoration: none;
-				text-transform: lowercase;
-			}
-			app-toolbar a iron-image.thumbnail {
-				display: inherit;
-				width: 48px;
-				height: 48px;
-				border-radius: 50%;
-				background-color: transparent;
-			}
-			.navigation {
-				margin: 0;
-				padding: 0;
-			}
-			.navigation li {
-				display: inline-block;
-				list-style: none;
-			}
-			#spinner {
-				position: absolute;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				right: 0;
-			}
-			paper-spinner {
-				width: 100px;
-				height: 100px;
-				--paper-spinner-stroke-width: 8px;
-			}
-			paper-icon-button {
-				color: var(--primary-background-color);
-			}
-		</style>
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+      }
 
-		<app-location route="{{route}}" use-hash-as-path></app-location>
+      app-header {
+        background-image: url(../images/md.jpg);
+        background-position: top center;
+      }
 
-		<app-route
-			route="{{route}}"
-			pattern="/:view"
-			data="{{dataView}}"
-			tail="{{tailView}}"></app-route>
+      app-toolbar {
+        color: var(--primary-background-color);
+      }
 
-		<app-route
-			route="{{tailView}}"
-			pattern="/:kind"
-			data="{{dataKind}}"
-			tail="{{tailKind}}"></app-route>
+      app-toolbar.sticky {
+        height: 64px;
+        line-height: 64px;
+        font-size: 24px;
+        color: var(--primary-text-color);
+      }
 
-		<app-route
-			route="{{tailKind}}"
-			pattern="/:field"
-			data="{{dataField}}"
-			tail="{{tailField}}"></app-route>
+      h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 300;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+      }
 
-		<app-route
-			route="{{tailField}}"
-			pattern="/:value"
-			data="{{dataValue}}"
-			tail="{{tailValue}}"></app-route>
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 300;
+      }
 
-		<firebase-app
-	        app="{{firebase}}"
-	        name="andsnews"
-	        api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-	        auth-domain="andsnews.firebaseapp.com"
-	        database-url="https://andsnews.firebaseio.com"
-	        storage-bucket="andsnews.appspot.com"
-	        messaging-sender-id="719127177629"></firebase-app>
+      app-toolbar a {
+        display: inline-block;
+        color: var(--primary-background-color);
+        text-decoration: none;
+        text-transform: lowercase;
+      }
 
-        <firebase-auth id="auth"
-			app-name="andsnews"
-			user="{{user}}"
-			online="{{online}}"
-			signed-in="{{isAuthorized}}"
-			provider="google"></firebase-auth>
+      app-toolbar a iron-image.thumbnail {
+        display: inherit;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: transparent;
+      }
 
-		<paper-dialog id="deleteDialog" modal
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation"
-			on-iron-overlay-closed="deleteRecord">
-            <h2>Are you sure?</h2>
-			<div class="layout horizontal center-justified">
-				<paper-button dialog-dismiss>Cancel</paper-button>
-				<paper-button dialog-confirm autofocus>OK</paper-button>
-			</div>
-        </paper-dialog>
+      .navigation {
+        margin: 0;
+        padding: 0;
+      }
 
-		<paper-dialog id="authorizationDialog" modal
-            entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<h2>Authorization Required</h2>
-            <p>Please Sign-In with your Google Account</p>
-            <div class="layout horizontal center-justified">
-				<paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
+      .navigation li {
+        display: inline-block;
+        list-style: none;
+      }
+
+      #spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      paper-spinner {
+        width: 100px;
+        height: 100px;
+        --paper-spinner-stroke-width: 8px;
+      }
+
+      paper-icon-button {
+        color: var(--primary-background-color);
+      }
+    </style>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:view"
+      data="{{dataView}}"
+      tail="{{tailView}}"></app-route>
+
+    <app-route
+      route="{{tailView}}"
+      pattern="/:kind"
+      data="{{dataKind}}"
+      tail="{{tailKind}}"></app-route>
+
+    <app-route
+      route="{{tailKind}}"
+      pattern="/:field"
+      data="{{dataField}}"
+      tail="{{tailField}}"></app-route>
+
+    <app-route
+      route="{{tailField}}"
+      pattern="/:value"
+      data="{{dataValue}}"
+      tail="{{tailValue}}"></app-route>
+
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
+
+      <firebase-auth id="auth"
+        app-name="andsnews"
+        user="{{user}}"
+        online="{{online}}"
+        signed-in="{{isAuthorized}}"
+        provider="google"></firebase-auth>
+
+      <paper-dialog id="deleteDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="deleteRecord">
+        <h2>Are you sure?</h2>
+        <div class="layout horizontal center-justified">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus>OK</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="authorizationDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+        <h2>Authorization Required</h2>
+        <p>Please Sign-In with your Google Account</p>
+        <div class="layout horizontal center-justified">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
+        </div>
+      </paper-dialog>
+
+      <div id="spinner" class="layout horizontal center-justified">
+        <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+      </div>
+
+      <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
+      <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+
+      <app-header-layout>
+        <app-header shadow reveals condenses>
+          <app-toolbar>
+            <div class="layout horizontal justified" style="width: 100%">
+              <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+                <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+              </a>
+              <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
+              <app-search field="{{dataField.field}}" value="{{dataValue.value}}" route="{{route}}"></app-search>
             </div>
-        </paper-dialog>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>{{headline}}</h1>
+          </app-toolbar>
+          <app-toolbar class="sticky" sticky>
+            <div class="layout horizontal justified" style="width: 100%">
+              <ul role="navigation" class="navigation">
+                <li>
+                  <a href="#/grid/photo">
+                    <paper-icon-button icon="image:photo-camera"></paper-icon-button>
+                    <span hidden$="{{smallScreen}}">Photos</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#/grid/entry">
+                    <paper-icon-button icon="description"></paper-icon-button>
+                    <span hidden$="{{smallScreen}}">Texts</span>
+                  </a>
+                </li>
+                <li hidden$="[[!isAdmin]]">
+                  <a href="#/maintenance">
+                    <paper-icon-button icon="settings"></paper-icon-button>
+                    <span hidden$="{{smallScreen}}">Admin</span>
+                  </a>
+                </li>
+              </ul>
 
-		<div id="spinner" class="layout horizontal center-justified">
-			<paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-		</div>
-
-		<iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-		<app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
-
-		<app-header-layout>
-			<app-header shadow reveals condenses>
-				<app-toolbar>
-					<div class="layout horizontal justified" style="width: 100%">
-						<a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-							<iron-image src="[[userImg(user)]]" class="thumbnail"
-								preload fade sizing="cover"></iron-image>
-						</a>
-						<a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-						<app-search
-							field="{{dataField.field}}"
-							value="{{dataValue.value}}"
-							route="{{route}}"></app-search>
-					</div>
-				</app-toolbar>
-				<app-toolbar>
-					<h1 main-title>{{headline}}</h1>
-				</app-toolbar>
-				<app-toolbar class="sticky" sticky>
-					<div class="layout horizontal justified" style="width: 100%">
-						<ul role="navigation" class="navigation">
-							<li>
-								<a href="#/grid/photo">
-									<paper-icon-button icon="image:photo-camera"></paper-icon-button>
-									<span hidden$="{{smallScreen}}">Photos</span>
-								</a>
-							</li>
-							<li>
-								<a href="#/grid/entry">
-									<paper-icon-button icon="description"></paper-icon-button>
-									<span hidden$="{{smallScreen}}">Texts</span>
-								</a>
-							</li>
-							<li hidden$="[[!isAdmin]]">
-								<a href="#/maintenance">
-									<paper-icon-button icon="settings"></paper-icon-button>
-									<span hidden$="{{smallScreen}}">Admin</span>
-								</a>
-							</li>
-						</ul>
-
-						<div hidden$="[[!_isDetailView(dataView.view)]]">
-							<span hidden$="[[!isAdmin]]">
-								<paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-							</span>
-							<span hidden$="[[!_isKindPhoto(itemKind)]]">
+              <div hidden$="[[!_isDetailView(dataView.view)]]">
+                <span hidden$="[[!isAdmin]]">
+								  <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+							  </span>
+                <span hidden$="[[!_isKindPhoto(itemKind)]]">
 								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
 								<paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
 							</span>
-						</div>
-					</div>
+              </div>
+            </div>
 
-					<div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-						<paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
-					</div>
-				</app-toolbar>
-			</app-header>
+            <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
+              <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+            </div>
+          </app-toolbar>
+        </app-header>
 
-			<iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-				<admin-shell
-					data-view="maintenance"
-					is-admin="{{isAdmin}}"
-					route="{{route}}"></admin-shell>
+        <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+          <admin-shell
+            data-view="maintenance"
+            is-admin="{{isAdmin}}"
+            route="{{route}}"></admin-shell>
 
-				<grid-view
-					data-view="grid"
-					kind="[[dataKind.kind]]"
-					field="{{dataField.field}}"
-					value="{{dataValue.value}}"
-					route="{{route}}"
-					loading="{{loading}}"></grid-view>
+          <grid-view
+            data-view="grid"
+            kind="[[dataKind.kind]]"
+            field="{{dataField.field}}"
+            value="{{dataValue.value}}"
+            route="{{route}}"
+            loading="{{loading}}"></grid-view>
 
-				<detail-view
-					data-view="detail"
-					is-authorized="{{isAuthorized}}"
-					is-admin="{{isAdmin}}"
-					disable-swipe="{{disableSwipe}}"
-					kind="[[dataKind.kind]]"
-					field="[[dataField.field]]"
-					value="[[dataValue.value]]"
-					item-kind="{{itemKind}}"
-					loading="{{loading}}"
-					headline="{{headline}}"
-					route="{{route}}"></detail-view>
+          <detail-view
+            data-view="detail"
+            is-authorized="{{isAuthorized}}"
+            is-admin="{{isAdmin}}"
+            disable-swipe="{{disableSwipe}}"
+            kind="[[dataKind.kind]]"
+            field="[[dataField.field]]"
+            value="[[dataValue.value]]"
+            item-kind="{{itemKind}}"
+            loading="{{loading}}"
+            headline="{{headline}}"
+            route="{{route}}"></detail-view>
 
-				<form-view
-					data-view="form"
-					is-authorized="{{isAuthorized}}"
-					kind="[[dataKind.kind]]"
-					field="[[dataField.field]]"
-					value="[[dataValue.value]]"
-					route="{{route}}"></form-view>
-			</iron-pages>
-		</app-header-layout>
-	</template>
+          <form-view
+            data-view="form"
+            is-authorized="{{isAuthorized}}"
+            kind="[[dataKind.kind]]"
+            field="[[dataField.field]]"
+            value="[[dataValue.value]]"
+            route="{{route}}"></form-view>
+        </iron-pages>
+      </app-header-layout>
+  </template>
 
-	<script>
-		Polymer({
-			is: 'app-shell',
-			attached: function() {
-				if (!this.route.path) {
-					this.set('route.path', '/grid/photo');
-				}
-				this.firebase.auth().onAuthStateChanged(function(user) {
-  					if (user) {
-						this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
-  					} else {
-						this.isAdmin = false;
-  					}
-				}.bind(this));
-			},
-			listeners: {
-				'confirm-delete': 'confirmDelete'
-			},
-			observers: [
-				'viewChanged(dataView.view)',
-				// 'pathChanged(route.path)'
-			],
-			properties: {
-				version: { type: String, value: '1701.12'},
-				headline: { type: String, value: 'ANDрејевићи', notify: true },
-				smallScreen: { type: Boolean, value: false, notify: true },
-				user: { type: Object, notify: true },
-				isAdmin: { type: Boolean, value: false, notify: true },
-				loading: { type: Boolean, value: false, notify: true },
-				itemKind: { type: String, value: 'photo', notify: true },
-				disableSwipe: { type: Boolean, value: false, notify: true },
-			},
-			viewChanged: function(view) {
-				this.debounce('viewChanged', function() {
-					switch (view) {
-						case 'grid':
-							this.set('dataField.field', null);
-							this.set('dataValue.value', null);
-							this.headline = 'ANDрејевићи';
-							break;
-						case 'detail':
-							Polymer.Base.importHref('src/detail-view.html');
-							break;
-						case 'form':
-							this.headline = 'Form';
-							var dialog = this.$.authorizationDialog;
-							Polymer.Base.importHref('src/form-view.html', function() {
-								if (!this.isAuthorized) dialog.open();
-							}.bind(this), null, true);
-							break;
-						case 'maintenance':
-							this.set('dataKind.kind', null);
-							this.set('dataField.field', null);
-							this.set('dataValue.value', null);
-							this.headline = 'Admin v.' + this.version;
-							var dialog = this.$.authorizationDialog;
-							Polymer.Base.importHref('src/admin-shell.html', function() {
-								if (!this.isAdmin) dialog.open();
-							}.bind(this), null, true);
-							break;
-					}
-				}, 0); // shorter or equal then grid ajax
-			},
-			_canAddRecord: function(view, loggedin) {
-				return view == 'grid' && loggedin;
-			},
-			_isDetailView: function(view) {
-				return view == 'detail';
-			},
-			_isKindPhoto: function(kind) {
-				return kind == 'photo';
-			},
-			_sign: function() {
-				if (this.user) {
-					this.$.auth.signOut();
-				} else {
-					this.$.auth.signInWithPopup()
-		    			.then(function(response) {
-							// response.credential.accessToken
-							// response.user.uid
-						}).catch(function(error) {
-							console.log(error);
-						});
-				}
-			},
-			userName: function(user) {
-				if (user) return user.displayName;
-			},
-			userImg: function(user) {
-				if (user) return user.photoURL;
-			},
-			addRecord: function(e) {
-				this.set('dataValue.value', null);
-				this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
-			},
-			editRecord: function(e) {
-				this.$$('detail-view').fire('edit-record');
-			},
-			confirmDelete: function(e) {
-				this.$.deleteDialog.open();
-			},
-			deleteRecord: function(e) {
-				if (e.detail.confirmed) {
-					this.$$('detail-view').fire('delete-record');
-				}
-			},
-			showInfo: function(e) {
-				this.$$('detail-view').$$('.iron-selected').fire('show-info');
-            },
-			zoomPhoto: function(e) {
-				var itemView = this.$$('detail-view').$$('.iron-selected');
-				e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
-				if (itemView.view != 'display') itemView.view = 'display';
-				itemView.fire('zoom-photo');
-			},
-			pathChanged: function(path) {
-				console.log(path);
-			},
-			objectChanged: function(obj) {
-                // this is object observer!
-				if (obj && obj.path) console.log(obj.path + ' -> ' + this.get(obj.path));
-            },
-			propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
-		});
-	</script>
+  <script>
+    Polymer({
+      is: 'app-shell',
+      attached: function () {
+        if (!this.route.path) {
+          this.set('route.path', '/grid/photo');
+        }
+        this.firebase.auth().onAuthStateChanged(function (user) {
+          if (user) {
+            this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
+          } else {
+            this.isAdmin = false;
+          }
+        }.bind(this));
+      },
+      listeners: {
+        'confirm-delete': 'confirmDelete'
+      },
+      observers: [
+        'viewChanged(dataView.view)',
+        // 'pathChanged(route.path)'
+      ],
+      properties: {
+        version: { type: String, value: '1701.12' },
+        headline: { type: String, value: 'ANDрејевићи', notify: true },
+        smallScreen: { type: Boolean, value: false, notify: true },
+        user: { type: Object, notify: true },
+        isAdmin: { type: Boolean, value: false, notify: true },
+        loading: { type: Boolean, value: false, notify: true },
+        itemKind: { type: String, value: 'photo', notify: true },
+        disableSwipe: { type: Boolean, value: false, notify: true },
+      },
+      viewChanged: function (view) {
+        this.debounce('viewChanged', function () {
+          switch (view) {
+            case 'grid':
+              this.set('dataField.field', null);
+              this.set('dataValue.value', null);
+              this.headline = 'ANDрејевићи';
+              break;
+            case 'detail':
+              Polymer.Base.importHref('src/detail-view.html');
+              break;
+            case 'form':
+              this.headline = 'Form';
+              var dialog = this.$.authorizationDialog;
+              Polymer.Base.importHref('src/form-view.html', function () {
+                if (!this.isAuthorized) dialog.open();
+              }.bind(this), null, true);
+              break;
+            case 'maintenance':
+              this.set('dataKind.kind', null);
+              this.set('dataField.field', null);
+              this.set('dataValue.value', null);
+              this.headline = 'Admin v.' + this.version;
+              var dialog = this.$.authorizationDialog;
+              Polymer.Base.importHref('src/admin-shell.html', function () {
+                if (!this.isAdmin) dialog.open();
+              }.bind(this), null, true);
+              break;
+          }
+        }, 0); // shorter or equal then grid ajax
+      },
+      _canAddRecord: function (view, loggedin) {
+        return view == 'grid' && loggedin;
+      },
+      _isDetailView: function (view) {
+        return view == 'detail';
+      },
+      _isKindPhoto: function (kind) {
+        return kind == 'photo';
+      },
+      _sign: function () {
+        if (this.user) {
+          this.$.auth.signOut();
+        } else {
+          this.$.auth.signInWithPopup()
+            .then(function (response) {
+              // response.credential.accessToken
+              // response.user.uid
+            }).catch(function (error) {
+              console.log(error);
+            });
+        }
+      },
+      userName: function (user) {
+        if (user) return user.displayName;
+      },
+      userImg: function (user) {
+        if (user) return user.photoURL;
+      },
+      addRecord: function (e) {
+        this.set('dataValue.value', null);
+        this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
+      },
+      editRecord: function (e) {
+        this.$$('detail-view').fire('edit-record');
+      },
+      confirmDelete: function (e) {
+        this.$.deleteDialog.open();
+      },
+      deleteRecord: function (e) {
+        if (e.detail.confirmed) {
+          this.$$('detail-view').fire('delete-record');
+        }
+      },
+      showInfo: function (e) {
+        this.$$('detail-view').$$('.iron-selected').fire('show-info');
+      },
+      zoomPhoto: function (e) {
+        var itemView = this.$$('detail-view').$$('.iron-selected');
+        e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
+        if (itemView.view != 'display') itemView.view = 'display';
+        itemView.fire('zoom-photo');
+      },
+      pathChanged: function (path) {
+        console.log(path);
+      },
+      objectChanged: function (obj) {
+        // this is object observer!
+        if (obj && obj.path) console.log(obj.path + ' -> ' + this.get(obj.path));
+      },
+      propertyChanged: function (newValue, oldValue) {
+        console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+      },
+    });
+  </script>
 </dom-module>

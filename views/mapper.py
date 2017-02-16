@@ -3,21 +3,21 @@ import itertools
 import logging
 import uuid
 
-import cloudstorage as gcs
 import re
+import cloudstorage as gcs
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
-from config import BUCKET, END_MSG
-from models import DUMMY_GIF, Counter
-from views.fireapi import Firebase, push_message
+from .config import BUCKET, END_MSG
+from .models import DUMMY_GIF, Counter
+from .fireapi import Firebase, push_message
 
 FB = Firebase()
 
 
 class Mapper(object):
-    # Subclasses should replace this with a model class (eg, model.Person).
+    """ Subclasses should replace this with a model class (eg, model.Person). """
     KIND = None
     # Subclasses can replace this with a list of (property, value) tuples to filter by.
     FILTERS = []
@@ -150,10 +150,10 @@ class Fixer(Mapper):
                 try:
                     write_retry_params = gcs.RetryParams(backoff_factor=1.1)
                     with gcs.open(
-                            object_name,
-                            'w',
-                            content_type=blob_info.content_type,
-                            retry_params=write_retry_params) as f:
+                        object_name,
+                        'w',
+                        content_type=blob_info.content_type,
+                        retry_params=write_retry_params) as f:
                         f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
 
                     # delete old blob key

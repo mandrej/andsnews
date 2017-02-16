@@ -1,0 +1,7 @@
+{
+  "python.autoComplete.extraPaths": [
+        "/home/milan/google_appengine",
+        "/home/milan/google_appengine/lib",
+        "${workspaceRoot}/lib" ],
+  "python.linting.pep8Enabled": true
+}

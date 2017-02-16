@@ -1,7 +1,7 @@
 import json
 
 import httplib2
-from config import FIREBASE, FB_SERVICE_ACCOUNT
+from .config import FIREBASE, FB_SERVICE_ACCOUNT
 from oauth2client.service_account import ServiceAccountCredentials
 
 _FIREBASE_SCOPES = [

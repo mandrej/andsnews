@@ -9,152 +9,155 @@
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="grid-view">
-    <template>
-        <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                display: block;
-                position: relative;
-            }
-            .rec {
-                position: relative;
-                width: calc(100% / 6);
-                height: calc(100vw / 6);
-				cursor: pointer;
-			}
-            .rec iron-image {
-                width: 100%;
-                height: 100%;
-            }
-            .rec .title {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background-color: rgba(0,0,0,0.5);
-                color: var(--primary-background-color);
-                font-size: 20px;
-                padding: 16px;
-                text-overflow: ellipsis;
-            }
-            @media (max-width: 1440px) { .rec { width: calc(100% / 6); height: calc(100vw / 6); } }
-            @media (max-width: 1280px) { .rec { width: calc(100% / 5); height: calc(100vw / 5); } }
-            @media (max-width: 1024px) { .rec { width: calc(100% / 4); height: calc(100vw / 4); } }
-            @media (max-width: 768px)  { .rec { width: calc(100% / 3); height: calc(100vw / 3); } }
-            @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: calc(100vw / 2); } }
-            iron-image {
-                background-color: var(--secondary-text-color);
-            }
-        </style>
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+      }
 
-        <iron-ajax auto
-			url="[[_url(kind, field, value)]]"
-			handle-as="json"
-            on-response="handler"
-            loading="{{loading}}"
-            debounce-duration="150"></iron-ajax>
+      .rec {
+        position: relative;
+        width: calc(100% / 6);
+        height: calc(100vw / 6);
+        cursor: pointer;
+      }
 
-        <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender" filter="_filtering">
-                <div class="rec"
-                    data-field$="[[rec.field_name]]" on-tap="applyFilter">
-                    <iron-image src="[[rec.repr_url]]=s400"
-                        preload fade sizing="cover"></iron-image>
-                    <div class="title">
-                        <div class="layout horizontal justified">
-                            <span class="self-center">[[rec.name]]</span>
-                            <span class="self-center">[[rec.count]]</span>
-                        </div>
-                    </div>
-                </div>
-            </template>
+      .rec iron-image {
+        width: 100%;
+        height: 100%;
+      }
+
+      .rec .title {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: var(--primary-background-color);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
+      }
+
+      @media (max-width: 1440px) { .rec { width: calc(100% / 6); height: calc(100vw / 6); }}
+      @media (max-width: 1280px) { .rec { width: calc(100% / 5); height: calc(100vw / 5); }}
+      @media (max-width: 1024px) { .rec { width: calc(100% / 4); height: calc(100vw / 4); }}
+      @media (max-width: 768px)  { .rec { width: calc(100% / 3); height: calc(100vw / 3); }}
+      @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: calc(100vw / 2); }}
+
+      iron-image {
+        background-color: var(--secondary-text-color);
+      }
+    </style>
+
+    <iron-ajax auto
+      url="[[_url(kind, field, value)]]"
+      handle-as="json"
+      on-response="handler"
+      loading="{{loading}}"
+      debounce-duration="150"></iron-ajax>
+
+    <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
+      <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender" filter="_filtering">
+        <div class="rec" data-field$="[[rec.field_name]]" on-tap="applyFilter">
+          <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+          <div class="title">
+            <div class="layout horizontal justified">
+              <span class="self-center">[[rec.name]]</span>
+              <span class="self-center">[[rec.count]]</span>
+            </div>
+          </div>
         </div>
+      </template>
+    </div>
 
-        <div hidden$="[[_isKindPhoto(kind)]]" class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
-                <div class="rec" on-tap="showDetail">
-                    <iron-image src="[[rec.front_img]]"
-                        preload fade sizing="cover"></iron-image>
-                    <div class="title">
-                        <div class="layout horizontal justified">
-                            <span class="self-center">[[rec.headline]]</span>
-                        </div>
-                    </div>
-                </div>
-            </template>
+    <div hidden$="[[_isKindPhoto(kind)]]" class="layout horizontal wrap">
+      <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
+        <div class="rec" on-tap="showDetail">
+          <iron-image src="[[rec.front_img]]" preload fade sizing="cover"></iron-image>
+          <div class="title">
+            <div class="layout horizontal justified">
+              <span class="self-center">[[rec.headline]]</span>
+            </div>
+          </div>
         </div>
-    </template>
-    <script>
-        Polymer({
-            is: 'grid-view',
-            behaviors: [
-                Polymer.NeonAnimatableBehavior,
-                Polymer.NeonAnimationRunnerBehavior,
-            ],
-            properties: {
-                animationConfig: {
-                    type: Object,
-                    value: function() {
-                        return {
-                            'entry': [{
-                                name: 'cascaded-animation',
-                                animation: 'fade-in-animation'
-                            }, {
-                                name: 'cascaded-animation',
-                                animation: 'transform-animation',
-                                transformFrom: 'translateY(-56px)'
-                            }]
-                        }
-                    }
-                },
-                items: { type: Array, value: [], notify: true },
-                loading: { type: Boolean, value: false, notify: true },
-            },
-            _url: function(kind, field, value) {
-                var view = Polymer.dom().querySelector('app-shell').dataView.view;
-                if (view == 'grid') {
-                    // clear previous filter
-                    field = null;
-                    value = null;
-                    this.items = [];
-                    if (kind == 'photo') {
-                        return '/api/filters';
-                    } else if (kind == 'entry') {
-                        return '/api/entry';
-                    }
-                }
-			},
-            _filtering: function(rec) {
-                return rec.show;
-            },
-            handler: function(request) {
-				var response = request.detail.response,
-                    collection;
-                if (this.kind == 'photo') {
-                    collection = response;
-                } else if (this.kind == 'entry') {
-                    collection = response.objects;
-                }
-                collection.forEach(function(item) {
-                    this.push('items', item);
-                }, this);
-			},
-            _isKindPhoto: function(kind) {
-                return kind == 'photo';
-            },
-            applyFilter: function(e) {
-                // photo
-                 this.set('route.path', ['/detail', this.kind, e.model.rec.field_name, '' + e.model.rec.name].join('/'));
-			},
-            showDetail: function(e) {
-                // entry
-                this.set('route.path', ['/detail', this.kind, 'key', e.model.rec.safekey].join('/'));
-            },
-            repeatRender: function() {
-                var nodes = this.root.querySelectorAll('.rec');
-                this.animationConfig['entry'][0].nodes = nodes;
-                this.animationConfig['entry'][1].nodes = nodes;
-                this.playAnimation('entry');
-            },
-        });
-    </script>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'grid-view',
+      behaviors: [
+        Polymer.NeonAnimatableBehavior,
+        Polymer.NeonAnimationRunnerBehavior,
+      ],
+      properties: {
+        animationConfig: {
+          type: Object,
+          value: function () {
+            return {
+              'entry': [{
+                name: 'cascaded-animation',
+                animation: 'fade-in-animation'
+              }, {
+                name: 'cascaded-animation',
+                animation: 'transform-animation',
+                transformFrom: 'translateY(-56px)'
+              }]
+            }
+          }
+        },
+        items: { type: Array, value: [], notify: true },
+        loading: { type: Boolean, value: false, notify: true },
+      },
+      _url: function (kind, field, value) {
+        var view = Polymer.dom().querySelector('app-shell').dataView.view;
+        if (view == 'grid') {
+          // clear previous filter
+          field = null;
+          value = null;
+          this.items = [];
+          if (kind == 'photo') {
+            return '/api/filters';
+          } else if (kind == 'entry') {
+            return '/api/entry';
+          }
+        }
+      },
+      _filtering: function (rec) {
+        return rec.show;
+      },
+      handler: function (request) {
+        var response = request.detail.response,
+          collection;
+        if (this.kind == 'photo') {
+          collection = response;
+        } else if (this.kind == 'entry') {
+          collection = response.objects;
+        }
+        collection.forEach(function (item) {
+          this.push('items', item);
+        }, this);
+      },
+      _isKindPhoto: function (kind) {
+        return kind == 'photo';
+      },
+      applyFilter: function (e) {
+        // photo
+        this.set('route.path', ['/detail', this.kind, e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+      },
+      showDetail: function (e) {
+        // entry
+        this.set('route.path', ['/detail', this.kind, 'key', e.model.rec.safekey].join('/'));
+      },
+      repeatRender: function () {
+        var nodes = this.root.querySelectorAll('.rec');
+        this.animationConfig['entry'][0].nodes = nodes;
+        this.animationConfig['entry'][1].nodes = nodes;
+        this.playAnimation('entry');
+      },
+    });
+  </script>
 </dom-module>

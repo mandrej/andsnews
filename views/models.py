@@ -16,9 +16,9 @@ from exifread import process_file
 from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
-from config import ASA, HUE, LUM, SAT, BUCKET
-from palette import extract_colors, rgb_to_hex
-from slugify import slugify
+from .config import ASA, HUE, LUM, SAT, BUCKET
+from .palette import extract_colors, rgb_to_hex
+from .slugify import slugify
 
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
@@ -44,7 +44,7 @@ def sizeof_fmt(num, suffix='B'):
 
 def filter_param(field, value):
     try:
-        assert (field and value)
+        assert field and value
     except AssertionError:
         return {}
 

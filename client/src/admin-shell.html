@@ -9,148 +9,151 @@
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="admin-shell">
-    <template>
-        <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                display: block;
-                position: relative;
-                height: 100vh;
-                background-color: var(--primary-background-color);
-            }
-            .container {
-                padding: 16px;
-                padding-bottom: 56px;
-            }
-            h1 {
-                margin-bottom: 0.5em;
-                font-weight: 300;
-            }
-            paper-toast {
-                --paper-toast-color: var(--primary-background-color);
-                --paper-toast-background-color: var(--primary-text-color);
-            }
-            paper-button {
-                width: 150px;
-                margin: 0 16px 16px 0;
-			}
-            paper-button[toggles][active] {
-                background: var(--secondary-text-color);
-            }
-        </style>
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+        height: 100vh;
+        background-color: var(--primary-background-color);
+      }
 
-        <firebase-auth id="auth"
-			app-name="andsnews"
-			user="{{user}}"
-			online="{{online}}"
-			signed-in="{{isAuthorized}}"
-			provider="google"></firebase-auth>
+      .container {
+        padding: 16px;
+        padding-bottom: 56px;
+      }
 
-        <firebase-messaging id="messaging"
-            app-name="andsnews"
-            token="{{token}}"
-            on-message="handleMessage"></firebase-messaging>
+      h1 {
+        margin-bottom: 0.5em;
+        font-weight: 300;
+      }
 
-        <firebase-document
-            log="true"
-            app-name="andsnews"
-            path="/users/[[user.uid]]/token"
-            data="[[token]]"></firebase-document>
+      paper-toast {
+        --paper-toast-color: var(--primary-background-color);
+        --paper-toast-background-color: var(--primary-text-color);
+      }
 
-        <iron-ajax auto
-            url="[[_url(isAdmin)]]"
-            last-response="{{info}}"></iron-ajax>
+      paper-button {
+        width: 150px;
+        margin: 0 16px 16px 0;
+      }
 
-        <iron-ajax id="xhr"
-            content-type="application/json"
-            method="POST"></iron-ajax>
+      paper-button[toggles][active] {
+        background: var(--secondary-text-color);
+      }
+    </style>
 
-        <div class="container" id="container">
-            <paper-toast id="toast" class="fit-bottom"></paper-toast>
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
 
-            <div hidden$="[[!isAdmin]]" class="layout vertical wrap">
-                <div>
-                    <h1>Photo [[info.photo.count]]</h1>
-                    <div class="layout horizontal justified wrap">
-                        <template is="dom-repeat"
-                            items="[[info.photo.counters]]" as="item">
-                            <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
-                        </template>
+    <firebase-messaging id="messaging"
+      app-name="andsnews"
+      token="{{token}}"
+      on-message="handleMessage"></firebase-messaging>
 
-                        <paper-button disabled on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-                        <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-                        <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
-                    </div>
-                </div>
+    <firebase-document
+      log="true"
+      app-name="andsnews"
+      path="/users/[[user.uid]]/token"
+      data="[[token]]"></firebase-document>
 
-                <div>
-                    <h1>Entry [[info.entry.count]]</h1>
-                    <div class="layout horizontal justified wrap">
-                        <template is="dom-repeat"
-                            items="[[info.entry.counters]]" as="item">
-                            <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
-                        </template>
+    <iron-ajax auto
+      url="[[_url(isAdmin)]]"
+      last-response="{{info}}"></iron-ajax>
 
-                        <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
-                    </div>
-                </div>
+    <iron-ajax id="xhr"
+      content-type="application/json"
+      method="POST"></iron-ajax>
 
-                <div>
-                  <redux-example></redux-example>
-                </div>
-            </div>
+    <div class="container" id="container">
+      <paper-toast id="toast" class="fit-bottom"></paper-toast>
+
+      <div hidden$="[[!isAdmin]]" class="layout vertical wrap">
+        <div>
+          <h1>Photo [[info.photo.count]]</h1>
+          <div class="layout horizontal justified wrap">
+            <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
+              <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+            </template>
+
+            <paper-button disabled on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
+            <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
+            <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
+          </div>
         </div>
-    </template>
 
-    <script>
-        Polymer({
-            is: 'admin-shell',
-            // attached: function() {
-            //
-            // },
-            _url: function(isAdmin) {
-                var view = Polymer.dom().querySelector('app-shell').dataView.view;
-                if (view == 'maintenance' && isAdmin) {
-                    return '/api/info';
-                }
-            },
-            // channelHandler: function(req) {
-            //     var resp = req.detail.response;
-            //     if (resp.userId != this.user.getBasicProfile().getId()) return;
-            //     var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
-            //     var self = this;
-            //     ref.on('child_added', function(data) {
-            //         self.onMessage(data.val());
-            //     });
-			// },
-            handleMessage: function(e) {
-                // console.log(arguments);
-                var toast = this.$.toast;
-                toast.fitInto = this.$.container;
-                toast.setAttribute('text', e.detail.message.notification.body);
-                toast.open();
-            },
-            callAjax: function(url) {
-                var xhr = this.$.xhr;
-                this.$.messaging.requestPermission().then(function() {
-                    xhr.url = url;
-                    xhr.body = JSON.stringify({'token': this.token});
-                    xhr.generateRequest();
-                }.bind(this), function(err) {
-                    console.log(err);
-                });
-            },
-            rebuild: function(e) {
-                this.callAjax('/api/rebuild/' + e.model.item);
-            },
-            reindex: function(e) {
-                this.callAjax('/api/index/' + e.target.dataset.kind);
-            },
-            unbound: function(e) {
-                this.callAjax('/api/unbound/' + e.target.dataset.kind);
-            },
-            fix: function(e) {
-                this.callAjax('/api/fix/' + e.target.dataset.kind);
-            },
+        <div>
+          <h1>Entry [[info.entry.count]]</h1>
+          <div class="layout horizontal justified wrap">
+            <template is="dom-repeat" items="[[info.entry.counters]]" as="item">
+              <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+            </template>
+
+            <paper-button on-tap="reindex" data-kind="entry" class="accent" toggles raised>Entry Reindex</paper-button>
+          </div>
+        </div>
+
+        <div>
+          <redux-example></redux-example>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'admin-shell',
+      // attached: function() {
+      //
+      // },
+      _url: function (isAdmin) {
+        var view = Polymer.dom().querySelector('app-shell').dataView.view;
+        if (view == 'maintenance' && isAdmin) {
+          return '/api/info';
+        }
+      },
+      // channelHandler: function(req) {
+      //     var resp = req.detail.response;
+      //     if (resp.userId != this.user.getBasicProfile().getId()) return;
+      //     var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
+      //     var self = this;
+      //     ref.on('child_added', function(data) {
+      //         self.onMessage(data.val());
+      //     });
+      // },
+      handleMessage: function (e) {
+        // console.log(arguments);
+        var toast = this.$.toast;
+        toast.fitInto = this.$.container;
+        toast.setAttribute('text', e.detail.message.notification.body);
+        toast.open();
+      },
+      callAjax: function (url) {
+        var xhr = this.$.xhr;
+        this.$.messaging.requestPermission().then(function () {
+          xhr.url = url;
+          xhr.body = JSON.stringify({ 'token': this.token });
+          xhr.generateRequest();
+        }.bind(this), function (err) {
+          console.log(err);
         });
-    </script>
+      },
+      rebuild: function (e) {
+        this.callAjax('/api/rebuild/' + e.model.item);
+      },
+      reindex: function (e) {
+        this.callAjax('/api/index/' + e.target.dataset.kind);
+      },
+      unbound: function (e) {
+        this.callAjax('/api/unbound/' + e.target.dataset.kind);
+      },
+      fix: function (e) {
+        this.callAjax('/api/fix/' + e.target.dataset.kind);
+      },
+    });
+  </script>
 </dom-module>

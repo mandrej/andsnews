@@ -14,154 +14,154 @@
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="form-view">
-    <template>
-        <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                display: block;
-                position: relative;
-                height: 100vh;
-                background-color: var(--primary-background-color);
-            }
-            .container {
-                padding: 16px;
-                padding-bottom: 56px;
-            }
-            vaadin-upload {
-                --vaadin-upload-button-add: {
-                    font-size: inherit;
-                    color: var(--primary-text-color);
-                    background-color: var(--accent-color);
-                    @apply(--shadow-elevation-2dp);
-                }
-            }
-            paper-input, vaadin-combo-box, paper-input-autocomplete-chips {
-                --paper-input-container-color: var(--primary-text-color);
-                --paper-input-container-focus-color: var(--primary-color);
-            }
-        </style>
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+        height: 100vh;
+        background-color: var(--primary-background-color);
+      }
 
-        <iron-ajax auto
-			url="[[_urlTagsCloud(kind, field)]]"
-			handle-as="json"
-			last-response="{{tags_cloud}}"
-			debounce-duration="100"></iron-ajax>
+      .container {
+        padding: 16px;
+        padding-bottom: 56px;
+      }
 
-        <div hidden$="[[!isAuthorized]]" class="container" id="container">
-            <paper-toast id="toast" class="fit-bottom"></paper-toast>
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--primary-text-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
+      }
 
-            <template is="dom-if" if="[[_isAdd(field)]]">
-                <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-                    <vaadin-upload id="upload" style="padding: 16px"
-                        target="/api/{{kind}}/add"
-                        max-files="10"
-                        on-upload-response="_uploadResponse"
-                        accept="image/*"></vaadin-upload>
-                    <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
-                </template>
+      paper-input,
+      vaadin-combo-box,
+      paper-input-autocomplete-chips {
+        --paper-input-container-color: var(--primary-text-color);
+        --paper-input-container-focus-color: var(--primary-color);
+      }
+    </style>
 
-                <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-                    <form is="iron-form" id="form"
-                        on-iron-form-response="_responseHandler"
-                        method="post"
-                        action$="/api/[[kind]]/add">
-                        <div class="layout horizontal end-justified">
-                            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-                        </div>
+    <iron-ajax auto
+      url="[[_urlTagsCloud(kind, field)]]"
+      handle-as="json"
+      last-response="{{tags_cloud}}"
+      debounce-duration="100"></iron-ajax>
 
-                        <paper-input name="headline" required label="headline"></paper-input>
-                        <vaadin-combo-box
-                            name="author"
-                            label="author"
-                            allow-custom-value="true"
-                            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
-                            </vaadin-combo-box>
-                        <paper-input-autocomplete-chips id="tags"
-                            name="tags"
-                            label="tags"
-                            local-candidates="{{listObjects(tags_cloud)}}"
-                            selected-objects="{{listObjects(item)}}"
-                            allow-select-unknown-token
-                            animated no-chip-image></paper-input-autocomplete-chips>
+    <div hidden$="[[!isAuthorized]]" class="container" id="container">
+      <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
-                        <paper-textarea name="summary" label="summary"></paper-textarea>
-                        <paper-textarea name="body" label="body"></paper-textarea>
-                    </form>
-                </template>
-            </template>
-        </div>
-    </template>
-    <script>
-        Polymer({
-            is: 'form-view',
-            properties: {
-            },
-            _urlTagsCloud: function(kind, field) {
-                var view = Polymer.dom().querySelector('app-shell').dataView.view;
-                if (view == 'form' && kind == 'photo' && field == 'edit') {
-                    return '/api/suggest/Photo_tags';
-                } else if (view == 'form' && kind == 'entry') {
-                    return '/api/suggest/Entry_tags';
-                }
-                return;
-            },
-            _isKindPhoto: function(kind) {
-                return kind == 'photo';
-            },
-            _isAdd: function(field) {
-                return field == 'add';
-            },
-            _uploadResponse: function(e) {
-                var res = JSON.parse(e.detail.xhr.responseText),
-                    toast = this.$.toast;
-                toast.fitInto = this.$.container;
-                if (res.success) {
-                    toast.setAttribute('text', 'Image successfully uploaded');
-                    toast.open();
-                    // this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
-                } else {
-                    toast.setAttribute('text', res.message);
-                    toast.open();
-                }
-            },
-            _responseHandler: function(e) {
-                var toast = this.$.toast;
-                toast.fitInto = this.$.container;
-                if (e.detail.xhr.status == 200) {
-                    toast.setAttribute('text', 'Record successfully created / updated');
-                    toast.open();
-                }
-            },
-            listObjects: function(obj) {
-                var list = [];
-                if (obj.tags) {
-                    obj.tags.forEach(function(tag) {
-                        list.push({'text': tag});
-                    });
-                } else {
-                    obj.forEach(function(tag) {
-                        list.push({'text': tag});
-                    });
-                }
-                return list;
-            },
-            _preSubmit: function() {
-                var form = this.$.form,
-                    tagsInput = this.$.tags.selectedObjects,
-                    tags = [];
-                tagsInput.forEach(function(item) {
-                    tags.push(item.text);
-                })
-                form.request.body['tags'] = tags.join(',');
-                // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
-                form.request.method = 'put';
-            },
-            _submit: function(e) {
-                // _submit calls _preSubmit
-                var form = this.$.form;
-                // var json = form.serialize();
-                // console.log(json);
-                form.submit();
-            },
-        });
-    </script>
+      <template is="dom-if" if="[[_isAdd(field)]]">
+        <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+          <vaadin-upload id="upload" style="padding: 16px"
+            target="/api/{{kind}}/add"
+            max-files="10"
+            on-upload-response="_uploadResponse"
+            accept="image/*"></vaadin-upload>
+            <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
+        </template>
+
+        <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+          <form is="iron-form" id="form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add">
+            <div class="layout horizontal end-justified">
+              <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+            </div>
+
+            <paper-input name="headline" required label="headline"></paper-input>
+            <vaadin-combo-box name="author"
+              label="author"
+              allow-custom-value="true"
+              items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
+            </vaadin-combo-box>
+            <paper-input-autocomplete-chips id="tags" name="tags"
+              label="tags"
+              local-candidates="{{listObjects(tags_cloud)}}"
+              selected-objects="{{listObjects(item)}}"
+              allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
+
+              <paper-textarea name="summary" label="summary"></paper-textarea>
+              <paper-textarea name="body" label="body"></paper-textarea>
+          </form>
+        </template>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'form-view',
+      // properties: {
+      // },
+      _urlTagsCloud: function (kind, field) {
+        var view = Polymer.dom().querySelector('app-shell').dataView.view;
+        if (view == 'form' && kind == 'photo' && field == 'edit') {
+          return '/api/suggest/Photo_tags';
+        } else if (view == 'form' && kind == 'entry') {
+          return '/api/suggest/Entry_tags';
+        }
+        return;
+      },
+      _isKindPhoto: function (kind) {
+        return kind == 'photo';
+      },
+      _isAdd: function (field) {
+        return field == 'add';
+      },
+      _uploadResponse: function (e) {
+        var res = JSON.parse(e.detail.xhr.responseText),
+          toast = this.$.toast;
+        toast.fitInto = this.$.container;
+        if (res.success) {
+          toast.setAttribute('text', 'Image successfully uploaded');
+          toast.open();
+          // this.set('route.path', ['/form', this.kind, 'edit', res.safe_key].join('/'));
+        } else {
+          toast.setAttribute('text', res.message);
+          toast.open();
+        }
+      },
+      _responseHandler: function (e) {
+        var toast = this.$.toast;
+        toast.fitInto = this.$.container;
+        if (e.detail.xhr.status == 200) {
+          toast.setAttribute('text', 'Record successfully created / updated');
+          toast.open();
+        }
+      },
+      listObjects: function (obj) {
+        var list = [];
+        if (obj.tags) {
+          obj.tags.forEach(function (tag) {
+            list.push({ 'text': tag });
+          });
+        } else {
+          obj.forEach(function (tag) {
+            list.push({ 'text': tag });
+          });
+        }
+        return list;
+      },
+      _preSubmit: function () {
+        var form = this.$.form,
+          tagsInput = this.$.tags.selectedObjects,
+          tags = [];
+        tagsInput.forEach(function (item) {
+          tags.push(item.text);
+        })
+        form.request.body['tags'] = tags.join(',');
+        // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
+        form.request.method = 'put';
+      },
+      _submit: function (e) {
+        // _submit calls _preSubmit
+        var form = this.$.form;
+        // var json = form.serialize();
+        // console.log(json);
+        form.submit();
+      },
+    });
+  </script>
 </dom-module>

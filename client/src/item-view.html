@@ -20,318 +20,322 @@
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="item-view">
-    <template>
-        <style include="shared-styles iron-flex iron-flex-alignment">
-            :host {
-                display: block;
-                position: relative;
-                background-color: var(--primary-background-color);
-            }
-            neon-animated-pages {
-                height: 100vh;
-            }
-            .swipe {
-                -moz-user-select: none;
-                -ms-user-select: none;
-                -webkit-user-select: none;
-                user-select: none;
-                cursor: default;
-            }
-            iron-image {
-                width: 100%;
-                height: 100%;
-                transition: all 0.3s ease-in-out;
-                background-color: var(--secondary-text-color);
-            }
-            paper-button {
-                margin-top: 8px;
-            }
-            paper-chip {
-                cursor: pointer;
-                margin-right: 8px;
-            }
-            paper-chip.accent {
-                --paper-chip-background-color: var(--accent-color);
-            }
-            .markdown-html * {
-                font-family: 'Roboto', 'Noto', sans-serif;
-            }
-            .markdown-html img {
-                max-width: 100%;
-            }
-            .markdown-html h2,
-            .markdown-html h3,
-            .markdown-html strong {
-                font-weight: 500;
-            }
-            .markdown-html a {
-                color: var(--primary-color);
-            }
-            /*.markdown-html img[alt='Milan D. Andrejevic'] {
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        position: relative;
+        background-color: var(--primary-background-color);
+      }
+
+      neon-animated-pages {
+        height: 100vh;
+      }
+
+      .swipe {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
+
+      iron-image {
+        width: 100%;
+        height: 100%;
+        transition: all 0.3s ease-in-out;
+        background-color: var(--secondary-text-color);
+      }
+
+      paper-button {
+        margin-top: 8px;
+      }
+
+      paper-chip {
+        cursor: pointer;
+        margin-right: 8px;
+      }
+
+      paper-chip.accent {
+        --paper-chip-background-color: var(--accent-color);
+      }
+
+      .markdown-html * {
+        font-family: 'Roboto', 'Noto', sans-serif;
+      }
+
+      .markdown-html img {
+        max-width: 100%;
+      }
+
+      .markdown-html h2,
+      .markdown-html h3,
+      .markdown-html strong {
+        font-weight: 500;
+      }
+
+      .markdown-html a {
+        color: var(--primary-color);
+      }
+      /*.markdown-html img[alt='Milan D. Andrejevic'] {
             }*/
-            paper-input, vaadin-combo-box, paper-input-autocomplete-chips {
-                --paper-input-container-color: var(--primary-text-color);
-                --paper-input-container-focus-color: var(--primary-color);
-            }
-            h2 {
-                margin: 0;
-				font-size: 24px;
-				font-weight: 300;
-            }
-            .white {
-                margin: 0;
-                padding: 0;
-                color: var(--primary-text-color);
-                background-color: var(--primary-background-color);
-                text-transform: none;
-            }
-        </style>
 
-        <iron-ajax auto
-            url="[[_urlTagsCloud(view, item)]]"
-            handle-as="json"
-            last-response="{{tags_cloud}}"
-            debounce-duration="100"></iron-ajax>
+      paper-input,
+      vaadin-combo-box,
+      paper-input-autocomplete-chips {
+        --paper-input-container-color: var(--primary-text-color);
+        --paper-input-container-focus-color: var(--primary-color);
+      }
 
-        <iron-ajax auto
-			url="[[_urlLensCloud(view, item)]]"
-			handle-as="json"
-			last-response="{{lens_cloud}}"
-			debounce-duration="100"></iron-ajax>
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 300;
+      }
 
-        <neon-animated-pages selected="[[view]]" attr-for-selected="data-view" id="neon"
-            entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-            <div data-view="display" class="swipe">
-                <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                    <iron-image
-                        src="[[item.serving_url]]=s0"
-                        data-dim$="[[item.dim]]"
-                        position="top"
-                        sizing="contain" preload fade></iron-image>
-                </template>
+      .white {
+        margin: 0;
+        padding: 0;
+        color: var(--primary-text-color);
+        background-color: var(--primary-background-color);
+        text-transform: none;
+      }
+    </style>
 
-                <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                    <marked-element markdown="[[item.body]]">
-                        <div class="markdown-html" style="padding: 16px"></div>
-                    </marked-element>
-                </template>
+    <iron-ajax auto
+      url="[[_urlTagsCloud(view, item)]]"
+      handle-as="json"
+      last-response="{{tags_cloud}}"
+      debounce-duration="100"></iron-ajax>
+
+    <iron-ajax auto
+      url="[[_urlLensCloud(view, item)]]"
+      handle-as="json"
+      last-response="{{lens_cloud}}"
+      debounce-duration="100"></iron-ajax>
+
+    <neon-animated-pages id="neon"
+      selected="[[view]]"
+      attr-for-selected="data-view"
+      entry-animation="fade-in-animation"
+      exit-animation="fade-out-animation">
+      <div data-view="display" class="swipe">
+        <template is="dom-if" if="[[_isKindPhoto(item)]]">
+          <iron-image
+            src="[[item.serving_url]]=s0"
+            data-dim$="[[item.dim]]"
+            position="top"
+            sizing="contain"
+            preload fade></iron-image>
+        </template>
+
+        <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+          <marked-element markdown="[[item.body]]">
+            <div class="markdown-html" style="padding: 16px"></div>
+          </marked-element>
+        </template>
+      </div>
+
+      <div data-view="info" style="padding: 16px">
+        <h2>[[item.headline]]</h2>
+        <paper-button on-tap="_downloadPhoto" class="white">
+          Download ([[item.size]])
+          <iron-icon icon="file-download"></iron-icon>
+        </paper-button>
+        <p>
+          [[_dateFormat(item.date)]]
+          <br>[[item.author]]
+          <br>
+          <br>[[item.model]]
+          <br>[[item.lens]] ([[item.focal_length]]mm)
+          <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
+        </p>
+        <div class="layout horizontal wrap">
+          <paper-chip label="[[item.year]]" no-image class$="[[activeFilter('date', item.year, filter)]]" on-tap="applyFilter" data-field="date"
+            data-field-value$="[[item.year]]"></paper-chip>
+            <template is="dom-repeat" items="[[item.tags]]" as="tag">
+              <paper-chip label="[[tag]]" no-image class$="[[activeFilter('tags', tag, filter)]]" on-tap="applyFilter" data-field="tags"
+                data-field-value$="[[tag]]"></paper-chip>
+            </template>
+            <paper-chip label="[[item.model]]" no-image class$="[[activeFilter('model', item.model, filter)]]" on-tap="applyFilter" data-field="model"
+              data-field-value$="[[item.model]]"></paper-chip>
+              <paper-chip label="[[item.color]]" no-image class$="[[activeFilter('color', item.color, filter)]]" on-tap="applyFilter" data-field="color"
+                data-field-value$="[[item.color]]"></paper-chip>
+        </div>
+      </div>
+
+      <div data-view="form" style="padding: 16px; padding-bottom: 56px;">
+        <form id="form"
+          data-view="form"
+          is="iron-form"
+          on-iron-form-response="_responseHandler"
+          action$="/api/[[item.kind]]/edit/[[item.safekey]]"
+          method="post">
+
+          <paper-toast id="toast" class="fit-bottom" on-iron-overlay-closed="_viewDisplay"></paper-toast>
+
+          <div class="layout horizontal justified">
+            <template is="dom-if" if="{{isAdmin}}">
+              <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+            </template>
+            <div>
+              <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
+              <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
             </div>
+          </div>
 
-            <div data-view="info" style="padding: 16px">
-                <h2>[[item.headline]]</h2>
-                <paper-button on-tap="_downloadPhoto" class="white">
-                    Download ([[item.size]])
-                    <iron-icon icon="file-download"></iron-icon>
-                </paper-button>
-                <p>
-                    [[_dateFormat(item.date)]]
-                    <br>[[item.author]]
-                    <br>
-                    <br>[[item.model]]
-                    <br>[[item.lens]] ([[item.focal_length]]mm)
-                    <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
-                </p>
-                <div class="layout horizontal wrap">
-                    <paper-chip label="[[item.year]]" no-image
-                        class$="[[activeFilter('date', item.year, filter)]]"
-                        on-tap="applyFilter" data-field="date" data-field-value$="[[item.year]]"></paper-chip>
-                    <template is="dom-repeat" items="[[item.tags]]" as="tag">
-                        <paper-chip label="[[tag]]" no-image
-                            class$="[[activeFilter('tags', tag, filter)]]"
-                            on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]"></paper-chip>
-                    </template>
-                    <paper-chip label="[[item.model]]" no-image
-                        class$="[[activeFilter('model', item.model, filter)]]"
-                        on-tap="applyFilter" data-field="model" data-field-value$="[[item.model]]"></paper-chip>
-                    <paper-chip label="[[item.color]]" no-image
-                        class$="[[activeFilter('color', item.color, filter)]]"
-                        on-tap="applyFilter" data-field="color" data-field-value$="[[item.color]]"></paper-chip>
+          <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+          <vaadin-combo-box name="author"
+            required auto-validate
+            label="author"
+            allow-custom-value="true"
+            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+            value="{{item.author}}"></vaadin-combo-box>
+            <paper-input-autocomplete-chips id="tags" name="tags" label="tags" local-candidates="{{listObjects(tags_cloud)}}" selected-objects="{{listObjects(item)}}"
+              allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
+              <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
+
+              <template is="dom-if" if="[[_isKindPhoto(item)]]">
+                <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
+                <div class="layout horizontal justified wrap">
+                  <vaadin-combo-box name="lens" label="lens" allow-custom-value="true" items="{{lens_cloud}}" value="{{item.lens}}"></vaadin-combo-box>
+                  <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
+                  <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
+                  <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
+                  <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
+                  <input type="hidden" name="color" value="{{item.color}}">
+                  <paper-input disabled label="color" value="{{item.color}}"></paper-input>
                 </div>
-            </div>
+              </template>
 
-            <div data-view="form" style="padding: 16px; padding-bottom: 56px;">
-                <form data-view="form" is="iron-form" id="form"
-                    on-iron-form-response="_responseHandler"
-                    action$="/api/[[item.kind]]/edit/[[item.safekey]]"
-                    method="post">
+              <template is="dom-if" if="[[!_isKindPhoto(item)]]">
+                <paper-textarea name="summary" label="summary" value="{{item.summary}}"></paper-textarea>
+                <paper-textarea name="front_img" label="front image" value="{{item.front_img}}"></paper-textarea>
+                <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
+              </template>
+              </form>
+      </div>
+    </neon-animated-pages>
+  </template>
 
-                    <paper-toast id="toast"
-                        class="fit-bottom"
-                        on-iron-overlay-closed="_viewDisplay"></paper-toast>
+  <script>
+    Polymer({
+      is: 'item-view',
+      properties: {
+        view: { type: String, value: 'display', notify: true },
+      },
+      listeners: {
+        'iron-form-presubmit': '_preSubmit',
+        'show-info': '_showInfo',
+        'zoom-photo': '_zoomPhoto',
+        //                'download-photo': '_downloadPhoto',
+      },
+      _urlTagsCloud: function (view, item) {
+        if (view == 'form' && item.kind == 'photo') {
+          return '/api/suggest/Photo_tags';
+        } else if (view == 'form' && item.kind == 'entry') {
+          return '/api/suggest/Entry_tags';
+        }
+      },
+      _urlLensCloud: function (view, item) {
+        if (view == 'form' && item.kind == 'photo') {
+          return '/api/suggest/Photo_lens';
+        }
+      },
+      _responseHandler: function (e) {
+        var toast = this.$.toast;
+        toast.fitInto = this.$.form;
+        if (e.detail.xhr.status == 200) {
+          toast.setAttribute('text', 'Record successfully created / updated');
+          toast.open();
+        }
+      },
+      _viewDisplay: function () {
+        Polymer.dom().querySelector('app-shell').disableSwipe = false;
+        this.view = 'display';
+      },
+      _preSubmit: function (e) {
+        var form = this.$.form,
+          tagsInput = this.$.tags.selectedObjects,
+          tags = [];
+        tagsInput.forEach(function (item) {
+          tags.push(item.text);
+        })
+        form.request.body['tags'] = tags.join(',');
+        // console.log(form.request.body);
+        // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
+        form.request.method = 'put';
+      },
+      _submit: function (e) {
+        // _submit calls _preSubmit
+        var form = this.$.form;
+        // var json = form.serialize();
+        // console.log(json);
+        form.submit();
+      },
+      _remove: function (e) {
+        Polymer.dom().querySelector('app-shell').fire('confirm-delete');
+      },
+      listObjects: function (obj) {
+        var list = [];
+        if (obj.tags) {
+          obj.tags.forEach(function (tag) {
+            list.push({ 'text': tag });
+          });
+        } else {
+          obj.forEach(function (tag) {
+            list.push({ 'text': tag });
+          });
+        }
+        return list;
+      },
+      _isKindPhoto: function (item) {
+        return item.kind == 'photo';
+      },
+      _showInfo: function () {
+        if (this.view == 'display' || this.view == 'form') {
+          this.view = 'info';
+        } else {
+          this.view = 'display';
+        }
+      },
+      _zoomPhoto: function () {
+        var img = this.$.neon.querySelector('iron-image'),
+          dim = JSON.parse(img.dataset.dim);
 
-                    <div class="layout horizontal justified">
-                        <template is="dom-if" if="{{isAdmin}}">
-                            <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
-                        </template>
-                        <div>
-                            <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
-                            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-                        </div>
-                    </div>
+        // var scale = Math.max(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
+        // if (img.style.transform) {
+        //     img.removeAttribute('style');
+        // } else {
+        //     img.style.transform = 'scale(' + scale + ')';
+        // }
 
-                    <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
-                    <vaadin-combo-box
-                        required
-                        auto-validate
-                        name="author"
-                        label="author"
-                        allow-custom-value="true"
-                        items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                        value="{{item.author}}"></vaadin-combo-box>
-                    <paper-input-autocomplete-chips id="tags"
-                        name="tags"
-                        label="tags"
-                        local-candidates="{{listObjects(tags_cloud)}}"
-                        selected-objects="{{listObjects(item)}}"
-                        allow-select-unknown-token
-                        animated no-chip-image></paper-input-autocomplete-chips>
-                    <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
-
-                    <template is="dom-if" if="[[_isKindPhoto(item)]]">
-                        <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
-                        <div class="layout horizontal justified wrap">
-                            <vaadin-combo-box
-                                name="lens"
-                                label="lens"
-                                allow-custom-value="true"
-                                items="{{lens_cloud}}"
-                                value="{{item.lens}}"></vaadin-combo-box>
-                            <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
-                            <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
-                            <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
-                            <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
-                            <input type="hidden" name="color" value="{{item.color}}">
-                            <paper-input disabled label="color" value="{{item.color}}"></paper-input>
-                        </div>
-                    </template>
-
-                    <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-                        <paper-textarea name="summary" label="summary" value="{{item.summary}}"></paper-textarea>
-                        <paper-textarea name="front_img" label="front image" value="{{item.front_img}}"></paper-textarea>
-                        <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
-                    </template>
-                </form>
-            </div>
-        </neon-animated-pages>
-    </template>
-    <script>
-        Polymer({
-            is: 'item-view',
-            properties: {
-                view: { type: String, value: 'display', notify: true },
-            },
-            listeners: {
-                'iron-form-presubmit': '_preSubmit',
-                'show-info': '_showInfo',
-                'zoom-photo': '_zoomPhoto',
-//                'download-photo': '_downloadPhoto',
-            },
-            _urlTagsCloud: function(view, item) {
-                if (view == 'form' && item.kind == 'photo') {
-                    return '/api/suggest/Photo_tags';
-                } else if (view == 'form' && item.kind == 'entry') {
-                    return '/api/suggest/Entry_tags';
-                }
-            },
-            _urlLensCloud: function(view, item) {
-                if (view == 'form' && item.kind == 'photo') {
-                    return '/api/suggest/Photo_lens';
-                }
-            },
-            _responseHandler: function(e) {
-                var toast = this.$.toast;
-                toast.fitInto = this.$.form;
-                if (e.detail.xhr.status == 200) {
-                    toast.setAttribute('text', 'Record successfully created / updated');
-                    toast.open();
-                }
-            },
-            _viewDisplay: function() {
-                Polymer.dom().querySelector('app-shell').disableSwipe = false;
-                this.view = 'display';
-            },
-            _preSubmit: function(e) {
-                var form = this.$.form,
-                    tagsInput = this.$.tags.selectedObjects,
-                    tags = [];
-                tagsInput.forEach(function(item) {
-                    tags.push(item.text);
-                })
-                form.request.body['tags'] = tags.join(',');
-                // console.log(form.request.body);
-                // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
-                form.request.method = 'put';
-            },
-            _submit: function(e) {
-                // _submit calls _preSubmit
-                var form = this.$.form;
-                // var json = form.serialize();
-                // console.log(json);
-                form.submit();
-            },
-            _remove: function(e) {
-				Polymer.dom().querySelector('app-shell').fire('confirm-delete');
-			},
-            listObjects: function(obj) {
-                var list = [];
-                if (obj.tags) {
-                    obj.tags.forEach(function(tag) {
-                        list.push({'text': tag});
-                    });
-                } else {
-                    obj.forEach(function(tag) {
-                        list.push({'text': tag});
-                    });
-                }
-                return list;
-            },
-            _isKindPhoto: function(item) {
-                return item.kind == 'photo';
-            },
-            _showInfo: function() {
-                if (this.view == 'display' || this.view == 'form') {
-                    this.view = 'info';
-                } else {
-                    this.view = 'display';
-                }
-            },
-            _zoomPhoto: function() {
-                var img = this.$.neon.querySelector('iron-image'),
-                    dim = JSON.parse(img.dataset.dim);
-
-                // var scale = Math.max(dim[0] / this.offsetWidth, dim[1] / this.offsetHeight);
-                // if (img.style.transform) {
-                //     img.removeAttribute('style');
-                // } else {
-                //     img.style.transform = 'scale(' + scale + ')';
-                // }
-
-                if (img.style.width != dim[0] + 'px') {
-                    Polymer.dom().querySelector('app-shell').disableSwipe = true;
-                    img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
-                } else {
-                    Polymer.dom().querySelector('app-shell').disableSwipe = false;
-                    img.style.cssText = 'width: 100%; height: 100%';
-                }
-            },
-            _downloadPhoto: function() {
-                window.location.href = '/api/download/' + this.item.safekey;
-            },
-            activeFilter: function(field, value, filter) {
-                return (filter[field] == value) ? 'accent' : '';
-            },
-            applyFilter: function(e) {
-                var target = e.target,
-                    field = target.dataset.field,
-                    value = target.dataset.fieldValue;
-                this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
-            },
-            _dateFormat: function(str) {
-                return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
-                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
-                // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
-            },
-        });
-    </script>
-    <script src="../bower_components/moment/min/moment.min.js"></script>
+        if (img.style.width != dim[0] + 'px') {
+          Polymer.dom().querySelector('app-shell').disableSwipe = true;
+          img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
+        } else {
+          Polymer.dom().querySelector('app-shell').disableSwipe = false;
+          img.style.cssText = 'width: 100%; height: 100%';
+        }
+      },
+      _downloadPhoto: function () {
+        window.location.href = '/api/download/' + this.item.safekey;
+      },
+      activeFilter: function (field, value, filter) {
+        return (filter[field] == value) ? 'accent' : '';
+      },
+      applyFilter: function (e) {
+        var target = e.target,
+          field = target.dataset.field,
+          value = target.dataset.fieldValue;
+        this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
+      },
+      _dateFormat: function (str) {
+        return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
+        // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
+        // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
+      },
+    });
+  </script>
+  <script src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>

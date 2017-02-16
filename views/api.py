@@ -9,11 +9,11 @@ from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 
-from config import DEVEL, START_MSG
-from mapper import Indexer, Unbound, Builder, Fixer
-from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
-from slugify import slugify
-from views.fireapi import push_message
+from .config import DEVEL, START_MSG
+from .mapper import Indexer, Unbound, Builder, Fixer
+from .models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
+from .slugify import slugify
+from .fireapi import push_message
 
 LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
@@ -24,6 +24,7 @@ TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>m
 
 
 class LazyEncoder(json.JSONEncoder):
+    """ json mapper helper """
     def default(self, obj):
         if isinstance(obj, ndb.Model):
             return obj.serialize()

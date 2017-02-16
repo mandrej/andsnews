@@ -8,93 +8,93 @@
 <link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
 <dom-module id="app-search">
-    <template>
-        <style include="iron-flex iron-flex-alignment">
-            paper-input {
-                width: 160px;
-                display: none;
-                --paper-input-container-color: var(--primary-background-color);
-                --paper-input-container-input-color: var(--primary-background-color);
-                --paper-input-container-focus-color: var(--primary-background-color);
-                /*--paper-input-container: {
-                    padding: 4px 0;
-                }*/
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      paper-input {
+        width: 160px;
+        display: none;
+        --paper-input-container-color: var(--primary-background-color);
+        --paper-input-container-input-color: var(--primary-background-color);
+        --paper-input-container-focus-color: var(--primary-background-color);
+        /*--paper-input-container: {
+          padding: 4px 0;
+        }*/
+      }
+    </style>
+
+    <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="onSearch"></iron-a11y-keys>
+    <div class="layout horizontal">
+      <paper-icon-button icon="search" on-tap="toggleWidget" id="button"></paper-icon-button>
+      <paper-input id="inputSearch" placeholder="search" no-label-float value="{{search::value-changed}}"></paper-input>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'app-search',
+      behaviors: [
+        Polymer.NeonAnimationBehavior,
+        Polymer.NeonAnimationRunnerBehavior,
+      ],
+      properties: {
+        animationConfig: {
+          type: Object,
+          value: function () {
+            return {
+              'entry': {
+                name: 'slide-from-right-animation',
+                node: this.$.inputSearch
+              },
+              'exit': {
+                name: 'slide-right-animation',
+                node: this.$.inputSearch
+              }
             }
-        </style>
+          }
+        },
+        search: { type: String, value: null, notify: true },
+        targetSearch: {
+          type: Object,
+          value: function () {
+            return this.$.inputSearch;
+          }
+        },
+      },
+      listeners: {
+        'neon-animation-finish': 'animationFinish'
+      },
+      animationFinish: function (e) {
+        if (this.$.inputSearch.style.display == 'block') {
+          this.$.inputSearch.focus();
+        } else {
+          if (this.search) {
+            this.field = this.search;
+            this.search = null;
+            this.value = null;
+            this.set('route.path', '/detail/search/' + this.field);
+          }
+        }
+      },
+      toggleWidget: function () {
+        if (this.$.inputSearch.style.display != 'block') {
+          this.$.inputSearch.style.display = 'block';
+          this.$.button.setAttribute('icon', 'clear');
+          this.playAnimation('entry');
+        } else {
+          this.$.inputSearch.style.display = 'none';
+          this.$.button.setAttribute('icon', 'search');
+          this.playAnimation('exit');
+        }
+      },
+      onSearch: function () {
+        this.$.inputSearch.style.display = 'none';
+        this.$.button.setAttribute('icon', 'search');
+        this.playAnimation('exit');
 
-        <iron-a11y-keys target="[[targetSearch]]" keys="enter" on-keys-pressed="onSearch"></iron-a11y-keys>
-        <div class="layout horizontal">
-            <paper-icon-button icon="search" on-tap="toggleWidget" id="button"></paper-icon-button>
-            <paper-input id="inputSearch" placeholder="search" no-label-float
-                value="{{search::value-changed}}"></paper-input>
-        </div>
-    </template>
-    <script>
-        Polymer({
-            is: 'app-search',
-            behaviors: [
-                Polymer.NeonAnimationBehavior,
-                Polymer.NeonAnimationRunnerBehavior,
-            ],
-            properties: {
-                animationConfig: {
-                    type: Object,
-                    value: function() {
-                        return {
-                            'entry': {
-                                name: 'slide-from-right-animation',
-                                node: this.$.inputSearch
-                            },
-                            'exit': {
-                                name: 'slide-right-animation',
-                                node: this.$.inputSearch
-                            }
-                        }
-                    }
-                },
-                search: { type: String, value: null, notify: true },
-                targetSearch: {
-					type: Object,
-					value: function() {
-						return this.$.inputSearch;
-					}
-				},
-            },
-            listeners: {
-                'neon-animation-finish': 'animationFinish'
-            },
-            animationFinish: function(e) {
-                if (this.$.inputSearch.style.display == 'block') {
-                    this.$.inputSearch.focus();
-                } else {
-                    if (this.search) {
-                        this.field = this.search;
-                        this.search = null;
-                        this.value = null;
-                        this.set('route.path', '/detail/search/' + this.field);
-                    }
-                }
-            },
-            toggleWidget: function() {
-                if (this.$.inputSearch.style.display != 'block') {
-                    this.$.inputSearch.style.display = 'block';
-                    this.$.button.setAttribute('icon', 'clear');
-                    this.playAnimation('entry');
-                } else {
-                    this.$.inputSearch.style.display = 'none';
-                    this.$.button.setAttribute('icon', 'search');
-                    this.playAnimation('exit');
-                }
-            },
-            onSearch: function() {
-                this.$.inputSearch.style.display = 'none';
-                this.$.button.setAttribute('icon', 'search');
-                this.playAnimation('exit');
-
-			},
-            propertyChanged: function(newValue, oldValue) {
-				console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
-			},
-        });
-    </script>
+      },
+      propertyChanged: function (newValue, oldValue) {
+        console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
+      },
+    });
+  </script>
 </dom-module>

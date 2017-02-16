@@ -2,5 +2,4 @@
 lib/
 decorator.py
 six.py
-.vscode/
 *.pyc
