@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./item-view.html">
@@ -49,14 +50,21 @@
   <script>
     Polymer({
       is: 'detail-view',
+      behaviors: [ ReduxBehavior ],
       properties: {
-        headline: { type: String, value: 'ANDрејевићи', notify: true },
         params: { type: Object, value: {}, notify: true },
         filter: { type: Object, value: {}, notify: true },
         records: { type: Array, notify: true },
-        itemKind: { type: String, value: 'photo', notify: true },
         loading: { type: Boolean, value: false, notify: true },
         disableSwipe: { type: Boolean, value: false, notify: true },
+      },
+      actions: {
+        change: function(payload) {
+          return {
+            type: 'CURRENT_CHANGED',
+            payload: payload
+          }
+        }
       },
       listeners: {
         'edit-record': '_editRecord',
@@ -101,8 +109,10 @@
         var index = this.$.swipe.selected,
           item = this.records[index];
         if (item) {
-          this.set('headline', item.headline);
-          this.set('itemKind', item.kind);
+          this.dispatch('change', {
+            headline: item.headline,
+            kind: item.kind
+          });
         }
         if (this.records.length - index < 5) {
           this.loadMore();

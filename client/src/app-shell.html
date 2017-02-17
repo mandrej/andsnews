@@ -18,6 +18,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./app-search.html">
@@ -249,9 +250,7 @@
             kind="[[dataKind.kind]]"
             field="[[dataField.field]]"
             value="[[dataValue.value]]"
-            item-kind="{{itemKind}}"
             loading="{{loading}}"
-            headline="{{headline}}"
             route="{{route}}"></detail-view>
 
           <form-view
@@ -268,6 +267,7 @@
   <script>
     Polymer({
       is: 'app-shell',
+      behaviors: [ ReduxBehavior ],
       attached: function () {
         if (!this.route.path) {
           this.set('route.path', '/grid/photo');
@@ -280,6 +280,14 @@
           }
         }.bind(this));
       },
+      actions: {
+        change: function(payload) {
+          return {
+            type: 'CURRENT_CHANGED',
+            payload: payload
+          }
+        }
+      },
       listeners: {
         'confirm-delete': 'confirmDelete'
       },
@@ -289,12 +297,12 @@
       ],
       properties: {
         version: { type: String, value: '1701.12' },
-        headline: { type: String, value: 'ANDрејевићи', notify: true },
+        headline: { type: String, statePath: 'current.headline' },
         smallScreen: { type: Boolean, value: false, notify: true },
         user: { type: Object, notify: true },
         isAdmin: { type: Boolean, value: false, notify: true },
         loading: { type: Boolean, value: false, notify: true },
-        itemKind: { type: String, value: 'photo', notify: true },
+        itemKind: { type: String, statePath: 'current.kind' },
         disableSwipe: { type: Boolean, value: false, notify: true },
       },
       viewChanged: function (view) {
@@ -303,13 +311,19 @@
             case 'grid':
               this.set('dataField.field', null);
               this.set('dataValue.value', null);
-              this.headline = 'ANDрејевићи';
+              this.dispatch('change', {
+                headline: 'ANDрејевићи',
+                kind: this.dataKind.kind
+              });
               break;
             case 'detail':
               Polymer.Base.importHref('src/detail-view.html');
               break;
             case 'form':
-              this.headline = 'Form';
+              this.dispatch('change', {
+                headline: 'Form',
+                kind: this.dataKind.kind
+              });
               var dialog = this.$.authorizationDialog;
               Polymer.Base.importHref('src/form-view.html', function () {
                 if (!this.isAuthorized) dialog.open();
@@ -319,7 +333,10 @@
               this.set('dataKind.kind', null);
               this.set('dataField.field', null);
               this.set('dataValue.value', null);
-              this.headline = 'Admin v.' + this.version;
+              this.dispatch('change', {
+                headline: 'Admin v.' + this.version,
+                kind: this.dataKind.kind
+              });
               var dialog = this.$.authorizationDialog;
               Polymer.Base.importHref('src/admin-shell.html', function () {
                 if (!this.isAdmin) dialog.open();

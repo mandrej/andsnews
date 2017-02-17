@@ -2,7 +2,11 @@
 
 <script>
   const initialStore = {
-    friends: []
+    friends: [],
+    current: {
+      headline: 'ANDрејевићи',
+      kind: 'photo'
+    }
   }
 
   const reducer = (state, action) => {
@@ -12,6 +16,10 @@
         const friends = state.friends.slice(0);
         friends.push(action.payload)
         return Object.assign({}, state, {friends: friends})
+      case 'CURRENT_CHANGED':
+        return Object.assign({}, state, {
+          current:  action.payload
+        })
     }
   }
 
