@@ -66,7 +66,6 @@
         filter: { type: Object, value: {}, notify: true },
         records: { type: Array, notify: true },
         loading: { type: Boolean, value: false, notify: true },
-        disableSwipe: { type: Boolean, value: false, notify: true },
       },
       actions: {
         change: function(payload) {
@@ -93,11 +92,11 @@
         return url;
       },
       handler: function (request) {
-        Polymer.dom().querySelector('app-shell').disableSwipe = false;
-        var response = request.detail.response;
+        this.disableSwipe = false;
+        const response = request.detail.response;
         if (!response.objects) return;
         if (response.objects.length == 0) {
-          var dialog = this.$.message;
+          const dialog = this.$.message;
           dialog.fitInto = this.$.swipe;
           dialog.open();
         } else {
@@ -109,14 +108,14 @@
         }
       },
       loadMore: function () {
-        var ajax = this.$.ajax;
+        const ajax = this.$.ajax;
         // if (ajax.lastRequest) ajax.lastRequest.abort();
         if (ajax.lastResponse && ajax.lastResponse._next) {
           this.set('params._page', ajax.lastResponse._next);
         }
       },
       changeCurrent: function () {
-        var index = this.$.swipe.selected,
+        const index = this.$.swipe.selected,
           item = this.records[index];
         if (item) {
           this.dispatch('change', {
@@ -132,10 +131,10 @@
       _editRecord: function () {
         var currentView = this.$$('item-view.iron-selected').view;
         if (currentView == 'display') {
-          Polymer.dom().querySelector('app-shell').disableSwipe = true;
+          this.disableSwipe = true;
           this.$$('item-view.iron-selected').view = 'form';
         } else {
-          Polymer.dom().querySelector('app-shell').disableSwipe = false;
+          this.disableSwipe = false;
           this.$$('item-view.iron-selected').view = 'display';
         }
       },
