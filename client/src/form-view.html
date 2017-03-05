@@ -54,38 +54,36 @@
     <div hidden$="[[!isAuthorized]]" class="container" id="container">
       <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
-      <template is="dom-if" if="[[_isAdd(field)]]">
-        <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-          <vaadin-upload id="upload" style="padding: 16px"
-            target="/api/{{kind}}/add"
-            max-files="10"
-            on-upload-response="_uploadResponse"
-            accept="image/*"></vaadin-upload>
-            <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
-        </template>
+      <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+        <vaadin-upload id="upload" style="padding: 16px"
+          target="/api/{{kind}}/add"
+          max-files="10"
+          on-upload-response="_uploadResponse"
+          accept="image/*"></vaadin-upload>
+          <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
+      </template>
 
-        <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-          <form is="iron-form" id="form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add">
-            <div class="layout horizontal end-justified">
-              <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-            </div>
+      <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+        <form is="iron-form" id="form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add">
+          <div class="layout horizontal end-justified">
+            <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+          </div>
 
-            <paper-input name="headline" required label="headline"></paper-input>
-            <vaadin-combo-box name="author"
-              label="author"
-              allow-custom-value="true"
-              items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
-            </vaadin-combo-box>
-            <paper-input-autocomplete-chips id="tags" name="tags"
-              label="tags"
-              local-candidates="{{listObjects(tags_cloud)}}"
-              selected-objects="{{listObjects(item)}}"
-              allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
+          <paper-input name="headline" required label="headline"></paper-input>
+          <vaadin-combo-box name="author"
+            label="author"
+            allow-custom-value="true"
+            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
+          </vaadin-combo-box>
+          <paper-input-autocomplete-chips id="tags" name="tags"
+            label="tags"
+            local-candidates="{{listObjects(tags_cloud)}}"
+            selected-objects="{{listObjects(item)}}"
+            allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
 
-              <paper-textarea name="summary" label="summary"></paper-textarea>
-              <paper-textarea name="body" label="body"></paper-textarea>
-          </form>
-        </template>
+            <paper-textarea name="summary" label="summary"></paper-textarea>
+            <paper-textarea name="body" label="body"></paper-textarea>
+        </form>
       </template>
     </div>
   </template>
@@ -93,8 +91,6 @@
   <script>
     Polymer({
       is: 'form-view',
-      // properties: {
-      // },
       _urlTagsCloud: function (kind, field) {
         var view = Polymer.dom().querySelector('app-shell').dataView.view;
         if (view == 'form' && kind == 'photo' && field == 'edit') {
@@ -106,9 +102,6 @@
       },
       _isKindPhoto: function (kind) {
         return kind == 'photo';
-      },
-      _isAdd: function (field) {
-        return field == 'add';
       },
       _uploadResponse: function (e) {
         var res = JSON.parse(e.detail.xhr.responseText),

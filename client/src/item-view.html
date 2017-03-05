@@ -119,6 +119,7 @@
       attr-for-selected="data-view"
       entry-animation="fade-in-animation"
       exit-animation="fade-out-animation">
+
       <div data-view="display" class="swipe">
         <template is="dom-if" if="[[_isKindPhoto(item)]]">
           <iron-image
@@ -228,7 +229,6 @@
         'iron-form-presubmit': '_preSubmit',
         'show-info': '_showInfo',
         'zoom-photo': '_zoomPhoto',
-        //                'download-photo': '_downloadPhoto',
       },
       _urlTagsCloud: function (view, item) {
         if (view == 'form' && item.kind == 'photo') {

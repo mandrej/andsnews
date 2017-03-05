@@ -143,125 +143,125 @@
       storage-bucket="andsnews.appspot.com"
       messaging-sender-id="719127177629"></firebase-app>
 
-      <firebase-auth id="auth"
-        app-name="andsnews"
-        user="{{user}}"
-        online="{{online}}"
-        signed-in="{{isAuthorized}}"
-        provider="google"></firebase-auth>
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
 
-      <paper-dialog id="deleteDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="deleteRecord">
-        <h2>Are you sure?</h2>
-        <div class="layout horizontal center-justified">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button dialog-confirm autofocus>OK</paper-button>
-        </div>
-      </paper-dialog>
-
-      <paper-dialog id="authorizationDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-        <h2>Authorization Required</h2>
-        <p>Please Sign-In with your Google Account</p>
-        <div class="layout horizontal center-justified">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
-        </div>
-      </paper-dialog>
-
-      <div id="spinner" class="layout horizontal center-justified">
-        <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+    <paper-dialog id="deleteDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="deleteRecord">
+      <h2>Are you sure?</h2>
+      <div class="layout horizontal center-justified">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>OK</paper-button>
       </div>
+    </paper-dialog>
 
-      <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-      <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+    <paper-dialog id="authorizationDialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Authorization Required</h2>
+      <p>Please Sign-In with your Google Account</p>
+      <div class="layout horizontal center-justified">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus on-tap="_sign">OK</paper-button>
+      </div>
+    </paper-dialog>
 
-      <app-header-layout>
-        <app-header shadow reveals condenses>
-          <app-toolbar>
-            <div class="layout horizontal justified" style="width: 100%">
-              <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-                <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
-              </a>
-              <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-              <app-search field="{{dataField.field}}" value="{{dataValue.value}}" route="{{route}}"></app-search>
+    <div id="spinner" class="layout horizontal center-justified">
+      <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
+    </div>
+
+    <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
+    <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
+
+    <app-header-layout>
+      <app-header shadow reveals condenses>
+        <app-toolbar>
+          <div class="layout horizontal justified" style="width: 100%">
+            <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+              <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+            </a>
+            <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
+            <app-search field="{{dataField.field}}" value="{{dataValue.value}}" route="{{route}}"></app-search>
+          </div>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>{{headline}}</h1>
+        </app-toolbar>
+        <app-toolbar class="sticky" sticky>
+          <div class="layout horizontal justified" style="width: 100%">
+            <ul role="navigation" class="navigation">
+              <li>
+                <a href="#/grid/photo">
+                  <paper-icon-button icon="image:photo-camera"></paper-icon-button>
+                  <span hidden$="{{smallScreen}}">Photos</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/grid/entry">
+                  <paper-icon-button icon="description"></paper-icon-button>
+                  <span hidden$="{{smallScreen}}">Texts</span>
+                </a>
+              </li>
+              <li hidden$="[[!isAdmin]]">
+                <a href="#/maintenance">
+                  <paper-icon-button icon="settings"></paper-icon-button>
+                  <span hidden$="{{smallScreen}}">Admin</span>
+                </a>
+              </li>
+            </ul>
+
+            <div hidden$="[[!_isDetailView(dataView.view)]]">
+              <span hidden$="[[!isAdmin]]">
+                <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+              </span>
+              <span hidden$="[[!_isKindPhoto(itemKind)]]">
+              <paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+              <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
+            </span>
             </div>
-          </app-toolbar>
-          <app-toolbar>
-            <h1 main-title>{{headline}}</h1>
-          </app-toolbar>
-          <app-toolbar class="sticky" sticky>
-            <div class="layout horizontal justified" style="width: 100%">
-              <ul role="navigation" class="navigation">
-                <li>
-                  <a href="#/grid/photo">
-                    <paper-icon-button icon="image:photo-camera"></paper-icon-button>
-                    <span hidden$="{{smallScreen}}">Photos</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#/grid/entry">
-                    <paper-icon-button icon="description"></paper-icon-button>
-                    <span hidden$="{{smallScreen}}">Texts</span>
-                  </a>
-                </li>
-                <li hidden$="[[!isAdmin]]">
-                  <a href="#/maintenance">
-                    <paper-icon-button icon="settings"></paper-icon-button>
-                    <span hidden$="{{smallScreen}}">Admin</span>
-                  </a>
-                </li>
-              </ul>
+          </div>
 
-              <div hidden$="[[!_isDetailView(dataView.view)]]">
-                <span hidden$="[[!isAdmin]]">
-								  <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
-							  </span>
-                <span hidden$="[[!_isKindPhoto(itemKind)]]">
-								<paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
-								<paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
-							</span>
-              </div>
-            </div>
+          <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
+            <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+          </div>
+        </app-toolbar>
+      </app-header>
 
-            <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-              <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
-            </div>
-          </app-toolbar>
-        </app-header>
+      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+        <admin-shell
+          data-view="maintenance"
+          is-admin="{{isAdmin}}"
+          route="{{route}}"></admin-shell>
 
-        <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-          <admin-shell
-            data-view="maintenance"
-            is-admin="{{isAdmin}}"
-            route="{{route}}"></admin-shell>
+        <grid-view
+          data-view="grid"
+          kind="[[dataKind.kind]]"
+          field="{{dataField.field}}"
+          value="{{dataValue.value}}"
+          route="{{route}}"
+          loading="{{loading}}"></grid-view>
 
-          <grid-view
-            data-view="grid"
-            kind="[[dataKind.kind]]"
-            field="{{dataField.field}}"
-            value="{{dataValue.value}}"
-            route="{{route}}"
-            loading="{{loading}}"></grid-view>
+        <detail-view
+          data-view="detail"
+          is-authorized="{{isAuthorized}}"
+          is-admin="{{isAdmin}}"
+          disable-swipe="{{disableSwipe}}"
+          kind="[[dataKind.kind]]"
+          field="[[dataField.field]]"
+          value="[[dataValue.value]]"
+          loading="{{loading}}"
+          route="{{route}}"></detail-view>
 
-          <detail-view
-            data-view="detail"
-            is-authorized="{{isAuthorized}}"
-            is-admin="{{isAdmin}}"
-            disable-swipe="{{disableSwipe}}"
-            kind="[[dataKind.kind]]"
-            field="[[dataField.field]]"
-            value="[[dataValue.value]]"
-            loading="{{loading}}"
-            route="{{route}}"></detail-view>
-
-          <form-view
-            data-view="form"
-            is-authorized="{{isAuthorized}}"
-            kind="[[dataKind.kind]]"
-            field="[[dataField.field]]"
-            value="[[dataValue.value]]"
-            route="{{route}}"></form-view>
-        </iron-pages>
-      </app-header-layout>
+        <form-view
+          data-view="form"
+          is-authorized="{{isAuthorized}}"
+          kind="[[dataKind.kind]]"
+          field="[[dataField.field]]"
+          value="[[dataValue.value]]"
+          route="{{route}}"></form-view>
+      </iron-pages>
+    </app-header-layout>
   </template>
 
   <script>
