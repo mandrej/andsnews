@@ -307,6 +307,7 @@
       },
       viewChanged: function (view) {
         this.debounce('viewChanged', function () {
+          const dialog = this.$.authorizationDialog;
           switch (view) {
             case 'grid':
               this.set('dataField.field', null);
@@ -324,7 +325,6 @@
                 headline: 'Form',
                 kind: this.dataKind.kind
               });
-              var dialog = this.$.authorizationDialog;
               Polymer.Base.importHref('src/form-view.html', function () {
                 if (!this.isAuthorized) dialog.open();
               }.bind(this), null, true);
@@ -337,7 +337,6 @@
                 headline: 'Admin v.' + this.version,
                 kind: this.dataKind.kind
               });
-              var dialog = this.$.authorizationDialog;
               Polymer.Base.importHref('src/admin-shell.html', function () {
                 if (!this.isAdmin) dialog.open();
               }.bind(this), null, true);
@@ -392,7 +391,7 @@
         this.$$('detail-view').$$('.iron-selected').fire('show-info');
       },
       zoomPhoto: function (e) {
-        var itemView = this.$$('detail-view').$$('.iron-selected');
+        const itemView = this.$$('detail-view').$$('.iron-selected');
         e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
         if (itemView.view != 'display') itemView.view = 'display';
         itemView.fire('zoom-photo');

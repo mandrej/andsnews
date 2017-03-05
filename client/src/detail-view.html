@@ -32,19 +32,29 @@
       loading="{{loading}}"
       debounce-duration="100"></iron-ajax>
 
-      <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
+    <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-      <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-        <h2>Nothing found</h2>
-        <p>Please try again</p>
-      </paper-dialog>
+    <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Nothing found</h2>
+      <p>Please try again</p>
+    </paper-dialog>
 
-      <iron-swipeable-pages id="swipe" selected="0" fallback-selection="0" on-iron-select="ironSelect" disabled="{{disableSwipe}}"
-        threshold="0">
-        <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
-          <item-view item="{{item}}" is-admin="{{isAdmin}}" filter="[[filter]]" route="{{route}}"></item-view>
-        </template>
-        </iron-swipeable-pages>
+    <iron-swipeable-pages id="swipe"
+      selected="0"
+      fallback-selection="0"
+      on-iron-select="changeCurrent"
+      disabled="{{disableSwipe}}"
+      threshold="0">
+
+      <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
+        <item-view
+          item="{{item}}"
+          is-admin="{{isAdmin}}"
+          filter="[[filter]]"
+          route="{{route}}"></item-view>
+      </template>
+
+    </iron-swipeable-pages>
   </template>
 
   <script>
@@ -105,7 +115,7 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       },
-      ironSelect: function () {
+      changeCurrent: function () {
         var index = this.$.swipe.selected,
           item = this.records[index];
         if (item) {
