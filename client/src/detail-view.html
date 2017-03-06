@@ -80,7 +80,8 @@
         'delete-record': '_deleteRecord',
       },
       _url: function (kind, field, value) {
-        var url, prefix = '/api';
+        let url;
+        const prefix = '/api';
         this.records = [];
 
         if (kind == 'search' && field != null) {
@@ -129,17 +130,17 @@
         }
       },
       _editRecord: function () {
-        var currentView = this.$$('item-view.iron-selected').view;
-        if (currentView == 'display') {
+        const current = this.$$('item-view.iron-selected');
+        if (current.view == 'display') {
           this.disableSwipe = true;
-          this.$$('item-view.iron-selected').view = 'form';
+          current.view = 'form';
         } else {
           this.disableSwipe = false;
-          this.$$('item-view.iron-selected').view = 'display';
+          current.view = 'display';
         }
       },
       _deleteRecord: function () {
-        var index = this.$.swipe.selected,
+        const index = this.$.swipe.selected,
           obj = this.splice('records', index, 1)[0],
           xhr = this.$.delete_ajax;
 

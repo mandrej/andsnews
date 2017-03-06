@@ -36,11 +36,11 @@
       last-response="{{tags_cloud}}"
       debounce-duration="100"></iron-ajax>
 
-    <iron-ajax auto
+    <!--<iron-ajax auto
       url="[[_urlLensCloud(view, item)]]"
       handle-as="json"
       last-response="{{lens_cloud}}"
-      debounce-duration="100"></iron-ajax>
+      debounce-duration="100"></iron-ajax>-->
 
     <form id="form"
       is="iron-form"
@@ -76,7 +76,8 @@
       <template is="dom-if" if="[[_isKindPhoto(item)]]">
         <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
         <div class="layout horizontal justified wrap">
-          <vaadin-combo-box name="lens" label="lens" allow-custom-value="true" items="{{lens_cloud}}" value="{{item.lens}}" style="width: 201px"></vaadin-combo-box>
+          <!--<vaadin-combo-box name="lens" label="lens" allow-custom-value="true" items="{{lens_cloud}}" value="{{item.lens}}" style="width: 201px"></vaadin-combo-box>-->
+          <paper-input name="lens" label="lens" value="{{item.lens}}"></paper-input>
           <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
           <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
           <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
@@ -108,13 +109,13 @@
           return '/api/suggest/Entry_tags';
         }
       },
-      _urlLensCloud: function (view, item) {
-        if (view === 'form' && item.kind === 'photo') {
-          return '/api/suggest/Photo_lens';
-        }
-      },
+      // _urlLensCloud: function (view, item) {
+      //   if (view === 'form' && item.kind === 'photo') {
+      //     return '/api/suggest/Photo_lens';
+      //   }
+      // },
       _preSubmit: function (e) {
-        var form = this.$.form,
+        const form = this.$.form,
           tagsInput = this.$.tags.selectedObjects,
           tags = [];
         tagsInput.forEach(function (item) {
@@ -127,13 +128,13 @@
       },
       _submit: function (e) {
         // _submit calls _preSubmit
-        var form = this.$.form;
+        const form = this.$.form;
         // var json = form.serialize();
         // console.log(json);
         form.submit();
       },
       _responseHandler: function (e) {
-        var toast = this.$.toast;
+        const toast = this.$.toast;
         toast.fitInto = this.$.form;
         if (e.detail.xhr.status == 200) {
           toast.setAttribute('text', 'Record successfully created / updated');
@@ -144,7 +145,7 @@
         return item.kind == 'photo';
       },
       listObjects: function (obj) {
-        var list = [];
+        const list = [];
         if (obj.tags) {
           obj.tags.forEach(function (tag) {
             list.push({ 'text': tag });
@@ -156,6 +157,10 @@
         }
         return list;
       },
+      _viewDisplay: function(e) {
+        const current = Polymer.dom().querySelector('app-shell').$$('detail-view').$$('.iron-selected');
+        current.view = 'display';
+      }
     });
   </script>
 </dom-module>

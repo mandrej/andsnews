@@ -106,7 +106,7 @@
       //
       // },
       _url: function (isAdmin) {
-        var view = Polymer.dom().querySelector('app-shell').dataView.view;
+        const view = Polymer.dom().querySelector('app-shell').dataView.view;
         if (view == 'maintenance' && isAdmin) {
           return '/api/info';
         }
@@ -122,13 +122,13 @@
       // },
       handleMessage: function (e) {
         // console.log(arguments);
-        var toast = this.$.toast;
+        const toast = this.$.toast;
         toast.fitInto = this.$.container;
         toast.setAttribute('text', e.detail.message.notification.body);
         toast.open();
       },
       callAjax: function (url) {
-        var xhr = this.$.xhr;
+        const xhr = this.$.xhr;
         this.$.messaging.requestPermission().then(function () {
           xhr.url = url;
           xhr.body = JSON.stringify({ 'token': this.token });

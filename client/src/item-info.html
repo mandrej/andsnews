@@ -83,7 +83,7 @@
         return (filter[field] == value) ? 'accent' : '';
       },
       applyFilter: function (e) {
-        var target = e.target,
+        const target = e.target,
           field = target.dataset.field,
           value = target.dataset.fieldValue;
         this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
