@@ -47,7 +47,11 @@
       disabled="{{disableSwipe}}"
       threshold="0">
       <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
-        <item-view item="{{item}}" is-admin="{{isAdmin}}" filter="[[filter]]" route="{{route}}"></item-view>
+        <item-view
+          item="{{item}}"
+          is-admin="{{isAdmin}}"
+          filter="[[filter]]"
+          route="{{route}}"></item-view>
       </template>
     </iron-swipeable-pages>
   </template>
@@ -55,7 +59,7 @@
   <script>
     Polymer({
       is: 'detail-view',
-      behaviors: [ReduxBehavior],
+      behaviors: [ ReduxBehavior ],
       properties: {
         params: { type: Object, value: {}, notify: true },
         filter: { type: Object, value: {}, notify: true },
@@ -75,7 +79,7 @@
         'delete-record': '_deleteRecord',
       },
       _url: function (kind, field, value) {
-        let url;
+        var url;
         const prefix = '/api';
         this.records = [];
 

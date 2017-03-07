@@ -7,9 +7,9 @@
       kind: 'photo',
       safekey: null
     }
-  }
+  };
 
-  const reducer = (state, action) => {
+  const reducer = function (state, action) {
     if (!state) return initialStore;
     switch (action.type) {
       // case 'ADD_FRIEND':
@@ -21,12 +21,12 @@
           current: action.payload
         })
     }
-  }
+  };
 
   const store = Redux.createStore(
     reducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
-  const ReduxBehavior = PolymerRedux(store);
 
+  const ReduxBehavior = PolymerRedux(store);
 </script>

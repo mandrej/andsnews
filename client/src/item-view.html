@@ -100,10 +100,6 @@
         'show-info': '_showInfo',
         'zoom-photo': '_zoomPhoto',
       },
-      _viewDisplay: function () {
-        Polymer.dom().querySelector('app-shell').disableSwipe = false;
-        this.view = 'display';
-      },
       _remove: function (e) {
         Polymer.dom().querySelector('app-shell').fire('confirm-delete');
       },

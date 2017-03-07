@@ -165,8 +165,8 @@
         return list;
       },
       _viewDisplay: function (e) {
-        const current = Polymer.dom().querySelector('app-shell').$$('detail-view').$$('.iron-selected');
-        current.view = 'display';
+        Polymer.dom().querySelector('app-shell').$$('detail-view').disableSwipe = false;
+        Polymer.dom().querySelector('app-shell').$$('detail-view').$$('.iron-selected').view = 'display';
       }
     });
   </script>

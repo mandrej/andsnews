@@ -262,7 +262,7 @@
   <script>
     Polymer({
       is: 'app-shell',
-      behaviors: [ReduxBehavior],
+      behaviors: [ ReduxBehavior ],
       attached: function () {
         if (!this.route.path) {
           this.set('route.path', '/grid/photo');
