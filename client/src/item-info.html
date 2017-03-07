@@ -10,7 +10,7 @@
 <dom-module id="item-info">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
+       :host {
         display: block;
         position: relative;
         background-color: var(--primary-background-color);
@@ -24,7 +24,6 @@
       paper-button {
         margin-top: 8px;
       }
-
       paper-chip {
         cursor: pointer;
         margin-right: 8px;
@@ -63,11 +62,11 @@
       </template>
       <paper-chip label="[[item.model]]" no-image class$="[[activeFilter('model', item.model, filter)]]" on-tap="applyFilter" data-field="model"
         data-field-value$="[[item.model]]"></paper-chip>
-        <paper-chip label="[[item.color]]" no-image class$="[[activeFilter('color', item.color, filter)]]" on-tap="applyFilter" data-field="color"
-          data-field-value$="[[item.color]]"></paper-chip>
+      <paper-chip label="[[item.color]]" no-image class$="[[activeFilter('color', item.color, filter)]]" on-tap="applyFilter" data-field="color"
+        data-field-value$="[[item.color]]"></paper-chip>
     </div>
-
   </template>
+
   <script>
     Polymer({
       is: 'item-info',

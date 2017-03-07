@@ -1,7 +1,7 @@
 <dom-module id="shared-styles">
   <template>
     <style>
-      :root {
+       :root {
         --primary-text-color: #212121;
         --primary-background-color: #ffffff;
         --secondary-text-color: #757575;
@@ -13,23 +13,18 @@
         --light-primary-color: #198997;
         --accent-color: #ff9800;
       }
-
       ::-webkit-scrollbar {
         display: none;
       }
-
       [hidden] {
         display: none !important;
       }
-
       *:focus {
         outline: none;
       }
-
       a {
         color: var(--dark-primary-color);
       }
-
       paper-dialog {
         max-width: 400px;
         --paper-dialog-title: {
@@ -37,25 +32,21 @@
           font-size: 20px;
         }
       }
-
       paper-button {
         color: var(--primary-background-color);
         background-color: var(--primary-color);
         text-transform: lowercase;
       }
-
       paper-fab,
       paper-button.accent {
         color: var(--primary-text-color);
         background-color: var(--accent-color);
       }
-
       paper-dialog paper-button {
         color: var(--primary-text-color);
         background-color: var(--divider-color);
         text-transform: lowercase;
       }
-
       paper-input {
         --paper-input-container-color: var(--primary-text-color);
         --paper-input-container-focus-color: var(--accent-color);

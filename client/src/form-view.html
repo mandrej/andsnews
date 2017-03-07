@@ -16,18 +16,16 @@
 <dom-module id="form-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
+       :host {
         display: block;
         position: relative;
         height: 100vh;
         background-color: var(--primary-background-color);
       }
-
       .container {
         padding: 16px;
         padding-bottom: 56px;
       }
-
       vaadin-upload {
         --vaadin-upload-button-add: {
           font-size: inherit;
@@ -36,7 +34,6 @@
           @apply(--shadow-elevation-2dp);
         }
       }
-
       paper-input,
       vaadin-combo-box,
       paper-input-autocomplete-chips {
@@ -55,34 +52,41 @@
       <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
       <template is="dom-if" if="[[_isKindPhoto(kind)]]">
-        <vaadin-upload id="upload" style="padding: 16px"
+        <vaadin-upload id="upload"
+          style="padding: 16px"
           target="/api/{{kind}}/add"
           max-files="10"
           on-upload-response="_uploadResponse"
           accept="image/*"></vaadin-upload>
-          <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
+        <p>See <a href="#/detail/photo/tags/new">uploaded files</a> and continue editing.</p>
       </template>
 
       <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
-        <form is="iron-form" id="form" on-iron-form-response="_responseHandler" method="post" action$="/api/[[kind]]/add">
+        <form id="form"
+          is="iron-form"
+          on-iron-form-response="_responseHandler"
+          method="post"
+          action$="/api/[[kind]]/add">
           <div class="layout horizontal end-justified">
             <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
           </div>
 
           <paper-input name="headline" required label="headline"></paper-input>
-          <vaadin-combo-box name="author"
+          <vaadin-combo-box
+            name="author"
             label="author"
             allow-custom-value="true"
             items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'>
           </vaadin-combo-box>
-          <paper-input-autocomplete-chips id="tags" name="tags"
+          <paper-input-autocomplete-chips id="tags"
+            name="tags"
             label="tags"
             local-candidates="{{listObjects(tags_cloud)}}"
             selected-objects="{{listObjects(item)}}"
             allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
 
-            <paper-textarea name="summary" label="summary"></paper-textarea>
-            <paper-textarea name="body" label="body"></paper-textarea>
+          <paper-textarea name="summary" label="summary"></paper-textarea>
+          <paper-textarea name="body" label="body"></paper-textarea>
         </form>
       </template>
     </div>

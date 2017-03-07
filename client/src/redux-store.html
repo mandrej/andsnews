@@ -18,7 +18,7 @@
       //   return Object.assign({}, state, {friends: friends})
       case 'CURRENT_CHANGED':
         return Object.assign({}, state, {
-          current:  action.payload
+          current: action.payload
         })
     }
   }
@@ -28,4 +28,5 @@
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
   const ReduxBehavior = PolymerRedux(store);
+
 </script>

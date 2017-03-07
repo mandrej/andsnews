@@ -14,18 +14,17 @@
 <dom-module id="detail-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
+       :host {
         display: block;
         position: relative;
       }
-
       iron-swipeable-pages {
         height: 100vh;
       }
     </style>
 
-    <iron-ajax id="ajax" auto
-      url="{{_url(kind, field, value)}}"
+    <iron-ajax id="ajax"
+      auto url="{{_url(kind, field, value)}}"
       params="{{params}}"
       handle-as="json"
       on-response="handler"
@@ -34,7 +33,9 @@
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-    <paper-dialog id="message" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="message"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation">
       <h2>Nothing found</h2>
       <p>Please try again</p>
     </paper-dialog>
@@ -45,22 +46,16 @@
       on-iron-select="changeCurrent"
       disabled="{{disableSwipe}}"
       threshold="0">
-
       <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
-        <item-view
-          item="{{item}}"
-          is-admin="{{isAdmin}}"
-          filter="[[filter]]"
-          route="{{route}}"></item-view>
+        <item-view item="{{item}}" is-admin="{{isAdmin}}" filter="[[filter]]" route="{{route}}"></item-view>
       </template>
-
     </iron-swipeable-pages>
   </template>
 
   <script>
     Polymer({
       is: 'detail-view',
-      behaviors: [ ReduxBehavior ],
+      behaviors: [ReduxBehavior],
       properties: {
         params: { type: Object, value: {}, notify: true },
         filter: { type: Object, value: {}, notify: true },
@@ -68,7 +63,7 @@
         loading: { type: Boolean, value: false, notify: true },
       },
       actions: {
-        change: function(payload) {
+        change: function (payload) {
           return {
             type: 'CURRENT_CHANGED',
             payload: payload

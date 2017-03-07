@@ -13,7 +13,7 @@
 <dom-module id="item-edit">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
+       :host {
         display: block;
         position: relative;
         background-color: var(--primary-background-color);
@@ -62,15 +62,22 @@
 
       <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
 
-      <vaadin-combo-box name="author"
-        required auto-validate
+      <vaadin-combo-box
+        name="author"
+        required
+        auto-validate
         label="author"
         allow-custom-value="true"
         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
         value="{{item.author}}"></vaadin-combo-box>
 
-      <paper-input-autocomplete-chips id="tags" name="tags" label="tags" local-candidates="{{listObjects(tags_cloud)}}" selected-objects="{{listObjects(item)}}"
+      <paper-input-autocomplete-chips id="tags"
+        name="tags"
+        label="tags"
+        local-candidates="{{listObjects(tags_cloud)}}"
+        selected-objects="{{listObjects(item)}}"
         allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
+
       <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
 
       <template is="dom-if" if="[[_isKindPhoto(item)]]">
@@ -157,7 +164,7 @@
         }
         return list;
       },
-      _viewDisplay: function(e) {
+      _viewDisplay: function (e) {
         const current = Polymer.dom().querySelector('app-shell').$$('detail-view').$$('.iron-selected');
         current.view = 'display';
       }

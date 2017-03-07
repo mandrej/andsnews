@@ -10,33 +10,28 @@
 <dom-module id="admin-shell">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
+       :host {
         display: block;
         position: relative;
         height: 100vh;
         background-color: var(--primary-background-color);
       }
-
       .container {
         padding: 16px;
         padding-bottom: 56px;
       }
-
       h1 {
         margin-bottom: 0.5em;
         font-weight: 300;
       }
-
       paper-toast {
         --paper-toast-color: var(--primary-background-color);
         --paper-toast-background-color: var(--primary-text-color);
       }
-
       paper-button {
         width: 150px;
         margin: 0 16px 16px 0;
       }
-
       paper-button[toggles][active] {
         background: var(--secondary-text-color);
       }
@@ -102,9 +97,6 @@
   <script>
     Polymer({
       is: 'admin-shell',
-      // attached: function() {
-      //
-      // },
       _url: function (isAdmin) {
         const view = Polymer.dom().querySelector('app-shell').dataView.view;
         if (view == 'maintenance' && isAdmin) {
