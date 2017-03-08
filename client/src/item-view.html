@@ -96,7 +96,7 @@
       is: 'item-view',
       behaviors: [ ReduxBehavior ],
       properties: {
-        view: { type: String, statePath: 'current.view' },
+        view: { type: String, statePath: 'view' },
       },
       listeners: {
         'show-info': '_showInfo',
@@ -118,7 +118,7 @@
       },
       _showInfo: function () {
         const state = this.getState();
-        if (state.current.view != 'info') {
+        if (state.view != 'info') {
           this.dispatch('change', {
             view: 'info',
             disableSwipe: true

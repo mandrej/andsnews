@@ -65,7 +65,7 @@
         filter: { type: Object, value: {}, notify: true },
         records: { type: Array, notify: true },
         loading: { type: Boolean, value: false, notify: true },
-        disableSwipe: { type: Boolean, statePath: 'current.disableSwipe' },
+        disableSwipe: { type: Boolean, statePath: 'disableSwipe' },
       },
       actions: {
         change: function (payload) {
@@ -130,7 +130,7 @@
       },
       _editRecord: function () {
         const state = this.getState();
-        if (state.current.view == 'display') {
+        if (state.view == 'display') {
           this.dispatch('change', {
             view: 'form',
             disableSwipe: true

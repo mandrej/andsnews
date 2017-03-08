@@ -291,12 +291,12 @@
       ],
       properties: {
         version: { type: String, value: '1703.07' },
-        headline: { type: String, statePath: 'current.headline' },
+        headline: { type: String, statePath: 'headline' },
         smallScreen: { type: Boolean, value: false, notify: true },
         user: { type: Object, notify: true },
         isAdmin: { type: Boolean, value: false, notify: true },
         loading: { type: Boolean, value: false, notify: true },
-        itemKind: { type: String, statePath: 'current.kind' },
+        itemKind: { type: String, statePath: 'kind' },
       },
       viewChanged: function (view) {
         this.debounce('viewChanged', function () {

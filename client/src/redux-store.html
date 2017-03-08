@@ -2,13 +2,11 @@
 
 <script>
   const initialStore = {
-    current: {
-      headline: 'ANDрејевићи',
-      kind: 'photo',
-      safekey: null,
-      view: 'display',
-      disableSwipe: false
-    }
+    headline: 'ANDрејевићи',
+    kind: 'photo',
+    safekey: null,
+    view: 'display',
+    disableSwipe: false
   };
 
   const reducer = function (state, action) {
@@ -19,10 +17,8 @@
       //   friends.push(action.payload)
       //   return Object.assign({}, state, {friends: friends})
       case 'CURRENT_CHANGED':
-        const current = Object.assign({}, state.current, action.payload);
-        return Object.assign({}, state, {
-          current: current
-        })
+        // const current = Object.assign({}, state.current, action.payload);
+        return Object.assign({}, state, action.payload)
     }
   };
 
