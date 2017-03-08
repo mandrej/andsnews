@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 <link rel="import" href="./item-info.html">
@@ -93,12 +94,21 @@
   <script>
     Polymer({
       is: 'item-view',
+      behaviors: [ ReduxBehavior ],
       properties: {
-        view: { type: String, value: 'display', notify: true },
+        view: { type: String, statePath: 'current.view' },
       },
       listeners: {
         'show-info': '_showInfo',
         'zoom-photo': '_zoomPhoto',
+      },
+      actions: {
+        change: function (payload) {
+          return {
+            type: 'CURRENT_CHANGED',
+            payload: payload
+          }
+        }
       },
       _remove: function (e) {
         Polymer.dom().querySelector('app-shell').fire('confirm-delete');
@@ -107,13 +117,23 @@
         return item.kind == 'photo';
       },
       _showInfo: function () {
-        if (this.view == 'display' || this.view == 'form') {
-          this.view = 'info';
+        const state = this.getState();
+        if (state.current.view != 'info') {
+          this.dispatch('change', {
+            view: 'info',
+            disableSwipe: true
+          });
         } else {
-          this.view = 'display';
+          this.dispatch('change', {
+            view: 'display',
+            disableSwipe: false
+          });
         }
       },
       _zoomPhoto: function () {
+        this.dispatch('change', {
+          view: 'display'
+        });
         const img = this.$.neon.querySelector('iron-image'),
           dim = JSON.parse(img.dataset.dim);
 
@@ -125,10 +145,14 @@
         // }
 
         if (img.style.width != dim[0] + 'px') {
-          Polymer.dom().querySelector('app-shell').disableSwipe = true;
+          this.dispatch('change', {
+            disableSwipe: true
+          });
           img.style.cssText = 'width: ' + dim[0] + 'px; height: ' + dim[1] + 'px;';
         } else {
-          Polymer.dom().querySelector('app-shell').disableSwipe = false;
+          this.dispatch('change', {
+            disableSwipe: false
+          });
           img.style.cssText = 'width: 100%; height: 100%';
         }
       },

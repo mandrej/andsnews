@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -105,8 +106,17 @@
   <script>
     Polymer({
       is: 'item-edit',
+      behaviors: [ ReduxBehavior ],
       listeners: {
         'iron-form-presubmit': '_preSubmit'
+      },
+      actions: {
+        change: function (payload) {
+          return {
+            type: 'CURRENT_CHANGED',
+            payload: payload
+          }
+        }
       },
       _urlTagsCloud: function (view, item) {
         if (view !== 'form') return;
@@ -165,8 +175,10 @@
         return list;
       },
       _viewDisplay: function (e) {
-        Polymer.dom().querySelector('app-shell').$$('detail-view').disableSwipe = false;
-        Polymer.dom().querySelector('app-shell').$$('detail-view').$$('.iron-selected').view = 'display';
+        this.dispatch('change', {
+          view: 'display',
+          disableSwipe: false
+        });
       }
     });
   </script>

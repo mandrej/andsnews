@@ -5,7 +5,9 @@
     current: {
       headline: 'ANDрејевићи',
       kind: 'photo',
-      safekey: null
+      safekey: null,
+      view: 'display',
+      disableSwipe: false
     }
   };
 
@@ -17,8 +19,9 @@
       //   friends.push(action.payload)
       //   return Object.assign({}, state, {friends: friends})
       case 'CURRENT_CHANGED':
+        const current = Object.assign({}, state.current, action.payload);
         return Object.assign({}, state, {
-          current: action.payload
+          current: current
         })
     }
   };

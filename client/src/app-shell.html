@@ -241,7 +241,6 @@
           data-view="detail"
           is-authorized="{{isAuthorized}}"
           is-admin="{{isAdmin}}"
-          disable-swipe="{{disableSwipe}}"
           kind="[[dataKind.kind]]"
           field="[[dataField.field]]"
           value="[[dataValue.value]]"
@@ -298,7 +297,6 @@
         isAdmin: { type: Boolean, value: false, notify: true },
         loading: { type: Boolean, value: false, notify: true },
         itemKind: { type: String, statePath: 'current.kind' },
-        disableSwipe: { type: Boolean, value: false, notify: true },
       },
       viewChanged: function (view) {
         this.debounce('viewChanged', function () {
@@ -329,8 +327,7 @@
               this.set('dataField.field', null);
               this.set('dataValue.value', null);
               this.dispatch('change', {
-                headline: 'Admin v.' + this.version,
-                kind: this.dataKind.kind
+                headline: 'Admin v.' + this.version
               });
               Polymer.Base.importHref('src/admin-shell.html', function () {
                 if (!this.isAdmin) dialog.open();
@@ -388,7 +385,6 @@
       zoomPhoto: function (e) {
         const itemView = this.$$('detail-view').$$('.iron-selected');
         e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
-        if (itemView.view != 'display') itemView.view = 'display';
         itemView.fire('zoom-photo');
       },
       pathChanged: function (path) {
