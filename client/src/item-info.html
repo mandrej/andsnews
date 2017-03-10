@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -70,6 +71,15 @@
   <script>
     Polymer({
       is: 'item-info',
+      behaviors: [ ReduxBehavior ],
+      actions: {
+        change: function (payload) {
+          return {
+            type: 'CURRENT_CHANGED',
+            payload: payload
+          }
+        }
+      },
       _downloadPhoto: function () {
         window.location.href = '/api/download/' + this.item.safekey;
       },
@@ -85,6 +95,10 @@
         const target = e.target,
           field = target.dataset.field,
           value = target.dataset.fieldValue;
+        this.dispatch('change', {
+            view: 'display',
+            disableSwipe: false
+          });
         this.set('route.path', ['/detail', this.item.kind, field, value].join('/'));
       },
     });
