@@ -91,6 +91,7 @@
         'delete-record': '_deleteRecord',
       },
       _url: function (kind, field, value) {
+        // initial set value to null, otherwise search won't work
         var url;
         const prefix = '/api';
         this.records = [];
@@ -130,25 +131,28 @@
       keyboardHandler: function(e) {
         e.preventDefault();
         const state = this.getState();
-        if (state.disableSwipe) return;
 
         switch(e.detail.key) {
           case 'left':
+            if (state.disableSwipe) return;
             this.entryAnimation = 'slide-from-left-animation';
             this.exitAnimation = 'slide-right-animation';
             this.$.swipe.selectPrevious();
             break;
           case 'right':
+            if (state.disableSwipe) return;
             this.entryAnimation = 'slide-from-right-animation';
             this.exitAnimation = 'slide-left-animation';
             this.$.swipe.selectNext();
             break;
           case 'z':
-            this.dispatch('change', {
-              disableSwipe: !state.disableSwipe,
-              zooming: !state.zooming
-            });
-            this.$$('.iron-selected').fire('zoom-toggle');
+            if (state.kind === 'photo') {
+              this.dispatch('change', {
+                disableSwipe: !state.disableSwipe,
+                zooming: !state.zooming
+              });
+              this.$$('.iron-selected').fire('zoom-toggle');
+            }
             break;
         }
       },

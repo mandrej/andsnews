@@ -211,7 +211,7 @@
                 <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
               </span>
               <span hidden$="[[!_isKindPhoto(itemKind)]]">
-              <paper-icon-button icon="zoom-in" on-tap="zoomPhoto"></paper-icon-button>
+              <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
               <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
             </span>
             </div>
@@ -296,7 +296,11 @@
         user: { type: Object, notify: true },
         isAdmin: { type: Boolean, value: false, notify: true },
         loading: { type: Boolean, value: false, notify: true },
+        dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         itemKind: { type: String, statePath: 'kind' },
+        zoomIcon: { type: String, statePath: function(state) {
+          return (state.zooming) ? 'zoom-out' : 'zoom-in';
+        }},
         zooming: { type: String, statePath: 'zooming' },
       },
       viewChanged: function (view) {
@@ -380,12 +384,11 @@
           this.$$('detail-view').fire('delete-record');
         }
       },
-      showInfo: function (e) {
+      showInfo: function () {
         this.$$('detail-view').$$('.iron-selected').fire('show-info');
       },
-      zoomPhoto: function (e) {
+      zoomPhoto: function () {
         const state = this.getState();
-        e.target.icon = (state.zooming) ? 'zoom-in' : 'zoom-out';
         this.dispatch('change', {
           disableSwipe: !state.disableSwipe,
           zooming: !state.zooming
