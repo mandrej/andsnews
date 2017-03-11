@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
@@ -41,8 +41,6 @@
       <p>Please try again</p>
     </paper-dialog>
 
-    <iron-a11y-keys target="[[target]]" keys="left right" on-keys-pressed="goSwipe"></iron-a11y-keys>
-
     <neon-animated-pages id="swipe"
       selected="0"
       fallback-selection="0"
@@ -62,19 +60,23 @@
   <script>
     Polymer({
       is: 'detail-view',
-      behaviors: [ ReduxBehavior ],
+      behaviors: [ ReduxBehavior, Polymer.IronA11yKeysBehavior ],
       properties: {
         params: { type: Object, value: {}, notify: true },
         filter: { type: Object, value: {}, notify: true },
         records: { type: Array, notify: true },
         loading: { type: Boolean, value: false, notify: true },
-        target: {
+        keyEventTarget: {
           type: Object,
           value: function () {
             return document.body;
           }
         },
-        disableSwipe: { type: Boolean, statePath: 'disableSwipe' },
+      },
+      keyBindings: {
+        'left': 'keyboardHandler',
+        'right': 'keyboardHandler',
+        'z': 'keyboardHandler',
       },
       actions: {
         change: function (payload) {
@@ -123,19 +125,29 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       },
-      goSwipe: function(e) {
+      keyboardHandler: function(e) {
+        e.preventDefault();
         const state = this.getState();
         if (state.disableSwipe) return;
 
-        const key = e.detail.key;
-        if (key == 'left') {
-          this.entryAnimation = 'slide-from-left-animation';
-          this.exitAnimation = 'slide-right-animation';
-          this.$.swipe.selectPrevious();
-        } else {
-          this.entryAnimation = 'slide-from-right-animation';
-          this.exitAnimation = 'slide-left-animation';
-          this.$.swipe.selectNext();
+        switch(e.detail.key) {
+          case 'left':
+            this.entryAnimation = 'slide-from-left-animation';
+            this.exitAnimation = 'slide-right-animation';
+            this.$.swipe.selectPrevious();
+            break;
+          case 'right':
+            this.entryAnimation = 'slide-from-right-animation';
+            this.exitAnimation = 'slide-left-animation';
+            this.$.swipe.selectNext();
+            break;
+          case 'z':
+            this.dispatch('change', {
+              disableSwipe: !state.disableSwipe,
+              zooming: !state.zooming
+            });
+            this.$$('.iron-selected').fire('zoom-toggle');
+            break;
         }
       },
       changeCurrent: function () {

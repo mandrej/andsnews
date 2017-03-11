@@ -297,6 +297,7 @@
         isAdmin: { type: Boolean, value: false, notify: true },
         loading: { type: Boolean, value: false, notify: true },
         itemKind: { type: String, statePath: 'kind' },
+        zooming: { type: String, statePath: 'zooming' },
       },
       viewChanged: function (view) {
         this.debounce('viewChanged', function () {
@@ -383,9 +384,13 @@
         this.$$('detail-view').$$('.iron-selected').fire('show-info');
       },
       zoomPhoto: function (e) {
-        const itemView = this.$$('detail-view').$$('.iron-selected');
-        e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
-        itemView.fire('zoom-photo');
+        // e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
+        const state = this.getState();
+        this.dispatch('change', {
+          disableSwipe: !state.disableSwipe,
+          zooming: !state.zooming
+        });
+        this.$$('detail-view').$$('.iron-selected').fire('zoom-toggle');
       },
       pathChanged: function (path) {
         console.log(path);
