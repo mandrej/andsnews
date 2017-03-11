@@ -3,6 +3,7 @@
     "shell": "src/app-shell.html",
     "fragments": [
         "src/shared-styles.html",
+        "src/redux-store.html",
         "src/grid-view.html",
         "src/app-search.html",
         "src/detail-view.html",
@@ -21,6 +22,7 @@
         "robots.txt",
         "manifest.json",
         "firebase-messaging-sw.js",
+        "node_modules/redux/dist/redux.js",
         "bower_components/webcomponentsjs/webcomponents-lite.min.js"
     ]
 }
