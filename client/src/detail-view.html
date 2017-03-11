@@ -115,7 +115,9 @@
             this.push('records', item);
           }, this);
           this.filter = {};
-          this.filter[response.filter.field] = response.filter.value;
+          if (response.filter) {
+            this.filter[response.filter.field] = response.filter.value;
+          }
         }
       },
       loadMore: function () {
