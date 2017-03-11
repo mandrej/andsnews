@@ -384,12 +384,13 @@
         this.$$('detail-view').$$('.iron-selected').fire('show-info');
       },
       zoomPhoto: function (e) {
-        // e.target.icon = (e.target.icon == 'zoom-in') ? 'zoom-out' : 'zoom-in';
         const state = this.getState();
+        e.target.icon = (state.zooming) ? 'zoom-in' : 'zoom-out';
         this.dispatch('change', {
           disableSwipe: !state.disableSwipe,
           zooming: !state.zooming
         });
+
         this.$$('detail-view').$$('.iron-selected').fire('zoom-toggle');
       },
       pathChanged: function (path) {
