@@ -135,15 +135,19 @@
         switch(e.detail.key) {
           case 'left':
             if (state.disableSwipe) return;
-            this.entryAnimation = 'slide-from-left-animation';
-            this.exitAnimation = 'slide-right-animation';
-            this.$.swipe.selectPrevious();
+            if (state.kind === 'photo') {
+              this.entryAnimation = 'slide-from-left-animation';
+              this.exitAnimation = 'slide-right-animation';
+              this.$.swipe.selectPrevious();
+            }
             break;
           case 'right':
             if (state.disableSwipe) return;
-            this.entryAnimation = 'slide-from-right-animation';
-            this.exitAnimation = 'slide-left-animation';
-            this.$.swipe.selectNext();
+            if (state.kind === 'photo') {
+              this.entryAnimation = 'slide-from-right-animation';
+              this.exitAnimation = 'slide-left-animation';
+              this.$.swipe.selectNext();
+            }
             break;
           case 'z':
             if (state.kind === 'photo') {
