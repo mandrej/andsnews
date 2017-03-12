@@ -137,11 +137,13 @@
 
         switch(e.detail.key) {
           case 'left':
+            if (state.disableSwipe) return;
             if (state.kind === 'photo') {
               this.$.swipe.selectPrevious();
             }
             break;
           case 'right':
+            if (state.disableSwipe) return;
             if (state.kind === 'photo') {
               this.$.swipe.selectNext();
             }
