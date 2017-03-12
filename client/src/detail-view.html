@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -19,7 +19,7 @@
         display: block;
         position: relative;
       }
-      neon-animated-pages {
+      iron-swipeable-pages {
         height: 100vh;
       }
     </style>
@@ -41,12 +41,14 @@
       <p>Please try again</p>
     </paper-dialog>
 
-    <neon-animated-pages id="swipe"
+    <iron-swipeable-pages id="swipe"
       selected="0"
+      threshold="0"
+      noCycle="true"
+      carousel="true"
       fallback-selection="0"
-      on-iron-select="changeCurrent"
-      entry-animation="[[entryAnimation]]"
-      exit-animation="[[exitAnimation]]">
+      disabled="[[disableSwipe]]"
+      on-iron-select="changeCurrent">
       <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">
         <item-view
           item="{{item}}"
@@ -54,7 +56,7 @@
           filter="[[filter]]"
           route="{{route}}"></item-view>
       </template>
-    </neon-animated-pages>
+    </iron-swipeable-pages>
   </template>
 
   <script>
@@ -66,6 +68,7 @@
         filter: { type: Object, value: {}, notify: true },
         records: { type: Array, notify: true },
         loading: { type: Boolean, value: false, notify: true },
+        disableSwipe: { type: Boolean, statePath: 'disableSwipe' },
         keyEventTarget: {
           type: Object,
           value: function () {
@@ -134,18 +137,12 @@
 
         switch(e.detail.key) {
           case 'left':
-            if (state.disableSwipe) return;
             if (state.kind === 'photo') {
-              this.entryAnimation = 'slide-from-left-animation';
-              this.exitAnimation = 'slide-right-animation';
               this.$.swipe.selectPrevious();
             }
             break;
           case 'right':
-            if (state.disableSwipe) return;
             if (state.kind === 'photo') {
-              this.entryAnimation = 'slide-from-right-animation';
-              this.exitAnimation = 'slide-left-animation';
               this.$.swipe.selectNext();
             }
             break;
