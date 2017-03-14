@@ -13,7 +13,7 @@
         "src/form-view.html",
         "src/admin-shell.html"
     ],
-    "sourceGlobs": [
+    "sources": [
         "src/**/*",
         "images/**/*",
         "bower.json"
@@ -22,7 +22,7 @@
         "robots.txt",
         "manifest.json",
         "firebase-messaging-sw.js",
-        "node_modules/redux/dist/redux.js",
+        "node_modules/redux/dist/redux.min.js",
         "bower_components/webcomponentsjs/webcomponents-lite.min.js"
     ]
 }
