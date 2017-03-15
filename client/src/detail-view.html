@@ -79,6 +79,7 @@
       keyBindings: {
         'left': 'keyboardHandler',
         'right': 'keyboardHandler',
+        'i': 'keyboardHandler',
         'z': 'keyboardHandler',
       },
       actions: {
@@ -146,6 +147,11 @@
             if (state.disableSwipe) return;
             if (state.kind === 'photo') {
               this.$.swipe.selectNext();
+            }
+            break;
+          case 'i':
+            if (state.kind === 'photo') {
+              this.$$('.iron-selected').fire('info-toggle');
             }
             break;
           case 'z':

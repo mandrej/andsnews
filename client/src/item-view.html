@@ -99,7 +99,7 @@
         view: { type: String, statePath: 'view' },
       },
       listeners: {
-        'show-info': '_showInfo',
+        'info-toggle': '_infoToggle',
         'zoom-toggle': '_zoomToggle',
       },
       actions: {
@@ -116,7 +116,7 @@
       _isKindPhoto: function (item) {
         return item.kind == 'photo';
       },
-      _showInfo: function () {
+      _infoToggle: function () {
         const state = this.getState();
         if (state.view != 'info') {
           this.dispatch('change', {
