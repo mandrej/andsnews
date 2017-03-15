@@ -25,6 +25,49 @@
       a {
         color: var(--dark-primary-color);
       }
+      app-header {
+        background-image: url(../images/md.jpg);
+        background-position: top center;
+      }
+      app-toolbar {
+        color: var(--primary-background-color);
+      }
+      app-toolbar .navigation {
+        margin: 0;
+        padding: 0;
+      }
+      app-toolbar .navigation li {
+        display: inline-block;
+        list-style: none;
+      }
+      app-toolbar.sticky {
+        height: 64px;
+        line-height: 64px;
+        font-size: 24px;
+        color: var(--primary-text-color);
+      }
+      app-toolbar a {
+        display: inline-block;
+        color: var(--primary-background-color);
+        text-decoration: none;
+        text-transform: lowercase;
+      }
+      app-toolbar a iron-image.thumbnail {
+        display: inherit;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: transparent;
+      }
+      app-toolbar h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 300;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+      }
       paper-dialog {
         max-width: 400px;
         --paper-dialog-title: {
@@ -36,6 +79,9 @@
         color: var(--primary-background-color);
         background-color: var(--primary-color);
         text-transform: lowercase;
+      }
+      paper-icon-button {
+        color: var(--primary-background-color);
       }
       paper-fab,
       paper-button.accent {
@@ -51,6 +97,11 @@
         --paper-input-container-color: var(--primary-text-color);
         --paper-input-container-focus-color: var(--accent-color);
         --paper-input-container-invalid-color: var(--error-color);
+      }
+      paper-spinner {
+        width: 100px;
+        height: 100px;
+        --paper-spinner-stroke-width: 8px;
       }
     </style>
 

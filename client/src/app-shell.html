@@ -31,68 +31,12 @@
         display: block;
         position: relative;
       }
-      app-header {
-        background-image: url(../images/md.jpg);
-        background-position: top center;
-      }
-      app-toolbar {
-        color: var(--primary-background-color);
-      }
-      app-toolbar.sticky {
-        height: 64px;
-        line-height: 64px;
-        font-size: 24px;
-        color: var(--primary-text-color);
-      }
-      h1 {
-        margin: 0;
-        font-size: 36px;
-        font-weight: 300;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
-      }
-      h4 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 300;
-      }
-      app-toolbar a {
-        display: inline-block;
-        color: var(--primary-background-color);
-        text-decoration: none;
-        text-transform: lowercase;
-      }
-      app-toolbar a iron-image.thumbnail {
-        display: inherit;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background-color: transparent;
-      }
-      .navigation {
-        margin: 0;
-        padding: 0;
-      }
-      .navigation li {
-        display: inline-block;
-        list-style: none;
-      }
       #spinner {
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
-      }
-      paper-spinner {
-        width: 100px;
-        height: 100px;
-        --paper-spinner-stroke-width: 8px;
-      }
-      paper-icon-button {
-        color: var(--primary-background-color);
       }
     </style>
 
@@ -211,9 +155,9 @@
                 <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
               </span>
               <span hidden$="[[!_isKindPhoto(itemKind)]]">
-              <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
-              <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
-            </span>
+                <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
+                <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
+              </span>
             </div>
           </div>
 
