@@ -19,49 +19,49 @@ libraries:
 
 handlers:
 - url: /
-  static_files: client/build/unbundled/index.html
-  upload: client/build/unbundled/index.html
+  static_files: client/index.html
+  upload: client/index.html
   secure: always
 
 - url: /favicon.ico
-  static_files: client/build/unbundled/favicon.ico
-  upload: client/build/unbundled/favicon.ico
+  static_files: client/favicon.ico
+  upload: client/favicon.ico
   secure: always
 
 - url: /robots\.txt
-  static_files: client/build/unbundled/robots.txt
-  upload: client/build/unbundled/robots.txt
+  static_files: client/robots.txt
+  upload: client/robots.txt
   secure: always
 
 - url: /service-worker\.js
-  static_files: client/build/unbundled/service-worker.js
-  upload: client/build/unbundled/service-worker.js
+  static_files: client/service-worker.js
+  upload: client/service-worker.js
   secure: always
 
 - url: /firebase-messaging-sw\.js
-  static_files: client/build/unbundled/firebase-messaging-sw.js
-  upload: client/build/unbundled/firebase-messaging-sw.js
+  static_files: client/firebase-messaging-sw.js
+  upload: client/firebase-messaging-sw.js
   secure: always
 
 - url: /manifest\.json
-  static_files: client/build/unbundled/manifest.json
-  upload: client/build/unbundled/manifest.json
+  static_files: client/manifest.json
+  upload: client/manifest.json
   secure: always
 
 - url: /src/
-  static_dir: client/build/unbundled/src
+  static_dir: client/src
   secure: always
 
 - url: /images/
-  static_dir: client/build/unbundled/images
+  static_dir: client/images
   secure: always
 
 - url: /bower_components/
-  static_dir: client/build/unbundled/bower_components
+  static_dir: client/bower_components
   secure: always
 
 - url: /node_modules/
-  static_dir: client/build/unbundled/node_modules
+  static_dir: client/node_modules
   secure: always
 
 - url: /api/.*

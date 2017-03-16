@@ -4,7 +4,7 @@ appengine=/home/milan/google_appengine
 work=/home/milan/work
 
 if [[ $# -eq 0 ]] ; then
-    $python $appengine/dev_appserver.py --host 127.0.0.1 --storage_path=$work/andsnews_storage/ .
+    $python $appengine/dev_appserver.py --storage_path=$work/andsnews_storage/ app_local.yaml
     exit
 fi
 
