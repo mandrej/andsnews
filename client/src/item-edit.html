@@ -52,7 +52,7 @@
       <paper-toast id="toast" class="fit-bottom" on-iron-overlay-closed="_viewDisplay"></paper-toast>
 
       <div class="layout horizontal justified">
-        <template is="dom-if" if="{{isAdmin}}">
+        <template is="dom-if" if="[[isAdmin]]">
           <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
         </template>
         <div>
@@ -117,6 +117,9 @@
             payload: payload
           }
         }
+      },
+      properties: {
+        isAdmin: { type: Boolean, statePath: 'isAdmin' },
       },
       _urlTagsCloud: function (view, item) {
         if (view !== 'form') return;

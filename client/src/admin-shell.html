@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -97,6 +98,10 @@
   <script>
     Polymer({
       is: 'admin-shell',
+      behaviors: [ ReduxBehavior ],
+      properties: {
+        isAdmin: { type: Boolean, statePath: 'isAdmin' },
+      },
       _url: function (isAdmin) {
         const view = Polymer.dom().querySelector('app-shell').dataView.view;
         if (view == 'maintenance' && isAdmin) {

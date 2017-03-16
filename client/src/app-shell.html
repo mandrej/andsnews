@@ -170,7 +170,6 @@
       <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
         <admin-shell
           data-view="maintenance"
-          is-admin="{{isAdmin}}"
           route="{{route}}"></admin-shell>
 
         <grid-view
@@ -184,7 +183,6 @@
         <detail-view
           data-view="detail"
           is-authorized="{{isAuthorized}}"
-          is-admin="{{isAdmin}}"
           kind="[[dataKind.kind]]"
           field="[[dataField.field]]"
           value="[[dataValue.value]]"
@@ -212,9 +210,13 @@
         }
         this.firebase.auth().onAuthStateChanged(function (user) {
           if (user) {
-            this.isAdmin = user.email == 'milan.andrejevic@gmail.com';
+            this.dispatch('change', {
+              isAdmin: user.email == 'milan.andrejevic@gmail.com'
+            });
           } else {
-            this.isAdmin = false;
+            this.dispatch('change', {
+              isAdmin: false
+            });
           }
         }.bind(this));
       },
@@ -238,7 +240,7 @@
         headline: { type: String, statePath: 'headline' },
         smallScreen: { type: Boolean, value: false, notify: true },
         user: { type: Object, notify: true },
-        isAdmin: { type: Boolean, value: false, notify: true },
+        isAdmin: { type: Boolean, statePath: 'isAdmin' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         itemKind: { type: String, statePath: 'kind' },
