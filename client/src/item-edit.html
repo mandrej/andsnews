@@ -14,11 +14,10 @@
 <dom-module id="item-edit">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-        background-color: var(--primary-background-color);
+      .container {
+        min-height: calc(100vh - 32px);
         padding: 16px;
+        background-color: var(--primary-background-color);
       }
       paper-button {
         margin-top: 8px;
@@ -43,7 +42,7 @@
       last-response="{{lens_cloud}}"
       debounce-duration="100"></iron-ajax>-->
 
-    <form id="form"
+    <form id="form" class="container"
       is="iron-form"
       on-iron-form-response="_responseHandler"
       action$="/api/[[item.kind]]/edit/[[item.safekey]]"
@@ -101,7 +100,6 @@
         <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
       </template>
     </form>
-
   </template>
   <script>
     Polymer({

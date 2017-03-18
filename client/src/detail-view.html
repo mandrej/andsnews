@@ -15,10 +15,6 @@
 <dom-module id="detail-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-      }
       iron-swipeable-pages {
         height: 100vh;
       }
@@ -132,7 +128,6 @@
         }
       },
       keyboardHandler: function(e) {
-        e.preventDefault();
         const state = this.getState();
 
         switch(e.detail.key) {
@@ -149,12 +144,12 @@
             }
             break;
           case 'i':
-            if (state.kind === 'photo') {
+            if (state.kind === 'photo' && state.view === 'display') {
               this.$$('.iron-selected').fire('info-toggle');
             }
             break;
           case 'z':
-            if (state.kind === 'photo') {
+            if (state.kind === 'photo' && state.view === 'display') {
               this.dispatch('change', {
                 disableSwipe: !state.disableSwipe,
                 zooming: !state.zooming

@@ -11,11 +11,10 @@
 <dom-module id="item-info">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-        background-color: var(--primary-background-color);
+      .container {
+        height: calc(100vh - 32px);
         padding: 16px;
+        background-color: var(--primary-background-color);
       }
       h2 {
         margin: 0;
@@ -41,30 +40,32 @@
       }
     </style>
 
-    <h2>[[item.headline]]</h2>
-    <paper-button on-tap="_downloadPhoto" class="white">
-      Download ([[item.size]])
-      <iron-icon icon="file-download"></iron-icon>
-    </paper-button>
-    <p>
-      [[_dateFormat(item.date)]]
-      <br>[[item.author]]
-      <br>
-      <br>[[item.model]]
-      <br>[[item.lens]] ([[item.focal_length]]mm)
-      <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
-    </p>
-    <div class="layout horizontal wrap">
-      <paper-chip label="[[item.year]]" no-image class$="[[activeFilter('date', item.year, filter)]]" on-tap="applyFilter" data-field="date"
-        data-field-value$="[[item.year]]"></paper-chip>
-      <template is="dom-repeat" items="[[item.tags]]" as="tag">
-        <paper-chip label="[[tag]]" no-image class$="[[activeFilter('tags', tag, filter)]]" on-tap="applyFilter" data-field="tags"
-          data-field-value$="[[tag]]"></paper-chip>
-      </template>
-      <paper-chip label="[[item.model]]" no-image class$="[[activeFilter('model', item.model, filter)]]" on-tap="applyFilter" data-field="model"
-        data-field-value$="[[item.model]]"></paper-chip>
-      <paper-chip label="[[item.color]]" no-image class$="[[activeFilter('color', item.color, filter)]]" on-tap="applyFilter" data-field="color"
-        data-field-value$="[[item.color]]"></paper-chip>
+    <div class="container">
+      <h2>[[item.headline]]</h2>
+      <paper-button on-tap="_downloadPhoto" class="white">
+        Download ([[item.size]])
+        <iron-icon icon="file-download"></iron-icon>
+      </paper-button>
+      <p>
+        [[_dateFormat(item.date)]]
+        <br>[[item.author]]
+        <br>
+        <br>[[item.model]]
+        <br>[[item.lens]] ([[item.focal_length]]mm)
+        <br>f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
+      </p>
+      <div class="layout horizontal wrap">
+        <paper-chip label="[[item.year]]" no-image class$="[[activeFilter('date', item.year, filter)]]" on-tap="applyFilter" data-field="date"
+          data-field-value$="[[item.year]]"></paper-chip>
+        <template is="dom-repeat" items="[[item.tags]]" as="tag">
+          <paper-chip label="[[tag]]" no-image class$="[[activeFilter('tags', tag, filter)]]" on-tap="applyFilter" data-field="tags"
+            data-field-value$="[[tag]]"></paper-chip>
+        </template>
+        <paper-chip label="[[item.model]]" no-image class$="[[activeFilter('model', item.model, filter)]]" on-tap="applyFilter" data-field="model"
+          data-field-value$="[[item.model]]"></paper-chip>
+        <paper-chip label="[[item.color]]" no-image class$="[[activeFilter('color', item.color, filter)]]" on-tap="applyFilter" data-field="color"
+          data-field-value$="[[item.color]]"></paper-chip>
+      </div>
     </div>
   </template>
 

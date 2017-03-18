@@ -11,15 +11,11 @@
 <dom-module id="admin-shell">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-        height: 100vh;
-        background-color: var(--primary-background-color);
-      }
       .container {
+        height: calc(100vh - 72px);
         padding: 16px;
         padding-bottom: 56px;
+        background-color: var(--primary-background-color);
       }
       h1 {
         margin-bottom: 0.5em;

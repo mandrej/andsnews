@@ -11,10 +11,6 @@
 <dom-module id="grid-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-      }
       .rec {
         position: relative;
         width: calc(100% / 6);
@@ -41,10 +37,6 @@
       @media (max-width: 1024px) { .rec { width: calc(100% / 4); height: calc(100vw / 4); }}
       @media (max-width: 768px)  { .rec { width: calc(100% / 3); height: calc(100vw / 3); }}
       @media (max-width: 432px)  { .rec { width: calc(100% / 2); height: calc(100vw / 2); }}
-
-      iron-image {
-        background-color: var(--secondary-text-color);
-      }
     </style>
 
     <iron-ajax auto

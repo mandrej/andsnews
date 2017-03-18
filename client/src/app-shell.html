@@ -27,10 +27,6 @@
 <dom-module id="app-shell">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-      }
       #spinner {
         position: absolute;
         top: 0;
@@ -258,7 +254,9 @@
               this.set('dataValue.value', null);
               this.dispatch('change', {
                 headline: 'ANDрејевићи',
-                kind: this.dataKind.kind
+                kind: this.dataKind.kind,
+                view: 'display',
+                disableSwipe: false
               });
               break;
             case 'detail':

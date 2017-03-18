@@ -16,20 +16,16 @@
 <dom-module id="form-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
-       :host {
-        display: block;
-        position: relative;
-        height: 100vh;
-        background-color: var(--primary-background-color);
-      }
       .container {
+        height: calc(100vh - 72px);
         padding: 16px;
         padding-bottom: 56px;
+        background-color: var(--primary-background-color);
       }
       vaadin-upload {
         --vaadin-upload-button-add: {
           font-size: inherit;
-          color: var(--primary-text-color);
+          color: var(--primary-background-color);
           background-color: var(--accent-color);
           @apply(--shadow-elevation-2dp);
         }
