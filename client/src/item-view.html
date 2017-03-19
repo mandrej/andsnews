@@ -117,15 +117,15 @@
       },
       _infoToggle: function () {
         const state = this.getState();
-        if (state.view != 'info') {
-          this.dispatch('change', {
-            view: 'info',
-            disableSwipe: true
-          });
-        } else {
+        if (state.view === 'info') {
           this.dispatch('change', {
             view: 'display',
             disableSwipe: false
+          });
+        } else {
+          this.dispatch('change', {
+            view: 'info',
+            disableSwipe: true
           });
         }
       },
