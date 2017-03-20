@@ -15,7 +15,7 @@ case $1 in
     exit ;;
   deploy)
     if [[ $# -eq 2 ]] ; then
-      echo gcloud app deploy -v $2 app.yaml index.yaml
+      echo gcloud app deploy -v $2 app.yaml index.yaml dos.yaml queue.yaml
       exit
     else
       echo $"Usage: $0 deploy version_id"
