@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
-python=/home/milan/venv/ands/bin/python
-dev_appserver=/home/milan/google_appengine/dev_appserver.py
-storage=/home/milan/work/andsnews_storage/
+home=/home/milan
+python=$home/venv/ands/bin/python
+dev_appserver=$home/google_appengine/dev_appserver.py
+storage=$home/work/andsnews_storage/
 stamp=`date +%Y%m%d%H%M`
+
+# If you deploy a version that specifies the same version ID as a version that already exists on App Engine,
+# the files that you deploy will overwrite the existing version. This can be problematic if the version is
+# serving traffic because traffic to your application might be disrupted. You can avoid disrupting traffic
+# if you deploy your new version with a different version ID and then move traffic to that version.
 
 case $1 in
   devel)
@@ -10,13 +16,13 @@ case $1 in
     exit ;;
   build)
     cd client
-    echo $(pwd)
+    # echo $(pwd)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" "src/app-shell.html"
     polymer build
     cd ..
     exit ;;
   deploy)
-    gcloud app deploy --project=andsnews --version=$stamp app.yaml index.yaml dos.yaml queue.yaml --verbosity=info
+    gcloud app deploy --project=andsnews --version=$stamp app.yaml index.yaml dos.yaml queue.yaml
     exit ;;
   *)
     echo $"Usage: $0 devel  - Run development server"
