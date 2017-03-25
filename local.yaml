@@ -91,4 +91,3 @@ skip_files:
 - ^client/(src|test|images)
 - ^client/bower_components
 - ^client/node_modules
-- ^lib/endpoints_proto_datastore

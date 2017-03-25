@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 python=/home/milan/venv/ands/bin/python
-appengine=/home/milan/google_appengine
+dev_appserver=/home/milan/google_appengine/dev_appserver.py
 storage=/home/milan/work/andsnews_storage/
-DATE=`date +%Y%m%d`
+stamp=`date +%Y%m%d%H%M`
 
 case $1 in
   devel)
-    $python $appengine/dev_appserver.py --storage_path=$storage local.yaml
+    $python $dev_appserver --storage_path=$storage local.yaml
     exit ;;
   build)
     cd client
     echo $(pwd)
-    sed -i -E "/version/s/[[:digit:]]{8}/$DATE/g" "src/app-shell.html"
+    sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" "src/app-shell.html"
     polymer build
     cd ..
     exit ;;
   deploy)
-    gcloud app deploy --project=andsnews --version=$DATE app.yaml index.yaml dos.yaml queue.yaml --verbosity=info
+    gcloud app deploy --project=andsnews --version=$stamp app.yaml index.yaml dos.yaml queue.yaml --verbosity=info
     exit ;;
   *)
     echo $"Usage: $0 devel  - Run development server"
     echo $"       $0 build  - Run polymer build"
-    echo $"       $0 deploy - Deploy app version $DATE"
+    echo $"       $0 deploy - Deploy app version $stamp"
     exit 1
 esac
