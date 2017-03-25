@@ -2,29 +2,25 @@
 python=/home/milan/venv/ands/bin/python
 appengine=/home/milan/google_appengine
 storage=/home/milan/work/andsnews_storage/
+DATE=`date +%Y%m%d`
 
 case $1 in
   devel)
-    $python $appengine/dev_appserver.py --storage_path=$storage app_local.yaml
+    $python $appengine/dev_appserver.py --storage_path=$storage local.yaml
     exit ;;
   build)
     cd client
     echo $(pwd)
-    echo polymer build
+    sed -i -E "/version/s/[[:digit:]]{8}/$DATE/g" "src/app-shell.html"
+    polymer build
     cd ..
     exit ;;
   deploy)
-    if [[ $# -eq 2 ]] ; then
-      echo gcloud app deploy -v $2 app.yaml index.yaml dos.yaml queue.yaml
-      exit
-    else
-      echo $"Usage: $0 deploy version_id"
-      echo $"version_id must be supplied"
-      exit 1
-    fi ;;
+    gcloud app deploy -v $DATE app.yaml index.yaml dos.yaml queue.yaml
+    exit ;;
   *)
-    echo $"Usage: $0 devel             - Run development server"
-    echo $"       $0 build             - Run polymer build"
-    echo $"       $0 deploy version_id - Deploy app to Google Cloud"
+    echo $"Usage: $0 devel  - Run development server"
+    echo $"       $0 build  - Run polymer build"
+    echo $"       $0 deploy - Deploy app version $DATE"
     exit 1
 esac
