@@ -16,7 +16,7 @@ case $1 in
     cd ..
     exit ;;
   deploy)
-    gcloud app deploy -v $DATE app.yaml index.yaml dos.yaml queue.yaml
+    gcloud app deploy --project=andsnews --version=$DATE app.yaml index.yaml dos.yaml queue.yaml --verbosity=info
     exit ;;
   *)
     echo $"Usage: $0 devel  - Run development server"
