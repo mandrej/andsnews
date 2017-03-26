@@ -9,14 +9,9 @@ automatic_scaling:
   max_pending_latency: 2s
 
 handlers:
-- url: /favicon.ico
-  static_files: build/unbundled/favicon.ico
-  upload: favicon.ico
-  secure: always
-
 - url: /robots\.txt
   static_files: build/unbundled/robots.txt
-  upload: robots.txt
+  upload: build/unbundled/robots.txt
   secure: always
 
 - url: /bower_components/
