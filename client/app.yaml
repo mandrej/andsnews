@@ -1,0 +1,62 @@
+service: default
+runtime: python27
+api_version: 1
+threadsafe: true
+default_expiration: "0s"
+
+automatic_scaling:
+  min_idle_instances: 2
+  max_pending_latency: 2s
+
+handlers:
+- url: /favicon.ico
+  static_files: build/unbundled/favicon.ico
+  upload: favicon.ico
+  secure: always
+
+- url: /robots\.txt
+  static_files: build/unbundled/robots.txt
+  upload: robots.txt
+  secure: always
+
+- url: /bower_components/
+  static_dir: build/unbundled/bower_components
+  secure: always
+
+- url: /node_modules/
+  static_dir: build/unbundled/node_modules
+  secure: always
+
+- url: /src/
+  static_dir: build/unbundled/src
+  secure: always
+
+- url: /images/
+  static_dir: build/unbundled/images
+  secure: always
+
+- url: /manifest\.json
+  static_files: build/unbundled/manifest.json
+  upload: build/unbundled/manifest.json
+  secure: always
+
+- url: /service-worker\.js
+  static_files: build/unbundled/service-worker.js
+  upload: build/unbundled/service-worker.js
+  secure: always
+
+- url: /firebase-messaging-sw\.js
+  static_files: build/unbundled/firebase-messaging-sw.js
+  upload: build/unbundled/firebase-messaging-sw.js
+  secure: always
+
+- url: /.*
+  static_files: build/unbundled/index.html
+  upload: build/unbundled/index.html
+  secure: always
+
+skip_files:
+- ^bower_components
+- ^node_modules
+- ^build/bundled
+- ^(src|test|images)

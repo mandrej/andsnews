@@ -12,7 +12,7 @@ stamp=`date +%Y%m%d%H%M`
 
 case $1 in
   devel)
-    $python $dev_appserver --storage_path=$storage local.yaml
+    $python $dev_appserver --storage_path=$storage dispatch.yaml local.yaml client/local.yaml
     exit ;;
   build)
     cd client

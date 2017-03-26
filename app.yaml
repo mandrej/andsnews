@@ -1,7 +1,11 @@
+service: api
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: "0s"
+
+instance_class: B2
+manual_scaling:
+  instances: 1
 
 libraries:
 - name: PIL
@@ -13,60 +17,12 @@ libraries:
 - name: numpy
   version: latest
 
-# client -> client/build/unbundled
-
 handlers:
-- url: /
-  static_files: client/build/unbundled/index.html
-  upload: client/build/unbundled/index.html
-  secure: always
-
-- url: /favicon.ico
-  static_files: client/build/unbundled/favicon.ico
-  upload: client/build/unbundled/favicon.ico
-  secure: always
-
-- url: /robots\.txt
-  static_files: client/build/unbundled/robots.txt
-  upload: client/build/unbundled/robots.txt
-  secure: always
-
-- url: /service-worker\.js
-  static_files: client/build/unbundled/service-worker.js
-  upload: client/build/unbundled/service-worker.js
-  secure: always
-
-- url: /firebase-messaging-sw\.js
-  static_files: client/build/unbundled/firebase-messaging-sw.js
-  upload: client/build/unbundled/firebase-messaging-sw.js
-  secure: always
-
-- url: /manifest\.json
-  static_files: client/build/unbundled/manifest.json
-  upload: client/build/unbundled/manifest.json
-  secure: always
-
-- url: /src/
-  static_dir: client/build/unbundled/src
-  secure: always
-
-- url: /images/
-  static_dir: client/build/unbundled/images
-  secure: always
-
-- url: /bower_components/
-  static_dir: client/build/unbundled/bower_components
-  secure: always
-
-- url: /node_modules/
-  static_dir: client/build/unbundled/node_modules
-  secure: always
-
-- url: /api/.*
+- url: /sitemap\.xml
   script: main.app
   secure: always
 
-- url: /sitemap\.xml
+- url: /api/.*
   script: main.app
   secure: always
 
@@ -87,7 +43,3 @@ skip_files:
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
 - ^docs
-- ^client/build/bundled
-- ^client/(src|test|images)
-- ^client/bower_components
-- ^client/node_modules
