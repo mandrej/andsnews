@@ -3,7 +3,7 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
-instance_class: B2
+instance_class: B1
 manual_scaling:
   instances: 1
 
@@ -29,9 +29,6 @@ handlers:
 - url: /tests/.*
   login: admin
   script: aeta.main.APP
-
-inbound_services:
-- warmup
 
 builtins:
 - deferred: on

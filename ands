@@ -22,7 +22,7 @@ case $1 in
     cd ..
     exit ;;
   deploy)
-    gcloud app deploy --project=andsnews --version=$stamp app.yaml index.yaml dos.yaml queue.yaml
+    gcloud app deploy --project=andsnews --version=$stamp dispatch.yaml app.yaml client/app.yaml index.yaml dos.yaml queue.yaml
     exit ;;
   *)
     echo $"Usage: $0 devel  - Run development server"

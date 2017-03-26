@@ -4,9 +4,10 @@ api_version: 1
 threadsafe: true
 default_expiration: "0s"
 
+instance_class: F1
 automatic_scaling:
-  min_idle_instances: 2
-  max_pending_latency: 2s
+  min_idle_instances: 1
+  max_pending_latency: automatic
 
 handlers:
 - url: /robots\.txt
@@ -49,6 +50,9 @@ handlers:
   static_files: build/unbundled/index.html
   upload: build/unbundled/index.html
   secure: always
+
+inbound_services:
+- warmup
 
 skip_files:
 - ^bower_components
