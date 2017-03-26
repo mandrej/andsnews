@@ -144,6 +144,9 @@
         // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
         form.request.method = 'put';
       },
+      _remove: function (e) {
+        Polymer.dom().querySelector('app-shell').fire('confirm-delete');
+      },
       _submit: function (e) {
         // _submit calls _preSubmit
         const form = this.$.form;

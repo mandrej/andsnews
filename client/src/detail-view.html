@@ -188,12 +188,16 @@
         }
       },
       _deleteRecord: function () {
-        const index = this.$.swipe.selected,
-          obj = this.splice('records', index, 1)[0],
-          xhr = this.$.delete_ajax;
+        const index = this.$.swipe.selected;
+        const obj = this.splice('records', index, 1)[0];
+        const xhr = this.$.delete_ajax;
 
         xhr.url = '/api/delete/' + obj.safekey;
         xhr.generateRequest();
+        this.dispatch('change', {
+            view: 'display',
+            disableSwipe: false
+          });
       },
       propertyChanged: function (newValue, oldValue) {
         console.log([oldValue || 'undefined', ' -> ', newValue].join(''));
