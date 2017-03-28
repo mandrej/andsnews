@@ -23,7 +23,6 @@ from .slugify import slugify
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
 
-DUMMY_GIF = 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = {'date': 10, 'tags': 20, 'model': 30, 'color': 40}
@@ -382,13 +381,12 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        url = DUMMY_GIF
         try:
-            url = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except (images.ObjectNotFoundError, images.TransformationError), e:
+            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except (images.ObjectNotFoundError, images.TransformationError) as e:
             # raise _ToImagesError(e, readable_blob_key)
             logger.error(e.message)
-        return url
+            return None
 
     @webapp2.cached_property
     def download_url(self):

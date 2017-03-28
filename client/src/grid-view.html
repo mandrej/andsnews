@@ -49,7 +49,7 @@
     <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
       <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender" filter="_filtering">
         <div class="rec" data-field$="[[rec.field_name]]" on-tap="applyFilter">
-          <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+          <iron-image src="[[_checkImage(rec)]]" preload fade sizing="cover"></iron-image>
           <div class="title">
             <div class="layout horizontal justified">
               <span class="self-center">[[rec.name]]</span>
@@ -131,6 +131,13 @@
       },
       _isKindPhoto: function (kind) {
         return kind == 'photo';
+      },
+      _checkImage: function (rec) {
+        if (rec.repr_url) {
+          return rec.repr_url + '=s400';
+        } else {
+          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+        }
       },
       applyFilter: function (e) {
         // photo
