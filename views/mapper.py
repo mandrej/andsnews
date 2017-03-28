@@ -10,7 +10,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
 from .config import BUCKET, END_MSG
-from .models import DUMMY_GIF, Counter
+from .models import Counter
 from .fireapi import Firebase, push_message
 
 FB = Firebase()
@@ -111,7 +111,7 @@ class Unbound(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
-            if entity.serving_url == DUMMY_GIF:
+            if entity.serving_url is None:
                 push_message(self.TOKEN, '{}'.format(entity.filename))
                 # FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
                 # entity.remove()
