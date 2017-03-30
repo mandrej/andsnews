@@ -3,6 +3,7 @@ module.exports = {
         '/index.html',
         '/manifest.json',
         '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+        '/node_modules/redux/dist/redux.min.js',
         '/images/*'
     ],
     navigateFallback: '/index.html',

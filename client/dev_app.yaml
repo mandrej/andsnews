@@ -9,10 +9,14 @@ instance_class: F1
 automatic_scaling:
   min_idle_instances: 1
 
+libraries:
+- name: webapp2
+  version: latest
+
 handlers:
-- url: /robots\.txt
-  static_files: robots.txt
-  upload: robots.txt
+- url: /(robots\.txt|manifest\.json)$
+  static_files: \1
+  upload: (robots\.txt|manifest\.json)$
   secure: always
 
 - url: /bower_components/
@@ -31,19 +35,13 @@ handlers:
   static_dir: images
   secure: always
 
-- url: /manifest\.json
-  static_files: manifest.json
-  upload: manifest.json
+- url: /(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: \1
+  upload: (service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
 
-- url: /service-worker\.js
-  static_files: service-worker.js
-  upload: service-worker.js
-  secure: always
-
-- url: /firebase-messaging-sw\.js
-  static_files: firebase-messaging-sw.js
-  upload: firebase-messaging-sw.js
+- url: /_ah/warmup
+  script: main.app
   secure: always
 
 - url: /.*

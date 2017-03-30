@@ -8,10 +8,14 @@ instance_class: F1
 automatic_scaling:
   min_idle_instances: 1
 
+libraries:
+- name: webapp2
+  version: latest
+
 handlers:
-- url: /robots\.txt
-  static_files: build/unbundled/robots.txt
-  upload: build/unbundled/robots.txt
+- url: /(robots\.txt|manifest\.json)$
+  static_files: build/unbundled/\1
+  upload: build/unbundled/(robots\.txt|manifest\.json)$
   secure: always
 
 - url: /bower_components/
@@ -30,19 +34,13 @@ handlers:
   static_dir: build/unbundled/images
   secure: always
 
-- url: /manifest\.json
-  static_files: build/unbundled/manifest.json
-  upload: build/unbundled/manifest.json
+- url: /(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: build/unbundled/\1
+  upload: build/unbundled/(service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
 
-- url: /service-worker\.js
-  static_files: build/unbundled/service-worker.js
-  upload: build/unbundled/service-worker.js
-  secure: always
-
-- url: /firebase-messaging-sw\.js
-  static_files: build/unbundled/firebase-messaging-sw.js
-  upload: build/unbundled/firebase-messaging-sw.js
+- url: /_ah/warmup
+  script: main.app
   secure: always
 
 - url: /.*
