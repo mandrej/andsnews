@@ -22,11 +22,13 @@ case $1 in
     cd ..
     exit ;;
   deploy)
-    gcloud app deploy --project=andsnews --version=$stamp dispatch.yaml app.yaml client/app.yaml index.yaml dos.yaml queue.yaml
+    version=$(grep "version" client/src/app-shell.html | awk '/[[:digit:]]{12}/ {print $6}' | sed "s/'//g")
+    # echo $version
+    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml client/app.yaml index.yaml dos.yaml queue.yaml
     exit ;;
   *)
     echo $"Usage: $0 devel  - Run development server"
     echo $"       $0 build  - Run polymer build"
-    echo $"       $0 deploy - Deploy app version $stamp"
+    echo $"       $0 deploy - Deploy app version $version"
     exit 1
 esac

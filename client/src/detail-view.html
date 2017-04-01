@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
@@ -14,7 +13,7 @@
 
 <dom-module id="detail-view">
   <template>
-    <style include="shared-styles iron-flex iron-flex-alignment">
+    <style include="shared-styles">
       iron-swipeable-pages {
         height: 100vh;
       }
@@ -37,11 +36,9 @@
       <p>Please try again</p>
     </paper-dialog>
 
-    <iron-swipeable-pages id="swipe"
+    <iron-swipeable-pages id="swipe" no-cycle
       selected="0"
       threshold="0"
-      noCycle="true"
-      carousel="true"
       fallback-selection="0"
       disabled="[[disableSwipe]]"
       on-iron-select="changeCurrent">

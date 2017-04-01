@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -10,7 +9,7 @@
 
 <dom-module id="admin-shell">
   <template>
-    <style include="shared-styles iron-flex iron-flex-alignment">
+    <style include="shared-styles">
       .container {
         /*height: calc(100vh - 72px);*/
         padding: 16px;
@@ -34,13 +33,6 @@
         background: var(--secondary-text-color);
       }
     </style>
-
-    <firebase-auth id="auth"
-      app-name="andsnews"
-      user="{{user}}"
-      online="{{online}}"
-      signed-in="{{isAuthorized}}"
-      provider="google"></firebase-auth>
 
     <firebase-messaging id="messaging"
       app-name="andsnews"
