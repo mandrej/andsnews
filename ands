@@ -4,6 +4,7 @@ python=$home/venv/ands/bin/python
 dev_appserver=$home/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
 stamp=`date +%Y%m%d%H%M`
+file="client/src/app-shell.html"
 
 # If you deploy a version that specifies the same version ID as a version that already exists on App Engine,
 # the files that you deploy will overwrite the existing version. This can be problematic if the version is
@@ -15,18 +16,17 @@ case $1 in
     $python $dev_appserver --storage_path=$storage dispatch.yaml dev_app.yaml client/dev_app.yaml
     exit ;;
   build)
+    sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
     cd client
-    # echo $(pwd)
-    sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" "src/app-shell.html"
     polymer build
     cd ..
     exit ;;
   deploy)
-    version=$(grep "version" client/src/app-shell.html | awk '/[[:digit:]]{12}/ {print $6}' | sed "s/'//g")
-    # echo $version
-    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml client/app.yaml index.yaml dos.yaml queue.yaml
+    version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
+    gcloud app deploy --project=andsnews --version=$version app.yaml index.yaml dos.yaml queue.yaml
     exit ;;
   *)
+    version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
     echo $"Usage: $0 devel  - Run development server"
     echo $"       $0 build  - Run polymer build"
     echo $"       $0 deploy - Deploy app version $version"
