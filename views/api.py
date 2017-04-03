@@ -371,6 +371,9 @@ class Info(RestHandler):
             'photo': {
                 'count': Photo.query().count(),
                 'counters': ['Photo_%s' % x for x in fields]
+            },
+            'entry': {
+                'count': Entry.query().count(),
             }
         }
         self.render(data)
