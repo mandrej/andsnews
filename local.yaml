@@ -67,6 +67,10 @@ handlers:
   script: main.app
   secure: always
 
+- url: /_ah/warmup
+  script: main.app
+  secure: always
+
 - url: /sitemap\.xml
   script: main.app
   secure: always

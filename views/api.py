@@ -103,6 +103,11 @@ class RestHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
+class WarmUp(RestHandler):
+    def get(self):
+        self.render({'warmup': True})
+
+
 class Suggest(RestHandler):
     def get(self, mem_key):
         kind, field = mem_key.split('_')
@@ -158,7 +163,7 @@ def available_filters():
             item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
                 else item['count'] > int(limit)
 
-    return collection
+    return [x for x in collection if x['show']]
 
 
 class PhotoFilters(RestHandler):
