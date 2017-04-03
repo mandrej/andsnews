@@ -158,7 +158,7 @@ def available_filters():
             item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
                 else item['count'] > int(limit)
 
-    return collection
+    return [x for x in collection if x['show']]
 
 
 class PhotoFilters(RestHandler):
@@ -366,6 +366,9 @@ class Info(RestHandler):
             'photo': {
                 'count': Photo.query().count(),
                 'counters': ['Photo_%s' % x for x in fields]
+            },
+            'entry': {
+                'count': Entry.query().count(),
             }
         }
         self.render(data)

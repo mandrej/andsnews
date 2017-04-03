@@ -15,13 +15,13 @@ app = WSGIApplication([
     Route(r'/api/<kind:(photo|entry)>/add', handler=api.Crud, methods=['GET', 'POST']),
     Route(r'/api/<kind:(photo|entry)>/edit/<safe_key>', handler=api.Crud, methods=['GET', 'PUT']),
     Route(r'/api/delete/<safe_key>', handler=api.Crud, methods=['DELETE']),
-    Route(r'/api/download/<safe_key>', handler=api.Download),
+    Route(r'/api/download/<safe_key>', handler=api.Download, methods=['GET']),
 
-    Route(r'/api/info', handler=api.Info),
+    Route(r'/api/info', handler=api.Info, methods=['GET']),
     Route(r'/api/index/<kind>', handler=api.BackgroundIndex, methods=['POST']),
     Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
     Route(r'/api/fix/<kind>', handler=api.BackgroundFix, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
 
-    Route(r'/sitemap.xml', handler=api.SiteMap, name='sitemap'),
+    Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
 ], debug=DEVEL)

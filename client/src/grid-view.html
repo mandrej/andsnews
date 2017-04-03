@@ -46,7 +46,7 @@
       debounce-duration="150"></iron-ajax>
 
     <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
-      <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender" filter="_filtering">
+      <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
         <div class="rec" data-field$="[[rec.field_name]]" on-tap="applyFilter">
           <iron-image src="[[_checkImage(rec)]]" preload fade sizing="cover"></iron-image>
           <div class="title">
@@ -113,9 +113,9 @@
           }
         }
       },
-      _filtering: function (rec) {
-        return rec.show;
-      },
+      // _filtering: function (rec) {
+      //   return rec.show;
+      // },
       handler: function (request) {
         var response = request.detail.response,
           collection;

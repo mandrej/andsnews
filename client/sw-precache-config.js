@@ -8,6 +8,9 @@ module.exports = {
     ],
     navigateFallback: '/index.html',
     runtimeCaching: [{
+        urlPattern: /\/_ah\/.*/,
+        handler: 'networkFirst'
+    }, {
         urlPattern: /\/api\/photo\/tags\/new/,
         handler: 'networkFirst'
     }, {
