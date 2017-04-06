@@ -30,6 +30,14 @@
         height: 100%;
         transition: all 0.3s ease-in-out;
       }
+      .left, .right {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 25%;
+      }
+      .left { left: 0; }
+      .right { right: 0; }
       .container {
         min-height: calc(100vh - 32px);
         padding: 16px;
@@ -65,6 +73,8 @@
             data-dim$="[[item.dim]]"
             sizing="cover"
             preload fade></iron-image>
+          <div class="left" on-tap="_goSwipe"></div>
+          <div class="right" on-tap="_goSwipe"></div>
         </template>
 
         <template is="dom-if" if="[[!_isKindPhoto(item)]]">
@@ -149,6 +159,18 @@
             width: '100%',
             height: '100%',
           });
+        }
+      },
+      _goSwipe: function (e) {
+        const state = this.getState();
+        if (state.zooming) return;
+
+        const direction = e.target.className;
+        const parent = Polymer.dom().querySelector('app-shell').root.querySelector('detail-view');
+        if (direction === 'left') {
+          parent.$.swipe.selectPrevious();
+        } else {
+          parent.$.swipe.selectNext();
         }
       },
     });
