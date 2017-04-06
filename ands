@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 home=/home/milan
 python=$home/venv/ands/bin/python
-dev_appserver=$home/google_appengine/dev_appserver.py
+dev_appserver=/usr/lib/google-cloud-sdk/platform/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
 stamp=`date +%Y%m%d%H%M`
 file="client/src/app-shell.html"
@@ -13,7 +13,7 @@ file="client/src/app-shell.html"
 
 case $1 in
   devel)
-    $python $dev_appserver --storage_path=$storage dispatch.yaml dev_app.yaml client/dev_app.yaml
+    $python $dev_appserver --storage_path=$storage dev_app.yaml
     exit ;;
   build)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file

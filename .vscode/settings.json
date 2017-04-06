@@ -2,8 +2,12 @@
   "python.venvPath": "/home/milan/venv/ands",
   "python.pythonPath": "/home/milan/venv/ands/bin/python",
   "python.autoComplete.extraPaths": [
-        "/home/milan/google_appengine",
-        "/home/milan/google_appengine/lib",
+        "/usr/lib/google-cloud-sdk/platform/google_appengine",
+        "/usr/lib/google-cloud-sdk/platform/google_appengine/lib",
         "${workspaceRoot}/lib" ],
-  "python.linting.pep8Enabled": true
+  "python.linting.pep8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "files.exclude": {
+      "**/*.pyc": true
+  }
 }
