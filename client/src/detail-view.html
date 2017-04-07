@@ -85,6 +85,8 @@
       listeners: {
         'edit-record': '_editRecord',
         'delete-record': '_deleteRecord',
+        'swipe-left': '_swipeLeft',
+        'swipe-right': '_swipeRight',
       },
       _url: function (kind, field, value) {
         // initial set value to null, otherwise search won't work
@@ -124,6 +126,15 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       },
+      _swipeLeft: function () {
+        const index = this.$.swipe.selected;
+        if (index > 0) this.$.swipe.selectPrevious();
+      },
+      _swipeRight: function () {
+        const index = this.$.swipe.selected;
+        const upto = this.records.length;
+        if (index < upto) this.$.swipe.selectNext();
+      },
       keyboardHandler: function(e) {
         const state = this.getState();
 
@@ -131,13 +142,13 @@
           case 'left':
             if (state.disableSwipe) return;
             if (state.kind === 'photo') {
-              this.$.swipe.selectPrevious();
+              this.fire('swipe-left');
             }
             break;
           case 'right':
             if (state.disableSwipe) return;
             if (state.kind === 'photo') {
-              this.$.swipe.selectNext();
+              this.fire('swipe-right');
             }
             break;
           case 'i':
