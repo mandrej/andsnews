@@ -34,7 +34,8 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        width: 25%;
+        width: 15%;
+        /*background-color: rgba(0,0,0,.3);*/
       }
       .left { left: 0; }
       .right { right: 0; }
@@ -71,7 +72,8 @@
           <iron-image
             src="[[item.serving_url]]=s0"
             data-dim$="[[item.dim]]"
-            sizing="cover"
+            position="top"
+            sizing="contain"
             preload fade></iron-image>
           <div class="left" on-tap="_goSwipe"></div>
           <div class="right" on-tap="_goSwipe"></div>
@@ -168,9 +170,9 @@
         const direction = e.target.className;
         const parent = Polymer.dom().querySelector('app-shell').root.querySelector('detail-view');
         if (direction === 'left') {
-          parent.$.swipe.selectPrevious();
+          parent.fire('swipe-left');
         } else {
-          parent.$.swipe.selectNext();
+          parent.fire('swipe-right');
         }
       },
     });
