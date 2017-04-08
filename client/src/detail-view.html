@@ -4,7 +4,6 @@
 <link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./redux-store.html">
 
@@ -58,6 +57,7 @@
       properties: {
         params: { type: Object, value: {}, notify: true },
         filter: { type: Object, value: {}, notify: true },
+        index: { type: Number, value: 0, notify: true },
         records: { type: Array, notify: true },
         loading: { type: Boolean, value: false, notify: true },
         disableSwipe: { type: Boolean, statePath: 'disableSwipe' },
@@ -126,15 +126,6 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       },
-      _swipeLeft: function () {
-        const index = this.$.swipe.selected;
-        if (index > 0) this.$.swipe.selectPrevious();
-      },
-      _swipeRight: function () {
-        const index = this.$.swipe.selected;
-        const upto = this.records.length;
-        if (index < upto) this.$.swipe.selectNext();
-      },
       keyboardHandler: function(e) {
         const state = this.getState();
 
@@ -168,8 +159,8 @@
         }
       },
       changeCurrent: function () {
-        const index = this.$.swipe.selected;
-        const item = this.records[index];
+        this.index = 1 * this.$.swipe.selected;
+        const item = this.records[this.index];
         if (item) {
           this.dispatch('change', {
             headline: item.headline,
@@ -177,7 +168,7 @@
             safekey: item.safekey
           });
         }
-        if (this.records.length - index < 5) {
+        if (this.records.length - 6 < this.index) {
           this.loadMore();
         }
       },
@@ -195,9 +186,18 @@
           });
         }
       },
+      _swipeLeft: function () {
+        if (this.index > 0) {
+          this.$.swipe.selectPrevious();
+        }
+      },
+      _swipeRight: function () {
+        if (this.index < this.records.length - 1) {
+          this.$.swipe.selectNext();
+        }
+      },
       _deleteRecord: function () {
-        const index = this.$.swipe.selected;
-        const obj = this.splice('records', index, 1)[0];
+        const obj = this.splice('records', this.index, 1)[0];
         const xhr = this.$.delete_ajax;
 
         xhr.url = '/api/delete/' + obj.safekey;
