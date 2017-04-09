@@ -1,7 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/marked-element/marked-element.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -29,23 +27,24 @@
         height: 100%;
         transition: all 0.3s ease-in-out;
       }
-      .arrow {
+      .left, .right {
         position: absolute;
         top: 0;
         bottom: 0;
         width: 15%;
         /*background-color: rgba(0,0,0,.3);*/
+        background-repeat: no-repeat;
+        background-position: center 25%;
       }
-      .arrow > iron-icon {
-        position: absolute;
-        top: calc(50% - 192px);
-        left: calc(50% - 32px);
-        --iron-icon-width: 64px;
-        --iron-icon-height: 64px;
-        color: var(--primary-background-color);
+      /*https://codepen.io/fixcl/pen/Fkcot*/
+      .left { 
+        left: 0;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjgwcHgiIHZpZXdCb3g9IjAgMCA1MCA4MCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iNDUuNjMsNzUuOCAwLjM3NSwzOC4wODcgNDUuNjMsMC4zNzUgIi8+PC9zdmc+");
       }
-      .arrow.left { left: 0; }
-      .arrow.right { right: 0; }
+      .right { 
+        right: 0;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjgwcHgiIHZpZXdCb3g9IjAgMCA1MCA4MCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMC4zNzUsMC4zNzUgNDUuNjMsMzguMDg3IDAuMzc1LDc1LjggIi8+PC9zdmc+');
+      }
       .container {
         min-height: calc(100vh - 32px);
         padding: 16px;
@@ -82,12 +81,8 @@
             position="top"
             sizing="contain"
             preload fade></iron-image>
-          <div class="arrow left" on-tap="_goSwipe">
-            <iron-icon icon="icons:chevron-left"></iron-icon>
-          </div>
-          <div class="arrow right" on-tap="_goSwipe">
-            <iron-icon icon="icons:chevron-right"></iron-icon>
-          </div>
+          <div class="left" on-tap="_goSwipe"></div>
+          <div class="right" on-tap="_goSwipe"></div>
         </template>
 
         <template is="dom-if" if="[[!_isKindPhoto(item)]]">
@@ -167,7 +162,7 @@
             width: dim[0] + 'px',
             height: dim[1] + 'px',
           });
-          [].forEach.call(this.$.neon.querySelectorAll('.arrow'), function (el) {
+          [].forEach.call(this.$.neon.querySelectorAll('.left, .right'), function (el) {
             el.style.visibility = 'hidden';
           });
         } else {
@@ -175,7 +170,7 @@
             width: '100%',
             height: '100%',
           });
-          [].forEach.call(this.$.neon.querySelectorAll('.arrow'), function (el) {
+          [].forEach.call(this.$.neon.querySelectorAll('.left, .right'), function (el) {
             el.style.visibility = 'visible';
           });
         }
@@ -184,12 +179,14 @@
         const state = this.getState();
         if (state.zooming) return;
 
-        const classes = e.currentTarget.classList.value;
         const parent = Polymer.dom().querySelector('app-shell').root.querySelector('detail-view');
-        if (classes.search(/left/) >= 0) {
-          parent.fire('swipe-left');
-        } else if (classes.search(/right/) >= 0) {
-          parent.fire('swipe-right');
+        switch (e.target.className) {
+          case 'left':
+            parent.fire('swipe-left');
+            break;
+          case 'right':
+            parent.fire('swipe-right');
+            break;
         }
       },
     });
