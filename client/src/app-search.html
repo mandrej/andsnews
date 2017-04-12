@@ -2,7 +2,8 @@
 <link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
@@ -24,7 +25,7 @@
     </style>
 
     <div class="layout horizontal">
-      <paper-icon-button icon="search" on-tap="toggleWidget" id="button"></paper-icon-button>
+      <paper-icon-button icon="app:search" on-tap="toggleWidget" id="button"></paper-icon-button>
       <paper-input id="inputSearch" placeholder="search" no-label-float value="{{search::value-changed}}"></paper-input>
     </div>
   </template>

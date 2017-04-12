@@ -2,6 +2,7 @@
     "entrypoint": "index.html",
     "shell": "src/app-shell.html",
     "fragments": [
+        "src/app-icons.html",
         "src/shared-styles.html",
         "src/redux-store.html",
         "src/grid-view.html",

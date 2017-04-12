@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -13,12 +15,11 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./redux-store.html">
 
 <link rel="import" href="./shared-styles.html">
+<link rel="import" href="./app-icons.html">
 <link rel="import" href="./app-search.html">
 <link rel="import" href="./grid-view.html">
 
@@ -126,19 +127,19 @@
             <ul role="navigation" class="navigation">
               <li>
                 <a href="#/grid/photo">
-                  <paper-icon-button icon="image:photo-camera"></paper-icon-button>
+                  <paper-icon-button icon="app:photo-camera"></paper-icon-button>
                   <span hidden$="{{smallScreen}}">Photos</span>
                 </a>
               </li>
               <li>
                 <a href="#/grid/entry">
-                  <paper-icon-button icon="description"></paper-icon-button>
+                  <paper-icon-button icon="app:description"></paper-icon-button>
                   <span hidden$="{{smallScreen}}">Texts</span>
                 </a>
               </li>
               <li hidden$="[[!isAdmin]]">
                 <a href="#/maintenance">
-                  <paper-icon-button icon="settings"></paper-icon-button>
+                  <paper-icon-button icon="app:settings"></paper-icon-button>
                   <span hidden$="{{smallScreen}}">Admin</span>
                 </a>
               </li>
@@ -146,17 +147,17 @@
 
             <div hidden$="[[!_isDetailView(dataView.view)]]">
               <span hidden$="[[!isAdmin]]">
-                <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+                <paper-icon-button icon="app:create" on-tap="editRecord"></paper-icon-button>
               </span>
               <span hidden$="[[!_isKindPhoto(itemKind)]]">
                 <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
-                <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
+                <paper-icon-button icon="app:more-vert" on-tap="showInfo"></paper-icon-button>
               </span>
             </div>
           </div>
 
           <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-            <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+            <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
           </div>
         </app-toolbar>
       </app-header>
@@ -239,7 +240,7 @@
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         itemKind: { type: String, statePath: 'kind' },
         zoomIcon: { type: String, statePath: function(state) {
-          return (state.zooming) ? 'zoom-out' : 'zoom-in';
+          return (state.zooming) ? 'app:zoom-out' : 'app:zoom-in';
         }},
         zooming: { type: String, statePath: 'zooming' },
       },
