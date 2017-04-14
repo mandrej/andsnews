@@ -11,7 +11,7 @@ from google.appengine.ext import ndb, deferred
 
 from .config import DEVEL, START_MSG
 from .mapper import Indexer, Unbound, Builder, Fixer
-from .models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
+from .models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
 from .slugify import slugify
 from .fireapi import push_message
 
@@ -366,14 +366,12 @@ class SiteMap(webapp2.RequestHandler):
 
 class Info(RestHandler):
     def get(self):
-        fields = [x[0] for x in sorted(PHOTO_FILTER.items(), key=itemgetter(1))]
         data = {
-            'photo': {
-                'count': Photo.query().count(),
-                'counters': ['Photo_%s' % x for x in fields]
-            },
-            'entry': {
-                'count': Entry.query().count(),
-            }
+            'photo': {'count': Photo.query().count()},
+            'entry': {'count': Entry.query().count()},
         }
+        fields = [x[0] for x in sorted(PHOTO_FILTER.items(), key=itemgetter(1))]
+        data['photo']['counters'] = ['Photo_%s' % x for x in fields]
+        fields = [x[0] for x in sorted(ENTRY_FILTER.items(), key=itemgetter(1))]
+        data['entry']['counters'] = ['Entry_%s' % x for x in fields]
         self.render(data)

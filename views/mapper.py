@@ -201,19 +201,19 @@ class Builder(Mapper):
     def finish(self):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
+        kind = self.KIND._class_name()
         for value, count in tally.items():
+            key_name = '{}||{}||{}'.format(kind, self.FIELD, str(value))
+            obj = Counter.get_or_insert(key_name, forkind=kind, field=self.FIELD, value=value)
+            obj.count = count
+
             latest = self.KIND.latest_for(self.FIELD, value)
             if latest is not None:
-                repr_url = latest.serving_url
-                repr_stamp = latest.date
+                if kind == 'Photo':
+                    obj.repr_url = latest.serving_url
+                    obj.repr_stamp = latest.date
 
-            key_name = 'Photo||{}||{}'.format(self.FIELD, str(value))
-            obj = Counter.get_or_insert(key_name, forkind="Photo", field=self.FIELD, value=value)
-            obj.count = count
-            obj.repr_url = repr_url
-            obj.repr_stamp = repr_stamp
             obj.put()
-
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
 
             # FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
