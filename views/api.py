@@ -9,11 +9,11 @@ from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 
-from .config import DEVEL, START_MSG
-from .mapper import Indexer, Unbound, Builder, Fixer
-from .models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
-from .slugify import slugify
-from .fireapi import push_message
+from config import DEVEL, START_MSG
+from mapper import Indexer, Unbound, Builder, Fixer
+from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
+from slugify import slugify
+from fireapi import push_message
 
 LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
@@ -141,7 +141,7 @@ class Collection(RestHandler):
 
 def available_filters():
     collection = []
-    for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
+    for field in PHOTO_FILTER:
         query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         items = []
         for counter in query:
@@ -370,8 +370,6 @@ class Info(RestHandler):
             'photo': {'count': Photo.query().count()},
             'entry': {'count': Entry.query().count()},
         }
-        fields = [x[0] for x in sorted(PHOTO_FILTER.items(), key=itemgetter(1))]
-        data['photo']['counters'] = ['Photo_%s' % x for x in fields]
-        fields = [x[0] for x in sorted(ENTRY_FILTER.items(), key=itemgetter(1))]
-        data['entry']['counters'] = ['Entry_%s' % x for x in fields]
+        data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
+        data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)

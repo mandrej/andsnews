@@ -9,9 +9,9 @@ from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
-from .config import BUCKET, END_MSG
-from .models import Counter
-from .fireapi import Firebase, push_message
+from config import BUCKET, END_MSG
+from models import Counter
+from fireapi import Firebase, push_message
 
 FB = Firebase()
 
@@ -209,9 +209,11 @@ class Builder(Mapper):
 
             latest = self.KIND.latest_for(self.FIELD, value)
             if latest is not None:
+                obj.repr_stamp = latest.date
                 if kind == 'Photo':
                     obj.repr_url = latest.serving_url
-                    obj.repr_stamp = latest.date
+                elif kind == 'Entry':
+                    obj.repr_url = latest.front_img
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
