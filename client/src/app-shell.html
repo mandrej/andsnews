@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
@@ -105,7 +104,6 @@
       <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
     </div>
 
-    <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
     <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
     <app-header-layout>
@@ -128,19 +126,19 @@
               <li>
                 <a href="#/grid/photo">
                   <paper-icon-button icon="app:photo-camera"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Photos</span>
+                  <span>Photos</span>
                 </a>
               </li>
               <li>
                 <a href="#/grid/entry">
                   <paper-icon-button icon="app:description"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Texts</span>
+                  <span>Texts</span>
                 </a>
               </li>
               <li hidden$="[[!isAdmin]]">
                 <a href="#/maintenance">
                   <paper-icon-button icon="app:settings"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Admin</span>
+                  <span>Admin</span>
                 </a>
               </li>
             </ul>
@@ -233,7 +231,6 @@
       properties: {
         version: { type: String, value: '201704101448' },
         headline: { type: String, statePath: 'headline' },
-        smallScreen: { type: Boolean, value: false, notify: true },
         user: { type: Object, notify: true },
         isAdmin: { type: Boolean, statePath: 'isAdmin' },
         loading: { type: Boolean, value: false, notify: true },
