@@ -29,16 +29,14 @@
       }
     </style>
 
-    <iron-ajax auto
-      url="[[_urlTagsCloud(view, item)]]"
+    <iron-ajax id="xhr"
       handle-as="json"
-      last-response="{{tags_cloud}}"
-      debounce-duration="100"></iron-ajax>
+      last-response="[[tags_cloud]]"></iron-ajax>
 
     <!--<iron-ajax auto
       url="[[_urlLensCloud(view, item)]]"
       handle-as="json"
-      last-response="{{lens_cloud}}"
+      last-response="[[lens_cloud]]"
       debounce-duration="100"></iron-ajax>-->
 
     <form id="form" class="container"
@@ -73,6 +71,7 @@
       <paper-input-autocomplete-chips id="tags"
         name="tags"
         label="tags"
+        on-focus="callAjax"
         local-candidates="{{listObjects(tags_cloud)}}"
         selected-objects="{{listObjects(item)}}"
         allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
@@ -118,13 +117,14 @@
       properties: {
         isAdmin: { type: Boolean, statePath: 'isAdmin' },
       },
-      _urlTagsCloud: function (view, item) {
-        if (view !== 'form') return;
-        if (item.kind === 'photo') {
-          return '/api/suggest/Photo_tags';
-        } else {
-          return '/api/suggest/Entry_tags';
+      callAjax: function () {
+        const xhr = this.$.xhr;
+        if (this.item.kind === 'photo') {
+          xhr.url = '/api/suggest/Photo_tags';
+        } else if (this.item.kind === 'entry') {
+          xhr.url = '/api/suggest/Entry_tags';
         }
+        if (!this.tags_cloud) xhr.generateRequest();
       },
       // _urlLensCloud: function (view, item) {
       //   if (view === 'form' && item.kind === 'photo') {

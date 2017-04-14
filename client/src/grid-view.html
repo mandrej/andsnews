@@ -41,33 +41,31 @@
     </style>
 
     <iron-ajax auto
-      url="[[_url(kind, field, value)]]"
+      url="[[_url(kind, view)]]"
       handle-as="json"
       on-response="handler"
       loading="{{loading}}"
       debounce-duration="150"></iron-ajax>
 
-    <div hidden$="[[!_isKindPhoto(kind)]]" class="layout horizontal wrap">
-      <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
-        <div class="rec" data-field$="[[rec.field_name]]" on-tap="applyFilter">
-          <iron-image src="[[_checkImage(rec)]]" preload fade sizing="cover"></iron-image>
-          <div class="title">
-            <div class="layout horizontal justified">
-              <span class="self-center">[[rec.name]]</span>
-              <span class="self-center">[[rec.count]]</span>
-            </div>
-          </div>
-        </div>
-      </template>
-    </div>
 
-    <div hidden$="[[_isKindPhoto(kind)]]" class="layout horizontal wrap">
+    <div class="layout horizontal wrap">
       <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
-        <div class="rec" on-tap="showDetail">
-          <iron-image src="[[rec.front_img]]" preload fade sizing="cover"></iron-image>
+        <div class="rec" data-field$="[[rec.field_name]]" on-tap="showDetail">
+          <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+            <iron-image src="[[_checkImage(rec)]]" preload fade sizing="cover"></iron-image>
+          </template>
+          <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+            <iron-image src="[[rec.front_img]]" preload fade sizing="cover"></iron-image>
+          </template>
           <div class="title">
             <div class="layout horizontal justified">
-              <span class="self-center">[[rec.headline]]</span>
+              <template is="dom-if" if="[[_isKindPhoto(kind)]]">
+                <span class="self-center">[[rec.name]]</span>
+                <span class="self-center">[[rec.count]]</span>
+              </template>
+              <template is="dom-if" if="[[!_isKindPhoto(kind)]]">
+                <span class="self-center">[[rec.headline]]</span>
+              </template>
             </div>
           </div>
         </div>
@@ -101,16 +99,11 @@
         items: { type: Array, value: [], notify: true },
         loading: { type: Boolean, value: false, notify: true },
       },
-      _url: function (kind, field, value) {
-        var view = Polymer.dom().querySelector('app-shell').dataView.view;
-        if (view == 'grid') {
-          // clear previous filter
-          field = null;
-          value = null;
-          this.items = [];
-          if (kind == 'photo') {
+      _url: function (kind, view) {
+        if (view === 'grid') {
+          if (kind === 'photo') {
             return '/api/filters';
-          } else if (kind == 'entry') {
+          } else if (kind === 'entry') {
             return '/api/entry';
           }
         }
@@ -119,13 +112,14 @@
       //   return rec.show;
       // },
       handler: function (request) {
-        var response = request.detail.response,
+        let response = request.detail.response,
           collection;
         if (this.kind == 'photo') {
           collection = response;
         } else if (this.kind == 'entry') {
           collection = response.objects;
         }
+        this.items = [];
         collection.forEach(function (item) {
           this.push('items', item);
         }, this);
@@ -140,13 +134,16 @@
           return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
         }
       },
-      applyFilter: function (e) {
-        // photo
-        this.set('route.path', ['/detail', this.kind, e.model.rec.field_name, '' + e.model.rec.name].join('/'));
-      },
       showDetail: function (e) {
-        // entry
-        this.set('route.path', ['/detail', this.kind, 'key', e.model.rec.safekey].join('/'));
+        switch (this.kind) {
+          case 'photo':
+            this.set('route.path', ['/detail', this.kind, e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+            break;
+          case 'entry':
+            this.set('route.path', ['/detail', this.kind, 'key', e.model.rec.safekey].join('/'));
+            break;
+        }
+
       },
       repeatRender: function () {
         var nodes = this.root.querySelectorAll('.rec');
