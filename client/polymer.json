@@ -12,7 +12,8 @@
         "src/item-info.html",
         "src/item-edit.html",
         "src/form-view.html",
-        "src/admin-shell.html"
+        "src/admin-shell.html",
+        "src/error-404.html"
     ],
     "sources": [
         "src/**/*",

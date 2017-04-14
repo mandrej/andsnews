@@ -160,11 +160,7 @@
         </app-toolbar>
       </app-header>
 
-      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-        <admin-shell
-          data-view="maintenance"
-          route="{{route}}"></admin-shell>
-
+      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view" fallback-selection="error404">
         <grid-view
           data-view="grid"
           kind="[[dataKind.kind]]"
@@ -189,6 +185,12 @@
           field="[[dataField.field]]"
           value="[[dataValue.value]]"
           route="{{route}}"></form-view>
+
+        <admin-shell
+          data-view="maintenance"
+          route="{{route}}"></admin-shell>
+
+        <error-404 data-view="error404"></error-404>
       </iron-pages>
     </app-header-layout>
   </template>
@@ -230,43 +232,63 @@
       ],
       properties: {
         version: { type: String, value: '201704101448' },
-        headline: { type: String, statePath: 'headline' },
-        user: { type: Object, notify: true },
-        isAdmin: { type: Boolean, statePath: 'isAdmin' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
+        user: { type: Object, notify: true },
+        headline: { type: String, statePath: 'headline' },
+        isAdmin: { type: Boolean, statePath: 'isAdmin' },
         itemKind: { type: String, statePath: 'kind' },
+        zooming: { type: String, statePath: 'zooming' },
         zoomIcon: { type: String, statePath: function(state) {
           return (state.zooming) ? 'app:zoom-out' : 'app:zoom-in';
         }},
-        zooming: { type: String, statePath: 'zooming' },
+      },
+      error404: function () {
+        this.set('dataView.view', '___');
+        Polymer.Base.importHref('src/error-404.html');
       },
       viewChanged: function (view) {
+        const dialog = this.$.authorizationDialog;
+        const allowed_kinds = ['photo', 'entry', 'search'];
         this.debounce('viewChanged', function () {
-          const dialog = this.$.authorizationDialog;
           switch (view) {
             case 'grid':
               this.set('dataField.field', null);
               this.set('dataValue.value', null);
-              this.dispatch('change', {
-                headline: 'ANDрејевићи',
-                kind: this.dataKind.kind,
-                view: 'display',
-                disableSwipe: false
-              });
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1) {
+                this.error404();
+                break;
+              } else {
+                this.dispatch('change', {
+                  headline: 'ANDрејевићи',
+                  kind: this.dataKind.kind,
+                  view: 'display',
+                  disableSwipe: false
+                });
+                break;
+              }
             case 'detail':
-              Polymer.Base.importHref('src/detail-view.html');
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1) {
+                this.error404();
+                break;
+              } else {
+                Polymer.Base.importHref('src/detail-view.html');
+                break;
+              }
             case 'form':
-              this.dispatch('change', {
-                headline: 'Form',
-                kind: this.dataKind.kind
-              });
-              Polymer.Base.importHref('src/form-view.html', function () {
-                if (!this.isAuthorized) dialog.open();
-              }.bind(this), null, true);
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1 || this.dataField.field !== 'add') {
+                this.error404();
+                break;
+              } else {
+                this.dispatch('change', {
+                  headline: 'Form',
+                  kind: this.dataKind.kind
+                });
+                Polymer.Base.importHref('src/form-view.html', function () {
+                  if (!this.isAuthorized) dialog.open();
+                }.bind(this), null, true);
+                break;
+              }
             case 'maintenance':
               this.set('dataKind.kind', null);
               this.set('dataField.field', null);
@@ -278,11 +300,13 @@
                 if (!this.isAdmin) dialog.open();
               }.bind(this), null, true);
               break;
+            default:
+              Polymer.Base.importHref('src/error-404.html');
           }
         }, 0); // shorter or equal then grid ajax
       },
-      _canAddRecord: function (view, loggedin) {
-        return view == 'grid' && loggedin;
+      _canAddRecord: function (view, isAuthorized) {
+        return view == 'grid' && isAuthorized;
       },
       _isDetailView: function (view) {
         return view == 'detail';

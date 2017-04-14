@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="error-404">
+  <template>
+    <style include="shared-styles">
+      .container {
+        height: calc(100vh - 32px);
+        padding: 16px;
+        background-color: var(--primary-background-color);
+      }
+      h1 {
+        margin-bottom: 0.5em;
+        font-weight: 300;
+      }
+    </style>
+    <div class="container">
+      <h1>Nothing Found (404)</h1>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'error-404'
+    });
+  </script>
+</dom-module>
