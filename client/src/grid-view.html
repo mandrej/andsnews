@@ -112,8 +112,9 @@
       //   return rec.show;
       // },
       handler: function (request) {
-        let response = request.detail.response,
-          collection;
+        const response = request.detail.response;
+        var collection;
+
         if (this.kind == 'photo') {
           collection = response;
         } else if (this.kind == 'entry') {
