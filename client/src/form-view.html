@@ -10,7 +10,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<link rel="import" href="./shared-styles.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="form-view">
   <template>
@@ -37,11 +37,9 @@
       }
     </style>
 
-    <iron-ajax auto
-      url="[[_urlTagsCloud(kind, field)]]"
+    <iron-ajax id="xhr"
       handle-as="json"
-      last-response="{{tags_cloud}}"
-      debounce-duration="100"></iron-ajax>
+      on-response="tagsHandler"></iron-ajax>
 
     <div hidden$="[[!isAuthorized]]" class="container" id="container">
       <paper-toast id="toast" class="fit-bottom"></paper-toast>
@@ -49,7 +47,7 @@
       <template is="dom-if" if="[[_isKindPhoto(kind)]]">
         <vaadin-upload id="upload"
           style="padding: 16px"
-          target="/api/{{kind}}/add"
+          target="/api/[[kind]]/add"
           max-files="10"
           on-upload-response="_uploadResponse"
           accept="image/*"></vaadin-upload>
@@ -76,11 +74,13 @@
           <paper-input-autocomplete-chips id="tags"
             name="tags"
             label="tags"
-            local-candidates="{{listObjects(tags_cloud)}}"
-            selected-objects="{{listObjects(item)}}"
+            on-focus="callAjax"
+            local-candidates="[[tagsCloud]]"
             allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
 
+          <paper-input name="date" label="date" type="date"></paper-input>
           <paper-textarea name="summary" label="summary"></paper-textarea>
+          <paper-input name="front_img" label="front image" type="url"></paper-input>
           <paper-textarea name="body" label="body"></paper-textarea>
         </form>
       </template>
@@ -90,14 +90,16 @@
   <script>
     Polymer({
       is: 'form-view',
-      _urlTagsCloud: function (kind, field) {
-        var view = Polymer.dom().querySelector('app-shell').dataView.view;
-        if (view == 'form' && kind == 'photo' && field == 'edit') {
-          return '/api/suggest/Photo_tags';
-        } else if (view == 'form' && kind == 'entry') {
-          return '/api/suggest/Entry_tags';
-        }
-        return;
+      listeners: {
+        'iron-form-presubmit': '_preSubmit'
+      },
+      properties: {
+        tagsCloud: Array
+      },
+      callAjax: function () {
+        const xhr = this.$.xhr;
+        xhr.url = '/api/suggest/Entry_tags';
+        if (xhr.lastResponse === undefined) xhr.generateRequest();
       },
       _isKindPhoto: function (kind) {
         return kind == 'photo';
@@ -123,35 +125,25 @@
           toast.open();
         }
       },
-      listObjects: function (obj) {
-        var list = [];
-        if (obj.tags) {
-          obj.tags.forEach(function (tag) {
-            list.push({ 'text': tag });
-          });
-        } else {
-          obj.forEach(function (tag) {
-            list.push({ 'text': tag });
-          });
-        }
-        return list;
+      tagsHandler: function (request) {
+        const response = request.detail.response;
+        this.tagsCloud = [];
+        response.forEach(function (item) {
+          this.push('tagsCloud', {'text': item});
+        }, this);
       },
       _preSubmit: function () {
-        var form = this.$.form,
-          tagsInput = this.$.tags.selectedObjects,
-          tags = [];
+        const form = this.$$('#form');
+        const tagsInput = this.$$('#tags').selectedObjects;
+        const tags = [];
         tagsInput.forEach(function (item) {
           tags.push(item.text);
         })
         form.request.body['tags'] = tags.join(',');
-        // FORM POST CHANGE TO PUT (PUT INITIALLY SENDS URL PARAMETERS, POST DOES NOT)
-        form.request.method = 'put';
       },
       _submit: function (e) {
-        // _submit calls _preSubmit
-        var form = this.$.form;
+        const form = this.$$('#form');
         // var json = form.serialize();
-        // console.log(json);
         form.submit();
       },
     });

@@ -16,16 +16,17 @@ from exifread import process_file
 from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
-from .config import ASA, HUE, LUM, SAT, BUCKET
-from .palette import extract_colors, rgb_to_hex
-from .slugify import slugify
+from config import ASA, HUE, LUM, SAT, BUCKET
+from palette import extract_colors, rgb_to_hex
+from slugify import slugify
 
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
 
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = {'date': 10, 'tags': 20, 'model': 30, 'color': 40}
+PHOTO_FILTER = ['date', 'tags', 'model', 'color']
+ENTRY_FILTER = ['date', 'tags']
 # PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
 
 
@@ -194,34 +195,6 @@ class Counter(ndb.Model):
     repr_url = ndb.StringProperty()
 
 
-def update_filters(new_pairs, old_pairs):
-    # context = ndb.get_context()
-    # context.clear_cache()
-
-    futures = []
-    for field, value in set(new_pairs) | set(old_pairs):
-        futures.append(Photo.query_for(field, value).get_async())
-
-    counters = []
-    for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
-        key_name = 'Photo||{}||{}'.format(field, value)
-        counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
-
-        if (field, value) in old_pairs:
-            counter.count -= 1
-        if (field, value) in new_pairs:
-            counter.count += 1
-
-        latest = futures[i].get_result()
-        if latest:
-            counter.repr_stamp = latest.date
-            counter.repr_url = latest.serving_url
-
-        counters.append(counter)
-
-    ndb.put_multi(counters)
-
-
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty()
@@ -266,13 +239,37 @@ class Photo(ndb.Model):
         )
         INDEX.put(doc)
 
+    def update_filters(self, new_pairs, old_pairs):
+        futures = []
+        for field, value in set(new_pairs) | set(old_pairs):
+            futures.append(self.query_for(field, value).get_async())
+
+        counters = []
+        for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
+            key_name = 'Photo||{}||{}'.format(field, value)
+            counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
+
+            if (field, value) in old_pairs:
+                counter.count -= 1
+            if (field, value) in new_pairs:
+                counter.count += 1
+
+            latest = futures[i].get_result()
+            if latest:
+                counter.repr_stamp = latest.date
+                counter.repr_url = latest.serving_url
+
+            counters.append(counter)
+
+        ndb.put_multi(counters)
+
     def changed_pairs(self):
         """
         List of changed field, value pairs
         [('date', '2016'), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
         """
         pairs = []
-        for field in PHOTO_FILTER.keys():
+        for field in PHOTO_FILTER:
             prop = field
             if field == 'date':
                 prop = 'year'
@@ -347,7 +344,7 @@ class Photo(ndb.Model):
             self.put()
 
             new_pairs = self.changed_pairs()
-            deferred.defer(update_filters, new_pairs, [], _queue='background')
+            deferred.defer(self.update_filters, new_pairs, [], _queue='background')
             return {'success': True, 'safe_key':  self.key.urlsafe()}
 
     def edit(self, data):
@@ -367,7 +364,7 @@ class Photo(ndb.Model):
 
         new_pairs = self.changed_pairs()
         deferred.defer(self.index_doc, _queue='background')
-        deferred.defer(update_filters, new_pairs, old_pairs, _queue='background')
+        deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
         old_pairs = self.changed_pairs()
@@ -377,7 +374,7 @@ class Photo(ndb.Model):
         time.sleep(3)
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
-        deferred.defer(update_filters, [], old_pairs, _queue='background')
+        deferred.defer(self.update_filters, [], old_pairs, _queue='background')
 
     @webapp2.cached_property
     def serving_url(self):
@@ -447,6 +444,53 @@ class Entry(ndb.Model):
         )
         INDEX.put(doc)
 
+    def update_filters(self, new_pairs, old_pairs):
+        futures = []
+        for field, value in set(new_pairs) | set(old_pairs):
+            futures.append(self.query_for(field, value).get_async())
+
+        counters = []
+        for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
+            key_name = 'Entry||{}||{}'.format(field, value)
+            counter = Counter.get_or_insert(key_name, forkind='Entry', field=field, value=value)
+
+            if (field, value) in old_pairs:
+                counter.count -= 1
+            if (field, value) in new_pairs:
+                counter.count += 1
+
+            latest = futures[i].get_result()
+            if latest:
+                counter.repr_stamp = latest.date
+                counter.repr_url = latest.front_img
+
+            counters.append(counter)
+
+        ndb.put_multi(counters)
+
+    def changed_pairs(self):
+        """
+        List of changed field, value pairs
+        [('date', '2016'), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
+        """
+        pairs = []
+        for field in ENTRY_FILTER:
+            prop = field
+            if field == 'date':
+                prop = 'year'
+            value = getattr(self, prop, None)
+            if value:
+                if isinstance(value, (list, tuple)):
+                    for v in value:
+                        pairs.append((field, str(v)))
+                elif isinstance(value, users.User):
+                    pairs.append((field, value.email()))
+                elif isinstance(value, int):
+                    pairs.append((field, value))
+                else:
+                    pairs.append((field, str(value)))  # stringify year
+        return pairs
+
     def add(self, data):
         self.headline = data['headline']
         self.author = data['author']
@@ -457,9 +501,14 @@ class Entry(ndb.Model):
         self.front_img = data['front_img']
         self.put()
 
+        new_pairs = self.changed_pairs()
+        deferred.defer(self.update_filters, new_pairs, [], _queue='background')
         deferred.defer(self.index_doc, _queue='background')
+        return {'success': True, 'safe_key': self.key.urlsafe()}
 
     def edit(self, data):
+        old_pairs = self.changed_pairs()
+
         self.headline = data['headline']
         self.author = data['author']
         self.summary = data['summary']
@@ -469,18 +518,27 @@ class Entry(ndb.Model):
         self.front_img = data['front_img']
         self.put()
 
+        new_pairs = self.changed_pairs()
         deferred.defer(self.index_doc, _queue='background')
+        deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
 
     def remove(self):
+        old_pairs = self.changed_pairs()
+
         self.key.delete()
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
+        deferred.defer(self.update_filters, [], old_pairs, _queue='background')
 
     @classmethod
     def query_for(cls, field, value):
-        """[FilterNode('color', '=', 'pink')]"""
         f = filter_param(field, value)
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
+
+    @classmethod
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        return query.get()
 
     def serialize(self):
         data = self.to_dict(exclude=('front', 'year'))

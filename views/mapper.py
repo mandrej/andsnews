@@ -9,9 +9,9 @@ from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
-from .config import BUCKET, END_MSG
-from .models import Counter
-from .fireapi import Firebase, push_message
+from config import BUCKET, END_MSG
+from models import Counter
+from fireapi import Firebase, push_message
 
 FB = Firebase()
 
@@ -201,19 +201,21 @@ class Builder(Mapper):
     def finish(self):
         values = filter(None, self.VALUES)  # filter out None
         tally = collections.Counter(values)
+        kind = self.KIND._class_name()
         for value, count in tally.items():
+            key_name = '{}||{}||{}'.format(kind, self.FIELD, str(value))
+            obj = Counter.get_or_insert(key_name, forkind=kind, field=self.FIELD, value=value)
+            obj.count = count
+
             latest = self.KIND.latest_for(self.FIELD, value)
             if latest is not None:
-                repr_url = latest.serving_url
-                repr_stamp = latest.date
+                obj.repr_stamp = latest.date
+                if kind == 'Photo':
+                    obj.repr_url = latest.serving_url
+                elif kind == 'Entry':
+                    obj.repr_url = latest.front_img
 
-            key_name = 'Photo||{}||{}'.format(self.FIELD, str(value))
-            obj = Counter.get_or_insert(key_name, forkind="Photo", field=self.FIELD, value=value)
-            obj.count = count
-            obj.repr_url = repr_url
-            obj.repr_stamp = repr_stamp
             obj.put()
-
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
 
             # FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))

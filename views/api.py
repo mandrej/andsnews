@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from operator import itemgetter
 from urlparse import urlparse
 
@@ -9,11 +10,11 @@ from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 
-from .config import DEVEL, START_MSG
-from .mapper import Indexer, Unbound, Builder, Fixer
-from .models import Counter, Photo, Entry, INDEX, PHOTO_FILTER
-from .slugify import slugify
-from .fireapi import push_message
+from config import DEVEL, START_MSG
+from fireapi import push_message
+from mapper import Indexer, Unbound, Builder, Fixer
+from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
+from slugify import slugify
 
 LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
@@ -141,7 +142,7 @@ class Collection(RestHandler):
 
 def available_filters():
     collection = []
-    for field, _ in sorted(PHOTO_FILTER.items(), key=itemgetter(1)):
+    for field in PHOTO_FILTER:
         query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         items = []
         for counter in query:
@@ -251,7 +252,7 @@ class BackgroundBuild(RestHandler):
 
 
 class Crud(RestHandler):
-    def get(self, kind=None, safe_key=None):
+    def get(self, safe_key=None):
         obj = ndb.Key(urlsafe=safe_key).get()
         if obj is None:
             self.abort(404)
@@ -282,6 +283,9 @@ class Crud(RestHandler):
             # fix empty values
             values = map(lambda x: x if x != '' else None, data.values())
             data = dict(zip(data.keys(), values))
+            # fix date for entry only
+            dt = data['date'].strip()
+            data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%d')  # input type="date"
             res = obj.add(data)
 
         self.render(res)
@@ -310,7 +314,7 @@ class Crud(RestHandler):
         values = map(lambda x: x if x != '' else None, data.values())
         data = dict(zip(data.keys(), values))
         # fix date
-        dt = data['date'].strip().split('.')[0]  # no milis
+        dt = data['date'].strip().split('.')[0]  # no millis
         data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
 
         if kind == 'photo':
@@ -321,8 +325,8 @@ class Crud(RestHandler):
             if data['iso']:
                 data['iso'] = int(data['iso'])
 
-        # elif kind == 'entry':
-        #     logging.error(data)
+        elif kind == 'entry':
+            logging.info(data)
 
         obj.edit(data)
 
@@ -366,14 +370,10 @@ class SiteMap(webapp2.RequestHandler):
 
 class Info(RestHandler):
     def get(self):
-        fields = [x[0] for x in sorted(PHOTO_FILTER.items(), key=itemgetter(1))]
         data = {
-            'photo': {
-                'count': Photo.query().count(),
-                'counters': ['Photo_%s' % x for x in fields]
-            },
-            'entry': {
-                'count': Entry.query().count(),
-            }
+            'photo': {'count': Photo.query().count()},
+            'entry': {'count': Entry.query().count()},
         }
+        data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
+        data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)

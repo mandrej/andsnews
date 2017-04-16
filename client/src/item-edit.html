@@ -3,12 +3,13 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
-<link rel="import" href="./redux-store.html">
 
-<link rel="import" href="./shared-styles.html">
+<link rel="import" href="redux-store.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="item-edit">
   <template>
@@ -29,16 +30,14 @@
       }
     </style>
 
-    <iron-ajax auto
-      url="[[_urlTagsCloud(view, item)]]"
+    <iron-ajax id="xhr"
       handle-as="json"
-      last-response="{{tags_cloud}}"
-      debounce-duration="100"></iron-ajax>
+      on-response="tagsHandler"></iron-ajax>
 
     <!--<iron-ajax auto
       url="[[_urlLensCloud(view, item)]]"
       handle-as="json"
-      last-response="{{lens_cloud}}"
+      last-response="[[lens_cloud]]"
       debounce-duration="100"></iron-ajax>-->
 
     <form id="form" class="container"
@@ -68,35 +67,35 @@
         label="author"
         allow-custom-value="true"
         items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-        value="{{item.author}}"></vaadin-combo-box>
+        value="[[item.author]]"></vaadin-combo-box>
 
       <paper-input-autocomplete-chips id="tags"
         name="tags"
         label="tags"
-        local-candidates="{{listObjects(tags_cloud)}}"
-        selected-objects="{{listObjects(item)}}"
+        on-focus="callAjax"
+        local-candidates="[[tagsCloud]]"
+        selected-objects="[[listObjects(item.tags)]]"
         allow-select-unknown-token animated no-chip-image></paper-input-autocomplete-chips>
-
-      <paper-input name="date" label="date" value="{{item.date}}"></paper-input>
+      <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
 
       <template is="dom-if" if="[[_isKindPhoto(item)]]">
-        <paper-input name="model" label="model" value="{{item.model}}"></paper-input>
+        <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
         <div class="layout horizontal justified wrap">
-          <!--<vaadin-combo-box name="lens" label="lens" allow-custom-value="true" items="{{lens_cloud}}" value="{{item.lens}}" style="width: 201px"></vaadin-combo-box>-->
-          <paper-input name="lens" label="lens" value="{{item.lens}}"></paper-input>
-          <paper-input name="focal_length" label="focal_length [mm]" value="{{item.focal_length}}"></paper-input>
-          <paper-input name="iso" label="iso [ASA]" value="{{item.iso}}"></paper-input>
-          <paper-input name="aperture" label="aperture" value="{{item.aperture}}"></paper-input>
-          <paper-input name="shutter" label="shutter [s]" value="{{item.shutter}}"></paper-input>
-          <input type="hidden" name="color" value="{{item.color}}">
-          <paper-input disabled label="color" value="{{item.color}}"></paper-input>
+          <!--<vaadin-combo-box name="lens" label="lens" allow-custom-value="true" items="[[lens_cloud]]" value="[[item.lens]]" style="width: 201px"></vaadin-combo-box>-->
+          <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
+          <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+          <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+          <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+          <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+          <input type="hidden" name="color" value="[[item.color]]">
+          <paper-input disabled label="color" value="[[item.color]]"></paper-input>
         </div>
       </template>
 
       <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-        <paper-textarea name="summary" label="summary" value="{{item.summary}}"></paper-textarea>
-        <paper-textarea name="front_img" label="front image" value="{{item.front_img}}"></paper-textarea>
-        <paper-textarea name="body" label="body" value="{{item.body}}"></paper-textarea>
+        <paper-textarea name="summary" label="summary" value="[[item.summary]]"></paper-textarea>
+        <paper-input name="front_img" label="front image" type="url" value="[[item.front_img]]"></paper-input>
+        <paper-textarea name="body" label="body" value="[[item.body]]"></paper-textarea>
       </template>
     </form>
   </template>
@@ -117,14 +116,16 @@
       },
       properties: {
         isAdmin: { type: Boolean, statePath: 'isAdmin' },
+        tagsCloud: Array
       },
-      _urlTagsCloud: function (view, item) {
-        if (view !== 'form') return;
-        if (item.kind === 'photo') {
-          return '/api/suggest/Photo_tags';
-        } else {
-          return '/api/suggest/Entry_tags';
+      callAjax: function () {
+        const xhr = this.$.xhr;
+        if (this.item.kind === 'photo') {
+          xhr.url = '/api/suggest/Photo_tags';
+        } else if (this.item.kind === 'entry') {
+          xhr.url = '/api/suggest/Entry_tags';
         }
+        if (xhr.lastResponse === undefined) xhr.generateRequest();
       },
       // _urlLensCloud: function (view, item) {
       //   if (view === 'form' && item.kind === 'photo') {
@@ -147,10 +148,8 @@
         Polymer.dom().querySelector('app-shell').fire('confirm-delete');
       },
       _submit: function (e) {
-        // _submit calls _preSubmit
         const form = this.$.form;
         // var json = form.serialize();
-        // console.log(json);
         form.submit();
       },
       _responseHandler: function (e) {
@@ -164,17 +163,18 @@
       _isKindPhoto: function (item) {
         return item.kind == 'photo';
       },
-      listObjects: function (obj) {
+      tagsHandler: function (request) {
+        const response = request.detail.response;
+        this.tagsCloud = [];
+        response.forEach(function (item) {
+          this.push('tagsCloud', {'text': item});
+        }, this);
+      },
+      listObjects: function (tags) {
         const list = [];
-        if (obj.tags) {
-          obj.tags.forEach(function (tag) {
-            list.push({ 'text': tag });
-          });
-        } else {
-          obj.forEach(function (tag) {
-            list.push({ 'text': tag });
-          });
-        }
+        tags.forEach(function (tag) {
+          list.push({'text': tag});
+        });
         return list;
       },
       _viewDisplay: function (e) {

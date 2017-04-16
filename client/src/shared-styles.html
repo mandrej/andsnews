@@ -54,6 +54,11 @@
         text-decoration: none;
         text-transform: lowercase;
       }
+      @media (max-width: 768px) {
+        app-toolbar a span {
+          display: none;
+        }
+      }
       app-toolbar a iron-image.thumbnail {
         display: inherit;
         width: 48px;

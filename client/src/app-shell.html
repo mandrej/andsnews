@@ -1,8 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -13,14 +14,13 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./redux-store.html">
 
-<link rel="import" href="./shared-styles.html">
-<link rel="import" href="./app-search.html">
-<link rel="import" href="./grid-view.html">
+<link rel="import" href="redux-store.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="app-icons.html">
+<link rel="import" href="app-search.html">
+<link rel="import" href="grid-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -104,7 +104,6 @@
       <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
     </div>
 
-    <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
     <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
     <app-header-layout>
@@ -126,51 +125,46 @@
             <ul role="navigation" class="navigation">
               <li>
                 <a href="#/grid/photo">
-                  <paper-icon-button icon="image:photo-camera"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Photos</span>
+                  <paper-icon-button icon="app:photo-camera"></paper-icon-button>
+                  <span>Photos</span>
                 </a>
               </li>
               <li>
                 <a href="#/grid/entry">
-                  <paper-icon-button icon="description"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Texts</span>
+                  <paper-icon-button icon="app:description"></paper-icon-button>
+                  <span>Texts</span>
                 </a>
               </li>
               <li hidden$="[[!isAdmin]]">
                 <a href="#/maintenance">
-                  <paper-icon-button icon="settings"></paper-icon-button>
-                  <span hidden$="{{smallScreen}}">Admin</span>
+                  <paper-icon-button icon="app:settings"></paper-icon-button>
+                  <span>Admin</span>
                 </a>
               </li>
             </ul>
 
             <div hidden$="[[!_isDetailView(dataView.view)]]">
               <span hidden$="[[!isAdmin]]">
-                <paper-icon-button icon="create" on-tap="editRecord"></paper-icon-button>
+                <paper-icon-button icon="app:create" on-tap="editRecord"></paper-icon-button>
               </span>
               <span hidden$="[[!_isKindPhoto(itemKind)]]">
                 <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
-                <paper-icon-button icon="more-vert" on-tap="showInfo"></paper-icon-button>
+                <paper-icon-button icon="app:more-vert" on-tap="showInfo"></paper-icon-button>
               </span>
             </div>
           </div>
 
           <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-            <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+            <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
           </div>
         </app-toolbar>
       </app-header>
 
-      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-        <admin-shell
-          data-view="maintenance"
-          route="{{route}}"></admin-shell>
-
+      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view" fallback-selection="error404">
         <grid-view
           data-view="grid"
           kind="[[dataKind.kind]]"
-          field="{{dataField.field}}"
-          value="{{dataValue.value}}"
+          view="[[dataView.view]]"
           route="{{route}}"
           loading="{{loading}}"></grid-view>
 
@@ -190,6 +184,12 @@
           field="[[dataField.field]]"
           value="[[dataValue.value]]"
           route="{{route}}"></form-view>
+
+        <admin-shell
+          data-view="maintenance"
+          route="{{route}}"></admin-shell>
+
+        <error-404 data-view="error404"></error-404>
       </iron-pages>
     </app-header-layout>
   </template>
@@ -230,45 +230,64 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704101448' },
-        headline: { type: String, statePath: 'headline' },
-        smallScreen: { type: Boolean, value: false, notify: true },
-        user: { type: Object, notify: true },
-        isAdmin: { type: Boolean, statePath: 'isAdmin' },
+        version: { type: String, value: '201704161020' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
+        user: { type: Object, notify: true },
+        headline: { type: String, statePath: 'headline' },
+        isAdmin: { type: Boolean, statePath: 'isAdmin' },
         itemKind: { type: String, statePath: 'kind' },
-        zoomIcon: { type: String, statePath: function(state) {
-          return (state.zooming) ? 'zoom-out' : 'zoom-in';
-        }},
         zooming: { type: String, statePath: 'zooming' },
+        zoomIcon: { type: String, statePath: function(state) {
+          return (state.zooming) ? 'app:zoom-out' : 'app:zoom-in';
+        }},
+      },
+      error404: function () {
+        this.set('dataView.view', '___');
+        Polymer.Base.importHref('src/error-404.html');
       },
       viewChanged: function (view) {
+        const dialog = this.$.authorizationDialog;
+        const allowed_kinds = ['photo', 'entry', 'search'];
         this.debounce('viewChanged', function () {
-          const dialog = this.$.authorizationDialog;
           switch (view) {
             case 'grid':
               this.set('dataField.field', null);
               this.set('dataValue.value', null);
-              this.dispatch('change', {
-                headline: 'ANDрејевићи',
-                kind: this.dataKind.kind,
-                view: 'display',
-                disableSwipe: false
-              });
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1) {
+                this.error404();
+                break;
+              } else {
+                this.dispatch('change', {
+                  headline: 'ANDрејевићи',
+                  kind: this.dataKind.kind,
+                  view: 'display',
+                  disableSwipe: false
+                });
+                break;
+              }
             case 'detail':
-              Polymer.Base.importHref('src/detail-view.html');
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1) {
+                this.error404();
+                break;
+              } else {
+                Polymer.Base.importHref('src/detail-view.html');
+                break;
+              }
             case 'form':
-              this.dispatch('change', {
-                headline: 'Form',
-                kind: this.dataKind.kind
-              });
-              Polymer.Base.importHref('src/form-view.html', function () {
-                if (!this.isAuthorized) dialog.open();
-              }.bind(this), null, true);
-              break;
+              if (allowed_kinds.indexOf(this.dataKind.kind) === -1 || this.dataField.field !== 'add') {
+                this.error404();
+                break;
+              } else {
+                this.dispatch('change', {
+                  headline: 'Form',
+                  kind: this.dataKind.kind
+                });
+                Polymer.Base.importHref('src/form-view.html', function () {
+                  if (!this.isAuthorized) dialog.open();
+                }.bind(this), null, true);
+                break;
+              }
             case 'maintenance':
               this.set('dataKind.kind', null);
               this.set('dataField.field', null);
@@ -280,11 +299,13 @@
                 if (!this.isAdmin) dialog.open();
               }.bind(this), null, true);
               break;
+            default:
+              Polymer.Base.importHref('src/error-404.html');
           }
         }, 0); // shorter or equal then grid ajax
       },
-      _canAddRecord: function (view, loggedin) {
-        return view == 'grid' && loggedin;
+      _canAddRecord: function (view, isAuthorized) {
+        return view == 'grid' && isAuthorized;
       },
       _isDetailView: function (view) {
         return view == 'detail';
