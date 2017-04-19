@@ -35,10 +35,10 @@
       <p>Please try again</p>
     </paper-dialog>
 
-    <!--331: if (this.items[i] && this.items[i].offsetWidth == 0) {-->
     <iron-swipeable-pages id="swipe" no-cycle
       selected="{{index}}"
       threshold="0"
+      fallback-selection="0"
       disabled="[[disableSwipe]]"
       on-iron-select="changeCurrent">
       <template is="dom-repeat" items="{{records}}" item="{{item}}" initial-count="1">

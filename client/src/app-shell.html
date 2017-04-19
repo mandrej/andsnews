@@ -230,7 +230,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704161020' },
+        version: { type: String, value: '201704192209' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -289,9 +289,6 @@
                 break;
               }
             case 'maintenance':
-              this.set('dataKind.kind', null);
-              this.set('dataField.field', null);
-              this.set('dataValue.value', null);
               this.dispatch('change', {
                 headline: 'Admin v.' + this.version
               });
