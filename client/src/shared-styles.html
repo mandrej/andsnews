@@ -27,14 +27,25 @@
       a {
         color: var(--dark-primary-color);
       }
-      app-header {
+      app-drawer {
+        --app-drawer-width: 300px;
+        --app-drawer-content-container: {
+          background-color: var(--primary-background-color);
+          /*background-image: url(../images/logo.svg);
+          background-position: bottom center;
+          background-repeat: no-repeat;
+          background-size: 250px auto;*/
+        }
+      }
+      /*app-header {
         background-image: url(../images/logo.svg);
         background-position: top center;
         background-repeat: no-repeat;
         background-size: auto 100%;
-      }
+      }*/
       app-toolbar {
-        color: var(--primary-background-color);
+        color: var(--primary-text-color);
+        background-color: var(--primary-background-color);
       }
       app-toolbar .navigation {
         margin: 0;
@@ -48,11 +59,10 @@
         height: 64px;
         line-height: 64px;
         font-size: 24px;
-        color: var(--primary-text-color);
       }
       app-toolbar a {
         display: inline-block;
-        color: var(--primary-background-color);
+        color: var(--primary-text-color);
         text-decoration: none;
         text-transform: lowercase;
       }
@@ -75,7 +85,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-align: center;
+        /*text-align: center;*/
       }
       paper-dialog {
         max-width: 400px;
@@ -90,7 +100,7 @@
         text-transform: lowercase;
       }
       paper-icon-button {
-        color: var(--primary-background-color);
+        color: var(--primary-color);
       }
       paper-fab,
       paper-button.accent {
@@ -113,7 +123,7 @@
         --paper-spinner-stroke-width: 8px;
       }
       iron-image {
-        background-color: var(--secondary-text-color);
+        background-color: var(--primary-background-color);
       }
     </style>
 
