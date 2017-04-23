@@ -2,27 +2,29 @@
 <link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/neon-animation/animations/slide-from-right-animation.html">
-<link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation-behavior.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
 
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-search">
   <template>
     <style include="shared-styles">
+      :host {
+        width: 100%;
+      }
       paper-input {
-        width: 160px;
-        display: none;
+        width: 100%;
         --paper-input-container-input-color: var(--dark-primary-color);
         --paper-input-container-focus-color: var(--primary-color);
+      }
+      iron-icon {
+        margin: 10px 10px 0 0;
+        color: var(--primary-color);
       }
     </style>
 
     <div class="layout horizontal">
-      <paper-icon-button icon="app:search" on-tap="toggleWidget" id="button"></paper-icon-button>
-      <paper-input id="inputSearch" placeholder="search" no-label-float value="{{search::value-changed}}"></paper-input>
+      <iron-icon icon="app:search" class="self-center"></iron-icon>
+      <paper-input id="inputSearch" class="self-center" placeholder="search" no-label-float value="{{search::value-changed}}"></paper-input>
     </div>
   </template>
 
@@ -30,26 +32,9 @@
     Polymer({
       is: 'app-search',
       behaviors: [
-        Polymer.NeonAnimationBehavior,
-        Polymer.NeonAnimationRunnerBehavior,
         Polymer.IronA11yKeysBehavior
       ],
       properties: {
-        animationConfig: {
-          type: Object,
-          value: function () {
-            return {
-              'entry': {
-                name: 'slide-from-right-animation',
-                node: this.$.inputSearch
-              },
-              'exit': {
-                name: 'slide-right-animation',
-                node: this.$.inputSearch
-              }
-            }
-          }
-        },
         search: { type: String, value: null, notify: true },
         keyEventTarget: {
           type: Object,
@@ -61,36 +46,13 @@
       keyBindings: {
         'enter': 'onSearch',
       },
-      listeners: {
-        'neon-animation-finish': 'animationFinish'
-      },
-      animationFinish: function (e) {
-        if (this.$.inputSearch.style.display == 'block') {
-          this.$.inputSearch.focus();
-        } else {
-          if (this.search) {
-            this.field = this.search;
-            this.search = null;
-            this.value = null;
-            this.set('route.path', '/detail/search/' + this.field);
-          }
-        }
-      },
-      toggleWidget: function () {
-        if (this.$.inputSearch.style.display != 'block') {
-          this.$.inputSearch.style.display = 'block';
-          this.$.button.setAttribute('icon', 'clear');
-          this.playAnimation('entry');
-        } else {
-          this.$.inputSearch.style.display = 'none';
-          this.$.button.setAttribute('icon', 'search');
-          this.playAnimation('exit');
-        }
-      },
       onSearch: function () {
-        this.$.inputSearch.style.display = 'none';
-        this.$.button.setAttribute('icon', 'search');
-        this.playAnimation('exit');
+        if (this.search) {
+          this.field = this.search;
+          this.search = null;
+          this.value = null;
+          this.set('route.path', '/detail/search/' + this.field);
+        }
 
       },
       propertyChanged: function (newValue, oldValue) {

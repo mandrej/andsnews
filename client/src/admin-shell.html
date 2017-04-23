@@ -96,15 +96,6 @@
           return '/api/info';
         }
       },
-      // channelHandler: function(req) {
-      //     var resp = req.detail.response;
-      //     if (resp.userId != this.user.getBasicProfile().getId()) return;
-      //     var ref = this.firebase.database().ref(resp.channelId.replace('.json', ''));
-      //     var self = this;
-      //     ref.on('child_added', function(data) {
-      //         self.onMessage(data.val());
-      //     });
-      // },
       handleMessage: function (e) {
         // console.log(arguments);
         const toast = this.$.toast;
