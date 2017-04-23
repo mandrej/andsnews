@@ -128,11 +128,11 @@
         </app-header>
 
         <paper-listbox>
-          <a href="#/grid/photo" on-tap="_drawerClose">
+          <a href="#/grid/photo">
             <paper-item><iron-icon icon="app:photo-camera"></iron-icon> Photos</paper-item></a>
-          <a href="#/grid/entry" on-tap="_drawerClose">
+          <a href="#/grid/entry">
             <paper-item><iron-icon icon="app:description"></iron-icon> Texts</paper-item></a>
-          <a hidden$="[[!isAdmin]]" href="#/maintenance" on-tap="_drawerClose">
+          <a hidden$="[[!isAdmin]]" href="#/maintenance">
             <paper-item><iron-icon icon="app:settings"></iron-icon> Admin</paper-item></a>
         </paper-listbox>
 
@@ -231,7 +231,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704232013' },
+        version: { type: String, value: '201704232322' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -250,6 +250,7 @@
       viewChanged: function (view) {
         const dialog = this.$.authorizationDialog;
         const allowed_kinds = ['photo', 'entry', 'search'];
+        this._drawerClose();
         this.debounce('viewChanged', function () {
           switch (view) {
             case 'grid':
