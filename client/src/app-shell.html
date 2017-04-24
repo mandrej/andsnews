@@ -1,16 +1,22 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -106,92 +112,89 @@
 
     <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
-    <app-header-layout>
-      <app-header shadow reveals condenses>
-        <app-toolbar>
-          <div class="layout horizontal justified" style="width: 100%">
-            <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-              <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
-            </a>
-            <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-            <app-search field="{{dataField.field}}" value="{{dataValue.value}}" route="{{route}}"></app-search>
-          </div>
-        </app-toolbar>
-        <app-toolbar>
-          <h1 main-title>{{headline}}</h1>
-        </app-toolbar>
-        <app-toolbar class="sticky" sticky>
-          <div class="layout horizontal justified" style="width: 100%">
-            <ul role="navigation" class="navigation">
-              <li>
-                <a href="#/grid/photo">
-                  <paper-icon-button icon="app:photo-camera"></paper-icon-button>
-                  <span>Photos</span>
-                </a>
-              </li>
-              <li>
-                <a href="#/grid/entry">
-                  <paper-icon-button icon="app:description"></paper-icon-button>
-                  <span>Texts</span>
-                </a>
-              </li>
-              <li hidden$="[[!isAdmin]]">
-                <a href="#/maintenance">
-                  <paper-icon-button icon="app:settings"></paper-icon-button>
-                  <span>Admin</span>
-                </a>
-              </li>
-            </ul>
-
-            <div hidden$="[[!_isDetailView(dataView.view)]]">
-              <span hidden$="[[!isAdmin]]">
-                <paper-icon-button icon="app:create" on-tap="editRecord"></paper-icon-button>
-              </span>
-              <span hidden$="[[!_isKindPhoto(itemKind)]]">
-                <paper-icon-button icon="[[zoomIcon]]" on-tap="zoomPhoto"></paper-icon-button>
-                <paper-icon-button icon="app:more-vert" on-tap="showInfo"></paper-icon-button>
-              </span>
+    <app-drawer-layout responsive-width="1024px">
+      <app-drawer id="drawer">
+        <app-header reveals condenses>
+          <app-toolbar>
+            <div class="layout horizontal justified" style="width: 100%">
+              <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+                <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+              </a>
+              <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
             </div>
-          </div>
+          </app-toolbar>
+          <app-toolbar>
+            <app-search field="{{dataField.field}}" value="{{dataValue.value}}" route="{{route}}"></app-search>
+          </app-toolbar>
+        </app-header>
 
-          <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-            <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
-          </div>
-        </app-toolbar>
-      </app-header>
+        <paper-listbox>
+          <a href="#/grid/photo">
+            <paper-item><iron-icon icon="app:photo-camera"></iron-icon> Photos</paper-item></a>
+          <a href="#/grid/entry">
+            <paper-item><iron-icon icon="app:description"></iron-icon> Texts</paper-item></a>
+          <a hidden$="[[!isAdmin]]" href="#/maintenance">
+            <paper-item><iron-icon icon="app:settings"></iron-icon> Admin</paper-item></a>
+        </paper-listbox>
 
-      <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view" fallback-selection="error404">
-        <grid-view
-          data-view="grid"
-          kind="[[dataKind.kind]]"
-          view="[[dataView.view]]"
-          route="{{route}}"
-          loading="{{loading}}"></grid-view>
+        <paper-item></paper-item>
 
-        <detail-view
-          data-view="detail"
-          is-authorized="{{isAuthorized}}"
-          kind="[[dataKind.kind]]"
-          field="[[dataField.field]]"
-          value="[[dataValue.value]]"
-          loading="{{loading}}"
-          route="{{route}}"></detail-view>
+        <paper-listbox hidden$="[[!_isDetailView(dataView.view)]]">
+          <paper-item hidden$="[[!isAdmin]]" on-tap="editRecord">
+            <iron-icon icon="app:create"></iron-icon> Edit</paper-item>
+          <paper-item hidden$="[[!_isKindPhoto(itemKind)]]" on-tap="zoomPhoto">
+            <iron-icon icon="[[zoomIcon]]"></iron-icon> Zoom</paper-item>
+          <paper-item hidden$="[[!_isKindPhoto(itemKind)]]" on-tap="showInfo">
+            <iron-icon icon="app:more-vert"></iron-icon> Info</paper-item>
+        </paper-listbox>
+      </app-drawer>
 
-        <form-view
-          data-view="form"
-          is-authorized="{{isAuthorized}}"
-          kind="[[dataKind.kind]]"
-          field="[[dataField.field]]"
-          value="[[dataValue.value]]"
-          route="{{route}}"></form-view>
+      <app-header-layout>
+        <app-header reveals condenses effects="blend-background parallax-background">
+          <app-toolbar>
+            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>{{headline}}</h1>
+            <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
+              <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
+            </div>
+          </app-toolbar>
+        </app-header>
 
-        <admin-shell
-          data-view="maintenance"
-          route="{{route}}"></admin-shell>
+        <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view" fallback-selection="error404">
+          <grid-view
+            data-view="grid"
+            kind="[[dataKind.kind]]"
+            view="[[dataView.view]]"
+            route="{{route}}"
+            loading="{{loading}}"></grid-view>
 
-        <error-404 data-view="error404"></error-404>
-      </iron-pages>
-    </app-header-layout>
+          <detail-view
+            data-view="detail"
+            is-authorized="{{isAuthorized}}"
+            kind="[[dataKind.kind]]"
+            field="[[dataField.field]]"
+            value="[[dataValue.value]]"
+            loading="{{loading}}"
+            route="{{route}}"></detail-view>
+
+          <form-view
+            data-view="form"
+            is-authorized="{{isAuthorized}}"
+            kind="[[dataKind.kind]]"
+            field="[[dataField.field]]"
+            value="[[dataValue.value]]"
+            route="{{route}}"></form-view>
+
+          <admin-shell
+            data-view="maintenance"
+            route="{{route}}"></admin-shell>
+
+          <error-404 data-view="error404"></error-404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>
@@ -230,7 +233,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704192209' },
+        version: { type: String, value: '201704242131' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -249,6 +252,7 @@
       viewChanged: function (view) {
         const dialog = this.$.authorizationDialog;
         const allowed_kinds = ['photo', 'entry', 'search'];
+        this._drawerClose();
         this.debounce('viewChanged', function () {
           switch (view) {
             case 'grid':
@@ -334,6 +338,7 @@
         this.set('route.path', ['/form', this.dataKind.kind, 'add'].join('/'));
       },
       editRecord: function (e) {
+        this._drawerClose();
         this.$$('detail-view').fire('edit-record');
       },
       confirmDelete: function (e) {
@@ -345,9 +350,11 @@
         }
       },
       showInfo: function () {
+        this._drawerClose();
         this.$$('detail-view').$$('.iron-selected').fire('info-toggle');
       },
       zoomPhoto: function () {
+        this._drawerClose();
         const state = this.getState();
         this.dispatch('change', {
           disableSwipe: !state.disableSwipe,
@@ -355,6 +362,9 @@
         });
 
         this.$$('detail-view').$$('.iron-selected').fire('zoom-toggle');
+      },
+      _drawerClose: function() {
+        if (!this.$.drawer.persistent) this.$.drawer.close();
       },
       pathChanged: function (path) {
         console.log(path);

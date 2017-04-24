@@ -5,8 +5,8 @@
     <style include="iron-flex iron-flex-alignment">
        :root {
         --primary-text-color: #212121;
-        --primary-background-color: #ffffff;
-        --secondary-text-color: #606060;
+        --primary-background-color: #fff;
+        --secondary-text-color: #53596d;
         --disabled-text-color: #9b9b9b;
         --divider-color: #bdbdbd;
         --error-color: #dc2128;
@@ -27,39 +27,48 @@
       a {
         color: var(--dark-primary-color);
       }
+      app-drawer {
+        --app-drawer-width: 350px;
+        --app-drawer-content-container: {
+          background-color: var(--primary-background-color);
+          /*background-image: url(../images/logo.svg);
+          background-position: center 82%;
+          background-repeat: no-repeat;
+          background-size: 100px auto;*/
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      }
       app-header {
-        background-image: url(../images/logo.png);
-        background-position: top center;
+        background-color: var(--primary-background-color);
+        --app-header-background-front-layer: {
+          background-image: url(../images/logo.svg);
+          background-position: center 0;
+          background-repeat: no-repeat;
+          background-size: 76px auto;
+        };
       }
       app-toolbar {
-        color: var(--primary-background-color);
-      }
-      app-toolbar .navigation {
-        margin: 0;
-        padding: 0;
-      }
-      app-toolbar .navigation li {
-        display: inline-block;
-        list-style: none;
-      }
-      app-toolbar.sticky {
-        height: 64px;
-        line-height: 64px;
-        font-size: 24px;
         color: var(--primary-text-color);
+        /*background-color: var(--primary-background-color);*/
+      }
+      paper-listbox a, paper-listbox paper-item {
+        height: 54px;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+      paper-item iron-icon {
+        margin-right: 10px;
       }
       app-toolbar a {
         display: inline-block;
-        color: var(--primary-background-color);
+        color: var(--primary-text-color);
         text-decoration: none;
         text-transform: lowercase;
       }
-      @media (max-width: 768px) {
-        app-toolbar a span {
-          display: none;
-        }
-      }
-      app-toolbar a iron-image.thumbnail {
+      iron-image.thumbnail {
         display: inherit;
         width: 48px;
         height: 48px;
@@ -88,7 +97,7 @@
         text-transform: lowercase;
       }
       paper-icon-button {
-        color: var(--primary-background-color);
+        color: var(--primary-color);
       }
       paper-fab,
       paper-button.accent {
@@ -111,7 +120,7 @@
         --paper-spinner-stroke-width: 8px;
       }
       iron-image {
-        background-color: var(--secondary-text-color);
+        background-color: var(--primary-background-color);
       }
     </style>
 
