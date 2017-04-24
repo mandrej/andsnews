@@ -150,7 +150,7 @@
       </app-drawer>
 
       <app-header-layout>
-        <app-header reveals condenses effects="fade-background">
+        <app-header reveals condenses effects="blend-background parallax-background">
           <app-toolbar>
             <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
           </app-toolbar>
@@ -233,7 +233,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704232322' },
+        version: { type: String, value: '201704242131' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
