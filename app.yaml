@@ -13,53 +13,51 @@ libraries:
 - name: numpy
   version: latest
 
-# client -> client/build/unbundled
-
 handlers:
 - url: /
-  static_files: client/build/unbundled/index.html
-  upload: client/build/unbundled/index.html
+  static_files: client/build/default/index.html
+  upload: client/build/default/index.html
   secure: always
 
 - url: /favicon.ico
-  static_files: client/build/unbundled/favicon.ico
-  upload: client/build/unbundled/favicon.ico
+  static_files: client/build/default/favicon.ico
+  upload: client/build/default/favicon.ico
   secure: always
 
 - url: /robots\.txt
-  static_files: client/build/unbundled/robots.txt
-  upload: client/build/unbundled/robots.txt
+  static_files: client/build/default/robots.txt
+  upload: client/build/default/robots.txt
   secure: always
 
 - url: /service-worker\.js
-  static_files: client/build/unbundled/service-worker.js
-  upload: client/build/unbundled/service-worker.js
+  static_files: client/build/default/service-worker.js
+  upload: client/build/default/service-worker.js
   secure: always
 
 - url: /firebase-messaging-sw\.js
-  static_files: client/build/unbundled/firebase-messaging-sw.js
-  upload: client/build/unbundled/firebase-messaging-sw.js
+  static_files: client/build/default/firebase-messaging-sw.js
+  upload: client/build/default/firebase-messaging-sw.js
   secure: always
 
 - url: /manifest\.json
-  static_files: client/build/unbundled/manifest.json
-  upload: client/build/unbundled/manifest.json
+  static_files: client/build/default/manifest.json
+  upload: client/build/default/manifest.json
   secure: always
 
 - url: /src/
-  static_dir: client/build/unbundled/src
+  static_dir: client/build/default/src
   secure: always
 
 - url: /images/
-  static_dir: client/build/unbundled/images
+  static_dir: client/build/default/images
   secure: always
 
 - url: /bower_components/
-  static_dir: client/build/unbundled/bower_components
+  static_dir: client/build/default/bower_components
   secure: always
 
 - url: /node_modules/
-  static_dir: client/build/unbundled/node_modules
+  static_dir: client/build/default/node_modules
   secure: always
 
 - url: /sitemap\.xml
@@ -91,7 +89,6 @@ skip_files:
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
 - ^docs
-- ^client/build/bundled
 - ^client/(src|test|images)
 - ^client/bower_components
 - ^client/node_modules

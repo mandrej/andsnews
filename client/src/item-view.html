@@ -132,7 +132,7 @@
         Polymer.dom().querySelector('app-shell').fire('confirm-delete');
       },
       _isKindPhoto: function (item) {
-        return item.kind == 'photo';
+        return item.kind === 'photo';
       },
       _infoToggle: function () {
         const state = this.getState();
