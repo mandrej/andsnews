@@ -30,6 +30,9 @@
   "builds": [
     {
       "bundle": false,
+      "addServiceWorker": true,
+      "swPrecacheConfig": "sw-precache-config.js",
+      "insertPrefetchLinks": true,
       "js": {
         "minify": true
       },
