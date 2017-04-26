@@ -20,7 +20,7 @@
         "images/**/*",
         "bower.json"
     ],
-    "includeDependencies": [
+    "extraDependencies": [
         "robots.txt",
         "manifest.json",
         "firebase-messaging-sw.js",

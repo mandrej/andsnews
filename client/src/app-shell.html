@@ -137,28 +137,26 @@
             <paper-item><iron-icon icon="app:settings"></iron-icon> Admin</paper-item></a>
         </paper-listbox>
 
-        <paper-item></paper-item>
+        <div style="height: 32px"></div>
 
         <paper-listbox hidden$="[[!_isDetailView(dataView.view)]]">
           <paper-item hidden$="[[!isAdmin]]" on-tap="editRecord">
             <iron-icon icon="app:create"></iron-icon> Edit</paper-item>
-          <paper-item hidden$="[[!_isKindPhoto(itemKind)]]" on-tap="zoomPhoto">
-            <iron-icon icon="[[zoomIcon]]"></iron-icon> Zoom</paper-item>
-          <paper-item hidden$="[[!_isKindPhoto(itemKind)]]" on-tap="showInfo">
-            <iron-icon icon="app:more-vert"></iron-icon> Info</paper-item>
+          <!--<paper-item hidden$="[[!_isKindPhoto(itemKind)]]" on-tap="zoomPhoto">
+            <iron-icon icon="[[zoomIcon]]"></iron-icon> Zoom</paper-item>-->
         </paper-listbox>
       </app-drawer>
 
       <app-header-layout>
         <app-header reveals condenses effects="blend-background">
+          <app-toolbar></app-toolbar>
           <app-toolbar>
             <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-          </app-toolbar>
-          <app-toolbar>
             <h1 main-title>{{headline}}</h1>
-            <div hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]">
-              <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
-            </div>
+            <paper-fab hidden$="[[!_canAddRecord(dataView.view, isAuthorized)]]"
+              mini icon="app:add" on-tap="addRecord"></paper-fab>
+            <paper-icon-button hidden$="[[!_isKindPhoto(itemKind)]]" icon="app:more-vert"
+              on-tap="showInfo"></paper-icon-button>
           </app-toolbar>
         </app-header>
 
@@ -233,7 +231,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704251233' },
+        version: { type: String, value: '201704261458' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -306,10 +304,10 @@
         }, 0); // shorter or equal then grid ajax
       },
       _canAddRecord: function (view, isAuthorized) {
-        return view == 'grid' && isAuthorized;
+        return view === 'grid' && isAuthorized;
       },
       _isDetailView: function (view) {
-        return view == 'detail';
+        return view === 'detail';
       },
       _isKindPhoto: function (kind) {
         return kind == 'photo';
