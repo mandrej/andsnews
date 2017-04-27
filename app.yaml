@@ -19,7 +19,12 @@ handlers:
   upload: client/build/default/index.html
   secure: always
 
-- url: /favicon.ico
+- url: /index\.html
+  static_files: client/build/default/index.html
+  upload: client/build/default/index.html
+  secure: always
+
+- url: /favicon\.ico
   static_files: client/build/default/favicon.ico
   upload: client/build/default/favicon.ico
   secure: always

@@ -20,7 +20,12 @@ handlers:
   upload: client/index.html
   secure: always
 
-- url: /favicon.ico
+- url: /index\.html
+  static_files: client/index.html
+  upload: client/index.html
+  secure: always
+
+- url: /favicon\.ico
   static_files: client/favicon.ico
   upload: client/favicon.ico
   secure: always
