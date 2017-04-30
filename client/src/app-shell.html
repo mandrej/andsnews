@@ -197,7 +197,7 @@
     Polymer({
       is: 'app-shell',
       behaviors: [ ReduxBehavior ],
-      attached: function () {
+      ready: function () {
         if (!this.route.path) {
           this.set('route.path', '/grid/photo');
         }
@@ -229,7 +229,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201704271605' },
+        version: { type: String, value: '201704301054' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },

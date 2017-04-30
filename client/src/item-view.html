@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-bottom-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-down-animation.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip.html">
 
 <link rel="import" href="redux-store.html">
@@ -72,8 +74,8 @@
     <neon-animated-pages id="neon"
       selected="[[view]]"
       attr-for-selected="data-view"
-      entry-animation="fade-in-animation"
-      exit-animation="fade-out-animation">
+      entry-animation="slide-from-bottom-animation"
+      exit-animation="slide-down-animation">
       <div data-view="display" class="swipe">
         <template is="dom-if" if="[[_isKindPhoto(item)]]">
           <iron-image
