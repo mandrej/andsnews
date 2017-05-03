@@ -31,10 +31,6 @@
         --app-drawer-width: 250px;
         --app-drawer-content-container: {
           background-color: var(--primary-background-color);
-          /*background-image: url(../images/logo.svg);
-          background-position: center 82%;
-          background-repeat: no-repeat;
-          background-size: 100px auto;*/
           -moz-user-select: none;
           -ms-user-select: none;
           -webkit-user-select: none;
@@ -43,16 +39,16 @@
       }
       app-header {
         background-color: var(--primary-background-color);
-        --app-header-background-front-layer: {
-          background-image: url(../images/logo.svg);
-          background-position: center -150px;
-          background-repeat: no-repeat;
-          background-size: 512px auto;
-        };
+      }
+      app-drawer app-header {
+        height: 128px;
+        background-image: url(../images/logo.svg);
+        background-position: center 0;
+        background-repeat: no-repeat;
+        background-size: 128px auto;
       }
       app-toolbar {
         color: var(--primary-text-color);
-        /*background-color: var(--primary-background-color);*/
       }
       paper-listbox a, paper-listbox paper-item {
         height: 54px;
