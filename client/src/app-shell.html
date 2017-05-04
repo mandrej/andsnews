@@ -227,7 +227,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201705032324' },
+        version: { type: String, value: '201705042225' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -297,7 +297,7 @@
             default:
               Polymer.Base.importHref('src/error-404.html');
           }
-        }, 100); // shorter or equal then grid ajax
+        }, 0);
       },
       _canAddRecord: function (view, isAuthorized) {
         return view === 'grid' && isAuthorized;
