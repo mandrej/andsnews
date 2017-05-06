@@ -3,17 +3,20 @@
 <dom-module id="shared-styles">
   <template>
     <style include="iron-flex iron-flex-alignment">
-       :root {
-        --primary-text-color: #212121;
-        --primary-background-color: #fff;
-        --secondary-text-color: #53596d;
-        --disabled-text-color: #9b9b9b;
-        --divider-color: #bdbdbd;
-        --error-color: #dc2128;
-        --dark-primary-color: #004d3d;
-        --primary-color: #008066;
-        --light-primary-color: #00b38f;
-        --accent-color: #ff6600;
+      /*amber/indigo*/
+      :root {
+        --dark-primary-color:       #FFA000;
+        --default-primary-color:    #FFC107;
+        --light-primary-color:      #FFECB3;
+        --text-primary-color:       #212121;
+        --accent-color:             #536DFE;
+        --primary-background-color: #FFECB3;
+        --primary-text-color:       #212121;
+        --secondary-text-color:     #757575;
+        --disabled-text-color:      #BDBDBD;
+        --divider-color:            #BDBDBD;
+
+        --error-color:              #dc2128;
       }
       ::-webkit-scrollbar {
         display: none;
@@ -24,8 +27,11 @@
       *:focus {
         outline: none;
       }
+      body {
+        background-color: var(--primary-background-color);
+      }
       a {
-        color: var(--dark-primary-color);
+        color: var(--accent-color);
       }
       app-drawer {
         --app-drawer-width: 250px;
@@ -38,21 +44,23 @@
         }
       }
       app-header {
-        background-color: var(--primary-background-color);
+        color: var(--text-primary-color);
+        background-color: var(--default-primary-color);
       }
       app-drawer app-header {
-        height: 128px;
+        height: 200px;
+        background-color: transparent;
         background-image: url(../images/logo.svg);
-        background-position: center 0;
+        background-position: center 25px;
         background-repeat: no-repeat;
-        background-size: 128px auto;
+        background-size: 150px auto;
       }
       app-toolbar {
-        color: var(--primary-text-color);
+        color: var(--text-primary-color);
       }
       paper-listbox a, paper-listbox paper-item {
         height: 54px;
-        color: var(--primary-color);
+        color: var(--primary-text-color);
         cursor: pointer;
         text-decoration: none;
       }
@@ -64,7 +72,7 @@
       }
       app-toolbar a {
         display: inline-block;
-        color: var(--primary-text-color);
+        color: inherit;
         text-decoration: none;
         text-transform: lowercase;
       }
@@ -92,16 +100,16 @@
         }
       }
       paper-button {
-        color: var(--primary-background-color);
-        background-color: var(--primary-color);
+        color: var(--text-primary-color);
+        background-color: var(--dark-primary-color);
         text-transform: lowercase;
       }
       paper-icon-button {
-        color: var(--primary-color);
+        color: var(--text-primary-color);
       }
       paper-fab,
       paper-button.accent {
-        color: var(--primary-background-color);
+        color: var(--primary-text-color);
         background-color: var(--accent-color);
       }
       paper-dialog paper-button {
@@ -109,10 +117,16 @@
         background-color: var(--divider-color);
         text-transform: lowercase;
       }
-      paper-input {
+      paper-input,
+      vaadin-combo-box,
+      paper-input-autocomplete-chips {
         --paper-input-container-color: var(--primary-text-color);
         --paper-input-container-focus-color: var(--accent-color);
         --paper-input-container-invalid-color: var(--error-color);
+      }
+      paper-toast {
+        --paper-toast-color: var(--text-primary-color);
+        --paper-toast-background-color: var(--default-primary-color);
       }
       paper-spinner {
         width: 100px;
