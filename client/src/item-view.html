@@ -49,10 +49,6 @@
         /*<svg xmlns="http://www.w3.org/2000/svg" width="60px" height="80px" viewBox="0 0 50 80" xml:space="preserve"><polyline fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/></svg>*/
         /*background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjgwcHgiIHZpZXdCb3g9IjAgMCA1MCA4MCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMC4zNzUsMC4zNzUgNDUuNjMsMzguMDg3IDAuMzc1LDc1LjggIi8+PC9zdmc+");*/
       }
-      .container {
-        min-height: calc(100vh - 32px);
-        padding: 16px;
-      }
       .markdown-html * {
         font-family: 'Roboto', 'Noto', sans-serif;
       }
@@ -87,11 +83,9 @@
         </template>
 
         <template is="dom-if" if="[[!_isKindPhoto(item)]]">
-          <div class="container">
-            <marked-element markdown="[[item.body]]">
-              <div class="markdown-html" style="padding: 16px"></div>
-            </marked-element>
-          </div>
+          <marked-element markdown="[[item.body]]">
+            <div class="markdown-html" style="padding: 16px"></div>
+          </marked-element>
         </template>
 
         <div class="left" on-tap="_goSwipe"></div>

@@ -14,6 +14,9 @@ module.exports = {
         urlPattern: /\/api\/photo\/tags\/new/,
         handler: 'networkFirst'
     }, {
+        urlPattern: /\/api\/download\/.*/,
+        handler: 'networkFirst'
+    }, {
         urlPattern: /\/api\/.*/,
         handler: 'fastest',
         options: {

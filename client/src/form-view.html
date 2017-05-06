@@ -45,7 +45,6 @@
 
       <template is="dom-if" if="[[_isKindPhoto(kind)]]">
         <vaadin-upload id="upload"
-          style="padding: 16px"
           target="/api/[[kind]]/add"
           max-files="10"
           on-upload-response="_uploadResponse"

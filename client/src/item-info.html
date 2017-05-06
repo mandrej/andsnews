@@ -72,12 +72,10 @@
         }
       },
       _downloadPhoto: function () {
-        window.location.href = '/api/download/' + this.item.safekey;
+        window.location = '/api/download/' + this.item.safekey;
       },
       _dateFormat: function (str) {
         return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
-        // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').format('LLL');
-        // return moment(str, 'YYYY-MM-DDTHH:mm:ss').locale('sr').fromNow();
       },
       activeFilter: function (field, value, filter) {
         return (filter[field] == value) ? 'accent' : '';
