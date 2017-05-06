@@ -28,14 +28,19 @@
       paper-chip.accent {
         --paper-chip-background-color: var(--accent-color);
       }
+      a[download] {
+        text-decoration: none;
+      }
     </style>
 
     <div class="container">
       <h2>[[item.headline]]</h2>
-      <paper-button on-tap="_downloadPhoto">
-        Download ([[item.size]])
-        <iron-icon icon="app:file-download"></iron-icon>
-      </paper-button>
+      <a href="/api/download/[[item.safekey]]" download target="_blank">
+        <paper-button>
+          Download ([[item.size]])
+          <iron-icon icon="app:file-download"></iron-icon>
+        </paper-button>
+      </a>
       <p>
         [[_dateFormat(item.date)]]
         <br>[[item.author]]
@@ -71,9 +76,9 @@
           }
         }
       },
-      _downloadPhoto: function () {
-        window.location = '/api/download/' + this.item.safekey;
-      },
+      // _downloadPhoto: function () {
+      //   window.location = '/api/download/' + this.item.safekey;
+      // },
       _dateFormat: function (str) {
         return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
       },
