@@ -21,12 +21,6 @@
       paper-button {
         margin-top: 8px;
       }
-      paper-input,
-      vaadin-combo-box,
-      paper-input-autocomplete-chips {
-        --paper-input-container-color: var(--primary-text-color);
-        --paper-input-container-focus-color: var(--primary-color);
-      }
     </style>
 
     <iron-ajax id="xhr"
@@ -49,11 +43,11 @@
 
       <div class="layout horizontal justified">
         <template is="dom-if" if="[[isAdmin]]">
-          <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+          <paper-button on-tap="_remove" raised>Remove</paper-button>
         </template>
         <div>
-          <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
-          <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+          <paper-button on-tap="_viewDisplay" class="accent" raised>Cancel</paper-button>
+          <paper-button on-tap="_submit" raised>Submit</paper-button>
         </div>
       </div>
 
