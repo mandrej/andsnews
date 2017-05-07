@@ -113,7 +113,7 @@
 
     <app-drawer-layout responsive-width="1024px">
       <app-drawer id="drawer">
-        <app-header reveals>
+        <app-header fixed>
           <app-toolbar>
             <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
               <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>

@@ -24,11 +24,6 @@ handlers:
   upload: client/build/default/index.html
   secure: always
 
-- url: /favicon\.ico
-  static_files: client/build/default/favicon.ico
-  upload: client/build/default/favicon.ico
-  secure: always
-
 - url: /robots\.txt
   static_files: client/build/default/robots.txt
   upload: client/build/default/robots.txt
