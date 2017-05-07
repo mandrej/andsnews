@@ -11,8 +11,8 @@
       stroke-miterlimit: 4;
       stroke-opacity: 1;
     }
-    .left { stroke:#FFA000; }
-    .right { stroke:#536DFE; }
+    .left { stroke:#9E9E9E; }
+    .right { stroke:#FF5722; }
   </style>
   <g transform="translate(-2308.1513,-191.95416)">
     <g id="logo">
