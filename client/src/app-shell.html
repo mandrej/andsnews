@@ -113,7 +113,7 @@
 
     <app-drawer-layout responsive-width="1024px">
       <app-drawer id="drawer">
-        <app-header reveals>
+        <app-header fixed>
           <app-toolbar>
             <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
               <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
@@ -227,7 +227,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201705062115' },
+        version: { type: String, value: '201705072003' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
