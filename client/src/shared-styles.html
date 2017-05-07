@@ -17,6 +17,7 @@
         --divider-color:            #BDBDBD;
 
         --error-color:              #d32f2f;
+        --primary-color:            var(---text-primary-color);
       }
       ::-webkit-scrollbar {
         display: none;
@@ -27,16 +28,12 @@
       *:focus {
         outline: none;
       }
-      body {
-        background-color: var(--primary-background-color);
-      }
       a {
         color: var(--accent-color);
       }
       app-drawer {
         --app-drawer-width: 250px;
         --app-drawer-content-container: {
-          background-color: var(--primary-background-color);
           -moz-user-select: none;
           -ms-user-select: none;
           -webkit-user-select: none;
@@ -44,10 +41,11 @@
         }
       }
       app-header {
-        color: var(--text-primary-color);
-        background-color: var(--default-primary-color);
+        color: var(--light-primary-color);
+        background-color: var(--dark-primary-color);
       }
       app-drawer app-header {
+        color: var(--text-primary-color);
         height: 200px;
         background-color: transparent;
         background-image: url(../images/logo.svg);
@@ -55,17 +53,10 @@
         background-repeat: no-repeat;
         background-size: 150px auto;
       }
-      app-toolbar {
-        color: var(--text-primary-color);
-      }
       paper-listbox a, paper-listbox paper-item {
         height: 54px;
-        color: var(--primary-text-color);
         cursor: pointer;
         text-decoration: none;
-      }
-      paper-listbox.accent paper-item {
-        color: var(--accent-color);
       }
       paper-item iron-icon {
         margin-right: 10px;
@@ -100,16 +91,13 @@
         }
       }
       paper-button {
-        color: var(--text-primary-color);
+        color: var(--light-primary-color);
         background-color: var(--dark-primary-color);
         text-transform: lowercase;
       }
-      paper-icon-button {
-        color: var(--text-primary-color);
-      }
       paper-fab,
       paper-button.accent {
-        color: var(--primary-text-color);
+        color: var(--light-primary-color);
         background-color: var(--accent-color);
       }
       paper-dialog paper-button {
