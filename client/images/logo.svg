@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns="http://www.w3.org/2000/svg"
   width="221.95563mm" height="221.89787mm"
   viewBox="0 0 786.45696 786.25229" version="1.1">
@@ -9,7 +8,6 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       stroke-miterlimit: 4;
-      stroke-opacity: 1;
     }
     .left { stroke:#9E9E9E; }
     .right { stroke:#FF5722; }
