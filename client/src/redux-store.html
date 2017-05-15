@@ -14,10 +14,6 @@
   const reducer = function (state, action) {
     if (!state) return initialStore;
     switch (action.type) {
-      // case 'ADD_FRIEND':
-      //   const friends = state.friends.slice(0);
-      //   friends.push(action.payload)
-      //   return Object.assign({}, state, {friends: friends})
       case 'CURRENT_CHANGED':
         // const current = Object.assign({}, state.current, action.payload);
         return Object.assign({}, state, action.payload)
