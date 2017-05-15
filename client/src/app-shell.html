@@ -9,7 +9,6 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
@@ -108,8 +107,6 @@
     <div id="spinner" class="layout horizontal center-justified">
       <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
     </div>
-
-    <app-scrollpos-control selected="{{dataView.view}}"></app-scrollpos-control>
 
     <app-drawer-layout responsive-width="1024px">
       <app-drawer id="drawer">
@@ -227,7 +224,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201705072353' },
+        version: { type: String, value: '201705151224' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
