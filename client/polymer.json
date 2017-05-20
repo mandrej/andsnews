@@ -32,7 +32,7 @@
       "bundle": false,
       "addServiceWorker": true,
       "js": {
-        "minify": true
+        "minify": false
       },
       "css": {
         "minify": true
