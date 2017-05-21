@@ -31,9 +31,6 @@
     {
       "bundle": false,
       "addServiceWorker": true,
-      "js": {
-        "minify": false
-      },
       "css": {
         "minify": true
       },

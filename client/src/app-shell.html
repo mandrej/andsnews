@@ -23,6 +23,7 @@
 <link rel="import" href="redux-store.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
+<link rel="import" href="app-search.html">
 <link rel="import" href="grid-view.html">
 
 <dom-module id="app-shell">
@@ -223,7 +224,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201705201349' },
+        version: { type: String, value: '201705211346' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
@@ -258,7 +259,6 @@
                   view: 'display',
                   disableSwipe: false
                 });
-                Polymer.Base.importHref('src/app-search.html', null, null, true);
                 break;
               }
             case 'detail':
@@ -266,7 +266,7 @@
                 this.error404();
                 break;
               } else {
-                Polymer.Base.importHref('src/detail-view.html', null, null, true);
+                Polymer.Base.importHref('src/detail-view.html');
                 break;
               }
             case 'form':
