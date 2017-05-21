@@ -14,13 +14,15 @@
 * Symlink all libraries to project lib:
     * aeta, cloudstorage, colormath, exifread, googleapiclient,
     * pyasn1, pyasn1_modules, rsa,
-    * httplib2, networkx, auth2client
+    * httplib2, networkx, oauth2client
 
 ### Deployment instructions ###
 
 * Create application on [Google Developers Console](https://console.developers.google.com/project)
-* Switch to /client
-* $> bower update
-* $> polymer build
-* Replace client -> client/build/unbundled in app.yaml
-* Deploy on Google infrastructure
+* cd client/
+* $> bower install / update
+* $> npm install / update
+* $> cd ..
+* $> ./ands devel
+* $> ./ands build
+* $> ./ands deploy to Deploy on Google infrastructure

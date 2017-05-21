@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 home=/home/milan
 python=$home/venv/ands/bin/python
-dev_appserver=/usr/lib/google-cloud-sdk/platform/google_appengine/dev_appserver.py
+dev_appserver=/home/milan/google-cloud-sdk/platform/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
 stamp=`date +%Y%m%d%H%M`
 file="client/src/app-shell.html"
