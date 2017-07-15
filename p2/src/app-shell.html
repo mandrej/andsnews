@@ -11,59 +11,24 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
+<link rel="import" href="grid-filter.html">
 
 <dom-module id="app-shell">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
       }
-      .rec {
-        position: relative;
-        width: calc((100vw - 256px) / 8);
-        height: calc(100vw / 8);
-        cursor: pointer;
-      }
-      .rec iron-image {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-      .rec .title {
-        @apply --layout-horizontal;
-        @apply --layout-justified;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: var(--primary-background-color);
-        font-size: 20px;
-        padding: 16px;
-        text-overflow: ellipsis;
-      }
-      @media (max-width: 1440px) { .rec { width: calc((100vw - 256px) / 5); height: 20vw; }}
-      @media (max-width: 1024px) { .rec { width: calc((100vw - 256px) / 4); height: 25vw; }}
-      @media (max-width: 768px) { .rec { width: calc(100vw / 3); height: calc(100vw / 3); }}
-      @media (max-width: 432px) { .rec { width: 50vw; height: 50vw; }}
     </style>
 
-    <!-- <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-location route="{{route}}" use-hash-as-path></app-location>
 
-    <app-route
-      route="{{route}}"
-      pattern="/:view"
-      data="{{dataView}}"
-      tail="{{tailView}}"></app-route> -->
+    <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
 
     <app-drawer-layout fullbleed responsive-width="768px">
       <app-drawer swipe-open slot="drawer">
@@ -85,38 +50,25 @@
           </app-toolbar>
         </app-header>
 
-        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-          <template>
-              <div>
-              <div class="rec" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span class="self-center">[[rec.name]]</span>
-                  <span class="self-center">[[rec.count]]</span>
-                </div>
-              </div>
-              </div>
-          </template>
-        </iron-list>
-
-        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+        <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
+          <grid-filter
+            data-view="grid"
+            view="[[dataView.view]]"
+            route="{{route}}"></grid-filter>
+        </iron-pages>
 
       </app-header-layout>
     </app-drawer-layout>
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
     class AppShell extends Polymer.Element {
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          prop1: {
+          version: {
             type: String,
-            value: 'app-shell'
+            value: '201707042233'
           }
         };
       }
@@ -126,9 +78,8 @@
         ]
       }
       _routeChanged(changeRecord) {
-        if (changeRecord.path === 'path') {
-          console.log(changeRecord);
-          console.log('Path changed!');
+        if (changeRecord.path === 'route') {
+          this.set('route.path', '/grid');
         }
       }
     }

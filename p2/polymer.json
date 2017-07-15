@@ -4,6 +4,7 @@
   "fragments": [
     "src/app-icons.html",
     "src/shared-styles.html",
+    "src/grid-filter.html",
   ],
   "sources": [
     "src/**/*",

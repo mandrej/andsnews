@@ -1,0 +1,51 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="app-icons.html">
+
+<dom-module id="grid-filter">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+    </style>
+
+    <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+      <template>
+        <div>
+          <div class="rec" tabindex$="[[tabIndex]]">
+            <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+            <div class="title">
+              <span class="self-center">[[rec.name]]</span>
+              <span class="self-center">[[rec.count]]</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </iron-list>
+
+    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+  </template>
+
+  <script>
+    class GridFilter extends Polymer.Element {
+      static get is() { return 'grid-filter'; }
+      static get properties() {
+        return {
+        };
+      }
+    }
+
+    window.customElements.define(GridFilter.is, GridFilter);
+  </script>
+</dom-module>

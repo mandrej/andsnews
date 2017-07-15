@@ -124,6 +124,63 @@
       iron-image {
         background-color: var(--primary-background-color);
       }
+      /* grid */
+      .rec {
+        position: relative;
+        width: calc((100vw - 256px) / 8);
+        height: calc(100vw / 8);
+        cursor: pointer;
+      }
+
+      .rec iron-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .rec .title {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: var(--primary-background-color);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
+      }
+
+      @media (max-width: 1440px) {
+        .rec {
+          width: calc((100vw - 256px) / 5);
+          height: 20vw;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .rec {
+          width: calc((100vw - 256px) / 4);
+          height: 25vw;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .rec {
+          width: calc(100vw / 3);
+          height: calc(100vw / 3);
+        }
+      }
+
+      @media (max-width: 432px) {
+        .rec {
+          width: 50vw;
+          height: 50vw;
+        }
+      }
     </style>
 
   </template>
