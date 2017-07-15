@@ -32,7 +32,6 @@
         color: var(--accent-color);
       }
       app-drawer {
-        --app-drawer-width: 250px;
         --app-drawer-content-container: {
           -moz-user-select: none;
           -ms-user-select: none;
@@ -74,14 +73,15 @@
         border-radius: 50%;
         background-color: transparent;
       }
-      app-toolbar h1 {
+      app-toolbar [main-title], app-toolbar [condensed-title] {
         margin: 0;
-        font-size: 36px;
         font-weight: 300;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-align: center;
+      }
+      app-toolbar [main-title] {
+        font-size: 36px;
       }
       paper-dialog {
         max-width: 400px;

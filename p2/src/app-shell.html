@@ -22,85 +22,87 @@
 <dom-module id="app-shell">
   <template>
     <style include="shared-styles">
-       :host {
+      :host {
         display: block;
       }
-      iron-list {
-        @apply --layout-flex;
+      .rec {
+        position: relative;
+        width: calc((100vw - 256px) / 8);
+        height: calc(100vw / 8);
+        cursor: pointer;
       }
-      .item {
-        @apply --layout-vertical;
-        /* height: 240px; */
+      .rec iron-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
       }
-      iron-image {
-        height: 192px;
-        width: 192px;
-      }
-
-      .pad {
-        padding: 0 16px;
-        @apply --layout-flex;
+      .rec .title {
         @apply --layout-horizontal;
         @apply --layout-justified;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: var(--primary-background-color);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
       }
-
-      .primary {
-
-      }
-
-      .secondary {
-
-      }
-      @media (max-width: 1024px) { .rec { width: calc(100% / 4); padding-bottom: calc(100vw / 4); }}
-      @media (max-width: 768px)  { .rec { width: calc(100% / 3); padding-bottom: calc(100vw / 3); }}
-      @media (max-width: 432px)  { .rec { width: calc(100% / 2); padding-bottom: calc(100vw / 2); }}
+      @media (max-width: 1440px) { .rec { width: calc((100vw - 256px) / 5); height: 20vw; }}
+      @media (max-width: 1024px) { .rec { width: calc((100vw - 256px) / 4); height: 25vw; }}
+      @media (max-width: 768px) { .rec { width: calc(100vw / 3); height: calc(100vw / 3); }}
+      @media (max-width: 432px) { .rec { width: 50vw; height: 50vw; }}
     </style>
 
-    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <!-- <app-location route="{{route}}" use-hash-as-path></app-location>
 
     <app-route
       route="{{route}}"
       pattern="/:view"
       data="{{dataView}}"
-      tail="{{tailView}}"></app-route>
+      tail="{{tailView}}"></app-route> -->
 
-    <app-drawer-layout>
-        <app-drawer swipe-open slot="drawer">
-          <app-toolbar class="navToolbar">ANDрејевићи</app-toolbar>
-        </app-drawer>
-        <app-header-layout>
-          <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
-            <app-toolbar>
-              <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-              <h4 condensed-title>ANDрејевићи</h4>
-              <paper-icon-button icon="app:search"></paper-icon-button>
-              <paper-icon-button icon="app:more-vert"></paper-icon-button>
-            </app-toolbar>
-            <app-toolbar class="tall">
-              <h1 main-title>ANDрејевићи</h1>
-            </app-toolbar>
-          </app-header>
-          <iron-list items="[[data]]" as="item" scroll-target="document" grid>
-            <template>
+    <app-drawer-layout fullbleed responsive-width="768px">
+      <app-drawer swipe-open slot="drawer">
+        <app-header fixed>
+
+        </app-header>
+      </app-drawer>
+
+      <app-header-layout>
+        <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
+          <app-toolbar>
+            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
+            <h4 condensed-title>ANDрејевићи</h4>
+            <paper-icon-button icon="app:search"></paper-icon-button>
+            <paper-icon-button icon="app:more-vert"></paper-icon-button>
+          </app-toolbar>
+          <app-toolbar class="tall">
+            <h1 main-title>ANDрејевићи</h1>
+          </app-toolbar>
+        </app-header>
+
+        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+          <template>
               <div>
-                <div class="item" tabindex$="[[tabIndex]]">
-                  <iron-image src="[[item.repr_url]]=s400" preload fade sizing="cover"></iron-image>
-                  <div class="pad">
-                    <div class="primary">[[item.name]]</div>
-                    <div class="secondary">[[item.count]]</div>
-                  </div>
-                  <iron-icon icon$="[[iconForItem(item)]]"></iron-icon>
+              <div class="rec" tabindex$="[[tabIndex]]">
+                <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+                <div class="title">
+                  <span class="self-center">[[rec.name]]</span>
+                  <span class="self-center">[[rec.count]]</span>
                 </div>
               </div>
-            </template>
-          </iron-list>
+              </div>
+          </template>
+        </iron-list>
 
-          <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
 
-        </app-header-layout>
-      </app-drawer-layout>
-
-    </app-header-layout>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>
