@@ -1,0 +1,136 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="app-icons.html">
+
+<dom-module id="app-shell">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+      iron-list {
+        @apply --layout-flex;
+      }
+      .item {
+        @apply --layout-vertical;
+        /* height: 240px; */
+      }
+      iron-image {
+        height: 192px;
+        width: 192px;
+      }
+
+      .pad {
+        padding: 0 16px;
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+      }
+
+      .primary {
+
+      }
+
+      .secondary {
+
+      }
+      @media (max-width: 1024px) { .rec { width: calc(100% / 4); padding-bottom: calc(100vw / 4); }}
+      @media (max-width: 768px)  { .rec { width: calc(100% / 3); padding-bottom: calc(100vw / 3); }}
+      @media (max-width: 432px)  { .rec { width: calc(100% / 2); padding-bottom: calc(100vw / 2); }}
+    </style>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:view"
+      data="{{dataView}}"
+      tail="{{tailView}}"></app-route>
+
+    <app-drawer-layout>
+        <app-drawer swipe-open slot="drawer">
+          <app-toolbar class="navToolbar">ANDрејевићи</app-toolbar>
+        </app-drawer>
+        <app-header-layout>
+          <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
+            <app-toolbar>
+              <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
+              <h4 condensed-title>ANDрејевићи</h4>
+              <paper-icon-button icon="app:search"></paper-icon-button>
+              <paper-icon-button icon="app:more-vert"></paper-icon-button>
+            </app-toolbar>
+            <app-toolbar class="tall">
+              <h1 main-title>ANDрејевићи</h1>
+            </app-toolbar>
+          </app-header>
+          <iron-list items="[[data]]" as="item" scroll-target="document" grid>
+            <template>
+              <div>
+                <div class="item" tabindex$="[[tabIndex]]">
+                  <iron-image src="[[item.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+                  <div class="pad">
+                    <div class="primary">[[item.name]]</div>
+                    <div class="secondary">[[item.count]]</div>
+                  </div>
+                  <iron-icon icon$="[[iconForItem(item)]]"></iron-icon>
+                </div>
+              </div>
+            </template>
+          </iron-list>
+
+          <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+
+        </app-header-layout>
+      </app-drawer-layout>
+
+    </app-header-layout>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class AppShell extends Polymer.Element {
+      static get is() { return 'app-shell'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'app-shell'
+          }
+        };
+      }
+      static get observers() {
+        return [
+          '_routeChanged(route.*)',
+        ]
+      }
+      _routeChanged(changeRecord) {
+        if (changeRecord.path === 'path') {
+          console.log(changeRecord);
+          console.log('Path changed!');
+        }
+      }
+    }
+
+    window.customElements.define(AppShell.is, AppShell);
+  </script>
+</dom-module>
