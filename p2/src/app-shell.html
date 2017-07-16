@@ -16,8 +16,8 @@
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
-<link rel="import" href="grid-filter.html">
-<link rel="import" href="grid-detail.html">
+<link rel="import" href="start-view.html">
+<link rel="import" href="list-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -53,17 +53,17 @@
         </app-header>
 
         <iron-pages selected="{{dataView.view}}" attr-for-selected="data-view">
-          <grid-filter
-            data-view="grid"
+          <start-view
+            data-view="start"
             view="[[dataView.view]]"
-            route="{{route}}"></grid-filter>
+            route="{{route}}"></start-view>
 
-            <grid-detail
-              data-view="detail"
-              view="[[dataView.view]]"
-              field="[[dataFilter.field]]"
-              value="[[dataFilter.value]]"
-              route="{{route}}"></grid-detail>
+          <list-view
+            data-view="list"
+            view="[[dataView.view]]"
+            field="[[dataFilter.field]]"
+            value="[[dataFilter.value]]"
+            route="{{route}}"></list-view>
         </iron-pages>
 
       </app-header-layout>
@@ -83,23 +83,14 @@
       }
       static get observers() {
         return [
-          '_routeChanged(route.*)',
-          // '_viewChanged(dataView.view)',
+          '_viewChanged(dataView.view)',
         ]
       }
-      _routeChanged(changeRecord) {
-        if (changeRecord.path === 'route') {
-          this.set('route.path', '/grid');
+      _viewChanged(view) {
+        if (!view) {
+          this.set('route.path', '/start');
         }
       }
-      // _viewChanged(view) {
-      //   switch(view) {
-      //     case 'grid':
-      //       break;
-      //     case 'detail':
-      //       bre
-      //   }
-      // }
     }
 
     window.customElements.define(AppShell.is, AppShell);

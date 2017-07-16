@@ -12,7 +12,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
 
-<dom-module id="grid-detail">
+<dom-module id="start-view">
   <template>
     <style include="shared-styles">
        :host {
@@ -20,44 +20,36 @@
       }
     </style>
 
-    <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
+    <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
       <template>
         <div>
-          <div class="rec" data-safekey$="[[rec.safekey]]" on-tap="showDetail" tabindex$="[[tabIndex]]">
-            <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
+          <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+            <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
             <div class="title">
-              <span class="self-center">[[rec.headline]]</span>
+              <span class="self-center">[[rec.name]]</span>
+              <span class="self-center">[[rec.count]]</span>
             </div>
           </div>
         </div>
       </template>
     </iron-list>
 
-    <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
+    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
   </template>
 
   <script>
-    class GridDetail extends Polymer.GestureEventListeners(Polymer.Element) {
-      static get is() { return 'grid-detail'; }
+    class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'start-view'; }
       static get properties() {
         return {
-          // field: String,
-          // value: String,
-          // url: {
-          //   type: String,
-          //   computed: '_url(field, value)'
-          // }
         };
       }
-      _url(field, value) {
-        return ['/api/photo', field, value].join('/');
-      }
-      showDetail(e) {
+      showList(e) {
         console.log(e.model);
-        // this.set('route.path', ['/detail', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+        this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
       }
     }
 
-    window.customElements.define(GridDetail.is, GridDetail);
+    window.customElements.define(StartView.is, StartView);
   </script>
 </dom-module>
