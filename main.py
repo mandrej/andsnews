@@ -13,7 +13,8 @@ app = WSGIApplication([
           handler=api.Collection),
 
     Route(r'/api/<kind:(photo|entry)>/add', handler=api.Crud, methods=['GET', 'POST']),
-    Route(r'/api/<kind:(photo|entry)>/edit/<safe_key>', handler=api.Crud, methods=['GET', 'PUT']),
+    Route(r'/api/<safe_key>', handler=api.Crud, methods=['GET']),
+    Route(r'/api/<kind:(photo|entry)>/edit/<safe_key>', handler=api.Crud, methods=['PUT']),
     Route(r'/api/delete/<safe_key>', handler=api.Crud, methods=['DELETE']),
     Route(r'/api/download/<safe_key>', handler=api.Download, methods=['GET']),
 

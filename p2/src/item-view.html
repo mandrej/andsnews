@@ -9,14 +9,13 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
 
-<dom-module id="list-view">
+<dom-module id="item-view">
   <template>
     <style include="shared-styles">
        :host {
@@ -37,42 +36,29 @@
             <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
             <h4 condensed-title>[[value]]</h4>
             <paper-icon-button icon="app:search"></paper-icon-button>
+            <paper-icon-button icon="app:more-vert"></paper-icon-button>
           </app-toolbar>
            <app-toolbar class="tall">
             <h1 main-title>[[value]]</h1>
           </app-toolbar>
         </app-header>
 
-        <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span class="self-center">[[rec.headline]]</span>
-                </div>
-              </div>
-            </div>
-          </template>
-        </iron-list>
+        <iron-image src="[[data.serving_url]]=s0" preload fade sizing="cover"></iron-image>
 
-        <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
+        <iron-ajax url="[[_url(safekey)]]" last-response="{{data}}" auto></iron-ajax>
 
       </app-header-layout>
     </app-drawer-layout>
   </template>
 
   <script>
-    class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
-      static get is() { return 'list-view'; }
-      _url(field, value) {
-        return ['/api/photo', field, value].join('/');
-      }
-      showView(e) {
-        this.set('route.path', ['/detail', e.model.rec.safekey].join('/'));
+    class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'item-view'; }
+      _url(safekey) {
+        return ['/api', safekey].join('/');
       }
     }
 
-    window.customElements.define(ListView.is, ListView);
+    window.customElements.define(ItemView.is, ItemView);
   </script>
 </dom-module>
