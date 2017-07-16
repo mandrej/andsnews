@@ -17,6 +17,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
 <link rel="import" href="grid-filter.html">
+<link rel="import" href="grid-detail.html">
 
 <dom-module id="app-shell">
   <template>
@@ -29,6 +30,7 @@
     <app-location route="{{route}}" use-hash-as-path></app-location>
 
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
+    <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
 
     <app-drawer-layout fullbleed responsive-width="768px">
       <app-drawer swipe-open slot="drawer">
@@ -55,6 +57,13 @@
             data-view="grid"
             view="[[dataView.view]]"
             route="{{route}}"></grid-filter>
+
+            <grid-detail
+              data-view="detail"
+              view="[[dataView.view]]"
+              field="[[dataFilter.field]]"
+              value="[[dataFilter.value]]"
+              route="{{route}}"></grid-detail>
         </iron-pages>
 
       </app-header-layout>
@@ -75,6 +84,7 @@
       static get observers() {
         return [
           '_routeChanged(route.*)',
+          // '_viewChanged(dataView.view)',
         ]
       }
       _routeChanged(changeRecord) {
@@ -82,6 +92,14 @@
           this.set('route.path', '/grid');
         }
       }
+      // _viewChanged(view) {
+      //   switch(view) {
+      //     case 'grid':
+      //       break;
+      //     case 'detail':
+      //       bre
+      //   }
+      // }
     }
 
     window.customElements.define(AppShell.is, AppShell);

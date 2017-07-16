@@ -5,6 +5,7 @@
     "src/app-icons.html",
     "src/shared-styles.html",
     "src/grid-filter.html",
+    "src/grid-detail.html",
   ],
   "sources": [
     "src/**/*",
