@@ -66,7 +66,10 @@
     class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'list-view'; }
       _url(field, value) {
-        return ['/api/photo', field, value].join('/');
+        const rx = /^\/list/;
+        if (rx.test(this.route.path)) {
+          return ['/api/photo', field, value].join('/');
+        }
       }
       showView(e) {
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));

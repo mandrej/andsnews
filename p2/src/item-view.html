@@ -59,7 +59,10 @@
     class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'item-view'; }
       _url(safekey) {
-        return ['/api', safekey].join('/');
+        const rx = /^\/item/;
+        if (rx.test(this.route.path)) {
+          return ['/api', safekey].join('/');
+        }
       }
     }
 
