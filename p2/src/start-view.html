@@ -71,7 +71,6 @@
         };
       }
       showList(e) {
-        console.log(this.route);
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
       }
     }

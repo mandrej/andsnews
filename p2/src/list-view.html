@@ -69,7 +69,7 @@
         return ['/api/photo', field, value].join('/');
       }
       showView(e) {
-        this.set('route.path', ['/detail', e.model.rec.safekey].join('/'));
+        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
     }
 
