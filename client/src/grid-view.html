@@ -44,12 +44,11 @@
     </style>
 
     <iron-ajax auto
-      url="[[_url(kind, view)]]"
+      url="[[_url(kind, route)]]"
       handle-as="json"
       on-response="handler"
       loading="{{loading}}"
       debounce-duration="50"></iron-ajax>
-
 
     <div class="layout horizontal wrap">
       <template is="dom-repeat" items="[[items]]" as="rec" on-dom-change="repeatRender">
@@ -102,8 +101,9 @@
         items: { type: Array, value: [], notify: true },
         loading: { type: Boolean, value: false, notify: true },
       },
-      _url: function (kind, view) {
-        if (view === 'grid') {
+      _url: function (kind, route) {
+        const rx = /^\/grid/;
+        if (rx.test(route.path)) {
           if (kind === 'photo') {
             return '/api/filters';
           } else if (kind === 'entry') {
