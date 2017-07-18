@@ -21,17 +21,17 @@
         view="[[dataView.view]]"
         route="{{route}}"></start-view>
 
+      <item-view
+        data-view="item"
+        safekey="[[dataField.field]]"
+        route="{{route}}"></item-view>
+
       <list-view
         data-view="list"
         view="[[dataView.view]]"
         field="[[dataField.field]]"
         value="[[dataValue.value]]"
         route="{{route}}"></list-view>
-
-      <item-view
-        data-view="item"
-        safekey="[[dataField.field]]"
-        route="{{route}}"></item-view>
     </iron-pages>
   </template>
 
@@ -55,9 +55,6 @@
         if (!view) {
           this.set('route.path', '/start');
         }
-        // this.set('dataView.view', null);
-        // this.set('dataField.filed', null);
-        // this.set('dataValue.value', null);
       }
     }
 
