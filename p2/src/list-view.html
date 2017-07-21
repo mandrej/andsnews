@@ -1,19 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
-
-<link rel="import" href="app-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <dom-module id="list-view">
   <template>
@@ -23,47 +11,30 @@
       }
     </style>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer">
-        <app-header fixed>
+    <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
 
-        </app-header>
-      </app-drawer>
-
-      <app-header-layout>
-        <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-            <h4 condensed-title>[[value]]</h4>
-            <paper-icon-button icon="app:search"></paper-icon-button>
-          </app-toolbar>
-           <app-toolbar class="tall">
-            <h1 main-title>[[value]]</h1>
-          </app-toolbar>
-        </app-header>
-
-        <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span class="self-center">[[rec.headline]]</span>
-                </div>
-              </div>
+    <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
+      <template>
+        <div>
+          <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
+            <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
+            <div class="title">
+              <span>[[rec.headline]]</span>
             </div>
-          </template>
-        </iron-list>
-
-        <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
-
-      </app-header-layout>
-    </app-drawer-layout>
+          </div>
+        </div>
+      </template>
+    </iron-list>
   </template>
 
   <script>
     class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'list-view'; }
+      static get properties() {
+        return {
+          route: Object
+        };
+      }
       _url(field, value) {
         const rx = /^\/list/;
         if (rx.test(this.route.path)) {
