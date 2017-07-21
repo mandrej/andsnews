@@ -1,17 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="app-icons.html">
@@ -24,43 +14,21 @@
       }
     </style>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer">
-        <app-header fixed>
-
-        </app-header>
-      </app-drawer>
-
-      <app-header-layout>
-        <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-            <h4 condensed-title>ANDрејевићи</h4>
-            <paper-icon-button icon="app:search"></paper-icon-button>
-          </app-toolbar>
-          <app-toolbar class="tall">
-            <h1 main-title>ANDрејевићи</h1>
-          </app-toolbar>
-        </app-header>
-
-        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span class="self-center">[[rec.name]]</span>
-                  <span class="self-center">[[rec.count]]</span>
-                </div>
-              </div>
+    <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+      <template>
+        <div>
+          <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+            <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
+            <div class="title">
+              <span class="self-center">[[rec.name]]</span>
+              <span class="self-center">[[rec.count]]</span>
             </div>
-          </template>
-        </iron-list>
+          </div>
+        </div>
+      </template>
+    </iron-list>
 
-        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
-
-      </app-header-layout>
-    </app-drawer-layout>
+    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
   </template>
 
   <script>
