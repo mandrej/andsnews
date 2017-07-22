@@ -30,11 +30,26 @@
 
         <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
 
-        <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
+        <!-- <iron-list id="list"
+          items="[[data.objects]]" as="rec" scroll-target="document" grid>
           <template>
             <div>
               <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
                 <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
+                <div class="title">
+                  <span>[[rec.headline]]</span>
+                </div>
+              </div>
+            </div>
+          </template>
+        </iron-list> -->
+
+        <iron-list id="list"
+          items="[[data.objects]]" as="rec" scroll-target="document">
+          <template>
+            <div>
+              <div class="rec full" on-tap="showView" tabindex$="[[tabIndex]]">
+                <iron-image src="[[rec.serving_url]]=s0" preload fade sizing="cover"></iron-image>
                 <div class="title">
                   <span>[[rec.headline]]</span>
                 </div>
@@ -61,7 +76,26 @@
         }
       }
       showView(e) {
-        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+        // let el = e.target;
+        // while ((el = el.parentElement) && !el.classList.contains('rec'));
+        // console.log(el);
+
+        // const img = el.querySelector('iron-image');
+        // img.src = img.src.replace('=s400', '=s0');
+        // img.style.width = '100%';
+        // img.style.height = '100vh';
+        // this.$.list.grid = false;
+        // const animation = el.animate({
+        //   opacity: [0, 1],
+        //   transform: ['translateY(100%)', 'translateY(0)'],
+        // }, {
+        //   direction: 'normal',
+        //   duration: 500,
+        //   easing: 'ease-in-out', //'linear', a bezier curve, etc.
+        //   iterations: 1,
+        //   fill: 'forwards'
+        // });
+        // this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
     }
 

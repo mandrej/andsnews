@@ -57,17 +57,17 @@
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
       loadedChanged(e) {
-        const el = e.target.parentElement.querySelector('.title');
-        let animation = el.animate({
-          opacity: [0, 1],
-          transform: ['translateY(100%)', 'translateY(0)'],
-        }, {
-          direction: 'normal',
-          duration: 500,
-          easing: 'ease-in-out', //'linear', a bezier curve, etc.
-          iterations: 1,
-          fill: 'forwards'
-        });
+        // const el = e.target.parentElement.querySelector('.title');
+        // let animation = el.animate({
+        //   opacity: [0, 1],
+        //   transform: ['translateY(100%)', 'translateY(0)'],
+        // }, {
+        //   direction: 'normal',
+        //   duration: 500,
+        //   easing: 'ease-in-out', //'linear', a bezier curve, etc.
+        //   iterations: 1,
+        //   fill: 'forwards'
+        // });
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
