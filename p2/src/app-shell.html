@@ -29,44 +29,22 @@
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer">
-        <app-header fixed>
+    <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
+      <start-view
+        view="start"
+        route="{{route}}"></start-view>
 
-        </app-header>
-      </app-drawer>
+      <item-view
+        view="item"
+        safekey="{{dataSafekey.safekey}}"
+        route="{{route}}"></item-view>
 
-      <app-header-layout>
-        <app-header class="mainHeader" condenses fixed effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-            <h4 condensed-title>ANDрејевићи</h4>
-            <paper-icon-button icon="app:search"></paper-icon-button>
-            <paper-icon-button icon="app:more-vert"></paper-icon-button>
-          </app-toolbar>
-          <app-toolbar class="tall">
-            <h1 main-title>ANDрејевићи</h1>
-          </app-toolbar>
-        </app-header>
-
-        <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
-          <start-view
-            view="start"
-            route="{{route}}"></start-view>
-
-          <item-view
-            view="item"
-            safekey="{{dataSafekey.safekey}}"
-            route="{{route}}"></item-view>
-
-          <list-view
-            view="list"
-            field="{{dataFilter.field}}"
-            value="{{dataFilter.value}}"
-            route="{{route}}"></list-view>
-        </iron-pages>
-      </app-header-layout>
-    </app-drawer-layout>
+      <list-view
+        view="list"
+        field="{{dataFilter.field}}"
+        value="{{dataFilter.value}}"
+        route="{{route}}"></list-view>
+    </iron-pages>
   </template>
 
   <script>

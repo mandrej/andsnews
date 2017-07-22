@@ -11,20 +11,39 @@
       }
     </style>
 
-    <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
+    <app-drawer-layout fullbleed responsive-width="768px">
+      <app-drawer swipe-open slot="drawer">
+        <app-header fixed></app-header>
+      </app-drawer>
 
-    <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
-      <template>
-        <div>
-          <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
-            <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
-            <div class="title">
-              <span>[[rec.headline]]</span>
+      <app-header-layout>
+        <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
+          <app-toolbar>
+            <paper-icon-button icon="app:chevron-left"></paper-icon-button>
+            <h4 condensed-title>[[value]]</h4>
+            <paper-icon-button icon="app:search"></paper-icon-button>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>[[value]]</h1>
+          </app-toolbar>
+        </app-header>
+
+        <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
+
+        <iron-list items="[[data.objects]]" as="rec" scroll-target="document" grid>
+          <template>
+            <div>
+              <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
+                <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
+                <div class="title">
+                  <span>[[rec.headline]]</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </template>
-    </iron-list>
+          </template>
+        </iron-list>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>

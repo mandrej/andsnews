@@ -13,26 +13,62 @@
       }
     </style>
 
-    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+    <app-drawer-layout fullbleed responsive-width="768px">
+      <app-drawer swipe-open slot="drawer">
+        <app-header fixed></app-header>
+      </app-drawer>
 
-    <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-      <template>
-        <div>
-          <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
-            <iron-image src="[[rec.repr_url]]=s400" preload fade sizing="cover"></iron-image>
-            <div class="title">
-              <span>[[rec.name]]</span>
-              <span>[[rec.count]]</span>
+      <app-header-layout>
+        <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
+          <app-toolbar>
+            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
+            <h4 condensed-title>ANDрејевићи</h4>
+            <paper-icon-button icon="app:search"></paper-icon-button>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>ANDрејевићи</h1>
+          </app-toolbar>
+        </app-header>
+
+        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+
+        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+          <template>
+            <div>
+              <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+                <iron-image
+                  src="[[rec.repr_url]]=s400"
+                  on-loaded-changed="loadedChanged"
+                  preload fade
+                  sizing="cover"></iron-image>
+                <div class="title">
+                  <span>[[rec.name]]</span>
+                  <span>[[rec.count]]</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </template>
-    </iron-list>
+          </template>
+        </iron-list>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
+      loadedChanged(e) {
+        const el = e.target.parentElement.querySelector('.title');
+        let animation = el.animate({
+          opacity: [0, 1],
+          transform: ['translateY(100%)', 'translateY(0)'],
+        }, {
+          direction: 'normal',
+          duration: 500,
+          easing: 'ease-in-out', //'linear', a bezier curve, etc.
+          iterations: 1,
+          fill: 'forwards'
+        });
+      }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
       }
