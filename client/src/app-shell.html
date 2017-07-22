@@ -191,10 +191,12 @@
     Polymer({
       is: 'app-shell',
       behaviors: [ ReduxBehavior ],
-      ready: function () {
+      attached: function () {
         if (!this.route.path) {
           this.set('route.path', '/grid/photo');
         }
+      },
+      ready: function () {
         this.firebase.auth().onAuthStateChanged(function (user) {
           if (user) {
             this.dispatch('change', {
@@ -223,7 +225,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201707182218' },
+        version: { type: String, value: '201707222148' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },
