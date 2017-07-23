@@ -35,7 +35,7 @@
         <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
           <template>
             <div>
-              <div class="rec" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+              <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
                 <iron-image
                   src="[[rec.repr_url]]=s400"
                   on-loaded-changed="loadedChanged"

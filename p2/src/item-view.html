@@ -22,7 +22,7 @@
       <app-header-layout>
         <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:chevron-left"></paper-icon-button>
+            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
             <h4 condensed-title>[[data.headline]]</h4>
             <paper-icon-button icon="app:more-vert"></paper-icon-button>
           </app-toolbar>
@@ -45,6 +45,9 @@
         if (rx.test(this.route.path)) {
           return ['/api', safekey].join('/');
         }
+      }
+      goBack() {
+        window.history.go(-1);
       }
     }
 

@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <dom-module id="list-view">
@@ -19,7 +20,7 @@
       <app-header-layout>
         <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:chevron-left"></paper-icon-button>
+            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
             <h4 condensed-title>[[value]]</h4>
             <paper-icon-button icon="app:search"></paper-icon-button>
           </app-toolbar>
@@ -30,26 +31,12 @@
 
         <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
 
-        <!-- <iron-list id="list"
+         <iron-list id="list"
           items="[[data.objects]]" as="rec" scroll-target="document" grid>
           <template>
             <div>
-              <div class="rec" on-tap="showView" tabindex$="[[tabIndex]]">
+              <div class="square" on-tap="showView" tabindex$="[[tabIndex]]">
                 <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span>[[rec.headline]]</span>
-                </div>
-              </div>
-            </div>
-          </template>
-        </iron-list> -->
-
-        <iron-list id="list"
-          items="[[data.objects]]" as="rec" scroll-target="document">
-          <template>
-            <div>
-              <div class="rec full" on-tap="showView" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.serving_url]]=s0" preload fade sizing="cover"></iron-image>
                 <div class="title">
                   <span>[[rec.headline]]</span>
                 </div>
@@ -76,6 +63,12 @@
         }
       }
       showView(e) {
+        // const el = this.$.list;
+        // el.grid = false;
+        // el.querySelectorAll('rec').forEach(function(element) {
+        //   element.classList.add('full');
+        // }, this); ;
+        // el.dispatchEvent('iron-resize');
         // let el = e.target;
         // while ((el = el.parentElement) && !el.classList.contains('rec'));
         // console.log(el);
@@ -95,7 +88,7 @@
         //   iterations: 1,
         //   fill: 'forwards'
         // });
-        // this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
     }
 
