@@ -15,9 +15,12 @@
       .rec {
         position: relative;
         width: calc(100% / 5);
-        height: 0;
-        padding-bottom: calc(100% / 5);
         cursor: pointer;
+      }
+      .rec::after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
       }
       .rec iron-image {
         position: absolute;
@@ -37,10 +40,9 @@
         padding: 16px;
         text-overflow: ellipsis;
       }
-      /*@media (max-width: 1440px) { .rec { width: calc(100% / 5); padding-bottom: calc(100vw / 5); }}*/
-      @media (max-width: 1024px) { .rec { width: calc(100% / 4); padding-bottom: calc(100vw / 4); }}
-      @media (max-width: 768px)  { .rec { width: calc(100% / 3); padding-bottom: calc(100vw / 3); }}
-      @media (max-width: 432px)  { .rec { width: calc(100% / 2); padding-bottom: calc(100vw / 2); }}
+      @media (max-width: 1024px) { .rec { width: calc(100% / 4); }}
+      @media (max-width: 768px)  { .rec { width: calc(100% / 3); }}
+      @media (max-width: 432px)  { .rec { width: calc(100% / 2); }}
     </style>
 
     <iron-ajax auto
