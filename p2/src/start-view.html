@@ -8,9 +8,47 @@
 <dom-module id="start-view">
   <template>
     <style include="shared-styles">
-       :host {
+      :host {
         display: block;
       }
+      .square {
+        position: relative;
+        width: calc((100vw - 256px) / 8);
+        cursor: pointer;
+      }
+      .square::after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
+      .square iron-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .square .title {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: var(--primary-background-color);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
+      }
+      .square .title > * {
+        @apply --layout-self-center;
+      }
+
+      @media (max-width: 1440px) { .square { width: calc((100vw - 256px) / 5); }}
+      @media (max-width: 1024px) { .square { width: calc((100vw - 256px) / 4); }}
+      @media (max-width: 768px)  { .square { width: calc(100vw / 3); }}
+      @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
     <app-drawer-layout fullbleed responsive-width="768px">
@@ -19,7 +57,7 @@
       </app-drawer>
 
       <app-header-layout>
-        <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
+        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
             <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
             <h4 condensed-title>ANDрејевићи</h4>
@@ -46,7 +84,7 @@
                   <span>[[rec.count]]</span>
                 </div>
               </div>
-            </div>
+            </div> 
           </template>
         </iron-list>
       </app-header-layout>

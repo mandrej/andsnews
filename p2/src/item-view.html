@@ -5,7 +5,7 @@
 <dom-module id="item-view">
   <template>
     <style include="shared-styles">
-       :host {
+      :host {
         display: block;
       }
       iron-image {
@@ -20,7 +20,7 @@
       </app-drawer>
 
       <app-header-layout>
-        <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
+        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
             <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
             <h4 condensed-title>[[data.headline]]</h4>

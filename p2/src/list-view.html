@@ -2,26 +2,48 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<!-- <link rel="import" href="../bower_components/iron-image/iron-image.html"> -->
 
 <dom-module id="list-view">
   <template>
-    <style include="shared-styles">
-       :host {
+     <style include="shared-styles">
+      :host {
         display: block;
+      }
+      iron-list {
+        flex: 1 1 auto;
+      }
+      paper-card {
+        width: 100%;
+        --paper-card-header-image: {
+          height: 200px;
+        }
+        --paper-card-header-color: var(--light-primary-color);
+        --paper-card-content: {
+          padding : 12px;
+        }
+        --paper-card-actions: {
+          padding : 12px;
+        }
+      }
+      paper-button {
+        margin: 8px 0;
       }
     </style>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
+     <app-drawer-layout fullbleed responsive-width="768px">
       <app-drawer swipe-open slot="drawer">
         <app-header fixed></app-header>
       </app-drawer>
 
       <app-header-layout>
-        <app-header condenses fixed effects="resize-title blend-background waterfall" slot="header">
+        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
             <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-            <h4 condensed-title>[[value]]</h4>
+              <h4 condensed-title>[[value]]</h4>
             <paper-icon-button icon="app:search"></paper-icon-button>
           </app-toolbar>
           <app-toolbar>
@@ -31,20 +53,31 @@
 
         <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
 
-         <iron-list id="list"
-          items="[[data.objects]]" as="rec" scroll-target="document" grid>
+         <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document">
           <template>
             <div>
-              <div class="square" on-tap="showView" tabindex$="[[tabIndex]]">
-                <iron-image src="[[rec.serving_url]]=s400" preload fade sizing="cover"></iron-image>
-                <div class="title">
-                  <span>[[rec.headline]]</span>
+              <paper-card
+                heading="[[rec.headline]]"
+                image="[[rec.serving_url]]=s0"
+                alt="[[rec.headline]]"
+                elevation="0">
+                <div class="card-content layout horizontal justified wrap">
+                  <paper-button on-tap="showView">View</paper-button>
+                  <paper-button on-tap="">Edit</paper-button>
                 </div>
-              </div>
+                <div class="card-actions layout horizontal justified wrap">
+                  <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[rec.year]]">[[rec.year]]</paper-button>
+                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                    <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
+                  </template>
+                  <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>
+                  <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
+                </div>
+              </paper-card>
             </div>
           </template>
         </iron-list>
-      </app-header-layout>
+       </app-header-layout>
     </app-drawer-layout>
   </template>
 
@@ -89,6 +122,12 @@
         //   fill: 'forwards'
         // });
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+      }
+      applyFilter(e) {
+        const target = e.target,
+          field = target.dataset.field,
+          value = target.dataset.fieldValue;
+        this.set('route.path', ['/list', field, value].join('/'));
       }
     }
 
