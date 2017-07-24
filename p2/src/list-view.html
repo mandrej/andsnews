@@ -2,10 +2,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<!-- <link rel="import" href="../bower_components/iron-image/iron-image.html"> -->
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <dom-module id="list-view">
   <template>
@@ -13,24 +12,29 @@
       :host {
         display: block;
       }
-      iron-list {
-        flex: 1 1 auto;
-      }
-      paper-card {
+      iron-image {
         width: 100%;
-        --paper-card-header-image: {
-          height: 200px;
-        }
-        --paper-card-header-color: var(--light-primary-color);
-        --paper-card-content: {
-          padding : 12px;
-        }
-        --paper-card-actions: {
-          padding : 12px;
-        }
       }
-      paper-button {
-        margin: 8px 0;
+      iron-image::after {
+        content: "";
+        display: block;
+        padding-bottom: 75%;
+      }
+      .square {
+        @apply --layout-vertical;
+      }
+      .title {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
+      }
+      .action {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-wrap;
+        background-color: var(--light-primary-color);
       }
     </style>
 
@@ -56,24 +60,26 @@
          <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document">
           <template>
             <div>
-              <paper-card
-                heading="[[rec.headline]]"
-                image="[[rec.serving_url]]=s0"
-                alt="[[rec.headline]]"
-                elevation="0">
-                <div class="card-content layout horizontal justified wrap">
-                  <paper-button on-tap="showView">View</paper-button>
-                  <paper-button on-tap="">Edit</paper-button>
-                </div>
-                <div class="card-actions layout horizontal justified wrap">
-                  <paper-button on-tap="applyFilter" data-field="date" data-field-value$="[[rec.year]]">[[rec.year]]</paper-button>
+              <div class="square">
+                <div class="title">[[rec.headline]]</div>
+                <iron-image src="[[rec.serving_url]]=s0" sizing="cover" on-tap="showView"></iron-image>
+                <div class="action">
+                  <paper-button hidden$="[[activeFilter('date', rec.year, data.filter)]]"
+                    on-tap="applyFilter" data-field="date"
+                    data-field-value$="[[rec.year]]">[[rec.year]]</paper-button>
                   <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                    <paper-button on-tap="applyFilter" data-field="tags" data-field-value$="[[tag]]">[[tag]]</paper-button>
+                    <paper-button hidden$="[[activeFilter('tags', tag, data.filter)]]"
+                      on-tap="applyFilter" data-field="tags"
+                      data-field-value$="[[tag]]">[[tag]]</paper-button>
                   </template>
-                  <paper-button on-tap="applyFilter" data-field="model" data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>
-                  <paper-button on-tap="applyFilter" data-field="color" data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
+                  <paper-button hidden$="[[activeFilter('model', rec.model, data.filter)]]"
+                    on-tap="applyFilter" data-field="model"
+                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>
+                  <paper-button hidden$="[[activeFilter('color', rec.color, data.filter)]]"
+                    on-tap="applyFilter" data-field="color"
+                    data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
                 </div>
-              </paper-card>
+              </div>
             </div>
           </template>
         </iron-list>
@@ -86,12 +92,14 @@
       static get is() { return 'list-view'; }
       static get properties() {
         return {
+          data: Array,
           route: Object
         };
       }
       _url(field, value) {
         const rx = /^\/list/;
         if (rx.test(this.route.path)) {
+          this.data = [];
           return ['/api/photo', field, value].join('/');
         }
       }
@@ -122,6 +130,9 @@
         //   fill: 'forwards'
         // });
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+      }
+      activeFilter(field, value, filter) {
+        return (filter.field === field && filter.value === value);
       }
       applyFilter(e) {
         const target = e.target,
