@@ -28,13 +28,9 @@
       .headline {
         @apply --layout-horizontal;
         @apply --layout-justified;
-        padding: 16px;
       }
       .headline > div {
         font-size: 20px;
-      }
-      .headline > * {
-        @apply --layout-self-center;
       }
       .action {
         @apply --layout-horizontal;
@@ -49,14 +45,20 @@
 
      <app-drawer-layout fullbleed responsive-width="768px">
       <app-drawer swipe-open slot="drawer">
-        <app-header fixed></app-header>
+        <app-header fixed>
+          <app-toolbar></app-toolbar>
+        </app-header>
+
+        <div role="listbox">
+          <a class="paper-item-link" href="#/start" tabindex="-1"><paper-item>Home</paper-item></a>
+        </div>
       </app-drawer>
 
       <app-header-layout>
         <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
-              <h4 condensed-title>[[value]]</h4>
+            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
+            <h4 condensed-title>[[value]]</h4>
             <paper-icon-button icon="app:search"></paper-icon-button>
           </app-toolbar>
           <app-toolbar>
@@ -70,7 +72,7 @@
           <template>
             <div>
               <div class="square">
-                <div class="headline">
+                <app-toolbar class="headline">
                   <paper-menu-button>
                     <paper-icon-button icon="app:more-vert" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
@@ -79,7 +81,7 @@
                     </paper-listbox>
                   </paper-menu-button>
                   <div>[[rec.headline]]</div>
-                </div>
+                </app-toolbar>
                 <iron-image src="[[rec.serving_url]]=s0" sizing="cover" on-tap="showView"></iron-image>
                 <div class="action">
                   <paper-button hidden$="[[activeFilter('date', rec.year, data.filter)]]"
@@ -92,7 +94,7 @@
                   </template>
                   <!-- <paper-button hidden$="[[activeFilter('model', rec.model, data.filter)]]"
                     on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button> -->
+                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>  -->
                   <paper-button hidden$="[[activeFilter('color', rec.color, data.filter)]]"
                     on-tap="applyFilter" data-field="color"
                     data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
@@ -122,31 +124,6 @@
         }
       }
       showView(e) {
-        // const el = this.$.list;
-        // el.grid = false;
-        // el.querySelectorAll('rec').forEach(function(element) {
-        //   element.classList.add('full');
-        // }, this); ;
-        // el.dispatchEvent('iron-resize');
-        // let el = e.target;
-        // while ((el = el.parentElement) && !el.classList.contains('rec'));
-        // console.log(el);
-
-        // const img = el.querySelector('iron-image');
-        // img.src = img.src.replace('=s400', '=s0');
-        // img.style.width = '100%';
-        // img.style.height = '100vh';
-        // this.$.list.grid = false;
-        // const animation = el.animate({
-        //   opacity: [0, 1],
-        //   transform: ['translateY(100%)', 'translateY(0)'],
-        // }, {
-        //   direction: 'normal',
-        //   duration: 500,
-        //   easing: 'ease-in-out', //'linear', a bezier curve, etc.
-        //   iterations: 1,
-        //   fill: 'forwards'
-        // });
         // this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
         window.location = e.target.src;
       }
@@ -158,6 +135,9 @@
           field = target.dataset.field,
           value = target.dataset.fieldValue;
         this.set('route.path', ['/list', field, value].join('/'));
+      }
+      goBack() {
+        this.set('route.path', '/start');
       }
     }
 

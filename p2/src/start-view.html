@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<!-- <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html"> -->
 
 <link rel="import" href="shared-styles.html">
 
@@ -52,14 +53,20 @@
     </style>
 
     <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer">
-        <app-header fixed></app-header>
+      <app-drawer swipe-open slot="drawer" id="drawer">
+        <app-header fixed>
+          <app-toolbar></app-toolbar>
+        </app-header>
+
+        <div role="listbox">
+          <a class="paper-item-link" href="#/start" tabindex="-1"><paper-item>Home</paper-item></a>
+        </div>
       </app-drawer>
 
       <app-header-layout>
         <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button hidden$="[[hideHamburger()]]" icon="app:menu" drawer-toggle></paper-icon-button>
             <h4 condensed-title>ANDрејевићи</h4>
             <paper-icon-button icon="app:search"></paper-icon-button>
           </app-toolbar>
@@ -94,6 +101,13 @@
   <script>
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
+      // ready() {
+      //   super.ready();
+      //   window.addEventListener('iron-resize', () => this.ironResize());
+      // }
+      // ironResize() {
+      //   console.log('HIT');
+      // }
       loadedChanged(e) {
         // const el = e.target.parentElement.querySelector('.title');
         // let animation = el.animate({
@@ -109,6 +123,12 @@
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+      }
+      hideHamburger() {
+        const drawer = this.$.drawer;
+        console.log(drawer.opened, drawer.persistent);
+        // return drawer.opened || drawer.persistent;
+        return false;
       }
     }
 
