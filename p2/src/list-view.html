@@ -12,6 +12,10 @@
       :host {
         display: block;
       }
+      .square {
+        width: 100%;
+        @apply --layout-vertical;
+      }
       iron-image {
         width: 100%;
       }
@@ -19,9 +23,6 @@
         content: "";
         display: block;
         padding-bottom: 75%;
-      }
-      .square {
-        @apply --layout-vertical;
       }
       .title {
         @apply --layout-horizontal;
@@ -72,9 +73,9 @@
                       on-tap="applyFilter" data-field="tags"
                       data-field-value$="[[tag]]">[[tag]]</paper-button>
                   </template>
-                  <paper-button hidden$="[[activeFilter('model', rec.model, data.filter)]]"
+                  <!-- <paper-button hidden$="[[activeFilter('model', rec.model, data.filter)]]"
                     on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>
+                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button> -->
                   <paper-button hidden$="[[activeFilter('color', rec.color, data.filter)]]"
                     on-tap="applyFilter" data-field="color"
                     data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
@@ -129,7 +130,8 @@
         //   iterations: 1,
         //   fill: 'forwards'
         // });
-        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+        // this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+        window.location = e.target.src;
       }
       activeFilter(field, value, filter) {
         return (filter.field === field && filter.value === value);
