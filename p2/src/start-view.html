@@ -101,6 +101,17 @@
   <script>
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   this.addEventListener('iron-resize', this._logResizeEvent);
+      // }
+      // disconnectedCallback() {
+      //   super.disconnectedCallback();
+      //   this.removeEventListener('iron-resize', this._logResizeEvent);
+      // }
+      // _logResizeEvent(e) {
+      //   console.debug('resize', e);
+      // }
       // ready() {
       //   super.ready();
       //   window.addEventListener('iron-resize', () => this.ironResize());
@@ -109,6 +120,7 @@
       //   console.log('HIT');
       // }
       loadedChanged(e) {
+        console.log('HIT');
         // const el = e.target.parentElement.querySelector('.title');
         // let animation = el.animate({
         //   opacity: [0, 1],
