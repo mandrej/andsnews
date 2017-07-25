@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <dom-module id="list-view">
@@ -24,12 +25,16 @@
         display: block;
         padding-bottom: 75%;
       }
-      .title {
+      .headline {
         @apply --layout-horizontal;
         @apply --layout-justified;
-        font-size: 20px;
         padding: 16px;
-        text-overflow: ellipsis;
+      }
+      .headline > div {
+        font-size: 20px;
+      }
+      .headline > * {
+        @apply --layout-self-center;
       }
       .action {
         @apply --layout-horizontal;
@@ -65,7 +70,16 @@
           <template>
             <div>
               <div class="square">
-                <div class="title">[[rec.headline]]</div>
+                <div class="headline">
+                  <paper-menu-button>
+                    <paper-icon-button icon="app:more-vert" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-listbox slot="dropdown-content">
+                      <paper-item>Edit</paper-item>
+                      <paper-item>Remove</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                  <div>[[rec.headline]]</div>
+                </div>
                 <iron-image src="[[rec.serving_url]]=s0" sizing="cover" on-tap="showView"></iron-image>
                 <div class="action">
                   <paper-button hidden$="[[activeFilter('date', rec.year, data.filter)]]"
