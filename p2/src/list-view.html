@@ -13,7 +13,7 @@
         display: block;
       }
       .square {
-        width: 100%;
+        width: calc((100vw - 256px) / 3);
         @apply --layout-vertical;
       }
       iron-image {
@@ -37,6 +37,9 @@
         @apply --layout-wrap;
         background-color: var(--light-primary-color);
       }
+      @media (max-width: 1024px) { .square { width: calc((100vw - 256px) / 2); }}
+      @media (max-width: 768px)  { .square { width: calc(100vw / 2); }}
+      @media (max-width: 432px)  { .square { width: 100vw; }}
     </style>
 
      <app-drawer-layout fullbleed responsive-width="768px">
@@ -58,7 +61,7 @@
 
         <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
 
-         <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document">
+         <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document" grid>
           <template>
             <div>
               <div class="square">
