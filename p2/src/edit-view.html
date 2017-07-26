@@ -1,0 +1,113 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
+
+<dom-module id="edit-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      .container {
+        padding: 16px;
+      }
+    </style>
+
+    <app-drawer-layout fullbleed responsive-width="768px">
+      <app-drawer swipe-open slot="drawer">
+        <app-header fixed>
+          <app-toolbar></app-toolbar>
+        </app-header>
+
+        <div role="listbox">
+          <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
+        </div>
+      </app-drawer>
+
+      <app-header-layout>
+        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
+          <app-toolbar>
+            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
+            <h4 condensed-title>Edit</h4>
+            <paper-icon-button icon="app:more-vert"></paper-icon-button>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>Edit</h1>
+          </app-toolbar>
+        </app-header>
+
+        <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
+        <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
+
+        <iron-form>
+          <form id="form" class="container"
+            on-iron-form-response="_responseHandler"
+            action$="/api/[[item.kind]]/edit/[[item.safekey]]"
+            method="post">
+
+            <div class="layout horizontal justified">
+              <!-- <template is="dom-if" if="[[isAdmin]]"> -->
+                <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
+              <!-- </template> -->
+              <div>
+                <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
+                <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
+              </div>
+            </div>
+
+            <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+
+            <vaadin-combo-box name="author" required label="author"
+              auto-validate
+              allow-custom-value="true"
+              items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+              value="[[item.author]]"></vaadin-combo-box>
+
+            <paper-chip-input-autocomplete name="tags" label="tags" closable
+              _items="[[item.tags]]"
+              source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+
+            <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
+            <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
+            <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
+            <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+            <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+            <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+            <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+
+          </form>
+        </iron-form>
+
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    class EditView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'edit-view'; }
+      _url(safekey) {
+        const rx = /^\/edit/;
+        if (rx.test(this.route.path)) {
+          return ['/api', safekey].join('/');
+        }
+      }
+      listObjects(tags) {
+        const list = [];
+        tags.forEach(function(tag) {
+          list.push({text: tag, value: tag});
+        });
+        return list;
+      }
+      goBack() {
+        window.history.go(-1);
+      }
+    }
+
+    window.customElements.define(EditView.is, EditView);
+  </script>
+</dom-module>

@@ -15,7 +15,7 @@
 <link rel="import" href="app-icons.html">
 <link rel="import" href="start-view.html">
 <link rel="import" href="list-view.html">
-<link rel="import" href="item-view.html">
+<link rel="import" href="edit-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -35,10 +35,10 @@
         view="start"
         route="{{route}}"></start-view>
 
-      <item-view
-        view="item"
+      <edit-view
+        view="edit"
         safekey="{{dataSafekey.safekey}}"
-        route="{{route}}"></item-view>
+        route="{{route}}"></edit-view>
 
       <list-view
         view="list"

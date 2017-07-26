@@ -17,7 +17,7 @@ case $1 in
     exit ;;
   build)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
-    cd client
+    cd p2
     polymer build
     cd ..
     exit ;;

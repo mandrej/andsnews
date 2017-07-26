@@ -14,7 +14,7 @@
         display: block;
       }
       .square {
-        width: calc((100vw - 256px) / 3);
+        width: calc((100vw - 256px) / 4);
         @apply --layout-vertical;
       }
       iron-image {
@@ -50,7 +50,7 @@
         </app-header>
 
         <div role="listbox">
-          <a class="paper-item-link" href="#/start" tabindex="-1"><paper-item>Home</paper-item></a>
+          <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
         </div>
       </app-drawer>
 
@@ -76,7 +76,7 @@
                   <paper-menu-button>
                     <paper-icon-button icon="app:more-vert" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
-                      <paper-item>Edit</paper-item>
+                      <paper-item on-tap="showForm">Edit</paper-item>
                       <paper-item>Remove</paper-item>
                     </paper-listbox>
                   </paper-menu-button>
@@ -124,8 +124,10 @@
         }
       }
       showView(e) {
-        // this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
         window.location = e.target.src;
+      }
+      showForm(e) {
+        this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
       activeFilter(field, value, filter) {
         return (filter.field === field && filter.value === value);
