@@ -44,11 +44,11 @@
         <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
         <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
 
-        <iron-form>
-          <form id="form" class="container"
+        <iron-form id="editForm">
+          <form class="container"
             on-iron-form-response="_responseHandler"
             action$="/api/[[item.kind]]/edit/[[item.safekey]]"
-            method="post">
+            method="put">
 
             <div class="layout horizontal justified">
               <!-- <template is="dom-if" if="[[isAdmin]]"> -->
@@ -68,7 +68,8 @@
               items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
               value="[[item.author]]"></vaadin-combo-box>
 
-            <paper-chip-input-autocomplete name="tags" label="tags" closable
+            <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
+              closable
               _items="[[item.tags]]"
               source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
 
@@ -79,6 +80,7 @@
             <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
             <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
             <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+            <paper-input disabled label="color" value="[[item.color]]"></paper-input>
 
           </form>
         </iron-form>
@@ -90,10 +92,15 @@
   <script>
     class EditView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'edit-view'; }
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.editForm.addEventListener('iron-form-presubmit', () => this._preSubmit());
+        // this.$.editForm.addEventListener('iron-form-submit', (e) => this._submit(e));
+      }
       _url(safekey) {
         const rx = /^\/edit/;
         if (rx.test(this.route.path)) {
-          return ['/api', safekey].join('/');
+          return ['/api', safekey].join('/');_submit
         }
       }
       listObjects(tags) {
@@ -102,6 +109,14 @@
           list.push({text: tag, value: tag});
         });
         return list;
+      }
+      _preSubmit() {
+        const form = this.$.editForm;
+        // console.dir(this.$.tags);
+        form.request.params['tags'] = this.$.tags._items.join(',');
+      }
+      _submit() {
+        this.$.editForm.submit();
       }
       goBack() {
         window.history.go(-1);
