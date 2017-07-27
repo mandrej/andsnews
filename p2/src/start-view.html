@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <!-- <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html"> -->
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -72,6 +73,7 @@
           </app-toolbar>
           <app-toolbar>
             <h1 main-title>ANDрејевићи</h1>
+            <paper-fab mini icon="app:add" on-tap="addRecord"></paper-fab>
           </app-toolbar>
         </app-header>
 
@@ -102,6 +104,9 @@
       static get is() { return 'start-view'; }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+      }
+      addRecord() {
+        this.set('route.path', '/add');
       }
       hideHamburger() {
         const drawer = this.$.drawer;

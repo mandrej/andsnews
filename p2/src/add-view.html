@@ -1,0 +1,95 @@
+<link rel="import" href="../bower_components/polymer/polymer-view.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+
+<dom-module id="add-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block
+      }
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--primary-background-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
+      }
+    </style>
+
+    <app-drawer-layout fullbleed responsive-width="768px">
+      <app-drawer swipe-open slot="drawer">
+        <app-header fixed>
+          <app-toolbar></app-toolbar>
+        </app-header>
+
+        <div role="listbox">
+          <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
+        </div>
+      </app-drawer>
+
+      <app-header-layout>
+        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
+          <app-toolbar>
+            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
+            <h4 condensed-title>Add</h4>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>Add</h1>
+          </app-toolbar>
+        </app-header>
+
+        <paper-toast id="toast" class="fit-bottom"></paper-toast>
+
+        <vaadin-upload id="upload"
+          target="/api/photo/add"
+          max-files="10"
+          on-upload-response="_uploadResponse"
+          accept="image/*"></vaadin-upload>
+        <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+        </iron-form>
+
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    class AddView extends Polymer.Element {
+
+      static get is() { return 'add-view'; }
+
+      static get properties() {
+        return {
+
+        };
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+
+        Polymer.RenderStatus.afterNextRender(this, function() {
+
+        });
+      }
+      _uploadResponse(e) {
+        var res = JSON.parse(e.detail.xhr.responseText),
+          toast = this.$.toast;
+        toast.fitInto = this.$.container;
+        if (res.success) {
+          toast.setAttribute('text', 'Image successfully uploaded');
+          toast.open();
+        } else {
+          toast.setAttribute('text', res.message);
+          toast.open();
+        }
+      }
+    }
+
+    window.customElements.define(AddView.is, AddView);
+  </script>
+</dom-module>
