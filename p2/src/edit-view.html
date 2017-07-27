@@ -34,7 +34,7 @@
           <app-toolbar>
             <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
             <h4 condensed-title>Edit</h4>
-            <paper-icon-button icon="app:more-vert"></paper-icon-button>
+            <!-- <paper-icon-button icon="app:more-vert"></paper-icon-button> -->
           </app-toolbar>
           <app-toolbar>
             <h1 main-title>Edit</h1>
@@ -51,13 +51,8 @@
             method="put">
 
             <div class="layout horizontal justified">
-              <!-- <template is="dom-if" if="[[isAdmin]]"> -->
-                <paper-button on-tap="_remove" class="accent" raised>Remove</paper-button>
-              <!-- </template> -->
-              <div>
-                <paper-button on-tap="_viewDisplay" raised>Cancel</paper-button>
-                <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
-              </div>
+              <paper-button on-tap="goBack" raised>Cancel</paper-button>
+              <paper-button on-tap="_submit" class="accent" raised>Submit</paper-button>
             </div>
 
             <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
@@ -73,15 +68,17 @@
               _items="[[item.tags]]"
               source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
 
-            <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
-            <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
-            <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
-            <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
-            <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
-            <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
-            <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
-            <paper-input disabled label="color" value="[[item.color]]"></paper-input>
+            <paper-input readonly name="date" label="date" value="[[item.date]]"></paper-input>
 
+            <div class="layout horizontal justified wrap">
+              <paper-input readonly name="model" label="model" value="[[item.model]]"></paper-input>
+              <paper-input readonly name="lens" label="lens" value="[[item.lens]]"></paper-input>
+              <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+              <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+              <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+              <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+            </div>
+            <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
           </form>
         </iron-form>
 

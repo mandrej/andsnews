@@ -6,6 +6,10 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-chip/paper-chip.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 
 <dom-module id="list-view">
   <template>
@@ -36,6 +40,7 @@
         @apply --layout-horizontal;
         @apply --layout-justified;
         @apply --layout-wrap;
+        padding: 16px 12px 11px 16px;
         background-color: var(--light-primary-color);
       }
       @media (max-width: 1024px) { .square { width: calc((100vw - 256px) / 2); }}
@@ -43,7 +48,19 @@
       @media (max-width: 432px)  { .square { width: 100vw; }}
     </style>
 
-     <app-drawer-layout fullbleed responsive-width="768px">
+    <paper-dialog id="deleteDialog"
+      modal
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
+      on-iron-overlay-closed="deleteRecord">
+      <h2>Are you sure?</h2>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+    <app-drawer-layout fullbleed responsive-width="768px">
       <app-drawer swipe-open slot="drawer">
         <app-header fixed>
           <app-toolbar></app-toolbar>
@@ -67,8 +84,9 @@
         </app-header>
 
         <iron-ajax url="[[_url(field, value)]]" last-response="{{data}}" auto></iron-ajax>
+        <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-         <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document" grid>
+        <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document" grid>
           <template>
             <div>
               <div class="square">
@@ -77,27 +95,27 @@
                     <paper-icon-button icon="app:more-vert" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
                       <paper-item on-tap="showForm">Edit</paper-item>
-                      <paper-item>Remove</paper-item>
+                      <paper-item on-tap="showDialog">Remove</paper-item>
                     </paper-listbox>
                   </paper-menu-button>
                   <div>[[rec.headline]]</div>
                 </app-toolbar>
                 <iron-image src="[[rec.serving_url]]=s0" sizing="cover" on-tap="showView"></iron-image>
                 <div class="action">
-                  <paper-button hidden$="[[activeFilter('date', rec.year, data.filter)]]"
+                  <paper-chip hidden$="[[activeFilter('date', rec.year, data.filter)]]"
                     on-tap="applyFilter" data-field="date"
-                    data-field-value$="[[rec.year]]">[[rec.year]]</paper-button>
+                    data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
                   <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                    <paper-button hidden$="[[activeFilter('tags', tag, data.filter)]]"
+                    <paper-chip hidden$="[[activeFilter('tags', tag, data.filter)]]"
                       on-tap="applyFilter" data-field="tags"
-                      data-field-value$="[[tag]]">[[tag]]</paper-button>
+                      data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
                   </template>
-                  <!-- <paper-button hidden$="[[activeFilter('model', rec.model, data.filter)]]"
+                  <paper-chip hidden$="[[activeFilter('model', rec.model, data.filter)]]"
                     on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-button>  -->
-                  <paper-button hidden$="[[activeFilter('color', rec.color, data.filter)]]"
+                    data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
+                  <paper-chip hidden$="[[activeFilter('color', rec.color, data.filter)]]"
                     on-tap="applyFilter" data-field="color"
-                    data-field-value$="[[rec.color]]">[[rec.color]]</paper-button>
+                    data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
                 </div>
               </div>
             </div>
@@ -112,8 +130,9 @@
       static get is() { return 'list-view'; }
       static get properties() {
         return {
-          data: Array,
-          route: Object
+          // data: Array,
+          route: Object,
+          currentIndex: Number
         };
       }
       _url(field, value) {
@@ -137,6 +156,18 @@
           field = target.dataset.field,
           value = target.dataset.fieldValue;
         this.set('route.path', ['/list', field, value].join('/'));
+      }
+      showDialog(e) {
+        this.currentIndex = e.model.index;
+        this.$.deleteDialog.open();
+      }
+      deleteRecord() {
+        const obj = this.splice('data.objects', this.currentIndex, 1)[0];
+        this.currentIndex = -1;
+        console.log(obj);
+        const xhr = this.$.delete_ajax;
+        xhr.url = '/api/delete/' + obj.safekey;
+        xhr.generateRequest();
       }
       goBack() {
         this.set('route.path', '/start');

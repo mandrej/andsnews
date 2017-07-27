@@ -22,7 +22,8 @@
     "paper-input": "PolymerElements/paper-input#^2.0.1",
     "iron-form": "PolymerElements/iron-form#^2.0.0",
     "vaadin-combo-box": "^2.0.0",
-    "paper-chip": "ThomasCybulski/paper-chip#^2.0.9"
+    "paper-chip": "ThomasCybulski/paper-chip#^2.0.9",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
