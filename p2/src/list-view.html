@@ -15,11 +15,11 @@
   <template>
      <style include="shared-styles">
       :host {
-        display: block;
+        @apply --layout-vertical;
       }
       .square {
-        width: calc((100vw - 256px) / 4);
         @apply --layout-vertical;
+        width: calc((100vw - 256px) / 4);
       }
       iron-image {
         width: 100%;
