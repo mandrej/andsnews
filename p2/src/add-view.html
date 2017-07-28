@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer-view.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 
@@ -56,26 +56,21 @@
 
   <script>
     class AddView extends Polymer.Element {
-
       static get is() { return 'add-view'; }
+      // static get properties() {
+      //   return {
 
-      static get properties() {
-        return {
+      //   };
+      // }
+      // constructor() {
+      //   super();
+      // }
+      // ready() {
+      //   super.ready();
+      //   Polymer.RenderStatus.afterNextRender(this, function() {
 
-        };
-      }
-
-      constructor() {
-        super();
-      }
-
-      ready() {
-        super.ready();
-
-        Polymer.RenderStatus.afterNextRender(this, function() {
-
-        });
-      }
+      //   });
+      // }
       _uploadResponse(e) {
         var res = JSON.parse(e.detail.xhr.responseText),
           toast = this.$.toast;

@@ -7,7 +7,7 @@
     "src/start-view.html",
     "src/list-view.html",
     "src/add-view.html",
-    "src/edit-view.html",
+    "src/edit-view.html"
   ],
   "sources": [
     "src/**/*",
@@ -16,8 +16,7 @@
   ],
   "extraDependencies": [
     "robots.txt",
-    "manifest.json",
-    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+    "manifest.json"
   ],
   "builds": [
     {
@@ -27,6 +26,9 @@
         "minify": true
       },
       "html": {
+        "minify": true
+      },
+      "js": {
         "minify": true
       }
     }
