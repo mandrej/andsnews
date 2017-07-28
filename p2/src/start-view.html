@@ -59,9 +59,9 @@
           <app-toolbar></app-toolbar>
         </app-header>
 
-        <div role="listbox">
+        <!-- <div role="listbox">
           <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
-        </div>
+        </div> -->
       </app-drawer>
 
       <app-header-layout>
@@ -110,7 +110,7 @@
       }
       hideHamburger() {
         const drawer = this.$.drawer;
-        console.log(drawer.opened, drawer.persistent);
+        // console.log(drawer.opened, drawer.persistent);
         // return drawer.opened || drawer.persistent;
         return false;
       }
