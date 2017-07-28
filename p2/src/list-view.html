@@ -74,9 +74,8 @@
       <app-header-layout>
         <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
+            <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
             <h4 condensed-title>[[value]]</h4>
-            <paper-icon-button icon="app:search"></paper-icon-button>
           </app-toolbar>
           <app-toolbar>
             <h1 main-title>[[value]]</h1>
@@ -92,7 +91,7 @@
               <div class="square">
                 <app-toolbar class="headline">
                   <paper-menu-button>
-                    <paper-icon-button icon="app:more-vert" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
                       <paper-item on-tap="showForm">Edit</paper-item>
                       <paper-item on-tap="showDialog">Remove</paper-item>
@@ -139,7 +138,11 @@
         const rx = /^\/list/;
         if (rx.test(this.route.path)) {
           this.data = [];
-          return ['/api/photo', field, value].join('/');
+          if (field === 'search') {
+            return ['/api/search', value].join('/');
+          } else {
+            return ['/api/photo', field, value].join('/');
+          }
         }
       }
       showView(e) {
@@ -149,7 +152,11 @@
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
       activeFilter(field, value, filter) {
-        return (filter.field === field && filter.value === value);
+        if (filter) {
+          return (filter.field === field && filter.value === value);
+        } else {
+          return false;
+        }
       }
       applyFilter(e) {
         const target = e.target,

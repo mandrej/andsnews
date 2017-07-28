@@ -32,7 +32,7 @@
       <app-header-layout>
         <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
           <app-toolbar>
-            <paper-icon-button icon="app:chevron-left" on-tap="goBack"></paper-icon-button>
+            <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
             <h4 condensed-title>Add</h4>
           </app-toolbar>
           <app-toolbar>
@@ -57,20 +57,6 @@
   <script>
     class AddView extends Polymer.Element {
       static get is() { return 'add-view'; }
-      // static get properties() {
-      //   return {
-
-      //   };
-      // }
-      // constructor() {
-      //   super();
-      // }
-      // ready() {
-      //   super.ready();
-      //   Polymer.RenderStatus.afterNextRender(this, function() {
-
-      //   });
-      // }
       _uploadResponse(e) {
         var res = JSON.parse(e.detail.xhr.responseText),
           toast = this.$.toast;
@@ -82,6 +68,9 @@
           toast.setAttribute('text', res.message);
           toast.open();
         }
+      }
+      goBack() {
+        window.history.go(-1);
       }
     }
 
