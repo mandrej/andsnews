@@ -62,7 +62,7 @@
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>ANDрејевићи</h1>
-          <paper-icon-button icon="search"></paper-icon-button>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
           <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
@@ -91,7 +91,8 @@
   </template>
 
   <script>
-    class StartView extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.GestureEventListeners(Polymer.Element)) {
+    // class StartView extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.GestureEventListeners(Polymer.Element)) {
+    class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
       static get properties() {
         return {
@@ -102,23 +103,26 @@
           }
         }
       }
-      get keyBindings() {
-        return {
-          'enter': 'onSearch',
-        };
-      }
+      // get keyBindings() {
+      //   return {
+      //     'enter': 'onSearch',
+      //   };
+      // }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
       }
       addRecord() {
         this.set('route.path', '/add');
       }
-      onSearch() {
-        const find = this.$.search.value;
-        if (find) {
-          this.set('route.path', ['/list/search', find].join('/'));
-        }
+      findForm() {
+        this.set('route.path', '/search');
       }
+      // onSearch() {
+      //   const find = this.$.search.value;
+      //   if (find) {
+      //     this.set('route.path', ['/list/search', find].join('/'));
+      //   }
+      // }
       clearInput() {
         this.$.search.value = '';
       }

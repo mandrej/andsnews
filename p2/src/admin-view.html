@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<dom-module id="admin-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      .container {
+        padding: 16px;
+      }
+    </style>
+s
+    <app-header-layout>
+      <app-header fixed slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>Find</h1>
+        </app-toolbar>
+      </app-header>
+
+        <div class="container">
+          <div class="layout horizontal end-justified">
+            <paper-button on-tap="_submit" class="accent" raised>Find</paper-button>
+          </div>
+
+          <paper-input name="find" required label="find"></paper-input>
+
+
+        </div>
+
+    </app-header-layout>
+  </template>
+
+  <script>
+    class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'admin-view'; }
+      goBack() {
+        window.history.go(-1);
+      }
+    }
+
+    window.customElements.define(AdminView.is, AdminView);
+  </script>
+</dom-module>

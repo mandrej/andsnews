@@ -8,6 +8,9 @@
       :host {
         display: block
       }
+      .container {
+        padding: 16px;
+      }
       vaadin-upload {
         --vaadin-upload-button-add: {
           font-size: inherit;
@@ -28,14 +31,14 @@
 
       <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
-      <vaadin-upload id="upload"
-        target="/api/photo/add"
-        max-files="10"
-        on-upload-response="_uploadResponse"
-        accept="image/*"></vaadin-upload>
-      <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
-      </iron-form>
-
+      <div class="container">
+        <vaadin-upload id="upload"
+          target="/api/photo/add"
+          max-files="10"
+          on-upload-response="_uploadResponse"
+          accept="image/*"></vaadin-upload>
+        <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+      </div>
     </app-header-layout>
   </template>
 

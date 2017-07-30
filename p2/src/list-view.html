@@ -68,7 +68,7 @@
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>[[value]]</h1>
-          <paper-icon-button icon="search"></paper-icon-button>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
@@ -164,6 +164,9 @@
         const xhr = this.$.delete_ajax;
         xhr.url = '/api/delete/' + obj.safekey;
         xhr.generateRequest();
+      }
+      findForm() {
+        this.set('route.path', '/search');
       }
       goBack() {
         this.set('route.path', '/start');

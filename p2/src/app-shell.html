@@ -14,6 +14,8 @@
 <link rel="import" href="list-view.html">
 <link rel="import" href="add-view.html">
 <link rel="import" href="edit-view.html">
+<link rel="import" href="search-view.html">
+<link rel="import" href="admin-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -32,6 +34,10 @@
       <start-view
         view="start"
         route="{{route}}"></start-view>
+
+      <search-view
+        view="search"
+        route="{{route}}"></search-view>
 
       <add-view
         view="add"
