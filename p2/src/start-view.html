@@ -17,7 +17,7 @@
       }
       .square {
         position: relative;
-        width: calc((100vw - 256px) / 6);
+        width: calc(100vw / 6);
         cursor: pointer;
       }
       .square::after {
@@ -49,62 +49,43 @@
         @apply --layout-self-center;
       }
 
-      @media (max-width: 1440px) { .square { width: calc((100vw - 256px) / 5); }}
-      @media (max-width: 1024px) { .square { width: calc((100vw - 256px) / 4); }}
+      @media (max-width: 1440px) { .square { width: 20vw; }}
+      @media (max-width: 1024px) { .square { width: 25vw; }}
       @media (max-width: 768px)  { .square { width: calc(100vw / 3); }}
       @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer" id="drawer">
-        <app-header fixed>
-          <app-toolbar></app-toolbar>
-        </app-header>
+    <app-header-layout>
+      <app-header condenses reveals effects="resize-title" slot="header">
+        <app-toolbar>
+          <h4 condensed-title>ANDрејевићи</h4>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>ANDрејевићи</h1>
+          <paper-icon-button icon="search"></paper-icon-button>
+          <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+        </app-toolbar>
+      </app-header>
 
-        <paper-item>
-          <paper-input label="search" id="search">
-            <iron-icon icon="search" slot="prefix"></iron-icon>
-            <paper-icon-button slot="suffix" on-tap="clearInput" icon="clear" alt="clear" title="clear"></paper-icon-button>
-          </paper-input>
-        </paper-item>
+      <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
 
-        <!-- <div role="listbox">
-          <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
-        </div> -->
-      </app-drawer>
-
-      <app-header-layout>
-        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button hidden$="{{wideLayout}}" icon="menu" drawer-toggle></paper-icon-button>
-            <h4 condensed-title>ANDрејевићи</h4>
-          </app-toolbar>
-          <app-toolbar>
-            <h1 main-title>ANDрејевићи</h1>
-            <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
-          </app-toolbar>
-        </app-header>
-
-        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
-
-        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
-                <iron-image
-                  src="[[rec.repr_url]]=s400"
-                  preload fade
-                  sizing="cover"></iron-image>
-                <div class="title">
-                  <span>[[rec.name]]</span>
-                  <span>[[rec.count]]</span>
-                </div>
+      <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+        <template>
+          <div>
+            <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+              <iron-image
+                src="[[rec.repr_url]]=s400"
+                preload fade
+                sizing="cover"></iron-image>
+              <div class="title">
+                <span>[[rec.name]]</span>
+                <span>[[rec.count]]</span>
               </div>
             </div>
-           </template>
-        </iron-list>
-      </app-header-layout>
-    </app-drawer-layout>
+          </div>
+          </template>
+      </iron-list>
+    </app-header-layout>
 
     <iron-media-query query="min-width: 1024px" query-matches="{{wideLayout}}"></iron-media-query>
   </template>
@@ -142,10 +123,10 @@
         this.$.search.value = '';
       }
       _layoutChanged(wide) {
-        const drawer = this.$.drawer;
-        if (wide && drawer.opened) {
-          drawer.opened = false;
-        }
+        // const drawer = this.$.drawer;
+        // if (wide && drawer.opened) {
+        //   drawer.opened = false;
+        // }
       }
     }
 

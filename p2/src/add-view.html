@@ -18,40 +18,25 @@
       }
     </style>
 
-    <app-drawer-layout fullbleed responsive-width="768px">
-      <app-drawer swipe-open slot="drawer">
-        <app-header fixed>
-          <app-toolbar></app-toolbar>
-        </app-header>
+    <app-header-layout>
+      <app-header fixed slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>Add</h1>
+        </app-toolbar>
+      </app-header>
 
-        <!-- <div role="listbox">
-          <a class="paper-item-link" href="#/maintenance" tabindex="-1"><paper-item>Maintenance</paper-item></a>
-        </div> -->
-      </app-drawer>
+      <paper-toast id="toast" class="fit-bottom"></paper-toast>
 
-      <app-header-layout>
-        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
-            <h4 condensed-title>Add</h4>
-          </app-toolbar>
-          <app-toolbar>
-            <h1 main-title>Add</h1>
-          </app-toolbar>
-        </app-header>
+      <vaadin-upload id="upload"
+        target="/api/photo/add"
+        max-files="10"
+        on-upload-response="_uploadResponse"
+        accept="image/*"></vaadin-upload>
+      <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+      </iron-form>
 
-        <paper-toast id="toast" class="fit-bottom"></paper-toast>
-
-        <vaadin-upload id="upload"
-          target="/api/photo/add"
-          max-files="10"
-          on-upload-response="_uploadResponse"
-          accept="image/*"></vaadin-upload>
-        <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
-        </iron-form>
-
-      </app-header-layout>
-    </app-drawer-layout>
+    </app-header-layout>
   </template>
 
   <script>
