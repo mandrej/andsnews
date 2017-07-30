@@ -42,24 +42,24 @@
 
       <add-view
         view="add"
-        isAuthorized="{{isAuthorized}}"
+        is-authorized="{{isAuthorized}}"
         route="{{route}}"></add-view>
 
       <admin-view
         view="maintenance"
-        isAuthorized="{{isAuthorized}}"
+        is-authorized="{{isAuthorized}}"
         version="[[version]]"
         route="{{route}}"></admin-view>
 
       <edit-view
         view="edit"
-        isAuthorized="{{isAuthorized}}"
+        is-authorized="{{isAuthorized}}"
         safekey="{{dataSafekey.safekey}}"
         route="{{route}}"></edit-view>
 
       <list-view
         view="list"
-        isAuthorized="{{isAuthorized}}"
+        is-authorized="{{isAuthorized}}"
         field="{{dataFilter.field}}"
         value="{{dataFilter.value}}"
         route="{{route}}"></list-view>
