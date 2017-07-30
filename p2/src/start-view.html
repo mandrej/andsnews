@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -55,15 +56,35 @@
       @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
-    <app-header-layout>
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
+
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
+
+    <app-header-layout fullbleed>
       <app-header condenses reveals effects="resize-title" slot="header">
         <app-toolbar>
+          <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+            <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+          </a>
+          <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
           <h4 condensed-title>ANDрејевићи</h4>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>ANDрејевићи</h1>
-          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
-          <paper-fab mini icon="add" on-tap="addRecord"></paper-fab>
+          <paper-fab hidden$="[[!isAuthorized]]" mini icon="add" on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
 
@@ -85,6 +106,8 @@
           </div>
           </template>
       </iron-list>
+
+      <footer>&copy; andsnews [[version]]</footer>
     </app-header-layout>
 
     <iron-media-query query="min-width: 1024px" query-matches="{{wideLayout}}"></iron-media-query>
@@ -94,8 +117,14 @@
     // class StartView extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.GestureEventListeners(Polymer.Element)) {
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
+      ready() {
+        super.ready();
+
+      }
       static get properties() {
         return {
+          user: { type: Object, notify: true },
+          isAuthorized: { type: Boolean, value: false, notify: true },
           wideLayout: {
             type: Boolean,
             value: false,
@@ -131,6 +160,25 @@
         // if (wide && drawer.opened) {
         //   drawer.opened = false;
         // }
+      }
+      _sign() {
+        if (this.user) {
+          this.$.auth.signOut();
+        } else {
+          this.$.auth.signInWithPopup()
+            .then(function (response) {
+              // response.credential.accessToken
+              // response.user.uid
+            }).catch(function (error) {
+              console.log(error);
+            });
+        }
+      }
+      userName(user) {
+        if (user) return user.displayName;
+      }
+      userImg(user) {
+        if (user) return user.photoURL;
       }
     }
 

@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="admin-view">
   <template>
@@ -11,31 +13,98 @@
         padding: 16px;
       }
     </style>
-s
+
+    <firebase-messaging id="messaging"
+      app-name="andsnews"
+      token="{{token}}"
+      on-message="handleMessage"></firebase-messaging>
+
+    <firebase-document
+      log="true"
+      app-name="andsnews"
+      path="/users/[[user.uid]]/token"
+      data="[[token]]"></firebase-document>
+
+    <iron-ajax auto
+      url="[[_url(isAuthorized)]]"
+      last-response="{{info}}"></iron-ajax>
+
+    <iron-ajax id="xhr"
+      content-type="application/json"
+      method="POST"></iron-ajax>
+
     <app-header-layout>
       <app-header fixed slot="header">
         <app-toolbar>
           <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Find</h1>
+          <h1 main-title>Admin v. [[version]]</h1>
         </app-toolbar>
       </app-header>
 
-        <div class="container">
-          <div class="layout horizontal end-justified">
-            <paper-button on-tap="_submit" class="accent" raised>Find</paper-button>
+      <div class="container">
+        <paper-toast id="toast" class="fit-bottom"></paper-toast>
+
+        <div hidden$="[[!isAuthorized]]" class="layout vertical wrap">
+          <div>
+            <h1>Photo [[info.photo.count]]</h1>
+            <div class="layout horizontal justified wrap">
+              <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
+                <paper-button on-tap="rebuild" class="accent" toggles raised>[[item]]</paper-button>
+              </template>
+
+              <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
+              <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
+              <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
+            </div>
           </div>
-
-          <paper-input name="find" required label="find"></paper-input>
-
-
         </div>
-
+      </div>
     </app-header-layout>
   </template>
 
   <script>
     class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'admin-view'; }
+      static get properties() {
+        return {
+          isAuthorized: { type: Boolean, value: true, notify: true }
+        };
+      }
+      _url(isAuthorized) {
+        const rx = /^\/maintenance/;
+        if (rx.test(this.route.path) && isAuthorized) {
+          return '/api/info';
+        }
+      }
+      handleMessage(e) {
+        // console.log(arguments);
+        const toast = this.$.toast;
+        toast.fitInto = this.$.container;
+        toast.setAttribute('text', e.detail.message.notification.body);
+        toast.open();
+      }
+      callAjax(url) {
+        const xhr = this.$.xhr;
+        this.$.messaging.requestPermission().then(function () {
+          xhr.url = url;
+          xhr.body = JSON.stringify({ token: this.token });
+          xhr.generateRequest();
+        }.bind(this), function (err) {
+          console.log(err);
+        });
+      }
+      rebuild(e) {
+        this.callAjax('/api/rebuild/' + e.model.item);
+      }
+      reindex(e) {
+        this.callAjax('/api/index/' + e.target.dataset.kind);
+      }
+      unbound(e) {
+        this.callAjax('/api/unbound/' + e.target.dataset.kind);
+      }
+      fix(e) {
+        this.callAjax('/api/fix/' + e.target.dataset.kind);
+      }
       goBack() {
         window.history.go(-1);
       }

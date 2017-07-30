@@ -33,6 +33,7 @@
     <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
       <start-view
         view="start"
+        version="[[version]]"
         route="{{route}}"></start-view>
 
       <search-view
@@ -41,15 +42,24 @@
 
       <add-view
         view="add"
+        isAuthorized="{{isAuthorized}}"
         route="{{route}}"></add-view>
+
+      <admin-view
+        view="maintenance"
+        isAuthorized="{{isAuthorized}}"
+        version="[[version]]"
+        route="{{route}}"></admin-view>
 
       <edit-view
         view="edit"
+        isAuthorized="{{isAuthorized}}"
         safekey="{{dataSafekey.safekey}}"
         route="{{route}}"></edit-view>
 
       <list-view
         view="list"
+        isAuthorized="{{isAuthorized}}"
         field="{{dataFilter.field}}"
         value="{{dataFilter.value}}"
         route="{{route}}"></list-view>
