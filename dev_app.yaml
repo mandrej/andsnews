@@ -15,7 +15,7 @@ libraries:
   version: latest
 
 handlers:
-- url: /
+- url: /*
   static_files: p2/index.html
   upload: p2/index.html
   secure: always

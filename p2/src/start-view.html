@@ -76,7 +76,7 @@
       <app-header condenses reveals effects="resize-title" slot="header">
         <app-toolbar>
           <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-            <iron-image src="[[userImg(user)]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+             <iron-image src="[[user.photoURL]]" class="thumbnail" preload fade sizing="cover"></iron-image>
           </a>
           <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
           <h4 condensed-title>ANDрејевићи</h4>
@@ -95,7 +95,7 @@
           <div>
             <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
               <iron-image
-                src="[[rec.repr_url]]=s400"
+                src="[[checkImage(rec)]]"
                 preload fade
                 sizing="cover"></iron-image>
               <div class="title">
@@ -137,6 +137,13 @@
       //     'enter': 'onSearch',
       //   };
       // }
+      checkImage(rec) {
+        if (rec.repr_url) {
+          return rec.repr_url + '=s400';
+        } else {
+          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+        }
+      }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
       }
@@ -173,12 +180,6 @@
               console.log(error);
             });
         }
-      }
-      userName(user) {
-        if (user) return user.displayName;
-      }
-      userImg(user) {
-        if (user) return user.photoURL;
       }
     }
 

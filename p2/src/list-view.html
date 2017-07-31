@@ -33,6 +33,7 @@
       .headline {
         @apply --layout-horizontal;
         @apply --layout-justified;
+        padding-left: 0;
       }
       .headline > div {
         font-size: 20px;
@@ -44,7 +45,7 @@
         padding: 16px 12px 11px 16px;
         background-color: var(--light-primary-color);
       }
-      @media (max-width: 1024px) { .square { width: 25vw; }}
+      @media (max-width: 1024px) { .square { width: calc(100vw / 3); }}
       @media (max-width: 768px)  { .square { width: 50vw; }}
       @media (max-width: 432px)  { .square { width: 100vw; }}
     </style>
@@ -97,7 +98,7 @@
                 </paper-menu-button>
                 <div>[[rec.headline]]</div>
               </app-toolbar>
-              <iron-image src="[[rec.serving_url]]=s0" sizing="cover" on-tap="showView"></iron-image>
+              <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
               <div class="action">
                 <paper-chip hidden$="[[activeFilter('date', rec.year, data.filter)]]"
                   on-tap="applyFilter" data-field="date"
@@ -148,6 +149,13 @@
           this.data = {};
         } else {
           this.data = response;
+        }
+      }
+      checkImage(rec) {
+        if (rec.serving_url) {
+          return rec.serving_url + '=s0';
+        } else {
+          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
         }
       }
       showView(e) {
