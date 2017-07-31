@@ -62,10 +62,6 @@ handlers:
   static_dir: p2/bower_components
   secure: always
 
-- url: /node_modules/
-  static_dir: p2/node_modules
-  secure: always
-
 - url: /sitemap\.xml
   script: main.app
   secure: always
@@ -77,10 +73,6 @@ handlers:
 - url: /_ah/warmup
   script: main.app
   secure: always
-
-- url: /tests/.*
-  login: admin
-  script: aeta.main.APP
 
 inbound_services:
 - warmup
@@ -97,4 +89,3 @@ skip_files:
 - ^docs
 - ^p2/(src|test|images)
 - ^p2/bower_components
-- ^p2/node_modules

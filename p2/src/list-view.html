@@ -142,9 +142,8 @@
         }
       }
       handler(e) {
-        const response = e.detail.response;
+        const response = e.detail.response, dialog = this.$.message;
         if (response && response.objects && response.objects.length === 0) {
-          const dialog = this.$.message;
           dialog.open();
           this.data = {};
         } else {

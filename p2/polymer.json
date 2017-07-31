@@ -17,7 +17,8 @@
   ],
   "extraDependencies": [
     "robots.txt",
-    "manifest.json"
+    "manifest.json",
+    "firebase-messaging-sw.js"
   ],
   "builds": [
     {
