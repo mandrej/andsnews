@@ -83,4 +83,4 @@ skip_files:
 - ^docs
 - ^p2/(src|test|images)
 - ^p2/bower_components
-- lib/PIL
+- ^client

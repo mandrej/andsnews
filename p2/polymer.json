@@ -18,7 +18,8 @@
   "extraDependencies": [
     "robots.txt",
     "manifest.json",
-    "firebase-messaging-sw.js"
+    "firebase-messaging-sw.js",
+    "bower_components/webcomponentsjs/webcomponents-lite.js"
   ],
   "builds": [
     {
@@ -28,9 +29,6 @@
         "minify": true
       },
       "html": {
-        "minify": true
-      },
-      "js": {
         "minify": true
       }
     }
