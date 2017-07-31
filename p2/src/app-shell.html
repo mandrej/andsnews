@@ -34,6 +34,7 @@
       <start-view
         view="start"
         version="[[version]]"
+        is-authorized="{{isAuthorized}}"
         route="{{route}}"></start-view>
 
       <search-view
@@ -47,8 +48,8 @@
 
       <admin-view
         view="maintenance"
-        is-authorized="{{isAuthorized}}"
         version="[[version]]"
+        is-authorized="{{isAuthorized}}"
         route="{{route}}"></admin-view>
 
       <edit-view
@@ -71,6 +72,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
+          // isAuthorized: { type: Boolean, value: false },
           version: {
             type: String,
             value: '201707042233'

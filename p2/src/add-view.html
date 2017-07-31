@@ -29,7 +29,7 @@
         </app-toolbar>
       </app-header>
 
-      <paper-toast id="toast" class="fit-bottom"></paper-toast>
+      <paper-toast id="toast"></paper-toast>
 
       <div class="container">
         <vaadin-upload id="upload"
@@ -48,7 +48,6 @@
       _uploadResponse(e) {
         var res = JSON.parse(e.detail.xhr.responseText),
           toast = this.$.toast;
-        toast.fitInto = this.$.container;
         if (res.success) {
           toast.setAttribute('text', 'Image successfully uploaded');
           toast.open();

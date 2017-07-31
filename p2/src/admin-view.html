@@ -12,6 +12,18 @@
       .container {
         padding: 16px;
       }
+      h1 {
+        margin-bottom: 0.5em;
+        font-weight: 300;
+      }
+      paper-button {
+        min-width: 175px;
+        margin-bottom: 16px;
+      }
+      paper-button[disabled],
+      paper-button[toggles][active] {
+        background: var(--secondary-text-color);
+      }
     </style>
 
     <firebase-messaging id="messaging"
@@ -42,7 +54,7 @@
       </app-header>
 
       <div class="container">
-        <paper-toast id="toast" class="fit-bottom"></paper-toast>
+        <paper-toast id="toast"></paper-toast>
 
         <div hidden$="[[!isAuthorized]]" class="layout vertical wrap">
           <div>
@@ -67,7 +79,7 @@
       static get is() { return 'admin-view'; }
       static get properties() {
         return {
-          isAuthorized: { type: Boolean, value: true, notify: true }
+
         };
       }
       _url(isAuthorized) {
@@ -79,7 +91,6 @@
       handleMessage(e) {
         // console.log(arguments);
         const toast = this.$.toast;
-        toast.fitInto = this.$.container;
         toast.setAttribute('text', e.detail.message.notification.body);
         toast.open();
       }
