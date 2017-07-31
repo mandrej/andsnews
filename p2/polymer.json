@@ -4,10 +4,10 @@
   "fragments": [
     "src/shared-styles.html",
     "src/start-view.html",
+    "src/search-view.html",
     "src/list-view.html",
     "src/add-view.html",
     "src/edit-view.html",
-    "src/search-view.html",
     "src/admin-view.html"
   ],
   "sources": [
@@ -19,18 +19,12 @@
     "robots.txt",
     "manifest.json",
     "firebase-messaging-sw.js",
-    "bower_components/webcomponentsjs/webcomponents-lite.js"
+    "bower_components/webcomponentsjs/*"
   ],
   "builds": [
     {
-      "bundle": false,
-      "addServiceWorker": true,
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      }
+      "name": "default",
+      "preset": "es6-unbundled"
     }
   ],
   "lint": {
