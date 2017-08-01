@@ -20,9 +20,9 @@
         min-width: 175px;
         margin-bottom: 16px;
       }
-      paper-button[disabled],
-      paper-button[toggles][active] {
-        background: var(--secondary-text-color);
+      paper-button[disabled] {
+        color: var(--dark-primary-color);
+        background: var(--default-primary-color);
       }
     </style>
 
@@ -56,18 +56,15 @@
       <div class="container">
         <paper-toast id="toast"></paper-toast>
 
-        <div hidden$="[[!isAuthorized]]" class="layout vertical wrap">
-          <div>
-            <h1>Photo [[info.photo.count]]</h1>
-            <div class="layout horizontal justified wrap">
-              <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
-                <paper-button on-tap="rebuild" class="accent" toggles raised>[[item]]</paper-button>
-              </template>
-
-              <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-              <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-              <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
-            </div>
+        <div hidden$="[[!isAuthorized]]" class="layout vertical">
+          <h1>Photo [[info.photo.count]]</h1>
+          <div class="layout horizontal justified wrap">
+            <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
+              <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+            </template>
+            <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
+            <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
+            <paper-button disabled on-tap="fix" data-kind="photo" toggles raised>Migration</paper-button>
           </div>
         </div>
       </div>
