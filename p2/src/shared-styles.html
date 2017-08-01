@@ -35,12 +35,6 @@
         color: var(--text-primary-color);
         background-color: var(--light-primary-color);
       }
-      app-header.logo {
-        background-image: url(../images/logo.svg);
-        background-position: -5px -207px;
-        background-repeat: no-repeat;
-        background-size: 640px auto;
-      }
       .paper-item-link {
         color: inherit;
         text-decoration: none;
@@ -117,6 +111,18 @@
         border-radius: 50%;
         margin: 8px;
         background-color: transparent;
+      }
+      #spinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+      paper-spinner {
+        width: 100px;
+        height: 100px;
+        --paper-spinner-stroke-width: 8px;
       }
       footer {
         height: 50px;
