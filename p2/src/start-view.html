@@ -73,17 +73,17 @@
       provider="google"></firebase-auth>
 
     <app-header-layout fullbleed>
-      <app-header condenses reveals effects="resize-title" slot="header">
+      <app-header reveals slot="header" class="logo">
         <app-toolbar>
+          <h4 condensed-title></h4>
           <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
              <iron-image src="[[user.photoURL]]" class="thumbnail" preload fade sizing="cover"></iron-image>
           </a>
           <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-          <h4 condensed-title>ANDрејевићи</h4>
-          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>ANDрејевићи</h1>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
           <paper-fab hidden$="[[!isAuthorized]]" mini icon="add" on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>

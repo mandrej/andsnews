@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
@@ -11,6 +12,7 @@
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 
 <dom-module id="list-view">
   <template>
@@ -81,10 +83,13 @@
         </app-toolbar>
       </app-header>
 
-      <iron-ajax url="[[_url(field, value)]]" on-response="handler" auto></iron-ajax>
+      <iron-ajax id="ajax" auto
+        url="[[_url(field, value)]]"
+        params="{{params}}"
+        on-response="handler"></iron-ajax>
       <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-      <iron-list id="list" items="[[data.objects]]" as="rec" scroll-target="document" grid>
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
         <template>
           <div>
             <div class="square">
@@ -100,18 +105,18 @@
               </app-toolbar>
               <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
               <div class="action">
-                <paper-chip hidden$="[[activeFilter('date', rec.year, data.filter)]]"
+                <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
                   on-tap="applyFilter" data-field="date"
                   data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
                 <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                  <paper-chip hidden$="[[activeFilter('tags', tag, data.filter)]]"
+                  <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
                     on-tap="applyFilter" data-field="tags"
                     data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
                 </template>
-                <paper-chip hidden$="[[activeFilter('model', rec.model, data.filter)]]"
+                <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
                   on-tap="applyFilter" data-field="model"
                   data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
-                <paper-chip hidden$="[[activeFilter('color', rec.color, data.filter)]]"
+                <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
                   on-tap="applyFilter" data-field="color"
                   data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
               </div>
@@ -119,7 +124,12 @@
           </div>
         </template>
       </iron-list>
-      </app-header-layout>
+    </app-header-layout>
+
+    <iron-scroll-threshold id="scrollTheshold"
+      lower-threshold="500"
+      on-lower-threshold="_load"
+      scroll-target="document"></iron-scroll-threshold>
   </template>
 
   <script>
@@ -127,12 +137,18 @@
       static get is() { return 'list-view'; }
       static get properties() {
         return {
-          data: Object,
+          params: { type: Object, value: {}, notify: true },
+          filter: { type: Object, value: {}, notify: true },
+          records: { type: Array, value: [], notify: true },
           route: Object,
           currentIndex: Number
         };
       }
       _url(field, value) {
+        this.records = [];
+        this.filter = {};
+        this.set('params._page', null);
+
         const rx = /^\/list/;
         if (rx.test(this.route.path)) {
           if (field === 'search') {
@@ -143,12 +159,29 @@
         }
       }
       handler(e) {
-        const response = e.detail.response, dialog = this.$.message;
-        if (response && response.objects && response.objects.length === 0) {
+        const data = e.detail.response,
+          dialog = this.$.message;
+
+        if (!data.objects) return;
+        if (data.objects.length === 0) {
           dialog.open();
-          this.data = {};
+          this.records = [];
+          this.filter = {};
         } else {
-          this.data = response;
+          data.objects.forEach(function(item) {
+            this.push('records', item);
+          }, this);
+          this.filter = {};
+          if (data.filter) {
+            this.filter = data.filter;
+          }
+          this.$.scrollTheshold.clearTriggers();
+        }
+      }
+      _load() {
+        const ajax = this.$.ajax;
+        if (ajax.lastResponse && ajax.lastResponse._next) {
+          this.set('params._page', ajax.lastResponse._next);
         }
       }
       checkImage(rec) {
@@ -182,9 +215,9 @@
         this.$.deleteDialog.open();
       }
       deleteRecord() {
-        const obj = this.splice('data.objects', this.currentIndex, 1)[0];
+        const obj = this.splice('records', this.currentIndex, 1)[0];
         this.currentIndex = -1;
-        console.log(obj);
+        // console.log(obj);
         const xhr = this.$.delete_ajax;
         xhr.url = '/api/delete/' + obj.safekey;
         xhr.generateRequest();

@@ -16,7 +16,7 @@ from mapper import Indexer, Unbound, Builder, Fixer
 from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
 from slugify import slugify
 
-LIMIT = 100
+LIMIT = 20
 PERCENTILE = 50 if DEVEL else 80
 TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
