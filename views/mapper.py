@@ -103,22 +103,22 @@ class Indexer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class Unbound(Mapper):
-    TOKEN = None
-
-    def map(self, entity):
-        return [entity], []
-
-    def _batch_write(self):
-        for entity in self.to_put:
-            if entity.serving_url is None:
-                push_message(self.TOKEN, '{}'.format(entity.filename))
-                # FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
-                # entity.remove()
-        self.to_put = []
-
-    def finish(self):
-        push_message(self.TOKEN, END_MSG)
+# class Unbound(Mapper):
+#     TOKEN = None
+#
+#     def map(self, entity):
+#         return [entity], []
+#
+#     def _batch_write(self):
+#         for entity in self.to_put:
+#             if entity.serving_url is None:
+#                 push_message(self.TOKEN, '{}'.format(entity.filename))
+#                 # FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
+#                 # entity.remove()
+#         self.to_put = []
+#
+#     def finish(self):
+#         push_message(self.TOKEN, END_MSG)
 
 
 class Fixer(Mapper):
@@ -211,7 +211,7 @@ class Builder(Mapper):
             if latest is not None:
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
-                    obj.repr_url = latest.serving_url
+                    obj.repr_url = latest.async_serving_url.get_result()
                 elif kind == 'Entry':
                     obj.repr_url = latest.front_img
 

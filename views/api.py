@@ -12,7 +12,7 @@ from google.appengine.ext import ndb, deferred
 
 from config import DEVEL, START_MSG
 from fireapi import push_message
-from mapper import Indexer, Unbound, Builder, Fixer
+from mapper import Indexer, Builder, Fixer
 from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
 from slugify import slugify
 
