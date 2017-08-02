@@ -70,15 +70,12 @@
       </div>
     </paper-dialog>
 
-    <div id="spinner" class="layout vertical center-justified">
-      <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
-    </div>
-
     <app-header-layout>
       <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
         <app-toolbar>
           <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
           <h4 condensed-title>[[value]]</h4>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>[[value]]</h1>

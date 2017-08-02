@@ -11,10 +11,7 @@
 
 <link rel="import" href="start-view.html">
 <link rel="import" href="list-view.html">
-<link rel="import" href="add-view.html">
-<link rel="import" href="edit-view.html">
 <link rel="import" href="search-view.html">
-<link rel="import" href="admin-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -71,13 +68,31 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708012300' }
+          version: { type: String, value: '201708021337' }
         };
       }
       ready() {
         super.ready();
         if (!this.route.path) {
           this.set('route.path', '/start');
+        }
+      }
+      static get observers() {
+        return [
+          'viewChanged(dataView.view)'
+        ]
+      }
+      viewChanged(view) {
+        switch (view) {
+          case 'add':
+            Polymer.importHref('src/add-view.html');
+            break;
+          case 'edit':
+            Polymer.importHref('src/edit-view.html');
+            break;
+          case 'maintenance':
+            Polymer.importHref('src/admin-view.html');
+            break;
         }
       }
     }
