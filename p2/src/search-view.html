@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="app-footer.html">
 
 <dom-module id="search-view">
   <template>
@@ -10,20 +12,18 @@
       :host {
         display: block;
       }
-      .container {
-        padding: 16px;
-      }
     </style>
 
-    <app-header-layout>
+    <app-header-layout fullbleed>
       <app-header fixed slot="header">
         <app-toolbar>
-          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h1 main-title>Find</h1>
         </app-toolbar>
       </app-header>
 
       <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
+      <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
 
       <iron-form id="findForm" class="container">
         <form method="get">
@@ -38,11 +38,20 @@
 
           <div class="layout horizontal justified wrap">
             <paper-input name="find_text" label="find text"></paper-input>
-            <paper-input name="find_year" label="find year"></paper-input>
-            <paper-input name="find_month" label="find month"></paper-input>
+            <paper-input name="find_year" label="in year"></paper-input>
+            <paper-input name="find_month" label="in month"></paper-input>
+            <vaadin-combo-box name="find_model" label="by camera"
+              auto-validate
+              allow-custom-value="false"
+              items="[[modelCloud]]"></vaadin-combo-box>
+            <vaadin-combo-box name="find_author" label="by author"
+              auto-validate
+              allow-custom-value="false"
+              items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
           </div>
          </form>
       </iron-form>
+      <app-footer version="[[version]]"></app-footer>
     </app-header-layout>
   </template>
 
@@ -77,6 +86,12 @@
         }
         if (e.detail.find_month) {
           params.push('month:' + e.detail.find_month)
+        }
+        if (e.detail.find_model) {
+          params.push('model:' + e.detail.find_model)
+        }
+        if (e.detail.find_author) {
+          params.push('author:' + e.detail.find_author)
         }
         const find = params.join(' AND ');
         if (find) {

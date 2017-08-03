@@ -11,7 +11,6 @@
 
 <link rel="import" href="start-view.html">
 <link rel="import" href="list-view.html">
-<link rel="import" href="search-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -35,10 +34,12 @@
 
       <search-view
         view="search"
+        version="[[version]]"
         route="{{route}}"></search-view>
 
       <add-view
         view="add"
+        version="[[version]]"
         is-authorized="{{isAuthorized}}"
         route="{{route}}"></add-view>
 
@@ -50,6 +51,7 @@
 
       <edit-view
         view="edit"
+        version="[[version]]"
         is-authorized="{{isAuthorized}}"
         safekey="{{dataSafekey.safekey}}"
         route="{{route}}"></edit-view>
@@ -89,6 +91,9 @@
             break;
           case 'edit':
             Polymer.importHref('src/edit-view.html');
+            break;
+          case 'search':
+            Polymer.importHref('src/search-view.html');
             break;
           case 'maintenance':
             Polymer.importHref('src/admin-view.html');

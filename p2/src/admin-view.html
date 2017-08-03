@@ -2,15 +2,13 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="app-footer.html">
 
 <dom-module id="admin-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
-      }
-      .container {
-        padding: 16px;
       }
       h1 {
         margin-bottom: 0.5em;
@@ -45,18 +43,18 @@
       content-type="application/json"
       method="POST"></iron-ajax>
 
-    <app-header-layout>
+    <app-header-layout fullbleed>
       <app-header fixed slot="header">
         <app-toolbar>
-          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Admin v. [[version]]</h1>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>Maintenance</h1>
         </app-toolbar>
       </app-header>
 
       <div class="container">
         <paper-toast id="toast"></paper-toast>
 
-        <div hidden$="[[!isAuthorized]]" class="layout vertical">
+        <div hidden$="[[!isAuthorized]]">
           <h1>Photo [[info.photo.count]]</h1>
           <div class="layout horizontal justified wrap">
             <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
@@ -68,17 +66,13 @@
           </div>
         </div>
       </div>
+      <app-footer version="[[version]]"></app-footer>
     </app-header-layout>
   </template>
 
   <script>
     class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'admin-view'; }
-      static get properties() {
-        return {
-
-        };
-      }
       _url(isAuthorized) {
         const rx = /^\/maintenance/;
         if (rx.test(this.route.path) && isAuthorized) {

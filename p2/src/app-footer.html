@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="app-footer">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+    </style>
+
+    &copy; ANDS 2008-[[ver]]
+  </template>
+
+  <script>
+    class AppFooter extends Polymer.Element {
+      static get is() { return 'app-footer'; }
+      static get properties() {
+        return {
+          ver: {
+            type: String,
+            computed: '_rewriteVer(version)'
+          }
+        };
+      }
+      _rewriteVer(version) {
+        return version.match(/.{1,4}/g).join('.');
+      }
+    }
+    window.customElements.define(AppFooter.is, AppFooter);
+  </script>
+</dom-module>

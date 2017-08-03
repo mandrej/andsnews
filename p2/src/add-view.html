@@ -1,15 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="app-footer.html">
 
 <dom-module id="add-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block
-      }
-      .container {
-        padding: 16px;
       }
       vaadin-upload {
         --vaadin-upload-button-add: {
@@ -21,10 +19,10 @@
       }
     </style>
 
-    <app-header-layout>
+    <app-header-layout fullbleed>
       <app-header fixed slot="header">
         <app-toolbar>
-          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h1 main-title>Add</h1>
         </app-toolbar>
       </app-header>
@@ -39,6 +37,7 @@
           accept="image/*"></vaadin-upload>
         <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
       </div>
+      <app-footer version="[[version]]"></app-footer>
     </app-header-layout>
   </template>
 

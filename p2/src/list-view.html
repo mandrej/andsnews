@@ -70,10 +70,10 @@
       </div>
     </paper-dialog>
 
-    <app-header-layout>
+    <app-header-layout fullbleed>
       <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
         <app-toolbar>
-          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h4 condensed-title>[[value]]</h4>
           <paper-spinner active$="[[loading]]"></paper-spinner>
         </app-toolbar>

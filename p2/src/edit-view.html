@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="app-footer.html">
 
 <dom-module id="edit-view">
   <template>
@@ -13,15 +14,12 @@
       :host {
         display: block;
       }
-      .container {
-        padding: 16px;
-      }
     </style>
 
-    <app-header-layout>
+    <app-header-layout fullbleed>
       <app-header fixed slot="header">
         <app-toolbar>
-          <paper-icon-button icon="chevron-left" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h1 main-title>Edit</h1>
         </app-toolbar>
       </app-header>
@@ -29,44 +27,44 @@
       <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
       <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
 
-      <iron-form id="editForm">
-        <form class="container"
-          action$="/api/[[item.kind]]/edit/[[item.safekey]]"
-          method="put">
+      <div class="container">
+        <iron-form id="editForm">
+          <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
 
-          <paper-toast id="toast"></paper-toast>
+            <paper-toast id="toast"></paper-toast>
 
-          <div class="layout horizontal end-justified">
-            <paper-button on-tap="_submit" raised>Submit</paper-button>
-          </div>
+            <div class="layout horizontal end-justified">
+              <paper-button on-tap="_submit" raised>Submit</paper-button>
+            </div>
 
-          <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+            <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
 
-          <vaadin-combo-box name="author" required label="author"
-            auto-validate
-            allow-custom-value="true"
-            items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-            value="[[item.author]]"></vaadin-combo-box>
+            <vaadin-combo-box name="author" required label="author"
+              auto-validate
+              allow-custom-value="true"
+              items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+              value="[[item.author]]"></vaadin-combo-box>
 
-          <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
-            closable
-            _items="[[item.tags]]"
-            source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+            <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
+              closable
+              _items="[[item.tags]]"
+              source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
 
-          <paper-input readonly name="date" label="date" value="[[item.date]]"></paper-input>
+            <paper-input readonly name="date" label="date" value="[[item.date]]"></paper-input>
 
-          <div class="layout horizontal justified wrap">
-            <paper-input readonly name="model" label="model" value="[[item.model]]"></paper-input>
-            <paper-input readonly name="lens" label="lens" value="[[item.lens]]"></paper-input>
-            <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
-            <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
-            <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
-            <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
-          </div>
-          <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
-        </form>
-      </iron-form>
-
+            <div class="layout horizontal justified wrap">
+              <paper-input readonly name="model" label="model" value="[[item.model]]"></paper-input>
+              <paper-input readonly name="lens" label="lens" value="[[item.lens]]"></paper-input>
+              <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+              <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+              <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+              <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+            </div>
+            <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
+          </form>
+        </iron-form>
+      </div>
+      <app-footer version="[[version]]"></app-footer>
     </app-header-layout>
   </template>
 

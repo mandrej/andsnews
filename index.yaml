@@ -24,6 +24,12 @@ indexes:
 
 - kind: Photo
   properties:
+  - name: author
+  - name: date
+    direction: desc
+
+- kind: Photo
+  properties:
   - name: color
   - name: date
     direction: desc

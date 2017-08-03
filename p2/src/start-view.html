@@ -9,12 +9,16 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="app-footer.html">
 
 <dom-module id="start-view">
   <template>
     <style include="shared-styles">
       :host {
-        @apply --layout-vertical;
+        display: block;
+      }
+      iron-list {
+         @apply --layout-flex;
       }
       .square {
         position: relative;
@@ -107,7 +111,7 @@
           </template>
       </iron-list>
 
-      <footer>&copy; andsnews [[version]]</footer>
+      <app-footer version="[[version]]"></app-footer>
     </app-header-layout>
 
     <iron-media-query query="min-width: 1024px" query-matches="{{wideLayout}}"></iron-media-query>

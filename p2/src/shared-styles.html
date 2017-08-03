@@ -85,13 +85,13 @@
         background-color: var(--divider-color);
         text-transform: lowercase;
       }
-      paper-input,
-      vaadin-combo-box,
-      paper-input-autocomplete-chips {
+      /* paper-input,
+      vaadin-combo-box {
         --paper-input-container-color: var(--primary-text-color);
         --paper-input-container-focus-color: var(--accent-color);
         --paper-input-container-invalid-color: var(--error-color);
-      }
+      } */
+      vaadin-combo-box { padding: 0; }
       paper-toast {
         --paper-toast-color: var(--text-primary-color);
         --paper-toast-background-color: var(--default-primary-color);
@@ -109,7 +109,11 @@
         border-radius: 50%;
         background-color: transparent;
       }
-      footer {
+      .container {
+        @apply --layout-flex;
+        padding: 16px;
+      }
+      app-footer {
         height: 50px;
         line-height: 50px;
         text-align: center;

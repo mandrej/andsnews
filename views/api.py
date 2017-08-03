@@ -372,8 +372,8 @@ class Info(RestHandler):
     def get(self):
         data = {
             'photo': {'count': Photo.query().count()},
-            'entry': {'count': Entry.query().count()},
+            # 'entry': {'count': Entry.query().count()},
         }
         data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
-        data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
+        # data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)

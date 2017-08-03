@@ -25,7 +25,7 @@ logger.setLevel(level=logging.DEBUG)
 
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = ['date', 'tags', 'model', 'color']
+PHOTO_FILTER = ['date', 'tags', 'model', 'color', 'author']
 ENTRY_FILTER = ['date', 'tags']
 # PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
 
@@ -235,7 +235,8 @@ class Photo(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month)]
+                search.NumberField(name='month', value=self.date.month),
+                search.TextField(name='model', value=self.model)]
         )
         INDEX.put(doc)
 
