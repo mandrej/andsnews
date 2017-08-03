@@ -25,7 +25,7 @@ logger.setLevel(level=logging.DEBUG)
 
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = ['date', 'tags', 'model', 'color', 'author']
+PHOTO_FILTER = ['date', 'tags', 'model', 'color']
 ENTRY_FILTER = ['date', 'tags']
 # PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
 
