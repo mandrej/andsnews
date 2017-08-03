@@ -50,6 +50,9 @@
               _items="[[item.tags]]"
               source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
 
+            <paper-chip-input name="new_tags" label="new tags" id="new_tags"
+              closable></paper-chip-input>
+
             <paper-input readonly name="date" label="date" value="[[item.date]]"></paper-input>
 
             <div class="layout horizontal justified wrap">
@@ -73,9 +76,10 @@
       static get is() { return 'edit-view'; }
       connectedCallback() {
         super.connectedCallback();
-        this.$.editForm.addEventListener('iron-form-presubmit', () => this._preSubmit());
-        this.$.editForm.addEventListener('iron-form-response', (e) => this._responseHandler(e));
-        // this.$.editForm.addEventListener('iron-form-submit', (e) => this._submit(e));
+        const form = this.$.editForm;
+        form.addEventListener('iron-form-presubmit', () => this._preSubmit());
+        form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
+        // form.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
       _url(safekey) {
         const rx = /^\/edit/;
@@ -91,9 +95,10 @@
         return list;
       }
       _preSubmit() {
-        const form = this.$.editForm;
-        // console.dir(this.$.tags);
-        form.request.params['tags'] = this.$.tags._items.join(',');
+        const form = this.$.editForm,
+          old_tags = this.$.tags._items,
+          new_tags = this.$.new_tags.items;
+        form.request.params['tags'] = old_tags.concat(new_tags).join(',');
       }
       _submit() {
         this.$.editForm.submit();
