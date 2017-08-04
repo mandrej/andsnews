@@ -5,11 +5,9 @@
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="app-footer.html">
 
 <dom-module id="start-view">
   <template>
@@ -81,7 +79,7 @@
         <app-toolbar>
           <h4 condensed-title></h4>
           <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-             <iron-image src="[[user.photoURL]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+             <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
           </a>
           <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
         </app-toolbar>
@@ -111,41 +109,41 @@
           </template>
       </iron-list>
 
-      <app-footer version="[[version]]"></app-footer>
+      <footer><slot name="copy"></slot></footer>
     </app-header-layout>
 
-    <iron-media-query query="min-width: 1024px" query-matches="{{wideLayout}}"></iron-media-query>
+    <!-- <iron-media-query query="min-width: 1024px" query-matches="{{wideLayout}}"></iron-media-query> -->
   </template>
 
   <script>
     // class StartView extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.GestureEventListeners(Polymer.Element)) {
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
-      ready() {
-        super.ready();
-
-      }
       static get properties() {
         return {
           user: { type: Object, notify: true },
-          isAuthorized: { type: Boolean, value: false, notify: true },
-          wideLayout: {
-            type: Boolean,
-            value: false,
-            observer: '_layoutChanged'
-          }
+          dummy: { type: String, value: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==' },
+          userPhoto: { type: String, value: this.dummy },
+          isAuthorized: { type: Boolean, value: false, notify: true }
         }
       }
-      // get keyBindings() {
-      //   return {
-      //     'enter': 'onSearch',
-      //   };
-      // }
+      static get observers() {
+        return [
+          'getUserPhoto(user.photoURL)'
+        ]
+      }
+      getUserPhoto(url) {
+        if (url) {
+          this.userPhoto = url;
+        } else {
+          this.dummy;
+        }
+      }
       checkImage(rec) {
         if (rec.repr_url) {
           return rec.repr_url + '=s400';
         } else {
-          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+          return this.dummy;
         }
       }
       showList(e) {
@@ -157,20 +155,8 @@
       findForm() {
         this.set('route.path', '/search');
       }
-      // onSearch() {
-      //   const find = this.$.search.value;
-      //   if (find) {
-      //     this.set('route.path', ['/list/search', find].join('/'));
-      //   }
-      // }
       clearInput() {
         this.$.search.value = '';
-      }
-      _layoutChanged(wide) {
-        // const drawer = this.$.drawer;
-        // if (wide && drawer.opened) {
-        //   drawer.opened = false;
-        // }
       }
       _sign() {
         if (this.user) {

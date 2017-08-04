@@ -169,6 +169,7 @@
           dialog.open();
           this.records = [];
           this.filter = {};
+          this.set('params._page', null);
         } else {
           data.objects.forEach(function(item) {
             this.push('records', item);

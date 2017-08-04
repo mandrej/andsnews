@@ -4,7 +4,6 @@
   "fragments": [
     "src/shared-styles.html",
     "src/start-view.html",
-    "src/app-footer.html",
     "src/search-view.html",
     "src/list-view.html",
     "src/add-view.html",

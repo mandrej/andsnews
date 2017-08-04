@@ -6,7 +6,6 @@
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="app-footer.html">
 
 <dom-module id="edit-view">
   <template>
@@ -67,7 +66,7 @@
           </form>
         </iron-form>
       </div>
-      <app-footer version="[[version]]"></app-footer>
+      <footer><slot name="copy"></slot></footer>
     </app-header-layout>
   </template>
 

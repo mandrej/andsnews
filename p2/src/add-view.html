@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
-<link rel="import" href="app-footer.html">
 
 <dom-module id="add-view">
   <template>
@@ -37,7 +36,7 @@
           accept="image/*"></vaadin-upload>
         <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
       </div>
-      <app-footer version="[[version]]"></app-footer>
+      <footer><slot name="copy"></slot></footer>
     </app-header-layout>
   </template>
 

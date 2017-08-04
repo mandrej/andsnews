@@ -28,33 +28,38 @@
     <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
       <start-view
         view="start"
-        version="[[version]]"
         is-authorized="{{isAuthorized}}"
-        route="{{route}}"></start-view>
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </start-view>
 
       <search-view
         view="search"
-        version="[[version]]"
-        route="{{route}}"></search-view>
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </search-view>
 
       <add-view
         view="add"
-        version="[[version]]"
         is-authorized="{{isAuthorized}}"
-        route="{{route}}"></add-view>
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </add-view>
 
       <admin-view
         view="maintenance"
-        version="[[version]]"
         is-authorized="{{isAuthorized}}"
-        route="{{route}}"></admin-view>
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </admin-view>
 
       <edit-view
         view="edit"
-        version="[[version]]"
         is-authorized="{{isAuthorized}}"
         safekey="{{dataSafekey.safekey}}"
-        route="{{route}}"></edit-view>
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </edit-view>
 
       <list-view
         view="list"
@@ -70,19 +75,23 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708032028' }
+          version: { type: String, value: '201708041150' },
+          copy: {
+            type: String,
+            computed: 'copywrite(version)'
+          }
         };
+      }
+      static get observers() {
+        return [
+          'viewChanged(dataView.view)'
+        ]
       }
       ready() {
         super.ready();
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
-      }
-      static get observers() {
-        return [
-          'viewChanged(dataView.view)'
-        ]
       }
       viewChanged(view) {
         switch (view) {
@@ -99,6 +108,9 @@
             Polymer.importHref('src/admin-view.html');
             break;
         }
+      }
+      copywrite(version) {
+        return 'ANDS 2008-' + version.match(/.{1,4}/g).join('.');
       }
     }
 

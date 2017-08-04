@@ -2,7 +2,6 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="app-footer.html">
 
 <dom-module id="admin-view">
   <template>
@@ -66,7 +65,7 @@
           </div>
         </div>
       </div>
-      <app-footer version="[[version]]"></app-footer>
+      <footer><slot name="copy"></slot></footer>
     </app-header-layout>
   </template>
 
