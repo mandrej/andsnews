@@ -10,7 +10,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG
-from models import Counter
+from models import Counter, remove_doc
 from fireapi import Firebase, push_message
 
 FB = Firebase()
@@ -96,6 +96,22 @@ class Indexer(Mapper):
     def _batch_write(self):
         for entity in self.to_put:
             entity.index_doc()
+            push_message(self.TOKEN, entity.slug)
+        self.to_put = []
+
+    def finish(self):
+        push_message(self.TOKEN, END_MSG)
+
+
+class RemoveIndex(Mapper):
+    TOKEN = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            remove_doc(entity.key.urlsafe())
             push_message(self.TOKEN, entity.slug)
         self.to_put = []
 
