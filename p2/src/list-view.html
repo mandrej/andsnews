@@ -1,0 +1,238 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-chip/paper-chip.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<dom-module id="list-view">
+  <template>
+     <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      .square {
+        width: 25vw;
+      }
+      iron-image {
+        width: 100%;
+      }
+      iron-image::after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
+      .headline {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+      }
+      .headline > div {
+        font-size: 20px;
+        font-weight: 300;
+      }
+      .action {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-wrap;
+        padding: 16px 12px 11px 16px;
+        background-color: var(--light-primary-color);
+      }
+      @media (max-width: 1024px) { .square { width: calc(100vw / 3); }}
+      @media (max-width: 768px)  { .square { width: 50vw; }}
+      @media (max-width: 432px)  { .square { width: 100vw; }}
+    </style>
+
+    <paper-dialog id="message"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation">
+      <h2>No items found</h2>
+      <p>Please try again</p>
+    </paper-dialog>
+
+    <paper-dialog id="deleteDialog" modal
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
+      on-iron-overlay-closed="deleteRecord">
+      <h2>Are you sure?</h2>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+    <app-header-layout fullbleed>
+      <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h4 condensed-title>[[value]]</h4>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>[[value]]</h1>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
+        </app-toolbar>
+      </app-header>
+
+      <iron-ajax id="ajax" auto
+        url="[[_url(field, value)]]"
+        params="{{params}}"
+        loading="{{loading}}"
+        on-response="handler"></iron-ajax>
+
+      <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
+
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+        <template>
+          <div>
+            <div class="square">
+              <app-toolbar class="headline">
+                <paper-menu-button hidden$="{{!isAuthorized}}">
+                  <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+                  <paper-listbox slot="dropdown-content">
+                    <paper-item on-tap="showForm">Edit</paper-item>
+                    <paper-item on-tap="showDialog">Remove</paper-item>
+                  </paper-listbox>
+                </paper-menu-button>
+                <div>[[rec.headline]]</div>
+              </app-toolbar>
+              <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
+              <div class="action">
+                <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
+                  on-tap="applyFilter" data-field="date"
+                  data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
+                <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                  <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
+                    on-tap="applyFilter" data-field="tags"
+                    data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
+                </template>
+                <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
+                  on-tap="applyFilter" data-field="model"
+                  data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
+                <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
+                  on-tap="applyFilter" data-field="color"
+                  data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
+              </div>
+            </div>
+          </div>
+        </template>
+      </iron-list>
+    </app-header-layout>
+
+    <iron-scroll-threshold id="scrollTheshold"
+      lower-threshold="500"
+      on-lower-threshold="_load"
+      scroll-target="document"></iron-scroll-threshold>
+  </template>
+
+  <script>
+    class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'list-view'; }
+      static get properties() {
+        return {
+          params: { type: Object, value: {}, notify: true },
+          filter: { type: Object, value: {}, notify: true },
+          records: { type: Array, value: [], notify: true },
+          route: Object,
+          currentIndex: Number
+        };
+      }
+      _url(field, value) {
+        this.records = [];
+        this.filter = {};
+        this.set('params._page', null);
+
+        const rx = /^\/list/;
+        if (rx.test(this.route.path)) {
+          if (field === 'search') {
+            return ['/api/search', value].join('/');
+          } else {
+            return ['/api/photo', field, value].join('/');
+          }
+        }
+      }
+      handler(e) {
+        const data = e.detail.response,
+          dialog = this.$.message;
+
+        if (!data.objects) return;
+        if (data.objects.length === 0) {
+          dialog.open();
+          this.records = [];
+          this.filter = {};
+          this.set('params._page', null);
+        } else {
+          data.objects.forEach(function(item) {
+            this.push('records', item);
+          }, this);
+          this.filter = {};
+          if (data.filter) {
+            this.filter = data.filter;
+          }
+          this.$.scrollTheshold.clearTriggers();
+        }
+      }
+      _load() {
+        const ajax = this.$.ajax;
+        if (ajax.lastResponse && ajax.lastResponse._next) {
+          this.set('params._page', ajax.lastResponse._next);
+        }
+      }
+      checkImage(rec) {
+        if (rec.serving_url) {
+          return rec.serving_url + '=s0';
+        } else {
+          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+        }
+      }
+      showView(e) {
+        window.location = e.target.src;
+      }
+      showForm(e) {
+        this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
+      }
+      activeFilter(field, value, filter) {
+        if (filter) {
+          return (filter.field === field && filter.value === value);
+        } else {
+          return false;
+        }
+      }
+      applyFilter(e) {
+        const target = e.target,
+          field = target.dataset.field,
+          value = target.dataset.fieldValue;
+        this.set('route.path', ['/list', field, value].join('/'));
+      }
+      showDialog(e) {
+        this.currentIndex = e.model.index;
+        this.$.deleteDialog.open();
+      }
+      deleteRecord() {
+        const obj = this.splice('records', this.currentIndex, 1)[0];
+        this.currentIndex = -1;
+        // console.log(obj);
+        const xhr = this.$.delete_ajax;
+        xhr.url = '/api/delete/' + obj.safekey;
+        xhr.generateRequest();
+      }
+      findForm() {
+        this.set('route.path', '/search');
+      }
+      goBack() {
+        this.set('route.path', '/start');
+      }
+    }
+
+    window.customElements.define(ListView.is, ListView);
+  </script>
+</dom-module>

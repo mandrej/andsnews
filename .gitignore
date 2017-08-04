@@ -4,4 +4,3 @@ decorator.py
 six.py
 *.pyc
 **/.directory
-p2/

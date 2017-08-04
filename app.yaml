@@ -14,50 +14,41 @@ libraries:
   version: latest
 
 handlers:
-- url: /
-  static_files: client/build/default/index.html
-  upload: client/build/default/index.html
-  secure: always
-
 - url: /index\.html
-  static_files: client/build/default/index.html
-  upload: client/build/default/index.html
+  static_files: p2/build/default/index.html
+  upload: p2/build/default/index.html
   secure: always
 
 - url: /robots\.txt
-  static_files: client/build/default/robots.txt
-  upload: client/build/default/robots.txt
+  static_files: p2/build/default/robots.txt
+  upload: p2/build/default/robots.txt
   secure: always
 
 - url: /service-worker\.js
-  static_files: client/build/default/service-worker.js
-  upload: client/build/default/service-worker.js
+  static_files: p2/build/default/service-worker.js
+  upload: p2/build/default/service-worker.js
   secure: always
 
 - url: /firebase-messaging-sw\.js
-  static_files: client/build/default/firebase-messaging-sw.js
-  upload: client/build/default/firebase-messaging-sw.js
+  static_files: p2/build/default/firebase-messaging-sw.js
+  upload: p2/build/default/firebase-messaging-sw.js
   secure: always
 
 - url: /manifest\.json
-  static_files: client/build/default/manifest.json
-  upload: client/build/default/manifest.json
+  static_files: p2/build/default/manifest.json
+  upload: p2/build/default/manifest.json
   secure: always
 
 - url: /src/
-  static_dir: client/build/default/src
+  static_dir: p2/build/default/src
   secure: always
 
 - url: /images/
-  static_dir: client/build/default/images
+  static_dir: p2/build/default/images
   secure: always
 
 - url: /bower_components/
-  static_dir: client/build/default/bower_components
-  secure: always
-
-- url: /node_modules/
-  static_dir: client/build/default/node_modules
+  static_dir: p2/build/default/bower_components
   secure: always
 
 - url: /sitemap\.xml
@@ -72,9 +63,10 @@ handlers:
   script: main.app
   secure: always
 
-- url: /tests/.*
-  login: admin
-  script: aeta.main.APP
+- url: /
+  static_files: p2/build/default/index.html
+  upload: p2/build/default/index.html
+  secure: always
 
 inbound_services:
 - warmup
@@ -89,6 +81,6 @@ skip_files:
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
 - ^docs
-- ^client/(src|test|images)
-- ^client/bower_components
-- ^client/node_modules
+- ^p2/(src|test|images)
+- ^p2/bower_components
+- ^client

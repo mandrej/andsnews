@@ -1,0 +1,119 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+
+<link rel="import" href="start-view.html">
+<link rel="import" href="list-view.html">
+
+<dom-module id="app-shell">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
+    <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
+    <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
+
+    <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
+      <start-view
+        view="start"
+        is-authorized="{{isAuthorized}}"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </start-view>
+
+      <search-view
+        view="search"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </search-view>
+
+      <add-view
+        view="add"
+        is-authorized="{{isAuthorized}}"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </add-view>
+
+      <admin-view
+        view="maintenance"
+        is-authorized="{{isAuthorized}}"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </admin-view>
+
+      <edit-view
+        view="edit"
+        is-authorized="{{isAuthorized}}"
+        safekey="{{dataSafekey.safekey}}"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </edit-view>
+
+      <list-view
+        view="list"
+        is-authorized="{{isAuthorized}}"
+        field="{{dataFilter.field}}"
+        value="{{dataFilter.value}}"
+        route="{{route}}"></list-view>
+    </iron-pages>
+  </template>
+
+  <script>
+    class AppShell extends Polymer.Element {
+      static get is() { return 'app-shell'; }
+      static get properties() {
+        return {
+          version: { type: String, value: '201708041225' },
+          copy: {
+            type: String,
+            computed: 'copywrite(version)'
+          }
+        };
+      }
+      static get observers() {
+        return [
+          'viewChanged(dataView.view)'
+        ]
+      }
+      ready() {
+        super.ready();
+        if (!this.route.path) {
+          this.set('route.path', '/start');
+        }
+      }
+      viewChanged(view) {
+        switch (view) {
+          case 'add':
+            Polymer.importHref('src/add-view.html');
+            break;
+          case 'edit':
+            Polymer.importHref('src/edit-view.html');
+            break;
+          case 'search':
+            Polymer.importHref('src/search-view.html');
+            break;
+          case 'maintenance':
+            Polymer.importHref('src/admin-view.html');
+            break;
+        }
+      }
+      copywrite(version) {
+        return 'ANDS 2008-' + version.match(/.{1,4}/g).join('.');
+      }
+    }
+
+    window.customElements.define(AppShell.is, AppShell);
+  </script>
+</dom-module>

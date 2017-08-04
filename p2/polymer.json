@@ -1,0 +1,51 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/app-shell.html",
+  "fragments": [
+    "src/shared-styles.html",
+    "src/start-view.html",
+    "src/search-view.html",
+    "src/list-view.html",
+    "src/add-view.html",
+    "src/edit-view.html",
+    "src/admin-view.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "robots.txt",
+    "manifest.json",
+    "firebase-messaging-sw.js",
+    "bower_components/webcomponentsjs/*"
+  ],
+  "builds": [
+    {
+      "name": "default",
+      "browserCapabilities": [
+        "es2015",
+        "push"
+      ],
+      "js": {
+        "minify": false,
+        "compile": false
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": false,
+      "addServiceWorker": true,
+      "addPushManifest": true
+    }
+  ],
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+
+<dom-module id="search-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-header-layout fullbleed>
+      <app-header fixed slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>Find</h1>
+        </app-toolbar>
+      </app-header>
+
+      <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
+      <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
+
+      <iron-form id="findForm" class="container">
+        <form method="get">
+          <div class="layout horizontal end-justified">
+            <paper-button on-tap="onSubmit" raised>Find</paper-button>
+          </div>
+
+          <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
+              closable
+              _items="[[item.tags]]"
+              source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+
+          <div class="layout horizontal justified wrap">
+            <paper-input name="find_text" label="find text"></paper-input>
+            <paper-input name="find_year" label="in year"></paper-input>
+            <paper-input name="find_month" label="in month"></paper-input>
+            <vaadin-combo-box name="find_model" label="by camera"
+              auto-validate
+              allow-custom-value="false"
+              items="[[modelCloud]]"></vaadin-combo-box>
+            <vaadin-combo-box name="find_author" label="by author"
+              auto-validate
+              allow-custom-value="false"
+              items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
+          </div>
+         </form>
+      </iron-form>
+      <footer><slot name="copy"></slot></footer>
+    </app-header-layout>
+  </template>
+
+  <script>
+    class SearchView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'search-view'; }
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
+      }
+      listObjects(tags) {
+        const list = [];
+        tags.forEach(function(tag) {
+          list.push({text: tag, value: tag});
+        });
+        return list;
+      }
+      onSubmit(e) {
+        this.$.findForm.submit();
+      }
+      _submit(e) {
+        // console.log(e.detail);
+        let params = [];
+        if (e.detail.find_text) {
+          params.push(e.detail.find_text)
+        }
+        this.$.tags._items.forEach(function(tag) {
+          params.push('tags:' + tag)
+        })
+        if (e.detail.find_year) {
+          params.push('year:' + e.detail.find_year)
+        }
+        if (e.detail.find_month) {
+          params.push('month:' + e.detail.find_month)
+        }
+        if (e.detail.find_model) {
+          params.push('model:' + e.detail.find_model)
+        }
+        if (e.detail.find_author) {
+          params.push('author:' + e.detail.find_author)
+        }
+        const find = params.join(' AND ');
+        if (find) {
+          this.set('route.path', ['/list/search', find].join('/'));
+        }
+      }
+      goBack() {
+        window.history.go(-1);
+      }
+    }
+
+    window.customElements.define(SearchView.is, SearchView);
+  </script>
+</dom-module>

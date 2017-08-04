@@ -235,7 +235,8 @@ class Photo(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month)]
+                search.NumberField(name='month', value=self.date.month),
+                search.TextField(name='model', value=self.model)]
         )
         INDEX.put(doc)
 
@@ -257,7 +258,7 @@ class Photo(ndb.Model):
             latest = futures[i].get_result()
             if latest:
                 counter.repr_stamp = latest.date
-                counter.repr_url = latest.serving_url
+                counter.repr_url = latest.async_serving_url.get_result()
 
             counters.append(counter)
 
@@ -376,10 +377,10 @@ class Photo(ndb.Model):
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
 
-    @webapp2.cached_property
-    def serving_url(self):
+    @property
+    def async_serving_url(self):
         try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+            return images.get_serving_url_async(self.blob_key, crop=False, secure_url=True)
         except (images.ObjectNotFoundError, images.TransformationError) as e:
             # raise _ToImagesError(e, readable_blob_key)
             logger.error(e.message)
@@ -413,7 +414,7 @@ class Photo(ndb.Model):
             'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
-            'serving_url': self.serving_url,
+            'serving_url': self.async_serving_url.get_result(),
             'size': sizeof_fmt(self.size),
         })
         return data

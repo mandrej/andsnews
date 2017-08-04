@@ -12,11 +12,11 @@ from google.appengine.ext import ndb, deferred
 
 from config import DEVEL, START_MSG
 from fireapi import push_message
-from mapper import Indexer, Unbound, Builder, Fixer
+from mapper import Indexer, Builder, Fixer, RemoveIndex
 from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
 from slugify import slugify
 
-LIMIT = 12
+LIMIT = 25
 PERCENTILE = 50 if DEVEL else 80
 TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
@@ -205,16 +205,16 @@ class BackgroundIndex(RestHandler):
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
-class BackgroundUnbound(RestHandler):
-    def post(self, kind):
-        token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
-            runner = Unbound()
-            runner.KIND = Photo
-            runner.TOKEN = token
-
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+# class BackgroundUnbound(RestHandler):
+#     def post(self, kind):
+#         token = self.request.json.get('token', None)
+#         if kind == 'photo' and token is not None:
+#             runner = Unbound()
+#             runner.KIND = Photo
+#             runner.TOKEN = token
+#
+#             push_message(runner.TOKEN, START_MSG)
+#             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class BackgroundFix(RestHandler):
@@ -225,6 +225,14 @@ class BackgroundFix(RestHandler):
             runner.KIND = Photo
             runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+            runner.TOKEN = token
+
+            push_message(runner.TOKEN, START_MSG)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+
+        elif kind == 'entry' and token is not None:
+            runner = RemoveIndex()
+            runner.KIND = Entry
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)
@@ -372,8 +380,8 @@ class Info(RestHandler):
     def get(self):
         data = {
             'photo': {'count': Photo.query().count()},
-            'entry': {'count': Entry.query().count()},
+            # 'entry': {'count': Entry.query().count()},
         }
         data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
-        data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
+        # data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)
