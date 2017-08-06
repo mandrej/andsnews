@@ -116,7 +116,6 @@
   </template>
 
   <script>
-    // class StartView extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.GestureEventListeners(Polymer.Element)) {
     class StartView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'start-view'; }
       static get properties() {
@@ -154,9 +153,6 @@
       }
       findForm() {
         this.set('route.path', '/search');
-      }
-      clearInput() {
-        this.$.search.value = '';
       }
       _sign() {
         if (this.user) {

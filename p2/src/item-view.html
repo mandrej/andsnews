@@ -1,0 +1,66 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+
+<dom-module id="item-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        @apply --layout-flex;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      /* iframe {
+        margin: 0;
+        padding: 0;
+        background: url("http://localhost:8080/_ah/img/RoTTeCln1TIahWxaCzT1KA===s0") no-repeat contain;
+      } */
+    </style>
+
+    <app-header-layout fullbleed>
+      <app-header reveals slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>[[obj.headline]]</h1>
+        </app-toolbar>
+      </app-header>
+
+      <iframe id="ifrm"></iframe>
+    </app-header-layout>
+  </template>
+
+  <script>
+    class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'item-view'; }
+      static get observers() {
+        return [
+          'changedObj(obj.serving_url)'
+        ];
+      }
+      changedObj(url) {
+        const ifrm = this.$.ifrm;
+        // const html = '<head><meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">' +
+        //   '<style>body {margin: 0;padding: 0;background: url(' + url + '=s0) no-repeat;background-size: contain;}</style></head>' +
+        //   '<body>&nbsp;</body>';
+        const html = '<head><meta name="viewport" content="width=device-width, minimum-scale=0.1"><style>body {margin: 0;padding: 0}</style></head>' +
+        '<body><img style="max-width: 100%" src="' + url + '=s0"></body>';
+        // const host = ifrm.createElement('body');
+        // const shadowRoot = host.attachShadow({mode: 'open'});
+        // shadowRoot.innerHTML = '<img style="-webkit-user-select: none;background: #000;max-width: 100%" src="' + url + '=s0">';
+        ifrm.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+      }
+      goBack() {
+        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true,
+          detail: {
+            sel: 0
+          }
+        }));
+      }
+    }
+
+    window.customElements.define(ItemView.is, ItemView);
+  </script>
+</dom-module>
