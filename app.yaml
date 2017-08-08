@@ -80,6 +80,7 @@ skip_files:
 - ^(.*/)?.*~$
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
+- lib/PIL*
 - ^docs
 - ^p2/(src|test|images)
 - ^p2/bower_components
