@@ -15,8 +15,6 @@
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
-<link rel="import" href="item-view.html">
-
 <dom-module id="list-view">
   <template>
      <style include="shared-styles">
@@ -72,67 +70,63 @@
       </div>
     </paper-dialog>
 
-    <iron-pages selected="0" id="switch">
-      <app-header-layout fullbleed>
-        <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
-          <app-toolbar>
-            <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-            <h4 condensed-title>[[value]]</h4>
-            <paper-spinner active$="[[loading]]"></paper-spinner>
-          </app-toolbar>
-          <app-toolbar>
-            <h1 main-title>[[value]]</h1>
-            <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
-          </app-toolbar>
-        </app-header>
+    <app-header-layout fullbleed>
+      <app-header condenses reveals effects="resize-title blend-background waterfall" slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h4 condensed-title>[[value]]</h4>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>[[value]]</h1>
+          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
+        </app-toolbar>
+      </app-header>
 
-        <iron-ajax id="ajax" auto
-          url="[[_url(field, value)]]"
-          params="{{params}}"
-          loading="{{loading}}"
-          on-response="handler"></iron-ajax>
+      <iron-ajax id="ajax" auto
+        url="[[_url(field, value)]]"
+        params="{{params}}"
+        loading="{{loading}}"
+        on-response="handler"></iron-ajax>
 
-        <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
+      <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-        <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="square">
-                <app-toolbar class="headline">
-                  <paper-menu-button hidden$="{{!isAuthorized}}">
-                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
-                    <paper-listbox slot="dropdown-content">
-                      <paper-item on-tap="showForm">Edit</paper-item>
-                      <paper-item on-tap="showDialog">Remove</paper-item>
-                    </paper-listbox>
-                  </paper-menu-button>
-                  <div>[[rec.headline]]</div>
-                </app-toolbar>
-                <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
-                <div class="action">
-                  <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
-                    on-tap="applyFilter" data-field="date"
-                    data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
-                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                    <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
-                      on-tap="applyFilter" data-field="tags"
-                      data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
-                  </template>
-                  <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
-                    on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
-                  <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
-                    on-tap="applyFilter" data-field="color"
-                    data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
-                </div>
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+        <template>
+          <div>
+            <div class="square">
+              <app-toolbar class="headline">
+                <paper-menu-button hidden$="{{!isAuthorized}}">
+                  <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+                  <paper-listbox slot="dropdown-content">
+                    <paper-item on-tap="showForm">Edit</paper-item>
+                    <paper-item on-tap="showDialog">Remove</paper-item>
+                  </paper-listbox>
+                </paper-menu-button>
+                <div>[[rec.headline]]</div>
+              </app-toolbar>
+              <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
+              <div class="action">
+                <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
+                  on-tap="applyFilter" data-field="date"
+                  data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
+                <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                  <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
+                    on-tap="applyFilter" data-field="tags"
+                    data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
+                </template>
+                <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
+                  on-tap="applyFilter" data-field="model"
+                  data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
+                <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
+                  on-tap="applyFilter" data-field="color"
+                  data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
               </div>
             </div>
-          </template>
-        </iron-list>
-      </app-header-layout>
-
-      <item-view obj="{{obj}}"></item-view>
-    </iron-pages>
+          </div>
+        </template>
+      </iron-list>
+    </app-header-layout>
 
     <iron-scroll-threshold id="scrollTheshold"
       lower-threshold="500"
@@ -152,14 +146,6 @@
           route: Object,
           currentIndex: Number
         };
-      }
-      connectedCallback() {
-        super.connectedCallback();
-        window.addEventListener('kick', e => this.showList(e));
-      }
-      disconnectedCallback() {
-        super.disconnetedCallback();
-        this.removeEventListener('kick');
       }
       _url(field, value) {
         this.records = [];
@@ -204,15 +190,13 @@
       }
       checkImage(rec) {
         if (rec.serving_url) {
-          return rec.serving_url + '=s0';
+          return rec.serving_url + '=s400';
         } else {
           return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
         }
       }
       showView(e) {
-        window.location = e.target.src;
-        // this.obj = e.model.rec;
-        // this.$.switch.selected = 1;
+        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
       showList(e) {
         // console.log(e);

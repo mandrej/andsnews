@@ -1,63 +1,54 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/img-pan-zoom/img-pan-zoom.html">
 
 <dom-module id="item-view">
   <template>
     <style include="shared-styles">
       :host {
-        @apply --layout-flex;
+        display: block;
       }
-      iframe {
-        width: 100%;
+      img-pan-zoom {
         height: 100%;
-        border: none;
       }
-      /* iframe {
-        margin: 0;
-        padding: 0;
-        background: url("http://localhost:8080/_ah/img/RoTTeCln1TIahWxaCzT1KA===s0") no-repeat contain;
-      } */
     </style>
+
+    <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
     <app-header-layout fullbleed>
       <app-header reveals slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>[[obj.headline]]</h1>
+          <h1 main-title>[[item.headline]]</h1>
+          <paper-icon-button icon="file-download" on-tap="download"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
-      <iframe id="ifrm"></iframe>
+      <img-pan-zoom src="[[checkImage(item)]]" hide-spinner="true" max-zoom-pixel-ratio="0.99999"></img-pan-zoom>
     </app-header-layout>
   </template>
 
   <script>
     class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'item-view'; }
-      static get observers() {
-        return [
-          'changedObj(obj.serving_url)'
-        ];
+      _url(safekey) {
+        const rx = /^\/item/;
+        if (rx.test(this.route.path)) {
+          return ['/api', safekey].join('/');_submit
+        }
       }
-      changedObj(url) {
-        const ifrm = this.$.ifrm;
-        // const html = '<head><meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">' +
-        //   '<style>body {margin: 0;padding: 0;background: url(' + url + '=s0) no-repeat;background-size: contain;}</style></head>' +
-        //   '<body>&nbsp;</body>';
-        const html = '<head><meta name="viewport" content="width=device-width, minimum-scale=0.1"><style>body {margin: 0;padding: 0}</style></head>' +
-        '<body><img style="max-width: 100%" src="' + url + '=s0"></body>';
-        // const host = ifrm.createElement('body');
-        // const shadowRoot = host.attachShadow({mode: 'open'});
-        // shadowRoot.innerHTML = '<img style="-webkit-user-select: none;background: #000;max-width: 100%" src="' + url + '=s0">';
-        ifrm.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+      checkImage(rec) {
+        if (rec.serving_url) {
+          return rec.serving_url + '=s0';
+        } else {
+          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+        }
+      }
+      download() {
+        window.location = '/api/download/' + this.safekey;
       }
       goBack() {
-        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true,
-          detail: {
-            sel: 0
-          }
-        }));
+        window.history.go(-1);
       }
     }
 

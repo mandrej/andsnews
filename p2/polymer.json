@@ -6,6 +6,7 @@
     "src/start-view.html",
     "src/search-view.html",
     "src/list-view.html",
+    "src/item-view.html",
     "src/add-view.html",
     "src/edit-view.html",
     "src/admin-view.html"

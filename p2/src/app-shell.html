@@ -53,6 +53,12 @@
         <span slot="copy">[[copy]]</span>
       </admin-view>
 
+      <item-view
+        view="item"
+        safekey="{{dataSafekey.safekey}}"
+        route="{{route}}">
+      </item-view>
+
       <edit-view
         view="edit"
         is-authorized="{{isAuthorized}}"
@@ -97,6 +103,9 @@
         switch (view) {
           case 'add':
             Polymer.importHref('src/add-view.html');
+            break;
+          case 'item':
+            Polymer.importHref('src/item-view.html');
             break;
           case 'edit':
             Polymer.importHref('src/edit-view.html');
