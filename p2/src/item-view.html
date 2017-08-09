@@ -41,11 +41,7 @@
         }
       }
       checkImage(rec) {
-        if (rec.serving_url) {
-          return rec.serving_url + '=s0';
-        } else {
-          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
-        }
+        if (rec.serving_url) return rec.serving_url + '=s0';
       }
       download() {
         window.location = '/api/download/' + this.safekey;

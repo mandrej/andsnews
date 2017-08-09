@@ -121,8 +121,7 @@
       static get properties() {
         return {
           user: { type: Object, notify: true },
-          dummy: { type: String, value: 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==' },
-          userPhoto: { type: String, value: this.dummy },
+          userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true }
         }
       }
@@ -132,18 +131,10 @@
         ]
       }
       getUserPhoto(url) {
-        if (url) {
-          this.userPhoto = url;
-        } else {
-          this.dummy;
-        }
+        if (url) this.userPhoto = url;
       }
       checkImage(rec) {
-        if (rec.repr_url) {
-          return rec.repr_url + '=s400';
-        } else {
-          return this.dummy;
-        }
+        if (rec.repr_url) return rec.repr_url + '=s400';
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));

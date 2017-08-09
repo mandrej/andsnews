@@ -144,7 +144,7 @@
           records: { type: Array, value: [], notify: true },
           obj: { type: Object, notify: true },
           route: Object,
-          currentIndex: Number
+          currentIndex: { type: Number, value: 0, notify: true }
         };
       }
       _url(field, value) {
@@ -189,19 +189,15 @@
         }
       }
       checkImage(rec) {
-        if (rec.serving_url) {
-          return rec.serving_url + '=s400';
-        } else {
-          return 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
-        }
+        if (rec.serving_url) return rec.serving_url + '=s400';
       }
       showView(e) {
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
-      showList(e) {
-        // console.log(e);
-        this.$.switch.selected = e.detail.sel;
-      }
+      // indexChanged(index, old) {
+      //   console.log(index, old);
+      //   this.$.list.scrollToIndex(index);
+      // }
       showForm(e) {
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
@@ -222,13 +218,14 @@
         this.currentIndex = e.model.index;
         this.$.deleteDialog.open();
       }
-      deleteRecord() {
-        const obj = this.splice('records', this.currentIndex, 1)[0];
-        this.currentIndex = -1;
-        // console.log(obj);
-        const xhr = this.$.delete_ajax;
-        xhr.url = '/api/delete/' + obj.safekey;
-        xhr.generateRequest();
+      deleteRecord(e) {
+        if (e.detail.confirmed) {
+          const obj = this.splice('records', this.currentIndex, 1)[0];
+          // this.currentIndex = -1;
+          const xhr = this.$.delete_ajax;
+          xhr.url = '/api/delete/' + obj.safekey;
+          xhr.generateRequest();
+        }
       }
       findForm() {
         this.set('route.path', '/search');
