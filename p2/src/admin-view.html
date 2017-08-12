@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="admin-view">
@@ -86,11 +87,11 @@
       }
       callAjax(url) {
         const xhr = this.$.xhr;
-        this.$.messaging.requestPermission().then(function () {
+        this.$.messaging.requestPermission().then(() => {
           xhr.url = url;
           xhr.body = JSON.stringify({ token: this.token });
           xhr.generateRequest();
-        }.bind(this), function (err) {
+        }, (err) => {
           console.log(err);
         });
       }

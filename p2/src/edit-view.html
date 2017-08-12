@@ -27,44 +27,46 @@
       <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
 
       <div class="container">
-        <iron-form id="editForm">
-          <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
+        <div hidden$="[[!isAuthorized]]">
+          <iron-form id="editForm">
+            <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
 
-            <paper-toast id="toast"></paper-toast>
+              <paper-toast id="toast"></paper-toast>
 
-            <div class="layout horizontal end-justified">
-              <paper-button on-tap="_submit" raised>Submit</paper-button>
-            </div>
+              <div class="layout horizontal end-justified">
+                <paper-button on-tap="_submit" raised>Submit</paper-button>
+              </div>
 
-            <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+              <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
 
-            <vaadin-combo-box name="author" required label="author"
-              auto-validate
-              allow-custom-value="true"
-              items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-              value="[[item.author]]"></vaadin-combo-box>
+              <vaadin-combo-box name="author" required label="author"
+                auto-validate
+                allow-custom-value="true"
+                items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+                value="[[item.author]]"></vaadin-combo-box>
 
-            <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
-              closable
-              _items="[[item.tags]]"
-              source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+              <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
+                closable
+                _items="[[item.tags]]"
+                source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
 
-            <paper-chip-input name="new_tags" label="new tags" id="new_tags"
-              closable></paper-chip-input>
+              <paper-chip-input name="new_tags" label="new tags" id="new_tags"
+                closable></paper-chip-input>
 
-            <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
+              <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
 
-            <div class="layout horizontal justified wrap">
-              <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
-              <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
-              <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
-              <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
-              <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
-              <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
-            </div>
-            <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
-          </form>
-        </iron-form>
+              <div class="layout horizontal justified wrap">
+                <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
+                <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
+                <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+                <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+                <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+                <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+              </div>
+              <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
+            </form>
+          </iron-form>
+        </div>
       </div>
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
@@ -88,7 +90,7 @@
       }
       listObjects(tags) {
         const list = [];
-        tags.forEach(function(tag) {
+        tags.forEach((tag) => {
           list.push({text: tag, value: tag});
         });
         return list;

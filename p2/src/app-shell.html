@@ -2,6 +2,10 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 
 <link rel="import" href="common-resources.html">
 <link rel="import" href="shared-styles.html">
@@ -19,6 +23,14 @@
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
+
+    <paper-dialog id="authorizationDialog"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation">
+      <h2>Authorization Required</h2>
+      <p>Go <a href="#/start">Home</a> and Sign-In
+        <br>with your Google Account<br></p>
+    </paper-dialog>
 
     <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
       <start-view
@@ -76,7 +88,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708121105' },
+          version: { type: String, value: '201708121938' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -97,24 +109,31 @@
         // });
       }
       viewChanged(view) {
+        const dialog = this.$.authorizationDialog;
         switch (view) {
           case 'list':
             Polymer.importHref('src/list-view.html');
             break;
           case 'add':
-            Polymer.importHref('src/add-view.html');
+            Polymer.importHref('src/add-view.html', () => {
+              if (!this.isAuthorized) dialog.open();
+            }, null, true);
             break;
           case 'item':
             Polymer.importHref('src/item-view.html');
             break;
           case 'edit':
-            Polymer.importHref('src/edit-view.html');
+            Polymer.importHref('src/edit-view.html', () => {
+              if (!this.isAuthorized) dialog.open();
+            }, null, true);
             break;
           case 'search':
             Polymer.importHref('src/search-view.html');
             break;
           case 'maintenance':
-            Polymer.importHref('src/admin-view.html');
+            Polymer.importHref('src/admin-view.html', () => {
+              if (!this.isAuthorized) dialog.open();
+            }, null, true);
             break;
         }
       }

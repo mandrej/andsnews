@@ -63,7 +63,7 @@
       }
       listObjects(tags) {
         const list = [];
-        tags.forEach(function(tag) {
+        tags.forEach((tag) => {
           list.push({text: tag, value: tag});
         });
         return list;
@@ -77,7 +77,7 @@
         if (e.detail.find_text) {
           params.push(e.detail.find_text)
         }
-        this.$.tags._items.forEach(function(tag) {
+        this.$.tags._items.forEach((tag) => {
           params.push('tags:' + tag)
         })
         if (e.detail.find_year) {

@@ -29,12 +29,14 @@
       <paper-toast id="toast"></paper-toast>
 
       <div class="container">
-        <vaadin-upload id="upload"
-          target="/api/photo/add"
-          max-files="10"
-          on-upload-response="_uploadResponse"
-          accept="image/*"></vaadin-upload>
-        <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+        <div hidden$="[[!isAuthorized]]">
+          <vaadin-upload id="upload"
+            target="/api/photo/add"
+            max-files="10"
+            on-upload-response="_uploadResponse"
+            accept="image/*"></vaadin-upload>
+          <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+        </div>
       </div>
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
