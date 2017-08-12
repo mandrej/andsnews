@@ -2,9 +2,11 @@ module.exports = {
   staticFileGlobs: [
     '/index.html',
     '/manifest.json',
-    '/bower_components/webcomponentsjs/webcomponents-loader.js',
+    '/bower_components/webcomponentsjs/webcomponents-lite.js',
     '/images/*'
   ],
+  navigateFallback: '/index.html',
+  navigateFallbackWhitelist: [/^(?!.*\.html$|\/data\/).*/],
   runtimeCaching: [
     {
       urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,
@@ -26,7 +28,7 @@ module.exports = {
       options: {
         cache: {
           maxEntries: 100,
-          maxAgeSeconds: 12 * 60 * 60,
+          maxAgeSeconds: 24 * 60 * 60,
           name: 'data-cache'
         }
       }

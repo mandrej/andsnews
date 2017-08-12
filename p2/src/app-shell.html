@@ -1,16 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
 
+<link rel="import" href="common-resources.html">
+<link rel="import" href="shared-styles.html">
 <link rel="import" href="start-view.html">
-<link rel="import" href="list-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -81,7 +76,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708112042' },
+          version: { type: String, value: '201708121105' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -98,9 +93,14 @@
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
+        // Polymer.RenderStatus.afterNextRender(this, function() {
+        // });
       }
       viewChanged(view) {
         switch (view) {
+          case 'list':
+            Polymer.importHref('src/list-view.html');
+            break;
           case 'add':
             Polymer.importHref('src/add-view.html');
             break;
