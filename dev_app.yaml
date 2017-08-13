@@ -20,11 +20,6 @@ handlers:
   upload: p2/index.html
   secure: always
 
-- url: /favicon\.ico
-  static_files: p2/favicon.ico
-  upload: p2/favicon.ico
-  secure: always
-
 - url: /robots\.txt
   static_files: p2/robots.txt
   upload: p2/robots.txt

@@ -258,7 +258,7 @@ class Photo(ndb.Model):
             latest = futures[i].get_result()
             if latest:
                 counter.repr_stamp = latest.date
-                counter.repr_url = latest.async_serving_url.get_result()
+                counter.repr_url = latest.serving_url
 
             counters.append(counter)
 
@@ -370,17 +370,18 @@ class Photo(ndb.Model):
     def remove(self):
         old_pairs = self.changed_pairs()
 
-        blobstore.delete(self.blob_key)
+        # blobstore.delete(self.blob_key)
+        images.delete_serving_url(self.blob_key)
         self.key.delete()
         time.sleep(3)
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
 
-    @property
-    def async_serving_url(self):
+    @webapp2.cached_property
+    def serving_url(self):
         try:
-            return images.get_serving_url_async(self.blob_key, crop=False, secure_url=True)
+            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
         except (images.ObjectNotFoundError, images.TransformationError) as e:
             # raise _ToImagesError(e, readable_blob_key)
             logger.error(e.message)
@@ -414,7 +415,7 @@ class Photo(ndb.Model):
             'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
-            'serving_url': self.async_serving_url.get_result(),
+            'serving_url': self.serving_url,
             'size': sizeof_fmt(self.size),
         })
         return data

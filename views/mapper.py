@@ -227,7 +227,7 @@ class Builder(Mapper):
             if latest is not None:
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
-                    obj.repr_url = latest.async_serving_url.get_result()
+                    obj.repr_url = latest.serving_url
                 elif kind == 'Entry':
                     obj.repr_url = latest.front_img
 
