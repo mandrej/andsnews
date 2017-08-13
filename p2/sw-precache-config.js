@@ -17,9 +17,6 @@ module.exports = {
         }
       }
     }, {
-      urlPattern: /\/_ah\/.*/,
-      handler: 'networkFirst'
-    }, {
       urlPattern: /\/api\/photo\/tags\/new/,
       handler: 'networkFirst'
     }, {
@@ -30,6 +27,16 @@ module.exports = {
           maxEntries: 100,
           maxAgeSeconds: 24 * 60 * 60,
           name: 'data-cache'
+        }
+      }
+    }, {
+      urlPattern: /^https:\/\/lh3.*/,
+      handler: 'fastest',
+      options: {
+        cache: {
+          maxEntries: 500,
+          maxAgeSeconds: 24 * 60 * 60,
+          name: 'image-cache'
         }
       }
     }]

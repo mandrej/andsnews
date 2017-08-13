@@ -104,7 +104,9 @@
                 </paper-menu-button>
                 <div>[[rec.headline]]</div>
               </app-toolbar>
-              <iron-image src="[[checkImage(rec)]]" sizing="cover" on-tap="showView"></iron-image>
+              <iron-image src="[[checkImage(rec)]]"
+                preload fade
+                sizing="cover" on-tap="showView"></iron-image>
               <div class="action">
                 <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
                   on-tap="applyFilter" data-field="date"
