@@ -132,7 +132,7 @@
         if (url) this.userPhoto = url;
       }
       checkImage(rec) {
-        if (rec.repr_url) return rec.repr_url + '=s400';
+        if (rec.repr_url) return rec.repr_url + '=s400-c';
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
