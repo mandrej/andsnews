@@ -128,6 +128,12 @@
           'getUserPhoto(user.photoURL)'
         ]
       }
+      // ready() {
+      //   super.ready();
+      //   Polymer.RenderStatus.afterNextRender(this, function() {
+      //     this.removeAttribute('unresolved');
+      //   });
+      // }
       getUserPhoto(url) {
         if (url) this.userPhoto = url;
       }

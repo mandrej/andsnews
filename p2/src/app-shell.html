@@ -88,7 +88,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708121938' },
+          version: { type: String, value: '201708141345' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -105,8 +105,6 @@
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
-        // Polymer.RenderStatus.afterNextRender(this, function() {
-        // });
       }
       viewChanged(view) {
         const dialog = this.$.authorizationDialog;

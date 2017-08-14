@@ -44,10 +44,5 @@
       "addServiceWorker": true,
       "addPushManifest": true
     }
-  ],
-  "lint": {
-    "rules": [
-      "polymer-2"
-    ]
-  }
+  ]
 }
