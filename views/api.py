@@ -121,16 +121,20 @@ class Collection(RestHandler):
         page = self.request.get('_page', None)
         token = None
 
-        if kind == 'entry' and value:
-            obj = ndb.Key(urlsafe=value).get()
-            if obj is None:
-                self.abort(404)
-            objects = [obj]
-        else:
-            model = ndb.Model._kind_map.get(kind.title())
-            query = model.query_for(field, value)
-            paginator = Paginator(query, per_page=LIMIT)
-            objects, token = paginator.page(page)  # [], None
+        # if kind == 'entry' and value:
+        #     obj = ndb.Key(urlsafe=value).get()
+        #     if obj is None:
+        #         self.abort(404)
+        #     objects = [obj]
+        # else:
+        #     model = ndb.Model._kind_map.get(kind.title())
+        #     query = model.query_for(field, value)
+        #     paginator = Paginator(query, per_page=LIMIT)
+        #     objects, token = paginator.page(page)  # [], None
+
+        query = Photo.query_for(field, value)
+        paginator = Paginator(query, per_page=LIMIT)
+        objects, token = paginator.page(page)  # [], None
 
         self.render({
             'objects': objects,
@@ -360,16 +364,15 @@ class Download(webapp2.RequestHandler):
 
 class SiteMap(webapp2.RequestHandler):
     def get(self):
-        p = urlparse(self.uri_for('sitemap', _full=True))
-        collection = available_filters()
+        uri = urlparse(self.uri_for('sitemap', _full=True))
+        collection = Photo.query().order(-Photo.date).fetch(100)
         out = ''
-        for f in collection:
-            if f['show']:
-                url = '{}://{}/#/detail/photo/{}/{}'.format(p.scheme, p.netloc, f['field_name'], f['name'])
-                out += TEMPLATE_ROW.format(**{
-                    'loc': url.replace('&', '&amp;'),
-                    'lastmod': f['repr_stamp'].strftime('%Y-%m-%d')
-                })
+        for obj in collection:
+            link = '{}://{}/#/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
+            out += TEMPLATE_ROW.format(**{
+                'loc': link,
+                'lastmod': obj.date.strftime('%Y-%m-%d')
+            })
         self.response.headers = {
             'Content-Type': 'application/xml'
         }
