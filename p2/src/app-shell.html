@@ -5,9 +5,16 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+
 <link rel="import" href="common-resources.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="start-view.html">
 
 <dom-module id="app-shell">
   <template>
@@ -15,12 +22,69 @@
       :host {
         display: block;
       }
+      iron-list {
+         @apply --layout-flex;
+      }
+      .square {
+        position: relative;
+        width: calc(100vw / 6);
+        cursor: pointer;
+      }
+      .square::after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
+      .square iron-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .square .title {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: var(--primary-background-color);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
+      }
+      .square .title > * {
+        @apply --layout-self-center;
+      }
+
+      @media (max-width: 1440px) { .square { width: 20vw; }}
+      @media (max-width: 1024px) { .square { width: 25vw; }}
+      @media (max-width: 768px)  { .square { width: calc(100vw / 3); }}
+      @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
     <app-location route="{{route}}" use-hash-as-path></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
+
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
+
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
 
     <paper-dialog id="authorizationDialog"
       entry-animation="scale-up-animation"
@@ -31,12 +95,43 @@
     </paper-dialog>
 
     <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
-      <start-view
-        view="start"
-        is-authorized="{{isAuthorized}}"
-        route="{{route}}">
-        <span slot="copy">[[copy]]</span>
-      </start-view>
+      <app-header-layout view="start" fullbleed>
+        <app-header reveals slot="header">
+          <app-toolbar>
+            <h4 condensed-title></h4>
+            <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+              <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+            </a>
+            <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
+          </app-toolbar>
+          <app-toolbar>
+            <h1 main-title>ANDрејевићи</h1>
+            <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
+            <paper-fab hidden$="[[!isAuthorized]]" mini icon="add" on-tap="addRecord"></paper-fab>
+          </app-toolbar>
+        </app-header>
+
+        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+
+        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
+          <template>
+            <div>
+              <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+                <iron-image
+                  src="[[checkImage(rec)]]"
+                  preload fade
+                  sizing="cover"></iron-image>
+                <div class="title">
+                  <span>[[rec.name]]</span>
+                  <span>[[rec.count]]</span>
+                </div>
+              </div>
+            </div>
+            </template>
+        </iron-list>
+
+        <footer>[[copy]]</footer>
+      </app-header-layout>
 
       <search-view
         view="search"
@@ -46,14 +141,14 @@
 
       <add-view
         view="add"
-        is-authorized="{{isAuthorized}}"
+        is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </add-view>
 
       <admin-view
         view="maintenance"
-        is-authorized="{{isAuthorized}}"
+        is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </admin-view>
@@ -66,7 +161,7 @@
 
       <edit-view
         view="edit"
-        is-authorized="{{isAuthorized}}"
+        is-authorized="[[isAuthorized]]"
         safekey="{{dataSafekey.safekey}}"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
@@ -74,7 +169,7 @@
 
       <list-view
         view="list"
-        is-authorized="{{isAuthorized}}"
+        is-authorized="[[isAuthorized]]"
         field="{{dataFilter.field}}"
         value="{{dataFilter.value}}"
         route="{{route}}"></list-view>
@@ -82,20 +177,23 @@
   </template>
 
   <script>
-    class AppShell extends Polymer.Element {
+    class AppShell extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708161623' },
+          version: { type: String, value: '201708181346' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
-          }
+          },
+          user: { type: Object, notify: true },
+          userPhoto: String
         };
       }
       static get observers() {
         return [
-          'viewChanged(dataView.view)'
+          'viewChanged(dataView.view)',
+          'getUserPhoto(user.photoURL)'
         ]
       }
       ready() {
@@ -103,6 +201,9 @@
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          this.removeAttribute('unresolved');
+        });
       }
       viewChanged(view) {
         const dialog = this.$.authorizationDialog;
@@ -131,6 +232,34 @@
               if (!this.isAuthorized) dialog.open();
             }, null, true);
             break;
+        }
+      }
+      getUserPhoto(url) {
+        if (url) this.userPhoto = url;
+      }
+      checkImage(rec) {
+        if (rec.repr_url) return rec.repr_url + '=s400-c';
+      }
+      showList(e) {
+        this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
+      }
+      addRecord() {
+        this.set('route.path', '/add');
+      }
+      findForm() {
+        this.set('route.path', '/search');
+      }
+      _sign() {
+        if (this.user) {
+          this.$.auth.signOut();
+        } else {
+          this.$.auth.signInWithPopup()
+            .then(function (response) {
+              // response.credential.accessToken
+              // response.user.uid
+            }).catch(function (error) {
+              console.log(error);
+            });
         }
       }
       copywrite(version) {
