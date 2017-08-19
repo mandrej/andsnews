@@ -18,28 +18,22 @@ handlers:
   script: main.app
   secure: always
 
+- url: /sitemap\.xml
+  script: main.app
+  secure: always
+
 - url: /_ah/warmup
   script: main.app
   secure: always
 
-- url: /robots\.txt
-  static_files: p2/build/default/robots.txt
-  upload: p2/build/default/robots.txt
+- url: /(robots\.txt|manifest\.json)$
+  static_files: p2/build/default/\1
+  upload: p2/build/default/(robots\.txt|manifest\.json)$
   secure: always
 
-- url: /service-worker\.js
-  static_files: p2/build/default/service-worker.js
-  upload: p2/build/default/service-worker.js
-  secure: always
-
-- url: /firebase-messaging-sw\.js
-  static_files: p2/build/default/firebase-messaging-sw.js
-  upload: p2/build/default/firebase-messaging-sw.js
-  secure: always
-
-- url: /manifest\.json
-  static_files: p2/build/default/manifest.json
-  upload: p2/build/default/manifest.json
+- url: /(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: p2/build/default/\1
+  upload: p2/build/default/(service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
 
 - url: /src/
@@ -52,10 +46,6 @@ handlers:
 
 - url: /bower_components/
   static_dir: p2/build/default/bower_components
-  secure: always
-
-- url: /sitemap\.xml
-  script: main.app
   secure: always
 
 - url: /index\.html

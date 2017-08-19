@@ -13,7 +13,7 @@ file="p2/src/app-shell.html"
 
 case $1 in
   devel)
-    $python $dev_appserver --storage_path=$storage dev_app.yaml
+    $python $dev_appserver --storage_path=$storage app_dev.yaml
     exit ;;
   build)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
