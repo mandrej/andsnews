@@ -24,10 +24,6 @@ handlers:
   script: main.app
   secure: always
 
-- url: /tests/.*
-  login: admin
-  script: aeta.main.APP
-
 builtins:
 - deferred: on
 #- appstats: on
@@ -38,3 +34,5 @@ skip_files:
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
 - ^docs
+- ^p2/(src|test|images)
+- ^p2/bower_components

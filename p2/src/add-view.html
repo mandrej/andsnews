@@ -1,0 +1,66 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+
+<dom-module id="add-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block
+      }
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--primary-background-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
+      }
+    </style>
+
+    <app-header-layout fullbleed>
+      <app-header fixed slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>Add</h1>
+        </app-toolbar>
+      </app-header>
+
+      <paper-toast id="toast"></paper-toast>
+
+      <div class="container">
+        <div hidden$="[[!isAuthorized]]">
+          <vaadin-upload id="upload"
+            target="/api/photo/add"
+            max-files="10"
+            on-upload-response="_uploadResponse"
+            accept="image/*"></vaadin-upload>
+          <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+        </div>
+      </div>
+      <footer><slot name="copy"></slot></footer>
+    </app-header-layout>
+  </template>
+
+  <script>
+    class AddView extends Polymer.Element {
+      static get is() { return 'add-view'; }
+      _uploadResponse(e) {
+        var res = JSON.parse(e.detail.xhr.responseText),
+          toast = this.$.toast;
+        if (res.success) {
+          toast.setAttribute('text', 'Image successfully uploaded');
+          toast.open();
+        } else {
+          toast.setAttribute('text', res.message);
+          toast.open();
+        }
+      }
+      goBack() {
+        window.history.go(-1);
+      }
+    }
+
+    window.customElements.define(AddView.is, AddView);
+  </script>
+</dom-module>

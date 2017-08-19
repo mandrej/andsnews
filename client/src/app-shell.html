@@ -108,7 +108,7 @@
       <paper-spinner class="self-center" active$="[[loading]]"></paper-spinner>
     </div>
 
-    <app-drawer-layout responsive-width="1024px">
+    <app-drawer-layout fullbleed responsive-width="1024px">
       <app-drawer id="drawer">
         <app-header fixed>
           <app-toolbar>
@@ -224,7 +224,7 @@
         // 'pathChanged(route.path)'
       ],
       properties: {
-        version: { type: String, value: '201705211346' },
+        version: { type: String, value: '201707042233' },
         loading: { type: Boolean, value: false, notify: true },
         dataValue: { type: Object, value: { value: null } }, // initial set value to null, otherwise search won't work
         user: { type: Object, notify: true },

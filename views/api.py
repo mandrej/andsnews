@@ -12,11 +12,11 @@ from google.appengine.ext import ndb, deferred
 
 from config import DEVEL, START_MSG
 from fireapi import push_message
-from mapper import Indexer, Unbound, Builder, Fixer
+from mapper import Indexer, Builder, Fixer, RemoveIndex
 from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
 from slugify import slugify
 
-LIMIT = 12
+LIMIT = 25
 PERCENTILE = 50 if DEVEL else 80
 TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
@@ -121,16 +121,20 @@ class Collection(RestHandler):
         page = self.request.get('_page', None)
         token = None
 
-        if kind == 'entry' and value:
-            obj = ndb.Key(urlsafe=value).get()
-            if obj is None:
-                self.abort(404)
-            objects = [obj]
-        else:
-            model = ndb.Model._kind_map.get(kind.title())
-            query = model.query_for(field, value)
-            paginator = Paginator(query, per_page=LIMIT)
-            objects, token = paginator.page(page)  # [], None
+        # if kind == 'entry' and value:
+        #     obj = ndb.Key(urlsafe=value).get()
+        #     if obj is None:
+        #         self.abort(404)
+        #     objects = [obj]
+        # else:
+        #     model = ndb.Model._kind_map.get(kind.title())
+        #     query = model.query_for(field, value)
+        #     paginator = Paginator(query, per_page=LIMIT)
+        #     objects, token = paginator.page(page)  # [], None
+
+        query = Photo.query_for(field, value)
+        paginator = Paginator(query, per_page=LIMIT)
+        objects, token = paginator.page(page)  # [], None
 
         self.render({
             'objects': objects,
@@ -205,16 +209,16 @@ class BackgroundIndex(RestHandler):
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
-class BackgroundUnbound(RestHandler):
-    def post(self, kind):
-        token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
-            runner = Unbound()
-            runner.KIND = Photo
-            runner.TOKEN = token
-
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+# class BackgroundUnbound(RestHandler):
+#     def post(self, kind):
+#         token = self.request.json.get('token', None)
+#         if kind == 'photo' and token is not None:
+#             runner = Unbound()
+#             runner.KIND = Photo
+#             runner.TOKEN = token
+#
+#             push_message(runner.TOKEN, START_MSG)
+#             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class BackgroundFix(RestHandler):
@@ -225,6 +229,14 @@ class BackgroundFix(RestHandler):
             runner.KIND = Photo
             runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+            runner.TOKEN = token
+
+            push_message(runner.TOKEN, START_MSG)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
+
+        elif kind == 'entry' and token is not None:
+            runner = RemoveIndex()
+            runner.KIND = Entry
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)
@@ -352,16 +364,15 @@ class Download(webapp2.RequestHandler):
 
 class SiteMap(webapp2.RequestHandler):
     def get(self):
-        p = urlparse(self.uri_for('sitemap', _full=True))
-        collection = available_filters()
+        uri = urlparse(self.uri_for('sitemap', _full=True))
+        collection = Photo.query().order(-Photo.date).fetch(100)
         out = ''
-        for f in collection:
-            if f['show']:
-                url = '{}://{}/#/detail/photo/{}/{}'.format(p.scheme, p.netloc, f['field_name'], f['name'])
-                out += TEMPLATE_ROW.format(**{
-                    'loc': url.replace('&', '&amp;'),
-                    'lastmod': f['repr_stamp'].strftime('%Y-%m-%d')
-                })
+        for obj in collection:
+            link = '{}://{}/#/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
+            out += TEMPLATE_ROW.format(**{
+                'loc': link,
+                'lastmod': obj.date.strftime('%Y-%m-%d')
+            })
         self.response.headers = {
             'Content-Type': 'application/xml'
         }
@@ -372,8 +383,8 @@ class Info(RestHandler):
     def get(self):
         data = {
             'photo': {'count': Photo.query().count()},
-            'entry': {'count': Entry.query().count()},
+            # 'entry': {'count': Entry.query().count()},
         }
         data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
-        data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
+        # data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)

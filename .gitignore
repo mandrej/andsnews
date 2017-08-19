@@ -3,3 +3,4 @@ lib/
 decorator.py
 six.py
 *.pyc
+**/.directory

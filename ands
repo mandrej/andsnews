@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 home=/home/milan
-python=$home/venv/ands/bin/python
+python=$home/venv/andsnews/bin/python
 dev_appserver=/home/milan/google-cloud-sdk/platform/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
 stamp=`date +%Y%m%d%H%M`
-file="client/src/app-shell.html"
+file="p2/src/app-shell.html"
 
 # If you deploy a version that specifies the same version ID as a version that already exists on App Engine,
 # the files that you deploy will overwrite the existing version. This can be problematic if the version is
@@ -17,7 +17,7 @@ case $1 in
     exit ;;
   build)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
-    cd client
+    cd p2
     polymer build
     cd ..
     exit ;;

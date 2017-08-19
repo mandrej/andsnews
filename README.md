@@ -12,7 +12,7 @@
 * Create virtualenv, activate it and install requirements
 * In virtualenv lib folder clone [aeta](https://code.google.com/p/aeta/)
 * Symlink all libraries to project lib:
-    * aeta, cloudstorage, colormath, exifread, googleapiclient,
+    * cloudstorage, colormath, exifread, googleapiclient,
     * pyasn1, pyasn1_modules, rsa,
     * httplib2, networkx, oauth2client
 

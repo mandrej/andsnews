@@ -235,7 +235,8 @@ class Photo(ndb.Model):
                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month)]
+                search.NumberField(name='month', value=self.date.month),
+                search.TextField(name='model', value=self.model)]
         )
         INDEX.put(doc)
 
@@ -369,7 +370,8 @@ class Photo(ndb.Model):
     def remove(self):
         old_pairs = self.changed_pairs()
 
-        blobstore.delete(self.blob_key)
+        # blobstore.delete(self.blob_key)
+        images.delete_serving_url(self.blob_key)
         self.key.delete()
         time.sleep(3)
 
