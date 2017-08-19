@@ -1,13 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/helpers/helpers.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="start-view.html">
+<!-- <link rel="import" href="start-view.html"> -->
 
 <dom-module id="app-shell">
   <template>
@@ -103,10 +103,6 @@
           '_routePageChanged(dataView.view)'
         ]
       }
-      ready() {
-        super.ready();
-        this.removeAttribute('unresolved');
-      }
       _routePageChanged(view) {
         this.page = view || 'start';
         if (this.page === 'list') {
@@ -114,33 +110,32 @@
         }
       }
       _pageChanged(page, oldPage) {
-        let cb = null;
+        let check = false;
         let scrollTop = 0;
         switch (page) {
           case 'list':
-            cb = this._pageLoaded.bind(this, false);
+            check = false
             scrollTop = this._listScrollTop;
             break;
           case 'add':
-            cb = this._pageLoaded.bind(this, true);
+            check = true;
             this._listScrollTop = 0;
             break;
           case 'edit':
-            cb = this._pageLoaded.bind(this, true);
+            check = true;
             this._listScrollTop = 0;
             break;
           case 'admin':
-            cb = this._pageLoaded.bind(this, true);
+            check = true;
             this._listScrollTop = 0;
             break;
           default:
-            cb = this._pageLoaded.bind(this, false);
+            check = false
             this._listScrollTop = 0;
             break;
         }
 
-        this._ensureLazyLoaded();
-
+        const cb = this._pageLoaded.bind(this, check);
         Polymer.importHref(
           this.resolveUrl(page + '-view.html'),
           cb, cb, true);
@@ -148,11 +143,12 @@
         Polymer.AppLayout.scroll({ top: scrollTop, behavior: 'silent' });
       }
       _pageLoaded(checkAuthorized) {
+        this._ensureLazyLoaded();
         const dialog = this.$.authorizationDialog;
         if (checkAuthorized) {
           Polymer.Async.timeOut.run(() => {
             if (!this.isAuthorized) dialog.open();
-          }, 1);
+          }, 100);
         }
       }
       _ensureLazyLoaded() {
