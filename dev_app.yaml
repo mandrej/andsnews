@@ -15,9 +15,12 @@ libraries:
   version: latest
 
 handlers:
-- url: /index\.html
-  static_files: p2/index.html
-  upload: p2/index.html
+- url: /api/.*
+  script: main.app
+  secure: always
+
+- url: /_ah/warmup
+  script: main.app
   secure: always
 
 - url: /robots\.txt
@@ -56,15 +59,12 @@ handlers:
   script: main.app
   secure: always
 
-- url: /api/.*
-  script: main.app
+- url: /index\.html
+  static_files: p2/index.html
+  upload: p2/index.html
   secure: always
 
-- url: /_ah/warmup
-  script: main.app
-  secure: always
-
-- url: /
+- url: /.*
   static_files: p2/index.html
   upload: p2/index.html
   secure: always
