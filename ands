@@ -13,7 +13,7 @@ file="p2/src/app-shell.html"
 
 case $1 in
   devel)
-    $python $dev_appserver --storage_path=$storage dev_dispatch.yaml dev_app.yaml p2/dev_app.yaml
+    $python $dev_appserver --storage_path=$storage dispatch.yaml app_dev.yaml p2/app_dev.yaml
     exit ;;
   build)
     sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
@@ -23,7 +23,8 @@ case $1 in
     exit ;;
   deploy)
     version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
-    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/build/default/app.yaml index.yaml dos.yaml queue.yaml
+    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/build/default/app.yaml \
+    index.yaml dos.yaml queue.yaml
     exit ;;
   *)
     version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
