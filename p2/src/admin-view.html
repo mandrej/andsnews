@@ -74,7 +74,7 @@
     class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'admin-view'; }
       _url(isAuthorized) {
-        const rx = /^\/maintenance/;
+        const rx = /^\/admin/;
         if (rx.test(this.route.path) && isAuthorized) {
           return '/api/info';
         }
