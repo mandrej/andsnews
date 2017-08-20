@@ -1,0 +1,35 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="notfound-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-header-layout fullbleed>
+      <app-header fixed slot="header">
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h1 main-title>404 Not Found Error</h1>
+        </app-toolbar>
+      </app-header>
+
+      <div class="container">
+        <p>Ooops, something went wrong</p>
+      </div>
+      <footer><slot name="copy"></slot></footer>
+    </app-header-layout>
+  </template>
+
+  <script>
+    class NotFoundView extends Polymer.Element {
+      static get is() { return 'notfound-view'; }
+      goBack() {
+        this.set('route.path', '/start');
+      }
+    }
+    window.customElements.define(NotFoundView.is, NotFoundView);
+  </script>
+</dom-module>

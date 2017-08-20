@@ -34,6 +34,12 @@
         <span slot="copy">[[copy]]</span>
       </search-view>
 
+      <notfound-view
+        view="404"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </notfound-view>
+
       <add-view
         view="add"
         is-authorized="[[isAuthorized]]"
@@ -76,7 +82,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708191153' },
+          version: { type: String, value: '201708201259' },
           page: {
             type: String,
             reflectToAttribute: true,

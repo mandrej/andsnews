@@ -10,7 +10,8 @@
     "src/item-view.html",
     "src/add-view.html",
     "src/edit-view.html",
-    "src/admin-view.html"
+    "src/admin-view.html",
+    "src/notfound-view.html"
   ],
   "sources": [
     "src/**/*",
