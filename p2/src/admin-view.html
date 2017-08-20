@@ -9,7 +9,6 @@
     <style include="shared-styles">
       :host {
         display: block;
-        font-family: 'Roboto', 'Noto', sans-serif;
       }
       h1 {
         margin-bottom: 0.5em;
@@ -108,8 +107,7 @@
         });
       }
       getTitle(pass) {
-        if (pass) return 'Maintenance';
-        return 'Authorization Required';
+        return (pass) ? 'Maintenance' : 'Authorization Required';
       }
       rebuild(e) {
         this.callAjax('/api/rebuild/' + e.model.item);

@@ -7,7 +7,6 @@
     <style include="shared-styles">
       :host {
         display: block;
-        font-family: 'Roboto', 'Noto', sans-serif;
       }
       vaadin-upload {
         --vaadin-upload-button-add: {
@@ -69,8 +68,7 @@
         }
       }
       getTitle(pass) {
-        if (pass) return 'Add';
-        return 'Authorization Required';
+        return (pass) ? 'Add' : 'Authorization Required';
       }
       goBack() {
         window.history.go(-1);
