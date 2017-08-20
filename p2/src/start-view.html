@@ -1,7 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="start-view">
   <template>
@@ -9,10 +12,8 @@
       :host {
         display: block;
       }
-      iron-list {
-         @apply --layout-flex;
-      }
       .square {
+        float: left;
         position: relative;
         width: calc(100vw / 6);
         cursor: pointer;
@@ -52,6 +53,8 @@
       @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
+    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
+
     <firebase-app
       app="{{firebase}}"
       name="andsnews"
@@ -67,6 +70,8 @@
       online="{{online}}"
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
+
+    <app-analytics key="UA-8994922-1"></app-analytics>
 
     <app-header-layout fullbleed>
       <app-header reveals slot="header">
@@ -84,24 +89,20 @@
         </app-toolbar>
       </app-header>
 
-      <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
-
-      <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-        <template>
-          <div>
-            <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
-              <iron-image
-                src="[[checkImage(rec)]]"
-                preload fade
-                sizing="cover"></iron-image>
-              <div class="title">
-                <span>[[rec.name]]</span>
-                <span>[[rec.count]]</span>
-              </div>
+      <div class="layout horizontal wrap">
+        <template is="dom-repeat" items="[[data]]" as="rec">
+          <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+            <iron-image
+              src="[[checkImage(rec)]]"
+              preload fade
+              sizing="cover"></iron-image>
+            <div class="title">
+              <span>[[rec.name]]</span>
+              <span>[[rec.count]]</span>
             </div>
           </div>
-          </template>
-      </iron-list>
+        </template>
+      </div>
 
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
