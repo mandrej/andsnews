@@ -48,7 +48,7 @@
       <app-header fixed slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Maintenance</h1>
+          <h1 main-title>[[title]]</h1>
         </app-toolbar>
       </app-header>
 
@@ -66,6 +66,9 @@
             <paper-button on-tap="fix" data-kind="entry" toggles raised>Remove Entry</paper-button> -->
           </div>
         </div>
+        <div hidden$="[[isAuthorized]]">
+          <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
+        </div>
       </div>
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
@@ -74,9 +77,17 @@
   <script>
     class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'admin-view'; }
-      _url(isAuthorized) {
+      static get properties() {
+        return {
+          title: {
+            type: String,
+            computed: 'getTitle(isAuthorized)'
+          }
+        };
+      }
+      _url(pass) {
         const rx = /^\/admin/;
-        if (rx.test(this.route.path) && isAuthorized) {
+        if (rx.test(this.route.path) && pass) {
           return '/api/info';
         }
       }
@@ -95,6 +106,10 @@
         }, (err) => {
           console.log(err);
         });
+      }
+      getTitle(pass) {
+        if (pass) return 'Maintenance';
+        return 'Authorization Required';
       }
       rebuild(e) {
         this.callAjax('/api/rebuild/' + e.model.item);

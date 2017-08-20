@@ -21,7 +21,7 @@
       <app-header fixed slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Edit</h1>
+          <h1 main-title>[[title]]</h1>
         </app-toolbar>
       </app-header>
 
@@ -69,6 +69,9 @@
             </form>
           </iron-form>
         </div>
+        <div hidden$="[[isAuthorized]]">
+          <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
+        </div>
       </div>
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
@@ -77,6 +80,14 @@
   <script>
     class EditView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'edit-view'; }
+      static get properties() {
+        return {
+          title: {
+            type: String,
+            computed: 'getTitle(isAuthorized)'
+          }
+        };
+      }
       connectedCallback() {
         super.connectedCallback();
         const form = this.$.editForm;
@@ -112,6 +123,10 @@
           toast.setAttribute('text', 'Successfully updated');
           toast.open();
         }
+      }
+      getTitle(pass) {
+        if (pass) return 'Edit';
+        return 'Authorization Required';
       }
       goBack() {
         window.history.go(-1);

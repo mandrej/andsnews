@@ -4,7 +4,6 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -20,14 +19,6 @@
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
-
-    <paper-dialog id="authorizationDialog"
-      entry-animation="scale-up-animation"
-      exit-animation="fade-out-animation">
-      <h2>Authorization Required</h2>
-      <p>Go <a href="#/start">Home</a> and Sign-In
-        <br>with your Google Account<br></p>
-    </paper-dialog>
 
     <iron-pages selected="[[page]]" attr-for-selected="view" fallback-selection="404">
       <start-view
@@ -109,46 +100,19 @@
         }
       }
       _pageChanged(page, oldPage) {
-        let check = false;
         let scrollTop = 0;
-        switch (page) {
-          case 'list':
-            check = false
-            scrollTop = this._listScrollTop;
-            break;
-          case 'add':
-            check = true;
-            this._listScrollTop = 0;
-            break;
-          case 'edit':
-            check = true;
-            this._listScrollTop = 0;
-            break;
-          case 'admin':
-            check = true;
-            this._listScrollTop = 0;
-            break;
-          default:
-            check = false
-            this._listScrollTop = 0;
-            break;
+        if (page === 'list') {
+          scrollTop = this._listScrollTop;
+        } else {
+          this._listScrollTop = 0;
         }
 
-        const cb = this._pageLoaded.bind(this, check);
+        const cb = this._ensureLazyLoaded.bind(this);
         Polymer.importHref(
           this.resolveUrl(page + '-view.html'),
           cb, cb, true);
 
         Polymer.AppLayout.scroll({ top: scrollTop, behavior: 'silent' });
-      }
-      _pageLoaded(checkAuthorized) {
-        this._ensureLazyLoaded();
-        const dialog = this.$.authorizationDialog;
-        if (checkAuthorized) {
-          Polymer.Async.timeOut.run(() => {
-            if (!this.isAuthorized) dialog.open();
-          }, 100);
-        }
       }
       _ensureLazyLoaded() {
         if (!this.loadComplete) {
