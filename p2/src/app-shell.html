@@ -100,9 +100,17 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('kick', function (e) {
-          this._listScrollTop = e.detail.top;
-        });
+        if (!this.route.path) {
+          this.set('route.path', '/start');
+        }
+        this.addEventListener('kick', this.setScrollTop);
+      }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('kick', this.setScrollTop, true);
+      }
+      setScrollTop(e) {
+        this._listScrollTop = e.detail.top;
       }
       _routeViewChanged(view) {
         let scrollTop = 0;
