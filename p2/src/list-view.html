@@ -203,13 +203,13 @@
         if (rec.serving_url) return rec.serving_url + '=s400-c';
       }
       showView(e) {
+        const top = window.pageYOffset;
+        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
-      // indexChanged(index, old) {
-      //   console.log(index, old);
-      //   this.$.list.scrollToIndex(index);
-      // }
       showForm(e) {
+        const top = window.pageYOffset;
+        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
       activeFilter(field, value, filter) {

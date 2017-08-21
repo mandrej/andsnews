@@ -6,10 +6,11 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="start-view.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
       }
@@ -20,7 +21,7 @@
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
 
-    <iron-pages selected="[[page]]" attr-for-selected="view" fallback-selection="404">
+    <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <start-view
         view="start"
         is-authorized="{{isAuthorized}}"
@@ -82,40 +83,36 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708201905' },
-          page: {
-            type: String,
-            reflectToAttribute: true,
-            observer: '_pageChanged'
-          },
+          version: { type: String, value: '201708211448' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
+          },
+          _listScrollTop: {
+            type: Number, value: 0
           }
         };
       }
       static get observers() {
         return [
-          '_routePageChanged(dataView.view)'
+          '_routeViewChanged(dataView.view)'
         ]
       }
-      _routePageChanged(view) {
-        this.page = view || 'start';
-        if (this.page === 'list') {
-          this._listScrollTop = window.pageYOffset;
-        }
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('kick', function (e) {
+          this._listScrollTop = e.detail.top;
+        });
       }
-      _pageChanged(page, oldPage) {
+      _routeViewChanged(view) {
         let scrollTop = 0;
-        if (page === 'list') {
+        if (view === 'list') {
           scrollTop = this._listScrollTop;
-        } else {
-          this._listScrollTop = 0;
         }
 
         const cb = this._ensureLazyLoaded.bind(this);
         Polymer.importHref(
-          this.resolveUrl(page + '-view.html'),
+          this.resolveUrl(view + '-view.html'),
           cb, cb, true);
 
         Polymer.AppLayout.scroll({ top: scrollTop, behavior: 'silent' });
@@ -129,6 +126,7 @@
                   navigator.serviceWorker.register('service-worker.js', {scope: '/'});
                 }
                 this.loadComplete = true;
+                this.removeAttribute('unresolved');
               }
             );
           });

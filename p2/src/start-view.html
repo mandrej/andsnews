@@ -4,8 +4,6 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 
-<link rel="import" href="shared-styles.html">
-
 <dom-module id="start-view">
   <template>
     <style include="shared-styles">
@@ -53,8 +51,6 @@
       @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
-    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
-
     <firebase-app
       app="{{firebase}}"
       name="andsnews"
@@ -71,7 +67,7 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
-    <app-analytics key="UA-8994922-1"></app-analytics>
+    <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
 
     <app-header-layout fullbleed>
       <app-header reveals slot="header">
@@ -89,7 +85,7 @@
         </app-toolbar>
       </app-header>
 
-      <div class="layout horizontal wrap">
+      <div class="flex horizontal wrap">
         <template is="dom-repeat" items="[[data]]" as="rec">
           <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
             <iron-image
@@ -106,6 +102,8 @@
 
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
+
+    <app-analytics key="UA-8994922-1"></app-analytics>
   </template>
 
   <script>
