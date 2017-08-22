@@ -5,7 +5,6 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
-<link rel="import" href="start-view.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
@@ -83,7 +82,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708212225' },
+          version: { type: String, value: '201708221541' },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -133,9 +132,6 @@
           Polymer.RenderStatus.afterNextRender(this, () => {
             Polymer.importHref(
               this.resolveUrl('common-resources.html'), () => {
-                if ('serviceWorker' in navigator) {
-                  navigator.serviceWorker.register('service-worker.js', {scope: '/'});
-                }
                 this.loadComplete = true;
                 this.removeAttribute('unresolved');
               }
