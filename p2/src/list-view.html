@@ -21,7 +21,9 @@
         display: block;
       }
       .square {
-        width: 25vw;
+        width: calc((100vw - 16px) / 4);
+        box-sizing: border-box;
+        padding: 8px;
       }
       iron-image {
         width: 100%;
@@ -47,9 +49,9 @@
         padding: 16px 12px 11px 16px;
         background-color: var(--light-primary-color);
       }
-      @media (max-width: 1024px) { .square { width: calc(100vw / 3); }}
-      @media (max-width: 768px)  { .square { width: 50vw; }}
-      @media (max-width: 432px)  { .square { width: 100vw; }}
+      @media (max-width: 1024px) { .square { width: calc((100vw - 16px) / 3); }}
+      @media (max-width: 768px)  { .square { width: calc((100vw - 16px) / 2); }}
+      @media (max-width: 432px)  { .square { width: calc(100vw - 16px); }}
     </style>
 
     <paper-dialog id="message"
@@ -91,7 +93,7 @@
 
       <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" style="padding: 8px" grid>
         <template>
           <div>
             <div class="square">
@@ -105,9 +107,12 @@
                 </paper-menu-button>
                 <div>[[rec.headline]]</div>
               </app-toolbar>
-              <iron-image src="[[checkImage(rec)]]"
-                preload fade
-                sizing="cover" on-tap="showView"></iron-image>
+              <div style="position:relative">
+                <iron-image src="[[checkImage(rec)]]"
+                  preload fade
+                  sizing="cover" on-tap="showView"></iron-image>
+                <paper-ripple></paper-ripple>
+              </div>
               <div class="action">
                 <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
                   on-tap="applyFilter" data-field="date"

@@ -13,8 +13,10 @@
       .square {
         float: left;
         position: relative;
-        width: calc(100vw / 6);
+        width: calc((100vw - 16px) / 6);
+        box-sizing: border-box;
         cursor: pointer;
+        padding: 8px;
       }
       .square::after {
         content: "";
@@ -23,18 +25,18 @@
       }
       .square iron-image {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        top: 8px;
+        bottom: 8px;
+        left: 8px;
+        right: 8px;
       }
       .square .title {
         @apply --layout-horizontal;
         @apply --layout-justified;
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        bottom: 8px;
+        left: 8px;
+        right: 8px;;
         background-color: rgba(0, 0, 0, 0.5);
         color: var(--primary-background-color);
         font-size: 20px;
@@ -45,10 +47,10 @@
         @apply --layout-self-center;
       }
 
-      @media (max-width: 1440px) { .square { width: 20vw; }}
-      @media (max-width: 1024px) { .square { width: 25vw; }}
-      @media (max-width: 768px)  { .square { width: calc(100vw / 3); }}
-      @media (max-width: 432px)  { .square { width: 50vw; }}
+      @media (max-width: 1440px) { .square { width: calc((100vw - 16px) / 5); }}
+      @media (max-width: 1024px) { .square { width: calc((100vw - 16px) / 4); }}
+      @media (max-width: 768px)  { .square { width: calc((100vw - 16px) / 3); }}
+      @media (max-width: 432px)  { .square { width: calc((100vw - 16px) / 2); }}
     </style>
 
     <firebase-app
@@ -81,11 +83,11 @@
         <app-toolbar>
           <h1 main-title>ANDрејевићи</h1>
           <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
-          <paper-fab hidden$="[[!isAuthorized]]" mini icon="add" on-tap="addRecord"></paper-fab>
+          <paper-fab hidden$="[[!isAuthorized]]" icon="add" on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
 
-      <div class="flex horizontal wrap">
+      <div class="flex horizontal wrap" style="padding: 8px">
         <template is="dom-repeat" items="[[data]]" as="rec">
           <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
             <iron-image
@@ -96,6 +98,7 @@
               <span>[[rec.name]]</span>
               <span>[[rec.count]]</span>
             </div>
+            <paper-ripple></paper-ripple>
           </div>
         </template>
       </div>
