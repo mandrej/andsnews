@@ -35,8 +35,11 @@
       }
       .headline {
         @apply --layout-horizontal;
-        @apply --layout-justified;
+        /* @apply --layout-justified; */
         background-color: #fff;
+      }
+      .nopadding {
+        padding-left: 0;
       }
       .headline > div {
         font-size: 20px;
@@ -44,10 +47,10 @@
       }
       .action {
         @apply --layout-horizontal;
-        @apply --layout-justified;
+        /* @apply --layout-justified; */
         @apply --layout-wrap;
         padding: 16px 12px 11px 16px;
-        background-color: var(--light-primary-color);
+        /* background-color: var(--light-primary-color); */
       }
       @media (max-width: 1024px) { .square { width: calc((100vw - 16px) / 3); }}
       @media (max-width: 768px)  { .square { width: calc((100vw - 16px) / 2); }}
@@ -97,7 +100,7 @@
         <template>
           <div>
             <div class="square">
-              <app-toolbar class="headline">
+              <app-toolbar class$="{{noPad(isAuthorized)}}">
                 <paper-menu-button hidden$="{{!isAuthorized}}">
                   <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
                   <paper-listbox slot="dropdown-content">
@@ -245,6 +248,9 @@
       }
       findForm() {
         this.set('route.path', '/search');
+      }
+      noPad(pass) {
+        return (pass) ? 'headline nopadding' : 'headline';
       }
       goBack() {
         this.set('route.path', '/start');

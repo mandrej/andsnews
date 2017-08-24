@@ -5,19 +5,19 @@
     <style include="iron-flex iron-flex-alignment">
       /*grey/deep orange*/
       :root {
-        --dark-primary-color:       #616161;
+        /* --dark-primary-color:       #616161;
         --default-primary-color:    #9E9E9E;
         --light-primary-color:      #F5F5F5;
-        --text-primary-color:       #212121;
-        --accent-color:             #FF5722;
-        --primary-background-color: #F5F5F5;
+        --text-primary-color:       #212121; */
+        --accent-color:             #FEC007;
+        /* --primary-background-color: #F5F5F5;
         --primary-text-color:       #212121;
         --secondary-text-color:     #757575;
         --disabled-text-color:      #BDBDBD;
-        --divider-color:            #BDBDBD;
+        --divider-color:            #BDBDBD; */
 
         --error-color:              #d32f2f;
-        --primary-color:            var(---text-primary-color);
+        /* --primary-color:            var(---text-primary-color); */
       }
       [hidden] {
         display: none !important;
@@ -30,7 +30,7 @@
       }
       app-header {
         color: var(--text-primary-color);
-        background-color: var(--light-primary-color);
+        background-color: var(--default-primary-color);
       }
       app-toolbar a {
         display: inline-block;
@@ -64,7 +64,7 @@
       }
       paper-fab,
       paper-button {
-        color: var(--light-primary-color);
+        color: var(--primary-text-color);
         background-color: var(--accent-color);
       }
       paper-fab {
