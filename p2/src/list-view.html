@@ -20,10 +20,13 @@
       :host {
         display: block;
       }
+      iron-list {
+        padding: calc(var(--user-gap) / 2);
+      }
       .square {
-        width: calc((100vw - 16px) / 4);
+        width: calc((var(--user-width) - var(--user-gap)) / 4);
         box-sizing: border-box;
-        padding: 8px;
+        padding: calc(var(--user-gap) / 2);
       }
       iron-image {
         width: 100%;
@@ -34,8 +37,8 @@
         padding-bottom: 100%;
       }
       .headline {
+        padding: 0 16px;
         @apply --layout-horizontal;
-        /* @apply --layout-justified; */
         background-color: #fff;
       }
       .nopadding {
@@ -43,18 +46,17 @@
       }
       .headline > div {
         font-size: 20px;
+        line-height: 110%;
         font-weight: 300;
       }
       .action {
         @apply --layout-horizontal;
-        /* @apply --layout-justified; */
         @apply --layout-wrap;
-        padding: 16px 12px 11px 16px;
-        /* background-color: var(--light-primary-color); */
+        padding: calc(var(--user-gap) / 2) 0;
       }
-      @media (max-width: 1024px) { .square { width: calc((100vw - 16px) / 3); }}
-      @media (max-width: 768px)  { .square { width: calc((100vw - 16px) / 2); }}
-      @media (max-width: 432px)  { .square { width: calc(100vw - 16px); }}
+      @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 3); }}
+      @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
+      @media (max-width: 432px)  { .square { width: calc(100vw - var(--user-gap)); }}
     </style>
 
     <paper-dialog id="message"
@@ -75,7 +77,7 @@
       </div>
     </paper-dialog>
 
-    <app-header-layout fullbleed>
+    <app-header-layout class="big" fullbleed>
       <app-header condenses reveals shadow effects="resize-title blend-background waterfall" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -96,11 +98,11 @@
 
       <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" style="padding: 8px" grid>
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
         <template>
           <div>
             <div class="square">
-              <app-toolbar class$="{{noPad(isAuthorized)}}">
+              <div class$="layout horizontal {{noPad(isAuthorized)}}">
                 <paper-menu-button hidden$="{{!isAuthorized}}">
                   <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
                   <paper-listbox slot="dropdown-content">
@@ -108,8 +110,8 @@
                     <paper-item on-tap="showDialog">Remove</paper-item>
                   </paper-listbox>
                 </paper-menu-button>
-                <div>[[rec.headline]]</div>
-              </app-toolbar>
+                <div class="self-center">[[rec.headline]]</div>
+              </div>
               <div style="position:relative">
                 <iron-image src="[[checkImage(rec)]]"
                   preload fade

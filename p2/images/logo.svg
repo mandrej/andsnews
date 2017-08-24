@@ -9,8 +9,8 @@
       stroke-linejoin: round;
       stroke-miterlimit: 4;
     }
-    .left { stroke:#9E9E9E; }
-    .right { stroke:#FF5722; }
+    .left { stroke:#3F51B5; }
+    .right { stroke:#FFC107; }
   </style>
   <g transform="translate(-2308.1513,-191.95416)">
     <g id="logo">

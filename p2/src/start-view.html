@@ -10,10 +10,13 @@
       :host {
         display: block;
       }
+      .horizontal {
+        padding: calc(var(--user-gap) / 2);
+      }
       .square {
         float: left;
         position: relative;
-        width: calc((100vw - 16px) / 6);
+        width: calc((var(--user-width) - var(--user-gap)) / 6);
         box-sizing: border-box;
         cursor: pointer;
         padding: 8px;
@@ -25,20 +28,20 @@
       }
       .square iron-image {
         position: absolute;
-        top: 8px;
-        bottom: 8px;
-        left: 8px;
-        right: 8px;
+        top: calc(var(--user-gap) / 2);
+        bottom: calc(var(--user-gap) / 2);
+        left: calc(var(--user-gap) / 2);
+        right: calc(var(--user-gap) / 2);
       }
       .square .title {
         @apply --layout-horizontal;
         @apply --layout-justified;
         position: absolute;
-        bottom: 8px;
-        left: 8px;
-        right: 8px;;
+        bottom: calc(var(--user-gap) / 2);
+        left: calc(var(--user-gap) / 2);
+        right: calc(var(--user-gap) / 2);
+        color: var(--text-primary-color);
         background-color: rgba(0, 0, 0, 0.5);
-        color: var(--primary-background-color);
         font-size: 20px;
         padding: 16px;
         text-overflow: ellipsis;
@@ -47,10 +50,10 @@
         @apply --layout-self-center;
       }
 
-      @media (max-width: 1440px) { .square { width: calc((100vw - 16px) / 5); }}
-      @media (max-width: 1024px) { .square { width: calc((100vw - 16px) / 4); }}
-      @media (max-width: 768px)  { .square { width: calc((100vw - 16px) / 3); }}
-      @media (max-width: 432px)  { .square { width: calc((100vw - 16px) / 2); }}
+      @media (max-width: 1440px) { .square { width: calc((100vw - var(--user-gap)) / 5); }}
+      @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 4); }}
+      @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 3); }}
+      @media (max-width: 432px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
     </style>
 
     <firebase-app
@@ -71,7 +74,7 @@
 
     <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
 
-    <app-header-layout fullbleed>
+    <app-header-layout class="big" fullbleed>
       <app-header reveals shadow slot="header">
         <app-toolbar>
           <h4 condensed-title></h4>
@@ -87,7 +90,7 @@
         </app-toolbar>
       </app-header>
 
-      <div class="flex horizontal wrap" style="padding: 8px">
+      <div class="flex horizontal wrap">
         <template is="dom-repeat" items="[[data]]" as="rec">
           <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
             <iron-image

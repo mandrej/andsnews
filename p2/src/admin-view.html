@@ -16,7 +16,7 @@
       }
       paper-button {
         min-width: 175px;
-        margin-bottom: 16px;
+        margin-bottom: var(--user-gap);
       }
       paper-button[disabled] {
         color: var(--dark-primary-color);
@@ -43,7 +43,7 @@
       content-type="application/json"
       method="POST"></iron-ajax>
 
-    <app-header-layout fullbleed>
+    <app-header-layout class="big" fullbleed>
       <app-header fixed shadow slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>

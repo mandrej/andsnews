@@ -10,13 +10,13 @@
       }
       img-pan-zoom {
         height: 100%;
-        padding: 16px;
+        padding: calc(var(--user-gap));
       }
     </style>
 
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
-    <app-header-layout fullbleed>
+    <app-header-layout class="big" fullbleed>
       <app-header reveals shadow slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
