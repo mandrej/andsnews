@@ -72,7 +72,7 @@
     <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header reveals slot="header">
+      <app-header reveals shadow slot="header">
         <app-toolbar>
           <h4 condensed-title></h4>
           <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">

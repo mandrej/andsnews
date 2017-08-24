@@ -17,7 +17,7 @@
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header reveals slot="header">
+      <app-header reveals shadow slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h1 main-title>[[item.headline]]</h1>
