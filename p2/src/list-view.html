@@ -36,17 +36,18 @@
         display: block;
         padding-bottom: 100%;
       }
-      .headline {
-        padding: 0 16px;
+      .toolbar {
+        padding: 4px 16px;
         @apply --layout-horizontal;
-        background-color: #fff;
+        /* background-color: #fff; */
+        min-height: 56px;
       }
       .nopadding {
         padding-left: 0;
       }
-      .headline > div {
+      .toolbar > div {
         font-size: 20px;
-        line-height: 110%;
+        line-height: 120%;
         font-weight: 300;
       }
       .action {
@@ -102,7 +103,7 @@
         <template>
           <div>
             <div class="square">
-              <div class$="layout horizontal {{noPad(isAuthorized)}}">
+              <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
                 <paper-menu-button hidden$="{{!isAuthorized}}">
                   <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
                   <paper-listbox slot="dropdown-content">
@@ -252,9 +253,11 @@
         this.set('route.path', '/search');
       }
       noPad(pass) {
-        return (pass) ? 'headline nopadding' : 'headline';
+        return (pass) ? 'nopadding' : '';
       }
       goBack() {
+        const ajax = this.$.ajax;
+        if (ajax.lastRequest) ajax.lastRequest.abort();
         this.set('route.path', '/start');
       }
     }

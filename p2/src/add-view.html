@@ -29,7 +29,7 @@
       <paper-toast id="toast"></paper-toast>
 
       <div class="container">
-        <div hidden$="[[!isAuthorized]]">
+        <div hidden$="[[!pass]]">
           <vaadin-upload id="upload"
             target="/api/photo/add"
             max-files="10"
@@ -37,7 +37,7 @@
             accept="image/*"></vaadin-upload>
           <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
         </div>
-        <div hidden$="[[isAuthorized]]">
+        <div hidden$="[[pass]]">
           <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
         </div>
       </div>
@@ -50,11 +50,20 @@
       static get is() { return 'add-view'; }
       static get properties() {
         return {
-          title: {
-            type: String,
-            computed: 'getTitle(isAuthorized)'
-          }
+          title: { type: String, value: 'Authorization Required' },
+          pass: { type: Boolean, value: false }
         };
+      }
+      static get observers() {
+        return [
+          'setPass(isAuthorized)'
+        ]
+      }
+      setPass(isAuthorized) {
+        if (isAuthorized === true) {
+          this.title = 'Add';
+          this.pass = true;
+        }
       }
       _uploadResponse(e) {
         var res = JSON.parse(e.detail.xhr.responseText),
@@ -66,9 +75,6 @@
           toast.setAttribute('text', res.message);
           toast.open();
         }
-      }
-      getTitle(pass) {
-        return (pass) ? 'Add' : 'Authorization Required';
       }
       goBack() {
         window.history.go(-1);

@@ -36,7 +36,7 @@
       data="[[token]]"></firebase-document>
 
     <iron-ajax auto
-      url="[[_url(isAuthorized)]]"
+      url="[[_url(pass)]]"
       last-response="{{info}}"></iron-ajax>
 
     <iron-ajax id="xhr"
@@ -54,7 +54,7 @@
       <div class="container">
         <paper-toast id="toast"></paper-toast>
 
-        <div hidden$="[[!isAuthorized]]">
+        <div hidden$="[[!pass]]">
           <h1>Photo [[info.photo.count]]</h1>
           <div class="layout horizontal justified wrap">
             <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
@@ -65,7 +65,7 @@
             <paper-button on-tap="fix" data-kind="entry" toggles raised>Remove Entry</paper-button> -->
           </div>
         </div>
-        <div hidden$="[[isAuthorized]]">
+        <div hidden$="[[pass]]">
           <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
         </div>
       </div>
@@ -78,11 +78,20 @@
       static get is() { return 'admin-view'; }
       static get properties() {
         return {
-          title: {
-            type: String,
-            computed: 'getTitle(isAuthorized)'
-          }
+          title: { type: String, value: 'Authorization Required' },
+          pass: { type: Boolean, value: false }
         };
+      }
+      static get observers() {
+        return [
+          'setPass(isAuthorized)'
+        ]
+      }
+      setPass(isAuthorized) {
+        if (isAuthorized === true) {
+          this.title = 'Maintenance';
+          this.pass = true;
+        }
       }
       _url(pass) {
         const rx = /^\/admin/;
@@ -105,9 +114,6 @@
         }, (err) => {
           console.log(err);
         });
-      }
-      getTitle(pass) {
-        return (pass) ? 'Maintenance' : 'Authorization Required';
       }
       rebuild(e) {
         this.callAjax('/api/rebuild/' + e.model.item);
