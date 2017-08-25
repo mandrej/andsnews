@@ -1,12 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/app-layout/helpers/helpers.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
+<link rel="import" href="start-view.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
@@ -22,10 +21,27 @@
     <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
 
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
+
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
+
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <start-view
         view="start"
-        is-authorized="{{isAuthorized}}"
+        user="[[user]]"
+        is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </start-view>
@@ -84,14 +100,15 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708251448' },
+          version: { type: String, value: '201708261029' },
+          user: { type: Object, notify: true },
+          userPhoto: String,
+          isAuthorized: { type: Boolean, value: false, notify: true },
           copy: {
             type: String,
             computed: 'copywrite(version)'
           },
-          _listScrollTop: {
-            type: Number, value: 0
-          }
+          _listScrollTop: { type: Number, value: 0 }
         };
       }
       static get observers() {
@@ -104,11 +121,26 @@
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
+        this.addEventListener('sign', this.signHandler);
         this.addEventListener('kick', this.setScrollTop);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
+        this.removeEventListener('sign', this.signHandler, true);
         this.removeEventListener('kick', this.setScrollTop, true);
+      }
+      signHandler() {
+        if (this.user) {
+          this.$.auth.signOut();
+        } else {
+          this.$.auth.signInWithPopup()
+            .then(function (response) {
+              // response.credential.accessToken
+              // response.user.uid
+            }).catch(function (error) {
+              console.log(error);
+            });
+        }
       }
       setScrollTop(e) {
         this._listScrollTop = e.detail.top;

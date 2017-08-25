@@ -1,5 +1,10 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
@@ -78,6 +83,14 @@
       </div>
     </paper-dialog>
 
+    <iron-ajax id="ajax" auto
+      url="[[_url(field, value)]]"
+      params="{{params}}"
+      loading="{{loading}}"
+      on-response="handler"></iron-ajax>
+
+    <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
+
     <app-header-layout class="big" fullbleed>
       <app-header condenses reveals shadow effects="resize-title blend-background waterfall" slot="header">
         <app-toolbar>
@@ -90,14 +103,6 @@
           <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
         </app-toolbar>
       </app-header>
-
-      <iron-ajax id="ajax" auto
-        url="[[_url(field, value)]]"
-        params="{{params}}"
-        loading="{{loading}}"
-        on-response="handler"></iron-ajax>
-
-      <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
       <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
         <template>
