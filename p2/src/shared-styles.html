@@ -5,17 +5,17 @@
     <style include="iron-flex iron-flex-alignment">
       :root {
         --dark-primary-color:       #303F9F;
-        --default-primary-color:    #3F51B5; /* indigo */
+        --default-primary-color:    #3F51B5; /* indigo 500 */
         --light-primary-color:      #C5CAE9;
         --text-primary-color:       #FFFFFF;
-        --accent-color:             #FFC107; /* amber */
+        --accent-color:             #FF4081; /* pink A200 */
         --primary-background-color: #C5CAE9;
         --primary-text-color:       #212121;
         --secondary-text-color:     #757575;
         --disabled-text-color:      #BDBDBD;
         --divider-color:            #BDBDBD;
 
-        --error-color:              #d32f2f;
+        --error-color:              #C2185B;
 
         --user-gap:                 16px;
         --user-width:               100vw;
@@ -34,6 +34,10 @@
       app-header {
         color: var(--text-primary-color);
         background-color: var(--default-primary-color);
+        background-image: url(../images/logo.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: var(--user-gap) 0;
       }
       /* .big, .big app-header {
         padding: 0 calc((100vw - var(--user-width)) / 2);
@@ -74,8 +78,16 @@
       }
       paper-fab,
       paper-button {
-        color: var(--primary-text-color);
+        color: var(--text-primary-color);
         background-color: var(--accent-color);
+      }
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--text-primary-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
       }
       paper-fab {
         position: absolute;

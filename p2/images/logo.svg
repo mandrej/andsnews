@@ -1,22 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-  width="221.95563mm" height="221.89787mm"
-  viewBox="0 0 786.45696 786.25229" version="1.1">
-  <style>
-    path {
-      fill: none;
-      stroke-width: 50;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-miterlimit: 4;
-    }
-    .left { stroke:#3F51B5; }
-    .right { stroke:#FFC107; }
-  </style>
-  <g transform="translate(-2308.1513,-191.95416)">
-    <g id="logo">
-      <path class="left" d="m 2640.007,372.14851 61.3719,106.29921 -184.1157,318.89765 367.9929,-0.51673 61.3718,107.33267 -613.4785,-0.48323 z" />
-      <path class="right" transform="translate(2308.1513,191.95416)"
-         d="M 393.22852 73.894531 L 331.85547 180.19531 L 515.8125 499.0918 L 270.48438 499.0918 L 209.11133 605.39062 L 577.13086 605.39062 L 638.83398 712.35547 L 761.45898 711.69727 L 393.22852 73.894531 z" />
-    </g>
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1984.6334"
+   height="1984.6334"
+   viewBox="0 -65 330.243 330.243">
+  <g id="g969" transform="translate(-84.157,-42.8785)">
+    <path d="M 331.842,0 290.561,71.5 331.842,143 373.121,71.5 Z"
+       inkscape:connector-curvature="0" style="fill:#3f51b5" />
+    <path d="M 373.121,71.5 249.277,286 h 82.565 L 414.4,143 Z"
+       inkscape:connector-curvature="0" style="fill:#7986cb" />
+    <path d="M 249.277,0 84.157,286 h 82.564 L 331.842,0 Z"
+       inkscape:connector-curvature="0" style="fill:#ff4081" />
+    <path d="M 249.277,0 290.561,71.5 331.842,0 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0.2" />
+    <path d="M 208,71.5 249.277,0 290.561,71.5 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0.1" />
+    <path d="M 208,71.5 249.277,143 290.561,71.5 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0" />
+    <path d="M 166.721,143 208,71.5 249.277,143 Z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.1" />
+    <path d="M 166.721,143 208,214.5 249.277,143 Z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.2" />
+    <path d="M 125.438,214.5 166.721,143 208,214.5 Z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.3" />
+    <path d="M 125.438,214.5 166.721,286 208,214.5 Z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.4" />
+    <path d="m 84.157,286 41.281,-71.5 41.283,71.5 z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.5" />
+    <path d="M 373.121,71.5 331.842,143 290.561,71.5 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0" />
+    <path d="M 331.842,143 373.121,71.5 414.4,143 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0.2" />
+    <path d="M 331.842,143 373.121,214.5 414.4,143 Z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0.1" />
+    <path d="m 290.561,214.5 41.281,-71.5 41.279,71.5 z"
+       inkscape:connector-curvature="0" style="fill:#ffffff;fill-opacity:0" />
+    <path d="m 290.561,214.5 41.281,71.5 41.279,-71.5 z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.1" />
+    <path d="m 249.277,286 41.284,-71.5 41.281,71.5 z"
+       inkscape:connector-curvature="0" style="fill-opacity:0.2" />
   </g>
+  <path d="m -84.157,-107.8785 h 416 v 416 h -416 z"
+     inkscape:connector-curvature="0" style="fill:none" />
 </svg>
