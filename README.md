@@ -10,7 +10,7 @@
 
 * Install python 2.7, virtualenv, pip and Google App Engine
 * Create virtualenv, activate it and install requirements
-* In virtualenv lib folder clone [aeta](https://code.google.com/p/aeta/)
+* ~~In virtualenv lib folder clone [aeta](https://code.google.com/p/aeta/)~~
 * Symlink all libraries to project lib:
     * cloudstorage, colormath, exifread, googleapiclient,
     * pyasn1, pyasn1_modules, rsa,

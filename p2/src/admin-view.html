@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -37,11 +37,10 @@
       token="{{token}}"
       on-message="handleMessage"></firebase-messaging>
 
-    <firebase-document
-      log="true"
+    <firebase-document log
       app-name="andsnews"
-      path="/users/[[user.uid]]/token"
-      data="[[token]]"></firebase-document>
+      path="/users/[[user.uid]]"
+      data="{{data}}"></firebase-document>
 
     <iron-ajax auto
       url="[[_url(pass)]]"
@@ -52,10 +51,11 @@
       method="POST"></iron-ajax>
 
     <app-header-layout class="big" fullbleed>
-      <app-header condenses reveals shadow effects="resize-title blend-background waterfall" slot="header">
+      <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h4 condensed-title>[[title]]</h4>
+          <div>[[user.email]]</div>
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>[[title]]</h1>
@@ -90,18 +90,29 @@
       static get properties() {
         return {
           title: { type: String, value: 'Authorization Required' },
-          pass: { type: Boolean, value: false }
+          pass: { type: Boolean, value: false },
+          data: Object
         };
       }
       static get observers() {
         return [
-          'setPass(isAuthorized)'
+          'setPass(isAuthorized)',
+          'userData(user)'
         ]
       }
       setPass(isAuthorized) {
         if (isAuthorized === true) {
           this.title = 'Maintenance';
           this.pass = true;
+        }
+      }
+      userData(user) {
+        const d = new Date();
+        if (user) {
+          this.data = {
+            email: user.email,
+            date: d.toISOString()
+          }
         }
       }
       _url(pass) {

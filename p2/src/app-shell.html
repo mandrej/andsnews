@@ -67,6 +67,7 @@
 
       <admin-view
         view="admin"
+        user="[[user]]"
         is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
@@ -100,7 +101,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708261159' },
+          version: { type: String, value: '201708262130' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
