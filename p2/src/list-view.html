@@ -219,11 +219,13 @@
         if (rec.serving_url) return rec.serving_url + '=s400-c';
       }
       showView(e) {
+        this.abortLoad();
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
       showForm(e) {
+        this.abortLoad();
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
@@ -236,6 +238,7 @@
         }
       }
       applyFilter(e) {
+        this.abortLoad();
         const target = e.target,
           field = target.dataset.field,
           value = target.dataset.fieldValue;
@@ -246,6 +249,7 @@
         this.$.deleteDialog.open();
       }
       deleteRecord(e) {
+        this.abortLoad();
         if (e.detail.confirmed) {
           const obj = this.splice('records', this.currentIndex, 1)[0];
           // this.currentIndex = -1;
@@ -255,14 +259,18 @@
         }
       }
       findForm() {
+        this.abortLoad();
         this.set('route.path', '/search');
       }
       noPad(pass) {
         return (pass) ? 'nopadding' : '';
       }
-      goBack() {
+      abortLoad() {
         const ajax = this.$.ajax;
         if (ajax.lastRequest) ajax.lastRequest.abort();
+      }
+      goBack() {
+        this.abortLoad();
         this.set('route.path', '/start');
       }
     }
