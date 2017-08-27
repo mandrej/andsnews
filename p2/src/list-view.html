@@ -100,56 +100,56 @@
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>[[value]]</h1>
-          <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
+          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
-      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
-        <template>
-          <div>
-            <div class="square">
-              <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
-                <paper-menu-button hidden$="{{!isAuthorized}}">
-                  <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
-                  <paper-listbox slot="dropdown-content">
-                    <paper-item on-tap="showForm">Edit</paper-item>
-                    <paper-item on-tap="showDialog">Remove</paper-item>
-                  </paper-listbox>
-                </paper-menu-button>
-                <div class="self-center">[[rec.headline]]</div>
-              </div>
-              <div style="position:relative">
-                <iron-image src="[[checkImage(rec)]]"
-                  preload fade
-                  sizing="cover" on-tap="showView"></iron-image>
-                <paper-ripple></paper-ripple>
-              </div>
-              <div class="action">
-                <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
-                  on-tap="applyFilter" data-field="date"
-                  data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
-                <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                  <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
-                    on-tap="applyFilter" data-field="tags"
-                    data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
-                </template>
-                <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
-                  on-tap="applyFilter" data-field="model"
-                  data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
-                <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
-                  on-tap="applyFilter" data-field="color"
-                  data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
+      <iron-scroll-threshold id="scrollTheshold"
+        lower-threshold="500"
+        on-lower-threshold="_load"
+        scroll-target="document">
+        <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+          <template>
+            <div>
+              <div class="square">
+                <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
+                  <paper-menu-button hidden$="{{!isAuthorized}}">
+                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-listbox slot="dropdown-content">
+                      <paper-item on-tap="showEdit">Edit</paper-item>
+                      <paper-item on-tap="showDialog">Remove</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                  <div class="self-center">[[rec.headline]]</div>
+                </div>
+                <div style="position:relative">
+                  <iron-image src="[[checkImage(rec)]]"
+                    preload fade
+                    sizing="cover" on-tap="showView"></iron-image>
+                  <paper-ripple></paper-ripple>
+                </div>
+                <div class="action">
+                  <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
+                    on-tap="applyFilter" data-field="date"
+                    data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
+                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                    <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
+                      on-tap="applyFilter" data-field="tags"
+                      data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
+                  </template>
+                  <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
+                    on-tap="applyFilter" data-field="model"
+                    data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
+                  <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
+                    on-tap="applyFilter" data-field="color"
+                    data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </iron-list>
+          </template>
+        </iron-list>
+      </iron-scroll-threshold>
     </app-header-layout>
-
-    <iron-scroll-threshold id="scrollTheshold"
-      lower-threshold="500"
-      on-lower-threshold="_load"
-      scroll-target="document"></iron-scroll-threshold>
   </template>
 
   <script>
@@ -219,13 +219,11 @@
         if (rec.serving_url) return rec.serving_url + '=s400-c';
       }
       showView(e) {
-        this.abortLoad();
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
-      showForm(e) {
-        this.abortLoad();
+      showEdit(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
@@ -238,7 +236,6 @@
         }
       }
       applyFilter(e) {
-        this.abortLoad();
         const target = e.target,
           field = target.dataset.field,
           value = target.dataset.fieldValue;
@@ -249,7 +246,6 @@
         this.$.deleteDialog.open();
       }
       deleteRecord(e) {
-        this.abortLoad();
         if (e.detail.confirmed) {
           const obj = this.splice('records', this.currentIndex, 1)[0];
           // this.currentIndex = -1;
@@ -258,19 +254,17 @@
           xhr.generateRequest();
         }
       }
-      findForm() {
-        this.abortLoad();
+      showSearch() {
         this.set('route.path', '/search');
       }
       noPad(pass) {
         return (pass) ? 'nopadding' : '';
       }
-      abortLoad() {
-        const ajax = this.$.ajax;
-        if (ajax.lastRequest) ajax.lastRequest.abort();
-      }
+      // abortLoad() {
+      //   const ajax = this.$.ajax;
+      //   if (ajax.lastRequest) ajax.lastRequest.abort();
+      // }
       goBack() {
-        this.abortLoad();
         this.set('route.path', '/start');
       }
     }
