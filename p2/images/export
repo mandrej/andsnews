@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-sizes=(32 48 72 96 144 192 512)
+sizes=(48 72 96 144 192 512)
 
 for i in ${sizes[@]}; do
-  if [ $i = "32" ]; then
-    file=logo.png
-  else
-    file=manifest/icon-$i\x$i.png
-  fi
+  file=manifest/icon-$i\x$i.png
   inkscape -z -e $file -w $i -h $i logo.svg
   echo $file
 done
+
+file=logo.png
+inkscape -z -e $file -w 192 -h 192 logo.svg
+echo $file
 exit 0
