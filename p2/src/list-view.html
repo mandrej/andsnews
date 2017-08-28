@@ -32,9 +32,11 @@
         width: calc((var(--user-width) - var(--user-gap)) / 4);
         box-sizing: border-box;
         padding: calc(var(--user-gap) / 2);
+        @apply --no-select;
       }
       iron-image {
         width: 100%;
+        cursor: pointer;
       }
       iron-image::after {
         content: "";

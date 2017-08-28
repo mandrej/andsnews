@@ -171,10 +171,12 @@ def available_filters():
     return [x for x in collection if x['show']]
 
 
-class PhotoFilters(RestHandler):
+class PhotoStart(RestHandler):
     def get(self):
-        collection = available_filters()
-        self.render(collection)
+        self.render({
+            'count': Photo.query().count(),
+            'filters': available_filters()
+        })
 
 
 class Find(RestHandler):
