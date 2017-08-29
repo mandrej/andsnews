@@ -123,20 +123,6 @@
           'getUserPhoto(user.photoURL)'
         ]
       }
-      // ready() {
-      //   super.ready();
-      //   const animation = this.$.first.animate([
-      //     { transform:'translateX(0%)', opacity: 1 },
-      //     { transform:'translateX(-100%)', opacity: 1 },
-      //     { transform:'translateX(-100%)', opacity: 0 }
-      //   ], { duration: 1500, delay: 4000 });
-
-      //   animation.finished.then(() => {
-      //     this.$.first.style.transform = 'translateX(-100%)';
-      //     this.$.first.style.opacity = 0;
-      //     this.$.first.style.display = 'none';
-      //   });
-      // }
       _url(path) {
         if (path === '/start') return '/api/start';
       }

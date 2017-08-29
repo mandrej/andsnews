@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sizes=(48 72 96 144 192 512)
+sizes=(48 96 144 192)
 
 for i in ${sizes[@]}; do
   file=manifest/icon-$i\x$i.png
@@ -8,7 +8,4 @@ for i in ${sizes[@]}; do
   echo $file
 done
 
-file=logo.png
-inkscape -z -e $file -w 192 -h 192 logo.svg
-echo $file
 exit 0
