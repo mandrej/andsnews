@@ -13,7 +13,7 @@ from google.appengine.ext import ndb, deferred
 from config import DEVEL, START_MSG
 from fireapi import push_message
 from mapper import Indexer, Builder, Fixer, RemoveIndex
-from models import Counter, Photo, Entry, INDEX, PHOTO_FILTER, ENTRY_FILTER
+from models import Counter, Photo, INDEX, PHOTO_FILTER
 from slugify import slugify
 
 LIMIT = 25
@@ -132,6 +132,8 @@ class Collection(RestHandler):
         #     paginator = Paginator(query, per_page=LIMIT)
         #     objects, token = paginator.page(page)  # [], None
 
+        if field == 'year':
+            value = int(value)
         query = Photo.query_for(field, value)
         paginator = Paginator(query, per_page=LIMIT)
         objects, token = paginator.page(page)  # [], None
@@ -157,7 +159,7 @@ def available_filters():
                 'repr_url': counter.repr_url,
                 'repr_stamp': counter.repr_stamp})
 
-        if field == 'date':
+        if field == 'year':
             items = sorted(items, key=itemgetter('name'), reverse=True)
         collection.extend(items)
 
@@ -203,8 +205,8 @@ class BackgroundIndex(RestHandler):
 
             if kind == 'photo':
                 runner.KIND = Photo
-            elif kind == 'entry':
-                runner.KIND = Entry
+            # elif kind == 'entry':
+            #     runner.KIND = Entry
 
             runner.TOKEN = token
             push_message(runner.TOKEN, START_MSG)
@@ -236,13 +238,13 @@ class BackgroundFix(RestHandler):
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
-        elif kind == 'entry' and token is not None:
-            runner = RemoveIndex()
-            runner.KIND = Entry
-            runner.TOKEN = token
-
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+        # elif kind == 'entry' and token is not None:
+        #     runner = RemoveIndex()
+        #     runner.KIND = Entry
+        #     runner.TOKEN = token
+        #
+        #     push_message(runner.TOKEN, START_MSG)
+        #     deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class BackgroundBuild(RestHandler):
@@ -253,8 +255,8 @@ class BackgroundBuild(RestHandler):
             runner = Builder()
             if kind == 'Photo':  # Title case!
                 runner.KIND = Photo
-            elif kind == 'Entry':
-                runner.KIND = Entry
+            # elif kind == 'Entry':
+            #     runner.KIND = Entry
 
             runner.VALUES = []
             runner.FIELD = field
@@ -278,29 +280,29 @@ class Crud(RestHandler):
             fs = data['file']
             obj = Photo(headline=fs.filename)
             res = obj.add(fs)
-        elif kind == 'entry':
-            obj = Entry(headline=data['headline'])
-            # fix tags
-            if 'tags' in data:
-                if data['tags'].strip() != '':
-                    tags = map(unicode.strip, data['tags'].split(','))
-                else:
-                    tags = []
-            else:
-                tags = []
-            data['tags'] = tags
-            # fix author
-            if 'author' in data:
-                email = data['author']
-                data['author'] = users.User(email=email)
-
-            # fix empty values
-            values = map(lambda x: x if x != '' else None, data.values())
-            data = dict(zip(data.keys(), values))
-            # fix date for entry only
-            dt = data['date'].strip()
-            data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%d')  # input type="date"
-            res = obj.add(data)
+        # elif kind == 'entry':
+        #     obj = Entry(headline=data['headline'])
+        #     # fix tags
+        #     if 'tags' in data:
+        #         if data['tags'].strip() != '':
+        #             tags = map(unicode.strip, data['tags'].split(','))
+        #         else:
+        #             tags = []
+        #     else:
+        #         tags = []
+        #     data['tags'] = tags
+        #     # fix author
+        #     if 'author' in data:
+        #         email = data['author']
+        #         data['author'] = users.User(email=email)
+        #
+        #     # fix empty values
+        #     values = map(lambda x: x if x != '' else None, data.values())
+        #     data = dict(zip(data.keys(), values))
+        #     # fix date for entry only
+        #     dt = data['date'].strip()
+        #     data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%d')  # input type="date"
+        #     res = obj.add(data)
 
         self.render(res)
 

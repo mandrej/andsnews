@@ -11,9 +11,9 @@ from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG
 from models import Counter, remove_doc
-from fireapi import Firebase, push_message
+from fireapi import push_message
 
-FB = Firebase()
+# FB = Firebase()
 
 
 class Mapper(object):
@@ -202,9 +202,6 @@ class Builder(Mapper):
 
     def _batch_write(self):
         prop = self.FIELD
-        if self.FIELD == 'date':
-            prop = 'year'
-
         values = (getattr(x, prop, None) for x in self.to_put)
         if prop == 'tags':
             values = list(itertools.chain(*values))
@@ -228,8 +225,8 @@ class Builder(Mapper):
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
                     obj.repr_url = latest.serving_url
-                elif kind == 'Entry':
-                    obj.repr_url = latest.front_img
+                # elif kind == 'Entry':
+                #     obj.repr_url = latest.front_img
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))

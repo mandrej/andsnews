@@ -131,8 +131,8 @@
                   <paper-ripple></paper-ripple>
                 </div>
                 <div class="action">
-                  <paper-chip hidden$="[[activeFilter('date', rec.year, filter)]]"
-                    on-tap="applyFilter" data-field="date"
+                  <paper-chip hidden$="[[activeFilter('year', rec.year, filter)]]"
+                    on-tap="applyFilter" data-field="year"
                     data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
                   <template is="dom-repeat" items="[[rec.tags]]" as="tag">
                     <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
@@ -232,6 +232,7 @@
       }
       activeFilter(field, value, filter) {
         if (filter) {
+          if (field === 'year') value = parseInt(value);
           return (filter.field === field && filter.value === value);
         } else {
           return false;
