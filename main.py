@@ -20,7 +20,7 @@ app = WSGIApplication([
     Route(r'/api/download/<safe_key>', handler=api.Download, methods=['GET']),
 
     Route(r'/api/index/<kind>', handler=api.BackgroundIndex, methods=['POST']),
-    # Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
+    Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
     Route(r'/api/fix/<kind>', handler=api.BackgroundFix, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
 

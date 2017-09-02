@@ -119,22 +119,71 @@ class RemoveIndex(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-# class Unbound(Mapper):
-#     TOKEN = None
-#
-#     def map(self, entity):
-#         return [entity], []
-#
-#     def _batch_write(self):
-#         for entity in self.to_put:
-#             if entity.serving_url is None:
-#                 push_message(self.TOKEN, '{}'.format(entity.filename))
-#                 # FB.post(path=self.CHANNEL_NAME, payload='%s' % entity.filename)
-#                 # entity.remove()
-#         self.to_put = []
-#
-#     def finish(self):
-#         push_message(self.TOKEN, END_MSG)
+class Unbound(Mapper):
+    """
+    import os
+    import cloudstorage as gcs
+    from google.appengine.api import app_identity
+    from google.appengine.ext import blobstore
+    from views.models import Photo
+
+    BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+
+    for s in gcs.listbucket(BUCKET, max_keys=100):
+      blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + s.filename))
+      p = Photo.query(Photo.blob_key == blob_key).get()
+      if p is None:
+        print 'delete %s' % s.filename
+        gcs.delete(s.filename)
+
+
+    for i in blobstore.BlobInfo.all():
+      blob_key = i.key()
+      p = Photo.query(Photo.blob_key == blob_key).get()
+      if p is None:
+        print 'delete %s' % i.filename
+        blobstore.delete(blob_key)
+    """
+    TOKEN = None
+
+    def map(self, stat):
+        return [], []
+
+    def _batch_write(self):
+        for stat in self.to_put:
+            push_message(self.TOKEN, '{}'.format(stat.filename))
+        self.to_put = []
+        for stat in self.to_delete:
+            push_message(self.TOKEN, '{}'.format(stat.filename))
+        self.to_delete = []
+
+    def _continue(self, marker, batch_size):
+        stats = gcs.listbucket(BUCKET + '/', max_keys=batch_size, marker=marker)
+        try:
+            for i, stat in enumerate(stats):
+                # map_updates, map_deletes = self.map(stat)
+                if not stat.is_dir:
+                    # blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + stat.filename))
+                    if stat.filename is None:
+                        self.to_delete.extend([stat])
+
+                    # self.to_put.extend(map_updates)
+                    # self.to_delete.extend(map_deletes)
+                # Do updates and deletes in batches.
+                if (i + 1) % batch_size == 0:
+                    self._batch_write()
+                # Record the last entity we processed.
+                marker = stat.etag
+            self._batch_write()
+        except (Timeout, DeadlineExceededError):
+            self._batch_write()
+            # Queue a new task to pick up where we left off.
+            deferred.defer(self._continue, marker, batch_size, _queue='background')
+            return
+        self.finish()
+
+    def finish(self):
+        push_message(self.TOKEN, END_MSG)
 
 
 class Fixer(Mapper):

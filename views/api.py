@@ -12,7 +12,7 @@ from google.appengine.ext import ndb, deferred
 
 from config import DEVEL, START_MSG
 from fireapi import push_message
-from mapper import Indexer, Builder, Fixer, RemoveIndex
+from mapper import Indexer, Builder, Fixer, Unbound
 from models import Counter, Photo, INDEX, PHOTO_FILTER
 from slugify import slugify
 
@@ -213,16 +213,15 @@ class BackgroundIndex(RestHandler):
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
-# class BackgroundUnbound(RestHandler):
-#     def post(self, kind):
-#         token = self.request.json.get('token', None)
-#         if kind == 'photo' and token is not None:
-#             runner = Unbound()
-#             runner.KIND = Photo
-#             runner.TOKEN = token
-#
-#             push_message(runner.TOKEN, START_MSG)
-#             deferred.defer(runner.run, batch_size=10, _queue='background')
+class BackgroundUnbound(RestHandler):
+    def post(self, kind):
+        token = self.request.json.get('token', None)
+        if kind == 'photo' and token is not None:
+            runner = Unbound()
+            runner.TOKEN = token
+
+            push_message(runner.TOKEN, START_MSG)
+            deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class BackgroundFix(RestHandler):

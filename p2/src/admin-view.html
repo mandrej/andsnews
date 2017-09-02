@@ -27,8 +27,7 @@
         margin-bottom: var(--user-gap);
       }
       paper-button[disabled] {
-        color: var(--dark-primary-color);
-        background: var(--default-primary-color);
+        color: var(--disabled-text-color);
       }
     </style>
 
@@ -37,7 +36,7 @@
       token="{{token}}"
       on-message="handleMessage"></firebase-messaging>
 
-    <firebase-document log
+    <firebase-document
       app-name="andsnews"
       path="/users/[[user.uid]]"
       data="{{data}}"></firebase-document>
@@ -72,8 +71,7 @@
               <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
             </template>
             <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-            <!-- <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-            <paper-button on-tap="fix" data-kind="entry" toggles raised>Remove Entry</paper-button> -->
+            <paper-button on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
           </div>
         </div>
         <div hidden$="[[pass]]">
