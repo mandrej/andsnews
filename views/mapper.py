@@ -129,6 +129,8 @@ class Unbound(Mapper):
 
     BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
 
+    Remove unbound images from google cloud storage
+
     for s in gcs.listbucket(BUCKET, max_keys=100):
       blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + s.filename))
       p = Photo.query(Photo.blob_key == blob_key).get()
@@ -136,6 +138,7 @@ class Unbound(Mapper):
         print 'delete %s' % s.filename
         gcs.delete(s.filename)
 
+    Remove unbound images from blobstore
 
     for i in blobstore.BlobInfo.all():
       blob_key = i.key()
@@ -143,6 +146,38 @@ class Unbound(Mapper):
       if p is None:
         print 'delete %s' % i.filename
         blobstore.delete(blob_key)
+
+    Migrate images from blobstore to google cloud storage
+
+    import os
+    import re
+    import uuid
+    import cloudstorage as gcs
+    from google.appengine.api import app_identity
+    from google.appengine.ext import blobstore
+    from views.models import Photo
+
+    BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+
+    for i in blobstore.BlobInfo.all():
+      blob_key = i.key()
+      p = Photo.query(Photo.blob_key == blob_key).get()
+      object_name = BUCKET + '/' + p.slug + '.jpg'
+      try:
+        gcs.stat(object_name)
+        object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], p.slug + '.jpg')
+      except gcs.NotFoundError:
+        pass
+
+      write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+      with gcs.open(object_name, 'w', content_type='image/jpeg', retry_params=write_retry_params) as f:
+        f.write(p.buffer)
+        blobstore.delete(p.blob_key)
+        p.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+        p.filename = object_name
+        p.size = f.tell()
+        print '%s done.' % object_name
+        p.put()
     """
     TOKEN = None
 
