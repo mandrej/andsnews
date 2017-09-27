@@ -3,7 +3,7 @@ from __future__ import division
 import unittest
 import math
 
-from models import Photo
+from views.models import Photo
 # from handlers import Paginator
 # from config import PHOTOS_PER_PAGE
 

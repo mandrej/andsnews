@@ -2,8 +2,8 @@ import unittest
 import cloudstorage as gcs
 from google.appengine.api import images
 from google.appengine.ext import blobstore
-from models import Photo
-from config import BUCKET
+from views.models import Photo
+from views.config import BUCKET
 
 
 class GCSTest(unittest.TestCase):

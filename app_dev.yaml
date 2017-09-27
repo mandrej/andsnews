@@ -54,6 +54,10 @@ handlers:
   upload: p2/index.html
   secure: always
 
+- url: /tests/.*
+  script: aeta.main.APP
+  secure: always
+
 - url: /.*
   static_files: p2/index.html
   upload: p2/index.html

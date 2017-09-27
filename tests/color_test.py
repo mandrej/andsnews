@@ -5,8 +5,8 @@ import numpy as np
 
 from colormath.color_objects import HSLColor, sRGBColor
 from colormath.color_conversions import convert_color
-from models import Photo
-from config import HUE
+from views.models import Photo
+from views.config import HUE
 
 
 class ColorTest(unittest.TestCase):
