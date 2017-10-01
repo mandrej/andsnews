@@ -21,9 +21,9 @@
       .square {
         float: left;
         position: relative;
-        width: calc((var(--user-width) - var(--user-gap)) / 6);
         box-sizing: border-box;
-        padding: 8px;
+        width: calc((100vw - var(--user-gap)) / 6);
+        padding: calc(var(--user-gap) / 2);
         @apply --no-select;
         cursor: pointer;
       }

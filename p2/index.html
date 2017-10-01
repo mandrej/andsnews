@@ -38,22 +38,22 @@
     <link rel="import" href="/src/app-shell.html">
 
     <style>
+      html { overflow: -moz-scrollbars-vertical; }
+      html, body { -ms-overflow-style: none; }
       body {
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
+        font-family: 'Roboto', Helvetica, sans-serif;
         line-height: 1.5;
         background-color: #fff;
       }
       ::-webkit-scrollbar {
         display: none;
       }
-      /* html, body { -ms-overflow-style: none; overflow: auto; } */
-      /* html { overflow: -moz-scrollbars-none; } */
     </style>
   </head>
   <body>
-    <app-shell unresolved></app-shell>
+    <app-shell></app-shell>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
