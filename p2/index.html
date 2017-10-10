@@ -35,6 +35,16 @@
         navigator.serviceWorker.register('/service-worker.js', {scope: '/'});
       }
     </script>
+    <script>
+      //Force all polyfills on for Edge 15
+      if (window.navigator.userAgent.indexOf("Edge") > -1) {
+        if (window.customElements) {
+          window.customElements.forcePolyfill = true;
+        }
+        ShadyDOM = { force: true };
+        ShadyCSS = { shimcssproperties: true };
+      }
+    </script>
     <link rel="import" href="/src/app-shell.html">
 
     <style>
