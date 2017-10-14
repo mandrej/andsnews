@@ -23,6 +23,7 @@ case $1 in
     exit ;;
   deploy)
     version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
+    sed -i -E "/target/s/[[:digit:]]{12}/$version/g" "queue.yaml"
     gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/app.yaml \
     index.yaml dos.yaml queue.yaml
     exit ;;
