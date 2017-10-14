@@ -51,5 +51,4 @@ inbound_services:
 skip_files:
 - ^bower_components
 - ^node_modules
-- ^build/bundled
 - ^(src|test|images)

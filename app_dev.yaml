@@ -1,4 +1,5 @@
 application: andsnews
+service: api
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -36,8 +37,6 @@ skip_files:
 - ^(.*/)?.*~$
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
-- lib/PIL*
 - ^docs
 - ^p2/(src|test|images)
 - ^p2/bower_components
-- ^client
