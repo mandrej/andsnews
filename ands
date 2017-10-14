@@ -23,7 +23,7 @@ case $1 in
     exit ;;
   deploy)
     version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
-    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/build/default/app.yaml \
+    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/app.yaml \
     index.yaml dos.yaml queue.yaml
     exit ;;
   *)
