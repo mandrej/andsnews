@@ -1,4 +1,10 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 
@@ -6,36 +12,34 @@
   <template>
     <style include="shared-styles">
       :host {
-        display: block
-      }
-      vaadin-upload {
-        --vaadin-upload-button-add: {
-          font-size: inherit;
-          color: var(--primary-background-color);
-          background-color: var(--accent-color);
-          @apply(--shadow-elevation-2dp);
-        }
+        display: block;
       }
     </style>
 
-    <app-header-layout fullbleed>
-      <app-header fixed slot="header">
+    <app-header-layout class="big" fullbleed>
+      <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Add</h1>
+          <h4 condensed-title>[[title]]</h4>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>[[title]]</h1>
         </app-toolbar>
       </app-header>
 
       <paper-toast id="toast"></paper-toast>
 
       <div class="container">
-        <div hidden$="[[!isAuthorized]]">
+        <div hidden$="[[!pass]]">
           <vaadin-upload id="upload"
             target="/api/photo/add"
             max-files="10"
             on-upload-response="_uploadResponse"
             accept="image/*"></vaadin-upload>
           <p>See <a href="#/list/tags/new">new uploaded files</a> and continue editing.</p>
+        </div>
+        <div hidden$="[[pass]]">
+          <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
         </div>
       </div>
       <footer><slot name="copy"></slot></footer>
@@ -45,6 +49,23 @@
   <script>
     class AddView extends Polymer.Element {
       static get is() { return 'add-view'; }
+      static get properties() {
+        return {
+          title: { type: String, value: 'Authorization Required' },
+          pass: { type: Boolean, value: false }
+        };
+      }
+      static get observers() {
+        return [
+          'setPass(isAuthorized)'
+        ]
+      }
+      setPass(isAuthorized) {
+        if (isAuthorized === true) {
+          this.title = 'Add';
+          this.pass = true;
+        }
+      }
       _uploadResponse(e) {
         var res = JSON.parse(e.detail.xhr.responseText),
           toast = this.$.toast;
@@ -60,7 +81,6 @@
         window.history.go(-1);
       }
     }
-
     window.customElements.define(AddView.is, AddView);
   </script>
 </dom-module>

@@ -1,6 +1,13 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
@@ -32,16 +39,19 @@
       @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
     </style>
 
-    <app-header-layout fullbleed>
-      <app-header fixed slot="header">
+    <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
+
+    <app-header-layout class="big" fullbleed>
+      <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <h4 condensed-title>Find</h4>
+        </app-toolbar>
+        <app-toolbar>
           <h1 main-title>Find</h1>
         </app-toolbar>
       </app-header>
-
-      <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
-      <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
 
       <iron-form id="findForm">
         <form method="get">

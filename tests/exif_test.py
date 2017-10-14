@@ -2,7 +2,7 @@ import unittest
 from cStringIO import StringIO
 
 from exifread import process_file
-from models import Photo
+from views.models import Photo
 from timer import Timer
 
 

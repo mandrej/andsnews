@@ -1,7 +1,7 @@
 import unittest
 
-from models import rounding
-from config import ASA
+from views.models import rounding
+from views.config import ASA
 
 
 class MiscTest(unittest.TestCase):

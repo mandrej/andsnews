@@ -4,12 +4,15 @@
   "fragments": [
     "src/shared-styles.html",
     "src/common-resources.html",
+    "src/start-view.html",
     "src/search-view.html",
     "src/list-view.html",
     "src/item-view.html",
     "src/add-view.html",
     "src/edit-view.html",
-    "src/admin-view.html"
+    "src/admin-view.html",
+    "src/app-analytics.html",
+    "src/notfound-view.html"
   ],
   "sources": [
     "src/**/*",

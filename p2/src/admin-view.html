@@ -1,5 +1,13 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -16,11 +24,10 @@
       }
       paper-button {
         min-width: 175px;
-        margin-bottom: 16px;
+        margin-bottom: var(--user-gap);
       }
       paper-button[disabled] {
-        color: var(--dark-primary-color);
-        background: var(--default-primary-color);
+        color: var(--disabled-text-color);
       }
     </style>
 
@@ -30,40 +37,45 @@
       on-message="handleMessage"></firebase-messaging>
 
     <firebase-document
-      log="true"
       app-name="andsnews"
-      path="/users/[[user.uid]]/token"
-      data="[[token]]"></firebase-document>
+      path="/users/[[user.uid]]"
+      data="{{data}}"></firebase-document>
 
     <iron-ajax auto
-      url="[[_url(isAuthorized)]]"
+      url="[[_url(pass)]]"
       last-response="{{info}}"></iron-ajax>
 
     <iron-ajax id="xhr"
       content-type="application/json"
       method="POST"></iron-ajax>
 
-    <app-header-layout fullbleed>
-      <app-header fixed slot="header">
+    <app-header-layout class="big" fullbleed>
+      <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>Maintenance</h1>
+          <h4 condensed-title>[[title]]</h4>
+          <div>[[user.email]]</div>
+        </app-toolbar>
+        <app-toolbar>
+          <h1 main-title>[[title]]</h1>
         </app-toolbar>
       </app-header>
 
       <div class="container">
         <paper-toast id="toast"></paper-toast>
 
-        <div hidden$="[[!isAuthorized]]">
+        <div hidden$="[[!pass]]">
           <h1>Photo [[info.photo.count]]</h1>
           <div class="layout horizontal justified wrap">
             <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
               <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
             </template>
             <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-            <!-- <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-            <paper-button on-tap="fix" data-kind="entry" toggles raised>Remove Entry</paper-button> -->
+            <paper-button on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
           </div>
+        </div>
+        <div hidden$="[[pass]]">
+          <p>Go <a href="#/start">Home</a> and Sign-In with your Google Account</p>
         </div>
       </div>
       <footer><slot name="copy"></slot></footer>
@@ -73,9 +85,37 @@
   <script>
     class AdminView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'admin-view'; }
-      _url(isAuthorized) {
-        const rx = /^\/maintenance/;
-        if (rx.test(this.route.path) && isAuthorized) {
+      static get properties() {
+        return {
+          title: { type: String, value: 'Authorization Required' },
+          pass: { type: Boolean, value: false },
+          data: Object
+        };
+      }
+      static get observers() {
+        return [
+          'setPass(isAuthorized)',
+          'userData(user)'
+        ]
+      }
+      setPass(isAuthorized) {
+        if (isAuthorized === true) {
+          this.title = 'Maintenance';
+          this.pass = true;
+        }
+      }
+      userData(user) {
+        const d = new Date();
+        if (user) {
+          this.data = {
+            email: user.email,
+            date: d.toISOString()
+          }
+        }
+      }
+      _url(pass) {
+        const rx = /^\/admin/;
+        if (rx.test(this.route.path) && pass) {
           return '/api/info';
         }
       }

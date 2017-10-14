@@ -4,11 +4,11 @@ from views import api
 from views.config import DEVEL
 app = WSGIApplication([
     Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
-    Route(r'/api/filters', handler=api.PhotoFilters),
+    Route(r'/api/start', handler=api.PhotoStart),
     Route(r'/api/search/<find>', handler=api.Find),
 
     Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),
-    Route(r'/api/<kind:(photo|entry)>/<field:(date|tags|color|model|author|key)>/<value>',
+    Route(r'/api/<kind:(photo|entry)>/<field:(year|tags|color|model|author|key)>/<value>',
           handler=api.Collection),
 
     Route(r'/api/info', handler=api.Info, methods=['GET']),         # 1
@@ -20,7 +20,7 @@ app = WSGIApplication([
     Route(r'/api/download/<safe_key>', handler=api.Download, methods=['GET']),
 
     Route(r'/api/index/<kind>', handler=api.BackgroundIndex, methods=['POST']),
-    # Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
+    Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
     Route(r'/api/fix/<kind>', handler=api.BackgroundFix, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
 

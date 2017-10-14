@@ -3,25 +3,27 @@
 <dom-module id="shared-styles">
   <template>
     <style include="iron-flex iron-flex-alignment">
-      /*grey/deep orange*/
       :root {
-        --dark-primary-color:       #616161;
-        --default-primary-color:    #9E9E9E;
-        --light-primary-color:      #F5F5F5;
-        --text-primary-color:       #212121;
-        --accent-color:             #FF5722;
-        --primary-background-color: #F5F5F5;
+        --dark-primary-color:       #303F9F;
+        --default-primary-color:    #3F51B5; /* indigo 500 */
+        --light-primary-color:      #C5CAE9;
+        --text-primary-color:       #FFFFFF;
+        --accent-color:             #FF4081; /* pink A200 */
+        --primary-background-color: #C5CAE9;
         --primary-text-color:       #212121;
         --secondary-text-color:     #757575;
         --disabled-text-color:      #BDBDBD;
         --divider-color:            #BDBDBD;
+        --error-color:              #C2185B;
 
-        --error-color:              #d32f2f;
-        --primary-color:            var(---text-primary-color);
+        --user-gap:                 16px;
+        --no-select: {
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -webkit-user-select: none;
+          user-select: none;
+        };
       }
-      /* ::-webkit-scrollbar {
-        display: none;
-      } */
       [hidden] {
         display: none !important;
       }
@@ -29,11 +31,18 @@
         outline: none;
       }
       a {
-        color: var(--accent-color);
+        color: var(--default-primary-color);
       }
       app-header {
         color: var(--text-primary-color);
-        background-color: var(--light-primary-color);
+        background-color: var(--default-primary-color);
+        background-image: url(../images/logo.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: var(--user-gap) 0;
+      }
+      app-toolbar {
+        padding: 0 var(--user-gap);
       }
       app-toolbar a {
         display: inline-block;
@@ -53,6 +62,7 @@
       }
       paper-dialog {
         max-width: 400px;
+        background-color: #fff;
         --paper-dialog-title: {
           white-space: normal;
           text-align: center;
@@ -67,13 +77,21 @@
       }
       paper-fab,
       paper-button {
-        color: var(--light-primary-color);
+        color: var(--text-primary-color);
         background-color: var(--accent-color);
+      }
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--text-primary-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
       }
       paper-fab {
         position: absolute;
-        top: 80px;
-        right: 16px;
+        top: calc(64px + (var(--user-gap) / 2));
+        right: calc(var(--user-gap) / 2);
       }
       paper-dialog paper-button {
         color: var(--primary-text-color);
@@ -90,10 +108,12 @@
         --paper-toast-color: var(--text-primary-color);
         --paper-toast-background-color: var(--default-primary-color);
       }
+      paper-ripple {
+        color: #fff;
+      }
       iron-image {
-        /* background-color: var(--primary-background-color); */
         --iron-image-placeholder: {
-          background-color: var(--primary-background-color);
+          background-color: #fff;
         };
       }
       iron-image.thumbnail {
@@ -101,11 +121,13 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background-color: transparent;
+        --iron-image-placeholder: {
+          background-color: transparent;
+        };
       }
       .container {
         @apply --layout-flex;
-        padding: 16px;
+        padding: var(--user-gap);
       }
       footer {
         height: 50px;

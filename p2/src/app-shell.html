@@ -1,19 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-
-<link rel="import" href="common-resources.html">
+<link rel="import" href="start-view.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
@@ -22,47 +14,6 @@
       :host {
         display: block;
       }
-      iron-list {
-         @apply --layout-flex;
-      }
-      .square {
-        position: relative;
-        width: calc(100vw / 6);
-        cursor: pointer;
-      }
-      .square::after {
-        content: "";
-        display: block;
-        padding-bottom: 100%;
-      }
-      .square iron-image {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-      .square .title {
-        @apply --layout-horizontal;
-        @apply --layout-justified;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: var(--primary-background-color);
-        font-size: 20px;
-        padding: 16px;
-        text-overflow: ellipsis;
-      }
-      .square .title > * {
-        @apply --layout-self-center;
-      }
-
-      @media (max-width: 1440px) { .square { width: 20vw; }}
-      @media (max-width: 1024px) { .square { width: 25vw; }}
-      @media (max-width: 768px)  { .square { width: calc(100vw / 3); }}
-      @media (max-width: 432px)  { .square { width: 50vw; }}
     </style>
 
     <app-location route="{{route}}" use-hash-as-path></app-location>
@@ -86,58 +37,26 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
-    <paper-dialog id="authorizationDialog"
-      entry-animation="scale-up-animation"
-      exit-animation="fade-out-animation">
-      <h2>Authorization Required</h2>
-      <p>Go <a href="#/start">Home</a> and Sign-In
-        <br>with your Google Account<br></p>
-    </paper-dialog>
-
-    <iron-pages selected="{{dataView.view}}" attr-for-selected="view">
-      <app-header-layout view="start" fullbleed>
-        <app-header reveals slot="header">
-          <app-toolbar>
-            <h4 condensed-title></h4>
-            <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-              <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
-            </a>
-            <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-          </app-toolbar>
-          <app-toolbar>
-            <h1 main-title>ANDрејевићи</h1>
-            <paper-icon-button icon="search" on-tap="findForm"></paper-icon-button>
-            <paper-fab hidden$="[[!isAuthorized]]" mini icon="add" on-tap="addRecord"></paper-fab>
-          </app-toolbar>
-        </app-header>
-
-        <iron-ajax url="/api/filters" last-response="{{data}}" auto></iron-ajax>
-
-        <iron-list items="[[data]]" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
-                <iron-image
-                  src="[[checkImage(rec)]]"
-                  preload fade
-                  sizing="cover"></iron-image>
-                <div class="title">
-                  <span>[[rec.name]]</span>
-                  <span>[[rec.count]]</span>
-                </div>
-              </div>
-            </div>
-            </template>
-        </iron-list>
-
-        <footer>[[copy]]</footer>
-      </app-header-layout>
+    <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
+      <start-view
+        view="start"
+        user="[[user]]"
+        is-authorized="[[isAuthorized]]"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </start-view>
 
       <search-view
         view="search"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </search-view>
+
+      <notfound-view
+        view="404"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </notfound-view>
 
       <add-view
         view="add"
@@ -147,7 +66,8 @@
       </add-view>
 
       <admin-view
-        view="maintenance"
+        view="admin"
+        user="[[user]]"
         is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
@@ -177,80 +97,40 @@
   </template>
 
   <script>
-    class AppShell extends Polymer.GestureEventListeners(Polymer.Element) {
+    class AppShell extends Polymer.Element {
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201708191153' },
+          version: { type: String, value: '201710131143' },
+          user: { type: Object, notify: true },
+          userPhoto: String,
+          isAuthorized: { type: Boolean, value: false, notify: true },
           copy: {
             type: String,
             computed: 'copywrite(version)'
           },
-          user: { type: Object, notify: true },
-          userPhoto: String
+          _listScrollTop: { type: Number, value: 0 }
         };
       }
       static get observers() {
         return [
-          'viewChanged(dataView.view)',
-          'getUserPhoto(user.photoURL)'
+          '_routeViewChanged(dataView.view)'
         ]
       }
-      ready() {
-        super.ready();
-        console.log(this.route);
+      connectedCallback() {
+        super.connectedCallback();
         if (!this.route.path) {
           this.set('route.path', '/start');
         }
-        Polymer.RenderStatus.afterNextRender(this, () => {
-          this.removeAttribute('unresolved');
-        });
+        this.addEventListener('sign', this.signHandler);
+        this.addEventListener('kick', this.setScrollTop);
       }
-      viewChanged(view) {
-        const dialog = this.$.authorizationDialog;
-        switch (view) {
-          case 'list':
-            Polymer.importHref('src/list-view.html');
-            break;
-          case 'add':
-            Polymer.importHref('src/add-view.html', () => {
-              if (!this.isAuthorized) dialog.open();
-            }, null, true);
-            break;
-          case 'item':
-            Polymer.importHref('src/item-view.html');
-            break;
-          case 'edit':
-            Polymer.importHref('src/edit-view.html', () => {
-              if (!this.isAuthorized) dialog.open();
-            }, null, true);
-            break;
-          case 'search':
-            Polymer.importHref('src/search-view.html');
-            break;
-          case 'maintenance':
-            Polymer.importHref('src/admin-view.html', () => {
-              if (!this.isAuthorized) dialog.open();
-            }, null, true);
-            break;
-        }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('sign', this.signHandler, true);
+        this.removeEventListener('kick', this.setScrollTop, true);
       }
-      getUserPhoto(url) {
-        if (url) this.userPhoto = url;
-      }
-      checkImage(rec) {
-        if (rec.repr_url) return rec.repr_url + '=s400-c';
-      }
-      showList(e) {
-        this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
-      }
-      addRecord() {
-        this.set('route.path', '/add');
-      }
-      findForm() {
-        this.set('route.path', '/search');
-      }
-      _sign() {
+      signHandler() {
         if (this.user) {
           this.$.auth.signOut();
         } else {
@@ -263,11 +143,41 @@
             });
         }
       }
+      setScrollTop(e) {
+        this._listScrollTop = e.detail.top;
+      }
+      _routeViewChanged(view) {
+        if (!view) return; // undefined
+        let scrollTop = 0;
+        if (view === 'list') {
+          scrollTop = this._listScrollTop;
+        }
+
+        const cb = this._ensureLazyLoaded.bind(this);
+        Polymer.importHref(
+          this.resolveUrl(view + '-view.html'),
+          cb, cb, true);
+
+        Polymer.Async.timeOut.run(() => {
+          Polymer.AppLayout.scroll({ top: scrollTop, behavior: 'silent' });
+        }, 20);
+      }
+      _ensureLazyLoaded() {
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this, () => {
+            Polymer.importHref(
+              this.resolveUrl('common-resources.html'), () => {
+                this.loadComplete = true;
+                this.removeAttribute('unresolved');
+              }
+            );
+          });
+        }
+      }
       copywrite(version) {
         return 'ANDS 2008-' + version.match(/.{1,4}/g).join('.');
       }
     }
-
     window.customElements.define(AppShell.is, AppShell);
   </script>
 </dom-module>
