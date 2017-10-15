@@ -3,34 +3,56 @@ home=/home/milan
 python=$home/venv/andsnews/bin/python
 dev_appserver=/home/milan/google-cloud-sdk/platform/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
-stamp=`date +%Y%m%d%H%M`
-file="p2/src/app-shell.html"
+
+api_version=`date +%Y%m%d%H%M`
+client="p2"
+client_version=`date +%Y%m%d%H%M`
+client_shell="$client/src/app-shell.html"
 
 # If you deploy a version that specifies the same version ID as a version that already exists on App Engine,
 # the files that you deploy will overwrite the existing version. This can be problematic if the version is
 # serving traffic because traffic to your application might be disrupted. You can avoid disrupting traffic
 # if you deploy your new version with a different version ID and then move traffic to that version.
 
-case $1 in
-  devel)
-    $python $dev_appserver --storage_path=$storage dispatch.yaml app_dev.yaml p2/app_dev.yaml
-    exit ;;
-  build)
-    sed -i -E "/version/s/[[:digit:]]{12}/$stamp/g" $file
-    cd p2
-    polymer build
-    cd ..
-    exit ;;
-  deploy)
-    version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
-    sed -i -E "/target/s/[[:digit:]]{12}/$version/g" "queue.yaml"
-    gcloud app deploy --project=andsnews --version=$version dispatch.yaml app.yaml p2/app.yaml \
-    index.yaml dos.yaml queue.yaml
-    exit ;;
-  *)
-    version=$(grep -oP 'version.+\K([[:digit:]]{12})' $file)
-    echo $"Usage: $0 devel  - Run development server"
-    echo $"       $0 build  - Run polymer build"
-    echo $"       $0 deploy - Deploy app version $version"
-    exit 1
-esac
+function syntax {
+  echo $"Usage:"
+  echo $"$0 devel         - Run development server"
+  echo $"$0 build         - Polymer build client"
+  echo $"$0 deploy api    - Deploy api version $api_version"
+  echo $"$0 deploy client - Deploy client version $client_version"
+  exit 1
+}
+
+if [ $# -eq 0 ]
+  then
+    syntax
+else
+  case $1 in
+    devel)
+      $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml app_dev.yaml $client/app_dev.yaml
+      exit ;;
+    build)
+      sed -i -E "/version/s/[[:digit:]]{12}/$client_version/g" $client_shell
+      cd $client
+      polymer build
+      cd ..
+      exit ;;
+    deploy)
+      case $2 in
+        api)
+          sed -i -E "/target/s/[[:digit:]]{12}/$api_version/g" "queue.yaml"
+          echo gcloud app deploy --project=andsnews --version=$api_version dispatch.yaml app.yaml index.yaml dos.yaml queue.yaml
+          exit ;;
+        client)
+          client_version=$(grep -oP 'version.+\K([[:digit:]]{12})' $client_shell)
+          echo gcloud app deploy --project=andsnews --version=$client_version $client/app.yaml
+          exit ;;
+        *)
+          echo
+          echo $"Provide service to deploy: api/ client"
+          exit 1
+      esac ;;
+    *)
+      syntax
+  esac
+fi
