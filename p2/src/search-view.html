@@ -66,7 +66,7 @@
             <li class="item">
               <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
                 closable
-                _items="[[item.tags]]"
+                items="[[item.tags]]"
                 source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
             </li>
             <li class="item">
@@ -114,12 +114,11 @@
         this.$.findForm.submit();
       }
       _submit(e) {
-        // console.log(e.detail);
         let params = [];
         if (e.detail.find_text) {
           params.push(e.detail.find_text)
         }
-        this.$.tags._items.forEach((tag) => {
+        this.$.tags.items.forEach((tag) => {
           params.push('tags:' + tag)
         })
         if (e.detail.find_year) {

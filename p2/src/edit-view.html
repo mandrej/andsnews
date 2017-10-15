@@ -57,11 +57,9 @@
 
               <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
                 closable
-                _items="[[item.tags]]"
+                additional-items
+                items="[[item.tags]]"
                 source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
-
-              <paper-chip-input name="new_tags" label="new tags" id="new_tags"
-                closable></paper-chip-input>
 
               <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
 
@@ -115,7 +113,7 @@
       _url(safekey) {
         const rx = /^\/edit/;
         if (rx.test(this.route.path)) {
-          return ['/api', safekey].join('/');_submit
+          return ['/api', safekey].join('/');
         }
       }
       listObjects(tags) {
@@ -126,10 +124,8 @@
         return list;
       }
       _preSubmit() {
-        const form = this.$.editForm,
-          old_tags = this.$.tags._items,
-          new_tags = this.$.new_tags.items;
-        form.request.params['tags'] = old_tags.concat(new_tags).join(',');
+        const form = this.$.editForm;
+        form.request.params['tags'] = this.$.tags.items.join(',');
       }
       _submit() {
         this.$.editForm.submit();
