@@ -6,7 +6,7 @@ default_expiration: "0s"
 
 instance_class: F1
 automatic_scaling:
-  min_idle_instances: 1
+  max_idle_instances: 1
 
 libraries:
 - name: webapp2
@@ -35,9 +35,9 @@ handlers:
   upload: build/default/(service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
 
-- url: /_ah/warmup
-  script: main.app
-  secure: always
+# - url: /_ah/warmup
+#   script: main.app
+#   secure: always
 
 - url: /.*
   static_files: build/default/index.html
