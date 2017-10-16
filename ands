@@ -41,11 +41,11 @@ else
       case $2 in
         api)
           sed -i -E "/target/s/[[:digit:]]{12}/$api_version/g" "queue.yaml"
-          echo gcloud app deploy --project=andsnews --version=$api_version dispatch.yaml app.yaml index.yaml dos.yaml queue.yaml
+          gcloud app deploy --project=andsnews --version=$api_version dispatch.yaml app.yaml index.yaml dos.yaml queue.yaml
           exit ;;
         client)
           client_version=$(grep -oP 'version.+\K([[:digit:]]{12})' $client_shell)
-          echo gcloud app deploy --project=andsnews --version=$client_version $client/app.yaml
+          gcloud app deploy --project=andsnews --version=$client_version $client/app.yaml
           exit ;;
         *)
           echo
