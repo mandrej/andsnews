@@ -26,11 +26,10 @@ TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>m
 
 
 def get_key(url_safe_str):
+    # https://github.com/googlecloudplatform/datastore-ndb-python/issues/143
     key = None
     try:
         key = ndb.Key(urlsafe=url_safe_str)
-    except TypeError:
-        pass
     except ProtocolBufferDecodeError:
         pass
     return key
