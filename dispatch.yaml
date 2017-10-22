@@ -8,5 +8,5 @@ dispatch:
 - url: "*/sitemap.xml"
   service: api
 
-- url: "*/*"
+- url: "*/client/*"
   service: default

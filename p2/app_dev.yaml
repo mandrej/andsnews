@@ -32,10 +32,6 @@ handlers:
   upload: (service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
 
-# - url: /_ah/warmup
-#   script: main.app
-#   secure: always
-
 - url: /.*
   static_files: index.html
   upload: index.html

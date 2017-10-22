@@ -32,7 +32,7 @@ handlers:
   script: aeta.main.APP
   secure: always
 
-- url: /api/.*
+- url: /.*
   script: main.app
   secure: always
 
