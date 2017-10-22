@@ -9,6 +9,7 @@ import webapp2
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
+from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
 from fireapi import push_message
@@ -22,6 +23,16 @@ TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
 TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
 <priority>0.3</priority></url>"""
+
+
+def get_key(url_safe_str):
+    # https://github.com/googlecloudplatform/datastore-ndb-python/issues/143
+    key = None
+    try:
+        key = ndb.Key(urlsafe=url_safe_str)
+    except ProtocolBufferDecodeError:
+        pass
+    return key
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -268,10 +279,10 @@ class BackgroundBuild(RestHandler):
 
 class Crud(RestHandler):
     def get(self, safe_key=None):
-        obj = ndb.Key(urlsafe=safe_key).get()
-        if obj is None:
+        key = get_key(safe_key)
+        if key is None:
             self.abort(404)
-        self.render(obj)
+        self.render(key.get())
 
     def post(self, kind=None):
         data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
@@ -306,9 +317,10 @@ class Crud(RestHandler):
         self.render(res)
 
     def put(self, kind=None, safe_key=None):
-        obj = ndb.Key(urlsafe=safe_key).get()
-        if obj is None:
+        key = get_key(safe_key)
+        if key is None:
             self.abort(404)
+        obj = key.get()
 
         data = dict(self.request.params)
         # fix tags
@@ -346,23 +358,23 @@ class Crud(RestHandler):
         obj.edit(data)
 
     def delete(self, safe_key):
-        obj = ndb.Key(urlsafe=safe_key).get()
-        if obj is None:
+        key = get_key(safe_key)
+        if key is None:
             self.abort(404)
-
-        obj.remove()
+        key.get().remove()
 
 
 class Download(webapp2.RequestHandler):
     def get(self, safe_key):
-        key = ndb.Key(urlsafe=safe_key)
+        key = get_key(safe_key)
+        if key is None:
+            self.abort(404)
         obj = key.get()
-        buff = obj.buffer
         self.response.headers = {
             'Content-Type': 'image/jpeg',
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
-        self.response.write(buff)
+        self.response.write(obj.buffer)
 
 
 class SiteMap(webapp2.RequestHandler):
