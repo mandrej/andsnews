@@ -194,7 +194,6 @@ class PhotoRecent(RestHandler):
         objects, token = paginator.page(page)  # [], None
 
         self.render({
-            'count': Photo.query().count(),
             'objects': objects,
             '_page': page,
             '_next': token
@@ -204,6 +203,7 @@ class PhotoRecent(RestHandler):
 class PhotoFilters(RestHandler):
     def get(self):
         self.render({
+            'count': Photo.query().count(),
             'filters': available_filters()
         })
 

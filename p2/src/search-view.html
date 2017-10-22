@@ -39,8 +39,8 @@
       @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
     </style>
 
-    <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" id="ajax_model"></iron-ajax>
 
     <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
@@ -67,7 +67,7 @@
               <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
                 closable
                 items="[[item.tags]]"
-                source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+                source="[[tags]]"></paper-chip-input-autocomplete>
             </li>
             <li class="item">
               <paper-input name="find_year" label="in year" type="number"
@@ -78,10 +78,10 @@
                 auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
             </li>
             <li class="item">
-              <vaadin-combo-box name="find_model" label="by camera"
+              <vaadin-combo-box name="find_model" label="by camera" id="models"
                 auto-validate
                 allow-custom-value="false"
-                items="[[modelCloud]]"></vaadin-combo-box>
+                items="[[models]]"></vaadin-combo-box>
             </li>
             <li class="item">
               <vaadin-combo-box name="find_author" label="by author"
@@ -99,16 +99,37 @@
   <script>
     class SearchView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'search-view'; }
+      static get properties() {
+        return {
+          tags: { type: Array, value:[], notify: true },
+          models: { type: Array, value:[], notify: true },
+        };
+      }
       connectedCallback() {
         super.connectedCallback();
+        this.$.tags.addEventListener('focus', (e) => this._getTags(e));
+        this.$.models.addEventListener('focus', (e) => this._getModels(e));
         this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
-      listObjects(tags) {
-        const list = [];
-        tags.forEach((tag) => {
-          list.push({text: tag, value: tag});
+      _getTags(e) {
+        if (this.tags.length === 0) {
+          this.$.ajax_tags.generateRequest();
+        }
+      }
+      _getModels(e) {
+        if (this.models.length === 0) {
+          this.$.ajax_model.generateRequest();
+        }
+      }
+      listTags(e) {
+        e.detail.response.forEach((tag) => {
+          this.push('tags', {text: tag, value: tag});
         });
-        return list;
+      }
+      listModels(e) {
+        e.detail.response.forEach((model) => {
+          this.push('models', model);
+        });
       }
       onSubmit(e) {
         this.$.findForm.submit();

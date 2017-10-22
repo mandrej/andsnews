@@ -87,8 +87,13 @@
       </app-header>
 
       <div class="flex horizontal wrap">
+        <div class="square first" id="first">
+          <div class="title">
+            <div style="text-align: center">Album contains [[data.count]] photos and counting…</div>
+          </div>
+        </div>
         <template is="dom-repeat" items="[[data.filters]]" as="rec">
-          <div class="square" data-field$="[[rec.field_name]]" on-tap="showList" tabindex$="[[tabIndex]]">
+          <div class="square" on-tap="showList" tabindex$="[[tabIndex]]">
             <iron-image
               src="[[checkImage(rec)]]"
               preload fade
