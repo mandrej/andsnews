@@ -46,6 +46,14 @@
         <span slot="copy">[[copy]]</span>
       </start-view>
 
+      <filters-view
+        view="filters"
+        user="[[user]]"
+        is-authorized="[[isAuthorized]]"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </filters-view>
+
       <search-view
         view="search"
         route="{{route}}">
@@ -149,7 +157,7 @@
       _routeViewChanged(view) {
         if (!view) return; // undefined
         let scrollTop = 0;
-        if (view === 'list') {
+        if (view === 'start' || view === 'list') {
           scrollTop = this._listScrollTop;
         }
 

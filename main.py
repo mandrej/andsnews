@@ -4,7 +4,8 @@ from views import api
 from views.config import DEVEL
 app = WSGIApplication([
     Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
-    Route(r'/api/start', handler=api.PhotoStart),
+    Route(r'/api/start', handler=api.PhotoRecent),
+    Route(r'/api/filters', handler=api.PhotoFilters),
     Route(r'/api/search/<find>', handler=api.Find),
 
     Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),

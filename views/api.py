@@ -184,10 +184,26 @@ def available_filters():
     return [x for x in collection if x['show']]
 
 
-class PhotoStart(RestHandler):
+class PhotoRecent(RestHandler):
     def get(self):
+        page = self.request.get('_page', None)
+        token = None
+
+        query = Photo.query().order(-Photo.date)
+        paginator = Paginator(query, per_page=LIMIT)
+        objects, token = paginator.page(page)  # [], None
+
         self.render({
             'count': Photo.query().count(),
+            'objects': objects,
+            '_page': page,
+            '_next': token
+        })
+
+
+class PhotoFilters(RestHandler):
+    def get(self):
+        self.render({
             'filters': available_filters()
         })
 

@@ -93,7 +93,7 @@
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-    <app-header-layout class="big" fullbleed>
+    <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -268,7 +268,7 @@
       //   if (ajax.lastRequest) ajax.lastRequest.abort();
       // }
       goBack() {
-        this.set('route.path', '/start');
+        window.history.go(-1);
       }
     }
 
