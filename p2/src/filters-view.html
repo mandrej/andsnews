@@ -109,8 +109,6 @@
 
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
-
-    <app-analytics key="UA-8994922-1"></app-analytics>
   </template>
 
   <script>
@@ -120,7 +118,7 @@
         if (path === '/filters') return '/api/filters';
       }
       checkImage(rec) {
-        if (rec.repr_url) return rec.repr_url + '=s400-c';
+        if (rec && rec.repr_url) return rec.repr_url + '=s400-c';
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));

@@ -144,7 +144,7 @@
         if (url) this.userPhoto = url;
       }
       checkImage(rec) {
-        if (rec.serving_url) return rec.serving_url + '=s400-c';
+        if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
       }
       showView(e) {
         const top = window.pageYOffset;
