@@ -75,7 +75,7 @@
       <admin-view
         view="admin"
         user="[[user]]"
-        is-authorized="[[isAuthorized]]"
+        is-admin="[[isAdmin]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </admin-view>
@@ -97,7 +97,7 @@
 
       <list-view
         view="list"
-        is-authorized="[[isAuthorized]]"
+        is-admin="[[isAdmin]]"
         field="{{dataFilter.field}}"
         value="{{dataFilter.value}}"
         route="{{route}}"></list-view>
@@ -109,10 +109,11 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201710231224' },
+          version: { type: String, value: '201710231538' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
+          isAdmin: { type: Boolean, value: false, notify: true },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -122,7 +123,8 @@
       }
       static get observers() {
         return [
-          '_routeViewChanged(dataView.view)'
+          '_routeViewChanged(dataView.view)',
+          '_userIsAdmin(user)'
         ]
       }
       connectedCallback() {
@@ -150,6 +152,9 @@
               console.log(error);
             });
         }
+      }
+      _userIsAdmin(user) {
+        this.isAdmin = (user && user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3');
       }
       setScrollTop(e) {
         this._listScrollTop = e.detail.top;

@@ -94,12 +94,12 @@
       }
       static get observers() {
         return [
-          'setPass(isAuthorized)',
+          'setPass(isAdmin)',
           'userData(user)'
         ]
       }
-      setPass(isAuthorized) {
-        if (isAuthorized === true) {
+      setPass(isAdmin) {
+        if (isAdmin === true) {
           this.title = 'Maintenance';
           this.pass = true;
         }

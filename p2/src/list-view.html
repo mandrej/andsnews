@@ -111,8 +111,8 @@
           <template>
             <div>
               <div class="square">
-                <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
-                  <paper-icon-button icon="clear" on-tap="showDialog" hidden$="{{!isAuthorized}}"></paper-icon-button>
+                <div class$="layout horizontal toolbar {{noPad(isAdmin)}}">
+                  <paper-icon-button icon="clear" on-tap="showDialog" hidden$="{{!isAdmin}}"></paper-icon-button>
                   <div class="self-center">[[rec.headline]]</div>
                 </div>
                 <div style="position:relative">
