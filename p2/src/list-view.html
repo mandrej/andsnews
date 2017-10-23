@@ -10,7 +10,6 @@
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -44,10 +43,8 @@
         padding-bottom: 100%;
       }
       .toolbar {
-        padding: 4px 16px;
+        padding: calc(var(--user-gap) / 2) var(--user-gap);
         @apply --layout-horizontal;
-        /* background-color: #fff; */
-        min-height: 56px;
       }
       .nopadding {
         padding-left: 0;
@@ -115,13 +112,7 @@
             <div>
               <div class="square">
                 <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
-                  <paper-menu-button hidden$="{{!isAuthorized}}">
-                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
-                    <paper-listbox slot="dropdown-content">
-                      <paper-item on-tap="showEdit">Edit</paper-item>
-                      <paper-item on-tap="showDialog">Remove</paper-item>
-                    </paper-listbox>
-                  </paper-menu-button>
+                  <paper-icon-button icon="clear" on-tap="showDialog" hidden$="{{!isAuthorized}}"></paper-icon-button>
                   <div class="self-center">[[rec.headline]]</div>
                 </div>
                 <div style="position:relative">
@@ -224,11 +215,6 @@
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
-      }
-      showEdit(e) {
-        const top = window.pageYOffset;
-        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
-        this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
       activeFilter(field, value, filter) {
         if (filter) {
