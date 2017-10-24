@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -74,10 +73,14 @@
     <iron-ajax url="[[_url(route.path)]]" last-response="{{data}}" auto></iron-ajax>
 
     <app-header-layout fullbleed>
-        <app-header condenses reveals shadow effects="resize-title" slot="header">
+        <app-header reveals shadow slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h4 condensed-title>Filters</h4>
+          <h4 condensed-title></h4>
+          <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+            <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+          </a>
+          <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>Filters</h1>
@@ -114,11 +117,19 @@
   <script>
     class FiltersView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'filters-view'; }
+      static get observers() {
+        return [
+          'getUserPhoto(user.photoURL)'
+        ]
+      }
       _url(path) {
         if (path === '/filters') return '/api/filters';
       }
       checkImage(rec) {
         if (rec && rec.repr_url) return rec.repr_url + '=s400-c';
+      }
+      getUserPhoto(url) {
+        if (url) this.userPhoto = url;
       }
       showList(e) {
         this.set('route.path', ['/list', e.model.rec.field_name, '' + e.model.rec.name].join('/'));
@@ -128,6 +139,9 @@
       }
       findForm() {
         this.set('route.path', '/search');
+      }
+      _sign() {
+        this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
       goBack() {
         this.set('route.path', '/start');

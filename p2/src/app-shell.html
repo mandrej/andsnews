@@ -97,6 +97,7 @@
 
       <list-view
         view="list"
+        is-authorized="[[isAuthorized]]"
         is-admin="[[isAdmin]]"
         field="{{dataFilter.field}}"
         value="{{dataFilter.value}}"
@@ -109,7 +110,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201710241428' },
+          version: { type: String, value: '201710242239' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },

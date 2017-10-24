@@ -26,7 +26,6 @@
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h1 main-title>[[item.headline]]</h1>
-          <paper-icon-button icon="create" on-tap="showEdit" hidden$="{{!isAuthorized}}"></paper-icon-button>
           <a href="/api/download/[[item.safekey]]" download="[[item.slug]].jpg" target="_blank">
             <paper-icon-button icon="file-download"></paper-icon-button>
           </a>
@@ -50,11 +49,6 @@
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s0';
-      }
-      showEdit(e) {
-        const top = window.pageYOffset;
-        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
-        this.set('route.path', ['/edit', this.item.safekey].join('/'));
       }
       goBack() {
         window.history.go(-1);

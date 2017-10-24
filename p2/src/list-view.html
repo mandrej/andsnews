@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip.html">
@@ -41,6 +42,7 @@
         content: "";
         display: block;
         padding-bottom: 100%;
+        margin-bottom: 20px;
       }
       .toolbar {
         padding: calc(var(--user-gap) / 2) var(--user-gap);
@@ -54,7 +56,7 @@
         line-height: 120%;
         font-weight: 300;
       }
-      .action {
+      .tags {
         @apply --layout-horizontal;
         @apply --layout-wrap;
         padding: calc(var(--user-gap) / 2) 0;
@@ -111,17 +113,25 @@
           <template>
             <div>
               <div class="square">
-                <div class$="layout horizontal toolbar {{noPad(isAdmin)}}">
-                  <paper-icon-button icon="clear" on-tap="showDialog" hidden$="{{!isAdmin}}"></paper-icon-button>
+                <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
+                  <paper-menu-button hidden$="{{!isAuthorized}}">
+                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-listbox slot="dropdown-content">
+                      <paper-item on-tap="showEdit">Edit</paper-item>
+                      <paper-item on-tap="showDialog" hidden$="{{!isAdmin}}">Remove</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
                   <div class="self-center">[[rec.headline]]</div>
                 </div>
-                <div style="position:relative">
+
+                <div>
                   <iron-image src="[[checkImage(rec)]]"
                     preload fade
                     sizing="cover" on-tap="showView"></iron-image>
                   <paper-ripple></paper-ripple>
                 </div>
-                <div class="action">
+
+                <div class="tags">
                   <paper-chip hidden$="[[activeFilter('year', rec.year, filter)]]"
                     on-tap="applyFilter" data-field="year"
                     data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
@@ -215,6 +225,11 @@
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+      }
+      showEdit(e) {
+        const top = window.pageYOffset;
+        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
+        this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
       activeFilter(field, value, filter) {
         if (filter) {
