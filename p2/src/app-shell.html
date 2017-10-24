@@ -109,7 +109,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201710231538' },
+          version: { type: String, value: '201710241428' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
@@ -188,7 +188,7 @@
         }
       }
       copywrite(version) {
-        return 'ANDS 2008-' + version.match(/.{1,4}/g).join('.');
+        return 'ANDS 2007-' + version.match(/.{1,4}/g).join('.');
       }
     }
     window.customElements.define(AppShell.is, AppShell);
