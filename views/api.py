@@ -74,8 +74,9 @@ class SearchPaginator(object):
             'sort_options': search.SortOptions(
                 expressions=[
                     search.SortExpression(
-                        expression='year * 12 + month',
-                        direction=search.SortExpression.DESCENDING, default_value=2030*12)
+                        expression='date',
+                        direction=search.SortExpression.DESCENDING,
+                        default_value=datetime.datetime(1970, 1, 1))
                 ]
             )
         }
