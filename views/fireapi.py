@@ -72,7 +72,8 @@ def push_message(token, message=''):
         "to": token,
         "notification": {
             "title": "ands",
-            "body": message
+            "body": message,
+            "icon": "/images/manifest/icon-48x48.png"
         }
     }
     http = httplib2.Http()
