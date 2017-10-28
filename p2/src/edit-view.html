@@ -41,7 +41,7 @@
           <iron-form id="editForm">
             <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
 
-              <paper-toast id="toast"></paper-toast>
+              <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
 
               <div class="layout horizontal end-justified">
                 <paper-button on-tap="_submit" raised>Submit</paper-button>
