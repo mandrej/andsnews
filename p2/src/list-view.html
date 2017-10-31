@@ -87,7 +87,7 @@
     </paper-dialog>
 
     <iron-ajax id="ajax" auto
-      url="[[_url(field, value)]]"
+      url="{{_url(route.path, field, value)}}"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
@@ -95,15 +95,19 @@
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
+      <app-header reveals shadow slot="header">
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h4 condensed-title>[[value]] ([[count]])</h4>
-          <paper-spinner active$="[[loading]]"></paper-spinner>
+          <h4 condensed-title></h4>
+          <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+            <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+          </a>
+          <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
         </app-toolbar>
         <app-toolbar>
-          <h1 main-title>[[value]]</h1>
+          <h1 main-title>ANDрејевићи</h1>
+          <paper-icon-button icon="home" on-tap="showHome"></paper-icon-button>
           <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
+          <paper-fab hidden$="[[!isAuthorized]]" icon="add" on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
 
@@ -119,19 +123,15 @@
                   <paper-menu-button>
                     <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
-                      <paper-item hidden$="[[activeFilter('year', rec.year, filter)]]"
-                        on-tap="applyFilter" data-field="year"
+                      <paper-item on-tap="applyFilter" data-field="year"
                         data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
                       <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                        <paper-item hidden$="[[activeFilter('tags', tag, filter)]]"
-                          on-tap="applyFilter" data-field="tags"
+                        <paper-item on-tap="applyFilter" data-field="tags"
                           data-field-value$="[[tag]]">[[tag]]</paper-item>
                       </template>
-                      <paper-item hidden$="[[activeFilter('model', rec.model, filter)]]"
-                        on-tap="applyFilter" data-field="model"
+                      <paper-item on-tap="applyFilter" data-field="model"
                         data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
-                      <paper-item hidden$="[[activeFilter('color', rec.color, filter)]]"
-                        on-tap="applyFilter" data-field="color"
+                      <paper-item on-tap="applyFilter" data-field="color"
                         data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
                     </paper-listbox>
                   </paper-menu-button>
@@ -158,32 +158,42 @@
   </template>
 
   <script>
-    class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
+    class ListView extends Polymer.OptionalMutableData(Polymer.Element) {
       static get is() { return 'list-view'; }
       static get properties() {
         return {
           params: { type: Object, value: {}, notify: true },
-          filter: { type: Object, value: {}, notify: true },
           records: { type: Array, value: [], notify: true },
           count: { type: Number, value: 0 },
           obj: { type: Object, notify: true },
           route: Object,
-          currentIndex: { type: Number, value: 0, notify: true }
+          currentIndex: { type: Number, value: 0, notify: true },
+          _listScrollTop: { type: Number, value: 0 },
         };
       }
       static get observers() {
         return [
-          '_getCount(records.length)'
+          '_getCount(records.length)',
+          'getUserPhoto(user.photoURL)'
         ]
       }
-      _url(field, value) {
-        this.records = [];
-        this.filter = {};
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('kick', this.setScrollTop);
+      }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('kick', this.setScrollTop, true);
+      }
+      _url(path, field, value) {
         this.set('params._page', null);
+        this.records = [];
 
         const rx = /^\/list/;
-        if (rx.test(this.route.path)) {
-          if (field === 'search') {
+        if (rx.test(path)) {
+          if (field === undefined && value === undefined) {
+            return '/api/start';
+          } else if (field === 'search') {
             return ['/api/search', value].join('/');
           } else {
             return ['/api/photo', field, value].join('/');
@@ -194,21 +204,17 @@
         const data = e.detail.response,
           dialog = this.$.message;
 
-        if (!data.objects) return;
         if (data.objects.length === 0) {
           dialog.open();
-          this.records = [];
-          this.filter = {};
           this.set('params._page', null);
         } else {
           data.objects.forEach((item) => {
             this.push('records', item);
           });
-          this.filter = {};
-          if (data.filter) {
-            this.filter = data.filter;
-          }
           this.$.scrollTheshold.clearTriggers();
+          Polymer.Async.timeOut.run(() => {
+            Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+          }, 20);
         }
       }
       _load() {
@@ -217,29 +223,38 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       }
+      setScrollTop(e) {
+        this._listScrollTop = e.detail.top;
+      }
       _getCount(count) {
         this.count = count;
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
       }
+      getUserPhoto(url) {
+        if (url) this.userPhoto = url;
+      }
+      showHome() {
+        this.field = undefined;
+        this.value = undefined;
+        this.set('route.path', '/list');
+      }
+      showSearch() {
+        this.set('route.path', '/search');
+      }
       showView(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
+      addRecord() {
+        this.set('route.path', '/add');
+      }
       showEdit(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
-      }
-      activeFilter(field, value, filter) {
-        if (filter) {
-          if (field === 'year') value = parseInt(value);
-          return (filter.field === field && filter.value === value);
-        } else {
-          return false;
-        }
       }
       applyFilter(e) {
         const target = e.target,
@@ -263,16 +278,10 @@
       showSearch() {
         this.set('route.path', '/search');
       }
-      noPad(pass) {
-        return (pass) ? 'nopadding' : '';
-      }
       // abortLoad() {
       //   const ajax = this.$.ajax;
       //   if (ajax.lastRequest) ajax.lastRequest.abort();
       // }
-      goBack() {
-        this.set('route.path', '/filters');
-      }
     }
 
     window.customElements.define(ListView.is, ListView);

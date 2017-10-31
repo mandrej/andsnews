@@ -35,7 +35,7 @@
     class NotFoundView extends Polymer.Element {
       static get is() { return 'notfound-view'; }
       goBack() {
-        this.set('route.path', '/start');
+        this.set('route.path', '/list');
       }
     }
     window.customElements.define(NotFoundView.is, NotFoundView);
