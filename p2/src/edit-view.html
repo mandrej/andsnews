@@ -23,7 +23,7 @@
     </style>
 
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
 
     <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
@@ -59,7 +59,7 @@
                 closable
                 additional-items
                 items="[[item.tags]]"
-                source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
+                source="[[tags]]"></paper-chip-input-autocomplete>
 
               <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
 
@@ -89,6 +89,7 @@
       static get properties() {
         return {
           title: { type: String, value: 'Authorization Required' },
+          tags: { type: Array, value:[], notify: true },
           pass: { type: Boolean, value: false }
         };
       }
@@ -105,6 +106,7 @@
       }
       connectedCallback() {
         super.connectedCallback();
+        this.$.tags.addEventListener('focus', (e) => this._getTags(e));
         const form = this.$.editForm;
         form.addEventListener('iron-form-presubmit', () => this._preSubmit());
         form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
@@ -116,12 +118,15 @@
           return ['/api', safekey].join('/');
         }
       }
-      listObjects(tags) {
-        const list = [];
-        tags.forEach((tag) => {
-          list.push({text: tag, value: tag});
+      listTags(e) {
+        e.detail.response.forEach((tag) => {
+          this.push('tags', {text: tag, value: tag});
         });
-        return list;
+      }
+      _getTags(e) {
+        if (this.tags.length === 0) {
+          this.$.ajax_tags.generateRequest();
+        }
       }
       _preSubmit() {
         const form = this.$.editForm;

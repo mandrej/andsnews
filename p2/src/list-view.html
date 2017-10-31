@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
@@ -121,7 +122,7 @@
               <div class="square">
                 <div class="layout horizontal toolbar">
                   <paper-menu-button>
-                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-icon-button icon="filter-list" slot="dropdown-trigger"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
                       <paper-item on-tap="applyFilter" data-field="year"
                         data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
@@ -277,6 +278,9 @@
       }
       showSearch() {
         this.set('route.path', '/search');
+      }
+      _sign() {
+        this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
       // abortLoad() {
       //   const ajax = this.$.ajax;

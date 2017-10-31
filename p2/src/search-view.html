@@ -65,9 +65,6 @@
               auto-validate
               items="{{filters}}"></vaadin-combo-box>
           </li>
-          <li class="item right">
-              <paper-button on-tap="applyFilter" raised>Apply</paper-button>
-          </li>
         </ul>
 
         <iron-form id="findForm">
@@ -128,6 +125,7 @@
         super.connectedCallback();
         this.$.tags.addEventListener('focus', (e) => this._getTags(e));
         this.$.models.addEventListener('focus', (e) => this._getModels(e));
+        this.$.filter.addEventListener('change', (e) => this.applyFilter(e));
         this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
       _url(path) {
@@ -145,11 +143,11 @@
       }
       listFilters(e) {
         e.detail.response.filters.forEach((filter) => {
-          this.push('filters', {label: filter.field_name + ':' + filter.name, value: filter});
+          this.push('filters', {label: filter.name, value: filter});
         });
       }
-      applyFilter() {
-        const filter = this.$.filter.value;
+      applyFilter(e) {
+        const filter = e.target.value;
         if (filter) {
           this.set('route.path', ['/list', filter.field_name, filter.name].join('/'));
         }
