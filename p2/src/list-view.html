@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -34,7 +33,11 @@
         padding: calc(var(--user-gap) / 2);
         @apply --no-select;
       }
+      .square > div {
+        @apply --shadow-elevation-2dp;
+      }
       iron-image {
+        display: block;
         width: 100%;
         cursor: pointer;
       }
@@ -42,6 +45,19 @@
         content: "";
         display: block;
         padding-bottom: 100%;
+      }
+      .square .title {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        position: absolute;
+        bottom: calc(var(--user-gap) / 2);
+        left: calc(var(--user-gap) / 2);
+        right: calc(var(--user-gap) / 2);
+        color: var(--text-primary-color);
+        background-color: rgba(0, 0, 0, 0.5);
+        font-size: 20px;
+        padding: 16px;
+        text-overflow: ellipsis;
       }
       paper-listbox {
         background-color: var(--divider-color);
@@ -51,18 +67,6 @@
       }
       paper-button {
         color: var(--accent-color);
-        background-color: var(--text-primary-color);
-      }
-      .toolbar {
-        padding-right: calc(var(--user-gap) / 2);
-      }
-      .toolbar > div {
-        font-size: 20px;
-        line-height: 120%;
-        font-weight: 300;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 3); }}
       @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
@@ -98,6 +102,9 @@
     <app-header-layout fullbleed>
       <app-header reveals shadow slot="header">
         <app-toolbar>
+          <paper-icon-button icon="home" on-tap="showHome"></paper-icon-button>
+          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
           <h4 condensed-title></h4>
           <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
             <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
@@ -106,9 +113,8 @@
         </app-toolbar>
         <app-toolbar>
           <h1 main-title>ANDрејевићи</h1>
-          <paper-icon-button icon="home" on-tap="showHome"></paper-icon-button>
-          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
-          <paper-fab hidden$="[[!isAuthorized]]" icon="add" on-tap="addRecord"></paper-fab>
+          <!-- <paper-icon-button icon="add" on-tap="addRecord"></paper-icon-button> -->
+          <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
 
@@ -120,35 +126,31 @@
           <template>
             <div>
               <div class="square">
-                <div class="layout horizontal toolbar">
-                  <paper-menu-button>
-                    <paper-icon-button icon="filter-list" slot="dropdown-trigger"></paper-icon-button>
-                    <paper-listbox slot="dropdown-content">
-                      <paper-item on-tap="applyFilter" data-field="year"
-                        data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
-                      <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                        <paper-item on-tap="applyFilter" data-field="tags"
-                          data-field-value$="[[tag]]">[[tag]]</paper-item>
-                      </template>
-                      <paper-item on-tap="applyFilter" data-field="model"
-                        data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
-                      <paper-item on-tap="applyFilter" data-field="color"
-                        data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
-                    </paper-listbox>
-                  </paper-menu-button>
-                  <div class="self-center">[[rec.headline]]</div>
-                </div>
-
                 <div>
-                  <iron-image src="[[checkImage(rec)]]"
-                    preload fade
-                    sizing="cover" on-tap="showView"></iron-image>
-                  <paper-ripple></paper-ripple>
-                </div>
+                  <div class="layout horizontal justified">
+                    <paper-menu-button>
+                      <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
+                      <paper-listbox slot="dropdown-content">
+                        <paper-item on-tap="applyFilter" data-field="year"
+                          data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
+                        <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                          <paper-item on-tap="applyFilter" data-field="tags"
+                            data-field-value$="[[tag]]">[[tag]]</paper-item>
+                        </template>
+                        <paper-item on-tap="applyFilter" data-field="model"
+                          data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
+                        <paper-item on-tap="applyFilter" data-field="color"
+                          data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
+                      </paper-listbox>
+                    </paper-menu-button>
+                    <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
+                    <paper-icon-button icon="create" on-tap="showEdit" class="self-center"></paper-icon-button>
+                  </div>
 
-                <div class="layout horizontal justified" hidden$="{{!isAuthorized}}">
-                  <paper-button on-tap="showEdit">Edit</paper-button>
-                  <paper-button on-tap="showDialog" hidden$="{{!isAdmin}}">Remove</paper-button>
+                  <div on-tap="showView">
+                    <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
+                    <div class="title">[[rec.headline]]</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -159,7 +161,7 @@
   </template>
 
   <script>
-    class ListView extends Polymer.OptionalMutableData(Polymer.Element) {
+    class ListView extends Polymer.Element {
       static get is() { return 'list-view'; }
       static get properties() {
         return {

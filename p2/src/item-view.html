@@ -39,7 +39,7 @@
   </template>
 
   <script>
-    class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
+    class ItemView extends Polymer.Element {
       static get is() { return 'item-view'; }
       _url(safekey) {
         const rx = /^\/item/;
