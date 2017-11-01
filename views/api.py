@@ -74,8 +74,9 @@ class SearchPaginator(object):
             'sort_options': search.SortOptions(
                 expressions=[
                     search.SortExpression(
-                        expression='year * 12 + month',
-                        direction=search.SortExpression.DESCENDING, default_value=2030*12)
+                        expression='date',
+                        direction=search.SortExpression.DESCENDING,
+                        default_value=datetime.datetime(1970, 1, 1))
                 ]
             )
         }
@@ -184,7 +185,23 @@ def available_filters():
     return [x for x in collection if x['show']]
 
 
-class PhotoStart(RestHandler):
+class PhotoRecent(RestHandler):
+    def get(self):
+        page = self.request.get('_page', None)
+        token = None
+
+        query = Photo.query().order(-Photo.date)
+        paginator = Paginator(query, per_page=LIMIT)
+        objects, token = paginator.page(page)  # [], None
+
+        self.render({
+            'objects': objects,
+            '_page': page,
+            '_next': token
+        })
+
+
+class PhotoFilters(RestHandler):
     def get(self):
         self.render({
             'count': Photo.query().count(),

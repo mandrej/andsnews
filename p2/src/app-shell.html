@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
-<link rel="import" href="start-view.html">
+<link rel="import" href="list-view.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
@@ -16,9 +16,9 @@
       }
     </style>
 
-    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
-    <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}" tail="{{tailFilter}}"></app-route>
+    <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
 
     <firebase-app
@@ -38,13 +38,20 @@
       provider="google"></firebase-auth>
 
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
-      <start-view
-        view="start"
+      <list-view
+        view="list"
         user="[[user]]"
         is-authorized="[[isAuthorized]]"
-        route="{{route}}">
-        <span slot="copy">[[copy]]</span>
-      </start-view>
+        is-admin="[[isAdmin]]"
+        field="{{dataFilter.field}}"
+        value="{{dataFilter.value}}"
+        route="{{route}}"></list-view>
+
+      <item-view
+        view="item"
+        is-authorized="[[isAuthorized]]"
+        safekey="{{dataSafekey.safekey}}"
+        route="{{route}}"></item-view>
 
       <search-view
         view="search"
@@ -52,32 +59,12 @@
         <span slot="copy">[[copy]]</span>
       </search-view>
 
-      <notfound-view
-        view="404"
-        route="{{route}}">
-        <span slot="copy">[[copy]]</span>
-      </notfound-view>
-
       <add-view
         view="add"
         is-authorized="[[isAuthorized]]"
         route="{{route}}">
         <span slot="copy">[[copy]]</span>
       </add-view>
-
-      <admin-view
-        view="admin"
-        user="[[user]]"
-        is-authorized="[[isAuthorized]]"
-        route="{{route}}">
-        <span slot="copy">[[copy]]</span>
-      </admin-view>
-
-      <item-view
-        view="item"
-        safekey="{{dataSafekey.safekey}}"
-        route="{{route}}">
-      </item-view>
 
       <edit-view
         view="edit"
@@ -87,12 +74,19 @@
         <span slot="copy">[[copy]]</span>
       </edit-view>
 
-      <list-view
-        view="list"
-        is-authorized="[[isAuthorized]]"
-        field="{{dataFilter.field}}"
-        value="{{dataFilter.value}}"
-        route="{{route}}"></list-view>
+      <admin-view
+        view="admin"
+        user="[[user]]"
+        is-admin="[[isAdmin]]"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </admin-view>
+
+      <notfound-view
+        view="404"
+        route="{{route}}">
+        <span slot="copy">[[copy]]</span>
+      </notfound-view>
     </iron-pages>
   </template>
 
@@ -101,34 +95,33 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201710131143' },
+          version: { type: String, value: '201711011523' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
+          isAdmin: { type: Boolean, value: false, notify: true },
           copy: {
             type: String,
             computed: 'copywrite(version)'
           },
-          _listScrollTop: { type: Number, value: 0 }
         };
       }
       static get observers() {
         return [
-          '_routeViewChanged(dataView.view)'
+          '_routeViewChanged(dataView.view)',
+          '_userIsAdmin(user)'
         ]
       }
       connectedCallback() {
         super.connectedCallback();
-        if (!this.route.path) {
-          this.set('route.path', '/start');
+        if (this.route.path === '/') {
+          this.set('route.path', '/list');
         }
         this.addEventListener('sign', this.signHandler);
-        this.addEventListener('kick', this.setScrollTop);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('sign', this.signHandler, true);
-        this.removeEventListener('kick', this.setScrollTop, true);
       }
       signHandler() {
         if (this.user) {
@@ -143,24 +136,15 @@
             });
         }
       }
-      setScrollTop(e) {
-        this._listScrollTop = e.detail.top;
+      _userIsAdmin(user) {
+        this.isAdmin = (user && user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3');
       }
       _routeViewChanged(view) {
         if (!view) return; // undefined
-        let scrollTop = 0;
-        if (view === 'list') {
-          scrollTop = this._listScrollTop;
-        }
-
         const cb = this._ensureLazyLoaded.bind(this);
         Polymer.importHref(
           this.resolveUrl(view + '-view.html'),
           cb, cb, true);
-
-        Polymer.Async.timeOut.run(() => {
-          Polymer.AppLayout.scroll({ top: scrollTop, behavior: 'silent' });
-        }, 20);
       }
       _ensureLazyLoaded() {
         if (!this.loadComplete) {
@@ -175,7 +159,7 @@
         }
       }
       copywrite(version) {
-        return 'ANDS 2008-' + version.match(/.{1,4}/g).join('.');
+        return 'ANDS 2007-' + version.match(/.{1,4}/g).join('.');
       }
     }
     window.customElements.define(AppShell.is, AppShell);

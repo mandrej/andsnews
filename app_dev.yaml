@@ -1,4 +1,5 @@
 application: andsnews
+service: api
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -15,43 +16,8 @@ libraries:
   version: latest
 
 handlers:
-- url: /api/.*
-  script: main.app
-  secure: always
-
 - url: /sitemap\.xml
   script: main.app
-  secure: always
-
-- url: /_ah/warmup
-  script: main.app
-  secure: always
-
-- url: /(robots\.txt|manifest\.json)$
-  static_files: p2/\1
-  upload: p2/(robots\.txt|manifest\.json)$
-  secure: always
-
-- url: /(service-worker\.js|firebase-messaging-sw\.js)$
-  static_files: p2/\1
-  upload: p2/(service-worker\.js|firebase-messaging-sw\.js)$
-  secure: always
-
-- url: /src/
-  static_dir: p2/src
-  secure: always
-
-- url: /images/
-  static_dir: p2/images
-  secure: always
-
-- url: /bower_components/
-  static_dir: p2/bower_components
-  secure: always
-
-- url: /index\.html
-  static_files: p2/index.html
-  upload: p2/index.html
   secure: always
 
 - url: /tests/.*
@@ -59,12 +25,8 @@ handlers:
   secure: always
 
 - url: /.*
-  static_files: p2/index.html
-  upload: p2/index.html
+  script: main.app
   secure: always
-
-inbound_services:
-- warmup
 
 builtins:
 - deferred: on

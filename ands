@@ -4,6 +4,7 @@ python=$home/venv/andsnews/bin/python
 dev_appserver=/home/milan/google-cloud-sdk/platform/google_appengine/dev_appserver.py
 storage=$home/work/andsnews_storage/
 
+api_version=`date +%Y%m%d%H%M`
 client="p2"
 client_version=`date +%Y%m%d%H%M`
 client_shell="$client/src/app-shell.html"
@@ -15,9 +16,10 @@ client_shell="$client/src/app-shell.html"
 
 function syntax {
   echo $"Usage:"
-  echo $"$0 devel - Run development server"
-  echo $"$0 build - Polymer build client"
-  echo $"$0 deploy - Deploy client version $client_version"
+  echo $"$0 devel         - Run development server"
+  echo $"$0 build         - Polymer build client"
+  echo $"$0 deploy api    - Deploy api version $api_version"
+  echo $"$0 deploy client - Deploy client version $client_version"
   exit 1
 }
 
@@ -27,7 +29,7 @@ if [ $# -eq 0 ]
 else
   case $1 in
     devel)
-      $python $dev_appserver --port=8080 --storage_path=$storage app_dev.yaml
+      $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml app_dev.yaml $client/app_dev.yaml
       exit ;;
     build)
       sed -i -E "/version/s/[[:digit:]]{12}/$client_version/g" $client_shell
@@ -36,9 +38,20 @@ else
       cd ..
       exit ;;
     deploy)
-      client_version=$(grep -oP 'version.+\K([[:digit:]]{12})' $client_shell)
-      gcloud app deploy --project=andsnews --version=$client_version app.yaml index.yaml dos.yaml queue.yaml
-      exit ;;
+      case $2 in
+        api)
+          sed -i -E "/target/s/[[:digit:]]{12}/$api_version/g" "queue.yaml"
+          gcloud app deploy --project=andsnews --version=$api_version dispatch.yaml app.yaml index.yaml dos.yaml queue.yaml
+          exit ;;
+        client)
+          client_version=$(grep -oP 'version.+\K([[:digit:]]{12})' $client_shell)
+          gcloud app deploy --project=andsnews --version=$client_version $client/app.yaml
+          exit ;;
+        *)
+          echo
+          echo $"Provide service to deploy: api/ client"
+          exit 1
+      esac ;;
     *)
       syntax
   esac

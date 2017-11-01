@@ -21,7 +21,7 @@
 
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
-    <app-header-layout class="big" fullbleed>
+    <app-header-layout fullbleed>
       <app-header fixed shadow slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -39,12 +39,12 @@
   </template>
 
   <script>
-    class ItemView extends Polymer.GestureEventListeners(Polymer.Element) {
+    class ItemView extends Polymer.Element {
       static get is() { return 'item-view'; }
       _url(safekey) {
         const rx = /^\/item/;
         if (rx.test(this.route.path)) {
-          return ['/api', safekey].join('/');_submit
+          return ['/api', safekey].join('/');
         }
       }
       checkImage(rec) {

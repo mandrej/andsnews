@@ -1,7 +1,17 @@
+service: api
 runtime: python27
 api_version: 1
 threadsafe: true
 default_expiration: "0s"
+
+instance_class: B2
+basic_scaling:
+  max_instances: 1
+  idle_timeout: 10m
+
+# instance_class: F1
+# automatic_scaling:
+#   max_idle_instances: 1
 
 libraries:
 - name: PIL
@@ -14,43 +24,8 @@ libraries:
   version: latest
 
 handlers:
-- url: /api/.*
-  script: main.app
-  secure: always
-
 - url: /sitemap\.xml
   script: main.app
-  secure: always
-
-- url: /_ah/warmup
-  script: main.app
-  secure: always
-
-- url: /(robots\.txt|manifest\.json)$
-  static_files: p2/build/default/\1
-  upload: p2/build/default/(robots\.txt|manifest\.json)$
-  secure: always
-
-- url: /(service-worker\.js|firebase-messaging-sw\.js)$
-  static_files: p2/build/default/\1
-  upload: p2/build/default/(service-worker\.js|firebase-messaging-sw\.js)$
-  secure: always
-
-- url: /src/
-  static_dir: p2/build/default/src
-  secure: always
-
-- url: /images/
-  static_dir: p2/build/default/images
-  secure: always
-
-- url: /bower_components/
-  static_dir: p2/build/default/bower_components
-  secure: always
-
-- url: /index\.html
-  static_files: p2/build/default/index.html
-  upload: p2/build/default/index.html
   secure: always
 
 - url: /tests/.*
@@ -58,12 +33,8 @@ handlers:
   secure: always
 
 - url: /.*
-  static_files: p2/build/default/index.html
-  upload: p2/build/default/index.html
+  script: main.app
   secure: always
-
-inbound_services:
-- warmup
 
 builtins:
 - deferred: on

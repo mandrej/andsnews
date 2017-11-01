@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -9,10 +8,10 @@
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../bower_components/paper-chip/paper-chip.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
@@ -34,7 +33,11 @@
         padding: calc(var(--user-gap) / 2);
         @apply --no-select;
       }
+      .square > div {
+        @apply --shadow-elevation-2dp;
+      }
       iron-image {
+        display: block;
         width: 100%;
         cursor: pointer;
       }
@@ -43,24 +46,27 @@
         display: block;
         padding-bottom: 100%;
       }
-      .toolbar {
-        padding: 4px 16px;
+      .square .title {
         @apply --layout-horizontal;
-        /* background-color: #fff; */
-        min-height: 56px;
-      }
-      .nopadding {
-        padding-left: 0;
-      }
-      .toolbar > div {
+        @apply --layout-justified;
+        position: absolute;
+        bottom: calc(var(--user-gap) / 2);
+        left: calc(var(--user-gap) / 2);
+        right: calc(var(--user-gap) / 2);
+        color: var(--text-primary-color);
+        background-color: rgba(0, 0, 0, 0.5);
         font-size: 20px;
-        line-height: 120%;
-        font-weight: 300;
+        padding: 16px;
+        text-overflow: ellipsis;
       }
-      .action {
-        @apply --layout-horizontal;
-        @apply --layout-wrap;
-        padding: calc(var(--user-gap) / 2) 0;
+      paper-listbox {
+        background-color: var(--divider-color);
+      }
+      paper-item {
+        cursor: pointer;
+      }
+      paper-button {
+        color: var(--accent-color);
       }
       @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 3); }}
       @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
@@ -86,23 +92,29 @@
     </paper-dialog>
 
     <iron-ajax id="ajax" auto
-      url="[[_url(field, value)]]"
+      url="{{_url(route.path, field, value)}}"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-    <app-header-layout class="big" fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
+    <app-header-layout fullbleed>
+      <app-header reveals shadow slot="header">
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h4 condensed-title>[[value]] ([[count]])</h4>
+          <paper-icon-button icon="home" on-tap="showHome"></paper-icon-button>
+          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
           <paper-spinner active$="[[loading]]"></paper-spinner>
+          <h4 condensed-title></h4>
+          <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
+            <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
+          </a>
+          <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
         </app-toolbar>
         <app-toolbar>
-          <h1 main-title>[[value]]</h1>
-          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
+          <h1 main-title>ANDрејевићи</h1>
+          <!-- <paper-icon-button icon="add" on-tap="addRecord"></paper-icon-button> -->
+          <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
 
@@ -114,37 +126,31 @@
           <template>
             <div>
               <div class="square">
-                <div class$="layout horizontal toolbar {{noPad(isAuthorized)}}">
-                  <paper-menu-button hidden$="{{!isAuthorized}}">
-                    <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
-                    <paper-listbox slot="dropdown-content">
-                      <paper-item on-tap="showEdit">Edit</paper-item>
-                      <paper-item on-tap="showDialog">Remove</paper-item>
-                    </paper-listbox>
-                  </paper-menu-button>
-                  <div class="self-center">[[rec.headline]]</div>
-                </div>
-                <div style="position:relative">
-                  <iron-image src="[[checkImage(rec)]]"
-                    preload fade
-                    sizing="cover" on-tap="showView"></iron-image>
-                  <paper-ripple></paper-ripple>
-                </div>
-                <div class="action">
-                  <paper-chip hidden$="[[activeFilter('year', rec.year, filter)]]"
-                    on-tap="applyFilter" data-field="year"
-                    data-field-value$="[[rec.year]]" label="[[rec.year]]"></paper-chip>
-                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                    <paper-chip hidden$="[[activeFilter('tags', tag, filter)]]"
-                      on-tap="applyFilter" data-field="tags"
-                      data-field-value$="[[tag]]" label="[[tag]]"></paper-chip>
-                  </template>
-                  <paper-chip hidden$="[[activeFilter('model', rec.model, filter)]]"
-                    on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]" label="[[rec.model]]"></paper-chip>
-                  <paper-chip hidden$="[[activeFilter('color', rec.color, filter)]]"
-                    on-tap="applyFilter" data-field="color"
-                    data-field-value$="[[rec.color]]" label="[[rec.color]]"></paper-chip>
+                <div>
+                  <div class="layout horizontal justified">
+                    <paper-menu-button>
+                      <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
+                      <paper-listbox slot="dropdown-content">
+                        <paper-item on-tap="applyFilter" data-field="year"
+                          data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
+                        <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                          <paper-item on-tap="applyFilter" data-field="tags"
+                            data-field-value$="[[tag]]">[[tag]]</paper-item>
+                        </template>
+                        <paper-item on-tap="applyFilter" data-field="model"
+                          data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
+                        <paper-item on-tap="applyFilter" data-field="color"
+                          data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
+                      </paper-listbox>
+                    </paper-menu-button>
+                    <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
+                    <paper-icon-button icon="create" on-tap="showEdit" class="self-center"></paper-icon-button>
+                  </div>
+
+                  <div on-tap="showView">
+                    <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
+                    <div class="title">[[rec.headline]]</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,32 +161,42 @@
   </template>
 
   <script>
-    class ListView extends Polymer.GestureEventListeners(Polymer.Element) {
+    class ListView extends Polymer.Element {
       static get is() { return 'list-view'; }
       static get properties() {
         return {
           params: { type: Object, value: {}, notify: true },
-          filter: { type: Object, value: {}, notify: true },
           records: { type: Array, value: [], notify: true },
           count: { type: Number, value: 0 },
           obj: { type: Object, notify: true },
           route: Object,
-          currentIndex: { type: Number, value: 0, notify: true }
+          currentIndex: { type: Number, value: 0, notify: true },
+          _listScrollTop: { type: Number, value: 0 },
         };
       }
       static get observers() {
         return [
-          '_getCount(records.length)'
+          '_getCount(records.length)',
+          'getUserPhoto(user.photoURL)'
         ]
       }
-      _url(field, value) {
-        this.records = [];
-        this.filter = {};
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('kick', this.setScrollTop);
+      }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('kick', this.setScrollTop, true);
+      }
+      _url(path, field, value) {
         this.set('params._page', null);
+        this.records = [];
 
         const rx = /^\/list/;
-        if (rx.test(this.route.path)) {
-          if (field === 'search') {
+        if (rx.test(path)) {
+          if (field === undefined && value === undefined) {
+            return '/api/start';
+          } else if (field === 'search') {
             return ['/api/search', value].join('/');
           } else {
             return ['/api/photo', field, value].join('/');
@@ -191,21 +207,19 @@
         const data = e.detail.response,
           dialog = this.$.message;
 
-        if (!data.objects) return;
         if (data.objects.length === 0) {
           dialog.open();
-          this.records = [];
-          this.filter = {};
           this.set('params._page', null);
         } else {
           data.objects.forEach((item) => {
             this.push('records', item);
           });
-          this.filter = {};
-          if (data.filter) {
-            this.filter = data.filter;
-          }
           this.$.scrollTheshold.clearTriggers();
+          if (window.pageYOffset < this._listScrollTop) {
+            Polymer.Async.timeOut.run(() => {
+              Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+            }, 20);
+          }
         }
       }
       _load() {
@@ -214,29 +228,38 @@
           this.set('params._page', ajax.lastResponse._next);
         }
       }
+      setScrollTop(e) {
+        this._listScrollTop = e.detail.top;
+      }
       _getCount(count) {
         this.count = count;
       }
       checkImage(rec) {
-        if (rec.serving_url) return rec.serving_url + '=s400-c';
+        if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
+      }
+      getUserPhoto(url) {
+        if (url) this.userPhoto = url;
+      }
+      showHome() {
+        this.field = undefined;
+        this.value = undefined;
+        this.set('route.path', '/list');
+      }
+      showSearch() {
+        this.set('route.path', '/search');
       }
       showView(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
+      addRecord() {
+        this.set('route.path', '/add');
+      }
       showEdit(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
-      }
-      activeFilter(field, value, filter) {
-        if (filter) {
-          if (field === 'year') value = parseInt(value);
-          return (filter.field === field && filter.value === value);
-        } else {
-          return false;
-        }
       }
       applyFilter(e) {
         const target = e.target,
@@ -260,16 +283,13 @@
       showSearch() {
         this.set('route.path', '/search');
       }
-      noPad(pass) {
-        return (pass) ? 'nopadding' : '';
+      _sign() {
+        this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
       // abortLoad() {
       //   const ajax = this.$.ajax;
       //   if (ajax.lastRequest) ajax.lastRequest.abort();
       // }
-      goBack() {
-        this.set('route.path', '/start');
-      }
     }
 
     window.customElements.define(ListView.is, ListView);

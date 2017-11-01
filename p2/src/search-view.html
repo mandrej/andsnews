@@ -21,10 +21,10 @@
         display: block;
       }
       iron-form {
-        @apply --layout-flex;
+        /* @apply --layout-flex; */
       }
       .container {
-        padding-bottom: 0;
+        /* padding-bottom: 0; */
       }
       ul {
         margin: 0;
@@ -35,14 +35,19 @@
         --app-grid-columns: 3;
         --app-grid-gutter: 16px;
       }
+      .right {
+        text-align: right;
+        @apply --app-grid-expandible-item;
+      }
       @media (max-width: 768px)  { .app-grid { --app-grid-columns: 2; }}
       @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
     </style>
 
-    <iron-ajax url="/api/suggest/Photo_tags" last-response="{{tagsCloud}}" auto></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_model" last-response="{{modelCloud}}" auto></iron-ajax>
+    <iron-ajax url="[[_url(route.path)]]" on-response="listFilters" auto></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" id="ajax_model"></iron-ajax>
 
-    <app-header-layout class="big" fullbleed>
+    <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -53,62 +58,109 @@
         </app-toolbar>
       </app-header>
 
-      <iron-form id="findForm">
-        <form method="get">
-          <div class="layout horizontal end-justified container">
-            <paper-button on-tap="onSubmit" raised>Find</paper-button>
-          </div>
+      <div class="container">
+        <ul class="app-grid">
+          <li class="item">
+            <vaadin-combo-box label="Predefined filter" id="filter"
+              auto-validate
+              items="{{filters}}"></vaadin-combo-box>
+          </li>
+        </ul>
 
-          <ul class="app-grid">
-            <li class="item">
-              <paper-input name="find_text" label="find text"></paper-input>
-            </li>
-            <li class="item">
-              <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
-                closable
-                items="[[item.tags]]"
-                source="[[listObjects(tagsCloud)]]"></paper-chip-input-autocomplete>
-            </li>
-            <li class="item">
-              <paper-input name="find_year" label="in year" type="number"
-                auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
-            </li>
-            <li class="item">
-              <paper-input name="find_month" label="in month" type="number"
-                auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
-            </li>
-            <li class="item">
-              <vaadin-combo-box name="find_model" label="by camera"
-                auto-validate
-                allow-custom-value="false"
-                items="[[modelCloud]]"></vaadin-combo-box>
-            </li>
-            <li class="item">
-              <vaadin-combo-box name="find_author" label="by author"
-                auto-validate
-                allow-custom-value="false"
-                items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
-            </li>
-          </ul>
-         </form>
-      </iron-form>
+        <iron-form id="findForm">
+            <form method="get">
+              <ul class="app-grid">
+                <li class="item">
+                  <paper-input name="find_text" label="find text"></paper-input>
+                </li>
+                <li class="item">
+                  <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
+                    closable
+                    items="[[item.tags]]"
+                    source="[[tags]]"></paper-chip-input-autocomplete>
+                </li>
+                <li class="item">
+                  <paper-input name="find_year" label="in year" type="number"
+                    auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
+                </li>
+                <li class="item">
+                  <paper-input name="find_month" label="in month" type="number"
+                    auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
+                </li>
+                <li class="item">
+                  <vaadin-combo-box name="find_model" label="by camera" id="models"
+                    auto-validate
+                    allow-custom-value="false"
+                    items="[[models]]"></vaadin-combo-box>
+                </li>
+                <li class="item">
+                  <vaadin-combo-box name="find_author" label="by author"
+                    auto-validate
+                    allow-custom-value="false"
+                    items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
+                </li>
+                <li class="item right">
+                    <paper-button on-tap="onSubmit" raised>Find</paper-button>
+                </li>
+              </ul>
+             </form>
+          </iron-form>
+      </div>
+
       <footer><slot name="copy"></slot></footer>
     </app-header-layout>
   </template>
 
   <script>
-    class SearchView extends Polymer.GestureEventListeners(Polymer.Element) {
+    class SearchView extends Polymer.Element {
       static get is() { return 'search-view'; }
+      static get properties() {
+        return {
+          filters: { type: Array, value:[], notify: true },
+          tags: { type: Array, value:[], notify: true },
+          models: { type: Array, value:[], notify: true },
+        };
+      }
       connectedCallback() {
         super.connectedCallback();
+        this.$.tags.addEventListener('focus', (e) => this._getTags(e));
+        this.$.models.addEventListener('focus', (e) => this._getModels(e));
+        this.$.filter.addEventListener('change', (e) => this.applyFilter(e));
         this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
-      listObjects(tags) {
-        const list = [];
-        tags.forEach((tag) => {
-          list.push({text: tag, value: tag});
+      _url(path) {
+        if (path === '/search') return '/api/filters';
+      }
+      _getTags(e) {
+        if (this.tags.length === 0) {
+          this.$.ajax_tags.generateRequest();
+        }
+      }
+      _getModels(e) {
+        if (this.models.length === 0) {
+          this.$.ajax_model.generateRequest();
+        }
+      }
+      listFilters(e) {
+        e.detail.response.filters.forEach((filter) => {
+          this.push('filters', {label: filter.name, value: filter});
         });
-        return list;
+      }
+      applyFilter(e) {
+        const filter = e.target.value;
+        if (filter) {
+          this.set('route.path', ['/list', filter.field_name, filter.name].join('/'));
+        }
+      }
+      listTags(e) {
+        e.detail.response.forEach((tag) => {
+          this.push('tags', {text: tag, value: tag});
+        });
+      }
+      listModels(e) {
+        e.detail.response.forEach((model) => {
+          this.push('models', model);
+        });
       }
       onSubmit(e) {
         this.$.findForm.submit();
@@ -139,7 +191,7 @@
         }
       }
       goBack() {
-        window.history.go(-1);
+        this.set('route.path', '/list');
       }
     }
 

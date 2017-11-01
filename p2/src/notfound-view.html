@@ -13,7 +13,7 @@
       }
     </style>
 
-    <app-header-layout class="big" fullbleed>
+    <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -35,7 +35,7 @@
     class NotFoundView extends Polymer.Element {
       static get is() { return 'notfound-view'; }
       goBack() {
-        this.set('route.path', '/start');
+        this.set('route.path', '/list');
       }
     }
     window.customElements.define(NotFoundView.is, NotFoundView);

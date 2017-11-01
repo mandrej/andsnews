@@ -1,0 +1,12 @@
+dispatch:
+- url: "*/api/*"
+  service: api
+
+- url: "*/tests/*"
+  service: api
+
+- url: "*/sitemap.xml"
+  service: api
+
+- url: "*/app/*"
+  service: default
