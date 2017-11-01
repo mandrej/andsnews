@@ -215,9 +215,11 @@
             this.push('records', item);
           });
           this.$.scrollTheshold.clearTriggers();
-          Polymer.Async.timeOut.run(() => {
-            Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
-          }, 20);
+          if (window.pageYOffset < this._listScrollTop) {
+            Polymer.Async.timeOut.run(() => {
+              Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+            }, 20);
+          }
         }
       }
       _load() {
