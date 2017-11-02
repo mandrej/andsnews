@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
@@ -92,7 +93,6 @@
     </paper-dialog>
 
     <iron-ajax id="ajax" auto
-      url="{{_url(route.path, field, value)}}"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
@@ -167,16 +167,14 @@
         return {
           params: { type: Object, value: {}, notify: true },
           records: { type: Array, value: [], notify: true },
-          count: { type: Number, value: 0 },
           obj: { type: Object, notify: true },
-          route: Object,
           currentIndex: { type: Number, value: 0, notify: true },
           _listScrollTop: { type: Number, value: 0 },
         };
       }
       static get observers() {
         return [
-          '_getCount(records.length)',
+          '_url(route.path, field, value)',
           'getUserPhoto(user.photoURL)'
         ]
       }
@@ -189,19 +187,26 @@
         this.removeEventListener('kick', this.setScrollTop, true);
       }
       _url(path, field, value) {
-        this.set('params._page', null);
-        this.records = [];
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer, // initially undefined
+          Polymer.Async.timeOut.after(0),
+          () => {
+            const ajax = this.$.ajax, rx = /^\/list/;
 
-        const rx = /^\/list/;
-        if (rx.test(path)) {
-          if (field === undefined && value === undefined) {
-            return '/api/start';
-          } else if (field === 'search') {
-            return ['/api/search', value].join('/');
-          } else {
-            return ['/api/photo', field, value].join('/');
+            if (rx.test(path)) {
+              this.set('params._page', null);
+              this.records = [];
+
+              if (field === undefined && value === undefined) {
+                ajax.url = '/api/start';
+              } else if (field === 'search') {
+                ajax.url = ['/api/search', value].join('/');
+              } else {
+                ajax.url = ['/api/photo', field, value].join('/');
+              }
+            }
           }
-        }
+        );
       }
       handler(e) {
         const data = e.detail.response,
@@ -230,9 +235,6 @@
       }
       setScrollTop(e) {
         this._listScrollTop = e.detail.top;
-      }
-      _getCount(count) {
-        this.count = count;
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
