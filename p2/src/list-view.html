@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
@@ -93,6 +93,7 @@
     </paper-dialog>
 
     <iron-ajax id="ajax" auto
+      url="{{_url(route.path, field, value)}}"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
@@ -174,7 +175,6 @@
       }
       static get observers() {
         return [
-          '_url(route.path, field, value)',
           'getUserPhoto(user.photoURL)'
         ]
       }
@@ -187,26 +187,25 @@
         this.removeEventListener('kick', this.setScrollTop, true);
       }
       _url(path, field, value) {
-        this._debouncer = Polymer.Debouncer.debounce(
-          this._debouncer, // initially undefined
-          Polymer.Async.timeOut.after(0),
-          () => {
-            const ajax = this.$.ajax, rx = /^\/list/;
+        const rx = /^\/list/;
 
-            if (rx.test(path)) {
-              this.set('params._page', null);
-              this.records = [];
+        if (rx.test(path)) {
+          this.set('params._page', null);
+          this.records = [];
 
-              if (field === undefined && value === undefined) {
-                ajax.url = '/api/start';
-              } else if (field === 'search') {
-                ajax.url = ['/api/search', value].join('/');
-              } else {
-                ajax.url = ['/api/photo', field, value].join('/');
-              }
-            }
+          if (field === undefined && value === undefined) {
+            return '/api/start';
+          } else if (field === 'search') {
+            return ['/api/search', value].join('/');
+          } else {
+            return ['/api/photo', field, value].join('/');
           }
-        );
+        }
+        // this._debouncer = Polymer.Debouncer.debounce(
+        //   this._debouncer, // initially undefined
+        //   Polymer.Async.timeOut.after(200),
+        //   () => { ... }
+        // );
       }
       handler(e) {
         const data = e.detail.response,
