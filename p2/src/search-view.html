@@ -43,7 +43,6 @@
       @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
     </style>
 
-    <iron-ajax url="[[_url(route.path)]]" on-response="listFilters" auto></iron-ajax>
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
     <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" id="ajax_model"></iron-ajax>
 
@@ -59,22 +58,17 @@
       </app-header>
 
       <div class="container">
-        <ul class="app-grid">
-          <li class="item">
-            <vaadin-combo-box label="Predefined filter" id="filter"
-              auto-validate
-              items="{{filters}}"></vaadin-combo-box>
-          </li>
-        </ul>
-
         <iron-form id="findForm">
             <form method="get">
               <ul class="app-grid">
-                <li class="item">
-                  <paper-input name="find_text" label="find text"></paper-input>
+                <li class="item right">
+                    <paper-button on-tap="onSubmit" raised>Find</paper-button>
                 </li>
                 <li class="item">
-                  <paper-chip-input-autocomplete name="find_tags" label="find tags" id="tags"
+                  <paper-input name="find_text" label="by text"></paper-input>
+                </li>
+                <li class="item">
+                  <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
                     closable
                     items="[[item.tags]]"
                     source="[[tags]]"></paper-chip-input-autocomplete>
@@ -99,8 +93,11 @@
                     allow-custom-value="false"
                     items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
                 </li>
-                <li class="item right">
-                    <paper-button on-tap="onSubmit" raised>Find</paper-button>
+                <li class="item">
+                  <vaadin-combo-box name="find_color" label="by color"
+                    auto-validate
+                    allow-custom-value="false"
+                    items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
                 </li>
               </ul>
              </form>
@@ -125,7 +122,6 @@
         super.connectedCallback();
         this.$.tags.addEventListener('focus', (e) => this._getTags(e));
         this.$.models.addEventListener('focus', (e) => this._getModels(e));
-        this.$.filter.addEventListener('change', (e) => this.applyFilter(e));
         this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
       _url(path) {
@@ -139,17 +135,6 @@
       _getModels(e) {
         if (this.models.length === 0) {
           this.$.ajax_model.generateRequest();
-        }
-      }
-      listFilters(e) {
-        e.detail.response.filters.forEach((filter) => {
-          this.push('filters', {label: filter.name, value: filter});
-        });
-      }
-      applyFilter(e) {
-        const filter = e.target.value;
-        if (filter) {
-          this.set('route.path', ['/list', filter.field_name, filter.name].join('/'));
         }
       }
       listTags(e) {
@@ -184,6 +169,9 @@
         }
         if (e.detail.find_author) {
           params.push('author:' + e.detail.find_author)
+        }
+        if (e.detail.find_color) {
+          params.push('color:' + e.detail.find_color)
         }
         const find = params.join(' AND ');
         if (find) {

@@ -234,7 +234,8 @@ class Photo(ndb.Model):
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
                 search.TextField(name='model', value=self.model),
-                search.DateField(name='date', value=self.date)
+                search.DateField(name='date', value=self.date),
+                search.TextField(name='color', value=self.color),
             ]
         )
         INDEX.put(doc)
