@@ -11,7 +11,7 @@
     <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
           <h4 condensed-title>404 Not Found Error</h4>
         </app-toolbar>
         <app-toolbar>
@@ -22,14 +22,14 @@
       <div class="container">
         <p>Ooops, something went wrong</p>
       </div>
-      <footer><slot name="copy"></slot></footer>
+      <slot name="footer"></slot>
     </app-header-layout>
   </template>
 
   <script>
     class NotFoundView extends Polymer.Element {
       static get is() { return 'notfound-view'; }
-      goBack() {
+      goHome() {
         this.set('route.path', '/list');
       }
     }

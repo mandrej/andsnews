@@ -112,7 +112,7 @@
           <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
         </app-toolbar>
         <app-toolbar>
-          <a href="#" on-tap="showHome" main-title>ANDрејевићи</a>
+          <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
           <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
       </app-header>
@@ -239,12 +239,6 @@
       getUserPhoto(url) {
         if (url) this.userPhoto = url;
       }
-      showHome(e) {
-        e.preventDefault();
-        this.field = undefined;
-        this.value = undefined;
-        this.set('route.path', '/list');
-      }
       showSearch() {
         this.set('route.path', '/search');
       }
@@ -266,6 +260,12 @@
           field = target.dataset.field,
           value = target.dataset.fieldValue;
         this.set('route.path', ['/list', field, value].join('/'));
+      }
+      resetFilter(e) {
+        e.preventDefault();
+        this.field = undefined;
+        this.value = undefined;
+        this.set('route.path', '/list');
       }
       showDialog(e) {
         this.currentIndex = e.model.index;

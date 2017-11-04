@@ -56,14 +56,14 @@
       <search-view
         view="search"
         route="{{route}}">
-        <span slot="copy">[[copy]]</span>
+        <footer slot="footer">[[copy]]</footer>
       </search-view>
 
       <add-view
         view="add"
         is-authorized="[[isAuthorized]]"
         route="{{route}}">
-        <span slot="copy">[[copy]]</span>
+        <footer slot="footer">[[copy]]</footer>
       </add-view>
 
       <edit-view
@@ -71,7 +71,7 @@
         is-authorized="[[isAuthorized]]"
         safekey="{{dataSafekey.safekey}}"
         route="{{route}}">
-        <span slot="copy">[[copy]]</span>
+        <footer slot="footer">[[copy]]</footer>
       </edit-view>
 
       <admin-view
@@ -79,13 +79,13 @@
         user="[[user]]"
         is-admin="[[isAdmin]]"
         route="{{route}}">
-        <span slot="copy">[[copy]]</span>
+        <footer slot="footer">[[copy]]</footer>
       </admin-view>
 
       <notfound-view
         view="404"
         route="{{route}}">
-        <span slot="copy">[[copy]]</span>
+        <footer slot="footer">[[copy]]</footer>
       </notfound-view>
     </iron-pages>
   </template>

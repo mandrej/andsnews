@@ -46,7 +46,7 @@
     <app-header-layout fullbleed>
       <app-header condenses reveals shadow effects="resize-title" slot="header">
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+          <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
           <h4 condensed-title>[[title]]</h4>
           <div>[[user.email]]</div>
         </app-toolbar>
@@ -72,7 +72,7 @@
           <p>Go <a href="/list">Home</a> and Sign-In with your Google Account</p>
         </div>
       </div>
-      <footer><slot name="copy"></slot></footer>
+      <slot name="footer"></slot>
     </app-header-layout>
   </template>
 
@@ -141,7 +141,7 @@
       fix(e) {
         this.callAjax('/api/fix/' + e.target.dataset.kind);
       }
-      goBack() {
+      goHome() {
         this.set('route.path', '/list');
       }
     }
