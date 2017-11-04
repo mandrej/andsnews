@@ -26,8 +26,6 @@ logger.setLevel(level=logging.DEBUG)
 TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = ['year', 'tags', 'model', 'color']
-# ENTRY_FILTER = ['year', 'tags']
-# PHOTO_EXIF_FIELDS = ('model', 'lens', 'date', 'aperture', 'shutter', 'focal_length', 'iso')
 
 
 def rounding(val, values):
@@ -241,10 +239,6 @@ class Photo(ndb.Model):
         INDEX.put(doc)
 
     def update_filters(self, new_pairs, old_pairs):
-        futures = []
-        for field, value in set(new_pairs) | set(old_pairs):
-            futures.append(self.query_for(field, value).get_async())
-
         counters = []
         for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
             key_name = 'Photo||{}||{}'.format(field, value)
@@ -254,12 +248,6 @@ class Photo(ndb.Model):
                 counter.count -= 1
             if (field, value) in new_pairs:
                 counter.count += 1
-
-            latest = futures[i].get_result()
-            if latest:
-                counter.repr_stamp = latest.date
-                counter.repr_url = latest.serving_url
-
             counters.append(counter)
 
         ndb.put_multi(counters)
@@ -416,132 +404,3 @@ class Photo(ndb.Model):
             'size': sizeof_fmt(self.size),
         })
         return data
-
-
-# class Entry(ndb.Model):
-#     headline = ndb.StringProperty(required=True)
-#     author = ndb.UserProperty()
-#     summary = ndb.StringProperty(required=True)
-#     body = ndb.TextProperty(required=True)
-#     tags = ndb.StringProperty(repeated=True)
-#     date = ndb.DateTimeProperty()
-#     year = ndb.ComputedProperty(lambda self: self.date.year)
-#     front_img = ndb.StringProperty()
-#
-#     slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
-#
-#     def index_doc(self):
-#         doc = search.Document(
-#             doc_id=self.key.urlsafe(),
-#             fields=[
-#                 search.TextField(name='slug', value=tokenize(self.slug)),
-#                 search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
-#                 search.TextField(name='tags', value=' '.join(self.tags)),
-#                 search.NumberField(name='year', value=self.year),
-#                 search.NumberField(name='month', value=self.date.month),
-#                 search.HtmlField(name='body', value=self.body)]
-#         )
-#         INDEX.put(doc)
-#
-#     def update_filters(self, new_pairs, old_pairs):
-#         futures = []
-#         for field, value in set(new_pairs) | set(old_pairs):
-#             futures.append(self.query_for(field, value).get_async())
-#
-#         counters = []
-#         for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
-#             key_name = 'Entry||{}||{}'.format(field, value)
-#             counter = Counter.get_or_insert(key_name, forkind='Entry', field=field, value=value)
-#
-#             if (field, value) in old_pairs:
-#                 counter.count -= 1
-#             if (field, value) in new_pairs:
-#                 counter.count += 1
-#
-#             latest = futures[i].get_result()
-#             if latest:
-#                 counter.repr_stamp = latest.date
-#                 counter.repr_url = latest.front_img
-#
-#             counters.append(counter)
-#
-#         ndb.put_multi(counters)
-#
-#     def changed_pairs(self):
-#         """
-#         List of changed field, value pairs
-#         [('year', 2016), ('tags', 'b&w'), ('tags', 'still life'), ('model', 'SIGMA dp2 Quattro')]
-#         """
-#         pairs = []
-#         for field in ENTRY_FILTER:
-#             prop = field
-#             value = getattr(self, prop, None)
-#             if value:
-#                 if isinstance(value, (list, tuple)):
-#                     for v in value:
-#                         pairs.append((field, str(v)))
-#                 elif isinstance(value, users.User):
-#                     pairs.append((field, value.email()))
-#                 elif isinstance(value, int):
-#                     pairs.append((field, value))
-#                 else:
-#                     pairs.append((field, str(value)))  # stringify year
-#         return pairs
-#
-#     def add(self, data):
-#         self.headline = data['headline']
-#         self.author = data['author']
-#         self.summary = data['summary']
-#         self.body = data['body']
-#         self.tags = data['tags']
-#         self.date = data['date']
-#         self.front_img = data['front_img']
-#         self.put()
-#
-#         new_pairs = self.changed_pairs()
-#         deferred.defer(self.update_filters, new_pairs, [], _queue='background')
-#         deferred.defer(self.index_doc, _queue='background')
-#         return {'success': True, 'safe_key': self.key.urlsafe()}
-#
-#     def edit(self, data):
-#         old_pairs = self.changed_pairs()
-#
-#         self.headline = data['headline']
-#         self.author = data['author']
-#         self.summary = data['summary']
-#         self.body = data['body']
-#         self.tags = data['tags']
-#         self.date = data['date']
-#         self.front_img = data['front_img']
-#         self.put()
-#
-#         new_pairs = self.changed_pairs()
-#         deferred.defer(self.index_doc, _queue='background')
-#         deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
-#
-#     def remove(self):
-#         old_pairs = self.changed_pairs()
-#
-#         self.key.delete()
-#         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
-#         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
-#
-#     @classmethod
-#     def query_for(cls, field, value):
-#         f = filter_param(field, value)
-#         filters = [cls._properties[k] == v for k, v in f.items()]
-#         return cls.query(*filters).order(-cls.date)
-#
-#     @classmethod
-#     def latest_for(cls, field, value):
-#         query = cls.query_for(field, value)
-#         return query.get()
-#
-#     def serialize(self):
-#         data = self.to_dict(exclude=('front', 'year'))
-#         data.update({
-#             'kind': 'entry',
-#             'year': str(self.year),
-#             'safekey': self.key.urlsafe()
-#         })
-#         return data

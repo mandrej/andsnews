@@ -1,8 +1,9 @@
 import datetime
 import json
 import logging
-from operator import itemgetter
 from urlparse import urlparse
+import httplib2
+from config import FIREBASE
 
 import numpy as np
 import webapp2
@@ -12,8 +13,7 @@ from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
-from fireapi import push_message
-from mapper import Indexer, Builder, Fixer, Unbound
+from mapper import push_message, Indexer, Builder, Fixer, Unbound
 from models import Counter, Photo, INDEX, PHOTO_FILTER
 from slugify import slugify
 
@@ -133,17 +133,6 @@ class Collection(RestHandler):
         page = self.request.get('_page', None)
         token = None
 
-        # if kind == 'entry' and value:
-        #     obj = ndb.Key(urlsafe=value).get()
-        #     if obj is None:
-        #         self.abort(404)
-        #     objects = [obj]
-        # else:
-        #     model = ndb.Model._kind_map.get(kind.title())
-        #     query = model.query_for(field, value)
-        #     paginator = Paginator(query, per_page=LIMIT)
-        #     objects, token = paginator.page(page)  # [], None
-
         if field == 'year':
             value = int(value)
         query = Photo.query_for(field, value)
@@ -156,33 +145,6 @@ class Collection(RestHandler):
             '_page': page,
             '_next': token
         })
-
-
-def available_filters():
-    collection = []
-    for field in PHOTO_FILTER:
-        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-        items = []
-        for counter in query:
-            items.append({
-                'field_name': field,
-                'count': counter.count,
-                'name': counter.value,
-                'repr_url': counter.repr_url,
-                'repr_stamp': counter.repr_stamp})
-
-        if field == 'year':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        collection.extend(items)
-
-    current = datetime.datetime.now().year
-    if collection:
-        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
-        for item in collection:
-            item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
-                else item['count'] > int(limit)
-
-    return [x for x in collection if x['show']]
 
 
 class PhotoRecent(RestHandler):
@@ -198,14 +160,6 @@ class PhotoRecent(RestHandler):
             'objects': objects,
             '_page': page,
             '_next': token
-        })
-
-
-class PhotoFilters(RestHandler):
-    def get(self):
-        self.render({
-            'count': Photo.query().count(),
-            'filters': available_filters()
         })
 
 
@@ -233,8 +187,6 @@ class BackgroundIndex(RestHandler):
 
             if kind == 'photo':
                 runner.KIND = Photo
-            # elif kind == 'entry':
-            #     runner.KIND = Entry
 
             runner.TOKEN = token
             push_message(runner.TOKEN, START_MSG)
@@ -265,14 +217,6 @@ class BackgroundFix(RestHandler):
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
-        # elif kind == 'entry' and token is not None:
-        #     runner = RemoveIndex()
-        #     runner.KIND = Entry
-        #     runner.TOKEN = token
-        #
-        #     push_message(runner.TOKEN, START_MSG)
-        #     deferred.defer(runner.run, batch_size=10, _queue='background')
-
 
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
@@ -282,13 +226,10 @@ class BackgroundBuild(RestHandler):
             runner = Builder()
             if kind == 'Photo':  # Title case!
                 runner.KIND = Photo
-            # elif kind == 'Entry':
-            #     runner.KIND = Entry
 
             runner.VALUES = []
             runner.FIELD = field
             runner.TOKEN = token
-            # runner.CHANNEL_NAME = '%s.json' % mem_key
 
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
@@ -307,29 +248,6 @@ class Crud(RestHandler):
             fs = data['file']
             obj = Photo(headline=fs.filename)
             res = obj.add(fs)
-        # elif kind == 'entry':
-        #     obj = Entry(headline=data['headline'])
-        #     # fix tags
-        #     if 'tags' in data:
-        #         if data['tags'].strip() != '':
-        #             tags = map(unicode.strip, data['tags'].split(','))
-        #         else:
-        #             tags = []
-        #     else:
-        #         tags = []
-        #     data['tags'] = tags
-        #     # fix author
-        #     if 'author' in data:
-        #         email = data['author']
-        #         data['author'] = users.User(email=email)
-        #
-        #     # fix empty values
-        #     values = map(lambda x: x if x != '' else None, data.values())
-        #     data = dict(zip(data.keys(), values))
-        #     # fix date for entry only
-        #     dt = data['date'].strip()
-        #     data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%d')  # input type="date"
-        #     res = obj.add(data)
 
         self.render(res)
 
@@ -368,9 +286,6 @@ class Crud(RestHandler):
                 data['aperture'] = float(data['aperture'])
             if data['iso']:
                 data['iso'] = int(data['iso'])
-
-        elif kind == 'entry':
-            logging.info(data)
 
         obj.edit(data)
 
@@ -415,8 +330,6 @@ class Info(RestHandler):
     def get(self):
         data = {
             'photo': {'count': Photo.query().count()},
-            # 'entry': {'count': Entry.query().count()},
         }
         data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
-        # data['entry']['counters'] = ['Entry_%s' % x for x in ENTRY_FILTER]
         self.render(data)

@@ -2,6 +2,8 @@ import collections
 import itertools
 import logging
 import uuid
+import httplib2
+import json
 
 import re
 import cloudstorage as gcs
@@ -9,11 +11,34 @@ from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
-from config import BUCKET, END_MSG
+from config import BUCKET, END_MSG, FIREBASE
 from models import Counter, remove_doc
-from fireapi import push_message
 
-# FB = Firebase()
+
+def push_message(token, message=''):
+    """
+        Firebase Cloud Messaging Server
+        content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
+            "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
+    """
+    url = 'https://fcm.googleapis.com/fcm/send'
+    headers = {
+        'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
+        'Content-Type': 'application/json',
+    }
+    payload = {
+        "to": token,
+        "notification": {
+            "title": "ands",
+            "body": message,
+            "icon": "/images/manifest/icon-48x48.png"
+        }
+    }
+    http = httplib2.Http()
+    response, content = http.request(url, method='POST', body=json.dumps(payload), headers=headers)
+    # logging.error(response.status)
+    # logging.error(content)
+    # return json.loads(content)
 
 
 class Mapper(object):
@@ -304,30 +329,7 @@ class Builder(Mapper):
             obj = Counter.get_or_insert(key_name, forkind=kind, field=self.FIELD, value=value)
             obj.count = count
 
-            latest = self.KIND.latest_for(self.FIELD, value)
-            if latest is not None:
-                obj.repr_stamp = latest.date
-                if kind == 'Photo':
-                    obj.repr_url = latest.serving_url
-                # elif kind == 'Entry':
-                #     obj.repr_url = latest.front_img
-
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
 
-            # FB.post(path=self.CHANNEL_NAME, payload='%s %s' % (obj.value, obj.count))
-
-            # key = '{}'.format(hashlib.md5(str(value)).hexdigest())
-            # path = '{}/{}.json'.format(self.CHANNEL_NAME, key)
-            # order = 2000 - value if self.FIELD == 'date' else '{}{}'.format(PHOTO_FILTER[self.FIELD], value)
-            # FB.put(path=path, payload={
-            #     'order': order,
-            #     'field_name': self.FIELD,
-            #     'value': value,
-            #     'count': count,
-            #     'repr_url': repr_url,
-            #     'repr_stamp': repr_stamp
-            # })
-
         push_message(self.TOKEN, END_MSG)
-        # FB.post(path=self.CHANNEL_NAME, payload='END %s' % datetime.datetime.now())

@@ -3,13 +3,12 @@ from webapp2 import WSGIApplication, Route
 from views import api
 from views.config import DEVEL
 app = WSGIApplication([
-    Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
     Route(r'/api/start', handler=api.PhotoRecent),
-    Route(r'/api/filters', handler=api.PhotoFilters),
+    Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
     Route(r'/api/search/<find>', handler=api.Find),
 
     Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),
-    Route(r'/api/<kind:(photo|entry)>/<field:(year|tags|color|model|author|key)>/<value>',
+    Route(r'/api/<kind:(photo|entry)>/<field:(year|tags|color|model|author)>/<value>',
           handler=api.Collection),
 
     Route(r'/api/info', handler=api.Info, methods=['GET']),         # 1
@@ -27,4 +26,3 @@ app = WSGIApplication([
 
     Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
 ], debug=DEVEL)
-
