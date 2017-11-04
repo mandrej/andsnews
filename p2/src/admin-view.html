@@ -65,7 +65,7 @@
               <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
             </template>
             <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-            <paper-button on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
+            <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
           </div>
         </div>
         <div hidden$="[[pass]]">
