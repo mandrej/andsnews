@@ -128,7 +128,7 @@ class Indexer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class RemoveIndex(Mapper):
+class RemoveFields(Mapper):
     TOKEN = None
 
     def map(self, entity):
@@ -136,8 +136,12 @@ class RemoveIndex(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
-            remove_doc(entity.key.urlsafe())
-            push_message(self.TOKEN, entity.slug)
+            if 'repr_stamp' in entity._properties:
+                del entity._properties['repr_stamp']
+            if 'repr_url' in entity._properties:
+                del entity._properties['repr_url']
+            entity.put()
+            push_message(self.TOKEN, entity.key.string_id())
         self.to_put = []
 
     def finish(self):

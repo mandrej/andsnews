@@ -13,7 +13,7 @@ from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
-from mapper import push_message, Indexer, Builder, Fixer, Unbound
+from mapper import push_message, Indexer, Builder, Fixer, Unbound, RemoveFields
 from models import Counter, Photo, INDEX, PHOTO_FILTER
 from slugify import slugify
 
@@ -207,11 +207,14 @@ class BackgroundUnbound(RestHandler):
 class BackgroundFix(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
-            runner = Fixer()
-            runner.KIND = Photo
-            runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
-            runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+        # if kind == 'photo' and token is not None:
+        if kind == 'counter' and token is not None:
+            # runner = Fixer()
+            runner = RemoveFields()
+            # runner.KIND = Photo
+            runner.KIND = Counter
+            # runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
+            # runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)

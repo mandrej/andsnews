@@ -186,8 +186,6 @@ class Counter(ndb.Model):
     field = ndb.StringProperty(required=True)
     value = ndb.GenericProperty(required=True)
     count = ndb.IntegerProperty(default=0)
-    repr_stamp = ndb.DateTimeProperty()
-    repr_url = ndb.StringProperty()
 
 
 class Photo(ndb.Model):
