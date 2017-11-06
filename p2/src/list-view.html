@@ -93,7 +93,7 @@
     </paper-dialog>
 
     <iron-ajax id="ajax" auto
-      url="{{_url(route.path, field, value)}}"
+      url="{{_url(field, value)}}"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
@@ -107,8 +107,8 @@
             <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
           </a>
           <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
-          <paper-spinner active$="[[loading]]"></paper-spinner>
           <h4 condensed-title></h4>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
           <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
         </app-toolbar>
         <app-toolbar>
@@ -184,14 +184,13 @@
         super.disconnectedCallback();
         this.removeEventListener('kick', this.setScrollTop, true);
       }
-      _url(path, field, value) {
+      _url(field, value) {
+        this.records = [];
+        this.set('params._page', null);
+
         const rx = /^\/list/;
-
-        if (rx.test(path)) {
-          this.set('params._page', null);
-          this.records = [];
-
-          if (field === undefined && value === undefined) {
+        if (rx.test(this.route.path)) {
+          if (field === 'all' && value === undefined) {
             return '/api/start';
           } else if (field === 'search') {
             return ['/api/search', value].join('/');
@@ -265,7 +264,7 @@
         e.preventDefault();
         this.field = undefined;
         this.value = undefined;
-        this.set('route.path', '/list');
+        this.set('route.path', '/list/all');
       }
       showDialog(e) {
         this.currentIndex = e.model.index;

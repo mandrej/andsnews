@@ -18,8 +18,8 @@
 
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
-    <app-route route="{{tailView}}" pattern="/:field/:value" data="{{dataFilter}}"></app-route>
-    <app-route route="{{tailView}}" pattern="/:safekey" data="{{dataSafekey}}"></app-route>
+    <app-route route="{{tailView}}" pattern="/:field" data="{{dataField}}" tail="{{tailField}}"></app-route>
+    <app-route route="{{tailField}}" pattern="/:value" data="{{dataValue}}"></app-route>
 
     <firebase-app
       app="{{firebase}}"
@@ -43,14 +43,14 @@
         user="[[user]]"
         is-authorized="[[isAuthorized]]"
         is-admin="[[isAdmin]]"
-        field="{{dataFilter.field}}"
-        value="{{dataFilter.value}}"
+        field="{{dataField.field}}"
+        value="{{dataValue.value}}"
         route="{{route}}"></list-view>
 
       <item-view
         view="item"
         is-authorized="[[isAuthorized]]"
-        safekey="{{dataSafekey.safekey}}"
+        safekey="{{dataField.field}}"
         route="{{route}}"></item-view>
 
       <search-view
@@ -69,7 +69,7 @@
       <edit-view
         view="edit"
         is-authorized="[[isAuthorized]]"
-        safekey="{{dataSafekey.safekey}}"
+        safekey="{{dataField.field}}"
         route="{{route}}">
         <footer slot="footer">[[copy]]</footer>
       </edit-view>
@@ -115,7 +115,7 @@
       connectedCallback() {
         super.connectedCallback();
         if (this.route.path === '/') {
-          this.set('route.path', '/list');
+          this.set('route.path', '/list/all');
         }
         this.addEventListener('sign', this.signHandler);
       }
