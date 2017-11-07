@@ -194,7 +194,7 @@
             return '/api/start';
           } else if (field === 'search') {
             return ['/api/search', value].join('/');
-          } else {
+          } else if (field && value) {
             return ['/api/photo', field, value].join('/');
           }
         }

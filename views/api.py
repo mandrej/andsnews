@@ -1,11 +1,8 @@
 import datetime
 import json
-import logging
+import time
 from urlparse import urlparse
-import httplib2
-from config import FIREBASE
 
-import numpy as np
 import webapp2
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
@@ -13,7 +10,7 @@ from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
-from mapper import push_message, Indexer, Builder, Fixer, Unbound, RemoveFields
+from mapper import push_message, Indexer, Builder, Unbound, RemoveFields
 from models import Counter, Photo, INDEX, PHOTO_FILTER
 from slugify import slugify
 
@@ -74,9 +71,9 @@ class SearchPaginator(object):
             'sort_options': search.SortOptions(
                 expressions=[
                     search.SortExpression(
-                        expression='date',
+                        expression='stamp',
                         direction=search.SortExpression.DESCENDING,
-                        default_value=datetime.datetime(1970, 1, 1))
+                        default_value=time.mktime(datetime.datetime(1970, 1, 1).timetuple()))
                 ]
             )
         }

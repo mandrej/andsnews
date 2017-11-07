@@ -230,7 +230,7 @@ class Photo(ndb.Model):
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
                 search.TextField(name='model', value=self.model),
-                search.DateField(name='date', value=self.date),
+                search.NumberField(name='stamp', value=time.mktime(self.date.timetuple())),
                 search.TextField(name='color', value=self.color),
             ]
         )
