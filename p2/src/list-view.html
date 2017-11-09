@@ -69,6 +69,22 @@
       paper-button {
         color: var(--accent-color);
       }
+      paper-dialog {
+        max-width: 400px;
+        background-color: #fff;
+        --paper-dialog-title: {
+          white-space: normal;
+          text-align: center;
+          font-size: 20px;
+        }
+      }
+      paper-dialog .buttons {
+        padding: 8px 24px 24px;
+      }
+      paper-dialog paper-button {
+        color: var(--primary-text-color);
+        background-color: var(--divider-color);
+      }
       @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 3); }}
       @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
       @media (max-width: 432px)  { .square { width: calc(100vw - var(--user-gap)); }}

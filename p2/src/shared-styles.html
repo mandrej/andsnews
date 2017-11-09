@@ -2,34 +2,7 @@
 
 <dom-module id="shared-styles">
   <template>
-    <style include="iron-flex iron-flex-alignment">
-      :root {
-        --dark-primary-color:       #303F9F;
-        --default-primary-color:    #3F51B5; /* indigo 500 */
-        --light-primary-color:      #C5CAE9;
-        --text-primary-color:       #FFFFFF;
-        --accent-color:             #FF4081; /* pink A200 */
-        --primary-background-color: #C5CAE9;
-        --primary-text-color:       #212121;
-        --secondary-text-color:     #757575;
-        --disabled-text-color:      #BDBDBD;
-        --divider-color:            #BDBDBD;
-        --error-color:              #C2185B;
-
-        --user-gap:                 16px;
-        --no-select: {
-          -moz-user-select: none;
-          -ms-user-select: none;
-          -webkit-user-select: none;
-          user-select: none;
-        };
-      }
-      [hidden] {
-        display: none !important;
-      }
-      *:focus {
-        outline: none;
-      }
+    <style include="iron-flex iron-flex-alignment iron-positioning">
       a {
         color: var(--default-primary-color);
       }
@@ -53,9 +26,7 @@
       app-toolbar [main-title], app-toolbar [condensed-title] {
         margin: 0;
         font-weight: 300;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @apply --ellipsis;
       }
       app-toolbar [main-title] {
         font-size: 36px;
@@ -64,44 +35,16 @@
         text-transform: none;
         pointer-events: all; /* default none */
       }
-      paper-dialog {
-        max-width: 400px;
-        background-color: #fff;
-        --paper-dialog-title: {
-          white-space: normal;
-          text-align: center;
-          font-size: 20px;
-        }
-      }
-      paper-dialog .buttons {
-        padding: 8px 24px 24px;
-      }
       paper-fab,
       paper-button {
         color: var(--text-primary-color);
         background-color: var(--accent-color);
       }
-      vaadin-upload {
-        --vaadin-upload-button-add: {
-          font-size: inherit;
-          color: var(--text-primary-color);
-          background-color: var(--accent-color);
-          @apply(--shadow-elevation-2dp);
-        }
-      }
-      /* paper-fab {
-        position: absolute;
-        top: calc(120px + (var(--user-gap) / 2));
-        right: calc(var(--user-gap) / 2);
-      } */
-      paper-dialog paper-button {
-        color: var(--primary-text-color);
-        background-color: var(--divider-color);
-      }
       vaadin-combo-box { padding: 0; }
       paper-toast {
         --paper-toast-color: var(--text-primary-color);
         --paper-toast-background-color: var(--default-primary-color);
+        @apply --ellipsis;
       }
       paper-ripple {
         color: #fff;
@@ -135,8 +78,9 @@
 
   </template>
   <script>
-    Polymer({
-      is: 'shared-styles'
-    });
+    class SharedStyles extends Polymer.Element {
+      static get is() { return 'shared-styles'; }
+    }
+    window.customElements.define(SharedStyles.is, SharedStyles);
   </script>
 </dom-module>

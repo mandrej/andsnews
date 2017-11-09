@@ -40,6 +40,32 @@
     <style>
       html { overflow: -moz-scrollbars-vertical; }
       html, body { -ms-overflow-style: none; }
+      html {
+        --dark-primary-color:       #303F9F;
+        --default-primary-color:    #3F51B5; /* indigo 500 */
+        --light-primary-color:      #C5CAE9;
+        --text-primary-color:       #FFFFFF;
+        --accent-color:             #FF4081; /* pink A200 */
+        --primary-background-color: #C5CAE9;
+        --primary-text-color:       #212121;
+        --secondary-text-color:     #757575;
+        --disabled-text-color:      #BDBDBD;
+        --divider-color:            #BDBDBD;
+        --error-color:              #C2185B;
+
+        --user-gap:                 16px;
+        --no-select: {
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -webkit-user-select: none;
+          user-select: none;
+        };
+        --ellipsis: {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        };
+      }
       body {
         margin: 0;
         padding: 0;
@@ -49,6 +75,9 @@
       }
       ::-webkit-scrollbar {
         display: none;
+      }
+      *:focus {
+        outline: none;
       }
     </style>
   </head>

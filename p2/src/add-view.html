@@ -8,6 +8,14 @@
       :host {
         display: block;
       }
+      vaadin-upload {
+        --vaadin-upload-button-add: {
+          font-size: inherit;
+          color: var(--text-primary-color);
+          background-color: var(--accent-color);
+          @apply(--shadow-elevation-2dp);
+        }
+      }
     </style>
 
     <app-header-layout fullbleed>
