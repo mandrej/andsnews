@@ -23,7 +23,6 @@ from slugify import slugify
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
 
-TIMEOUT = 60  # 1 minute
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = ['year', 'tags', 'model', 'color']
 
@@ -384,11 +383,6 @@ class Photo(ndb.Model):
         f = filter_param(field, value)
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
-
-    @classmethod
-    def latest_for(cls, field, value):
-        query = cls.query_for(field, value)
-        return query.get()
 
     def serialize(self):
         data = self.to_dict(exclude=(
