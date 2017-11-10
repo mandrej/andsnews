@@ -15,6 +15,11 @@
       .container {
         @apply --layout-flex;
       }
+      app-header {
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
       ul {
         margin: 0;
         padding: 0;
@@ -41,8 +46,8 @@
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title"
-        style="background-image: url([[item.serving_url]]=s0-c); background-size: cover; background-position: center" slot="header">
+      <app-header condenses reveals shadow effects="resize-title fade-background"
+        style="background-image: url([[item.serving_url]]=s0)" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h4 condensed-title>[[title]]</h4>

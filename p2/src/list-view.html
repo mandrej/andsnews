@@ -18,6 +18,22 @@
       iron-list {
         padding: calc(var(--user-gap) / 2);
       }
+      .sign {
+        padding: 0;
+        --iron-icon: {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+      }
+      paper-spinner {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        top: 44px;
+        left: calc(50% - 20px);
+      }
       .square {
         width: calc((100vw - var(--user-gap)) / 4);
         box-sizing: border-box;
@@ -98,8 +114,7 @@
       </div>
     </paper-dialog>
 
-    <iron-ajax id="ajax" auto
-      url="{{_url(field, value)}}"
+    <iron-ajax id="ajax"
       params="{{params}}"
       loading="{{loading}}"
       on-response="handler"></iron-ajax>
@@ -107,20 +122,17 @@
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header reveals shadow slot="header">
+      <app-header condenses reveals shadow slot="header">
         <app-toolbar>
-          <a hidden$="[[!isAuthorized]]" class="self-center" href="#" on-tap="_sign">
-            <iron-image src="[[userPhoto]]" class="thumbnail" preload fade sizing="cover"></iron-image>
-          </a>
-          <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
+          <paper-icon-button id="sign" class="sign" on-tap="_sign"></paper-icon-button>
           <h4 condensed-title></h4>
           <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
-        <app-toolbar>
+        <app-toolbar sticky>
           <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
-          <paper-spinner active$="[[loading]]"></paper-spinner>
           <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
         </app-toolbar>
+        <paper-spinner active$="[[loading]]"></paper-spinner>
       </app-header>
 
       <iron-scroll-threshold id="scrollTheshold"
@@ -179,6 +191,7 @@
       }
       static get observers() {
         return [
+          'buildUrl(field, value)',
           'getUserPhoto(user.photoURL)'
         ]
       }
@@ -190,25 +203,41 @@
         super.disconnectedCallback();
         this.removeEventListener('kick', this.setScrollTop, true);
       }
-      _url(field, value) {
-        const rx = /^\/list/;
-        if (rx.test(this.route.path)) {
-          this.records = [];
-          this.set('params._page', null);
+      buildUrl(field, value) {
+        let url;
+        let rx = /^\/list/;
+        const ajax = this.$.ajax;
 
-          if (field === 'all' && value === undefined) {
-            return '/api/start';
-          } else if (field === 'search') {
-            return ['/api/search', value].join('/');
-          } else if (field && value) {
-            return ['/api/photo', field, value].join('/');
-          }
+        if (rx.test(this.route.path)) {
+          this._debouncer = Polymer.Debouncer.debounce(
+            this._debouncer, // initially undefined
+            Polymer.Async.timeOut.after(100),
+            () => {
+              if (field === 'all') {
+                ajax.url = '/api/start';
+              } else if (field === 'search') {
+                ajax.url = ['/api/search', value].join('/');
+              } else if (field && value) {
+                ajax.url = ['/api/photo', field, value].join('/');
+              }
+              if (ajax.lastRequest) {
+                if (!ajax.lastRequest.url.startsWith(ajax.url)) {
+                  this.records = [];
+                  this.set('params._page', null);
+                  ajax.generateRequest();
+                } else {
+                  Polymer.Async.timeOut.run(() => {
+                    Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+                  }, 20);
+                }
+              } else {
+                this.records = [];
+                this.set('params._page', null);
+                ajax.generateRequest();
+              }
+            }
+          );
         }
-        // this._debouncer = Polymer.Debouncer.debounce(
-        //   this._debouncer, // initially undefined
-        //   Polymer.Async.timeOut.after(200),
-        //   () => { ... }
-        // );
       }
       handler(e) {
         const data = e.detail.response,
@@ -222,17 +251,13 @@
             this.push('records', item);
           });
           this.$.scrollTheshold.clearTriggers();
-          if (window.pageYOffset < this._listScrollTop) {
-            Polymer.Async.timeOut.run(() => {
-              Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
-            }, 20);
-          }
         }
       }
       _load() {
         const ajax = this.$.ajax;
         if (ajax.lastResponse && ajax.lastResponse._next) {
           this.set('params._page', ajax.lastResponse._next);
+          ajax.generateRequest();
         }
       }
       setScrollTop(e) {
@@ -242,7 +267,14 @@
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
       }
       getUserPhoto(url) {
-        if (url) this.userPhoto = url;
+        const icon = this.$.sign;
+        if (url) {
+          icon.icon = '';
+          icon.src = url;
+        } else {
+          icon.src = '';
+          icon.icon = 'exit-to-app';
+        }
       }
       showSearch() {
         this.set('route.path', '/search');
@@ -268,8 +300,6 @@
       }
       resetFilter(e) {
         e.preventDefault();
-        this.field = undefined;
-        this.value = undefined;
         this.set('route.path', '/list/all');
       }
       showDialog(e) {
