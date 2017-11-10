@@ -5,14 +5,13 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-
 <link rel="import" href="../bower_components/app-layout/app-grid/app-grid-style.html">
 
 <dom-module id="search-view">
   <template>
-    <style include="shared-styles app-grid-style">
-      :host {
-        display: block;
+    <style include="shared-styles app-grid-style iron-flex iron-flex-alignment iron-positioning">
+      .container {
+        @apply --layout-flex;
       }
       ul {
         margin: 0;
@@ -21,14 +20,16 @@
       }
       .app-grid {
         --app-grid-columns: 3;
-        --app-grid-gutter: 16px;
+        --app-grid-gutter: var(--user-gap);
       }
       .item {
         @apply --layout-self-end;
       }
+      .expandible {
+        @apply --app-grid-expandible-item;
+      }
       .right {
         text-align: right;
-        @apply --app-grid-expandible-item;
       }
       @media (max-width: 768px)  { .app-grid { --app-grid-columns: 2; }}
       @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
@@ -52,7 +53,7 @@
         <iron-form id="findForm">
             <form method="get">
               <ul class="app-grid">
-                <li class="item right">
+                <li class="item expandible right">
                     <paper-button on-tap="onSubmit" raised>Find</paper-button>
                 </li>
                 <li class="item">

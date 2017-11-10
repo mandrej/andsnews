@@ -14,10 +14,7 @@
 
 <dom-module id="list-view">
   <template>
-     <style include="shared-styles">
-      :host {
-        display: block;
-      }
+     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
       iron-list {
         padding: calc(var(--user-gap) / 2);
       }
@@ -194,11 +191,11 @@
         this.removeEventListener('kick', this.setScrollTop, true);
       }
       _url(field, value) {
-        this.records = [];
-        this.set('params._page', null);
-
         const rx = /^\/list/;
         if (rx.test(this.route.path)) {
+          this.records = [];
+          this.set('params._page', null);
+
           if (field === 'all' && value === undefined) {
             return '/api/start';
           } else if (field === 'search') {

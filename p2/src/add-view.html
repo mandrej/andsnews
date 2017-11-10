@@ -4,9 +4,10 @@
 
 <dom-module id="add-view">
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
+    <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+      .container {
+        @apply --layout-flex;
+        padding: var(--user-gap);
       }
       vaadin-upload {
         --vaadin-upload-button-add: {

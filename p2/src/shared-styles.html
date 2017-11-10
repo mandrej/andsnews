@@ -1,8 +1,6 @@
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
 <dom-module id="shared-styles">
   <template>
-    <style include="iron-flex iron-flex-alignment iron-positioning">
+    <style>
       a {
         color: var(--default-primary-color);
       }
@@ -40,7 +38,6 @@
         color: var(--text-primary-color);
         background-color: var(--accent-color);
       }
-      vaadin-combo-box { padding: 0; }
       paper-toast {
         --paper-toast-color: var(--text-primary-color);
         --paper-toast-background-color: var(--default-primary-color);
@@ -63,10 +60,6 @@
           background-color: transparent;
         };
       }
-      .container {
-        @apply --layout-flex;
-        padding: var(--user-gap);
-      }
       footer {
         height: 50px;
         line-height: 50px;
@@ -75,6 +68,5 @@
         font-size: 14px;
       }
     </style>
-
   </template>
 </dom-module>
