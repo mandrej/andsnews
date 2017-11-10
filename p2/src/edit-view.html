@@ -20,7 +20,8 @@
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
 
     <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
+      <app-header condenses reveals shadow effects="resize-title"
+        style="background-image: url([[item.serving_url]]=s0-c); background-size: cover; background-position: center" slot="header">
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
           <h4 condensed-title>[[title]]</h4>
@@ -64,8 +65,8 @@
                 <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
                 <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
                 <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+                <paper-input disabled label="color" value="[[item.color]]"></paper-input>
               </div>
-              <!-- <paper-input disabled label="color" value="[[item.color]]"></paper-input> -->
             </form>
           </iron-form>
         </div>

@@ -1,9 +1,3 @@
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
@@ -15,7 +9,6 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
@@ -124,12 +117,12 @@
           </a>
           <a hidden$="[[isAuthorized]]" class="self-center" href="#" on-tap="_sign">Sign-In</a>
           <h4 condensed-title></h4>
-          <paper-spinner active$="[[loading]]"></paper-spinner>
-          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
+          <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
         <app-toolbar>
           <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
-          <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
+          <paper-spinner active$="[[loading]]"></paper-spinner>
+          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
