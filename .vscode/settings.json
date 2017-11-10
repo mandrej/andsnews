@@ -1,6 +1,6 @@
 {
-  "python.venvPath": "/home/milan/venv/ands",
-  "python.pythonPath": "/home/milan/venv/ands/bin/python",
+  "python.venvPath": "/home/milan/venv/andsnews/bin/",
+  "python.pythonPath": "/home/milan/venv/andsnews/bin/python",
   "python.autoComplete.extraPaths": [
         "/home/milan/google-cloud-sdk/platform/google_appengine",
         "/home/milan/google-cloud-sdk/platform/google_appengine/lib",
