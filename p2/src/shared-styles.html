@@ -1,6 +1,19 @@
 <dom-module id="shared-styles">
   <template>
     <style>
+      :host {
+        --ellipsis: {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        };
+        --no-select: {
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -webkit-user-select: none;
+          user-select: none;
+        };
+      }
       a {
         color: var(--default-primary-color);
       }
@@ -33,8 +46,7 @@
         text-transform: none;
         pointer-events: all; /* default none */
       }
-      paper-fab,
-      paper-button {
+      paper-fab, paper-button {
         color: var(--text-primary-color);
         background-color: var(--accent-color);
       }
