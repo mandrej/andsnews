@@ -161,7 +161,7 @@
                       </paper-listbox>
                     </paper-menu-button>
                     <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
-                    <paper-icon-button icon="create" on-tap="showEdit" class="self-center"></paper-icon-button>
+                    <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
                   </div>
 
                   <div on-tap="showView">
