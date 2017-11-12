@@ -21,8 +21,6 @@
       .sign {
         padding: 0;
         --iron-icon: {
-          width: 40px;
-          height: 40px;
           border-radius: 50%;
           overflow: hidden;
         }
@@ -60,14 +58,14 @@
         bottom: calc(var(--user-gap) / 2);
         left: calc(var(--user-gap) / 2);
         right: calc(var(--user-gap) / 2);
-        color: var(--text-primary-color);
+        color: #fff;
         background-color: rgba(0, 0, 0, 0.5);
         font-size: 20px;
         padding: 16px;
         text-overflow: ellipsis;
       }
       paper-listbox {
-        background-color: var(--divider-color);
+        background-color: var(--light-primary-color);
       }
       paper-item {
         cursor: pointer;
@@ -124,7 +122,7 @@
     <app-header-layout fullbleed>
       <app-header condenses reveals shadow slot="header">
         <app-toolbar>
-          <paper-icon-button id="sign" class="sign" on-tap="_sign"></paper-icon-button>
+          <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
           <h4 condensed-title></h4>
           <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         </app-toolbar>
@@ -271,9 +269,11 @@
         if (url) {
           icon.icon = '';
           icon.src = url;
+          icon.className = 'sign'
         } else {
           icon.src = '';
-          icon.icon = 'exit-to-app';
+          icon.icon = 'account-circle';
+          icon.classList.remove('sign');
         }
       }
       showSearch() {
