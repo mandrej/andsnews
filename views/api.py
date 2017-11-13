@@ -113,11 +113,6 @@ class RestHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
-class WarmUp(RestHandler):
-    def get(self):
-        self.render({'warmup': True})
-
-
 class Suggest(RestHandler):
     def get(self, mem_key):
         kind, field = mem_key.split('_')
@@ -251,7 +246,7 @@ class Crud(RestHandler):
 
         self.render(res)
 
-    def put(self, kind=None, safe_key=None):
+    def put(self, kind=None, safe_key=Noe):
         key = get_key(safe_key)
         if key is None:
             self.abort(404)
