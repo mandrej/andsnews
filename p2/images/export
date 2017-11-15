@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sizes=(48 96 144 192)
+sizes=(48 96 144 192 384 512)
 
 for i in ${sizes[@]}; do
   file=manifest/icon-$i\x$i.png

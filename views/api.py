@@ -246,7 +246,7 @@ class Crud(RestHandler):
 
         self.render(res)
 
-    def put(self, kind=None, safe_key=Noe):
+    def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)
         if key is None:
             self.abort(404)
