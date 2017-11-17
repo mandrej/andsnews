@@ -18,12 +18,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ANDS">
     <meta name="google-site-verification" content="ct5R3S5NpEh8aBWgqK0HBq-il5YnGIUIlympBbp6rTU">
-    <meta name="keywords" content="gae, google appengine, google app engine, webapp2, polymer, python, html5, andrejevic">
+    <meta name="keywords" content="gae, google appengine, google app engine, webapp2, polymer, polymer 2, python, html5, andrejevic">
 
     <link rel="icon" sizes="48x48" href="/images/manifest/icon-48x48.png">
     <link rel="icon" sizes="96x96" href="/images/manifest/icon-96x96.png">
     <link rel="icon" sizes="144x144" href="/images/manifest/icon-144x144.png">
     <link rel="icon" sizes="192x192" href="/images/manifest/icon-192x192.png">
+    <link rel="icon" sizes="384x384" href="/images/manifest/icon-384x384.png">
+    <link rel="icon" sizes="512x512" href="/images/manifest/icon-512x512.png">
 
     <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#212121">
@@ -35,22 +37,52 @@
       }
     </script>
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="/src/shared-styles.html">
     <link rel="import" href="/src/app-shell.html">
 
-    <style>
-      html { overflow: -moz-scrollbars-vertical; }
-      html, body { -ms-overflow-style: none; }
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Roboto', Helvetica, sans-serif;
-        line-height: 1.5;
-        background-color: #fff;
-      }
-      ::-webkit-scrollbar {
-        display: none;
-      }
-    </style>
+    <custom-style>
+      <style include="shared-styles">
+        html { overflow: -moz-scrollbars-vertical; }
+        html, body { -ms-overflow-style: none; }
+        html {
+          /* https://www.materialpalette.com/amber/blue-grey */
+          --dark-primary-color:       #FFA000;
+          --default-primary-color:    #FFC107;
+          --light-primary-color:      #FFECB3;
+          --text-primary-color:       #212121;
+          --accent-color:             #607D8B;
+          --primary-background-color: #FFECB3;
+          --primary-text-color:       #212121;
+          --secondary-text-color:     #757575;
+          --disabled-text-color:      #BDBDBD;
+          --divider-color:            #BDBDBD;
+          --error-color:              #C2185B;
+          --user-gap:                 16px;
+
+          --ellipsis: {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          };
+          --no-select: {
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+          };
+        }
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: 'Roboto', Helvetica, sans-serif;
+          line-height: 1.5;
+          background-color: #fff;
+        }
+        ::-webkit-scrollbar {
+          display: none;
+        }
+      </style>
+    </custom-style>
   </head>
   <body>
     <app-shell></app-shell>

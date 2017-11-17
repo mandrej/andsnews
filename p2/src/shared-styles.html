@@ -1,43 +1,16 @@
 <dom-module id="shared-styles">
   <template>
     <style>
-      /* https://www.materialpalette.com/amber/blue-grey */
-      :host {
-        --dark-primary-color:       #FFA000;
-        --default-primary-color:    #FFC107;
-        --light-primary-color:      #FFECB3;
-        --text-primary-color:       #212121;
-        --accent-color:             #607D8B;
-        --primary-background-color: #FFECB3;
-        --primary-text-color:       #212121;
-        --secondary-text-color:     #757575;
-        --disabled-text-color:      #BDBDBD;
-        --divider-color:            #BDBDBD;
-        --error-color:              #C2185B;
-        --user-gap:                 16px;
-
-        --ellipsis: {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        };
-        --no-select: {
-          -moz-user-select: none;
-          -ms-user-select: none;
-          -webkit-user-select: none;
-          user-select: none;
-        };
-      }
       a {
         color: var(--default-primary-color);
       }
       app-header {
         color: var(--text-primary-color);
         background-color: var(--default-primary-color);
-        /* background-image: url(../images/logo.svg); */
+        /* background-image: url(../images/logo.svg);
         background-repeat: no-repeat;
         background-size: contain;
-        background-position: var(--user-gap) 0;
+        background-position: var(--user-gap) 0; */
       }
       app-toolbar {
         padding: 0 var(--user-gap);
@@ -71,11 +44,6 @@
       }
       paper-ripple {
         color: #fff;
-      }
-      iron-image {
-        --iron-image-placeholder: {
-          background-color: #fff;
-        };
       }
       ::slotted(footer) {
         height: 50px;

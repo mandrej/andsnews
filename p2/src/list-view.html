@@ -14,7 +14,7 @@
 
 <dom-module id="list-view">
   <template>
-     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+    <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
       iron-list {
         padding: calc(var(--user-gap) / 2);
       }
@@ -45,6 +45,9 @@
         display: block;
         width: 100%;
         cursor: pointer;
+        --iron-image-placeholder: {
+          background-color: #fff;
+        };
       }
       iron-image::after {
         content: "";
@@ -62,7 +65,6 @@
         background-color: rgba(0, 0, 0, 0.5);
         font-size: 20px;
         padding: 16px;
-        text-overflow: ellipsis;
       }
       paper-listbox {
         background-color: var(--light-primary-color);
