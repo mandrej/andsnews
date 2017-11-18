@@ -5,7 +5,12 @@
         color: var(--default-primary-color);
       }
       app-header {
-        color: var(--text-primary-color);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        color: #fff;
         background-color: var(--default-primary-color);
         /* background-image: url(../images/logo.svg);
         background-repeat: no-repeat;
@@ -44,6 +49,13 @@
       }
       paper-ripple {
         color: #fff;
+      }
+      paper-spinner {
+        position: fixed;
+        width: 100px;
+        height: 100px;
+        top: calc(50vh - 50px);
+        left: calc(50% - 50px);
       }
       ::slotted(footer) {
         height: 50px;

@@ -1,32 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/img-pan-zoom/img-pan-zoom.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="item-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+        margin-top: 68px;
+      }
       img-pan-zoom {
         height: 100%;
+        box-sizing: border-box;
         padding: calc(var(--user-gap));
       }
     </style>
 
-    <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
+    <iron-ajax url="[[_url(safekey)]]" loading="{{loading}}" last-response="{{item}}" auto></iron-ajax>
 
-    <app-header-layout fullbleed>
-      <app-header fixed shadow slot="header">
-        <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-          <h1 main-title>[[item.headline]]</h1>
-          <a href="/api/download/[[item.safekey]]" download="[[item.slug]].jpg" target="_blank">
-            <paper-icon-button icon="file-download"></paper-icon-button>
-          </a>
-        </app-toolbar>
-      </app-header>
+    <app-header fixed shadow slot="header">
+      <app-toolbar>
+        <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
+        <h1 main-title>[[item.headline]]</h1>
+        <a href="/api/download/[[item.safekey]]" download="[[item.slug]].jpg" target="_blank">
+          <paper-icon-button icon="file-download"></paper-icon-button>
+        </a>
+      </app-toolbar>
+      <paper-spinner active$="[[loading]]"></paper-spinner>
+    </app-header>
 
-      <img-pan-zoom src="[[checkImage(item)]]"
-        visibility-ratio="1.0"
-        max-zoom-pixel-ratio="1.0"></img-pan-zoom>
-    </app-header-layout>
+    <img-pan-zoom src="[[checkImage(item)]]"
+      hide-spinner
+      visibility-ratio="1.0"
+      max-zoom-pixel-ratio="1.0"></img-pan-zoom>
   </template>
 
   <script>

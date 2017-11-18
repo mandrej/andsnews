@@ -1,30 +1,33 @@
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 <dom-module id="notfound-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+        margin-top: 132px;
+      }
       .container {
         @apply --layout-flex;
         padding: var(--user-gap);
       }
     </style>
 
-    <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
-        <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-          <h4 condensed-title>404 Not Found Error</h4>
+    <app-header condenses reveals shadow effects="resize-title" slot="header">
+      <app-toolbar>
+        <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
+        <h4 condensed-title>404 Not Found Error</h4>
+      </app-toolbar>
+      <app-toolbar>
+          <h1 main-title>404 Not Found Error</h1>
         </app-toolbar>
-        <app-toolbar>
-            <h1 main-title>404 Not Found Error</h1>
-          </app-toolbar>
-      </app-header>
+    </app-header>
 
-      <div class="container">
-        <p>Ooops, something went wrong</p>
-      </div>
-      <slot name="footer"></slot>
-    </app-header-layout>
+    <div class="container">
+      <p>Ooops, something went wrong</p>
+    </div>
+    <slot name="footer"></slot>
   </template>
 
   <script>

@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
@@ -9,6 +9,11 @@
 <dom-module id="admin-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+        margin-top: 132px;
+      }
       .container {
         @apply --layout-flex;
         padding: var(--user-gap);
@@ -44,37 +49,35 @@
       content-type="application/json"
       method="POST"></iron-ajax>
 
-    <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
-        <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-          <h4 condensed-title>[[title]]</h4>
-        </app-toolbar>
-        <app-toolbar>
-          <h1 main-title>[[title]]</h1>
-        </app-toolbar>
-      </app-header>
+    <app-header condenses reveals shadow effects="resize-title" slot="header">
+      <app-toolbar>
+        <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
+        <h4 condensed-title>[[title]]</h4>
+      </app-toolbar>
+      <app-toolbar>
+        <h1 main-title>[[title]]</h1>
+      </app-toolbar>
+    </app-header>
 
-      <div class="container">
-        <paper-toast id="toast"></paper-toast>
+    <div class="container">
+      <paper-toast id="toast"></paper-toast>
 
-        <div hidden$="[[!pass]]">
-          <h1>Photo [[info.photo.count]]</h1>
-          <div class="layout horizontal justified wrap">
-            <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
-              <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
-            </template>
-            <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
-            <paper-button disabled on-tap="fix" data-kind="counter" toggles raised>Counter fix</paper-button>
-            <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
-          </div>
-        </div>
-        <div hidden$="[[pass]]">
-          <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
+      <div hidden$="[[!pass]]">
+        <h1>Photo [[info.photo.count]]</h1>
+        <div class="layout horizontal justified wrap">
+          <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
+            <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
+          </template>
+          <paper-button on-tap="reindex" data-kind="photo" toggles raised>Photo Reindex</paper-button>
+          <paper-button disabled on-tap="fix" data-kind="counter" toggles raised>Counter fix</paper-button>
+          <paper-button disabled on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
         </div>
       </div>
-      <slot name="footer"></slot>
-    </app-header-layout>
+      <div hidden$="[[pass]]">
+        <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
+      </div>
+    </div>
+    <slot name="footer"></slot>
   </template>
 
   <script>

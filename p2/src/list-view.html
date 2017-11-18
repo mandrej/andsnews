@@ -1,3 +1,4 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
@@ -16,6 +17,11 @@
 <dom-module id="list-view">
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+        margin-top: 132px;
+      }
       iron-list {
         padding: calc(var(--user-gap) / 2);
       }
@@ -25,13 +31,6 @@
           border-radius: 50%;
           overflow: hidden;
         }
-      }
-      paper-spinner {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        top: 44px;
-        left: calc(50% - 20px);
       }
       .square {
         width: calc((100vw - var(--user-gap)) / 4);
@@ -114,60 +113,59 @@
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-    <app-header-layout fullbleed>
-      <app-header condenses reveals shadow slot="header">
-        <app-toolbar>
-          <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
-          <h4 condensed-title></h4>
-          <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
-        </app-toolbar>
-        <app-toolbar sticky>
-          <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
-          <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
-        </app-toolbar>
-        <paper-spinner active$="[[loading]]"></paper-spinner>
-      </app-header>
+    <app-header condenses reveals shadow slot="header">
+      <app-toolbar>
+        <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
+        <h4 condensed-title></h4>
+        <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
+      </app-toolbar>
+      <app-toolbar sticky>
+        <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
+        <paper-icon-button icon="arrow-upward" on-tap="scrollTop"></paper-icon-button>
+        <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
+      </app-toolbar>
+      <paper-spinner active$="[[loading]]"></paper-spinner>
+    </app-header>
 
-      <iron-scroll-threshold id="scrollTheshold"
-        lower-threshold="700"
-        on-lower-threshold="_load"
-        scroll-target="document">
-        <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
-          <template>
-            <div>
-              <div class="square">
-                <div>
-                  <div class="layout horizontal justified">
-                    <paper-menu-button>
-                      <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
-                      <paper-listbox slot="dropdown-content">
-                        <paper-item on-tap="applyFilter" data-field="year"
-                          data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
-                        <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                          <paper-item on-tap="applyFilter" data-field="tags"
-                            data-field-value$="[[tag]]">[[tag]]</paper-item>
-                        </template>
-                        <paper-item on-tap="applyFilter" data-field="model"
-                          data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
-                        <paper-item on-tap="applyFilter" data-field="color"
-                          data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
-                      </paper-listbox>
-                    </paper-menu-button>
-                    <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
-                    <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
-                  </div>
+    <iron-scroll-threshold id="scrollTheshold"
+      lower-threshold="700"
+      on-lower-threshold="_load"
+      scroll-target="document">
+      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+        <template>
+          <div>
+            <div class="square">
+              <div>
+                <div class="layout horizontal justified">
+                  <paper-menu-button>
+                    <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
+                    <paper-listbox slot="dropdown-content">
+                      <paper-item on-tap="applyFilter" data-field="year"
+                        data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
+                      <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                        <paper-item on-tap="applyFilter" data-field="tags"
+                          data-field-value$="[[tag]]">[[tag]]</paper-item>
+                      </template>
+                      <paper-item on-tap="applyFilter" data-field="model"
+                        data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
+                      <paper-item on-tap="applyFilter" data-field="color"
+                        data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                  <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
+                  <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
+                </div>
 
-                  <div on-tap="showView">
-                    <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
-                    <div class="title">[[rec.headline]]</div>
-                  </div>
+                <div on-tap="showView">
+                  <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
+                  <div class="title">[[rec.headline]]</div>
                 </div>
               </div>
             </div>
-          </template>
-        </iron-list>
-      </iron-scroll-threshold>
-    </app-header-layout>
+          </div>
+        </template>
+      </iron-list>
+    </iron-scroll-threshold>
   </template>
 
   <script>
@@ -189,11 +187,11 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('kick', this.setScrollTop);
+        this.addEventListener('kick', this.scrollPrevious);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('kick', this.setScrollTop, true);
+        this.removeEventListener('kick', this.scrollPrevious, true);
       }
       buildUrl(field, value) {
         let url;
@@ -252,7 +250,13 @@
           ajax.generateRequest();
         }
       }
-      setScrollTop(e) {
+      scrollTop() {
+        this._listScrollTop = 0;
+        Polymer.Async.timeOut.run(() => {
+          Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+        }, 20);
+      }
+      scrollPrevious(e) {
         this._listScrollTop = e.detail.top;
       }
       checkImage(rec) {

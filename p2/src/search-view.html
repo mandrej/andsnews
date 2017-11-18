@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -10,6 +10,11 @@
 <dom-module id="search-view">
   <template>
     <style include="shared-styles app-grid-style iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+        margin-top: 132px;
+      }
       .container {
         @apply --layout-flex;
       }
@@ -38,66 +43,64 @@
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
     <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" id="ajax_model"></iron-ajax>
 
-    <app-header-layout fullbleed>
-      <app-header condenses reveals shadow effects="resize-title" slot="header">
-        <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-          <h4 condensed-title>Find</h4>
-        </app-toolbar>
-        <app-toolbar>
-          <h1 main-title>Find</h1>
-        </app-toolbar>
-      </app-header>
+    <app-header condenses reveals shadow effects="resize-title" slot="header">
+      <app-toolbar>
+        <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
+        <h4 condensed-title>Find</h4>
+      </app-toolbar>
+      <app-toolbar>
+        <h1 main-title>Find</h1>
+      </app-toolbar>
+    </app-header>
 
-      <div class="container">
-        <iron-form id="findForm">
-            <form method="get">
-              <ul class="app-grid">
-                <li class="item expandible right">
-                    <paper-button on-tap="onSubmit" raised>Find</paper-button>
-                </li>
-                <li class="item">
-                  <paper-input name="find_text" label="by text"></paper-input>
-                </li>
-                <li class="item">
-                  <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
-                    closable
-                    items="[[item.tags]]"
-                    source="[[tags]]"></paper-chip-input-autocomplete>
-                </li>
-                <li class="item">
-                  <paper-input name="find_year" label="in year" type="number"
-                    auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
-                </li>
-                <li class="item">
-                  <paper-input name="find_month" label="in month" type="number"
-                    auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
-                </li>
-                <li class="item">
-                  <vaadin-combo-box name="find_model" label="by camera" id="models"
-                    auto-validate
-                    allow-custom-value="false"
-                    items="[[models]]"></vaadin-combo-box>
-                </li>
-                <li class="item">
-                  <vaadin-combo-box name="find_author" label="by author"
-                    auto-validate
-                    allow-custom-value="false"
-                    items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
-                </li>
-                <li class="item">
-                  <vaadin-combo-box name="find_color" label="by color"
-                    auto-validate
-                    allow-custom-value="false"
-                    items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
-                </li>
-              </ul>
-             </form>
-          </iron-form>
-      </div>
+    <div class="container">
+      <iron-form id="findForm">
+          <form method="get">
+            <ul class="app-grid">
+              <li class="item expandible right">
+                  <paper-button on-tap="onSubmit" raised>Find</paper-button>
+              </li>
+              <li class="item">
+                <paper-input name="find_text" label="by text"></paper-input>
+              </li>
+              <li class="item">
+                <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
+                  closable
+                  items="[[item.tags]]"
+                  source="[[tags]]"></paper-chip-input-autocomplete>
+              </li>
+              <li class="item">
+                <paper-input name="find_year" label="in year" type="number"
+                  auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
+              </li>
+              <li class="item">
+                <paper-input name="find_month" label="in month" type="number"
+                  auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
+              </li>
+              <li class="item">
+                <vaadin-combo-box name="find_model" label="by camera" id="models"
+                  auto-validate
+                  allow-custom-value="false"
+                  items="[[models]]"></vaadin-combo-box>
+              </li>
+              <li class="item">
+                <vaadin-combo-box name="find_author" label="by author"
+                  auto-validate
+                  allow-custom-value="false"
+                  items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
+              </li>
+              <li class="item">
+                <vaadin-combo-box name="find_color" label="by color"
+                  auto-validate
+                  allow-custom-value="false"
+                  items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
+              </li>
+            </ul>
+            </form>
+        </iron-form>
+    </div>
 
-      <slot name="footer"></slot>
-    </app-header-layout>
+    <slot name="footer"></slot>
   </template>
 
   <script>
