@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
@@ -72,12 +73,8 @@
       paper-item {
         cursor: pointer;
       }
-      paper-button {
-        color: var(--accent-color);
-      }
       paper-dialog {
-        max-width: 400px;
-        background-color: #fff;
+        background-color: var(--default-primary-color);
         --paper-dialog-title: {
           white-space: normal;
           text-align: center;
@@ -85,11 +82,7 @@
         }
       }
       paper-dialog .buttons {
-        padding: 8px 24px 24px;
-      }
-      paper-dialog paper-button {
-        color: var(--primary-text-color);
-        background-color: var(--divider-color);
+        padding: var(--user-gap) 24px 24px;
       }
       @media (max-width: 1024px) { .square { width: calc((100vw - var(--user-gap)) / 3); }}
       @media (max-width: 768px)  { .square { width: calc((100vw - var(--user-gap)) / 2); }}
@@ -136,7 +129,7 @@
       </app-header>
 
       <iron-scroll-threshold id="scrollTheshold"
-        lower-threshold="500"
+        lower-threshold="700"
         on-lower-threshold="_load"
         scroll-target="document">
         <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
@@ -184,8 +177,7 @@
         return {
           params: { type: Object, value: {}, notify: true },
           records: { type: Array, value: [], notify: true },
-          obj: { type: Object, notify: true },
-          currentIndex: { type: Number, value: 0, notify: true },
+          currentIndex: { type: Number, value: -1, notify: true },
           _listScrollTop: { type: Number, value: 0 },
         };
       }
@@ -309,13 +301,13 @@
         this.$.deleteDialog.open();
       }
       deleteRecord(e) {
-        if (e.detail.confirmed) {
+        if (e.detail.confirmed && this.currentIndex > -1) {
           const obj = this.splice('records', this.currentIndex, 1)[0];
-          // this.currentIndex = -1;
           const xhr = this.$.delete_ajax;
           xhr.url = '/api/delete/' + obj.safekey;
           xhr.generateRequest();
         }
+        this.currentIndex = -1;
       }
       showSearch() {
         this.set('route.path', '/search');
