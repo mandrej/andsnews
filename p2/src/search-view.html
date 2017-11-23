@@ -55,51 +55,50 @@
 
     <div class="container">
       <iron-form id="findForm">
-          <form method="get">
-            <ul class="app-grid">
-              <li class="item expandible right">
-                  <paper-button on-tap="onSubmit" raised>Find</paper-button>
-              </li>
-              <li class="item">
-                <paper-input name="find_text" label="by text"></paper-input>
-              </li>
-              <li class="item">
-                <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
-                  closable
-                  items="[[item.tags]]"
-                  source="[[tags]]"></paper-chip-input-autocomplete>
-              </li>
-              <li class="item">
-                <paper-input name="find_year" label="in year" type="number"
-                  auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="find_month" label="in month" type="number"
-                  auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
-              </li>
-              <li class="item">
-                <vaadin-combo-box name="find_model" label="by camera" id="models"
-                  auto-validate
-                  allow-custom-value="false"
-                  items="[[models]]"></vaadin-combo-box>
-              </li>
-              <li class="item">
-                <vaadin-combo-box name="find_author" label="by author"
-                  auto-validate
-                  allow-custom-value="false"
-                  items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
-              </li>
-              <li class="item">
-                <vaadin-combo-box name="find_color" label="by color"
-                  auto-validate
-                  allow-custom-value="false"
-                  items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
-              </li>
-            </ul>
-            </form>
-        </iron-form>
+        <form method="get">
+          <ul class="app-grid">
+            <li class="item expandible right">
+                <paper-button on-tap="onSubmit" raised>Find</paper-button>
+            </li>
+            <li class="item">
+              <paper-input name="find_text" label="by text"></paper-input>
+            </li>
+            <li class="item">
+              <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
+                closable
+                items="[[item.tags]]"
+                source="[[tags]]"></paper-chip-input-autocomplete>
+            </li>
+            <li class="item">
+              <paper-input name="find_year" label="in year" type="number"
+                auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
+            </li>
+            <li class="item">
+              <paper-input name="find_month" label="in month" type="number"
+                auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
+            </li>
+            <li class="item">
+              <vaadin-combo-box name="find_model" label="by camera" id="models"
+                auto-validate
+                allow-custom-value="false"
+                items="[[models]]"></vaadin-combo-box>
+            </li>
+            <li class="item">
+              <vaadin-combo-box name="find_author" label="by author"
+                auto-validate
+                allow-custom-value="false"
+                items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
+            </li>
+            <li class="item">
+              <vaadin-combo-box name="find_color" label="by color"
+                auto-validate
+                allow-custom-value="false"
+                items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
+            </li>
+          </ul>
+        </form>
+      </iron-form>
     </div>
-
     <slot name="footer"></slot>
   </template>
 
