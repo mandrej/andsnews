@@ -42,8 +42,6 @@
 
     <custom-style>
       <style include="shared-styles">
-        html { overflow: -moz-scrollbars-vertical; }
-        html, body { -ms-overflow-style: none; }
         html {
           /* https://www.materialpalette.com/amber/blue-grey */
           --dark-primary-color:       #FFA000;
@@ -77,6 +75,8 @@
           font-family: 'Roboto', Helvetica, sans-serif;
           line-height: 1.5;
           background-color: #fff;
+          /* -ms-overflow-style: none; */
+          /* overflow: -moz-scrollbars-none; */
         }
         ::-webkit-scrollbar {
           display: none;

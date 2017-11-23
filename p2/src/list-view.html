@@ -133,34 +133,30 @@
       scroll-target="document">
       <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
         <template>
-          <div>
-            <div class="square">
-              <div>
-                <div class="layout horizontal justified">
-                  <paper-menu-button>
-                    <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
-                    <paper-listbox slot="dropdown-content">
-                      <paper-item on-tap="applyFilter" data-field="year"
-                        data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
-                      <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                        <paper-item on-tap="applyFilter" data-field="tags"
-                          data-field-value$="[[tag]]">[[tag]]</paper-item>
-                      </template>
-                      <paper-item on-tap="applyFilter" data-field="model"
-                        data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
-                      <paper-item on-tap="applyFilter" data-field="color"
-                        data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
-                    </paper-listbox>
-                  </paper-menu-button>
-                  <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
-                  <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
-                </div>
+          <div class="square">
+            <div class="layout horizontal justified">
+              <paper-menu-button>
+                <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
+                <paper-listbox slot="dropdown-content">
+                  <paper-item on-tap="applyFilter" data-field="year"
+                    data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
+                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
+                    <paper-item on-tap="applyFilter" data-field="tags"
+                      data-field-value$="[[tag]]">[[tag]]</paper-item>
+                  </template>
+                  <paper-item on-tap="applyFilter" data-field="model"
+                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
+                  <paper-item on-tap="applyFilter" data-field="color"
+                    data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
+                </paper-listbox>
+              </paper-menu-button>
+              <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
+              <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
+            </div>
 
-                <div on-tap="showView">
-                  <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
-                  <div class="title">[[rec.headline]]</div>
-                </div>
-              </div>
+            <div on-tap="showView">
+              <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
+              <div class="title">[[rec.headline]]</div>
             </div>
           </div>
         </template>
