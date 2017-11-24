@@ -6,11 +6,10 @@
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../bower_components/app-layout/app-grid/app-grid-style.html">
 
 <dom-module id="edit-view">
   <template>
-    <style include="shared-styles app-grid-style iron-flex iron-flex-alignment iron-positioning">
+    <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
@@ -18,32 +17,24 @@
       }
       .container {
         @apply --layout-flex;
+        padding: var(--user-gap) var(--user-gap) 0 0;
       }
+      .full-width {
+        padding: 0 0 var(--user-gap) var(--user-gap);
+      }
+      .fields * {
+        width: calc(100% / 3);
+        height: 80px;
+        padding: 0 0 var(--user-gap) var(--user-gap);
+        box-sizing: border-box;
+      }
+      @media (max-width: 768px)  { .fields * { width: 50%; }}
+      @media (max-width: 432px)  { .fields * { width: 100%; }}
       app-header {
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
       }
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-      .app-grid {
-        --app-grid-columns: 3;
-        --app-grid-gutter: var(--user-gap);
-      }
-      .item {
-        @apply --layout-self-end;
-      }
-      .expandible {
-        @apply --app-grid-expandible-item;
-      }
-      .right {
-        text-align: right;
-      }
-      @media (max-width: 768px)  { .app-grid { --app-grid-columns: 2; }}
-      @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
     </style>
 
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
@@ -67,52 +58,34 @@
 
             <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
 
-            <ul class="app-grid">
-              <li class="item expandible right">
-                <paper-button on-tap="_submit" raised>Submit</paper-button>
-              </li>
-              <li class="item expandible">
-                <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
-              </li>
-              <li class="item expandible">
-                <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
-                  closable
-                  additional-items
-                  items="[[item.tags]]"
-                  source="[[tags]]"></paper-chip-input-autocomplete>
-              </li>
-              <li class="item">
-                <vaadin-combo-box name="author" required label="author"
-                  auto-validate
-                  allow-custom-value="true"
-                  items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
-                  value="[[item.author]]"></vaadin-combo-box>
-              </li>
-              <li class="item">
-                <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
-              </li>
-              <li class="item">
-                  <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
-              </li>
-              <li class="item">
-                <paper-input disabled label="color" value="[[item.color]]"></paper-input>
-              </li>
-            </ul>
+            <div class="layout horizontal end-justified">
+              <paper-button on-tap="_submit" raised>Submit</paper-button>
+            </div>
+
+            <div class="full-width">
+              <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+              <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
+                closable
+                additional-items
+                items="[[item.tags]]"
+                source="[[tags]]"></paper-chip-input-autocomplete>
+            </div>
+
+            <div class="layout horizontal justified wrap fields">
+              <vaadin-combo-box name="author" required label="author"
+                auto-validate
+                allow-custom-value="true"
+                items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
+                value="[[item.author]]"></vaadin-combo-box>
+              <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
+              <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
+              <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
+              <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+              <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
+              <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
+              <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
+              <paper-input disabled label="color" value="[[item.color]]"></paper-input>
+            </div>
           </form>
         </iron-form>
       </div>

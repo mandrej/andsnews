@@ -5,11 +5,10 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-<link rel="import" href="../bower_components/app-layout/app-grid/app-grid-style.html">
 
 <dom-module id="search-view">
   <template>
-    <style include="shared-styles app-grid-style iron-flex iron-flex-alignment iron-positioning">
+    <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
@@ -17,27 +16,16 @@
       }
       .container {
         @apply --layout-flex;
+        padding: var(--user-gap) var(--user-gap) 0 0;
       }
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
+      .fields * {
+        width: calc(100% / 3);
+        height: 80px;
+        padding: 0 0 var(--user-gap) var(--user-gap);
+        box-sizing: border-box;
       }
-      .app-grid {
-        --app-grid-columns: 3;
-        --app-grid-gutter: var(--user-gap);
-      }
-      .item {
-        @apply --layout-self-end;
-      }
-      .expandible {
-        @apply --app-grid-expandible-item;
-      }
-      .right {
-        text-align: right;
-      }
-      @media (max-width: 768px)  { .app-grid { --app-grid-columns: 2; }}
-      @media (max-width: 432px)  { .app-grid { --app-grid-columns: 1; }}
+      @media (max-width: 768px)  { .fields * { width: 50%; }}
+      @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
@@ -56,46 +44,32 @@
     <div class="container">
       <iron-form id="findForm">
         <form method="get">
-          <ul class="app-grid">
-            <li class="item expandible right">
-                <paper-button on-tap="onSubmit" raised>Find</paper-button>
-            </li>
-            <li class="item">
-              <paper-input name="find_text" label="by text"></paper-input>
-            </li>
-            <li class="item">
-              <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
-                closable
-                items="[[item.tags]]"
-                source="[[tags]]"></paper-chip-input-autocomplete>
-            </li>
-            <li class="item">
-              <paper-input name="find_year" label="in year" type="number"
-                auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
-            </li>
-            <li class="item">
-              <paper-input name="find_month" label="in month" type="number"
-                auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
-            </li>
-            <li class="item">
-              <vaadin-combo-box name="find_model" label="by camera" id="models"
-                auto-validate
-                allow-custom-value="false"
-                items="[[models]]"></vaadin-combo-box>
-            </li>
-            <li class="item">
-              <vaadin-combo-box name="find_author" label="by author"
-                auto-validate
-                allow-custom-value="false"
-                items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
-            </li>
-            <li class="item">
-              <vaadin-combo-box name="find_color" label="by color"
-                auto-validate
-                allow-custom-value="false"
-                items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
-            </li>
-          </ul>
+          <div class="layout horizontal end-justified">
+            <paper-button on-tap="onSubmit" raised>Find</paper-button>
+          </div>
+          <div class="layout horizontal justified wrap fields">
+            <paper-input name="find_text" label="by text"></paper-input>
+            <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
+              closable
+              items="[[item.tags]]"
+              source="[[tags]]"></paper-chip-input-autocomplete>
+            <paper-input name="find_year" label="in year" type="number"
+              auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
+            <paper-input name="find_month" label="in month" type="number"
+              auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
+            <vaadin-combo-box name="find_model" label="by camera" id="models"
+              auto-validate
+              allow-custom-value="false"
+              items="[[models]]"></vaadin-combo-box>
+            <vaadin-combo-box name="find_author" label="by author"
+              auto-validate
+              allow-custom-value="false"
+              items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
+            <vaadin-combo-box name="find_color" label="by color"
+              auto-validate
+              allow-custom-value="false"
+              items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
+          </div>
         </form>
       </iron-form>
     </div>
