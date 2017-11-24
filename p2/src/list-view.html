@@ -23,7 +23,7 @@
         margin-top: 132px;
       }
       iron-list {
-        padding: calc(var(--user-gap) / 2);
+        padding: var(--user-gap) var(--user-gap) 0 0;
       }
       .sign {
         padding: 0;
@@ -34,7 +34,7 @@
       }
       .square {
         width: 25%;
-        padding: calc(var(--user-gap) / 2);
+        padding: 0 0 var(--user-gap) var(--user-gap);
         backface-visibility: hidden;
         @apply --no-select;
       }
@@ -58,9 +58,9 @@
         @apply --layout-horizontal;
         @apply --layout-justified;
         position: absolute;
-        bottom: calc(var(--user-gap) / 2);
-        left: calc(var(--user-gap) / 2);
-        right: calc(var(--user-gap) / 2);
+        bottom: var(--user-gap);
+        left: var(--user-gap);
+        right: 0;
         color: #fff;
         background-color: rgba(0, 0, 0, 0.5);
         font-size: 20px;
