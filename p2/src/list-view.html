@@ -237,6 +237,7 @@
             this.push('records', item);
           });
           this.$.scrollTheshold.clearTriggers();
+          this.$.list.fire('iron-resize');
         }
       }
       _load() {
@@ -309,15 +310,12 @@
         }
         this.currentIndex = -1;
       }
-      showSearch() {
-        this.set('route.path', '/search');
-      }
       _sign() {
         this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
-      // abortLoad() {
+      // _abort() {
       //   const ajax = this.$.ajax;
-      //   if (ajax.lastRequest) ajax.lastRequest.abort();
+      //   if (this.loading) ajax.lastRequest._discardRequest();
       // }
     }
 
