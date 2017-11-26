@@ -1,18 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="list-view">
   <template>
@@ -20,9 +14,11 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin-top: 132px;
+        margin: 128px auto 0 auto;
+        max-width: var(--max-width);
       }
-      iron-list {
+      .container {
+        margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
       .sign {
@@ -35,13 +31,26 @@
       .square {
         width: 25%;
         padding: 0 0 var(--user-gap) var(--user-gap);
-        backface-visibility: hidden;
         @apply --no-select;
       }
       .square > div {
+        position: relative;
+        background-color: #fff;
+        @apply --layout-vertical;
         @apply --shadow-elevation-2dp;
       }
-      iron-image {
+      .square .icon {
+        color: #fff;
+        position: absolute;
+        top: 0;
+      }
+      .square .left {
+        left: 0;
+      }
+      .square .right {
+        right: 0;
+      }
+      .square iron-image {
         display: block;
         width: 100%;
         cursor: pointer;
@@ -49,28 +58,15 @@
           background-color: #fff;
         };
       }
-      iron-image::after {
+      .square iron-image::after {
         content: "";
         display: block;
         padding-bottom: 100%;
       }
       .square .title {
-        @apply --layout-horizontal;
-        @apply --layout-justified;
-        position: absolute;
-        bottom: var(--user-gap);
-        left: var(--user-gap);
-        right: 0;
-        color: #fff;
-        background-color: rgba(0, 0, 0, 0.5);
         font-size: 20px;
         padding: 16px;
-      }
-      paper-listbox {
-        background-color: var(--light-primary-color);
-      }
-      paper-item {
-        cursor: pointer;
+        @apply --ellipsis;
       }
       paper-dialog {
         background-color: var(--default-primary-color);
@@ -83,7 +79,10 @@
       paper-dialog .buttons {
         padding: var(--user-gap) 24px 24px;
       }
-      @media (max-width: 1024px) { .square { width: calc(100% / 3); }}
+      @media (max-width: 1024px) {
+        .square { width: calc(100% / 3); }
+        .container { margin: var(--user-gap) 0; }
+      }
       @media (max-width: 768px)  { .square { width: 50%; }}
       @media (max-width: 432px)  { .square { width: 100%; }}
     </style>
@@ -127,41 +126,25 @@
       <paper-spinner active$="[[loading]]"></paper-spinner>
     </app-header>
 
-    <iron-scroll-threshold id="scrollTheshold"
-      lower-threshold="700"
-      on-lower-threshold="_load"
-      scroll-target="document">
-      <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
-        <template>
-          <div class="square">
-            <div class="layout horizontal justified">
-              <paper-menu-button>
-                <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
-                <paper-listbox slot="dropdown-content">
-                  <paper-item on-tap="applyFilter" data-field="year"
-                    data-field-value$="[[rec.year]]">[[rec.year]]</paper-item>
-                  <template is="dom-repeat" items="[[rec.tags]]" as="tag">
-                    <paper-item on-tap="applyFilter" data-field="tags"
-                      data-field-value$="[[tag]]">[[tag]]</paper-item>
-                  </template>
-                  <paper-item on-tap="applyFilter" data-field="model"
-                    data-field-value$="[[rec.model]]">[[rec.model]]</paper-item>
-                  <paper-item on-tap="applyFilter" data-field="color"
-                    data-field-value$="[[rec.color]]">[[rec.color]]</paper-item>
-                </paper-listbox>
-              </paper-menu-button>
-              <paper-icon-button icon="clear" on-tap="showDialog" class="self-center" hidden$="{{!isAdmin}}"></paper-icon-button>
-              <paper-icon-button icon="create" on-tap="showEdit" class="self-center" hidden$="{{!isAuthorized}}"></paper-icon-button>
+    <div class="container">
+      <iron-scroll-threshold id="scrollTheshold"
+        lower-threshold="700"
+        on-lower-threshold="_load"
+        scroll-target="document">
+        <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+          <template>
+            <div class="square">
+              <div>
+                <iron-image src="[[checkImage(rec)]]" on-tap="showView" preload fade sizing="cover"></iron-image>
+                <div class="title">[[rec.headline]]</div>
+                <paper-icon-button icon="clear" on-tap="showDialog" class="icon left" hidden$="{{!isAdmin}}"></paper-icon-button>
+                <paper-icon-button icon="create" on-tap="showEdit" class="icon right" hidden$="{{!isAuthorized}}"></paper-icon-button>
+              </div>
             </div>
-
-            <div on-tap="showView">
-              <iron-image src="[[checkImage(rec)]]" preload fade sizing="cover"></iron-image>
-              <div class="title">[[rec.headline]]</div>
-            </div>
-          </div>
-        </template>
-      </iron-list>
-    </iron-scroll-threshold>
+          </template>
+        </iron-list>
+      </iron-scroll-threshold>
+    </div>
   </template>
 
   <script>
@@ -197,7 +180,7 @@
         if (rx.test(this.route.path)) {
           this._debouncer = Polymer.Debouncer.debounce(
             this._debouncer, // initially undefined
-            Polymer.Async.timeOut.after(100),
+            Polymer.Async.timeOut.after(0),
             () => {
               if (field === 'all') {
                 ajax.url = '/api/start';
@@ -287,12 +270,12 @@
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
-      applyFilter(e) {
-        const target = e.target,
-          field = target.dataset.field,
-          value = target.dataset.fieldValue;
-        this.set('route.path', ['/list', field, value].join('/'));
-      }
+      // applyFilter(e) {
+      //   const target = e.target,
+      //     field = target.dataset.field,
+      //     value = target.dataset.fieldValue;
+      //   this.set('route.path', ['/list', field, value].join('/'));
+      // }
       resetFilter(e) {
         e.preventDefault();
         this.set('route.path', '/list/all');

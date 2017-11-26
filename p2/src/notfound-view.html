@@ -6,12 +6,15 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin-top: 132px;
+        margin: 128px auto 0 auto;
+        max-width: var(--max-width);
       }
       .container {
         @apply --layout-flex;
+        margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap);
       }
+      @media (max-width: 1024px) { .container { margin: var(--user-gap) 0; }}
     </style>
 
     <app-header condenses reveals shadow effects="resize-title" slot="header">

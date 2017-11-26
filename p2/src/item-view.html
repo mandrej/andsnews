@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/img-pan-zoom/img-pan-zoom.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
@@ -9,13 +8,19 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin-top: 68px;
+        margin: 64px auto 0 auto;
+        max-width: var(--max-width);
+      }
+      .container {
+        @apply --layout-flex;
+        margin: 0 calc(-1 * var(--user-gap));
+        padding: var(--user-gap);
       }
       img-pan-zoom {
         height: 100%;
-        padding: calc(var(--user-gap));
         box-sizing: border-box;
       }
+      @media (max-width: 1024px) { .container { margin: 0; }}
     </style>
 
     <iron-ajax url="[[_url(safekey)]]" loading="{{loading}}" last-response="{{item}}" auto></iron-ajax>
@@ -31,10 +36,12 @@
       <paper-spinner active$="[[loading]]"></paper-spinner>
     </app-header>
 
-    <img-pan-zoom src="[[checkImage(item)]]"
-      hide-spinner
-      visibility-ratio="1.0"
-      max-zoom-pixel-ratio="1.0"></img-pan-zoom>
+    <div class="container">
+      <img-pan-zoom src="[[checkImage(item)]]"
+        hide-spinner
+        visibility-ratio="1.0"
+        max-zoom-pixel-ratio="1.0"></img-pan-zoom>
+    </div>
   </template>
 
   <script>

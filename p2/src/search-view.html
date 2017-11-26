@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -12,10 +11,12 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin-top: 132px;
+        margin: 128px auto 0 auto;
+        max-width: var(--max-width);
       }
       .container {
         @apply --layout-flex;
+        margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
       .fields * {
@@ -24,6 +25,7 @@
         padding: 0 0 var(--user-gap) var(--user-gap);
         box-sizing: border-box;
       }
+      @media (max-width: 1024px) { .container { margin: var(--user-gap) 0; }}
       @media (max-width: 768px)  { .fields * { width: 50%; }}
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
