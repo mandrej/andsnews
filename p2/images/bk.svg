@@ -1,9 +1,5 @@
-<svg width="1440" height="4875" viewBox="0 0 1440 4875" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" fill-rule="evenodd">
-    <path fill="#BDBDBD" d="M1440 4875H0V3798h1440z" />
-    <path fill="#FFFFFF" d="M1440 4796.177V2771H0v1384.048l1440 641.129z" />
-    <path fill="#BDBDBD" d="M0 3339.578V1775h1440v1143.498z" />
-    <path fill="#FFC107" d="M1440 2643.857L0 2034.01V905.881h1440z" />
-    <path fill="#FFFFFF" d="M1440 905.88L0 1373.776V0h1440v905.88z" />
-  </g>
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="1440" height="3339.5779" viewBox="0 0 1440 3339.5779">
+  <path style="fill:#bdbdbd;fill-rule:evenodd" d="M 0,3339.578 V 1775 h 1440 v 1143.498 z" />
+  <path style="fill:#ffc107;fill-rule:evenodd" d="M 1440,2643.857 0,2034.01 V 905.881 h 1440 z" />
+  <path style="fill:#ffffff;fill-rule:evenodd" d="M 1440,905.88 0,1373.776 V 0 h 1440 z" />
 </svg>
