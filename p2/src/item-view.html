@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/img-pan-zoom/img-pan-zoom.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 
 <dom-module id="item-view">
   <template>
@@ -19,11 +18,13 @@
       img-pan-zoom {
         height: 100%;
         box-sizing: border-box;
+        --img-pan-zoom-spinner-color: #fff;
+        --img-pan-zoom-spinner-width: 3px;
       }
       @media (max-width: 1024px) { .container { margin: 0; }}
     </style>
 
-    <iron-ajax url="[[_url(safekey)]]" loading="{{loading}}" last-response="{{item}}" auto></iron-ajax>
+    <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
     <app-header fixed shadow slot="header">
       <app-toolbar>
@@ -33,12 +34,10 @@
           <paper-icon-button icon="file-download"></paper-icon-button>
         </a>
       </app-toolbar>
-      <paper-spinner-lite active$="[[loading]]"></paper-spinner-lite>
     </app-header>
 
     <div class="container">
       <img-pan-zoom src="[[checkImage(item)]]"
-        hide-spinner
         visibility-ratio="1.0"
         max-zoom-pixel-ratio="1.0"></img-pan-zoom>
     </div>

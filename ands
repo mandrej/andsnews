@@ -37,6 +37,10 @@ else
       polymer build
       cd ..
       exit ;;
+    run)
+      # /tmp/appengine.None.milan
+      $python $dev_appserver --port=8989 dispatch.yaml app.yaml $client/app.yaml
+      exit ;;
     deploy)
       case $2 in
         api)
