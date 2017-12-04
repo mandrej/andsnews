@@ -153,10 +153,12 @@
       }
       _responseHandler(e) {
         const toast = this.$.toast;
-        if (e.detail.xhr.status == 200) {
+        if (e.detail.xhr.status === 200) {
           toast.setAttribute('text', 'Successfully updated');
-          toast.open();
+        } else {
+          toast.setAttribute('text', 'Update failed');
         }
+        toast.open();
       }
       goBack() {
         window.history.go(-1);
