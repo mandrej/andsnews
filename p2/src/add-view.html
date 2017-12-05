@@ -1,11 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
-<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
 
 <dom-module id="add-view">
   <template>
-    <style include="shared-styles iron-flex iron-flex-alignment iron-positioning">
+    <style include="shared-styles iron-flex">
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
@@ -28,7 +27,7 @@
       @media (max-width: 1024px) { .container { margin: var(--user-gap) 0; }}
     </style>
 
-<app-header condenses reveals shadow effects="resize-title" slot="header">
+    <app-header condenses reveals shadow effects="resize-title" slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
         <h4 condensed-title>[[title]]</h4>

@@ -9,10 +9,19 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 
 <dom-module id="app-shell">
   <template>
+    <style include="iron-flex">
+      paper-toast {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-justified;
+      }
+    </style>
+
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:field" data="{{dataField}}" tail="{{tailField}}"></app-route>
@@ -33,6 +42,10 @@
       online="{{online}}"
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
+
+    <paper-toast id="toast" duration="0" text="YOU ARE OFFLINE">
+      <paper-icon-button icon="clear" on-tap="_close"></paper-icon-button>
+    </paper-toast>
 
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <list-view
@@ -92,7 +105,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201711301141' },
+          version: { type: String, value: '201712051336' },
           user: { type: Object, notify: true },
           userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
@@ -105,6 +118,7 @@
       }
       static get observers() {
         return [
+          '_checkNet(online)',
           '_routeViewChanged(dataView.view)',
           '_userIsAdmin(user)'
         ]
@@ -157,6 +171,17 @@
       }
       copywrite(version) {
         return 'ANDS 2007-' + version.match(/.{1,4}/g).join('.');
+      }
+      _checkNet(online) {
+        const toast = this.$.toast;
+        if (online) {
+          toast.close()
+        } else {
+          toast.open();
+        }
+      }
+      _close(e) {
+        this.$.toast.close();
       }
     }
     window.customElements.define(AppShell.is, AppShell);
