@@ -20,6 +20,18 @@
         margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
+      .buttons {
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
+      }
+      .long {
+        padding: 0 0 var(--user-gap) var(--user-gap);
+      }
+      .fields {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-wrap;
+      }
       .fields * {
         width: calc(100% / 3);
         height: 80px;
@@ -47,15 +59,18 @@
     <div class="container">
       <iron-form id="findForm">
         <form method="get">
-          <div class="layout horizontal end-justified">
+          <div class="buttons">
+            <paper-button on-tap="onClear" raised>Clear</paper-button>
             <paper-button on-tap="onSubmit" raised>Find</paper-button>
           </div>
-          <div class="layout horizontal justified wrap fields">
-            <paper-input name="find_text" label="by text"></paper-input>
+          <div class="long">
             <paper-chip-input-autocomplete name="find_tags" label="by tags" id="tags"
               closable
               items="[[item.tags]]"
               source="[[tags]]"></paper-chip-input-autocomplete>
+          </div>
+          <div class="fields">
+            <paper-input name="find_text" label="by text"></paper-input>
             <paper-input name="find_year" label="in year" type="number"
               auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
             <paper-input name="find_month" label="in month" type="number"
@@ -120,6 +135,10 @@
       }
       onSubmit(e) {
         this.$.findForm.submit();
+      }
+      onClear() {
+        this.$.tags.items = [];
+        this.$.findForm.reset();
       }
       _submit(e) {
         let params = [];

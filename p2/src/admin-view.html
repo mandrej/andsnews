@@ -23,6 +23,11 @@
         margin-bottom: 0.5em;
         font-weight: 300;
       }
+      .actions {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-wrap;
+      }
       paper-button {
         min-width: 175px;
         margin-bottom: 16px;
@@ -66,7 +71,7 @@
 
       <div hidden$="[[!pass]]">
         <h1>Photo [[info.photo.count]]</h1>
-        <div class="layout horizontal justified wrap">
+        <div class="actions">
           <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
             <paper-button on-tap="rebuild" toggles raised>[[item]]</paper-button>
           </template>
