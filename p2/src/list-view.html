@@ -37,7 +37,6 @@
         position: relative;
         background-color: #fff;
         @apply --layout-vertical;
-        @apply --shadow-elevation-2dp;
       }
       .square .icon {
         color: #fff;
@@ -69,7 +68,7 @@
         @apply --ellipsis;
       }
       paper-dialog {
-        background-color: var(--default-primary-color);
+        background-color: #fff;
         --paper-dialog-title: {
           white-space: normal;
           text-align: center;
@@ -112,7 +111,7 @@
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
-    <app-header condenses reveals shadow slot="header">
+    <app-header condenses reveals slot="header">
       <app-toolbar>
         <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
         <h4 condensed-title></h4>

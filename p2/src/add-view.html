@@ -19,15 +19,15 @@
       vaadin-upload {
         --vaadin-upload-button-add: {
           font-size: inherit;
-          color: #fff;
-          background-color: var(--accent-color);
+          color: var(--text-primary-color);
+          background-color: var(--default-primary-color);
           @apply(--shadow-elevation-2dp);
         }
       }
       @media (max-width: 1024px) { .container { margin: var(--user-gap) 0; }}
     </style>
 
-    <app-header condenses reveals shadow effects="resize-title" slot="header">
+    <app-header condenses reveals effects="resize-title" slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
         <h4 condensed-title>[[title]]</h4>

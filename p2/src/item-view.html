@@ -18,7 +18,7 @@
       img-pan-zoom {
         height: 100%;
         box-sizing: border-box;
-        --img-pan-zoom-spinner-color: #fff;
+        --img-pan-zoom-spinner-color: var(--default-primary-color);
         --img-pan-zoom-spinner-width: 3px;
       }
       @media (max-width: 1024px) { .container { margin: 0; }}
@@ -26,7 +26,7 @@
 
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
 
-    <app-header fixed shadow slot="header">
+    <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
         <h1 main-title>[[item.headline]]</h1>

@@ -2,7 +2,7 @@
   <template>
     <style>
       a {
-        color: var(--default-primary-color);
+        color: var(--accent-color);
       }
       [hidden] {
         display: none !important;
@@ -13,12 +13,8 @@
         left: 0;
         width: 100%;
         z-index: 10;
-        color: #fff;
-        background-color: var(--default-primary-color);
-        /* background-image: url(../images/logo.svg);
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: var(--user-gap) 0; */
+        color: var(--text-primary-color);
+        background-color: #fff;
       }
       app-toolbar {
         margin: 0 auto;
@@ -43,16 +39,12 @@
         pointer-events: all; /* default none */
       }
       paper-fab, paper-button {
-        color: #fff;
-        background-color: var(--accent-color);
+        color: var(--text-primary-color);
+        background-color: var(--default-primary-color);
+        @apply --shadow-elevation-2dp;
       }
       paper-toast {
-        --paper-toast-color: var(--text-primary-color);
-        --paper-toast-background-color: var(--default-primary-color);
         @apply --ellipsis;
-      }
-      paper-ripple {
-        color: #fff;
       }
       paper-spinner-lite {
         position: absolute;
@@ -60,7 +52,7 @@
         height: 40px;
         bottom: 12px;
         left: calc(50% - 20px);
-        --paper-spinner-color: #fff;
+        --paper-spinner-color: var(--default-primary-color);
         --paper-spinner-stroke-width: 3px;
       }
       ::slotted(footer) {
