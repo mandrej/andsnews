@@ -46,7 +46,7 @@
     <firebase-document
       app-name="andsnews"
       path="/users/[[user.uid]]"
-      data="{{data}}"></firebase-document>
+      data="{{fbData}}"></firebase-document>
 
     <iron-ajax auto
       url="[[_url(pass)]]"
@@ -94,7 +94,7 @@
         return {
           title: { type: String, value: 'Authorization Required' },
           pass: { type: Boolean, value: false },
-          data: Object
+          fbData: Object
         };
       }
       static get observers() {
@@ -112,9 +112,10 @@
       userData(user) {
         const d = new Date();
         if (user) {
-          this.data = {
+          this.fbData = {
             email: user.email,
-            date: d.toISOString()
+            date: d.toISOString(),
+            token: this.token
           }
         }
       }

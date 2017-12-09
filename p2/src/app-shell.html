@@ -107,7 +107,6 @@
         return {
           version: { type: String, value: '201712071454' },
           user: { type: Object, notify: true },
-          userPhoto: String,
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
           copy: {
@@ -169,9 +168,6 @@
           });
         }
       }
-      copywrite(version) {
-        return 'ANDS 2007-' + version.match(/.{1,4}/g).join('.');
-      }
       _checkNet(online) {
         const toast = this.$.toast;
         if (online) {
@@ -182,6 +178,9 @@
       }
       _close(e) {
         this.$.toast.close();
+      }
+      copywrite(version) {
+        return 'ANDS 2007-' + version.match(/.{1,4}/g).join('.');
       }
     }
     window.customElements.define(AppShell.is, AppShell);
