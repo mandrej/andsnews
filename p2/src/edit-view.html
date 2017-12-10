@@ -16,10 +16,9 @@
         max-width: var(--max-width);
       }
       app-header {
-        color: #fff;
         background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        background-size: auto 100%;
+        background-position: 100% 50%;
       }
       .container {
         @apply --layout-flex;
@@ -45,7 +44,6 @@
         box-sizing: border-box;
       }
       @media (max-width: 1024px) { .container { margin: var(--user-gap) 0; }}
-      @media (min-width: 1025px) { .container { margin: var(--user-gap) 0; }}
       @media (max-width: 768px)  { .fields * { width: 50%; }}
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
