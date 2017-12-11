@@ -15,19 +15,19 @@
         margin: 128px auto 0 auto;
         max-width: var(--max-width);
       }
-      app-header {
-        background-repeat: no-repeat;
-        background-size: auto 100%;
-        background-position: 100% 50%;
-      }
       .container {
         @apply --layout-flex;
         margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
       .buttons {
+        margin-left: var(--user-gap);
+        padding: 100px 0 0;
         @apply --layout-horizontal;
         @apply --layout-end-justified;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        background-position: 0% 50%;
       }
       .long {
         padding: 0 0 var(--user-gap) var(--user-gap);
@@ -51,8 +51,7 @@
     <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
 
-    <app-header condenses reveals effects="resize-title"
-      style="background-image: url([[item.serving_url]]=s400-c)" slot="header">
+    <app-header condenses reveals effects="resize-title" slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
         <h4 condensed-title>[[title]]</h4>
@@ -69,7 +68,7 @@
 
             <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
 
-            <div class="buttons">
+            <div class="buttons" style="background-image: url([[item.serving_url]]=s400-c)">
               <paper-button on-tap="_submit" raised>Submit</paper-button>
             </div>
 
