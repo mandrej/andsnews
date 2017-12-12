@@ -25,7 +25,6 @@
     <link rel="icon" sizes="144x144" href="/images/manifest/icon-144x144.png">
     <link rel="icon" sizes="192x192" href="/images/manifest/icon-192x192.png">
     <link rel="icon" sizes="384x384" href="/images/manifest/icon-384x384.png">
-    <link rel="icon" sizes="512x512" href="/images/manifest/icon-512x512.png">
 
     <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#212121">
@@ -37,11 +36,10 @@
       }
     </script>
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-    <link rel="import" href="/src/shared-styles.html">
     <link rel="import" href="/src/app-shell.html">
 
     <custom-style>
-      <style include="shared-styles">
+      <style>
         html {
           /* https://www.materialpalette.com/amber/blue-grey */
           --dark-primary-color:       #FFA000;
@@ -65,12 +63,6 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-          };
-          --no-select: {
-            -moz-user-select: none;
-            -ms-user-select: none;
-            -webkit-user-select: none;
-            user-select: none;
           };
         }
         body {
