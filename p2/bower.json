@@ -31,7 +31,8 @@
     "polymerfire": "firebase/polymerfire#^2.1.0",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^2.0.0",
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
-    "img-pan-zoom": "ryanburns23/img-pan-zoom#^2.0.0"
+    "img-pan-zoom": "ryanburns23/img-pan-zoom#^2.0.0",
+    "moment": "^2.19.4"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

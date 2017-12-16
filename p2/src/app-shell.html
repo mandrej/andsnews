@@ -62,6 +62,7 @@
         view="item"
         is-authorized="[[isAuthorized]]"
         safekey="{{dataField.field}}"
+        current="{{current}}"
         route="{{route}}"></item-view>
 
       <search-view
@@ -81,6 +82,7 @@
         view="edit"
         is-authorized="[[isAuthorized]]"
         safekey="{{dataField.field}}"
+        current="{{current}}"
         route="{{route}}">
         <footer slot="footer">[[copy]]</footer>
       </edit-view>
@@ -106,10 +108,11 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201712131157' },
+          version: { type: String, value: '201712161932' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
+          current: { type: Object, notify: true },
           copy: {
             type: String,
             computed: 'copywrite(version)'
@@ -129,10 +132,12 @@
           this.set('route.path', '/list/all');
         }
         this.addEventListener('sign', this.signHandler);
+        this.addEventListener('current', this.currentChange);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('sign', this.signHandler, true);
+        this.removeEventListener('current', this.currentChange, true);
       }
       signHandler() {
         if (this.user) {
@@ -146,6 +151,9 @@
               console.log(error);
             });
         }
+      }
+      currentChange(e) {
+        this.current = e.detail;
       }
       _userIsAdmin(user) {
         this.isAdmin = (user && user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3');

@@ -264,6 +264,7 @@
       showView(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
+        this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
         this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
       }
       addRecord() {
@@ -272,14 +273,9 @@
       showEdit(e) {
         const top = window.pageYOffset;
         this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
+        this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
-      // applyFilter(e) {
-      //   const target = e.target,
-      //     field = target.dataset.field,
-      //     value = target.dataset.fieldValue;
-      //   this.set('route.path', ['/list', field, value].join('/'));
-      // }
       resetFilter(e) {
         e.preventDefault();
         this.set('route.path', '/list/all');

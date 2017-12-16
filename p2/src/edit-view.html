@@ -48,7 +48,7 @@
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
-    <iron-ajax url="[[_url(safekey)]]" last-response="{{item}}" auto></iron-ajax>
+    <iron-ajax url="[[_url(safekey, current)]]" last-response="{{item}}" auto></iron-ajax>
     <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
 
     <app-header condenses reveals effects="resize-title" slot="header">
@@ -135,10 +135,14 @@
         form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
         // form.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
-      _url(safekey) {
+      _url(safekey, current) {
         const rx = /^\/edit/;
         if (rx.test(this.route.path)) {
-          return ['/api', safekey].join('/');
+          if (current && current.safekey === safekey) {
+            this.item = current;
+          } else {
+            return ['/api', safekey].join('/');
+          }
         }
       }
       listTags(e) {
