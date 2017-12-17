@@ -22,7 +22,8 @@
     "robots.txt",
     "manifest.json",
     "firebase-messaging-sw.js",
-    "bower_components/webcomponentsjs/*"
+    "bower_components/webcomponentsjs/*",
+    "bower_components/moment/min/*"
   ],
   "builds": [
     {

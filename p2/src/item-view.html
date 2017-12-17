@@ -59,7 +59,8 @@
         [[_dateFormat(item.date)]]<br>
         [[item.author]]<br>
         [[item.model]] [[item.lens]] ([[item.focal_length]]mm)<br>
-        f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA</p>
+        f[[item.aperture]] [[item.shutter]]s [[item.iso]] ASA
+      </p>
       <p>
         <paper-chip label="[[item.year]]" data-field="date" data-field-value$="[[item.year]]"
           on-tap="applyFilter"></paper-chip>
@@ -98,7 +99,7 @@
         this.$.info.toggle();
       }
       _dateFormat(str) {
-        return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('LLL');
+        return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('llll');
       }
       applyFilter(e) {
         const target = e.target,
@@ -116,5 +117,4 @@
 
     window.customElements.define(ItemView.is, ItemView);
   </script>
-  <script defer src="../bower_components/moment/min/moment.min.js"></script>
 </dom-module>
