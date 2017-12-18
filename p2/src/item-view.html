@@ -29,6 +29,12 @@
           font-size: 20px;
         }
       }
+      .buttons {
+        padding: 16px 16px 0;
+      }
+      .buttons paper-icon-button {
+        color: var(--text-primary-color);
+      }
       img-pan-zoom {
         height: 100%;
         box-sizing: border-box;
@@ -54,6 +60,9 @@
     <paper-dialog id="info"
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation">
+      <div class="buttons">
+        <paper-icon-button icon="clear" dialog-dismiss></paper-icon-button>
+      </div>
       <h2>[[item.headline]]</h2>
       <p>
         [[_dateFormat(item.date)]]<br>
