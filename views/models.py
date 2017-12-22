@@ -31,12 +31,12 @@ def rounding(val, values):
     return min(values, key=lambda x: abs(x - val))
 
 
-def sizeof_fmt(num, suffix='B'):
-    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-        if abs(num) < 1024.0:
-            return "%3.1f%s%s" % (num, unit, suffix)
-        num /= 1024.0
-    return "%.1f%s%s" % (num, 'Y', suffix)
+# def sizeof_fmt(num, suffix='B'):
+#     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+#         if abs(num) < 1024.0:
+#             return "%3.1f%s%s" % (num, unit, suffix)
+#         num /= 1024.0
+#     return "%.1f%s%s" % (num, 'Y', suffix)
 
 
 def filter_param(field, value):
@@ -386,13 +386,13 @@ class Photo(ndb.Model):
 
     def serialize(self):
         data = self.to_dict(exclude=(
-            'blob_key', 'size', 'ratio', 'crop_factor',
+            'blob_key', 'size', 'ratio', 'crop_factor', 'dim',
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
-            'kind': 'photo',
+            # 'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
-            'size': sizeof_fmt(self.size),
+            # 'size': sizeof_fmt(self.size),
         })
         return data

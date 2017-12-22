@@ -9,7 +9,7 @@ class TransliterateTest(unittest.TestCase):
         print slugify(u'Mišići')
 
     def test2(self):
-        print slugify(u'Мишићи')
+        print slugify(u'Gruja, Rumunija.')
 
     def test3(self):
         print slugify(u'Ђоле с лоптом')
