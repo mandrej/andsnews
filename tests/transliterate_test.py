@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import unittest
-from views.slugify import slugify
-from views.models import tokenize
+from views.models import slugify, tokenize
 
 
 class TransliterateTest(unittest.TestCase):
     def test1(self):
-        print slugify(u'Mišići')
+        print slugify(u'Mišići Чањ, Црна Гора.')
 
     def test2(self):
         print slugify(u'Gruja, Rumunija.')

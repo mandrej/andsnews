@@ -11,8 +11,7 @@ from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
 from mapper import push_message, Indexer, Builder, Unbound, RemoveFields
-from models import Counter, Photo, INDEX, PHOTO_FILTER
-from slugify import slugify
+from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 25
 PERCENTILE = 50 if DEVEL else 80

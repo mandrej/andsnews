@@ -4,6 +4,7 @@ import colorsys
 import datetime
 import logging
 import time
+import unicodedata
 import uuid
 from cStringIO import StringIO
 from decimal import *
@@ -15,10 +16,10 @@ from PIL import Image
 from exifread import process_file
 from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
+from isounidecode import unidecode
 
 from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex
-from slugify import slugify
 
 logger = logging.getLogger('modules')
 logger.setLevel(level=logging.DEBUG)
@@ -37,6 +38,25 @@ def rounding(val, values):
 #             return "%3.1f%s%s" % (num, unit, suffix)
 #         num /= 1024.0
 #     return "%.1f%s%s" % (num, 'Y', suffix)
+
+
+def strip_punctuation(text):
+    punctuation = set(['Pc', 'Pd', 'Ps', 'Pe', 'Pi', 'Pf', 'Po'])
+    return ''.join(x for x in text if unicodedata.category(x) not in punctuation)
+
+
+def slugify(text):
+    text = strip_punctuation(text)
+    text = unidecode(text.lower())
+    return '-'.join(text.split())
+
+
+def tokenize(phrase):
+    res = []
+    for word in phrase.split('-'):
+        for i in range(3, len(word) + 1):
+            res.append(word[:i])
+    return ' '.join(res)
 
 
 def filter_param(field, value):
@@ -166,14 +186,6 @@ def range_names(rgb):
     lum = in_range(l, LUM)
     sat = in_range(s, SAT)
     return hue, lum, sat
-
-
-def tokenize(phrase):
-    res = []
-    for word in phrase.split('-'):
-        for i in range(3, len(word) + 1):
-            res.append(word[:i])
-    return ' '.join(res)
 
 
 def remove_doc(safe_key):
