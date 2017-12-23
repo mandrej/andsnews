@@ -12,7 +12,7 @@ class TransliterateTest(unittest.TestCase):
         print slugify(u'Gruja, Rumunija.')
 
     def test3(self):
-        print slugify(u'Ђоле с лоптом')
+        print slugify(u'Estação Olaias')
 
     def testTokenze(self):
         print tokenize('masa-gleda-u-tv-preko-knjige')

@@ -389,7 +389,7 @@ class Photo(ndb.Model):
             'blob_key', 'size', 'ratio', 'crop_factor', 'dim',
             'rgb', 'sat', 'lum', 'hue', 'year', 'filename'))
         data.update({
-            # 'kind': 'photo',
+            'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
             'serving_url': self.serving_url,
