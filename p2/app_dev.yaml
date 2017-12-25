@@ -32,8 +32,3 @@ handlers:
   static_files: index.html
   upload: index.html
   secure: always
-
-skip_files:
-- ^bower_components
-- ^node_modules
-- ^(src|test|images)

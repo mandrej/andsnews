@@ -72,7 +72,7 @@
           <div class="fields">
             <paper-input name="find_text" label="by text"></paper-input>
             <paper-input name="find_year" label="in year" type="number"
-              auto-validate min="2008" max="2017" error-message="2008 - 2017">></paper-input>
+              auto-validate min="2007" max$="[[year()]]" error-message$="2007 - [[year()]]">></paper-input>
             <paper-input name="find_month" label="in month" type="number"
               auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
             <vaadin-combo-box name="find_model" label="by camera" id="models"
@@ -167,6 +167,10 @@
         if (find) {
           this.set('route.path', ['/list/search', find].join('/'));
         }
+      }
+      year() {
+        const now = new Date();
+        return now.getFullYear();
       }
       goHome() {
         this.set('route.path', '/list/all');
