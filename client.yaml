@@ -38,14 +38,15 @@ handlers:
 
 skip_files:
 # - (?!^p2/build)
-- ^docs
-- ^client
-- ^lib
-- ^p2/bower_components
-- ^p2/node_modules
-- ^p2/(src|test|images)
-- ^tests
-- ^views
-- ^(.*/)?.*~$
-- ^(.*/)?\..*$
-- ^(.*/)?.*\.py[co]$
+- (?!^(p2($|/build)))
+# - ^docs
+# - ^client
+# - ^lib
+# - ^p2/bower_components
+# - ^p2/node_modules
+# - ^p2/(src|test|images)
+# - ^tests
+# - ^views
+# - ^(.*/)?.*~$
+# - ^(.*/)?\..*$
+# - ^(.*/)?.*\.py[co]$
