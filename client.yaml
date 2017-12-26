@@ -37,6 +37,14 @@ handlers:
   secure: always
 
 skip_files:
-- ^bower_components
-- ^node_modules
-- ^(src|test|images)
+- ^docs
+- ^client
+- ^lib
+- ^p2/bower_components
+- ^p2/node_modules
+- ^p2/(src|test|images)
+- ^tests
+- ^views
+- ^(.*/)?.*~$
+- ^(.*/)?\..*$
+- ^(.*/)?.*\.py[co]$

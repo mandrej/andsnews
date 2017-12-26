@@ -38,11 +38,10 @@ builtins:
 #- remote_api: on
 
 skip_files:
+- lib/PIL*
+- ^docs
+- ^client
+- ^p2
 - ^(.*/)?.*~$
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.py[co]$
-- lib/PIL*
-- ^docs
-- ^p2/(src|test|images)
-- ^p2/bower_components
-- ^client
