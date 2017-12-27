@@ -1,8 +1,5 @@
 .idea/
 lib/
-p2/bower_components
-p2/node_modules
-p2/build
 decorator.py
 six.py
 *.pyc
