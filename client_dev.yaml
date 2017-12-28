@@ -1,5 +1,5 @@
 application: andsnews
-service: default
+service: client
 runtime: python27
 api_version: 1
 threadsafe: true
