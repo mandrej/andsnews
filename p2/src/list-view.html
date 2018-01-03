@@ -123,7 +123,7 @@
         <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
       </app-toolbar>
       <app-toolbar sticky>
-        <a href="#" on-tap="resetFilter" main-title>ANDрејевићи</a>
+        <a href="#" on-tap="resetFilter" main-title>[[title]]</a>
         <paper-icon-button icon="arrow-upward" on-tap="scrollTop"></paper-icon-button>
         <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
       </app-toolbar>
@@ -160,6 +160,7 @@
           records: { type: Array, value: [], notify: true },
           currentIndex: { type: Number, value: -1, notify: true },
           _listScrollTop: { type: Number, value: 0 },
+          title: String,
         };
       }
       static get observers() {
@@ -188,20 +189,24 @@
             () => {
               if (field === 'all') {
                 ajax.url = '/api/start';
+                this.title = 'ANDрејевићи';
               } else if (field === 'search') {
                 ajax.url = ['/api/search', value].join('/');
+                this.title = value.replace(/AND/gi, '+');
               } else if (field && value) {
                 ajax.url = ['/api/photo', field, value].join('/');
+                this.title = field + ':' + value;
               }
               if (ajax.lastRequest) {
-                if (!ajax.lastRequest.url.startsWith(ajax.url)) {
-                  this.records = [];
-                  this.set('params._page', null);
-                  ajax.generateRequest();
-                } else {
+                const pathname = ajax.lastRequest.url.split('?')[0];
+                if (pathname === ajax.url) {
                   Polymer.Async.timeOut.run(() => {
                     Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
                   }, 20);
+                } else {
+                  this.records = [];
+                  this.set('params._page', null);
+                  ajax.generateRequest();
                 }
               } else {
                 this.records = [];
