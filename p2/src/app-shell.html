@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -67,39 +68,34 @@
 
       <search-view
         view="search"
-        route="{{route}}">
-        <footer slot="footer">[[copy]]</footer>
-      </search-view>
+        route="{{route}}"
+        copy="[[copy]]"></search-view>
 
       <add-view
         view="add"
         is-authorized="[[isAuthorized]]"
-        route="{{route}}">
-        <footer slot="footer">[[copy]]</footer>
-      </add-view>
+        route="{{route}}"
+        copy="[[copy]]"></add-view>
 
       <edit-view
         view="edit"
         is-authorized="[[isAuthorized]]"
         safekey="{{dataField.field}}"
         current="{{current}}"
-        route="{{route}}">
-        <footer slot="footer">[[copy]]</footer>
-      </edit-view>
+        route="{{route}}"
+        copy="[[copy]]"></edit-view>
 
       <admin-view
         view="admin"
         user="[[user]]"
         is-admin="[[isAdmin]]"
-        route="{{route}}">
-        <footer slot="footer">[[copy]]</footer>
-      </admin-view>
+        route="{{route}}"
+        copy="[[copy]]"></admin-view>
 
       <notfound-view
         view="404"
-        route="{{route}}">
-        <footer slot="footer">[[copy]]</footer>
-      </notfound-view>
+        route="{{route}}"
+        copy="[[copy]]"></notfound-view>
     </iron-pages>
   </template>
 
@@ -108,7 +104,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801031541' },
+          version: { type: String, value: '201801061952' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },

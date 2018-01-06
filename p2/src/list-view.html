@@ -1,14 +1,9 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
-
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 
@@ -196,6 +191,9 @@
               } else if (field && value) {
                 ajax.url = ['/api/photo', field, value].join('/');
                 this.title = field + ':' + value;
+              } else {
+                this.set('route.path', '/404');
+                return;
               }
               if (ajax.lastRequest) {
                 const pathname = ajax.lastRequest.url.split('?')[0];
