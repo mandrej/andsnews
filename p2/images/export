@@ -4,7 +4,7 @@ sizes=(48 96 144 192 384 512)
 
 for i in ${sizes[@]}; do
   file=manifest/icon-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i logo.svg
+  inkscape -z -e $file -w $i -h $i aperture.svg
   echo $file
 done
 

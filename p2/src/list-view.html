@@ -192,7 +192,7 @@
                 ajax.url = ['/api/photo', field, value].join('/');
                 this.title = field + ':' + value;
               } else {
-                this.set('route.path', '/404');
+                this.set('route.path', '/notfound');
                 return;
               }
               if (ajax.lastRequest) {
