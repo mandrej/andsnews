@@ -152,7 +152,10 @@
         this.current = e.detail;
       }
       _userIsAdmin(user) {
-        this.isAdmin = (user && user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3');
+        if (user) {
+          this.isAdmin = (user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3' || user.uid === 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2')
+        }
+        this.isAdmin = false;
       }
       _routeViewChanged(view) {
         if (!view) return; // undefined
