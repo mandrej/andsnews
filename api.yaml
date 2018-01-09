@@ -2,7 +2,7 @@ service: default
 runtime: python27
 api_version: 1
 threadsafe: true
-default_expiration: "0s"
+default_expiration: "0m"
 
 instance_class: B1
 basic_scaling:

@@ -26,7 +26,7 @@ module.exports = {
       options: {
         cache: {
           maxEntries: 100,
-          maxAgeSeconds: 2 * 24 * 60 * 60,
+          maxAgeSeconds: 6 * 3600,
           name: 'data-cache'
         }
       }
@@ -35,8 +35,8 @@ module.exports = {
       handler: 'fastest',
       options: {
         cache: {
-          maxEntries: 500,
-          maxAgeSeconds: 7 * 24 * 60 * 60,
+          maxEntries: 100,
+          maxAgeSeconds: 7 * 24 * 3600,
           name: 'image-cache'
         }
       }
