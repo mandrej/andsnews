@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="644px" height="644px" viewBox="0 0 644 644">
   <style>
-    circle { fill: #212121; fill-rule: evenodd; clip-rule: evenodd; }
+    circle { fill: #212121; fill-opacity: 0.3; fill-rule: evenodd; clip-rule: evenodd; }
     path { fill: #FFC107; fill-rule: evenodd; clip-rule: evenodd; }
   </style>
   <circle cx="323.743" cy="321.744" r="311.243" />

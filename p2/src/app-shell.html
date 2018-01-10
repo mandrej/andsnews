@@ -104,7 +104,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801092102' },
+          version: { type: String, value: '201801102028' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -113,6 +113,9 @@
             type: String,
             computed: 'copywrite(version)'
           },
+          admins: { type: Array, value: [
+            'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',
+            'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },
         };
       }
       static get observers() {
@@ -152,10 +155,9 @@
         this.current = e.detail;
       }
       _userIsAdmin(user) {
-        if (user) {
-          this.isAdmin = (user.uid === 'j8ezW5PBwMMnzrUvDA9ucYOOmrD3' || user.uid === 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2')
+        if (user && user.uid) {
+          this.isAdmin = (this.admins.indexOf(user.uid) !== -1);
         }
-        this.isAdmin = false;
       }
       _routeViewChanged(view) {
         if (!view) return; // undefined
