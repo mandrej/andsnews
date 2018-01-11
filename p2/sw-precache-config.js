@@ -7,7 +7,7 @@ module.exports = {
     '/images/*'
   ],
   navigateFallback: '/index.html',
-  navigateFallbackWhitelist: [/^(?!.*\.html$|\/data\/).*/],
+  navigateFallbackWhitelist: [],
   runtimeCaching: [
     {
       urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,
@@ -19,14 +19,14 @@ module.exports = {
       }
     }, {
       urlPattern: /\/api\/photo\/tags\/new/,
-      handler: 'networkFirst'
+      handler: 'networkOnly'
     }, {
       urlPattern: /\/api\/.*/,
       handler: 'fastest',
       options: {
         cache: {
           maxEntries: 100,
-          maxAgeSeconds: 6 * 3600,
+          maxAgeSeconds: 12 * 3600,
           name: 'data-cache'
         }
       }

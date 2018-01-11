@@ -26,6 +26,8 @@ handlers:
 - url: /(service-worker\.js|firebase-messaging-sw\.js)$
   static_files: p2/\1
   upload: p2/(service-worker\.js|firebase-messaging-sw\.js)$
+  http_headers:
+    Cache-Control: max-age=0
   secure: always
 
 - url: /.*
