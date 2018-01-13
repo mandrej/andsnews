@@ -1,7 +1,7 @@
 {
     "name": "ANDрејевићи",
     "short_name": "ANDS",
-    "start_url": "/",
+    "start_url": "index.html",
     "display": "standalone",
     "theme_color": "#fff",
     "background_color": "#fff",
