@@ -25,6 +25,10 @@
     "bower_components/webcomponentsjs/*",
     "bower_components/moment/min/*"
   ],
+  "lint": {
+    "rules": ["polymer-2"],
+    "ignoreWarnings": []
+  },
   "builds": [
     {
       "preset": "es6-unbundled",
