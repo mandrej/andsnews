@@ -48,19 +48,24 @@
         @apply --ellipsis;
       }
       paper-spinner-lite {
-        position: absolute;
+        /* position: absolute;
         width: 40px;
         height: 40px;
         bottom: 12px;
-        left: calc(50% - 20px);
+        left: calc(50% - 20px); */
         --paper-spinner-color: var(--default-primary-color);
         --paper-spinner-stroke-width: 3px;
       }
       footer {
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
+        height: 64px;
+        line-height: 64px;
+      }
+      footer app-toolbar [condensed-title] {
+        margin: 0;
         font-size: 14px;
+        font-weight: 300;
+        text-align: center;
+        @apply --ellipsis;
       }
     </style>
   </template>

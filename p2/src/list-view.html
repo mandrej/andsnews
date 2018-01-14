@@ -80,7 +80,14 @@
       paper-dialog .buttons {
         padding: var(--user-gap) 24px 24px;
       }
-      @media (max-width: 1200px) { .container { margin: var(--user-gap) 0; }}
+      footer {
+        position: sticky;
+        background-color: #fff;
+        bottom: 0;
+      }
+      @media (max-width: 1200px) {
+        .container { margin: var(--user-gap) 0; }
+      }
       @media (max-width: 1024px) { .square { width: calc(100% / 3); }}
       @media (max-width: 768px)  { .square { width: 50%; }}
       @media (max-width: 432px)  { .square { width: 100%; }}
@@ -113,16 +120,14 @@
 
     <app-header condenses reveals slot="header">
       <app-toolbar>
-        <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
+        <paper-spinner-lite active$="[[loading]]"></paper-spinner-lite>
         <h4 condensed-title></h4>
-        <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
+        <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
       </app-toolbar>
       <app-toolbar sticky>
         <a href="#" on-tap="resetFilter" main-title>[[title]]</a>
-        <paper-icon-button icon="arrow-upward" on-tap="scrollTop"></paper-icon-button>
         <paper-icon-button icon="search" on-tap="showSearch"></paper-icon-button>
       </app-toolbar>
-      <paper-spinner-lite active$="[[loading]]"></paper-spinner-lite>
     </app-header>
 
     <div class="container">
@@ -144,6 +149,13 @@
         </iron-list>
       </iron-scroll-threshold>
     </div>
+    <footer>
+      <app-toolbar>
+        <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
+        <h4 condensed-title>[[copy]]</h4>
+        <paper-icon-button icon="arrow-upward" mini on-tap="scrollTop"></paper-icon-button>
+      </app-toolbar>
+    </footer>
   </template>
 
   <script>

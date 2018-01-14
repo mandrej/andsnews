@@ -57,7 +57,8 @@
         is-admin="[[isAdmin]]"
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
-        route="{{route}}"></list-view>
+        route="{{route}}"
+        copy="[[copy]]"></list-view>
 
       <item-view
         view="item"
@@ -104,7 +105,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801131809' },
+          version: { type: String, value: '201801141229' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
