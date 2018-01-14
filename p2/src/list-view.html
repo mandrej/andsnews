@@ -80,10 +80,9 @@
       paper-dialog .buttons {
         padding: var(--user-gap) 24px 24px;
       }
-      footer {
+      .footer {
         position: sticky;
-        background-color: #fff;
-        bottom: 0;
+        bottom: -69px;
       }
       @media (max-width: 1200px) {
         .container { margin: var(--user-gap) 0; }
@@ -149,13 +148,14 @@
         </iron-list>
       </iron-scroll-threshold>
     </div>
-    <footer>
+
+    <app-header class="footer" condenses reveals>
       <app-toolbar>
         <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         <h4 condensed-title>[[copy]]</h4>
         <paper-icon-button icon="arrow-upward" mini on-tap="scrollTop"></paper-icon-button>
       </app-toolbar>
-    </footer>
+    </app-header>
   </template>
 
   <script>
