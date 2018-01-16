@@ -105,7 +105,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801142102' },
+          version: { type: String, value: '201801162058' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -115,8 +115,8 @@
             computed: 'copywrite(version)'
           },
           admins: { type: Array, value: [
-            'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',
-            'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },
+            'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
+            'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
         };
       }
       static get observers() {

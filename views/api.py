@@ -56,7 +56,7 @@ class Paginator(object):
 
         objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
         next_token = cursor.urlsafe() if has_next else None
-        return [x for x in objects if x is not None], next_token
+        return objects, next_token
 
 
 class SearchPaginator(object):
@@ -102,7 +102,7 @@ class SearchPaginator(object):
                 if found.cursor is not None:
                     next_token = found.cursor.web_safe_string
 
-        return [x for x in objects if x is not None], number_found, next_token, error
+        return objects, number_found, next_token, error
 
 
 class RestHandler(webapp2.RequestHandler):
