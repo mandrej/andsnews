@@ -109,7 +109,8 @@
         lower-threshold="700"
         on-lower-threshold="_load"
         scroll-target="document">
-        <iron-list id="list" grid items="{{records}}" as="rec">
+        <iron-list grid mutable-data id="list"
+          items="{{records}}" as="rec">
           <template>
             <div class="square">
               <div>

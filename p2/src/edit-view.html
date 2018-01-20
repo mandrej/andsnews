@@ -142,7 +142,6 @@
         const form = this.$.editForm;
         form.addEventListener('iron-form-presubmit', () => this._preSubmit());
         form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
-        // form.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
       _url(safekey, current) {
         const rx = /^\/edit/;

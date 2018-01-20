@@ -125,7 +125,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801201357' },
+          version: { type: String, value: '201801202051' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -210,7 +210,7 @@
         const ajax = this.$.ajax;
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer, // initially undefined
-          Polymer.Async.timeOut.after(50),
+          Polymer.Async.timeOut.after(100),
           () => {
             if (field === 'all') {
               ajax.url = '/api/start';
