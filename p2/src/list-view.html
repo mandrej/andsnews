@@ -1,9 +1,7 @@
-<link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 
@@ -69,17 +67,6 @@
         padding: var(--user-gap);
         @apply --ellipsis;
       }
-      paper-dialog {
-        background-color: #fff;
-        --paper-dialog-title: {
-          white-space: normal;
-          text-align: center;
-          font-size: 20px;
-        }
-      }
-      paper-dialog .buttons {
-        padding: var(--user-gap) 24px 24px;
-      }
       .footer {
         position: sticky;
         bottom: -69px;
@@ -92,13 +79,6 @@
       @media (max-width: 432px)  { .square { width: 100%; }}
     </style>
 
-    <paper-dialog id="message"
-      entry-animation="scale-up-animation"
-      exit-animation="fade-out-animation">
-      <h2>No items found</h2>
-      <p>Please try again</p>
-    </paper-dialog>
-
     <paper-dialog id="deleteDialog" modal
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
@@ -109,11 +89,6 @@
         <paper-button dialog-confirm autofocus>OK</paper-button>
       </div>
     </paper-dialog>
-
-    <iron-ajax id="ajax"
-      params="{{params}}"
-      loading="{{loading}}"
-      on-response="handler"></iron-ajax>
 
     <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
@@ -134,7 +109,7 @@
         lower-threshold="700"
         on-lower-threshold="_load"
         scroll-target="document">
-        <iron-list id="list" items="{{records}}" as="rec" scroll-target="document" grid>
+        <iron-list id="list" grid items="{{records}}" as="rec">
           <template>
             <div class="square">
               <div>
@@ -163,94 +138,34 @@
       static get is() { return 'list-view'; }
       static get properties() {
         return {
-          params: { type: Object, value: {}, notify: true },
-          records: { type: Array, value: [], notify: true },
-          currentIndex: { type: Number, value: -1, notify: true },
-          _listScrollTop: { type: Number, value: 0 },
           title: String,
+          currentIndex: { type: Number, value: -1, notify: true },
         };
       }
       static get observers() {
         return [
-          'buildUrl(field, value)',
-          'getUserPhoto(user.photoURL)'
+          'makeTitle(field, value)',
+          'getUserPhoto(user.photoURL)',
         ]
       }
-      connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener('kick', this.scrollPrevious);
-      }
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('kick', this.scrollPrevious, true);
-      }
-      buildUrl(field, value) {
-        let url;
-        let rx = /^\/list/;
-        const ajax = this.$.ajax;
-
-        if (rx.test(this.route.path)) {
-          if (field === 'all') {
-            ajax.url = '/api/start';
-            this.title = 'ANDрејевићи';
-          } else if (field === 'search') {
-            ajax.url = ['/api/search', value].join('/');
-            this.title = value.replace(/AND/gi, '+');
-          } else if (field && value) {
-            ajax.url = ['/api/photo', field, value].join('/');
-            this.title = field + ':' + value;
-          } else {
-            this.set('route.path', '/notfound');
-            return;
-          }
-          if (ajax.lastRequest) {
-            const pathname = ajax.lastRequest.url.split('?')[0];
-            if (pathname === ajax.url) {
-              Polymer.Async.timeOut.run(() => {
-                Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
-              }, 20);
-            } else {
-              this.records = [];
-              this.set('params._page', null);
-              ajax.generateRequest();
-            }
-          } else {
-            this.records = [];
-            this.set('params._page', null);
-            ajax.generateRequest();
-          }
+      makeTitle(field, value) {
+        if (field === 'all') {
+          this.title = 'ANDрејевићи';
+        } else if (field === 'search') {
+          this.title = value.replace(/AND/gi, '+');
+        } else if (field && value) {
+          this.title = field + ':' + value;
         }
       }
-      handler(e) {
-        const data = e.detail.response,
-          dialog = this.$.message;
-
-        if (data.objects.length === 0) {
-          dialog.open();
-          this.set('params._page', null);
-        } else {
-          data.objects.forEach((item) => {
-            this.push('records', item);
-          });
-          this.$.scrollTheshold.clearTriggers();
-          this.$.list.fire('iron-resize');
-        }
-      }
-      _load() {
-        const ajax = this.$.ajax;
-        if (ajax.lastResponse && ajax.lastResponse._next) {
-          this.set('params._page', ajax.lastResponse._next);
-          ajax.generateRequest();
-        }
+      _load(e) {
+        this.$.scrollTheshold.clearTriggers();
+        this.$.list.fire('iron-resize');
+        this.dispatchEvent(new CustomEvent('load', {bubbles: true, composed: true}));
       }
       scrollTop() {
-        this._listScrollTop = 0;
         Polymer.Async.timeOut.run(() => {
-          Polymer.AppLayout.scroll({ top: this._listScrollTop, behavior: 'silent' });
+          Polymer.AppLayout.scroll({ top: 0, behavior: 'silent' });
         }, 20);
-      }
-      scrollPrevious(e) {
-        this._listScrollTop = e.detail.top;
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
@@ -270,18 +185,14 @@
       showSearch() {
         this.set('route.path', '/search');
       }
-      showView(e) {
-        const top = window.pageYOffset;
-        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
-        this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
-        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
-      }
       addRecord() {
         this.set('route.path', '/add');
       }
+      showView(e) {
+        this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
+        this.set('route.path', ['/item', e.model.rec.safekey].join('/'));
+      }
       showEdit(e) {
-        const top = window.pageYOffset;
-        this.dispatchEvent(new CustomEvent('kick', {bubbles: true, composed: true, detail: {top: top}}));
         this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
         this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
       }
@@ -305,10 +216,6 @@
       _sign() {
         this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
-      // _abort() {
-      //   const ajax = this.$.ajax;
-      //   if (this.loading) ajax.lastRequest._discardRequest();
-      // }
     }
 
     window.customElements.define(ListView.is, ListView);

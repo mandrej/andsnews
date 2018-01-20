@@ -47,6 +47,17 @@
       paper-toast {
         @apply --ellipsis;
       }
+      paper-dialog {
+        background-color: #fff;
+        --paper-dialog-title: {
+          white-space: normal;
+          text-align: center;
+          font-size: 20px;
+        }
+      }
+      paper-dialog .buttons {
+        padding: var(--user-gap) 24px 24px;
+      }
       paper-spinner-lite {
         /* position: absolute;
         width: 40px;

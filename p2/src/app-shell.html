@@ -6,11 +6,13 @@
 
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="shared-styles.html">
 
@@ -45,9 +47,22 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
+    <iron-ajax id="ajax"
+      url="{{url}}"
+      params="{{params}}"
+      loading="{{loading}}"
+      on-response="handler"></iron-ajax>
+
     <paper-toast id="toast" duration="0" text="YOU ARE OFFLINE">
       <paper-icon-button icon="clear" on-tap="_close"></paper-icon-button>
     </paper-toast>
+
+    <paper-dialog id="message"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation">
+      <h2>No photos for<br>current filter / search</h2>
+      <p>Please try again</p>
+    </paper-dialog>
 
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <list-view
@@ -57,6 +72,11 @@
         is-admin="[[isAdmin]]"
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
+
+        records="{{records}}"
+        loading="{{loading}}"
+        url="[[ajaxUrl]]"
+
         route="{{route}}"
         copy="[[copy]]"></list-view>
 
@@ -105,7 +125,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801162058' },
+          version: { type: String, value: '201801201357' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -117,13 +137,17 @@
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
+          records: { type: Array, value: [], notify: true },
+          ajaxUrl: String,
+          params: { type: Object, value: {}, notify: true },
         };
       }
       static get observers() {
         return [
           '_checkNet(online)',
           '_routeViewChanged(dataView.view)',
-          '_userIsAdmin(user)'
+          '_paramsChanged(dataView.view, dataField.field, dataValue.value)',
+          '_userIsAdmin(user)',
         ]
       }
       connectedCallback() {
@@ -133,11 +157,13 @@
         }
         this.addEventListener('sign', this.signHandler);
         this.addEventListener('current', this.currentChange);
+        this.addEventListener('load', this._loadMore);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('sign', this.signHandler, true);
         this.removeEventListener('current', this.currentChange, true);
+        this.removeEventListener('load', this._loadMore, true);
       }
       signHandler() {
         if (this.user) {
@@ -177,6 +203,57 @@
               }
             );
           });
+        }
+      }
+      _paramsChanged(view, field, value) {
+        if (view !== 'list') return;
+        const ajax = this.$.ajax;
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer, // initially undefined
+          Polymer.Async.timeOut.after(50),
+          () => {
+            if (field === 'all') {
+              ajax.url = '/api/start';
+            } else if (field === 'search') {
+              ajax.url = ['/api/search', value].join('/');
+            } else if (field && value) {
+              ajax.url = ['/api/photo', field, value].join('/');
+            } else {
+              return;
+            }
+
+            if (ajax.lastRequest) {
+              const pathname = ajax.lastRequest.url.split('?')[0];
+              if (pathname !== ajax.url) {
+                this.records = [];
+                this.set('params._page', null);
+                this.ajaxUrl = ajax.url;
+                ajax.generateRequest();
+              }
+            } else {
+              this.records = [];
+              this.set('params._page', null);
+              this.ajaxUrl = ajax.url;
+              ajax.generateRequest();
+            }
+          }
+        )
+      }
+      handler(e) {
+        const data = e.detail.response;
+        if (data.objects.length === 0) {
+          this.$.message.open();
+        } else {
+          data.objects.forEach((item) => {
+            this.push('records', item);
+          });
+        }
+      }
+      _loadMore(e) {
+        const ajax = this.$.ajax;
+        if (ajax.lastResponse && ajax.lastResponse._next) {
+          this.set('params._page', ajax.lastResponse._next);
+          ajax.generateRequest();
         }
       }
       _checkNet(online) {
