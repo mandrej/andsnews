@@ -109,7 +109,7 @@
   </template>
 
   <script>
-    class EditView extends Polymer.Element {
+    class EditView extends Polymer.MutableData(Polymer.Element) {
       static get is() { return 'edit-view'; }
       static get properties() {
         return {
@@ -164,8 +164,14 @@
         }
       }
       _preSubmit() {
-        const form = this.$.editForm;
-        form.request.params['tags'] = this.$.tags.items.join(',');
+        const form = this.$.editForm,
+          tags = this.$.tags.items;
+
+        if (this.current) {
+          form.request.params['tags'] = tags;
+          Object.assign(this.current, form.request.params);
+        }
+        form.request.params['tags'] = tags.join(',');
       }
       _submit() {
         this.$.editForm.submit();

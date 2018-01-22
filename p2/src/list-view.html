@@ -67,6 +67,9 @@
         padding: var(--user-gap);
         @apply --ellipsis;
       }
+      paper-dialog .buttons {
+        @apply --layout-justified;
+      }
       .footer {
         position: sticky;
         bottom: -69px;
@@ -83,10 +86,10 @@
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
       on-iron-overlay-closed="deleteRecord">
-      <h2>Are you sure?</h2>
+      <h2>Are you sure?<br><small>This action cannot be undone</small></h2>
       <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button dialog-confirm autofocus>OK</paper-button>
+        <paper-button dialog-dismiss>Cancel</paper-button>
       </div>
     </paper-dialog>
 
@@ -104,7 +107,7 @@
       </app-toolbar>
     </app-header>
 
-    <div class="container">
+    <div class="flex container">
       <iron-scroll-threshold id="scrollTheshold"
         lower-threshold="700"
         on-lower-threshold="_load"
