@@ -16,7 +16,7 @@ from PIL import Image
 from exifread import process_file
 from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
-from isounidecode import unidecode
+from unidecode import unidecode
 
 from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex

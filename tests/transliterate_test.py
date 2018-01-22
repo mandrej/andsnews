@@ -5,13 +5,13 @@ from views.models import slugify, tokenize
 
 class TransliterateTest(unittest.TestCase):
     def test1(self):
-        print slugify(u'Mišići Чањ, Црна Гора.')
+        print slugify(u'Mišići Чањ, Црна Гора. Комшилук')
 
     def test2(self):
-        print slugify(u'Gruja, Rumunija.')
+        print slugify(u'Gruja, Rumunija. Божићна звезда')
 
     def test3(self):
         print slugify(u'Estação Olaias')
 
     def testTokenze(self):
-        print tokenize('masa-gleda-u-tv-preko-knjige')
+        print tokenize('misici-chanj-tsrna-gora-komshiluk')

@@ -4,8 +4,9 @@ ExifRead==2.1.2
 funcsigs==0.4
 GoogleAppEngineCloudStorageClient==1.9.22.1
 httplib2==0.9.2
-isounidecode==0.3
 networkx==1.9.1
 numpy==1.9.2
 Pillow==3.3.1
 six==1.10.0
+Unidecode==1.0.22
+
