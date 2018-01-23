@@ -124,7 +124,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201801222242' },
+          version: { type: String, value: '201801232315' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -209,7 +209,7 @@
         let url = '/api/start';
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer, // initially undefined
-          Polymer.Async.timeOut.after(100),
+          Polymer.Async.timeOut.after(20),
           () => {
             if (field === 'all') {
               url = '/api/start';
@@ -249,8 +249,10 @@
       _loadMore(e) {
         const ajax = this.$.ajax;
         if (ajax.lastResponse && ajax.lastResponse._next) {
-          this.set('params._page', ajax.lastResponse._next);
-          ajax.generateRequest();
+          if (this.params._page !== ajax.lastResponse._next) {
+            this.set('params._page', ajax.lastResponse._next);
+            ajax.generateRequest();
+          }
         }
       }
       _fireRequest(url) {
