@@ -364,13 +364,13 @@ class Photo(ndb.Model):
     def remove(self):
         old_pairs = self.changed_pairs()
 
-        # blobstore.delete(self.blob_key)
+        blobstore.delete(self.blob_key)
         images.delete_serving_url(self.blob_key)
-        self.key.delete()
         time.sleep(3)
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
+        self.key.delete()
 
     @webapp2.cached_property
     def serving_url(self):
