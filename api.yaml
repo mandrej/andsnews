@@ -32,6 +32,9 @@ handlers:
   script: main.app
   secure: always
 
+inbound_services:
+- warmup
+
 builtins:
 - deferred: on
 #- appstats: on
