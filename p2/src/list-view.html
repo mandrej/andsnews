@@ -163,7 +163,7 @@
       }
       _load(e) {
         this.$.scrollTheshold.clearTriggers();
-        this.$.list.fire('iron-resize');
+        // this.$.list.fire('iron-resize');
         this.dispatchEvent(new CustomEvent('load', {bubbles: true, composed: true}));
       }
       scrollTop() {
