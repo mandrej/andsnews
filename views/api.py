@@ -187,12 +187,12 @@ class BackgroundIndex(RestHandler):
 class BackgroundUnbound(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
+        if token is not None:
             runner = Unbound()
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+            deferred.defer(runner.run, _queue='background')
 
 
 class BackgroundFix(RestHandler):

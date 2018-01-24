@@ -1,18 +1,20 @@
 import collections
 import itertools
+import json
 import logging
 import uuid
-import httplib2
-import json
 
-import re
 import cloudstorage as gcs
+import httplib2
+import re
+from google.appengine.api import images
 from google.appengine.api.datastore_errors import Timeout
 from google.appengine.ext import ndb, deferred, blobstore
 from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
-from models import Counter, remove_doc
+from models import Counter
+from views.models import Photo
 
 
 def push_message(token, message=''):
@@ -147,102 +149,56 @@ class RemoveFields(Mapper):
     def finish(self):
         push_message(self.TOKEN, END_MSG)
 
+"""
+Remove unbound images from google cloud storage
+
+import os
+import cloudstorage as gcs
+from google.appengine.api import app_identity
+from google.appengine.ext import blobstore
+from views.models import Photo
+
+for s in gcs.listbucket(BUCKET, max_keys=100):
+  blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + s.filename))
+  p = Photo.query(Photo.blob_key == blob_key).get()
+  if p is None:
+    print 'delete %s' % s.filename
+    gcs.delete(s.filename)
+"""
+
 
 class Unbound(Mapper):
     """
-    import os
-    import cloudstorage as gcs
-    from google.appengine.api import app_identity
-    from google.appengine.ext import blobstore
-    from views.models import Photo
-
-    BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
-
-    Remove unbound images from google cloud storage
-
-    for s in gcs.listbucket(BUCKET, max_keys=100):
-      blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + s.filename))
-      p = Photo.query(Photo.blob_key == blob_key).get()
-      if p is None:
-        print 'delete %s' % s.filename
-        gcs.delete(s.filename)
-
-    Remove unbound images from blobstore
-
-    for i in blobstore.BlobInfo.all():
-      blob_key = i.key()
-      p = Photo.query(Photo.blob_key == blob_key).get()
-      if p is None:
-        print 'delete %s' % i.filename
-        blobstore.delete(blob_key)
-
-    Migrate images from blobstore to google cloud storage
-
-    import os
-    import re
-    import uuid
-    import cloudstorage as gcs
-    from google.appengine.api import app_identity
-    from google.appengine.ext import blobstore
-    from views.models import Photo
-
-    BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
-
-    for i in blobstore.BlobInfo.all():
-      blob_key = i.key()
-      p = Photo.query(Photo.blob_key == blob_key).get()
-      object_name = BUCKET + '/' + p.slug + '.jpg'
-      try:
-        gcs.stat(object_name)
-        object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], p.slug + '.jpg')
-      except gcs.NotFoundError:
-        pass
-
-      write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-      with gcs.open(object_name, 'w', content_type='image/jpeg', retry_params=write_retry_params) as f:
-        f.write(p.buffer)
-        blobstore.delete(p.blob_key)
-        p.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
-        p.filename = object_name
-        p.size = f.tell()
-        print '%s done.' % object_name
-        p.put()
+    Remove unbound images from blobstore (google cloud storage ???)
     """
     TOKEN = None
 
-    def map(self, stat):
-        return [], []
+    def map(self, entity):
+        return [], [entity]
+
+    def run(self, batch_size=100):
+        self._continue(batch_size)
 
     def _batch_write(self):
-        for stat in self.to_put:
-            push_message(self.TOKEN, '{}'.format(stat.filename))
-        self.to_put = []
-        for stat in self.to_delete:
-            push_message(self.TOKEN, '{}'.format(stat.filename))
+        for entity in self.to_delete:
+            images.delete_serving_url(entity)
+            blobstore.delete(entity)
         self.to_delete = []
 
-    def _continue(self, marker, batch_size):
-        stats = gcs.listbucket(BUCKET + '/', max_keys=batch_size, marker=marker)
+    def _continue(self, batch_size):
         try:
-            for i, stat in enumerate(stats):
-                # map_updates, map_deletes = self.map(stat)
-                if not stat.is_dir:
-                    # blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + stat.filename))
-                    if stat.filename is None:
-                        self.to_delete.extend([stat])
-
-                    # self.to_put.extend(map_updates)
-                    # self.to_delete.extend(map_deletes)
-                # Do updates and deletes in batches.
-                if (i + 1) % batch_size == 0:
-                    self._batch_write()
-                # Record the last entity we processed.
-                marker = stat.etag
+            for info in blobstore.BlobInfo.all():
+                blob_key = info.key()
+                p = Photo.query(Photo.blob_key == blob_key).get()
+                if p is None:
+                    map_updates, map_deletes = self.map(blob_key)
+                    self.to_put.extend(map_updates)
+                    self.to_delete.extend(map_deletes)
+                    push_message(self.TOKEN, info.size)
             self._batch_write()
         except (Timeout, DeadlineExceededError):
             self._batch_write()
-            # Queue a new task to pick up where we left off.
-            deferred.defer(self._continue, marker, batch_size, _queue='background')
+            deferred.defer(self._continue, batch_size, _queue='background')
             return
         self.finish()
 
@@ -251,6 +207,9 @@ class Unbound(Mapper):
 
 
 class Fixer(Mapper):
+    """
+    Migrate images from blobstore to google cloud storage
+    """
     TOKEN = None
     DATE_START = None
     DATE_END = None
