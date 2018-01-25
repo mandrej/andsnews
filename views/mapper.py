@@ -14,7 +14,7 @@ from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
 from models import Counter
-from views.models import Photo
+from views.models import Photo, sizeof_fmt
 
 
 def push_message(token, message=''):
@@ -149,40 +149,66 @@ class RemoveFields(Mapper):
     def finish(self):
         push_message(self.TOKEN, END_MSG)
 
-"""
-Remove unbound images from google cloud storage
 
-import os
-import cloudstorage as gcs
-from google.appengine.api import app_identity
-from google.appengine.ext import blobstore
-from views.models import Photo
-
-for s in gcs.listbucket(BUCKET, max_keys=100):
-  blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + s.filename))
-  p = Photo.query(Photo.blob_key == blob_key).get()
-  if p is None:
-    print 'delete %s' % s.filename
-    gcs.delete(s.filename)
-"""
-
-
-class Unbound(Mapper):
+class UnboundCloud(Mapper):
     """
-    Remove unbound images from blobstore (google cloud storage ???)
+    Remove unbound images from Google Cloud Storage
     """
     TOKEN = None
+    TOTAL = 0
 
-    def map(self, entity):
-        return [], [entity]
+    def map(self, filename):
+        return [], [filename]
+
+    def run(self, batch_size=100):
+        self._continue(None, batch_size)
+
+    def _batch_write(self):
+        for filename in self.to_delete:
+            gcs.delete(filename)
+        self.to_delete = []
+
+    def _continue(self, marker, batch_size):
+        try:
+            for i, stat in enumerate(gcs.listbucket(BUCKET, max_keys=batch_size, marker=marker)):
+                p = Photo.query(Photo.filename == stat.filename).get()
+                if p is None:
+                    map_updates, map_deletes = self.map(stat.filename)
+                    self.to_put.extend(map_updates)
+                    self.to_delete.extend(map_deletes)
+                    self.TOTAL += stat.st_size
+                    push_message(self.TOKEN, sizeof_fmt(self.TOTAL))
+                if (i + 1) % batch_size == 0:
+                    self._batch_write()
+                marker = stat.filename
+            self._batch_write()
+        except (Timeout, DeadlineExceededError):
+            self._batch_write()
+            deferred.defer(self._continue, marker, batch_size, _queue='background')
+            return
+        self.finish()
+
+    def finish(self):
+        push_message(self.TOKEN, END_MSG)
+
+
+class UnboundDevel(Mapper):
+    """
+    Remove unbound images from local Blobstore
+    """
+    TOKEN = None
+    TOTAL = 0
+
+    def map(self, blob_key):
+        return [], [blob_key]
 
     def run(self, batch_size=100):
         self._continue(batch_size)
 
     def _batch_write(self):
-        for entity in self.to_delete:
-            images.delete_serving_url(entity)
-            blobstore.delete(entity)
+        for blob_key in self.to_delete:
+            images.delete_serving_url(blob_key)
+            blobstore.delete(blob_key)
         self.to_delete = []
 
     def _continue(self, batch_size):
@@ -194,7 +220,8 @@ class Unbound(Mapper):
                     map_updates, map_deletes = self.map(blob_key)
                     self.to_put.extend(map_updates)
                     self.to_delete.extend(map_deletes)
-                    push_message(self.TOKEN, info.size)
+                    self.TOTAL += info.size
+                    push_message(self.TOKEN, sizeof_fmt(self.TOTAL))
             self._batch_write()
         except (Timeout, DeadlineExceededError):
             self._batch_write()

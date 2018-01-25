@@ -18,7 +18,7 @@ from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 from unidecode import unidecode
 
-from config import ASA, HUE, LUM, SAT, BUCKET
+from config import ASA, HUE, LUM, SAT, DEVEL, BUCKET
 from palette import extract_colors, rgb_to_hex
 
 logger = logging.getLogger('modules')
@@ -32,12 +32,12 @@ def rounding(val, values):
     return min(values, key=lambda x: abs(x - val))
 
 
-# def sizeof_fmt(num, suffix='B'):
-#     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-#         if abs(num) < 1024.0:
-#             return "%3.1f%s%s" % (num, unit, suffix)
-#         num /= 1024.0
-#     return "%.1f%s%s" % (num, 'Y', suffix)
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Y', suffix)
 
 
 def strip_punctuation(text):
@@ -364,8 +364,15 @@ class Photo(ndb.Model):
     def remove(self):
         old_pairs = self.changed_pairs()
 
-        blobstore.delete(self.blob_key)
         images.delete_serving_url(self.blob_key)
+        if DEVEL:
+            blobstore.delete(self.blob_key)
+        else:
+            try:
+                gcs.delete(self.filename)
+            except gcs.NotFoundError:
+                pass
+
         time.sleep(3)
 
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')

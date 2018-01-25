@@ -10,7 +10,7 @@ from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
-from mapper import push_message, Indexer, Builder, Unbound, RemoveFields
+from mapper import push_message, Indexer, Builder, UnboundDevel, UnboundCloud, RemoveFields
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 25
@@ -188,7 +188,7 @@ class BackgroundUnbound(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
         if token is not None:
-            runner = Unbound()
+            runner = UnboundCloud()
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)
