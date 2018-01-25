@@ -21,7 +21,7 @@ app = WSGIApplication([
 
     Route(r'/api/index/<kind>', handler=api.BackgroundIndex, methods=['POST']),
     Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
-    Route(r'/api/fix/<kind>', handler=api.BackgroundFix, methods=['POST']),
+    Route(r'/api/fix/<kind>', handler=api.BackgroundDeleted, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
 
     Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),

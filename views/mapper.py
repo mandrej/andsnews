@@ -150,6 +150,30 @@ class RemoveFields(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
+class Fixer(Mapper):
+    TOKEN = None
+    KIND = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def get_query(self):
+        return self.KIND.query()
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            try:
+                gcs.stat(entity.filename)
+            except gcs.NotFoundError:
+                log = 'DELETED {}-{} {}'.format(entity.date.year, entity.date.month, entity.slug)
+                logging.info(log)
+                push_message(self.TOKEN, entity.slug)
+        self.to_put = []
+
+    def finish(self):
+        push_message(self.TOKEN, END_MSG)
+
+
 class UnboundCloud(Mapper):
     """
     Remove unbound images from Google Cloud Storage
@@ -233,7 +257,7 @@ class UnboundDevel(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class Fixer(Mapper):
+class OldFixer(Mapper):
     """
     Migrate images from blobstore to google cloud storage
     """
