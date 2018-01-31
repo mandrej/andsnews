@@ -156,15 +156,15 @@
         if (field === 'all') {
           this.title = 'ANDрејевићи';
         } else if (field === 'search') {
-          this.title = value.replace(/AND/gi, '+');
+          this.title = value.replace(/AND/g, '+');
         } else if (field && value) {
           this.title = field + ':' + value;
         }
       }
       _load(e) {
-        this.$.scrollTheshold.clearTriggers();
         // this.$.list.fire('iron-resize');
         this.dispatchEvent(new CustomEvent('load', {bubbles: true, composed: true}));
+        this.$.scrollTheshold.clearTriggers();
       }
       scrollTop() {
         Polymer.Async.timeOut.run(() => {
