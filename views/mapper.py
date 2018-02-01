@@ -165,7 +165,7 @@ class Fixer(Mapper):
             try:
                 gcs.stat(entity.filename)
             except gcs.NotFoundError:
-                log = '__DEL__,{},{},{}'.format(entity.date.isoformat(), entity.slug, entity.filename)
+                log = '__DEL__,{},{},{},{}'.format(entity.date.isoformat(), entity.slug, entity.filename, entity.model)
                 logging.info(log)
                 push_message(self.TOKEN, entity.slug)
         self.to_put = []

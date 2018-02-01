@@ -384,8 +384,7 @@ class Photo(ndb.Model):
         try:
             return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
         except (images.ObjectNotFoundError, images.TransformationError) as e:
-            # raise _ToImagesError(e, readable_blob_key)
-            logger.error(e.message)
+            logger.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))
             return None
 
     @webapp2.cached_property
