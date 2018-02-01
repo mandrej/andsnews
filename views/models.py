@@ -21,8 +21,8 @@ from unidecode import unidecode
 from config import ASA, HUE, LUM, SAT, DEVEL, BUCKET
 from palette import extract_colors, rgb_to_hex
 
-logger = logging.getLogger('modules')
-logger.setLevel(level=logging.DEBUG)
+# logger = logging.getLogger('modules')
+# logger.setLevel(level=logging.DEBUG)
 
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = ['year', 'tags', 'model', 'color']
@@ -381,11 +381,12 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
+        result = None
         try:
-            return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except (images.ObjectNotFoundError, images.TransformationError) as e:
-            logger.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))
-            return None
+            result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except images.Error:
+            logging.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))
+        return result
 
     @webapp2.cached_property
     def download_url(self):
