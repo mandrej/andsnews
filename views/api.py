@@ -13,7 +13,7 @@ from config import DEVEL, START_MSG
 from mapper import push_message, Fixer, Indexer, Builder, UnboundDevel, UnboundCloud, RemoveFields
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
-LIMIT = 25
+LIMIT = 12
 PERCENTILE = 50 if DEVEL else 80
 TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
