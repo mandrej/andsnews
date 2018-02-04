@@ -127,6 +127,7 @@
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s0';
+        return '../images/broken.svg';
       }
       goBack() {
         window.history.go(-1);

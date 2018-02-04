@@ -70,7 +70,7 @@
 
             <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
 
-            <div class="buttons" style="background-image: url([[item.serving_url]]=s400-c)">
+            <div class="buttons" style$="[[checkImage(item)]]">
               <paper-button on-tap="_submit" raised>Submit</paper-button>
             </div>
 
@@ -151,6 +151,13 @@
           } else {
             return ['/api', safekey].join('/');
           }
+        }
+      }
+      checkImage(rec) {
+        if (rec && rec.serving_url) {
+          return 'background-image: url(' + rec.serving_url + '=s400-c)'
+        } else {
+          return 'background-image: url(../images/broken.svg)'
         }
       }
       listTags(e) {

@@ -173,6 +173,7 @@
       }
       checkImage(rec) {
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
+        return '../../images/broken.svg';
       }
       getUserPhoto(url) {
         const icon = this.$.sign;
