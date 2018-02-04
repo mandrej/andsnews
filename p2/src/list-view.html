@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -15,6 +14,7 @@
         max-width: var(--max-width);
       }
       .container {
+        @apply --layout-flex;
         margin: var(--user-gap) calc(-1 * var(--user-gap)) 69px;
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
@@ -28,10 +28,6 @@
       .square {
         width: 25%;
         padding: 0 0 var(--user-gap) var(--user-gap);
-        /* -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none; */
       }
       .square > div {
         position: relative;
@@ -54,7 +50,7 @@
         width: 100%;
         cursor: pointer;
         --iron-image-placeholder: {
-          background-color: #eee;
+          background-color: #fff;
         };
       }
       .square iron-image::after {
@@ -107,7 +103,7 @@
       </app-toolbar>
     </app-header>
 
-    <div class="flex container">
+    <div class="container">
       <iron-scroll-threshold id="scrollTheshold"
         lower-threshold="2000"
         on-lower-threshold="_load"

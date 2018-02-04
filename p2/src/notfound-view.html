@@ -6,7 +6,7 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin: 128px auto 0 auto;
+        margin: 64px auto 0 auto;
         max-width: var(--max-width);
       }
       .container {
@@ -18,17 +18,14 @@
         background-position: 50% 50%;
         background-size: 50vw;
       }
-      @media (max-width: 1200px) { .container { margin: var(--user-gap) 0; }}
+      @media (max-width: 1200px) { .container { margin: 0; }}
     </style>
 
     <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-        <h4 condensed-title></h4>
+        <h1 main-title>404 Not Found Error</h1>
       </app-toolbar>
-      <app-toolbar>
-          <h1 main-title>404 Not Found Error</h1>
-        </app-toolbar>
     </app-header>
 
     <div class="container">

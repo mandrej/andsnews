@@ -72,10 +72,8 @@
         is-admin="[[isAdmin]]"
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
-
         records="{{records}}"
         loading="{{loading}}"
-
         route="{{route}}"
         copy="[[copy]]"></list-view>
 
@@ -124,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201802041324' },
+          version: { type: String, value: '201802041957' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },

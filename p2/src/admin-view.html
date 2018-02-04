@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/resize-title.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="admin-view">
@@ -10,7 +9,7 @@
       :host {
         @apply --layout-vertical;
         @apply --layout-fit;
-        margin: 128px auto 0 auto;
+        margin: 64px auto 0 auto;
         max-width: var(--max-width);
       }
       .container {
@@ -34,7 +33,7 @@
       paper-button[disabled] {
         color: var(--disabled-text-color);
       }
-      @media (max-width: 1200px) { .container { margin: var(--user-gap) 0; }}
+      @media (max-width: 1200px) { .container { margin: 0; }}
     </style>
 
     <firebase-messaging id="messaging"
@@ -55,12 +54,9 @@
       content-type="application/json"
       method="POST"></iron-ajax>
 
-    <app-header condenses reveals effects="resize-title" slot="header">
+    <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-        <h4 condensed-title>[[title]]</h4>
-      </app-toolbar>
-      <app-toolbar>
         <h1 main-title>[[title]]</h1>
       </app-toolbar>
     </app-header>
