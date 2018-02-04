@@ -26,6 +26,7 @@ from palette import extract_colors, rgb_to_hex
 
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = ['year', 'tags', 'model', 'color']
+BROKEN_IMG = '../images/broken.svg?'
 
 
 def rounding(val, values):
@@ -381,10 +382,10 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        result = None
-        try:
+        result = BROKEN_IMG
+        if blobstore.get(self.blob_key):
             result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except images.Error:
+        else:
             logging.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))
         return result
 
