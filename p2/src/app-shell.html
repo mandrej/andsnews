@@ -122,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201802041957' },
+          version: { type: String, value: '201802042121' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -163,6 +163,7 @@
       }
       signHandler() {
         if (this.user) {
+          this.isAdmin = false;
           this.$.auth.signOut();
         } else {
           this.$.auth.signInWithPopup()
@@ -216,7 +217,7 @@
             } else if (field && value) {
               url = ['/api/photo', field, value].join('/');
             } else {
-              return;
+              this.set('route.path', '/notfound');
             }
 
             if (ajax.lastRequest) {
