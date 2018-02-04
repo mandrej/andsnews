@@ -224,7 +224,7 @@ class Photo(ndb.Model):
     sat = ndb.StringProperty()
     # image dimension
     dim = ndb.IntegerProperty(repeated=True)  # width, height
-    filename = ndb.StringProperty()
+    filename = ndb.StringProperty()  # /bucket/object
 
     color = ndb.ComputedProperty(
         lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
@@ -388,7 +388,6 @@ class Photo(ndb.Model):
         else:
             try:
                 gcs.stat(self.filename)
-                # result = images.get_serving_url(self.filename, crop=False, secure_url=True) not working
                 result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
             except gcs.NotFoundError:
                 pass
