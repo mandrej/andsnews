@@ -122,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201802042121' },
+          version: { type: String, value: '201802051536' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -151,6 +151,7 @@
         if (this.route.path === '/') {
           this.set('route.path', '/list/all');
         }
+        this.removeAttribute('unresolved');
         this.addEventListener('sign', this.signHandler);
         this.addEventListener('current', this.currentChange);
         this.addEventListener('load', this._loadMore);

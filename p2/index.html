@@ -35,10 +35,6 @@
         navigator.serviceWorker.register('/service-worker.js');
       }
     </script>
-    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-    <script defer src="/bower_components/moment/min/moment.min.js"></script>
-
-    <link rel="import" href="/src/app-shell.html">
 
     <custom-style>
       <style>
@@ -82,12 +78,27 @@
           MS4wOCB2IDQyMS4wOCB6IiBzdHlsZT0iZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxIi8+DQo8L3N2Zz4=') repeat-y 50% 0;
           background-size: 100vw;
         }
+        app-shell[unresolved] {
+          display: block;
+          max-width: 1200px;
+          height: calc(100vh - 128px);
+          margin: 64px auto;
+          padding: 0 16px;
+          line-height: 64px;
+          font-size: 36px;
+          color: #212121;
+          background: url(../../images/aperture.svg) no-repeat center;
+          background-size: 50vw;
+        }
         @media (max-width: 768px)  { html { --user-gap: 8px; }}
       </style>
     </custom-style>
   </head>
   <body>
-    <app-shell></app-shell>
+    <app-shell unresolved>ANDрејевићи</app-shell>
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <script defer src="/bower_components/moment/min/moment.min.js"></script>
+    <link rel="import" href="/src/app-shell.html">
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
