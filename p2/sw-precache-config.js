@@ -18,6 +18,9 @@ module.exports = {
         }
       }
     }, {
+      urlPattern: /\/service-worker\.js/,
+      handler: 'networkOnly'
+    }, {
       urlPattern: /\/api\/photo\/tags\/new/,
       handler: 'networkOnly'
     }, {
