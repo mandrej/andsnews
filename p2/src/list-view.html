@@ -60,6 +60,7 @@
       }
       .square .title {
         font-size: 20px;
+        color: var(--text-primary-color);
         padding: var(--user-gap);
         @apply --ellipsis;
       }
@@ -95,7 +96,7 @@
       <app-toolbar>
         <paper-spinner-lite active$="[[loading]]"></paper-spinner-lite>
         <h4 condensed-title></h4>
-        <paper-icon-button id="sign" on-tap="_sign"></paper-icon-button>
+        <paper-icon-button id="sign" class="sign" on-tap="_sign"></paper-icon-button>
       </app-toolbar>
       <app-toolbar sticky>
         <paper-icon-button hidden$="{{!canReset}}" icon="arrow-back" on-tap="resetFilter"></paper-icon-button>
@@ -163,8 +164,8 @@
         }
       }
       _load(e) {
-        // this.$.list.fire('iron-resize');
         this.dispatchEvent(new CustomEvent('load', {bubbles: true, composed: true}));
+        this.$.list.fire('iron-resize');
         this.$.scrollTheshold.clearTriggers();
       }
       scrollTop() {
@@ -181,11 +182,9 @@
         if (url) {
           icon.icon = '';
           icon.src = url;
-          icon.className = 'sign';
         } else {
           icon.src = '';
           icon.icon = 'account-circle';
-          icon.classList.remove('sign');
         }
       }
       showSearch() {

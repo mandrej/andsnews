@@ -12,11 +12,20 @@
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="app-shell">
   <template>
+    <style include="shared-styles iron-flex">
+      paper-toast {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-justified;
+      }
+    </style>
+
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
     <app-route route="{{tailView}}" pattern="/:field" data="{{dataField}}" tail="{{tailField}}"></app-route>
@@ -113,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201802062324' },
+          version: { type: String, value: '201802072132' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
