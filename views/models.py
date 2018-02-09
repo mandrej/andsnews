@@ -340,7 +340,7 @@ class Photo(ndb.Model):
 
             new_pairs = self.changed_pairs()
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
-            return {'success': True, 'safe_key':  self.key.urlsafe()}
+            return {'success': True, 'rec':  self.serialize()}
 
     def edit(self, data):
         old_pairs = self.changed_pairs()
