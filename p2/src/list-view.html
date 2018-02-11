@@ -83,7 +83,9 @@
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation"
       on-iron-overlay-closed="deleteRecord">
-      <h2>Are you sure?<br><small>This action cannot be undone</small></h2>
+      <h2>Are you sure you want to delete<br>
+        {{selectedItem.headline}}?<br>
+        <small>This action cannot be undone</small></h2>
       <div class="buttons">
         <paper-button dialog-confirm autofocus>OK</paper-button>
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -118,7 +120,7 @@
               <div>
                 <iron-image src="[[checkImage(rec)]]" on-tap="showView" preload fade sizing="cover"></iron-image>
                 <div class="title">[[rec.headline]]</div>
-                <paper-icon-button icon="clear" on-tap="showDialog" class="icon left" hidden$="{{!isAdmin}}"></paper-icon-button>
+                <paper-icon-button icon="clear" on-tap="showDeleteDialog" class="icon left" hidden$="{{!isAdmin}}"></paper-icon-button>
                 <paper-icon-button icon="create" on-tap="showEdit" class="icon right" hidden$="{{!isAuthorized}}"></paper-icon-button>
               </div>
             </div>
@@ -143,7 +145,8 @@
         return {
           title: String,
           canReset: { type: Boolean, value: false, notify: true },
-          currentIndex: { type: Number, value: -1, notify: true },
+          selectedItem: Object,
+          selectedIndex: { type: Number, value: -1, notify: true },
         };
       }
       static get observers() {
@@ -206,18 +209,19 @@
         e.preventDefault();
         this.set('route.path', '/list/all');
       }
-      showDialog(e) {
-        this.currentIndex = e.model.index;
+      showDeleteDialog(e) {
+        this.selectedItem = e.model.rec;
+        this.selectedIndex = e.model.index;
         this.$.deleteDialog.open();
       }
       deleteRecord(e) {
-        if (e.detail.confirmed && this.currentIndex > -1) {
-          const obj = this.splice('records', this.currentIndex, 1)[0];
+        if (e.detail.confirmed && this.selectedIndex > -1) {
+          const obj = this.splice('records', this.selectedIndex, 1)[0];
           const xhr = this.$.delete_ajax;
           xhr.url = '/api/delete/' + obj.safekey;
           xhr.generateRequest();
         }
-        this.currentIndex = -1;
+        this.selectedIndex = -1;
       }
       _sign() {
         this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
