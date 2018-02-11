@@ -122,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201802111144' },
+          version: { type: String, value: '201802112132' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -136,6 +136,7 @@
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
           records: { type: Array, value: [], notify: true },
           params: { type: Object, value: {}, notify: true },
+          clearRecords: Boolean,
         };
       }
       static get observers() {
@@ -239,6 +240,9 @@
         )
       }
       handler(e) {
+        if (this.clearRecords) {
+          this.set('records', []);
+        }
         const data = e.detail.response;
         if (data.objects.length === 0) {
           this.$.message.open();
@@ -249,6 +253,7 @@
         }
       }
       _loadMore(e) {
+        this.clearRecords = false;
         const ajax = this.$.ajax;
         if (ajax.lastResponse && ajax.lastResponse._next) {
           if (this.params._page !== ajax.lastResponse._next) {
@@ -258,7 +263,7 @@
         }
       }
       _fireRequest(url) {
-        this.set('records', []);
+        this.clearRecords = true;
         this.set('params._page', null);
 
         const ajax = this.$.ajax;
