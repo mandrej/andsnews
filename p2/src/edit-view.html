@@ -88,11 +88,14 @@
               <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
               <paper-input name="model" label="model" value="[[item.model]]"></paper-input>
               <paper-input name="lens" label="lens" value="[[item.lens]]"></paper-input>
-              <paper-input name="focal_length" label="focal_length [mm]" value="[[item.focal_length]]"></paper-input>
+              <paper-input name="focal_length" label="focal length [mm]" value="[[item.focal_length]]"></paper-input>
               <paper-input name="iso" label="iso [ASA]" value="[[item.iso]]"></paper-input>
               <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
               <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
               <paper-input disabled label="color" value="[[item.color]]"></paper-input>
+            </div>
+            <div class="long">
+              <paper-input disabled name="filename" label="file name" value="{{item.filename}}"></paper-input>
             </div>
           </form>
         </iron-form>
