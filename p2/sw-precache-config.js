@@ -19,17 +19,18 @@ module.exports = {
       }
     }, {
       urlPattern: /\/service-worker\.js/,
-      handler: 'networkOnly'
+      handler: 'networkFirst'
     }, {
       urlPattern: /\/api\/photo\/tags\/new/,
-      handler: 'networkOnly'
+      handler: 'networkFirst'
     }, {
       urlPattern: /\/api\/.*/,
       handler: 'fastest',
       options: {
         cache: {
           maxEntries: 100,
-          name: 'data-cache'
+          name: 'data-cache',
+          maxAgeSeconds: 60 * 60
         }
       }
     }, {
