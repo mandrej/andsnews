@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
+<link rel="import" href="../bower_components/vaadin-material-theme/vaadin-text-field.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
@@ -36,6 +37,9 @@
         height: 80px;
         padding: 0 0 var(--user-gap) var(--user-gap);
         box-sizing: border-box;
+      }
+      vaadin-combo-box {
+        margin-top: -8px;
       }
       @media (max-width: 1200px) { .container { margin: 0; }}
       @media (max-width: 768px)  { .fields * { width: 50%; }}
@@ -75,18 +79,12 @@
             <paper-input name="find_month" label="in month" type="number" value="{{search.find_month}}"
               auto-validate min="1" max="12" error-message="1 - 12"></paper-input>
             <vaadin-combo-box name="find_model" label="by camera" id="models"
-              auto-validate
-              allow-custom-value="false"
               value="{{search.find_model}}"
               items="[[models]]"></vaadin-combo-box>
             <vaadin-combo-box name="find_author" label="by author"
-              auto-validate
-              allow-custom-value="false"
               value="{{search.find_author}}"
               items='["milan", "mihailo", "genije", "svetlana", "andrejevic", "ana", "devic", "dannytaboo", "zile", "zikson"]'></vaadin-combo-box>
             <vaadin-combo-box name="find_color" label="by color"
-              auto-validate
-              allow-custom-value="false"
               value="{{search.find_color}}"
               items='["red", "orange", "yellow", "green", "blue", "violet", "dark", "medium", "light"]'></vaadin-combo-box>
           </div>

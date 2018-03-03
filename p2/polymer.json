@@ -9,6 +9,7 @@
     "src/item-view.html",
     "src/add-view.html",
     "src/edit-view.html",
+    "src/vaadin-upload-style.html",
     "src/admin-view.html",
     "src/app-analytics.html",
     "src/notfound-view.html"

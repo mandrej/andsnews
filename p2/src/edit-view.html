@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-material-theme/vaadin-text-field.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 
@@ -41,6 +42,9 @@
         padding: 0 0 var(--user-gap) var(--user-gap);
         box-sizing: border-box;
       }
+      vaadin-combo-box {
+        margin-top: -8px;
+      }
       @media (max-width: 1200px) { .container { margin: 0; }}
       @media (max-width: 768px)  { .fields * { width: 50%; }}
       @media (max-width: 432px)  { .fields * { width: 100%; }}
@@ -71,7 +75,7 @@
             </div>
 
             <div class="long">
-              <paper-input name="headline" required label="headline" value="{{item.headline}}"></paper-input>
+              <paper-input name="headline" required label="headline for [[item.filename]]" value="{{item.headline}}"></paper-input>
               <paper-chip-input-autocomplete name="tags" label="tags" id="tags"
                 closable
                 additional-items
@@ -81,8 +85,7 @@
 
             <div class="fields">
               <vaadin-combo-box name="author" required label="author"
-                auto-validate
-                allow-custom-value="true"
+                allow-custom-value
                 items='["milan.andrejevic@gmail.com", "mihailo.genije@gmail.com", "svetlana.andrejevic@gmail.com", "ana.devic@gmail.com", "dannytaboo@gmail.com", "zile.zikson@gmail.com"]'
                 value="[[item.author]]"></vaadin-combo-box>
               <paper-input name="date" label="date" value="[[item.date]]"></paper-input>
@@ -93,9 +96,6 @@
               <paper-input name="aperture" label="aperture" value="[[item.aperture]]"></paper-input>
               <paper-input name="shutter" label="shutter [s]" value="[[item.shutter]]"></paper-input>
               <paper-input disabled label="color" value="[[item.color]]"></paper-input>
-            </div>
-            <div class="long">
-              <paper-input disabled name="filename" label="file name" value="{{item.filename}}"></paper-input>
             </div>
           </form>
         </iron-form>
