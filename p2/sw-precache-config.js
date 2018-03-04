@@ -3,11 +3,10 @@ module.exports = {
     '/index.html',
     '/manifest.json',
     '/bower_components/webcomponentsjs/webcomponents-loader.js',
-    '/src/*',
     '/images/*'
   ],
   navigateFallback: '/index.html',
-  navigateFallbackWhitelist: [],
+  navigateFallbackWhitelist: [/^(?!.*\.html$|\/api\/).*/],
   runtimeCaching: [
     {
       urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,
@@ -17,9 +16,6 @@ module.exports = {
           name: 'webcomponentsjs-polyfills-cache'
         }
       }
-    }, {
-      urlPattern: /\/service-worker\.js/,
-      handler: 'networkFirst'
     }, {
       urlPattern: /\/api\/photo\/tags\/new/,
       handler: 'networkFirst'

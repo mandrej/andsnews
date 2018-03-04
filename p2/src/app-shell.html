@@ -122,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201803032006' },
+          version: { type: String, value: '201803041228' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -199,6 +199,9 @@
           Polymer.RenderStatus.afterNextRender(this, () => {
             Polymer.importHref(
               this.resolveUrl('common-resources.html'), () => {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.register('/service-worker.js', {scope: '/'});
+                }
                 this.loadComplete = true;
                 this.removeAttribute('unresolved');
               }
