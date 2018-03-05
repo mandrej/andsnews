@@ -17,16 +17,12 @@ module.exports = {
         }
       }
     }, {
-      urlPattern: /\/api\/photo\/tags\/new/,
-      handler: 'networkFirst'
-    }, {
       urlPattern: /\/api\/.*/,
       handler: 'fastest',
       options: {
         cache: {
           maxEntries: 100,
-          name: 'data-cache',
-          maxAgeSeconds: 60 * 60
+          name: 'data-cache'
         }
       }
     }, {
