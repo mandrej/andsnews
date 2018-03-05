@@ -155,6 +155,14 @@
           'getUserPhoto(user.photoURL)',
         ]
       }
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('new', this._addNew);
+      }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('new', this._addNew, true);
+      }
       makeTitle(field, value) {
         if (field === 'all') {
           this.canReset = false;
@@ -213,6 +221,9 @@
         this.selectedItem = e.model.rec;
         this.selectedIndex = e.model.index;
         this.$.deleteDialog.open();
+      }
+      _addNew(e) {
+        this.unshift('records', e.detail);
       }
       deleteRecord(e) {
         if (e.detail.confirmed && this.selectedIndex > -1) {
