@@ -54,7 +54,8 @@
       url="[[_url(safekey, current)]]"
       last-error="{{error}}"
       last-response="{{item}}"></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
+    <iron-ajax auto
+      url="/api/suggest/Photo_tags" on-response="listTags"></iron-ajax>
 
     <app-header fixed slot="header">
       <app-toolbar>
@@ -137,7 +138,6 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.$.tags.addEventListener('focus', (e) => this._getTags(e));
         const form = this.$.editForm;
         form.addEventListener('iron-form-presubmit', () => this._preSubmit());
         form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
@@ -163,11 +163,6 @@
         e.detail.response.forEach((tag) => {
           this.push('tags', {text: tag, value: tag});
         });
-      }
-      _getTags(e) {
-        if (this.tags.length === 0) {
-          this.$.ajax_tags.generateRequest();
-        }
       }
       _preSubmit() {
         const form = this.$.editForm,

@@ -46,8 +46,10 @@
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
-    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" auto></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" auto></iron-ajax>
+    <iron-ajax auto
+      url="/api/suggest/Photo_tags" on-response="listTags"></iron-ajax>
+    <iron-ajax auto
+      url="/api/suggest/Photo_model" on-response="listModels"></iron-ajax>
     <app-localstorage-document id="search"
       key="search"
       data="{{search}}"></app-localstorage-document>
