@@ -46,8 +46,8 @@
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
-    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" id="ajax_tags"></iron-ajax>
-    <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" id="ajax_model"></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_tags" on-response="listTags" auto></iron-ajax>
+    <iron-ajax url="/api/suggest/Photo_model" on-response="listModels" auto></iron-ajax>
     <app-localstorage-document id="search"
       key="search"
       data="{{search}}"></app-localstorage-document>
@@ -102,15 +102,7 @@
           filters: { type: Array, value:[], notify: true },
           tags: { type: Array, value:[], notify: true },
           models: { type: Array, value:[], notify: true },
-          search: { type: Object, value: {
-            tags: [],
-            find_text: '',
-            find_year: '',
-            find_month: '',
-            find_model: '',
-            find_author: '',
-            find_color: ''
-          }, notify: true },
+          search: { type: Object, value: {}, notify: true },
         };
       }
       static get observers() {
@@ -120,22 +112,16 @@
       }
       connectedCallback() {
         super.connectedCallback();
-        this.$.tags.addEventListener('focus', (e) => this._getTags(e));
-        this.$.models.addEventListener('focus', (e) => this._getModels(e));
+        this.search = {
+          tags: [],
+          find_text: '',
+          find_year: '',
+          find_month: '',
+          find_model: '',
+          find_author: '',
+          find_color: ''
+        };
         this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
-      }
-      _url(path) {
-        if (path === '/search') return '/api/filters';
-      }
-      _getTags(e) {
-        if (this.tags.length === 0) {
-          this.$.ajax_tags.generateRequest();
-        }
-      }
-      _getModels(e) {
-        if (this.models.length === 0) {
-          this.$.ajax_model.generateRequest();
-        }
       }
       listTags(e) {
         e.detail.response.forEach((tag) => {
