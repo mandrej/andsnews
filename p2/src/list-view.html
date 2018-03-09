@@ -19,7 +19,7 @@
         padding: var(--user-gap) var(--user-gap) 0 0;
       }
       .sign {
-        padding: 0;
+        padding: 1px;
         --iron-icon: {
           border-radius: 50%;
           overflow: hidden;
@@ -192,11 +192,9 @@
       getUserPhoto(url) {
         const icon = this.$.sign;
         if (url) {
-          icon.icon = '';
           icon.src = url;
         } else {
-          icon.src = '';
-          icon.icon = 'account-circle';
+          icon.src = '../images/google_g_logo.svg';
         }
       }
       showSearch() {
