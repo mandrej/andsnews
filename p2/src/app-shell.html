@@ -122,7 +122,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201803182333' },
+          version: { type: String, value: '201803192019' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -156,14 +156,12 @@
         this.addEventListener('sign', this.signHandler);
         this.addEventListener('current', this.currentChange);
         this.addEventListener('load', this._loadMore);
-        this.addEventListener('new', this._addNew);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('sign', this.signHandler, true);
         this.removeEventListener('current', this.currentChange, true);
         this.removeEventListener('load', this._loadMore, true);
-        this.removeEventListener('new', this._addNew, true);
       }
       signHandler() {
         if (this.user) {
@@ -272,9 +270,6 @@
         const ajax = this.$.ajax;
         ajax.url = url;
         ajax.generateRequest();
-      }
-      _addNew(e) {
-        this.unshift('records', e.detail);
       }
       _checkNet(online) {
         const toast = this.$.toast;

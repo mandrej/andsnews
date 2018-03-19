@@ -93,7 +93,6 @@
           toast = this.$.toast;
         if (res.success) {
           toast.setAttribute('text', 'Image successfully uploaded');
-          this.dispatchEvent(new CustomEvent('new', {bubbles: true, composed: true, detail: res.rec}));
           toast.open();
         } else {
           toast.setAttribute('text', res.message);

@@ -17,6 +17,9 @@ module.exports = {
         }
       }
     }, {
+      urlPattern: /\/api\/photo\/tags\/new/,
+      handler: 'networkOnly'
+    }, {
       urlPattern: /\/api\/.*/,
       handler: 'fastest',
       options: {
