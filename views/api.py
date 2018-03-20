@@ -122,7 +122,6 @@ class Suggest(RestHandler):
 class Collection(RestHandler):
     def get(self, kind=None, field=None, value=None):
         page = self.request.get('_page', None)
-        token = None
 
         if field == 'year':
             value = int(value)
@@ -173,12 +172,9 @@ class Find(RestHandler):
 class BackgroundIndex(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
-        if token is not None:
+        if kind == 'photo' and token is not None:
             runner = Indexer()
-
-            if kind == 'photo':
-                runner.KIND = Photo
-
+            runner.KIND = Photo
             runner.TOKEN = token
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
@@ -219,6 +215,7 @@ class BackgroundFix(RestHandler):
 
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
+
         elif kind == 'counter' and token is not None:
             runner = RemoveFields()
             runner.KIND = Counter
@@ -232,15 +229,12 @@ class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
         token = self.request.json.get('token', None)
-        if token is not None:
+        if kind == 'Photo' and token is not None:  # TODO Title case!
             runner = Builder()
-            if kind == 'Photo':  # Title case!
-                runner.KIND = Photo
-
+            runner.KIND = Photo
             runner.VALUES = []
             runner.FIELD = field
             runner.TOKEN = token
-
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
@@ -258,8 +252,7 @@ class Crud(RestHandler):
             fs = data['file']
             obj = Photo(headline=fs.filename)
             res = obj.add(fs)
-
-        self.render(res)
+            self.render(res)
 
     def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)
@@ -296,8 +289,7 @@ class Crud(RestHandler):
                 data['aperture'] = float(data['aperture'])
             if data['iso']:
                 data['iso'] = int(data['iso'])
-
-        obj.edit(data)
+            obj.edit(data)
 
     def delete(self, safe_key):
         key = get_key(safe_key)
