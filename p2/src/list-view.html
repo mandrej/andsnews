@@ -172,7 +172,7 @@
       static get observers() {
         return [
           'makeTitle(field, value)',
-          '_setUrl(view, field, value)',
+          '_setUrl(field, value)',
           'getUserPhoto(user.photoURL)',
         ]
       }
@@ -201,10 +201,11 @@
           });
         }
       }
-      _setUrl(view, field, value) {
-        if (view !== 'list') return;
+      _setUrl(field, value) {
+        const rx = /^\/list/;
         const ajax = this.$.ajax;
         let url = '/api/start';
+        if (!rx.test(this.route.path)) return;
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer, // initially undefined
           Polymer.Async.timeOut.after(20),
@@ -215,16 +216,12 @@
               url = ['/api/search', value].join('/');
             } else if (field && value) {
               url = ['/api/photo', field, value].join('/');
+            } else {
+              this.set('route.path', '/notfound');
             }
-            // else {
-            //   this.set('route.path', '/notfound');
-            // }
 
-            console.log('value', value)
-            console.log('url', url)
             if (ajax.lastRequest) {
               const pathname = ajax.lastRequest.url.split('?')[0];
-              console.log('pathname', pathname)
               if (pathname === url) {
                 if (pathname === '/api/photo/tags/new') {
                   this._fireRequest(url);
@@ -241,12 +238,10 @@
       _fireRequest(url) {
         this.clearRecords = true;
         this.set('params._page', null);
-        // this.field = null;
-        // this.value = null;
+        this.$.scrollTheshold.clearTriggers();
 
         const ajax = this.$.ajax;
         ajax.url = url;
-        this.$.scrollTheshold.clearTriggers();
         ajax.generateRequest();
       }
       _loadMore() {
