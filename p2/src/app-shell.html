@@ -47,22 +47,9 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
-    <iron-ajax id="ajax"
-      url="{{url}}"
-      params="{{params}}"
-      loading="{{loading}}"
-      on-response="handler"></iron-ajax>
-
     <paper-toast id="toast" duration="0" text="YOU ARE OFFLINE">
       <paper-icon-button icon="clear" on-tap="_close"></paper-icon-button>
     </paper-toast>
-
-    <paper-dialog id="message"
-      entry-animation="scale-up-animation"
-      exit-animation="fade-out-animation">
-      <h2>No photos for<br>current filter / search</h2>
-      <p>Please try again</p>
-    </paper-dialog>
 
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <list-view
@@ -72,8 +59,6 @@
         is-admin="[[isAdmin]]"
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
-        records="{{records}}"
-        loading="{{loading}}"
         route="{{route}}"
         copy="[[copy]]"></list-view>
 
@@ -134,16 +119,12 @@
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
-          records: { type: Array, value: [], notify: true },
-          params: { type: Object, value: {}, notify: true },
-          clearRecords: Boolean,
         };
       }
       static get observers() {
         return [
           '_checkNet(online)',
           '_routeViewChanged(dataView.view)',
-          '_paramsChanged(dataView.view, dataField.field, dataValue.value)',
           '_userIsAdmin(user)',
         ]
       }
@@ -155,13 +136,11 @@
         this.removeAttribute('unresolved');
         this.addEventListener('sign', this.signHandler);
         this.addEventListener('current', this.currentChange);
-        this.addEventListener('load', this._loadMore);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('sign', this.signHandler, true);
         this.removeEventListener('current', this.currentChange, true);
-        this.removeEventListener('load', this._loadMore, true);
       }
       signHandler() {
         if (this.user) {
@@ -206,70 +185,6 @@
             );
           });
         }
-      }
-      _paramsChanged(view, field, value) {
-        if (view !== 'list') return;
-        const ajax = this.$.ajax;
-        let url = '/api/start';
-        this._debouncer = Polymer.Debouncer.debounce(
-          this._debouncer, // initially undefined
-          Polymer.Async.timeOut.after(20),
-          () => {
-            if (field === 'all') {
-              url = '/api/start';
-            } else if (field === 'search') {
-              url = ['/api/search', value].join('/');
-            } else if (field && value) {
-              url = ['/api/photo', field, value].join('/');
-            } else {
-              this.set('route.path', '/notfound');
-            }
-
-            if (ajax.lastRequest) {
-              const pathname = ajax.lastRequest.url.split('?')[0];
-              if (pathname === url) {
-                if (pathname === '/api/photo/tags/new') {
-                  this._fireRequest(url);
-                }
-              } else {
-                this._fireRequest(url);
-              }
-            } else {
-              this._fireRequest(url);
-            }
-          }
-        )
-      }
-      handler(e) {
-        if (this.clearRecords) {
-          this.set('records', []);
-        }
-        const data = e.detail.response;
-        if (data.objects.length === 0) {
-          this.$.message.open();
-        } else {
-          data.objects.forEach((item) => {
-            this.push('records', item);
-          });
-        }
-      }
-      _loadMore(e) {
-        this.clearRecords = false;
-        const ajax = this.$.ajax;
-        if (ajax.lastResponse && ajax.lastResponse._next) {
-          if (this.params._page !== ajax.lastResponse._next) {
-            this.set('params._page', ajax.lastResponse._next);
-            ajax.generateRequest();
-          }
-        }
-      }
-      _fireRequest(url) {
-        this.clearRecords = true;
-        this.set('params._page', null);
-
-        const ajax = this.$.ajax;
-        ajax.url = url;
-        ajax.generateRequest();
       }
       _checkNet(online) {
         const toast = this.$.toast;
