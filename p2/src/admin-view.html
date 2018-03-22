@@ -47,7 +47,7 @@
       data="{{fbData}}"></firebase-document>
 
     <iron-ajax auto
-      url="[[_url(pass)]]"
+      url="[[_url(route.path, pass)]]"
       last-response="{{info}}"></iron-ajax>
 
     <iron-ajax id="xhr"
@@ -114,9 +114,8 @@
           }
         }
       }
-      _url(pass) {
-        const rx = /^\/admin/;
-        if (rx.test(this.route.path) && pass) {
+      _url(path, pass) {
+        if (/^\/admin/.test(path) && pass) {
           return '/api/info';
         }
       }

@@ -35,7 +35,7 @@
     </style>
 
     <iron-ajax auto
-      url="[[_url(safekey, current)]]"
+      url="[[_url(route.path, safekey, current)]]"
       last-error="{{error}}"
       last-response="{{item}}"></iron-ajax>
 
@@ -95,14 +95,13 @@
           'notFound(error.status)',
         ]
       }
-      _url(safekey, current) {
-        const rx = /^\/item/;
-        if (rx.test(this.route.path)) {
-          if (current && current.safekey === safekey) {
-            this.item = current;
-          } else {
-            return ['/api', safekey].join('/');
-          }
+      _url(path, safekey, current) {
+        if (!/^\/item/.test(path)) return;
+
+        if (current && current.safekey === safekey) {
+          this.item = current;
+        } else {
+          return ['/api', safekey].join('/');
         }
       }
       notFound(status) {

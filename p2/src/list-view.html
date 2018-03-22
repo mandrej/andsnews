@@ -171,8 +171,8 @@
       }
       static get observers() {
         return [
+          '_setUrl(route.path, field, value)',
           'makeTitle(field, value)',
-          '_setUrl(field, value)',
           'getUserPhoto(user.photoURL)',
         ]
       }
@@ -201,11 +201,11 @@
           });
         }
       }
-      _setUrl(field, value) {
-        const rx = /^\/list/;
+      _setUrl(path, field, value) {
+        if (!/^\/list/.test(path)) return;
+
         const ajax = this.$.ajax;
         let url = '/api/start';
-        if (!rx.test(this.route.path)) return;
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer, // initially undefined
           Polymer.Async.timeOut.after(20),
