@@ -64,7 +64,7 @@
     <div class="container">
       <paper-toast id="toast"></paper-toast>
 
-      <template is="dom-if" if="[[pass]]">
+      <div hidden$="[[!pass]]">
         <h1>Photo [[info.photo.count]]</h1>
         <div class="actions">
           <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
@@ -74,10 +74,10 @@
           <paper-button on-tap="fix" data-kind="photo" toggles raised>Deleted</paper-button>
           <paper-button on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
         </div>
-      </template>
-      <template is="dom-if" if="[[!pass]]">
+      </div>
+      <div hidden$="[[pass]]">
         <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
-      </template>
+      </div>
     </div>
     <footer class="footer"><app-toolbar><h4 condensed-title>[[copy]]</h4></app-toolbar></footer>
   </template>

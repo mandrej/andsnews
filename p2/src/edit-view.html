@@ -65,7 +65,7 @@
     </app-header>
 
     <div class="container">
-      <template is="dom-if" if="[[pass]]">
+      <div hidden$="[[!pass]]">
         <iron-form id="editForm">
           <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
 
@@ -100,10 +100,10 @@
             </div>
           </form>
         </iron-form>
-      </template>
-      <template is="dom-if" if="[[!pass]]">
-        <p style="padding: 16px">Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
-      </template>
+      </div>
+      <div hidden$="[[pass]]" style="padding: 16px">
+        <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
+      </div>
     </div>
     <footer class="footer"><app-toolbar><h4 condensed-title>[[copy]]</h4></app-toolbar></footer>
   </template>
@@ -142,6 +142,11 @@
         form.addEventListener('iron-form-presubmit', () => this._preSubmit());
         form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
       }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('iron-form-presubmit', this._preSubmit, true);
+        this.removeEventListener('iron-form-response', this._responseHandler, true);
+      }
       _url(path, safekey, current) {
         if (!/^\/edit/.test(path)) return;
 
@@ -177,9 +182,11 @@
         this.$.editForm.submit();
       }
       _responseHandler(e) {
-        const toast = this.$.toast;
-        if (e.detail.xhr.status === 200) {
+        const res = e.detail.xhr.response,
+          toast = this.$.toast;
+        if (res.success) {
           toast.setAttribute('text', 'Successfully updated');
+          this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: res.rec}));
         } else {
           toast.setAttribute('text', 'Update failed');
         }

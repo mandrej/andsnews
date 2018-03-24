@@ -289,7 +289,8 @@ class Crud(RestHandler):
                 data['aperture'] = float(data['aperture'])
             if data['iso']:
                 data['iso'] = int(data['iso'])
-            obj.edit(data)
+            res = obj.edit(data)
+            self.render(res)
 
     def delete(self, safe_key):
         key = get_key(safe_key)

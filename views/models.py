@@ -360,6 +360,7 @@ class Photo(ndb.Model):
         new_pairs = self.changed_pairs()
         deferred.defer(self.index_doc, _queue='background')
         deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
+        return {'success': True, 'rec': self.serialize()}
 
     def remove(self):
         old_pairs = self.changed_pairs()
