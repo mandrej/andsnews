@@ -7,10 +7,6 @@
       :host {
         color: var(--text-primary-color);
       }
-      :host(:not([nodrop])) {
-        border: 1px dashed;
-        padding: 1em;
-      }
       [part="drop-label"] {
         @apply --layout-center;
       }
@@ -18,6 +14,9 @@
         color: var(--text-primary-color);
         background-color: var(--default-primary-color);
         @apply --shadow-elevation-2dp;
+      }
+      [part="file-list"] {
+        padding: calc(var(--user-gap) / 2);
       }
     </style>
   </template>
@@ -50,7 +49,7 @@
     <paper-toast id="toast"></paper-toast>
 
     <div class="container">
-      <div hidden$="[[!pass]]">
+      <template is="dom-if" if="[[pass]]">
         <vaadin-upload id="upload"
           target="/api/photo/add"
           max-files="10"
@@ -60,10 +59,10 @@
           <span slot="drop-label">&nbsp;Drop files to the cloud&hellip;</span>
         </vaadin-upload>
         <p>See <a href="/list/tags/new">new uploaded files</a> and continue editing.</p>
-      </div>
-      <div hidden$="[[pass]]">
+      </template>
+      <template is="dom-if" if="[[!pass]]">
         <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
-      </div>
+      </template>
     </div>
     <footer class="footer"><app-toolbar><h4 condensed-title>[[copy]]</h4></app-toolbar></footer>
   </template>
@@ -89,10 +88,11 @@
         }
       }
       _uploadResponse(e) {
-        var res = JSON.parse(e.detail.xhr.responseText),
+        var res = JSON.parse(e.detail.xhr.response),
           toast = this.$.toast;
         if (res.success) {
           toast.setAttribute('text', 'Image successfully uploaded');
+          this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: res.rec}));
           toast.open();
         } else {
           toast.setAttribute('text', res.message);
@@ -100,7 +100,7 @@
         }
       }
       goBack() {
-        window.history.go(-1);
+        window.history.back();
       }
     }
     window.customElements.define(AddView.is, AddView);
