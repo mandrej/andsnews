@@ -110,7 +110,9 @@
         }
       }
       openInfo() {
-        this.$.info.toggle();
+        const dialog = this.$.info;
+        dialog.style.visibility = 'visible';
+        dialog.toggle();
       }
       _dateFormat(str) {
         return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('llll');

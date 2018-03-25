@@ -192,9 +192,11 @@
         if (this.clearRecords) {
           this.set('records', []);
         }
-        const data = e.detail.response;
+        const data = e.detail.response,
+          dialog = this.$.message;
         if (data.objects.length === 0) {
-          this.$.message.open();
+          dialog.style.visibility = 'visible';
+          dialog.open();
         } else {
           data.objects.forEach((item) => {
             this.push('records', item);
@@ -288,7 +290,9 @@
       showDeleteDialog(e) {
         this.selectedItem = e.model.rec;
         this.selectedIndex = e.model.index;
-        this.$.deleteDialog.open();
+        const dialog = this.$.deleteDialog;
+        dialog.style.visibility = 'visible';
+        dialog.open();
       }
       deleteRecord(e) {
         if (e.detail.confirmed && this.selectedIndex > -1) {

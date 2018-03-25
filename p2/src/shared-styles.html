@@ -58,10 +58,15 @@
         background-color: var(--default-primary-color);
         @apply --shadow-elevation-2dp;
       }
+      paper-button[active] {
+        color: #fff;
+        background-color: var(--accent-color);
+      }
       paper-toast {
         @apply --ellipsis;
       }
       paper-dialog {
+        visibility: hidden;
         background-color: #fff;
         --paper-dialog-title: {
           white-space: normal;
