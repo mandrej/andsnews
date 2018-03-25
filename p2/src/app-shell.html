@@ -107,7 +107,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201803241953' },
+          version: { type: String, value: '201803251922' },
           user: { type: Object, notify: true },
           isAuthorized: { type: Boolean, value: false, notify: true },
           isAdmin: { type: Boolean, value: false, notify: true },
@@ -139,8 +139,8 @@
       }
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('sign', this.signHandler, true);
-        this.removeEventListener('current', this.currentChange, true);
+        this.removeEventListener('sign', this.signHandler);
+        this.removeEventListener('current', this.currentChange);
       }
       signHandler() {
         if (this.user) {

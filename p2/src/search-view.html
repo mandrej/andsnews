@@ -123,11 +123,11 @@
           find_author: '',
           find_color: ''
         };
-        this.$.findForm.addEventListener('iron-form-submit', (e) => this.iron-form-submit(e));
+        this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
       }
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('iron-form-submit', this.iron-form-submit, true);
+        this.removeEventListener('iron-form-submit', this._submit);
       }
       listTags(e) {
         e.detail.response.forEach((tag) => {
