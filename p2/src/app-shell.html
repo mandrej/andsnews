@@ -37,17 +37,14 @@
     <iron-pages selected="[[dataView.view]]" attr-for-selected="view" fallback-selection="404">
       <list-view
         view="list"
-        user="[[user]]"
-        is-authorized="[[isAuthorized]]"
-        is-admin="[[isAdmin]]"
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
         route="{{route}}"
+        state="[[state]]"
         copy="[[copy]]"></list-view>
 
       <item-view
         view="item"
-        is-authorized="[[isAuthorized]]"
         safekey="{{dataField.field}}"
         current="[[current]]"
         route="{{route}}"></item-view>
@@ -59,23 +56,22 @@
 
       <add-view
         view="add"
-        is-authorized="[[isAuthorized]]"
         route="{{route}}"
+        state="[[state]]"
         copy="[[copy]]"></add-view>
 
       <edit-view
         view="edit"
-        is-authorized="[[isAuthorized]]"
         safekey="{{dataField.field}}"
         current="{{current}}"
         route="{{route}}"
+        state="[[state]]"
         copy="[[copy]]"></edit-view>
 
       <admin-view
         view="admin"
-        user="[[user]]"
-        is-admin="[[isAdmin]]"
         route="{{route}}"
+        state="[[state]]"
         copy="[[copy]]"></admin-view>
 
       <notfound-view
@@ -91,9 +87,6 @@
       static get properties() {
         return {
           version: { type: String, value: '201803252152' },
-          user: { type: Object, notify: true },
-          isAuthorized: { type: Boolean, value: false, notify: true },
-          isAdmin: { type: Boolean, value: false, notify: true },
           current: { type: Object, notify: true },
           copy: {
             type: String,
@@ -103,9 +96,7 @@
       }
       static get observers() {
         return [
-          // '_checkNet(online)',
           '_routeViewChanged(dataView.view)',
-          '_userIsAdmin(user)',
         ]
       }
       connectedCallback() {
@@ -114,11 +105,19 @@
           this.set('route.path', '/list/all');
         }
         this.removeAttribute('unresolved');
+        this.addEventListener('online', this._checkNet);
+        this.addEventListener('state', this._stateChanged);
         this.addEventListener('current', this.currentChange);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
+        this.removeEventListener('online', this._checkNet);
+        this.removeEventListener('state', this._stateChanged);
         this.removeEventListener('current', this.currentChange);
+      }
+      _stateChanged(e) {
+        console.log(e.detail);
+        this.state = e.detail;
       }
       currentChange(e) {
         this.current = e.detail;
@@ -145,9 +144,9 @@
           });
         }
       }
-      _checkNet(online) {
+      _checkNet(e) {
         const toast = this.$.toast;
-        if (online) {
+        if (e.detail) {
           toast.close()
         } else {
           toast.open();

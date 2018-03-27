@@ -42,93 +42,70 @@
       static get is() { return 'app-auth'; }
       static get properties() {
         return {
-          meta: { type: Object, notify: true },
-          user: { type: Object, notify: true },
+          meta: { type: Object, observer: 'metaChanged' },
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
         };
       }
-      connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener('sign', this.signHandler);
-      }
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('sign', this.signHandler);
-      }
-      // ready() {
-      //   super.ready();
-      //   Polymer.RenderStatus.afterNextRender(this, function() {
-      //   });
-      // }
       static get observers() {
         return [
-          'getUser(user)',
-          // '_userIsAdmin(user)',
+          '_getUser(user)',
           '_checkNet(online)',
         ]
       }
+      metaChanged(state) {
+        this.dispatchEvent(new CustomEvent('state', {bubbles: true, composed: true, detail: state}));
+      }
       signHandler() {
         if (this.user) {
-          this.$.auth.signOut().then(() => {
-            this.meta = {
-              name: null,
-              email: null,
-              photo: '../images/google_g_logo.svg',
-              isAuthorized: false,
-              isAdmin: false
-            };
-          });
+          this.$.auth.signOut();
+          this.meta = {
+            name: null,
+            email: null,
+            isAuthorized: this.isAuthorized,
+            isAdmin: false
+          };
+          this.$.sign.src = '../images/google_g_logo.svg';
         } else {
           this.$.auth.signInWithPopup()
             .then((response) => {
-              // response.credential.accessToken
-              // response.user.uid
-              console.log(response)
               this.meta = {
                 name: response.user.displayName,
                 email: response.user.email,
-                photo: response.user.photoURL,
-                isAuthorized: response.user.emailVerified,
+                isAuthorized: this.isAuthorized,
                 isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
               }
+              this.$.sign.src = response.user.photoURL;
             }).catch(function (error) {
               console.log(error);
             });
         }
       }
-      _userIsAdmin(user) {
-        if (user && user.uid) {
-          this.isAdmin = (this.admins.indexOf(user.uid) !== -1);
-        }
-      }
-      getUser(user) {
+      _getUser(user) {
         if (user) {
           this.meta = {
             name: this.user.displayName,
             email: this.user.email,
-            photo: this.user.photoURL,
             isAuthorized: this.isAuthorized,
             isAdmin: (this.admins.indexOf(this.user.uid) !== -1)
-          }
+          };
+          this.$.sign.src = this.user.photoURL;
         } else {
           this.meta = {
             name: null,
             email: null,
-            photo: '../images/google_g_logo.svg',
             isAuthorized: false,
             isAdmin: false
           };
+          this.$.sign.src = '../images/google_g_logo.svg';
         }
 
       }
-      // getUserPhoto(url) {
-      //   this.$.sign.src = (url) ? url : '../images/google_g_logo.svg';
-      // }
-      // _sign() {
-      //   this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
-      // }
+
+      _checkNet(online) {
+        this.dispatchEvent(new CustomEvent('online', {bubbles: true, composed: true, detail: online}));
+      }
     }
 
     window.customElements.define(AppAuth.is, AppAuth);

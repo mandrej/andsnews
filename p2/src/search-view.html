@@ -123,7 +123,7 @@
           find_author: '',
           find_color: ''
         };
-        this.$.findForm.addEventListener('iron-form-submit', (e) => this._submit(e));
+        this.$.findForm.addEventListener('iron-form-submit', e => this._submit(e));
       }
       disconnectedCallback() {
         super.disconnectedCallback();

@@ -139,8 +139,8 @@
       connectedCallback() {
         super.connectedCallback();
         const form = this.$.editForm;
-        form.addEventListener('iron-form-presubmit', () => this._preSubmit());
-        form.addEventListener('iron-form-response', (e) => this._responseHandler(e));
+        form.addEventListener('iron-form-presubmit', this._preSubmit);
+        form.addEventListener('iron-form-response', e => this._responseHandler(e));
       }
       disconnectedCallback() {
         super.disconnectedCallback();

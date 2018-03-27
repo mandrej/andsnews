@@ -128,8 +128,8 @@
               <div>
                 <iron-image src="[[checkImage(rec)]]" on-tap="showView" preload fade sizing="cover"></iron-image>
                 <div class="title">[[rec.headline]]</div>
-                <paper-icon-button icon="clear" on-tap="showDeleteDialog" class="icon left" hidden$="{{!isAdmin}}"></paper-icon-button>
-                <paper-icon-button icon="create" on-tap="showEdit" class="icon right" hidden$="{{!isAuthorized}}"></paper-icon-button>
+                <paper-icon-button icon="clear" on-tap="showDeleteDialog" class="icon left" hidden$="{{!state.isAdmin}}"></paper-icon-button>
+                <paper-icon-button icon="create" on-tap="showEdit" class="icon right" hidden$="{{!state.isAuthorized}}"></paper-icon-button>
               </div>
             </div>
           </template>
@@ -139,7 +139,8 @@
 
     <app-header class="footer" condenses reveals>
       <app-toolbar>
-        <paper-fab hidden$="[[!isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
+        <!-- <paper-fab hidden$="[[!state.isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab> -->
+        <paper-fab icon="add" mini on-tap="addRecord"></paper-fab>
         <h4 condensed-title>[[copy]]</h4>
         <paper-icon-button icon="arrow-upward" mini on-tap="scrollTop"></paper-icon-button>
       </app-toolbar>
