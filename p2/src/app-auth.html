@@ -1,0 +1,136 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+
+<dom-module id="app-auth">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+      .sign {
+        padding: 1px;
+        --iron-icon: {
+          border-radius: 50%;
+          overflow: hidden;
+        }
+      }
+    </style>
+
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
+
+    <firebase-auth id="auth"
+      app-name="andsnews"
+      user="{{user}}"
+      online="{{online}}"
+      signed-in="{{isAuthorized}}"
+      provider="google"></firebase-auth>
+
+    <paper-icon-button id="sign" class="sign" on-tap="signHandler"></paper-icon-button>
+
+  </template>
+
+  <script>
+    class AppAuth extends Polymer.Element {
+      static get is() { return 'app-auth'; }
+      static get properties() {
+        return {
+          meta: { type: Object, notify: true },
+          user: { type: Object, notify: true },
+          admins: { type: Array, value: [
+            'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
+            'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
+        };
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('sign', this.signHandler);
+      }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('sign', this.signHandler);
+      }
+      // ready() {
+      //   super.ready();
+      //   Polymer.RenderStatus.afterNextRender(this, function() {
+      //   });
+      // }
+      static get observers() {
+        return [
+          'getUser(user)',
+          // '_userIsAdmin(user)',
+          '_checkNet(online)',
+        ]
+      }
+      signHandler() {
+        if (this.user) {
+          this.$.auth.signOut().then(() => {
+            this.meta = {
+              name: null,
+              email: null,
+              photo: '../images/google_g_logo.svg',
+              isAuthorized: false,
+              isAdmin: false
+            };
+          });
+        } else {
+          this.$.auth.signInWithPopup()
+            .then((response) => {
+              // response.credential.accessToken
+              // response.user.uid
+              console.log(response)
+              this.meta = {
+                name: response.user.displayName,
+                email: response.user.email,
+                photo: response.user.photoURL,
+                isAuthorized: response.user.emailVerified,
+                isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
+        }
+      }
+      _userIsAdmin(user) {
+        if (user && user.uid) {
+          this.isAdmin = (this.admins.indexOf(user.uid) !== -1);
+        }
+      }
+      getUser(user) {
+        if (user) {
+          this.meta = {
+            name: this.user.displayName,
+            email: this.user.email,
+            photo: this.user.photoURL,
+            isAuthorized: this.isAuthorized,
+            isAdmin: (this.admins.indexOf(this.user.uid) !== -1)
+          }
+        } else {
+          this.meta = {
+            name: null,
+            email: null,
+            photo: '../images/google_g_logo.svg',
+            isAuthorized: false,
+            isAdmin: false
+          };
+        }
+
+      }
+      // getUserPhoto(url) {
+      //   this.$.sign.src = (url) ? url : '../images/google_g_logo.svg';
+      // }
+      // _sign() {
+      //   this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
+      // }
+    }
+
+    window.customElements.define(AppAuth.is, AppAuth);
+  </script>
+</dom-module>

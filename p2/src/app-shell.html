@@ -30,22 +30,6 @@
     <app-route route="{{tailView}}" pattern="/:field" data="{{dataField}}" tail="{{tailField}}"></app-route>
     <app-route route="{{tailField}}" pattern="/:value" data="{{dataValue}}"></app-route>
 
-    <firebase-app
-      app="{{firebase}}"
-      name="andsnews"
-      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-      auth-domain="andsnews.firebaseapp.com"
-      database-url="https://andsnews.firebaseio.com"
-      storage-bucket="andsnews.appspot.com"
-      messaging-sender-id="719127177629"></firebase-app>
-
-    <firebase-auth id="auth"
-      app-name="andsnews"
-      user="{{user}}"
-      online="{{online}}"
-      signed-in="{{isAuthorized}}"
-      provider="google"></firebase-auth>
-
     <paper-toast id="toast" duration="0" text="YOU ARE OFFLINE">
       <paper-icon-button icon="clear" on-tap="_close"></paper-icon-button>
     </paper-toast>
@@ -115,14 +99,11 @@
             type: String,
             computed: 'copywrite(version)'
           },
-          admins: { type: Array, value: [
-            'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
-            'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
         };
       }
       static get observers() {
         return [
-          '_checkNet(online)',
+          // '_checkNet(online)',
           '_routeViewChanged(dataView.view)',
           '_userIsAdmin(user)',
         ]
@@ -133,35 +114,14 @@
           this.set('route.path', '/list/all');
         }
         this.removeAttribute('unresolved');
-        this.addEventListener('sign', this.signHandler);
         this.addEventListener('current', this.currentChange);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('sign', this.signHandler);
         this.removeEventListener('current', this.currentChange);
-      }
-      signHandler() {
-        if (this.user) {
-          this.isAdmin = false;
-          this.$.auth.signOut();
-        } else {
-          this.$.auth.signInWithPopup()
-            .then(function (response) {
-              // response.credential.accessToken
-              // response.user.uid
-            }).catch(function (error) {
-              console.log(error);
-            });
-        }
       }
       currentChange(e) {
         this.current = e.detail;
-      }
-      _userIsAdmin(user) {
-        if (user && user.uid) {
-          this.isAdmin = (this.admins.indexOf(user.uid) !== -1);
-        }
       }
       _routeViewChanged(view) {
         if (!view) return; // undefined

@@ -3,6 +3,7 @@
 
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="app-auth.html">
 
 <dom-module id="list-view">
   <template>
@@ -17,13 +18,6 @@
         @apply --layout-flex;
         margin: var(--user-gap) calc(-1 * var(--user-gap)) 69px;
         padding: var(--user-gap) var(--user-gap) 0 0;
-      }
-      .sign {
-        padding: 1px;
-        --iron-icon: {
-          border-radius: 50%;
-          overflow: hidden;
-        }
       }
       .square {
         width: 25%;
@@ -111,7 +105,7 @@
       <app-toolbar>
         <paper-spinner-lite active$="[[loading]]"></paper-spinner-lite>
         <h4 condensed-title></h4>
-        <paper-icon-button id="sign" class="sign" on-tap="_sign"></paper-icon-button>
+        <app-auth></app-auth>
       </app-toolbar>
       <app-toolbar sticky>
         <paper-icon-button hidden$="{{!canReset}}" icon="arrow-back" on-tap="resetFilter"></paper-icon-button>
@@ -173,7 +167,6 @@
         return [
           '_setUrl(route.path, field, value)',
           'makeTitle(field, value)',
-          'getUserPhoto(user.photoURL)',
         ]
       }
       makeTitle(field, value) {
@@ -266,9 +259,6 @@
         if (rec && rec.serving_url) return rec.serving_url + '=s400-c';
         return '../../images/broken.svg';
       }
-      getUserPhoto(url) {
-        this.$.sign.src = (url) ? url : '../images/google_g_logo.svg';
-      }
       showSearch() {
         this.set('route.path', '/search');
       }
@@ -303,9 +293,6 @@
         }
         this.selectedItem = null;
         this.selectedIndex = -1;
-      }
-      _sign() {
-        this.dispatchEvent(new CustomEvent('sign', {bubbles: true, composed: true, detail: {tap: true}}));
       }
     }
 
