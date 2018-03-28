@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -40,7 +41,6 @@
         field="{{dataField.field}}"
         value="{{dataValue.value}}"
         route="{{route}}"
-        state="[[state]]"
         copy="[[copy]]"></list-view>
 
       <item-view
@@ -57,7 +57,6 @@
       <add-view
         view="add"
         route="{{route}}"
-        state="[[state]]"
         copy="[[copy]]"></add-view>
 
       <edit-view
@@ -65,13 +64,11 @@
         safekey="{{dataField.field}}"
         current="{{current}}"
         route="{{route}}"
-        state="[[state]]"
         copy="[[copy]]"></edit-view>
 
       <admin-view
         view="admin"
         route="{{route}}"
-        state="[[state]]"
         copy="[[copy]]"></admin-view>
 
       <notfound-view
@@ -86,7 +83,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201803252152' },
+          version: { type: String, value: '201803281529' },
           current: { type: Object, notify: true },
           copy: {
             type: String,
@@ -106,18 +103,12 @@
         }
         this.removeAttribute('unresolved');
         this.addEventListener('online', this._checkNet);
-        this.addEventListener('state', this._stateChanged);
         this.addEventListener('current', this.currentChange);
       }
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('online', this._checkNet);
-        this.removeEventListener('state', this._stateChanged);
         this.removeEventListener('current', this.currentChange);
-      }
-      _stateChanged(e) {
-        console.log(e.detail);
-        this.state = e.detail;
       }
       currentChange(e) {
         this.current = e.detail;

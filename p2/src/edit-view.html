@@ -50,6 +50,8 @@
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
+    <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
+
     <iron-ajax auto
       url="[[_url(route.path, safekey, current)]]"
       last-error="{{error}}"
@@ -60,12 +62,12 @@
     <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
-        <h1 main-title>[[title]]</h1>
+        <h1 main-title>Edit</h1>
       </app-toolbar>
     </app-header>
 
     <div class="container">
-      <div hidden$="[[!pass]]">
+      <div hidden$="[[!state.isAuthorized]]">
         <iron-form id="editForm">
           <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
 
@@ -101,7 +103,8 @@
           </form>
         </iron-form>
       </div>
-      <div hidden$="[[pass]]" style="padding: 16px">
+      <div hidden$="[[state.isAuthorized]]" style="padding: 16px">
+        <h2>Authorization Required</h2>
         <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
       </div>
     </div>
@@ -113,27 +116,18 @@
       static get is() { return 'edit-view'; }
       static get properties() {
         return {
-          title: { type: String, value: 'Authorization Required' },
           tags: { type: Array, value:[], notify: true },
-          pass: { type: Boolean, value: false },
           error: Object,
         };
       }
       static get observers() {
         return [
           'notFound(error.status)',
-          'setPass(isAuthorized)'
         ]
       }
       notFound(status) {
         if (status === 404) {
           this.set('route.path', '/notfound');
-        }
-      }
-      setPass(isAuthorized) {
-        if (isAuthorized === true) {
-          this.title = 'Edit';
-          this.pass = true;
         }
       }
       connectedCallback() {

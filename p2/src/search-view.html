@@ -4,7 +4,6 @@
 <link rel="import" href="../bower_components/paper-chip/paper-chip-input-autocomplete.html">
 <link rel="import" href="../bower_components/vaadin-material-theme/vaadin-text-field.html">
 <link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
 <dom-module id="search-view">
   <template>
@@ -46,13 +45,12 @@
       @media (max-width: 432px)  { .fields * { width: 100%; }}
     </style>
 
+    <app-localstorage-document key="search" data="{{search}}"></app-localstorage-document>
+
     <iron-ajax auto
       url="/api/suggest/Photo_tags" on-response="listTags"></iron-ajax>
     <iron-ajax auto
       url="/api/suggest/Photo_model" on-response="listModels"></iron-ajax>
-    <app-localstorage-document id="search"
-      key="search"
-      data="{{search}}"></app-localstorage-document>
 
     <app-header fixed slot="header">
       <app-toolbar>
@@ -107,11 +105,6 @@
           search: { type: Object, value: {}, notify: true },
         };
       }
-      static get observers() {
-        return [
-          '_searchChanged(search.*)',
-        ]
-      }
       connectedCallback() {
         super.connectedCallback();
         this.search = {
@@ -142,9 +135,6 @@
       onSubmit(e) {
         this.$.findForm.submit();
       }
-      _searchChanged(obj) {
-        this.$.search.saveValue('search', obj.base );
-      }
       onClear() {
         this.$.tags.items = [];
         this.search = {
@@ -156,7 +146,6 @@
           find_author: '',
           find_color: ''
         };
-        this.$.search.saveValue('search', this.search);
         this.$.findForm.reset();
       }
       _submit(e) {

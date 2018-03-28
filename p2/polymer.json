@@ -2,9 +2,9 @@
   "entrypoint": "index.html",
   "shell": "src/app-shell.html",
   "fragments": [
-    "src/app-auth.html",
     "src/shared-styles.html",
     "src/common-resources.html",
+    "src/app-auth.html",
     "src/list-view.html",
     "src/search-view.html",
     "src/item-view.html",

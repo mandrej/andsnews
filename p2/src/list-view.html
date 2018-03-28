@@ -3,7 +3,6 @@
 
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
-<link rel="import" href="app-auth.html">
 
 <dom-module id="list-view">
   <template>
@@ -73,6 +72,8 @@
       @media (max-width: 432px)  { .square { width: 100%; }}
     </style>
 
+    <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
+
     <paper-dialog id="message"
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation">
@@ -139,8 +140,7 @@
 
     <app-header class="footer" condenses reveals>
       <app-toolbar>
-        <!-- <paper-fab hidden$="[[!state.isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab> -->
-        <paper-fab icon="add" mini on-tap="addRecord"></paper-fab>
+        <paper-fab hidden$="[[!state.isAuthorized]]" icon="add" mini on-tap="addRecord"></paper-fab>
         <h4 condensed-title>[[copy]]</h4>
         <paper-icon-button icon="arrow-upward" mini on-tap="scrollTop"></paper-icon-button>
       </app-toolbar>

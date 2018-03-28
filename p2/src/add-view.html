@@ -39,6 +39,8 @@
       @media (max-width: 1200px) { .container { margin: 0; }}
     </style>
 
+    <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
+
     <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goBack"></paper-icon-button>
@@ -71,14 +73,6 @@
   <script>
     class AddView extends Polymer.Element {
       static get is() { return 'add-view'; }
-      // static get observers() {
-      //   return [
-      //     '_getState(state)'
-      //   ]
-      // }
-      // _getState(state) {
-      //   this.isAuthorized = state.isAuthorized;
-      // }
       _uploadResponse(e) {
         const res = e.detail.xhr.response,
           toast = this.$.toast;

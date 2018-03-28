@@ -36,6 +36,8 @@
       @media (max-width: 1200px) { .container { margin: 0; }}
     </style>
 
+    <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
+
     <firebase-messaging id="messaging"
       app-name="andsnews"
       token="{{token}}"
@@ -47,7 +49,7 @@
       data="{{fbData}}"></firebase-document>
 
     <iron-ajax auto
-      url="[[_url(route.path, pass)]]"
+      url="[[_url(route.path)]]"
       last-response="{{info}}"></iron-ajax>
 
     <iron-ajax id="xhr"
@@ -57,14 +59,14 @@
     <app-header fixed slot="header">
       <app-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="goHome"></paper-icon-button>
-        <h1 main-title>[[title]]</h1>
+        <h1 main-title>Maintenance</h1>
       </app-toolbar>
     </app-header>
 
     <div class="container">
       <paper-toast id="toast"></paper-toast>
 
-      <div hidden$="[[!pass]]">
+      <div hidden$="[[!state.isAdmin]]">
         <h1>Photo [[info.photo.count]]</h1>
         <div class="actions">
           <template is="dom-repeat" items="[[info.photo.counters]]" as="item">
@@ -75,7 +77,8 @@
           <paper-button on-tap="unbound" data-kind="photo" toggles raised>Photo Unbound</paper-button>
         </div>
       </div>
-      <div hidden$="[[pass]]">
+      <div hidden$="[[state.isAdmin]]">
+        <h2>Authorization Required</h2>
         <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
       </div>
     </div>
@@ -87,22 +90,13 @@
       static get is() { return 'admin-view'; }
       static get properties() {
         return {
-          title: { type: String, value: 'Authorization Required' },
-          pass: { type: Boolean, value: false },
           fbData: Object
         };
       }
       static get observers() {
         return [
-          'setPass(isAdmin)',
           'userData(user)'
         ]
-      }
-      setPass(isAdmin) {
-        if (isAdmin === true) {
-          this.title = 'Maintenance';
-          this.pass = true;
-        }
       }
       userData(user) {
         const d = new Date();
@@ -114,8 +108,8 @@
           }
         }
       }
-      _url(path, pass) {
-        if (/^\/admin/.test(path) && pass) {
+      _url(path) {
+        if (/^\/admin/.test(path)) {
           return '/api/info';
         }
       }

@@ -33,8 +33,9 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
-    <paper-icon-button id="sign" class="sign" on-tap="signHandler"></paper-icon-button>
+    <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
 
+    <paper-icon-button id="sign" class="sign" on-tap="signHandler"></paper-icon-button>
   </template>
 
   <script>
@@ -42,7 +43,7 @@
       static get is() { return 'app-auth'; }
       static get properties() {
         return {
-          meta: { type: Object, observer: 'metaChanged' },
+          state: { type: Object, notify: true },
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
@@ -54,13 +55,10 @@
           '_checkNet(online)',
         ]
       }
-      metaChanged(state) {
-        this.dispatchEvent(new CustomEvent('state', {bubbles: true, composed: true, detail: state}));
-      }
       signHandler() {
         if (this.user) {
           this.$.auth.signOut();
-          this.meta = {
+          this.state = {
             name: null,
             email: null,
             isAuthorized: this.isAuthorized,
@@ -70,7 +68,7 @@
         } else {
           this.$.auth.signInWithPopup()
             .then((response) => {
-              this.meta = {
+              this.state = {
                 name: response.user.displayName,
                 email: response.user.email,
                 isAuthorized: this.isAuthorized,
@@ -84,7 +82,7 @@
       }
       _getUser(user) {
         if (user) {
-          this.meta = {
+          this.state = {
             name: this.user.displayName,
             email: this.user.email,
             isAuthorized: this.isAuthorized,
@@ -92,7 +90,7 @@
           };
           this.$.sign.src = this.user.photoURL;
         } else {
-          this.meta = {
+          this.state = {
             name: null,
             email: null,
             isAuthorized: false,
@@ -100,9 +98,7 @@
           };
           this.$.sign.src = '../images/google_g_logo.svg';
         }
-
       }
-
       _checkNet(online) {
         this.dispatchEvent(new CustomEvent('online', {bubbles: true, composed: true, detail: online}));
       }

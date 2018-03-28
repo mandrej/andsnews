@@ -25,7 +25,8 @@ module.exports = {
       options: {
         cache: {
           maxEntries: 100,
-          name: 'data-cache'
+          name: 'data-cache',
+          maxAgeSeconds: 3600 * 4
         }
       }
     }, {
