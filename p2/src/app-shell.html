@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
@@ -25,6 +26,15 @@
         @apply --layout-justified;
       }
     </style>
+
+    <firebase-app
+      app="{{firebase}}"
+      name="andsnews"
+      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
+      auth-domain="andsnews.firebaseapp.com"
+      database-url="https://andsnews.firebaseio.com"
+      storage-bucket="andsnews.appspot.com"
+      messaging-sender-id="719127177629"></firebase-app>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:view" data="{{dataView}}" tail="{{tailView}}"></app-route>
@@ -83,7 +93,7 @@
       static get is() { return 'app-shell'; }
       static get properties() {
         return {
-          version: { type: String, value: '201803281529' },
+          version: { type: String, value: '201803281557' },
           current: { type: Object, notify: true },
           copy: {
             type: String,

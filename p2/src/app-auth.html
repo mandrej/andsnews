@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 
 <dom-module id="app-auth">
@@ -16,15 +15,6 @@
         }
       }
     </style>
-
-    <firebase-app
-      app="{{firebase}}"
-      name="andsnews"
-      api-key="AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M"
-      auth-domain="andsnews.firebaseapp.com"
-      database-url="https://andsnews.firebaseio.com"
-      storage-bucket="andsnews.appspot.com"
-      messaging-sender-id="719127177629"></firebase-app>
 
     <firebase-auth id="auth"
       app-name="andsnews"
