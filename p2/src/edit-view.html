@@ -67,12 +67,11 @@
     </app-header>
 
     <div class="container">
-      <div hidden$="[[!state.isAuthorized]]">
+      <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
+
+      <template is="dom-if" if="[[state.isAuthorized]]" restamp>
         <iron-form id="editForm">
           <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
-
-            <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
-
             <div class="buttons" style$="[[checkImage(item)]]">
               <paper-button on-tap="_submit" raised>Submit</paper-button>
             </div>
@@ -102,11 +101,13 @@
             </div>
           </form>
         </iron-form>
-      </div>
-      <div hidden$="[[state.isAuthorized]]" style="padding: 16px">
-        <h2>Authorization Required</h2>
-        <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
-      </div>
+      </template>
+      <template is="dom-if" if="[[!state.isAuthorized]]">
+        <div style="margin: 16px">
+          <h2>Authorization Required</h2>
+          <p>Go <a href="/list/all">Home</a> and Sign-In with your Google Account</p>
+        </div>
+      </template>
     </div>
     <footer class="footer"><app-toolbar><h4 condensed-title>[[copy]]</h4></app-toolbar></footer>
   </template>
@@ -133,8 +134,10 @@
       connectedCallback() {
         super.connectedCallback();
         const form = this.$.editForm;
-        form.addEventListener('iron-form-presubmit', this._preSubmit);
-        form.addEventListener('iron-form-response', e => this._responseHandler(e));
+        if (form) {
+          form.addEventListener('iron-form-presubmit', this._preSubmit);
+          form.addEventListener('iron-form-response', e => this._responseHandler(e));
+        }
       }
       disconnectedCallback() {
         super.disconnectedCallback();
