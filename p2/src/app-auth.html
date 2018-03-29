@@ -21,12 +21,12 @@
       app-name="andsnews"
       user="{{user}}"
       online="{{online}}"
-      signed-in="{{isAuthorized}}"
+      signed-in="{{signedIn}}"
       provider="google"></firebase-auth>
 
     <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
 
-    <span>[[signText(isAuthorized)]]</span>
+    <span>[[signText(state.isAuthorized)]]</span>
     <paper-icon-button id="sign" class="sign" on-tap="signHandler"></paper-icon-button>
   </template>
 
@@ -35,7 +35,12 @@
       static get is() { return 'app-auth'; }
       static get properties() {
         return {
-          state: { type: Object, notify: true },
+          state: { type: Object, value: {
+            name: null,
+            email: null,
+            isAuthorized: false,
+            isAdmin: false
+          }, notify: true },
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
@@ -53,49 +58,31 @@
           this.state = {
             name: null,
             email: null,
-            isAuthorized: this.isAuthorized,
+            isAuthorized: false,
             isAdmin: false
           };
-          this.$.sign.src = '../images/google_g_logo.svg';
         } else {
           this.$.auth.signInWithPopup()
-            .then((response) => {
+            .then(response => {
               this.state = {
                 name: response.user.displayName,
                 email: response.user.email,
-                isAuthorized: this.isAuthorized,
+                isAuthorized: true,
                 isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
               }
-              this.$.sign.src = response.user.photoURL;
             }).catch(function (error) {
               console.log(error);
             });
         }
       }
       _getUser(user) {
-        if (user) {
-          this.state = {
-            name: this.user.displayName,
-            email: this.user.email,
-            isAuthorized: this.isAuthorized,
-            isAdmin: (this.admins.indexOf(this.user.uid) !== -1)
-          };
-          this.$.sign.src = this.user.photoURL;
-        } else {
-          this.state = {
-            name: null,
-            email: null,
-            isAuthorized: false,
-            isAdmin: false
-          };
-          this.$.sign.src = '../images/google_g_logo.svg';
-        }
-      }
-      signText(isAuthorized) {
-        return (isAuthorized) ? 'sign-off' : 'sign-in';
+        this.$.sign.src = (user) ? this.user.photoURL : '../images/google_g_logo.svg';
       }
       _checkNet(online) {
         this.dispatchEvent(new CustomEvent('online', {bubbles: true, composed: true, detail: online}));
+      }
+      signText(isAuthorized) {
+        return (isAuthorized) ? 'sign-off' : 'sign-in';
       }
     }
 
