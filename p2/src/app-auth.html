@@ -23,6 +23,8 @@
       signed-in="{{isAuthorized}}"
       provider="google"></firebase-auth>
 
+    <template is="dom-if" if="{{state.isAuthorized}}">sign-off&nbsp;</template>
+    <template is="dom-if" if="{{!state.isAuthorized}}">sign-in&nbsp;</template>
     <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
 
     <paper-icon-button id="sign" class="sign" on-tap="signHandler"></paper-icon-button>
