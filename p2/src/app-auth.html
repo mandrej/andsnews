@@ -48,7 +48,7 @@
       }
       static get observers() {
         return [
-          '_getUser(user)',
+          '_getUser(state.isAuthorized, user.photoURL)',
           '_checkNet(online)',
         ]
       }
@@ -75,8 +75,8 @@
             });
         }
       }
-      _getUser(user) {
-        this.$.sign.src = (user) ? this.user.photoURL : '../images/google_g_logo.svg';
+      _getUser(isAuthorized, url) {
+        this.$.sign.src = (isAuthorized && url) ? url : '../images/google_g_logo.svg';
       }
       _checkNet(online) {
         this.dispatchEvent(new CustomEvent('online', {bubbles: true, composed: true, detail: online}));
