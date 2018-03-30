@@ -79,7 +79,7 @@
       exit-animation="fade-out-animation">
       <h2>No photos for<br>current filter / search</h2>
       <p>Please try again</p>
-      </paper-dialog>
+    </paper-dialog>
 
     <paper-dialog id="deleteDialog" modal
       entry-animation="scale-up-animation"
@@ -152,13 +152,13 @@
       static get is() { return 'list-view'; }
       static get properties() {
         return {
-          title: String,
+          // title: String,
           view: { type: String, notify: true },
           field: { type: String, notify: true },
           value: { type: String, notify: true },
           records: { type: Array, value: [], notify: true },
           params: { type: Object, value: {}, notify: true },
-          clearRecords: Boolean,
+          clearRecords: { type: Boolean, value: true, notify: true },
           canReset: { type: Boolean, value: false, notify: true },
           selectedItem: { type: Object, notify: true },
           selectedIndex: { type: Number, value: -1, notify: true },
@@ -170,18 +170,6 @@
           'makeTitle(field, value)',
         ]
       }
-      makeTitle(field, value) {
-        if (field === 'all') {
-          this.canReset = false;
-          this.title = 'ANDрејевићи';
-        } else if (field === 'search') {
-          this.canReset = true;
-          this.title = value.replace(/AND/g, '+');
-        } else if (field && value) {
-          this.canReset = true;
-          this.title = field + ':' + value;
-        }
-      }
       handler(e) {
         if (this.clearRecords) {
           this.set('records', []);
@@ -192,7 +180,7 @@
           dialog.style.visibility = 'visible';
           dialog.open();
         } else {
-          data.objects.forEach((item) => {
+          data.objects.forEach(item => {
             this.push('records', item);
           });
         }
@@ -230,6 +218,18 @@
             }
           }
         )
+      }
+      makeTitle(field, value) {
+        if (field === 'all') {
+          this.canReset = false;
+          this.title = 'ANDрејевићи';
+        } else if (field === 'search') {
+          this.canReset = true;
+          this.title = value.replace(/AND/g, '+');
+        } else if (field && value) {
+          this.canReset = true;
+          this.title = field + ':' + value;
+        }
       }
       _fireRequest(url) {
         this.clearRecords = true;

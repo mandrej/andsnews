@@ -115,11 +115,6 @@
         this.addEventListener('online', this._checkNet);
         this.addEventListener('current', this.currentChange);
       }
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('online', this._checkNet);
-        this.removeEventListener('current', this.currentChange);
-      }
       currentChange(e) {
         this.current = e.detail;
       }

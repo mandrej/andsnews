@@ -126,11 +126,6 @@
           'notFound(error.status)',
         ]
       }
-      notFound(status) {
-        if (status === 404) {
-          this.set('route.path', '/notfound');
-        }
-      }
       connectedCallback() {
         super.connectedCallback();
         const form = this.$.editForm;
@@ -161,7 +156,7 @@
         }
       }
       listTags(e) {
-        e.detail.response.forEach((tag) => {
+        e.detail.response.forEach(tag => {
           this.push('tags', {text: tag, value: tag});
         });
       }
@@ -188,6 +183,11 @@
           toast.setAttribute('text', 'Update failed');
         }
         toast.open();
+      }
+      notFound(status) {
+        if (status === 404) {
+          this.set('route.path', '/notfound');
+        }
       }
       goBack() {
         window.history.back();

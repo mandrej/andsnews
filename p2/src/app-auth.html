@@ -35,16 +35,20 @@
       static get is() { return 'app-auth'; }
       static get properties() {
         return {
-          state: { type: Object, value: {
-            name: null,
-            email: null,
-            isAuthorized: false,
-            isAdmin: false
-          }, notify: true },
+          state: { type: Object, value: {}, notify: true },
           admins: { type: Array, value: [
             'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',       // milan
             'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'] },    // mihailo
         };
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.state = {
+          name: null,
+          email: null,
+          isAuthorized: false,
+          isAdmin: false
+        }
       }
       static get observers() {
         return [

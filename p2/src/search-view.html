@@ -118,17 +118,13 @@
         };
         this.$.findForm.addEventListener('iron-form-submit', e => this._submit(e));
       }
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('iron-form-submit', this._submit);
-      }
       listTags(e) {
-        e.detail.response.forEach((tag) => {
+        e.detail.response.forEach(tag => {
           this.push('tags', {text: tag, value: tag});
         });
       }
       listModels(e) {
-        e.detail.response.forEach((model) => {
+        e.detail.response.forEach(model => {
           this.push('models', model);
         });
       }
@@ -150,7 +146,7 @@
       }
       _submit(e) {
         let params = [];
-        this.$.tags.items.forEach((tag) => {
+        this.$.tags.items.forEach(tag => {
           params.push('tags:' + tag);
         })
         if (e.detail.find_text) {
