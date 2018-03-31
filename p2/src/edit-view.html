@@ -70,8 +70,10 @@
       <paper-toast id="toast" on-iron-overlay-closed="goBack"></paper-toast>
 
       <template is="dom-if" if="[[state.isAuthorized]]" restamp>
-        <iron-form id="editForm">
-          <form action$="/api/[[item.kind]]/edit/[[item.safekey]]" method="put">
+        <iron-form id="editForm"
+          on-iron-form-presubmit="_preSubmit"
+          on-iron-form-response="_responseHandler">
+          <form method="put" action$="/api/[[item.kind]]/edit/[[item.safekey]]">
             <div class="buttons" style$="[[checkImage(item)]]">
               <paper-button on-tap="_submit" raised>Submit</paper-button>
             </div>
@@ -126,19 +128,6 @@
           'notFound(error.status)',
         ]
       }
-      connectedCallback() {
-        super.connectedCallback();
-        const form = this.$.editForm;
-        if (form) {
-          form.addEventListener('iron-form-presubmit', this._preSubmit);
-          form.addEventListener('iron-form-response', e => this._responseHandler(e));
-        }
-      }
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('iron-form-presubmit', this._preSubmit);
-        this.removeEventListener('iron-form-response', this._responseHandler);
-      }
       _url(path, safekey, current) {
         if (!/^\/edit/.test(path)) return;
 
@@ -160,9 +149,9 @@
           this.push('tags', {text: tag, value: tag});
         });
       }
-      _preSubmit() {
-        const form = this.$.editForm,
-          tags = this.$.tags.items;
+      _preSubmit(e) {
+        const form = e.target,
+          tags = this.shadowRoot.querySelector('#tags').items;
 
         if (this.current) {
           form.request.params['tags'] = tags;
@@ -171,7 +160,7 @@
         form.request.params['tags'] = tags.join(',');
       }
       _submit() {
-        this.$.editForm.submit();
+        this.shadowRoot.querySelector('#editForm').submit();
       }
       _responseHandler(e) {
         const res = e.detail.xhr.response,
