@@ -76,7 +76,7 @@
     class AddView extends Polymer.Element {
       static get is() { return 'add-view'; }
       _uploadResponse(e) {
-        const res = e.detail.xhr.response,
+        const res = JSON.parse(e.detail.xhr.response),
           toast = this.$.toast;
         if (res.success) {
           toast.setAttribute('text', 'Image successfully uploaded');

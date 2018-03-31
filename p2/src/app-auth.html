@@ -46,6 +46,7 @@
         this.state = {
           name: null,
           email: null,
+          uid: null,
           isAuthorized: false,
           isAdmin: false
         }
@@ -62,6 +63,7 @@
           this.state = {
             name: null,
             email: null,
+            uid: null,
             isAuthorized: false,
             isAdmin: false
           };
@@ -71,6 +73,7 @@
               this.state = {
                 name: response.user.displayName,
                 email: response.user.email,
+                uid: response.user.uid,
                 isAuthorized: true,
                 isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
               }
