@@ -1,11 +1,19 @@
 <link rel="import" href="../bower_components/vaadin-material-theme/vaadin-button.html">
 <link rel="import" href="../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <dom-module id="vaadin-upload-style" theme-for="vaadin-upload">
   <template>
     <style include="iron-flex">
       :host {
+        padding: 20px;
+        background:var(--divider-color);
+      }
+      [part="upload-button"] {
         color: var(--text-primary-color);
+        padding: 0.7em 0.57em;
       }
       [part="drop-label"] {
         @apply --layout-center;
@@ -36,10 +44,39 @@
         margin: var(--user-gap) calc(-1 * var(--user-gap)) 0;
         padding: var(--user-gap);
       }
+      iron-list {
+        --iron-list-items-container: {
+          margin-bottom: 20px;
+        };
+      }
+      .item {
+        @apply --layout-horizontal;
+        padding: 20px;
+        background:var(--divider-color);
+        border-bottom: 8px solid #fff;
+      }
+      .avatar {
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        background-color: var(--secondary-text-color);
+      }
+      .pad {
+        padding: 0 16px;
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }
       @media (max-width: 1200px) { .container { margin: 0; }}
     </style>
 
     <app-localstorage-document key="state" data="{{state}}"></app-localstorage-document>
+
+    <iron-ajax id="ajax"
+      url="{{url}}"
+      on-response="handler"></iron-ajax>
+
+    <iron-ajax id="delete_ajax" method="DELETE"></iron-ajax>
 
     <app-header fixed slot="header">
       <app-toolbar>
@@ -60,7 +97,24 @@
           <iron-icon slot="drop-label-icon" icon="cloud-upload"></iron-icon>
           <span slot="drop-label">&nbsp;Drop files to the cloud&hellip;</span>
         </vaadin-upload>
-        <p>See <a href="/list/tags/new">new uploaded files</a> and continue editing.</p>
+
+        <h2>New uploaded files</h2>
+        <iron-list id="list"
+          mutable-data
+          items="{{items}}" as="rec">
+          <template>
+            <div class="item" elevation="1">
+              <iron-image class="avatar" sizing="contain" src="[[rec.serving_url]]=s400-c"></iron-image>
+              <div class="pad">
+                <strong>[[rec.headline]]</strong>
+                <span>[[_dateFormat(rec.date)]]</span>
+              </div>
+              <paper-button on-tap="deleteRecord" raised>Remove</paper-button>
+              <paper-button on-tap="showEdit" raised>Edit</paper-button>
+            </div>
+          </template>
+        </iron-list>
+
       </template>
       <template is="dom-if" if="[[!state.isAuthorized]]">
         <div>
@@ -75,17 +129,53 @@
   <script>
     class AddView extends Polymer.Element {
       static get is() { return 'add-view'; }
+      static get properties() {
+        return {
+          url: String,
+          items: { type: Array, value: [], notify: true },
+        };
+      }
+      static get observers() {
+        return [
+          '_setUrl(route.path)',
+        ]
+      }
       _uploadResponse(e) {
-        const res = JSON.parse(e.detail.xhr.response),
-          toast = this.$.toast;
+        const res = JSON.parse(e.detail.xhr.response);
         if (res.success) {
-          toast.setAttribute('text', 'Image successfully uploaded');
-          this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: res.rec}));
-          toast.open();
+          this.push('items', res.rec);
+          this.shadowRoot.querySelector('#list').notifyResize();
         } else {
+          const toast = this.$.toast
           toast.setAttribute('text', res.message);
           toast.open();
         }
+      }
+      _setUrl(path) {
+        if (!/^\/add/.test(path)) return;
+        const ajax = this.$.ajax;
+        ajax.url = '/api/photo/tags/new';
+        ajax.generateRequest();
+      }
+      handler(e) {
+        this.set('items', []);
+        const data = e.detail.response;
+        data.objects.forEach(item => {
+          this.push('items', item);
+        });
+      }
+      showEdit(e) {
+        this.dispatchEvent(new CustomEvent('current', {bubbles: true, composed: true, detail: e.model.rec}));
+        this.set('route.path', ['/edit', e.model.rec.safekey].join('/'));
+      }
+      deleteRecord(e) {
+        const obj = this.splice('items', e.model.index, 1)[0];
+        const xhr = this.$.delete_ajax;
+        xhr.url = '/api/delete/' + obj.safekey;
+        xhr.generateRequest();
+      }
+      _dateFormat(str) {
+        return moment(str, 'YYYY-MM-DDTHH:mm:ss').format('llll');
       }
       goBack() {
         window.history.back();
