@@ -15,8 +15,9 @@ export default new Vuex.Store({
     loading: true
   },
   actions: {
-    loadData ({commit}) {
-      axios.get(URL + 'start').then((response) => {
+    loadData ({commit}, next) {
+      const params = (next && next !== this.state.next) ? { _page: next } : {}
+      axios.get(URL + 'start', params).then((response) => {
         // console.log(response.data, this)
         commit('updateRecords', response.data)
         commit('changeLoadingState', false)
@@ -25,7 +26,7 @@ export default new Vuex.Store({
   },
   mutations: {
     updateRecords (state, data) {
-      state.objects = data.objects
+      state.objects = state.objects.concat(data.objects)
       state.page = data._page
       state.next = data._next
     },

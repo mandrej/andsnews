@@ -7,7 +7,7 @@
 
       <md-app-content>
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-medium-size-33 md-large-size-25"
+          <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-medium-size-33 md-large-size-25 md-size-20"
             v-for="item in objects" :key="item.safekey">
             <md-card>
               <md-card-media-cover md-solid>
@@ -23,6 +23,7 @@
               </md-card-media-cover>
             </md-card>
           </div>
+          <infinite-loading @infinite="infiniteHandler"></infinite-loading>
         </div>
       </md-app-content>
     </md-app>
@@ -32,6 +33,7 @@
 <script>
 import Vuex from 'vuex'
 import store from '../store'
+import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   name: 'Home',
@@ -40,13 +42,18 @@ export default {
       msg: 'ANDS'
     }
   },
-  computed: Vuex.mapState(['objects', 'page', 'next', 'loading']),
   store,
+  computed: Vuex.mapState(['objects', 'page', 'next', 'loading']),
   created () {
     // console.log(this.$store)
     this.$store.dispatch('loadData') // dispatch loading
   },
   methods: {
+    infiniteHandler ($state) {
+      // console.log($state)
+      this.$store.dispatch('loadData', this.next)
+      $state.loaded()
+    },
     findImage (rec) {
       if (rec && rec.serving_url) {
         if (process.env.NODE_ENV === 'development') {
@@ -58,6 +65,9 @@ export default {
         return '/static/broken.svg'
       }
     }
+  },
+  components: {
+    InfiniteLoading
   }
 }
 </script>
