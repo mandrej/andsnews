@@ -2,7 +2,7 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
-        <span class="md-title">{{msg}}</span>
+        <span class="md-title">{{title}}</span>
       </md-app-toolbar>
 
       <md-app-content>
@@ -23,7 +23,11 @@
               </md-card-media-cover>
             </md-card>
           </div>
-          <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+          <infinite-loading @infinite="infiniteHandler"
+            force-use-infinite-wrapper="true" :distance="distance" ref="infiniteLoading">
+            <span slot="no-results">No results</span>
+            <span slot="no-more">No more</span>
+          </infinite-loading>
         </div>
       </md-app-content>
     </md-app>
@@ -39,20 +43,24 @@ export default {
   name: 'Home',
   data () {
     return {
-      msg: 'ANDS'
+      title: 'ANDS',
+      distance: 100
     }
   },
   store,
   computed: Vuex.mapState(['objects', 'page', 'next', 'loading']),
   created () {
-    // console.log(this.$store)
+    // this.$store.dispatch('resetData')
     this.$store.dispatch('loadData') // dispatch loading
   },
   methods: {
     infiniteHandler ($state) {
-      // console.log($state)
-      this.$store.dispatch('loadData', this.next)
-      $state.loaded()
+      if (this.next && !this.loading) {
+        this.$store.dispatch('loadData', this.next)
+        $state.loaded()
+      } else {
+        $state.complete()
+      }
     },
     findImage (rec) {
       if (rec && rec.serving_url) {
@@ -74,6 +82,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+// md-app-content {
+//   max-height: 100%;
+// }
 .md-card {
   width: 100%;
   margin: 0 0 16px;
