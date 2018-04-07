@@ -17,11 +17,14 @@ export default new Vuex.Store({
     next: null,
     loading: false
   },
+  getters: {
+    record: state => state.current
+  },
   actions: {
     // resetData ({commit}) {
     //   commit('resetState')
     // },
-    getData ({commit}, id) {
+    getRecord ({commit}, id) {
       const obj = this.state.objects.filter(item => item.safekey === id)
       if (obj.length === 1) {
         console.log('found: ', obj[0])
@@ -37,7 +40,7 @@ export default new Vuex.Store({
           })
       }
     },
-    loadData ({commit}, next) {
+    loadList ({commit}, next) {
       commit('changeLoadingState', true)
       const params = (next && next === this.state.next) ? { _page: next } : {}
       axios.get(URL + 'start', {params: params}).then(response => {
@@ -57,6 +60,7 @@ export default new Vuex.Store({
     //   state.loading = false
     // },
     updateCurrent (state, data) {
+      console.log('updateCurrent', +new Date())
       state.current = data
     },
     updateRecords (state, data) {

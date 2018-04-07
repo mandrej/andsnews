@@ -23,8 +23,10 @@
               </md-card-media-cover>
               <md-card-actions>
                 <md-button>Delete</md-button>
-                <md-button>Edit</md-button>
-                <router-link :to="{ name: 'Item', params: { id: item.safekey }}">
+                <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
+                  <md-button>Edit</md-button>
+                </router-link>
+                <router-link :to="{ name: 'item', params: { id: item.safekey }}">
                   <md-button>View</md-button>
                 </router-link>
               </md-card-actions>
@@ -41,7 +43,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex'
+import { mapState } from 'vuex'
 import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
@@ -52,15 +54,17 @@ export default {
       distance: 100
     }
   },
-  computed: Vuex.mapState(['objects', 'page', 'next', 'loading']),
   created () {
     // this.$store.dispatch('resetData')
-    this.$store.dispatch('loadData') // dispatch loading
+    this.$store.dispatch('loadList') // dispatch loading
+  },
+  computed: {
+    ...mapState(['objects', 'page', 'next', 'loading'])
   },
   methods: {
     infiniteHandler ($state) {
       if (this.next && !this.loading) {
-        this.$store.dispatch('loadData', this.next)
+        this.$store.dispatch('loadList', this.next)
         $state.loaded()
       } else {
         $state.complete()
