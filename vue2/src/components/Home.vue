@@ -6,84 +6,69 @@
       </md-app-toolbar>
 
       <md-app-content>
-        <div class="md-layout md-gutter">
-          <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-medium-size-33 md-large-size-25 md-size-20"
-            v-for="item in objects" :key="item.safekey">
-            <md-card>
-              <md-card-media-cover md-solid>
-                <md-card-media md-ratio="1/1">
-                  <img :src="src(item)" :alt="`${item.slug}`">
-                </md-card-media>
-                <md-card-area>
-                  <md-card-header>
-                    <span class="md-title">{{item.headline}}</span>
-                    <span class="md-subhead">{{item.date}}</span>
-                  </md-card-header>
-                </md-card-area>
-              </md-card-media-cover>
-              <md-card-actions>
-                <md-button>Delete</md-button>
-                <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
-                  <md-button>Edit</md-button>
-                </router-link>
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+          <div class="grid">
+            <div v-masonry transition-duration="0.3s" item-selector=".grid-item"
+              horizontal-order="true" column-width=".grid-sizer" gutter=".gutter-sizer">
+              <div class="grid-sizer"></div>
+              <div class="gutter-sizer"></div>
+              <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
                 <router-link :to="{ name: 'item', params: { id: item.safekey }}">
-                  <md-button>View</md-button>
+                  <img :src="src(item)" :alt="`${item.slug}`" class="md-elevation-1">
                 </router-link>
-              </md-card-actions>
-            </md-card>
+              </div>
+            </div>
           </div>
-          <infinite-loading @infinite="infiniteHandler" :distance="distance" ref="infiniteLoading">
-            <span slot="no-results">No results</span>
-            <span slot="no-more">No more</span>
-          </infinite-loading>
         </div>
       </md-app-content>
+      <!-- <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
+        <md-button>Edit</md-button>
+      </router-link> -->
     </md-app>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
-import InfiniteLoading from 'vue-infinite-loading'
+import { VueMasonryPlugin } from 'vue-masonry'
+import infiniteScroll from 'vue-infinite-scroll'
+
+Vue.use(VueMasonryPlugin, infiniteScroll)
 
 export default {
   name: 'Home',
   data () {
     return {
-      title: 'ANDS',
-      distance: 100
+      title: 'ANDS'
     }
   },
   created () {
-    // this.$store.dispatch('resetData')
-    this.$store.dispatch('loadList') // dispatch loading
+    this.$store.dispatch('loadList')
   },
   computed: {
     ...mapState(['objects', 'page', 'next', 'loading'])
   },
   methods: {
-    infiniteHandler ($state) {
-      if (this.next && !this.loading) {
+    loadMore () {
+      if (this.next) {
         this.$store.dispatch('loadList', this.next)
-        $state.loaded()
-      } else {
-        $state.complete()
       }
     },
     src (rec) {
       if (rec && rec.serving_url) {
         if (process.env.NODE_ENV === 'development') {
-          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400-c'
+          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400'
         } else {
-          return rec.serving_url + '=s400-c'
+          return rec.serving_url + '=s400'
         }
       } else {
         return '/static/broken.svg'
       }
     }
   },
-  components: {
-    InfiniteLoading
+  directives: {
+    infiniteScroll
   }
 }
 </script>
@@ -91,12 +76,30 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .md-app {
-  max-height: 100vh;
+  height: 1200px;
 }
-.md-card {
-  width: 100%;
-  margin: 0 0 16px;
-  display: inline-block;
-  vertical-align: top;
+.grid {
+  margin: -16px -16px 0 0;
+  // &:after {
+  //   content: '';
+  //   display: block;
+  //   clear: both;
+  // }
+}
+.grid-sizer, .grid-item {
+  margin-bottom: 16px;
+  width: calc(100% / 4 - 16px);
+  @media (max-width: 600px) {
+    width: calc(100% - 16px);
+  }
+  @media (max-width: 960px) {
+    width: calc(100% / 2 - 16px);
+  }
+  @media (max-width: 1280px) {
+    width: calc(100% / 3 - 16px);
+  }
+}
+.gutter-sizer {
+  width: 16px;
 }
 </style>

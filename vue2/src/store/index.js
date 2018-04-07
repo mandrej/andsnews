@@ -2,8 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-// import _union from 'lodash/union'
-// import _ from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 
 Vue.use(Vuex, VueAxios, axios)
 
@@ -64,10 +63,8 @@ export default new Vuex.Store({
       state.current = data
     },
     updateRecords (state, data) {
-      state.objects = state.objects.concat(data.objects)
-      // const objects = _.union(state.objects, data.objects, (item) => {
-      // })
-      // state.objects = objects
+      const merged = state.objects.concat(data.objects)
+      state.objects = uniqBy(merged, p => p.safekey)
       state.page = data._page
       state.next = data._next
     },
