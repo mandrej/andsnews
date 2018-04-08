@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import uniqBy from 'lodash/uniqBy'
+// import uniqBy from 'lodash/uniqBy'
 
 Vue.use(Vuex, VueAxios, axios)
 
@@ -16,9 +16,9 @@ export default new Vuex.Store({
     next: null,
     loading: false
   },
-  getters: {
-    record: state => state.current
-  },
+  // getters: {
+  //   record: state => state.current
+  // },
   actions: {
     // resetData ({commit}) {
     //   commit('resetState')
@@ -40,8 +40,8 @@ export default new Vuex.Store({
       }
     },
     loadList ({commit}, next) {
-      commit('changeLoadingState', true)
       const params = (next && next === this.state.next) ? { _page: next } : {}
+      commit('changeLoadingState', true)
       axios.get(URL + 'start', {params: params}).then(response => {
         commit('updateRecords', response.data)
         commit('changeLoadingState', false)
@@ -63,8 +63,9 @@ export default new Vuex.Store({
       state.current = data
     },
     updateRecords (state, data) {
-      const merged = state.objects.concat(data.objects)
-      state.objects = uniqBy(merged, p => p.safekey)
+      state.objects = state.objects.concat(data.objects)
+      // const merged = state.objects.concat(data.objects)
+      // state.objects = uniqBy(merged, p => p.safekey)
       state.page = data._page
       state.next = data._next
     },

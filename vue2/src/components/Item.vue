@@ -6,7 +6,7 @@
       </md-app-toolbar>
 
       <md-app-content>
-        <img :src="`${src}`" :alt="`${alt}`">
+        <img :src="src" :alt="alt">
       </md-app-content>
     </md-app>
   </div>
