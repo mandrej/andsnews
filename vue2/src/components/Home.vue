@@ -49,12 +49,10 @@ Vue.use(VueMasonryPlugin, infiniteScroll)
 
 export default {
   name: 'Home',
-  data () {
-    return {
-      title: 'ANDрејевићи',
-      distance: 1200
-    }
-  },
+  data: () => ({
+    title: 'ANDрејевићи',
+    distance: 1200
+  }),
   computed: {
     ...mapState(['objects', 'page', 'next', 'loading'])
   },

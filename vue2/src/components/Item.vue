@@ -17,13 +17,11 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Item',
-  data () {
-    return {
-      src: '/static/broken.svg',
-      alt: '',
-      title: 'Not found'
-    }
-  },
+  data: () => ({
+    src: '/static/broken.svg',
+    alt: '',
+    title: 'Not found'
+  }),
   created () {
     this.$store.dispatch('getRecord', this.$route.params.id)
   },

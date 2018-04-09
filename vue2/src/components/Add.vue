@@ -19,11 +19,9 @@
 
 export default {
   name: 'Add',
-  data () {
-    return {
-      multiple: null
-    }
-  }
+  data: () => ({
+    multiple: null
+  })
 }
 </script>
 

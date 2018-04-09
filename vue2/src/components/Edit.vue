@@ -81,19 +81,17 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Edit',
-  data () {
-    return {
-      rec: {},
-      authors: [
-        'milan.andrejevic@gmail.com',
-        'mihailo.genije@gmail.com',
-        'svetlana.andrejevic@gmail.com',
-        'ana.devic@gmail.com',
-        'dannytaboo@gmail.com',
-        'zile.zikson@gmail.com'
-      ]
-    }
-  },
+  data: () => ({
+    rec: {},
+    authors: [
+      'milan.andrejevic@gmail.com',
+      'mihailo.genije@gmail.com',
+      'svetlana.andrejevic@gmail.com',
+      'ana.devic@gmail.com',
+      'dannytaboo@gmail.com',
+      'zile.zikson@gmail.com'
+    ]
+  }),
   created () {
     this.$store.dispatch('getRecord', this.$route.params.id)
   },
