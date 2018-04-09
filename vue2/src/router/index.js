@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Item from '@/components/Item'
+import Add from '@/components/Add'
 import Edit from '@/components/Edit'
 
 Vue.use(Router)
@@ -22,6 +23,11 @@ export default new Router({
       component: Home
     },
     {
+      path: '/add',
+      name: 'add',
+      component: Add
+    },
+    {
       path: '/view/:id',
       name: 'item',
       component: Item
@@ -29,7 +35,10 @@ export default new Router({
     {
       path: '/edit/:id',
       name: 'edit',
-      component: Edit
+      component: Edit,
+      meta: {
+        back: 'home'
+      }
     }
   ]
 })

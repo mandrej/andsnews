@@ -260,15 +260,25 @@ class Crud(RestHandler):
             self.abort(404)
         obj = key.get()
 
-        data = dict(self.request.params)
-        # fix tags
-        if 'tags' in data:
-            if data['tags'].strip() != '':
-                tags = map(unicode.strip, data['tags'].split(','))
+        client = self.request.headers.get('client', None)
+        if (client == 'vue2'):
+            data = json.loads(self.request.body)  # TODO vue2
+            # fix tags
+            if 'tags' in data:
+                tags = data['tags']
             else:
                 tags = []
         else:
-            tags = []
+            data = dict(self.request.params)  # TODO polymer
+            # fix tags
+            if 'tags' in data:
+                if data['tags'].strip() != '':
+                    tags = map(unicode.strip, data['tags'].split(','))
+                else:
+                    tags = []
+            else:
+                tags = []
+
         data['tags'] = sorted(tags)
         # fix author
         if 'author' in data:

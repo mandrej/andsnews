@@ -1,12 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 import VueAxios from 'vue-axios'
+import { HTTP } from '../../config/http'
 // import uniqBy from 'lodash/uniqBy'
 
-Vue.use(Vuex, VueAxios, axios)
-
-const URL = '/api/'
+Vue.use(Vuex, VueAxios)
 
 export default new Vuex.Store({
   state: {
@@ -23,16 +21,23 @@ export default new Vuex.Store({
     // resetData ({commit}) {
     //   commit('resetState')
     // },
+    saveRecord ({commit}, id) {
+      HTTP.put('photo/edit/' + id, this.state.current)
+        .then(response => {
+          commit('changeCurrent', response.data.rec)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
     getRecord ({commit}, id) {
       const obj = this.state.objects.filter(item => item.safekey === id)
       if (obj.length === 1) {
-        console.log('found: ', obj[0])
-        commit('updateCurrent', obj[0])
+        commit('changeCurrent', obj[0])
       } else {
-        axios.get(URL + id)
+        HTTP.get(id)
           .then(response => {
-            console.log('axios: ', response.data)
-            commit('updateCurrent', response.data)
+            commit('changeCurrent', response.data)
           })
           .catch(e => {
             console.log(e)
@@ -40,9 +45,9 @@ export default new Vuex.Store({
       }
     },
     loadList ({commit}, next) {
-      const params = (next && next === this.state.next) ? { _page: next } : {}
+      const params = (next) ? { _page: next } : {}
       commit('changeLoadingState', true)
-      axios.get(URL + 'start', {params: params}).then(response => {
+      HTTP.get('start', {params: params}).then(response => {
         commit('updateRecords', response.data)
         commit('changeLoadingState', false)
       }).catch(e => {
@@ -58,8 +63,7 @@ export default new Vuex.Store({
     //   state.next = null
     //   state.loading = false
     // },
-    updateCurrent (state, data) {
-      console.log('updateCurrent', +new Date())
+    changeCurrent (state, data) {
       state.current = data
     },
     updateRecords (state, data) {

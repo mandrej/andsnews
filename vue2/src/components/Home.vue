@@ -24,6 +24,7 @@
                     <div class="md-subhead">{{item.date}}</div>
                   </md-card-header>
                   <md-card-actions>
+                    <md-button>Delete</md-button>
                     <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
                       <md-button>Edit</md-button>
                     </router-link>
@@ -51,7 +52,7 @@ export default {
   data () {
     return {
       title: 'ANDрејевићи',
-      distance: 200
+      distance: 1200
     }
   },
   computed: {
