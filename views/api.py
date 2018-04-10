@@ -248,11 +248,11 @@ class Crud(RestHandler):
         self.render(key.get())
 
     def post(self, kind=None):
+        logging.error(self.request.params)
         client = self.request.headers.get('client', None)
         if kind == 'photo':
             if (client == 'vue2'):
-                data = self.request.body  # <type 'str'>
-                fs = data
+                # data = self.request.body  # <type 'str'>
                 # obj = Photo(headline=fs.filename)
                 # res = obj.add(fs)
                 # self.render(res)
