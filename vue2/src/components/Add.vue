@@ -8,7 +8,7 @@
       <md-app-content>
         <md-field>
           <label>Upload images</label>
-          <md-file v-model="multiple" multiple accept="image/*" />
+          <md-file v-model="multiple" @change="processFiles" multiple accept="image/*" />
         </md-field>
       </md-app-content>
     </md-app>
@@ -21,7 +21,13 @@ export default {
   name: 'Add',
   data: () => ({
     multiple: null
-  })
+  }),
+  methods: {
+    processFiles (e) {
+      // console.log(e.target.files)
+      this.$store.dispatch('uploadList', e.target.files)
+    }
+  }
 }
 </script>
 

@@ -2,6 +2,7 @@ import datetime
 import json
 import time
 from urlparse import urlparse
+import logging
 
 import webapp2
 from google.appengine.api import users, search, datastore_errors
@@ -247,12 +248,21 @@ class Crud(RestHandler):
         self.render(key.get())
 
     def post(self, kind=None):
-        data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
+        client = self.request.headers.get('client', None)
         if kind == 'photo':
-            fs = data['file']
-            obj = Photo(headline=fs.filename)
-            res = obj.add(fs)
-            self.render(res)
+            if (client == 'vue2'):
+                data = self.request.body  # <type 'str'>
+                fs = data
+                # obj = Photo(headline=fs.filename)
+                # res = obj.add(fs)
+                # self.render(res)
+                self.render({'success': True})
+            else:
+                data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
+                fs = data['file']
+                obj = Photo(headline=fs.filename)
+                res = obj.add(fs)
+                self.render(res)
 
     def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)

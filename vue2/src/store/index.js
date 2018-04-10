@@ -12,7 +12,8 @@ export default new Vuex.Store({
     current: null,
     page: null,
     next: null,
-    loading: false
+    loading: false,
+    uploaded: []
   },
   // getters: {
   //   record: state => state.current
@@ -42,6 +43,21 @@ export default new Vuex.Store({
           .catch(e => {
             console.log(e)
           })
+      }
+    },
+    uploadList ({commit}, list) {
+      const $list = list
+      const upload = item => {
+        HTTP.post('photo/add', item)
+          .then(response => {
+            commit('updateUploaded', response.data)
+          })
+          .catch(e => {
+            console.log(e)
+          })
+      }
+      for (let i = 0; i < $list.length; i++) {
+        upload($list[i])
       }
     },
     loadList ({commit}, next) {
@@ -75,6 +91,9 @@ export default new Vuex.Store({
     },
     changeLoadingState (state, loading) {
       state.loading = loading
+    },
+    updateUploaded (state, data) {
+      state.uploaded.push(data)
     }
   }
 })
