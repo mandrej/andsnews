@@ -67,12 +67,15 @@ export default {
     upload (formData) {
       // HTTP.post('photo/add', {content: formData}, {headers: {'Content-Type': 'multipart/form-data'}})
       HTTP.post('photo/add', formData)
-        .then(response => response.data) // list
-        .then(list => list.map(item => {
-          this.uploadedFiles.push(...[item.rec])
-          this.currentStatus = STATUS_SUCCESS
-          this.$store.dispatch('uploadList', item.rec)
-        }))
+        .then(x => x.data) // list
+        .then(x => x.map(
+          // item => Object.assign({}, item.rec, {url: `${item.rec.filename}`})
+          item => {
+            console.log(item.rec)
+            this.uploadedFiles.push(item.rec)
+            this.currentStatus = STATUS_SUCCESS
+          }
+        ))
         .catch(err => {
           this.uploadError = err.response
           this.currentStatus = STATUS_FAILED
@@ -83,11 +86,14 @@ export default {
       this.currentStatus = STATUS_SAVING
 
       this.upload(formData)
+      // doesn't wait !!!
+      this.$store.dispatch('uploadList', this.uploadedFiles)
 
       // .then(x => console.log(x))
-      // .then(x => {
-      //   this.uploadedFiles = [].concat(x)
+      // .then(rec => {
+      //   this.uploadedFiles = [].concat(rec)
       //   this.currentStatus = STATUS_SUCCESS
+      //   // this.$store.dispatch('uploadList', rec)
       // })
       // .catch(err => {
       //   this.uploadError = err.response

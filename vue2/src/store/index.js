@@ -45,8 +45,8 @@ export default new Vuex.Store({
           })
       }
     },
-    uploadList ({commit}, obj) {
-      commit('updateUploaded', obj)
+    uploadList ({commit}, list) {
+      commit('updateUploaded', list)
     },
     loadList ({commit}, next) {
       const params = (next) ? { _page: next } : {}
@@ -81,7 +81,7 @@ export default new Vuex.Store({
       state.loading = loading
     },
     updateUploaded (state, data) {
-      state.uploaded.push(...[data])
+      state.uploaded = state.uploaded.concat(data)
     }
   }
 })

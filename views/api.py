@@ -256,7 +256,8 @@ class Crud(RestHandler):
                 for fs in self.request.POST.getall('photos'):
                     obj = Photo(headline=fs.filename)
                     res = obj.add(fs)
-                    self.render(res)
+                    resList.append(res)
+                self.render(resList)
             else:
                 data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
                 fs = data['file']
