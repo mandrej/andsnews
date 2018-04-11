@@ -248,21 +248,22 @@ class Crud(RestHandler):
         self.render(key.get())
 
     def post(self, kind=None):
-        logging.error(self.request.params)
         client = self.request.headers.get('client', None)
         if kind == 'photo':
+            resList = []
             if (client == 'vue2'):
-                # data = self.request.body  # <type 'str'>
-                # obj = Photo(headline=fs.filename)
-                # res = obj.add(fs)
-                # self.render(res)
-                self.render({'success': True})
+                # {'photos', FieldStorage('photos', u'light-rain.jpg')}
+                for fs in self.request.POST.getall('photos'):
+                    obj = Photo(headline=fs.filename)
+                    res = obj.add(fs)
+                    self.render(res)
             else:
                 data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
                 fs = data['file']
                 obj = Photo(headline=fs.filename)
                 res = obj.add(fs)
-                self.render(res)
+                resList.append(res)
+                self.render(resList)
 
     def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)

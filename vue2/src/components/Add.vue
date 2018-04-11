@@ -7,8 +7,7 @@
 
       <md-app-content>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-        <!-- <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving"> -->
-        <form enctype="multipart/form-data" novalidate>
+        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
           <h1>Upload images</h1>
           <div class="dropbox">
             <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
@@ -26,6 +25,8 @@
 </template>
 
 <script>
+import { HTTP } from '../../config/http'
+
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2
@@ -39,6 +40,9 @@ export default {
     currentStatus: null,
     uploadFieldName: 'photos'
   }),
+  mounted () {
+    this.reset()
+  },
   computed: {
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
@@ -61,31 +65,40 @@ export default {
       this.uploadError = null
     },
     upload (formData) {
-      console.log(formData)
-      // this.$store.dispatch('uploadList', formData)
+      // HTTP.post('photo/add', {content: formData}, {headers: {'Content-Type': 'multipart/form-data'}})
+      HTTP.post('photo/add', formData)
+        .then(response => response.data) // list
+        .then(list => list.map(item => {
+          this.uploadedFiles.push(...[item.rec])
+          this.currentStatus = STATUS_SUCCESS
+          this.$store.dispatch('uploadList', item.rec)
+        }))
+        .catch(err => {
+          this.uploadError = err.response
+          this.currentStatus = STATUS_FAILED
+        })
     },
     save (formData) {
       // upload data to the server
       this.currentStatus = STATUS_SAVING
-      console.log(formData)
 
-      // this.upload(formData)
-      //   .then(x => {
-      //     this.uploadedFiles = [].concat(x)
-      //     this.currentStatus = STATUS_SUCCESS
-      //   })
-      //   .catch(err => {
-      //     this.uploadError = err.response
-      //     this.currentStatus = STATUS_FAILED
-      //   })
+      this.upload(formData)
+
+      // .then(x => console.log(x))
+      // .then(x => {
+      //   this.uploadedFiles = [].concat(x)
+      //   this.currentStatus = STATUS_SUCCESS
+      // })
+      // .catch(err => {
+      //   this.uploadError = err.response
+      //   this.currentStatus = STATUS_FAILED
+      // })
     },
     filesChange (fieldName, fileList) {
       // handle file changes
       const formData = new FormData()
-
       if (!fileList.length) return
 
-      // append the files to FormData
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
@@ -94,9 +107,6 @@ export default {
 
       // save it
       this.save(formData)
-    },
-    mounted () {
-      this.reset()
     }
   }
 }

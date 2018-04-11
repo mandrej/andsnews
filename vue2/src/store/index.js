@@ -45,27 +45,8 @@ export default new Vuex.Store({
           })
       }
     },
-    uploadList ({commit}, formData) {
-      HTTP.post('photo/add', formData)
-        .then(response => {
-          commit('updateUploaded', response.data)
-        })
-        .catch(e => {
-          console.log(e)
-        })
-      // const $list = list
-      // const upload = item => {
-      //   HTTP.post('photo/add', item, config)
-      //     .then(response => {
-      //       commit('updateUploaded', response.data)
-      //     })
-      //     .catch(e => {
-      //       console.log(e)
-      //     })
-      // }
-      // for (let i = 0; i < $list.length; i++) {
-      //   upload($list[i])
-      // }
+    uploadList ({commit}, obj) {
+      commit('updateUploaded', obj)
     },
     loadList ({commit}, next) {
       const params = (next) ? { _page: next } : {}
@@ -100,7 +81,7 @@ export default new Vuex.Store({
       state.loading = loading
     },
     updateUploaded (state, data) {
-      state.uploaded.push(data)
+      state.uploaded.push(...[data])
     }
   }
 })
