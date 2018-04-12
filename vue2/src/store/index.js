@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../config/http'
 // import uniqBy from 'lodash/uniqBy'
@@ -7,6 +8,7 @@ import { HTTP } from '../../config/http'
 Vue.use(Vuex, VueAxios)
 
 export default new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
     objects: [],
     current: null,
@@ -16,16 +18,24 @@ export default new Vuex.Store({
     uploaded: []
   },
   // getters: {
-  //   record: state => state.current
   // },
   actions: {
-    // resetData ({commit}) {
-    //   commit('resetState')
-    // },
+    changeCurrent ({commit}, obj) {
+      commit('updateCurrent', obj)
+    },
+    changeRecords ({commit}, obj) {
+      commit('removeFromRecords', obj)
+    },
+    changeUploaded ({commit}, obj) {
+      commit('removeFromUploaded', obj)
+    },
     saveRecord ({commit}, id) {
       HTTP.put('photo/edit/' + id, this.state.current)
         .then(response => {
-          commit('changeCurrent', response.data.rec)
+          const obj = response.data.rec
+          commit('updateCurrent', obj)
+          commit('removeFromRecords', obj)
+          commit('removeFromUploaded', obj)
         })
         .catch(e => {
           console.log(e)
@@ -34,19 +44,19 @@ export default new Vuex.Store({
     getRecord ({commit}, id) {
       const obj = this.state.objects.filter(item => item.safekey === id)
       if (obj.length === 1) {
-        commit('changeCurrent', obj[0])
+        commit('updateCurrent', obj[0])
       } else {
         HTTP.get(id)
           .then(response => {
-            commit('changeCurrent', response.data)
+            commit('updateCurrent', response.data)
           })
           .catch(e => {
             console.log(e)
           })
       }
     },
-    uploadList ({commit}, list) {
-      commit('updateUploaded', list)
+    uploadList ({commit}, obj) {
+      commit('updateUploaded', obj)
     },
     loadList ({commit}, next) {
       const params = (next) ? { _page: next } : {}
@@ -61,13 +71,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // resetState (state) {
-    //   state.objects = []
-    //   state.page = null
-    //   state.next = null
-    //   state.loading = false
-    // },
-    changeCurrent (state, data) {
+    updateCurrent (state, data) {
       state.current = data
     },
     updateRecords (state, data) {
@@ -77,11 +81,25 @@ export default new Vuex.Store({
       state.page = data._page
       state.next = data._next
     },
-    changeLoadingState (state, loading) {
-      state.loading = loading
+    removeFromRecords (state, data) {
+      const index = this.state.objects.findIndex(item => item.safekey === data.safekey)
+      console.log(index)
+
+      if (index > -1) {
+        this.state.objects.splice(index, 1)
+      }
     },
     updateUploaded (state, data) {
-      state.uploaded = state.uploaded.concat(data)
+      state.uploaded.push(data)
+    },
+    removeFromUploaded (state, data) {
+      const index = this.state.objects.findIndex(item => item.safekey === data.safekey)
+      if (index > -1) {
+        this.state.objects.splice(index, 1)
+      }
+    },
+    changeLoadingState (state, loading) {
+      state.loading = loading
     }
   }
 })

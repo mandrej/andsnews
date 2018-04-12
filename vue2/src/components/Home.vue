@@ -24,9 +24,9 @@
                     <div class="md-subhead">{{item.date}}</div>
                   </md-card-header>
                   <md-card-actions>
-                    <md-button>Delete</md-button>
+                    <md-button class="md-primary">Delete</md-button>
                     <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
-                      <md-button>Edit</md-button>
+                      <md-button class="md-primary">Edit</md-button>
                     </router-link>
                   </md-card-actions>
                 </md-card>

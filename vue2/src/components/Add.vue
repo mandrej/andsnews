@@ -7,8 +7,8 @@
 
       <md-app-content>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-          <h1>Upload images</h1>
+        <form novalidate v-if="isInitial || isSaving">
+          <h1 class="md-title">Upload images</h1>
           <div class="dropbox">
             <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
             <p v-if="isInitial">
@@ -19,12 +19,30 @@
             </p>
           </div>
         </form>
+
+        <p v-if="isSuccess">
+          <a href="javascript:void(0)" @click="reset()">Upload again</a>
+        </p>
+
+        <md-list v-for="item in uploaded" :key="item.safekey">
+            <md-list-item>
+              <md-avatar>
+                <img :src="src(item)" :alt="item.slug">
+              </md-avatar>
+              <span class="md-list-item-text">{{item.headline}}</span>
+              <md-button class="md-primary" @click="deleteRecord(item)">Delete</md-button>
+              <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
+                <md-button class="md-primary">Edit</md-button>
+              </router-link>
+            </md-list-item>
+          </md-list>
       </md-app-content>
     </md-app>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { HTTP } from '../../config/http'
 
 const STATUS_INITIAL = 0
@@ -44,6 +62,7 @@ export default {
     this.reset()
   },
   computed: {
+    ...mapState(['uploaded']),
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
     },
@@ -64,41 +83,22 @@ export default {
       this.uploadedFiles = []
       this.uploadError = null
     },
-    upload (formData) {
-      // HTTP.post('photo/add', {content: formData}, {headers: {'Content-Type': 'multipart/form-data'}})
-      HTTP.post('photo/add', formData)
+    save (formData) {
+      // upload data to the server
+      this.currentStatus = STATUS_SAVING
+      HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}})
         .then(x => x.data) // list
         .then(x => x.map(
-          // item => Object.assign({}, item.rec, {url: `${item.rec.filename}`})
           item => {
-            console.log(item.rec)
             this.uploadedFiles.push(item.rec)
             this.currentStatus = STATUS_SUCCESS
+            this.$store.dispatch('uploadList', item.rec)
           }
         ))
         .catch(err => {
           this.uploadError = err.response
           this.currentStatus = STATUS_FAILED
         })
-    },
-    save (formData) {
-      // upload data to the server
-      this.currentStatus = STATUS_SAVING
-
-      this.upload(formData)
-      // doesn't wait !!!
-      this.$store.dispatch('uploadList', this.uploadedFiles)
-
-      // .then(x => console.log(x))
-      // .then(rec => {
-      //   this.uploadedFiles = [].concat(rec)
-      //   this.currentStatus = STATUS_SUCCESS
-      //   // this.$store.dispatch('uploadList', rec)
-      // })
-      // .catch(err => {
-      //   this.uploadError = err.response
-      //   this.currentStatus = STATUS_FAILED
-      // })
     },
     filesChange (fieldName, fileList) {
       // handle file changes
@@ -113,6 +113,30 @@ export default {
 
       // save it
       this.save(formData)
+    },
+    deleteRecord (rec) {
+      this.$store.dispatch('changeCurrent', null)
+      this.$store.dispatch('changeRecords', rec)
+      this.$store.dispatch('changeUploaded', rec)
+
+      HTTP.delete('delete/' + rec.safekey)
+        .then(response => {
+
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    src (rec) {
+      if (rec && rec.serving_url) {
+        if (process.env.NODE_ENV === 'development') {
+          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400'
+        } else {
+          return rec.serving_url + '=s400'
+        }
+      } else {
+        return '/static/broken.svg'
+      }
     }
   }
 }
@@ -121,7 +145,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .dropbox {
-  outline: 2px dashed grey; /* the dash box */
+  outline: 1px dashed grey; /* the dash box */
   outline-offset: -10px;
   background: lightcyan;
   color: dimgray;
