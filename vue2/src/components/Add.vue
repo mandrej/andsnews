@@ -13,14 +13,13 @@
             <md-empty-state v-if="isInitial"
               md-icon="cloud_upload"
               md-label="Upload images"
-              md-description="Drag your file(s) here to begin or click to browse.">
-              <!-- <md-button class="md-primary md-raised">Create first project</md-button> -->
+              md-description="Drag your image(s) here to begin or click to browse.">
               <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
             </md-empty-state>
             <md-empty-state v-if="isSaving"
               md-icon="file_upload"
               md-label="Uploading images"
-              md-description="Uploading ${fileCount} files...">
+              :md-description="`Uploading ${fileCount} images...`">
             </md-empty-state>
           </div>
         </form>
@@ -120,19 +119,7 @@ export default {
       this.save(formData)
     },
     deleteRecord (rec) {
-      console.log(rec)
-
-      this.$store.dispatch('changeCurrent', null)
-      this.$store.dispatch('changeRecords', rec)
-      this.$store.dispatch('changeUploaded', rec)
-
-      HTTP.delete('delete/' + rec.safekey)
-        .then(response => {
-
-        })
-        .catch(e => {
-          console.log(e)
-        })
+      this.$store.dispatch('deleteRecord', rec)
     },
     src (rec) {
       if (rec && rec.serving_url) {

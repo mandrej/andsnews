@@ -17,8 +17,7 @@ export default new Vuex.Store({
     loading: false,
     uploaded: []
   },
-  // getters: {
-  // },
+  // getters: {},
   actions: {
     changeCurrent ({commit}, obj) {
       commit('updateCurrent', obj)
@@ -54,6 +53,19 @@ export default new Vuex.Store({
             console.log(e)
           })
       }
+    },
+    deleteRecord ({commit}, obj) {
+      commit('updateCurrent', null)
+      commit('changeRecords', obj)
+      commit('changeUploaded', obj)
+
+      HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log(e)
+        })
     },
     uploadList ({commit}, obj) {
       commit('updateUploaded', obj)
@@ -92,10 +104,10 @@ export default new Vuex.Store({
       state.uploaded.push(data)
     },
     removeFromUploaded (state, data) {
-      const index = state.objects.findIndex(item => item.safekey === data.safekey)
+      const index = state.uploaded.findIndex(item => item.safekey === data.safekey)
       console.log(index)
       if (index !== -1) {
-        state.objects.splice(index, 1)
+        state.uploaded.splice(index, 1)
       }
     },
     changeLoadingState (state, loading) {

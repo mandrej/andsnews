@@ -24,7 +24,7 @@
                     <div class="md-subhead">{{item.date}}</div>
                   </md-card-header>
                   <md-card-actions>
-                    <md-button class="md-primary">Delete</md-button>
+                    <md-button class="md-primary" @click="deleteRecord(item)">Delete</md-button>
                     <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
                       <md-button class="md-primary">Edit</md-button>
                     </router-link>
@@ -72,6 +72,9 @@ export default {
       } else {
         return '/static/broken.svg'
       }
+    },
+    deleteRecord (rec) {
+      this.$store.dispatch('deleteRecord', rec)
     }
   },
   directives: {
