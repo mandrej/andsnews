@@ -34,8 +34,8 @@ export default new Vuex.Store({
         .then(response => {
           const obj = response.data.rec
           commit('updateCurrent', obj)
-          commit('removeFromRecords', obj)
-          commit('removeFromUploaded', obj)
+          // commit('removeFromRecords', obj)
+          // commit('removeFromUploaded', obj)
         })
         .catch(e => {
           console.log(e)
@@ -82,20 +82,20 @@ export default new Vuex.Store({
       state.next = data._next
     },
     removeFromRecords (state, data) {
-      const index = this.state.objects.findIndex(item => item.safekey === data.safekey)
+      const index = state.objects.findIndex(item => item.safekey === data.safekey)
       console.log(index)
-
-      if (index > -1) {
-        this.state.objects.splice(index, 1)
+      if (index !== -1) {
+        state.objects.splice(index, 1)
       }
     },
     updateUploaded (state, data) {
       state.uploaded.push(data)
     },
     removeFromUploaded (state, data) {
-      const index = this.state.objects.findIndex(item => item.safekey === data.safekey)
-      if (index > -1) {
-        this.state.objects.splice(index, 1)
+      const index = state.objects.findIndex(item => item.safekey === data.safekey)
+      console.log(index)
+      if (index !== -1) {
+        state.objects.splice(index, 1)
       }
     },
     changeLoadingState (state, loading) {

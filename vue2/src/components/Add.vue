@@ -8,15 +8,20 @@
       <md-app-content>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
         <form novalidate v-if="isInitial || isSaving">
-          <h1 class="md-title">Upload images</h1>
-          <div class="dropbox">
-            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
-            <p v-if="isInitial">
-              Drag your file(s) here to begin<br> or click to browse
-            </p>
-            <p v-if="isSaving">
-              Uploading {{ fileCount }} files...
-            </p>
+          <!-- <h1 class="md-title">Upload images</h1> -->
+          <div class="dropboxxx">
+            <md-empty-state v-if="isInitial"
+              md-icon="cloud_upload"
+              md-label="Upload images"
+              md-description="Drag your file(s) here to begin or click to browse.">
+              <!-- <md-button class="md-primary md-raised">Create first project</md-button> -->
+              <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
+            </md-empty-state>
+            <md-empty-state v-if="isSaving"
+              md-icon="file_upload"
+              md-label="Uploading images"
+              md-description="Uploading ${fileCount} files...">
+            </md-empty-state>
           </div>
         </form>
 
@@ -115,6 +120,8 @@ export default {
       this.save(formData)
     },
     deleteRecord (rec) {
+      console.log(rec)
+
       this.$store.dispatch('changeCurrent', null)
       this.$store.dispatch('changeRecords', rec)
       this.$store.dispatch('changeUploaded', rec)
@@ -150,14 +157,17 @@ export default {
   background: lightcyan;
   color: dimgray;
   padding: 10px 10px;
-  min-height: 200px; /* minimum height */
+  // min-height: 200px; /* minimum height */
   position: relative;
   cursor: pointer;
+}
+.md-empty-state {
+  max-width: 100%;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 100%;
-  height: 200px;
+  height: 100%;
   position: absolute;
   cursor: pointer;
 }
