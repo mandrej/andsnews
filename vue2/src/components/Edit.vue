@@ -2,6 +2,9 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
+        <md-button class="md-icon-button" @click="$router.go(-1)">
+          <md-icon>keyboard_arrow_left</md-icon>
+        </md-button>
         <span class="md-title">Edit</span>
       </md-app-toolbar>
 
@@ -13,7 +16,7 @@
             <md-input v-model="rec.headline" required></md-input>
           </md-field>
 
-          <md-chips v-model="rec.tags" md-placeholder="Add tag..."></md-chips>
+          <md-chips v-model="rec.tags" md-placeholder="Add tag..." md-check-duplicated></md-chips>
 
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">

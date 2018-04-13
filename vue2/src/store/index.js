@@ -8,7 +8,10 @@ import { HTTP } from '../../config/http'
 Vue.use(Vuex, VueAxios)
 
 export default new Vuex.Store({
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({
+    key: 'vuex',
+    paths: ['uploaded']
+  })],
   state: {
     objects: [],
     current: null,
@@ -33,8 +36,8 @@ export default new Vuex.Store({
         .then(response => {
           const obj = response.data.rec
           commit('updateCurrent', obj)
-          // commit('removeFromRecords', obj)
-          // commit('removeFromUploaded', obj)
+          commit('updateOneRecord', obj)
+          commit('removeFromUploaded', obj)
         })
         .catch(e => {
           console.log(e)
@@ -93,9 +96,16 @@ export default new Vuex.Store({
       state.page = data._page
       state.next = data._next
     },
+    updateOneRecord (state, data) {
+      const index = state.objects.findIndex(item => item.safekey === data.safekey)
+      if (index !== -1) {
+        state.objects[index] = data
+      } else {
+        state.objects.push(data)
+      }
+    },
     removeFromRecords (state, data) {
       const index = state.objects.findIndex(item => item.safekey === data.safekey)
-      console.log(index)
       if (index !== -1) {
         state.objects.splice(index, 1)
       }
@@ -105,7 +115,6 @@ export default new Vuex.Store({
     },
     removeFromUploaded (state, data) {
       const index = state.uploaded.findIndex(item => item.safekey === data.safekey)
-      console.log(index)
       if (index !== -1) {
         state.uploaded.splice(index, 1)
       }

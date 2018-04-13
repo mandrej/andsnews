@@ -25,7 +25,10 @@ export default new Router({
     {
       path: '/add',
       name: 'add',
-      component: Add
+      component: Add,
+      meta: {
+        back: 'home'
+      }
     },
     {
       path: '/view/:id',
@@ -35,10 +38,7 @@ export default new Router({
     {
       path: '/edit/:id',
       name: 'edit',
-      component: Edit,
-      meta: {
-        back: 'home'
-      }
+      component: Edit
     }
   ]
 })

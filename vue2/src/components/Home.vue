@@ -1,5 +1,9 @@
 <template>
   <div class="page-container">
+    <md-button id="add" class="md-icon-button md-raised md-accent md-size-2x" @click="$router.push({name: 'add'})">
+      <md-icon>add</md-icon>
+    </md-button>
+
     <md-app md-mode="reveal">
       <md-app-toolbar class="md-primary">
         <span class="md-title">{{title}}</span>
@@ -87,6 +91,12 @@ export default {
 <style lang="scss" scoped>
 .md-app {
   height: 100vh;
+}
+#add {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
+  z-index: 10;
 }
 .grid {
   margin: -16px -16px 0 0;
