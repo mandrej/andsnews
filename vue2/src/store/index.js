@@ -18,7 +18,8 @@ export default new Vuex.Store({
     page: null,
     next: null,
     loading: false,
-    uploaded: []
+    uploaded: [],
+    tags: []
   },
   // getters: {},
   actions: {
@@ -39,35 +40,30 @@ export default new Vuex.Store({
           commit('updateOneRecord', obj)
           commit('removeFromUploaded', obj)
         })
-        .catch(e => {
-          console.log(e)
+        .catch(err => {
+          console.log(err)
         })
     },
     getRecord ({commit}, id) {
-      const obj = this.state.objects.filter(item => item.safekey === id)
-      if (obj.length === 1) {
-        commit('updateCurrent', obj[0])
-      } else {
-        HTTP.get(id)
-          .then(response => {
-            commit('updateCurrent', response.data)
-          })
-          .catch(e => {
-            console.log(e)
-          })
-      }
+      HTTP.get(id)
+        .then(response => {
+          commit('updateCurrent', response.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     deleteRecord ({commit}, obj) {
       commit('updateCurrent', null)
       commit('removeFromRecords', obj)
-      commit('changeUploaded', obj)
+      commit('removeFromUploaded', obj)
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
           console.log(response.data)
         })
-        .catch(e => {
-          console.log(e)
+        .catch(err => {
+          console.log(err)
         })
     },
     uploadList ({commit}, obj) {
@@ -79,10 +75,19 @@ export default new Vuex.Store({
       HTTP.get('start', {params: params}).then(response => {
         commit('updateRecords', response.data)
         commit('changeLoadingState', false)
-      }).catch(e => {
+      }).catch(err => {
         commit('changeLoadingState', false)
-        console.log(e)
+        console.log(err)
       })
+    },
+    getTags ({commit}) {
+      HTTP.get('suggest/Photo_tags')
+        .then(response => {
+          commit('updateTags', response.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   mutations: {
@@ -96,10 +101,13 @@ export default new Vuex.Store({
       state.page = data._page
       state.next = data._next
     },
+    updateTags (state, data) {
+      state.tags = data
+    },
     updateOneRecord (state, data) {
       const index = state.objects.findIndex(item => item.safekey === data.safekey)
       if (index !== -1) {
-        state.objects[index] = data
+        state.objects.splice(index, 1, data)
       } else {
         state.objects.push(data)
       }

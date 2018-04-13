@@ -7,95 +7,95 @@
       </v-toolbar>
 
       <v-content>
-        <v-container>
-          <v-form v-model="valid">
-            <v-btn type="submit" dark color="primary">Submit</v-btn>
-            <v-text-field
-              :label="`Headline for ${rec.filename}`"
-              v-model="rec.headline"
-              required></v-text-field>
+        <v-container grid-list-md>
+          <v-form v-model="valid" ref="form" lazy-validation>
+            <v-btn @click="submit" :disabled="!valid" dark color="primary">Submit</v-btn>
 
-            <v-select
-              label="Tags"
-              chips
-              tags
-              solo
-              prepend-icon="filter_list"
-              append-icon=""
-              clearable
-              v-model="rec.tags">
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  close
-                  @input="remove(data.item)"
-                  :selected="data.selected">
-                  <strong>{{ data.item }}</strong>&nbsp;
-                  <span>(interest)</span>
-                </v-chip>
-              </template>
-            </v-select>
+            <v-layout row wrap>
+              <v-flex xs12>
+                <v-text-field
+                  :label="`Headline for ${rec.filename}`"
+                  v-model="rec.headline"
+                  required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-select
+                  label="Tags"
+                  v-model="rec.tags"
+                  chips
+                  tags
+                  :items="tags"
+                  clearable
+                  autocomplete>
+                  <template slot="selection" slot-scope="data">
+                    <v-chip
+                      close
+                      @input="data.parent.selectItem(data.item)"
+                      :selected="data.selected">
+                      <strong>{{ data.item }}</strong>&nbsp;
+                    </v-chip>
+                  </template>
+                </v-select>
+              </v-flex>
+            </v-layout>
 
+            <v-layout row wrap>
+              <v-flex xs12 sm6 md4>
+                <v-select
+                  :items="authors"
+                  v-model="rec.author"
+                  label="Author"
+                  autocomplete
+                  single-line></v-select>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Date taken"
+                  v-model="rec.date"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Camera Model"
+                  v-model="rec.model"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Lens"
+                  v-model="rec.lens"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Focal length"
+                  type="number"
+                  v-model="rec.focal_length"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="ISO [ASA]"
+                  type="number"
+                  v-model="rec.iso"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Aperture"
+                  type="number"
+                  step="0.1"
+                  v-model="rec.aperture"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Shutter [s]"
+                  v-model="rec.shutter"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-text-field
+                  label="Color"
+                  v-model="rec.color"
+                  disabled></v-text-field>
+              </v-flex>
+            </v-layout>
           </v-form>
         </v-container>
-        <!-- <form @submit.prevent="checkForm">
-          <md-chips v-model="rec.tags" md-placeholder="Add tag..." md-check-duplicated></md-chips>
-
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-autocomplete v-model="rec.author" :md-options="authors" required>
-                <label>Author</label>
-              </md-autocomplete>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Date taken</label>
-                <md-input v-model="rec.date"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Camera Model</label>
-                <md-input v-model="rec.model"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Lens</label>
-                <md-input v-model="rec.lens"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Focal length</label>
-                <md-input type="number" v-model="rec.focal_length"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>ISO [ASA]</label>
-                <md-input type="number" v-model="rec.iso"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Aperture</label>
-                <md-input type="number" step="0.1" v-model="rec.aperture"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Shutter [s]</label>
-                <md-input v-model="rec.shutter"></md-input>
-              </md-field>
-            </div>
-            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-size-33">
-              <md-field>
-                <label>Color</label>
-                <md-input v-model="rec.color" disabled></md-input>
-              </md-field>
-            </div>
-          </div>
-        </form> -->
       </v-content>
     </v-app>
   </div>
@@ -107,8 +107,8 @@ import { mapState } from 'vuex'
 export default {
   name: 'Edit',
   data: () => ({
+    valid: true,
     rec: {},
-    chips: ['layout', 'still life'],
     authors: [
       'milan.andrejevic@gmail.com',
       'mihailo.genije@gmail.com',
@@ -120,9 +120,10 @@ export default {
   }),
   created () {
     this.$store.dispatch('getRecord', this.$route.params.id)
+    this.$store.dispatch('getTags')
   },
   computed: {
-    ...mapState(['current'])
+    ...mapState(['current', 'tags'])
   },
   watch: {
     current (newVal, oldVal) {
@@ -134,15 +135,12 @@ export default {
     createRecord (obj) {
       this.rec = obj
     },
-    remove (item) {
-      this.chips.splice(this.chips.indexOf(item), 1)
-      this.chips = [...this.chips]
-    },
-    checkForm (e) {
+    submit () {
       // console.log(e.target.elements)
-      this.$store.dispatch('saveRecord', this.rec.safekey)
-      const {back} = this.$route.meta
-      this.$router.replace({name: back})
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch('saveRecord', this.rec.safekey)
+        this.$router.go(-1)
+      }
     }
   }
 }

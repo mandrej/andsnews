@@ -1,50 +1,57 @@
 <template>
   <div class="page-container">
-    <md-app>
-      <md-app-toolbar class="md-primary">
-        <md-button class="md-icon-button" @click="goHome">
-          <md-icon>keyboard_arrow_left</md-icon>
-        </md-button>
-        <span class="md-title">Add</span>
-      </md-app-toolbar>
+    <v-app light>
+      <v-toolbar app>
+        <v-icon @click="$router.push({name: 'home'})">keyboard_arrow_left</v-icon>
+        <v-toolbar-title>Add</v-toolbar-title>
+      </v-toolbar>
 
-      <md-app-content>
+      <v-content>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
         <form novalidate v-if="isInitial || isSaving">
-          <!-- <h1 class="md-title">Upload images</h1> -->
-          <div class="dropboxxx">
-            <md-empty-state v-if="isInitial"
-              md-icon="cloud_upload"
-              md-label="Upload images"
-              md-description="Drag your image(s) here to begin or click to browse.">
-              <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept="image/*" class="input-file">
-            </md-empty-state>
-            <md-empty-state v-if="isSaving"
-              md-icon="file_upload"
-              md-label="Uploading images"
-              :md-description="`Uploading ${fileCount} images...`">
-            </md-empty-state>
-          </div>
+          <v-jumbotron color="grey lighten-2" v-if="isInitial">
+            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
+            <v-container fill-height>
+              <v-layout column justify-center align-center>
+                <v-icon x-large color="primary">cloud_upload</v-icon>
+                <h3 class="headline">Upload images</h3>
+                <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
+              </v-layout>
+            </v-container>
+          </v-jumbotron>
+
+          <v-alert
+            type="success"
+            :value="isSaving"
+            transition="scale-transition">
+            Uploading {{fileCount}} images...
+          </v-alert>
         </form>
 
-        <p v-if="isSuccess">
-          <a href="javascript:void(0)" @click="reset()">Upload again</a>
-        </p>
+        <v-list two-line>
+          <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
+            <v-list-tile-avatar>
+              <img :src="src(item)" :alt="item.slug">
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title v-html="item.headline"></v-list-tile-title>
+              <v-list-tile-sub-title>{{item.date}}</v-list-tile-sub-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-layout row>
+                <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                <v-btn color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+              </v-layout>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
 
-        <md-list v-for="item in uploaded" :key="item.safekey">
-            <md-list-item>
-              <md-avatar>
-                <img :src="src(item)" :alt="item.slug">
-              </md-avatar>
-              <span class="md-list-item-text">{{item.headline}}</span>
-              <md-button class="md-primary" @click="deleteRecord(item)">Delete</md-button>
-              <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
-                <md-button class="md-primary">Edit</md-button>
-              </router-link>
-            </md-list-item>
-          </md-list>
-      </md-app-content>
-    </md-app>
+        <v-layout justify-center v-if="isSuccess">
+          <v-btn color="primary" @click="reset">Upload again</v-btn>
+        </v-layout>
+
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -61,6 +68,7 @@ export default {
   name: 'Add',
   data: () => ({
     uploadedFiles: [],
+    fileCount: 0,
     uploadError: null,
     currentStatus: null,
     uploadFieldName: 'photos'
@@ -109,6 +117,7 @@ export default {
     },
     filesChange (fieldName, fileList) {
       // handle file changes
+      this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
 
@@ -134,30 +143,16 @@ export default {
       } else {
         return '/static/broken.svg'
       }
-    },
-    goHome () {
-      const {back} = this.$route.meta
-      this.$router.replace({name: back})
     }
-
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.dropbox {
-  outline: 1px dashed grey; /* the dash box */
-  outline-offset: -10px;
-  background: lightcyan;
-  color: dimgray;
-  padding: 10px 10px;
-  // min-height: 200px; /* minimum height */
-  position: relative;
+.jumbotron {
+  height: 200px !important;
   cursor: pointer;
-}
-.md-empty-state {
-  max-width: 100%;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */
@@ -165,15 +160,5 @@ export default {
   height: 100%;
   position: absolute;
   cursor: pointer;
-}
-
-.dropbox:hover {
-  background: lightblue; /* when mouse over to the drop zone, change color */
-}
-
-.dropbox p {
-  font-size: 1.2em;
-  text-align: center;
-  padding: 50px 0;
 }
 </style>
