@@ -1,21 +1,43 @@
 <template>
   <div class="page-container">
-    <md-app>
-      <md-app-toolbar class="md-primary">
-        <md-button class="md-icon-button" @click="$router.go(-1)">
-          <md-icon>keyboard_arrow_left</md-icon>
-        </md-button>
-        <span class="md-title">Edit</span>
-      </md-app-toolbar>
+    <v-app light>
+      <v-toolbar app>
+        <v-icon @click="$router.go(-1)">keyboard_arrow_left</v-icon>
+        <v-toolbar-title>Edit</v-toolbar-title>
+      </v-toolbar>
 
-      <md-app-content>
-        <form @submit.prevent="checkForm">
-          <md-button type="submit" class="md-primary">Submit</md-button>
-          <md-field>
-            <label>Headline for {{rec.filename}}</label>
-            <md-input v-model="rec.headline" required></md-input>
-          </md-field>
+      <v-content>
+        <v-container>
+          <v-form v-model="valid">
+            <v-btn type="submit" dark color="primary">Submit</v-btn>
+            <v-text-field
+              :label="`Headline for ${rec.filename}`"
+              v-model="rec.headline"
+              required></v-text-field>
 
+            <v-select
+              label="Tags"
+              chips
+              tags
+              solo
+              prepend-icon="filter_list"
+              append-icon=""
+              clearable
+              v-model="rec.tags">
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  close
+                  @input="remove(data.item)"
+                  :selected="data.selected">
+                  <strong>{{ data.item }}</strong>&nbsp;
+                  <span>(interest)</span>
+                </v-chip>
+              </template>
+            </v-select>
+
+          </v-form>
+        </v-container>
+        <!-- <form @submit.prevent="checkForm">
           <md-chips v-model="rec.tags" md-placeholder="Add tag..." md-check-duplicated></md-chips>
 
           <div class="md-layout md-gutter">
@@ -73,9 +95,9 @@
               </md-field>
             </div>
           </div>
-        </form>
-      </md-app-content>
-    </md-app>
+        </form> -->
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -86,6 +108,7 @@ export default {
   name: 'Edit',
   data: () => ({
     rec: {},
+    chips: ['layout', 'still life'],
     authors: [
       'milan.andrejevic@gmail.com',
       'mihailo.genije@gmail.com',
@@ -110,6 +133,10 @@ export default {
   methods: {
     createRecord (obj) {
       this.rec = obj
+    },
+    remove (item) {
+      this.chips.splice(this.chips.indexOf(item), 1)
+      this.chips = [...this.chips]
     },
     checkForm (e) {
       // console.log(e.target.elements)

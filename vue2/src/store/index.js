@@ -59,7 +59,7 @@ export default new Vuex.Store({
     },
     deleteRecord ({commit}, obj) {
       commit('updateCurrent', null)
-      commit('changeRecords', obj)
+      commit('removeFromRecords', obj)
       commit('changeUploaded', obj)
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})

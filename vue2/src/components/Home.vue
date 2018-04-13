@@ -1,45 +1,47 @@
 <template>
   <div class="page-container">
-    <md-button id="add" class="md-icon-button md-raised md-accent md-size-2x" @click="$router.push({name: 'add'})">
-      <md-icon>add</md-icon>
-    </md-button>
+    <v-btn id="add" fab dark medium color="orange" @click="$router.push({name: 'add'})">
+      <v-icon dark>add</v-icon>
+    </v-btn>
 
-    <md-app md-mode="reveal">
-      <md-app-toolbar class="md-primary">
-        <span class="md-title">{{title}}</span>
-      </md-app-toolbar>
+    <v-app light>
+      <v-toolbar app>
+        <v-toolbar-title>{{title}}</v-toolbar-title>
+      </v-toolbar>
 
-      <md-app-content>
+      <v-content>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="distance">
           <div class="grid">
-            <div v-masonry transition-duration="0.5s" item-selector=".grid-item"
+            <div v-masonry transition-duration="0.5s" itSem-selector=".grid-item"
               horizontal-order="true" column-width=".grid-sizer" gutter=".gutter-sizer">
               <div class="grid-sizer"></div>
               <div class="gutter-sizer"></div>
               <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
-                <md-card>
-                  <md-card-media>
+                <v-card>
+                  <v-card-media>
                     <router-link :to="{ name: 'item', params: { id: item.safekey }}">
                       <img :src="src(item)" :alt="item.slug">
                     </router-link>
-                  </md-card-media>
-                  <md-card-header>
-                    <div class="md-title">{{item.headline}}</div>
-                    <div class="md-subhead">{{item.date}}</div>
-                  </md-card-header>
-                  <md-card-actions>
-                    <md-button class="md-primary" @click="deleteRecord(item)">Delete</md-button>
-                    <router-link :to="{ name: 'edit', params: { id: item.safekey }}">
-                      <md-button class="md-primary">Edit</md-button>
-                    </router-link>
-                  </md-card-actions>
-                </md-card>
+                  </v-card-media>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="headline mb-0">{{item.headline}}</h3>
+                      <div>{{item.date}}</div>
+                    </div>
+                  </v-card-title>
+                  <v-card-actions>
+                    <v-layout justify-space-between>
+                      <v-btn dark color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                      <v-btn dark color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+                    </v-layout>
+                  </v-card-actions>
+                </v-card>
               </div>
             </div>
           </div>
         </div>
-      </md-app-content>
-    </md-app>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -89,25 +91,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.md-app {
-  height: 100vh;
-}
 #add {
-  position: absolute;
+  position: fixed;
   bottom: 16px;
   right: 32px;
   z-index: 10;
 }
 .grid {
-  margin: -16px -16px 0 0;
-  // &:after {
-  //   content: '';
-  //   display: block;
-  //   clear: both;
-  // }
+  margin: 0;
+  padding: 16px;
+  padding-right: 0;
 }
 .grid-sizer, .grid-item {
-  margin-bottom: 16px;
   width: calc(100% / 4 - 16px);
   @media (max-width: 1280px) {
     width: calc(100% / 3 - 16px);
@@ -119,10 +114,10 @@ export default {
     width: calc(100% - 16px);
   }
 }
+.grid-item {
+  margin-bottom: 16px;
+}
 .gutter-sizer {
   width: 16px;
-}
-.md-card {
-  margin: 0;
 }
 </style>
