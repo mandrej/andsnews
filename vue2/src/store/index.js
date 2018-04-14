@@ -10,9 +10,16 @@ Vue.use(Vuex, VueAxios)
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['uploaded']
+    paths: ['user', 'uploaded']
   })],
   state: {
+    user: {
+      name: '',
+      email: '',
+      uid: null,
+      isAuthorized: false,
+      isAdmin: false
+    },
     objects: [],
     current: null,
     page: null,
@@ -23,6 +30,9 @@ export default new Vuex.Store({
   },
   // getters: {},
   actions: {
+    signIn ({commit}, user) {
+      commit('updateUser', user)
+    },
     changeCurrent ({commit}, obj) {
       commit('updateCurrent', obj)
     },
@@ -96,6 +106,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateUser (state, user) {
+      Object.assign(state.user, user)
+    },
     updateCurrent (state, data) {
       state.current = data
     },

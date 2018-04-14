@@ -1,12 +1,14 @@
 <template>
   <div class="page-container">
-    <v-btn id="add" fab medium color="warning" class="secondary--text" @click="$router.push({name: 'add'})">
+    <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="$router.push({name: 'add'})">
       <v-icon>add</v-icon>
     </v-btn>
 
     <v-app light>
       <v-toolbar app>
         <v-toolbar-title>{{title}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <SignIn></SignIn>
       </v-toolbar>
 
       <v-content>
@@ -31,8 +33,8 @@
                   </v-card-title>
                   <v-card-actions>
                     <v-layout justify-space-between>
-                      <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-                      <v-btn color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+                      <v-btn v-if="user.isAdmin" color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                      <v-btn v-if="user.isAuthorized" color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
                     </v-layout>
                   </v-card-actions>
                 </v-card>
@@ -50,17 +52,21 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { VueMasonryPlugin } from 'vue-masonry'
 import infiniteScroll from 'vue-infinite-scroll'
+import SignIn from './SignIn'
 
 Vue.use(VueMasonryPlugin, infiniteScroll)
 
 export default {
   name: 'Home',
+  components: {
+    SignIn
+  },
   data: () => ({
     title: 'ANDрејевићи',
     distance: 1200
   }),
   computed: {
-    ...mapState(['objects', 'page', 'next', 'loading'])
+    ...mapState(['user', 'objects', 'page', 'next', 'loading'])
   },
   methods: {
     loadMore () {

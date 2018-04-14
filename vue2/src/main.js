@@ -4,11 +4,23 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import firebase from 'firebase'
 
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+const config = {
+  apiKey: 'AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M',
+  authDomain: 'andsnews.firebaseapp.com',
+  databaseURL: 'https://andsnews.firebaseio.com',
+  projectId: 'andsnews',
+  storageBucket: 'andsnews.appspot.com',
+  messagingSenderId: '719127177629'
+}
+firebase.initializeApp(config)
+
 Vue.config.productionTip = false
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#1976D2',
