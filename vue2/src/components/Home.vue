@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
-    <v-btn id="add" fab dark medium color="orange" @click="$router.push({name: 'add'})">
-      <v-icon dark>add</v-icon>
+    <v-btn id="add" fab medium color="warning" class="secondary--text" @click="$router.push({name: 'add'})">
+      <v-icon>add</v-icon>
     </v-btn>
 
     <v-app light>
@@ -10,7 +10,7 @@
       </v-toolbar>
 
       <v-content>
-        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="distance">
+        <div id="scrolling-techniques" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="distance">
           <div class="grid">
             <div v-masonry transition-duration="0.5s" itSem-selector=".grid-item"
               horizontal-order="true" column-width=".grid-sizer" gutter=".gutter-sizer">
@@ -31,8 +31,8 @@
                   </v-card-title>
                   <v-card-actions>
                     <v-layout justify-space-between>
-                      <v-btn dark color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-                      <v-btn dark color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+                      <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                      <v-btn color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
                     </v-layout>
                   </v-card-actions>
                 </v-card>

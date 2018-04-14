@@ -45,13 +45,18 @@ export default new Vuex.Store({
         })
     },
     getRecord ({commit}, id) {
-      HTTP.get(id)
-        .then(response => {
-          commit('updateCurrent', response.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      const obj = this.state.objects.filter(item => item.safekey === id)
+      if (obj.length === 1) {
+        commit('updateCurrent', obj[0])
+      } else {
+        HTTP.get(id)
+          .then(response => {
+            commit('updateCurrent', response.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
     deleteRecord ({commit}, obj) {
       commit('updateCurrent', null)

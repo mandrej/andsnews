@@ -2,20 +2,21 @@
   <div class="page-container">
     <v-app light>
       <v-toolbar app>
-        <v-icon @click="$router.go(-1)">keyboard_arrow_left</v-icon>
+        <v-icon @click="$router.go(-1)">arrow_back</v-icon>
         <v-toolbar-title>Edit</v-toolbar-title>
       </v-toolbar>
 
       <v-content>
-        <v-container grid-list-md>
-          <v-form v-model="valid" ref="form" lazy-validation>
-            <v-btn @click="submit" :disabled="!valid" dark color="primary">Submit</v-btn>
+        <v-container grid-list-md mt-5>
+          <v-form v-model="valid" ref="form">
+            <v-btn @click="submit" :disabled="!valid" color="primary">Submit</v-btn>
 
             <v-layout row wrap>
               <v-flex xs12>
                 <v-text-field
                   :label="`Headline for ${rec.filename}`"
                   v-model="rec.headline"
+                  :rules="requiredRule"
                   required></v-text-field>
               </v-flex>
               <v-flex xs12>
@@ -108,6 +109,9 @@ export default {
   name: 'Edit',
   data: () => ({
     valid: true,
+    requiredRule: [
+      v => !!v || 'Required field'
+    ],
     rec: {},
     authors: [
       'milan.andrejevic@gmail.com',

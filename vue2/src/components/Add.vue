@@ -2,7 +2,7 @@
   <div class="page-container">
     <v-app light>
       <v-toolbar app>
-        <v-icon @click="$router.push({name: 'home'})">keyboard_arrow_left</v-icon>
+        <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
         <v-toolbar-title>Add</v-toolbar-title>
       </v-toolbar>
 

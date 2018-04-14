@@ -1,14 +1,15 @@
 <template>
   <div class="page-container">
-    <md-app>
-      <md-app-toolbar class="md-primary">
-        <span class="md-title">{{title}}</span>
-      </md-app-toolbar>
+    <v-app light>
+      <v-toolbar app>
+        <v-icon @click="$router.go(-1)">arrow_back</v-icon>
+        <v-toolbar-title>{{title}}</v-toolbar-title>
+      </v-toolbar>
 
-      <md-app-content>
+      <v-content>
         <img :src="src" :alt="alt">
-      </md-app-content>
-    </md-app>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -46,5 +47,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+img {
+  width: 100%;
+}
 </style>
