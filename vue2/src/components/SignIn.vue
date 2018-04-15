@@ -1,6 +1,6 @@
 <template>
-  <v-btn v-if="user.isAuthorized" @click="signHandler" color="primary">Sign-Out</v-btn>
-  <v-btn v-else @click="signHandler" color="primary">Sign-In</v-btn>
+  <v-btn v-if="user.isAuthorized" @click="signHandler" flat color="secondary">Sign-Off</v-btn>
+  <v-btn v-else @click="signHandler" flat color="primary">Sign-In</v-btn>
 </template>
 
 <script>

@@ -156,18 +156,28 @@ class PhotoRecent(RestHandler):
 
 class Find(RestHandler):
     def get(self, find):
+        client = self.request.headers.get('client', None)
         page = self.request.get('_page', None)
         paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
 
-        self.render({
-            'objects': objects,
-            'phrase': find.strip(),
-            'number_found': number_found,
-            '_page': page,
-            '_next': token,
-            'error': error
-        })
+        if (client == 'vue2'):
+            self.render({
+                'objects': objects,
+                'filter': {'field': 'search', 'value': find.strip()},
+                '_page': page,
+                '_next': token,
+                'error': error
+            })
+        else:
+            self.render({
+                'objects': objects,
+                'phrase': find.strip(),
+                'number_found': number_found,
+                '_page': page,
+                '_next': token,
+                'error': error
+            })
 
 
 class BackgroundIndex(RestHandler):

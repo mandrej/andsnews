@@ -4,18 +4,40 @@
       <v-icon>add</v-icon>
     </v-btn>
 
+    <!-- <v-dialog v-model="dialog" max-width="400px">
+      <v-card>
+        <v-card-title class="headline">
+          No photos for current filter / search
+        </v-card-title>
+        <v-card-actions>
+          <v-btn color="primary" flat @click.stop="dialog=false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog> -->
+
     <v-app light>
       <v-toolbar app>
         <v-toolbar-title>{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-btn icon :to="{ name: 'find' }">
+          <v-icon>search</v-icon>
+        </v-btn>
         <SignIn></SignIn>
       </v-toolbar>
 
       <v-content>
-        <div id="scrolling-techniques" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="distance">
+        <div id="scrolling-techniques"
+          v-infinite-scroll="loadMore"
+          infinite-scroll-disabled="stopLoading"
+          infinite-scroll-distance="distance">
           <div class="grid">
-            <div v-masonry transition-duration="0.5s" itSem-selector=".grid-item"
-              horizontal-order="true" column-width=".grid-sizer" gutter=".gutter-sizer">
+            <div
+              v-masonry
+              transition-duration="0.5s"
+              item-selector=".grid-item"
+              horizontal-order="true"
+              column-width=".grid-sizer"
+              gutter=".gutter-sizer">
               <div class="grid-sizer"></div>
               <div class="gutter-sizer"></div>
               <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
@@ -32,9 +54,9 @@
                     </div>
                   </v-card-title>
                   <v-card-actions>
-                    <v-layout justify-space-between>
-                      <v-btn v-if="user.isAdmin" color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-                      <v-btn v-if="user.isAuthorized" color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+                    <v-layout justify-space-between v-if="user.isAuthorized">
+                      <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                      <v-btn flat color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
                     </v-layout>
                   </v-card-actions>
                 </v-card>
@@ -65,12 +87,18 @@ export default {
     title: 'ANDрејевићи',
     distance: 1200
   }),
+  created () {
+    this.$store.dispatch('loadList')
+  },
   computed: {
-    ...mapState(['user', 'objects', 'page', 'next', 'loading'])
+    ...mapState(['user', 'objects', 'page', 'next', 'loading']),
+    stopLoading () { // if true
+      return this.loading || this.objects.length === 0
+    }
   },
   methods: {
     loadMore () {
-      if (this.objects.length === 0 || this.next) {
+      if (this.next || this.objects.length === 0) {
         this.$store.dispatch('loadList', this.next)
       }
     },

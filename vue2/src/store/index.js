@@ -10,7 +10,7 @@ Vue.use(Vuex, VueAxios)
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'uploaded']
+    paths: ['user', 'find', 'uploaded']
   })],
   state: {
     user: {
@@ -21,12 +21,23 @@ export default new Vuex.Store({
       isAdmin: false
     },
     objects: [],
+    filter: {},
+    find: {
+      tags: [],
+      text: '',
+      year: '',
+      month: '',
+      model: '',
+      author: '',
+      color: ''
+    },
     current: null,
     page: null,
     next: null,
     loading: false,
     uploaded: [],
-    tags: []
+    tags: [],
+    models: []
   },
   // getters: {},
   actions: {
@@ -84,16 +95,40 @@ export default new Vuex.Store({
     uploadList ({commit}, obj) {
       commit('updateUploaded', obj)
     },
-    loadList ({commit}, next) {
+    changeFind ({commit}, payload) {
+      commit('updateFind', payload)
+    },
+    changeFilter ({commit}, payload) {
+      commit('updateFilter', payload)
+      commit('resetRecords')
+    },
+    loadList ({commit, state}, next) {
+      let url = 'start'
       const params = (next) ? { _page: next } : {}
+      const saved = {...state.filter}
+
+      if (saved && saved.field) {
+        if (saved.field === 'search') {
+          url = ['search', saved.value].join('/')
+        } else {
+          url = ['photo', saved.field, saved.value].join('/')
+        }
+      }
+      console.log(url, params)
+
       commit('changeLoadingState', true)
-      HTTP.get('start', {params: params}).then(response => {
-        commit('updateRecords', response.data)
-        commit('changeLoadingState', false)
-      }).catch(err => {
-        commit('changeLoadingState', false)
-        console.log(err)
-      })
+      HTTP.get(url, {params: params})
+        .then(response => {
+          commit('changeLoadingState', false)
+          commit('updateRecords', response.data)
+        })
+        .catch(err => {
+          commit('changeLoadingState', false)
+          console.log(err)
+        })
+    },
+    clearList ({commit}) {
+      commit('resetRecords')
     },
     getTags ({commit}) {
       HTTP.get('suggest/Photo_tags')
@@ -103,14 +138,29 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
+    },
+    getModels ({commit}) {
+      HTTP.get('suggest/Photo_model')
+        .then(response => {
+          commit('updateModels', response.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   mutations: {
     updateUser (state, user) {
-      Object.assign(state.user, user)
+      state.user = Object.assign({}, user)
     },
     updateCurrent (state, data) {
       state.current = data
+    },
+    updateFind (state, find) {
+      state.find = Object.assign({}, find)
+    },
+    updateFilter (state, filter) {
+      state.filter = Object.assign({}, filter)
     },
     updateRecords (state, data) {
       state.objects = state.objects.concat(data.objects)
@@ -119,8 +169,16 @@ export default new Vuex.Store({
       state.page = data._page
       state.next = data._next
     },
+    resetRecords (state) {
+      state.objects = []
+      state.page = null
+      state.next = null
+    },
     updateTags (state, data) {
       state.tags = data
+    },
+    updateModels (state, data) {
+      state.models = data
     },
     updateOneRecord (state, data) {
       const index = state.objects.findIndex(item => item.safekey === data.safekey)
