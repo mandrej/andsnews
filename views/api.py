@@ -133,7 +133,7 @@ class Collection(RestHandler):
         self.render({
             'objects': objects,
             'filter': {'field': field, 'value': value} if (field and value) else None,
-            '_page': page,
+            '_page': page if page else 'FP',
             '_next': token
         })
 
@@ -149,7 +149,7 @@ class PhotoRecent(RestHandler):
 
         self.render({
             'objects': objects,
-            '_page': page,
+            '_page': page if page else 'FP',
             '_next': token
         })
 
@@ -165,7 +165,7 @@ class Find(RestHandler):
             self.render({
                 'objects': objects,
                 'filter': {'field': 'search', 'value': find.strip()},
-                '_page': page,
+                '_page': page if page else 'FP',
                 '_next': token,
                 'error': error
             })
@@ -174,7 +174,7 @@ class Find(RestHandler):
                 'objects': objects,
                 'phrase': find.strip(),
                 'number_found': number_found,
-                '_page': page,
+                '_page': page if page else 'FP',
                 '_next': token,
                 'error': error
             })

@@ -21,6 +21,7 @@ export default new Vuex.Store({
       isAdmin: false
     },
     objects: [],
+    pages: [],
     filter: {},
     find: {
       tags: [],
@@ -60,6 +61,7 @@ export default new Vuex.Store({
           commit('updateCurrent', obj)
           commit('updateOneRecord', obj)
           commit('removeFromUploaded', obj)
+          // commit('resetPages')
         })
         .catch(err => {
           console.log(err)
@@ -83,6 +85,7 @@ export default new Vuex.Store({
       commit('updateCurrent', null)
       commit('removeFromRecords', obj)
       commit('removeFromUploaded', obj)
+      // commit('resetPages')
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
@@ -101,6 +104,7 @@ export default new Vuex.Store({
     changeFilter ({commit}, payload) {
       commit('updateFilter', payload)
       commit('resetRecords')
+      commit('resetPages')
     },
     loadList ({commit, state}, next) {
       let url = 'start'
@@ -120,15 +124,13 @@ export default new Vuex.Store({
       HTTP.get(url, {params: params})
         .then(response => {
           commit('changeLoadingState', false)
+          commit('updatePages', response.data._page)
           commit('updateRecords', response.data)
         })
         .catch(err => {
           commit('changeLoadingState', false)
           console.log(err)
         })
-    },
-    clearList ({commit}) {
-      commit('resetRecords')
     },
     getTags ({commit}) {
       HTTP.get('suggest/Photo_tags')
@@ -173,6 +175,12 @@ export default new Vuex.Store({
       state.objects = []
       state.page = null
       state.next = null
+    },
+    updatePages (state, page) {
+      state.pages.push(page)
+    },
+    resetPages (state) {
+      state.pages = []
     },
     updateTags (state, data) {
       state.tags = data
