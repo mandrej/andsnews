@@ -1,0 +1,136 @@
+<template>
+  <div class="page-container">
+    <v-dialog v-model="dialog" max-width="300px">
+      <v-card>
+        <v-card-title class="headline">
+          No photos for current filter / search
+        </v-card-title>
+        <v-card-actions>
+          <v-layout justify-space-between>
+            <v-btn color="secondary" flat @click.stop="dialog=false; $router.push({name: 'home'})">Close</v-btn>
+            <v-btn color="primary" flat @click.stop="dialog=false; $router.push({name: 'find'})">Find Again</v-btn>
+          </v-layout>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <div class="grid">
+      <div v-masonry
+        transition-duration="0.6s"
+        item-selector=".grid-item"
+        horizontal-order="true"
+        column-width=".grid-sizer"
+        gutter=".gutter-sizer">
+        <div class="grid-sizer"></div>
+        <div class="gutter-sizer"></div>
+        <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
+          <v-card>
+            <v-card-media>
+              <router-link :to="{ name: 'item', params: { id: item.safekey }}">
+                <img :src="src(item)" :alt="item.slug">
+              </router-link>
+            </v-card-media>
+            <v-card-title primary-title>
+              <div>
+                <h3 class="headline mb-0">{{item.headline}}</h3>
+                <div>{{item.date}}</div>
+              </div>
+            </v-card-title>
+            <v-card-actions v-if="user.isAuthorized">
+              <!-- <v-layout justify-space-between> -->
+                <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+              <!-- </v-layout> -->
+            </v-card-actions>
+          </v-card>
+        </div>
+      </div>
+
+      <mugen-scroll :handler="loadMore" :should-handle="!loading"
+        :threshold="threshold" scroll-container="grid">
+        <v-progress-linear v-show="loading" :indeterminate="true"></v-progress-linear>
+      </mugen-scroll>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import { mapState } from 'vuex'
+import { VueMasonryPlugin } from 'vue-masonry'
+import MugenScroll from 'vue-mugen-scroll'
+
+Vue.use(VueMasonryPlugin)
+
+export default {
+  name: 'Home',
+  components: {
+    MugenScroll
+  },
+  data: () => ({
+    threshold: 0,
+    dialog: false
+  }),
+  computed: {
+    ...mapState(['user', 'objects', 'pages', 'next', 'loading'])
+  },
+  watch: {
+    objects (newVal, oldVal) {
+      if (!newVal) return
+      if (newVal.length === 0) {
+        this.dialog = true
+      }
+    }
+  },
+  methods: {
+    loadMore () {
+      if (this.objects.length === 0) {
+        this.$store.dispatch('loadList')
+      } else if (this.next && this.pages.indexOf(this.next) === -1) {
+        this.$store.dispatch('loadList', this.next)
+      }
+    },
+    src (rec) {
+      if (rec && rec.serving_url) {
+        if (process.env.NODE_ENV === 'development') {
+          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400'
+        } else {
+          return rec.serving_url + '=s400'
+        }
+      } else {
+        return '/static/broken.svg'
+      }
+    },
+    deleteRecord (rec) {
+      this.$store.dispatch('deleteRecord', rec)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.grid {
+  margin: 0;
+  padding: 16px;
+  padding-right: 0;
+}
+.grid-sizer, .grid-item {
+  width: calc(100% / 4 - 16px);
+  @media (max-width: 1280px) {
+    width: calc(100% / 3 - 16px);
+  }
+  @media (max-width: 960px) {
+    width: calc(100% / 2 - 16px);
+  }
+  @media (max-width: 600px) {
+    width: calc(100% - 16px);
+  }
+}
+.grid-item {
+  margin-bottom: 16px;
+}
+.gutter-sizer {
+  width: 16px;
+}
+</style>
