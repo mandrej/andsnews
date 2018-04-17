@@ -4,10 +4,12 @@
       <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
       <v-toolbar-title>Search results</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon :to="{ name: 'find' }">
+      <v-btn icon @click="showFindForm=true">
         <v-icon>search</v-icon>
       </v-btn>
     </v-toolbar>
+
+    <Find :visible="showFindForm" @close="showFindForm=false"></Find>
 
     <v-content>
       <List></List>
@@ -17,12 +19,17 @@
 
 <script>
 import List from './List'
+import Find from './Find'
 
 export default {
   name: 'Search',
   components: {
-    List
+    List,
+    Find
   },
+  data: () => ({
+    showFindForm: false
+  }),
   destroyed () {
     this.$store.dispatch('changeFilter', {})
   }

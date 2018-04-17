@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Item from '@/components/Item'
 import Add from '@/components/Add'
-import Find from '@/components/Find'
 import Search from '@/components/Search'
 import Edit from '@/components/Edit'
 
@@ -31,11 +30,6 @@ export default new Router({
       meta: {
         back: 'home'
       }
-    },
-    {
-      path: '/find',
-      name: 'find',
-      component: Find
     },
     {
       path: '/search/:term',
