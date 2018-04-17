@@ -1,24 +1,22 @@
 <template>
-  <div class="page-container">
+  <v-app light>
     <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="$router.push({name: 'add'})">
       <v-icon>add</v-icon>
     </v-btn>
 
-    <v-app light>
-      <v-toolbar app>
-        <v-toolbar-title>{{title}}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon :to="{ name: 'find' }">
-          <v-icon>search</v-icon>
-        </v-btn>
-        <SignIn></SignIn>
-      </v-toolbar>
+    <v-toolbar app>
+      <v-toolbar-title>{{title}}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon :to="{ name: 'find' }">
+        <v-icon>search</v-icon>
+      </v-btn>
+      <SignIn></SignIn>
+    </v-toolbar>
 
-      <v-content>
-        <List></List>
-      </v-content>
-    </v-app>
-  </div>
+    <v-content>
+      <List></List>
+    </v-content>
+  </v-app>
 </template>
 
 <script>

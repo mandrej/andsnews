@@ -1,58 +1,56 @@
 <template>
-  <div class="page-container">
-    <v-app light>
-      <v-toolbar app>
-        <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
-        <v-toolbar-title>Add</v-toolbar-title>
-      </v-toolbar>
+  <v-app light>
+    <v-toolbar app>
+      <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
+      <v-toolbar-title>Add</v-toolbar-title>
+    </v-toolbar>
 
-      <v-content>
-        <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-        <form novalidate v-if="isInitial || isSaving">
-          <v-jumbotron color="grey lighten-2" v-if="isInitial">
-            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
-            <v-container fill-height>
-              <v-layout column justify-center align-center>
-                <v-icon x-large color="primary">cloud_upload</v-icon>
-                <h3 class="headline">Upload images</h3>
-                <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
-              </v-layout>
-            </v-container>
-          </v-jumbotron>
+    <v-content>
+      <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
+      <form novalidate v-if="isInitial || isSaving">
+        <v-jumbotron color="grey lighten-2" v-if="isInitial">
+          <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
+          <v-container fill-height>
+            <v-layout column justify-center align-center>
+              <v-icon x-large color="primary">cloud_upload</v-icon>
+              <h3 class="headline">Upload images</h3>
+              <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
+            </v-layout>
+          </v-container>
+        </v-jumbotron>
 
-          <v-alert
-            type="success"
-            :value="isSaving"
-            transition="scale-transition">
-            Uploading {{fileCount}} images...
-          </v-alert>
-        </form>
+        <v-alert
+          type="success"
+          :value="isSaving"
+          transition="scale-transition">
+          Uploading {{fileCount}} images...
+        </v-alert>
+      </form>
 
-        <v-list two-line>
-          <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
-            <v-list-tile-avatar>
-              <img :src="src(item)" :alt="item.slug">
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="item.headline"></v-list-tile-title>
-              <v-list-tile-sub-title>{{item.date}}</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-layout row>
-                <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-                <v-btn color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
-              </v-layout>
-            </v-list-tile-action>
-          </v-list-tile>
-        </v-list>
+      <v-list two-line>
+        <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
+          <v-list-tile-avatar>
+            <img :src="src(item)" :alt="item.slug">
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title v-html="item.headline"></v-list-tile-title>
+            <v-list-tile-sub-title>{{item.date}}</v-list-tile-sub-title>
+          </v-list-tile-content>
+          <v-list-tile-action>
+            <v-layout row>
+              <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+              <v-btn color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+            </v-layout>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
 
-        <v-layout justify-center v-if="isSuccess">
-          <v-btn color="primary" @click="reset">Upload again</v-btn>
-        </v-layout>
+      <v-layout justify-center v-if="isSuccess">
+        <v-btn color="primary" @click="reset">Upload again</v-btn>
+      </v-layout>
 
-      </v-content>
-    </v-app>
-  </div>
+    </v-content>
+  </v-app>
 </template>
 
 <script>

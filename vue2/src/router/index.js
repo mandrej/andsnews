@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Item from '@/components/Item'
 import Add from '@/components/Add'
 import Find from '@/components/Find'
+import Search from '@/components/Search'
 import Edit from '@/components/Edit'
 
 Vue.use(Router)
@@ -35,6 +36,11 @@ export default new Router({
       path: '/find',
       name: 'find',
       component: Find
+    },
+    {
+      path: '/search/:term',
+      name: 'search',
+      component: Search
     },
     {
       path: '/view/:id',

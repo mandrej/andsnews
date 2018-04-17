@@ -1,16 +1,14 @@
 <template>
-  <div class="page-container">
-    <v-app light>
-      <v-toolbar app>
-        <v-icon @click="$router.go(-1)">arrow_back</v-icon>
-        <v-toolbar-title>{{title}}</v-toolbar-title>
-      </v-toolbar>
+  <v-app light>
+    <v-toolbar app>
+      <v-icon @click="$router.go(-1)">arrow_back</v-icon>
+      <v-toolbar-title>{{title}}</v-toolbar-title>
+    </v-toolbar>
 
-      <v-content>
-        <img :src="src" :alt="alt">
-      </v-content>
-    </v-app>
-  </div>
+    <v-content>
+      <img :src="src" :alt="alt">
+    </v-content>
+  </v-app>
 </template>
 
 <script>

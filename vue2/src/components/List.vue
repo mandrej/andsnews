@@ -1,15 +1,13 @@
 <template>
-  <div class="page-container">
+  <div>
     <v-dialog v-model="dialog" max-width="300px">
       <v-card>
         <v-card-title class="headline">
           No photos for current filter / search
         </v-card-title>
         <v-card-actions>
-          <v-layout justify-space-between>
-            <v-btn color="secondary" flat @click.stop="dialog=false; $router.push({name: 'home'})">Close</v-btn>
-            <v-btn color="primary" flat @click.stop="dialog=false; $router.push({name: 'find'})">Find Again</v-btn>
-          </v-layout>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" flat @click.stop="dialog=false; $router.push({name: 'home'})">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -37,11 +35,9 @@
               </div>
             </v-card-title>
             <v-card-actions v-if="user.isAuthorized">
-              <!-- <v-layout justify-space-between> -->
-                <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn flat color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
-              <!-- </v-layout> -->
+              <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
             </v-card-actions>
           </v-card>
         </div>
@@ -76,9 +72,9 @@ export default {
     ...mapState(['user', 'objects', 'pages', 'next', 'loading'])
   },
   watch: {
-    objects (newVal, oldVal) {
-      if (!newVal) return
-      if (newVal.length === 0) {
+    loading (newVal, oldVal) {
+      // if (!newVal) return
+      if (!newVal && this.objects.length === 0) {
         this.dialog = true
       }
     }
