@@ -17,7 +17,7 @@ const config = {
   storageBucket: 'andsnews.appspot.com',
   messagingSenderId: '719127177629'
 }
-firebase.initializeApp(config)
+Vue.prototype.$firebase = firebase.initializeApp(config) // TODO
 
 Vue.config.productionTip = false
 

@@ -5,6 +5,7 @@ import Item from '@/components/Item'
 import Add from '@/components/Add'
 import Search from '@/components/Search'
 import Edit from '@/components/Edit'
+import Admin from '@/components/Admin'
 
 Vue.use(Router)
 
@@ -27,6 +28,14 @@ export default new Router({
       path: '/add',
       name: 'add',
       component: Add,
+      meta: {
+        back: 'home'
+      }
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
       meta: {
         back: 'home'
       }

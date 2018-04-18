@@ -38,7 +38,8 @@ export default new Vuex.Store({
     loading: false,
     uploaded: [],
     tags: [],
-    models: []
+    models: [],
+    info: {}
   },
   // getters: {},
   actions: {
@@ -149,6 +150,15 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
+    },
+    getInfo ({commit}) {
+      HTTP.get('info')
+        .then(response => {
+          commit('updateInfo', response.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   mutations: {
@@ -213,6 +223,9 @@ export default new Vuex.Store({
     },
     changeLoadingState (state, loading) {
       state.loading = loading
+    },
+    updateInfo (state, payload) {
+      state.info = Object.assign({}, payload)
     }
   }
 })
