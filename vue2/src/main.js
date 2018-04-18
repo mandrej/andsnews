@@ -17,7 +17,10 @@ const config = {
   storageBucket: 'andsnews.appspot.com',
   messagingSenderId: '719127177629'
 }
-Vue.prototype.$firebase = firebase.initializeApp(config) // TODO
+const FB = firebase.initializeApp(config)
+Vue.prototype.$FireAuth = FB.auth()
+Vue.prototype.$Google = new firebase.auth.GoogleAuthProvider()
+Vue.prototype.$FireMessaging = FB.messaging()
 
 Vue.config.productionTip = false
 

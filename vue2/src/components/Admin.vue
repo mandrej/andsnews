@@ -4,17 +4,25 @@
       <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
       <v-toolbar-title>Admin</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="submit" :disabled="!valid" color="primary">Submit</v-btn>
     </v-toolbar>
 
     <v-content>
       <v-container grid-list-md mt-3>
-        <v-form v-model="valid" ref="form">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4>
-            </v-flex>
-          </v-layout>
-        </v-form>
+        <h1 class="headline">Photo {{count}}</h1>
+        <v-layout row wrap>
+          <v-flex v-for="name in counters" :key="name" xs12 sm6 md4>
+            <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
+          </v-flex>
+          <v-flex xs12 sm6 md4>
+            <v-btn large color="secondary" @click="reindex">Photo Reindex</v-btn>
+          </v-flex>
+          <v-flex xs12 sm6 md4>
+            <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
+          </v-flex>
+          <v-flex xs12 sm6 md4>
+            <v-btn large disabled color="secondary" @click="fix">Deleted</v-btn>
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-content>
   </v-app>
@@ -22,33 +30,55 @@
 
 <script>
 import { mapState } from 'vuex'
-// import firebase from 'firebase'
-
-// const messaging = firebase.messaging()
+import { HTTP } from '../../config/http'
 
 export default {
   name: 'Admin',
   data: () => ({
-    valid: true
+    count: 0,
+    counters: [],
+    token: null
   }),
   created () {
     this.$store.dispatch('getInfo')
+    // this.getToken()
   },
   computed: {
     ...mapState(['info'])
   },
+  watch: {
+    info (newVal, oldVal) {
+      if (!newVal) return
+      this.count = newVal.photo.count
+      this.counters = newVal.photo.counters
+    }
+  },
   methods: {
-    handleMessage () {
-      // messaging.requestPermission()
-      //   .then(() => console.log('success'))
-      //   .catch(() => console.log('failed'))
+    getToken () {
+      this.$FireMessaging.getToken()
+        .then(token => console.log(token))
+        .catch(() => console.log('token failed'))
     },
-    submit () {
-      // console.log(e.target.elements)
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('saveRecord', this.rec.safekey)
-        this.$router.go(-1)
-      }
+    callAjax (url) {
+      this.$FireMessaging.requestPermission()
+        .then(() => {
+          HTTP.post(url, {token: 'SDFSDFSDFFSDFSDFSDF'})
+            .then(x => x.data)
+            .catch(err => console.log(err))
+        })
+        .catch(() => console.log('permission failed'))
+    },
+    rebuild (name) {
+      this.callAjax('rebuild/' + name)
+    },
+    reindex () {
+      this.callAjax('index/photo')
+    },
+    unbound () {
+      this.callAjax('unbound/photo')
+    },
+    fix () {
+      this.callAjax('fix/photo')
     }
   }
 }
@@ -56,5 +86,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+.btn {
+  width: 100%;
+}
 </style>
