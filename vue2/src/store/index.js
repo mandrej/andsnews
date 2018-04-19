@@ -39,7 +39,8 @@ export default new Vuex.Store({
     uploaded: [],
     tags: [],
     models: [],
-    info: {}
+    info: {},
+    token: null
   },
   // getters: {},
   actions: {
@@ -159,6 +160,16 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
+    },
+    getToken ({commit}) {
+      this.$FireMessaging.requestPermission()
+        .then(() => {
+          return this.$FireMessaging.getToken()
+        })
+        .then((token) => {
+          commit('setToken', token)
+        })
+        .catch(() => console.log('permission failed'))
     }
   },
   mutations: {
@@ -226,6 +237,9 @@ export default new Vuex.Store({
     },
     updateInfo (state, payload) {
       state.info = Object.assign({}, payload)
+    },
+    setToken (state, token) {
+      state.token = token
     }
   }
 })

@@ -9,6 +9,8 @@ import firebase from 'firebase'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+Vue.config.productionTip = false
+
 const config = {
   apiKey: 'AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M',
   authDomain: 'andsnews.firebaseapp.com',
@@ -19,10 +21,9 @@ const config = {
 }
 const FB = firebase.initializeApp(config)
 Vue.prototype.$FireAuth = FB.auth()
-Vue.prototype.$Google = new firebase.auth.GoogleAuthProvider()
-Vue.prototype.$FireMessaging = FB.messaging()
-
-Vue.config.productionTip = false
+Vue.prototype.$Google = new firebase.auth.GoogleAuthProvider().addScope('email')
+Vue.prototype.$FireBase = FB.database().ref()
+Vue.prototype.$FireMessaging = FB.messaging().usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
 
 Vue.use(Vuetify, {
   theme: {

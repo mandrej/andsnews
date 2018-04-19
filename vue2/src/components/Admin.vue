@@ -36,15 +36,14 @@ export default {
   name: 'Admin',
   data: () => ({
     count: 0,
-    counters: [],
-    token: null
+    counters: []
   }),
   created () {
     this.$store.dispatch('getInfo')
-    // this.getToken()
+    this.$store.dispatch('getToken')
   },
   computed: {
-    ...mapState(['info'])
+    ...mapState(['info', 'token'])
   },
   watch: {
     info (newVal, oldVal) {
@@ -52,13 +51,22 @@ export default {
       this.count = newVal.photo.count
       this.counters = newVal.photo.counters
     }
+    // token (newVal, oldVal) {
+    //   if (!newVal) return
+    //   this.token = newVal
+    // }
   },
   methods: {
-    getToken () {
-      this.$FireMessaging.getToken()
-        .then(token => console.log(token))
-        .catch(() => console.log('token failed'))
-    },
+    // getToken () {
+    //   this.$FireMessaging.requestPermission()
+    //     .then(() => {
+    //       return this.$FireMessaging.getToken()
+    //     })
+    //     .then((x) => {
+    //       console.log(x)
+    //     })
+    //     .catch(() => console.log('permission failed'))
+    // },
     callAjax (url) {
       this.$FireMessaging.requestPermission()
         .then(() => {
