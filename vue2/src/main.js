@@ -19,11 +19,7 @@ const config = {
   storageBucket: 'andsnews.appspot.com',
   messagingSenderId: '719127177629'
 }
-const FB = firebase.initializeApp(config)
-Vue.prototype.$FireAuth = FB.auth()
-Vue.prototype.$Google = new firebase.auth.GoogleAuthProvider().addScope('email')
-Vue.prototype.$FireBase = FB.database().ref()
-Vue.prototype.$FireMessaging = FB.messaging().usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
+export const FB = firebase.initializeApp(config)
 
 Vue.use(Vuetify, {
   theme: {

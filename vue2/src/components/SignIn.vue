@@ -5,6 +5,10 @@
 
 <script>
 import { mapState } from 'vuex'
+import firebase from 'firebase'
+import { FB } from '../main'
+
+const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 
 export default {
   name: 'SignIn',
@@ -21,7 +25,7 @@ export default {
   methods: {
     signHandler () {
       if (this.user.uid) {
-        this.$FireAuth.signOut()
+        FB.auth().signOut()
           .then(() => {
             this.$store.dispatch('signIn', {
               name: '',
@@ -32,7 +36,7 @@ export default {
             })
           })
       } else {
-        this.$FireAuth.signInWithPopup(this.$Google)
+        FB.auth().signInWithPopup(provider)
           .then(response => {
             this.$store.dispatch('signIn', {
               name: response.user.displayName,

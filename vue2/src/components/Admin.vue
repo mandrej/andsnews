@@ -58,11 +58,12 @@ export default {
   },
   methods: {
     // getToken () {
-    //   this.$FireMessaging.requestPermission()
+    //   messaging.requestPermission()
     //     .then(() => {
-    //       return this.$FireMessaging.getToken()
+    //       console.log('permission success')
+    //       return messaging.getToken()
     //     })
-    //     .then((x) => {
+    //     .then(x => {
     //       console.log(x)
     //     })
     //     .catch(() => console.log('permission failed'))

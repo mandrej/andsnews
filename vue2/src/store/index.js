@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../config/http'
+import { FB } from '../main'
 // import uniqBy from 'lodash/uniqBy'
 
 Vue.use(Vuex, VueAxios)
@@ -162,11 +163,15 @@ export default new Vuex.Store({
         })
     },
     getToken ({commit}) {
-      this.$FireMessaging.requestPermission()
+      const messaging = FB.messaging()
+      messaging.usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
+      messaging.requestPermission()
         .then(() => {
-          return this.$FireMessaging.getToken()
+          console.log('permission success')
+          return messaging.getToken()
         })
         .then((token) => {
+          console.log(token)
           commit('setToken', token)
         })
         .catch(() => console.log('permission failed'))
