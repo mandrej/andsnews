@@ -13,6 +13,7 @@
     </v-dialog>
 
     <Edit :visible="editdForm" :rec="current" @close="editdForm=false"></Edit>
+    <Item :visible="showItem" :rec="current" @close="showItem=false"></Item>
 
     <div class="grid">
       <div v-masonry
@@ -25,11 +26,7 @@
         <div class="gutter-sizer"></div>
         <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
           <v-card>
-            <v-card-media>
-              <router-link :to="{ name: 'item', params: { id: item.safekey }}">
-                <img :src="src(item)" :alt="item.slug">
-              </router-link>
-            </v-card-media>
+            <v-card-media :src="src(item)" @click="showDetail(item)" height="300px"></v-card-media>
             <v-card-title primary-title>
               <div>
                 <h3 class="headline mb-0">{{item.headline}}</h3>
@@ -58,6 +55,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { VueMasonryPlugin } from 'vue-masonry'
 import MugenScroll from 'vue-mugen-scroll'
+import Item from './Item'
 import Edit from './Edit'
 
 Vue.use(VueMasonryPlugin)
@@ -66,22 +64,34 @@ export default {
   name: 'Home',
   components: {
     MugenScroll,
+    Item,
     Edit
   },
   data: () => ({
     threshold: 0,
     dialog: false,
     current: {},
+    showItem: false,
     editdForm: false
   }),
+  // mounted () {
+  //   if (typeof this.$redrawVueMasonry === 'function') {
+  //     this.$redrawVueMasonry()
+  //   }
+  // },
   computed: {
     ...mapState(['user', 'objects', 'pages', 'next', 'loading'])
   },
   watch: {
     loading (newVal, oldVal) {
-      // if (!newVal) return
       if (!newVal && this.objects.length === 0) {
         this.dialog = true
+      }
+    },
+    user (newVal, oldVal) {
+      if (newVal.isAuthorized !== oldVal.isAuthorized) {
+        console.log('redraw')
+        // this.$redrawVueMasonry() TODO not working
       }
     }
   },
@@ -96,13 +106,17 @@ export default {
     src (rec) {
       if (rec && rec.serving_url) {
         if (process.env.NODE_ENV === 'development') {
-          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400'
+          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400-c'
         } else {
-          return rec.serving_url + '=s400'
+          return rec.serving_url + '=s400-c'
         }
       } else {
         return '/static/broken.svg'
       }
+    },
+    showDetail (rec) {
+      this.current = rec
+      this.showItem = true
     },
     showEditdForm (rec) {
       this.current = rec

@@ -27,7 +27,6 @@ export default new Vuex.Store({
       author: '',
       color: ''
     },
-    current: null,
     page: null,
     next: null,
     loading: false,
@@ -42,12 +41,6 @@ export default new Vuex.Store({
     signIn ({commit}, user) {
       commit('updateUser', user)
     },
-    changeCurrent ({commit}, obj) {
-      commit('updateCurrent', obj)
-    },
-    changeRecords ({commit}, obj) {
-      commit('removeFromRecords', obj)
-    },
     changeUploaded ({commit}, obj) {
       commit('removeFromUploaded', obj)
     },
@@ -55,7 +48,6 @@ export default new Vuex.Store({
       HTTP.put('photo/edit/' + obj.safekey, obj)
         .then(response => {
           const obj = response.data.rec
-          commit('updateCurrent', obj)
           commit('updateOneRecord', obj)
           commit('removeFromUploaded', obj)
         })
@@ -63,22 +55,7 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
-    getRecord ({commit}, id) {
-      const obj = this.state.objects.filter(item => item.safekey === id)
-      if (obj.length === 1) {
-        commit('updateCurrent', obj[0])
-      } else {
-        HTTP.get(id)
-          .then(response => {
-            commit('updateCurrent', response.data)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
     deleteRecord ({commit}, obj) {
-      commit('updateCurrent', null)
       commit('removeFromRecords', obj)
       commit('removeFromUploaded', obj)
       // commit('resetPages')
@@ -171,9 +148,6 @@ export default new Vuex.Store({
   mutations: {
     updateUser (state, user) {
       state.user = Object.assign({}, user)
-    },
-    updateCurrent (state, data) {
-      state.current = data
     },
     updateFind (state, find) {
       state.find = Object.assign({}, find)

@@ -1,49 +1,61 @@
 <template>
-  <v-app light>
-    <v-toolbar app>
-      <v-icon @click="$router.go(-1)">arrow_back</v-icon>
-      <v-toolbar-title>{{title}}</v-toolbar-title>
-    </v-toolbar>
-
-    <v-content>
-      <img :src="src" :alt="alt">
-    </v-content>
-  </v-app>
+  <v-dialog
+    v-model="show"
+    fullscreen
+    transition="dialog-bottom-transition"
+    :overlay="false"
+    scrollable>
+    <v-card tile>
+      <v-toolbar card dark color="primary">
+        <v-btn icon @click.native="show = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-toolbar-title>{{rec.headline || title}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <!-- <v-btn @click="submit" :disabled="!valid" light>Submit</v-btn> -->
+      </v-toolbar>
+      <v-card-text>
+         <img :src="src(rec)" :alt="rec.slug">
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   name: 'Item',
+  props: ['visible', 'rec'],
   data: () => ({
-    src: '/static/broken.svg',
-    alt: '',
     title: 'Not found'
   }),
-  created () {
-    this.$store.dispatch('getRecord', this.$route.params.id)
-  },
   computed: {
-    ...mapState(['current'])
-  },
-  watch: {
-    current (newVal, oldVal) {
-      if (!newVal) return
-      this.createRecord(newVal)
+    show: {
+      get () {
+        return this.visible
+      },
+      set (value) {
+        if (!value) {
+          this.$emit('close')
+        }
+      }
     }
   },
   methods: {
-    createRecord (obj) {
-      this.title = obj.headline
-      this.src = (process.env.NODE_ENV === 'development') ? obj.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s0' : obj.serving_url + '=s0'
-      this.alt = obj.slug
+    src (rec) {
+      if (rec && rec.serving_url) {
+        if (process.env.NODE_ENV === 'development') {
+          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s0'
+        } else {
+          return rec.serving_url + '=s0'
+        }
+      } else {
+        return '/static/broken.svg'
+      }
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 img {
   width: 100%;
