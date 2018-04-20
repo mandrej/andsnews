@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
-import { HTTP } from '../../config/http'
-import { FB } from '../main'
+import { HTTP } from '../../helpers/http'
+import { MESSAGING } from '../../helpers/fire'
 // import uniqBy from 'lodash/uniqBy'
 
 Vue.use(Vuex, VueAxios)
@@ -14,13 +14,7 @@ export default new Vuex.Store({
     paths: ['user', 'find', 'uploaded']
   })],
   state: {
-    user: {
-      name: '',
-      email: '',
-      uid: null,
-      isAuthorized: false,
-      isAdmin: false
-    },
+    user: {},
     objects: [],
     pages: [],
     filter: {},
@@ -57,14 +51,13 @@ export default new Vuex.Store({
     changeUploaded ({commit}, obj) {
       commit('removeFromUploaded', obj)
     },
-    saveRecord ({commit}, id) {
-      HTTP.put('photo/edit/' + id, this.state.current)
+    saveRecord ({commit}, obj) {
+      HTTP.put('photo/edit/' + obj.safekey, obj)
         .then(response => {
           const obj = response.data.rec
           commit('updateCurrent', obj)
           commit('updateOneRecord', obj)
           commit('removeFromUploaded', obj)
-          // commit('resetPages')
         })
         .catch(err => {
           console.log(err)
@@ -163,12 +156,10 @@ export default new Vuex.Store({
         })
     },
     getToken ({commit}) {
-      const messaging = FB.messaging()
-      messaging.usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
-      messaging.requestPermission()
+      MESSAGING.requestPermission()
         .then(() => {
           console.log('permission success')
-          return messaging.getToken()
+          return MESSAGING.getToken()
         })
         .then(token => {
           console.log(token)

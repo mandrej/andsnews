@@ -7,15 +7,13 @@
     scrollable>
     <v-card tile>
       <v-toolbar card dark color="primary">
-        <v-btn icon @click.native="show=false">
+        <v-btn icon @click.native="show = false">
           <v-icon>close</v-icon>
         </v-btn>
         <v-toolbar-title>Find</v-toolbar-title>
         <v-spacer></v-spacer>
-        <!-- <v-toolbar-items> -->
-          <v-btn @click="reset" color="secondary">Reset</v-btn>
-          <v-btn @click="submit" :disabled="!valid" light>Find</v-btn>
-        <!-- </v-toolbar-items> -->
+        <v-btn @click="reset" color="secondary">Reset</v-btn>
+        <v-btn @click="submit" :disabled="!valid" light>Find</v-btn>
       </v-toolbar>
       <v-card-text>
         <v-container grid-list-md mt-3>

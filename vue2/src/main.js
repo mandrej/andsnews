@@ -4,22 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import firebase from 'firebase'
 
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
-
-const config = {
-  apiKey: 'AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M',
-  authDomain: 'andsnews.firebaseapp.com',
-  databaseURL: 'https://andsnews.firebaseio.com',
-  projectId: 'andsnews',
-  storageBucket: 'andsnews.appspot.com',
-  messagingSenderId: '719127177629'
-}
-export const FB = firebase.initializeApp(config)
 
 Vue.use(Vuetify, {
   theme: {

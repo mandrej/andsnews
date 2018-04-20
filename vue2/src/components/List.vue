@@ -12,6 +12,8 @@
       </v-card>
     </v-dialog>
 
+    <Edit :visible="editdForm" :rec="current" @close="editdForm=false"></Edit>
+
     <div class="grid">
       <div v-masonry
         transition-duration="0.6s"
@@ -37,7 +39,7 @@
             <v-card-actions v-if="user.isAuthorized">
               <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
               <v-spacer></v-spacer>
-              <v-btn flat color="primary" :to="{ name: 'edit', params: { id: item.safekey }}">Edit</v-btn>
+              <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
             </v-card-actions>
           </v-card>
         </div>
@@ -56,17 +58,21 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { VueMasonryPlugin } from 'vue-masonry'
 import MugenScroll from 'vue-mugen-scroll'
+import Edit from './Edit'
 
 Vue.use(VueMasonryPlugin)
 
 export default {
   name: 'Home',
   components: {
-    MugenScroll
+    MugenScroll,
+    Edit
   },
   data: () => ({
     threshold: 0,
-    dialog: false
+    dialog: false,
+    current: {},
+    editdForm: false
   }),
   computed: {
     ...mapState(['user', 'objects', 'pages', 'next', 'loading'])
@@ -97,6 +103,10 @@ export default {
       } else {
         return '/static/broken.svg'
       }
+    },
+    showEditdForm (rec) {
+      this.current = rec
+      this.editdForm = true
     },
     deleteRecord (rec) {
       this.$store.dispatch('deleteRecord', rec)

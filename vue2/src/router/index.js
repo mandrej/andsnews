@@ -4,7 +4,6 @@ import Home from '@/components/Home'
 import Item from '@/components/Item'
 import Add from '@/components/Add'
 import Search from '@/components/Search'
-import Edit from '@/components/Edit'
 import Admin from '@/components/Admin'
 
 Vue.use(Router)
@@ -49,11 +48,6 @@ export default new Router({
       path: '/view/:id',
       name: 'item',
       component: Item
-    },
-    {
-      path: '/edit/:id',
-      name: 'edit',
-      component: Edit
     }
   ]
 })

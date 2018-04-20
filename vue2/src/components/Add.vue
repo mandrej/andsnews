@@ -55,7 +55,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { HTTP } from '../../config/http'
+import { HTTP } from '../../helpers/http'
 
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1

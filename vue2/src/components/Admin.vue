@@ -12,23 +12,23 @@
       left
       bottom>
       {{ text }}
-      <v-btn flat color="white" @click.native="snackbar=false">Close</v-btn>
+      <v-btn flat color="white" @click.native="snackbar = false">Close</v-btn>
     </v-snackbar>
 
     <v-content>
       <v-container grid-list-md mt-3>
         <h1 class="headline">Photo {{count}}</h1>
         <v-layout row wrap>
-          <v-flex v-for="name in counters" :key="name" xs12 sm6 md4>
+          <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
             <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
           </v-flex>
-          <v-flex xs12 sm6 md4>
+          <v-flex xs6 sm4 md3>
             <v-btn large color="secondary" @click="reindex">Photo Reindex</v-btn>
           </v-flex>
-          <v-flex xs12 sm6 md4>
+          <v-flex xs6 sm4 md3>
             <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
           </v-flex>
-          <v-flex xs12 sm6 md4>
+          <v-flex xs6 sm4 md3>
             <v-btn large disabled color="secondary" @click="fix">Deleted</v-btn>
           </v-flex>
         </v-layout>
@@ -39,7 +39,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { HTTP } from '../../config/http'
+import { HTTP } from '../../helpers/http'
 import firebase from 'firebase'
 
 export default {
