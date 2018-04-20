@@ -6,6 +6,15 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      left
+      bottom>
+      {{ text }}
+      <v-btn flat color="white" @click.native="snackbar=false">Close</v-btn>
+    </v-snackbar>
+
     <v-content>
       <v-container grid-list-md mt-3>
         <h1 class="headline">Photo {{count}}</h1>
@@ -31,19 +40,30 @@
 <script>
 import { mapState } from 'vuex'
 import { HTTP } from '../../config/http'
+import firebase from 'firebase'
 
 export default {
   name: 'Admin',
   data: () => ({
     count: 0,
-    counters: []
+    counters: [],
+    text: '',
+    snackbar: false,
+    timeout: 3000
   }),
   created () {
     this.$store.dispatch('getInfo')
     this.$store.dispatch('getToken')
   },
+  mounted () {
+    const messaging = firebase.messaging()
+    messaging.onMessage(payload => {
+      this.snackbar = true
+      this.text = payload.notification.body
+    })
+  },
   computed: {
-    ...mapState(['info', 'token'])
+    ...mapState(['info', 'fcm_token'])
   },
   watch: {
     info (newVal, oldVal) {
@@ -51,31 +71,15 @@ export default {
       this.count = newVal.photo.count
       this.counters = newVal.photo.counters
     }
-    // token (newVal, oldVal) {
-    //   if (!newVal) return
-    //   this.token = newVal
-    // }
   },
   methods: {
-    // getToken () {
-    //   messaging.requestPermission()
-    //     .then(() => {
-    //       console.log('permission success')
-    //       return messaging.getToken()
-    //     })
-    //     .then(x => {
-    //       console.log(x)
-    //     })
-    //     .catch(() => console.log('permission failed'))
-    // },
+    handleMessage (e) {
+      console.log(e.detail.message.notification.body)
+    },
     callAjax (url) {
-      this.$FireMessaging.requestPermission()
-        .then(() => {
-          HTTP.post(url, {token: 'SDFSDFSDFFSDFSDFSDF'})
-            .then(x => x.data)
-            .catch(err => console.log(err))
-        })
-        .catch(() => console.log('permission failed'))
+      HTTP.post(url, {token: this.fcm_token})
+        .then(x => x.data)
+        .catch(err => console.log(err))
     },
     rebuild (name) {
       this.callAjax('rebuild/' + name)

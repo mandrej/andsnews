@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": "app",
+    "database": {
+      "rules": "database.rules.json"
+    },
+    "headers": [{
+      "source" : "/firebase-messaging-sw.js",
+      "headers" : [{
+        "key" : "Content-Type",
+        "value" : "application/javascript"
+      }]
+    }],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

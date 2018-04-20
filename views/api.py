@@ -239,7 +239,12 @@ class BackgroundFix(RestHandler):
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
-        token = self.request.json.get('token', None)
+        client = self.request.headers.get('client', None)
+        if (client == 'vue2'):
+            token = json.loads(self.request.body).get('token', None)
+        else:
+            token = self.request.json.get('token', None)
+
         if kind == 'Photo' and token is not None:  # TODO Title case!
             runner = Builder()
             runner.KIND = Photo

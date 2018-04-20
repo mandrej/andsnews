@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "firebase": "^4.12.1",
+    "sw-precache-webpack-plugin": "^0.11.5",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.1",
     "vue-masonry": "^0.11.1",

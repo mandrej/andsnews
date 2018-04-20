@@ -29,7 +29,9 @@ if [ $# -eq 0 ]
 else
   case $1 in
     devel)
-      $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml client_dev.yaml
+      # $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml client_dev.yaml
+      # $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml client_vue.yaml
+      $python $dev_appserver --port=8080 --storage_path=$storage api_dev.yaml
       exit ;;
     build)
       sed -i -E "/version/s/[[:digit:]]{12}/$client_version/g" $client_shell

@@ -41,7 +41,7 @@ export default new Vuex.Store({
     tags: [],
     models: [],
     info: {},
-    token: null
+    fcm_token: null
   },
   // getters: {},
   actions: {
@@ -170,7 +170,7 @@ export default new Vuex.Store({
           console.log('permission success')
           return messaging.getToken()
         })
-        .then((token) => {
+        .then(token => {
           console.log(token)
           commit('setToken', token)
         })
@@ -243,8 +243,8 @@ export default new Vuex.Store({
     updateInfo (state, payload) {
       state.info = Object.assign({}, payload)
     },
-    setToken (state, token) {
-      state.token = token
+    setToken (state, payload) {
+      state.fcm_token = payload
     }
   }
 })

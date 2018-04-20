@@ -23,6 +23,13 @@ module.exports = {
         pathRewrite: {
           '^/_ah': ''
         }
+      },
+      '/firebase-messaging-sw.js': {
+        target: 'http://localhost:6000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/firebase-messaging-sw.js': ''
+        }
       }
     },
 
