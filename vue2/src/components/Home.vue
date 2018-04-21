@@ -1,16 +1,16 @@
 <template>
   <div>
-    <Find :visible="showFindForm" @close="showFindForm=false"></Find>
+    <Find :visible="showFindForm" @close="showFindForm = false"></Find>
+    <Add :visible="showAddForm" @close="showAddForm = false"></Add>
+    <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="showAddForm = true">
+      <v-icon>add</v-icon>
+    </v-btn>
 
     <v-app light>
-      <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="$router.push({name: 'add'})">
-        <v-icon>add</v-icon>
-      </v-btn>
-
       <v-toolbar app>
         <v-toolbar-title>{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="showFindForm=true">
+        <v-btn icon @click="showFindForm = true">
           <v-icon>search</v-icon>
         </v-btn>
         <SignIn></SignIn>
@@ -28,18 +28,21 @@ import { mapState } from 'vuex'
 import SignIn from './SignIn'
 import List from './List'
 import Find from './Find'
+import Add from './Add'
 
 export default {
   name: 'Home',
   components: {
     SignIn,
     List,
-    Find
+    Find,
+    Add
   },
   data: () => ({
     drawer: null,
     title: 'ANDрејевићи',
-    showFindForm: false
+    showFindForm: false,
+    showAddForm: false
   }),
   computed: {
     ...mapState(['user'])

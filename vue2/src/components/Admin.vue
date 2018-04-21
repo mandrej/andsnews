@@ -1,11 +1,5 @@
 <template>
-  <v-app light>
-    <v-toolbar app>
-      <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
-      <v-toolbar-title>Admin</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
-
+  <div>
     <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
@@ -15,26 +9,34 @@
       <v-btn flat color="white" @click.native="snackbar = false">Close</v-btn>
     </v-snackbar>
 
-    <v-content>
-      <v-container grid-list-md mt-3>
-        <h1 class="headline">Photo {{count}}</h1>
-        <v-layout row wrap>
-          <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
-            <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <v-btn large color="secondary" @click="reindex">Photo Reindex</v-btn>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
-          </v-flex>
-          <v-flex xs6 sm4 md3>
-            <v-btn large disabled color="secondary" @click="fix">Deleted</v-btn>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-content>
-  </v-app>
+    <v-app light>
+      <v-toolbar app>
+        <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
+        <v-toolbar-title>Admin</v-toolbar-title>
+        <v-spacer></v-spacer>
+      </v-toolbar>
+
+      <v-content>
+        <v-container grid-list-md mt-3>
+          <h1 class="headline">Photo {{count}}</h1>
+          <v-layout row wrap>
+            <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
+              <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
+            </v-flex>
+            <v-flex xs6 sm4 md3>
+              <v-btn large color="secondary" @click="reindex">Photo Reindex</v-btn>
+            </v-flex>
+            <v-flex xs6 sm4 md3>
+              <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
+            </v-flex>
+            <v-flex xs6 sm4 md3>
+              <v-btn large disabled color="secondary" @click="fix">Deleted</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
 </template>
 
 <script>

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
+    <Item :visible="showItem" :rec="current" @close="showItem = false"></Item>
+
     <v-dialog v-model="dialog" max-width="300px">
       <v-card>
         <v-card-title class="headline">
@@ -7,13 +10,10 @@
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click.stop="dialog=false; $router.push({name: 'home'})">Close</v-btn>
+          <v-btn color="secondary" flat @click.stop="dialog = false; $router.push({name: 'home'})">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <Edit :visible="editdForm" :rec="current" @close="editdForm=false"></Edit>
-    <Item :visible="showItem" :rec="current" @close="showItem=false"></Item>
 
     <div class="grid">
       <div v-masonry
@@ -42,8 +42,12 @@
         </div>
       </div>
 
-      <mugen-scroll :handler="loadMore" :should-handle="!loading"
-        :threshold="threshold" scroll-container="grid">
+      <mugen-scroll
+        :handler="loadMore"
+        :should-handle="!loading"
+        :threshold="threshold"
+        handle-on-mount
+        scroll-container="grid">
         <v-progress-linear v-show="loading" :indeterminate="true"></v-progress-linear>
       </mugen-scroll>
     </div>
@@ -68,7 +72,7 @@ export default {
     Edit
   },
   data: () => ({
-    threshold: 0,
+    threshold: 0.1,
     dialog: false,
     current: {},
     showItem: false,

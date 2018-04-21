@@ -59,6 +59,7 @@
                   v-model="find.model"
                   label="Find by camera model"
                   autocomplete
+                  clearable
                   single-line></v-select>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -67,6 +68,7 @@
                   v-model="find.author"
                   label="Find by author"
                   autocomplete
+                  clearable
                   single-line></v-select>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -75,6 +77,7 @@
                   v-model="find.color"
                   label="Find by color"
                   autocomplete
+                  clearable
                   single-line></v-select>
               </v-flex>
             </v-layout>
@@ -167,6 +170,7 @@ export default {
             field: 'search',
             value: value
           })
+          this.show = false
           this.$router.push({name: 'search', params: {term: value}})
         }
       }
