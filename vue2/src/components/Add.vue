@@ -4,6 +4,7 @@
 
     <v-dialog
       v-model="show"
+      lazy
       fullscreen
       transition="dialog-bottom-transition"
       :overlay="false"
@@ -42,7 +43,7 @@
           <v-list two-line>
             <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
               <v-list-tile-avatar>
-                <img :src="src(item)" :alt="item.slug">
+                <img :src="getImgSrc(item, 's')" :alt="item.slug">
               </v-list-tile-avatar>
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.headline"></v-list-tile-title>
@@ -69,6 +70,7 @@
 <script>
 import { mapState } from 'vuex'
 import { HTTP } from '../../helpers/http'
+import common from '../../helpers/mixins'
 import Edit from './Edit'
 
 const STATUS_INITIAL = 0
@@ -82,6 +84,7 @@ export default {
   components: {
     Edit
   },
+  mixins: [ common ],
   data: () => ({
     uploadedFiles: [],
     fileCount: 0,
@@ -96,16 +99,6 @@ export default {
   },
   computed: {
     ...mapState(['uploaded']),
-    show: {
-      get () {
-        return this.visible
-      },
-      set (value) {
-        if (!value) {
-          this.$emit('close')
-        }
-      }
-    },
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
     },
@@ -164,17 +157,6 @@ export default {
     },
     deleteRecord (rec) {
       this.$store.dispatch('deleteRecord', rec)
-    },
-    src (rec) {
-      if (rec && rec.serving_url) {
-        if (process.env.NODE_ENV === 'development') {
-          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400-c'
-        } else {
-          return rec.serving_url + '=s400-c'
-        }
-      } else {
-        return '/static/broken.svg'
-      }
     }
   }
 }

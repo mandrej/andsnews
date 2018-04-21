@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="show"
+    lazy
     fullscreen
     transition="dialog-bottom-transition"
     :overlay="false"
@@ -90,9 +91,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import common from '../../helpers/mixins'
 
 export default {
   name: 'Find',
+  mixins: [ common ],
   props: ['visible'],
   data: () => ({
     valid: true,
@@ -120,17 +123,7 @@ export default {
     this.$store.dispatch('getModels')
   },
   computed: {
-    ...mapState(['find', 'filter', 'tags', 'models']),
-    show: {
-      get () {
-        return this.visible
-      },
-      set (value) {
-        if (!value) {
-          this.$emit('close')
-        }
-      }
-    }
+    ...mapState(['find', 'filter', 'tags', 'models'])
   },
   methods: {
     reset () {

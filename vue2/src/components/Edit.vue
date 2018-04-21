@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="show"
+    lazy
     fullscreen
     transition="dialog-bottom-transition"
     :overlay="false"
@@ -107,9 +108,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import common from '../../helpers/mixins'
 
 export default {
   name: 'Edit',
+  mixins: [ common ],
   props: ['visible', 'rec'],
   data: () => ({
     valid: true,
@@ -129,19 +132,8 @@ export default {
     this.$store.dispatch('getTags')
   },
   computed: {
-    ...mapState(['tags']),
-    show: {
-      get () {
-        return this.visible
-      },
-      set (value) {
-        if (!value) {
-          this.$emit('close')
-        }
-      }
-    }
+    ...mapState(['tags'])
   },
-
   methods: {
     submit () {
       if (this.$refs.form.validate()) {

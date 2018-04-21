@@ -3,7 +3,7 @@
     <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
     <Item :visible="showItem" :rec="current" @close="showItem = false"></Item>
 
-    <v-dialog v-model="dialog" max-width="300px">
+    <v-dialog v-model="dialog" max-width="300px" lazy>
       <v-card>
         <v-card-title class="headline">
           No photos for current filter / search
@@ -26,7 +26,7 @@
         <div class="gutter-sizer"></div>
         <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
           <v-card>
-            <v-card-media :src="src(item)" @click="showDetail(item)" height="300px"></v-card-media>
+            <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
             <v-card-title primary-title>
               <div>
                 <h3 class="headline mb-0">{{item.headline}}</h3>
@@ -61,6 +61,7 @@ import { VueMasonryPlugin } from 'vue-masonry'
 import MugenScroll from 'vue-mugen-scroll'
 import Item from './Item'
 import Edit from './Edit'
+import common from '../../helpers/mixins'
 
 Vue.use(VueMasonryPlugin)
 
@@ -71,6 +72,7 @@ export default {
     Item,
     Edit
   },
+  mixins: [ common ],
   data: () => ({
     threshold: 0.1,
     dialog: false,
@@ -105,17 +107,6 @@ export default {
         this.$store.dispatch('loadList')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('loadList', this.next)
-      }
-    },
-    src (rec) {
-      if (rec && rec.serving_url) {
-        if (process.env.NODE_ENV === 'development') {
-          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s400-c'
-        } else {
-          return rec.serving_url + '=s400-c'
-        }
-      } else {
-        return '/static/broken.svg'
       }
     },
     showDetail (rec) {

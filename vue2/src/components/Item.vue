@@ -1,8 +1,9 @@
 <template>
   <v-dialog
     v-model="show"
+    lazy
     fullscreen
-    transition="dialog-bottom-transition"
+    transition="scale-transition"
     :overlay="false"
     scrollable>
     <v-card tile>
@@ -14,50 +15,20 @@
         <v-spacer></v-spacer>
         <!-- <v-btn @click="submit" :disabled="!valid" light>Submit</v-btn> -->
       </v-toolbar>
-      <v-card-text>
-         <img :src="src(rec)" :alt="rec.slug">
-      </v-card-text>
+      <v-card-media :src="getImgSrc(rec)" height="100%" contain></v-card-media>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import common from '../../helpers/mixins'
+
 export default {
   name: 'Item',
+  mixins: [ common ],
   props: ['visible', 'rec'],
   data: () => ({
     title: 'Not found'
-  }),
-  computed: {
-    show: {
-      get () {
-        return this.visible
-      },
-      set (value) {
-        if (!value) {
-          this.$emit('close')
-        }
-      }
-    }
-  },
-  methods: {
-    src (rec) {
-      if (rec && rec.serving_url) {
-        if (process.env.NODE_ENV === 'development') {
-          return rec.serving_url.replace('http://localhost:8080/_ah', '/_ah') + '=s0'
-        } else {
-          return rec.serving_url + '=s0'
-        }
-      } else {
-        return '/static/broken.svg'
-      }
-    }
-  }
+  })
 }
 </script>
-
-<style lang="scss" scoped>
-img {
-  width: 100%;
-}
-</style>
