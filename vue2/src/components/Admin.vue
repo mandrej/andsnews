@@ -10,9 +10,9 @@
     </v-snackbar>
 
     <v-app light>
-      <v-toolbar app>
+      <v-toolbar app flat>
         <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
-        <v-toolbar-title>Admin</v-toolbar-title>
+        <h2 class="headline">Admin</h2>
         <v-spacer></v-spacer>
       </v-toolbar>
 

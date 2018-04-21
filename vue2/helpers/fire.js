@@ -12,5 +12,5 @@ const firebase_app = firebase.initializeApp(config)
 export const FB = firebase_app
 
 const messaging = firebase_app.messaging()
-messaging.usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
+// messaging.usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
 export const MESSAGING = messaging

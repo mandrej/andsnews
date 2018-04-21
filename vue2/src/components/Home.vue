@@ -7,8 +7,8 @@
     </v-btn>
 
     <v-app light>
-      <v-toolbar app>
-        <v-toolbar-title>{{title}}</v-toolbar-title>
+      <v-toolbar app flat>
+        <h2 class="headline">{{title}}</h2>
         <v-spacer></v-spacer>
         <v-btn icon @click="showFindForm = true">
           <v-icon>search</v-icon>
