@@ -29,7 +29,7 @@ export default new Vuex.Store({
     },
     page: null,
     next: null,
-    loading: false,
+    busy: false,
     uploaded: [],
     tags: [],
     models: [],
@@ -202,8 +202,8 @@ export default new Vuex.Store({
         state.uploaded.splice(index, 1)
       }
     },
-    changeLoadingState (state, loading) {
-      state.loading = loading
+    changeLoadingState (state, busy) {
+      state.busy = busy
     },
     updateInfo (state, payload) {
       state.info = Object.assign({}, payload)

@@ -24,7 +24,10 @@
         gutter=".gutter-sizer">
         <div class="grid-sizer"></div>
         <div class="gutter-sizer"></div>
-        <div v-masonry-tile class="grid-item" v-for="item in objects" :key="item.safekey">
+        <div v-masonry-tile
+          class="grid-item"
+          v-for="item in objects"
+          :key="item.safekey">
           <v-card>
             <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
             <v-card-title primary-title>
@@ -44,11 +47,11 @@
 
       <mugen-scroll
         :handler="loadMore"
-        :should-handle="!loading"
+        :should-handle="!busy"
         :threshold="threshold"
         handle-on-mount
         scroll-container="grid">
-        <v-progress-linear v-show="loading" :indeterminate="true"></v-progress-linear>
+        <v-progress-linear v-show="busy" :indeterminate="true"></v-progress-linear>
       </mugen-scroll>
     </div>
   </div>
@@ -74,30 +77,19 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
-    threshold: 0.1,
+    threshold: 0,
     dialog: false,
     current: {},
     showItem: false,
     editdForm: false
   }),
-  // mounted () {
-  //   if (typeof this.$redrawVueMasonry === 'function') {
-  //     this.$redrawVueMasonry()
-  //   }
-  // },
   computed: {
-    ...mapState(['user', 'objects', 'pages', 'next', 'loading'])
+    ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy'])
   },
   watch: {
-    loading (newVal, oldVal) {
+    busy (newVal, oldVal) {
       if (!newVal && this.objects.length === 0) {
         this.dialog = true
-      }
-    },
-    user (newVal, oldVal) {
-      if (newVal.isAuthorized !== oldVal.isAuthorized) {
-        console.log('redraw')
-        // this.$redrawVueMasonry() TODO not working
       }
     }
   },

@@ -128,9 +128,6 @@ export default {
       'zile.zikson@gmail.com'
     ]
   }),
-  created () {
-    this.$store.dispatch('getTags')
-  },
   computed: {
     ...mapState(['tags'])
   },

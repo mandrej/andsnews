@@ -99,14 +99,7 @@ export default {
   props: ['visible'],
   data: () => ({
     valid: true,
-    authors: [
-      'milan.andrejevic@gmail.com',
-      'mihailo.genije@gmail.com',
-      'svetlana.andrejevic@gmail.com',
-      'ana.devic@gmail.com',
-      'dannytaboo@gmail.com',
-      'zile.zikson@gmail.com'
-    ],
+    authors: ['milan', 'mihailo', 'genije', 'svetlana', 'andrejevic', 'ana', 'devic', 'dannytaboo', 'zile', 'zikson'],
     colors: ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'],
     blank: {
       tags: [],
@@ -118,12 +111,8 @@ export default {
       color: ''
     }
   }),
-  created () {
-    this.$store.dispatch('getTags')
-    this.$store.dispatch('getModels')
-  },
   computed: {
-    ...mapState(['find', 'filter', 'tags', 'models'])
+    ...mapState(['find', 'tags', 'models'])
   },
   methods: {
     reset () {
@@ -155,16 +144,20 @@ export default {
         if (this.find.color) {
           params.push('color:' + this.find.color)
         }
+        this.$store.dispatch('changeFind', this.find)
 
         const value = params.join(' AND ')
         if (value) {
-          this.$store.dispatch('changeFind', this.find)
           this.$store.dispatch('changeFilter', {
             field: 'search',
             value: value
           })
           this.show = false
+          this.$store.dispatch('loadList')
           this.$router.push({name: 'search', params: {term: value}})
+        } else {
+          this.$store.dispatch('changeFilter', {})
+          this.$store.dispatch('loadList')
         }
       }
     }
