@@ -29,10 +29,10 @@
               <v-flex xs12>
                 <v-select
                   label="Tags"
+                  :items="tags"
                   v-model="rec.tags"
                   chips
                   tags
-                  :items="tags"
                   clearable
                   autocomplete>
                   <template slot="selection" slot-scope="data">
@@ -47,9 +47,9 @@
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-select
+                  label="Author"
                   :items="authors"
                   v-model="rec.author"
-                  label="Author"
                   autocomplete
                   single-line></v-select>
               </v-flex>
@@ -117,7 +117,7 @@ export default {
   data: () => ({
     valid: true,
     requiredRule: [
-      v => !!v || 'Required field'
+      value => !!value || 'Required.'
     ],
     authors: [
       'milan.andrejevic@gmail.com',

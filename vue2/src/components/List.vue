@@ -29,13 +29,13 @@
           v-for="item in objects"
           :key="item.safekey">
           <v-card>
-            <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
             <v-card-title primary-title>
               <div>
                 <h3 class="headline mb-0">{{item.headline}}</h3>
                 <div>{{item.date}}</div>
               </div>
             </v-card-title>
+            <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
             <v-card-actions v-if="user.isAuthorized">
               <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
               <v-spacer></v-spacer>
@@ -49,8 +49,7 @@
         :handler="loadMore"
         :should-handle="!busy"
         :threshold="threshold"
-        handle-on-mount
-        scroll-container="grid">
+        handle-on-mount>
         <v-progress-linear v-show="busy" :indeterminate="true"></v-progress-linear>
       </mugen-scroll>
     </div>
@@ -83,6 +82,14 @@ export default {
     showItem: false,
     editdForm: false
   }),
+  created () {
+    if (this.$route.params.term) {
+      this.$store.dispatch('changeFilter', {
+        field: 'search',
+        value: this.$route.params.term
+      })
+    }
+  },
   computed: {
     ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy'])
   },

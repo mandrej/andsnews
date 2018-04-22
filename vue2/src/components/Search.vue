@@ -33,6 +33,10 @@ export default {
   data: () => ({
     showFindForm: false
   }),
+  created () {
+    this.$store.dispatch('getTags')
+    this.$store.dispatch('getModels')
+  },
   computed: {
     ...mapState(['filter'])
   },

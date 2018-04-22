@@ -5,6 +5,7 @@ import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
 // import uniqBy from 'lodash/uniqBy'
+import isEqual from 'lodash/isEqual'
 
 Vue.use(Vuex, VueAxios)
 
@@ -18,15 +19,7 @@ export default new Vuex.Store({
     objects: [],
     pages: [],
     filter: {},
-    find: {
-      tags: [],
-      text: '',
-      year: '',
-      month: '',
-      model: '',
-      author: '',
-      color: ''
-    },
+    find: {},
     page: null,
     next: null,
     busy: false,
@@ -58,7 +51,6 @@ export default new Vuex.Store({
     deleteRecord ({commit}, obj) {
       commit('removeFromRecords', obj)
       commit('removeFromUploaded', obj)
-      // commit('resetPages')
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
@@ -74,10 +66,12 @@ export default new Vuex.Store({
     changeFind ({commit}, payload) {
       commit('updateFind', payload)
     },
-    changeFilter ({commit}, payload) {
-      commit('updateFilter', payload)
-      commit('resetRecords')
-      commit('resetPages')
+    changeFilter ({state, commit}, payload) {
+      if (!isEqual(state.filter, payload)) {
+        commit('updateFilter', payload)
+        commit('resetRecords')
+        commit('resetPages')
+      }
     },
     loadList ({commit, state}, next) {
       let url = 'start'

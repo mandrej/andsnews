@@ -28,10 +28,10 @@
               <v-flex xs12>
                 <v-select
                   label="Find by tags"
+                  :items="tags"
                   v-model="find.tags"
                   chips
                   tags
-                  :items="tags"
                   clearable
                   autocomplete>
                   <template slot="selection" slot-scope="data">
@@ -47,36 +47,42 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Find by year"
-                  v-model="find.year"></v-text-field>
+                  v-model="find.year"
+                  type="number"
+                  :min="2007"
+                  :max="(new Date()).getFullYear()"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Find by month"
-                  v-model="find.month"></v-text-field>
+                  v-model="find.month"
+                  type="number"
+                  :min="1"
+                  :max="12"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-select
+                  label="Find by camera model"
                   :items="models"
                   v-model="find.model"
-                  label="Find by camera model"
                   autocomplete
                   clearable
                   single-line></v-select>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-select
+                  label="Find by author"
                   :items="authors"
                   v-model="find.author"
-                  label="Find by author"
                   autocomplete
                   clearable
                   single-line></v-select>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-select
+                  label="Find by color"
                   :items="colors"
                   v-model="find.color"
-                  label="Find by color"
                   autocomplete
                   clearable
                   single-line></v-select>
@@ -116,16 +122,16 @@ export default {
   },
   methods: {
     reset () {
-      // this.find = {...this.blank}
       this.$store.dispatch('changeFind', this.blank)
-      // this.$store.dispatch('changeFilter', {})
     },
     submit () {
       let params = []
       if (this.$refs.form.validate()) {
-        this.find.tags.forEach(tag => {
-          params.push('tags:' + tag)
-        })
+        if (this.find.tags) {
+          this.find.tags.forEach(tag => {
+            params.push('tags:' + tag)
+          })
+        }
         if (this.find.text) {
           params.push(this.find.text)
         }
@@ -153,11 +159,10 @@ export default {
             value: value
           })
           this.show = false
-          this.$store.dispatch('loadList')
           this.$router.push({name: 'search', params: {term: value}})
         } else {
+          this.show = false
           this.$store.dispatch('changeFilter', {})
-          this.$store.dispatch('loadList')
         }
       }
     }
