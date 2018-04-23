@@ -3,12 +3,14 @@
     <Find :visible="showFindForm" @close="showFindForm = false"></Find>
 
     <v-app light>
-      <v-toolbar app flat>
+      <v-toolbar app extended>
         <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
-        <h2 class="headline">Search results for {{filter.value}}</h2>
+        <v-toolbar-title class="headline">Results for</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
-        <v-btn icon @click="showFindForm = true">
+        <v-progress-circular v-show="busy" class="hidden-xs-only" color="primary" :indeterminate="true"></v-progress-circular>
+        <v-toolbar-title slot="extension">{{filter.value}}</v-toolbar-title>
+        <v-spacer slot="extension"></v-spacer>
+        <v-btn slot="extension" icon @click="showFindForm = true">
           <v-icon>search</v-icon>
         </v-btn>
       </v-toolbar>

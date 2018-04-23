@@ -79,7 +79,6 @@ export default new Vuex.Store({
           url = ['photo', saved.field, saved.value].join('/')
         }
       }
-      console.log(url, params)
 
       commit('changeLoadingState', true)
       HTTP.get(url, {params: params})
@@ -118,7 +117,6 @@ export default new Vuex.Store({
           return MESSAGING.getToken()
         })
         .then(token => {
-          console.log(token)
           commit('setToken', token)
         })
         .catch(() => console.log('permission failed'))

@@ -1,6 +1,12 @@
 <template>
-  <v-btn v-if="user.isAuthorized" @click="signHandler" flat color="secondary">Sign-Off</v-btn>
-  <v-btn v-else @click="signHandler" flat color="primary">Sign-In</v-btn>
+  <v-avatar
+    size="36px"
+    @click="signHandler">
+    <img
+      :src="user.photo"
+      v-if="user.isAuthorized">
+    <v-icon v-else flat color="secondary">account_circle</v-icon>
+  </v-avatar>
 </template>
 
 <script>
@@ -31,6 +37,7 @@ export default {
               name: '',
               email: '',
               uid: null,
+              photo: '',
               isAuthorized: false,
               isAdmin: false
             })
@@ -42,6 +49,7 @@ export default {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,
+              photo: response.user.photoURL,
               isAuthorized: true,
               isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
             })

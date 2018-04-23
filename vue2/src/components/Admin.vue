@@ -10,15 +10,15 @@
     </v-snackbar>
 
     <v-app light>
-      <v-toolbar app flat>
+      <v-toolbar app extended>
         <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
-        <h2 class="headline">Admin</h2>
+        <v-toolbar-title class="headline">Admin</v-toolbar-title>
+        <v-toolbar-title slot="extension">{{count}} photos and counting</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
 
       <v-content>
         <v-container grid-list-md mt-3>
-          <h1 class="headline">Photo {{count}}</h1>
           <v-layout row wrap>
             <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
               <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
@@ -75,9 +75,6 @@ export default {
     }
   },
   methods: {
-    handleMessage (e) {
-      console.log(e.detail.message.notification.body)
-    },
     callAjax (url) {
       HTTP.post(url, {token: this.fcm_token})
         .then(x => x.data)
