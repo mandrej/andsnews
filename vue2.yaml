@@ -1,0 +1,34 @@
+service: client
+runtime: python27
+api_version: 1
+threadsafe: true
+default_expiration: "0m"
+
+instance_class: F1
+automatic_scaling:
+  max_idle_instances: 1
+
+handlers:
+- url: /(robots\.txt|manifest\.json)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(robots\.txt|manifest\.json)$
+  secure: always
+
+- url: /static/
+  static_dir: vue2/dist/static
+  secure: always
+
+- url: /(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(service-worker\.js|firebase-messaging-sw\.js)$
+  secure: always
+  http_headers:
+    Content-Type: application/javascript
+
+- url: /.*
+  static_files: vue2/dist/index.html
+  upload: vue2/dist/index.html
+  secure: always
+
+skip_files:
+- (?!^(vue2($|/dist)))
