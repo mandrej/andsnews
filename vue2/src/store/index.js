@@ -4,8 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
-// import uniqBy from 'lodash/uniqBy'
-import { isEqual, isEmpty } from 'lodash'
+import { isEqual, isEmpty } from 'lodash' // uniqBy
 
 Vue.use(Vuex, VueAxios)
 
@@ -44,9 +43,6 @@ export default new Vuex.Store({
           commit('updateOneRecord', obj)
           commit('removeFromUploaded', obj)
         })
-        .catch(err => {
-          console.log(err)
-        })
     },
     deleteRecord ({commit}, obj) {
       commit('removeFromRecords', obj)
@@ -55,9 +51,6 @@ export default new Vuex.Store({
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
           console.log(response.data)
-        })
-        .catch(err => {
-          console.log(err)
         })
     },
     uploadList ({commit}, obj) {
@@ -105,26 +98,17 @@ export default new Vuex.Store({
         .then(response => {
           commit('updateTags', response.data)
         })
-        .catch(err => {
-          console.log(err)
-        })
     },
     getModels ({commit}) {
       HTTP.get('suggest/Photo_model')
         .then(response => {
           commit('updateModels', response.data)
         })
-        .catch(err => {
-          console.log(err)
-        })
     },
     getInfo ({commit}) {
       HTTP.get('info')
         .then(response => {
           commit('updateInfo', response.data)
-        })
-        .catch(err => {
-          console.log(err)
         })
     },
     getToken ({commit}) {
