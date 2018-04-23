@@ -161,8 +161,8 @@ export default {
           this.show = false
           this.$router.push({name: 'search', params: {term: value}})
         } else {
-          this.show = false
           this.$store.dispatch('changeFilter', {})
+          this.show = false
         }
       }
     }

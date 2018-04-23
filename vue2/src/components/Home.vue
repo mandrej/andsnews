@@ -10,6 +10,7 @@
       <v-toolbar app flat>
         <h2 class="headline">{{title}}</h2>
         <v-spacer></v-spacer>
+        <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
         <v-btn icon @click="showFindForm = true">
           <v-icon>search</v-icon>
         </v-btn>
@@ -49,7 +50,7 @@ export default {
     this.$store.dispatch('getModels')
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user', 'busy'])
   }
 }
 </script>

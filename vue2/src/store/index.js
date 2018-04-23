@@ -5,7 +5,7 @@ import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
 // import uniqBy from 'lodash/uniqBy'
-import isEqual from 'lodash/isEqual'
+import { isEqual, isEmpty } from 'lodash'
 
 Vue.use(Vuex, VueAxios)
 
@@ -66,11 +66,12 @@ export default new Vuex.Store({
     changeFind ({commit}, payload) {
       commit('updateFind', payload)
     },
-    changeFilter ({state, commit}, payload) {
+    changeFilter ({state, commit, dispatch}, payload) {
       if (!isEqual(state.filter, payload)) {
         commit('updateFilter', payload)
         commit('resetRecords')
         commit('resetPages')
+        if (!isEmpty(payload)) dispatch('loadList')
       }
     },
     loadList ({commit, state}, next) {

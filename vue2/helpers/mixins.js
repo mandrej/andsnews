@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const common = {
   computed: {
     // v-dialog v-model="show"
@@ -24,7 +26,12 @@ const common = {
       } else {
         return '/static/broken.svg'
       }
+    },
+    dateFormat (str, fmt) {
+      if (!fmt) fmt = 'llll'
+      return moment(str, 'YYYY-MM-DDTHH:mm:ss').format(fmt)
     }
   }
-};
-export default common;
+}
+
+export default common

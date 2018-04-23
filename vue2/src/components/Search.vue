@@ -7,6 +7,7 @@
         <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
         <h2 class="headline">Search results for {{filter.value}}</h2>
         <v-spacer></v-spacer>
+        <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
         <v-btn icon @click="showFindForm = true">
           <v-icon>search</v-icon>
         </v-btn>
@@ -38,7 +39,7 @@ export default {
     this.$store.dispatch('getModels')
   },
   computed: {
-    ...mapState(['filter'])
+    ...mapState(['filter', 'busy'])
   },
   destroyed () {
     this.$store.dispatch('changeFilter', {})

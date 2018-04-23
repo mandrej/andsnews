@@ -16,42 +16,38 @@
     </v-dialog>
 
     <div class="grid">
-      <div v-masonry
-        transition-duration="0.6s"
-        item-selector=".grid-item"
-        horizontal-order="true"
-        column-width=".grid-sizer"
-        gutter=".gutter-sizer">
-        <div class="grid-sizer"></div>
-        <div class="gutter-sizer"></div>
-        <div v-masonry-tile
-          class="grid-item"
-          v-for="item in objects"
-          :key="item.safekey">
-          <v-card>
-            <v-card-title primary-title>
-              <div>
-                <h3 class="headline mb-0">{{item.headline}}</h3>
-                <div>{{item.date}}</div>
-              </div>
-            </v-card-title>
-            <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
-            <v-card-actions v-if="user.isAuthorized">
-              <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
-            </v-card-actions>
-          </v-card>
+      <div v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="busy"
+        infinite-scroll-distance="distance">
+        <div v-masonry
+          transition-duration="0.6s"
+          item-selector=".grid-item"
+          horizontal-order="true"
+          column-width=".grid-sizer"
+          gutter=".gutter-sizer">
+          <div class="grid-sizer"></div>
+          <div class="gutter-sizer"></div>
+          <div v-masonry-tile
+            class="grid-item"
+            v-for="item in objects"
+            :key="item.safekey">
+            <v-card>
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="headline mb-0">{{item.headline}}</h3>
+                  <div>{{dateFormat(item.date, 'll')}}</div>
+                </div>
+              </v-card-title>
+              <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
+              <v-card-actions v-if="user.isAuthorized">
+                <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
+              </v-card-actions>
+            </v-card>
+          </div>
         </div>
       </div>
-
-      <mugen-scroll
-        :handler="loadMore"
-        :should-handle="!busy"
-        :threshold="threshold"
-        handle-on-mount>
-        <v-progress-linear v-show="busy" :indeterminate="true"></v-progress-linear>
-      </mugen-scroll>
     </div>
   </div>
 </template>
@@ -60,7 +56,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { VueMasonryPlugin } from 'vue-masonry'
-import MugenScroll from 'vue-mugen-scroll'
+import infiniteScroll from 'vue-infinite-scroll'
 import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
@@ -70,13 +66,15 @@ Vue.use(VueMasonryPlugin)
 export default {
   name: 'Home',
   components: {
-    MugenScroll,
     Item,
     Edit
   },
+  directives: {
+    infiniteScroll
+  },
   mixins: [ common ],
   data: () => ({
-    threshold: 0,
+    distance: 200,
     dialog: false,
     current: {},
     showItem: false,
