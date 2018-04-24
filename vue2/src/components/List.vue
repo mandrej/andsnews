@@ -38,7 +38,10 @@
                   <div>{{dateFormat(item.date, 'short')}}</div>
                 </div>
               </v-card-title>
-              <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
+              <v-card-media
+                v-lazy:background-image="getImgSrc(item, 's')"
+                @click="showDetail(item)"
+                height="300px"></v-card-media>
               <v-card-actions v-if="user.isAuthorized">
                 <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
                 <v-spacer></v-spacer>
@@ -56,12 +59,14 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { VueMasonryPlugin } from 'vue-masonry'
+import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
 
 Vue.use(VueMasonryPlugin)
+Vue.use(VueLazyload)
 
 export default {
   name: 'Home',
