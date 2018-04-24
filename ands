@@ -34,8 +34,8 @@ else
           $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml p2_dev.yaml
           exit ;;
         vue2)
+          $python $dev_appserver --port=8080 --storage_path=$storage api_dev.yaml
           # start manually
-          # $python $dev_appserver --port=8080 --storage_path=$storage api_dev.yaml
           # cd vue2
           # yarn run dev
           exit ;;

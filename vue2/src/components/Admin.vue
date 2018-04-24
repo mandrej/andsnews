@@ -10,7 +10,7 @@
     </v-snackbar>
 
     <v-app light>
-      <v-toolbar app extended>
+      <v-toolbar app prominent extended>
         <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
         <v-toolbar-title slot="extension">{{count}} photos and counting</v-toolbar-title>

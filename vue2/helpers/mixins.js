@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 const common = {
   computed: {
     // v-dialog v-model="show"
@@ -28,8 +26,14 @@ const common = {
       }
     },
     dateFormat (str, fmt) {
-      if (!fmt) fmt = 'llll'
-      return moment(str, 'YYYY-MM-DDTHH:mm:ss').format(fmt)
+      if (!str) return 'N/A'
+      let [date, time] = str.split('T')
+      let [year, month, day] = date.split('-')
+      if (fmt) {
+        return [day, month, year].join('.')
+      } else {
+        return [day, month, year].join('.') + ' ' + time
+      }
     }
   }
 }

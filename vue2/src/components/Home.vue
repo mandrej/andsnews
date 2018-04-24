@@ -7,15 +7,17 @@
     </v-btn>
 
     <v-app light>
-      <v-toolbar app extended>
+      <v-toolbar app prominent extended>
         <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-progress-circular v-show="busy" class="hidden-xs-only" color="primary" :indeterminate="true"></v-progress-circular>
         <SignIn></SignIn>
-        <v-spacer slot="extension"></v-spacer>
-        <v-btn slot="extension" icon @click="showFindForm = true">
-          <v-icon>search</v-icon>
-        </v-btn>
+        <v-layout slot="extension">
+          <v-spacer ></v-spacer>
+          <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
+          <v-btn icon @click="showFindForm = true">
+            <v-icon>search</v-icon>
+          </v-btn>
+        </v-layout>
       </v-toolbar>
 
       <v-content>

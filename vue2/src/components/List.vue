@@ -35,7 +35,7 @@
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">{{item.headline}}</h3>
-                  <div>{{dateFormat(item.date, 'll')}}</div>
+                  <div>{{dateFormat(item.date, 'short')}}</div>
                 </div>
               </v-card-title>
               <v-card-media :src="getImgSrc(item, 's')" @click="showDetail(item)" height="300px"></v-card-media>
