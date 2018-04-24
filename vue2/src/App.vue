@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view :version="version.match(/.{1,4}/g).join('.')"/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data: () => ({
+    version: '201804241612'
+  })
 }
 </script>
 
