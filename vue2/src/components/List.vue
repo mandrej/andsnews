@@ -34,7 +34,7 @@
             <v-card>
               <v-card-title primary-title>
                 <div>
-                  <h3 class="headline mb-0">{{item.headline}}</h3>
+                  <h3 class="title mb-0">{{item.headline}}</h3>
                   <div>{{dateFormat(item.date, 'short')}}</div>
                 </div>
               </v-card-title>
@@ -74,7 +74,7 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
-    distance: 200,
+    distance: 800,
     dialog: false,
     current: {},
     showItem: false,

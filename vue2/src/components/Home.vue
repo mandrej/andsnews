@@ -12,7 +12,7 @@
         <v-spacer></v-spacer>
         <SignIn></SignIn>
         <v-layout slot="extension">
-          <v-toolbar-title class="grey--text">{{version}}</v-toolbar-title>
+          <v-toolbar-title class="grey--text text--lighten-1">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer ></v-spacer>
           <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">

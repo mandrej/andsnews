@@ -6,7 +6,9 @@
       left
       bottom>
       {{ text }}
-      <v-btn flat color="white" @click.native="snackbar = false">Close</v-btn>
+      <v-btn flat icon color="white" @click.native="snackbar = false">
+        <v-icon>close</v-icon>
+      </v-btn>
     </v-snackbar>
 
     <v-app light>
