@@ -48,6 +48,7 @@
                 <v-text-field
                   label="Find by year"
                   v-model="find.year"
+                  clearable
                   type="number"
                   :min="2007"
                   :max="(new Date()).getFullYear()"></v-text-field>
@@ -56,6 +57,7 @@
                 <v-text-field
                   label="Find by month"
                   v-model="find.month"
+                  clearable
                   type="number"
                   :min="1"
                   :max="12"></v-text-field>
@@ -161,7 +163,6 @@ export default {
           })
           this.show = false
           EventBus.$emit('reload')
-          // this.$router.push({name: 'search', params: {term: value}})
         } else {
           this.$store.dispatch('changeFilter', {})
           this.show = false

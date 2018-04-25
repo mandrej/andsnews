@@ -13,7 +13,9 @@
         <SignIn></SignIn>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value">
-            <v-btn color="grey lighten-1" @click="clearFilter">Clear</v-btn>
+            <v-btn icon color="secondary--text" @click="clearFilter">
+              <v-icon>close</v-icon>
+            </v-btn>
             {{filter.value}}
           </v-toolbar-title>
           <v-toolbar-title v-else class="grey--text text--lighten-1">ANDS 2007-{{version}}</v-toolbar-title>
@@ -70,7 +72,7 @@ export default {
   methods: {
     clearFilter () {
       this.$store.dispatch('changeFilter', {})
-      this.$store.dispatch('loadList')
+      EventBus.$emit('reload')
     }
   }
 }

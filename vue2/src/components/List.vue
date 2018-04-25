@@ -10,7 +10,7 @@
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click.stop="dialog = false; $router.push({name: 'home'})">Close</v-btn>
+          <v-btn color="secondary" flat @click.stop="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

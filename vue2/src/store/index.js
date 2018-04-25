@@ -4,7 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
-import { isEqual } from 'lodash' // uniqBy
+// import { isEqual } from 'lodash' // uniqBy
 
 Vue.use(Vuex, VueAxios)
 
@@ -30,13 +30,9 @@ export default new Vuex.Store({
   },
   // getters: {},
   actions: {
-    signIn ({commit}, user) {
-      commit('updateUser', user)
-    },
-    changeUploaded ({commit}, obj) {
-      commit('removeFromUploaded', obj)
-    },
-    saveRecord ({commit}, obj) {
+    signIn: ({commit}, user) => commit('updateUser', user),
+    changeUploaded: ({commit}, obj) => commit('removeFromUploaded', obj),
+    saveRecord: ({commit}, obj) => {
       HTTP.put('photo/edit/' + obj.safekey, obj)
         .then(response => {
           const obj = response.data.rec
@@ -44,7 +40,7 @@ export default new Vuex.Store({
           commit('removeFromUploaded', obj)
         })
     },
-    deleteRecord ({commit}, obj) {
+    deleteRecord: ({commit}, obj) => {
       commit('removeFromRecords', obj)
       commit('removeFromUploaded', obj)
 
@@ -53,21 +49,14 @@ export default new Vuex.Store({
           console.log(response.data)
         })
     },
-    uploadList ({commit}, obj) {
-      commit('updateUploaded', obj)
+    uploadList: ({commit}, obj) => commit('updateUploaded', obj),
+    changeFind: ({commit}, payload) => commit('updateFind', payload),
+    changeFilter: ({commit}, payload) => {
+      commit('updateFilter', payload)
+      commit('resetRecords')
+      commit('resetPages')
     },
-    changeFind ({commit}, payload) {
-      commit('updateFind', payload)
-    },
-    changeFilter ({state, commit, dispatch}, payload) {
-      if (!isEqual(state.filter, payload)) {
-        commit('updateFilter', payload)
-        commit('resetRecords')
-        commit('resetPages')
-        // if (!isEmpty(payload)) dispatch('loadList')
-      }
-    },
-    loadList ({commit, state}, next) {
+    loadList: ({commit, state}, next) => {
       let url = 'start'
       const params = (next) ? { _page: next } : {}
       const saved = {...state.filter}
@@ -92,25 +81,25 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
-    getTags ({commit}) {
+    getTags: ({commit}) => {
       HTTP.get('suggest/Photo_tags')
         .then(response => {
           commit('updateTags', response.data)
         })
     },
-    getModels ({commit}) {
+    getModels: ({commit}) => {
       HTTP.get('suggest/Photo_model')
         .then(response => {
           commit('updateModels', response.data)
         })
     },
-    getInfo ({commit}) {
+    getInfo: ({commit}) => {
       HTTP.get('info')
         .then(response => {
           commit('updateInfo', response.data)
         })
     },
-    getToken ({commit}) {
+    getToken: ({commit}) => {
       MESSAGING.requestPermission()
         .then(() => {
           console.log('permission success')
