@@ -98,6 +98,7 @@
 <script>
 import { mapState } from 'vuex'
 import common from '../../helpers/mixins'
+import { EventBus } from '../../helpers/event-bus'
 
 export default {
   name: 'Find',
@@ -159,7 +160,8 @@ export default {
             value: value
           })
           this.show = false
-          this.$router.push({name: 'search', params: {term: value}})
+          EventBus.$emit('reload')
+          // this.$router.push({name: 'search', params: {term: value}})
         } else {
           this.$store.dispatch('changeFilter', {})
           this.show = false

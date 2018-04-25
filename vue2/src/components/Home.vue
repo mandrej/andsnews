@@ -12,7 +12,11 @@
         <v-spacer></v-spacer>
         <SignIn></SignIn>
         <v-layout slot="extension">
-          <v-toolbar-title class="grey--text text--lighten-1">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-toolbar-title v-if="filter.value">
+            <v-btn color="grey lighten-1" @click="clearFilter">Clear</v-btn>
+            {{filter.value}}
+          </v-toolbar-title>
+          <v-toolbar-title v-else class="grey--text text--lighten-1">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer ></v-spacer>
           <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">
@@ -34,6 +38,7 @@ import SignIn from './SignIn'
 import List from './List'
 import Find from './Find'
 import Add from './Add'
+import { EventBus } from '../../helpers/event-bus'
 
 export default {
   name: 'Home',
@@ -54,8 +59,19 @@ export default {
     this.$store.dispatch('getTags')
     this.$store.dispatch('getModels')
   },
+  mounted () {
+    EventBus.$on('reload', () => {
+      this.$store.dispatch('loadList')
+    })
+  },
   computed: {
-    ...mapState(['user', 'busy'])
+    ...mapState(['user', 'busy', 'filter'])
+  },
+  methods: {
+    clearFilter () {
+      this.$store.dispatch('changeFilter', {})
+      this.$store.dispatch('loadList')
+    }
   }
 }
 </script>

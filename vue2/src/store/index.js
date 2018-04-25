@@ -4,7 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
-import { isEqual, isEmpty } from 'lodash' // uniqBy
+import { isEqual } from 'lodash' // uniqBy
 
 Vue.use(Vuex, VueAxios)
 
@@ -64,7 +64,7 @@ export default new Vuex.Store({
         commit('updateFilter', payload)
         commit('resetRecords')
         commit('resetPages')
-        if (!isEmpty(payload)) dispatch('loadList')
+        // if (!isEmpty(payload)) dispatch('loadList')
       }
     },
     loadList ({commit, state}, next) {

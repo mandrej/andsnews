@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Search from '@/components/Search'
+// import Search from '@/components/Search'
 import Admin from '@/components/Admin'
 
 Vue.use(Router)
@@ -21,11 +21,12 @@ export default new Router({
       meta: {
         back: 'home'
       }
-    },
-    {
-      path: '/search/:term',
-      name: 'search',
-      component: Search
     }
+    // ,
+    // {
+    //   path: '/search/:term',
+    //   name: 'search',
+    //   component: Search
+    // }
   ]
 })
