@@ -11,7 +11,7 @@ Vue.use(Vuex, VueAxios)
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'find', 'uploaded']
+    paths: ['user', 'objects', 'pages', 'filter', 'find', 'page', 'next', 'uploaded']
   })],
   state: {
     user: {},
@@ -21,8 +21,9 @@ export default new Vuex.Store({
     find: {},
     page: null,
     next: null,
-    busy: false,
     uploaded: [],
+
+    busy: false,
     tags: [],
     models: [],
     info: {},

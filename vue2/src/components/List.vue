@@ -41,6 +41,7 @@
               <v-card-media
                 v-lazy:background-image="getImgSrc(item, 's')"
                 @click="showDetail(item)"
+                style="background-position: 50% 50%"
                 height="300px"></v-card-media>
               <v-card-actions v-if="user.isAuthorized">
                 <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>

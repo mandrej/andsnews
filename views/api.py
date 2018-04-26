@@ -117,7 +117,7 @@ class Suggest(RestHandler):
     def get(self, mem_key):
         kind, field = mem_key.split('_')
         query = Counter.query(Counter.forkind == kind, Counter.field == field)
-        self.render([counter.value for counter in query])
+        self.render([counter.value for counter in query if counter.count > 0])
 
 
 class Collection(RestHandler):

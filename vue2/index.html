@@ -4,12 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Material+Icons">
-    <title>ANDS</title>
+    <title>ANDрејевићи</title>
+    <meta name="description" content="">
+    <meta name="theme-color" content="#fff">
     <link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>static/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ANDS">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ANDS">
+    <meta name="keywords" content="gae, google appengine, google app engine, webapp2, vue, vue2, python, html5, andrejevic">
     <link rel="icon" sizes="192x192" href="<%= htmlWebpackPlugin.files.publicPath %>static/manifest/icon-192x192.png">
+    <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#212121">
+    <meta name="msapplication-tap-highlight" content="no">
   </head>
   <body>
     <div id="app"></div>
     <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
+    <noscript>Please enable JavaScript to view this website.</noscript>
   </body>
 </html>
