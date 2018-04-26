@@ -23,10 +23,10 @@ export default new Vuex.Store({
     next: null,
     uploaded: [],
 
-    busy: false,
     tags: [],
     models: [],
     info: {},
+    busy: false,
     fcm_token: null
   },
   // getters: {},
@@ -147,7 +147,7 @@ export default new Vuex.Store({
       state.models = data
     },
     updateOneRecord (state, data) {
-      const index = state.objects.findIndex(item => item.safekey === data.safekey)
+      const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.objects.splice(index, 1, data)
       } else {
@@ -155,7 +155,7 @@ export default new Vuex.Store({
       }
     },
     removeFromRecords (state, data) {
-      const index = state.objects.findIndex(item => item.safekey === data.safekey)
+      const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.objects.splice(index, 1)
       }
@@ -164,7 +164,7 @@ export default new Vuex.Store({
       state.uploaded.push(data)
     },
     removeFromUploaded (state, data) {
-      const index = state.uploaded.findIndex(item => item.safekey === data.safekey)
+      const index = state.uploaded.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.uploaded.splice(index, 1)
       }

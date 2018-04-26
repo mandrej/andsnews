@@ -4,7 +4,7 @@
       <v-card>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn icon flat @click.stop="info = false">
+          <v-btn icon flat @click.native="info = false">
              <v-icon>close</v-icon>
           </v-btn>
         </v-card-actions>

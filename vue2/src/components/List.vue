@@ -6,11 +6,26 @@
     <v-dialog v-model="dialog" max-width="300px" lazy>
       <v-card>
         <v-card-title class="headline">
-          No photos for current filter / search
+          No photos<br>
+          <small>for current filter / search</small>
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click.stop="dialog = false">Close</v-btn>
+          <v-btn color="secondary" flat @click.native="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="confirm" max-width="300px" persistent lazy>
+      <v-card>
+        <v-card-title class="headline">
+          Are you sure?<br>
+          <small>you want to delete "{{current.headline}}"</small>
+        </v-card-title>
+        <v-card-actions>
+          <v-btn color="primary" @click.native="agree">Yes</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" @click.native="confirm = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -82,18 +97,11 @@ export default {
   data: () => ({
     distance: 800,
     dialog: false,
+    confirm: false,
     current: {},
     showItem: false,
     editdForm: false
   }),
-  created () {
-    if (this.$route.params.term) {
-      this.$store.dispatch('changeFilter', {
-        field: 'search',
-        value: this.$route.params.term
-      })
-    }
-  },
   computed: {
     ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy'])
   },
@@ -121,7 +129,12 @@ export default {
       this.editdForm = true
     },
     deleteRecord (rec) {
-      this.$store.dispatch('deleteRecord', rec)
+      this.confirm = true
+      this.current = rec
+    },
+    agree () {
+      this.confirm = false
+      this.$store.dispatch('deleteRecord', this.current)
     }
   }
 }
