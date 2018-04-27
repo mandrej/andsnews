@@ -97,7 +97,7 @@ export default {
   data: () => ({
     distance: 800,
     dialog: false,
-    stop: true,
+    stop: false,
     confirm: false,
     current: {},
     showItem: false,
@@ -112,7 +112,10 @@ export default {
   watch: {
     busy (newVal, oldVal) {
       if (!newVal && this.objects.length === 0) {
+        this.stop = true
         this.dialog = true
+      } else {
+        this.stop = false
       }
     }
   },
