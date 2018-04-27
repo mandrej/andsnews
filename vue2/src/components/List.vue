@@ -32,7 +32,7 @@
 
     <div class="grid">
       <div v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="busy"
+        infinite-scroll-disabled="disabled"
         infinite-scroll-distance="distance">
         <div v-masonry
           transition-duration="0.6s"
@@ -97,13 +97,17 @@ export default {
   data: () => ({
     distance: 800,
     dialog: false,
+    stop: true,
     confirm: false,
     current: {},
     showItem: false,
     editdForm: false
   }),
   computed: {
-    ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy'])
+    ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy']),
+    disabled () {
+      return this.busy || this.stop
+    }
   },
   watch: {
     busy (newVal, oldVal) {

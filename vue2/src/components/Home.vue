@@ -72,7 +72,7 @@ export default {
   methods: {
     clearFilter () {
       this.$store.dispatch('changeFilter', {})
-      EventBus.$emit('reload')
+      this.$store.dispatch('loadList')
     }
   }
 }
