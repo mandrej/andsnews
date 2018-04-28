@@ -1,6 +1,16 @@
 <template>
   <div>
     <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      left
+      bottom>
+      {{ text }}
+      <v-btn flat icon color="white" @click.native="snackbar = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
 
     <v-dialog
       v-model="show"
@@ -15,30 +25,21 @@
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title>Add</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <!-- <v-btn @click="submit" :disabled="!valid" light>Submit</v-btn> -->
         </v-toolbar>
+        <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
+        <form novalidate v-if="isInitial || isSaving">
+          <v-jumbotron color="grey lighten-2" v-if="isInitial">
+            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
+            <v-container fill-height>
+              <v-layout column justify-center align-center>
+                <v-icon x-large color="primary">cloud_upload</v-icon>
+                <h3 class="headline">Upload images</h3>
+                <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
+              </v-layout>
+            </v-container>
+          </v-jumbotron>
+        </form>
         <v-card-text>
-          <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-          <form novalidate v-if="isInitial || isSaving">
-            <v-jumbotron color="grey lighten-2" v-if="isInitial">
-              <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
-              <v-container fill-height>
-                <v-layout column justify-center align-center>
-                  <v-icon x-large color="primary">cloud_upload</v-icon>
-                  <h3 class="headline">Upload images</h3>
-                  <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
-                </v-layout>
-              </v-container>
-            </v-jumbotron>
-
-            <v-alert
-              type="success"
-              :value="isSaving"
-              transition="scale-transition">
-              Uploading {{fileCount}} images...
-            </v-alert>
-          </form>
 
           <v-list two-line>
             <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
@@ -92,7 +93,10 @@ export default {
     current: {},
     currentStatus: null,
     uploadFieldName: 'photos',
-    editdForm: false
+    editdForm: false,
+    snackbar: false,
+    text: '',
+    timeout: 3000
   }),
   mounted () {
     this.reset()
@@ -128,6 +132,8 @@ export default {
           item => {
             this.uploadedFiles.push(item.rec)
             this.currentStatus = STATUS_SUCCESS
+            this.text = item.rec.headline
+            this.snackbar = true
             this.$store.dispatch('addUploaded', item.rec)
             this.$store.dispatch('addRecord', item.rec)
           }

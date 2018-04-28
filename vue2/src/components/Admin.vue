@@ -62,8 +62,8 @@ export default {
   mounted () {
     const messaging = firebase.messaging()
     messaging.onMessage(payload => {
-      this.snackbar = true
       this.text = payload.notification.body
+      this.snackbar = true
     })
   },
   computed: {

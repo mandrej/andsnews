@@ -23,7 +23,8 @@
               <v-flex xs12 class="hidden-xs-only">
                 <v-text-field
                   label="Find text"
-                  v-model="find.text"></v-text-field>
+                  v-model="find.text"
+                  clearable></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select

@@ -34,38 +34,36 @@
       <div v-infinite-scroll="loadMore"
         infinite-scroll-disabled="disabled"
         infinite-scroll-distance="distance">
-        <div v-masonry
-          transition-duration="0.6s"
-          item-selector=".grid-item"
-          horizontal-order="true"
-          column-width=".grid-sizer"
-          gutter=".gutter-sizer">
-          <div class="grid-sizer"></div>
-          <div class="gutter-sizer"></div>
-          <div v-masonry-tile
-            class="grid-item"
-            v-for="item in objects"
-            :key="item.safekey">
+        <v-layout>
+          <v-flex>
             <v-card>
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="title mb-0">{{item.headline}}</h3>
-                  <div>{{dateFormat(item.date, 'short')}}</div>
-                </div>
-              </v-card-title>
-              <v-card-media
-                v-lazy:background-image="getImgSrc(item, 's')"
-                @click="showDetail(item)"
-                style="background-position: 50% 50%"
-                height="300px"></v-card-media>
-              <v-card-actions v-if="user.isAuthorized">
-                <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
-              </v-card-actions>
+              <v-container fluid grid-list-lg>
+                <v-layout row wrap>
+                  <v-flex xs12 sm6 md4 lg3 xl2
+                    v-for="item in objects"
+                    :key="item.safekey">
+                    <v-card tile>
+                      <v-card-title class="title" primary-title>
+                        {{item.headline}}
+                      </v-card-title>
+                      <v-card-media
+                        v-lazy:background-image="getImgSrc(item, 's')"
+                        @click="showDetail(item)"
+                        style="background-position: 50% 50%"
+                        height="300px">
+                      </v-card-media>
+                      <v-card-actions v-if="user.isAuthorized">
+                        <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
+                        <v-spacer style="text-align: center">{{dateFormat(item.date, 'short')}}</v-spacer>
+                        <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+              </v-container>
             </v-card>
-          </div>
-        </div>
+          </v-flex>
+        </v-layout>
       </div>
     </div>
   </div>
@@ -74,14 +72,12 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { VueMasonryPlugin } from 'vue-masonry'
 import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
 
-Vue.use(VueMasonryPlugin)
 Vue.use(VueLazyload)
 
 export default {
@@ -95,6 +91,7 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
+    // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
     distance: 800,
     dialog: false,
     stop: false,
@@ -148,27 +145,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.grid {
-  margin: 0;
-  padding: 16px;
-  padding-right: 0;
-}
-.grid-sizer, .grid-item {
-  width: calc(100% / 4 - 16px);
-  @media (max-width: 1280px) {
-    width: calc(100% / 3 - 16px);
-  }
-  @media (max-width: 960px) {
-    width: calc(100% / 2 - 16px);
-  }
-  @media (max-width: 600px) {
-    width: calc(100% - 16px);
-  }
-}
-.grid-item {
-  margin-bottom: 16px;
-}
-.gutter-sizer {
-  width: 16px;
-}
+
 </style>

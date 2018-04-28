@@ -15,10 +15,14 @@
         <v-spacer></v-spacer>
         <v-btn @click="submit" :disabled="!valid" light>Submit</v-btn>
       </v-toolbar>
+      <v-card-media :src="getImgSrc(rec)" height="200px"></v-card-media>
       <v-card-text>
         <v-container grid-list-md mt-3>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
+              <!-- <v-flex xs12 sm6 md4>
+                <img :src="getImgSrc(rec, 's')" style="width: 100%; max-width: 200px">
+              </v-flex> -->
               <v-flex xs12>
                 <v-text-field
                   :label="`Headline for ${rec.filename}`"
