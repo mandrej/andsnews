@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     reset () {
-      this.$store.dispatch('changeFind', this.blank)
+      this.$store.dispatch('saveFindForm', this.blank)
     },
     submit () {
       let params = []
@@ -153,7 +153,7 @@ export default {
         if (this.find.color) {
           params.push('color:' + this.find.color)
         }
-        this.$store.dispatch('changeFind', this.find)
+        this.$store.dispatch('saveFindForm', this.find)
 
         const value = params.join(' AND ')
         if (value) {

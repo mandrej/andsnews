@@ -51,7 +51,7 @@
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-layout row>
-                  <v-btn color="secondary" @click="deleteRecord(item)">Delete</v-btn>&nbsp;
+                  <v-btn color="secondary" @click="removeRecord(item)">Delete</v-btn>&nbsp;
                   <v-btn color="primary" @click="showEditdForm(item)">Edit</v-btn>
                 </v-layout>
               </v-list-tile-action>
@@ -128,7 +128,8 @@ export default {
           item => {
             this.uploadedFiles.push(item.rec)
             this.currentStatus = STATUS_SUCCESS
-            this.$store.dispatch('uploadList', item.rec)
+            this.$store.dispatch('addUploaded', item.rec)
+            this.$store.dispatch('addRecord', item.rec)
           }
         ))
         .catch(err => {
@@ -155,7 +156,7 @@ export default {
       this.current = rec
       this.editdForm = true
     },
-    deleteRecord (rec) {
+    removeRecord (rec) {
       this.$store.dispatch('deleteRecord', rec)
     }
   }

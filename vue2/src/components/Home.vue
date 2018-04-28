@@ -58,12 +58,12 @@ export default {
     showAddForm: false
   }),
   created () {
-    this.$store.dispatch('getTags')
-    this.$store.dispatch('getModels')
+    this.$store.dispatch('fetchTags')
+    this.$store.dispatch('fetchModels')
   },
   mounted () {
     EventBus.$on('reload', () => {
-      this.$store.dispatch('loadList')
+      this.$store.dispatch('fetchRecords')
     })
   },
   computed: {
@@ -72,7 +72,7 @@ export default {
   methods: {
     clearFilter () {
       this.$store.dispatch('changeFilter', {})
-      this.$store.dispatch('loadList')
+      this.$store.dispatch('fetchRecords')
     }
   }
 }

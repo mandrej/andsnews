@@ -31,33 +31,32 @@ export default new Vuex.Store({
   },
   // getters: {},
   actions: {
-    signIn: ({commit}, user) => commit('updateUser', user),
-    changeUploaded: ({commit}, obj) => commit('removeFromUploaded', obj),
+    saveUser: ({commit}, user) => commit('SAVE_USER', user),
+    addRecord: ({commit}, obj) => commit('ADD_RECORD', obj),
     saveRecord: ({commit}, obj) => {
       HTTP.put('photo/edit/' + obj.safekey, obj)
         .then(response => {
           const obj = response.data.rec
-          commit('updateOneRecord', obj)
-          commit('removeFromUploaded', obj)
+          commit('UPDATE_RECORD', obj)
+          commit('DELETE_UPLOADED', obj)
         })
     },
     deleteRecord: ({commit}, obj) => {
-      commit('removeFromRecords', obj)
-      commit('removeFromUploaded', obj)
+      commit('DELETE_RECORD', obj)
+      commit('DELETE_UPLOADED', obj)
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
           console.log(response.data)
         })
     },
-    uploadList: ({commit}, obj) => commit('updateUploaded', obj),
-    changeFind: ({commit}, payload) => commit('updateFind', payload),
+    addUploaded: ({commit}, obj) => commit('ADD_UPLOADED', obj),
+    saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
     changeFilter: ({commit}, payload) => {
-      commit('updateFilter', payload)
-      commit('resetRecords')
-      commit('resetPages')
+      commit('CHANGE_FILTER', payload)
+      commit('RESET_RECORDS')
     },
-    loadList: ({commit, state}, next) => {
+    fetchRecords: ({commit, state}, next) => {
       let url = 'start'
       const params = (next) ? { _page: next } : {}
       const saved = {...state.filter}
@@ -70,34 +69,34 @@ export default new Vuex.Store({
         }
       }
 
-      commit('changeLoadingState', true)
+      commit('SET_BUSY', true)
       HTTP.get(url, {params: params})
         .then(response => {
-          commit('changeLoadingState', false)
-          commit('updatePages', response.data._page)
-          commit('updateRecords', response.data)
+          commit('SET_BUSY', false)
+          commit('ADD_PAGE', response.data._page)
+          commit('UPDATE_RECORDS', response.data)
         })
         .catch(err => {
-          commit('changeLoadingState', false)
+          commit('SET_BUSY', false)
           console.log(err)
         })
     },
-    getTags: ({commit}) => {
+    fetchTags: ({commit}) => {
       HTTP.get('suggest/Photo_tags')
         .then(response => {
-          commit('updateTags', response.data)
+          commit('UPDATE_TAGS', response.data)
         })
     },
-    getModels: ({commit}) => {
+    fetchModels: ({commit}) => {
       HTTP.get('suggest/Photo_model')
         .then(response => {
-          commit('updateModels', response.data)
+          commit('UPDATE_MODELS', response.data)
         })
     },
-    getInfo: ({commit}) => {
+    fetchInfo: ({commit}) => {
       HTTP.get('info')
         .then(response => {
-          commit('updateInfo', response.data)
+          commit('UPDATE_INFO', response.data)
         })
     },
     getToken: ({commit}) => {
@@ -107,46 +106,47 @@ export default new Vuex.Store({
           return MESSAGING.getToken()
         })
         .then(token => {
-          commit('setToken', token)
+          commit('SET_TOKEN', token)
         })
         .catch(() => console.log('permission failed'))
     }
   },
   mutations: {
-    updateUser (state, user) {
+    SAVE_USER (state, user) {
       state.user = Object.assign({}, user)
     },
-    updateFind (state, find) {
+    SAVE_FIND_FORM (state, find) {
       state.find = Object.assign({}, find)
     },
-    updateFilter (state, filter) {
+    CHANGE_FILTER (state, filter) {
       state.filter = Object.assign({}, filter)
     },
-    updateRecords (state, data) {
+    ADD_RECORD (state, obj) {
+      state.objects.push(obj)
+    },
+    UPDATE_RECORDS (state, data) {
       state.objects = state.objects.concat(data.objects)
       // const merged = state.objects.concat(data.objects)
       // state.objects = uniqBy(merged, p => p.safekey)
       state.page = data._page
       state.next = data._next
     },
-    resetRecords (state) {
+    RESET_RECORDS (state) {
       state.objects = []
       state.page = null
       state.next = null
-    },
-    updatePages (state, page) {
-      state.pages.push(page)
-    },
-    resetPages (state) {
       state.pages = []
     },
-    updateTags (state, data) {
+    ADD_PAGE (state, page) {
+      state.pages.push(page)
+    },
+    UPDATE_TAGS (state, data) {
       state.tags = data
     },
-    updateModels (state, data) {
+    UPDATE_MODELS (state, data) {
       state.models = data
     },
-    updateOneRecord (state, data) {
+    UPDATE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.objects.splice(index, 1, data)
@@ -154,28 +154,28 @@ export default new Vuex.Store({
         state.objects.push(data)
       }
     },
-    removeFromRecords (state, data) {
+    DELETE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.objects.splice(index, 1)
       }
     },
-    updateUploaded (state, data) {
+    ADD_UPLOADED (state, data) {
       state.uploaded.push(data)
     },
-    removeFromUploaded (state, data) {
+    DELETE_UPLOADED (state, data) {
       const index = state.uploaded.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.uploaded.splice(index, 1)
       }
     },
-    changeLoadingState (state, busy) {
+    SET_BUSY (state, busy) {
       state.busy = busy
     },
-    updateInfo (state, payload) {
+    UPDATE_INFO (state, payload) {
       state.info = Object.assign({}, payload)
     },
-    setToken (state, payload) {
+    SET_TOKEN (state, payload) {
       state.fcm_token = payload
     }
   }

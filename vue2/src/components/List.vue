@@ -59,7 +59,7 @@
                 style="background-position: 50% 50%"
                 height="300px"></v-card-media>
               <v-card-actions v-if="user.isAuthorized">
-                <v-btn v-if="user.isAdmin" flat color="secondary" @click="deleteRecord(item)">Delete</v-btn>
+                <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
               </v-card-actions>
@@ -122,9 +122,9 @@ export default {
   methods: {
     loadMore () {
       if (this.objects.length === 0) {
-        this.$store.dispatch('loadList')
+        this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
-        this.$store.dispatch('loadList', this.next)
+        this.$store.dispatch('fetchRecords', this.next)
       }
     },
     showDetail (rec) {
@@ -135,7 +135,7 @@ export default {
       this.current = rec
       this.editdForm = true
     },
-    deleteRecord (rec) {
+    removeRecord (rec) {
       this.confirm = true
       this.current = rec
     },

@@ -33,7 +33,7 @@ export default {
       if (this.user.uid) {
         FB.auth().signOut()
           .then(() => {
-            this.$store.dispatch('signIn', {
+            this.$store.dispatch('saveUser', {
               name: '',
               email: '',
               uid: null,
@@ -45,7 +45,7 @@ export default {
       } else {
         FB.auth().signInWithPopup(provider)
           .then(response => {
-            this.$store.dispatch('signIn', {
+            this.$store.dispatch('saveUser', {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,

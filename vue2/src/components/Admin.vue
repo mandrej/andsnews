@@ -56,7 +56,7 @@ export default {
     timeout: 3000
   }),
   created () {
-    this.$store.dispatch('getInfo')
+    this.$store.dispatch('fetchInfo')
     this.$store.dispatch('getToken')
   },
   mounted () {
