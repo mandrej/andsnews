@@ -4,25 +4,43 @@ import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
-// import { isEqual } from 'lodash' // uniqBy
+// import { _findIndex } from 'lodash' // uniqBy
 
 Vue.use(Vuex, VueAxios)
+
+// https://stackoverflow.com/questions/1344500/efficient-way-to-insert-a-number-into-a-sorted-array-of-numbers/18341744#18341744
+function locationOf (element, array, start, end) {
+  start = start || 0
+  end = end || array.length
+  var pivot = parseInt(start + (end - start) / 2, 10)
+  if (array[pivot] === element) {
+    return pivot
+  }
+  if (end - start <= 1) {
+    return array[pivot] > element ? pivot - 1 : pivot
+  }
+  if (array[pivot] < element) {
+    return locationOf(element, array, pivot, end)
+  } else {
+    return locationOf(element, array, start, pivot)
+  }
+}
 
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'objects', 'pages', 'filter', 'find', 'page', 'next', 'uploaded']
+    paths: ['user', 'filter', 'find', 'uploaded']
   })],
   state: {
     user: {},
-    objects: [],
-    pages: [],
     filter: {},
     find: {},
-    page: null,
-    next: null,
     uploaded: [],
 
+    objects: [],
+    pages: [],
+    page: null,
+    next: null,
     tags: [],
     models: [],
     info: {},
@@ -32,7 +50,13 @@ export default new Vuex.Store({
   // getters: {},
   actions: {
     saveUser: ({commit}, user) => commit('SAVE_USER', user),
+    saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
+    changeFilter: ({commit}, payload) => {
+      commit('CHANGE_FILTER', payload)
+      commit('RESET_RECORDS')
+    },
     addRecord: ({commit}, obj) => commit('ADD_RECORD', obj),
+    addUploaded: ({commit}, obj) => commit('ADD_UPLOADED', obj),
     saveRecord: ({commit}, obj) => {
       HTTP.put('photo/edit/' + obj.safekey, obj)
         .then(response => {
@@ -49,12 +73,6 @@ export default new Vuex.Store({
         .then(response => {
           console.log(response.data)
         })
-    },
-    addUploaded: ({commit}, obj) => commit('ADD_UPLOADED', obj),
-    saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
-    changeFilter: ({commit}, payload) => {
-      commit('CHANGE_FILTER', payload)
-      commit('RESET_RECORDS')
     },
     fetchRecords: ({commit, state}, next) => {
       let url = 'start'
@@ -73,7 +91,6 @@ export default new Vuex.Store({
       HTTP.get(url, {params: params})
         .then(response => {
           commit('SET_BUSY', false)
-          commit('ADD_PAGE', response.data._page)
           commit('UPDATE_RECORDS', response.data)
         })
         .catch(err => {
@@ -122,7 +139,12 @@ export default new Vuex.Store({
       state.filter = Object.assign({}, filter)
     },
     ADD_RECORD (state, obj) {
-      state.objects.push(obj)
+      const timestamps = state.objects.map(item => item.date).sort() // accending
+      const index = locationOf(obj.date, timestamps)
+      state.objects.splice(timestamps.length - index - 1, 0, obj)
+    },
+    ADD_UPLOADED (state, data) {
+      state.uploaded.push(data)
     },
     UPDATE_RECORDS (state, data) {
       state.objects = state.objects.concat(data.objects)
@@ -130,21 +152,7 @@ export default new Vuex.Store({
       // state.objects = uniqBy(merged, p => p.safekey)
       state.page = data._page
       state.next = data._next
-    },
-    RESET_RECORDS (state) {
-      state.objects = []
-      state.page = null
-      state.next = null
-      state.pages = []
-    },
-    ADD_PAGE (state, page) {
-      state.pages.push(page)
-    },
-    UPDATE_TAGS (state, data) {
-      state.tags = data
-    },
-    UPDATE_MODELS (state, data) {
-      state.models = data
+      state.pages.push(data._page)
     },
     UPDATE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
@@ -154,20 +162,29 @@ export default new Vuex.Store({
         state.objects.push(data)
       }
     },
+    RESET_RECORDS (state) {
+      state.objects = []
+      state.page = null
+      state.next = null
+      state.pages = []
+    },
     DELETE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.objects.splice(index, 1)
       }
     },
-    ADD_UPLOADED (state, data) {
-      state.uploaded.push(data)
-    },
     DELETE_UPLOADED (state, data) {
       const index = state.uploaded.map(item => item.safekey).indexOf(data.safekey)
       if (index !== -1) {
         state.uploaded.splice(index, 1)
       }
+    },
+    UPDATE_TAGS (state, data) {
+      state.tags = data
+    },
+    UPDATE_MODELS (state, data) {
+      state.models = data
     },
     SET_BUSY (state, busy) {
       state.busy = busy
