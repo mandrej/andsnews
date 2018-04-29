@@ -4,7 +4,6 @@ import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { MESSAGING } from '../../helpers/fire'
-// import { _findIndex } from 'lodash' // uniqBy
 
 Vue.use(Vuex, VueAxios)
 
@@ -39,7 +38,7 @@ export default new Vuex.Store({
 
     objects: [],
     pages: [],
-    page: null,
+    page: null, // unused
     next: null,
     tags: [],
     models: [],
@@ -130,10 +129,10 @@ export default new Vuex.Store({
   },
   mutations: {
     SAVE_USER (state, user) {
-      state.user = Object.assign({}, user)
+      state.user = Object.assign(state.user, user)
     },
     SAVE_FIND_FORM (state, find) {
-      state.find = Object.assign({}, find)
+      state.find = Object.assign(state.find, find)
     },
     CHANGE_FILTER (state, filter) {
       state.filter = Object.assign({}, filter)
@@ -144,23 +143,17 @@ export default new Vuex.Store({
       state.objects.splice(timestamps.length - index - 1, 0, obj)
     },
     ADD_UPLOADED (state, data) {
-      state.uploaded.push(data)
+      state.uploaded = [...state.uploaded, data]
     },
     UPDATE_RECORDS (state, data) {
-      state.objects = state.objects.concat(data.objects)
-      // const merged = state.objects.concat(data.objects)
-      // state.objects = uniqBy(merged, p => p.safekey)
+      state.objects = [...state.objects, ...data.objects]
+      state.pages = [...state.pages, data._page]
       state.page = data._page
       state.next = data._next
-      state.pages.push(data._page)
     },
     UPDATE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
-      if (index !== -1) {
-        state.objects.splice(index, 1, data)
-      } else {
-        state.objects.push(data)
-      }
+      state.objects.splice(index, 1, data)
     },
     RESET_RECORDS (state) {
       state.objects = []
@@ -170,15 +163,11 @@ export default new Vuex.Store({
     },
     DELETE_RECORD (state, data) {
       const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
-      if (index !== -1) {
-        state.objects.splice(index, 1)
-      }
+      state.objects.splice(index, 1)
     },
     DELETE_UPLOADED (state, data) {
       const index = state.uploaded.map(item => item.safekey).indexOf(data.safekey)
-      if (index !== -1) {
-        state.uploaded.splice(index, 1)
-      }
+      state.uploaded.splice(index, 1)
     },
     UPDATE_TAGS (state, data) {
       state.tags = data
@@ -186,11 +175,11 @@ export default new Vuex.Store({
     UPDATE_MODELS (state, data) {
       state.models = data
     },
+    UPDATE_INFO (state, payload) {
+      state.info = Object.assign(state.info, payload)
+    },
     SET_BUSY (state, busy) {
       state.busy = busy
-    },
-    UPDATE_INFO (state, payload) {
-      state.info = Object.assign({}, payload)
     },
     SET_TOKEN (state, payload) {
       state.fcm_token = payload

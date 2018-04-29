@@ -13,12 +13,12 @@
         </v-btn>
         <v-toolbar-title>Find</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn @click="reset" color="secondary">Reset</v-btn>
-        <v-btn @click="submit" color="primary" :disabled="!valid">Find</v-btn>
+        <v-btn @click="reset" color="secondary">Clear</v-btn>
+        <v-btn @click="submit" color="primary">Find</v-btn>
       </v-toolbar>
       <v-card-text>
         <v-container grid-list-md mt-3>
-          <v-form v-model="valid" ref="form">
+          <v-form ref="form">
             <v-layout row wrap>
               <v-flex xs12 class="hidden-xs-only">
                 <v-text-field
@@ -108,7 +108,6 @@ export default {
   mixins: [ common ],
   props: ['visible'],
   data: () => ({
-    valid: true,
     authors: ['milan', 'mihailo', 'genije', 'svetlana', 'andrejevic', 'ana', 'devic', 'dannytaboo', 'zile', 'zikson'],
     colors: ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'],
     blank: {
@@ -127,6 +126,7 @@ export default {
   methods: {
     reset () {
       this.$store.dispatch('saveFindForm', this.blank)
+      this.$store.dispatch('changeFilter', {})
     },
     submit () {
       let params = []
@@ -162,12 +162,11 @@ export default {
             field: 'search',
             value: value
           })
-          this.show = false
-          EventBus.$emit('reload')
         } else {
           this.$store.dispatch('changeFilter', {})
-          this.show = false
         }
+        this.show = false
+        EventBus.$emit('reload')
       }
     }
   }
