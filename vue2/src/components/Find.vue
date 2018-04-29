@@ -4,17 +4,17 @@
     lazy
     fullscreen
     transition="dialog-bottom-transition"
-    :overlay="false"
+    hide-overlay
     scrollable>
     <v-card tile>
-      <v-toolbar card dark color="primary">
+      <v-toolbar card light>
         <v-btn icon @click.native="show = false">
           <v-icon>close</v-icon>
         </v-btn>
         <v-toolbar-title>Find</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn @click="reset" color="secondary">Reset</v-btn>
-        <v-btn @click="submit" :disabled="!valid" light>Find</v-btn>
+        <v-btn @click="submit" color="primary" :disabled="!valid">Find</v-btn>
       </v-toolbar>
       <v-card-text>
         <v-container grid-list-md mt-3>

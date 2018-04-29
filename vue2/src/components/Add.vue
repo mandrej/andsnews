@@ -6,7 +6,7 @@
       :timeout="timeout"
       left
       bottom>
-      {{ text }}
+      Uploading {{fileCount}} images…
       <v-btn flat icon color="white" @click.native="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
@@ -17,7 +17,7 @@
       lazy
       fullscreen
       transition="dialog-bottom-transition"
-      :overlay="false"
+      hide-overlay
       scrollable>
       <v-card tile>
         <v-toolbar card dark color="primary">
@@ -29,7 +29,13 @@
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
         <form novalidate v-if="isInitial || isSaving">
           <v-jumbotron color="grey lighten-2" v-if="isInitial">
-            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files)" accept="image/*" class="input-file">
+            <input type="file"
+              multiple
+              :name="uploadFieldName"
+              :disabled="isSaving"
+              @change="filesChange($event.target.name, $event.target.files)"
+              accept="image/*"
+              class="input-file">
             <v-container fill-height>
               <v-layout column justify-center align-center>
                 <v-icon x-large color="primary">cloud_upload</v-icon>
@@ -95,7 +101,6 @@ export default {
     uploadFieldName: 'photos',
     editdForm: false,
     snackbar: false,
-    text: '',
     timeout: 3000
   }),
   mounted () {
@@ -126,14 +131,13 @@ export default {
     save (formData) {
       // upload data to the server
       this.currentStatus = STATUS_SAVING
+      this.snackbar = true
       HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}})
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
             this.uploadedFiles.push(item.rec)
             this.currentStatus = STATUS_SUCCESS
-            this.text = item.rec.headline
-            this.snackbar = true
             this.$store.dispatch('addUploaded', item.rec)
             this.$store.dispatch('addRecord', item.rec)
           }

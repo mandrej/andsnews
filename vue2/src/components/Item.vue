@@ -27,16 +27,16 @@
       hide-overlay
       scrollable>
       <v-card tile>
-        <v-toolbar card dark color="primary">
+        <v-toolbar card light>
           <v-btn icon @click.native="show = false">
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title>{{rec.headline || title}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon class="white--text" :href="`/api/download/${rec.safekey}`" flat>
+          <v-btn icon :href="`/api/download/${rec.safekey}`" flat>
             <v-icon>file_download</v-icon>
           </v-btn>
-          <v-btn icon class="white--text" @click="info = true" flat>
+          <v-btn icon @click="info = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
         </v-toolbar>
