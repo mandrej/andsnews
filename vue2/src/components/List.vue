@@ -1,7 +1,7 @@
 <template>
   <div>
     <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
-    <Item :visible="showItem" :rec="current" @close="showItem = false"></Item>
+    <Item :visible="showItem" :index="idx" @close="showItem = false"></Item>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
       <v-card>
@@ -40,7 +40,7 @@
               <v-container fluid grid-list-lg>
                 <v-layout row wrap>
                   <v-flex xs12 sm6 md4 lg3 xl2
-                    v-for="item in objects"
+                    v-for="(item, idx) in objects"
                     :key="item.safekey">
                     <v-card tile>
                       <v-card-title class="title" primary-title>
@@ -48,7 +48,7 @@
                       </v-card-title>
                       <v-card-media
                         v-lazy:background-image="getImgSrc(item, 's')"
-                        @click="showDetail(item)"
+                        @click="showDetail(idx)"
                         style="background-position: 50% 50%"
                         height="300px">
                       </v-card-media>
@@ -96,6 +96,7 @@ export default {
     dialog: false,
     stop: false,
     confirm: false,
+    idx: 0,
     current: {},
     showItem: false,
     editdForm: false
@@ -124,8 +125,8 @@ export default {
         this.$store.dispatch('fetchRecords', this.next)
       }
     },
-    showDetail (rec) {
-      this.current = rec
+    showDetail (idx) {
+      this.idx = idx
       this.showItem = true
     },
     showEditdForm (rec) {
