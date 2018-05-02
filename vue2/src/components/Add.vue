@@ -158,7 +158,6 @@ export default {
         .map(x => {
           formData.append(fieldName, fileList[x], fileList[x].name)
         })
-
       // save it
       this.save(formData)
     },
