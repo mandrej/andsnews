@@ -7,24 +7,6 @@ import { MESSAGING } from '../../helpers/fire'
 
 Vue.use(Vuex, VueAxios)
 
-// https://stackoverflow.com/questions/1344500/efficient-way-to-insert-a-number-into-a-sorted-array-of-numbers/18341744#18341744
-function locationOf (element, array, start, end) {
-  start = start || 0
-  end = end || array.length
-  var pivot = parseInt(start + (end - start) / 2, 10)
-  if (array[pivot] === element) {
-    return pivot
-  }
-  if (end - start <= 1) {
-    return array[pivot] > element ? pivot - 1 : pivot
-  }
-  if (array[pivot] < element) {
-    return locationOf(element, array, pivot, end)
-  } else {
-    return locationOf(element, array, start, pivot)
-  }
-}
-
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
@@ -138,9 +120,9 @@ export default new Vuex.Store({
       state.filter = Object.assign({}, filter)
     },
     ADD_RECORD (state, obj) {
-      const timestamps = state.objects.map(item => item.date).sort() // accending
-      const index = locationOf(obj.date, timestamps)
-      state.objects.splice(timestamps.length - index - 1, 0, obj)
+      const dates = state.objects.map(item => item.date)
+      const index = dates.findIndex(date => date < obj.date)
+      state.objects.splice(index, 0, obj)
     },
     ADD_UPLOADED (state, data) {
       state.uploaded = [...state.uploaded, data]
