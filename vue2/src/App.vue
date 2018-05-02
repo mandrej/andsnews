@@ -8,7 +8,7 @@
 export default {
   name: 'App',
   data: () => ({
-    version: '201805022215'
+    version: '201805022253'
   })
 }
 </script>

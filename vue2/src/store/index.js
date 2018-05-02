@@ -158,7 +158,7 @@ export default new Vuex.Store({
       state.models = data
     },
     UPDATE_INFO (state, payload) {
-      state.info = Object.assign(state.info, payload)
+      state.info = Object.assign({}, payload)
     },
     SET_BUSY (state, busy) {
       state.busy = busy
