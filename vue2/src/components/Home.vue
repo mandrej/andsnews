@@ -2,6 +2,7 @@
   <div>
     <Find :visible="showFindForm" @close="showFindForm = false"></Find>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
+
     <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
     </v-btn>

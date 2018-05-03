@@ -10,18 +10,19 @@ Vue.use(Vuex, VueAxios)
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'filter', 'find', 'uploaded']
+    paths: ['user', 'filter', 'find', 'uploaded', 'objects', 'pages', 'page', 'next']
   })],
   state: {
     user: {},
     filter: {},
     find: {},
     uploaded: [],
-
     objects: [],
     pages: [],
     page: null, // unused
     next: null,
+
+    current: {},
     tags: [],
     models: [],
     info: {},
@@ -32,6 +33,7 @@ export default new Vuex.Store({
   actions: {
     saveUser: ({commit}, user) => commit('SAVE_USER', user),
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
+    changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
     changeFilter: ({commit}, payload) => {
       commit('CHANGE_FILTER', payload)
       commit('RESET_RECORDS')
@@ -43,12 +45,14 @@ export default new Vuex.Store({
         .then(response => {
           const obj = response.data.rec
           commit('UPDATE_RECORD', obj)
+          commit('SET_CURRENT', obj)
           commit('DELETE_UPLOADED', obj)
         })
     },
     deleteRecord: ({commit}, obj) => {
       commit('DELETE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
+      commit('SET_CURRENT', {})
 
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
@@ -112,6 +116,9 @@ export default new Vuex.Store({
   mutations: {
     SAVE_USER (state, user) {
       state.user = Object.assign(state.user, user)
+    },
+    SET_CURRENT (state, data) {
+      state.current = Object.assign({}, data)
     },
     SAVE_FIND_FORM (state, find) {
       state.find = Object.assign(state.find, find)

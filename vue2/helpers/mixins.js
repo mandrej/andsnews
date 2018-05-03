@@ -25,14 +25,15 @@ const common = {
         return '/static/broken.svg'
       }
     },
-    dateFormat (str, fmt) {
-      if (!str) return 'N/A'
-      let [date, time] = str.split('T')
-      let [year, month, day] = date.split('-')
-      if (fmt) {
-        return [day, month, year].join('.')
-      } else {
-        return [day, month, year].join('.') + ' ' + time
+    dateFormat (rec, fmt) {
+      if (rec && rec.date) {
+        let [date, time] = rec.date.split('T')
+        let [year, month, day] = date.split('-')
+        if (fmt) {
+          return [day, month, year].join('.')
+        } else {
+          return [day, month, year].join('.') + ' ' + time
+        }
       }
     }
   }

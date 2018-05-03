@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
+    <Edit :visible="editForm" @close="editForm = false"></Edit>
     <Item :visible="showItem" :index="idx" @close="showItem = false"></Item>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
@@ -30,41 +30,39 @@
       </v-card>
     </v-dialog>
 
-    <div class="grid">
-      <div v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="disabled"
-        infinite-scroll-distance="distance">
-        <v-layout>
-          <v-flex>
-            <v-card>
-              <v-container fluid grid-list-lg>
-                <v-layout row wrap>
-                  <v-flex xs12 sm6 md4 lg3 xl2
-                    v-for="(item, idx) in objects"
-                    :key="item.safekey">
-                    <v-card tile>
-                      <v-card-title class="title" primary-title>
-                        {{item.headline}}
-                      </v-card-title>
-                      <v-card-media
-                        v-lazy:background-image="getImgSrc(item, 's')"
-                        @click="showDetail(idx)"
-                        style="background-position: 50% 50%"
-                        height="300px">
-                      </v-card-media>
-                      <v-card-actions v-if="user.isAuthorized">
-                        <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
-                        <v-spacer style="text-align: center">{{dateFormat(item.date, 'short')}}</v-spacer>
-                        <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </div>
+    <div v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="disabled"
+      infinite-scroll-distance="distance">
+      <v-layout>
+        <v-flex>
+          <v-card>
+            <v-container fluid grid-list-lg>
+              <v-layout row wrap>
+                <v-flex xs12 sm6 md4 lg3 xl2
+                  v-for="(item, idx) in objects"
+                  :key="item.safekey">
+                  <v-card tile>
+                    <v-card-title class="title" primary-title>
+                      {{item.headline}}
+                    </v-card-title>
+                    <v-card-media
+                      v-lazy:background-image="getImgSrc(item, 's')"
+                      @click="showDetail(item, idx)"
+                      style="background-position: 50% 50%"
+                      height="300px">
+                    </v-card-media>
+                    <v-card-actions v-if="user.isAuthorized">
+                      <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
+                      <v-spacer style="text-align: center">{{dateFormat(item, 'short')}}</v-spacer>
+                      <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card>
+        </v-flex>
+      </v-layout>
     </div>
   </div>
 </template>
@@ -97,12 +95,11 @@ export default {
     stop: false,
     confirm: false,
     idx: 0,
-    current: {},
     showItem: false,
-    editdForm: false
+    editForm: false
   }),
   computed: {
-    ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
     disabled () {
       return this.busy || this.stop
     }
@@ -125,26 +122,23 @@ export default {
         this.$store.dispatch('fetchRecords', this.next)
       }
     },
-    showDetail (idx) {
+    showDetail (rec, idx) {
+      this.$store.dispatch('changeCurrent', rec)
       this.idx = idx
       this.showItem = true
     },
     showEditdForm (rec) {
-      this.current = rec
-      this.editdForm = true
+      this.$store.dispatch('changeCurrent', rec)
+      this.editForm = true
     },
     removeRecord (rec) {
+      this.$store.dispatch('changeCurrent', rec)
       this.confirm = true
-      this.current = rec
     },
     agree () {
-      this.confirm = false
       this.$store.dispatch('deleteRecord', this.current)
+      this.confirm = false
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Edit :visible="editdForm" :rec="current" @close="editdForm = false"></Edit>
+    <Edit :visible="editdForm" @close="editdForm = false"></Edit>
+
     <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
@@ -53,8 +54,8 @@
                 <img :src="getImgSrc(item, 's')" :alt="item.slug">
               </v-list-tile-avatar>
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.headline"></v-list-tile-title>
-                <v-list-tile-sub-title>{{item.date}}</v-list-tile-sub-title>
+                <v-list-tile-title>{{item.headline}}</v-list-tile-title>
+                <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-layout row>
@@ -96,7 +97,6 @@ export default {
     uploadedFiles: [],
     fileCount: 0,
     uploadError: null,
-    current: {},
     currentStatus: null,
     uploadFieldName: 'photos',
     editdForm: false,
@@ -140,6 +140,7 @@ export default {
             this.currentStatus = STATUS_SUCCESS
             this.$store.dispatch('addUploaded', item.rec)
             this.$store.dispatch('addRecord', item.rec)
+            this.$store.dispatch('changeCurrent', {})
           }
         ))
         .catch(err => {
@@ -162,7 +163,7 @@ export default {
       this.save(formData)
     },
     showEditdForm (rec) {
-      this.current = rec
+      this.$store.dispatch('changeCurrent', rec)
       this.editdForm = true
     },
     removeRecord (rec) {

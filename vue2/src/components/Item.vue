@@ -1,23 +1,7 @@
 <template>
   <div>
-    <v-dialog v-model="info" hide-overlay lazy max-width="360px">
-      <v-card>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn icon flat @click.native="info = false">
-             <v-icon>close</v-icon>
-          </v-btn>
-        </v-card-actions>
-        <v-card-text>
-          <p class="title">{{dateFormat(rec.date)}}</p>
-          <p>
-            {{rec.author}}<br>
-            {{rec.model}} {{rec.lens}} ({{rec.focal_length}}mm)
-          </p>
-          <p class="title">f{{rec.aperture}} {{rec.shutter}}s {{rec.iso}} ASA</p>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <Edit :visible="editForm" @close="editForm = false"></Edit>
+    <Info :visible="showInfo" @close="showInfo = false"></Info>
 
     <v-dialog
       v-model="show"
@@ -31,12 +15,15 @@
           <v-btn icon @click.native="show = false">
             <v-icon>close</v-icon>
           </v-btn>
-          <v-toolbar-title>{{rec.headline || title}}</v-toolbar-title>
+          <v-toolbar-title>{{current.headline || 'Not found'}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon :href="`/api/download/${rec.safekey}`" flat>
+          <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>
+            <v-icon>create</v-icon>
+          </v-btn>
+          <v-btn icon :href="`/api/download/${current.safekey}`" flat>
             <v-icon>file_download</v-icon>
           </v-btn>
-          <v-btn icon @click="info = true" flat>
+          <v-btn icon @click="showInfo = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
         </v-toolbar>
@@ -57,22 +44,27 @@
 <script>
 import { mapState } from 'vuex'
 import common from '../../helpers/mixins'
+import Edit from './Edit'
+import Info from './Info'
 
 export default {
   name: 'Item',
+  components: {
+    Info,
+    Edit
+  },
   mixins: [ common ],
   props: ['visible', 'index'],
   data: () => ({
-    rec: {},
-    title: 'Not found',
-    info: false
+    showInfo: false,
+    editForm: false
   }),
   computed: {
-    ...mapState(['user', 'objects', 'pages', 'next', 'filter', 'busy'])
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy'])
   },
   methods: {
     currentIndex (idx) {
-      this.rec = this.objects[idx]
+      this.$store.dispatch('changeCurrent', this.objects[idx])
       if ((this.objects.length - idx) === 3) this.loadMore()
     },
     loadMore () {

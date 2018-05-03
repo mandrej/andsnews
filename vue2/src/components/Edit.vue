@@ -15,15 +15,15 @@
         <v-spacer></v-spacer>
         <v-btn @click="submit" :disabled="!valid" color="primary">Submit</v-btn>
       </v-toolbar>
-      <v-card-media :src="getImgSrc(rec)" height="200px"></v-card-media>
+      <v-card-media :src="getImgSrc(current)" height="200px"></v-card-media>
       <v-card-text>
         <v-container grid-list-md mt-3>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12>
                 <v-text-field
-                  :label="`Headline for ${rec.filename}`"
-                  v-model="rec.headline"
+                  :label="`Headline for ${current.filename}`"
+                  v-model="current.headline"
                   :rules="requiredRule"
                   required></v-text-field>
               </v-flex>
@@ -31,7 +31,7 @@
                 <v-select
                   label="Tags"
                   :items="tags"
-                  v-model="rec.tags"
+                  v-model="current.tags"
                   chips
                   tags
                   clearable
@@ -50,53 +50,53 @@
                 <v-select
                   label="Author"
                   :items="authors"
-                  v-model="rec.author"
+                  v-model="current.author"
                   autocomplete
                   single-line></v-select>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Date taken"
-                  v-model="rec.date"></v-text-field>
+                  v-model="current.date"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Camera Model"
-                  v-model="rec.model"></v-text-field>
+                  v-model="current.model"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Lens"
-                  v-model="rec.lens"></v-text-field>
+                  v-model="current.lens"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Focal length"
                   type="number"
-                  v-model="rec.focal_length"></v-text-field>
+                  v-model="current.focal_length"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="ISO [ASA]"
                   type="number"
-                  v-model="rec.iso"></v-text-field>
+                  v-model="current.iso"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Aperture"
                   type="number"
                   step="0.1"
-                  v-model="rec.aperture"></v-text-field>
+                  v-model="current.aperture"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Shutter [s]"
-                  v-model="rec.shutter"></v-text-field>
+                  v-model="current.shutter"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Color"
-                  v-model="rec.color"
+                  v-model="current.color"
                   disabled></v-text-field>
               </v-flex>
             </v-layout>
@@ -114,7 +114,7 @@ import common from '../../helpers/mixins'
 export default {
   name: 'Edit',
   mixins: [ common ],
-  props: ['visible', 'rec'],
+  props: ['visible'],
   data: () => ({
     valid: true,
     requiredRule: [
@@ -130,12 +130,12 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(['tags'])
+    ...mapState(['current', 'tags'])
   },
   methods: {
     submit () {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('saveRecord', this.rec)
+        this.$store.dispatch('saveRecord', this.current)
         this.show = false
       }
     }
