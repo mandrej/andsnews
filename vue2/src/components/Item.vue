@@ -28,8 +28,10 @@
           </v-btn>
         </v-toolbar>
         <v-card-media>
-          <v-carousel :value="index" :cycle="false"
-            @input="currentIndex" hide-delimiters lazy>
+          <v-carousel :cycle="false"
+            :value="index"
+            @input="currentIndex"
+            hide-delimiters lazy>
             <v-carousel-item v-for="item in objects" :key="item.safekey"
               v-lazy:background-image="getImgSrc(item)"
               style="background-size: contain; background-position: 50% 50%">
@@ -42,10 +44,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import Vue from 'vue'
+import { mapGetters, mapState } from 'vuex'
+import VueLazyload from 'vue-lazyload'
 import common from '../../helpers/mixins'
 import Edit from './Edit'
 import Info from './Info'
+
+Vue.use(VueLazyload)
 
 export default {
   name: 'Item',
@@ -54,13 +60,17 @@ export default {
     Edit
   },
   mixins: [ common ],
-  props: ['visible', 'index'],
+  props: ['visible'],
   data: () => ({
     showInfo: false,
     editForm: false
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy'])
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapGetters(['getCurrentIndex']),
+    index () {
+      return this.getCurrentIndex(this.current.safekey)
+    }
   },
   methods: {
     currentIndex (idx) {

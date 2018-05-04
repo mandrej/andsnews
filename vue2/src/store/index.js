@@ -29,7 +29,11 @@ export default new Vuex.Store({
     busy: false,
     fcm_token: null
   },
-  // getters: {},
+  getters: {
+    getCurrentIndex: (state) => (id) => {
+      return state.objects.findIndex(item => item.safekey === id)
+    }
+  },
   actions: {
     saveUser: ({commit}, user) => commit('SAVE_USER', user),
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
@@ -98,7 +102,7 @@ export default new Vuex.Store({
     fetchInfo: ({commit}) => {
       HTTP.get('info')
         .then(response => {
-          commit('UPDATE_INFO', response.data)
+          commit('SET_INFO', response.data)
         })
     },
     getToken: ({commit}) => {
@@ -118,7 +122,7 @@ export default new Vuex.Store({
       state.user = Object.assign(state.user, user)
     },
     SET_CURRENT (state, data) {
-      state.current = Object.assign({}, data)
+      state.current = data
     },
     SAVE_FIND_FORM (state, find) {
       state.find = Object.assign(state.find, find)
@@ -164,8 +168,8 @@ export default new Vuex.Store({
     UPDATE_MODELS (state, data) {
       state.models = data
     },
-    UPDATE_INFO (state, payload) {
-      state.info = Object.assign({}, payload)
+    SET_INFO (state, payload) {
+      state.info = payload
     },
     SET_BUSY (state, busy) {
       state.busy = busy
