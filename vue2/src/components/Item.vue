@@ -28,7 +28,7 @@
           </v-btn>
         </v-toolbar>
         <v-card-media>
-          <v-carousel :cycle="false"
+          <v-carousel :cycle="false" light
             :value="index"
             @input="currentIndex"
             hide-delimiters lazy>

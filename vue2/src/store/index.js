@@ -118,17 +118,17 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SAVE_USER (state, user) {
-      state.user = Object.assign(state.user, user)
+    SAVE_USER (state, payload) {
+      state.user = Object.assign(state.user, payload)
     },
-    SET_CURRENT (state, data) {
-      state.current = data
+    SET_CURRENT (state, payload) {
+      state.current = Object.assign({}, payload)
     },
-    SAVE_FIND_FORM (state, find) {
-      state.find = Object.assign(state.find, find)
+    SAVE_FIND_FORM (state, payload) {
+      state.find = Object.assign(state.find, payload)
     },
-    CHANGE_FILTER (state, filter) {
-      state.filter = Object.assign({}, filter)
+    CHANGE_FILTER (state, payload) {
+      state.filter = Object.assign({}, payload)
     },
     ADD_RECORD (state, obj) {
       const dates = state.objects.map(item => item.date)
@@ -144,22 +144,22 @@ export default new Vuex.Store({
       state.page = data._page
       state.next = data._next
     },
-    UPDATE_RECORD (state, data) {
-      const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
-      state.objects.splice(index, 1, data)
+    UPDATE_RECORD (state, obj) {
+      const index = state.objects.map(item => item.safekey).indexOf(obj.safekey)
+      state.objects.splice(index, 1, obj)
     },
     RESET_RECORDS (state) {
-      state.objects = []
+      state.objects.length = 0
+      state.pages.length = 0
       state.page = null
       state.next = null
-      state.pages = []
     },
-    DELETE_RECORD (state, data) {
-      const index = state.objects.map(item => item.safekey).indexOf(data.safekey)
+    DELETE_RECORD (state, obj) {
+      const index = state.objects.map(item => item.safekey).indexOf(obj.safekey)
       state.objects.splice(index, 1)
     },
-    DELETE_UPLOADED (state, data) {
-      const index = state.uploaded.map(item => item.safekey).indexOf(data.safekey)
+    DELETE_UPLOADED (state, obj) {
+      const index = state.uploaded.map(item => item.safekey).indexOf(obj.safekey)
       state.uploaded.splice(index, 1)
     },
     UPDATE_TAGS (state, data) {
@@ -169,13 +169,13 @@ export default new Vuex.Store({
       state.models = data
     },
     SET_INFO (state, payload) {
-      state.info = payload
+      state.info = Object.assign({}, payload)
     },
     SET_BUSY (state, busy) {
       state.busy = busy
     },
-    SET_TOKEN (state, payload) {
-      state.fcm_token = payload
+    SET_TOKEN (state, token) {
+      state.fcm_token = token
     }
   }
 })

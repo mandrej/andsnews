@@ -140,7 +140,6 @@ export default {
             this.currentStatus = STATUS_SUCCESS
             this.$store.dispatch('addUploaded', item.rec)
             this.$store.dispatch('addRecord', item.rec)
-            this.$store.dispatch('changeCurrent', {})
           }
         ))
         .catch(err => {
