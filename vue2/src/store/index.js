@@ -106,6 +106,8 @@ export default new Vuex.Store({
         })
     },
     getToken: ({commit}) => {
+      if (process.env.NODE_ENV === 'development') return
+
       MESSAGING.requestPermission()
         .then(() => {
           console.log('permission success')
