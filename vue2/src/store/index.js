@@ -22,17 +22,13 @@ export default new Vuex.Store({
     page: null, // unused
     next: null,
 
+    index: 0,
     current: {},
     tags: [],
     models: [],
     info: {},
     busy: false,
     fcm_token: null
-  },
-  getters: {
-    getCurrentIndex: (state) => (id) => {
-      return state.objects.findIndex(item => item.safekey === id)
-    }
   },
   actions: {
     saveUser: ({commit}, user) => commit('SAVE_USER', user),
@@ -56,8 +52,6 @@ export default new Vuex.Store({
     deleteRecord: ({commit}, obj) => {
       commit('DELETE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
-      commit('SET_CURRENT', {})
-
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
           console.log(response.data)
@@ -125,6 +119,7 @@ export default new Vuex.Store({
     },
     SET_CURRENT (state, payload) {
       state.current = Object.assign({}, payload)
+      state.index = state.objects.findIndex(item => item.safekey === payload.safekey)
     },
     SAVE_FIND_FORM (state, payload) {
       state.find = Object.assign(state.find, payload)
@@ -134,8 +129,8 @@ export default new Vuex.Store({
     },
     ADD_RECORD (state, obj) {
       const dates = state.objects.map(item => item.date)
-      const index = dates.findIndex(date => date < obj.date)
-      state.objects.splice(index, 0, obj)
+      state.index = dates.findIndex(date => date < obj.date)
+      state.objects.splice(state.index, 0, obj)
     },
     ADD_UPLOADED (state, data) {
       state.uploaded = [...state.uploaded, data]
@@ -147,22 +142,23 @@ export default new Vuex.Store({
       state.next = data._next
     },
     UPDATE_RECORD (state, obj) {
-      const index = state.objects.map(item => item.safekey).indexOf(obj.safekey)
-      state.objects.splice(index, 1, obj)
+      state.index = state.objects.findIndex(item => item.safekey === obj.safekey)
+      state.objects.splice(state.index, 1, obj)
     },
     RESET_RECORDS (state) {
       state.objects.length = 0
       state.pages.length = 0
       state.page = null
       state.next = null
+      state.index = 0
     },
     DELETE_RECORD (state, obj) {
-      const index = state.objects.map(item => item.safekey).indexOf(obj.safekey)
-      state.objects.splice(index, 1)
+      state.index = state.objects.findIndex(item => item.safekey === obj.safekey)
+      state.objects.splice(state.index, 1)
     },
     DELETE_UPLOADED (state, obj) {
-      const index = state.uploaded.map(item => item.safekey).indexOf(obj.safekey)
-      state.uploaded.splice(index, 1)
+      const index = state.objects.findIndex(item => item.safekey === obj.safekey)
+      if (index > -1) state.uploaded.splice(index, 1)
     },
     UPDATE_TAGS (state, data) {
       state.tags = data

@@ -32,7 +32,7 @@
               <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
             </v-flex>
             <v-flex xs6 sm4 md3>
-              <v-btn large disabled color="secondary" @click="fix">Deleted</v-btn>
+              <v-btn large color="secondary" @click="fix">Deleted</v-btn>
             </v-flex>
           </v-layout>
         </v-container>

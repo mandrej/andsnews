@@ -41,22 +41,24 @@
                 <v-flex xs12 sm6 md4 lg3 xl2
                   v-for="item in objects"
                   :key="item.safekey">
-                  <v-card tile>
-                    <v-card-title class="title" primary-title>
-                      {{item.headline}}
-                    </v-card-title>
-                    <v-card-media
-                      v-lazy:background-image="getImgSrc(item, 's')"
-                      @click="showDetail(item)"
-                      style="background-position: 50% 50%"
-                      height="300px">
-                    </v-card-media>
-                    <v-card-actions v-if="user.isAuthorized">
-                      <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
-                      <v-spacer style="text-align: center">{{dateFormat(item, 'short')}}</v-spacer>
-                      <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
-                    </v-card-actions>
-                  </v-card>
+                  <div :class="`${item.safekey}`">
+                    <v-card tile>
+                      <v-card-title class="title" primary-title>
+                        {{item.headline}}
+                      </v-card-title>
+                      <v-card-media
+                        v-lazy:background-image="getImgSrc(item, 's')"
+                        @click="showDetail(item)"
+                        style="background-position: 50% 50%"
+                        height="300px">
+                      </v-card-media>
+                      <v-card-actions v-if="user.isAuthorized">
+                        <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
+                        <v-spacer style="text-align: center">{{dateFormat(item, 'short')}}</v-spacer>
+                        <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </div>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -75,6 +77,8 @@ import infiniteScroll from 'vue-infinite-scroll'
 import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
+import { EventBus } from '../../helpers/event-bus'
+import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   preLoad: 2,
@@ -98,13 +102,33 @@ export default {
     stop: false,
     confirm: false,
     showItem: false,
-    editForm: false
+    editForm: false,
+
+    duration: 300,
+    offset: 0,
+    easing: 'easeInOutCubic',
+    easings: Object.keys(easings)
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapState(['user', 'current', 'index', 'objects', 'pages', 'next', 'filter', 'busy']),
+    options () {
+      return {
+        duration: this.duration,
+        offset: this.offset,
+        easing: this.easing
+      }
+    },
     disabled () {
       return this.busy || this.stop
     }
+  },
+  mounted () {
+    EventBus.$on('scroll', () => {
+      if (this.index > -1) {
+        const target = '.' + this.current.safekey
+        this.$vuetify.goTo(target, this.options)
+      }
+    })
   },
   watch: {
     busy (newVal, oldVal) {

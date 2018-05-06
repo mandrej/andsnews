@@ -110,6 +110,7 @@
 <script>
 import { mapState } from 'vuex'
 import common from '../../helpers/mixins'
+import { EventBus } from '../../helpers/event-bus'
 
 export default {
   name: 'Edit',
@@ -136,6 +137,7 @@ export default {
     submit () {
       if (this.$refs.form.validate()) {
         this.$store.dispatch('saveRecord', this.current)
+        EventBus.$emit('scroll')
         this.show = false
       }
     }

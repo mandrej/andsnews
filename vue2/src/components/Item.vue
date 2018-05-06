@@ -12,7 +12,7 @@
       scrollable>
       <v-card tile>
         <v-toolbar card light>
-          <v-btn icon @click.native="show = false">
+          <v-btn icon @click.native="close">
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title>{{current.headline || 'Not found'}}</v-toolbar-title>
@@ -45,11 +45,12 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import common from '../../helpers/mixins'
 import Edit from './Edit'
 import Info from './Info'
+import { EventBus } from '../../helpers/event-bus'
 
 Vue.use(VueLazyload)
 
@@ -66,11 +67,7 @@ export default {
     editForm: false
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
-    ...mapGetters(['getCurrentIndex']),
-    index () {
-      return this.getCurrentIndex(this.current.safekey)
-    }
+    ...mapState(['user', 'current', 'index', 'objects', 'pages', 'next', 'filter', 'busy'])
   },
   methods: {
     currentIndex (idx) {
@@ -83,6 +80,10 @@ export default {
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('fetchRecords', this.next)
       }
+    },
+    close () {
+      EventBus.$emit('scroll')
+      this.show = false
     }
   }
 }
