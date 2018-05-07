@@ -195,7 +195,10 @@ class BackgroundUnbound(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
         if token is not None:
-            runner = UnboundCloud()
+            if DEVEL:
+                runner = UnboundDevel()
+            else:
+                runner = UnboundCloud()
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)

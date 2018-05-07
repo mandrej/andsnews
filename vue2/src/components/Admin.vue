@@ -22,18 +22,18 @@
       <v-content>
         <v-container grid-list-md mt-3>
           <v-layout row wrap>
-            <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
-              <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
-            </v-flex>
-            <v-flex xs6 sm4 md3>
-              <v-btn large color="secondary" @click="reindex">Photo Reindex</v-btn>
-            </v-flex>
-            <v-flex xs6 sm4 md3>
-              <v-btn large color="secondary" @click="unbound">Photo Unbound</v-btn>
-            </v-flex>
-            <v-flex xs6 sm4 md3>
-              <v-btn large color="secondary" @click="fix">Deleted</v-btn>
-            </v-flex>
+              <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
+                <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
+              </v-flex>
+              <v-flex xs6 sm4 md3>
+                <v-btn large color="secondary" @click="reindex">Reindex</v-btn>
+              </v-flex>
+              <v-flex xs6 sm4 md3>
+                <v-btn large color="secondary" @click="unbound">Delete unbound</v-btn>
+              </v-flex>
+              <v-flex xs6 sm4 md3>
+                <v-btn large color="secondary" @click="fix">List Missing</v-btn>
+              </v-flex>
           </v-layout>
         </v-container>
       </v-content>

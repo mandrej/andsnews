@@ -119,7 +119,7 @@ export default new Vuex.Store({
     },
     SET_CURRENT (state, payload) {
       state.current = Object.assign({}, payload)
-      state.index = state.objects.findIndex(item => item.safekey === payload.safekey)
+      state.index = state.objects.map(item => item.safekey).indexOf(payload.safekey)
     },
     SAVE_FIND_FORM (state, payload) {
       state.find = Object.assign(state.find, payload)
@@ -129,8 +129,8 @@ export default new Vuex.Store({
     },
     ADD_RECORD (state, obj) {
       const dates = state.objects.map(item => item.date)
-      state.index = dates.findIndex(date => date < obj.date)
-      state.objects.splice(state.index, 0, obj)
+      const idx = dates.findIndex(date => date < obj.date)
+      state.objects.splice(idx, 0, obj)
     },
     ADD_UPLOADED (state, data) {
       state.uploaded = [...state.uploaded, data]
@@ -142,23 +142,22 @@ export default new Vuex.Store({
       state.next = data._next
     },
     UPDATE_RECORD (state, obj) {
-      state.index = state.objects.findIndex(item => item.safekey === obj.safekey)
-      state.objects.splice(state.index, 1, obj)
+      const idx = state.objects.map(item => item.safekey).indexOf(obj.safekey)
+      state.objects.splice(idx, 1, obj)
     },
     RESET_RECORDS (state) {
       state.objects.length = 0
       state.pages.length = 0
       state.page = null
       state.next = null
-      state.index = 0
     },
     DELETE_RECORD (state, obj) {
-      state.index = state.objects.findIndex(item => item.safekey === obj.safekey)
-      state.objects.splice(state.index, 1)
+      const idx = state.objects.map(item => item.safekey).indexOf(obj.safekey)
+      state.objects.splice(idx, 1)
     },
     DELETE_UPLOADED (state, obj) {
-      const index = state.objects.findIndex(item => item.safekey === obj.safekey)
-      if (index > -1) state.uploaded.splice(index, 1)
+      const idx = state.uploaded.map(item => item.safekey).indexOf(obj.safekey)
+      if (idx > -1) state.uploaded.splice(idx, 1)
     },
     UPDATE_TAGS (state, data) {
       state.tags = data
