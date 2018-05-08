@@ -119,7 +119,7 @@ export default new Vuex.Store({
     },
     SET_CURRENT (state, payload) {
       state.current = Object.assign({}, payload)
-      state.index = state.objects.map(item => item.safekey).indexOf(payload.safekey)
+      state.index = state.objects.findIndex(item => item.safekey === payload.safekey)
     },
     SAVE_FIND_FORM (state, payload) {
       state.find = Object.assign(state.find, payload)
@@ -142,7 +142,7 @@ export default new Vuex.Store({
       state.next = data._next
     },
     UPDATE_RECORD (state, obj) {
-      const idx = state.objects.map(item => item.safekey).indexOf(obj.safekey)
+      const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
       state.objects.splice(idx, 1, obj)
     },
     RESET_RECORDS (state) {
@@ -152,11 +152,11 @@ export default new Vuex.Store({
       state.next = null
     },
     DELETE_RECORD (state, obj) {
-      const idx = state.objects.map(item => item.safekey).indexOf(obj.safekey)
+      const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
       state.objects.splice(idx, 1)
     },
     DELETE_UPLOADED (state, obj) {
-      const idx = state.uploaded.map(item => item.safekey).indexOf(obj.safekey)
+      const idx = state.uploaded.findIndex(item => item.safekey === obj.safekey)
       if (idx > -1) state.uploaded.splice(idx, 1)
     },
     UPDATE_TAGS (state, data) {

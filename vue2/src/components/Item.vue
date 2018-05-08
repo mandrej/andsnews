@@ -10,8 +10,8 @@
       transition="scale-transition"
       hide-overlay
       scrollable>
-      <v-card tile>
-        <v-toolbar card light>
+      <v-card tile light>
+        <v-toolbar card>
           <v-btn icon @click.native="close">
             <v-icon>close</v-icon>
           </v-btn>

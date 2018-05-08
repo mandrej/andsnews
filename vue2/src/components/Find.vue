@@ -6,8 +6,8 @@
     transition="dialog-bottom-transition"
     hide-overlay
     scrollable>
-    <v-card tile>
-      <v-toolbar card light>
+    <v-card tile light>
+      <v-toolbar card>
         <v-btn icon @click.native="show = false">
           <v-icon>close</v-icon>
         </v-btn>

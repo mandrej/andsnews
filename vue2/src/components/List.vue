@@ -42,7 +42,7 @@
                   v-for="item in objects"
                   :key="item.safekey">
                   <div :class="`${item.safekey}`">
-                    <v-card tile>
+                    <v-card flat tile>
                       <v-card-title class="title" primary-title>
                         {{item.headline}}
                       </v-card-title>
@@ -105,7 +105,7 @@ export default {
     editForm: false,
 
     duration: 300,
-    offset: 0,
+    offset: -16,
     easing: 'easeInOutCubic',
     easings: Object.keys(easings)
   }),
