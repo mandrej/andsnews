@@ -7,8 +7,8 @@
       <v-icon>add</v-icon>
     </v-btn>
 
-    <v-app light>
-      <v-toolbar app prominent extended>
+    <v-app>
+      <v-toolbar app prominent extended flat>
         <v-toolbar-title style="font-size: 32px">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>

@@ -46,8 +46,8 @@
             </v-container>
           </v-jumbotron>
         </form>
-        <v-card-text>
 
+        <v-card-text>
           <v-list two-line>
             <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
               <v-list-tile-avatar>

@@ -12,30 +12,57 @@
     </v-snackbar>
 
     <v-app light>
-      <v-toolbar app prominent extended>
+      <v-toolbar app prominent extended flat>
         <v-icon @click="$router.push({name: 'home'})" style="cursor: pointer">arrow_back</v-icon>
-        <v-toolbar-title class="headline">Admin</v-toolbar-title>
+        <v-toolbar-title class="headline">Admin background operations</v-toolbar-title>
         <v-toolbar-title slot="extension">{{count}} photos and counting</v-toolbar-title>
-        <v-spacer></v-spacer>
       </v-toolbar>
 
       <v-content>
-        <v-container grid-list-md mt-3>
-          <v-layout row wrap>
-              <v-flex v-for="name in counters" :key="name" xs6 sm4 md3>
-                <v-btn large color="primary" @click="rebuild(name)">{{name}}</v-btn>
-              </v-flex>
-              <v-flex xs6 sm4 md3>
-                <v-btn large color="secondary" @click="reindex">Reindex</v-btn>
-              </v-flex>
-              <v-flex xs6 sm4 md3>
-                <v-btn large color="secondary" @click="unbound">Delete unbound</v-btn>
-              </v-flex>
-              <v-flex xs6 sm4 md3>
-                <v-btn large color="secondary" @click="fix">List Missing</v-btn>
-              </v-flex>
-          </v-layout>
-        </v-container>
+        <v-list>
+          <v-subheader>Counters</v-subheader>
+
+          <v-list-tile v-for="name in counters" :key="name" @click="nop">
+            <v-list-tile-content>
+              <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn color="primary" @click="rebuild(name)">Rebuild</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile @click="nop">
+            <v-list-tile-content>
+              <v-list-tile-title>Reindex all images</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn color="warning" class="black--text" @click="reindex">Reindex</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+          <v-divider></v-divider>
+
+          <v-subheader>Cloud</v-subheader>
+
+          <v-list-tile two-line @click="nop">
+            <v-list-tile-content>
+              <v-list-tile-title>Remove images from the Cloud</v-list-tile-title>
+              <v-list-tile-sub-title>not referenced in datastore</v-list-tile-sub-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn color="secondary" @click="unbound">Remove</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile two-line @click="nop">
+            <v-list-tile-content>
+              <v-list-tile-title>List images in datastore</v-list-tile-title>
+              <v-list-tile-sub-title>that are missing in the Cloud</v-list-tile-sub-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn color="secondary" @click="fix">Missing</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
       </v-content>
     </v-app>
   </div>
@@ -93,14 +120,16 @@ export default {
     },
     fix () {
       this.callAjax('fix/photo')
+    },
+    nop () {
+      return null
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .btn {
-  width: 100%;
+  width: 100px;
 }
 </style>
