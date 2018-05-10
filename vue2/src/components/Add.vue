@@ -59,7 +59,7 @@
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-layout row>
-                  <v-btn color="secondary" @click="removeRecord(item)">Delete</v-btn>&nbsp;
+                  <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
                   <v-btn color="primary" @click="showEditdForm(item)">Edit</v-btn>
                 </v-layout>
               </v-list-tile-action>
@@ -67,7 +67,7 @@
           </v-list>
 
           <v-layout justify-center v-if="isSuccess">
-            <v-btn color="primary" @click="reset">Upload again</v-btn>
+            <v-btn @click="reset">Upload again</v-btn>
           </v-layout>
         </v-card-text>
       </v-card>

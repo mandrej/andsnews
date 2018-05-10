@@ -14,7 +14,7 @@
     <v-app light>
       <v-toolbar app prominent extended flat>
         <v-icon @click="$router.push({name: 'home'})" style="cursor: pointer">arrow_back</v-icon>
-        <v-toolbar-title class="headline">Admin background operations</v-toolbar-title>
+        <v-toolbar-title class="headline">Background admin operations</v-toolbar-title>
         <v-toolbar-title slot="extension">{{count}} photos and counting</v-toolbar-title>
       </v-toolbar>
 
@@ -36,7 +36,7 @@
               <v-list-tile-title>Reindex all images</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="warning" class="black--text" @click="reindex">Reindex</v-btn>
+              <v-btn color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider></v-divider>

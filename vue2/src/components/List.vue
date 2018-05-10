@@ -23,9 +23,9 @@
           <small>you want to delete "{{current.headline}}"</small>
         </v-card-title>
         <v-card-actions>
-          <v-btn color="primary" @click.native="agree">Yes</v-btn>
+          <v-btn color="error" @click.native="agree">Yes</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" @click.native="confirm = false">No</v-btn>
+          <v-btn color="primary" @click.native="confirm = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -53,9 +53,9 @@
                         height="300px">
                       </v-card-media>
                       <v-card-actions v-if="user.isAuthorized">
-                        <v-btn v-if="user.isAdmin" flat color="secondary" @click="removeRecord(item)">Delete</v-btn>
+                        <v-btn v-if="user.isAdmin" flat class="black--text" @click="removeRecord(item)">Delete</v-btn>
                         <v-spacer style="text-align: center">{{dateFormat(item, 'short')}}</v-spacer>
-                        <v-btn flat color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                        <v-btn flat class="black--text" @click="showEditdForm(item)">Edit</v-btn>
                       </v-card-actions>
                     </v-card>
                   </div>

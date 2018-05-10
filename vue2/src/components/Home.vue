@@ -3,23 +3,23 @@
     <Find :visible="showFindForm" @close="showFindForm = false"></Find>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
-    <v-btn id="add" v-if="user.isAuthorized" fab medium color="warning" class="secondary--text" @click="showAddForm = true">
+    <v-btn id="add" v-if="user.isAuthorized" fab medium color="accent" class="black--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
     </v-btn>
 
     <v-app>
-      <v-toolbar app prominent extended flat>
+      <v-toolbar app prominent extended flat dark color="primary">
         <v-toolbar-title style="font-size: 32px">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value">
-            <v-btn icon color="secondary--text" @click="clearFilter">
+            <v-btn icon @click="clearFilter">
               <v-icon>close</v-icon>
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else class="grey--text text--lighten-1">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-toolbar-title v-else class="black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer ></v-spacer>
           <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">
