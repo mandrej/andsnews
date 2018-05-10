@@ -8,7 +8,7 @@
     </v-btn>
 
     <v-app>
-      <v-toolbar app prominent extended flat dark color="primary">
+      <v-toolbar app prominent extended dark color="primary">
         <v-toolbar-title style="font-size: 32px">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>

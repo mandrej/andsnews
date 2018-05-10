@@ -49,7 +49,7 @@
               <v-list-tile-sub-title>not referenced in datastore</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="secondary" @click="unbound">Remove</v-btn>
+              <v-btn color="error" @click="unbound">Remove</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 
