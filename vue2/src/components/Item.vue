@@ -3,20 +3,11 @@
     <Edit :visible="editForm" @close="editForm = false"></Edit>
     <Info :visible="showInfo" @close="showInfo = false"></Info>
 
-    <v-dialog
-      v-model="show"
-      lazy
-      fullscreen
-      transition="scale-transition"
-      hide-overlay
-      scrollable>
-      <v-card tile light>
-        <v-toolbar card>
-          <v-btn icon @click.native="close">
-            <v-icon>close</v-icon>
-          </v-btn>
-          <v-toolbar-title>{{current.headline || 'Not found'}}</v-toolbar-title>
-          <v-spacer></v-spacer>
+    <v-app light>
+      <v-toolbar app flat>
+        <v-icon @click="back" style="cursor: pointer">arrow_back</v-icon>
+        <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
+        <v-spacer></v-spacer>
           <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>
             <v-icon>create</v-icon>
           </v-btn>
@@ -26,20 +17,21 @@
           <v-btn icon @click="showInfo = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
-        </v-toolbar>
-        <v-card-media>
-          <v-carousel v-if="show" :cycle="false" light
-            :value="index"
-            @input="currentIndex"
-            hide-delimiters lazy>
-            <v-carousel-item v-for="item in objects" :key="item.safekey"
-              v-lazy:background-image="getImgSrc(item)"
-              style="background-size: contain; background-position: 50% 50%">
-            </v-carousel-item>
-          </v-carousel>
-        </v-card-media>
-      </v-card>
-    </v-dialog>
+      </v-toolbar>
+
+      <v-content>
+        <v-carousel :cycle="false" light
+          v-bind="current"
+          :value="index"
+          @input="currentIndex"
+          hide-delimiters lazy>
+          <v-carousel-item v-for="item in objects" :key="item.safekey"
+            v-lazy:background-image="getImgSrc(item)"
+            style="background-size: contain; background-position: 50% 50%">
+          </v-carousel-item>
+        </v-carousel>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -61,17 +53,22 @@ export default {
     Edit
   },
   mixins: [ common ],
-  props: ['visible'],
+  props: ['id'],
   data: () => ({
     showInfo: false,
     editForm: false
   }),
   computed: {
-    ...mapState(['user', 'current', 'index', 'objects', 'pages', 'next', 'filter', 'busy'])
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
+    index () {
+      return this.objects.findIndex(item => item.safekey === this.id)
+    }
   },
   methods: {
     currentIndex (idx) {
-      this.$store.dispatch('changeCurrent', this.objects[idx])
+      const obj = this.objects[idx]
+      this.$store.dispatch('changeCurrent', obj)
+      this.$router.push({name: 'item', params: {id: obj.safekey}})
       if ((this.objects.length - idx) === 3) this.loadMore()
     },
     loadMore () {
@@ -81,9 +78,9 @@ export default {
         this.$store.dispatch('fetchRecords', this.next)
       }
     },
-    close () {
+    back () {
       EventBus.$emit('scroll')
-      this.show = false
+      this.$router.push({name: 'home'})
     }
   }
 }

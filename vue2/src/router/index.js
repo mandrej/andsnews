@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Err from '@/components/Err'
+import Item from '@/components/Item'
 import Admin from '@/components/Admin'
+import Err from '@/components/Err'
 import store from '../store'
 
 Vue.use(Router)
@@ -14,6 +15,12 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/item/:id',
+      name: 'item',
+      component: Item,
+      props: true
     },
     {
       path: '/admin',

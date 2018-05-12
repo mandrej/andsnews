@@ -5,7 +5,7 @@
     <img
       :src="user.photo"
       v-if="user.isAuthorized">
-    <v-icon v-else flat color="secondary">account_circle</v-icon>
+    <v-icon v-else flat>account_circle</v-icon>
   </v-avatar>
 </template>
 
@@ -59,8 +59,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-
-</style>

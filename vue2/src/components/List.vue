@@ -1,7 +1,6 @@
 <template>
   <div>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
-    <Item :visible="showItem" @close="showItem = false"></Item>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
       <v-card>
@@ -41,7 +40,7 @@
                 <v-flex xs12 sm6 md4 lg3 xl2
                   v-for="item in objects"
                   :key="item.safekey">
-                  <div :class="`${item.safekey}`">
+                  <div :id="`${item.safekey}`">
                     <v-card flat tile>
                       <v-card-title class="title" primary-title>
                         {{item.headline}}
@@ -74,7 +73,6 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
-import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
 import { EventBus } from '../../helpers/event-bus'
@@ -88,7 +86,6 @@ Vue.use(VueLazyload, {
 export default {
   name: 'Home',
   components: {
-    Item,
     Edit
   },
   directives: {
@@ -101,7 +98,6 @@ export default {
     dialog: false,
     stop: false,
     confirm: false,
-    showItem: false,
     editForm: false,
 
     duration: 300,
@@ -110,7 +106,7 @@ export default {
     easings: Object.keys(easings)
   }),
   computed: {
-    ...mapState(['user', 'current', 'index', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
     options () {
       return {
         duration: this.duration,
@@ -123,11 +119,13 @@ export default {
     }
   },
   mounted () {
+    EventBus.$on('reload', () => {
+      this.$store.dispatch('fetchRecords')
+    })
     EventBus.$on('scroll', () => {
-      if (this.index > -1) {
-        const target = '.' + this.current.safekey
-        this.$vuetify.goTo(target, this.options)
-      }
+      setTimeout(() => {
+        this.$vuetify.goTo('#' + this.current.safekey, this.options)
+      }, 0)
     })
   },
   watch: {
@@ -150,7 +148,7 @@ export default {
     },
     showDetail (rec) {
       this.$store.dispatch('changeCurrent', rec)
-      this.showItem = true
+      this.$router.push({name: 'item', params: {id: rec.safekey}})
     },
     showEditdForm (rec) {
       this.$store.dispatch('changeCurrent', rec)

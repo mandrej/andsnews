@@ -22,7 +22,6 @@ export default new Vuex.Store({
     page: null, // unused
     next: null,
 
-    index: 0,
     current: {},
     tags: [],
     models: [],
@@ -35,8 +34,8 @@ export default new Vuex.Store({
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
     changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
     changeFilter: ({commit}, payload) => {
-      commit('CHANGE_FILTER', payload)
       commit('RESET_RECORDS')
+      commit('CHANGE_FILTER', payload)
     },
     addRecord: ({commit}, obj) => commit('ADD_RECORD', obj),
     addUploaded: ({commit}, obj) => commit('ADD_UPLOADED', obj),
@@ -54,6 +53,15 @@ export default new Vuex.Store({
       commit('DELETE_UPLOADED', obj)
       HTTP.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
         .then(response => {
+          console.log(response.data)
+        })
+    },
+    fetchObject: ({commit}, id) => {
+      commit('SET_BUSY', true)
+      HTTP.get(id)
+        .then(response => {
+          commit('SET_BUSY', false)
+          commit('SET_CURRENT', response.data)
           console.log(response.data)
         })
     },
@@ -119,7 +127,6 @@ export default new Vuex.Store({
     },
     SET_CURRENT (state, payload) {
       state.current = Object.assign({}, payload)
-      state.index = state.objects.findIndex(item => item.safekey === payload.safekey)
     },
     SAVE_FIND_FORM (state, payload) {
       state.find = Object.assign(state.find, payload)
