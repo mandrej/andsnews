@@ -3,7 +3,7 @@
     size="36px"
     @click="signHandler">
     <img
-      v-bind="user.photo"
+      v-bind="user"
       :src="user.photo"
       v-if="user.isAuthorized">
     <v-icon v-else flat>account_circle</v-icon>
