@@ -84,7 +84,6 @@ export default {
   }),
   created () {
     this.$store.dispatch('fetchInfo')
-    this.$store.dispatch('getToken')
   },
   mounted () {
     const messaging = firebase.messaging()

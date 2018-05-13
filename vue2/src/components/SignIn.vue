@@ -3,6 +3,7 @@
     size="36px"
     @click="signHandler">
     <img
+      v-bind="user.photo"
       :src="user.photo"
       v-if="user.isAuthorized">
     <v-icon v-else flat>account_circle</v-icon>
@@ -59,3 +60,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.avatar {
+  cursor: pointer;
+}
+</style>

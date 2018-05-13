@@ -3,41 +3,52 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
-import { MESSAGING } from '../../helpers/fire'
+import { FB, MESSAGING_SERVER_KEY, MESSAGING } from '../../helpers/fire'
+
+const NOTIFICATION_URL = 'https://fcm.googleapis.com/fcm/notification'
+const NOTIFICATION_GROUP = 'andsnews-subscribers'
 
 Vue.use(Vuex, VueAxios)
 
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'filter', 'find', 'uploaded', 'objects', 'pages', 'page', 'next']
+    paths: ['user', 'filter', 'find', 'uploaded', 'objects', 'pages', 'page', 'next', 'fcm_token']
   })],
   state: {
     user: {},
-    filter: {},
     find: {},
     uploaded: [],
     objects: [],
     pages: [],
     page: null, // unused
     next: null,
+    fcm_token: null,
+    // notification_key: null,
 
     current: {},
     tags: [],
     models: [],
     info: {},
-    busy: false,
-    fcm_token: null
+    busy: false
   },
   actions: {
-    saveUser: ({commit}, user) => commit('SAVE_USER', user),
+    saveUser: ({commit}, user) => {
+      if (user && user.uid) {
+        FB.database().ref('users').child(user.uid).set({
+          email: user.email,
+          date: (new Date()).toISOString()
+        })
+      }
+      commit('SAVE_USER', user)
+    },
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
     changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
     changeFilter: ({commit}, payload) => {
       commit('RESET_RECORDS')
       commit('CHANGE_FILTER', payload)
     },
-    addRecord: ({commit}, obj) => commit('ADD_RECORD', obj),
+    addRecord: ({commit, dispatch}, obj) => commit('ADD_RECORD', obj),
     addUploaded: ({commit}, obj) => commit('ADD_UPLOADED', obj),
     saveRecord: ({commit}, obj) => {
       HTTP.put('photo/edit/' + obj.safekey, obj)
@@ -107,7 +118,7 @@ export default new Vuex.Store({
           commit('SET_INFO', response.data)
         })
     },
-    getToken: ({commit}) => {
+    getToken: ({commit, dispatch}) => {
       if (process.env.NODE_ENV === 'development') return
 
       MESSAGING.requestPermission()
@@ -119,6 +130,43 @@ export default new Vuex.Store({
           commit('SET_TOKEN', token)
         })
         .catch(() => console.log('permission failed'))
+    },
+    subscribeToken: ({commit, state}) => {
+      const ref = FB.database().ref('registrations')
+      ref.child(state.fcm_token).set({
+        date: (new Date()).toISOString()
+      })
+    },
+    getNotificationKey: ({commit, state}) => {
+      const registrations = []
+      const ref = FB.database().ref('registrations')
+      ref.once('value', (shot) => {
+        shot.forEach(child => {
+          if (child.key !== state.fcm_token) {
+            registrations.push(child.key)
+          }
+        })
+      })
+      const credentials = {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=' + MESSAGING_SERVER_KEY,
+        'project_id': FB.options.messagingSenderId
+      }
+      // HTTP.get(NOTIFICATION_URL, {params: {notification_key_name: NOTIFICATION_GROUP}, headers: credentials})
+      //   .then(response => {
+      //     console.log(response.data)
+      //   })
+      //   .catch(() => console.log('get notification_key failed'))
+      const data = {
+        'operation': 'create',
+        'notification_key_name': NOTIFICATION_GROUP,
+        'registration_ids': registrations
+      }
+      HTTP.post(NOTIFICATION_URL, data, credentials)
+        .then(response => {
+          commit('SET_NOTIFICATION_KEY', response.data.notification_key)
+        })
+        .catch(() => console.log('create notification_key failed'))
     }
   },
   mutations: {
@@ -180,6 +228,9 @@ export default new Vuex.Store({
     },
     SET_TOKEN (state, token) {
       state.fcm_token = token
+    },
+    SET_NOTIFICATION_KEY (state, token) {
+      state.notification_key = token
     }
   }
 })

@@ -58,6 +58,7 @@ export default {
     showAddForm: false
   }),
   created () {
+    this.$store.dispatch('getToken')
     this.$store.dispatch('fetchTags')
     this.$store.dispatch('fetchModels')
   },
