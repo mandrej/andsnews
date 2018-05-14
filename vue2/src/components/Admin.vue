@@ -20,18 +20,6 @@
 
       <v-content>
         <v-list>
-          <v-subheader>Messaging</v-subheader>
-          <v-list-tile two-line @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>Send message</v-list-tile-title>
-              <v-list-tile-sub-title>to andsnews-subscribers group</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-btn disabled color="primary" @click="send">Send</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-          <v-divider></v-divider>
-
           <v-subheader>Counters</v-subheader>
 
           <v-list-tile v-for="name in counters" :key="name" @click="nop">
@@ -131,9 +119,6 @@ export default {
     },
     fix () {
       this.callAjax('fix/photo')
-    },
-    send () {
-      this.$store.dispatch('sendNotification')
     },
     nop () {
       return null

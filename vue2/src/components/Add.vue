@@ -138,7 +138,6 @@ export default {
           item => {
             this.uploadedFiles.push(item.rec)
             this.currentStatus = STATUS_SUCCESS
-            this.$store.dispatch('addUploaded', item.rec)
             this.$store.dispatch('addRecord', item.rec)
           }
         ))
