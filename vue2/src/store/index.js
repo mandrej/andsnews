@@ -3,9 +3,9 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
-import { FB, MESSAGING_SERVER_KEY, MESSAGING } from '../../helpers/fire'
+import { FB, MESSAGING, MESSAGING_AUTH } from '../../helpers/fire'
 
-const NOTIFICATION_URL = 'https://fcm.googleapis.com/fcm/notification'
+const FCM_URL = 'https://fcm.googleapis.com/fcm/'
 const NOTIFICATION_GROUP = 'andsnews-subscribers'
 
 Vue.use(Vuex, VueAxios)
@@ -13,7 +13,7 @@ Vue.use(Vuex, VueAxios)
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'filter', 'find', 'uploaded', 'objects', 'pages', 'page', 'next', 'fcm_token']
+    paths: ['user', 'filter', 'find', 'uploaded', 'objects', 'pages', 'page', 'next', 'fcm_token', 'notification_key']
   })],
   state: {
     user: {},
@@ -24,7 +24,7 @@ export default new Vuex.Store({
     page: null, // unused
     next: null,
     fcm_token: null,
-    // notification_key: null,
+    notification_key: null,
 
     current: {},
     tags: [],
@@ -128,6 +128,7 @@ export default new Vuex.Store({
         })
         .then(token => {
           commit('SET_TOKEN', token)
+          dispatch('subscribeToken')
         })
         .catch(() => console.log('permission failed'))
     },
@@ -137,32 +138,46 @@ export default new Vuex.Store({
         date: (new Date()).toISOString()
       })
     },
+    sendNotification: ({commit, state, dispatch}) => {
+      // check if state.notification_key exist
+      // if not dispatch('getNotificationKey')
+      if (!state.notification_key) return
+      const data = {
+        'data': {
+          'score': '5x1',
+          'time': '15:10'
+        },
+        'to': state.notification_key
+      }
+      HTTP.post(FCM_URL + 'send', data, {headers: MESSAGING_AUTH})
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(() => console.log('send notification failed'))
+    },
     getNotificationKey: ({commit, state}) => {
+      // check notification_key_name exist
+      // if not create
+      // if exist check token in registrations
+      // if not add
+      HTTP.get(FCM_URL + 'notification', {params: {notification_key_name: NOTIFICATION_GROUP}, headers: MESSAGING_AUTH})
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(() => console.log('get notification_key failed'))
       const registrations = []
       const ref = FB.database().ref('registrations')
       ref.once('value', (shot) => {
         shot.forEach(child => {
-          if (child.key !== state.fcm_token) {
-            registrations.push(child.key)
-          }
+          registrations.push(child.key)
         })
       })
-      const credentials = {
-        'Content-Type': 'application/json',
-        'Authorization': 'key=' + MESSAGING_SERVER_KEY,
-        'project_id': FB.options.messagingSenderId
-      }
-      // HTTP.get(NOTIFICATION_URL, {params: {notification_key_name: NOTIFICATION_GROUP}, headers: credentials})
-      //   .then(response => {
-      //     console.log(response.data)
-      //   })
-      //   .catch(() => console.log('get notification_key failed'))
       const data = {
         'operation': 'create',
         'notification_key_name': NOTIFICATION_GROUP,
         'registration_ids': registrations
       }
-      HTTP.post(NOTIFICATION_URL, data, credentials)
+      HTTP.post(FCM_URL + 'notification', data, {headers: MESSAGING_AUTH})
         .then(response => {
           commit('SET_NOTIFICATION_KEY', response.data.notification_key)
         })

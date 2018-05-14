@@ -8,10 +8,11 @@ const config = {
   storageBucket: 'andsnews.appspot.com',
   messagingSenderId: '719127177629'
 }
-const firebase_app = firebase.initializeApp(config)
-export const FB = firebase_app
-
-const messaging = firebase_app.messaging()
 // messaging.usePublicVapidKey('BEMvPS8oRWveXcM6M_uBdQvDFZqvYKUOnUa22hVvMMlSMFr_04rI3G3BjJWW7EZKSqkM2mchPP3tReV4LY0Y45o')
-export const MESSAGING = messaging
-export const MESSAGING_SERVER_KEY = 'AAAAp29R6Z0:APA91bEsmfN6-ZywxP05Xpw-Ooto5FwTyXjgxRcqDllaTo6Kay3y8wnB-1QcwBt1-iQvoPt2p8wwp0JmKz4xWHST-pAQyrAivyTT-RFXasRYGmT09rP6oMuW95XHEi-HANZgzljuA-4i4Gh44den43zooddq5uSjBA'
+export const FB = firebase.initializeApp(config)
+export const MESSAGING = FB.messaging()
+export const MESSAGING_AUTH = {
+  'Content-Type': 'application/json',
+  'Authorization': 'key=AAAAp29R6Z0:APA91bEsmfN6-ZywxP05Xpw-Ooto5FwTyXjgxRcqDllaTo6Kay3y8wnB-1QcwBt1-iQvoPt2p8wwp0JmKz4xWHST-pAQyrAivyTT-RFXasRYGmT09rP6oMuW95XHEi-HANZgzljuA-4i4Gh44den43zooddq5uSjBA',
+  'project_id': config.messagingSenderId
+}
