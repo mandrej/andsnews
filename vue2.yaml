@@ -24,6 +24,7 @@ handlers:
   secure: always
   http_headers:
     Content-Type: application/javascript
+    Cache-Control: no-cache, no-store, must-revalidate
 
 - url: /.*
   static_files: vue2/dist/index.html

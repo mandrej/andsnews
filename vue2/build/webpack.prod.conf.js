@@ -128,6 +128,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: 'service-worker.js',
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
+      navigateFallback: '/index.html',
       stripPrefix: 'dist/',
       runtimeCaching: [
         {
@@ -141,6 +142,17 @@ const webpackConfig = merge(baseWebpackConfig, {
             cache: {
               maxEntries: 100,
               name: 'image-cache'
+            }
+          }
+        },
+        {
+          urlPattern: /\/api\/.*/,
+          handler: 'fastest',
+          options: {
+            cache: {
+              maxEntries: 100,
+              name: 'data-cache',
+              maxAgeSeconds: 600
             }
           }
         }

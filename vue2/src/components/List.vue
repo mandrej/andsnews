@@ -125,7 +125,7 @@ export default {
     EventBus.$on('scroll', () => {
       setTimeout(() => {
         this.$vuetify.goTo('#' + this.current.safekey, this.options)
-      }, 0)
+      }, 50)
     })
   },
   watch: {
