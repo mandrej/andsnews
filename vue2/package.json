@@ -18,7 +18,6 @@
     "firebase": "^4.12.1",
     "sw-precache-webpack-plugin": "^0.11.5",
     "vue": "^2.5.2",
-    "vue-axios": "^2.1.1",
     "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.14",

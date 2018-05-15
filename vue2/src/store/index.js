@@ -1,28 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import VueAxios from 'vue-axios'
 import { HTTP } from '../../helpers/http'
 import { FB, MESSAGING } from '../../helpers/fire'
 
-Vue.use(Vuex, VueAxios)
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   plugins: [createPersistedState({
     key: 'vuex',
-    paths: ['user', 'filter', 'find', 'uploaded', 'fcm_token', 'notification_key']
+    paths: ['user', 'filter', 'find', 'uploaded', 'fcm_token']
   })],
   state: {
     user: {},
     find: {},
+    filter: {},
     uploaded: [],
+    fcm_token: null,
+
     objects: [],
     pages: [],
     page: null, // unused
     next: null,
-    fcm_token: null,
-    notification_key: null,
-
     current: {},
     tags: [],
     models: [],
