@@ -125,8 +125,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     // service worker caching
     new SWPrecacheWebpackPlugin({
       cacheId: 'andsnews',
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
       filename: 'service-worker.js',
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
+      staticFileGlobsIgnorePatterns: [/\.map$/],
       minify: true,
       navigateFallback: '/index.html',
       stripPrefix: 'dist/',

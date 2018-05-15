@@ -129,8 +129,8 @@ export default {
     })
   },
   watch: {
-    busy (newVal, oldVal) {
-      if (!newVal && this.objects.length === 0) {
+    busy (val, oldVal) {
+      if (!val && this.objects.length === 0) {
         this.stop = true
         this.dialog = true
       } else {

@@ -96,10 +96,10 @@ export default {
     ...mapState(['info', 'fcm_token'])
   },
   watch: {
-    info (newVal, oldVal) {
-      if (!newVal) return
-      this.count = newVal.photo.count
-      this.counters = newVal.photo.counters
+    info (val, oldVal) {
+      if (!val) return
+      this.count = val.photo.count
+      this.counters = val.photo.counters
     }
   },
   methods: {
