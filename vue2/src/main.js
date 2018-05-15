@@ -10,6 +10,14 @@ import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
 
+if (
+  process.env.NODE_ENV === 'production' &&
+  (location.protocol === 'https:' || location.host.match(/(localhost|127.0.0.1)/)) &&
+  navigator.serviceWorker
+) {
+  navigator.serviceWorker.register('/service-worker.js')
+}
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#3F51B5',
