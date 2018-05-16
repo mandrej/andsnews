@@ -28,24 +28,27 @@
           <v-toolbar-title>Add</v-toolbar-title>
         </v-toolbar>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-        <form novalidate v-if="isInitial || isSaving">
-          <v-jumbotron color="grey lighten-2" v-if="isInitial">
-            <input type="file"
-              multiple
-              :name="uploadFieldName"
-              :disabled="isSaving"
-              @change="filesChange($event.target.name, $event.target.files)"
-              accept="image/*"
-              class="input-file">
-            <v-container fill-height>
-              <v-layout column justify-center align-center>
-                <v-icon x-large color="primary">cloud_upload</v-icon>
-                <h3 class="headline">Upload images</h3>
-                <span class="subheading">Drag your image(s) here to begin or click to browse.</span>
-              </v-layout>
-            </v-container>
-          </v-jumbotron>
-        </form>
+        <v-jumbotron color="grey lighten-2" v-if="isInitial || isSaving || isFailed">
+          <input type="file" multiple
+            :name="uploadFieldName"
+            :disabled="isSaving"
+            @change="filesChange($event.target.name, $event.target.files)"
+            accept="image/*"
+            class="input-file">
+          <v-container fill-height>
+            <v-layout column justify-center align-center>
+              <v-progress-circular v-if="isSaving"
+                :size="100"
+                :width="15"
+                :rotate="-90"
+                :value="value"
+                color="primary">{{value}}</v-progress-circular>
+              <h3 class="headline">Upload images</h3>
+              <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
+              <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
+            </v-layout>
+          </v-container>
+        </v-jumbotron>
 
         <v-card-text>
           <v-list two-line>
@@ -101,7 +104,8 @@ export default {
     uploadFieldName: 'photos',
     editdForm: false,
     snackbar: false,
-    timeout: 3000
+    timeout: 6000,
+    value: 0
   }),
   mounted () {
     this.reset()
@@ -127,9 +131,10 @@ export default {
       this.currentStatus = STATUS_INITIAL
       this.uploadedFiles = []
       this.uploadError = null
+      this.value = 0
     },
     progress (e) {
-      console.log(Math.round((e.loaded * 100) / e.total))
+      this.value = Math.round((e.loaded * 100) / e.total)
     },
     save (formData) {
       // upload data to the server
