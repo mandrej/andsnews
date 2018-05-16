@@ -128,11 +128,14 @@ export default {
       this.uploadedFiles = []
       this.uploadError = null
     },
+    progress (e) {
+      console.log(Math.round((e.loaded * 100) / e.total))
+    },
     save (formData) {
       // upload data to the server
       this.currentStatus = STATUS_SAVING
       this.snackbar = true
-      HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
