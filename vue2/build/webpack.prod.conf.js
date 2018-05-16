@@ -153,8 +153,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           options: {
             cache: {
               maxEntries: 100,
-              name: 'data-cache',
-              maxAgeSeconds: 600
+              name: 'data-cache'
             }
           }
         }
