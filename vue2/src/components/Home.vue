@@ -21,7 +21,7 @@
           </v-toolbar-title>
           <v-toolbar-title v-else class="black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer ></v-spacer>
-          <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
+          <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">
             <v-icon>search</v-icon>
           </v-btn>
