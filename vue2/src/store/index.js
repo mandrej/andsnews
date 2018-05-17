@@ -15,7 +15,7 @@ function pushMessage (token) {
     },
     'to': token
   }
-  HTTP.post('https://fcm.googleapis.com/fcm/send', data, {headers: MESSAGING_AUTH})
+  HTTP.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data), {headers: MESSAGING_AUTH})
     .then(response => {
       console.log(response.data)
     })
