@@ -11,7 +11,7 @@
           <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>
             <v-icon>create</v-icon>
           </v-btn>
-          <v-btn icon :href="`/api/download/${current.safekey}`" flat>
+          <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
             <v-icon>file_download</v-icon>
           </v-btn>
           <v-btn icon @click="showInfo = true" flat>

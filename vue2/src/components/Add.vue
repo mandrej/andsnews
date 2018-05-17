@@ -127,7 +127,6 @@ export default {
   },
   methods: {
     reset () {
-      // reset form to initial state
       this.currentStatus = STATUS_INITIAL
       this.uploadedFiles = []
       this.uploadError = null
@@ -137,7 +136,6 @@ export default {
       this.value = Math.round((e.loaded * 100) / e.total)
     },
     save (formData) {
-      // upload data to the server
       this.currentStatus = STATUS_SAVING
       this.snackbar = true
       HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
@@ -155,17 +153,16 @@ export default {
         })
     },
     filesChange (fieldName, fileList) {
-      // handle file changes
       this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
 
+      // make formData
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
           formData.append(fieldName, fileList[x], fileList[x].name)
         })
-      // save it
       this.save(formData)
     },
     showEditdForm (rec) {
