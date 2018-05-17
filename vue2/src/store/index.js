@@ -2,9 +2,25 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import { HTTP } from '../../helpers/http'
-import { FB, MESSAGING } from '../../helpers/fire'
+import { FB, MESSAGING, MESSAGING_AUTH } from '../../helpers/fire'
 
 Vue.use(Vuex)
+
+function pushMessage (token) {
+  const data = {
+    'notification': {
+      'title': 'ands',
+      'body': 'Look for new images',
+      'icon': '/static/manifest/icon-48x48.png'
+    },
+    'to': token
+  }
+  HTTP.post('https://fcm.googleapis.com/fcm/send', data, {headers: MESSAGING_AUTH})
+    .then(response => {
+      console.log(response.data)
+    })
+    .catch(() => console.log('push message failed'))
+}
 
 export default new Vuex.Store({
   plugins: [createPersistedState({
@@ -122,8 +138,25 @@ export default new Vuex.Store({
         })
         .then(token => {
           commit('SET_TOKEN', token)
+          dispatch('subscribeToken')
         })
         .catch(() => console.log('permission failed'))
+    },
+    subscribeToken: ({commit, state}) => {
+      const ref = FB.database().ref('registrations')
+      ref.child(state.fcm_token).set({
+        date: (new Date()).toISOString()
+      })
+    },
+    sendNotifications: ({commit, state}) => {
+      const ref = FB.database().ref('registrations')
+      ref.once('value', (shot) => {
+        shot.forEach(child => {
+          if (child.key !== state.fcm_token) {
+            pushMessage(child.key)
+          }
+        })
+      })
     }
   },
   mutations: {

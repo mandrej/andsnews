@@ -7,6 +7,17 @@
       <v-icon>add</v-icon>
     </v-btn>
 
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      left
+      bottom>
+      {{ text }}
+      <v-btn flat icon color="white" @click.native="snackbar = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
+
     <v-app>
       <v-toolbar app prominent extended dark color="primary">
         <v-toolbar-title style="font-size: 32px">{{title}}</v-toolbar-title>
@@ -41,6 +52,7 @@ import SignIn from './SignIn'
 import List from './List'
 import Find from './Find'
 import Add from './Add'
+import firebase from 'firebase'
 
 export default {
   name: 'Home',
@@ -55,7 +67,10 @@ export default {
     drawer: null,
     title: 'ANDрејевићи',
     showFindForm: false,
-    showAddForm: false
+    showAddForm: false,
+    text: '',
+    snackbar: false,
+    timeout: 6000
   }),
   created () {
     this.$store.dispatch('getToken')
@@ -63,7 +78,11 @@ export default {
     this.$store.dispatch('fetchModels')
   },
   mounted () {
-
+    const messaging = firebase.messaging()
+    messaging.onMessage(payload => {
+      this.text = payload.notification.body
+      this.snackbar = true
+    })
   },
   computed: {
     ...mapState(['user', 'busy', 'filter'])

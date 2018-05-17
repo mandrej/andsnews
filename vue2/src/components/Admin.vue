@@ -20,8 +20,19 @@
 
       <v-content>
         <v-list>
-          <v-subheader>Counters</v-subheader>
+          <v-subheader>Messaging</v-subheader>
+          <v-list-tile two-line @click="nop">
+            <v-list-tile-content>
+              <v-list-tile-title>Send message</v-list-tile-title>
+              <v-list-tile-sub-title>to subscribers group</v-list-tile-sub-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn color="primary" @click="send">Send</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+          <v-divider></v-divider>
 
+          <v-subheader>Counters</v-subheader>
           <v-list-tile v-for="name in counters" :key="name" @click="nop">
             <v-list-tile-content>
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
@@ -42,7 +53,6 @@
           <v-divider></v-divider>
 
           <v-subheader>Cloud</v-subheader>
-
           <v-list-tile two-line @click="nop">
             <v-list-tile-content>
               <v-list-tile-title>Remove images from the Cloud</v-list-tile-title>
@@ -119,6 +129,9 @@ export default {
     },
     fix () {
       this.callAjax('fix/photo')
+    },
+    send () {
+      this.$store.dispatch('sendNotifications')
     },
     nop () {
       return null

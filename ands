@@ -45,6 +45,12 @@ else
           echo $"Provide client to run: p2 | vue2)"
           exit 1
       esac ;;
+    run)
+      case $2 in
+        vue2)
+          # build first
+          $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml vue2_dev.yaml
+      esac ;;
     build)
       case $2 in
         p2)
