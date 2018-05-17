@@ -120,23 +120,26 @@ export default new Vuex.Store({
           commit('SET_INFO', response.data)
         })
     },
-    getToken: ({commit, dispatch}) => {
+    getToken: ({commit, state, dispatch}) => {
       if (process.env.NODE_ENV === 'development') return
 
-      MESSAGING.requestPermission()
-        .then(() => {
-          console.log('permission success')
-          return MESSAGING.getToken()
-        })
-        .then(token => {
-          commit('SET_TOKEN', token)
-          dispatch('subscribeToken')
-        })
-        .catch(() => console.log('permission failed'))
+      if (state.user && state.user.uid) {
+        MESSAGING.requestPermission()
+          .then(() => {
+            console.log('permission success')
+            return MESSAGING.getToken()
+          })
+          .then(token => {
+            commit('SET_TOKEN', token)
+            dispatch('subscribeToken')
+          })
+          .catch(() => console.log('permission failed'))
+      }
     },
     subscribeToken: ({commit, state}) => {
       const ref = FB.database().ref('registrations')
       ref.child(state.fcm_token).set({
+        email: state.user.email,
         date: (new Date()).toISOString()
       })
     },
