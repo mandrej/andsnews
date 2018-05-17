@@ -2,20 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import { HTTP } from '../../helpers/http'
-import { FB, MESSAGING, MESSAGING_AUTH } from '../../helpers/fire'
+import { FB, MESSAGING } from '../../helpers/fire'
 
 Vue.use(Vuex)
 
 function pushMessage (token) {
-  const data = {
-    'notification': {
-      'title': 'ands',
-      'body': 'Look for new images',
-      'icon': '/static/manifest/icon-48x48.png'
-    },
-    'to': token
-  }
-  HTTP.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data), {headers: MESSAGING_AUTH})
+  HTTP.post('message', {token: token})
     .then(response => {
       console.log(response.data)
     })

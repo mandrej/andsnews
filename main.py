@@ -23,6 +23,7 @@ app = WSGIApplication([
     Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
     Route(r'/api/fix/<kind>', handler=api.BackgroundDeleted, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
+    Route(r'/api/message', handler=api.Notify, methods=['POST']),
 
     Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
 ], debug=DEVEL)
