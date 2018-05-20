@@ -104,7 +104,7 @@ export default {
     uploadFieldName: 'photos',
     editdForm: false,
     snackbar: false,
-    timeout: 6000,
+    timeout: 0,
     value: 0
   }),
   mounted () {
@@ -143,10 +143,13 @@ export default {
         .then(x => x.map(
           item => {
             this.uploadedFiles.push(item.rec)
-            this.currentStatus = STATUS_SUCCESS
             this.$store.dispatch('addRecord', item.rec)
           }
         ))
+        .then(() => {
+          this.snackbar = false
+          this.currentStatus = STATUS_SUCCESS
+        })
         .catch(err => {
           this.uploadError = err.response
           this.currentStatus = STATUS_FAILED

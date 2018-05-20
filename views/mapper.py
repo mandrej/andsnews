@@ -16,6 +16,11 @@ from config import BUCKET, END_MSG, FIREBASE
 from models import Counter
 from views.models import Photo, sizeof_fmt
 
+FCM = 'https://fcm.googleapis.com/fcm/send'
+HEADERS = {
+    'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
+    'Content-Type': 'application/json',
+}
 
 def push_message(token, message=''):
     """
@@ -23,21 +28,16 @@ def push_message(token, message=''):
         content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
             "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
     """
-    url = 'https://fcm.googleapis.com/fcm/send'
-    headers = {
-        'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
-        'Content-Type': 'application/json',
-    }
     payload = {
         "to": token,
         "notification": {
             "title": "ands",
             "body": message,
-            "icon": "/images/manifest/icon-48x48.png"
+            "icon": "/static/manifest/icon-48x48.png"
         }
     }
     http = httplib2.Http()
-    response, content = http.request(url, method='POST', body=json.dumps(payload), headers=headers)
+    response, content = http.request(FCM, method='POST', body=json.dumps(payload), headers=HEADERS)
     # logging.error(response.status)
     # logging.error(content)
     # return json.loads(content)

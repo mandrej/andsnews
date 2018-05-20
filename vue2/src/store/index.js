@@ -9,7 +9,7 @@ Vue.use(Vuex)
 function pushMessage (token) {
   HTTP.post('message', {token: token})
     .then(response => {
-      console.log(response.data)
+      // console.log(response)
     })
     .catch(() => console.log('push message failed'))
 }
