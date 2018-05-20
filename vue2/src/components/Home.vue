@@ -30,7 +30,7 @@
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else class="black--text">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-toolbar-title v-else class="body-2">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer ></v-spacer>
           <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">
@@ -129,6 +129,9 @@ export default {
   background-repeat: no-repeat;
   background-position: -52px -67px;
   background-size: 500px;
+}
+.body-2 {
+  line-height: 48px;
 }
 #add {
   position: fixed;
