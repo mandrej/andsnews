@@ -19,10 +19,36 @@
     </v-snackbar>
 
     <v-app>
+      <v-navigation-drawer v-model="drawer" fixed app>
+        <v-toolbar extended dark color="red accent-3">
+          <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <SignIn></SignIn>
+        </v-toolbar>
+
+        <v-list>
+          <v-list-tile @click="showFindForm = true">
+            <v-list-tile-action>
+              <v-icon>search</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Search</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-divider></v-divider>
+          <v-list-tile @click="$router.push({name: 'admin'})">
+            <v-list-tile-action>
+              <v-icon>settings</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Admin</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-navigation-drawer>
+
       <v-toolbar app extended dark color="primary">
-        <v-toolbar-title style="font-size: 32px">{{title}}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <SignIn></SignIn>
+        <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value">
             <v-btn icon @click="clearFilter">
@@ -30,10 +56,10 @@
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-toolbar-title v-else style="font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
-          <v-btn icon @click="showFindForm = true">
+          <v-btn v-if="!drawer" icon @click="showFindForm = true">
             <v-icon>search</v-icon>
           </v-btn>
         </v-layout>
@@ -127,7 +153,7 @@ export default {
   0MC45MzIsMzYuNzA5LTgxLjk5OCw3Mi4zNzktMTIyLjk3NiwxMDguNzI2DQogICAgICBjOTAuNDYzLDYuMTQ4LDE4MS4wMjgsMTMuMDIsMjcxLj\
   QzNSwxOC43MjNDNTU4LjcwNiwxNTAuMzMsNTM2LjU2MywxMjMuMDY1LDUwNS45MjQsOTYuOTE0eiIgLz4NCiAgPC9nPg0KPC9zdmc+');
   background-repeat: no-repeat;
-  background-position: -52px -67px;
+  background-position: -16px -67px;
   background-size: 500px;
 }
 .body-2 {
