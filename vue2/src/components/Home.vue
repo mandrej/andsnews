@@ -30,8 +30,8 @@
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else class="body-2">ANDS 2007-{{version}}</v-toolbar-title>
-          <v-spacer ></v-spacer>
+          <v-toolbar-title v-else class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-spacer></v-spacer>
           <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
           <v-btn icon @click="showFindForm = true">
             <v-icon>search</v-icon>
