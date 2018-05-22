@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Find :visible="showFindForm" @close="showFindForm = false"></Find>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
     <v-btn id="add" v-if="user.isAuthorized" fab medium color="accent" class="black--text" @click="showAddForm = true">
@@ -19,23 +18,22 @@
     </v-snackbar>
 
     <v-app>
-      <v-navigation-drawer v-model="drawer" fixed app>
+      <v-navigation-drawer v-model="drawer" app fixed>
         <v-toolbar extended dark color="red accent-3">
           <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
+          <v-layout slot="extension">
+            <v-spacer></v-spacer>
+            <v-btn @click="emitSubmit" flat>
+              Find
+              <v-icon right dark>search</v-icon>
+            </v-btn>
+          </v-layout>
         </v-toolbar>
 
+        <Find></Find>
         <v-list>
-          <v-list-tile @click="showFindForm = true">
-            <v-list-tile-action>
-              <v-icon>search</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>Search</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-divider></v-divider>
           <v-list-tile @click="$router.push({name: 'admin'})">
             <v-list-tile-action>
               <v-icon>settings</v-icon>
@@ -47,7 +45,7 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-toolbar app extended dark color="primary">
+      <v-toolbar app extended dark flat color="primary">
         <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
@@ -60,9 +58,6 @@
           <v-toolbar-title v-else style="margin-left: 16px; font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
-          <v-btn v-if="!drawer" icon @click="showFindForm = true">
-            <v-icon>search</v-icon>
-          </v-btn>
         </v-layout>
       </v-toolbar>
 
@@ -79,6 +74,7 @@ import SignIn from './SignIn'
 import List from './List'
 import Find from './Find'
 import Add from './Add'
+import { EventBus } from '../../helpers/event-bus'
 import firebase from 'firebase'
 
 export default {
@@ -93,7 +89,6 @@ export default {
   data: () => ({
     drawer: null,
     title: 'ANDрејевићи',
-    showFindForm: false,
     showAddForm: false,
     text: '',
     snackbar: false,
@@ -118,6 +113,10 @@ export default {
     clearFilter () {
       this.$store.dispatch('changeFilter', {})
       this.$store.dispatch('fetchRecords')
+    },
+    emitSubmit () {
+      // this.drawer = !this.drawer
+      EventBus.$emit('submit')
     }
   }
 }

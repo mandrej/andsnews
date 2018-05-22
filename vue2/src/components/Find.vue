@@ -1,101 +1,82 @@
 <template>
-  <v-dialog
-    v-model="show"
-    lazy
-    fullscreen
-    transition="dialog-bottom-transition"
-    hide-overlay
-    scrollable>
-    <v-card tile light>
-      <v-toolbar card>
-        <v-btn icon @click.native="show = false">
-          <v-icon>close</v-icon>
-        </v-btn>
-        <v-toolbar-title class="headline">Find</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn @click="reset" color="secondary">Clear</v-btn>
-        <v-btn @click="submit" color="primary">Find</v-btn>
-      </v-toolbar>
-      <v-card-text>
-        <v-container grid-list-md mt-3>
-          <v-form ref="form">
-            <v-layout row wrap>
-              <v-flex xs12 class="hidden-xs-only">
-                <v-text-field
-                  label="Find text"
-                  v-model="find.text"
-                  clearable></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-select
-                  label="Find by tags"
-                  :items="tags"
-                  v-model="find.tags"
-                  chips
-                  tags
-                  clearable
-                  autocomplete>
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      close
-                      @input="data.parent.selectItem(data.item)"
-                      :selected="data.selected">
-                      <strong>{{ data.item }}</strong>&nbsp;
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Find by year"
-                  v-model="find.year"
-                  clearable
-                  type="number"
-                  :min="2007"
-                  :max="(new Date()).getFullYear()"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Find by month"
-                  v-model="find.month"
-                  clearable
-                  type="number"
-                  :min="1"
-                  :max="12"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-select
-                  label="Find by camera model"
-                  :items="models"
-                  v-model="find.model"
-                  autocomplete
-                  clearable
-                  single-line></v-select>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-select
-                  label="Find by author"
-                  :items="authors"
-                  v-model="find.author"
-                  autocomplete
-                  clearable
-                  single-line></v-select>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-select
-                  label="Find by color"
-                  :items="colors"
-                  v-model="find.color"
-                  autocomplete
-                  clearable
-                  single-line></v-select>
-              </v-flex>
-            </v-layout>
-          </v-form>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <v-card tile light flat>
+    <v-card-text>
+      <v-form ref="form">
+        <v-layout row wrap>
+          <v-flex xs12 class="hidden-xs-only">
+            <v-text-field
+              label="Find text"
+              v-model="find.text"
+              clearable></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-select
+              label="Find by tags"
+              :items="tags"
+              v-model="find.tags"
+              chips
+              tags
+              clearable
+              autocomplete>
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                  close
+                  @input="data.parent.selectItem(data.item)"
+                  :selected="data.selected">
+                  <strong>{{ data.item }}</strong>&nbsp;
+                </v-chip>
+              </template>
+            </v-select>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field
+              label="Find by year"
+              v-model="find.year"
+              clearable
+              type="number"
+              :min="2007"
+              :max="(new Date()).getFullYear()"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field
+              label="Find by month"
+              v-model="find.month"
+              clearable
+              type="number"
+              :min="1"
+              :max="12"></v-text-field>
+          </v-flex>
+          <v-flex xs12 class="hidden-xs-only">
+            <v-select
+              label="Find by camera model"
+              :items="models"
+              v-model="find.model"
+              autocomplete
+              clearable
+              single-line></v-select>
+          </v-flex>
+          <v-flex xs12>
+            <v-select
+              label="Find by author"
+              :items="authors"
+              v-model="find.author"
+              autocomplete
+              clearable
+              single-line></v-select>
+          </v-flex>
+          <v-flex xs12 class="hidden-xs-only">
+            <v-select
+              label="Find by color"
+              :items="colors"
+              v-model="find.color"
+              autocomplete
+              clearable
+              single-line></v-select>
+          </v-flex>
+        </v-layout>
+      </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -123,51 +104,48 @@ export default {
   computed: {
     ...mapState(['find', 'tags', 'models'])
   },
+  mounted () {
+    EventBus.$on('submit', this.submit)
+  },
   methods: {
-    reset () {
-      this.$store.dispatch('saveFindForm', this.blank)
-      this.$store.dispatch('changeFilter', {})
-    },
     submit () {
       let params = []
-      if (this.$refs.form.validate()) {
-        if (this.find.tags) {
-          this.find.tags.forEach(tag => {
-            params.push('tags:' + tag)
-          })
-        }
-        if (this.find.text) {
-          params.push(this.find.text)
-        }
-        if (this.find.year) {
-          params.push('year:' + this.find.year)
-        }
-        if (this.find.month) {
-          params.push('month:' + this.find.month)
-        }
-        if (this.find.model) {
-          params.push('model:' + this.find.model)
-        }
-        if (this.find.author) {
-          params.push('author:' + this.find.author)
-        }
-        if (this.find.color) {
-          params.push('color:' + this.find.color)
-        }
-        this.$store.dispatch('saveFindForm', this.find)
 
-        const value = params.join(' AND ')
-        if (value) {
-          this.$store.dispatch('changeFilter', {
-            field: 'search',
-            value: value
-          })
-        } else {
-          this.$store.dispatch('changeFilter', {})
-        }
-        this.show = false
-        EventBus.$emit('reload')
+      if (this.find.tags) {
+        this.find.tags.forEach(tag => {
+          params.push('tags:' + tag)
+        })
       }
+      if (this.find.text) {
+        params.push(this.find.text)
+      }
+      if (this.find.year) {
+        params.push('year:' + this.find.year)
+      }
+      if (this.find.month) {
+        params.push('month:' + this.find.month)
+      }
+      if (this.find.model) {
+        params.push('model:' + this.find.model)
+      }
+      if (this.find.author) {
+        params.push('author:' + this.find.author)
+      }
+      if (this.find.color) {
+        params.push('color:' + this.find.color)
+      }
+      this.$store.dispatch('saveFindForm', this.find)
+
+      const value = params.join(' AND ')
+      if (value) {
+        this.$store.dispatch('changeFilter', {
+          field: 'search',
+          value: value
+        })
+      } else {
+        this.$store.dispatch('changeFilter', {})
+      }
+      EventBus.$emit('reload')
     }
   }
 }

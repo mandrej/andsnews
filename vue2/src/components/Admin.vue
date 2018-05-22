@@ -12,23 +12,24 @@
     </v-snackbar>
 
     <v-app>
-      <v-navigation-drawer v-model="drawer" fixed app>
-        <v-toolbar extended dark color="red accent-3">
+      <v-navigation-drawer v-model="drawer" app fixed>
+        <v-toolbar extended dark flat color="red accent-3">
           <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
         </v-toolbar>
 
         <v-list>
-          <v-list-tile>
+          <v-list-tile two-line>
             <v-list-tile-content>
-              <v-list-tile-title>{{count}} photos and counting</v-list-tile-title>
+              <v-list-tile-title style="font-size: 24px">{{count}} photos</v-list-tile-title>
+              <v-list-tile-sub-title>and counting</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
       </v-navigation-drawer>
 
-      <v-toolbar app extended dark color="primary">
+      <v-toolbar app extended dark flat color="primary">
         <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
