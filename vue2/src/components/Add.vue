@@ -25,7 +25,7 @@
           <v-btn icon @click.native="show = false">
             <v-icon>close</v-icon>
           </v-btn>
-          <v-toolbar-title>Add</v-toolbar-title>
+          <v-toolbar-title class="headline">Add</v-toolbar-title>
         </v-toolbar>
         <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
         <v-jumbotron color="grey lighten-2" v-if="isInitial || isSaving || isFailed">

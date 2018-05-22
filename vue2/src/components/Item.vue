@@ -5,7 +5,9 @@
 
     <v-app light>
       <v-toolbar app flat>
-        <v-icon @click="back" style="cursor: pointer">arrow_back</v-icon>
+        <v-btn icon  @click="back">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
         <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
         <v-spacer></v-spacer>
           <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>

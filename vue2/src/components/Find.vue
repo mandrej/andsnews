@@ -11,7 +11,7 @@
         <v-btn icon @click.native="show = false">
           <v-icon>close</v-icon>
         </v-btn>
-        <v-toolbar-title>Find</v-toolbar-title>
+        <v-toolbar-title class="headline">Find</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn @click="reset" color="secondary">Clear</v-btn>
         <v-btn @click="submit" color="primary">Find</v-btn>

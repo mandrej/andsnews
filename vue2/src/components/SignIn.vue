@@ -44,6 +44,7 @@ export default {
               isAuthorized: false,
               isAdmin: false
             })
+            this.$router.push({name: 'home'})
           })
       } else {
         FB.auth().signInWithPopup(provider)

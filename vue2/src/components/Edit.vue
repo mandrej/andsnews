@@ -11,7 +11,7 @@
         <v-btn icon @click.native="show = false">
           <v-icon>close</v-icon>
         </v-btn>
-        <v-toolbar-title>Edit</v-toolbar-title>
+        <v-toolbar-title class="headline">Edit</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn @click="submit" :disabled="!valid" color="primary">Submit</v-btn>
       </v-toolbar>

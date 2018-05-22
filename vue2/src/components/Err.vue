@@ -1,8 +1,10 @@
 <template>
   <div>
-    <v-app light>
-      <v-toolbar app>
-        <v-icon @click="$router.push({name: 'home'})">arrow_back</v-icon>
+    <v-app>
+      <v-toolbar app dark color="red accent-3">
+        <v-btn icon  @click="$router.push({name: 'home'})">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
         <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
       </v-toolbar>
 

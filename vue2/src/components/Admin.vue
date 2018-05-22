@@ -11,11 +11,32 @@
       </v-btn>
     </v-snackbar>
 
-    <v-app light>
-      <v-toolbar app prominent extended flat>
-        <v-icon @click="$router.push({name: 'home'})" style="cursor: pointer">arrow_back</v-icon>
-        <v-toolbar-title class="headline">Background admin operations</v-toolbar-title>
-        <v-toolbar-title slot="extension">{{count}} photos and counting</v-toolbar-title>
+    <v-app>
+      <v-navigation-drawer v-model="drawer" fixed app>
+        <v-toolbar extended dark color="red accent-3">
+          <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <SignIn></SignIn>
+        </v-toolbar>
+
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>{{count}} photos and counting</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-navigation-drawer>
+
+      <v-toolbar app extended dark color="primary">
+        <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
+        <v-spacer></v-spacer>
+        <v-layout slot="extension">
+          <v-btn icon  @click="$router.push({name: 'home'})">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
+          <v-toolbar-title style="font-size: 32px">Admin</v-toolbar-title>
+        </v-layout>
       </v-toolbar>
 
       <v-content>
@@ -80,12 +101,18 @@
 
 <script>
 import { mapState } from 'vuex'
+import SignIn from './SignIn'
 import { HTTP } from '../../helpers/http'
 import firebase from 'firebase'
 
 export default {
   name: 'Admin',
+  components: {
+    SignIn
+  },
+  props: ['version'],
   data: () => ({
+    drawer: null,
     count: 0,
     counters: [],
     text: '',
@@ -141,7 +168,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn {
+.body-2 {
+  line-height: 48px;
+}
+.list__tile__action .btn {
   width: 100px;
 }
 </style>
