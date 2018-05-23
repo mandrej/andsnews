@@ -41,20 +41,20 @@
                   v-for="item in objects"
                   :key="item.safekey">
                   <div :id="`${item.safekey}`">
-                    <v-card flat tile>
-                      <v-card-title class="title" primary-title>
-                        {{item.headline}}
-                      </v-card-title>
+                    <v-card tile>
                       <v-card-media
                         v-lazy:background-image="getImgSrc(item, 's')"
                         @click="showDetail(item)"
                         style="background-position: 50% 50%"
                         height="300px">
                       </v-card-media>
+                      <v-card-title class="title" primary-title>
+                        {{item.headline}}
+                      </v-card-title>
                       <v-card-actions v-if="user.isAuthorized">
-                        <v-btn v-if="user.isAdmin" flat class="black--text" @click="removeRecord(item)">Delete</v-btn>
-                        <v-spacer style="text-align: center">{{dateFormat(item, 'short')}}</v-spacer>
-                        <v-btn flat class="black--text" @click="showEditdForm(item)">Edit</v-btn>
+                        <v-btn v-if="user.isAdmin" small flat class="black--text" @click="removeRecord(item)">Delete</v-btn>
+                        <v-spacer style="text-align: center; line-height: 28px">{{dateFormat(item, 'short')}}</v-spacer>
+                        <v-btn small flat class="black--text" @click="showEditdForm(item)">Edit</v-btn>
                       </v-card-actions>
                     </v-card>
                   </div>

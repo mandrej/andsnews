@@ -13,23 +13,27 @@
 
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
-        <v-toolbar extended dark flat color="red accent-3">
+        <v-toolbar extended dark color="red accent-3">
           <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
+          <v-layout slot="extension">
+            <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-layout>
         </v-toolbar>
 
-        <v-list>
+        <!-- <v-list>
           <v-list-tile two-line>
             <v-list-tile-content>
-              <v-list-tile-title style="font-size: 24px">{{count}} photos</v-list-tile-title>
-              <v-list-tile-sub-title>and counting</v-list-tile-sub-title>
+              <v-list-tile-title></v-list-tile-title>
+              <v-list-tile-sub-title></v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
-        </v-list>
+        </v-list> -->
       </v-navigation-drawer>
 
-      <v-toolbar app extended dark flat color="primary">
+      <v-toolbar app extended dark color="primary">
         <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
@@ -114,8 +118,6 @@ export default {
   props: ['version'],
   data: () => ({
     drawer: null,
-    count: 0,
-    counters: [],
     text: '',
     snackbar: false,
     timeout: 3000
@@ -131,14 +133,7 @@ export default {
     })
   },
   computed: {
-    ...mapState(['info', 'fcm_token'])
-  },
-  watch: {
-    info (val, oldVal) {
-      if (!val) return
-      this.count = val.photo.count
-      this.counters = val.photo.counters
-    }
+    ...mapState(['total', 'counters', 'fcm_token'])
   },
   methods: {
     callAjax (url) {

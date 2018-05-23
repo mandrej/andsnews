@@ -24,6 +24,7 @@
           <v-spacer></v-spacer>
           <SignIn></SignIn>
           <v-layout slot="extension">
+            <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn @click="emitSubmit" flat>
               Find
@@ -45,7 +46,7 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-toolbar app extended dark flat color="primary">
+      <v-toolbar app extended dark color="primary">
         <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
@@ -57,7 +58,7 @@
           </v-toolbar-title>
           <v-toolbar-title v-else style="margin-left: 16px; font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-progress-circular v-show="busy" :indeterminate="true"></v-progress-circular>
+          <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
 
@@ -98,6 +99,7 @@ export default {
     this.$store.dispatch('getToken')
     this.$store.dispatch('fetchTags')
     this.$store.dispatch('fetchModels')
+    this.$store.dispatch('fetchInfo')
   },
   mounted () {
     const messaging = firebase.messaging()
@@ -107,7 +109,7 @@ export default {
     })
   },
   computed: {
-    ...mapState(['user', 'busy', 'filter'])
+    ...mapState(['user', 'busy', 'filter', 'total'])
   },
   methods: {
     clearFilter () {

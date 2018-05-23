@@ -1,5 +1,5 @@
 <template>
-  <v-card tile light flat>
+  <v-card tile light flat class="mt-3">
     <v-card-text>
       <v-form ref="form">
         <v-layout row wrap>

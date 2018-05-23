@@ -33,7 +33,10 @@ export default new Vuex.Store({
     current: {},
     tags: [],
     models: [],
-    info: {},
+
+    total: null, // info
+    counters: [], // info
+
     busy: false,
     clear: false
   },
@@ -171,6 +174,7 @@ export default new Vuex.Store({
       const dates = state.objects.map(item => item.date)
       const idx = dates.findIndex(date => date < obj.date)
       state.objects.splice(idx, 0, obj)
+      state.total++
     },
     ADD_UPLOADED (state, data) {
       state.uploaded = [...state.uploaded, data]
@@ -194,6 +198,7 @@ export default new Vuex.Store({
     DELETE_RECORD (state, obj) {
       const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
       state.objects.splice(idx, 1)
+      state.total--
     },
     DELETE_UPLOADED (state, obj) {
       const idx = state.uploaded.findIndex(item => item.safekey === obj.safekey)
@@ -206,7 +211,8 @@ export default new Vuex.Store({
       state.models = data
     },
     SET_INFO (state, payload) {
-      state.info = Object.assign({}, payload)
+      state.total = payload.photo.count
+      state.counters = payload.photo.counters
     },
     SET_CLEAR (state, clear) {
       state.clear = clear
