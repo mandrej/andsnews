@@ -35,6 +35,7 @@ export default new Vuex.Store({
     models: [],
 
     total: null, // info
+    count: null,
     counters: [], // info
 
     busy: false,
@@ -174,6 +175,7 @@ export default new Vuex.Store({
       const dates = state.objects.map(item => item.date)
       const idx = dates.findIndex(date => date < obj.date)
       state.objects.splice(idx, 0, obj)
+      state.count++
       state.total++
     },
     ADD_UPLOADED (state, data) {
@@ -184,6 +186,7 @@ export default new Vuex.Store({
       state.pages = [...state.pages, data._page]
       state.page = data._page
       state.next = data._next
+      state.count = state.objects.length
     },
     UPDATE_RECORD (state, obj) {
       const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
@@ -198,6 +201,7 @@ export default new Vuex.Store({
     DELETE_RECORD (state, obj) {
       const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
       state.objects.splice(idx, 1)
+      state.count--
       state.total--
     },
     DELETE_UPLOADED (state, obj) {

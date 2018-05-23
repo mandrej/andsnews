@@ -61,7 +61,7 @@ export default {
     editForm: false
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy']),
     index () {
       return this.objects.findIndex(item => item.safekey === this.id)
     }
@@ -74,7 +74,7 @@ export default {
       if ((this.objects.length - idx) === 3) this.loadMore()
     },
     loadMore () {
-      if (this.objects.length === 0) {
+      if (this.objects.length === 0 || this.pages.indexOf(this.page) === -1) {
         this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('fetchRecords', this.next)

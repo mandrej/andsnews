@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <SignIn></SignIn>
           <v-layout slot="extension">
-            <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
+            <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn @click="emitSubmit" flat>
               Find
@@ -109,7 +109,7 @@ export default {
     })
   },
   computed: {
-    ...mapState(['user', 'busy', 'filter', 'total'])
+    ...mapState(['user', 'busy', 'filter', 'count', 'total'])
   },
   methods: {
     clearFilter () {

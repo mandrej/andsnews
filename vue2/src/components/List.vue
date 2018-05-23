@@ -34,7 +34,7 @@
       infinite-scroll-distance="distance">
       <v-layout>
         <v-flex>
-          <v-card>
+          <v-card tile flat>
             <v-container fluid grid-list-lg>
               <v-layout row wrap>
                 <v-flex xs12 sm6 md4 lg3 xl2
@@ -106,7 +106,7 @@ export default {
     easings: Object.keys(easings)
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'filter', 'busy']),
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy']),
     options () {
       return {
         duration: this.duration,
@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     loadMore () {
-      if (this.objects.length === 0) {
+      if (this.objects.length === 0 || this.pages.indexOf(this.page) === -1) {
         this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('fetchRecords', this.next)
