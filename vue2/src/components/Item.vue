@@ -2,6 +2,7 @@
   <div>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
     <Info :visible="showInfo" @close="showInfo = false"></Info>
+    <!-- <v-progress-linear :indeterminate="true" height="2"></v-progress-linear> -->
 
     <v-app light>
       <v-toolbar app flat>
@@ -10,18 +11,23 @@
         </v-btn>
         <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
         <v-spacer></v-spacer>
-          <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>
-            <v-icon>create</v-icon>
-          </v-btn>
-          <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
-            <v-icon>file_download</v-icon>
-          </v-btn>
-          <v-btn icon @click="showInfo = true" flat>
-            <v-icon>more_vert</v-icon>
-          </v-btn>
+        <v-btn v-if="user.isAuthorized" icon @click="editForm = true" flat>
+          <v-icon>create</v-icon>
+        </v-btn>
+        <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
+          <v-icon>file_download</v-icon>
+        </v-btn>
+        <v-btn icon @click="showInfo = true" flat>
+          <v-icon>more_vert</v-icon>
+        </v-btn>
       </v-toolbar>
 
       <v-content>
+        <v-progress-circular v-if="isLoading"
+          indeterminate
+          :size="100"
+          :width="5"
+          color="black"></v-progress-circular>
         <v-carousel :cycle="false" light
           v-bind="current"
           :value="index"
@@ -58,13 +64,18 @@ export default {
   props: ['id'],
   data: () => ({
     showInfo: false,
-    editForm: false
+    editForm: false,
+    isLoading: false
   }),
   computed: {
     ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy']),
     index () {
       return this.objects.findIndex(item => item.safekey === this.id)
     }
+  },
+  mounted () {
+    this.$Lazyload.$on('loading', this.loading)
+    this.$Lazyload.$on('loaded', this.loading)
   },
   methods: {
     currentIndex (idx) {
@@ -80,6 +91,9 @@ export default {
         this.$store.dispatch('fetchRecords', this.next)
       }
     },
+    loading (e) {
+      this.isLoading = !e.state.loaded
+    },
     back () {
       EventBus.$emit('scroll')
       this.$router.push({name: 'home'})
@@ -89,6 +103,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.progress-circular {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px)
+}
 .carousel {
   height: calc(100vh - 56px);
 }

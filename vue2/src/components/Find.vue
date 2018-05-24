@@ -14,10 +14,7 @@
               label="Find by tags"
               :items="tags"
               v-model="find.tags"
-              chips
-              tags
-              clearable
-              autocomplete>
+              tags chips clearable autocomplete>
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
@@ -29,49 +26,39 @@
             </v-select>
           </v-flex>
           <v-flex xs12>
-            <v-text-field
+            <v-select
               label="Find by year"
+              :items="years"
               v-model="find.year"
-              clearable
-              type="number"
-              :min="2007"
-              :max="(new Date()).getFullYear()"></v-text-field>
+              clearable></v-select>
           </v-flex>
           <v-flex xs12>
-            <v-text-field
+            <v-select
               label="Find by month"
+              :items="months"
               v-model="find.month"
-              clearable
-              type="number"
-              :min="1"
-              :max="12"></v-text-field>
+              clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-select
               label="Find by camera model"
               :items="models"
               v-model="find.model"
-              autocomplete
-              clearable
-              single-line></v-select>
+              autocomplete clearable></v-select>
           </v-flex>
           <v-flex xs12>
             <v-select
               label="Find by author"
               :items="authors"
               v-model="find.author"
-              autocomplete
-              clearable
-              single-line></v-select>
+              autocomplete clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-select
               label="Find by color"
               :items="colors"
               v-model="find.color"
-              autocomplete
-              clearable
-              single-line></v-select>
+              autocomplete clearable></v-select>
           </v-flex>
         </v-layout>
       </v-form>
@@ -102,7 +89,17 @@ export default {
     }
   }),
   computed: {
-    ...mapState(['find', 'tags', 'models'])
+    ...mapState(['find', 'tags', 'models']),
+    years () {
+      const start = 2007
+      const end = (new Date()).getFullYear()
+      return [...Array(end - start + 1).keys()].map(n => start + n).reverse()
+    },
+    months () {
+      const tmp = [...Array(12 + 1).keys()]
+      tmp.shift()
+      return tmp
+    }
   },
   mounted () {
     EventBus.$on('submit', this.submit)
