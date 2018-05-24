@@ -140,11 +140,11 @@ export default {
   },
   methods: {
     loadMore () {
+      this.stop = true
       if (this.objects.length === 0) {
         this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('fetchRecords', this.next)
-        this.stop = true
       }
     },
     showDetail (rec) {
