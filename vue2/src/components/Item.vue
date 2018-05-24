@@ -74,7 +74,7 @@ export default {
       if ((this.objects.length - idx) === 3) this.loadMore()
     },
     loadMore () {
-      if (this.objects.length === 0 || this.pages.indexOf(this.page) === -1) {
+      if (this.objects.length === 0) {
         this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('fetchRecords', this.next)
