@@ -54,8 +54,8 @@ export default new Vuex.Store({
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
     changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
     changeFilter: ({commit}, payload) => {
-      commit('SET_CLEAR', true)
       commit('CHANGE_FILTER', payload)
+      commit('SET_CLEAR', true)
     },
     addRecord: ({commit}, obj) => {
       commit('ADD_UPLOADED', obj)
@@ -98,8 +98,8 @@ export default new Vuex.Store({
             commit('RESET_RECORDS')
             commit('SET_CLEAR', false)
           }
-          commit('SET_BUSY', false)
           commit('UPDATE_RECORDS', response.data)
+          commit('SET_BUSY', false)
         })
         .catch(err => {
           commit('SET_BUSY', false)
@@ -218,14 +218,14 @@ export default new Vuex.Store({
       state.total = payload.photo.count
       state.counters = payload.photo.counters
     },
-    SET_CLEAR (state, clear) {
-      state.clear = clear
+    SET_CLEAR (state, val) {
+      state.clear = val
     },
-    SET_BUSY (state, busy) {
-      state.busy = busy
+    SET_BUSY (state, val) {
+      state.busy = val
     },
-    SET_TOKEN (state, token) {
-      state.fcm_token = token
+    SET_TOKEN (state, val) {
+      state.fcm_token = val
     }
   }
 })
