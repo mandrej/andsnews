@@ -79,10 +79,18 @@ export default new Vuex.Store({
         })
     },
     fetchRecords: ({commit, state}, next) => {
-      let url = 'start'
-      const params = (next) ? { _page: next } : {}
-      const filter = {...state.filter}
+      const params = {}
+      if (next) {
+        if (state.pages.indexOf(next) === -1) {
+          params._page = next
+        } else {
+          console.log('early duplicate ', next)
+          return
+        }
+      }
 
+      let url = 'start'
+      const filter = {...state.filter}
       if (filter && filter.field) {
         if (filter.field === 'search') {
           url = ['search', filter.value].join('/')
@@ -101,7 +109,7 @@ export default new Vuex.Store({
           if (state.pages.indexOf(response.data._page) === -1) {
             commit('UPDATE_RECORDS', response.data)
           } else {
-            console.log('duplicate page')
+            console.log('late duplicate ', response.data._page)
           }
           commit('SET_BUSY', false)
         })
