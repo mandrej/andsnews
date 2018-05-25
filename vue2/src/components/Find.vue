@@ -1,20 +1,21 @@
 <template>
-  <v-card tile light flat class="mt-3">
+  <v-card tile light flat class="mt-2">
     <v-card-text>
       <v-form ref="form">
+        <p class="subheadings">Search images</p>
         <v-layout row wrap>
           <v-flex xs12 class="hidden-xs-only">
             <v-text-field
-              label="Find text"
+              label="by text"
               v-model="find.text"
               clearable></v-text-field>
           </v-flex>
           <v-flex xs12>
             <v-select
-              label="Find by tags"
+              label="by tags"
               :items="tags"
               v-model="find.tags"
-              tags chips clearable autocomplete>
+              multiple chips clearable autocomplete>
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
@@ -27,35 +28,35 @@
           </v-flex>
           <v-flex xs12>
             <v-select
-              label="Find by year"
+              label="by year"
               :items="years"
               v-model="find.year"
               clearable></v-select>
           </v-flex>
           <v-flex xs12>
             <v-select
-              label="Find by month"
+              label="by month"
               :items="months"
               v-model="find.month"
               clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-select
-              label="Find by camera model"
+              label="by camera model"
               :items="models"
               v-model="find.model"
               autocomplete clearable></v-select>
           </v-flex>
           <v-flex xs12>
             <v-select
-              label="Find by author"
+              label="by author"
               :items="authors"
               v-model="find.author"
               autocomplete clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-select
-              label="Find by color"
+              label="by color"
               :items="colors"
               v-model="find.color"
               autocomplete clearable></v-select>
