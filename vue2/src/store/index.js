@@ -98,7 +98,11 @@ export default new Vuex.Store({
             commit('RESET_RECORDS')
             commit('SET_CLEAR', false)
           }
-          commit('UPDATE_RECORDS', response.data)
+          if (state.pages.indexOf(response.data._page) === -1) {
+            commit('UPDATE_RECORDS', response.data)
+          } else {
+            console.log('duplicate page')
+          }
           commit('SET_BUSY', false)
         })
         .catch(err => {
