@@ -134,7 +134,7 @@ export default {
     submit () {
       if (this.$refs.form.validate()) {
         this.$store.dispatch('saveRecord', this.current)
-        EventBus.$emit('scroll')
+        EventBus.$emit('goto')
         this.show = false
       }
     }

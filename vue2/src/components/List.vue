@@ -29,45 +29,41 @@
       </v-card>
     </v-dialog>
 
-    <div v-infinite-scroll="loadMore"
-      infinite-scroll-disabled="disabled"
-      infinite-scroll-distance="distance">
-      <v-layout>
-        <v-flex>
-          <v-card tile flat>
-            <v-container fluid grid-list-lg>
-              <v-layout row wrap>
-                <v-flex xs12 sm6 md4 lg3 xl3
-                  v-for="item in objects"
-                  :key="item.safekey">
-                  <div :id="`${item.safekey}`">
-                    <v-card tile>
-                      <v-card-media
-                        v-lazy:background-image="getImgSrc(item, 's')"
-                        @click="showDetail(item)"
-                        style="background-position: 50% 50%"
-                        height="300px">
-                      </v-card-media>
-                      <v-card-title primary-title>
-                        <div>
-                          <h3 class="title mb-0">{{item.headline}}</h3>
-                          <div>{{dateFormat(item)}}</div>
-                        </div>
-                      </v-card-title>
-                      <v-card-actions v-if="user.isAuthorized">
-                        <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </div>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </div>
+    <v-layout>
+      <v-flex>
+        <v-card tile flat>
+          <v-container fluid grid-list-lg>
+            <v-layout row wrap>
+              <v-flex xs12 sm6 md4 lg3 xl3
+                v-for="item in objects"
+                :key="item.safekey">
+                <div :id="`${item.safekey}`">
+                  <v-card tile>
+                    <v-card-media
+                      v-lazy:background-image="getImgSrc(item, 's')"
+                      @click="showDetail(item)"
+                      style="background-position: 50% 50%"
+                      height="300px">
+                    </v-card-media>
+                    <v-card-title primary-title>
+                      <div>
+                        <h3 class="title mb-0">{{item.headline}}</h3>
+                        <div>{{dateFormat(item)}}</div>
+                      </div>
+                    </v-card-title>
+                    <v-card-actions v-if="user.isAuthorized">
+                      <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
@@ -75,7 +71,6 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
-import infiniteScroll from 'vue-infinite-scroll'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
 import { EventBus } from '../../helpers/event-bus'
@@ -91,15 +86,13 @@ export default {
   components: {
     Edit
   },
-  directives: {
-    infiniteScroll
-  },
   mixins: [ common ],
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
     distance: 800,
+    bottom: false,
+
     dialog: false,
-    stop: false,
     confirm: false,
     editForm: false,
 
@@ -116,34 +109,41 @@ export default {
         offset: this.offset,
         easing: this.easing
       }
-    },
-    disabled () {
-      return this.busy || this.stop
     }
+  },
+  created () {
+    window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
+    })
+    this.loadMore()
   },
   mounted () {
     EventBus.$on('reload', () => {
       this.$store.dispatch('fetchRecords')
     })
-    EventBus.$on('scroll', () => {
+    EventBus.$on('goto', () => {
       setTimeout(() => {
         this.$vuetify.goTo('#' + this.current.safekey, this.options)
       }, 50)
     })
   },
   watch: {
-    busy (val, oldVal) {
-      if (!val && this.objects.length === 0) {
-        this.stop = true
-        this.dialog = true
-      } else {
-        this.stop = false
+    // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
+    bottom (bottom) {
+      if (bottom) {
+        this.loadMore()
       }
     }
   },
   methods: {
+    bottomVisible () {
+      const scrollY = window.scrollY
+      const visible = document.documentElement.clientHeight + this.distance
+      const pageHeight = document.documentElement.scrollHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
+    },
     loadMore () {
-      this.stop = true
       if (this.objects.length === 0) {
         this.$store.dispatch('fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {

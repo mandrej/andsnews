@@ -94,7 +94,7 @@ export default {
       this.isLoading = !e.state.loaded
     },
     back () {
-      EventBus.$emit('scroll')
+      EventBus.$emit('goto')
       this.$router.push({name: 'home'})
     }
   }
