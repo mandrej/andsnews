@@ -6,7 +6,7 @@
       left
       bottom>
       {{ text }}
-      <v-btn flat icon color="white" @click.native="snackbar = false">
+      <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
@@ -34,7 +34,7 @@
       </v-navigation-drawer>
 
       <v-toolbar app extended dark color="primary">
-        <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
           <v-btn icon  @click="$router.push({name: 'home'})">
@@ -163,7 +163,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .body-2 {
   line-height: 48px;
 }

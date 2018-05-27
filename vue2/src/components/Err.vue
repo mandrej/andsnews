@@ -9,14 +9,16 @@
       </v-toolbar>
 
       <v-content>
-        <v-jumbotron color="grey lighten-2">
-          <v-container fill-height>
-            <v-layout column justify-center align-center>
-              <v-icon x-large color="seconadry">error</v-icon>
-              <h3 class="title">{{text}}</h3>
-            </v-layout>
-          </v-container>
-        </v-jumbotron>
+        <v-container fluid>
+          <v-jumbotron color="grey lighten-2">
+            <v-container fill-height>
+              <v-layout column justify-center align-center>
+                <v-icon x-large color="seconadry">error</v-icon>
+                <h3 class="title">{{text}}</h3>
+              </v-layout>
+            </v-container>
+          </v-jumbotron>
+        </v-container>
       </v-content>
     </v-app>
   </div>

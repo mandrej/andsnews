@@ -10,7 +10,7 @@
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click.native="dialog = false">Close</v-btn>
+          <v-btn color="secondary" flat @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -22,9 +22,9 @@
           <small>you want to delete "{{current.headline}}"</small>
         </v-card-title>
         <v-card-actions>
-          <v-btn color="error" @click.native="agree">Yes</v-btn>
+          <v-btn color="error" @click="agree">Yes</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click.native="confirm = false">No</v-btn>
+          <v-btn color="primary" @click="confirm = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -37,7 +37,7 @@
           <v-card tile flat>
             <v-container fluid grid-list-lg>
               <v-layout row wrap>
-                <v-flex xs12 sm6 md4 lg3 xl2
+                <v-flex xs12 sm6 md4 lg3 xl3
                   v-for="item in objects"
                   :key="item.safekey">
                   <div :id="`${item.safekey}`">
@@ -48,13 +48,16 @@
                         style="background-position: 50% 50%"
                         height="300px">
                       </v-card-media>
-                      <v-card-title class="title" primary-title>
-                        {{item.headline}}
+                      <v-card-title primary-title>
+                        <div>
+                          <h3 class="title mb-0">{{item.headline}}</h3>
+                          <div>{{dateFormat(item)}}</div>
+                        </div>
                       </v-card-title>
                       <v-card-actions v-if="user.isAuthorized">
-                        <v-btn v-if="user.isAdmin" small flat class="black--text" @click="removeRecord(item)">Delete</v-btn>
-                        <v-spacer style="text-align: center; line-height: 28px">{{dateFormat(item, 'short')}}</v-spacer>
-                        <v-btn small flat class="black--text" @click="showEditdForm(item)">Edit</v-btn>
+                        <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
                       </v-card-actions>
                     </v-card>
                   </div>

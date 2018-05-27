@@ -5,52 +5,48 @@
     <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
-      left
-      bottom>
+      left bottom>
       Uploading {{fileCount}} images…
-      <v-btn flat icon color="white" @click.native="snackbar = false">
+      <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-dialog
       v-model="show"
-      lazy
-      fullscreen
-      transition="dialog-bottom-transition"
-      hide-overlay
-      scrollable>
-      <v-card tile light>
-        <v-toolbar card>
-          <v-btn icon @click.native="show = false">
+      lazy fullscreen hide-overlay scrollable
+      transition="dialog-bottom-transition">
+      <v-card tile>
+        <v-toolbar dark color="primary">
+          <v-btn icon @click="show = false">
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title class="headline">Add</v-toolbar-title>
         </v-toolbar>
-        <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-        <v-jumbotron color="grey lighten-2" v-if="isInitial || isSaving || isFailed">
-          <input type="file" multiple
-            :name="uploadFieldName"
-            :disabled="isSaving"
-            @change="filesChange($event.target.name, $event.target.files)"
-            accept="image/*"
-            class="input-file">
-          <v-container fill-height>
-            <v-layout column justify-center align-center>
-              <v-progress-circular v-if="isSaving"
-                :size="100"
-                :width="15"
-                :rotate="-90"
-                :value="value"
-                color="primary">{{value}}</v-progress-circular>
-              <h3 class="headline">Upload images</h3>
-              <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
-              <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
-            </v-layout>
-          </v-container>
-        </v-jumbotron>
-
         <v-card-text>
+          <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
+          <v-jumbotron height="200px" v-if="isInitial || isSaving || isFailed">
+            <input type="file" multiple
+              :name="uploadFieldName"
+              :disabled="isSaving"
+              @change="filesChange($event.target.name, $event.target.files)"
+              accept="image/*"
+              class="input-file">
+            <v-container fill-height>
+              <v-layout column justify-center align-center>
+                <v-progress-circular v-if="isSaving"
+                  :size="100"
+                  :width="5"
+                  :rotate="-90"
+                  :value="value"
+                  color="black">{{value}}</v-progress-circular>
+                <h3 class="headline">Upload images</h3>
+                <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
+                <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
+              </v-layout>
+            </v-container>
+          </v-jumbotron>
+
           <v-list two-line>
             <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
               <v-list-tile-avatar>
@@ -179,9 +175,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .jumbotron {
-  height: 200px !important;
+  outline: 2px dashed #3F51B5;
   cursor: pointer;
 }
 .input-file {

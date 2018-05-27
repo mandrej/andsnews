@@ -2,10 +2,9 @@
   <div>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
     <Info :visible="showInfo" @close="showInfo = false"></Info>
-    <!-- <v-progress-linear :indeterminate="true" height="2"></v-progress-linear> -->
 
     <v-app light>
-      <v-toolbar app flat>
+      <v-toolbar app dark color="primary">
         <v-btn icon  @click="back">
           <v-icon>arrow_back</v-icon>
         </v-btn>
@@ -102,10 +101,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .progress-circular {
   position: absolute;
-  top: calc(50% - 50px);
+  top: calc(50% - 22px);
   left: calc(50% - 50px)
 }
 .carousel {

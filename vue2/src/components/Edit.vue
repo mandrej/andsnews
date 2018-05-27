@@ -1,22 +1,19 @@
 <template>
   <v-dialog
     v-model="show"
-    lazy
-    fullscreen
-    transition="dialog-bottom-transition"
-    hide-overlay
-    scrollable>
-    <v-card tile light>
-      <v-toolbar card>
-        <v-btn icon @click.native="show = false">
+    lazy fullscreen hide-overlay scrollable
+    transition="dialog-bottom-transition">
+    <v-card tile>
+      <v-toolbar dark color="primary">
+        <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Edit</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn @click="submit" :disabled="!valid" color="primary">Submit</v-btn>
+        <v-btn @click="submit" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
-      <v-card-media :src="getImgSrc(current)" height="200px"></v-card-media>
       <v-card-text>
+        <img v-lazy="getImgSrc(current, 's')">
         <v-container grid-list-md mt-3>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>

@@ -2,7 +2,9 @@
   <div>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
-    <v-btn id="add" v-if="user.isAuthorized" fab medium color="accent" class="black--text" @click="showAddForm = true">
+    <v-btn id="add" v-if="user.isAuthorized"
+      fab medium fixed bottom right
+      color="accent" class="black--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
     </v-btn>
 
@@ -12,7 +14,7 @@
       left
       bottom>
       {{ text }}
-      <v-btn flat icon color="white" @click.native="snackbar = false">
+      <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
@@ -47,7 +49,7 @@
       </v-navigation-drawer>
 
       <v-toolbar app extended dark color="primary">
-        <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value" style="margin-left: 0">
@@ -127,14 +129,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .body-2 {
   line-height: 48px;
-}
-#add {
-  position: fixed;
-  bottom: 16px;
-  right: 32px;
-  z-index: 10;
 }
 </style>
