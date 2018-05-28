@@ -53,9 +53,10 @@ export default new Vuex.Store({
     },
     saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
     changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
-    changeFilter: ({commit}, payload) => {
+    changeFilter: ({commit, dispatch}, payload) => {
       commit('CHANGE_FILTER', payload)
       commit('SET_CLEAR', true)
+      dispatch('fetchRecords')
     },
     addRecord: ({commit}, obj) => {
       commit('ADD_UPLOADED', obj)

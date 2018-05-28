@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '../../helpers/mixins'
 import { EventBus } from '../../helpers/event-bus'
@@ -144,9 +143,6 @@ export default {
       } else {
         this.$store.dispatch('changeFilter', {})
       }
-      Vue.nextTick(function () {
-        EventBus.$emit('reload')
-      })
     }
   }
 }

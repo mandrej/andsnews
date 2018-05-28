@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState } from 'vuex'
 import SignIn from './SignIn'
 import List from './List'
@@ -117,9 +116,6 @@ export default {
   methods: {
     clearFilter () {
       this.$store.dispatch('changeFilter', {})
-      Vue.nextTick(function () {
-        EventBus.$emit('reload')
-      })
     },
     emitSubmit () {
       // this.drawer = !this.drawer

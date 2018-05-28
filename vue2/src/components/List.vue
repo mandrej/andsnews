@@ -118,9 +118,6 @@ export default {
     this.loadMore()
   },
   mounted () {
-    EventBus.$on('reload', () => {
-      this.$store.dispatch('fetchRecords')
-    })
     EventBus.$on('goto', () => {
       setTimeout(() => {
         this.$vuetify.goTo('#' + this.current.safekey, this.options)
