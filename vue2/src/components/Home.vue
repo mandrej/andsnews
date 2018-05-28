@@ -21,7 +21,7 @@
 
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
-        <v-toolbar extended dark color="red accent-3">
+        <v-toolbar dark color="red accent-3">
           <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
@@ -48,7 +48,7 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-toolbar app extended dark color="primary">
+      <v-toolbar app dark color="primary">
         <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
