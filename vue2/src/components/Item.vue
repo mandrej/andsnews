@@ -3,7 +3,7 @@
     <Edit :visible="editForm" @close="editForm = false"></Edit>
     <Info :visible="showInfo" @close="showInfo = false"></Info>
 
-    <v-app light>
+    <v-app>
       <v-toolbar app dark color="primary">
         <v-btn icon  @click="back">
           <v-icon>arrow_back</v-icon>
@@ -38,6 +38,8 @@
           </v-carousel-item>
         </v-carousel>
       </v-content>
+
+      <Footer :version="version"></Footer>
     </v-app>
   </div>
 </template>
@@ -49,6 +51,7 @@ import VueLazyload from 'vue-lazyload'
 import common from '../../helpers/mixins'
 import Edit from './Edit'
 import Info from './Info'
+import Footer from './Footer'
 import { EventBus } from '../../helpers/event-bus'
 
 Vue.use(VueLazyload)
@@ -57,10 +60,11 @@ export default {
   name: 'Item',
   components: {
     Info,
-    Edit
+    Edit,
+    Footer
   },
   mixins: [ common ],
-  props: ['id'],
+  props: ['id', 'version'],
   data: () => ({
     showInfo: false,
     editForm: false,
@@ -102,12 +106,13 @@ export default {
 </script>
 
 <style scoped>
+.carousel {
+  position: relative;
+  height: 100%;
+}
 .progress-circular {
   position: absolute;
-  top: calc(50% - 22px);
-  left: calc(50% - 50px)
-}
-.carousel {
-  height: calc(100vh - 56px);
+  top: calc(50% - 25px);
+  left: calc(50% - 50px);
 }
 </style>

@@ -14,7 +14,6 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-toolbar dark color="red accent-3">
-          <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
           <v-layout slot="extension">
@@ -100,6 +99,8 @@
           </v-list-tile>
         </v-list>
       </v-content>
+
+      <Footer :version="version"></Footer>
     </v-app>
   </div>
 </template>
@@ -107,13 +108,15 @@
 <script>
 import { mapState } from 'vuex'
 import SignIn from './SignIn'
+import Footer from './Footer'
 import { HTTP } from '../../helpers/http'
 import firebase from 'firebase'
 
 export default {
   name: 'Admin',
   components: {
-    SignIn
+    SignIn,
+    Footer
   },
   props: ['version'],
   data: () => ({

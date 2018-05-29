@@ -2,7 +2,7 @@
   <div>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
-    <v-btn id="add" v-if="user.isAuthorized"
+    <v-btn v-if="user.isAuthorized"
       fab medium fixed bottom right
       color="accent" class="black--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
@@ -22,7 +22,6 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-toolbar dark color="red accent-3">
-          <v-toolbar-title class="body-2 black--text">ANDS 2007-{{version}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
           <v-layout slot="extension">
@@ -64,7 +63,9 @@
       <v-content>
         <List></List>
       </v-content>
-    </v-app>
+
+      <Footer :version="version" :top="true"></Footer>
+   </v-app>
   </div>
 </template>
 
@@ -74,6 +75,7 @@ import SignIn from './SignIn'
 import List from './List'
 import Find from './Find'
 import Add from './Add'
+import Footer from './Footer'
 import { EventBus } from '../../helpers/event-bus'
 import firebase from 'firebase'
 
@@ -83,7 +85,8 @@ export default {
     SignIn,
     List,
     Find,
-    Add
+    Add,
+    Footer
   },
   props: ['version'],
   data: () => ({

@@ -20,14 +20,21 @@
           </v-jumbotron>
         </v-container>
       </v-content>
+
+      <Footer :version="version"></Footer>
     </v-app>
   </div>
 </template>
 
 <script>
+import Footer from './Footer'
+
 export default {
   name: 'Err',
-  props: ['title', 'text']
+  components: {
+    Footer
+  },
+  props: ['version', 'title', 'text']
 }
 </script>
 
