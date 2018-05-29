@@ -89,7 +89,6 @@ export default {
   mixins: [ common ],
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
-    distance: 800,
     bottom: false,
 
     dialog: false,
@@ -126,8 +125,8 @@ export default {
   },
   watch: {
     // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
-    bottom (bottom) {
-      if (bottom) {
+    bottom (val, oldVal) {
+      if (val) {
         this.loadMore()
       }
     }
@@ -135,10 +134,9 @@ export default {
   methods: {
     bottomVisible () {
       const scrollY = window.scrollY
-      const visible = document.documentElement.clientHeight + this.distance
+      const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      const bottomOfPage = visible + scrollY >= pageHeight
-      return bottomOfPage || pageHeight < visible
+      return visible + scrollY >= pageHeight
     },
     loadMore () {
       if (this.objects.length === 0) {

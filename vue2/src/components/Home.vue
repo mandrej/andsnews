@@ -28,10 +28,7 @@
           <v-layout slot="extension">
             <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn @click="emitSubmit" flat>
-              Find
-              <v-icon right dark>search</v-icon>
-            </v-btn>
+            <v-btn @click="emitSubmit" flat>Find<v-icon right dark>search</v-icon></v-btn>
           </v-layout>
         </v-toolbar>
 
