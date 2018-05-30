@@ -77,7 +77,6 @@ import { EventBus } from '../../helpers/event-bus'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
-  preLoad: 2,
   attempt: 1
 })
 
@@ -90,25 +89,20 @@ export default {
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
     bottom: false,
+    distance: 800,
 
     dialog: false,
     confirm: false,
     editForm: false,
 
-    duration: 300,
-    offset: -16,
-    easing: 'easeInOutCubic',
-    easings: Object.keys(easings)
+    options: {
+      duration: 300,
+      offset: -16,
+      easings: Object.keys(easings)
+    }
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy']),
-    options () {
-      return {
-        duration: this.duration,
-        offset: this.offset,
-        easing: this.easing
-      }
-    }
+    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -123,6 +117,9 @@ export default {
       }, 50)
     })
   },
+  updated () {
+    this.bottom = false
+  },
   watch: {
     // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
     bottom (val, oldVal) {
@@ -136,7 +133,7 @@ export default {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      return visible + scrollY >= pageHeight
+      return visible + scrollY + this.distance >= pageHeight
     },
     loadMore () {
       if (this.objects.length === 0) {
