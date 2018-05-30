@@ -21,27 +21,31 @@
 
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
-        <v-toolbar dark color="red accent-3">
-          <v-spacer></v-spacer>
-          <SignIn></SignIn>
-          <v-layout slot="extension">
-            <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
+        <v-layout column fill-height>
+          <v-toolbar dark color="red accent-3">
             <v-spacer></v-spacer>
-            <v-btn @click="emitSubmit" flat>Find<v-icon right dark>search</v-icon></v-btn>
-          </v-layout>
-        </v-toolbar>
+            <SignIn></SignIn>
+            <v-layout slot="extension">
+              <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn @click="emitSubmit" flat>Find<v-icon right dark>search</v-icon></v-btn>
+            </v-layout>
+          </v-toolbar>
 
-        <Find></Find>
-        <v-list>
-          <v-list-tile @click="$router.push({name: 'admin'})">
-            <v-list-tile-action>
-              <v-icon>settings</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>Admin</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+          <Find class="mt-2"></Find>
+          <v-spacer></v-spacer>
+
+          <v-list>
+            <v-list-tile @click="$router.push({name: 'admin'})">
+              <v-list-tile-action>
+                <v-icon>settings</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>Admin</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-layout>
       </v-navigation-drawer>
 
       <v-toolbar app dark color="primary">

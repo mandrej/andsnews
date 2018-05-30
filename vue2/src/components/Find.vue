@@ -1,5 +1,5 @@
 <template>
-  <v-card tile light flat class="mt-2">
+  <v-card tile light flat>
     <v-card-text>
       <v-form ref="form">
         <p class="subheadings">Search images</p>
