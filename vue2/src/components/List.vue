@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Item :visible="showItem" :index="index" @close="showItem = false"></Item>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
@@ -33,13 +34,13 @@
       <v-container fluid grid-list-lg>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl3
-            v-for="item in objects"
+            v-for="(item, idx) in objects"
             :key="item.safekey">
             <div :id="`${item.safekey}`">
               <v-card tile>
                 <v-card-media
                   v-lazy:background-image="getImgSrc(item, 's')"
-                  @click="showDetail(item)"
+                  @click="showDetail(item, idx)"
                   style="background-position: 50% 50%"
                   height="300px">
                 </v-card-media>
@@ -67,6 +68,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
+import Item from './Item'
 import Edit from './Edit'
 import common from '../../helpers/mixins'
 import { EventBus } from '../../helpers/event-bus'
@@ -79,17 +81,21 @@ Vue.use(VueLazyload, {
 export default {
   name: 'Home',
   components: {
+    Item,
     Edit
   },
   mixins: [ common ],
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
+    index: null,
+
     bottom: false,
     distance: 800,
 
     dialog: false,
     confirm: false,
     editForm: false,
+    showItem: false,
 
     options: {
       duration: 300,
@@ -138,9 +144,10 @@ export default {
         this.$store.dispatch('fetchRecords', this.next)
       }
     },
-    showDetail (rec) {
+    showDetail (rec, idx) {
+      this.index = idx
+      this.showItem = true
       this.$store.dispatch('changeCurrent', rec)
-      this.$router.push({name: 'item', params: {id: rec.safekey}})
     },
     showEditdForm (rec) {
       this.$store.dispatch('changeCurrent', rec)

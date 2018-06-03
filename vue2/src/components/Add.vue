@@ -128,8 +128,8 @@ export default {
       this.uploadError = null
       this.value = 0
     },
-    progress (e) {
-      this.value = Math.round((e.loaded * 100) / e.total)
+    progress (event) {
+      this.value = Math.round((event.loaded * 100) / event.total)
     },
     save (formData) {
       this.currentStatus = STATUS_SAVING

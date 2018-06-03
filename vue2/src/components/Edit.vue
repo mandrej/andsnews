@@ -10,7 +10,7 @@
         </v-btn>
         <v-toolbar-title class="headline">Edit</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn @click="submit" :disabled="!valid">Submit</v-btn>
+        <v-btn @click="submit" color="secondary" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
         <img v-lazy="getImgSrc(current, 's')">
