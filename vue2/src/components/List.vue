@@ -36,27 +36,25 @@
           <v-flex xs12 sm6 md4 lg3 xl3
             v-for="(item, idx) in objects"
             :key="item.safekey">
-            <div :id="`${item.safekey}`">
-              <v-card tile>
-                <v-card-media
-                  v-lazy:background-image="getImgSrc(item, 's')"
-                  @click="showDetail(item, idx)"
-                  style="background-position: 50% 50%"
-                  height="300px">
-                </v-card-media>
-                <v-card-title primary-title>
-                  <div>
-                    <h3 class="title mb-0">{{item.headline}}</h3>
-                    <div>{{dateFormat(item)}}</div>
-                  </div>
-                </v-card-title>
-                <v-card-actions v-if="user.isAuthorized">
-                  <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
-                  <v-spacer></v-spacer>
-                  <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
-                </v-card-actions>
-              </v-card>
-            </div>
+            <v-card tile :id="`${item.safekey}`">
+              <v-card-media
+                v-lazy:background-image="getImgSrc(item, 's')"
+                @click="showDetail(item, idx)"
+                style="background-position: 50% 50%"
+                height="300px">
+              </v-card-media>
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="title mb-0">{{item.headline}}</h3>
+                  <div>{{dateFormat(item)}}</div>
+                </div>
+              </v-card-title>
+              <v-card-actions v-if="user.isAuthorized">
+                <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-flex>
         </v-layout>
       </v-container>
