@@ -26,7 +26,7 @@
             :size="100"
             :width="5"
             color="black"></v-progress-circular>
-          <v-carousel :cycle="false" dark
+          <v-carousel :cycle="false" light
             v-bind="current"
             :value="index"
             @input="currentIndex"
@@ -96,8 +96,7 @@ export default {
 
 <style scoped>
 .carousel {
-  position: relative;
-  height: 100vh;
+  height: calc(100vh - 56px);
 }
 .progress-circular {
   position: absolute;
