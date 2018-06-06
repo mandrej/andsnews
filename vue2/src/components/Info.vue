@@ -11,11 +11,16 @@
         <p>
           <span class="title">{{current.headline}}</span><br>
           <span class="subheading">{{dateFormat(current)}}</span><br>
-          <span class="subheading">f{{current.aperture}} {{current.shutter}}s {{current.iso}} ASA</span>
+          <span class="subheading">
+            {{current.aperture ? 'f' + current.aperture : ''}}
+            {{current.shutter ? current.shutter + 's' : ''}}
+            {{current.iso ? current.iso + ' ASA' : ''}}
+          </span>
         </p>
         <p>
           {{current.author}}<br>
-          {{current.model}} {{current.lens}} ({{current.focal_length}}mm)
+          {{current.model}} {{current.lens}}
+          {{current.focal_length ? '(' + current.focal_length + 'mm)' : ''}}
         </p>
       </v-card-text>
     </v-card>
