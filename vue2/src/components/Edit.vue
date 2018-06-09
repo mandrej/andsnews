@@ -13,81 +13,91 @@
         <v-btn @click="submit" color="secondary" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
-        <img v-lazy="getImgSrc(current, 's')">
         <v-container grid-list-md mt-3>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
-              <v-flex xs12>
-                <v-text-field
-                  :label="`Headline for ${current.filename}`"
-                  v-model="current.headline"
-                  :rules="requiredRule"
-                  required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-select
-                  label="Tags"
-                  :items="tags"
-                  v-model="current.tags"
-                  chips
-                  tags
-                  clearable
-                  autocomplete>
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      close
-                      @input="data.parent.selectItem(data.item)"
-                      :selected="data.selected">
-                      <strong>{{ data.item }}</strong>&nbsp;
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-select
-                  label="Author"
-                  :items="authors"
-                  v-model="current.author"
-                  autocomplete
-                  single-line></v-select>
+                <img v-lazy="getImgSrc(current, 's')">
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-layout row>
-                  <v-flex xs6>
-                    <v-menu
-                      ref="dateRef"
-                      :close-on-content-click="false"
-                      v-model="menuDate"
-                      :nudge-right="40"
-                      :return-value.sync="dateTime.date"
-                      lazy
-                      transition="scale-transition"
-                      offset-y>
-                      <v-text-field
-                        slot="activator"
-                        v-model="dateTime.date"
-                        label="Date taken"
-                        readonly></v-text-field>
-                      <v-date-picker v-model="dateTime.date" @change="$refs.dateRef.save(dateTime.date)"></v-date-picker>
-                    </v-menu>
+              <v-flex xs12 sm6 md8>
+                <v-layout row wrap>
+                  <v-flex xs12 d-flex>
+                    <v-text-field
+                      :label="`Headline for ${current.filename}`"
+                      v-model="current.headline"
+                      :rules="requiredRule"
+                      required></v-text-field>
                   </v-flex>
-                  <v-flex xs6>
-                    <v-menu
-                      ref="timeRef"
-                      :close-on-content-click="false"
-                      v-model="menuTime"
-                      :nudge-right="40"
-                      :return-value.sync="dateTime.time"
-                      lazy
-                      transition="scale-transition"
-                      offset-y>
-                      <v-text-field
-                        slot="activator"
-                        v-model="dateTime.time"
-                        label="time taken"
-                        readonly></v-text-field>
-                      <v-time-picker v-model="dateTime.time" format="24hr" @change="$refs.timeRef.save(dateTime.time)"></v-time-picker>
-                    </v-menu>
+                  <v-flex xs12 d-flex>
+                    <v-select
+                      label="Tags"
+                      :items="tags"
+                      v-model="current.tags"
+                      chips
+                      tags
+                      clearable
+                      autocomplete>
+                      <template slot="selection" slot-scope="data">
+                        <v-chip
+                          close
+                          @input="data.parent.selectItem(data.item)"
+                          :selected="data.selected">
+                          <strong>{{ data.item }}</strong>&nbsp;
+                        </v-chip>
+                      </template>
+                    </v-select>
+                  </v-flex>
+                  <v-flex xs12 sm12 md12 d-flex>
+                    <v-select
+                      label="Author"
+                      :items="authors"
+                      v-model="current.author"
+                      autocomplete
+                      single-line></v-select>
+                  </v-flex>
+                  <v-flex xs12 sm12 md12 d-flex>
+                    <v-layout row>
+                      <v-flex xs6>
+                        <v-menu
+                          ref="dateRef"
+                          :close-on-content-click="false"
+                          v-model="menuDate"
+                          :nudge-right="40"
+                          :return-value.sync="dateTime.date"
+                          lazy
+                          full-width
+                          transition="scale-transition"
+                          max-width="290px"
+                          offset-y>
+                          <v-text-field
+                            slot="activator"
+                            v-model="dateTime.date"
+                            label="Date taken"
+                            readonly></v-text-field>
+                          <v-date-picker v-model="dateTime.date" @change="$refs.dateRef.save(dateTime.date)"></v-date-picker>
+                        </v-menu>
+                      </v-flex>
+                      <v-flex xs6>
+                        <v-menu
+                          ref="timeRef"
+                          :close-on-content-click="false"
+                          v-model="menuTime"
+                          :nudge-right="40"
+                          :return-value.sync="dateTime.time"
+                          lazy
+                          full-width
+                          transition="scale-transition"
+                          max-width="290px"
+                          offset-y>
+                          <v-text-field
+                            slot="activator"
+                            v-model="dateTime.time"
+                            label="time taken"
+                            readonly></v-text-field>
+                          <v-time-picker v-model="dateTime.time" format="24hr" @change="$refs.timeRef.save(dateTime.time)"></v-time-picker>
+                        </v-menu>
+                      </v-flex>
+                    </v-layout>
                   </v-flex>
                 </v-layout>
               </v-flex>
@@ -196,3 +206,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.flex img {
+  max-width: 100%;
+}
+</style>

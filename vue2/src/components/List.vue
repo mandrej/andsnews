@@ -33,28 +33,21 @@
     <v-card tile flat>
       <v-container fluid grid-list-lg>
         <v-layout row wrap>
-          <v-flex xs12 sm6 md4 lg3 xl3
+          <v-flex xs12 sm6 md4 lg3 xl2
             v-for="(item, idx) in objects"
             :key="item.safekey">
-            <v-card tile :id="`${item.safekey}`">
-              <v-card-media
-                v-lazy:background-image="getImgSrc(item, 's')"
-                @click="showDetail(item, idx)"
-                style="background-position: 50% 50%"
-                height="300px">
-              </v-card-media>
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="title mb-0">{{item.headline}}</h3>
-                  <div>{{dateFormat(item)}}</div>
-                </div>
-              </v-card-title>
-              <v-card-actions v-if="user.isAuthorized">
+            <div :id="`${item.safekey}`" class="square elevation-1">
+              <img v-lazy="getImgSrc(item, 's')" @click="showDetail(item, idx)">
+              <div class="px-3 pt-3">
+                <h3 class="title mb-0">{{item.headline}}</h3>
+                <div>{{dateFormat(item)}}</div>
+              </div>
+              <v-layout justify-center pb-3>
                 <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
-              </v-card-actions>
-            </v-card>
+              </v-layout>
+            </div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -129,6 +122,7 @@ export default {
     }
   },
   methods: {
+    // console.log(this.$vuetify.breakpoint.xs)
     bottomVisible () {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
@@ -162,3 +156,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.square {
+  margin-bottom: 16px;
+  img {
+    max-width: 100%;
+  }
+}
+</style>

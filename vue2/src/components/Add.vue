@@ -24,50 +24,52 @@
           <v-toolbar-title class="headline">Add</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-          <v-jumbotron height="200px" v-if="isInitial || isSaving || isFailed">
-            <input type="file" multiple
-              :name="uploadFieldName"
-              :disabled="isSaving"
-              @change="filesChange($event.target.name, $event.target.files)"
-              accept="image/*"
-              class="input-file">
-            <v-container fill-height>
-              <v-layout column justify-center align-center>
-                <v-progress-circular v-if="isSaving"
-                  :size="100"
-                  :width="5"
-                  :rotate="-90"
-                  :value="value"
-                  color="black">{{value}}</v-progress-circular>
-                <h3 class="headline">Upload images</h3>
-                <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
-                <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
-              </v-layout>
-            </v-container>
-          </v-jumbotron>
-
-          <v-list two-line>
-            <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
-              <v-list-tile-avatar>
-                <img :src="getImgSrc(item, 's')" :alt="item.slug">
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-layout row>
-                  <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
-                  <v-btn color="primary" @click="showEditdForm(item)">Edit</v-btn>
+          <v-container>
+            <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
+            <v-jumbotron height="200px" v-if="isInitial || isSaving || isFailed">
+              <input type="file" multiple
+                :name="uploadFieldName"
+                :disabled="isSaving"
+                @change="filesChange($event.target.name, $event.target.files)"
+                accept="image/*"
+                class="input-file">
+              <v-container fill-height>
+                <v-layout column justify-center align-center>
+                  <v-progress-circular v-if="isSaving"
+                    :size="100"
+                    :width="5"
+                    :rotate="-90"
+                    :value="value"
+                    color="black">{{value}}</v-progress-circular>
+                  <h3 class="headline">Upload images</h3>
+                  <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
+                  <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
                 </v-layout>
-              </v-list-tile-action>
-            </v-list-tile>
-          </v-list>
+              </v-container>
+            </v-jumbotron>
 
-          <v-layout justify-center v-if="isSuccess">
-            <v-btn @click="reset">Upload again</v-btn>
-          </v-layout>
+            <v-list two-line>
+              <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
+                <v-list-tile-avatar>
+                  <img :src="getImgSrc(item, 's')" :alt="item.slug">
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{item.headline}}</v-list-tile-title>
+                  <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-layout row>
+                    <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
+                    <v-btn color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                  </v-layout>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+
+            <v-layout justify-center v-if="isSuccess">
+              <v-btn @click="reset">Upload again</v-btn>
+            </v-layout>
+          </v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
