@@ -102,7 +102,7 @@ export default {
     timeout: 6000
   }),
   created () {
-    this.$store.dispatch('getToken')
+    this.$store.dispatch('fetchToken')
     this.$store.dispatch('fetchTags')
     this.$store.dispatch('fetchModels')
     this.$store.dispatch('fetchInfo')

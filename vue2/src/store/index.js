@@ -132,7 +132,7 @@ export default new Vuex.Store({
           commit('SET_INFO', response.data)
         })
     },
-    getToken: ({commit, state, dispatch}) => {
+    fetchToken: ({commit, state, dispatch}) => {
       if (process.env.NODE_ENV === 'development') return
 
       if (state.user && state.user.uid) {
