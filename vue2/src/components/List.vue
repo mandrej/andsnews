@@ -137,9 +137,9 @@ export default {
       }
     },
     showDetail (rec, idx) {
+      this.$store.dispatch('changeCurrent', rec)
       this.index = idx
       this.showItem = true
-      this.$store.dispatch('changeCurrent', rec)
     },
     showEditdForm (rec) {
       this.$store.dispatch('changeCurrent', rec)
@@ -159,9 +159,14 @@ export default {
 
 <style lang="scss" scoped>
 .square {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   img {
     max-width: 100%;
+    opacity: 0;
+    transition: all 0.5s ease-in;
+    &[lazy=loaded] {
+      opacity: 1;
+    }
   }
 }
 </style>
