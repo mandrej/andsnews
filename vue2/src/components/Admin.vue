@@ -110,7 +110,9 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import SignIn from './SignIn'
 import Footer from './Footer'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+
+const messaging = firebase.messaging()
 
 export default {
   name: 'Admin',
@@ -130,7 +132,6 @@ export default {
     this.$store.dispatch('All/fetchInfo')
   },
   mounted () {
-    const messaging = firebase.messaging()
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true

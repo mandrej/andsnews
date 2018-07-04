@@ -69,8 +69,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import common from '../helpers/mixins'
-import { EventBus } from '../helpers/event-bus'
+import common from '@/helpers/mixins'
+import { EventBus } from '@/helpers/event-bus'
 
 export default {
   name: 'Find',

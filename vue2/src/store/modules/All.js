@@ -1,9 +1,10 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
-import { FB, MESSAGING } from '@/helpers/fire'
+import { FB } from '@/helpers/fire'
 /* eslint-disable no-console */
 
 const axios = Vue.axios
+const messaging = FB.messaging()
 
 function pushMessage (token) {
   axios.post('message', {token: token})
@@ -136,10 +137,10 @@ const actions = {
     if (process.env.NODE_ENV === 'development') return
 
     if (state.user && state.user.uid) {
-      MESSAGING.requestPermission()
+      messaging.requestPermission()
         .then(() => {
           console.log('permission success')
-          return MESSAGING.getToken()
+          return messaging.getToken()
         })
         .then(token => {
           commit('SET_TOKEN', token)

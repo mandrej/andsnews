@@ -80,8 +80,10 @@ import List from './List'
 import Find from './Find'
 import Add from './Add'
 import Footer from './Footer'
-import { EventBus } from '../helpers/event-bus'
-import firebase from 'firebase'
+import { EventBus } from '@/helpers/event-bus'
+import firebase from 'firebase/app'
+
+const messaging = firebase.messaging()
 
 export default {
   name: 'Home',
@@ -108,7 +110,6 @@ export default {
     this.$store.dispatch('All/fetchInfo')
   },
   mounted () {
-    const messaging = firebase.messaging()
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true

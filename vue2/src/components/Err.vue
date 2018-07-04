@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.jumbotron {
+.v-jumbotron {
   height: 200px !important;
   & h3 {
     padding-top: 1em;

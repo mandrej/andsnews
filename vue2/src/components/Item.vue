@@ -45,9 +45,9 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
-import common from '../helpers/mixins'
+import common from '@/helpers/mixins'
 import Info from './Info'
-import { EventBus } from '../helpers/event-bus'
+import { EventBus } from '@/helpers/event-bus'
 
 Vue.use(VueLazyload)
 

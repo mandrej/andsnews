@@ -61,8 +61,8 @@ import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import Item from './Item'
 import Edit from './Edit'
-import common from '../helpers/mixins'
-import { EventBus } from '../helpers/event-bus'
+import common from '@/helpers/mixins'
+import { EventBus } from '@/helpers/event-bus'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
