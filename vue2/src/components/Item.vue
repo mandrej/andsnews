@@ -45,9 +45,9 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
-import common from '../../helpers/mixins'
+import common from '../helpers/mixins'
 import Info from './Info'
-import { EventBus } from '../../helpers/event-bus'
+import { EventBus } from '../helpers/event-bus'
 
 Vue.use(VueLazyload)
 
@@ -64,7 +64,7 @@ export default {
     isLoading: false
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
+    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
   },
   mounted () {
     this.$Lazyload.$on('loading', this.loading)
@@ -73,14 +73,14 @@ export default {
   methods: {
     currentIndex (idx) {
       const obj = this.objects[idx]
-      this.$store.dispatch('changeCurrent', obj)
+      this.$store.dispatch('All/changeCurrent', obj)
       if ((this.objects.length - idx) === 4) this.loadMore()
     },
     loadMore () {
       if (this.objects.length === 0) {
-        this.$store.dispatch('fetchRecords')
+        this.$store.dispatch('All/fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
-        this.$store.dispatch('fetchRecords', this.next)
+        this.$store.dispatch('All/fetchRecords', this.next)
       }
     },
     loading (event) {
@@ -95,10 +95,10 @@ export default {
 </script>
 
 <style scoped>
-.carousel {
+.v-carousel {
   height: calc(100vh - 56px);
 }
-.progress-circular {
+.v-progress-circular {
   position: absolute;
   top: calc(50% - 25px);
   left: calc(50% - 50px);

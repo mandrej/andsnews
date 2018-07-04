@@ -61,8 +61,8 @@ import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import Item from './Item'
 import Edit from './Edit'
-import common from '../../helpers/mixins'
-import { EventBus } from '../../helpers/event-bus'
+import common from '../helpers/mixins'
+import { EventBus } from '../helpers/event-bus'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
@@ -95,7 +95,7 @@ export default {
     }
   }),
   computed: {
-    ...mapState(['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
+    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -115,7 +115,7 @@ export default {
   },
   watch: {
     // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
-    bottom (val, oldVal) {
+    bottom (val) {
       if (val) {
         this.loadMore()
       }
@@ -131,26 +131,26 @@ export default {
     },
     loadMore () {
       if (this.objects.length === 0) {
-        this.$store.dispatch('fetchRecords')
+        this.$store.dispatch('All/fetchRecords')
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
-        this.$store.dispatch('fetchRecords', this.next)
+        this.$store.dispatch('All/fetchRecords', this.next)
       }
     },
     showDetail (rec, idx) {
-      this.$store.dispatch('changeCurrent', rec)
+      this.$store.dispatch('All/changeCurrent', rec)
       this.index = idx
       this.showItem = true
     },
     showEditdForm (rec) {
-      this.$store.dispatch('changeCurrent', rec)
+      this.$store.dispatch('All/changeCurrent', rec)
       this.editForm = true
     },
     removeRecord (rec) {
-      this.$store.dispatch('changeCurrent', rec)
+      this.$store.dispatch('All/changeCurrent', rec)
       this.confirm = true
     },
     agree () {
-      this.$store.dispatch('deleteRecord', this.current)
+      this.$store.dispatch('All/deleteRecord', this.current)
       this.confirm = false
     }
   }

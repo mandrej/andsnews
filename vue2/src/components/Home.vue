@@ -80,7 +80,7 @@ import List from './List'
 import Find from './Find'
 import Add from './Add'
 import Footer from './Footer'
-import { EventBus } from '../../helpers/event-bus'
+import { EventBus } from '../helpers/event-bus'
 import firebase from 'firebase'
 
 export default {
@@ -102,10 +102,10 @@ export default {
     timeout: 6000
   }),
   created () {
-    this.$store.dispatch('fetchToken')
-    this.$store.dispatch('fetchTags')
-    this.$store.dispatch('fetchModels')
-    this.$store.dispatch('fetchInfo')
+    this.$store.dispatch('All/fetchToken')
+    this.$store.dispatch('All/fetchTags')
+    this.$store.dispatch('All/fetchModels')
+    this.$store.dispatch('All/fetchInfo')
   },
   mounted () {
     const messaging = firebase.messaging()
@@ -115,11 +115,11 @@ export default {
     })
   },
   computed: {
-    ...mapState(['user', 'busy', 'filter', 'count', 'total'])
+    ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
   },
   methods: {
     clearFilter () {
-      this.$store.dispatch('changeFilter', {})
+      this.$store.dispatch('All/changeFilter', {})
     },
     emitSubmit () {
       // this.drawer = !this.drawer

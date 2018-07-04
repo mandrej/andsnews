@@ -77,10 +77,12 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
-import { HTTP } from '../../helpers/http'
-import common from '../../helpers/mixins'
+import common from '@/helpers/mixins'
 import Edit from './Edit'
+
+const axios = Vue.axios
 
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
@@ -109,7 +111,7 @@ export default {
     this.reset()
   },
   computed: {
-    ...mapState(['uploaded']),
+    ...mapState('All', ['uploaded']),
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
     },
@@ -136,12 +138,12 @@ export default {
     save (formData) {
       this.currentStatus = STATUS_SAVING
       this.snackbar = true
-      HTTP.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
+      axios.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
             this.uploadedFiles.push(item.rec)
-            this.$store.dispatch('addRecord', item.rec)
+            this.$store.dispatch('All/addRecord', item.rec)
           }
         ))
         .then(() => {
@@ -167,18 +169,18 @@ export default {
       this.save(formData)
     },
     showEditdForm (rec) {
-      this.$store.dispatch('changeCurrent', rec)
+      this.$store.dispatch('All/changeCurrent', rec)
       this.editdForm = true
     },
     removeRecord (rec) {
-      this.$store.dispatch('deleteRecord', rec)
+      this.$store.dispatch('All/deleteRecord', rec)
     }
   }
 }
 </script>
 
 <style scoped>
-.jumbotron {
+.v-jumbotron {
   outline: 2px dashed #3F51B5;
   cursor: pointer;
 }

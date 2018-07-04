@@ -63,7 +63,7 @@
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="primary" @click="rebuild(name)">Rebuild</v-btn>
+              <v-btn disabled="disabled" color="primary" @click="rebuild(name)">Rebuild</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 
@@ -72,7 +72,7 @@
               <v-list-tile-title>Reindex all images</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="accent" class="black--text" @click="reindex">Reindex</v-btn>
+              <v-btn disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider></v-divider>
@@ -84,7 +84,7 @@
               <v-list-tile-sub-title>not referenced in datastore</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="error" @click="unbound">Remove</v-btn>
+              <v-btn disabled="disabled" color="error" @click="unbound">Remove</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 
@@ -94,7 +94,7 @@
               <v-list-tile-sub-title>that are missing in the Cloud</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="secondary" @click="fix">Missing</v-btn>
+              <v-btn disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -106,10 +106,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
 import SignIn from './SignIn'
 import Footer from './Footer'
-import { HTTP } from '../../helpers/http'
 import firebase from 'firebase'
 
 export default {
@@ -123,10 +123,11 @@ export default {
     drawer: null,
     text: '',
     snackbar: false,
-    timeout: 3000
+    timeout: 3000,
+    disabled: (process.env.NODE_ENV === 'development')
   }),
   created () {
-    this.$store.dispatch('fetchInfo')
+    this.$store.dispatch('All/fetchInfo')
   },
   mounted () {
     const messaging = firebase.messaging()
@@ -136,13 +137,13 @@ export default {
     })
   },
   computed: {
-    ...mapState(['total', 'counters', 'fcm_token'])
+    ...mapState('All', ['total', 'counters', 'fcm_token'])
   },
   methods: {
     callAjax (url) {
-      HTTP.post(url, {token: this.fcm_token})
+      Vue.axios.post(url, {token: this.fcm_token})
         .then(x => x.data)
-        .catch(err => console.log(err))
+        // .catch(err => console.log(err))
     },
     rebuild (name) {
       this.callAjax('rebuild/' + name)
@@ -157,7 +158,7 @@ export default {
       this.callAjax('fix/photo')
     },
     send () {
-      this.$store.dispatch('sendNotifications')
+      this.$store.dispatch('All/sendNotifications')
     },
     nop () {
       return null

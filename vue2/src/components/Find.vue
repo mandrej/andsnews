@@ -7,15 +7,15 @@
           <v-flex xs12 class="hidden-xs-only">
             <v-text-field
               label="by text"
-              v-model="find.text"
+              v-model="data.text"
               clearable></v-text-field>
           </v-flex>
           <v-flex xs12>
-            <v-select
+            <v-autocomplete
               label="by tags"
               :items="tags"
-              v-model="find.tags"
-              multiple chips clearable autocomplete>
+              v-model="data.tags"
+              multiple chips clearable>
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
@@ -24,42 +24,42 @@
                   <strong>{{ data.item }}</strong>&nbsp;
                 </v-chip>
               </template>
-            </v-select>
+            </v-autocomplete>
           </v-flex>
           <v-flex xs12>
             <v-select
               label="by year"
               :items="years"
-              v-model="find.year"
+              v-model="data.year"
               clearable></v-select>
           </v-flex>
           <v-flex xs12>
             <v-select
               label="by month"
               :items="months"
-              v-model="find.month"
+              v-model="data.month"
               clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
-            <v-select
+            <v-autocomplete
               label="by camera model"
               :items="models"
-              v-model="find.model"
-              autocomplete clearable></v-select>
+              v-model="data.model"
+              clearable></v-autocomplete>
           </v-flex>
           <v-flex xs12>
-            <v-select
+            <v-autocomplete
               label="by author"
               :items="authors"
-              v-model="find.author"
-              autocomplete clearable></v-select>
+              v-model="data.author"
+              clearable></v-autocomplete>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
-            <v-select
+            <v-autocomplete
               label="by color"
               :items="colors"
-              v-model="find.color"
-              autocomplete clearable></v-select>
+              v-model="data.color"
+              clearable></v-autocomplete>
           </v-flex>
         </v-layout>
       </v-form>
@@ -69,8 +69,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import common from '../../helpers/mixins'
-import { EventBus } from '../../helpers/event-bus'
+import common from '../helpers/mixins'
+import { EventBus } from '../helpers/event-bus'
 
 export default {
   name: 'Find',
@@ -90,7 +90,10 @@ export default {
     }
   }),
   computed: {
-    ...mapState(['find', 'tags', 'models']),
+    ...mapState('All', ['find', 'tags', 'models']),
+    data () {
+      return Object.assign({}, this.find)
+    },
     years () {
       const start = 2007
       const end = (new Date()).getFullYear()
@@ -109,39 +112,39 @@ export default {
     submit () {
       let params = []
 
-      if (this.find.tags) {
-        this.find.tags.forEach(tag => {
+      if (this.data.tags) {
+        this.data.tags.forEach(tag => {
           params.push('tags:' + tag)
         })
       }
-      if (this.find.text) {
-        params.push(this.find.text)
+      if (this.data.text) {
+        params.push(this.data.text)
       }
-      if (this.find.year) {
-        params.push('year:' + this.find.year)
+      if (this.data.year) {
+        params.push('year:' + this.data.year)
       }
-      if (this.find.month) {
-        params.push('month:' + this.find.month)
+      if (this.data.month) {
+        params.push('month:' + this.data.month)
       }
-      if (this.find.model) {
-        params.push('model:' + this.find.model)
+      if (this.data.model) {
+        params.push('model:' + this.data.model)
       }
-      if (this.find.author) {
-        params.push('author:' + this.find.author)
+      if (this.data.author) {
+        params.push('author:' + this.data.author)
       }
-      if (this.find.color) {
-        params.push('color:' + this.find.color)
+      if (this.data.color) {
+        params.push('color:' + this.data.color)
       }
-      this.$store.dispatch('saveFindForm', this.find)
+      this.$store.dispatch('All/saveFindForm', this.data)
 
       const value = params.join(' AND ')
       if (value) {
-        this.$store.dispatch('changeFilter', {
+        this.$store.dispatch('All/changeFilter', {
           field: 'search',
           value: value
         })
       } else {
-        this.$store.dispatch('changeFilter', {})
+        this.$store.dispatch('All/changeFilter', {})
       }
     }
   }

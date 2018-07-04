@@ -17,26 +17,25 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img v-lazy="getImgSrc(current, 's')">
+                <img v-lazy="getImgSrc(data, 's')">
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
                   <v-flex xs12 d-flex>
                     <v-text-field
-                      :label="`Headline for ${current.filename}`"
-                      v-model="current.headline"
+                      :label="`Headline for ${data.filename}`"
+                      v-model="data.headline"
                       :rules="requiredRule"
                       required></v-text-field>
                   </v-flex>
                   <v-flex xs12 d-flex>
-                    <v-select
+                    <v-autocomplete
                       label="Tags"
                       :items="tags"
-                      v-model="current.tags"
+                      v-model="data.tags"
                       chips
                       tags
-                      clearable
-                      autocomplete>
+                      clearable>
                       <template slot="selection" slot-scope="data">
                         <v-chip
                           close
@@ -45,15 +44,14 @@
                           <strong>{{ data.item }}</strong>&nbsp;
                         </v-chip>
                       </template>
-                    </v-select>
+                    </v-autocomplete>
                   </v-flex>
                   <v-flex xs12 sm12 md12 d-flex>
-                    <v-select
+                    <v-autocomplete
                       label="Author"
                       :items="authors"
-                      v-model="current.author"
-                      autocomplete
-                      single-line></v-select>
+                      v-model="data.author"
+                      single-line></v-autocomplete>
                   </v-flex>
                   <v-flex xs12 sm12 md12 d-flex>
                     <v-layout row>
@@ -104,41 +102,41 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Camera Model"
-                  v-model="current.model"></v-text-field>
+                  v-model="data.model"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Lens"
-                  v-model="current.lens"></v-text-field>
+                  v-model="data.lens"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Focal length"
                   type="number"
-                  v-model="current.focal_length"></v-text-field>
+                  v-model="data.focal_length"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="ISO [ASA]"
                   type="number"
-                  v-model="current.iso"></v-text-field>
+                  v-model="data.iso"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Aperture"
                   type="number"
                   step="0.1"
-                  v-model="current.aperture"></v-text-field>
+                  v-model="data.aperture"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Shutter [s]"
-                  v-model="current.shutter"></v-text-field>
+                  v-model="data.shutter"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Color"
-                  v-model="current.color"
+                  v-model="data.color"
                   disabled></v-text-field>
               </v-flex>
             </v-layout>
@@ -152,8 +150,8 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import common from '../../helpers/mixins'
-import { EventBus } from '../../helpers/event-bus'
+import common from '../helpers/mixins'
+import { EventBus } from '../helpers/event-bus'
 
 export default {
   name: 'Edit',
@@ -177,10 +175,13 @@ export default {
     menuTime: false
   }),
   computed: {
-    ...mapState(['current', 'tags'])
+    ...mapState('All', ['current', 'tags']),
+    data () {
+      return Object.assign({}, this.current)
+    },
   },
   watch: {
-    'current.date' (val) {
+    'data.date' (val) {
       if (!val) return
       const tmp = val.split('T')
       // this.dateTime = Object.assign({}, this.dateTime, {
@@ -197,8 +198,8 @@ export default {
         if (this.dateTime.time.length === 5) {
           this.dateTime.time += ':00'
         }
-        this.current.date = this.dateTime.date + 'T' + this.dateTime.time
-        this.$store.dispatch('saveRecord', this.current)
+        this.data.date = this.dateTime.date + 'T' + this.dateTime.time
+        this.$store.dispatch('All/saveRecord', this.data)
         EventBus.$emit('goto')
         this.show = false
       }

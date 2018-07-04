@@ -12,7 +12,7 @@
 <script>
 import { mapState } from 'vuex'
 import firebase from 'firebase'
-import { FB } from '../../helpers/fire'
+import { FB } from '../helpers/fire'
 
 const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 
@@ -26,7 +26,7 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(['user']),
+    ...mapState('All', ['user']),
     photoUrl () {
       return this.user.photo
     }
@@ -36,7 +36,7 @@ export default {
       if (this.user.uid) {
         FB.auth().signOut()
           .then(() => {
-            this.$store.dispatch('saveUser', {
+            this.$store.dispatch('All/saveUser', {
               name: '',
               email: '',
               uid: null,
@@ -49,7 +49,7 @@ export default {
       } else {
         FB.auth().signInWithPopup(provider)
           .then(response => {
-            this.$store.dispatch('saveUser', {
+            this.$store.dispatch('All/saveUser', {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,
@@ -65,7 +65,7 @@ export default {
 </script>
 
 <style scoped>
-.avatar {
+.v-avatar {
   cursor: pointer;
 }
 </style>
