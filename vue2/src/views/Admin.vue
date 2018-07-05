@@ -63,7 +63,7 @@
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn disabled="disabled" color="primary" @click="rebuild(name)">Rebuild</v-btn>
+              <v-btn :disabled="disabled" color="primary" @click="rebuild(name)">Rebuild</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 
@@ -72,7 +72,7 @@
               <v-list-tile-title>Reindex all images</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
+              <v-btn :disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider></v-divider>
@@ -84,7 +84,7 @@
               <v-list-tile-sub-title>not referenced in datastore</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn disabled="disabled" color="error" @click="unbound">Remove</v-btn>
+              <v-btn :disabled="disabled" color="error" @click="unbound">Remove</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 
@@ -94,7 +94,7 @@
               <v-list-tile-sub-title>that are missing in the Cloud</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
+              <v-btn :disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
