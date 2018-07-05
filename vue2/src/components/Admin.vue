@@ -111,6 +111,8 @@ import { mapState } from 'vuex'
 import SignIn from './SignIn'
 import Footer from './Footer'
 import firebase from 'firebase/app'
+import 'firebase/app'
+import 'firebase/messaging'
 
 const messaging = firebase.messaging()
 

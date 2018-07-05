@@ -11,8 +11,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import firebase from 'firebase'
 import { FB } from '@/helpers/fire'
+import firebase from 'firebase/app'
+import 'firebase/app'
+import 'firebase/auth'
 
 const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 

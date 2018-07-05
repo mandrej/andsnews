@@ -82,6 +82,8 @@ import Add from './Add'
 import Footer from './Footer'
 import { EventBus } from '@/helpers/event-bus'
 import firebase from 'firebase/app'
+import 'firebase/app'
+import 'firebase/messaging'
 
 const messaging = firebase.messaging()
 
