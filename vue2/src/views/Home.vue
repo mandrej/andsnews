@@ -75,12 +75,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import SignIn from '@/components/SignIn'
 import List from '@/components/List'
 import Find from '@/components/Find'
-import Add from '@/components/Add'
 import Footer from '@/components/Footer'
 import { EventBus } from '@/helpers/event-bus'
+import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
@@ -90,10 +89,10 @@ const messaging = firebase.messaging()
 export default {
   name: 'Home',
   components: {
-    SignIn,
+    'SignIn': () => import('@/components/SignIn'),
+    'Add': () => import('@/components/Add'),
     List,
     Find,
-    Add,
     Footer
   },
   props: ['version'],

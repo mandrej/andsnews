@@ -59,8 +59,6 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
-import Item from './Item'
-import Edit from './Edit'
 import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
 import * as easings from 'vuetify/es5/util/easing-patterns'
@@ -72,8 +70,8 @@ Vue.use(VueLazyload, {
 export default {
   name: 'Home',
   components: {
-    Item,
-    Edit
+    'Item': () => import('./Item'),
+    'Edit': () => import('./Edit')
   },
   mixins: [ common ],
   data: () => ({
@@ -90,7 +88,7 @@ export default {
 
     options: {
       duration: 300,
-      offset: -16,
+      offset: -144,
       easings: Object.keys(easings)
     }
   }),

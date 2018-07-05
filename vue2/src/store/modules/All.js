@@ -1,7 +1,6 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
 import { FB } from '@/helpers/fire'
-import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/database'
 /* eslint-disable no-console */

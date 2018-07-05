@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
-import Admin from '@/views/Admin'
-import Err from '@/views/Err'
 import createStore from './store';
+
+const Admin = () => import('@/views/Admin')
+const Err = () => import('@/views/Err')
 
 Vue.use(Router)
 
