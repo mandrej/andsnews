@@ -14,9 +14,25 @@ handlers:
   upload: vue2/dist/(robots\.txt|manifest\.json)$
   secure: always
 
-- url: /static/
-  static_dir: vue2/dist/static
+- url: /css/
+  static_dir: vue2/dist/css
   secure: always
+
+- url: /img/
+  static_dir: vue2/dist/img
+  secure: always
+
+- url: /js/
+  static_dir: vue2/dist/js
+  secure: always
+
+- url: /(precache-manifest\..*\.js)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(precache-manifest\..*\.js)$
+  secure: always
+  http_headers:
+    Content-Type: application/javascript
+    Cache-Control: no-cache, no-store, must-revalidate
 
 - url: /(service-worker\.js|firebase-messaging-sw\.js)$
   static_files: vue2/dist/\1
