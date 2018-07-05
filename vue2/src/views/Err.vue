@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import Footer from './Footer'
+import Footer from '@/components/Footer'
 
 export default {
   name: 'Err',

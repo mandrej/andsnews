@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import Admin from '@/components/Admin'
-import Err from '@/components/Err'
+import Home from '@/views/Home'
+import Admin from '@/views/Admin'
+import Err from '@/views/Err'
 import createStore from './store';
 
 Vue.use(Router)

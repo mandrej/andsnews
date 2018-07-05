@@ -75,11 +75,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import SignIn from './SignIn'
-import List from './List'
-import Find from './Find'
-import Add from './Add'
-import Footer from './Footer'
+import SignIn from '@/components/SignIn'
+import List from '@/components/List'
+import Find from '@/components/Find'
+import Add from '@/components/Add'
+import Footer from '@/components/Footer'
 import { EventBus } from '@/helpers/event-bus'
 import firebase from 'firebase/app'
 import 'firebase/app'

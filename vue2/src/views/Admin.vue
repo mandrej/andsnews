@@ -108,8 +108,8 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import SignIn from './SignIn'
-import Footer from './Footer'
+import SignIn from '@/components/SignIn'
+import Footer from '@/components/Footer'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
