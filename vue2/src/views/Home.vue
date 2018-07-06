@@ -28,7 +28,6 @@
             <v-layout slot="extension">
               <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn @click="emitSubmit" flat>Find<v-icon right dark>search</v-icon></v-btn>
             </v-layout>
           </v-toolbar>
 
@@ -78,7 +77,6 @@ import { mapState } from 'vuex'
 import List from '@/components/List'
 import Find from '@/components/Find'
 import Footer from '@/components/Footer'
-import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
@@ -122,10 +120,6 @@ export default {
   methods: {
     clearFilter () {
       this.$store.dispatch('All/changeFilter', {})
-    },
-    emitSubmit () {
-      // this.drawer = !this.drawer
-      EventBus.$emit('submit')
     }
   }
 }

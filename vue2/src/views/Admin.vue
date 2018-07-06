@@ -12,35 +12,11 @@
     </v-snackbar>
 
     <v-app>
-      <v-navigation-drawer v-model="drawer" app fixed>
-        <v-toolbar dark color="red accent-3">
-          <v-spacer></v-spacer>
-          <SignIn></SignIn>
-          <v-layout slot="extension">
-            <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-layout>
-        </v-toolbar>
-
-        <!-- <v-list>
-          <v-list-tile two-line>
-            <v-list-tile-content>
-              <v-list-tile-title></v-list-tile-title>
-              <v-list-tile-sub-title></v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list> -->
-      </v-navigation-drawer>
-
-      <v-toolbar app dark color="primary">
-        <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
-        <v-spacer></v-spacer>
-        <v-layout slot="extension">
-          <v-btn icon  @click="$router.push({name: 'home'})">
-            <v-icon>arrow_back</v-icon>
-          </v-btn>
-          <v-toolbar-title style="font-size: 32px">Admin</v-toolbar-title>
-        </v-layout>
+      <v-toolbar app dark color="red accent-3">
+        <v-btn icon  @click="$router.push({name: 'home'})">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
+        <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-toolbar>
 
       <v-content>
@@ -124,7 +100,6 @@ export default {
   },
   props: ['version'],
   data: () => ({
-    drawer: null,
     text: '',
     snackbar: false,
     timeout: 3000,

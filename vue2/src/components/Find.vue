@@ -2,7 +2,9 @@
   <v-card tile light flat>
     <v-card-text>
       <v-form ref="form">
-        <p class="subheadings">Search images</p>
+        <v-btn @click="submit" block flat>
+          Search images<v-icon right dark>search</v-icon>
+        </v-btn>
         <v-layout row wrap>
           <v-flex xs12 class="hidden-xs-only">
             <v-text-field
@@ -70,7 +72,6 @@
 <script>
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
-import { EventBus } from '@/helpers/event-bus'
 
 export default {
   name: 'Find',
@@ -104,9 +105,6 @@ export default {
       tmp.shift()
       return tmp
     }
-  },
-  mounted () {
-    EventBus.$on('submit', this.submit)
   },
   methods: {
     submit () {
