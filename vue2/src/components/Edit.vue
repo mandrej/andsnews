@@ -33,8 +33,9 @@
                       label="Tags"
                       :items="tags"
                       v-model="data.tags"
-                      chips
                       tags
+                      chips
+                      multiple
                       clearable>
                       <template slot="selection" slot-scope="data">
                         <v-chip
@@ -148,7 +149,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
@@ -184,12 +184,10 @@ export default {
     'data.date' (val) {
       if (!val) return
       const tmp = val.split('T')
-      // this.dateTime = Object.assign({}, this.dateTime, {
-      //   date: tmp[0],
-      //   time: tmp[1]
-      // })
-      Vue.set(this.dateTime, 'date', tmp[0])
-      Vue.set(this.dateTime, 'time', tmp[1])
+      this.dateTime = Object.assign({}, this.dateTime, {
+        date: tmp[0],
+        time: tmp[1]
+      })
     }
   },
   methods: {
