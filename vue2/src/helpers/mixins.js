@@ -22,7 +22,7 @@ const common = {
           return rec.serving_url + suffix
         }
       } else {
-        return '/static/broken.svg'
+        return '/img/broken.svg'
       }
     },
     dateFormat (rec, fmt) {

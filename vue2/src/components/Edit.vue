@@ -17,7 +17,7 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img v-lazy="getImgSrc(data, 's')">
+                <img :src="getImgSrc(data, 's')">
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
@@ -170,7 +170,6 @@ export default {
       'dannytaboo@gmail.com',
       'zile.zikson@gmail.com'
     ],
-    dateTime: {},
     menuDate: false,
     menuTime: false
   }),
@@ -179,15 +178,12 @@ export default {
     data () {
       return Object.assign({}, this.current)
     },
-  },
-  watch: {
-    'data.date' (val) {
-      if (!val) return
-      const tmp = val.split('T')
-      this.dateTime = Object.assign({}, this.dateTime, {
+    dateTime() {
+      const tmp = this.data.date.split('T')
+      return {
         date: tmp[0],
         time: tmp[1]
-      })
+      }
     }
   },
   methods: {
