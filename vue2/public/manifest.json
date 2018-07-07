@@ -1,6 +1,10 @@
 {
   "name": "Andрејевићи",
   "short_name": "ANDS",
+  "start_url": "/index.html",
+  "display": "fullscreen",
+  "background_color": "#3f51b5",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",
@@ -13,8 +17,5 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#3f51b5",
-  "theme_color": "#ffffff"
+  "gcm_sender_id": "103953800507"
 }

@@ -170,6 +170,7 @@ export default {
       'dannytaboo@gmail.com',
       'zile.zikson@gmail.com'
     ],
+    dateTime: {},
     menuDate: false,
     menuTime: false
   }),
@@ -177,13 +178,16 @@ export default {
     ...mapState('All', ['current', 'tags']),
     data () {
       return Object.assign({}, this.current)
-    },
-    dateTime() {
-      const tmp = this.data.date.split('T')
-      return {
+    }
+  },
+  watch: {
+    'data.date' (val) {
+      if (!val) return
+      const tmp = val.split('T')
+      this.dateTime = Object.assign({}, this.dateTime, {
         date: tmp[0],
         time: tmp[1]
-      }
+      })
     }
   },
   methods: {

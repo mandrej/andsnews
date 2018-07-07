@@ -1,6 +1,40 @@
 module.exports = {
   pwa: {
-    name: 'Andрејевићи'
+    name: 'Andрејевићи',
+    themeColor: '#000000',
+    msTileColor: '#ffffff',
+    workboxPluginMode: 'GenerateSW',
+    workboxOptions: {
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts.(?:googleapis|gstatic).com\/(.*)/,
+          handler: 'cacheFirst',
+          options: {
+            cacheName: 'google-fonts'
+          }
+        },
+        {
+        urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/(.*)/,
+          handler: 'cacheFirst',
+          options: {
+            cacheName: 'image-cache',
+            expiration: {
+              maxEntries: 100
+            }
+          }
+        },
+        {
+        urlPattern: /api/,
+          handler: 'networkFirst',
+          options: {
+            cacheName: 'data-cache',
+            expiration: {
+              maxEntries: 100
+            }
+          }
+        }
+      ]
+    }
   },
   devServer: {
     proxy: {
