@@ -103,7 +103,7 @@ export default {
     text: '',
     snackbar: false,
     timeout: 3000,
-    disabled: (process.env.NODE_ENV === 'development')
+    disabled: false
   }),
   created () {
     this.$store.dispatch('All/fetchInfo')
@@ -116,6 +116,13 @@ export default {
   },
   computed: {
     ...mapState('All', ['total', 'counters', 'fcm_token'])
+  },
+  watch: {
+    fcm_token (val) {
+      if (!val) {
+        this.disabled = true
+      }
+    }
   },
   methods: {
     callAjax (url) {

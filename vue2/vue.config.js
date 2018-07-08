@@ -1,9 +1,8 @@
 module.exports = {
   pwa: {
     name: 'Andрејевићи',
-    themeColor: '#000000',
+    themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    workboxPluginMode: 'GenerateSW',
     workboxOptions: {
       runtimeCaching: [
         {
@@ -14,17 +13,23 @@ module.exports = {
           }
         },
         {
-        urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/(.*)/,
+          urlPattern: /^https:\/\/lh3.(?:googleusercontent).com\/(.*)/,
           handler: 'cacheFirst',
           options: {
             cacheName: 'image-cache',
             expiration: {
               maxEntries: 100
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+              headers: {
+                'X-Is-Cacheable': 'true'
+              }
             }
           }
         },
         {
-        urlPattern: /api/,
+          urlPattern: /api/,
           handler: 'networkFirst',
           options: {
             cacheName: 'data-cache',

@@ -1,10 +1,10 @@
 {
   "name": "Andрејевићи",
-  "short_name": "ANDS",
+  "short_name": "Andрејевићи",
   "start_url": "/index.html",
   "display": "fullscreen",
   "background_color": "#3f51b5",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",

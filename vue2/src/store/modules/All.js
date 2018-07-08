@@ -136,8 +136,6 @@ const actions = {
       })
   },
   fetchToken: ({commit, state, dispatch}) => {
-    if (process.env.NODE_ENV === 'development') return
-
     if (state.user && state.user.uid) {
       messaging.requestPermission()
         .then(() => {

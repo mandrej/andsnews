@@ -30,7 +30,9 @@ export default {
   computed: {
     ...mapState('All', ['user']),
     photoUrl () {
-      return this.user.photo
+      if (this.user && this.user.isAuthorized && this.user.photo) {
+        return this.user.photo
+      }
     }
   },
   methods: {
