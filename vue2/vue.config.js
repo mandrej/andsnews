@@ -13,7 +13,7 @@ module.exports = {
           }
         },
         {
-          urlPattern: /^https:\/\/lh3.(?:googleusercontent).com\/(.*)/,
+          urlPattern: /^https:\/\/lh3(.*)/,
           handler: 'cacheFirst',
           options: {
             cacheName: 'image-cache',
@@ -30,11 +30,14 @@ module.exports = {
         },
         {
           urlPattern: /api/,
-          handler: 'networkFirst',
+          handler: 'staleWhileRevalidate',
           options: {
             cacheName: 'data-cache',
             expiration: {
               maxEntries: 100
+            },
+            cacheableResponse: {
+              statuses: [0, 200]
             }
           }
         }
