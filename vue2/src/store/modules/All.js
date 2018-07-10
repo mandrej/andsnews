@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { FB } from '@/helpers/fire'
 import 'firebase/app'
 import 'firebase/database'
-/* eslint-disable no-console */
+/* xxxeslint-disable no-console */
 
 const axios = Vue.axios
 const messaging = FB.messaging()
@@ -139,17 +139,29 @@ const actions = {
     if (state.user && state.user.uid) {
       messaging.requestPermission()
         .then(() => {
-          console.log('permission success')
           return messaging.getToken()
         })
         .then(token => {
+          // console.log(token)
           commit('SET_TOKEN', token)
-          dispatch('subscribeToken')
+          dispatch('removeRegistrations')
+          dispatch('addRegistration')
         })
         .catch(() => console.log('permission failed'))
     }
   },
-  subscribeToken: ({state}) => {
+  removeRegistrations: ({state}) => {
+    const ref = FB.database().ref('registrations')
+    ref.orderByChild('email').equalTo(state.user.email).on('value', function(snapshot) {
+      snapshot.forEach(function(data) {
+        if (data.key !== state.fcm_token) {
+          // console.log(ref.child(data.key))
+          ref.child(data.key).remove()
+        }
+      })
+    })
+  },
+  addRegistration: ({state}) => {
     const ref = FB.database().ref('registrations')
     ref.child(state.fcm_token).set({
       email: state.user.email,

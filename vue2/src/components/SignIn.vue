@@ -3,7 +3,7 @@
     size="36px"
     @click="signHandler">
     <img
-      v-if="user.isAuthorized"
+      v-if="photoUrl"
       :src="photoUrl">
     <v-icon v-else flat>account_circle</v-icon>
   </v-avatar>
@@ -30,7 +30,7 @@ export default {
   computed: {
     ...mapState('All', ['user']),
     photoUrl () {
-      if (this.user && this.user.isAuthorized && this.user.photo) {
+      if (this.user && this.user.photo) {
         return this.user.photo
       }
     }
