@@ -142,30 +142,24 @@ const actions = {
           return messaging.getToken()
         })
         .then(token => {
-          // console.log(token)
           commit('SET_TOKEN', token)
-          dispatch('removeRegistrations')
           dispatch('addRegistration')
         })
         .catch(() => console.log('permission failed'))
     }
-  },
-  removeRegistrations: ({state}) => {
-    const ref = FB.database().ref('registrations')
-    ref.orderByChild('email').equalTo(state.user.email).on('value', function(snapshot) {
-      snapshot.forEach(function(data) {
-        if (data.key !== state.fcm_token) {
-          // console.log(ref.child(data.key))
-          ref.child(data.key).remove()
-        }
-      })
-    })
   },
   addRegistration: ({state}) => {
     const ref = FB.database().ref('registrations')
     ref.child(state.fcm_token).set({
       email: state.user.email,
       date: (new Date()).toISOString()
+    })
+    ref.orderByChild('email').equalTo(state.user.email).on('value', function(snapshot) {
+      snapshot.forEach(function(data) {
+        if (data.key !== state.fcm_token) {
+          ref.child(data.key).remove()
+        }
+      })
     })
   },
   sendNotifications: ({state}) => {
