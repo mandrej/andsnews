@@ -26,8 +26,8 @@
             :size="100"
             :width="5"
             color="black"></v-progress-circular>
-          <v-carousel :cycle="false" dark
-            v-bind="current"
+          <v-carousel dark
+            :cycle="false"
             :value="index"
             @input="currentIndex"
             hide-delimiters>
