@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editdForm" @close="editdForm = false"></Edit>
+    <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-snackbar
       v-model="snackbar"
@@ -60,7 +60,7 @@
                 <v-list-tile-action>
                   <v-layout row>
                     <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
-                    <v-btn color="primary" @click="showEditdForm(item)">Edit</v-btn>
+                    <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
                 </v-list-tile-action>
               </v-list-tile>
@@ -102,7 +102,7 @@ export default {
     uploadError: null,
     currentStatus: null,
     uploadFieldName: 'photos',
-    editdForm: false,
+    editForm: false,
     snackbar: false,
     timeout: 0,
     value: 0
@@ -168,9 +168,9 @@ export default {
         })
       this.save(formData)
     },
-    showEditdForm (rec) {
+    showEditForm (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
-      this.editdForm = true
+      this.editForm = true
     },
     removeRecord (rec) {
       this.$store.dispatch('All/deleteRecord', rec)

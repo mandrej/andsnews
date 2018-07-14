@@ -26,11 +26,11 @@
             :size="100"
             :width="5"
             color="black"></v-progress-circular>
-          <v-carousel :cycle="false" light
+          <v-carousel :cycle="false" dark
             v-bind="current"
             :value="index"
             @input="currentIndex"
-            hide-delimiters lazy>
+            hide-delimiters>
             <v-carousel-item v-for="item in objects" :key="item.safekey"
               v-lazy:background-image="getImgSrc(item)" class="slide">
             </v-carousel-item>

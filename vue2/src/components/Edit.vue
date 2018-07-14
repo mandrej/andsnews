@@ -17,14 +17,14 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img :src="getImgSrc(data, 's')">
+                <img :src="getImgSrc(tmp, 's')">
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
                   <v-flex xs12 d-flex>
                     <v-text-field
-                      :label="`Headline for ${data.filename}`"
-                      v-model="data.headline"
+                      :label="`Headline for ${tmp.filename}`"
+                      v-model="tmp.headline"
                       :rules="requiredRule"
                       required></v-text-field>
                   </v-flex>
@@ -32,7 +32,7 @@
                     <v-autocomplete
                       label="Tags"
                       :items="tags"
-                      v-model="data.tags"
+                      v-model="tmp.tags"
                       tags
                       chips
                       multiple
@@ -51,7 +51,7 @@
                     <v-autocomplete
                       label="Author"
                       :items="authors"
-                      v-model="data.author"
+                      v-model="tmp.author"
                       single-line></v-autocomplete>
                   </v-flex>
                   <v-flex xs12 sm12 md12 d-flex>
@@ -103,41 +103,41 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Camera Model"
-                  v-model="data.model"></v-text-field>
+                  v-model="tmp.model"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Lens"
-                  v-model="data.lens"></v-text-field>
+                  v-model="tmp.lens"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Focal length"
                   type="number"
-                  v-model="data.focal_length"></v-text-field>
+                  v-model="tmp.focal_length"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="ISO [ASA]"
                   type="number"
-                  v-model="data.iso"></v-text-field>
+                  v-model="tmp.iso"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Aperture"
                   type="number"
                   step="0.1"
-                  v-model="data.aperture"></v-text-field>
+                  v-model="tmp.aperture"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Shutter [s]"
-                  v-model="data.shutter"></v-text-field>
+                  v-model="tmp.shutter"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="Color"
-                  v-model="data.color"
+                  v-model="tmp.color"
                   disabled></v-text-field>
               </v-flex>
             </v-layout>
@@ -176,12 +176,12 @@ export default {
   }),
   computed: {
     ...mapState('All', ['current', 'tags']),
-    data () {
+    tmp () {
       return Object.assign({}, this.current)
     }
   },
   watch: {
-    'data.date' (val) {
+    'tmp.date' (val) {
       if (!val) return
       const tmp = val.split('T')
       this.dateTime = Object.assign({}, this.dateTime, {
@@ -196,8 +196,8 @@ export default {
         if (this.dateTime.time.length === 5) {
           this.dateTime.time += ':00'
         }
-        this.data.date = this.dateTime.date + 'T' + this.dateTime.time
-        this.$store.dispatch('All/saveRecord', this.data)
+        this.tmp.date = this.dateTime.date + 'T' + this.dateTime.time
+        this.$store.dispatch('All/saveRecord', this.tmp)
         EventBus.$emit('goto')
         this.show = false
       }

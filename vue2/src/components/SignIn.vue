@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     signHandler () {
-      if (this.user.uid) {
+      if (this.user && this.user.uid) {
         FB.auth().signOut()
           .then(() => {
             this.$store.dispatch('All/saveUser', {
