@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Item :visible="showItem" :index="index" @close="showItem = false"></Item>
+    <Info :visible="showInfo" @close="showInfo = false"></Info>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
@@ -30,28 +30,32 @@
       </v-card>
     </v-dialog>
 
-    <v-card tile flat>
-      <v-container fluid grid-list-lg>
-        <v-layout row wrap>
-          <v-flex xs12 sm6 md4 lg3 xl2
-            v-for="(item, idx) in objects"
-            :key="item.safekey">
-            <div :id="`${item.safekey}`" class="square elevation-1">
-              <img v-lazy="getImgSrc(item, 's')" @click="showDetail(item, idx)">
-              <div class="px-3 pt-3">
-                <h3 class="title mb-0">{{item.headline}}</h3>
-                <div>{{dateFormat(item)}}</div>
+    <v-container fluid grid-list-lg>
+      <viewer :options="viewerOptions" :images="objects"
+        class="viewer" ref="viewer">
+        <template slot-scope="scope">
+          <v-layout row wrap>
+            <v-flex xs12 sm6 md4 lg4 xl2
+              v-for="item in scope.images"
+              :key="item.safekey">
+              <div :id="`${item.safekey}`" class="square elevation-1">
+                <img v-lazy="getImgSrc(item, 's')" :data-source="getImgSrc(item)">
+                <div class="px-3 pt-3">
+                  <h3 class="title mb-0">{{item.headline}}</h3>
+                  <div>{{dateFormat(item)}}</div>
+                </div>
+                <v-layout justify-space-between pb-3>
+                  <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
+                  <v-btn small flat @click="showInfoPop(item)">Info</v-btn>
+                  <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
+                </v-layout>
               </div>
-              <v-layout justify-center pb-3>
-                <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
-              </v-layout>
-            </div>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-card>
+            </v-flex>
+          </v-layout>
+          {{scope.viewerOptions}}
+        </template>
+      </viewer>
+    </v-container>
   </div>
 </template>
 
@@ -59,24 +63,26 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
 import common from '@/helpers/mixins'
-import { EventBus } from '@/helpers/event-bus'
+// import { EventBus } from '@/helpers/event-bus'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1
 })
+Vue.use(Viewer)
 
 export default {
   name: 'Home',
   components: {
-    'Item': () => import('./Item'),
-    'Edit': () => import('./Edit')
+    'Edit': () => import('./Edit'),
+    'Info': () => import('./Info')
   },
   mixins: [ common ],
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
-    index: null,
 
     bottom: false,
     distance: 800,
@@ -84,12 +90,24 @@ export default {
     dialog: false,
     confirm: false,
     editForm: false,
-    showItem: false,
+    showInfo: false,
 
     options: {
       duration: 300,
       offset: -144,
       easings: Object.keys(easings)
+    },
+    viewerOptions: {
+      navbar: false,
+      title: false,
+      toolbar: false,
+      tooltip: true,
+      rotatable: false,
+      scalable: false,
+      transition: true,
+      fullscreen: true,
+      keyboard: true,
+      url: 'data-source'
     }
   }),
   computed: {
@@ -101,13 +119,13 @@ export default {
     })
     this.loadMore()
   },
-  mounted () {
-    EventBus.$on('goto', () => {
-      setTimeout(() => {
-        this.$vuetify.goTo('#' + this.current.safekey, this.options)
-      }, 50)
-    })
-  },
+  // mounted () {
+  //   EventBus.$on('goto', () => {
+  //     setTimeout(() => {
+  //       this.$vuetify.goTo('#' + this.current.safekey, this.options)
+  //     }, 50)
+  //   })
+  // },
   updated () {
     this.bottom = false
   },
@@ -134,14 +152,13 @@ export default {
         this.$store.dispatch('All/fetchRecords', this.next)
       }
     },
-    showDetail (rec, idx) {
-      this.$store.dispatch('All/changeCurrent', rec)
-      this.index = idx
-      this.showItem = true
-    },
     showEditdForm (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
       this.editForm = true
+    },
+    showInfoPop (rec) {
+      this.$store.dispatch('All/changeCurrent', rec)
+      this.showInfo = true
     },
     removeRecord (rec) {
       this.$store.dispatch('All/changeCurrent', rec)

@@ -151,7 +151,6 @@
 <script>
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
-import { EventBus } from '@/helpers/event-bus'
 
 export default {
   name: 'Edit',
@@ -198,7 +197,6 @@ export default {
         }
         this.tmp.date = this.dateTime.date + 'T' + this.dateTime.time
         this.$store.dispatch('All/saveRecord', this.tmp)
-        EventBus.$emit('goto')
         this.show = false
       }
     }
