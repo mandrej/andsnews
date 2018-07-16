@@ -35,20 +35,40 @@
         class="viewer" ref="viewer">
         <template slot-scope="scope">
           <v-layout row wrap>
-            <v-flex xs12 sm6 md4 lg4 xl2
+            <v-flex xs12 sm6 md4 lg3 xl2
               v-for="item in scope.images"
               :key="item.safekey">
               <div :id="`${item.safekey}`" class="square elevation-1">
                 <img v-lazy="getImgSrc(item, 's')" :data-source="getImgSrc(item)">
-                <div class="px-3 pt-3">
-                  <h3 class="title mb-0">{{item.headline}}</h3>
-                  <div>{{dateFormat(item)}}</div>
-                </div>
-                <v-layout justify-space-between pb-3>
-                  <v-btn v-if="user.isAdmin" small flat @click="removeRecord(item)">Delete</v-btn>
-                  <v-btn small flat @click="showInfoPop(item)">Info</v-btn>
-                  <v-btn small flat @click="showEditdForm(item)">Edit</v-btn>
-                </v-layout>
+                <v-list two-line>
+                  <v-list-tile>
+                    <v-list-tile-content>
+                      <v-list-tile-title v-html="item.headline"></v-list-tile-title>
+                      <v-list-tile-sub-title v-html="dateFormat(item)"></v-list-tile-sub-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-menu offset-y>
+                        <v-btn icon dark outline slot="activator" color="grey">
+                          <v-icon>more_vert</v-icon>
+                        </v-btn>
+                        <v-list>
+                          <v-list-tile @click="showEditdForm(item)">
+                            <v-list-tile-content>Edit</v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile @click="showInfoPop(item)">
+                            <v-list-tile-content>Exif</v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                            <v-list-tile-content>Download</v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile v-if="user.isAdmin" @click="removeRecord(item)">
+                            <v-list-tile-content>Delete</v-list-tile-content>
+                          </v-list-tile>
+                        </v-list>
+                      </v-menu>
+                    </v-list-tile-action>
+                  </v-list-tile>
+                </v-list>
               </div>
             </v-flex>
           </v-layout>
