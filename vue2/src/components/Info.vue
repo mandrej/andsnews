@@ -10,15 +10,15 @@
       <v-card-text>
         <p>
           <span class="title">{{current.headline}}</span><br>
-          <span class="subheading">{{dateFormat(current)}}</span><br>
           <span class="subheading">
-            {{current.aperture ? 'f' + current.aperture : ''}}
-            {{current.shutter ? current.shutter + 's' : ''}}
-            {{current.iso ? current.iso + ' ASA' : ''}}
+            {{dateFormat(current)}}<br>
+            {{current.author}}
           </span>
         </p>
         <p>
-          {{current.author}}<br>
+          {{current.aperture ? 'f' + current.aperture : ''}}
+          {{current.shutter ? current.shutter + 's' : ''}}
+          {{current.iso ? current.iso + ' ASA' : ''}}<br>
           {{current.model}} {{current.lens}}
           {{current.focal_length ? '(' + current.focal_length + 'mm)' : ''}}
         </p>

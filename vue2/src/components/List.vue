@@ -43,12 +43,12 @@
                 <v-list two-line>
                   <v-list-tile>
                     <v-list-tile-content>
-                      <v-list-tile-title v-html="item.headline"></v-list-tile-title>
-                      <v-list-tile-sub-title v-html="dateFormat(item)"></v-list-tile-sub-title>
+                      <v-list-tile-title>{{item.headline}}</v-list-tile-title>
+                      <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-menu offset-y>
-                        <v-btn icon dark outline slot="activator" color="grey">
+                      <v-menu>
+                        <v-btn icon slot="activator">
                           <v-icon>more_vert</v-icon>
                         </v-btn>
                         <v-list>
@@ -112,11 +112,11 @@ export default {
     editForm: false,
     showInfo: false,
 
-    options: {
-      duration: 300,
-      offset: -144,
-      easings: Object.keys(easings)
-    },
+    // options: {
+    //   duration: 300,
+    //   offset: -144,
+    //   easings: Object.keys(easings)
+    // },
     viewerOptions: {
       navbar: false,
       title: false,
@@ -203,5 +203,8 @@ export default {
       opacity: 1;
     }
   }
+}
+.v-list__tile__title {
+  font-size: 20px;
 }
 </style>
