@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Info :visible="showInfo" @close="showInfo = false"></Info>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-dialog v-model="dialog" max-width="300px" lazy>
@@ -39,7 +38,9 @@
               v-for="item in scope.images"
               :key="item.safekey">
               <div :id="`${item.safekey}`" class="square elevation-1">
-                <img v-lazy="getImgSrc(item, 's')" :data-source="getImgSrc(item)">
+                <img :alt="alt(item)"
+                  v-lazy="getImgSrc(item, 's')"
+                  :data-source="getImgSrc(item)">
                 <v-list two-line>
                   <v-list-tile>
                     <v-list-tile-content>
@@ -54,9 +55,6 @@
                         <v-list>
                           <v-list-tile @click="showEditdForm(item)">
                             <v-list-tile-content>Edit</v-list-tile-content>
-                          </v-list-tile>
-                          <v-list-tile @click="showInfoPop(item)">
-                            <v-list-tile-content>Exif</v-list-tile-content>
                           </v-list-tile>
                           <v-list-tile :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
                             <v-list-tile-content>Download</v-list-tile-content>
@@ -97,8 +95,7 @@ Vue.use(Viewer)
 export default {
   name: 'Home',
   components: {
-    'Edit': () => import('./Edit'),
-    'Info': () => import('./Info')
+    'Edit': () => import('./Edit')
   },
   mixins: [ common ],
   data: () => ({
@@ -110,7 +107,7 @@ export default {
     dialog: false,
     confirm: false,
     editForm: false,
-    showInfo: false,
+    // showInfo: false,
 
     // options: {
     //   duration: 300,
@@ -119,7 +116,7 @@ export default {
     // },
     viewerOptions: {
       navbar: false,
-      title: false,
+      title: true,
       toolbar: false,
       tooltip: true,
       rotatable: false,
@@ -176,9 +173,12 @@ export default {
       this.$store.dispatch('All/changeCurrent', rec)
       this.editForm = true
     },
-    showInfoPop (rec) {
-      this.$store.dispatch('All/changeCurrent', rec)
-      this.showInfo = true
+    alt (rec) {
+      return `${rec.aperture ? 'f/' + rec.aperture : ''}` +
+        ` ${rec.shutter ? rec.shutter + 's' : ''}` +
+        ` ${rec.iso ? rec.iso + ' ASA' : ''}` +
+        ` ${rec.model ? rec.model : ''} ${rec.lens ? rec.lens : ''}` +
+        ` ${rec.focal_length ? '(' + rec.focal_length + 'mm)' : ''}`
     },
     removeRecord (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
@@ -206,5 +206,26 @@ export default {
 }
 .v-list__tile__title {
   font-size: 20px;
+}
+</style>
+<style lang="scss">
+.viewer-footer {
+  top: 21px;
+  left: 0;
+  height: 40px;
+  text-align: center;
+  & .viewer-title {
+    color: #fff;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 5% 5px;
+    max-width: 90%;
+    opacity: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity .15s;
+    white-space: nowrap;
+  }
 }
 </style>
