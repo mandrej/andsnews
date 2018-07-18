@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { FB } from '@/helpers/fire'
 import 'firebase/app'
 import 'firebase/database'
-/* xxxeslint-disable no-console */
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const axios = Vue.axios
 const messaging = FB.messaging()
@@ -11,9 +11,9 @@ const messaging = FB.messaging()
 function pushMessage (token) {
   axios.post('message', {token: token})
     .then(response => {
-      console.log(response)
+      console.error(response)
     })
-    .catch(() => console.log('push message failed'))
+    .catch(() => console.error('push message failed'))
 }
 
 const initialState = {
@@ -79,7 +79,7 @@ const actions = {
     commit('DELETE_UPLOADED', obj)
     axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
       .then(response => {
-        console.log(response.data)
+        console.error(response.data)
       })
   },
   fetchRecords: ({commit, state}, next) => {
@@ -108,13 +108,13 @@ const actions = {
         if (state.pages.indexOf(response.data._page) === -1) {
           commit('UPDATE_RECORDS', response.data)
         } else {
-          console.log('duplicate ', response.data._page)
+          console.error('duplicate ', response.data._page)
         }
         commit('SET_BUSY', false)
       })
       .catch(err => {
         commit('SET_BUSY', false)
-        console.log(err)
+        console.error(err)
       })
   },
   fetchTags: ({commit}) => {
@@ -145,7 +145,7 @@ const actions = {
           commit('SET_TOKEN', token)
           dispatch('addRegistration')
         })
-        .catch(() => console.log('permission failed'))
+        .catch(() => console.error('permission failed'))
     }
   },
   addRegistration: ({state}) => {

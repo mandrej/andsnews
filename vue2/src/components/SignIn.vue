@@ -25,14 +25,21 @@ export default {
     admins: [
       'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',
       'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'
-    ]
+    ],
+    photoUrl: null
   }),
-  computed: {
-    ...mapState('All', ['user']),
-    photoUrl () {
-      if (this.user && this.user.photo) {
-        return this.user.photo
+  mounted () {
+    if (this.user && this.user.photo) {
+        this.photoUrl = this.user.photo
       }
+  },
+  computed: {
+    ...mapState('All', ['user'])
+  },
+  watch: {
+    'user.photo' (val) {
+      if (!val) return
+      this.photoUrl = val
     }
   },
   methods: {
@@ -48,6 +55,7 @@ export default {
               isAuthorized: false,
               isAdmin: false
             })
+            this.photoUrl = null
             this.$router.push({name: 'home'})
           })
       } else {

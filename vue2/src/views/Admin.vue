@@ -102,7 +102,7 @@ export default {
   data: () => ({
     text: '',
     snackbar: false,
-    timeout: 3000,
+    timeout: 6000,
     disabled: false
   }),
   created () {
