@@ -14,16 +14,8 @@ handlers:
   upload: vue2/dist/(robots\.txt|manifest\.json)$
   secure: always
 
-- url: /css/
-  static_dir: vue2/dist/css
-  secure: always
-
-- url: /img/
-  static_dir: vue2/dist/img
-  secure: always
-
-- url: /js/
-  static_dir: vue2/dist/js
+- url: /static/
+  static_dir: vue2/dist/static
   secure: always
 
 - url: /(precache-manifest\..*\.js)$
