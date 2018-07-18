@@ -90,6 +90,10 @@ export default {
       color: ''
     }
   }),
+  created () {
+    this.$store.dispatch('All/fetchTags')
+    this.$store.dispatch('All/fetchModels')
+  },
   computed: {
     ...mapState('All', ['find', 'tags', 'models']),
     data () {

@@ -103,9 +103,6 @@ export default {
     timeout: 6000
   }),
   created () {
-    this.$store.dispatch('All/fetchToken')
-    this.$store.dispatch('All/fetchTags')
-    this.$store.dispatch('All/fetchModels')
     this.$store.dispatch('All/fetchInfo')
   },
   mounted () {

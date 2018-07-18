@@ -173,6 +173,9 @@ export default {
     menuDate: false,
     menuTime: false
   }),
+  created () {
+    this.$store.dispatch('All/fetchTags')
+  },
   computed: {
     ...mapState('All', ['current', 'tags']),
     tmp () {

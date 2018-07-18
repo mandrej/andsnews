@@ -107,6 +107,7 @@ export default {
   }),
   created () {
     this.$store.dispatch('All/fetchInfo')
+    this.$store.dispatch('All/fetchToken')
   },
   mounted () {
     messaging.onMessage(payload => {
@@ -115,7 +116,7 @@ export default {
     })
   },
   computed: {
-    ...mapState('All', ['total', 'counters', 'fcm_token'])
+    ...mapState('All', ['counters', 'fcm_token'])
   },
   watch: {
     fcm_token (val) {
