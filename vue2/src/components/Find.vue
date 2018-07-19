@@ -23,8 +23,8 @@
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
-                  @input="data.parent.selectItem(data.item)"
-                  :selected="data.selected">
+                  :selected="data.selected"
+                  @input="data.parent.selectItem(data.item)">
                   <strong>{{ data.item }}</strong>&nbsp;
                 </v-chip>
               </template>
@@ -99,7 +99,7 @@ export default {
   computed: {
     ...mapState('All', ['find', 'tags', 'models']),
     data () {
-      return Object.assign({}, this.find)
+      return {...this.find}
     },
     years () {
       const start = 2007

@@ -29,23 +29,22 @@
                       required></v-text-field>
                   </v-flex>
                   <v-flex xs12 d-flex>
-                    <v-select
+                    <v-combobox
                       label="Tags"
                       :items="tags"
                       v-model="tmp.tags"
-                      tags
                       chips
                       multiple
                       clearable>
                       <template slot="selection" slot-scope="data">
                         <v-chip
                           close
-                          @input="data.parent.selectItem(data.item)"
-                          :selected="data.selected">
+                          :selected="data.selected"
+                          @input="data.parent.selectItem(data.item)">
                           <strong>{{ data.item }}</strong>&nbsp;
                         </v-chip>
                       </template>
-                    </v-select>
+                    </v-combobox>
                   </v-flex>
                   <v-flex xs12 sm12 md12 d-flex>
                     <v-autocomplete
@@ -169,7 +168,6 @@ export default {
       'dannytaboo@gmail.com',
       'zile.zikson@gmail.com'
     ],
-    dateTime: {},
     menuDate: false,
     menuTime: false
   }),
@@ -179,17 +177,14 @@ export default {
   computed: {
     ...mapState('All', ['current', 'tags']),
     tmp () {
-      return Object.assign({}, this.current)
-    }
-  },
-  watch: {
-    'tmp.date' (val) {
-      if (!val) return
-      const tmp = val.split('T')
-      this.dateTime = Object.assign({}, this.dateTime, {
+      return {...this.current}
+    },
+    dateTime () {
+      const tmp = this.current.date.split('T')
+      return {
         date: tmp[0],
         time: tmp[1]
-      })
+      }
     }
   },
   methods: {
