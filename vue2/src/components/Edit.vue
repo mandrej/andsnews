@@ -169,21 +169,24 @@ export default {
       'zile.zikson@gmail.com'
     ],
     menuDate: false,
-    menuTime: false
+    menuTime: false,
+    dateTime: {},
+    tmp: {}
   }),
   created () {
     this.$store.dispatch('All/fetchTags')
   },
   computed: {
-    ...mapState('All', ['current', 'tags']),
-    tmp () {
-      return {...this.current}
-    },
-    dateTime () {
-      const tmp = this.current.date.split('T')
-      return {
-        date: tmp[0],
-        time: tmp[1]
+    ...mapState('All', ['current', 'tags'])
+  },
+  watch: {
+    current (val) {
+      if (JSON.stringify(val) === '{}') return
+      const dt = val.date.split('T')
+      this.tmp = {...val}
+      this.dateTime = {
+        date: dt[0],
+        time: dt[1]
       }
     }
   },
