@@ -29,7 +29,7 @@
                       required></v-text-field>
                   </v-flex>
                   <v-flex xs12 d-flex>
-                    <v-autocomplete
+                    <v-select
                       label="Tags"
                       :items="tags"
                       v-model="tmp.tags"
@@ -45,7 +45,7 @@
                           <strong>{{ data.item }}</strong>&nbsp;
                         </v-chip>
                       </template>
-                    </v-autocomplete>
+                    </v-select>
                   </v-flex>
                   <v-flex xs12 sm12 md12 d-flex>
                     <v-autocomplete

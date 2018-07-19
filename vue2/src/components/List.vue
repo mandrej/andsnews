@@ -85,7 +85,7 @@ import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
 import common from '@/helpers/mixins'
 // import { EventBus } from '@/helpers/event-bus'
-import * as easings from 'vuetify/es5/util/easing-patterns'
+// import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1

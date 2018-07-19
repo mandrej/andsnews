@@ -17,7 +17,9 @@
               label="by tags"
               :items="tags"
               v-model="data.tags"
-              multiple chips clearable>
+              chips
+              multiple
+              clearable>
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
