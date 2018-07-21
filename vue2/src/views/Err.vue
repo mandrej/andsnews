@@ -27,12 +27,10 @@
 </template>
 
 <script>
-import Footer from '@/components/Footer'
-
 export default {
   name: 'Err',
   components: {
-    Footer
+    'Footer': () => import('@/components/Footer'),
   },
   props: ['version', 'title', 'text']
 }

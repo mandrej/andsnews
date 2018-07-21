@@ -76,7 +76,6 @@
 import { mapState } from 'vuex'
 import List from '@/components/List'
 import Find from '@/components/Find'
-import Footer from '@/components/Footer'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
@@ -89,9 +88,9 @@ export default {
   components: {
     'SignIn': () => import('@/components/SignIn'),
     'Add': () => import('@/components/Add'),
+    'Footer': () => import('@/components/Footer'),
     List,
-    Find,
-    Footer
+    Find
   },
   props: ['version'],
   data: () => ({

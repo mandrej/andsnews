@@ -84,8 +84,6 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import SignIn from '@/components/SignIn'
-import Footer from '@/components/Footer'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
@@ -95,8 +93,7 @@ const messaging = firebase.messaging()
 export default {
   name: 'Admin',
   components: {
-    SignIn,
-    Footer
+    'Footer': () => import('@/components/Footer')
   },
   props: ['version'],
   data: () => ({
