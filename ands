@@ -8,7 +8,7 @@ api_version=`date +%Y%m%d%H%M`
 client="p2"
 client_version=`date +%Y%m%d%H%M`
 p2_shell="p2/src/app-shell.html"
-vue2_shell="vue2/src/App.vue"
+vue2_shell="vue2/.env"
 
 # If you deploy a version that specifies the same version ID as a version that already exists on App Engine,
 # the files that you deploy will overwrite the existing version. This can be problematic if the version is
@@ -60,7 +60,7 @@ else
           cd ..
           exit ;;
         vue2)
-          sed -i -E "/version/s/[[:digit:]]{12}/$client_version/g" $vue2_shell
+          sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$client_version/g" $vue2_shell
           cd vue2
           yarn build
           cd ..

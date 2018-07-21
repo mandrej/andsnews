@@ -21,7 +21,7 @@
         </v-container>
       </v-content>
 
-      <Footer :version="version"></Footer>
+      <Footer/>
     </v-app>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   components: {
     'Footer': () => import('@/components/Footer'),
   },
-  props: ['version', 'title', 'text']
+  props: ['title', 'text']
 }
 </script>
 

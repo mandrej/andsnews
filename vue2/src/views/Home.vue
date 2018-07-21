@@ -67,7 +67,7 @@
         <List></List>
       </v-content>
 
-      <Footer :version="version" :top="true"></Footer>
+      <Footer :top="true"></Footer>
    </v-app>
   </div>
 </template>
@@ -92,7 +92,6 @@ export default {
     List,
     Find
   },
-  props: ['version'],
   data: () => ({
     drawer: null,
     title: 'ANDрејевићи',

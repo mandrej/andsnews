@@ -52,14 +52,14 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:6060/api',
+        target: process.env.VUE_APP_PROXY + 'api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         }
       },
       '/_ah': {
-        target: 'http://localhost:6060/_ah',
+        target: process.env.VUE_APP_PROXY + '_ah',
         changeOrigin: true,
         pathRewrite: {
           '^/_ah': ''

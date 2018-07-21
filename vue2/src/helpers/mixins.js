@@ -13,6 +13,9 @@ const common = {
     }
   },
   methods:{
+    version () {
+      return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+    },
     getImgSrc (rec, size) {
       const suffix = (size) ? '=s400-c' : '=s0'
       if (rec && rec.serving_url) {
