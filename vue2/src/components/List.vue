@@ -84,7 +84,6 @@ import VueLazyload from 'vue-lazyload'
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
 import common from '@/helpers/mixins'
-// import { EventBus } from '@/helpers/event-bus'
 // import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
@@ -136,13 +135,6 @@ export default {
     })
     this.loadMore()
   },
-  // mounted () {
-  //   EventBus.$on('goto', () => {
-  //     setTimeout(() => {
-  //       this.$vuetify.goTo('#' + this.current.safekey, this.options)
-  //     }, 50)
-  //   })
-  // },
   updated () {
     this.bottom = false
   },

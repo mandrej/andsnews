@@ -12,6 +12,7 @@
 <script>
 import { mapState } from 'vuex'
 import { FB } from '@/helpers/fire'
+import { EventBus } from '@/helpers/event-bus'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/auth'
@@ -30,23 +31,23 @@ export default {
   }),
   mounted () {
     if (this.user && this.user.photo) {
-        this.photoUrl = this.user.photo
+      this.photoUrl = this.user.photo
+    }
+    EventBus.$on('signin', user => {
+      if (user && user.photo) {
+        this.photoUrl = user.photo
       }
+    })
   },
   computed: {
     ...mapState('All', ['user'])
-  },
-  watch: {
-    'user.photo' (val) {
-      if (!val) return
-      this.photoUrl = val
-    }
   },
   methods: {
     signHandler () {
       if (this.user && this.user.uid) {
         FB.auth().signOut()
           .then(() => {
+            this.photoUrl = null
             this.$store.dispatch('All/saveUser', {
               name: '',
               email: '',
@@ -55,7 +56,6 @@ export default {
               isAuthorized: false,
               isAdmin: false
             })
-            this.photoUrl = null
             this.$router.push({name: 'home'})
           })
       } else {
