@@ -2,26 +2,16 @@
   <div>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
-    <v-dialog v-model="dialog" max-width="300px" lazy>
-      <v-card>
-        <v-card-title class="headline">
-          No photos<br>
-          <small>for current filter / search</small>
-        </v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click="dialog = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
       <v-card>
-        <v-card-title class="headline">
-          Are you sure?<br>
-          <small>you want to delete "{{current.headline}}"</small>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          Are you sure?
         </v-card-title>
-        <v-card-actions>
+        <v-card-text>
+          you want to delete "{{current.headline}}"
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="pa-3">
           <v-btn color="error" @click="agree">Yes</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="confirm = false">No</v-btn>
@@ -103,7 +93,6 @@ export default {
     bottom: false,
     distance: 800,
 
-    dialog: false,
     confirm: false,
     editForm: false,
     // showInfo: false,
@@ -201,6 +190,7 @@ export default {
 }
 </style>
 <style lang="scss">
+
 .viewer-footer {
   top: 21px;
   left: 0;

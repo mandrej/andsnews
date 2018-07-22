@@ -12,7 +12,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app dark color="red accent-3">
+      <v-toolbar app dark prominent color="red accent-3">
         <v-btn icon  @click="$router.push({name: 'home'})">
           <v-icon>arrow_back</v-icon>
         </v-btn>
@@ -150,9 +150,6 @@ export default {
 </script>
 
 <style scoped>
-.body-2 {
-  line-height: 48px;
-}
 .list__tile__action .btn {
   width: 100px;
 }

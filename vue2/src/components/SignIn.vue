@@ -1,7 +1,8 @@
 <template>
   <v-avatar
     size="36px"
-    @click="signHandler">
+    @click="signHandler"
+    style="cursor: pointer">
     <img
       v-if="photoUrl"
       :src="photoUrl">
@@ -75,9 +76,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.v-avatar {
-  cursor: pointer;
-}
-</style>

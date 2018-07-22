@@ -19,10 +19,26 @@
       </v-btn>
     </v-snackbar>
 
+    <v-dialog v-model="empty" max-width="300px" lazy>
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          No photos
+        </v-card-title>
+        <v-card-text>
+          for current filter / search
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="pa-3">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="empty = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-layout column fill-height>
-          <v-toolbar dark color="red accent-3">
+          <v-toolbar dark prominent color="red accent-3">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -47,7 +63,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app dark color="primary">
+      <v-toolbar app dark prominent color="primary">
         <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
@@ -98,7 +114,8 @@ export default {
     showAddForm: false,
     text: '',
     snackbar: false,
-    timeout: 6000
+    timeout: 6000,
+    empty: false
   }),
   created () {
     this.$store.dispatch('All/fetchInfo')
@@ -108,6 +125,13 @@ export default {
       this.text = payload.notification.body
       this.snackbar = true
     })
+  },
+  watch: {
+    count (val) {
+      if (val === 0) {
+        this.empty = true
+      }
+    }
   },
   computed: {
     ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
@@ -119,9 +143,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.body-2 {
-  line-height: 48px;
-}
-</style>

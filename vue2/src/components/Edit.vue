@@ -4,7 +4,7 @@
     lazy fullscreen hide-overlay scrollable
     transition="dialog-bottom-transition">
     <v-card tile>
-      <v-toolbar dark color="primary">
+      <v-toolbar dark prominent color="primary">
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
@@ -17,7 +17,7 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img :src="getImgSrc(tmp, 's')">
+                <img :src="getImgSrc(tmp, 's')" style="max-width: 100%">
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
@@ -204,9 +204,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.flex img {
-  max-width: 100%;
-}
-</style>

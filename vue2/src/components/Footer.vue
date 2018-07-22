@@ -30,6 +30,6 @@ export default {
     version () {
       return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
     }
-  },
+  }
 }
 </script>
