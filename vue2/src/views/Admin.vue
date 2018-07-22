@@ -12,7 +12,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app dark prominent color="red accent-3">
+      <v-toolbar app dark prominent color="error">
         <v-btn icon  @click="$router.push({name: 'home'})">
           <v-icon>arrow_back</v-icon>
         </v-btn>

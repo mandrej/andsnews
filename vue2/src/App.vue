@@ -46,7 +46,7 @@ export default {
   0MC45MzIsMzYuNzA5LTgxLjk5OCw3Mi4zNzktMTIyLjk3NiwxMDguNzI2DQogICAgICBjOTAuNDYzLDYuMTQ4LDE4MS4wMjgsMTMuMDIsMjcxLj\
   QzNSwxOC43MjNDNTU4LjcwNiwxNTAuMzMsNTM2LjU2MywxMjMuMDY1LDUwNS45MjQsOTYuOTE0eiIgLz4NCiAgPC9nPg0KPC9zdmc+');
   background-repeat: no-repeat;
-  background-position: -18px -62px;
+  background-position: -18px -60px;
   background-size: 500px;
 }
 </style>

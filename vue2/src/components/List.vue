@@ -4,7 +4,7 @@
 
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="headline warning" primary-title>
           Are you sure?
         </v-card-title>
         <v-card-text>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app>
-      <v-toolbar app dark prominent color="red accent-3">
+      <v-toolbar app dark prominent color="error">
         <v-btn icon  @click="$router.push({name: 'home'})">
           <v-icon>arrow_back</v-icon>
         </v-btn>
@@ -10,7 +10,7 @@
 
       <v-content>
         <v-container fluid>
-          <v-jumbotron color="grey lighten-2">
+          <v-jumbotron color="warning">
             <v-container fill-height>
               <v-layout column justify-center align-center>
                 <v-icon x-large color="seconadry">error</v-icon>

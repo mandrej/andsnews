@@ -21,7 +21,7 @@
 
     <v-dialog v-model="empty" max-width="300px" lazy>
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="headline warning" primary-title>
           No photos
         </v-card-title>
         <v-card-text>
@@ -38,7 +38,7 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-layout column fill-height>
-          <v-toolbar dark prominent color="red accent-3">
+          <v-toolbar dark prominent color="error">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -64,7 +64,7 @@
       </v-navigation-drawer>
 
       <v-toolbar app dark prominent color="primary">
-        <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value" style="margin-left: 0">
