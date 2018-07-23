@@ -118,7 +118,7 @@ export default {
 
       if (this.data.tags) {
         this.data.tags.forEach(tag => {
-          params.push('tags:' + tag)
+          params.push('tags:' + '\"' + tag + '\"') // because of tags:b&w -> tags:"b&w"
         })
       }
       if (this.data.text) {

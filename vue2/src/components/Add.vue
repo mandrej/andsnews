@@ -60,7 +60,7 @@
                 <v-list-tile-action>
                   <v-layout row>
                     <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
-                    <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
+                    <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
                 </v-list-tile-action>
               </v-list-tile>
