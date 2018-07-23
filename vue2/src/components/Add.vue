@@ -17,7 +17,7 @@
       lazy fullscreen hide-overlay scrollable
       transition="dialog-bottom-transition">
       <v-card tile>
-        <v-toolbar dark prominent color="primary">
+        <v-toolbar dark prominent color="secondary">
           <v-btn icon @click="show = false">
             <v-icon>close</v-icon>
           </v-btn>
@@ -181,7 +181,7 @@ export default {
 
 <style scoped>
 .v-jumbotron {
-  outline: 2px dashed #3F51B5;
+  outline: 2px dashed #BDBDBD;
   cursor: pointer;
 }
 .input-file {

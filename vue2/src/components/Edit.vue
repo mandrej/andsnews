@@ -4,13 +4,13 @@
     lazy fullscreen hide-overlay scrollable
     transition="dialog-bottom-transition">
     <v-card tile>
-      <v-toolbar dark prominent color="primary">
+      <v-toolbar dark prominent color="secondary">
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Edit</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn @click="submit" color="secondary" :disabled="!valid">Submit</v-btn>
+        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
         <v-container grid-list-md mt-3>

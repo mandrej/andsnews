@@ -12,7 +12,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app dark prominent color="error">
+      <v-toolbar app dark prominent color="secondary">
         <v-btn icon  @click="$router.push({name: 'home'})">
           <v-icon>arrow_back</v-icon>
         </v-btn>
@@ -28,7 +28,7 @@
               <v-list-tile-sub-title>to subscribers group</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="primary" @click="send">Send</v-btn>
+              <v-btn color="secondary" @click="send">Send</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider></v-divider>
@@ -39,7 +39,7 @@
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn :disabled="disabled" color="primary" @click="rebuild(name)">Rebuild</v-btn>
+              <v-btn :disabled="disabled" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
             </v-list-tile-action>
           </v-list-tile>
 

@@ -30,7 +30,7 @@
         <v-divider></v-divider>
         <v-card-actions class="pa-3">
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="empty = false">Close</v-btn>
+          <v-btn color="secondary" @click="empty = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -38,7 +38,7 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-layout column fill-height>
-          <v-toolbar dark prominent color="error">
+          <v-toolbar dark prominent color="secondary">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -63,7 +63,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app dark prominent color="primary">
+      <v-toolbar app light prominent color="primary">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
