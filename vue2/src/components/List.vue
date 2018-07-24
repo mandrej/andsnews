@@ -27,7 +27,7 @@
             <v-flex xs12 sm6 md4 lg3 xl2
               v-for="item in scope.images"
               :key="item.safekey">
-              <div :id="`${item.safekey}`" class="square elevation-1">
+              <div :id="`${item.safekey}`" class="square">
                 <img :alt="alt(item)"
                   v-lazy="getImgSrc(item, 's')"
                   :data-source="getImgSrc(item)">

@@ -67,15 +67,15 @@
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
-          <v-toolbar-title v-if="filter.value" style="margin-left: 0">
+          <v-toolbar-title v-if="filter.value" style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
               <v-icon>close</v-icon>
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else style="margin-left: 16px; font-size: 32px">{{title}}</v-toolbar-title>
+          <v-toolbar-title v-else style="font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
+          <v-progress-circular v-show="busy" :indeterminate="true" color="accent" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
 

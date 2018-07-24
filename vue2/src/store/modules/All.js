@@ -80,7 +80,7 @@ const actions = {
     commit('DELETE_UPLOADED', obj)
     axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
       .then(response => {
-        console.error(response.data)
+        // console.error(response.data)
       })
   },
   fetchRecords: ({commit, state}, next) => {

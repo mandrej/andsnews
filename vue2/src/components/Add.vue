@@ -40,7 +40,7 @@
                     :width="5"
                     :rotate="-90"
                     :value="value"
-                    color="black">{{value}}</v-progress-circular>
+                    color="secondary">{{value}}</v-progress-circular>
                   <h3 class="headline">Upload images</h3>
                   <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
                   <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
