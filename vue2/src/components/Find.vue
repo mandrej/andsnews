@@ -115,33 +115,29 @@ export default {
   methods: {
     submit () {
       let params = []
+      // eslint-disable-next-line
+      const sep = '\"'
 
-      if (this.data.tags) {
-        this.data.tags.forEach(tag => {
-          params.push('tags:' + '\"' + tag + '\"') // because of tags:b&w -> tags:"b&w"
-        })
+      // because of tags:b&w -> tags:"b&w"
+      function wrap (value) {
+        params.push(sep + value + sep)
       }
-      if (this.data.text) {
-        params.push(this.data.text)
-      }
-      if (this.data.year) {
-        params.push('year:' + this.data.year)
-      }
-      if (this.data.month) {
-        params.push('month:' + this.data.month)
-      }
-      if (this.data.model) {
-        params.push('model:' + this.data.model)
-      }
-      if (this.data.author) {
-        params.push('author:' + this.data.author)
-      }
-      if (this.data.color) {
-        params.push('color:' + this.data.color)
-      }
+
+      Object.keys(this.data).forEach(key => {
+        if (key === 'tags') {
+          this.data[key].forEach(tag => {
+            wrap(tag)
+          })
+        } else {
+          if (this.data[key]) {
+            wrap(this.data[key])
+          }
+        }
+      })
+
       this.$store.dispatch('All/saveFindForm', this.data)
-
       const value = params.join(' AND ')
+
       if (value) {
         this.$store.dispatch('All/changeFilter', {
           field: 'search',
