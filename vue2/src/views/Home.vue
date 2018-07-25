@@ -71,7 +71,7 @@
             <v-btn icon @click="clearFilter">
               <v-icon>close</v-icon>
             </v-btn>
-            {{filter.value}}
+            {{formatFilter(filter.value)}}
           </v-toolbar-title>
           <v-toolbar-title v-else style="font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -137,6 +137,10 @@ export default {
     ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
   },
   methods: {
+    formatFilter(filter) {
+      const result = filter.match(/".+?"/g)
+      return result.join(' AND ')
+    },
     clearFilter () {
       this.$store.dispatch('All/changeFilter', {})
     }

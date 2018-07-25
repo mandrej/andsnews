@@ -116,21 +116,24 @@ export default {
     submit () {
       let params = []
       // eslint-disable-next-line
-      const sep = '\"'
+      const sep = '\"' // because of tags:b&w -> tags:"b&w"
 
-      // because of tags:b&w -> tags:"b&w"
-      function wrap (value) {
-        params.push(sep + value + sep)
+      function wrap (key, value) {
+        if (key === 'text') {
+          params.push(sep + value + sep)
+        } else {
+          params.push(key + ':' + sep + value + sep)
+        }
       }
 
       Object.keys(this.data).forEach(key => {
         if (key === 'tags') {
           this.data[key].forEach(tag => {
-            wrap(tag)
+            wrap(key, tag)
           })
         } else {
           if (this.data[key]) {
-            wrap(this.data[key])
+            wrap(key, this.data[key])
           }
         }
       })
