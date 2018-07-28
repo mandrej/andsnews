@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app>
-      <v-toolbar app dark prominent color="error">
+      <v-toolbar app dark color="error">
         <v-btn icon  @click="$router.push({name: 'home'})">
           <v-icon>arrow_back</v-icon>
         </v-btn>

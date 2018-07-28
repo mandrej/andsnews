@@ -38,7 +38,7 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-layout column fill-height>
-          <v-toolbar dark prominent color="secondary">
+          <v-toolbar dark color="secondary">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -63,7 +63,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app light prominent color="primary">
+      <v-toolbar app light color="white">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
