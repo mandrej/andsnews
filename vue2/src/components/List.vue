@@ -192,12 +192,9 @@ export default {
 <style lang="scss">
 
 .viewer-footer {
-  top: 21px;
-  left: 0;
-  height: 40px;
-  text-align: center;
+  bottom: 10px;
   & .viewer-title {
-    color: #fff;
+    color: rgba(0, 0, 0, 0.87);
     font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
     font-size: 16px;
     line-height: normal;
@@ -209,5 +206,11 @@ export default {
     transition: opacity .15s;
     white-space: nowrap;
   }
+}
+.viewer-button {
+  background-color: rgba(0, 0, 0, 0.87);
+}
+.viewer-backdrop {
+  background-color: #fff;
 }
 </style>
