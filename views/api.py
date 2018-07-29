@@ -5,6 +5,7 @@ from urlparse import urlparse
 import logging
 
 import webapp2
+from unidecode import unidecode
 from google.appengine.api import users, search, datastore_errors
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
@@ -62,7 +63,7 @@ class Paginator(object):
 
 class SearchPaginator(object):
     def __init__(self, querystring, per_page):
-        self.querystring = querystring
+        self.querystring = unidecode(querystring.decode('utf-8'))
         self.per_page = per_page
 
         self.options = {

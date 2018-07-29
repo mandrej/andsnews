@@ -120,7 +120,7 @@ export default {
 
       function wrap (key, value) {
         if (key === 'text') {
-          params.push(sep + value + sep)
+          params.push(sep + value.toLowerCase() + sep)
         } else {
           params.push(key + ':' + sep + value + sep)
         }
