@@ -16,7 +16,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.v-toolbar {
+.aperture {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDRw\
   eCIgaGVpZ2h0PSI2NDRweCIgdmlld0JveD0iMCAwIDY0NCA2NDQiPg0KICA8c3R5bGU+DQogICAgY2lyY2xlIHsgZmlsbDogIzIxMjEyMTsgZml\
   sbC1vcGFjaXR5OiAwLjM7IGZpbGwtcnVsZTogZXZlbm9kZDsgY2xpcC1ydWxlOiBldmVub2RkOyB9DQogICAgcGF0aCB7IGZpbGw6ICNGRkMxMD\
@@ -46,7 +46,7 @@ export default {
   0MC45MzIsMzYuNzA5LTgxLjk5OCw3Mi4zNzktMTIyLjk3NiwxMDguNzI2DQogICAgICBjOTAuNDYzLDYuMTQ4LDE4MS4wMjgsMTMuMDIsMjcxLj\
   QzNSwxOC43MjNDNTU4LjcwNiwxNTAuMzMsNTM2LjU2MywxMjMuMDY1LDUwNS45MjQsOTYuOTE0eiIgLz4NCiAgPC9nPg0KPC9zdmc+');
   background-repeat: no-repeat;
-  background-position: -18px -60px;
+  background-position: -10px -60px;
   background-size: 500px;
 }
 </style>

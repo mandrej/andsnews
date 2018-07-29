@@ -37,8 +37,8 @@
 
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
-        <v-layout column fill-height>
-          <v-toolbar dark color="secondary">
+        <v-layout column class="aperture" fill-height>
+          <v-toolbar dark class="aperture" color="secondary">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -47,10 +47,10 @@
             </v-layout>
           </v-toolbar>
 
-          <Find class="mt-2"></Find>
+          <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list>
+          <v-list light>
             <v-list-tile @click="$router.push({name: 'admin'})">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -63,7 +63,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app light color="white">
+      <v-toolbar app light class="aperture" color="white">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
