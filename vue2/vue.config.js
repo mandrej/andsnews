@@ -17,7 +17,7 @@ module.exports = {
           }
         },
         {
-          urlPattern: /^https:\/\/lh3(.*)/,
+          urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/(.*=s400-c$)/,
           handler: 'cacheFirst',
           options: {
             cacheName: 'image-cache',
@@ -38,7 +38,8 @@ module.exports = {
           options: {
             cacheName: 'data-cache',
             expiration: {
-              maxEntries: 100
+              maxEntries: 100,
+              maxAgeSeconds: 2 * 60 * 60
             },
             cacheableResponse: {
               statuses: [0, 200]
