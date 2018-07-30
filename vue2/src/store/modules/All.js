@@ -39,11 +39,6 @@ const initialState = {
   busy: false,
   clear: false
 };
-const getters = {
-  // getTags: (state) => {
-  //   return state.tags
-  // },
-}
 const actions = {
   // reset: ({ commit }) => commit(RESET),
   saveUser: ({commit}, user) => {
@@ -78,10 +73,7 @@ const actions = {
   deleteRecord: ({commit}, obj) => {
     commit('DELETE_RECORD', obj)
     commit('DELETE_UPLOADED', obj)
-    axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}})
-      .then(response => {
-        console.error(response.data)
-      })
+    axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}}) // no response
   },
   fetchRecords: ({commit, state}, next) => {
     let url = 'start'
@@ -218,7 +210,7 @@ const mutations = {
   },
   DELETE_RECORD (state, obj) {
     const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
-    state.objects.splice(idx, 1)
+    if (idx > -1) state.objects.splice(idx, 1)
     state.count--
     state.total--
   },
@@ -250,7 +242,6 @@ const mutations = {
 export default {
   namespaced: true,
   state: initialState,
-  getters,
   mutations,
   actions
 };
