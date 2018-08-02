@@ -37,6 +37,8 @@ export default {
     EventBus.$on('signin', user => {
       if (user && user.photo) {
         this.photoUrl = user.photo
+      } else {
+        this.photoUrl = null
       }
     })
   },

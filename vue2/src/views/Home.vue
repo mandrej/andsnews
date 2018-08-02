@@ -2,7 +2,7 @@
   <div>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
-    <v-btn v-if="user.isAuthorized"
+    <v-btn v-if="isAuthorized"
       fab medium fixed bottom right
       color="accent" class="black--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
@@ -92,6 +92,7 @@
 import { mapState } from 'vuex'
 import List from '@/components/List'
 import Find from '@/components/Find'
+import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
@@ -115,12 +116,23 @@ export default {
     text: '',
     snackbar: false,
     timeout: 6000,
-    empty: false
+    empty: false,
+    isAuthorized: null
   }),
   created () {
     this.$store.dispatch('All/fetchInfo')
   },
   mounted () {
+    if (this.user && this.user.isAuthorized) {
+      this.isAuthorized = this.user.isAuthorized
+    }
+    EventBus.$on('signin', user => {
+      if (user && user.isAuthorized) {
+        this.isAuthorized = user.isAuthorized
+      } else {
+        this.isAuthorized = null
+      }
+    })
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true

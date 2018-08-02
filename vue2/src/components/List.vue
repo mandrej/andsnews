@@ -95,13 +95,7 @@ export default {
 
     confirm: false,
     editForm: false,
-    // showInfo: false,
 
-    // options: {
-    //   duration: 300,
-    //   offset: -144,
-    //   easings: Object.keys(easings)
-    // },
     viewerOptions: {
       navbar: false,
       title: true,
