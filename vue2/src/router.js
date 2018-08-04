@@ -3,8 +3,8 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import createStore from './store';
 
-const Admin = () => import('@/views/Admin')
-const Err = () => import('@/views/Err')
+const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
+const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
 Vue.use(Router)
 

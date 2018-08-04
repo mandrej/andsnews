@@ -93,7 +93,7 @@ const messaging = firebase.messaging()
 export default {
   name: 'Admin',
   components: {
-    'Footer': () => import('@/components/Footer')
+    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
   },
   data: () => ({
     text: '',

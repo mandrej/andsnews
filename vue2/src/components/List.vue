@@ -84,7 +84,7 @@ Vue.use(Viewer)
 export default {
   name: 'Home',
   components: {
-    'Edit': () => import('./Edit')
+    'Edit': () => import(/* webpackChunkName: "edit" */ './Edit')
   },
   mixins: [ common ],
   data: () => ({
@@ -183,8 +183,26 @@ export default {
   font-size: 20px;
 }
 </style>
-<style lang="scss">
 
+<style lang="scss">
+.viewer-loading {
+  &::after {
+    animation: viewer-spinner 1s linear infinite;
+    border: 8px solid rgba(0, 0, 0, .1);
+    border-left-color: rgba(0, 0, 0, .5);
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    height: 100px;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+    position: absolute;
+    top: 50%;
+    width: 100px;
+    z-index: 1;
+  }
+}
 .viewer-footer {
   bottom: 10px;
   & .viewer-title {

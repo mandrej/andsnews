@@ -1,36 +1,34 @@
 <template>
-  <div>
-    <v-app>
-      <v-toolbar app dark color="error" class="aperture">
-        <v-btn icon  @click="$router.push({name: 'home'})">
-          <v-icon>arrow_back</v-icon>
-        </v-btn>
-        <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
-      </v-toolbar>
+  <v-app>
+    <v-toolbar app dark color="error" class="aperture">
+      <v-btn icon  @click="$router.push({name: 'home'})">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
+    </v-toolbar>
 
-      <v-content>
-        <v-container fluid>
-          <v-jumbotron color="warning">
-            <v-container fill-height>
-              <v-layout column justify-center align-center>
-                <v-icon x-large color="seconadry">error</v-icon>
-                <h3 class="title">{{text}}</h3>
-              </v-layout>
-            </v-container>
-          </v-jumbotron>
-        </v-container>
-      </v-content>
+    <v-content>
+      <v-container fluid>
+        <v-jumbotron color="warning">
+          <v-container fill-height>
+            <v-layout column justify-center align-center>
+              <v-icon x-large color="seconadry">error</v-icon>
+              <h3 class="title">{{text}}</h3>
+            </v-layout>
+          </v-container>
+        </v-jumbotron>
+      </v-container>
+    </v-content>
 
-      <Footer/>
-    </v-app>
-  </div>
+    <Footer/>
+  </v-app>
 </template>
 
 <script>
 export default {
   name: 'Err',
   components: {
-    'Footer': () => import('@/components/Footer'),
+    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
   },
   props: ['title', 'text']
 }

@@ -103,9 +103,9 @@ const messaging = firebase.messaging()
 export default {
   name: 'Home',
   components: {
-    'SignIn': () => import('@/components/SignIn'),
-    'Add': () => import('@/components/Add'),
-    'Footer': () => import('@/components/Footer'),
+    'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
+    'Add': () => import(/* webpackChunkName: "add" */ '@/components/Add'),
+    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
     List,
     Find
   },
