@@ -16,22 +16,22 @@ module.exports = {
             cacheName: 'google-fonts'
           }
         },
-        {
-          urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/(.*=s400-c$)/,
-          handler: 'cacheFirst',
-          options: {
-            cacheName: 'image-cache',
-            expiration: {
-              maxEntries: 100
-            },
-            cacheableResponse: {
-              statuses: [0, 200],
-              headers: {
-                'X-Is-Cacheable': 'true'
-              }
-            }
-          }
-        },
+        // {
+        //   urlPattern: /^https:\/\/lh3\.googleusercontent\.com\/(.*=s400-c$)/,
+        //   handler: 'cacheFirst',
+        //   options: {
+        //     cacheName: 'image-cache',
+        //     expiration: {
+        //       maxEntries: 100
+        //     },
+        //     cacheableResponse: {
+        //       statuses: [0, 200],
+        //       headers: {
+        //         'X-Is-Cacheable': 'true'
+        //       }
+        //     }
+        //   }
+        // },
         {
           urlPattern: /api/,
           handler: 'staleWhileRevalidate',

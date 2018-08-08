@@ -5,7 +5,7 @@ import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
-import configureStore from './store';
+import configureStore from './store'
 
 Vue.config.productionTip = false
 

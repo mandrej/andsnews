@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
-import createStore from './store';
+import createStore from './store'
 
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')

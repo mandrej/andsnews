@@ -46,6 +46,13 @@
       "parser": "babel-eslint"
     }
   },
+  "jshintConfig": {
+    "undef": true,
+    "unused": true,
+    "esversion": 6,
+    "asi": true,
+    "node": true
+  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
