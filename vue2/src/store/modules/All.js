@@ -9,8 +9,8 @@ import 'firebase/database'
 const axios = Vue.axios
 const messaging = FB.messaging()
 
-function pushMessage (token) {
-  axios.post('message', {token: token})
+function pushMessage (token, msg) {
+  axios.post('message', {token: token, text: msg})
     .then(response => {
       console.error(response)
     })
@@ -155,12 +155,22 @@ const actions = {
       })
     })
   },
-  sendNotifications: ({state}) => {
+  sendNotifications: ({state}, msg) => {
     const ref = FB.database().ref('registrations')
-    ref.once('value', (shot) => {
-      shot.forEach(child => {
-        if (child.key !== state.fcm_token) {
-          pushMessage(child.key)
+    ref.once('value', (snapshot) => {
+      snapshot.forEach(node => {
+        // messaging.getToken()
+        //   .then(token => {
+        //     if (token !== node.key) {
+        //       ref.child(token).set({
+        //         email: node.child('email').val(),
+        //         date: (new Date()).toISOString()
+        //       })
+        //       ref.child(node.key).remove()
+        //     }
+        //   })
+        if (node.key !== state.fcm_token) {
+          pushMessage(node.key, msg)
         }
       })
     })

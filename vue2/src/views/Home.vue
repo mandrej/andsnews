@@ -121,6 +121,7 @@ export default {
   }),
   created () {
     this.$store.dispatch('All/fetchInfo')
+    this.$store.dispatch('All/fetchToken')
   },
   mounted () {
     if (this.user && this.user.isAuthorized) {

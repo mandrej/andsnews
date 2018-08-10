@@ -11,7 +11,7 @@ from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
-from config import DEVEL, START_MSG, NOTIFY_MSG
+from config import DEVEL, START_MSG
 from mapper import push_message, Fixer, Indexer, Builder, UnboundDevel, UnboundCloud, RemoveFields
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
@@ -184,7 +184,8 @@ class Find(RestHandler):
 class Notify(RestHandler):
     def post(self):
         token = self.request.json.get('token', None)
-        push_message(token, NOTIFY_MSG)
+        text = self.request.json.get('text', None)
+        push_message(token, text)
 
 
 class BackgroundIndex(RestHandler):

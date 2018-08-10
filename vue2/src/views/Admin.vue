@@ -20,20 +20,30 @@
       </v-toolbar>
 
       <v-content>
-        <v-list>
-          <v-subheader>Messaging</v-subheader>
-          <v-list-tile two-line @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>Send message</v-list-tile-title>
-              <v-list-tile-sub-title>to subscribers group</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-btn color="secondary" @click="send">Send</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-          <v-divider></v-divider>
+        <div class="pa-3 hidden-xs-only">
+          <h2>Messaging</h2>
+          <v-layout row justify-space-around>
+            <v-flex xs9>
+              <v-text-field
+                label="Send message"
+                hint="Send message to subscribers group"
+                v-model="msg.default"
+                type="text"
+                @input="upper($event)"
+                :rules="requiredRule"
+                required
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs1></v-flex>
+            <v-flex xs2 class="pt-3 text-xs-right">
+              <v-btn color="secondary" class="ma-0 pa-0" @click="send">Send</v-btn>
+            </v-flex>
+          </v-layout>
+        </div>
 
+        <v-list>
           <v-subheader>Counters</v-subheader>
+          <v-divider></v-divider>
           <v-list-tile v-for="name in counters" :key="name" @click="nop">
             <v-list-tile-content>
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
@@ -84,6 +94,7 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import common from '@/helpers/mixins'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
@@ -95,16 +106,18 @@ export default {
   components: {
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
   },
+  mixins: [ common ],
   data: () => ({
     text: '',
     snackbar: false,
     timeout: 6000,
-    disabled: false
+    disabled: false,
+    msg: {
+      type: String,
+      required: true,
+      default: 'NEW IMAGES'
+    }
   }),
-  created () {
-    this.$store.dispatch('All/fetchInfo')
-    this.$store.dispatch('All/fetchToken')
-  },
   mounted () {
     messaging.onMessage(payload => {
       this.text = payload.notification.body
@@ -139,8 +152,11 @@ export default {
     fix () {
       this.callAjax('fix/photo')
     },
+    upper (event) {
+      this.msg.default = event.toUpperCase()
+    },
     send () {
-      this.$store.dispatch('All/sendNotifications')
+      this.$store.dispatch('All/sendNotifications', this.msg.default)
     },
     nop () {
       return null

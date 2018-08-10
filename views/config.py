@@ -16,7 +16,6 @@ BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 START_MSG = '*** START ***'
 END_MSG = '*** END ***'
-NOTIFY_MSG = 'NEW IMAGES'
 
 COLOR_NAMES = (
     'red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'

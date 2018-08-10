@@ -1,4 +1,9 @@
 const common = {
+  data: () => ({
+    requiredRule: [
+      v => !!v || 'Required Field'
+    ],
+  }),
   computed: {
     // v-dialog v-model="show"
     show: {

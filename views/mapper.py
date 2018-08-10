@@ -40,7 +40,6 @@ def push_message(token, message=''):
     response, content = http.request(FCM, method='POST', body=json.dumps(payload), headers=HEADERS)
     # logging.error(response.status)
     # logging.error(content)
-    # return json.loads(content)
 
 
 class Mapper(object):
