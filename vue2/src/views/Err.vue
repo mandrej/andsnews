@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-toolbar app dark color="error" class="aperture">
-      <v-btn icon  @click="$router.push({name: 'home'})">
+    <v-toolbar app flat dark color="error" class="aperture">
+      <v-btn icon @click="$router.push({name: 'home'})">
         <v-icon>arrow_back</v-icon>
       </v-btn>
       <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
