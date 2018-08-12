@@ -38,7 +38,7 @@
     <v-app>
       <v-navigation-drawer v-model="drawer" app fixed>
         <v-layout column class="aperture" fill-height>
-          <v-toolbar dark flat class="aperture" color="secondary">
+          <v-toolbar dark class="aperture" color="secondary">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
@@ -63,7 +63,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app flat light class="aperture" color="white">
+      <v-toolbar app light class="aperture" color="white">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-layout slot="extension">
