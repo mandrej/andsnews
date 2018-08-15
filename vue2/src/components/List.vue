@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Item :visible="showItem" :index="index" @close="showItem = false"></Item>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
@@ -20,49 +21,43 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg>
-      <viewer :options="viewerOptions" :images="objects"
-        class="viewer" ref="viewer">
-        <template slot-scope="scope">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 lg3 xl2
-              v-for="item in scope.images"
-              :key="item.safekey">
-              <div :id="`${item.safekey}`" class="square">
-                <img :alt="alt(item)"
-                  v-lazy="getImgSrc(item, 's')"
-                  :data-source="getImgSrc(item)">
-                <v-list two-line>
-                  <v-list-tile>
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                      <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-menu>
-                        <v-btn icon slot="activator">
-                          <v-icon>more_vert</v-icon>
-                        </v-btn>
-                        <v-list>
-                          <v-list-tile @click="showEditdForm(item)">
-                            <v-list-tile-content>Edit</v-list-tile-content>
-                          </v-list-tile>
-                          <v-list-tile :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                            <v-list-tile-content>Download</v-list-tile-content>
-                          </v-list-tile>
-                          <v-list-tile v-if="user.isAdmin" @click="removeRecord(item)">
-                            <v-list-tile-content>Delete</v-list-tile-content>
-                          </v-list-tile>
-                        </v-list>
-                      </v-menu>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                </v-list>
-              </div>
-            </v-flex>
-          </v-layout>
-          {{scope.viewerOptions}}
-        </template>
-      </viewer>
+      <v-layout row wrap>
+        <v-flex xs12 sm6 md4 lg3 xl2
+          v-for="(item, idx) in objects"
+          :key="item.safekey">
+          <div :id="`${item.safekey}`" class="square">
+            <img :alt="alt(item)"
+              v-lazy="getImgSrc(item, 's')"
+              @click="showDetail(item, idx)">
+            <v-list two-line>
+              <v-list-tile>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{item.headline}}</v-list-tile-title>
+                  <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-menu>
+                    <v-btn icon slot="activator">
+                      <v-icon>more_vert</v-icon>
+                    </v-btn>
+                    <v-list>
+                      <v-list-tile @click="showEditdForm(item)">
+                        <v-list-tile-content>Edit</v-list-tile-content>
+                      </v-list-tile>
+                      <v-list-tile :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                        <v-list-tile-content>Download</v-list-tile-content>
+                      </v-list-tile>
+                      <v-list-tile v-if="user.isAdmin" @click="removeRecord(item)">
+                        <v-list-tile-content>Delete</v-list-tile-content>
+                      </v-list-tile>
+                    </v-list>
+                  </v-menu>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+          </div>
+        </v-flex>
+      </v-layout>
     </v-container>
   </div>
 </template>
@@ -71,19 +66,18 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
 import common from '@/helpers/mixins'
-// import * as easings from 'vuetify/es5/util/easing-patterns'
+import { EventBus } from '@/helpers/event-bus'
+import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1
 })
-Vue.use(Viewer)
 
 export default {
   name: 'Home',
   components: {
+    'Item': () => import(/* webpackChunkName: "item" */ './Item'),
     'Edit': () => import(/* webpackChunkName: "edit" */ './Edit')
   },
   mixins: [ common ],
@@ -92,21 +86,14 @@ export default {
 
     bottom: false,
     distance: 800,
-
+    index: null,
     confirm: false,
     editForm: false,
-
-    viewerOptions: {
-      navbar: false,
-      title: true,
-      toolbar: false,
-      tooltip: true,
-      rotatable: false,
-      scalable: false,
-      transition: true,
-      fullscreen: true,
-      keyboard: true,
-      url: 'data-source'
+    showItem: false,
+    options: {
+      duration: 300,
+      offset: -144,
+      easings: Object.keys(easings)
     }
   }),
   computed: {
@@ -117,6 +104,13 @@ export default {
       this.bottom = this.bottomVisible()
     })
     this.loadMore()
+  },
+  mounted () {
+    EventBus.$on('goto', () => {
+      setTimeout(() => {
+        this.$vuetify.goTo('#' + this.current.safekey, this.options)
+      }, 50)
+    })
   },
   updated () {
     this.bottom = false
@@ -143,6 +137,11 @@ export default {
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('All/fetchRecords', this.next)
       }
+    },
+    showDetail (rec, idx) {
+      this.$store.dispatch('All/changeCurrent', rec)
+      this.index = idx
+      this.showItem = true
     },
     showEditdForm (rec) {
       this.$store.dispatch('All/changeCurrent', rec)

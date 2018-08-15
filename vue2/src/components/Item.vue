@@ -6,16 +6,16 @@
       v-model="show"
       lazy fullscreen hide-overlay scrollable
       transition="dialog-bottom-transition">
-      <v-card tile>
-        <v-toolbar dark color="primary">
+      <v-card tile flat>
+        <v-toolbar dark color="secondary" class="aperture">
           <v-btn icon @click="close">
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
+          <!-- <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
             <v-icon>file_download</v-icon>
-          </v-btn>
+          </v-btn> -->
           <v-btn icon @click="showInfo = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
@@ -25,8 +25,8 @@
             indeterminate
             :size="100"
             :width="5"
-            color="black"></v-progress-circular>
-          <v-carousel dark
+            color="secondary"></v-progress-circular>
+          <v-carousel light
             :cycle="false"
             :value="index"
             @input="currentIndex"
@@ -53,7 +53,7 @@ Vue.use(VueLazyload)
 export default {
   name: 'Item',
   components: {
-    'Info': () => import('./Info')
+    'Info': () => import(/* webpackChunkName: "info" */ './Info')
   },
   mixins: [ common ],
   props: ['visible', 'index'],
@@ -95,7 +95,8 @@ export default {
 
 <style scoped>
 .v-carousel {
-  height: calc(100vh - 56px);
+  height: calc(100vh - 64px);
+  padding: 24px;
 }
 .v-progress-circular {
   position: absolute;
