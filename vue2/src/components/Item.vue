@@ -13,9 +13,6 @@
           </v-btn>
           <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <!-- <v-btn icon :href="`/api/download/${current.safekey}`" :download="`${current.slug}.jpg`" target="_blank" flat>
-            <v-icon>file_download</v-icon>
-          </v-btn> -->
           <v-btn icon @click="showInfo = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
@@ -26,7 +23,7 @@
             :size="100"
             :width="5"
             color="secondary"></v-progress-circular>
-          <v-carousel light
+          <v-carousel dark class="pa-3"
             :cycle="false"
             :value="index"
             @input="currentIndex"
@@ -96,12 +93,11 @@ export default {
 <style scoped>
 .v-carousel {
   height: calc(100vh - 64px);
-  padding: 24px;
 }
 .v-progress-circular {
   position: absolute;
-  top: calc(50% - 25px);
-  left: calc(50% - 50px);
+  top: calc(50% - 23px);
+  left: calc(50% - 46px);
 }
 .slide {
   background-size: contain;
