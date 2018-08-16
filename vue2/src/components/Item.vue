@@ -23,7 +23,7 @@
             :size="100"
             :width="5"
             color="secondary"></v-progress-circular>
-          <v-carousel dark class="pa-3"
+          <v-carousel light
             :cycle="false"
             :value="index"
             @input="currentIndex"
