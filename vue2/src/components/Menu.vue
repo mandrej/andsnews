@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     showFilter (rec) {
-      const sep = '\"'
+      const sep = '"'
       this.$store.dispatch('All/changeFilter', {
         field: 'search',
         value: rec.field_name + ':' + sep + rec.name + sep
@@ -64,8 +64,8 @@ export default {
 
 <style lang="scss" scoped>
 .square {
-  margin-bottom: 8px;
   img {
+    display: inherit;
     max-width: 100%;
     opacity: 0;
     transition: all 0.5s ease-in;

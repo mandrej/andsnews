@@ -107,9 +107,7 @@ export default {
   },
   mounted () {
     EventBus.$on('goto', () => {
-      setTimeout(() => {
-        this.$vuetify.goTo('#' + this.current.safekey, this.options)
-      }, 50)
+      this.$vuetify.goTo('#' + this.current.safekey, this.options)
     })
   },
   updated () {
@@ -168,8 +166,8 @@ export default {
 
 <style lang="scss" scoped>
 .square {
-  margin-bottom: 8px;
   img {
+    display: inherit;
     max-width: 100%;
     opacity: 0;
     transition: all 0.5s ease-in;
@@ -180,48 +178,5 @@ export default {
 }
 .v-list__tile__title {
   font-size: 20px;
-}
-</style>
-
-<style lang="scss">
-.viewer-loading {
-  &::after {
-    animation: viewer-spinner 1s linear infinite;
-    border: 8px solid rgba(0, 0, 0, .1);
-    border-left-color: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    content: '';
-    display: inline-block;
-    height: 100px;
-    left: 50%;
-    margin-left: -50px;
-    margin-top: -50px;
-    position: absolute;
-    top: 50%;
-    width: 100px;
-    z-index: 1;
-  }
-}
-.viewer-footer {
-  bottom: 10px;
-  & .viewer-title {
-    color: rgba(0, 0, 0, 0.87);
-    font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
-    font-size: 16px;
-    line-height: normal;
-    margin: 0 5% 5px;
-    max-width: 90%;
-    opacity: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity .15s;
-    white-space: nowrap;
-  }
-}
-.viewer-button {
-  background-color: rgba(0, 0, 0, 0.87);
-}
-.viewer-backdrop {
-  background-color: #fff;
 }
 </style>

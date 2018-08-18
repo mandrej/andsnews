@@ -85,6 +85,7 @@ const actions = {
       })
   },
   fetchRecords: ({commit, state}, next) => {
+    if (state.busy) return
     let url = 'start'
     const params = {}
     const filter = {...state.filter}

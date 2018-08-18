@@ -116,7 +116,7 @@ export default {
     submit () {
       let params = []
       // eslint-disable-next-line
-      const sep = '\"' // because of tags:b&w -> tags:"b&w"
+      const sep = '"' // because of tags:b&w -> tags:"b&w"
 
       function wrap (key, value) {
         if (key === 'text') {

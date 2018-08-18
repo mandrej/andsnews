@@ -47,20 +47,11 @@ class LazyEncoder(json.JSONEncoder):
         return obj
 
 
-class Paginator(object):
-    def __init__(self, query, per_page):
-        self.query = query
-        self.per_page = per_page
-
-    def page(self, token=None):
-        try:
-            cursor = Cursor(urlsafe=token)
-        except datastore_errors.BadValueError:
-            webapp2.abort(404)
-
-        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
-        next_token = cursor.urlsafe() if has_next else None
-        return objects, next_token
+class RestHandler(webapp2.RequestHandler):
+    def render(self, data):
+        self.response.content_type = 'application/json; charset=utf-8'
+        # self.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+        self.response.write(json.dumps(data, cls=LazyEncoder))
 
 
 class SearchPaginator(object):
@@ -109,11 +100,31 @@ class SearchPaginator(object):
         return objects, number_found, next_token, error
 
 
-class RestHandler(webapp2.RequestHandler):
-    def render(self, data):
-        self.response.content_type = 'application/json; charset=utf-8'
-        # self.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        self.response.write(json.dumps(data, cls=LazyEncoder))
+class Find(RestHandler):
+    def get(self, find):
+        client = self.request.headers.get('client', None)
+        page = self.request.get('_page', None)
+        paginator = SearchPaginator(find, per_page=LIMIT)
+        objects, number_found, token, error = paginator.page(page)
+        logging.error(token)
+
+        if (client == 'vue2'):
+            self.render({
+                'objects': objects,
+                'filter': {'field': 'search', 'value': find.strip()},
+                '_page': page if page else 'FP',
+                '_next': token,
+                'error': error
+            })
+        else:
+            self.render({
+                'objects': objects,
+                'phrase': find.strip(),
+                'number_found': number_found,
+                '_page': page if page else 'FP',
+                '_next': token,
+                'error': error
+            })
 
 
 class Suggest(RestHandler):
@@ -121,6 +132,22 @@ class Suggest(RestHandler):
         kind, field = mem_key.split('_')
         query = Counter.query(Counter.forkind == kind, Counter.field == field)
         self.render([counter.value for counter in query if counter.count > 0])
+
+
+class Paginator(object):
+    def __init__(self, query, per_page):
+        self.query = query
+        self.per_page = per_page
+
+    def page(self, token=None):
+        try:
+            cursor = Cursor(urlsafe=token)
+        except datastore_errors.BadValueError:
+            webapp2.abort(404)
+
+        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+        next_token = cursor.urlsafe() if has_next else None
+        return objects, next_token
 
 
 class Collection(RestHandler):
@@ -191,32 +218,6 @@ class PhotoFilters(RestHandler):
             'count': Photo.query().count(),
             'filters': available_filters()
         })
-
-
-class Find(RestHandler):
-    def get(self, find):
-        client = self.request.headers.get('client', None)
-        page = self.request.get('_page', None)
-        paginator = SearchPaginator(find, per_page=LIMIT)
-        objects, number_found, token, error = paginator.page(page)
-
-        if (client == 'vue2'):
-            self.render({
-                'objects': objects,
-                'filter': {'field': 'search', 'value': find.strip()},
-                '_page': page if page else 'FP',
-                '_next': token,
-                'error': error
-            })
-        else:
-            self.render({
-                'objects': objects,
-                'phrase': find.strip(),
-                'number_found': number_found,
-                '_page': page if page else 'FP',
-                '_next': token,
-                'error': error
-            })
 
 
 class Notify(RestHandler):
