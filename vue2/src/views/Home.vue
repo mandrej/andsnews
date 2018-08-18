@@ -42,7 +42,7 @@
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
-              <v-toolbar-title style="font-size: 32px">{{count}}/{{total}}</v-toolbar-title>
+              <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-layout>
           </v-toolbar>
@@ -80,7 +80,9 @@
       </v-toolbar>
 
       <v-content class="aperture" style="background-attachment: fixed">
-        <List></List>
+        <keep-alive>
+          <component v-bind:is="currentComponent"></component>
+        </keep-alive>
       </v-content>
 
       <Footer :top="true"></Footer>
@@ -90,6 +92,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Menu from '@/components/Menu'
 import List from '@/components/List'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
@@ -106,7 +109,7 @@ export default {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
     'Add': () => import(/* webpackChunkName: "add" */ '@/components/Add'),
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
-    List,
+    Menu,
     Find
   },
   data: () => ({
@@ -117,10 +120,10 @@ export default {
     snackbar: false,
     timeout: 6000,
     empty: false,
-    isAuthorized: null
+    isAuthorized: null,
+    currentComponent: Menu
   }),
   created () {
-    this.$store.dispatch('All/fetchInfo')
     this.$store.dispatch('All/fetchToken')
   },
   mounted () {
@@ -144,13 +147,20 @@ export default {
       if (val === 0) {
         this.empty = true
       }
+    },
+    "filter.value" (val) {
+      if (val) {
+        this.currentComponent = List
+      } else {
+        this.currentComponent = Menu
+      }
     }
   },
   computed: {
     ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
   },
   methods: {
-    formatFilter(filter) {
+    formatFilter (filter) {
       const result = filter.match(/".+?"/g)
       return result.join(' AND ')
     },

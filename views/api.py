@@ -3,7 +3,9 @@ import json
 import time
 from urlparse import urlparse
 import logging
+from operator import itemgetter
 
+import numpy as np
 import webapp2
 from unidecode import unidecode
 from google.appengine.api import users, search, datastore_errors
@@ -12,11 +14,11 @@ from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
 from config import DEVEL, START_MSG
-from mapper import push_message, Fixer, Indexer, Builder, UnboundDevel, UnboundCloud, RemoveFields
+from mapper import push_message, Fixer, Indexer, Builder, UnboundDevel, UnboundCloud
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
-PERCENTILE = 50 if DEVEL else 80
+PERCENTILE = 80
 TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
 TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
@@ -155,6 +157,42 @@ class PhotoRecent(RestHandler):
         })
 
 
+def available_filters():
+    collection = []
+    for field in PHOTO_FILTER:
+        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+        items = []
+        for counter in query:
+            items.append({
+                'field_name': field,
+                'count': counter.count,
+                'name': counter.value,
+                'serving_url': counter.repr_url,
+                'repr_stamp': counter.repr_stamp})
+
+        if field == 'year':
+            items = sorted(items, key=itemgetter('name'), reverse=True)
+        collection.extend(items)
+
+    current = datetime.datetime.now().year
+    if collection:
+        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
+        logging.error(limit)
+        for item in collection:
+            item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
+                else item['count'] > int(limit)
+
+    return [x for x in collection if x['show']]
+
+
+class PhotoFilters(RestHandler):
+    def get(self):
+        self.render({
+            'count': Photo.query().count(),
+            'filters': available_filters()
+        })
+
+
 class Find(RestHandler):
     def get(self, find):
         client = self.request.headers.get('client', None)
@@ -225,26 +263,26 @@ class BackgroundDeleted(RestHandler):
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
-class BackgroundFix(RestHandler):
-    def post(self, kind):
-        token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
-            runner = Fixer()
-            runner.KIND = Photo
-            runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
-            runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
-            runner.TOKEN = token
+# class BackgroundFix(RestHandler):
+#     def post(self, kind):
+#         token = self.request.json.get('token', None)
+#         if kind == 'photo' and token is not None:
+#             runner = Fixer()
+#             runner.KIND = Photo
+#             runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
+#             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
+#             runner.TOKEN = token
 
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+#             push_message(runner.TOKEN, START_MSG)
+#             deferred.defer(runner.run, batch_size=10, _queue='background')
 
-        elif kind == 'counter' and token is not None:
-            runner = RemoveFields()
-            runner.KIND = Counter
-            runner.TOKEN = token
+#         elif kind == 'counter' and token is not None:
+#             runner = RemoveFields()
+#             runner.KIND = Counter
+#             runner.TOKEN = token
 
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+#             push_message(runner.TOKEN, START_MSG)
+#             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class BackgroundBuild(RestHandler):

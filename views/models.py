@@ -197,6 +197,8 @@ class Counter(ndb.Model):
     field = ndb.StringProperty(required=True)
     value = ndb.GenericProperty(required=True)
     count = ndb.IntegerProperty(default=0)
+    repr_stamp = ndb.DateTimeProperty()
+    repr_url = ndb.StringProperty()
 
 
 class Photo(ndb.Model):
@@ -248,6 +250,10 @@ class Photo(ndb.Model):
         INDEX.put(doc)
 
     def update_filters(self, new_pairs, old_pairs):
+        futures = []
+        for field, value in set(new_pairs) | set(old_pairs):
+            futures.append(self.query_for(field, value).get_async())
+
         counters = []
         for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
             key_name = 'Photo||{}||{}'.format(field, value)
@@ -258,6 +264,11 @@ class Photo(ndb.Model):
             if (field, value) in new_pairs:
                 counter.count += 1
             counters.append(counter)
+
+            latest = futures[i].get_result()
+            if latest:
+                counter.repr_stamp = latest.date
+                counter.repr_url = latest.serving_url
 
         ndb.put_multi(counters)
 
@@ -412,6 +423,11 @@ class Photo(ndb.Model):
         f = filter_param(field, value)
         filters = [cls._properties[k] == v for k, v in f.items()]
         return cls.query(*filters).order(-cls.date)
+
+    @classmethod
+    def latest_for(cls, field, value):
+        query = cls.query_for(field, value)
+        return query.get()
 
     def serialize(self):
         data = self.to_dict(exclude=(

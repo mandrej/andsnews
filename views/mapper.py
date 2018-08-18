@@ -129,24 +129,24 @@ class Indexer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class RemoveFields(Mapper):
-    TOKEN = None
+# class RemoveFields(Mapper):
+#     TOKEN = None
 
-    def map(self, entity):
-        return [entity], []
+#     def map(self, entity):
+#         return [entity], []
 
-    def _batch_write(self):
-        for entity in self.to_put:
-            if 'repr_stamp' in entity._properties:
-                del entity._properties['repr_stamp']
-            if 'repr_url' in entity._properties:
-                del entity._properties['repr_url']
-            entity.put()
-            push_message(self.TOKEN, entity.key.string_id())
-        self.to_put = []
+#     def _batch_write(self):
+#         for entity in self.to_put:
+#             if 'repr_stamp' in entity._properties:
+#                 del entity._properties['repr_stamp']
+#             if 'repr_url' in entity._properties:
+#                 del entity._properties['repr_url']
+#             entity.put()
+#             push_message(self.TOKEN, entity.key.string_id())
+#         self.to_put = []
 
-    def finish(self):
-        push_message(self.TOKEN, END_MSG)
+#     def finish(self):
+#         push_message(self.TOKEN, END_MSG)
 
 
 class Fixer(Mapper):
@@ -256,61 +256,61 @@ class UnboundDevel(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class OldFixer(Mapper):
-    """
-    Migrate images from blobstore to google cloud storage
-    """
-    TOKEN = None
-    DATE_START = None
-    DATE_END = None
+# class OldFixer(Mapper):
+#     """
+#     Migrate images from blobstore to google cloud storage
+#     """
+#     TOKEN = None
+#     DATE_START = None
+#     DATE_END = None
 
-    def map(self, entity):
-        return [entity], []
+#     def map(self, entity):
+#         return [entity], []
 
-    def get_query(self):
-        return self.KIND.query(self.KIND.date < self.DATE_END, self.KIND.date >= self.DATE_START)
+#     def get_query(self):
+#         return self.KIND.query(self.KIND.date < self.DATE_END, self.KIND.date >= self.DATE_START)
 
-    def _batch_write(self):
-        for entity in self.to_put:
-            blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-            if blob_info and entity.filename is None:
-                logging.info(u'{} {}'.format(blob_info.filename, blob_info.content_type))
-                blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
-                buff = blob_reader.read(size=-1)
-                object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
-                # Check  GCS stat exist first
-                try:
-                    gcs.stat(object_name)
-                    object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
-                except gcs.NotFoundError:
-                    pass
+#     def _batch_write(self):
+#         for entity in self.to_put:
+#             blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
+#             if blob_info and entity.filename is None:
+#                 logging.info(u'{} {}'.format(blob_info.filename, blob_info.content_type))
+#                 blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
+#                 buff = blob_reader.read(size=-1)
+#                 object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
+#                 # Check  GCS stat exist first
+#                 try:
+#                     gcs.stat(object_name)
+#                     object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
+#                 except gcs.NotFoundError:
+#                     pass
 
-                try:
-                    write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-                    with gcs.open(
-                        object_name,
-                        'w',
-                        content_type=blob_info.content_type,
-                        retry_params=write_retry_params) as f:
-                        f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+#                 try:
+#                     write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+#                     with gcs.open(
+#                         object_name,
+#                         'w',
+#                         content_type=blob_info.content_type,
+#                         retry_params=write_retry_params) as f:
+#                         f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
 
-                    # delete old blob key
-                    blobstore.delete(entity.blob_key)
-                    # write new blob key
-                    entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
-                    entity.filename = object_name
-                    entity.put()
+#                     # delete old blob key
+#                     blobstore.delete(entity.blob_key)
+#                     # write new blob key
+#                     entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+#                     entity.filename = object_name
+#                     entity.put()
 
-                except gcs.errors as e:
-                    push_message(self.TOKEN, e.message)
-                else:
-                    push_message(self.TOKEN, 'DONE {}'.format(entity.slug))
-            else:
-                push_message(self.TOKEN, 'SKIPPED {}'.format(entity.slug))
-        self.to_put = []
+#                 except gcs.errors as e:
+#                     push_message(self.TOKEN, e.message)
+#                 else:
+#                     push_message(self.TOKEN, 'DONE {}'.format(entity.slug))
+#             else:
+#                 push_message(self.TOKEN, 'SKIPPED {}'.format(entity.slug))
+#         self.to_put = []
 
-    def finish(self):
-        push_message(self.TOKEN, END_MSG)
+#     def finish(self):
+#         push_message(self.TOKEN, END_MSG)
 
 
 class Builder(Mapper):
@@ -341,6 +341,14 @@ class Builder(Mapper):
             key_name = '{}||{}||{}'.format(kind, self.FIELD, str(value))
             obj = Counter.get_or_insert(key_name, forkind=kind, field=self.FIELD, value=value)
             obj.count = count
+
+            latest = self.KIND.latest_for(self.FIELD, value)
+            if latest is not None:
+                obj.repr_stamp = latest.date
+                if kind == 'Photo':
+                    obj.repr_url = latest.serving_url
+                # elif kind == 'Entry':
+                #     obj.repr_url = latest.front_img
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))

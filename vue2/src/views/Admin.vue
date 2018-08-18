@@ -44,7 +44,7 @@
         <v-list>
           <v-subheader>Counters</v-subheader>
           <v-divider></v-divider>
-          <v-list-tile v-for="name in counters" :key="name" @click="nop">
+          <v-list-tile v-for="name in rebuild" :key="name" @click="nop">
             <v-list-tile-content>
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
             </v-list-tile-content>
@@ -119,13 +119,14 @@ export default {
     }
   }),
   mounted () {
+    this.$store.dispatch('All/fetchRebuild')
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true
     })
   },
   computed: {
-    ...mapState('All', ['counters', 'fcm_token'])
+    ...mapState('All', ['rebuild', 'fcm_token'])
   },
   watch: {
     fcm_token (val) {

@@ -24,6 +24,7 @@ const initialState = {
   uploaded: [],
   fcm_token: null,
 
+  menu: [],
   objects: [],
   pages: [],
   page: null, // unused
@@ -32,9 +33,9 @@ const initialState = {
   tags: [],
   models: [],
 
-  total: null, // info
+  total: null, // menu
   count: null,
-  counters: [], // info
+  rebuild: [], // info
 
   busy: false,
   clear: false
@@ -74,6 +75,14 @@ const actions = {
     commit('DELETE_RECORD', obj)
     commit('DELETE_UPLOADED', obj)
     axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}}) // no response
+  },
+  fetchMenu: ({commit}) => {
+    commit('SET_BUSY', true)
+    axios.get('filters')
+      .then(response => {
+        commit('UPDATE_MENU', response.data)
+        commit('SET_BUSY', false)
+      })
   },
   fetchRecords: ({commit, state}, next) => {
     let url = 'start'
@@ -122,10 +131,10 @@ const actions = {
         commit('UPDATE_MODELS', response.data)
       })
   },
-  fetchInfo: ({commit}) => {
+  fetchRebuild: ({commit}) => {
     axios.get('info')
       .then(response => {
-        commit('SET_INFO', response.data)
+        commit('SET_REBUILD', response.data.photo.counters)
       })
   },
   fetchToken: ({commit, state, dispatch}) => {
@@ -191,6 +200,10 @@ const mutations = {
   CHANGE_FILTER (state, payload) {
     state.filter = Object.assign({}, payload)
   },
+  UPDATE_MENU (state, data) {
+    state.total = data.count
+    state.menu = [...data.filters]
+  },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
@@ -234,9 +247,8 @@ const mutations = {
   UPDATE_MODELS (state, data) {
     state.models = data
   },
-  SET_INFO (state, payload) {
-    state.total = payload.photo.count
-    state.counters = payload.photo.counters
+  SET_REBUILD (state, payload) {
+    state.rebuild = payload
   },
   SET_CLEAR (state, val) {
     state.clear = val

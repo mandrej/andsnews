@@ -75,7 +75,7 @@ Vue.use(VueLazyload, {
 })
 
 export default {
-  name: 'Home',
+  name: 'List',
   components: {
     'Item': () => import(/* webpackChunkName: "item" */ './Item'),
     'Edit': () => import(/* webpackChunkName: "edit" */ './Edit')
