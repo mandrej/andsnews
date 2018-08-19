@@ -35,7 +35,7 @@ const initialState = {
 
   total: null, // menu
   count: null,
-  rebuild: [], // info
+  cloud: [], // info
 
   busy: false,
   clear: false
@@ -132,10 +132,10 @@ const actions = {
         commit('UPDATE_MODELS', response.data)
       })
   },
-  fetchRebuild: ({commit}) => {
+  fetchCloud: ({commit}) => {
     axios.get('info')
       .then(response => {
-        commit('SET_REBUILD', response.data.photo.counters)
+        commit('SET_CLOUD', response.data.photo.counters)
       })
   },
   fetchToken: ({commit, state, dispatch}) => {
@@ -169,16 +169,6 @@ const actions = {
     const ref = FB.database().ref('registrations')
     ref.once('value', (snapshot) => {
       snapshot.forEach(node => {
-        // messaging.getToken()
-        //   .then(token => {
-        //     if (token !== node.key) {
-        //       ref.child(token).set({
-        //         email: node.child('email').val(),
-        //         date: (new Date()).toISOString()
-        //       })
-        //       ref.child(node.key).remove()
-        //     }
-        //   })
         if (node.key !== state.fcm_token) {
           pushMessage(node.key, msg)
         }
@@ -248,8 +238,8 @@ const mutations = {
   UPDATE_MODELS (state, data) {
     state.models = data
   },
-  SET_REBUILD (state, payload) {
-    state.rebuild = payload
+  SET_CLOUD (state, payload) {
+    state.cloud = payload
   },
   SET_CLEAR (state, val) {
     state.clear = val

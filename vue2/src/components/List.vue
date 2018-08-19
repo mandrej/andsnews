@@ -13,9 +13,10 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="pa-3">
-          <v-btn color="error" @click="agree">Yes</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="secondary" @click="confirm = false">No</v-btn>
+          <v-layout justify-space-between row>
+            <v-btn color="error" @click="agree">Yes</v-btn>
+            <v-btn color="secondary" @click="confirm = false">No</v-btn>
+          </v-layout>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -25,37 +26,35 @@
         <v-flex xs12 sm6 md4 lg3 xl2
           v-for="(item, idx) in objects"
           :key="item.safekey">
-          <div :id="`${item.safekey}`" class="square">
-            <img :alt="alt(item)"
-              v-lazy="getImgSrc(item, 's')"
-              @click="showDetail(item, idx)">
-            <v-list two-line>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-menu>
-                    <v-btn icon slot="activator">
-                      <v-icon>more_vert</v-icon>
-                    </v-btn>
-                    <v-list>
-                      <v-list-tile @click="showEditdForm(item)">
-                        <v-list-tile-content>Edit</v-list-tile-content>
-                      </v-list-tile>
-                      <v-list-tile :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                        <v-list-tile-content>Download</v-list-tile-content>
-                      </v-list-tile>
-                      <v-list-tile v-if="user.isAdmin" @click="removeRecord(item)">
-                        <v-list-tile-content>Delete</v-list-tile-content>
-                      </v-list-tile>
-                    </v-list>
-                  </v-menu>
-                </v-list-tile-action>
-              </v-list-tile>
-            </v-list>
-          </div>
+          <v-card light :id="`${item.safekey}`">
+            <v-card-media
+              @click="showDetail(item, idx)"
+              class="white--text"
+              height="300px"
+              v-lazy:background-image="getImgSrc(item, 's')">
+              <v-container fill-height fluid>
+                <v-layout fill-height>
+                  <v-flex xs12 align-end flexbox>
+                    <span class="headline">{{item.headline}}</span><br>
+                    <span>{{dateFormat(item)}}</span>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-card-media>
+            <v-card-actions class="pa-3">
+              <v-layout justify-space-between row>
+                <v-btn icon flat color="error" @click="removeRecord(item)">
+                  <v-icon>cancel</v-icon>
+                </v-btn>
+                <v-btn icon flat color="secondary" @click="showEditdForm(item)">
+                  <v-icon>edit</v-icon>
+                </v-btn>
+                <v-btn icon flat color="secondary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                  <v-icon>file_download</v-icon>
+                </v-btn>
+              </v-layout>
+            </v-card-actions>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -97,7 +96,7 @@ export default {
     }
   }),
   computed: {
-    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
+    ...mapState('All', ['current', 'objects', 'pages', 'next', 'page'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -165,18 +164,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.square {
-  img {
-    display: inherit;
-    max-width: 100%;
-    opacity: 0;
-    transition: all 0.5s ease-in;
-    &[lazy=loaded] {
-      opacity: 1;
-    }
+.v-card__media {
+  opacity: 0;
+  background-position: center;
+  transition: all 0.3s ease-in;
+  &[lazy=loaded] {
+    opacity: 1;
   }
-}
-.v-list__tile__title {
-  font-size: 20px;
 }
 </style>

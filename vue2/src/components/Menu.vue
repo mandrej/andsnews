@@ -1,28 +1,29 @@
 <template>
-  <div>
-    <v-container fluid grid-list-lg>
-      <v-layout row wrap>
-        <v-flex xs12 sm6 md4 lg3 xl2
-          v-for="(item, i) in menu" :key="i">
-          <div class="square">
-            <img :alt="alt(item)"
-              v-lazy="getImgSrc(item, 's')"
-              @click="showFilter(item)">
-            <v-list>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{item.name}}</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-list-tile-sub-title>{{item.count}}</v-list-tile-sub-title>
-                </v-list-tile-action>
-              </v-list-tile>
-            </v-list>
-          </div>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+  <v-container fluid grid-list-lg>
+    <v-layout row wrap>
+      <v-flex xs12 sm6 md4 lg3 xl2
+        v-for="(item, i) in menu" :key="i">
+        <v-card light>
+          <v-card-media
+            @click="showFilter(item)"
+            class="white--text"
+            height="150px"
+            v-lazy:background-image="getImgSrc(item, 's')">
+            <v-container fill-height fluid>
+              <v-layout fill-height>
+                <v-flex xs12 align-end flexbox>
+                  <span class="headline">{{item.name}}</span>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-media>
+          <v-card-text>
+            {{item.count}} photos
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -38,14 +39,11 @@ Vue.use(VueLazyload, {
 export default {
   name: 'Menu',
   mixins: [ common ],
-  data: () => ({
-
-  }),
   mounted () {
     this.$store.dispatch('All/fetchMenu')
   },
   computed: {
-    ...mapState('All', ['user', 'menu', 'busy'])
+    ...mapState('All', ['menu'])
   },
   methods: {
     showFilter (rec) {
@@ -54,30 +52,18 @@ export default {
         field: 'search',
         value: rec.field_name + ':' + sep + rec.name + sep
       })
-    },
-    alt (rec) {
-      return `${rec.field_name + '/' + rec.name}`
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.square {
-  img {
-    display: inherit;
-    max-width: 100%;
-    opacity: 0;
-    transition: all 0.5s ease-in;
-    &[lazy=loaded] {
-      opacity: 1;
-    }
+.v-card__media {
+  opacity: 0;
+  background-position: center;
+  transition: all 0.3s ease-in;
+  &[lazy=loaded] {
+    opacity: 1;
   }
-}
-.v-list__tile__title, .v-list__tile__sub-title {
-  font-size: 20px;
-}
-.v-list__tile__sub-title {
-  text-align: right;
 }
 </style>

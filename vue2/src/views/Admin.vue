@@ -44,7 +44,7 @@
         <v-list>
           <v-subheader>Counters</v-subheader>
           <v-divider></v-divider>
-          <v-list-tile v-for="name in rebuild" :key="name" @click="nop">
+          <v-list-tile v-for="name in cloud" :key="name" @click="nop">
             <v-list-tile-content>
               <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
             </v-list-tile-content>
@@ -118,15 +118,17 @@ export default {
       default: 'NEW IMAGES'
     }
   }),
+  created () {
+    this.$store.dispatch('All/fetchCloud')
+  },
   mounted () {
-    this.$store.dispatch('All/fetchRebuild')
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true
     })
   },
   computed: {
-    ...mapState('All', ['rebuild', 'fcm_token'])
+    ...mapState('All', ['cloud', 'fcm_token'])
   },
   watch: {
     fcm_token (val) {

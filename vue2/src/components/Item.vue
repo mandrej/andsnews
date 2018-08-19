@@ -60,7 +60,7 @@ export default {
     isLoading: false
   }),
   computed: {
-    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page', 'filter', 'busy'])
+    ...mapState('All', ['current', 'objects', 'pages', 'next', 'page'])
   },
   mounted () {
     this.$Lazyload.$on('loading', this.loading)
