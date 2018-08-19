@@ -142,11 +142,13 @@ export default {
       const value = params.join(' AND ')
 
       if (value) {
+        this.$router.push({ name: 'list', params: { 'qs': value }})
         this.$store.dispatch('All/changeFilter', {
           field: 'search',
           value: value
         })
       } else {
+        this.$router.push({ name: 'home' })
         this.$store.dispatch('All/changeFilter', {})
       }
     }

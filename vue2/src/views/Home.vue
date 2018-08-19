@@ -51,7 +51,7 @@
           <v-spacer></v-spacer>
 
           <v-list light>
-            <v-list-tile @click="$router.push({name: 'admin'})">
+            <v-list-tile @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
               </v-list-tile-action>
@@ -71,7 +71,7 @@
             <v-btn icon @click="clearFilter">
               <v-icon>close</v-icon>
             </v-btn>
-            {{formatFilter(filter.value)}}
+            {{filter.value}}
           </v-toolbar-title>
           <v-toolbar-title v-else style="font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -148,7 +148,7 @@ export default {
         this.empty = true
       }
     },
-    "filter.value" (val) {
+    "$route.params.qs" (val) {
       if (val) {
         this.currentComponent = List
       } else {
@@ -160,11 +160,8 @@ export default {
     ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
   },
   methods: {
-    formatFilter (filter) {
-      const result = filter.match(/".+?"/g)
-      return result.join(' AND ')
-    },
     clearFilter () {
+      this.$router.push({ name: 'home' })
       this.$store.dispatch('All/changeFilter', {})
     }
   }

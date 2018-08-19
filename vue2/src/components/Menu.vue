@@ -48,9 +48,11 @@ export default {
   methods: {
     showFilter (rec) {
       const sep = '"'
+      const value = rec.field_name + ':' + sep + rec.name + sep
+      this.$router.push({ name: 'list', params: { 'qs': value }})
       this.$store.dispatch('All/changeFilter', {
         field: 'search',
-        value: rec.field_name + ':' + sep + rec.name + sep
+        value: value
       })
     }
   }

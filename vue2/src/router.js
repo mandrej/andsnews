@@ -17,6 +17,11 @@ export default new Router({
       component: Home
     },
     {
+      path: '/list/:qs',
+      name: 'list',
+      component: Home
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: Admin,
