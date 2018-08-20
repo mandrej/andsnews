@@ -20,9 +20,9 @@
       </v-toolbar>
 
       <v-content>
-        <div class="pa-3 hidden-xs-only">
-          <h2>Messaging</h2>
-          <v-layout row justify-space-around>
+        <v-container mt-4>
+          <h3 class="title">Messaging</h3>
+          <v-layout row>
             <v-flex xs9>
               <v-text-field
                 label="Send message"
@@ -31,59 +31,59 @@
                 type="text"
                 @input="upper($event)"
                 :rules="requiredRule"
-                required
-              ></v-text-field>
+                required></v-text-field>
             </v-flex>
-            <v-flex xs1></v-flex>
-            <v-flex xs2 class="pt-3 text-xs-right">
-              <v-btn color="secondary" class="ma-0 pa-0" @click="send">Send</v-btn>
+            <v-flex xs3 class="pt-3 text-xs-right">
+              <v-btn color="secondary" @click="send">Send</v-btn>
             </v-flex>
           </v-layout>
-        </div>
 
-        <v-list>
-          <v-subheader>Counters</v-subheader>
+          <h3 class="title">Counters</h3>
           <v-divider></v-divider>
-          <v-list-tile v-for="name in cloud" :key="name" @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>Rebuild {{name}}</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
+          <v-layout row v-for="name in cloud" :key="name">
+            <v-flex xs9>
+              <v-layout row align-center justify-start fill-height>
+                Rebuild {{name}}
+              </v-layout>
+            </v-flex>
+            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
               <v-btn :disabled="disabled" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-
-          <v-list-tile @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>Reindex all images</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs9>
+              <v-layout row align-center justify-start fill-height>
+                Reindex all images
+              </v-layout>
+            </v-flex>
+            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
               <v-btn :disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
+            </v-flex>
+          </v-layout>
+
+          <h3 class="title">Cloud</h3>
           <v-divider></v-divider>
-
-          <v-subheader>Cloud</v-subheader>
-          <v-list-tile two-line @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>Remove images from the Cloud</v-list-tile-title>
-              <v-list-tile-sub-title>not referenced in datastore</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
+          <v-layout row>
+            <v-flex xs9>
+              <v-layout row align-center justify-start fill-height>
+                Remove images from the Cloud not referenced in datastore
+              </v-layout>
+            </v-flex>
+            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
               <v-btn :disabled="disabled" color="error" @click="unbound">Remove</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-
-          <v-list-tile two-line @click="nop">
-            <v-list-tile-content>
-              <v-list-tile-title>List images in datastore</v-list-tile-title>
-              <v-list-tile-sub-title>that are missing in the Cloud</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs9>
+              <v-layout row align-center justify-start fill-height>
+                List images in datastore that are missing in the Cloud
+              </v-layout>
+            </v-flex>
+            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
               <v-btn :disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-        </v-list>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </v-content>
 
       <Footer/>

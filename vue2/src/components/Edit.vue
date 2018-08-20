@@ -13,7 +13,7 @@
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
-        <v-container grid-list-md mt-3>
+        <v-container grid-list-md>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>

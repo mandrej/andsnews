@@ -30,6 +30,7 @@
             <v-card-media
               @click="showDetail(item, idx)"
               class="white--text"
+              style="cursor: pointer"
               height="300px"
               v-lazy:background-image="getImgSrc(item, 's')">
               <v-container fill-height fluid>
