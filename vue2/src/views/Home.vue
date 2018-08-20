@@ -127,15 +127,15 @@ export default {
     this.$store.dispatch('All/fetchToken')
     const qs = this.$route.params.qs || null
     if (qs) {
-        this.$store.dispatch('All/changeFilter', {
-          field: 'search',
-          value: qs
-        })
-        this.currentComponent = List
-      } else {
-        this.$store.dispatch('All/changeFilter', {})
-        this.currentComponent = Menu
-      }
+      this.$store.dispatch('All/changeFilter', {
+        field: 'search',
+        value: qs
+      })
+      this.currentComponent = List
+    } else {
+      this.$store.dispatch('All/changeFilter', {})
+      this.currentComponent = Menu
+    }
   },
   mounted () {
     if (this.user && this.user.isAuthorized) {

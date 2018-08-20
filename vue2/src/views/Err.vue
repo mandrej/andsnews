@@ -8,7 +8,7 @@
     </v-toolbar>
 
     <v-content>
-      <v-container fluid>
+      <v-container>
         <v-jumbotron color="warning">
           <v-container fill-height>
             <v-layout column justify-center align-center>

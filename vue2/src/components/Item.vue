@@ -56,7 +56,6 @@ export default {
   props: ['visible', 'index'],
   data: () => ({
     showInfo: false,
-    editForm: false,
     isLoading: false
   }),
   computed: {
