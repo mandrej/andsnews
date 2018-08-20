@@ -50,10 +50,6 @@ export default {
       const sep = '"'
       const value = rec.field_name + ':' + sep + rec.name + sep
       this.$router.push({ name: 'list', params: { 'qs': value }})
-      this.$store.dispatch('All/changeFilter', {
-        field: 'search',
-        value: value
-      })
     }
   }
 }

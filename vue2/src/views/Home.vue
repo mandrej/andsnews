@@ -125,6 +125,17 @@ export default {
   }),
   created () {
     this.$store.dispatch('All/fetchToken')
+    const qs = this.$route.params.qs || null
+    if (qs) {
+        this.$store.dispatch('All/changeFilter', {
+          field: 'search',
+          value: qs
+        })
+        this.currentComponent = List
+      } else {
+        this.$store.dispatch('All/changeFilter', {})
+        this.currentComponent = Menu
+      }
   },
   mounted () {
     if (this.user && this.user.isAuthorized) {
@@ -148,10 +159,15 @@ export default {
         this.empty = true
       }
     },
-    "$route.params.qs" (val) {
-      if (val) {
+    '$route.params.qs' (qs) {
+      if (qs) {
+        this.$store.dispatch('All/changeFilter', {
+          field: 'search',
+          value: qs
+        })
         this.currentComponent = List
       } else {
+        this.$store.dispatch('All/changeFilter', {})
         this.currentComponent = Menu
       }
     }
@@ -162,7 +178,6 @@ export default {
   methods: {
     clearFilter () {
       this.$router.push({ name: 'home' })
-      this.$store.dispatch('All/changeFilter', {})
     }
   }
 }
