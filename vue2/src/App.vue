@@ -22,4 +22,7 @@ export default {
   background-position: -10px -60px;
   background-size: 500px;
 }
+.v-toolbar__title:not(:first-child) {
+  margin-left: 0;
+}
 </style>

@@ -42,7 +42,7 @@
             <v-spacer></v-spacer>
             <SignIn></SignIn>
             <v-layout slot="extension">
-              <v-toolbar-title style="font-size: 32px">{{total}}</v-toolbar-title>
+              <v-toolbar-title class="headline">{{total}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-layout>
           </v-toolbar>
@@ -63,9 +63,10 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app light class="aperture" color="white">
+      <v-toolbar app light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
+        <v-toolbar-title class="headline secondary--text">{{title}}</v-toolbar-title>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value" style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
@@ -73,7 +74,6 @@
             </v-btn>
             {{filter.value}}
           </v-toolbar-title>
-          <v-toolbar-title v-else style="font-size: 32px">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-progress-circular v-show="busy" :indeterminate="true" color="accent" style="margin-right: 16px"></v-progress-circular>
         </v-layout>

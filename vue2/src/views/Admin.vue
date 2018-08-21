@@ -46,7 +46,7 @@
                 Rebuild {{name}}
               </v-layout>
             </v-flex>
-            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
+            <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="disabled" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
             </v-flex>
           </v-layout>
@@ -56,7 +56,7 @@
                 Reindex all images
               </v-layout>
             </v-flex>
-            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
+            <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-flex>
           </v-layout>
@@ -69,7 +69,7 @@
                 Remove images from the Cloud not referenced in datastore
               </v-layout>
             </v-flex>
-            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
+            <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="disabled" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
@@ -79,7 +79,7 @@
                 List images in datastore that are missing in the Cloud
               </v-layout>
             </v-flex>
-            <v-flex xs3 class="ma-0 pa-0 text-xs-right">
+            <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
             </v-flex>
           </v-layout>
