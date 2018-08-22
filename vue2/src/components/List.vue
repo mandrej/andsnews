@@ -31,7 +31,6 @@
               @click="showDetail(item, idx)"
               class="white--text"
               style="cursor: pointer"
-              height="300px"
               v-lazy:background-image="getImgSrc(item, 's')">
               <v-container fill-height fluid>
                 <v-layout fill-height>
@@ -43,7 +42,7 @@
               </v-container>
             </v-card-media>
             <v-card-actions class="pa-3">
-              <v-layout justify-space-between row>
+              <v-layout justify-end row>
                 <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
                   <v-icon>cancel</v-icon>
                 </v-btn>
@@ -171,6 +170,11 @@ export default {
   transition: all 0.3s ease-in;
   &[lazy=loaded] {
     opacity: 1;
+  }
+  &:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
   }
 }
 </style>

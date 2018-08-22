@@ -8,7 +8,6 @@
             @click="showFilter(item)"
             class="white--text"
             style="cursor: pointer"
-            height="150px"
             v-lazy:background-image="getImgSrc(item, 's')">
             <v-container fill-height fluid>
               <v-layout fill-height>
@@ -63,6 +62,11 @@ export default {
   transition: all 0.3s ease-in;
   &[lazy=loaded] {
     opacity: 1;
+  }
+  &:after {
+    content: "";
+    display: block;
+    padding-bottom: 50%;
   }
 }
 </style>
