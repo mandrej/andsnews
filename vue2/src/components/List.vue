@@ -44,13 +44,13 @@
             </v-card-media>
             <v-card-actions class="pa-3">
               <v-layout justify-space-between row>
-                <v-btn icon flat color="error" @click="removeRecord(item)">
+                <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
                   <v-icon>cancel</v-icon>
                 </v-btn>
-                <v-btn icon flat color="secondary" @click="showEditdForm(item)">
+                <v-btn v-if="user.isAuthorized" icon flat color="primary" @click="showEditdForm(item)">
                   <v-icon>edit</v-icon>
                 </v-btn>
-                <v-btn icon flat color="secondary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
                   <v-icon>file_download</v-icon>
                 </v-btn>
               </v-layout>
@@ -97,7 +97,7 @@ export default {
     }
   }),
   computed: {
-    ...mapState('All', ['current', 'objects', 'pages', 'next', 'page'])
+    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page'])
   },
   created () {
     window.addEventListener('scroll', () => {

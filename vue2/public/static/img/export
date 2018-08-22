@@ -23,6 +23,13 @@ for i in ${sizes[@]}; do
   echo $file
 done
 
+sizes=(150)
+for i in ${sizes[@]}; do
+  file=$dest/mstile-$i\x$i.png
+  inkscape -z -e $file -w $i -h $i aperture.svg
+  echo $file
+done
+
 sizes=(16 32)
 for i in ${sizes[@]}; do
   file=$dest/favicon-$i\x$i.png
