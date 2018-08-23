@@ -13,6 +13,9 @@
           </v-btn>
           <v-toolbar-title class="headline">{{current.headline || 'Not found'}}</v-toolbar-title>
           <v-spacer></v-spacer>
+          <!-- <v-btn icon @click="toggle" flat>
+            <v-icon>launch</v-icon>
+          </v-btn> -->
           <v-btn icon @click="showInfo = true" flat>
             <v-icon>more_vert</v-icon>
           </v-btn>
@@ -77,6 +80,13 @@ export default {
       } else if (this.next && this.pages.indexOf(this.next) === -1) {
         this.$store.dispatch('All/fetchRecords', this.next)
       }
+    },
+    toggle () {
+      const all = document.querySelectorAll('.slide')
+      all.forEach(el => {
+        const size = el.style.backgroundSize
+        el.style.backgroundSize = (size === 'contain')? 'cover': 'contain'
+      });
     },
     loading (event) {
       this.isLoading = !event.state.loaded
