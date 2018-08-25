@@ -520,8 +520,8 @@
     regexpu-core "^4.1.3"
 
 "@babel/polyfill@^7.0.0-beta.49":
-  version "7.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-rc.2.tgz#d0141441713bb0c5fda170b5abddcfd219e055d6"
+  version "7.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-rc.3.tgz#af142a5d5ce82f5ee0ae615c798e3a5bffacee84"
   dependencies:
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"
@@ -6764,6 +6764,10 @@ thread-loader@^1.1.5:
     loader-runner "^2.3.0"
     loader-utils "^1.1.0"
 
+throttle-debounce@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-2.0.1.tgz#7307ddd6cd9acadb349132fbf6c18d78c88a5e62"
+
 through2@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
@@ -7092,6 +7096,13 @@ uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
+v-viewer@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/v-viewer/-/v-viewer-1.2.1.tgz#1d04fd42a188c82cf70e4432e69d2a467909c3b2"
+  dependencies:
+    throttle-debounce "^2.0.1"
+    viewerjs "^1.0.0"
+
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
@@ -7114,6 +7125,10 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+viewerjs@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.2.0.tgz#22254b86e50898c7c7593891a1e36e6577eb8462"
 
 vm-browserify@0.0.4:
   version "0.0.4"

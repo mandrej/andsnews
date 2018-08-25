@@ -30,9 +30,13 @@
             :cycle="false"
             :value="index"
             @input="currentIndex"
-            hide-delimiters>
-            <v-carousel-item v-for="item in objects" :key="item.safekey"
-              v-lazy:background-image="getImgSrc(item)" class="slide">
+            hide-delimiters
+            v-viewer="options">
+            <v-carousel-item
+              v-for="item in objects" :key="item.safekey">
+              <v-layout row align-center justify-center fill-height>
+                <img v-lazy="getImgSrc(item)">
+              </v-layout>
             </v-carousel-item>
           </v-carousel>
         </v-card-media>
@@ -48,7 +52,13 @@ import VueLazyload from 'vue-lazyload'
 import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
 
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
+
 Vue.use(VueLazyload)
+Vue.use(Viewer, {
+  // debug: true
+})
 
 export default {
   name: 'Item',
@@ -59,7 +69,16 @@ export default {
   props: ['visible', 'index'],
   data: () => ({
     showInfo: false,
-    isLoading: false
+    isLoading: false,
+    options: {
+      loop: false,
+      title: false,
+      navbar: false,
+      keyborad: false,
+      toolbar: false,
+      rotatable: false,
+      loading: false
+    }
   }),
   computed: {
     ...mapState('All', ['current', 'objects', 'pages', 'next', 'page'])
@@ -67,6 +86,10 @@ export default {
   mounted () {
     this.$Lazyload.$on('loading', this.loading)
     this.$Lazyload.$on('loaded', this.loading)
+    // window.addEventListener('zoom', (event) => {
+    //   console.log(event.detail.oldRatio, event.detail.ratio)
+    //   console.log(event.target.$viewer)
+    // })
   },
   methods: {
     currentIndex (idx) {
@@ -108,8 +131,13 @@ export default {
   top: calc(50% - 23px);
   left: calc(50% - 46px);
 }
-.slide {
-  background-size: contain;
-  background-position: 50% 50%;
+.v-card__media img {
+  width: 90%;
+}
+</style>
+
+<style>
+.viewer-backdrop {
+  background-color: #fff;
 }
 </style>
