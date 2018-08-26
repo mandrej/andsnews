@@ -7,7 +7,7 @@
       lazy fullscreen hide-overlay scrollable
       transition="dialog-bottom-transition">
       <v-card tile flat>
-        <v-toolbar light class="aperture">
+        <v-toolbar light class="aperture" style="z-index: 1">
           <v-btn icon @click="close">
             <v-icon>close</v-icon>
           </v-btn>
@@ -31,9 +31,7 @@
             v-viewer="options">
             <v-carousel-item
               v-for="item in objects" :key="item.safekey">
-              <v-layout row align-center justify-center fill-height>
-                <img v-lazy="getImgSrc(item)">
-              </v-layout>
+              <img v-lazy="getImgSrc(item)">
             </v-carousel-item>
           </v-carousel>
         </v-card-media>
@@ -68,7 +66,6 @@ export default {
     showInfo: false,
     isLoading: false,
     options: {
-      loop: false,
       title: false,
       navbar: false,
       keyborad: false,
@@ -122,7 +119,10 @@ export default {
   left: calc(50% - 46px);
 }
 .v-card__media img {
-  width: 90%;
+  display: block;
+  width: 100vw;
+  height: calc(100vh - 64px);
+  object-fit: cover;
 }
 </style>
 
