@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Item :visible="showItem" :index="index" @close="showItem = false"></Item>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
@@ -22,41 +21,39 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg>
-      <v-layout row wrap>
-        <v-flex xs12 sm6 md4 lg3 xl2
-          v-for="(item, idx) in objects"
-          :key="item.safekey">
-          <v-card light :id="`${item.safekey}`">
-            <v-card-media
-              @click="showDetail(item, idx)"
-              class="white--text"
-              style="cursor: pointer"
-              v-lazy:background-image="getImgSrc(item, 's')">
-              <v-container fill-height fluid>
-                <v-layout fill-height>
-                  <v-flex xs12 align-end flexbox>
-                    <span class="headline">{{item.headline}}</span><br>
-                    <span>{{dateFormat(item)}}</span>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-media>
-            <v-card-actions class="pa-3">
-              <v-layout justify-end row>
-                <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
-                  <v-icon>cancel</v-icon>
-                </v-btn>
-                <v-btn v-if="user.isAuthorized" icon flat color="primary" @click="showEditdForm(item)">
-                  <v-icon>edit</v-icon>
-                </v-btn>
-                <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                  <v-icon>file_download</v-icon>
-                </v-btn>
-              </v-layout>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
+      <viewer :options="viewerOptions" :images="objects">
+        <template slot-scope="scope">
+          <v-layout row wrap>
+            <v-flex xs12 sm6 md4 lg3 xl2
+              v-for="item in scope.images"
+              :key="item.safekey">
+              <v-card light>
+                <v-card-media style="cursor: pointer">
+                  <img
+                    v-lazy="getImgSrc(item, 's')"
+                    :data-full="getImgSrc(item)">
+                </v-card-media>
+                <v-card-title>
+                  <span class="title">{{item.headline}}</span>
+                </v-card-title>
+                <v-card-actions class="pa-3">
+                  <v-layout justify-end row>
+                    <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
+                      <v-icon>cancel</v-icon>
+                    </v-btn>
+                    <v-btn v-if="user.isAuthorized" icon flat color="primary" @click="showEditdForm(item)">
+                      <v-icon>edit</v-icon>
+                    </v-btn>
+                    <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                      <v-icon>file_download</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </template>
+      </viewer>
     </v-container>
   </div>
 </template>
@@ -66,33 +63,36 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import common from '@/helpers/mixins'
-import { EventBus } from '@/helpers/event-bus'
-import * as easings from 'vuetify/es5/util/easing-patterns'
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
 
 Vue.use(VueLazyload, {
   attempt: 1
+})
+Vue.use(Viewer, {
+  debug: true
 })
 
 export default {
   name: 'List',
   components: {
-    'Item': () => import(/* webpackChunkName: "item" */ './Item'),
     'Edit': () => import(/* webpackChunkName: "edit" */ './Edit')
   },
   mixins: [ common ],
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
-
     bottom: false,
     distance: 800,
-    index: null,
     confirm: false,
     editForm: false,
-    showItem: false,
-    options: {
-      duration: 300,
-      offset: -144,
-      easings: Object.keys(easings)
+    viewerOptions: {
+      loop: false,
+      title: false,
+      navbar: false,
+      keyborad: false,
+      toolbar: false,
+      rotatable: false,
+      url: 'data-full'
     }
   }),
   computed: {
@@ -103,11 +103,6 @@ export default {
       this.bottom = this.bottomVisible()
     })
     this.loadMore()
-  },
-  mounted () {
-    EventBus.$on('goto', () => {
-      this.$vuetify.goTo('#' + this.current.safekey, this.options)
-    })
   },
   updated () {
     this.bottom = false
@@ -135,21 +130,9 @@ export default {
         this.$store.dispatch('All/fetchRecords', this.next)
       }
     },
-    showDetail (rec, idx) {
-      this.$store.dispatch('All/changeCurrent', rec)
-      this.index = idx
-      this.showItem = true
-    },
     showEditdForm (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
       this.editForm = true
-    },
-    alt (rec) {
-      return `${rec.aperture ? 'f/' + rec.aperture : ''}` +
-        ` ${rec.shutter ? rec.shutter + 's' : ''}` +
-        ` ${rec.iso ? rec.iso + ' ASA' : ''}` +
-        ` ${rec.model ? rec.model : ''} ${rec.lens ? rec.lens : ''}` +
-        ` ${rec.focal_length ? '(' + rec.focal_length + 'mm)' : ''}`
     },
     removeRecord (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
@@ -165,16 +148,21 @@ export default {
 
 <style lang="scss" scoped>
 .v-card__media {
-  opacity: 0;
-  background-position: center;
-  transition: all 0.3s ease-in;
-  &[lazy=loaded] {
-    opacity: 1;
-  }
-  &:after {
-    content: "";
+  img {
+    opacity: 0;
     display: block;
-    padding-bottom: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    &[lazy=loaded] {
+      opacity: 1;
+    }
   }
+}
+</style>
+
+<style>
+.viewer-backdrop {
+  background-color: white;
 }
 </style>
