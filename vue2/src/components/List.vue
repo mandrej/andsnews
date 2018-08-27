@@ -27,11 +27,12 @@
             <v-flex xs12 sm6 md4 lg3 xl2
               v-for="item in scope.images"
               :key="item.safekey">
-              <v-card light>
+              <v-card light class="card">
                 <v-card-media style="cursor: pointer">
                   <img
                     v-lazy="getImgSrc(item, 's')"
                     :data-full="getImgSrc(item)">
+                  {{scope.viewerOptions}}
                 </v-card-media>
                 <v-card-title>
                   <span class="title">{{item.headline}}</span>
@@ -65,6 +66,7 @@ import VueLazyload from 'vue-lazyload'
 import common from '@/helpers/mixins'
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
+import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1
@@ -93,6 +95,12 @@ export default {
       toolbar: false,
       rotatable: false,
       url: 'data-full'
+    },
+    index: 0,
+    scrollOptions: {
+      duration: 300,
+      offset: -144,
+      easings: Object.keys(easings)
     }
   }),
   computed: {
@@ -103,6 +111,17 @@ export default {
       this.bottom = this.bottomVisible()
     })
     this.loadMore()
+  },
+  mounted () {
+    window.addEventListener('hide', () => {
+      const elm = document.querySelectorAll('.card')[this.index]
+      setTimeout(() => {
+        this.$vuetify.goTo(elm, this.scrollOptions)
+      }, 350)
+    })
+    window.addEventListener('view', event => {
+      this.index = event.detail.index
+    })
   },
   updated () {
     this.bottom = false
@@ -161,7 +180,25 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
+.viewer-loading {
+  &::after {
+    animation: viewer-spinner 1s linear infinite;
+    border: 8px solid rgba(0, 0, 0, .1);
+    border-left-color: rgba(0, 0, 0, .5);
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    height: 100px;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+    position: absolute;
+    top: 50%;
+    width: 100px;
+    z-index: 1;
+  }
+}
 .viewer-backdrop {
   background-color: white;
 }
