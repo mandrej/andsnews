@@ -520,8 +520,8 @@
     regexpu-core "^4.1.3"
 
 "@babel/polyfill@^7.0.0-beta.49":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-rc.3.tgz#af142a5d5ce82f5ee0ae615c798e3a5bffacee84"
+  version "7.0.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-rc.4.tgz#959230793e96a719da4606837810ca3b87d8e1df"
   dependencies:
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"

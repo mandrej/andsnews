@@ -34,10 +34,15 @@
                     :data-full="getImgSrc(item)">
                   {{scope.viewerOptions}}
                 </v-card-media>
-                <v-card-title>
-                  <span class="title">{{item.headline}}</span>
-                </v-card-title>
-                <v-card-actions class="pa-3">
+                <v-container>
+                  <v-layout>
+                    <v-flex xs12>
+                      <span class="title">{{item.headline}}</span><br>
+                      <span>{{dateFormat(item)}}</span>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+                <v-card-actions class="px-3 pb-3">
                   <v-layout justify-end row>
                     <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
                       <v-icon>cancel</v-icon>
