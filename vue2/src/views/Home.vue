@@ -80,9 +80,7 @@
       </v-toolbar>
 
       <v-content class="aperture" style="background-attachment: fixed">
-        <keep-alive>
-          <component v-bind:is="currentComponent"></component>
-        </keep-alive>
+        <component v-bind:is="currentComponent"></component>
       </v-content>
 
       <Footer :top="true"></Footer>
