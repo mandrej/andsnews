@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 home=/home/milan
 python=$home/venv/andsnews/bin/python
-dev_appserver=/home/milan/google-cloud-sdk/bin/dev_appserver.py
+dev_appserver=$home/google-cloud-sdk/bin/dev_appserver.py
 storage=$home/work/andsnews_storage/
 
 api_version=`date +%Y%m%d%H%M`
