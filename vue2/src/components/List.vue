@@ -31,7 +31,6 @@
                 <img
                   v-lazy="getImgSrc(item, 's')"
                   :data-full="getImgSrc(item)">
-                {{scope.viewerOptions}}
                 <v-card-title primary-title class="pt-3">
                   <div>
                     <h3 class="title">{{item.headline}}</h3>
@@ -54,6 +53,7 @@
               </v-card>
             </v-flex>
           </v-layout>
+          {{scope.viewerOptions}}
         </template>
       </viewer>
     </v-container>
