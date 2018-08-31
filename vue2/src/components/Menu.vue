@@ -4,11 +4,14 @@
       <v-flex xs12 sm6 md4 lg3 xl2
         v-for="(item, i) in menu" :key="i">
         <v-card light>
-          <v-card-media
-            @click="showFilter(item)"
+          <v-img
+            cover
+            height="200px"
+            aspect-ratio="1.0"
             class="white--text"
             style="cursor: pointer"
-            v-lazy:background-image="getImgSrc(item, 's')">
+            @click="showFilter(item)"
+            :src="getImgSrc(item, 's')">
             <v-container fill-height fluid>
               <v-layout fill-height>
                 <v-flex xs12 align-end flexbox>
@@ -16,7 +19,7 @@
                 </v-flex>
               </v-layout>
             </v-container>
-          </v-card-media>
+          </v-img>
           <v-card-text>
             {{item.count}} photos
           </v-card-text>
@@ -29,12 +32,7 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import VueLazyload from 'vue-lazyload'
 import common from '@/helpers/mixins'
-
-Vue.use(VueLazyload, {
-  attempt: 1
-})
 
 export default {
   name: 'Menu',
@@ -54,19 +52,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.v-card__media {
-  opacity: 0;
-  background-position: center;
-  transition: all 0.3s ease-in;
-  &[lazy=loaded] {
-    opacity: 1;
-  }
-  &:after {
-    content: "";
-    display: block;
-    padding-bottom: 50%;
-  }
-}
-</style>

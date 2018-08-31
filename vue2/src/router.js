@@ -47,7 +47,7 @@ export default new Router({
       component: Err,
       props: {
         title: '404 Not found',
-        text: 'Page you requested cannot be found'
+        text: 'Requested page cannot be found'
       }
     }
   ]

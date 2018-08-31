@@ -9,14 +9,14 @@
 
     <v-content>
       <v-container>
-        <v-jumbotron color="warning">
+        <v-responsive height="200px">
           <v-container fill-height>
             <v-layout column justify-center align-center>
               <v-icon x-large color="seconadry">error</v-icon>
               <h3 class="title">{{text}}</h3>
             </v-layout>
           </v-container>
-        </v-jumbotron>
+        </v-responsive>
       </v-container>
     </v-content>
 
@@ -35,8 +35,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-jumbotron {
-  height: 200px !important;
+.v-responsive {
+  outline: 2px dashed #BDBDBD;
   & h3 {
     padding-top: 1em;
     text-align: center;

@@ -26,7 +26,7 @@
         <v-card-text>
           <v-container>
             <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-            <v-jumbotron height="200px" v-if="isInitial || isSaving || isFailed">
+            <v-responsive height="200px" v-if="isInitial || isSaving || isFailed">
               <input type="file" multiple
                 :name="uploadFieldName"
                 :disabled="isSaving"
@@ -46,7 +46,7 @@
                   <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
                 </v-layout>
               </v-container>
-            </v-jumbotron>
+            </v-responsive>
 
             <v-list two-line>
               <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
@@ -180,7 +180,7 @@ export default {
 </script>
 
 <style scoped>
-.v-jumbotron {
+.v-responsive {
   outline: 2px dashed #BDBDBD;
   cursor: pointer;
 }

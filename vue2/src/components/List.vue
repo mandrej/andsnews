@@ -28,21 +28,17 @@
               v-for="item in scope.images"
               :key="item.safekey">
               <v-card light class="card">
-                <v-card-media style="cursor: pointer">
-                  <img
-                    v-lazy="getImgSrc(item, 's')"
-                    :data-full="getImgSrc(item)">
-                  {{scope.viewerOptions}}
-                </v-card-media>
-                <v-container>
-                  <v-layout>
-                    <v-flex xs12>
-                      <span class="title">{{item.headline}}</span><br>
-                      <span>{{dateFormat(item)}}</span>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-                <v-card-actions class="px-3 pb-3">
+                <img
+                  v-lazy="getImgSrc(item, 's')"
+                  :data-full="getImgSrc(item)">
+                {{scope.viewerOptions}}
+                <v-card-title primary-title class="pt-3">
+                  <div>
+                    <h3 class="title">{{item.headline}}</h3>
+                    <div>{{dateFormat(item)}}</div>
+                  </div>
+                </v-card-title>
+                <v-card-actions class="pt-0 px-3 pb-3">
                   <v-layout justify-end row>
                     <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
                       <v-icon>cancel</v-icon>
@@ -171,13 +167,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-card__media {
+.card {
   img {
     opacity: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
     &[lazy=loaded] {
       opacity: 1;
     }
