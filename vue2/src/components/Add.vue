@@ -51,7 +51,7 @@
             <v-list two-line>
               <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
                 <v-list-tile-avatar>
-                  <img :src="getImgSrc(item, 's')" :alt="item.slug">
+                  <img :src="getImgSrc(item, '400')" :alt="item.slug">
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>{{item.headline}}</v-list-tile-title>

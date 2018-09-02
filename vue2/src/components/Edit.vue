@@ -17,7 +17,7 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img :src="getImgSrc(tmp, 's')" style="max-width: 100%">
+                <img :src="getImgSrc(tmp, '400')" style="max-width: 100%">
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>

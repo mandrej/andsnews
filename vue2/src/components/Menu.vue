@@ -7,11 +7,11 @@
           <v-img
             cover
             height="200px"
-            aspect-ratio="1.0"
+            aspect-ratio="1"
             class="white--text"
             style="cursor: pointer"
             @click="showFilter(item)"
-            :src="getImgSrc(item, 's')">
+            :src="getImgSrc(item, '400')">
             <v-container fill-height fluid>
               <v-layout fill-height>
                 <v-flex xs12 align-end flexbox>
@@ -20,9 +20,7 @@
               </v-layout>
             </v-container>
           </v-img>
-          <v-card-text>
-            {{item.count}} photos
-          </v-card-text>
+          <v-card-text>{{item.count}} photos</v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -30,7 +28,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 

@@ -28,13 +28,14 @@
               v-for="item in scope.images"
               :key="item.safekey">
               <v-card light class="card">
-                <img
-                  v-lazy="getImgSrc(item, 's')"
+                <img :alt="alt(item)"
+                  v-lazy="getImgSrc(item, '400')"
                   :data-full="getImgSrc(item)">
                 <v-card-title primary-title class="pt-3">
                   <div>
                     <h3 class="title">{{item.headline}}</h3>
                     <div>{{dateFormat(item)}}</div>
+                    <div>{{item.author.match(/[^@]+/)[0]}}</div>
                   </div>
                 </v-card-title>
                 <v-card-actions class="pt-0 px-3 pb-3">
@@ -90,7 +91,7 @@ export default {
     editForm: false,
     viewerOptions: {
       loop: false,
-      title: false,
+
       navbar: false,
       keyborad: false,
       toolbar: false,
@@ -161,6 +162,13 @@ export default {
     agree () {
       this.$store.dispatch('All/deleteRecord', this.current)
       this.confirm = false
+    },
+    alt (rec) {
+      return `${rec.aperture ? 'f/' + rec.aperture : ''}` +
+        ` ${rec.shutter ? rec.shutter + 's' : ''}` +
+        ` ${rec.iso ? rec.iso + ' ASA' : ''}` +
+        ` ${rec.model ? rec.model : ''} ${rec.lens ? rec.lens : ''}` +
+        ` ${rec.focal_length ? '(' + rec.focal_length + 'mm)' : ''}`
     }
   }
 }
@@ -199,6 +207,21 @@ export default {
     top: 50%;
     width: 100px;
     z-index: 1;
+  }
+}
+.viewer-footer {
+  bottom: 10px;
+  & .viewer-title {
+    font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
+    font-size: 14px;
+    line-height: normal;
+    margin: 0 5% 5px;
+    max-width: 90%;
+    opacity: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity .15s;
+    white-space: nowrap;
   }
 }
 .viewer-backdrop {
