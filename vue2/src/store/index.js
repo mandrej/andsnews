@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
-// import createLogger from 'vuex/dist/logger';
+import createLogger from 'vuex/dist/logger';
 import modules from './modules';
 
 Vue.use(Vuex);
@@ -17,7 +17,7 @@ const createStore = () => {
     strict: isNotProd,
     plugins: []
       .concat(isNotTest ? [createPersistedState({ key: APP_KEY })] : ['user', 'menu', 'filter', 'find', 'uploaded', 'fcm_token'])
-      // .concat(isNotProd ? [createLogger()] : []),
+      .concat(isNotProd ? [createLogger()] : []),
   });
   if (module.hot) {
   // accept actions and mutations as hot modules

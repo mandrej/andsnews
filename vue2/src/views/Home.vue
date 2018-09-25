@@ -63,10 +63,10 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app light class="aperture">
+      <v-toolbar app dark class="aperture" color="secondary">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
-        <v-toolbar-title class="headline secondary--text">{{title}}</v-toolbar-title>
+        <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value" style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
