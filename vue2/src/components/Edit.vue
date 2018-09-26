@@ -4,7 +4,7 @@
     lazy fullscreen hide-overlay scrollable
     transition="dialog-bottom-transition">
     <v-card tile light>
-      <v-toolbar dark class="aperture" color="secondary">
+      <v-toolbar light class="aperture">
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
