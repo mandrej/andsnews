@@ -36,7 +36,7 @@
     </v-dialog>
 
     <v-app>
-      <v-navigation-drawer v-model="drawer" app fixed>
+      <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column class="aperture" fill-height>
           <v-toolbar light class="aperture">
             <v-spacer></v-spacer>
@@ -108,6 +108,7 @@ export default {
     'Add': () => import(/* webpackChunkName: "add" */ '@/components/Add'),
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
     Menu,
+    List,
     Find
   },
   data: () => ({
@@ -124,16 +125,7 @@ export default {
   created () {
     this.$store.dispatch('All/fetchToken')
     const qs = this.$route.params.qs || null
-    if (qs) {
-      this.$store.dispatch('All/changeFilter', {
-        field: 'search',
-        value: qs
-      })
-      this.currentComponent = List
-    } else {
-      this.$store.dispatch('All/changeFilter', {})
-      this.currentComponent = Menu
-    }
+    this.switchComponent(qs)
   },
   mounted () {
     if (this.user && this.user.isAuthorized) {
@@ -157,7 +149,19 @@ export default {
         this.empty = true
       }
     },
-    '$route.params.qs' (qs) {
+    '$route.params.qs': {
+      handler: 'switchComponent',
+      immediate: true
+    }
+  },
+  computed: {
+    ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
+  },
+  methods: {
+    clearFilter () {
+      this.$router.push({ name: 'home' })
+    },
+    switchComponent (qs) {
       if (qs) {
         this.$store.dispatch('All/changeFilter', {
           field: 'search',
@@ -168,14 +172,6 @@ export default {
         this.$store.dispatch('All/changeFilter', {})
         this.currentComponent = Menu
       }
-    }
-  },
-  computed: {
-    ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
-  },
-  methods: {
-    clearFilter () {
-      this.$router.push({ name: 'home' })
     }
   }
 }
