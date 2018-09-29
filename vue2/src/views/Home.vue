@@ -41,9 +41,9 @@
           <v-toolbar light class="aperture">
             <v-spacer></v-spacer>
             <SignIn></SignIn>
-            <v-layout slot="extension">
+            <v-layout slot="extension" row justify-space-between>
               <v-toolbar-title class="headline">{{total}}</v-toolbar-title>
-              <v-spacer></v-spacer>
+              <v-toolbar-title class="headline">{{counter()}}</v-toolbar-title>
             </v-layout>
           </v-toolbar>
 
@@ -120,7 +120,9 @@ export default {
     timeout: 6000,
     empty: false,
     isAuthorized: null,
-    currentComponent: Menu
+    currentComponent: Menu,
+    displayCount: 0,
+    interval: false
   }),
   created () {
     this.$store.dispatch('All/fetchToken')
@@ -142,12 +144,23 @@ export default {
       this.text = payload.notification.body
       this.snackbar = true
     })
+    this.displayCount = this.count
   },
   watch: {
     count (val) {
       if (val === 0) {
         this.empty = true
+        return
       }
+      // https://stackoverflow.com/questions/35531629/vuejs-animate-number-changes
+      clearInterval(this.interval)
+      this.interval = setInterval(() => {
+        if (this.displayCount !== val) {
+          let change = (val - this.displayCount) / 10
+          change = change >= 0 ? Math.ceil(change) : Math.floor(change)
+          this.displayCount += change
+        }
+      }, 20)
     },
     '$route.params.qs': {
       handler: 'switchComponent',
@@ -171,6 +184,11 @@ export default {
       } else {
         this.$store.dispatch('All/changeFilter', {})
         this.currentComponent = Menu
+      }
+    },
+    counter () {
+      if (this.currentComponent !== Menu) {
+        return this.displayCount
       }
     }
   }

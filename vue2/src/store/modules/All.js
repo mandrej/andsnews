@@ -56,7 +56,9 @@ const actions = {
   changeFilter: ({commit, dispatch}, payload) => {
     commit('CHANGE_FILTER', payload)
     commit('SET_CLEAR', true)
-    dispatch('fetchRecords')
+    if (payload.field) {
+      dispatch('fetchRecords')
+    }
   },
   addRecord: ({commit}, obj) => {
     commit('ADD_UPLOADED', obj)
