@@ -80,7 +80,9 @@
       </v-toolbar>
 
       <v-content class="aperture" style="background-attachment: fixed">
-        <component v-bind:is="currentComponent"></component>
+        <transition name="fade" mode="out-in">
+          <component v-bind:is="currentComponent"></component>
+        </transition>
       </v-content>
 
       <Footer :top="true"></Footer>
@@ -187,7 +189,7 @@ export default {
       }
     },
     counter () {
-      if (this.currentComponent !== Menu) {
+      if (this.currentComponent === List) {
         return this.displayCount
       }
     }

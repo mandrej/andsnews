@@ -1,13 +1,15 @@
 <template>
-  <v-avatar
-    size="36px"
-    @click="signHandler"
-    style="cursor: pointer">
-    <img
-      v-if="photoUrl"
-      :src="photoUrl">
-    <v-icon v-else flat>account_circle</v-icon>
-  </v-avatar>
+  <transition name="fade" mode="out-in">
+    <v-avatar
+      size="36px"
+      @click="signHandler"
+      style="cursor: pointer">
+      <img
+        v-if="photoUrl"
+        :src="photoUrl">
+      <v-icon v-else flat>account_circle</v-icon>
+    </v-avatar>
+  </transition>
 </template>
 
 <script>
