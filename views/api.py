@@ -204,9 +204,8 @@ def available_filters():
     current = datetime.datetime.now().year
     if collection:
         limit = np.percentile([d['count'] for d in collection], PERCENTILE)
-        logging.error(limit)
         for item in collection:
-            item['show'] = True if (item['field_name'] == 'date' and item['name'] == current) \
+            item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
                 else item['count'] > int(limit)
 
     return [x for x in collection if x['show']]

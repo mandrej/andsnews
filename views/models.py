@@ -294,20 +294,21 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def buffer(self):
+        """ Used for Download """
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
     def add(self, fs):
         _buffer = fs.value
+        # Check GCS stat exist first
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
-        # Check  GCS stat exist first
         try:
             gcs.stat(object_name)
             object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
-        # Write to GCS
         try:
+            # Write to GCS
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)
             with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
