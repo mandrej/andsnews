@@ -298,6 +298,29 @@ class Photo(ndb.Model):
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
         return blob_reader.read(size=-1)
 
+    def extra_properties(self):
+        _buffer = self.buffer
+        image_from_buffer = Image.open(StringIO(_buffer))
+        self.dim = image_from_buffer.size
+
+        # Calculate Pallette
+        image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
+        palette = extract_colors(image_from_buffer)
+        if palette.bgcolor:
+            colors = [palette.bgcolor] + palette.colors
+        else:
+            colors = palette.colors
+
+        _max = 0
+        for c in colors:
+            h, l, s = rgb_hls(c.value)
+            criteria = s * c.prominence
+            if criteria >= _max:  # saturation could be 0
+                _max = criteria
+                self.rgb = c.value
+        self.hue, self.lum, self.sat = range_names(self.rgb)
+        self.put()
+
     def add(self, fs):
         _buffer = fs.value
         # Check GCS stat exist first
@@ -324,31 +347,11 @@ class Photo(ndb.Model):
             for field, value in exif.items():
                 setattr(self, field, value)
 
-            # Set dim
-            image_from_buffer = Image.open(StringIO(_buffer))
-            self.dim = image_from_buffer.size
-
-            # Calculate Pallette
-            image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
-            palette = extract_colors(image_from_buffer)
-            if palette.bgcolor:
-                colors = [palette.bgcolor] + palette.colors
-            else:
-                colors = palette.colors
-
-            _max = 0
-            for c in colors:
-                h, l, s = rgb_hls(c.value)
-                criteria = s * c.prominence
-                if criteria >= _max:  # saturation could be 0
-                    _max = criteria
-                    self.rgb = c.value
-            self.hue, self.lum, self.sat = range_names(self.rgb)
-
             # SAVE EVERYTHING
             self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
             self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
+            deferred.defer(self.extra_properties, _queue='background')
 
             new_pairs = self.changed_pairs()
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
