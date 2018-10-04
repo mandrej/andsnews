@@ -71,6 +71,7 @@ const actions = {
         commit('UPDATE_RECORD', obj)
         commit('SET_CURRENT', obj)
         commit('DELETE_UPLOADED', obj)
+        commit('UPDATE_TAGS_MODELS', obj)
       })
   },
   deleteRecord: ({commit}, obj) => {
@@ -122,13 +123,15 @@ const actions = {
         console.error(err)
       })
   },
-  fetchTags: ({commit}) => {
+  fetchTags: ({commit, state}) => {
+    if (state.tags.length !== 0) return
     axios.get('suggest/Photo_tags')
       .then(response => {
         commit('UPDATE_TAGS', response.data)
       })
   },
-  fetchModels: ({commit}) => {
+  fetchModels: ({commit, state}) => {
+    if (state.models.length !== 0) return
     axios.get('suggest/Photo_model')
       .then(response => {
         commit('UPDATE_MODELS', response.data)
@@ -217,6 +220,10 @@ const mutations = {
   UPDATE_RECORD (state, obj) {
     const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
     state.objects.splice(idx, 1, obj)
+  },
+  UPDATE_TAGS_MODELS (state, obj) {
+    state.tags = [...new Set([].concat(...state.tags, obj.tags))]
+    if (obj.model) state.models = [...new Set([].concat(...state.models, [obj.model]))]
   },
   RESET_RECORDS (state) {
     state.objects.length = 0
