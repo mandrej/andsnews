@@ -197,7 +197,6 @@ export default {
           this.dateTime.time += ':00'
         }
         this.tmp.date = this.dateTime.date + 'T' + this.dateTime.time
-        console.log(this.tmp);
         this.$store.dispatch('All/saveRecord', this.tmp)
         this.show = false
       }

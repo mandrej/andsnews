@@ -55,8 +55,8 @@ const actions = {
   changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
   changeFilter: ({commit, dispatch}, payload) => {
     commit('CHANGE_FILTER', payload)
-    commit('SET_CLEAR', true)
     if (payload.field) {
+      commit('SET_CLEAR', true)
       dispatch('fetchRecords')
     }
   },
