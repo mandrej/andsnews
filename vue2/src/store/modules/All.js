@@ -89,13 +89,12 @@ const actions = {
   },
   fetchRecords: ({commit, state}, next) => {
     if (state.busy) return
+    commit('SET_BUSY', true)
     let url = 'start'
     const params = {}
     const filter = {...state.filter}
 
-    if (next) {
-      params._page = next
-    }
+    if (next) params._page = next
     if (filter && filter.field) {
       if (filter.field === 'search') {
         url = ['search', filter.value].join('/')
@@ -104,7 +103,6 @@ const actions = {
       }
     }
 
-    commit('SET_BUSY', true)
     axios.get(url, {params: params})
       .then(response => {
         if (state.clear) {

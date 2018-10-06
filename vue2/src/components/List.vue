@@ -129,7 +129,7 @@ export default {
     // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
     bottom (val) {
       if (val) {
-        this.loadMore()
+        this.$store.dispatch('All/fetchRecords', this.next)
       }
     }
   },
@@ -140,13 +140,6 @@ export default {
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
       return visible + scrollY + this.distance >= pageHeight
-    },
-    loadMore () {
-      if (this.objects.length === 0) {
-        this.$store.dispatch('All/fetchRecords')
-      } else if (this.next && this.pages.indexOf(this.next) === -1) {
-        this.$store.dispatch('All/fetchRecords', this.next)
-      }
     },
     showEditdForm (rec) {
       this.$store.dispatch('All/changeCurrent', rec)
