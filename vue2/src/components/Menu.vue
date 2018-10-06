@@ -34,9 +34,6 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Menu',
   mixins: [ common ],
-  mounted () {
-    this.$store.dispatch('All/fetchMenu')
-  },
   computed: {
     ...mapState('All', ['menu'])
   },

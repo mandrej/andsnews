@@ -90,8 +90,6 @@ export default {
     confirm: false,
     editForm: false,
     viewerOptions: {
-      loop: false,
-
       navbar: false,
       keyborad: false,
       toolbar: false,
@@ -112,7 +110,6 @@ export default {
     window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })
-    this.loadMore()
   },
   mounted () {
     window.addEventListener('hide', () => {

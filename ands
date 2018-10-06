@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 home=/home/milan
+app=$home/work/andsnews
 python=$home/venv/andsnews/bin/python
 dev_appserver=$home/google-cloud-sdk/bin/dev_appserver.py
 storage=$home/work/andsnews_storage/
@@ -35,7 +36,7 @@ else
           $python $dev_appserver --port=8080 --storage_path=$storage dispatch.yaml api_dev.yaml p2_dev.yaml
           exit ;;
         vue2)
-          $python $dev_appserver --port=6060 --storage_path=$storage --support_datastore_emulator=True api_dev.yaml
+          $python $dev_appserver --port=6060 --storage_path=$storage --support_datastore_emulator=True $app/api_dev.yaml
           # start manually
           # cd vue2
           # yarn run dev

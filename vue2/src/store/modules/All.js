@@ -53,11 +53,10 @@ const actions = {
   },
   saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
   changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
-  changeFilter: ({commit, dispatch}, payload) => {
+  changeFilter: ({commit}, payload) => {
     commit('CHANGE_FILTER', payload)
     if (payload.field) {
       commit('SET_CLEAR', true)
-      dispatch('fetchRecords')
     }
   },
   addRecord: ({commit}, obj) => {
@@ -79,7 +78,8 @@ const actions = {
     commit('DELETE_UPLOADED', obj)
     axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}}) // no response
   },
-  fetchMenu: ({commit}) => {
+  fetchMenu: ({commit, state}) => {
+    if (state.busy) return
     commit('SET_BUSY', true)
     axios.get('filters')
       .then(response => {

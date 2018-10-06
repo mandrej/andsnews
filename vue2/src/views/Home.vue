@@ -182,9 +182,11 @@ export default {
           field: 'search',
           value: qs
         })
+        this.$store.dispatch('All/fetchRecords')
         this.currentComponent = List
       } else {
         this.$store.dispatch('All/changeFilter', {})
+        this.$store.dispatch('All/fetchMenu')
         this.currentComponent = Menu
       }
     },
