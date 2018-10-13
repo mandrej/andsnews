@@ -13,11 +13,15 @@
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
-        <v-container grid-list-md>
+        <v-container grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <img :src="getImgSrc(tmp, '400')" style="max-width: 100%">
+                <v-img
+                  cover
+                  aspect-ratio="1"
+                  :src="getImgSrc(tmp, '400')">
+                </v-img>
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
