@@ -27,7 +27,7 @@ export default new Router({
       component: Admin,
       beforeEnter: (to, from, next) => {
         const store = createStore()
-        if (store.state.All.user.isAdmin) {
+        if (store.state.auth.user.isAdmin) {
           next()
         } else {
           next('/401')

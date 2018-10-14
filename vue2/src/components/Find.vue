@@ -93,11 +93,11 @@ export default {
     }
   }),
   created () {
-    this.$store.dispatch('All/fetchTags')
-    this.$store.dispatch('All/fetchModels')
+    this.$store.dispatch('app/fetchTags')
+    this.$store.dispatch('app/fetchModels')
   },
   computed: {
-    ...mapState('All', ['find', 'tags', 'models']),
+    ...mapState('app', ['find', 'tags', 'models']),
     data () {
       return {...this.find}
     },
@@ -138,7 +138,7 @@ export default {
         }
       })
 
-      this.$store.dispatch('All/saveFindForm', this.data)
+      this.$store.dispatch('app/saveFindForm', this.data)
       const value = params.join(' AND ')
 
       if (value) {

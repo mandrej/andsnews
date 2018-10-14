@@ -111,7 +111,7 @@ export default {
     this.reset()
   },
   computed: {
-    ...mapState('All', ['uploaded']),
+    ...mapState('app', ['uploaded']),
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
     },
@@ -143,7 +143,7 @@ export default {
         .then(x => x.map(
           item => {
             this.uploadedFiles.push(item.rec)
-            this.$store.dispatch('All/addRecord', item.rec)
+            this.$store.dispatch('app/addRecord', item.rec)
           }
         ))
         .then(() => {
@@ -169,11 +169,11 @@ export default {
       this.save(formData)
     },
     showEditForm (rec) {
-      this.$store.dispatch('All/changeCurrent', rec)
+      this.$store.dispatch('app/changeCurrent', rec)
       this.editForm = true
     },
     removeRecord (rec) {
-      this.$store.dispatch('All/deleteRecord', rec)
+      this.$store.dispatch('app/deleteRecord', rec)
     }
   }
 }

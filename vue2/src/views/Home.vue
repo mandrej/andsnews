@@ -127,7 +127,7 @@ export default {
     interval: false
   }),
   created () {
-    this.$store.dispatch('All/fetchToken')
+    this.$store.dispatch('auth/fetchToken')
     const qs = this.$route.params.qs || null
     this.switchComponent(qs)
   },
@@ -170,7 +170,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('All', ['user', 'busy', 'filter', 'count', 'total'])
+    ...mapState('auth', ['user']),
+    ...mapState('app', ['busy', 'filter', 'count', 'total'])
   },
   methods: {
     clearFilter () {
@@ -178,15 +179,15 @@ export default {
     },
     switchComponent (qs) {
       if (qs) {
-        this.$store.dispatch('All/changeFilter', {
+        this.$store.dispatch('app/changeFilter', {
           field: 'search',
           value: qs
         })
-        this.$store.dispatch('All/fetchRecords')
+        this.$store.dispatch('app/fetchRecords')
         this.currentComponent = List
       } else {
-        this.$store.dispatch('All/changeFilter', {})
-        this.$store.dispatch('All/fetchMenu')
+        this.$store.dispatch('app/changeFilter', {})
+        this.$store.dispatch('app/fetchMenu')
         this.currentComponent = Menu
       }
     },

@@ -104,7 +104,8 @@ export default {
     }
   }),
   computed: {
-    ...mapState('All', ['user', 'current', 'objects', 'pages', 'next', 'page'])
+    ...mapState('auth', ['user']),
+    ...mapState('app', ['current', 'objects', 'pages', 'next', 'page'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -129,7 +130,7 @@ export default {
     // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
     bottom (val) {
       if (val) {
-        this.$store.dispatch('All/fetchRecords', this.next)
+        this.$store.dispatch('app/fetchRecords', this.next)
       }
     }
   },
@@ -142,15 +143,15 @@ export default {
       return visible + scrollY + this.distance >= pageHeight
     },
     showEditdForm (rec) {
-      this.$store.dispatch('All/changeCurrent', rec)
+      this.$store.dispatch('app/changeCurrent', rec)
       this.editForm = true
     },
     removeRecord (rec) {
-      this.$store.dispatch('All/changeCurrent', rec)
+      this.$store.dispatch('app/changeCurrent', rec)
       this.confirm = true
     },
     agree () {
-      this.$store.dispatch('All/deleteRecord', this.current)
+      this.$store.dispatch('app/deleteRecord', this.current)
       this.confirm = false
     },
     alt (rec) {

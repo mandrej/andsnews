@@ -1,5 +1,7 @@
-import All from './All'
+import auth from './auth'
+import app from './app'
 
 export default {
-  All
+  auth,
+  app
 };

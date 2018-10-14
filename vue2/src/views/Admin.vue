@@ -119,7 +119,7 @@ export default {
     }
   }),
   created () {
-    this.$store.dispatch('All/fetchCloud')
+    this.$store.dispatch('app/fetchCloud')
   },
   mounted () {
     messaging.onMessage(payload => {
@@ -128,7 +128,8 @@ export default {
     })
   },
   computed: {
-    ...mapState('All', ['cloud', 'fcm_token'])
+    ...mapState('auth', ['fcm_token']),
+    ...mapState('app', ['cloud'])
   },
   watch: {
     fcm_token (val) {
@@ -159,7 +160,7 @@ export default {
       this.msg.default = event.toUpperCase()
     },
     send () {
-      this.$store.dispatch('All/sendNotifications', this.msg.default)
+      this.$store.dispatch('auth/sendNotifications', this.msg.default)
     },
     nop () {
       return null

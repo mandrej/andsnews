@@ -35,7 +35,7 @@ export default {
   name: 'Menu',
   mixins: [ common ],
   computed: {
-    ...mapState('All', ['menu'])
+    ...mapState('app', ['menu'])
   },
   methods: {
     showFilter (rec) {

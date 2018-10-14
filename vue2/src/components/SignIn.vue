@@ -45,7 +45,7 @@ export default {
     })
   },
   computed: {
-    ...mapState('All', ['user'])
+    ...mapState('auth', ['user'])
   },
   methods: {
     signHandler () {
@@ -53,7 +53,7 @@ export default {
         FB.auth().signOut()
           .then(() => {
             this.photoUrl = null
-            this.$store.dispatch('All/saveUser', {
+            this.$store.dispatch('auth/saveUser', {
               name: '',
               email: '',
               uid: null,
@@ -66,7 +66,7 @@ export default {
       } else {
         FB.auth().signInWithPopup(provider)
           .then(response => {
-            this.$store.dispatch('All/saveUser', {
+            this.$store.dispatch('auth/saveUser', {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,

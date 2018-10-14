@@ -178,10 +178,10 @@ export default {
     tmp: {}
   }),
   created () {
-    this.$store.dispatch('All/fetchTags')
+    this.$store.dispatch('app/fetchTags')
   },
   computed: {
-    ...mapState('All', ['current', 'tags'])
+    ...mapState('app', ['current', 'tags'])
   },
   watch: {
     current (val) {
@@ -201,7 +201,7 @@ export default {
           this.dateTime.time += ':00'
         }
         this.tmp.date = this.dateTime.date + 'T' + this.dateTime.time
-        this.$store.dispatch('All/saveRecord', this.tmp)
+        this.$store.dispatch('app/saveRecord', this.tmp)
         this.show = false
       }
     }

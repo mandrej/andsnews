@@ -16,7 +16,7 @@ const createStore = () => {
     modules,
     strict: isNotProd,
     plugins: []
-      .concat(isNotTest ? [createPersistedState({ key: APP_KEY })] : ['user', 'menu', 'filter', 'find', 'uploaded', 'fcm_token'])
+      .concat(isNotTest ? [createPersistedState({ key: APP_KEY })] : ['user', 'fcm_token', 'menu', 'filter', 'find', 'uploaded'])
       .concat(isNotProd ? [createLogger()] : []),
   });
   if (module.hot) {
