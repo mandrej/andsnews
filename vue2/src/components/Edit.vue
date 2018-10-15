@@ -53,7 +53,7 @@
                   <v-flex xs12 sm12 md12 d-flex>
                     <v-autocomplete
                       label="Author"
-                      :items="authors"
+                      :items="$authors"
                       v-model="tmp.author"
                       single-line></v-autocomplete>
                   </v-flex>
@@ -163,14 +163,6 @@ export default {
     valid: true,
     requiredRule: [
       value => !!value || 'Required.'
-    ],
-    authors: [
-      'milan.andrejevic@gmail.com',
-      'mihailo.genije@gmail.com',
-      'svetlana.andrejevic@gmail.com',
-      'ana.devic@gmail.com',
-      'dannytaboo@gmail.com',
-      'zile.zikson@gmail.com'
     ],
     menuDate: false,
     menuTime: false,

@@ -7,6 +7,18 @@ import router from './router'
 import './registerServiceWorker'
 import configureStore from './store'
 
+// Instance Properties
+Vue.prototype.$authors = [
+  'milan.andrejevic@gmail.com',
+  'mihailo.genije@gmail.com',
+  'svetlana.andrejevic@gmail.com',
+  'ana.devic@gmail.com',
+  'dannytaboo@gmail.com',
+  'zile.zikson@gmail.com'
+]
+Vue.prototype.$colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light']
+Vue.prototype.$version = process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+
 Vue.config.productionTip = false
 
 new Vue({

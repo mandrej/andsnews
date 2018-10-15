@@ -9,14 +9,14 @@
           <v-flex xs12 class="hidden-xs-only">
             <v-text-field
               label="by text"
-              v-model="data.text"
+              v-model="tmp.text"
               clearable></v-text-field>
           </v-flex>
           <v-flex xs12>
             <v-autocomplete
               label="by tags"
               :items="tags"
-              v-model="data.tags"
+              v-model="tmp.tags"
               chips
               multiple
               clearable>
@@ -34,35 +34,35 @@
             <v-select
               label="by year"
               :items="years"
-              v-model="data.year"
+              v-model="tmp.year"
               clearable></v-select>
           </v-flex>
           <v-flex xs12>
             <v-select
               label="by month"
               :items="months"
-              v-model="data.month"
+              v-model="tmp.month"
               clearable></v-select>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-autocomplete
               label="by camera model"
               :items="models"
-              v-model="data.model"
+              v-model="tmp.model"
               clearable></v-autocomplete>
           </v-flex>
           <v-flex xs12>
             <v-autocomplete
               label="by author"
-              :items="authors"
-              v-model="data.author"
+              :items="names"
+              v-model="tmp.author"
               clearable></v-autocomplete>
           </v-flex>
           <v-flex xs12 class="hidden-xs-only">
             <v-autocomplete
               label="by color"
-              :items="colors"
-              v-model="data.color"
+              :items="$colors"
+              v-model="tmp.color"
               clearable></v-autocomplete>
           </v-flex>
         </v-layout>
@@ -79,26 +79,13 @@ export default {
   name: 'Find',
   mixins: [ common ],
   props: ['visible'],
-  data: () => ({
-    authors: ['milan', 'mihailo', 'genije', 'svetlana', 'andrejevic', 'ana', 'devic', 'dannytaboo', 'zile', 'zikson'],
-    colors: ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'],
-    blank: {
-      tags: [],
-      text: '',
-      year: '',
-      month: '',
-      model: '',
-      author: '',
-      color: ''
-    }
-  }),
   created () {
     this.$store.dispatch('app/fetchTags')
     this.$store.dispatch('app/fetchModels')
   },
   computed: {
     ...mapState('app', ['find', 'tags', 'models']),
-    data () {
+    tmp () {
       return {...this.find}
     },
     years () {
@@ -110,6 +97,11 @@ export default {
       const tmp = [...Array(12 + 1).keys()]
       tmp.shift()
       return tmp
+    },
+    names () {
+      let arr = []
+      this.$authors.map(email => arr = [...arr, ...email.split('@')[0].split('.')])
+      return [...new Set(arr)].sort()
     }
   },
   methods: {
@@ -126,19 +118,19 @@ export default {
         }
       }
 
-      Object.keys(this.data).forEach(key => {
+      Object.keys(this.tmp).forEach(key => {
         if (key === 'tags') {
-          this.data[key].forEach(tag => {
+          this.tmp[key].forEach(tag => {
             wrap(key, tag)
           })
         } else {
-          if (this.data[key]) {
-            wrap(key, this.data[key])
+          if (this.tmp[key]) {
+            wrap(key, this.tmp[key])
           }
         }
       })
 
-      this.$store.dispatch('app/saveFindForm', this.data)
+      this.$store.dispatch('app/saveFindForm', this.tmp)
       const value = params.join(' AND ')
 
       if (value) {
