@@ -94,14 +94,14 @@ export default {
       return [...Array(end - start + 1).keys()].map(n => start + n).reverse()
     },
     months () {
-      const tmp = [...Array(12 + 1).keys()]
-      tmp.shift()
-      return tmp
+      const arr = [...Array(12 + 1).keys()]
+      arr.shift()
+      return arr
     },
     names () {
       let arr = []
       this.$authors.map(email => arr = [...arr, ...email.split('@')[0].split('.')])
-      return [...new Set(arr)].sort()
+      return [...new Set(arr)]
     }
   },
   methods: {
