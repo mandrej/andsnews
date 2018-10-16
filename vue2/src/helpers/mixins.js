@@ -37,7 +37,7 @@ const common = {
         if (fmt) {
           return [day, month, year].join('.')
         } else {
-          return [day, month, year].join('.') + ' ' + time
+          return [day, month, year].join('.') + ' ' + time.slice(0,5)
         }
       }
     }
