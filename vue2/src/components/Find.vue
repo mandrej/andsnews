@@ -3,7 +3,8 @@
     <v-card-text>
       <v-form ref="form">
         <v-btn @click="submit" block flat>
-          Search images<v-icon right dark>search</v-icon>
+          Search photos
+          <v-icon right dark>search</v-icon>
         </v-btn>
         <v-layout row wrap>
           <v-flex xs12 class="hidden-xs-only">
