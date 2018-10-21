@@ -106,7 +106,6 @@ class Find(RestHandler):
         page = self.request.get('_page', None)
         paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
-        logging.error(token)
 
         if (client == 'vue2'):
             self.render({

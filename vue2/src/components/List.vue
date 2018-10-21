@@ -40,10 +40,10 @@
                 </v-card-title>
                 <v-card-actions class="pt-0 px-3 pb-3">
                   <v-layout justify-end row>
-                    <v-btn v-if="user.isAdmin" icon flat color="primary" @click="removeRecord(item)">
+                    <v-btn v-if="canDelete(user)" icon flat color="primary" @click="removeRecord(item)">
                       <v-icon>cancel</v-icon>
                     </v-btn>
-                    <v-btn v-if="user.isAuthorized" icon flat color="primary" @click="showEditdForm(item)">
+                    <v-btn v-if="canEdit(user)" icon flat color="primary" @click="showEditdForm(item)">
                       <v-icon>edit</v-icon>
                     </v-btn>
                     <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
@@ -73,9 +73,7 @@ import * as easings from 'vuetify/es5/util/easing-patterns'
 Vue.use(VueLazyload, {
   attempt: 1
 })
-Vue.use(Viewer, {
-  debug: true
-})
+Vue.use(Viewer)
 
 export default {
   name: 'List',
@@ -86,7 +84,7 @@ export default {
   data: () => ({
     // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
     bottom: false,
-    distance: 800,
+    distance: 1800,
     confirm: false,
     editForm: false,
     viewerOptions: {
@@ -105,7 +103,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['current', 'objects', 'pages', 'next', 'page'])
+    ...mapState('app', ['current', 'objects', 'next'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -142,9 +140,15 @@ export default {
       const pageHeight = document.documentElement.scrollHeight
       return visible + scrollY + this.distance >= pageHeight
     },
+    canEdit (user) {
+      return user.isAuthorized
+    },
     showEditdForm (rec) {
       this.$store.dispatch('app/changeCurrent', rec)
       this.editForm = true
+    },
+    canDelete (user) {
+      return user.isAdmin
     },
     removeRecord (rec) {
       this.$store.dispatch('app/changeCurrent', rec)

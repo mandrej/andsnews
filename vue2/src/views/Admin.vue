@@ -47,7 +47,7 @@
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="disabled" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
             </v-flex>
           </v-layout>
           <v-layout row>
@@ -57,7 +57,7 @@
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="disabled" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-flex>
           </v-layout>
 
@@ -70,7 +70,7 @@
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="disabled" color="error" @click="unbound">Remove</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
           <v-layout row>
@@ -80,7 +80,7 @@
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="disabled" color="secondary" @click="fix">Missing</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="fix">Missing</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -111,7 +111,6 @@ export default {
     text: '',
     snackbar: false,
     timeout: 6000,
-    disabled: false,
     msg: {
       type: String,
       required: true,
@@ -131,14 +130,10 @@ export default {
     ...mapState('auth', ['fcm_token']),
     ...mapState('app', ['cloud'])
   },
-  watch: {
-    fcm_token (val) {
-      if (!val) {
-        this.disabled = true
-      }
-    }
-  },
   methods: {
+    canRun (token) {
+      return Boolean(!token)
+    },
     callAjax (url) {
       Vue.axios.post(url, {token: this.fcm_token})
         .then(x => x.data)

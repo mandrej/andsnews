@@ -12,7 +12,6 @@ const initialState = {
   menu: [],
   objects: [],
   pages: [],
-  page: null, // unused
   next: null,
   current: {},
   tags: [],
@@ -65,12 +64,13 @@ const actions = {
   },
   fetchRecords: ({commit, state}, next) => {
     if (state.busy) return
+    console.error(state.next, next)
     commit('SET_BUSY', true)
     let url = 'start'
     const params = {}
     const filter = {...state.filter}
-
     if (next) params._page = next
+
     if (filter && filter.field) {
       if (filter.field === 'search') {
         url = ['search', filter.value].join('/')
@@ -146,7 +146,6 @@ const mutations = {
   UPDATE_RECORDS (state, data) {
     state.objects = [...state.objects, ...data.objects]
     state.pages = [...state.pages, data._page]
-    state.page = data._page
     state.next = data._next
     state.count = state.objects.length
   },
@@ -161,7 +160,6 @@ const mutations = {
   RESET_RECORDS (state) {
     state.objects.length = 0
     state.pages.length = 0
-    state.page = null
     state.next = null
   },
   DELETE_RECORD (state, obj) {

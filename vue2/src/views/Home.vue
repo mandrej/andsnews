@@ -50,7 +50,7 @@
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list light style="background: transparent">
+          <v-list v-if="isAdmin" light style="background: transparent">
             <v-list-tile @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -121,6 +121,7 @@ export default {
     snackbar: false,
     timeout: 6000,
     empty: false,
+    isAdmin: null,
     isAuthorized: null,
     currentComponent: Menu,
     displayCount: 0,
@@ -133,12 +134,15 @@ export default {
   },
   mounted () {
     if (this.user && this.user.isAuthorized) {
+      this.isAdmin = this.user.isAdmin
       this.isAuthorized = this.user.isAuthorized
     }
     EventBus.$on('signin', user => {
       if (user && user.isAuthorized) {
+        this.isAdmin = user.isAdmin
         this.isAuthorized = user.isAuthorized
       } else {
+        this.isAdmin = null
         this.isAuthorized = null
       }
     })
@@ -152,7 +156,6 @@ export default {
     count (val) {
       if (val === 0) {
         this.empty = true
-        return
       }
       // https://stackoverflow.com/questions/35531629/vuejs-animate-number-changes
       clearInterval(this.interval)
@@ -183,7 +186,7 @@ export default {
           field: 'search',
           value: qs
         })
-        this.$store.dispatch('app/fetchRecords')
+        this.$store.dispatch('app/fetchRecords', null)
         this.currentComponent = List
       } else {
         this.$store.dispatch('app/changeFilter', {})
