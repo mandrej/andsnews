@@ -25,11 +25,6 @@ const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 export default {
   name: 'SignIn',
   data: () => ({
-    // milan, mihailo
-    admins: [
-      'j8ezW5PBwMMnzrUvDA9ucYOOmrD3',
-      'vlRwHqVZNfOpr3FRqQZGqT2M2HA2'
-    ],
     photoUrl: null
   }),
   mounted () {
@@ -72,7 +67,7 @@ export default {
               uid: response.user.uid,
               photo: response.user.photoURL,
               isAuthorized: true,
-              isAdmin: (this.admins.indexOf(response.user.uid) !== -1)
+              isAdmin: (this.$admins.indexOf(response.user.uid) !== -1)
             })
           })
       }

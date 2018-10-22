@@ -16,6 +16,8 @@ Vue.prototype.$authors = [
   'dannytaboo@gmail.com',
   'zile.zikson@gmail.com'
 ]
+// user.uid for           milan.andrejevic@gmail.com      mihailo.genije@gmail.com
+Vue.prototype.$admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
 Vue.prototype.$colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light']
 Vue.prototype.$version = process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
 
