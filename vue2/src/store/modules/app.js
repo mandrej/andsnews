@@ -13,6 +13,7 @@ const initialState = {
   objects: [],
   pages: [],
   next: null,
+  error: '',
   current: {},
   tags: [],
   models: [],
@@ -32,6 +33,7 @@ const actions = {
     commit('CHANGE_FILTER', payload)
     if (payload.field) {
       commit('SET_CLEAR', true)
+      commit('RESET_PAGINATOR')
     }
   },
   addRecord: ({commit}, obj) => {
@@ -62,14 +64,14 @@ const actions = {
         commit('SET_BUSY', false)
       })
   },
-  fetchRecords: ({commit, state}, next) => {
+  fetchRecords: ({commit, state}) => {
     if (state.busy) return
-    console.error(state.next, next)
+    commit('SET_ERROR', '')
     commit('SET_BUSY', true)
     let url = 'start'
     const params = {}
     const filter = {...state.filter}
-    if (next) params._page = next
+    if (state.next) params._page = state.next
 
     if (filter && filter.field) {
       if (filter.field === 'search') {
@@ -85,16 +87,13 @@ const actions = {
           commit('RESET_RECORDS')
           commit('SET_CLEAR', false)
         }
-        if (state.pages.indexOf(response.data._page) === -1) {
-          commit('UPDATE_RECORDS', response.data)
-        } else {
-          console.error('duplicate ', response.data._page)
-        }
+        commit('UPDATE_RECORDS', response.data)
+        if (response.error) commit('SET_ERROR', response.error)
         commit('SET_BUSY', false)
       })
       .catch(err => {
+        commit('SET_ERROR', err)
         commit('SET_BUSY', false)
-        console.error(err)
       })
   },
   fetchTags: ({commit, state}) => {
@@ -159,6 +158,8 @@ const mutations = {
   },
   RESET_RECORDS (state) {
     state.objects.length = 0
+  },
+  RESET_PAGINATOR (state) {
     state.pages.length = 0
     state.next = null
   },
@@ -186,6 +187,9 @@ const mutations = {
   },
   SET_BUSY (state, val) {
     state.busy = val
+  },
+  SET_ERROR (state, val) {
+    state.error = val
   }
 };
 

@@ -21,11 +21,15 @@
 
     <v-dialog v-model="empty" max-width="300px" lazy>
       <v-card>
-        <v-card-title class="headline warning" primary-title>
+        <v-card-title v-if="error" class="headline warning error--text" primary-title>
+          Error
+        </v-card-title>
+        <v-card-title v-else class="headline warning" primary-title>
           No photos
         </v-card-title>
         <v-card-text>
-          for current filter / search
+          <template v-if="error">{{error}}</template>
+          <template v-else>For current filter | search</template>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="pa-3">
@@ -174,7 +178,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'filter', 'count', 'total'])
+    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   methods: {
     clearFilter () {
@@ -186,7 +190,7 @@ export default {
           field: 'search',
           value: qs
         })
-        this.$store.dispatch('app/fetchRecords', null)
+        this.$store.dispatch('app/fetchRecords')
         this.currentComponent = List
       } else {
         this.$store.dispatch('app/changeFilter', {})
