@@ -2,7 +2,7 @@
   <div>
     <Add :visible="showAddForm" @close="showAddForm = false"></Add>
 
-    <v-btn v-if="isAuthorized"
+    <v-btn v-if="canAdd(user)"
       fab medium fixed bottom right
       color="accent" class="black--text" @click="showAddForm = true">
       <v-icon>add</v-icon>
@@ -54,7 +54,7 @@
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list v-if="isAdmin" light style="background: transparent">
+          <v-list v-if="canAdmin(user)" light style="background: transparent">
             <v-list-tile @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -99,7 +99,6 @@ import { mapState } from 'vuex'
 import Menu from '@/components/Menu'
 import List from '@/components/List'
 import Find from '@/components/Find'
-import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
@@ -125,8 +124,6 @@ export default {
     snackbar: false,
     timeout: 6000,
     empty: false,
-    isAdmin: null,
-    isAuthorized: null,
     currentComponent: Menu,
     displayCount: 0,
     interval: false
@@ -137,19 +134,6 @@ export default {
     this.switchComponent(qs)
   },
   mounted () {
-    if (this.user && this.user.isAuthorized) {
-      this.isAdmin = this.user.isAdmin
-      this.isAuthorized = this.user.isAuthorized
-    }
-    EventBus.$on('signin', user => {
-      if (user && user.isAuthorized) {
-        this.isAdmin = user.isAdmin
-        this.isAuthorized = user.isAuthorized
-      } else {
-        this.isAdmin = null
-        this.isAuthorized = null
-      }
-    })
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true
@@ -181,6 +165,12 @@ export default {
     ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   methods: {
+    canAdd (user) {
+      return user && user.isAuthorized
+    },
+    canAdmin (user) {
+      return user && user.isAdmin
+    },
     clearFilter () {
       this.$router.push({ name: 'home' })
     },

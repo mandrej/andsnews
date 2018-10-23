@@ -5,8 +5,8 @@
       @click="signHandler"
       style="cursor: pointer">
       <img
-        v-if="photoUrl"
-        :src="photoUrl">
+        v-if="user.uid"
+        :src="photo(user)">
       <v-icon v-else flat>account_circle</v-icon>
     </v-avatar>
   </transition>
@@ -15,7 +15,6 @@
 <script>
 import { mapState } from 'vuex'
 import { FB } from '@/helpers/fire'
-import { EventBus } from '@/helpers/event-bus'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/auth'
@@ -24,30 +23,20 @@ const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 
 export default {
   name: 'SignIn',
-  data: () => ({
-    photoUrl: null
-  }),
-  mounted () {
-    if (this.user && this.user.photo) {
-      this.photoUrl = this.user.photo
-    }
-    EventBus.$on('signin', user => {
-      if (user && user.photo) {
-        this.photoUrl = user.photo
-      } else {
-        this.photoUrl = null
-      }
-    })
-  },
   computed: {
     ...mapState('auth', ['user'])
   },
   methods: {
+    photo (user) {
+      if (user && user.photo) {
+        return user.photo
+      }
+      return null
+    },
     signHandler () {
       if (this.user && this.user.uid) {
         FB.auth().signOut()
           .then(() => {
-            this.photoUrl = null
             this.$store.dispatch('auth/saveUser', {
               name: '',
               email: '',
