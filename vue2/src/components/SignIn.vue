@@ -6,7 +6,7 @@
       style="cursor: pointer">
       <img
         v-if="user.uid"
-        :src="photo(user)">
+        :src="user.photo">
       <v-icon v-else flat>account_circle</v-icon>
     </v-avatar>
   </transition>
@@ -27,12 +27,6 @@ export default {
     ...mapState('auth', ['user'])
   },
   methods: {
-    photo (user) {
-      if (user && user.photo) {
-        return user.photo
-      }
-      return null
-    },
     signHandler () {
       if (this.user && this.user.uid) {
         FB.auth().signOut()

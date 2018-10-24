@@ -25,14 +25,14 @@
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
-                  <v-flex xs12 d-flex>
+                  <v-flex xs12>
                     <v-text-field
                       :label="`Headline for ${tmp.filename}`"
                       v-model="tmp.headline"
                       :rules="requiredRule"
                       required></v-text-field>
                   </v-flex>
-                  <v-flex xs12 d-flex>
+                  <v-flex xs12>
                     <v-combobox
                       label="Tags"
                       :items="tags"
@@ -50,14 +50,14 @@
                       </template>
                     </v-combobox>
                   </v-flex>
-                  <v-flex xs12 sm12 md12 d-flex>
+                  <v-flex xs12 sm12 md12>
                     <v-autocomplete
                       label="Author"
                       :items="$authors"
                       v-model="tmp.author"
                       single-line></v-autocomplete>
                   </v-flex>
-                  <v-flex xs12 sm12 md12 d-flex>
+                  <v-flex xs12 sm12 md12>
                     <v-layout row>
                       <v-flex xs6>
                         <v-menu
