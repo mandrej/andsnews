@@ -27,7 +27,7 @@
         <v-card-text>
           <v-container>
             <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-            <v-responsive height="120px">
+            <v-responsive height="120px" class="mb-3">
               <input type="file" multiple
                 :name="uploadFieldName"
                 :disabled="isSaving"
@@ -56,11 +56,7 @@
                 </v-layout>
               </v-container>
             </v-responsive>
-          </v-container>
-        </v-card-text>
 
-        <v-card v-if="uploaded.length > 0" flat>
-          <v-container>
             <v-slide-y-transition hide-on-leave group tag="v-list" two-line>
               <template v-for="(item, i) in uploaded">
                 <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
@@ -81,9 +77,9 @@
                 </v-list-tile>
               </template>
             </v-slide-y-transition>
-          </v-container>
-        </v-card>
 
+          </v-container>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
