@@ -26,7 +26,6 @@
 
         <v-card-text>
           <v-container>
-            <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
             <v-responsive height="120px" class="mb-3">
               <input type="file" multiple
                 :name="uploadFieldName"
@@ -40,19 +39,20 @@
                     <h3 class="headline">Upload images <v-icon large>cloud_upload</v-icon></h3>
                     <span class="subheading text-xs-center">Drag your images here to upload, or click to browse.</span>
                   </template>
-                  <template v-if="isSaving && value < 100">
+                  <template v-if="isSaving">
                     <v-progress-linear
+                      :active="true"
+                      :query="value < 100"
+                      :indeterminate="value === 100"
                       color="secondary"
                       v-model="value"></v-progress-linear>
-                    <span class="subheading text-xs-center">Upload in progress {{value}}%.</span>
+                    <span v-if="value < 100" class="subheading text-xs-center">Upload in progress {{value}}%.</span>
+                    <span v-if="value === 100" class="subheading text-xs-center">Progressing images. Please wait</span>
                   </template>
-                  <template v-if="isSaving && value === 100">
-                    <v-progress-linear
-                      color="accent"
-                      indeterminate></v-progress-linear>
-                    <span class="subheading text-xs-center">Progressing images. Please wait</span>
+                  <template v-if="isFailed">
+                    <h3 class="headline">Upload failed</h3>
+                    <span v-if="isFailed" class="subheading text-xs-center error--text">Something went wrong.</span>
                   </template>
-                  <span v-if="isFailed" class="subheading text-xs-center error--text">Upload failed.</span>
                 </v-layout>
               </v-container>
             </v-responsive>
@@ -166,6 +166,7 @@ export default {
         })
     },
     filesChange (fieldName, fileList) {
+      // https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
       this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
