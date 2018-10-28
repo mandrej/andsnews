@@ -79,7 +79,7 @@
             {{filter.value}}
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-progress-circular v-show="busy" :indeterminate="true" color="accent" style="margin-right: 16px"></v-progress-circular>
+          <v-progress-circular v-show="busy" color="secondary" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
 

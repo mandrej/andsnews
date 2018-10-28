@@ -1,73 +1,71 @@
 <template>
   <v-card tile light flat>
     <v-card-text>
-      <v-form ref="form">
-        <v-btn @click="submit" block flat>
-          Search photos
-          <v-icon right dark>search</v-icon>
-        </v-btn>
-        <v-layout row wrap>
-          <v-flex xs12 class="hidden-xs-only">
-            <v-text-field
-              label="by text"
-              v-model="tmp.text"
-              clearable></v-text-field>
-          </v-flex>
-          <v-flex xs12>
-            <v-autocomplete
-              label="by tags"
-              :items="tags"
-              v-model="tmp.tags"
-              chips
-              multiple
-              clearable>
-              <template slot="selection" slot-scope="data">
-                <v-chip
-                  close
-                  :selected="data.selected"
-                  @input="data.parent.selectItem(data.item)">
-                  <strong>{{ data.item }}</strong>&nbsp;
-                </v-chip>
-              </template>
-            </v-autocomplete>
-          </v-flex>
-          <v-flex xs12>
-            <v-select
-              label="by year"
-              :items="years"
-              v-model="tmp.year"
-              clearable></v-select>
-          </v-flex>
-          <v-flex xs12>
-            <v-select
-              label="by month"
-              :items="months"
-              v-model="tmp.month"
-              clearable></v-select>
-          </v-flex>
-          <v-flex xs12 class="hidden-xs-only">
-            <v-autocomplete
-              label="by camera model"
-              :items="models"
-              v-model="tmp.model"
-              clearable></v-autocomplete>
-          </v-flex>
-          <v-flex xs12>
-            <v-autocomplete
-              label="by author"
-              :items="names"
-              v-model="tmp.author"
-              clearable></v-autocomplete>
-          </v-flex>
-          <v-flex xs12 class="hidden-xs-only">
-            <v-autocomplete
-              label="by color"
-              :items="$colors"
-              v-model="tmp.color"
-              clearable></v-autocomplete>
-          </v-flex>
-        </v-layout>
-      </v-form>
+      <v-btn @click="submit" block flat>
+        Search photos
+        <v-icon right dark>search</v-icon>
+      </v-btn>
+      <v-layout row wrap>
+        <v-flex xs12 class="hidden-xs-only">
+          <v-text-field
+            label="by text"
+            v-model="tmp.text"
+            clearable></v-text-field>
+        </v-flex>
+        <v-flex xs12>
+          <v-autocomplete
+            label="by tags"
+            :items="tags"
+            v-model="tmp.tags"
+            chips
+            multiple
+            clearable>
+            <template slot="selection" slot-scope="data">
+              <v-chip
+                close
+                :selected="data.selected"
+                @input="data.parent.selectItem(data.item)">
+                <strong>{{ data.item }}</strong>&nbsp;
+              </v-chip>
+            </template>
+          </v-autocomplete>
+        </v-flex>
+        <v-flex xs12>
+          <v-select
+            label="by year"
+            :items="years"
+            v-model="tmp.year"
+            clearable></v-select>
+        </v-flex>
+        <v-flex xs12>
+          <v-select
+            label="by month"
+            :items="months"
+            v-model="tmp.month"
+            clearable></v-select>
+        </v-flex>
+        <v-flex xs12 class="hidden-xs-only">
+          <v-autocomplete
+            label="by camera model"
+            :items="models"
+            v-model="tmp.model"
+            clearable></v-autocomplete>
+        </v-flex>
+        <v-flex xs12>
+          <v-autocomplete
+            label="by author"
+            :items="names"
+            v-model="tmp.author"
+            clearable></v-autocomplete>
+        </v-flex>
+        <v-flex xs12 class="hidden-xs-only">
+          <v-autocomplete
+            label="by color"
+            :items="$colors"
+            v-model="tmp.color"
+            clearable></v-autocomplete>
+        </v-flex>
+      </v-layout>
     </v-card-text>
   </v-card>
 </template>
@@ -79,7 +77,6 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Find',
   mixins: [ common ],
-  props: ['visible'],
   created () {
     this.$store.dispatch('app/fetchTags')
     this.$store.dispatch('app/fetchModels')

@@ -23,10 +23,11 @@
           </v-btn>
           <v-toolbar-title class="headline">Add</v-toolbar-title>
         </v-toolbar>
+
         <v-card-text>
           <v-container>
             <!-- https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2 -->
-            <v-responsive height="200px" v-if="isInitial || isSaving || isFailed">
+            <v-responsive height="120px">
               <input type="file" multiple
                 :name="uploadFieldName"
                 :disabled="isSaving"
@@ -35,42 +36,54 @@
                 class="input-file">
               <v-container fill-height>
                 <v-layout column justify-center align-center>
-                  <v-progress-circular v-if="isSaving"
-                    :size="100"
-                    :width="5"
-                    :rotate="-90"
-                    :value="value"
-                    color="secondary">{{value}}</v-progress-circular>
-                  <h3 class="headline">Upload images</h3>
-                  <span v-if="isInitial" class="subheading">Drag your image(s) here to begin or click to browse.</span>
-                  <span v-if="isFailed" class="subheading error--text">Upload failed.</span>
+                  <template v-if="isInitial">
+                    <h3 class="headline">Upload images <v-icon large>cloud_upload</v-icon></h3>
+                    <span class="subheading text-xs-center">Drag your images here to upload, or click to browse.</span>
+                  </template>
+                  <template v-if="isSaving && value < 100">
+                    <v-progress-linear
+                      color="secondary"
+                      v-model="value"></v-progress-linear>
+                    <span class="subheading text-xs-center">Upload in progress {{value}}%.</span>
+                  </template>
+                  <template v-if="isSaving && value === 100">
+                    <v-progress-linear
+                      color="accent"
+                      indeterminate></v-progress-linear>
+                    <span class="subheading text-xs-center">Progressing images. Please wait</span>
+                  </template>
+                  <span v-if="isFailed" class="subheading text-xs-center error--text">Upload failed.</span>
                 </v-layout>
               </v-container>
             </v-responsive>
-
-            <v-list two-line>
-              <v-list-tile avatar v-for="item in uploaded" :key="item.safekey">
-                <v-list-tile-avatar>
-                  <img :src="getImgSrc(item, '400')" :alt="item.slug">
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-layout row>
-                    <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
-                    <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
-                  </v-layout>
-                </v-list-tile-action>
-              </v-list-tile>
-            </v-list>
-
-            <v-layout justify-center v-if="isSuccess">
-              <v-btn @click="reset">Upload again</v-btn>
-            </v-layout>
           </v-container>
         </v-card-text>
+
+        <v-card v-if="uploaded.length > 0" flat>
+          <v-container>
+            <v-slide-y-transition hide-on-leave group tag="v-list" two-line>
+              <template v-for="(item, i) in uploaded">
+                <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+                <v-list-tile avatar :key="item.safekey">
+                  <v-list-tile-avatar>
+                    <img :src="getImgSrc(item, '400')" :alt="item.slug">
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{item.headline}}</v-list-tile-title>
+                    <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-layout row>
+                      <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
+                      <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
+                    </v-layout>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </template>
+            </v-slide-y-transition>
+          </v-container>
+        </v-card>
+
       </v-card>
     </v-dialog>
   </div>
@@ -149,6 +162,7 @@ export default {
         .then(() => {
           this.snackbar = false
           this.currentStatus = STATUS_SUCCESS
+          this.reset()
         })
         .catch(err => {
           this.uploadError = err.response
