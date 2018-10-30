@@ -1,10 +1,8 @@
 <template>
   <div>
-    <Add :visible="showAddForm" @close="showAddForm = false"></Add>
-
     <v-btn v-if="canAdd(user)"
       fab medium fixed bottom right
-      color="accent" class="black--text" @click="showAddForm = true">
+      color="accent" class="black--text" @click="$router.push({ name: 'add' })">
       <v-icon>add</v-icon>
     </v-btn>
 
@@ -110,7 +108,6 @@ export default {
   name: 'Home',
   components: {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
-    'Add': () => import(/* webpackChunkName: "add" */ '@/components/Add'),
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
     Menu,
     List,
@@ -119,7 +116,6 @@ export default {
   data: () => ({
     drawer: null,
     title: 'ANDрејевићи',
-    showAddForm: false,
     text: '',
     snackbar: false,
     timeout: 6000,

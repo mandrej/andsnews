@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
+import Add from '@/views/Add'
 import createStore from './store'
 
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
@@ -20,6 +21,19 @@ export default new Router({
       path: '/list/:qs',
       name: 'list',
       component: Home
+    },
+    {
+      path: '/add',
+      name: 'add',
+      component: Add,
+      beforeEnter: (to, from, next) => {
+        const store = createStore()
+        if (store.state.auth.user.isAuthorized) {
+          next()
+        } else {
+          next('/401')
+        }
+      }
     },
     {
       path: '/admin',

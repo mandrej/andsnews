@@ -33,6 +33,7 @@ const actions = {
     commit('CHANGE_FILTER', payload)
     if (payload.field) {
       commit('SET_CLEAR', true)
+      commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
     }
   },
