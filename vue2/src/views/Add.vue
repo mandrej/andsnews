@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <v-snackbar
       v-model="snackbar"
@@ -102,10 +102,11 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
+    current: {},
     uploadedFiles: [],
     fileCount: 0,
     uploadError: null,
-    currentStatus: null,
+    status: null,
     uploadFieldName: 'photos',
     editForm: false,
     snackbar: false,
@@ -118,21 +119,21 @@ export default {
   computed: {
     ...mapState('app', ['uploaded']),
     isInitial () {
-      return this.currentStatus === STATUS_INITIAL
+      return this.status === STATUS_INITIAL
     },
     isSaving () {
-      return this.currentStatus === STATUS_SAVING
+      return this.status === STATUS_SAVING
     },
     isSuccess () {
-      return this.currentStatus === STATUS_SUCCESS
+      return this.status === STATUS_SUCCESS
     },
     isFailed () {
-      return this.currentStatus === STATUS_FAILED
+      return this.status === STATUS_FAILED
     }
   },
   methods: {
     reset () {
-      this.currentStatus = STATUS_INITIAL
+      this.status = STATUS_INITIAL
       this.uploadedFiles = []
       this.uploadError = null
       this.value = 0
@@ -141,7 +142,7 @@ export default {
       this.value = Math.round((event.loaded * 100) / event.total)
     },
     save (formData) {
-      this.currentStatus = STATUS_SAVING
+      this.status = STATUS_SAVING
       this.snackbar = true
       axios.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
         .then(x => x.data) // list
@@ -153,12 +154,12 @@ export default {
         ))
         .then(() => {
           this.snackbar = false
-          this.currentStatus = STATUS_SUCCESS
+          this.status = STATUS_SUCCESS
           this.reset()
         })
         .catch(err => {
           this.uploadError = err.response
-          this.currentStatus = STATUS_FAILED
+          this.status = STATUS_FAILED
         })
     },
     filesChange (fieldName, fileList) {
@@ -176,7 +177,7 @@ export default {
       this.save(formData)
     },
     showEditForm (rec) {
-      this.$store.dispatch('app/changeCurrent', rec)
+      this.current = rec
       this.editForm = true
     },
     removeRecord (rec) {

@@ -94,7 +94,6 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
@@ -106,7 +105,6 @@ export default {
   components: {
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
   },
-  mixins: [ common ],
   data: () => ({
     text: '',
     snackbar: false,

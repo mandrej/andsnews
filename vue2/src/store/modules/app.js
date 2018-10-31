@@ -14,7 +14,6 @@ const initialState = {
   pages: [],
   next: null,
   error: '',
-  current: {},
   tags: [],
   models: [],
 
@@ -28,7 +27,6 @@ const initialState = {
 const actions = {
   // reset: ({ commit }) => commit(RESET),
   saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
-  changeCurrent: ({commit}, payload) => commit('SET_CURRENT', payload),
   changeFilter: ({commit}, payload) => {
     commit('CHANGE_FILTER', payload)
     if (payload.field) {
@@ -46,7 +44,6 @@ const actions = {
       .then(response => {
         const obj = response.data.rec
         commit('UPDATE_RECORD', obj)
-        commit('SET_CURRENT', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_TAGS_MODELS', obj)
       })
@@ -120,9 +117,6 @@ const actions = {
 };
 const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
-  SET_CURRENT (state, payload) {
-    state.current = Object.assign({}, payload)
-  },
   SAVE_FIND_FORM (state, payload) {
     state.find = Object.assign(state.find, payload)
   },

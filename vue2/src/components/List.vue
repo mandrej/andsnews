@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
       <v-card>
@@ -86,6 +86,7 @@ export default {
     bottom: false,
     distance: 1800,
     confirm: false,
+    current: {},
     editForm: false,
     viewerOptions: {
       navbar: false,
@@ -103,7 +104,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['current', 'objects', 'next'])
+    ...mapState('app', ['objects', 'next'])
   },
   created () {
     window.addEventListener('scroll', () => {
@@ -144,14 +145,14 @@ export default {
       return user.isAuthorized
     },
     showEditdForm (rec) {
-      this.$store.dispatch('app/changeCurrent', rec)
+      this.current = rec
       this.editForm = true
     },
     canDelete (user) {
       return user.isAdmin
     },
     removeRecord (rec) {
-      this.$store.dispatch('app/changeCurrent', rec)
+      this.current = rec
       this.confirm = true
     },
     agree () {

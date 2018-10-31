@@ -158,7 +158,7 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Edit',
   mixins: [ common ],
-  props: ['visible'],
+  props: ['visible', 'rec'],
   data: () => ({
     valid: true,
     requiredRule: [
@@ -173,10 +173,10 @@ export default {
     this.$store.dispatch('app/fetchTags')
   },
   computed: {
-    ...mapState('app', ['current', 'tags'])
+    ...mapState('app', ['tags'])
   },
   watch: {
-    current (val) {
+    rec (val) {
       if (JSON.stringify(val) === '{}') return
       const dt = val.date.split('T')
       this.tmp = {...val}
