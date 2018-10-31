@@ -87,7 +87,13 @@
         </transition>
       </v-content>
 
-      <Footer :top="true"></Footer>
+      <Footer>
+        <template slot="gotop">
+          <v-btn fab small flat @click="$vuetify.goTo(0, options)">
+            <v-icon>arrow_upward</v-icon>
+          </v-btn>
+        </template>
+      </Footer>
    </v-app>
   </div>
 </template>
@@ -101,6 +107,7 @@ import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/messaging'
+import * as easings from 'vuetify/es5/util/easing-patterns'
 
 const messaging = firebase.messaging()
 
@@ -122,7 +129,12 @@ export default {
     empty: false,
     currentComponent: Menu,
     displayCount: 0,
-    interval: false
+    interval: false,
+    options: {
+      duration: 300,
+      offset: -16,
+      easings: Object.keys(easings)
+    }
   }),
   created () {
     this.$store.dispatch('auth/fetchToken')

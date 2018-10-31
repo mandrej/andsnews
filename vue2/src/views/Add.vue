@@ -96,7 +96,6 @@ const STATUS_FAILED = 3
 
 export default {
   name: 'Add',
-  props: ['visible'],
   components: {
     'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
     'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
