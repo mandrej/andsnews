@@ -8,6 +8,8 @@
   "python.linting.pep8Enabled": false,
   "python.linting.pylintEnabled": false,
   "files.exclude": {
-      "**/*.pyc": true
+    "**/*.pyc": true,
+    "client/": true,
+    "p2/": true
   }
 }
