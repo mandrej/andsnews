@@ -43,7 +43,7 @@
                     color="secondary"
                     v-model="value"></v-progress-linear>
                   <span v-if="value < 100" class="subheading text-xs-center">Upload in progress {{value}}%.</span>
-                  <span v-if="value === 100" class="subheading text-xs-center">Progressing images. Please wait</span>
+                  <span v-if="value === 100" class="subheading text-xs-center">Processing images. Please wait</span>
                 </template>
                 <template v-if="isFailed">
                   <h3 class="headline">Upload failed</h3>
