@@ -58,7 +58,7 @@
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
               <v-list-tile avatar :key="item.safekey">
                 <v-list-tile-avatar>
-                  <img :src="getImgSrc(item, '400')" :alt="item.slug">
+                  <img :src="getImgSrc(item, '400-c')" :alt="item.slug">
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>{{item.headline}}</v-list-tile-title>

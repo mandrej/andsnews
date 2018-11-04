@@ -21,35 +21,38 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg>
-      <masonry v-photoswipe
-        :cols="{default: 5, 1440: 3, 960: 2, 600: 1}" :gutter="16">
-        <v-card light class="card"
-          v-for="item in objects" :key="item.safekey">
-          <img
-            :title="item.headline"
-            :src="getImgSrc(item)">
-          <v-card-title primary-title class="pt-3">
-            <div>
-              <h3 class="title">{{item.headline}}</h3>
-              <div>{{dateFormat(item)}}</div>
-              <div>{{item.author.match(/[^@]+/)[0]}}</div>
-            </div>
-          </v-card-title>
-          <v-card-actions class="pt-0 px-3 pb-3">
-            <v-layout justify-end row>
-              <v-btn v-if="canDelete(user)" icon flat color="primary" @click.native="removeRecord(item)">
-                <v-icon>cancel</v-icon>
-              </v-btn>
-              <v-btn v-if="canEdit(user)" icon flat color="primary" @click.native="showEditdForm(item)">
-                <v-icon>edit</v-icon>
-              </v-btn>
-              <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                <v-icon>file_download</v-icon>
-              </v-btn>
-            </v-layout>
-          </v-card-actions>
-        </v-card>
-      </masonry>
+      <Photoswipe>
+        <masonry
+          :cols="{default: 6, 1440: 4, 1024: 3, 960: 2, 600: 1}" :gutter="16">
+          <v-card light class="card"
+            v-for="item in objects" :key="item.safekey">
+            <img
+              :title="item.headline"
+              :src="getImgSrc(item, '400')"
+              :data-pswp-src="getImgSrc(item)">
+            <v-card-title primary-title class="pt-3">
+              <div>
+                <h3 class="title">{{item.headline}}</h3>
+                <div>{{dateFormat(item)}}</div>
+                <div>{{item.author.match(/[^@]+/)[0]}}</div>
+              </div>
+            </v-card-title>
+            <v-card-actions class="pt-0 px-3 pb-3">
+              <v-layout justify-end row>
+                <v-btn v-if="canDelete(user)" icon flat color="primary" @click.native="removeRecord(item)">
+                  <v-icon>cancel</v-icon>
+                </v-btn>
+                <v-btn v-if="canEdit(user)" icon flat color="primary" @click.native="showEditdForm(item)">
+                  <v-icon>edit</v-icon>
+                </v-btn>
+                <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                  <v-icon>file_download</v-icon>
+                </v-btn>
+              </v-layout>
+            </v-card-actions>
+          </v-card>
+        </masonry>
+      </Photoswipe>
     </v-container>
   </div>
 </template>
@@ -58,16 +61,15 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import VueMasonry from 'vue-masonry-css'
-import DirectivePhotoswipe from 'directive-photoswipe'
+import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueMasonry)
-Vue.use(DirectivePhotoswipe, {
+Vue.use(Photoswipe, {
+  preload: [1,1],
   history: false,
-  focus: false,
   shareEl: false,
-  captionEl: true
 })
 
 export default {

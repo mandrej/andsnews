@@ -20,7 +20,7 @@
                 <v-img
                   cover
                   aspect-ratio="1"
-                  :src="getImgSrc(tmp, '400')">
+                  :src="getImgSrc(tmp, '400-c')">
                 </v-img>
               </v-flex>
               <v-flex xs12 sm6 md8>

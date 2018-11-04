@@ -19,7 +19,8 @@ const common = {
   },
   methods:{
     getImgSrc (rec, size) {
-      const suffix = (size) ? '=s' + size + '-c' : '=s0'
+      // size: '400-c'
+      const suffix = (size) ? '=s' + size : '=s0'
       if (rec && rec.serving_url) {
         if (process.env.NODE_ENV === 'development') {
           return rec.serving_url.replace('http://localhost:6060/_ah', '/_ah') + suffix

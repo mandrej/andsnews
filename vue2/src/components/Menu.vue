@@ -11,7 +11,7 @@
             class="white--text"
             style="cursor: pointer"
             @click="showFilter(item)"
-            :src="getImgSrc(item, '400')">
+            :src="getImgSrc(item, '400-c')">
             <v-container fill-height fluid>
               <v-layout fill-height>
                 <v-flex xs12 align-end flexbox>
