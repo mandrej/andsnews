@@ -37,10 +37,10 @@
           </v-card-title>
           <v-card-actions class="pt-0 px-3 pb-3">
             <v-layout justify-end row>
-              <v-btn v-if="canDelete(user)" icon flat color="primary" @click="removeRecord(item)">
+              <v-btn v-if="canDelete(user)" icon flat color="primary" @click.native="removeRecord(item)">
                 <v-icon>cancel</v-icon>
               </v-btn>
-              <v-btn v-if="canEdit(user)" icon flat color="primary" @click="showEditdForm(item)">
+              <v-btn v-if="canEdit(user)" icon flat color="primary" @click.native="showEditdForm(item)">
                 <v-icon>edit</v-icon>
               </v-btn>
               <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
@@ -160,11 +160,5 @@ export default {
     object-fit: cover;
     cursor: pointer;
   }
-}
-</style>
-
-<style>
-.pswp__top-bar {
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 </style>
