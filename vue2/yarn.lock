@@ -810,6 +810,11 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@oncomouse/vue-cli-plugin-advanced-vuex-store/-/vue-cli-plugin-advanced-vuex-store-1.1.1.tgz#c7137ed5682c7fcc82f0bdc2d08add1a7a31d585"
 
+"@types/photoswipe@^4.0.28":
+  version "4.0.28"
+  resolved "https://registry.yarnpkg.com/@types/photoswipe/-/photoswipe-4.0.28.tgz#0d6dd9d193e592759c5f8068e8bc9c35486b6d94"
+  integrity sha512-TNC1LDQ1/7op3VqN2I36JVOSThw+y5LO6N+Yv4dvarF1bKl2Aod10LlTd3pmb09QXSGNtY+sx4KNN3bjpZBX9g==
+
 "@vue/babel-preset-app@^3.1.0":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@vue/babel-preset-app/-/babel-preset-app-3.1.1.tgz#1bb6395c5ddc84bc8e993ace47151b0d95d382a7"
@@ -2806,6 +2811,15 @@ dir-glob@^2.0.0:
   dependencies:
     arrify "^1.0.1"
     path-type "^3.0.0"
+
+directive-photoswipe@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/directive-photoswipe/-/directive-photoswipe-1.0.2.tgz#d988ca5a7c086072c5c76adc774b703dcd7b8605"
+  integrity sha512-8RnewfUnz3u0Qzpk8qohDtE8thWOBqBMdHiXM9HBbjqQN3WJ4WIX1Bf7Pc4gd+GtH59zdpJipfk1wz16xP3bfQ==
+  dependencies:
+    "@types/photoswipe" "^4.0.28"
+    photoswipe "^4.1.2"
+    vue "^2.5.17"
 
 dns-equal@^1.0.0:
   version "1.0.0"
@@ -5936,6 +5950,11 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+photoswipe@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/photoswipe/-/photoswipe-4.1.2.tgz#95c20a75cea23b70d6299641cad82e03cae7f797"
+  integrity sha1-lcIKdc6iO3DWKZZBytguA8rn95c=
+
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
@@ -7610,10 +7629,6 @@ thread-loader@^1.2.0:
     loader-runner "^2.3.0"
     loader-utils "^1.1.0"
 
-throttle-debounce@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-2.0.1.tgz#7307ddd6cd9acadb349132fbf6c18d78c88a5e62"
-
 through2@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
@@ -7983,13 +7998,6 @@ uuid@^3.0.1, uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
-v-viewer@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/v-viewer/-/v-viewer-1.2.1.tgz#1d04fd42a188c82cf70e4432e69d2a467909c3b2"
-  dependencies:
-    throttle-debounce "^2.0.1"
-    viewerjs "^1.0.0"
-
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
@@ -8016,10 +8024,6 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
-
-viewerjs@^1.0.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.3.0.tgz#600c037f4e435f48db0808d44f5c077d159a7b18"
 
 vm-browserify@0.0.4:
   version "0.0.4"
@@ -8053,10 +8057,6 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.1.tgz#b2d3d95402a811602380783ea4f566eb875569a2"
   integrity sha512-AA86yKZ5uOKz87/q1UpngEXhbRkaYg1b7HMMVRobNV1IVKqZe8oLIzo6iMocVwZXnYitlGwf2k4ZRLOZlS8oPQ==
 
-vue-lazyload@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/vue-lazyload/-/vue-lazyload-1.2.6.tgz#baa04c172d52a812608eb12c7a6bfb14f5c91079"
-
 vue-loader@^15.4.2:
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.4.2.tgz#812bb26e447dd3b84c485eb634190d914ce125e2"
@@ -8067,6 +8067,11 @@ vue-loader@^15.4.2:
     loader-utils "^1.1.0"
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
+
+vue-masonry-css@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vue-masonry-css/-/vue-masonry-css-1.0.3.tgz#a5e7bb248570eeedcd358637d3f1f4fc7f0c5f86"
+  integrity sha512-viecHQiHVLez7HlYUQsv1wJb2MT/RDSzkDp6m3In41vPrk6OsBmT2qRE8LZqYIA4daIwrnx/Xm8h4fjOpuE3hw==
 
 vue-router@^3.0.1:
   version "3.0.1"
@@ -8092,7 +8097,7 @@ vue-template-es2015-compiler@^1.6.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
   integrity sha512-x3LV3wdmmERhVCYy3quqA57NJW7F3i6faas++pJQWtknWT+n7k30F4TVdHvCLn48peTJFRvCpxs3UuFPqgeELg==
 
-vue@^2.5.16:
+vue@^2.5.16, vue@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 

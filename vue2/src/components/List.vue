@@ -21,42 +21,35 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg>
-      <viewer :options="viewerOptions" :images="objects">
-        <template slot-scope="scope">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 lg3 xl2
-              v-for="item in scope.images"
-              :key="item.safekey">
-              <v-card light class="card">
-                <img :alt="alt(item)"
-                  v-lazy="getImgSrc(item, '400')"
-                  :data-full="getImgSrc(item)">
-                <v-card-title primary-title class="pt-3">
-                  <div>
-                    <h3 class="title">{{item.headline}}</h3>
-                    <div>{{dateFormat(item)}}</div>
-                    <div>{{item.author.match(/[^@]+/)[0]}}</div>
-                  </div>
-                </v-card-title>
-                <v-card-actions class="pt-0 px-3 pb-3">
-                  <v-layout justify-end row>
-                    <v-btn v-if="canDelete(user)" icon flat color="primary" @click="removeRecord(item)">
-                      <v-icon>cancel</v-icon>
-                    </v-btn>
-                    <v-btn v-if="canEdit(user)" icon flat color="primary" @click="showEditdForm(item)">
-                      <v-icon>edit</v-icon>
-                    </v-btn>
-                    <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                      <v-icon>file_download</v-icon>
-                    </v-btn>
-                  </v-layout>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
-          </v-layout>
-          {{scope.viewerOptions}}
-        </template>
-      </viewer>
+      <masonry v-photoswipe
+        :cols="{default: 5, 1440: 3, 960: 2, 600: 1}" :gutter="16">
+        <v-card light class="card"
+          v-for="item in objects" :key="item.safekey">
+          <img
+            :title="item.headline"
+            :src="getImgSrc(item)">
+          <v-card-title primary-title class="pt-3">
+            <div>
+              <h3 class="title">{{item.headline}}</h3>
+              <div>{{dateFormat(item)}}</div>
+              <div>{{item.author.match(/[^@]+/)[0]}}</div>
+            </div>
+          </v-card-title>
+          <v-card-actions class="pt-0 px-3 pb-3">
+            <v-layout justify-end row>
+              <v-btn v-if="canDelete(user)" icon flat color="primary" @click="removeRecord(item)">
+                <v-icon>cancel</v-icon>
+              </v-btn>
+              <v-btn v-if="canEdit(user)" icon flat color="primary" @click="showEditdForm(item)">
+                <v-icon>edit</v-icon>
+              </v-btn>
+              <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                <v-icon>file_download</v-icon>
+              </v-btn>
+            </v-layout>
+          </v-card-actions>
+        </v-card>
+      </masonry>
     </v-container>
   </div>
 </template>
@@ -64,16 +57,18 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import VueLazyload from 'vue-lazyload'
+import VueMasonry from 'vue-masonry-css'
+import DirectivePhotoswipe from 'directive-photoswipe'
 import common from '@/helpers/mixins'
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 
-Vue.use(VueLazyload, {
-  attempt: 1
+Vue.use(VueMasonry)
+Vue.use(DirectivePhotoswipe, {
+  history: false,
+  focus: false,
+  shareEl: false,
+  captionEl: true
 })
-Vue.use(Viewer)
 
 export default {
   name: 'List',
@@ -82,19 +77,11 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
-    // size: 'lg', v-bind="{[`grid-list-${size}`]: true}"
     bottom: false,
     distance: 1800,
     confirm: false,
     current: {},
     editForm: false,
-    viewerOptions: {
-      navbar: false,
-      keyborad: false,
-      toolbar: false,
-      rotatable: false,
-      url: 'data-full'
-    },
     index: 0,
     scrollOptions: {
       duration: 300,
@@ -158,13 +145,6 @@ export default {
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
       this.confirm = false
-    },
-    alt (rec) {
-      return `${rec.aperture ? 'f/' + rec.aperture : ''}` +
-        ` ${rec.shutter ? rec.shutter + 's' : ''}` +
-        ` ${rec.iso ? rec.iso + ' ASA' : ''}` +
-        ` ${rec.model ? rec.model : ''} ${rec.lens ? rec.lens : ''}` +
-        ` ${rec.focal_length ? '(' + rec.focal_length + 'mm)' : ''}`
     }
   }
 }
@@ -172,55 +152,19 @@ export default {
 
 <style lang="scss" scoped>
 .card {
+  margin-bottom: 16px;
   img {
-    opacity: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     cursor: pointer;
-    &[lazy=loaded] {
-      opacity: 1;
-    }
   }
 }
 </style>
 
-<style lang="scss">
-.viewer-loading {
-  &::after {
-    animation: viewer-spinner 1s linear infinite;
-    border: 8px solid rgba(0, 0, 0, .1);
-    border-left-color: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    content: '';
-    display: inline-block;
-    height: 100px;
-    left: 50%;
-    margin-left: -50px;
-    margin-top: -50px;
-    position: absolute;
-    top: 50%;
-    width: 100px;
-    z-index: 1;
-  }
-}
-.viewer-footer {
-  bottom: 10px;
-  & .viewer-title {
-    font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
-    font-size: 14px;
-    line-height: normal;
-    margin: 0 5% 5px;
-    max-width: 90%;
-    opacity: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity .15s;
-    white-space: nowrap;
-  }
-}
-.viewer-backdrop {
-  background-color: white;
+<style>
+.pswp__top-bar {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 </style>
