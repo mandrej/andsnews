@@ -28,6 +28,7 @@
             <v-card light class="card">
               <img
                 v-lazy="getImgSrc(item, '400-c')"
+                :data-pswp-size="item.dim.join('x')"
                 :data-pswp-src="getImgSrc(item)">
               <v-card-title primary-title class="pt-3">
                 <div>
