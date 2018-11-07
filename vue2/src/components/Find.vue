@@ -97,9 +97,9 @@ export default {
       return arr
     },
     names () {
-      let arr = []
-      this.$authors.map(email => arr = [...arr, ...email.split('@')[0].split('.')])
-      return [...new Set(arr)]
+      const arr = [].concat.apply([], this.$authors.map(email => [...email.split('@')[0].split('.')]))
+      const set = new Set(arr)
+      return [...set]
     }
   },
   methods: {

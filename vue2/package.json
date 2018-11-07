@@ -46,9 +46,11 @@
       "eslint:recommended",
       "@vue/standard"
     ],
-    "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
+    },
+    "rules": {
+      "vue/no-unused-components": "warning"
     }
   },
   "postcss": {
