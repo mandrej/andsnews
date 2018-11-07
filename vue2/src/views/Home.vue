@@ -105,7 +105,6 @@ import List from '@/components/List'
 import Find from '@/components/Find'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
-import 'firebase/app'
 import 'firebase/messaging'
 import * as easings from 'vuetify/es5/util/easing-patterns'
 

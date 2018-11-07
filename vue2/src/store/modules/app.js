@@ -1,6 +1,6 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const axios = Vue.axios
 
@@ -23,11 +23,11 @@ const initialState = {
 
   busy: false,
   clear: false
-};
+}
 const actions = {
   // reset: ({ commit }) => commit(RESET),
-  saveFindForm: ({commit}, payload) => commit('SAVE_FIND_FORM', payload),
-  changeFilter: ({commit}, payload) => {
+  saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
+  changeFilter: ({ commit }, payload) => {
     commit('CHANGE_FILTER', payload)
     if (payload.field) {
       commit('SET_CLEAR', true)
@@ -35,11 +35,11 @@ const actions = {
       commit('RESET_PAGINATOR')
     }
   },
-  addRecord: ({commit}, obj) => {
+  addRecord: ({ commit }, obj) => {
     commit('ADD_UPLOADED', obj)
     commit('ADD_RECORD', obj)
   },
-  saveRecord: ({commit}, obj) => {
+  saveRecord: ({ commit }, obj) => {
     axios.put('photo/edit/' + obj.safekey, obj)
       .then(response => {
         const obj = response.data.rec
@@ -48,12 +48,12 @@ const actions = {
         commit('UPDATE_TAGS_MODELS', obj)
       })
   },
-  deleteRecord: ({commit}, obj) => {
+  deleteRecord: ({ commit }, obj) => {
     commit('DELETE_RECORD', obj)
     commit('DELETE_UPLOADED', obj)
-    axios.delete('delete/' + obj.safekey, {parms: {foo: 'bar'}}) // no response
+    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } }) // no response
   },
-  fetchMenu: ({commit, state}) => {
+  fetchMenu: ({ commit, state }) => {
     if (state.busy) return
     commit('SET_BUSY', true)
     axios.get('filters')
@@ -62,13 +62,13 @@ const actions = {
         commit('SET_BUSY', false)
       })
   },
-  fetchRecords: ({commit, state}) => {
+  fetchRecords: ({ commit, state }) => {
     if (state.busy) return
     commit('SET_ERROR', '')
     commit('SET_BUSY', true)
     let url = 'start'
     const params = {}
-    const filter = {...state.filter}
+    const filter = { ...state.filter }
     if (state.next) params._page = state.next
 
     if (filter && filter.field) {
@@ -79,7 +79,7 @@ const actions = {
       }
     }
 
-    axios.get(url, {params: params})
+    axios.get(url, { params: params })
       .then(response => {
         if (state.clear) {
           commit('RESET_RECORDS')
@@ -94,27 +94,27 @@ const actions = {
         commit('SET_BUSY', false)
       })
   },
-  fetchTags: ({commit, state}) => {
+  fetchTags: ({ commit, state }) => {
     if (state.tags.length !== 0) return
     axios.get('suggest/Photo_tags')
       .then(response => {
         commit('UPDATE_TAGS', response.data)
       })
   },
-  fetchModels: ({commit, state}) => {
+  fetchModels: ({ commit, state }) => {
     if (state.models.length !== 0) return
     axios.get('suggest/Photo_model')
       .then(response => {
         commit('UPDATE_MODELS', response.data)
       })
   },
-  fetchCloud: ({commit}) => {
+  fetchCloud: ({ commit }) => {
     axios.get('info')
       .then(response => {
         commit('SET_CLOUD', response.data.photo.counters)
       })
   }
-};
+}
 const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_FIND_FORM (state, payload) {
@@ -186,11 +186,11 @@ const mutations = {
   SET_ERROR (state, val) {
     state.error = val
   }
-};
+}
 
 export default {
   namespaced: true,
   state: initialState,
   mutations,
   actions
-};
+}

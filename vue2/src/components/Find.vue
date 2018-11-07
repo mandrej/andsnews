@@ -84,7 +84,7 @@ export default {
   computed: {
     ...mapState('app', ['find', 'tags', 'models']),
     tmp () {
-      return {...this.find}
+      return { ...this.find }
     },
     years () {
       const start = 2007
@@ -132,7 +132,7 @@ export default {
       const value = params.join(' AND ')
 
       if (value) {
-        this.$router.push({ name: 'list', params: { 'qs': value }})
+        this.$router.push({ name: 'list', params: { 'qs': value } })
       } else {
         this.$router.push({ name: 'home' })
       }

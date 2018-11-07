@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'App'
 }
 </script>
 
@@ -37,8 +37,5 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0
-}
-.pswp__top-bar {
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 </style>

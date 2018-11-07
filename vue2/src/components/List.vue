@@ -28,6 +28,7 @@
             <v-card light class="card">
               <img
                 v-lazy="getImgSrc(item, '400-c')"
+                :title="caption(item)"
                 :data-pswp-size="item.dim.join('x')"
                 :data-pswp-src="getImgSrc(item)">
               <v-card-title primary-title class="pt-3">
@@ -70,10 +71,16 @@ Vue.use(VueLazyload, {
   attempt: 1
 })
 Vue.use(Photoswipe, {
-  preload: [1,3],
-  history: false,
+  preload: [1, 3],
   shareEl: false,
-  captionEl: false
+  addCaptionHTMLFn: function (item, captionEl, isFake) {
+    if (!item.el.title) {
+      captionEl.children[0].innerHTML = ''
+      return false
+    }
+    captionEl.children[0].innerHTML = item.el.title
+    return true
+  }
 })
 
 export default {
@@ -126,6 +133,13 @@ export default {
     canEdit (user) {
       return user.isAuthorized
     },
+    caption (rec) {
+      let tmp = rec.headline
+      tmp += (rec.aperture) ? ' f' + rec.aperture : ''
+      tmp += (rec.shutter) ? ', ' + rec.shutter + 's' : ''
+      tmp += (rec.iso) ? ', ' + rec.iso + ' ASA' : ''
+      return tmp
+    },
     showEditdForm (rec) {
       this.current = rec
       this.editForm = true
@@ -160,5 +174,20 @@ export default {
       opacity: 1;
     }
   }
+}
+</style>
+
+<style>
+.pswp * {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+.pswp__caption--empty {
+  display: block;
+}
+.pswp__caption__center {
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.75;
 }
 </style>

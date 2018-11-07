@@ -28,7 +28,7 @@
 export default {
   name: 'Err',
   components: {
-    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
+    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
   },
   props: ['title', 'text']
 }

@@ -2,7 +2,7 @@ const common = {
   data: () => ({
     requiredRule: [
       v => !!v || 'Required Field'
-    ],
+    ]
   }),
   computed: {
     // v-dialog v-model="show"
@@ -17,7 +17,7 @@ const common = {
       }
     }
   },
-  methods:{
+  methods: {
     getImgSrc (rec, size) {
       // size: '400-c'
       const suffix = (size) ? '=s' + size : '=s0'
@@ -38,7 +38,7 @@ const common = {
         if (fmt) {
           return [day, month, year].join('.')
         } else {
-          return [day, month, year].join('.') + ' ' + time.slice(0,5)
+          return [day, month, year].join('.') + ' ' + time.slice(0, 5)
         }
       }
     }

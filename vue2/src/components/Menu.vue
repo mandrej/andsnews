@@ -41,7 +41,7 @@ export default {
     showFilter (rec) {
       const sep = '"'
       const value = rec.field_name + ':' + sep + rec.name + sep
-      this.$router.push({ name: 'list', params: { 'qs': value }})
+      this.$router.push({ name: 'list', params: { 'qs': value } })
     }
   }
 }

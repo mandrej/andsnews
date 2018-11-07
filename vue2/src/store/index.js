@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import createPersistedState from 'vuex-persistedstate';
-import createLogger from 'vuex/dist/logger';
-import modules from './modules';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import createLogger from 'vuex/dist/logger'
+import modules from './modules'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-const APP_KEY = 'ands';
+const APP_KEY = 'ands'
 
-const isNotProd = process.env.NODE_ENV !== 'production';
-const isNotTest = process.env.NODE_ENV !== 'test';
+const isNotProd = process.env.NODE_ENV !== 'production'
+const isNotTest = process.env.NODE_ENV !== 'test'
 
 const createStore = () => {
   const store = new Vuex.Store({
@@ -17,8 +17,8 @@ const createStore = () => {
     strict: isNotProd,
     plugins: []
       .concat(isNotTest ? [createPersistedState({ key: APP_KEY })] : ['user', 'fcm_token', 'menu', 'filter', 'find', 'uploaded'])
-      .concat(isNotProd ? [createLogger()] : []),
-  });
+      .concat(isNotProd ? [createLogger()] : [])
+  })
   if (module.hot) {
   // accept actions and mutations as hot modules
     module.hot.accept(['./modules'], () => {
@@ -27,12 +27,12 @@ const createStore = () => {
       import('./modules').then((newModules) => {
         // swap in the new actions and mutations
         store.hotUpdate({
-          modules: newModules.default,
-        });
-      });
-    });
+          modules: newModules.default
+        })
+      })
+    })
   }
-  return store;
-};
+  return store
+}
 
-export default createStore;
+export default createStore

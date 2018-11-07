@@ -179,7 +179,7 @@ export default {
     rec (val) {
       if (JSON.stringify(val) === '{}') return
       const dt = val.date.split('T')
-      this.tmp = {...val}
+      this.tmp = { ...val }
       this.dateTime = {
         date: dt[0],
         time: dt[1]

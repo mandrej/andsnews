@@ -144,7 +144,7 @@ export default {
     save (formData) {
       this.status = STATUS_SAVING
       this.snackbar = true
-      axios.post('photo/add', formData, {headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: this.progress})
+      axios.post('photo/add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
         .then(x => x.map(
           item => {

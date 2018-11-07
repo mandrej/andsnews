@@ -96,8 +96,6 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 import firebase from 'firebase/app'
-import 'firebase/app'
-import 'firebase/messaging'
 
 const messaging = firebase.messaging()
 
@@ -135,7 +133,7 @@ export default {
       return Boolean(!token)
     },
     callAjax (url) {
-      Vue.axios.post(url, {token: this.fcm_token})
+      Vue.axios.post(url, { token: this.fcm_token })
         .then(x => x.data)
         // .catch(err => console.log(err))
     },
