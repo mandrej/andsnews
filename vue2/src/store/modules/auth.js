@@ -1,5 +1,6 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
+import { EventBus } from '@/helpers/event-bus'
 import { FB } from '@/helpers/fire'
 import 'firebase/app'
 import 'firebase/database'
@@ -73,6 +74,7 @@ const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_USER (state, payload) {
     state.user = Object.assign(state.user, payload)
+    EventBus.$emit('signin', state.user)
   },
   SET_TOKEN (state, val) {
     state.fcm_token = val
