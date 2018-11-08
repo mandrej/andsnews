@@ -176,18 +176,3 @@ export default {
   }
 }
 </style>
-
-<style>
-.pswp * {
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
-}
-.pswp__caption--empty {
-  display: block;
-}
-.pswp__caption__center {
-  color: #fff;
-  font-size: 14px;
-  text-align: center;
-  opacity: 0.75;
-}
-</style>

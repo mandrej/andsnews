@@ -25,9 +25,11 @@ export default {
   background-position: -10px -60px;
   background-size: 500px;
 }
+/* Add, Edit, Admin back icon button */
 .v-toolbar__title:not(:first-child) {
-  margin-left: 0;
+  margin-left: 10px;
 }
+/* transition name="fade" */
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.3s;
@@ -37,5 +39,18 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0
+}
+/* Photoswipe */
+.pswp * {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
+}
+.pswp__caption--empty {
+  display: block !important;
+}
+.pswp__caption__center {
+  color: #fff !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  opacity: 0.75 !important;
 }
 </style>
