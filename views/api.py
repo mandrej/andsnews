@@ -102,28 +102,29 @@ class SearchPaginator(object):
 
 class Find(RestHandler):
     def get(self, find):
-        client = self.request.headers.get('client', None)
+        # client = self.request.headers.get('client', None)
         page = self.request.get('_page', None)
         paginator = SearchPaginator(find, per_page=LIMIT)
         objects, number_found, token, error = paginator.page(page)
 
-        if (client == 'vue2'):
-            self.render({
-                'objects': objects,
-                'filter': {'field': 'search', 'value': find.strip()},
-                '_page': page if page else 'FP',
-                '_next': token,
-                'error': error
-            })
-        else:
-            self.render({
-                'objects': objects,
-                'phrase': find.strip(),
-                'number_found': number_found,
-                '_page': page if page else 'FP',
-                '_next': token,
-                'error': error
-            })
+        self.render({
+            'objects': objects,
+            'filter': {'field': 'search', 'value': find.strip()},
+            'number_found': number_found,
+            '_page': page if page else 'FP',
+            '_next': token,
+            'error': error
+        })
+        # if (client == 'vue2'):
+        # else:
+        #     self.render({
+        #         'objects': objects,
+        #         'phrase': find.strip(),
+        #         'number_found': number_found,
+        #         '_page': page if page else 'FP',
+        #         '_next': token,
+        #         'error': error
+        #     })
 
 
 class Suggest(RestHandler):
@@ -149,22 +150,22 @@ class Paginator(object):
         return objects, next_token
 
 
-class Collection(RestHandler):
-    def get(self, kind=None, field=None, value=None):
-        page = self.request.get('_page', None)
+# class Collection(RestHandler):
+#     def get(self, kind=None, field=None, value=None):
+#         page = self.request.get('_page', None)
 
-        if field == 'year':
-            value = int(value)
-        query = Photo.query_for(field, value)
-        paginator = Paginator(query, per_page=LIMIT)
-        objects, token = paginator.page(page)  # [], None
+#         if field == 'year':
+#             value = int(value)
+#         query = Photo.query_for(field, value)
+#         paginator = Paginator(query, per_page=LIMIT)
+#         objects, token = paginator.page(page)  # [], None
 
-        self.render({
-            'objects': objects,
-            'filter': {'field': field, 'value': value} if (field and value) else None,
-            '_page': page if page else 'FP',
-            '_next': token
-        })
+#         self.render({
+#             'objects': objects,
+#             'filter': {'field': field, 'value': value} if (field and value) else None,
+#             '_page': page if page else 'FP',
+#             '_next': token
+#         })
 
 
 class PhotoRecent(RestHandler):
@@ -287,11 +288,11 @@ class BackgroundDeleted(RestHandler):
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
-        client = self.request.headers.get('client', None)
-        if (client == 'vue2'):
-            token = json.loads(self.request.body).get('token', None)
-        else:
-            token = self.request.json.get('token', None)
+        # client = self.request.headers.get('client', None)
+        token = json.loads(self.request.body).get('token', None)
+        # if (client == 'vue2'):
+        # else:
+        #     token = self.request.json.get('token', None)
 
         if kind == 'Photo' and token is not None:  # TODO Title case!
             runner = Builder()
@@ -311,23 +312,23 @@ class Crud(RestHandler):
         self.render(key.get())
 
     def post(self, kind=None):
-        client = self.request.headers.get('client', None)
+        # client = self.request.headers.get('client', None)
         if kind == 'photo':
             resList = []
-            if (client == 'vue2'):
-                # {'photos', FieldStorage('photos', u'light-rain.jpg')}
-                for fs in self.request.POST.getall('photos'):
-                    obj = Photo(headline=fs.filename)
-                    res = obj.add(fs)
-                    resList.append(res)
-                self.render(resList)
-            else:
-                data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
-                fs = data['file']
+            # {'photos', FieldStorage('photos', u'light-rain.jpg')}
+            for fs in self.request.POST.getall('photos'):
                 obj = Photo(headline=fs.filename)
                 res = obj.add(fs)
                 resList.append(res)
-                self.render(resList)
+            self.render(resList)
+            # if (client == 'vue2'):
+            # else:
+            #     data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
+            #     fs = data['file']
+            #     obj = Photo(headline=fs.filename)
+            #     res = obj.add(fs)
+            #     resList.append(res)
+            #     self.render(resList)
 
     def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)
@@ -335,24 +336,24 @@ class Crud(RestHandler):
             self.abort(404)
         obj = key.get()
 
-        client = self.request.headers.get('client', None)
-        if (client == 'vue2'):
-            data = json.loads(self.request.body)  # TODO vue2
-            # fix tags
-            if 'tags' in data:
-                tags = data['tags']
-            else:
-                tags = []
+        # client = self.request.headers.get('client', None)
+        data = json.loads(self.request.body)  # TODO vue2
+        # fix tags
+        if 'tags' in data:
+            tags = data['tags']
         else:
-            data = dict(self.request.params)  # TODO polymer
-            # fix tags
-            if 'tags' in data:
-                if data['tags'].strip() != '':
-                    tags = map(unicode.strip, data['tags'].split(','))
-                else:
-                    tags = []
-            else:
-                tags = []
+            tags = []
+        # if (client == 'vue2'):
+        # else:
+        #     data = dict(self.request.params)  # TODO polymer
+        #     # fix tags
+        #     if 'tags' in data:
+        #         if data['tags'].strip() != '':
+        #             tags = map(unicode.strip, data['tags'].split(','))
+        #         else:
+        #             tags = []
+        #     else:
+        #         tags = []
 
         data['tags'] = sorted(tags)
         # fix author
@@ -397,21 +398,21 @@ class Download(webapp2.RequestHandler):
         self.response.write(obj.buffer)
 
 
-class SiteMap(webapp2.RequestHandler):
-    def get(self):
-        uri = urlparse(self.uri_for('sitemap', _full=True))
-        collection = Photo.query().order(-Photo.date).fetch(100)
-        out = ''
-        for obj in collection:
-            link = '{}://{}/#/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
-            out += TEMPLATE_ROW.format(**{
-                'loc': link,
-                'lastmod': obj.date.strftime('%Y-%m-%d')
-            })
-        self.response.headers = {
-            'Content-Type': 'application/xml'
-        }
-        self.response.write(TEMPLATE_WRAPPER.format(out))
+# class SiteMap(webapp2.RequestHandler):
+#     def get(self):
+#         uri = urlparse(self.uri_for('sitemap', _full=True))
+#         collection = Photo.query().order(-Photo.date).fetch(100)
+#         out = ''
+#         for obj in collection:
+#             link = '{}://{}/#/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
+#             out += TEMPLATE_ROW.format(**{
+#                 'loc': link,
+#                 'lastmod': obj.date.strftime('%Y-%m-%d')
+#             })
+#         self.response.headers = {
+#             'Content-Type': 'application/xml'
+#         }
+#         self.response.write(TEMPLATE_WRAPPER.format(out))
 
 
 class Info(RestHandler):

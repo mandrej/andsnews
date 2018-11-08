@@ -8,9 +8,9 @@ app = WSGIApplication([
     Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
     Route(r'/api/search/<find>', handler=api.Find),
 
-    Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),
-    Route(r'/api/<kind:(photo|entry)>/<field:(year|tags|color|model|author)>/<value>',
-          handler=api.Collection),
+    # Route(r'/api/<kind:(photo|entry)>', handler=api.Collection),
+    # Route(r'/api/<kind:(photo|entry)>/<field:(year|tags|color|model|author)>/<value>',
+    #       handler=api.Collection),
 
     Route(r'/api/info', handler=api.Info, methods=['GET']),         # 1
 
@@ -26,5 +26,5 @@ app = WSGIApplication([
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
     Route(r'/api/message', handler=api.Notify, methods=['POST']),
 
-    Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
+    # Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
 ], debug=DEVEL)
