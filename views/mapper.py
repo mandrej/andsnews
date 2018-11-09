@@ -173,7 +173,7 @@ class Fixer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class UnboundCloud(Mapper):
+class Unbound(Mapper):
     """
     Remove unbound images from Google Cloud Storage
     """
@@ -215,45 +215,45 @@ class UnboundCloud(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class UnboundDevel(Mapper):
-    """
-    Remove unbound images from local Blobstore
-    """
-    TOKEN = None
-    TOTAL = 0
+# class UnboundDevel(Mapper):
+#     """
+#     Remove unbound images from local Blobstore
+#     """
+#     TOKEN = None
+#     TOTAL = 0
 
-    def map(self, blob_key):
-        return [], [blob_key]
+#     def map(self, blob_key):
+#         return [], [blob_key]
 
-    def run(self, batch_size=100):
-        self._continue(batch_size)
+#     def run(self, batch_size=100):
+#         self._continue(batch_size)
 
-    def _batch_write(self):
-        for blob_key in self.to_delete:
-            images.delete_serving_url(blob_key)
-            blobstore.delete(blob_key)
-        self.to_delete = []
+#     def _batch_write(self):
+#         for blob_key in self.to_delete:
+#             images.delete_serving_url(blob_key)
+#             blobstore.delete(blob_key)
+#         self.to_delete = []
 
-    def _continue(self, batch_size):
-        try:
-            for info in blobstore.BlobInfo.all():
-                blob_key = info.key()
-                p = Photo.query(Photo.blob_key == blob_key).get()
-                if p is None:
-                    map_updates, map_deletes = self.map(blob_key)
-                    self.to_put.extend(map_updates)
-                    self.to_delete.extend(map_deletes)
-                    self.TOTAL += info.size
-                    push_message(self.TOKEN, sizeof_fmt(self.TOTAL))
-            self._batch_write()
-        except (Timeout, DeadlineExceededError):
-            self._batch_write()
-            deferred.defer(self._continue, batch_size, _queue='background')
-            return
-        self.finish()
+#     def _continue(self, batch_size):
+#         try:
+#             for info in blobstore.BlobInfo.all():
+#                 blob_key = info.key()
+#                 p = Photo.query(Photo.blob_key == blob_key).get()
+#                 if p is None:
+#                     map_updates, map_deletes = self.map(blob_key)
+#                     self.to_put.extend(map_updates)
+#                     self.to_delete.extend(map_deletes)
+#                     self.TOTAL += info.size
+#                     push_message(self.TOKEN, sizeof_fmt(self.TOTAL))
+#             self._batch_write()
+#         except (Timeout, DeadlineExceededError):
+#             self._batch_write()
+#             deferred.defer(self._continue, batch_size, _queue='background')
+#             return
+#         self.finish()
 
-    def finish(self):
-        push_message(self.TOKEN, END_MSG)
+#     def finish(self):
+#         push_message(self.TOKEN, END_MSG)
 
 
 # class OldFixer(Mapper):

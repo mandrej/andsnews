@@ -111,7 +111,7 @@ const actions = {
   fetchCloud: ({ commit }) => {
     axios.get('info')
       .then(response => {
-        commit('SET_CLOUD', response.data.photo.counters)
+        commit('SET_CLOUD', response.data)
       })
   }
 }

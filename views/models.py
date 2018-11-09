@@ -18,7 +18,7 @@ from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 from unidecode import unidecode
 
-from config import ASA, HUE, LUM, SAT, DEVEL, BUCKET
+from config import ASA, HUE, LUM, SAT, BUCKET  # DEVEL
 from palette import extract_colors, rgb_to_hex
 
 # logger = logging.getLogger('modules')
@@ -381,13 +381,13 @@ class Photo(ndb.Model):
         old_pairs = self.changed_pairs()
 
         images.delete_serving_url(self.blob_key)
-        if DEVEL:
-            blobstore.delete(self.blob_key)
-        else:
-            try:
-                gcs.delete(self.filename)
-            except gcs.NotFoundError:
-                pass
+        # if DEVEL:
+        #     blobstore.delete(self.blob_key)
+        # else:
+        try:
+            gcs.delete(self.filename)
+        except gcs.NotFoundError:
+            pass
 
         time.sleep(3)
 
@@ -398,15 +398,15 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def serving_url(self):
         result = None
-        if DEVEL:
-            if blobstore.get(self.blob_key):
-                result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        else:
-            try:
-                gcs.stat(self.filename)
-                result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-            except gcs.NotFoundError:
-                pass
+        # if DEVEL:
+        #     if blobstore.get(self.blob_key):
+        #         result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        # else:
+        try:
+            gcs.stat(self.filename)
+            result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except gcs.NotFoundError:
+            pass
 
         if result is None:
             logging.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))

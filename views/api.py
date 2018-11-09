@@ -13,8 +13,8 @@ from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 
-from config import DEVEL, START_MSG
-from mapper import push_message, Fixer, Indexer, Builder, UnboundDevel, UnboundCloud
+from config import START_MSG  # DEVEL
+from mapper import push_message, Fixer, Indexer, Builder, Unbound  # UnboundDevel
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
@@ -168,20 +168,20 @@ class Paginator(object):
 #         })
 
 
-class PhotoRecent(RestHandler):
-    def get(self):
-        page = self.request.get('_page', None)
-        token = None
+# class PhotoRecent(RestHandler):
+#     def get(self):
+#         page = self.request.get('_page', None)
+#         token = None
 
-        query = Photo.query().order(-Photo.date)
-        paginator = Paginator(query, per_page=LIMIT)
-        objects, token = paginator.page(page)  # [], None
+#         query = Photo.query().order(-Photo.date)
+#         paginator = Paginator(query, per_page=LIMIT)
+#         objects, token = paginator.page(page)  # [], None
 
-        self.render({
-            'objects': objects,
-            '_page': page if page else 'FP',
-            '_next': token
-        })
+#         self.render({
+#             'objects': objects,
+#             '_page': page if page else 'FP',
+#             '_next': token
+#         })
 
 
 def available_filters():
@@ -241,10 +241,10 @@ class BackgroundUnbound(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
         if token is not None:
-            if DEVEL:
-                runner = UnboundDevel()
-            else:
-                runner = UnboundCloud()
+            # if DEVEL:
+            #     runner = UnboundDevel()
+            # else:
+            runner = Unbound()
             runner.TOKEN = token
 
             push_message(runner.TOKEN, START_MSG)
@@ -417,8 +417,5 @@ class Download(webapp2.RequestHandler):
 
 class Info(RestHandler):
     def get(self):
-        data = {
-            'photo': {'count': Photo.query().count()},
-        }
-        data['photo']['counters'] = ['Photo_%s' % x for x in PHOTO_FILTER]
+        data = ['Photo_%s' % x for x in PHOTO_FILTER]
         self.render(data)
