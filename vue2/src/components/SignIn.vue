@@ -30,15 +30,9 @@ export default {
     ...mapState('auth', ['user'])
   },
   mounted () {
-    if (this.user && this.user.photo) {
-      this.photoUrl = this.user.photo
-    }
+    this.photoUrl = this.user && this.user.photo
     EventBus.$on('signin', user => {
-      if (user && user.photo) {
-        this.photoUrl = user.photo
-      } else {
-        this.photoUrl = null
-      }
+      this.photoUrl = user && user.photo
     })
   },
   methods: {

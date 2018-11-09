@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn v-if="canAdd(user)"
+    <v-btn v-if="canAdd"
       fab medium fixed bottom right
       color="accent" class="black--text" @click="$router.push({ name: 'add' })">
       <v-icon>add</v-icon>
@@ -52,7 +52,7 @@
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list v-if="canAdmin(user)" light style="background: transparent">
+          <v-list v-if="canAdmin" light style="background: transparent">
             <v-list-tile @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -103,6 +103,7 @@ import { mapState } from 'vuex'
 import Menu from '@/components/Menu'
 import List from '@/components/List'
 import Find from '@/components/Find'
+import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/messaging'
@@ -120,6 +121,8 @@ export default {
     Find
   },
   data: () => ({
+    canAdd: false,
+    canAdmin: false,
     drawer: null,
     title: 'ANDрејевићи',
     text: '',
@@ -141,6 +144,12 @@ export default {
     this.switchComponent(qs)
   },
   mounted () {
+    this.canAdd = this.user && this.user.isAuthorized
+    this.canAdmin = this.user && this.user.isAdmin
+    EventBus.$on('signin', user => {
+      this.canAdd = user && user.isAuthorized
+      this.canAdmin = user && user.isAdmin
+    })
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true
@@ -149,9 +158,7 @@ export default {
   },
   watch: {
     count (val) {
-      if (val === 0) {
-        this.empty = true
-      }
+      this.empty = val === 0
       // https://stackoverflow.com/questions/35531629/vuejs-animate-number-changes
       clearInterval(this.interval)
       this.interval = setInterval(() => {
@@ -172,12 +179,6 @@ export default {
     ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   methods: {
-    canAdd (user) {
-      return user && user.isAuthorized
-    },
-    canAdmin (user) {
-      return user && user.isAdmin
-    },
     clearFilter () {
       this.$router.push({ name: 'home' })
     },
