@@ -134,20 +134,20 @@ class Suggest(RestHandler):
         self.render([counter.value for counter in query if counter.count > 0])
 
 
-class Paginator(object):
-    def __init__(self, query, per_page):
-        self.query = query
-        self.per_page = per_page
+# class Paginator(object):
+#     def __init__(self, query, per_page):
+#         self.query = query
+#         self.per_page = per_page
 
-    def page(self, token=None):
-        try:
-            cursor = Cursor(urlsafe=token)
-        except datastore_errors.BadValueError:
-            webapp2.abort(404)
+#     def page(self, token=None):
+#         try:
+#             cursor = Cursor(urlsafe=token)
+#         except datastore_errors.BadValueError:
+#             webapp2.abort(404)
 
-        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
-        next_token = cursor.urlsafe() if has_next else None
-        return objects, next_token
+#         objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+#         next_token = cursor.urlsafe() if has_next else None
+#         return objects, next_token
 
 
 # class Collection(RestHandler):
@@ -241,12 +241,8 @@ class BackgroundUnbound(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
         if token is not None:
-            # if DEVEL:
-            #     runner = UnboundDevel()
-            # else:
             runner = Unbound()
             runner.TOKEN = token
-
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, _queue='background')
 
@@ -258,7 +254,6 @@ class BackgroundDeleted(RestHandler):
             runner = Fixer()
             runner.KIND = Photo
             runner.TOKEN = token
-
             push_message(runner.TOKEN, START_MSG)
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
