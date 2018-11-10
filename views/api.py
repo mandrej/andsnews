@@ -102,13 +102,14 @@ class Find(RestHandler):
     def get(self, find):
         # client = self.request.headers.get('client', None)
         page = self.request.get('_page', None)
-        paginator = SearchPaginator(find, per_page=LIMIT)
+        per_page = int(self.request.get('per_page', LIMIT))
+        paginator = SearchPaginator(find, per_page=per_page)
         objects, number_found, token, error = paginator.page(page)
 
         self.render({
             'objects': objects,
             'filter': {'field': 'search', 'value': find.strip()},
-            'number_found': number_found,
+            # 'number_found': number_found,
             '_page': page if page else 'FP',
             '_next': token,
             'error': error

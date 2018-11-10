@@ -44,7 +44,7 @@
             v-model="tmp.month"
             clearable></v-select>
         </v-flex>
-        <v-flex xs12 class="hidden-xs-only">
+        <v-flex xs12>
           <v-autocomplete
             label="by camera model"
             :items="models"

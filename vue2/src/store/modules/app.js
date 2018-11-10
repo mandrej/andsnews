@@ -3,6 +3,7 @@ import Vue from 'vue'
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const axios = Vue.axios
+const LIMIT = 24
 
 const initialState = {
   find: {},
@@ -67,7 +68,7 @@ const actions = {
     commit('SET_ERROR', '')
     commit('SET_BUSY', true)
     let url = 'start'
-    const params = {}
+    const params = { per_page: LIMIT }
     const filter = { ...state.filter }
     if (state.next) params._page = state.next
 
