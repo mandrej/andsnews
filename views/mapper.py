@@ -2,14 +2,11 @@ import collections
 import itertools
 import json
 import logging
-import uuid
 
 import cloudstorage as gcs
 import httplib2
-import re
-from google.appengine.api import images
 from google.appengine.api.datastore_errors import Timeout
-from google.appengine.ext import ndb, deferred, blobstore
+from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
@@ -21,6 +18,7 @@ HEADERS = {
     'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
     'Content-Type': 'application/json',
 }
+
 
 def push_message(token, message=''):
     """

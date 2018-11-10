@@ -18,7 +18,7 @@ from google.appengine.api import users, search, images
 from google.appengine.ext import ndb, deferred, blobstore
 from unidecode import unidecode
 
-from config import ASA, HUE, LUM, SAT, BUCKET  # DEVEL
+from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex
 
 # logger = logging.getLogger('modules')

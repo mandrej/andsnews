@@ -1,20 +1,18 @@
 import datetime
 import json
 import time
-from urlparse import urlparse
 import logging
 from operator import itemgetter
 
 import numpy as np
 import webapp2
-from unidecode import unidecode
-from google.appengine.api import users, search, datastore_errors
-from google.appengine.datastore.datastore_query import Cursor
+from google.appengine.api import users, search
 from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
+from unidecode import unidecode
 
-from config import START_MSG  # DEVEL
-from mapper import push_message, Fixer, Indexer, Builder, Unbound  # UnboundDevel
+from config import START_MSG
+from mapper import push_message, Fixer, Indexer, Builder, Unbound
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
