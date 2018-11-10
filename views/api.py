@@ -17,10 +17,10 @@ from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
 PERCENTILE = 80
-TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
-TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
-<priority>0.3</priority></url>"""
+# TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
+# xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
+# TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
+# <priority>0.3</priority></url>"""
 
 
 def get_key(url_safe_str):
@@ -100,7 +100,6 @@ class SearchPaginator(object):
 
 class Find(RestHandler):
     def get(self, find):
-        # client = self.request.headers.get('client', None)
         page = self.request.get('_page', None)
         per_page = int(self.request.get('per_page', LIMIT))
         paginator = SearchPaginator(find, per_page=per_page)
@@ -114,16 +113,6 @@ class Find(RestHandler):
             '_next': token,
             'error': error
         })
-        # if (client == 'vue2'):
-        # else:
-        #     self.render({
-        #         'objects': objects,
-        #         'phrase': find.strip(),
-        #         'number_found': number_found,
-        #         '_page': page if page else 'FP',
-        #         '_next': token,
-        #         'error': error
-        #     })
 
 
 class Suggest(RestHandler):
@@ -131,56 +120,6 @@ class Suggest(RestHandler):
         kind, field = mem_key.split('_')
         query = Counter.query(Counter.forkind == kind, Counter.field == field)
         self.render([counter.value for counter in query if counter.count > 0])
-
-
-# class Paginator(object):
-#     def __init__(self, query, per_page):
-#         self.query = query
-#         self.per_page = per_page
-
-#     def page(self, token=None):
-#         try:
-#             cursor = Cursor(urlsafe=token)
-#         except datastore_errors.BadValueError:
-#             webapp2.abort(404)
-
-#         objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
-#         next_token = cursor.urlsafe() if has_next else None
-#         return objects, next_token
-
-
-# class Collection(RestHandler):
-#     def get(self, kind=None, field=None, value=None):
-#         page = self.request.get('_page', None)
-
-#         if field == 'year':
-#             value = int(value)
-#         query = Photo.query_for(field, value)
-#         paginator = Paginator(query, per_page=LIMIT)
-#         objects, token = paginator.page(page)  # [], None
-
-#         self.render({
-#             'objects': objects,
-#             'filter': {'field': field, 'value': value} if (field and value) else None,
-#             '_page': page if page else 'FP',
-#             '_next': token
-#         })
-
-
-# class PhotoRecent(RestHandler):
-#     def get(self):
-#         page = self.request.get('_page', None)
-#         token = None
-
-#         query = Photo.query().order(-Photo.date)
-#         paginator = Paginator(query, per_page=LIMIT)
-#         objects, token = paginator.page(page)  # [], None
-
-#         self.render({
-#             'objects': objects,
-#             '_page': page if page else 'FP',
-#             '_next': token
-#         })
 
 
 def available_filters():
@@ -257,36 +196,10 @@ class BackgroundDeleted(RestHandler):
             deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
-# class BackgroundFix(RestHandler):
-#     def post(self, kind):
-#         token = self.request.json.get('token', None)
-#         if kind == 'photo' and token is not None:
-#             runner = Fixer()
-#             runner.KIND = Photo
-#             runner.DATE_START = datetime.datetime.strptime('2013-01-01T00:00:00', '%Y-%m-%dT%H:%M:%S')
-#             runner.DATE_END = datetime.datetime.strptime('2013-12-31T23:59:59', '%Y-%m-%dT%H:%M:%S')
-#             runner.TOKEN = token
-
-#             push_message(runner.TOKEN, START_MSG)
-#             deferred.defer(runner.run, batch_size=10, _queue='background')
-
-#         elif kind == 'counter' and token is not None:
-#             runner = RemoveFields()
-#             runner.KIND = Counter
-#             runner.TOKEN = token
-
-#             push_message(runner.TOKEN, START_MSG)
-#             deferred.defer(runner.run, batch_size=10, _queue='background')
-
-
 class BackgroundBuild(RestHandler):
     def post(self, mem_key):
         kind, field = mem_key.split('_', 1)
-        # client = self.request.headers.get('client', None)
         token = json.loads(self.request.body).get('token', None)
-        # if (client == 'vue2'):
-        # else:
-        #     token = self.request.json.get('token', None)
 
         if kind == 'Photo' and token is not None:  # TODO Title case!
             runner = Builder()
@@ -306,7 +219,6 @@ class Crud(RestHandler):
         self.render(key.get())
 
     def post(self, kind=None):
-        # client = self.request.headers.get('client', None)
         if kind == 'photo':
             resList = []
             # {'photos', FieldStorage('photos', u'light-rain.jpg')}
@@ -315,14 +227,6 @@ class Crud(RestHandler):
                 res = obj.add(fs)
                 resList.append(res)
             self.render(resList)
-            # if (client == 'vue2'):
-            # else:
-            #     data = dict(self.request.params)  # {'file': FieldStorage('file', u'SDIM4151.jpg')}
-            #     fs = data['file']
-            #     obj = Photo(headline=fs.filename)
-            #     res = obj.add(fs)
-            #     resList.append(res)
-            #     self.render(resList)
 
     def put(self, kind=None, safe_key=None):
         key = get_key(safe_key)
@@ -330,24 +234,12 @@ class Crud(RestHandler):
             self.abort(404)
         obj = key.get()
 
-        # client = self.request.headers.get('client', None)
         data = json.loads(self.request.body)  # TODO vue2
         # fix tags
         if 'tags' in data:
             tags = data['tags']
         else:
             tags = []
-        # if (client == 'vue2'):
-        # else:
-        #     data = dict(self.request.params)  # TODO polymer
-        #     # fix tags
-        #     if 'tags' in data:
-        #         if data['tags'].strip() != '':
-        #             tags = map(unicode.strip, data['tags'].split(','))
-        #         else:
-        #             tags = []
-        #     else:
-        #         tags = []
 
         data['tags'] = sorted(tags)
         # fix author

@@ -127,26 +127,6 @@ class Indexer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-# class RemoveFields(Mapper):
-#     TOKEN = None
-
-#     def map(self, entity):
-#         return [entity], []
-
-#     def _batch_write(self):
-#         for entity in self.to_put:
-#             if 'repr_stamp' in entity._properties:
-#                 del entity._properties['repr_stamp']
-#             if 'repr_url' in entity._properties:
-#                 del entity._properties['repr_url']
-#             entity.put()
-#             push_message(self.TOKEN, entity.key.string_id())
-#         self.to_put = []
-
-#     def finish(self):
-#         push_message(self.TOKEN, END_MSG)
-
-
 class Fixer(Mapper):
     TOKEN = None
     KIND = None
@@ -211,104 +191,6 @@ class Unbound(Mapper):
 
     def finish(self):
         push_message(self.TOKEN, END_MSG)
-
-
-# class UnboundDevel(Mapper):
-#     """
-#     Remove unbound images from local Blobstore
-#     """
-#     TOKEN = None
-#     TOTAL = 0
-
-#     def map(self, blob_key):
-#         return [], [blob_key]
-
-#     def run(self, batch_size=100):
-#         self._continue(batch_size)
-
-#     def _batch_write(self):
-#         for blob_key in self.to_delete:
-#             images.delete_serving_url(blob_key)
-#             blobstore.delete(blob_key)
-#         self.to_delete = []
-
-#     def _continue(self, batch_size):
-#         try:
-#             for info in blobstore.BlobInfo.all():
-#                 blob_key = info.key()
-#                 p = Photo.query(Photo.blob_key == blob_key).get()
-#                 if p is None:
-#                     map_updates, map_deletes = self.map(blob_key)
-#                     self.to_put.extend(map_updates)
-#                     self.to_delete.extend(map_deletes)
-#                     self.TOTAL += info.size
-#                     push_message(self.TOKEN, sizeof_fmt(self.TOTAL))
-#             self._batch_write()
-#         except (Timeout, DeadlineExceededError):
-#             self._batch_write()
-#             deferred.defer(self._continue, batch_size, _queue='background')
-#             return
-#         self.finish()
-
-#     def finish(self):
-#         push_message(self.TOKEN, END_MSG)
-
-
-# class OldFixer(Mapper):
-#     """
-#     Migrate images from blobstore to google cloud storage
-#     """
-#     TOKEN = None
-#     DATE_START = None
-#     DATE_END = None
-
-#     def map(self, entity):
-#         return [entity], []
-
-#     def get_query(self):
-#         return self.KIND.query(self.KIND.date < self.DATE_END, self.KIND.date >= self.DATE_START)
-
-#     def _batch_write(self):
-#         for entity in self.to_put:
-#             blob_info = blobstore.BlobInfo.get(entity.blob_key)  # content_type, creation, filename, size
-#             if blob_info and entity.filename is None:
-#                 logging.info(u'{} {}'.format(blob_info.filename, blob_info.content_type))
-#                 blob_reader = blobstore.BlobReader(entity.blob_key, buffer_size=1024 * 1024)
-#                 buff = blob_reader.read(size=-1)
-#                 object_name = BUCKET + '/' + blob_info.filename  # format /bucket/object
-#                 # Check  GCS stat exist first
-#                 try:
-#                     gcs.stat(object_name)
-#                     object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], blob_info.filename)
-#                 except gcs.NotFoundError:
-#                     pass
-
-#                 try:
-#                     write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-#                     with gcs.open(
-#                         object_name,
-#                         'w',
-#                         content_type=blob_info.content_type,
-#                         retry_params=write_retry_params) as f:
-#                         f.write(buff)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
-
-#                     # delete old blob key
-#                     blobstore.delete(entity.blob_key)
-#                     # write new blob key
-#                     entity.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
-#                     entity.filename = object_name
-#                     entity.put()
-
-#                 except gcs.errors as e:
-#                     push_message(self.TOKEN, e.message)
-#                 else:
-#                     push_message(self.TOKEN, 'DONE {}'.format(entity.slug))
-#             else:
-#                 push_message(self.TOKEN, 'SKIPPED {}'.format(entity.slug))
-#         self.to_put = []
-
-#     def finish(self):
-#         push_message(self.TOKEN, END_MSG)
 
 
 class Builder(Mapper):

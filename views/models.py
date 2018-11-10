@@ -381,9 +381,6 @@ class Photo(ndb.Model):
         old_pairs = self.changed_pairs()
 
         images.delete_serving_url(self.blob_key)
-        # if DEVEL:
-        #     blobstore.delete(self.blob_key)
-        # else:
         try:
             gcs.delete(self.filename)
         except gcs.NotFoundError:
@@ -398,10 +395,6 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def serving_url(self):
         result = None
-        # if DEVEL:
-        #     if blobstore.get(self.blob_key):
-        #         result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        # else:
         try:
             gcs.stat(self.filename)
             result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
