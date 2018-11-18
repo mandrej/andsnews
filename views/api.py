@@ -1,6 +1,7 @@
 import datetime
 import json
 import time
+import pytz
 import logging
 from operator import itemgetter
 
@@ -21,6 +22,7 @@ PERCENTILE = 80
 # xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
 # TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
 # <priority>0.3</priority></url>"""
+TZ = pytz.timezone('Europe/Belgrade')
 
 
 def get_key(url_safe_str):
@@ -39,7 +41,11 @@ class LazyEncoder(json.JSONEncoder):
         if isinstance(obj, ndb.Model):
             return obj.serialize()
         elif isinstance(obj, datetime.datetime):
-            return obj.isoformat()
+            """
+            2018-08-16 10:39:09 -> 2018-08-16 10:39:09+02:00
+            2018-01-14 13:03:01 -> 2018-01-14 13:03:01+01:00
+            """
+            return TZ.localize(obj).isoformat()
         elif isinstance(obj, users.User):
             return obj.email()
         return obj

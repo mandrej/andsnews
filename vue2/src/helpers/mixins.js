@@ -30,17 +30,6 @@ const common = {
       } else {
         return '/static/img/broken.svg'
       }
-    },
-    dateFormat (rec, fmt) {
-      if (rec && rec.date) {
-        let [date, time] = rec.date.split('T')
-        let [year, month, day] = date.split('-')
-        if (fmt) {
-          return [day, month, year].join('.')
-        } else {
-          return [day, month, year].join('.') + ' ' + time.slice(0, 5)
-        }
-      }
     }
   }
 }

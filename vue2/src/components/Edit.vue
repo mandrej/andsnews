@@ -182,7 +182,7 @@ export default {
       this.tmp = { ...val }
       this.dateTime = {
         date: dt[0],
-        time: dt[1]
+        time: dt[1].substring(0, 5)
       }
     }
   },

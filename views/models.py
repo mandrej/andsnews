@@ -427,9 +427,7 @@ class Photo(ndb.Model):
         return query.get()
 
     def serialize(self):
-        data = self.to_dict(exclude=(
-            'blob_key', 'size', 'ratio', 'crop_factor',
-            'rgb', 'sat', 'lum', 'hue', 'year'))
+        data = self.to_dict(exclude=('blob_key', 'size', 'rgb', 'sat', 'lum', 'hue', 'year'))
         data.update({
             'kind': 'photo',
             'year': str(self.year),

@@ -62,7 +62,7 @@
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{dateFormat(item)}}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{item.date | moment('lll')}}</v-list-tile-sub-title>
                 </v-list-tile-content>
                 <v-list-tile-action>
                   <v-layout row>
@@ -93,6 +93,8 @@ const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2
 const STATUS_FAILED = 3
+
+Vue.use(require('vue-moment'))
 
 export default {
   name: 'Add',

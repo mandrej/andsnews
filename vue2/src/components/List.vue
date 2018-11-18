@@ -34,7 +34,7 @@
               <v-card-title primary-title class="pt-3">
                 <div>
                   <h3 class="title">{{item.headline}}</h3>
-                  <div>{{dateFormat(item)}}</div>
+                  <div>{{item.date | moment('lll Z')}}</div>
                   <div>{{item.author.match(/[^@]+/)[0]}}</div>
                 </div>
               </v-card-title>
@@ -82,6 +82,7 @@ Vue.use(Photoswipe, {
     return true
   }
 })
+Vue.use(require('vue-moment'))
 
 export default {
   name: 'List',
