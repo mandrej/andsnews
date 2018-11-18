@@ -38,11 +38,12 @@
 - six.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/six.py
 
 /lib
-- colormath -> /home/milan/venv/andsnews/lib/python2.7/site-packages/colormath
-- exifread -> /home/milan/venv/andsnews/lib/python2.7/site-packages/exifread/
-- httplib2 -> /home/milan/venv/andsnews/lib/python2.7/site-packages/httplib2
-- networkx -> /home/milan/venv/andsnews/lib/python2.7/site-packages/networkx
-- numpy -> /home/milan/venv/andsnews/lib/python2.7/site-packages/numpy
-- cloudstorage -> /home/milan/venv/andsnews/lib/python2.7/site-packages/cloudstorage/
-- aeta -> /home/milan/venv/andsnews/lib/aeta/aeta/
-- unidecode -> /home/milan/venv/andsnews/lib/python2.7/site-packages/unidecode/
+aeta -> /home/milan/venv/andsnews/lib/aeta/aeta/
+cloudstorage -> /home/milan/venv/andsnews/lib/python2.7/site-packages/cloudstorage/
+colormath -> /home/milan/venv/andsnews/lib/python2.7/site-packages/colormath
+exifread -> /home/milan/venv/andsnews/lib/python2.7/site-packages/exifread/
+httplib2 -> /home/milan/venv/andsnews/lib/python2.7/site-packages/httplib2
+networkx -> /home/milan/venv/andsnews/lib/python2.7/site-packages/networkx
+numpy -> /home/milan/venv/andsnews/lib/python2.7/site-packages/numpy
+pytz -> /home/milan/venv/andsnews/lib/python2.7/site-packages/pytz
+unidecode -> /home/milan/venv/andsnews/lib/python2.7/site-packages/unidecode/
