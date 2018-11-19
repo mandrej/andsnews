@@ -20,7 +20,7 @@
       </v-card>
     </v-dialog>
 
-    <v-container fluid grid-list-lg>
+    <v-container grid-list-lg>
       <Photoswipe>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2

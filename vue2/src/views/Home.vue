@@ -1,11 +1,5 @@
 <template>
   <div>
-    <v-btn v-if="canAdd"
-      fab medium fixed bottom right
-      color="accent" class="black--text" @click="$router.push({ name: 'add' })">
-      <v-icon>add</v-icon>
-    </v-btn>
-
     <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
@@ -42,6 +36,8 @@
         <v-layout column class="aperture" fill-height>
           <v-toolbar light class="aperture">
             <v-spacer></v-spacer>
+            <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
+            <span v-else style="padding-right: 1em">sign-in</span>
             <SignIn></SignIn>
             <v-layout slot="extension" row justify-space-between>
               <v-toolbar-title class="headline">{{total}}</v-toolbar-title>
@@ -68,7 +64,7 @@
       <v-toolbar app light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
-        <v-toolbar-title class="headline font-weight-thin">{{title}}</v-toolbar-title>
+        <v-toolbar-title class="headline font-weight-light">{{title}}</v-toolbar-title>
         <v-layout slot="extension">
           <v-toolbar-title v-if="filter.value" style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
@@ -121,7 +117,7 @@ export default {
     Find
   },
   data: () => ({
-    canAdd: false,
+    isAuthorized: false,
     canAdmin: false,
     drawer: null,
     title: 'ANDрејевићи',
@@ -144,10 +140,10 @@ export default {
     this.switchComponent(qs)
   },
   mounted () {
-    this.canAdd = this.user && this.user.isAuthorized
+    this.isAuthorized = this.user && this.user.isAuthorized
     this.canAdmin = this.user && this.user.isAdmin
     EventBus.$on('signin', user => {
-      this.canAdd = user && user.isAuthorized
+      this.isAuthorized = user && user.isAuthorized
       this.canAdmin = user && user.isAdmin
     })
     messaging.onMessage(payload => {
