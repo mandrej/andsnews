@@ -30,7 +30,7 @@
           </v-img>
           <v-card-title @click="showFilter(item)" style="cursor: pointer">
             <div>
-              <div class="headline">{{item.name}}</div>
+              <h3 class="title">{{item.name}}</h3>
               <div>{{item.count}} photos</div>
             </div>
           </v-card-title>

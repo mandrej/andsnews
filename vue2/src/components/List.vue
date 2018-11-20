@@ -31,7 +31,7 @@
                 :title="caption(item)"
                 :data-pswp-size="item.dim.join('x')"
                 :data-pswp-src="getImgSrc(item)">
-              <v-card-title primary-title class="pt-3">
+              <v-card-title>
                 <div>
                   <h3 class="title">{{item.headline}}</h3>
                   <div>{{item.date | moment('lll Z')}}</div>
