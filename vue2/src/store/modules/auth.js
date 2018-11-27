@@ -1,10 +1,10 @@
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 // export const RESET = 'RESET';
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import { FB } from '@/helpers/fire'
 import 'firebase/app'
 import 'firebase/database'
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const axios = Vue.axios
 const messaging = FB.messaging()

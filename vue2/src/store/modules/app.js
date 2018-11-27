@@ -1,6 +1,6 @@
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 // export const RESET = 'RESET';
 import Vue from 'vue'
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const axios = Vue.axios
 const LIMIT = 24
@@ -139,6 +139,7 @@ const mutations = {
     state.uploaded = [...state.uploaded, data]
   },
   UPDATE_RECORDS (state, data) {
+    if (state.pages[0] === 'FP' && data._page === 'FP') return
     state.objects = [...state.objects, ...data.objects]
     state.pages = [...state.pages, data._page]
     state.next = data._next
@@ -149,8 +150,8 @@ const mutations = {
     state.objects.splice(idx, 1, obj)
   },
   UPDATE_TAGS_MODELS (state, obj) {
-    state.tags = [...new Set([].concat(...state.tags, obj.tags))]
-    if (obj.model) state.models = [...new Set([].concat(...state.models, [obj.model]))]
+    state.tags = [...new Set([...state.tags, obj.tags])]
+    if (obj.model) state.models = [...new Set([...state.models, obj.model])]
   },
   RESET_RECORDS (state) {
     state.objects.length = 0

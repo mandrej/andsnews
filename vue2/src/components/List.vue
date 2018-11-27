@@ -113,7 +113,9 @@ export default {
     })
   },
   updated () {
-    this.bottom = false
+    this.$nextTick(() => {
+      this.bottom = false
+    })
   },
   watch: {
     bottom (val) {
