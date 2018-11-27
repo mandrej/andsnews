@@ -3,7 +3,7 @@
     <v-parallax :src="getImgSrc(menu[0])" height="440" light>
       <v-layout align-center column justify-center>
         <h1 class="display-2 font-weight-light mb-3">ANDрејевићи</h1>
-        <h4 class="subheading text-xs-center">our photo album from 2007</h4>
+        <h4 class="subheading text-xs-center">our photo album since 2007</h4>
       </v-layout>
     </v-parallax>
 
