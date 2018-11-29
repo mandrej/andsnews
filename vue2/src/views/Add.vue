@@ -170,7 +170,9 @@ export default {
       const formData = new FormData()
       if (!fileList.length) return
 
-      // make formData
+      // make formData from Array Iterator
+      // Array.from(Array(5).keys()) = [0, 1, 2, 3, 4]
+      // [...Array(5).keys()] = [0, 1, 2, 3, 4]
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
