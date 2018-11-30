@@ -692,17 +692,17 @@
     tslib "1.9.0"
     xmlhttprequest "1.8.0"
 
-"@firebase/auth-types@0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.3.4.tgz#253b1b2d9b520a0b945d4617c8418f0f19a4159f"
-  integrity sha512-0r3gSQk9jw5orFHCTUIgao0zan6dHt2J0BO3t/uEzbod+uwqvUn/gh+yg+kK6HX92Fg8E7y030KX4Bw/aXt0Ew==
+"@firebase/auth-types@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.4.0.tgz#f65e1d079a2793f581a995a92f56005e44cf4aac"
+  integrity sha512-Q1qAmkQW2dL0Ggg9/hNGpI69IlYZ6HOHcRtavuJi724tm8j1bCARxwSv78vncI9spSFsi+efbaZW12XMS5HwVg==
 
-"@firebase/auth@0.7.9":
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/@firebase/auth/-/auth-0.7.9.tgz#f915f8eeb6ee16b827518f48a0fa529803d39e4e"
-  integrity sha512-m8e2KZ/WvToTMovoBI5K3N0Ku8Aqt6083oqzQODUYHjf94KsAfGdoQEaJono7T7vK4o7E5xpqFgFldOM5LdgiQ==
+"@firebase/auth@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@firebase/auth/-/auth-0.8.0.tgz#e98374341c66e4dc1e7dabdac4015eebfdae56ce"
+  integrity sha512-n3zgNrvNZ/fYCnYz+B2+MoFfpFPQx56lPeWkXgTua1Cy4OxJR6OWVA5xfQjRj1pM07pkBvnhRZtwB+DgY3BjDA==
   dependencies:
-    "@firebase/auth-types" "0.3.4"
+    "@firebase/auth-types" "0.4.0"
 
 "@firebase/database-types@0.3.2":
   version "0.3.2"
@@ -1225,10 +1225,20 @@ ajv@^5.2.3, ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ajv@^6.1.0, ajv@^6.5.3, ajv@^6.5.5:
+ajv@^6.1.0, ajv@^6.5.3:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.5.5.tgz#cf97cdade71c6399a92c6d6c4177381291b781a1"
   integrity sha512-7q7gtRQDJSyuEHjuVgHoUa2VuemFiCMrfQc9Tc08XTAc4Zj/5U1buQJ0HU6i7fKjXU09SVgSmxa4sLvuvS8Iyg==
+  dependencies:
+    fast-deep-equal "^2.0.1"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.4.1"
+    uri-js "^4.2.2"
+
+ajv@^6.5.5:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.6.1.tgz#6360f5ed0d80f232cc2b294c362d5dc2e538dd61"
+  integrity sha512-ZoJjft5B+EJBjUyu9C9Hc0OZyPZSSlOF+plzouTrg6UlA8f+e/n8NIgBFG/9tppJtpPWfthHakK7juJdNDODww==
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
@@ -3716,12 +3726,12 @@ find-up@^3.0.0:
     locate-path "^3.0.0"
 
 firebase@^5.2.0:
-  version "5.5.9"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.5.9.tgz#1e20172d7c7dfafdc75a18378439e0493bc12753"
-  integrity sha512-IFABX9++5Bq7S00zYGdkdnqikq67cJuub26iyap4qNPnc05qXxx/5waomMIyEvfH74K7ywOaVWEy0E1BFNKk7g==
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.6.0.tgz#fbaecb066a2928ff64f69e7b94669640daba5ba2"
+  integrity sha512-ejYDmJT3S/vQoNFsCCtBVopjXe0ny47aZ+C3QXgDY0UxlruNkcMa4Mo3vBIV32q1uad6AbHih6XdDHfs0CH5Uw==
   dependencies:
     "@firebase/app" "0.3.5"
-    "@firebase/auth" "0.7.9"
+    "@firebase/auth" "0.8.0"
     "@firebase/database" "0.3.7"
     "@firebase/firestore" "0.8.8"
     "@firebase/functions" "0.3.3"
@@ -5243,7 +5253,15 @@ lower-case@^1.1.1:
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
   integrity sha1-miyr0bno4K6ZOkv31YdcOcQujqw=
 
-lru-cache@^4.0.1, lru-cache@^4.1.1, lru-cache@^4.1.2, lru-cache@^4.1.3:
+lru-cache@^4.0.1:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.5.tgz#8bbe50ea85bed59bc9e33dcab8235ee9bcf443cd"
+  integrity sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==
+  dependencies:
+    pseudomap "^1.0.2"
+    yallist "^2.1.2"
+
+lru-cache@^4.1.1, lru-cache@^4.1.2, lru-cache@^4.1.3:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.4.tgz#51cc46e8e6d9530771c857e24ccc720ecdbcc031"
   integrity sha512-EPstzZ23znHUVLKj+lcXO1KvZkrlw+ZirdwvOmnAnA/1PB4ggyXJ77LRkCqkff+ShQ+cqoxCxLQOh4cKITO5iA==
@@ -8862,6 +8880,11 @@ y18n@^3.2.0, y18n@^3.2.1:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
   integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
+
+yallist@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
+  integrity sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=
 
 yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.3"

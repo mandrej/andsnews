@@ -55,12 +55,9 @@ const actions = {
     axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } }) // no response
   },
   fetchMenu: ({ commit, state }) => {
-    if (state.busy) return
-    commit('SET_BUSY', true)
     axios.get('filters')
       .then(response => {
         commit('UPDATE_MENU', response.data)
-        commit('SET_BUSY', false)
       })
   },
   fetchRecords: ({ commit, state }) => {
