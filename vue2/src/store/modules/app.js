@@ -62,45 +62,38 @@ const actions = {
   },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
-    commit('SET_ERROR', '')
-    commit('SET_BUSY', true)
-    let url = 'start'
-    const params = { per_page: LIMIT }
     const filter = { ...state.filter }
-    if (state.next) params._page = state.next
 
-    if (filter && filter.field) {
-      if (filter.field === 'search') {
-        url = ['search', filter.value].join('/')
-      } else {
-        url = ['photo', filter.field, filter.value].join('/')
-      }
+    if (filter && filter.field === 'search') {
+      const url = [filter.field, filter.value].join('/')
+      const params = { per_page: LIMIT }
+      if (state.next) params._page = state.next
+
+      commit('SET_ERROR', '')
+      commit('SET_BUSY', true)
+      axios.get(url, { params: params })
+        .then(response => {
+          if (state.clear) {
+            commit('RESET_RECORDS')
+            commit('SET_CLEAR', false)
+          }
+          commit('UPDATE_RECORDS', response.data)
+          if (response.error) commit('SET_ERROR', response.error)
+          commit('SET_BUSY', false)
+        })
+        .catch(err => {
+          commit('SET_ERROR', err)
+          commit('SET_BUSY', false)
+        })
     }
-
-    axios.get(url, { params: params })
-      .then(response => {
-        if (state.clear) {
-          commit('RESET_RECORDS')
-          commit('SET_CLEAR', false)
-        }
-        commit('UPDATE_RECORDS', response.data)
-        if (response.error) commit('SET_ERROR', response.error)
-        commit('SET_BUSY', false)
-      })
-      .catch(err => {
-        commit('SET_ERROR', err)
-        commit('SET_BUSY', false)
-      })
   },
-  fetchTags: ({ commit, state }) => {
-    if (state.tags.length !== 0) return
+  fetchTags: ({ commit }) => {
     axios.get('suggest/Photo_tags')
       .then(response => {
         commit('UPDATE_TAGS', response.data)
       })
   },
-  fetchModels: ({ commit, state }) => {
-    if (state.models.length !== 0) return
+  fetchModels: ({ commit }) => {
     axios.get('suggest/Photo_model')
       .then(response => {
         commit('UPDATE_MODELS', response.data)

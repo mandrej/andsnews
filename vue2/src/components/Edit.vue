@@ -169,9 +169,6 @@ export default {
     dateTime: {},
     tmp: {}
   }),
-  created () {
-    this.$store.dispatch('app/fetchTags')
-  },
   computed: {
     ...mapState('app', ['tags'])
   },

@@ -73,7 +73,7 @@ const actions = {
 const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_USER (state, payload) {
-    state.user = Object.assign(state.user, payload)
+    state.user = payload
     EventBus.$emit('signin', state.user)
   },
   SET_TOKEN (state, val) {

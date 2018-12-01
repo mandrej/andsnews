@@ -40,14 +40,7 @@ export default {
       if (this.user && this.user.uid) {
         FB.auth().signOut()
           .then(() => {
-            this.$store.dispatch('auth/saveUser', {
-              name: '',
-              email: '',
-              uid: null,
-              photo: '',
-              isAuthorized: false,
-              isAdmin: false
-            })
+            this.$store.dispatch('auth/saveUser', {})
             this.$router.push({ name: 'home' })
           })
       } else {

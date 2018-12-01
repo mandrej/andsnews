@@ -135,9 +135,8 @@ export default {
     }
   }),
   created () {
+    this.switchComponent(this.$route.params.qs)
     this.$store.dispatch('auth/fetchToken')
-    const qs = this.$route.params.qs || null
-    this.switchComponent(qs)
   },
   mounted () {
     this.isAuthorized = this.user && this.user.isAuthorized
@@ -166,12 +165,11 @@ export default {
       }, 20)
     },
     '$route.params.qs': {
-      handler: 'switchComponent',
-      immediate: true
+      handler: 'switchComponent'
     }
   },
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('auth', ['user', 'fcm_token']),
     ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   methods: {
