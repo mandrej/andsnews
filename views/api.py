@@ -13,7 +13,7 @@ from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 from unidecode import unidecode
 
 from config import START_MSG
-from mapper import push_message, Fixer, Indexer, Builder, Unbound
+from mapper import push_message, Missing, Indexer, Builder, Unbound
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
@@ -195,7 +195,7 @@ class BackgroundDeleted(RestHandler):
     def post(self, kind):
         token = self.request.json.get('token', None)
         if kind == 'photo' and token is not None:
-            runner = Fixer()
+            runner = Missing()
             runner.KIND = Photo
             runner.TOKEN = token
             push_message(runner.TOKEN, START_MSG)

@@ -127,7 +127,7 @@ class Indexer(Mapper):
         push_message(self.TOKEN, END_MSG)
 
 
-class Fixer(Mapper):
+class Missing(Mapper):
     TOKEN = None
     KIND = None
 
@@ -145,6 +145,7 @@ class Fixer(Mapper):
                 log = '__DEL__,{},{},{},{}'.format(entity.date.isoformat(), entity.slug, entity.filename, entity.model)
                 logging.info(log)
                 push_message(self.TOKEN, entity.slug)
+                entity.remove()
         self.to_put = []
 
     def finish(self):

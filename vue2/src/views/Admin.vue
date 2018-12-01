@@ -76,11 +76,11 @@
           <v-layout row>
             <v-flex xs9>
               <v-layout row align-center justify-start fill-height>
-                List images in datastore that are missing in the Cloud
+                Remove images in datastore that are missing in the Cloud
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="fix">Missing</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="error" @click="missing">Missing</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -146,8 +146,8 @@ export default {
     unbound () {
       this.callAjax('unbound/photo')
     },
-    fix () {
-      this.callAjax('fix/photo')
+    missing () {
+      this.callAjax('missing/photo')
     },
     upper (event) {
       this.msg.default = event.toUpperCase()

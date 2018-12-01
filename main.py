@@ -6,10 +6,9 @@ app = WSGIApplication([
     Route(r'/api/filters', handler=api.PhotoFilters),
     Route(r'/api/suggest/<mem_key>', handler=api.Suggest),
     Route(r'/api/search/<find>', handler=api.Find),
+    Route(r'/api/info', handler=api.Info, methods=['GET']),
 
-    Route(r'/api/info', handler=api.Info, methods=['GET']),         # 1
-
-    Route(r'/api/<safe_key>', handler=api.Crud, methods=['GET']),   # 2
+    # Route(r'/api/<safe_key>', handler=api.Crud, methods=['GET']),  # not using
     Route(r'/api/<kind:(photo|entry)>/add', handler=api.Crud, methods=['GET', 'POST']),
     Route(r'/api/<kind:(photo|entry)>/edit/<safe_key>', handler=api.Crud, methods=['PUT']),
     Route(r'/api/delete/<safe_key>', handler=api.Crud, methods=['DELETE']),
@@ -17,7 +16,7 @@ app = WSGIApplication([
 
     Route(r'/api/index/<kind>', handler=api.BackgroundIndex, methods=['POST']),
     Route(r'/api/unbound/<kind>', handler=api.BackgroundUnbound, methods=['POST']),
-    Route(r'/api/fix/<kind>', handler=api.BackgroundDeleted, methods=['POST']),
+    Route(r'/api/missing/<kind>', handler=api.BackgroundDeleted, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
     Route(r'/api/message', handler=api.Notify, methods=['POST']),
 
