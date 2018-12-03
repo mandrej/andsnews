@@ -40,21 +40,23 @@ const actions = {
     commit('ADD_UPLOADED', obj)
     commit('ADD_RECORD', obj)
   },
-  saveRecord: ({ commit }, obj) => {
+  saveRecord: ({ commit, dispatch }, obj) => {
     axios.put('photo/edit/' + obj.safekey, obj)
       .then(response => {
         const obj = response.data.rec
         commit('UPDATE_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_TAGS_MODELS', obj)
+        dispatch('fetchMenu')
       })
   },
-  deleteRecord: ({ commit }, obj) => {
+  deleteRecord: ({ commit, dispatch }, obj) => {
+    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } }) // no response
     commit('DELETE_RECORD', obj)
     commit('DELETE_UPLOADED', obj)
-    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } }) // no response
+    dispatch('fetchMenu')
   },
-  fetchMenu: ({ commit, state }) => {
+  fetchMenu: ({ commit }) => {
     axios.get('filters')
       .then(response => {
         commit('UPDATE_MENU', response.data)
