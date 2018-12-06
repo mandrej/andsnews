@@ -48,7 +48,7 @@
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list v-if="canAdmin" light style="background: transparent">
+          <v-list v-if="isAdmin" light style="background: transparent">
             <v-list-tile @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -117,8 +117,8 @@ export default {
     Find
   },
   data: () => ({
+    isAdmin: false,
     isAuthorized: false,
-    canAdmin: false,
     drawer: null,
     title: 'ANDрејевићи',
     text: '',
@@ -140,16 +140,20 @@ export default {
   },
   mounted () {
     this.isAuthorized = this.user && this.user.isAuthorized
-    this.canAdmin = this.user && this.user.isAdmin
+    this.isAdmin = this.user && this.user.isAdmin
     EventBus.$on('signin', user => {
       this.isAuthorized = user && user.isAuthorized
-      this.canAdmin = user && user.isAdmin
+      this.isAdmin = user && user.isAdmin
     })
     messaging.onMessage(payload => {
       this.text = payload.notification.body
       this.snackbar = true
     })
     this.displayCount = this.count
+  },
+  computed: {
+    ...mapState('auth', ['user', 'fcm_token']),
+    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   watch: {
     count (val) {
@@ -167,10 +171,6 @@ export default {
     '$route.params.qs': {
       handler: 'switchComponent'
     }
-  },
-  computed: {
-    ...mapState('auth', ['user', 'fcm_token']),
-    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   methods: {
     clearFilter () {

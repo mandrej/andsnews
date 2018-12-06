@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container fluid grid-list-lg>
     <v-parallax :src="getImgSrc(menu[0])" height="440" light>
       <v-layout align-center column justify-center>
         <h1 class="display-2 font-weight-light mb-3">ANDрејевићи</h1>
