@@ -21,7 +21,8 @@ export default new Router({
     {
       path: '/list/:qs',
       name: 'list',
-      component: Home
+      component: Home,
+      props: true
     },
     {
       path: '/add',

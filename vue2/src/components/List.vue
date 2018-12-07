@@ -118,7 +118,7 @@ export default {
     })
   },
   watch: {
-    bottom (val) {
+    bottom: function (val) {
       // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
       if (val && this.next) {
         this.$store.dispatch('app/fetchRecords')

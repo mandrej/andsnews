@@ -116,6 +116,7 @@ export default {
     List,
     Find
   },
+  props: ['qs'],
   data: () => ({
     isAdmin: false,
     isAuthorized: false,
@@ -135,7 +136,6 @@ export default {
     }
   }),
   created () {
-    this.switchComponent(this.$route.params.qs)
     this.$store.dispatch('auth/fetchToken')
   },
   mounted () {
@@ -156,7 +156,7 @@ export default {
     ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   watch: {
-    count (val) {
+    count: function (val) {
       this.empty = val === 0
       // https://stackoverflow.com/questions/35531629/vuejs-animate-number-changes
       clearInterval(this.interval)
@@ -168,27 +168,27 @@ export default {
         }
       }, 20)
     },
-    '$route.params.qs': {
-      handler: 'switchComponent'
+    qs: {
+      handler: function (val) {
+        if (val) {
+          this.$store.dispatch('app/changeFilter', {
+            field: 'search',
+            value: val
+          })
+          this.$store.dispatch('app/fetchRecords')
+          this.currentComponent = List
+        } else {
+          this.$store.dispatch('app/changeFilter', {})
+          this.$store.dispatch('app/fetchMenu')
+          this.currentComponent = Menu
+        }
+      },
+      immediate: true
     }
   },
   methods: {
     clearFilter () {
       this.$router.push({ name: 'home' })
-    },
-    switchComponent (qs) {
-      if (qs) {
-        this.$store.dispatch('app/changeFilter', {
-          field: 'search',
-          value: qs
-        })
-        this.$store.dispatch('app/fetchRecords')
-        this.currentComponent = List
-      } else {
-        this.$store.dispatch('app/changeFilter', {})
-        this.$store.dispatch('app/fetchMenu')
-        this.currentComponent = Menu
-      }
     },
     counter () {
       if (this.currentComponent === List) {

@@ -105,7 +105,6 @@ export default {
   methods: {
     submit () {
       let params = []
-      // eslint-disable-next-line
       const sep = '"' // because of tags:b&w -> tags:"b&w"
 
       function wrap (key, value) {

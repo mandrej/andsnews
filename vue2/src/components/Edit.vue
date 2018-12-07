@@ -173,7 +173,7 @@ export default {
     ...mapState('app', ['tags'])
   },
   watch: {
-    rec (val) {
+    rec: function (val) {
       if (JSON.stringify(val) === '{}') return
       const dt = val.date.split('T')
       this.tmp = { ...val }
