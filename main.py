@@ -8,7 +8,6 @@ app = WSGIApplication([
     Route(r'/api/search/<find>', handler=api.Find, methods=['GET']),
     Route(r'/api/info', handler=api.Info, methods=['GET']),
 
-    Route(r'/api/<safe_key>', handler=api.Crud, methods=['GET']),
     Route(r'/api/add', handler=api.Crud, methods=['POST']),
     Route(r'/api/edit/<safe_key>', handler=api.Crud, methods=['PUT']),
     Route(r'/api/delete/<safe_key>', handler=api.Crud, methods=['DELETE']),
@@ -19,6 +18,4 @@ app = WSGIApplication([
     Route(r'/api/missing', handler=api.BackgroundDeleted, methods=['POST']),
     Route(r'/api/rebuild/<mem_key>', handler=api.BackgroundBuild, methods=['POST']),
     Route(r'/api/message', handler=api.Notify, methods=['POST']),
-
-    # Route(r'/sitemap.xml', handler=api.SiteMap, methods=['GET'], name='sitemap'),
 ], debug=DEVEL)

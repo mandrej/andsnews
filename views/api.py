@@ -11,7 +11,6 @@ from google.appengine.api import users, search
 from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 from unidecode import unidecode
-from urlparse import urlparse
 
 from config import START_MSG
 from mapper import push_message, Missing, Indexer, Builder, Unbound
@@ -20,11 +19,6 @@ from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 LIMIT = 24
 PERCENTILE = 80
 TZ = pytz.timezone('Europe/Belgrade')
-
-TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
-TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
-<priority>0.3</priority></url>"""
 
 
 def get_key(url_safe_str):
@@ -220,12 +214,6 @@ class BackgroundBuild(RestHandler):
 
 
 class Crud(RestHandler):
-    def get(self, safe_key=None):
-        key = get_key(safe_key)
-        if key is None:
-            self.abort(404)
-        self.render(key.get())
-
     def post(self):
         resList = []
         # {'photos', FieldStorage('photos', u'light-rain.jpg')}
@@ -288,23 +276,6 @@ class Download(webapp2.RequestHandler):
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
         self.response.write(obj.buffer)
-
-
-# class SiteMap(webapp2.RequestHandler):
-#     def get(self):
-#         uri = urlparse(self.uri_for('sitemap', _full=True))
-#         collection = Photo.query().order(-Photo.date).fetch(100)
-#         out = ''
-#         for obj in collection:
-#             link = '{}://{}/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
-#             out += TEMPLATE_ROW.format(**{
-#                 'loc': link,
-#                 'lastmod': TZ.localize(obj.date).isoformat()
-#             })
-#         self.response.headers = {
-#             'Content-Type': 'application/xml'
-#         }
-#         self.response.write(TEMPLATE_WRAPPER.format(out))
 
 
 class Info(RestHandler):

@@ -5,8 +5,5 @@ dispatch:
 - url: "*/tests/*"
   service: default
 
-# - url: "*/sitemap.xml"
-#   service: default
-
 - url: "*/*"
   service: client

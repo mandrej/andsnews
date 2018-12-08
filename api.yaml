@@ -20,10 +20,6 @@ libraries:
   version: latest
 
 handlers:
-# - url: /sitemap\.xml
-#   script: main.app
-#   secure: always
-
 - url: /tests/.*
   script: aeta.main.APP
   secure: always
