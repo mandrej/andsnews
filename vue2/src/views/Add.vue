@@ -87,14 +87,13 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
+Vue.use(require('vue-moment'))
 const axios = Vue.axios
 
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2
 const STATUS_FAILED = 3
-
-Vue.use(require('vue-moment'))
 
 export default {
   name: 'Add',
@@ -146,7 +145,7 @@ export default {
     save (formData) {
       this.status = STATUS_SAVING
       this.snackbar = true
-      axios.post('photo/add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
+      axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
         .then(x => x.map(
           item => {

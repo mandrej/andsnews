@@ -6,6 +6,7 @@ import createStore from './store'
 
 const store = createStore()
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
+// const Item = () => import(/* webpackChunkName: "item" */ '@/views/Item')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
 Vue.use(Router)
@@ -24,6 +25,12 @@ export default new Router({
       component: Home,
       props: true
     },
+    // {
+    //   path: '/item/:safekey',
+    //   name: 'item',
+    //   component: Item,
+    //   props: true
+    // },
     {
       path: '/add',
       name: 'add',

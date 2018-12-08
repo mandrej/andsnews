@@ -14,7 +14,7 @@
     <v-app>
       <v-toolbar app light class="aperture">
         <v-btn icon @click="$router.push({ name: 'home' })">
-          <v-icon>arrow_back</v-icon>
+          <v-icon>home</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-toolbar>
@@ -141,13 +141,13 @@ export default {
       this.callAjax('rebuild/' + name)
     },
     reindex () {
-      this.callAjax('index/photo')
+      this.callAjax('reindex')
     },
     unbound () {
-      this.callAjax('unbound/photo')
+      this.callAjax('unbound')
     },
     missing () {
-      this.callAjax('missing/photo')
+      this.callAjax('missing')
     },
     upper (event) {
       this.msg.default = event.toUpperCase()

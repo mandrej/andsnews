@@ -41,7 +41,7 @@ const actions = {
     commit('ADD_RECORD', obj)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
-    axios.put('photo/edit/' + obj.safekey, obj)
+    axios.put('edit/' + obj.safekey, obj)
       .then(response => {
         const obj = response.data.rec
         commit('UPDATE_RECORD', obj)

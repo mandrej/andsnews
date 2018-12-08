@@ -9,18 +9,18 @@
       </v-card-actions>
       <v-card-text>
         <p>
-          <span class="title">{{current.headline}}</span><br>
+          <span class="title">{{item.headline}}</span><br>
           <span class="subheading">
-            {{dateFormat(current)}}<br>
-            {{current.author}}
+            {{item.date | moment('lll Z')}}<br>
+            {{item.author}}
           </span>
         </p>
         <p>
-          {{current.aperture ? 'f' + current.aperture : ''}}
-          {{current.shutter ? current.shutter + 's' : ''}}
-          {{current.iso ? current.iso + ' ASA' : ''}}<br>
-          {{current.model}} {{current.lens}}
-          {{current.focal_length ? '(' + current.focal_length + 'mm)' : ''}}
+          {{item.aperture ? 'f' + item.aperture : ''}}
+          {{item.shutter ? item.shutter + 's' : ''}}
+          {{item.iso ? item.iso + ' ASA' : ''}}<br>
+          {{item.model}} {{item.lens}}
+          {{item.focal_length ? '(' + item.focal_length + 'mm)' : ''}}
         </p>
       </v-card-text>
     </v-card>
@@ -28,15 +28,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import Vue from 'vue'
 import common from '@/helpers/mixins'
+
+Vue.use(require('vue-moment'))
 
 export default {
   name: 'Info',
   mixins: [ common ],
-  props: ['visible'],
-  computed: {
-    ...mapState('All', ['current'])
-  }
+  props: ['visible', 'item']
 }
 </script>

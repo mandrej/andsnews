@@ -11,6 +11,7 @@ from google.appengine.api import users, search
 from google.appengine.ext import ndb, deferred
 from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 from unidecode import unidecode
+from urlparse import urlparse
 
 from config import START_MSG
 from mapper import push_message, Missing, Indexer, Builder, Unbound
@@ -18,11 +19,12 @@ from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
 PERCENTILE = 80
-# TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
-# xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
-# TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
-# <priority>0.3</priority></url>"""
 TZ = pytz.timezone('Europe/Belgrade')
+
+TEMPLATE_WRAPPER = """<?xml version="1.0" encoding="UTF-8"?><urlset
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</urlset>"""
+TEMPLATE_ROW = """<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq>
+<priority>0.3</priority></url>"""
 
 
 def get_key(url_safe_str):
@@ -171,9 +173,9 @@ class Notify(RestHandler):
 
 
 class BackgroundIndex(RestHandler):
-    def post(self, kind):
+    def post(self):
         token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
+        if token is not None:
             runner = Indexer()
             runner.KIND = Photo
             runner.TOKEN = token
@@ -182,7 +184,7 @@ class BackgroundIndex(RestHandler):
 
 
 class BackgroundUnbound(RestHandler):
-    def post(self, kind):
+    def post(self):
         token = self.request.json.get('token', None)
         if token is not None:
             runner = Unbound()
@@ -192,9 +194,9 @@ class BackgroundUnbound(RestHandler):
 
 
 class BackgroundDeleted(RestHandler):
-    def post(self, kind):
+    def post(self):
         token = self.request.json.get('token', None)
-        if kind == 'photo' and token is not None:
+        if token is not None:
             runner = Missing()
             runner.KIND = Photo
             runner.TOKEN = token
@@ -224,17 +226,16 @@ class Crud(RestHandler):
             self.abort(404)
         self.render(key.get())
 
-    def post(self, kind=None):
-        if kind == 'photo':
-            resList = []
-            # {'photos', FieldStorage('photos', u'light-rain.jpg')}
-            for fs in self.request.POST.getall('photos'):
-                obj = Photo(headline=fs.filename)
-                res = obj.add(fs)
-                resList.append(res)
-            self.render(resList)
+    def post(self):
+        resList = []
+        # {'photos', FieldStorage('photos', u'light-rain.jpg')}
+        for fs in self.request.POST.getall('photos'):
+            obj = Photo(headline=fs.filename)
+            res = obj.add(fs)
+            resList.append(res)
+        self.render(resList)
 
-    def put(self, kind=None, safe_key=None):
+    def put(self, safe_key=None):
         key = get_key(safe_key)
         if key is None:
             self.abort(404)
@@ -260,15 +261,14 @@ class Crud(RestHandler):
         dt = data['date'].strip().split('.')[0]  # no millis
         data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
 
-        if kind == 'photo':
-            if data['focal_length']:
-                data['focal_length'] = round(float(data['focal_length']), 1)
-            if data['aperture']:
-                data['aperture'] = float(data['aperture'])
-            if data['iso']:
-                data['iso'] = int(data['iso'])
-            res = obj.edit(data)
-            self.render(res)
+        if data['focal_length']:
+            data['focal_length'] = round(float(data['focal_length']), 1)
+        if data['aperture']:
+            data['aperture'] = float(data['aperture'])
+        if data['iso']:
+            data['iso'] = int(data['iso'])
+        res = obj.edit(data)
+        self.render(res)
 
     def delete(self, safe_key):
         key = get_key(safe_key)
@@ -296,10 +296,10 @@ class Download(webapp2.RequestHandler):
 #         collection = Photo.query().order(-Photo.date).fetch(100)
 #         out = ''
 #         for obj in collection:
-#             link = '{}://{}/#/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
+#             link = '{}://{}/item/{}'.format(uri.scheme, uri.netloc, obj.key.urlsafe())
 #             out += TEMPLATE_ROW.format(**{
 #                 'loc': link,
-#                 'lastmod': obj.date.strftime('%Y-%m-%d')
+#                 'lastmod': TZ.localize(obj.date).isoformat()
 #             })
 #         self.response.headers = {
 #             'Content-Type': 'application/xml'
