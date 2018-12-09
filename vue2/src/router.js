@@ -7,6 +7,18 @@ import createStore from './store'
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
+function requireAuth (to, from, next) {
+  const store = createStore()
+  const user = store.state.auth.user
+  if (to.name === 'add' && user.isAuthorized) {
+    next()
+  } else if (to.name === 'admin' && user.isAdmin) {
+    next()
+  } else {
+    next('/401')
+  }
+}
+
 Vue.use(Router)
 
 export default new Router({
@@ -27,27 +39,13 @@ export default new Router({
       path: '/add',
       name: 'add',
       component: Add,
-      beforeEnter: (to, from, next) => {
-        const store = createStore()
-        if (store.state.auth.user.isAuthorized) {
-          next()
-        } else {
-          next('/401')
-        }
-      }
+      beforeEnter: requireAuth
     },
     {
       path: '/admin',
       name: 'admin',
       component: Admin,
-      beforeEnter: (to, from, next) => {
-        const store = createStore()
-        if (store.state.auth.user.isAdmin) {
-          next()
-        } else {
-          next('/401')
-        }
-      }
+      beforeEnter: requireAuth
     },
     {
       path: '/401',
