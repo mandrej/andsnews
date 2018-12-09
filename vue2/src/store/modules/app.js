@@ -20,7 +20,6 @@ const initialState = {
 
   total: null, // menu
   count: null,
-  cloud: [], // info
 
   busy: false,
   clear: false
@@ -100,12 +99,6 @@ const actions = {
       .then(response => {
         commit('UPDATE_MODELS', response.data)
       })
-  },
-  fetchCloud: ({ commit }) => {
-    axios.get('info')
-      .then(response => {
-        commit('SET_CLOUD', response.data)
-      })
   }
 }
 const mutations = {
@@ -167,9 +160,6 @@ const mutations = {
   },
   UPDATE_MODELS (state, data) {
     state.models = data
-  },
-  SET_CLOUD (state, payload) {
-    state.cloud = payload
   },
   SET_CLEAR (state, val) {
     state.clear = val

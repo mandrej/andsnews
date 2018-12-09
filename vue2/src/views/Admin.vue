@@ -40,14 +40,14 @@
 
           <h3 class="title">Counters</h3>
           <v-divider></v-divider>
-          <v-layout row v-for="name in cloud" :key="name">
+          <v-layout row v-for="field in $photo_filter" :key="field">
             <v-flex xs9>
               <v-layout row align-center justify-start fill-height>
-                Rebuild {{name}}
+                Rebuild for field {{field}}
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
-              <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="rebuild(name)">Rebuild</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="rebuild(field)">Rebuild</v-btn>
             </v-flex>
           </v-layout>
           <v-layout row>
@@ -116,7 +116,7 @@ export default {
     }
   }),
   created () {
-    this.$store.dispatch('app/fetchCloud')
+    this.$store.dispatch('auth/fetchToken')
   },
   mounted () {
     messaging.onMessage(payload => {
@@ -125,8 +125,7 @@ export default {
     })
   },
   computed: {
-    ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['cloud'])
+    ...mapState('auth', ['fcm_token'])
   },
   methods: {
     canRun (token) {

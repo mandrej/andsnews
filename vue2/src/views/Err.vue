@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar app dark class="aperture" color="error">
       <v-btn icon @click="$router.push({ name: 'home' })">
-        <v-icon>arrow_back</v-icon>
+        <v-icon>home</v-icon>
       </v-btn>
       <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
     </v-toolbar>

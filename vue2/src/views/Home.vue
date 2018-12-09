@@ -135,9 +135,6 @@ export default {
       easings: Object.keys(easings)
     }
   }),
-  created () {
-    this.$store.dispatch('auth/fetchToken')
-  },
   mounted () {
     this.isAuthorized = this.user && this.user.isAuthorized
     this.isAdmin = this.user && this.user.isAdmin
@@ -152,7 +149,7 @@ export default {
     this.displayCount = this.count
   },
   computed: {
-    ...mapState('auth', ['user', 'fcm_token']),
+    ...mapState('auth', ['user']),
     ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
   },
   watch: {

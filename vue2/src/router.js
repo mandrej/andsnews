@@ -4,7 +4,6 @@ import Home from '@/views/Home'
 import Add from '@/views/Add'
 import createStore from './store'
 
-const store = createStore()
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
@@ -29,6 +28,7 @@ export default new Router({
       name: 'add',
       component: Add,
       beforeEnter: (to, from, next) => {
+        const store = createStore()
         if (store.state.auth.user.isAuthorized) {
           next()
         } else {
@@ -41,6 +41,7 @@ export default new Router({
       name: 'admin',
       component: Admin,
       beforeEnter: (to, from, next) => {
+        const store = createStore()
         if (store.state.auth.user.isAdmin) {
           next()
         } else {

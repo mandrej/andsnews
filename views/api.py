@@ -199,11 +199,9 @@ class BackgroundDeleted(RestHandler):
 
 
 class BackgroundBuild(RestHandler):
-    def post(self, mem_key):
-        kind, field = mem_key.split('_', 1)
+    def post(self, field):
         token = json.loads(self.request.body).get('token', None)
-
-        if kind == 'Photo' and token is not None:  # TODO Title case!
+        if token is not None:
             runner = Builder()
             runner.KIND = Photo
             runner.VALUES = []
@@ -276,9 +274,3 @@ class Download(webapp2.RequestHandler):
             'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
         }
         self.response.write(obj.buffer)
-
-
-class Info(RestHandler):
-    def get(self):
-        data = ['Photo_%s' % x for x in PHOTO_FILTER]
-        self.render(data)
