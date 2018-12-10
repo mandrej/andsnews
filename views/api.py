@@ -21,16 +21,6 @@ PERCENTILE = 80
 TZ = pytz.timezone('Europe/Belgrade')
 
 
-def get_key(url_safe_str):
-    # https://github.com/googlecloudplatform/datastore-ndb-python/issues/143
-    key = None
-    try:
-        key = ndb.Key(urlsafe=url_safe_str)
-    except ProtocolBufferDecodeError:
-        pass
-    return key
-
-
 class LazyEncoder(json.JSONEncoder):
     """ json mapper helper """
     def default(self, obj):
@@ -118,9 +108,8 @@ class Find(RestHandler):
 
 
 class Suggest(RestHandler):
-    def get(self, mem_key):
-        kind, field = mem_key.split('_')
-        query = Counter.query(Counter.forkind == kind, Counter.field == field)
+    def get(self, field):
+        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         self.render([counter.value for counter in query if counter.count > 0])
 
 
@@ -168,34 +157,26 @@ class Notify(RestHandler):
 
 
 class BackgroundRunner(RestHandler):
-    def post(self, verb=None):
+    def post(self, verb=None, field=None):
         token = self.request.json.get('token', None)
         assert token is not None, 'Token cannot be null'
 
-        if verb == 'reindex':
-            runner = Indexer()
-        elif verb == 'unbound':
-            runner = Unbound()
-        elif verb == 'missing':
-            runner = Missing()
+        if field and verb == 'rebuild':
+            runner = Builder()
+            runner.VALUES = []
+            runner.FIELD = field
+        else:
+            if verb == 'reindex':
+                runner = Indexer()
+            elif verb == 'unbound':
+                runner = Unbound()
+            elif verb == 'missing':
+                runner = Missing()
 
         runner.KIND = Photo
         runner.TOKEN = token
         push_message(runner.TOKEN, START_MSG)
         deferred.defer(runner.run, _queue='background')
-
-
-class BackgroundBuild(RestHandler):
-    def post(self, field):
-        token = json.loads(self.request.body).get('token', None)
-        assert token is not None, 'Token cannot be null'
-        runner = Builder()
-        runner.KIND = Photo
-        runner.VALUES = []
-        runner.FIELD = field
-        runner.TOKEN = token
-        push_message(runner.TOKEN, START_MSG)
-        deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class Crud(RestHandler):
@@ -208,8 +189,8 @@ class Crud(RestHandler):
             resList.append(res)
         self.render(resList)
 
-    def put(self, safe_key=None):
-        key = get_key(safe_key)
+    def put(self, safe_key):
+        key = ndb.Key(urlsafe=safe_key)
         if key is None:
             self.abort(404)
         obj = key.get()
@@ -244,7 +225,7 @@ class Crud(RestHandler):
         self.render(res)
 
     def delete(self, safe_key):
-        key = get_key(safe_key)
+        key = ndb.Key(urlsafe=safe_key)
         if key is None:
             self.abort(404)
         key.get().remove()
@@ -252,7 +233,7 @@ class Crud(RestHandler):
 
 class Download(webapp2.RequestHandler):
     def get(self, safe_key):
-        key = get_key(safe_key)
+        key = ndb.Key(urlsafe=safe_key)
         if key is None:
             self.abort(404)
         obj = key.get()

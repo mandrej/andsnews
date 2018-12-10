@@ -89,13 +89,13 @@ const actions = {
     }
   },
   fetchTags: ({ commit }) => {
-    axios.get('suggest/Photo_tags')
+    axios.get('suggest/tags')
       .then(response => {
         commit('UPDATE_TAGS', response.data)
       })
   },
   fetchModels: ({ commit }) => {
-    axios.get('suggest/Photo_model')
+    axios.get('suggest/model')
       .then(response => {
         commit('UPDATE_MODELS', response.data)
       })

@@ -21,9 +21,6 @@ from unidecode import unidecode
 from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex
 
-# logger = logging.getLogger('modules')
-# logger.setLevel(level=logging.DEBUG)
-
 INDEX = search.Index(name='searchindex')
 PHOTO_FILTER = ['year', 'tags', 'model', 'color']
 
