@@ -12,9 +12,7 @@ app = WSGIApplication([
     Route(r'/api/delete/<safe_key>', handler=api.Crud, methods=['DELETE']),
     Route(r'/api/download/<safe_key>', handler=api.Download, methods=['GET']),
 
-    Route(r'/api/reindex', handler=api.BackgroundIndex, methods=['POST']),
-    Route(r'/api/unbound', handler=api.BackgroundUnbound, methods=['POST']),
-    Route(r'/api/missing', handler=api.BackgroundDeleted, methods=['POST']),
+    Route(r'/api/<verb>', handler=api.BackgroundRunner, methods=['POST']),
     Route(r'/api/rebuild/<field>', handler=api.BackgroundBuild, methods=['POST']),
     Route(r'/api/message', handler=api.Notify, methods=['POST']),
 ], debug=DEVEL)

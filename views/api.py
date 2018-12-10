@@ -162,53 +162,40 @@ class PhotoFilters(RestHandler):
 class Notify(RestHandler):
     def post(self):
         token = self.request.json.get('token', None)
+        assert token is not None, 'Token cannot be null'
         text = self.request.json.get('text', None)
         push_message(token, text)
 
 
-class BackgroundIndex(RestHandler):
-    def post(self):
+class BackgroundRunner(RestHandler):
+    def post(self, verb=None):
         token = self.request.json.get('token', None)
-        if token is not None:
+        assert token is not None, 'Token cannot be null'
+
+        if verb == 'reindex':
             runner = Indexer()
-            runner.KIND = Photo
-            runner.TOKEN = token
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
-
-
-class BackgroundUnbound(RestHandler):
-    def post(self):
-        token = self.request.json.get('token', None)
-        if token is not None:
+        elif verb == 'unbound':
             runner = Unbound()
-            runner.TOKEN = token
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, _queue='background')
-
-
-class BackgroundDeleted(RestHandler):
-    def post(self):
-        token = self.request.json.get('token', None)
-        if token is not None:
+        elif verb == 'missing':
             runner = Missing()
-            runner.KIND = Photo
-            runner.TOKEN = token
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+
+        runner.KIND = Photo
+        runner.TOKEN = token
+        push_message(runner.TOKEN, START_MSG)
+        deferred.defer(runner.run, _queue='background')
 
 
 class BackgroundBuild(RestHandler):
     def post(self, field):
         token = json.loads(self.request.body).get('token', None)
-        if token is not None:
-            runner = Builder()
-            runner.KIND = Photo
-            runner.VALUES = []
-            runner.FIELD = field
-            runner.TOKEN = token
-            push_message(runner.TOKEN, START_MSG)
-            deferred.defer(runner.run, batch_size=10, _queue='background')
+        assert token is not None, 'Token cannot be null'
+        runner = Builder()
+        runner.KIND = Photo
+        runner.VALUES = []
+        runner.FIELD = field
+        runner.TOKEN = token
+        push_message(runner.TOKEN, START_MSG)
+        deferred.defer(runner.run, batch_size=10, _queue='background')
 
 
 class Crud(RestHandler):
