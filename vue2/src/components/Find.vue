@@ -15,7 +15,7 @@
         <v-flex xs12>
           <v-autocomplete
             label="by tags"
-            :items="tags"
+            :items="values.tags"
             v-model="tmp.tags"
             chips
             multiple
@@ -33,7 +33,7 @@
         <v-flex xs12>
           <v-select
             label="by year"
-            :items="years"
+            :items="values.year"
             v-model="tmp.year"
             clearable></v-select>
         </v-flex>
@@ -47,7 +47,7 @@
         <v-flex xs12>
           <v-autocomplete
             label="by camera model"
-            :items="models"
+            :items="values.models"
             v-model="tmp.model"
             clearable></v-autocomplete>
         </v-flex>
@@ -61,7 +61,7 @@
         <v-flex xs12 class="hidden-xs-only">
           <v-autocomplete
             label="by color"
-            :items="$colors"
+            :items="values.colors"
             v-model="tmp.color"
             clearable></v-autocomplete>
         </v-flex>
@@ -78,18 +78,12 @@ export default {
   name: 'Find',
   mixins: [ common ],
   created () {
-    this.$store.dispatch('app/fetchTags')
-    this.$store.dispatch('app/fetchModels')
+    this.$store.dispatch('app/fetchValues')
   },
   computed: {
-    ...mapState('app', ['find', 'tags', 'models']),
+    ...mapState('app', ['find', 'values']),
     tmp () {
       return { ...this.find }
-    },
-    years () {
-      const start = 2007
-      const end = (new Date()).getFullYear()
-      return [...Array(end - start + 1).keys()].map(n => start + n).reverse()
     },
     months () {
       const arr = [...Array(12 + 1).keys()]

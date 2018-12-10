@@ -4,7 +4,7 @@ from views import api
 from views.config import DEVEL
 app = WSGIApplication([
     Route(r'/api/filters', handler=api.PhotoFilters, methods=['GET']),
-    Route(r'/api/suggest/<field:(year|tags|model|color)>', handler=api.Suggest, methods=['GET']),
+    Route(r'/api/values', handler=api.Values, methods=['GET']),
     Route(r'/api/search/<find>', handler=api.Find, methods=['GET']),
 
     Route(r'/api/add', handler=api.Crud, methods=['POST']),

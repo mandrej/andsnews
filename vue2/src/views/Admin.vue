@@ -40,7 +40,7 @@
 
           <h3 class="title">Counters</h3>
           <v-divider></v-divider>
-          <v-layout row v-for="field in $photo_filter" :key="field">
+          <v-layout row v-for="field in keys(values)" :key="field">
             <v-flex xs9>
               <v-layout row align-center justify-start fill-height>
                 Rebuild for field {{field}}
@@ -125,7 +125,8 @@ export default {
     })
   },
   computed: {
-    ...mapState('auth', ['fcm_token'])
+    ...mapState('auth', ['fcm_token']),
+    ...mapState('app', ['values'])
   },
   methods: {
     canRun (token) {
@@ -154,8 +155,8 @@ export default {
     send () {
       this.$store.dispatch('auth/sendNotifications', this.msg.default)
     },
-    nop () {
-      return null
+    keys (values) {
+      return Object.keys(values)
     }
   }
 }

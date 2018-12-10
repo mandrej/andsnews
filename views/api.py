@@ -107,10 +107,18 @@ class Find(RestHandler):
         })
 
 
-class Suggest(RestHandler):
-    def get(self, field):
-        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-        self.render([counter.value for counter in query if counter.count > 0])
+class Values(RestHandler):
+    def get(self):
+        data = {}
+        for field in PHOTO_FILTER:
+            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+            _list = [counter.value for counter in query if counter.count > 0]
+            if field == 'year':
+                data[field] = sorted(_list, reverse=True)
+            else:
+                data[field] = sorted(_list)
+
+        self.render(data)
 
 
 def available_filters():

@@ -35,7 +35,7 @@
                   <v-flex xs12>
                     <v-combobox
                       label="Tags"
-                      :items="tags"
+                      :items="values.tags"
                       v-model="tmp.tags"
                       chips
                       multiple
@@ -170,7 +170,7 @@ export default {
     tmp: {}
   }),
   computed: {
-    ...mapState('app', ['tags'])
+    ...mapState('app', ['values'])
   },
   watch: {
     rec: function (val) {

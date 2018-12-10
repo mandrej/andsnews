@@ -15,8 +15,7 @@ const initialState = {
   pages: [],
   next: null,
   error: '',
-  tags: [],
-  models: [],
+  values: {},
 
   total: null, // menu
   count: null,
@@ -45,7 +44,7 @@ const actions = {
         const obj = response.data.rec
         commit('UPDATE_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
-        commit('UPDATE_TAGS_MODELS', obj)
+        commit('UPDATE_VALUES', obj)
         dispatch('fetchMenu')
       })
   },
@@ -88,16 +87,10 @@ const actions = {
         })
     }
   },
-  fetchTags: ({ commit }) => {
-    axios.get('suggest/tags')
+  fetchValues: ({ commit }) => {
+    axios.get('values')
       .then(response => {
-        commit('UPDATE_TAGS', response.data)
-      })
-  },
-  fetchModels: ({ commit }) => {
-    axios.get('suggest/model')
-      .then(response => {
-        commit('UPDATE_MODELS', response.data)
+        commit('SET_VALUES', response.data)
       })
   }
 }
@@ -134,10 +127,6 @@ const mutations = {
     const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
     state.objects.splice(idx, 1, obj)
   },
-  UPDATE_TAGS_MODELS (state, obj) {
-    state.tags = [...new Set([...state.tags, obj.tags])]
-    if (obj.model) state.models = [...new Set([...state.models, obj.model])]
-  },
   RESET_RECORDS (state) {
     state.objects.length = 0
   },
@@ -155,11 +144,14 @@ const mutations = {
     const idx = state.uploaded.findIndex(item => item.safekey === obj.safekey)
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
-  UPDATE_TAGS (state, data) {
-    state.tags = data
+  UPDATE_VALUES (state, obj) {
+    state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
+    state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
+    state.values.color = [...new Set([...state.values.color, obj.color])]
+    if (obj.model) state.values.model = [...new Set([...state.values.model, obj.model])]
   },
-  UPDATE_MODELS (state, data) {
-    state.models = data
+  SET_VALUES (state, data) {
+    state.values = data
   },
   SET_CLEAR (state, val) {
     state.clear = val
