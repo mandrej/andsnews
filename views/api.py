@@ -107,36 +107,46 @@ class Find(RestHandler):
         })
 
 
+def counters_by_field():
+    data = {}
+    for field in PHOTO_FILTER:
+        query = ndb.gql("select * from Counter where forkind = 'Photo' and field = :1", field)
+        data[field] = [counter for counter in query if counter.count > 0]
+
+    return data
+
+
 class Values(RestHandler):
     def get(self):
-        data = {}
-        for field in PHOTO_FILTER:
-            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-            _list = [counter.value for counter in query if counter.count > 0]
+        result = {}
+        data = counters_by_field()
+        for field in data.keys():
+            _list = [counter.value for counter in data[field]]
             if field == 'year':
-                data[field] = sorted(_list, reverse=True)
+                result[field] = sorted(_list, reverse=True)
             else:
-                data[field] = sorted(_list)
+                result[field] = sorted(_list)
 
-        self.render(data)
+        self.render(result)
 
 
 def available_filters():
+    result = {}
     collection = []
-    for field in PHOTO_FILTER:
-        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-        items = []
-        for counter in query:
-            items.append({
-                'field_name': field,
-                'count': counter.count,
-                'name': counter.value,
-                'serving_url': counter.repr_url,
-                'repr_stamp': counter.repr_stamp})
-
+    data = counters_by_field()
+    for field in sorted(data.keys(), reverse=True):
+        _list = [{
+            'field_name': field,
+            'count': counter.count,
+            'name': counter.value,
+            'serving_url': counter.repr_url,
+            'repr_stamp': counter.repr_stamp
+        } for counter in data[field]]
         if field == 'year':
-            items = sorted(items, key=itemgetter('name'), reverse=True)
-        collection.extend(items)
+            _list = sorted(_list, key=itemgetter('name'), reverse=True)
+        else:
+            _list = sorted(_list, key=itemgetter('name'))
+        collection.extend(_list)
 
     current = datetime.datetime.now().year
     if collection:

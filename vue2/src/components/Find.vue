@@ -47,7 +47,7 @@
         <v-flex xs12>
           <v-autocomplete
             label="by camera model"
-            :items="values.models"
+            :items="values.model"
             v-model="tmp.model"
             clearable></v-autocomplete>
         </v-flex>
@@ -61,7 +61,7 @@
         <v-flex xs12 class="hidden-xs-only">
           <v-autocomplete
             label="by color"
-            :items="values.colors"
+            :items="values.color"
             v-model="tmp.color"
             clearable></v-autocomplete>
         </v-flex>
