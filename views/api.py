@@ -110,7 +110,7 @@ class Find(RestHandler):
 def counters_by_field():
     data = {}
     for field in PHOTO_FILTER:
-        query = ndb.gql("select * from Counter where forkind = 'Photo' and field = :1", field)
+        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         data[field] = [counter for counter in query if counter.count > 0]
 
     return data
