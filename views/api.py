@@ -1,15 +1,13 @@
 import datetime
 import json
 import time
-import pytz
-import logging
 from operator import itemgetter
 
 import numpy as np
+import pytz
 import webapp2
 from google.appengine.api import users, search
 from google.appengine.ext import ndb, deferred
-from google.net.proto.ProtocolBuffer import ProtocolBufferDecodeError
 from unidecode import unidecode
 
 from config import START_MSG
@@ -19,6 +17,63 @@ from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 LIMIT = 24
 PERCENTILE = 80
 TZ = pytz.timezone('Europe/Belgrade')
+
+
+class cached_property(object):
+    """Decorator for read-only properties evaluated only once within TTL period.
+    https://wiki.python.org/moin/PythonDecoratorLibrary#Cached_Properties
+    It can be used to create a cached property like this::
+
+        import random
+
+        # the class containing the property must be a new-style class
+        class MyClass(object):
+            # create property whose value is cached for ten minutes
+            @cached_property(ttl=600)
+            def randint(self):
+                # will only be evaluated every 10 min. at maximum.
+                return random.randint(0, 100)
+
+    The value is cached  in the '_cache' attribute of the object instance that
+    has the property getter method wrapped by this decorator. The '_cache'
+    attribute value is a dictionary which has a key for every property of the
+    object which is wrapped by this decorator. Each entry in the cache is
+    created only when the property is accessed for the first time and is a
+    two-element tuple with the last computed property value and the last time
+    it was updated in seconds since the epoch.
+
+    The default time-to-live (TTL) is 300 seconds (5 minutes). Set the TTL to
+    zero for the cached value to never expire.
+
+    To expire a cached property value manually just do::
+
+        del instance._cache[<property name>]
+
+    """
+    def __init__(self, ttl=300):
+        self.ttl = ttl
+
+    def __call__(self, fget, doc=None):
+        self.fget = fget
+        self.__doc__ = doc or fget.__doc__
+        self.__name__ = fget.__name__
+        self.__module__ = fget.__module__
+        return self
+
+    def __get__(self, inst, owner):
+        now = time.time()
+        try:
+            value, last_update = inst._cache[self.__name__]
+            if self.ttl > 0 and now - last_update > self.ttl:
+                raise AttributeError
+        except (KeyError, AttributeError):
+            value = self.fget(inst)
+            try:
+                cache = inst._cache
+            except AttributeError:
+                cache = inst._cache = {}
+            cache[self.__name__] = (value, now)
+        return value
 
 
 class LazyEncoder(json.JSONEncoder):
@@ -107,33 +162,20 @@ class Find(RestHandler):
         })
 
 
-def counters_by_field():
-    data = {}
-    for field in PHOTO_FILTER:
-        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-        data[field] = [counter for counter in query if counter.count > 0]
-
-    return data
-
-
-class Values(RestHandler):
-    def get(self):
-        result = {}
-        data = counters_by_field()
-        for field in data.keys():
-            _list = [counter.value for counter in data[field]]
-            if field == 'year':
-                result[field] = sorted(_list, reverse=True)
-            else:
-                result[field] = sorted(_list)
-
-        self.render(result)
-
-
-def available_filters():
+def counters_values(data):
     result = {}
+    for field in data.keys():
+        _list = [counter.value for counter in data[field]]
+        if field == 'year':
+            result[field] = sorted(_list, reverse=True)
+        else:
+            result[field] = sorted(_list)
+
+    return result
+
+
+def available_filters(data):
     collection = []
-    data = counters_by_field()
     for field in sorted(data.keys(), reverse=True):
         _list = [{
             'field_name': field,
@@ -158,12 +200,27 @@ def available_filters():
     return [x for x in collection if x['show']]
 
 
-class PhotoFilters(RestHandler):
-    def get(self):
-        self.render({
-            'count': Photo.query().count(),
-            'filters': available_filters()
-        })
+class Cached(object):
+    @cached_property(ttl=5)
+    def counters(self):
+        tmp = {}
+        for field in PHOTO_FILTER:
+            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+            tmp[field] = [counter for counter in query if counter.count > 0]
+
+        return tmp
+
+
+class Counters(RestHandler):
+    def get(self, set):
+        cached = Cached()
+        if set == 'values':
+            self.render(counters_values(cached.counters))
+        elif set == 'filters':
+            self.render({
+                'count': Photo.query().count(),
+                'filters': available_filters(cached.counters)
+            })
 
 
 class Notify(RestHandler):

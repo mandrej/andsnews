@@ -3,8 +3,7 @@ from webapp2 import WSGIApplication, Route
 from views import api
 from views.config import DEVEL
 app = WSGIApplication([
-    Route(r'/api/filters', handler=api.PhotoFilters, methods=['GET']),
-    Route(r'/api/values', handler=api.Values, methods=['GET']),
+    Route(r'/api/counter/<set:(filters|values)>', handler=api.Counters, methods=['GET']),
     Route(r'/api/search/<find>', handler=api.Find, methods=['GET']),
 
     Route(r'/api/add', handler=api.Crud, methods=['POST']),

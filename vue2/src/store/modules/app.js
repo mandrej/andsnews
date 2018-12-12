@@ -55,7 +55,7 @@ const actions = {
     dispatch('fetchMenu')
   },
   fetchMenu: ({ commit }) => {
-    axios.get('filters')
+    axios.get('counter/filters')
       .then(response => {
         commit('UPDATE_MENU', response.data)
       })
@@ -88,7 +88,7 @@ const actions = {
     }
   },
   fetchValues: ({ commit }) => {
-    axios.get('values')
+    axios.get('counter/values')
       .then(response => {
         commit('SET_VALUES', response.data)
       })
