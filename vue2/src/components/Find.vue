@@ -119,10 +119,11 @@ export default {
             wrap(key, this.tmp[key])
           }
         }
+        // remove undefined and empty list
+        if (this.tmp[key] == null || this.tmp[key].length === 0) {
+          delete this.tmp[key]
+        }
       })
-      // Object.keys(this.tmp).forEach(key => (this.tmp[key] == null || this.tmp[key].length === 0) && delete this.tmp[key])
-      // console.log(this.tmp)
-
 
       this.$store.dispatch('app/saveFindForm', this.tmp)
       const value = params.join(' AND ')

@@ -3,7 +3,7 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201812121449',
+    assetsVersion: '201812142321',
     workboxOptions: {
       runtimeCaching: [
         {
