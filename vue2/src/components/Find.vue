@@ -120,6 +120,9 @@ export default {
           }
         }
       })
+      // Object.keys(this.tmp).forEach(key => (this.tmp[key] == null || this.tmp[key].length === 0) && delete this.tmp[key])
+      // console.log(this.tmp)
+
 
       this.$store.dispatch('app/saveFindForm', this.tmp)
       const value = params.join(' AND ')

@@ -97,10 +97,10 @@ const actions = {
 const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_FIND_FORM (state, payload) {
-    state.find = Object.assign(state.find, payload)
+    state.find = payload
   },
   CHANGE_FILTER (state, payload) {
-    state.filter = Object.assign({}, payload)
+    state.filter = payload
   },
   UPDATE_MENU (state, data) {
     state.total = data.count
