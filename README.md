@@ -45,5 +45,4 @@ exifread -> /home/milan/venv/andsnews/lib/python2.7/site-packages/exifread/
 httplib2 -> /home/milan/venv/andsnews/lib/python2.7/site-packages/httplib2
 networkx -> /home/milan/venv/andsnews/lib/python2.7/site-packages/networkx
 numpy -> /home/milan/venv/andsnews/lib/python2.7/site-packages/numpy
-pytz -> /home/milan/venv/andsnews/lib/python2.7/site-packages/pytz
 unidecode -> /home/milan/venv/andsnews/lib/python2.7/site-packages/unidecode/

@@ -4,7 +4,6 @@ import time
 from operator import itemgetter
 
 import numpy as np
-import pytz
 import webapp2
 from google.appengine.api import users, search
 from google.appengine.ext import ndb, deferred
@@ -16,7 +15,6 @@ from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
 PERCENTILE = 80
-TZ = pytz.timezone('Europe/Belgrade')
 
 
 class cached_property(object):
@@ -78,15 +76,11 @@ class cached_property(object):
 
 class LazyEncoder(json.JSONEncoder):
     """ json mapper helper """
-    def default(self, obj):
+    def default(self, obj):  # pylint: disable=E0202
         if isinstance(obj, ndb.Model):
             return obj.serialize()
         elif isinstance(obj, datetime.datetime):
-            """
-            2018-08-16 10:39:09 -> 2018-08-16 10:39:09+02:00
-            2018-01-14 13:03:01 -> 2018-01-14 13:03:01+01:00
-            """
-            return TZ.localize(obj).isoformat()
+            return obj.isoformat()
         elif isinstance(obj, users.User):
             return obj.email()
         return obj

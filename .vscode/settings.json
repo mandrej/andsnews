@@ -1,12 +1,13 @@
 {
-  "python.venvPath": "/home/milan/venv/andsnews/bin/",
+  "python.venvPath": "/home/milan/venv/andsnews",
   "python.pythonPath": "/home/milan/venv/andsnews/bin/python",
   "python.autoComplete.extraPaths": [
-        "/home/milan/google-cloud-sdk/platform/google_appengine",
-        "/home/milan/google-cloud-sdk/platform/google_appengine/lib",
-        "${workspaceRoot}/lib" ],
-  "python.linting.pep8Enabled": false,
-  "python.linting.pylintEnabled": false,
+    "~/google-cloud-sdk/platform/google_appengine",
+    "~/google-cloud-sdk/platform/google_appengine/lib/webapp2-2.5.2"
+  ],
+  "python.autoComplete.addBrackets": true,
+  "python.linting.pep8Enabled": true,
+  "python.linting.pylintEnabled": true,
   "files.exclude": {
     "**/*.pyc": true,
     "client/": true,

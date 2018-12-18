@@ -7,7 +7,7 @@ import time
 import unicodedata
 import uuid
 from cStringIO import StringIO
-from decimal import *
+from decimal import getcontext, Decimal
 
 import cloudstorage as gcs
 import re
@@ -166,9 +166,9 @@ def rgb_hls(rgb):
     def intround(n):
         return int(round(n))
 
-    rel_rgb = map(lambda x: x/255.0, rgb)
+    rel_rgb = map(lambda x: x / 255.0, rgb)
     h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    return map(intround, (h*360, l*100, s*100))
+    return map(intround, (h * 360, l * 100, s * 100))
 
 
 def range_names(rgb):
@@ -292,7 +292,7 @@ class Photo(ndb.Model):
     @webapp2.cached_property
     def buffer(self):
         """ Used for Download """
-        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024*1024)
+        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024 * 1024)
         return blob_reader.read(size=-1)
 
     def extra_properties(self):
@@ -310,7 +310,7 @@ class Photo(ndb.Model):
 
         _max = 0
         for c in colors:
-            h, l, s = rgb_hls(c.value)
+            _, _, s = rgb_hls(c.value)
             criteria = s * c.prominence
             if criteria >= _max:  # saturation could be 0
                 _max = criteria
@@ -352,7 +352,7 @@ class Photo(ndb.Model):
 
             new_pairs = self.changed_pairs()
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
-            return {'success': True, 'rec':  self.serialize()}
+            return {'success': True, 'rec': self.serialize()}
 
     def edit(self, data):
         old_pairs = self.changed_pairs()
