@@ -18,36 +18,8 @@ PERCENTILE = 80
 
 
 class cached_property(object):
-    """Decorator for read-only properties evaluated only once within TTL period.
-    https://wiki.python.org/moin/PythonDecoratorLibrary#Cached_Properties
-    It can be used to create a cached property like this::
-
-        import random
-
-        # the class containing the property must be a new-style class
-        class MyClass(object):
-            # create property whose value is cached for ten minutes
-            @cached_property(ttl=600)
-            def randint(self):
-                # will only be evaluated every 10 min. at maximum.
-                return random.randint(0, 100)
-
-    The value is cached  in the '_cache' attribute of the object instance that
-    has the property getter method wrapped by this decorator. The '_cache'
-    attribute value is a dictionary which has a key for every property of the
-    object which is wrapped by this decorator. Each entry in the cache is
-    created only when the property is accessed for the first time and is a
-    two-element tuple with the last computed property value and the last time
-    it was updated in seconds since the epoch.
-
-    The default time-to-live (TTL) is 300 seconds (5 minutes). Set the TTL to
-    zero for the cached value to never expire.
-
-    To expire a cached property value manually just do::
-
-        del instance._cache[<property name>]
-
-    """
+    """ Decorator for read-only properties evaluated only once within TTL period.
+        https://wiki.python.org/moin/PythonDecoratorLibrary#Cached_Properties """
     def __init__(self, ttl=300):
         self.ttl = ttl
 
@@ -206,14 +178,15 @@ class Cached(object):
 
 
 class Counters(RestHandler):
+    cached = Cached()
+
     def get(self, set):
-        cached = Cached()
         if set == 'values':
-            self.render(counters_values(cached.counters))
+            self.render(counters_values(Counters.cached.counters))
         elif set == 'filters':
             self.render({
                 'count': Photo.query().count(),
-                'filters': available_filters(cached.counters)
+                'filters': available_filters(Counters.cached.counters)
             })
 
 
