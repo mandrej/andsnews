@@ -34,7 +34,7 @@
               <v-card-title>
                 <div>
                   <h3 class="title">{{item.headline}}</h3>
-                  <div>{{item.date | moment('lll Z')}}</div>
+                  <div>{{item.date | moment('lll')}}</div>
                   <div>{{item.author.match(/[^@]+/)[0]}}</div>
                 </div>
               </v-card-title>
