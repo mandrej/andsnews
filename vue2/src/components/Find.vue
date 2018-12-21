@@ -91,9 +91,7 @@ export default {
       return arr
     },
     names () {
-      const arr = [].concat.apply([], this.$authors.map(email => [...email.split('@')[0].split('.')]))
-      const set = new Set(arr)
-      return [...set]
+      return this.values.author.map(email => this.getName(email))
     }
   },
   methods: {

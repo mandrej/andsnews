@@ -53,7 +53,7 @@
                   <v-flex xs12 sm12 md12>
                     <v-autocomplete
                       label="Author"
-                      :items="$authors"
+                      :items="authorList"
                       v-model="tmp.author"
                       single-line></v-autocomplete>
                   </v-flex>
@@ -170,7 +170,11 @@ export default {
     tmp: {}
   }),
   computed: {
-    ...mapState('app', ['values'])
+    ...mapState('auth', ['user']),
+    ...mapState('app', ['values']),
+    authorList () {
+      return [...new Set([...this.values.author, this.user.email])]
+    }
   },
   watch: {
     rec: function (val) {

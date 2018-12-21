@@ -22,7 +22,7 @@ from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex
 
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = ['year', 'tags', 'model', 'color']
+PHOTO_FILTER = ['year', 'tags', 'model', 'color', 'author']
 
 
 def rounding(val, values):

@@ -30,6 +30,9 @@ const common = {
       } else {
         return '/static/img/broken.svg'
       }
+    },
+    getName (email) {
+      return email.match(/[^@]+/)[0].split('.')[0]
     }
   }
 }

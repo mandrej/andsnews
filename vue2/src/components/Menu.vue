@@ -30,7 +30,7 @@
           </v-img>
           <v-card-title @click="showFilter(item)" style="cursor: pointer">
             <div>
-              <h3 class="title">{{item.name}}</h3>
+              <h3 class="title">{{justName(item)}}</h3>
               <div>{{item.count}} photos</div>
             </div>
           </v-card-title>
@@ -57,8 +57,13 @@ export default {
     },
     showFilter (rec) {
       const sep = '"'
-      const value = rec.field_name + ':' + sep + rec.name + sep
+      const value = (rec.field_name === 'author') ?
+        rec.field_name + ':' + sep + this.getName(rec.name) + sep :
+        rec.field_name + ':' + sep + rec.name + sep
       this.$router.push({ name: 'list', params: { 'qs': value } })
+    },
+    justName (rec) {
+      return (rec.field_name === 'author') ? this.getName(rec.name) : rec.name
     }
   }
 }
