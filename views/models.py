@@ -230,11 +230,14 @@ class Photo(ndb.Model):
     slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
 
     def index_doc(self):
+        by_email = ''
+        if self.email:
+            by_email = ' '.join(re.match('([^@]+)', self.email).group().split('.'))
         doc = search.Document(
             doc_id=self.key.urlsafe(),
             fields=[
                 search.TextField(name='slug', value=tokenize(self.slug)),
-                search.TextField(name='email', value=' '.join(re.match('([^@]+)', self.email).group().split('.'))),
+                search.TextField(name='email', value=by_email),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
