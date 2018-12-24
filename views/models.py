@@ -198,8 +198,7 @@ class Counter(ndb.Model):
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
-    author = ndb.UserProperty()
-    email = ndb.StringProperty()
+    email = ndb.StringProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
     size = ndb.IntegerProperty()

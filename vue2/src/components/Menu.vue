@@ -63,7 +63,7 @@ export default {
       this.$router.push({ name: 'list', params: { 'qs': value } })
     },
     justName (rec) {
-      return (rec.field_name === 'email') ? this.getName(rec.name) : rec.name
+      return (rec.field_name === 'email') ? 'by ' + this.getName(rec.name) : rec.name
     }
   }
 }

@@ -173,10 +173,11 @@ export default {
       // make formData from Array Iterator
       // Array.from(Array(5).keys()) = [0, 1, 2, 3, 4]
       // [...Array(5).keys()] = [0, 1, 2, 3, 4]
+      // eslint-disable-next-line
+      // File(531551) {name: "jutro2.jpg", lastModified: 1538385671886, lastModifiedDate: Mon Oct 01 2018 11..., size: 531551, type: "image/jpeg"
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
-          // File(531551) {name: "jutro2.jpg", lastModified: 1538385671886, lastModifiedDate: Mon Oct 01 2018 11..., size: 531551, type: "image/jpeg"
           formData.append(fieldName, fileList[x], fileList[x].name)
         })
       this.save(formData)

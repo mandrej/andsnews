@@ -5,7 +5,7 @@ from operator import itemgetter
 
 import numpy as np
 import webapp2
-from google.appengine.api import users, search
+from google.appengine.api import search
 from google.appengine.ext import ndb, deferred
 from unidecode import unidecode
 
@@ -53,8 +53,6 @@ class LazyEncoder(json.JSONEncoder):
             return obj.serialize()
         elif isinstance(obj, datetime.datetime):
             return obj.isoformat()
-        elif isinstance(obj, users.User):
-            return obj.email()
         return obj
 
 

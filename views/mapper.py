@@ -145,7 +145,7 @@ class Missing(Mapper):
                 log = '__DEL__,{},{},{},{}'.format(entity.date.isoformat(), entity.slug, entity.filename, entity.model)
                 logging.info(log)
                 push_message(self.TOKEN, entity.slug)
-                entity.remove()
+                # entity.remove()
         self.to_put = []
 
     def finish(self):
@@ -226,8 +226,6 @@ class Builder(Mapper):
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
                     obj.repr_url = latest.serving_url
-                # elif kind == 'Entry':
-                #     obj.repr_url = latest.front_img
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
@@ -243,11 +241,18 @@ class Fixer(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
+            # if entity.email is None:
+            #     if entity.author:
+            #         entity.email = entity.author.email()
+            #     else:
+            #         entity.email = 'milan.andrejevic@gmail.com'
+            #         push_message(self.TOKEN, entity.slug)
+            #     entity.put()
             if 'author' in entity._properties:
-                entity.email = entity.author.email()
                 del entity._properties['author']
                 entity.put()
                 push_message(self.TOKEN, entity.slug)
+
         self.to_put = []
 
     def finish(self):
