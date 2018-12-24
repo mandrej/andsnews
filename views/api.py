@@ -10,7 +10,7 @@ from google.appengine.ext import ndb, deferred
 from unidecode import unidecode
 
 from config import START_MSG
-from mapper import push_message, Missing, Indexer, Builder, Unbound
+from mapper import push_message, Missing, Indexer, Builder, Unbound, Fixer
 from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
 
 LIMIT = 24
@@ -214,6 +214,8 @@ class BackgroundRunner(RestHandler):
                 runner = Unbound()
             elif verb == 'missing':
                 runner = Missing()
+            elif verb == 'fix':
+                runner = Fixer()
 
         runner.KIND = Photo
         runner.TOKEN = token
@@ -224,9 +226,10 @@ class BackgroundRunner(RestHandler):
 class Crud(RestHandler):
     def post(self):
         resList = []
+        email = self.request.POST.get('email')
         # {'photos', FieldStorage('photos', u'light-rain.jpg')}
         for fs in self.request.POST.getall('photos'):
-            obj = Photo(headline=fs.filename)
+            obj = Photo(headline=fs.filename, email=email)
             res = obj.add(fs)
             resList.append(res)
         self.render(resList)
@@ -243,12 +246,7 @@ class Crud(RestHandler):
             tags = data['tags']
         else:
             tags = []
-
         data['tags'] = sorted(tags)
-        # fix author
-        if 'author' in data:
-            email = data['author']
-            data['author'] = users.User(email=email)
 
         # fix empty values
         values = map(lambda x: x if x != '' else None, data.values())

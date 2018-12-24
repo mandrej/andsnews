@@ -14,7 +14,7 @@ import re
 import webapp2
 from PIL import Image
 from exifread import process_file
-from google.appengine.api import users, search, images
+from google.appengine.api import search, images
 from google.appengine.ext import ndb, deferred, blobstore
 from unidecode import unidecode
 
@@ -22,7 +22,7 @@ from config import ASA, HUE, LUM, SAT, BUCKET
 from palette import extract_colors, rgb_to_hex
 
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = ['year', 'tags', 'model', 'color', 'author']
+PHOTO_FILTER = ['year', 'tags', 'model', 'color', 'email']
 
 
 def rounding(val, values):
@@ -62,9 +62,7 @@ def filter_param(field, value):
     except AssertionError:
         return {}
 
-    if field == 'author':
-        value = users.User(email=value)
-    elif field == 'iso':
+    if field == 'iso':
         value = int(value)
 
     return {field: value}
@@ -201,6 +199,7 @@ class Counter(ndb.Model):
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
     author = ndb.UserProperty()
+    email = ndb.StringProperty()
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
     size = ndb.IntegerProperty()
@@ -235,7 +234,7 @@ class Photo(ndb.Model):
             doc_id=self.key.urlsafe(),
             fields=[
                 search.TextField(name='slug', value=tokenize(self.slug)),
-                search.TextField(name='author', value=' '.join(self.author.nickname().split('.'))),
+                search.TextField(name='email', value=' '.join(re.match('([^@]+)', self.email).group().split('.'))),
                 search.TextField(name='tags', value=' '.join(self.tags)),
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
@@ -281,8 +280,6 @@ class Photo(ndb.Model):
                 if isinstance(value, (list, tuple)):
                     for v in value:
                         pairs.append((field, str(v)))
-                elif isinstance(value, users.User):
-                    pairs.append((field, value.email()))
                 elif isinstance(value, int):
                     pairs.append((field, value))
                 else:
@@ -345,7 +342,6 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
             # SAVE EVERYTHING
-            self.author = users.User(email='milan.andrejevic@gmail.com')  # FORCE FIELD
             self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
             deferred.defer(self.extra_properties, _queue='background')
@@ -358,7 +354,7 @@ class Photo(ndb.Model):
         old_pairs = self.changed_pairs()
 
         self.headline = data['headline']
-        self.author = data['author']
+        self.email = data['email']
         self.tags = data['tags']
         self.model = data['model']
         self.aperture = data['aperture']

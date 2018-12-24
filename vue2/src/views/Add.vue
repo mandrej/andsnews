@@ -24,7 +24,7 @@
         <v-container>
           <v-responsive height="120px" class="mb-3">
             <input type="file" multiple
-              :name="uploadFieldName"
+              name="photos"
               :disabled="isSaving"
               @change="filesChange($event.target.name, $event.target.files)"
               accept="image/*"
@@ -108,7 +108,6 @@ export default {
     fileCount: 0,
     uploadError: null,
     status: null,
-    uploadFieldName: 'photos',
     editForm: false,
     snackbar: false,
     timeout: 0,
@@ -118,6 +117,7 @@ export default {
     this.reset()
   },
   computed: {
+    ...mapState('auth', ['user']),
     ...mapState('app', ['uploaded']),
     isInitial () {
       return this.status === STATUS_INITIAL
@@ -168,6 +168,7 @@ export default {
       this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
+      formData.append('email', this.user.email)
 
       // make formData from Array Iterator
       // Array.from(Array(5).keys()) = [0, 1, 2, 3, 4]
@@ -175,6 +176,7 @@ export default {
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
+          // File(531551) {name: "jutro2.jpg", lastModified: 1538385671886, lastModifiedDate: Mon Oct 01 2018 11..., size: 531551, type: "image/jpeg"
           formData.append(fieldName, fileList[x], fileList[x].name)
         })
       this.save(formData)

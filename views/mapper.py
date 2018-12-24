@@ -208,8 +208,6 @@ class Builder(Mapper):
         values = (getattr(x, prop, None) for x in self.to_put)
         if prop == 'tags':
             values = list(itertools.chain(*values))
-        elif prop == 'author':
-            values = [x.email() for x in values]
 
         self.VALUES.extend(values)
         self.to_put = []
@@ -234,4 +232,23 @@ class Builder(Mapper):
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))
 
+        push_message(self.TOKEN, END_MSG)
+
+
+class Fixer(Mapper):
+    TOKEN = None
+
+    def map(self, entity):
+        return [entity], []
+
+    def _batch_write(self):
+        for entity in self.to_put:
+            if 'author' in entity._properties:
+                entity.email = entity.author.email()
+                del entity._properties['author']
+                entity.put()
+                push_message(self.TOKEN, entity.slug)
+        self.to_put = []
+
+    def finish(self):
         push_message(self.TOKEN, END_MSG)

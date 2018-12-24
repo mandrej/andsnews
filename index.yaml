@@ -7,7 +7,7 @@ indexes:
 # Do NOT delete! Need for background counter build
 - kind: Photo
   properties:
-  - name: author
+  - name: email
   - name: date
     direction: desc
 

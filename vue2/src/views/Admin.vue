@@ -42,7 +42,7 @@
           <v-divider></v-divider>
           <v-layout row v-for="field in keys(values)" :key="field">
             <v-flex xs9>
-              <v-layout row align-center justify-start fill-height>
+              <v-layout align-center fill-height>
                 Rebuild for field {{field}}
               </v-layout>
             </v-flex>
@@ -52,7 +52,7 @@
           </v-layout>
           <v-layout row>
             <v-flex xs9>
-              <v-layout row align-center justify-start fill-height>
+              <v-layout align-center fill-height>
                 Reindex all images
               </v-layout>
             </v-flex>
@@ -60,12 +60,22 @@
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-flex>
           </v-layout>
+          <v-layout row>
+            <v-flex xs9>
+              <v-layout align-center fill-height>
+                Remove google.appengine.api.users
+              </v-layout>
+            </v-flex>
+            <v-flex xs3 class="text-xs-right">
+              <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="fix">Fix</v-btn>
+            </v-flex>
+          </v-layout>
 
           <h3 class="title">Cloud</h3>
           <v-divider></v-divider>
           <v-layout row>
             <v-flex xs9>
-              <v-layout row align-center justify-start fill-height>
+              <v-layout align-center fill-height>
                 Remove images from the Cloud not referenced in datastore
               </v-layout>
             </v-flex>
@@ -75,7 +85,7 @@
           </v-layout>
           <v-layout row>
             <v-flex xs9>
-              <v-layout row align-center justify-start fill-height>
+              <v-layout align-center fill-height>
                 Remove images in datastore that are missing in the Cloud
               </v-layout>
             </v-flex>
@@ -148,6 +158,9 @@ export default {
     },
     missing () {
       this.callAjax('missing')
+    },
+    fix () {
+      this.callAjax('fix')
     },
     upper (event) {
       this.msg.default = event.toUpperCase()

@@ -57,13 +57,13 @@ export default {
     },
     showFilter (rec) {
       const sep = '"'
-      const value = (rec.field_name === 'author')
+      const value = (rec.field_name === 'email')
         ? rec.field_name + ':' + sep + this.getName(rec.name) + sep
         : rec.field_name + ':' + sep + rec.name + sep
       this.$router.push({ name: 'list', params: { 'qs': value } })
     },
     justName (rec) {
-      return (rec.field_name === 'author') ? this.getName(rec.name) : rec.name
+      return (rec.field_name === 'email') ? this.getName(rec.name) : rec.name
     }
   }
 }

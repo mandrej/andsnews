@@ -55,7 +55,7 @@
           <v-autocomplete
             label="by author"
             :items="names"
-            v-model="tmp.author"
+            v-model="tmp.email"
             clearable></v-autocomplete>
         </v-flex>
         <v-flex xs12 class="hidden-xs-only">
@@ -91,7 +91,7 @@ export default {
       return arr
     },
     names () {
-      return this.values.author.map(email => this.getName(email))
+      return this.values.email.map(email => this.getName(email))
     }
   },
   methods: {

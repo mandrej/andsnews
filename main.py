@@ -13,5 +13,5 @@ app = WSGIApplication([
 
     Route(r'/api/message', handler=api.Notify, methods=['POST']),
     Route(r'/api/<verb:(rebuild)>/<field>', handler=api.BackgroundRunner, methods=['POST']),
-    Route(r'/api/<verb:(reindex|unbound|missing)>', handler=api.BackgroundRunner, methods=['POST']),
+    Route(r'/api/<verb:(reindex|unbound|missing|fix)>', handler=api.BackgroundRunner, methods=['POST']),
 ], debug=DEVEL)
