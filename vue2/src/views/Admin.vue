@@ -83,7 +83,7 @@
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout row>
+          <!-- <v-layout row>
             <v-flex xs9>
               <v-layout align-center fill-height>
                 Remove images in datastore that are missing in the Cloud
@@ -92,7 +92,7 @@
             <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="missing">Missing</v-btn>
             </v-flex>
-          </v-layout>
+          </v-layout> -->
         </v-container>
       </v-content>
 

@@ -389,21 +389,7 @@ class Photo(ndb.Model):
 
     @webapp2.cached_property
     def serving_url(self):
-        result = None
-        try:
-            gcs.stat(self.filename)
-            result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
-        except gcs.NotFoundError:
-            pass
-
-        if result is None:
-            logging.error('__DEL__,{},{},{},{}'.format(self.date.isoformat(), self.slug, self.filename, self.model))
-
-        return result
-
-    @webapp2.cached_property
-    def download_url(self):
-        return webapp2.uri_for('download_url', safe_key=self.key.urlsafe())
+        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
 
     @property
     def hex(self):
@@ -422,7 +408,7 @@ class Photo(ndb.Model):
         return query.get()
 
     def serialize(self):
-        data = self.to_dict(exclude=('blob_key', 'size', 'rgb', 'sat', 'lum', 'hue', 'year'))
+        data = self.to_dict(exclude=('blob_key', 'size', 'rgb', 'sat', 'lum', 'hue', 'year', 'author'))
         data.update({
             'kind': 'photo',
             'year': str(self.year),
