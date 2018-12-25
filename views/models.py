@@ -11,7 +11,6 @@ from decimal import getcontext, Decimal
 
 import cloudstorage as gcs
 import re
-import webapp2
 from PIL import Image
 from exifread import process_file
 from google.appengine.api import search, images
@@ -288,7 +287,7 @@ class Photo(ndb.Model):
                     pairs.append((field, str(value)))  # stringify year
         return pairs
 
-    @webapp2.cached_property
+    @property
     def buffer(self):
         """ Used for Download """
         blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024 * 1024)
@@ -387,7 +386,7 @@ class Photo(ndb.Model):
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
         self.key.delete()
 
-    @webapp2.cached_property
+    @property
     def serving_url(self):
         return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
 

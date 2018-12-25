@@ -8,9 +8,7 @@ default_expiration: "0s"
 libraries:
 - name: PIL
   version: latest
-- name: webapp2
-  version: latest
-- name: webob
+- name: ssl
   version: latest
 - name: numpy
   version: latest

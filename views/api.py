@@ -1,19 +1,14 @@
 import datetime
-import json
 import time
 from operator import itemgetter
 
 import numpy as np
-import webapp2
-from google.appengine.api import users, search
-from google.appengine.ext import ndb, deferred
+from google.appengine.api import search
+from google.appengine.ext import ndb
 from unidecode import unidecode
 
-from config import START_MSG
-from mapper import push_message, Missing, Indexer, Builder, Unbound, Fixer
-from models import Counter, Photo, INDEX, PHOTO_FILTER, slugify
+from models import Counter, INDEX, PHOTO_FILTER
 
-LIMIT = 24
 PERCENTILE = 80
 
 
@@ -46,23 +41,57 @@ class cached_property(object):
         return value
 
 
-class LazyEncoder(json.JSONEncoder):
-    """ json mapper helper """
-    def default(self, obj):  # pylint: disable=E0202
-        if isinstance(obj, ndb.Model):
-            return obj.serialize()
-        elif isinstance(obj, datetime.datetime):
-            return obj.isoformat()
-        elif isinstance(obj, users.User):
-            return obj.email()
-        return json.JSONEncoder.default(self, obj)
+class Cached(object):
+    @cached_property(ttl=5)
+    def counters(self):
+        tmp = {}
+        for field in PHOTO_FILTER:
+            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+            tmp[field] = [counter for counter in query if counter.count > 0]
+
+        return tmp
 
 
-class RestHandler(webapp2.RequestHandler):
-    def render(self, data):
-        self.response.content_type = 'application/json; charset=utf-8'
-        # self.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        self.response.write(json.dumps(data, cls=LazyEncoder))
+cached = Cached()
+DATA = cached.counters
+
+
+def counters_values():
+    result = {}
+    for field in DATA.keys():
+        _list = [counter.value for counter in DATA[field]]
+        if field == 'year':
+            result[field] = sorted(_list, reverse=True)
+        else:
+            result[field] = sorted(_list)
+
+    return result
+
+
+def available_filters():
+    collection = []
+    for field in sorted(DATA.keys(), reverse=True):
+        _list = [{
+            'field_name': field,
+            'count': counter.count,
+            'name': counter.value,
+            'serving_url': counter.repr_url,
+            'repr_stamp': counter.repr_stamp
+        } for counter in DATA[field]]
+        if field == 'year':
+            _list = sorted(_list, key=itemgetter('name'), reverse=True)
+        else:
+            _list = sorted(_list, key=itemgetter('name'))
+        collection.extend(_list)
+
+    current = datetime.datetime.now().year
+    if collection:
+        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
+        for item in collection:
+            item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
+                else item['count'] > int(limit)
+
+    return [x for x in collection if x['show']]
 
 
 class SearchPaginator(object):
@@ -109,176 +138,3 @@ class SearchPaginator(object):
                     next_token = found.cursor.web_safe_string
 
         return objects, number_found, next_token, error
-
-
-class Find(RestHandler):
-    def get(self, find):
-        page = self.request.get('_page', None)
-        per_page = int(self.request.get('per_page', LIMIT))
-        paginator = SearchPaginator(find, per_page=per_page)
-        objects, number_found, token, error = paginator.page(page)
-
-        self.render({
-            'objects': objects,
-            'filter': {'field': 'search', 'value': find.strip()},
-            # 'number_found': number_found,
-            '_page': page if page else 'FP',
-            '_next': token,
-            'error': error
-        })
-
-
-def counters_values(data):
-    result = {}
-    for field in data.keys():
-        _list = [counter.value for counter in data[field]]
-        if field == 'year':
-            result[field] = sorted(_list, reverse=True)
-        else:
-            result[field] = sorted(_list)
-
-    return result
-
-
-def available_filters(data):
-    collection = []
-    for field in sorted(data.keys(), reverse=True):
-        _list = [{
-            'field_name': field,
-            'count': counter.count,
-            'name': counter.value,
-            'serving_url': counter.repr_url,
-            'repr_stamp': counter.repr_stamp
-        } for counter in data[field]]
-        if field == 'year':
-            _list = sorted(_list, key=itemgetter('name'), reverse=True)
-        else:
-            _list = sorted(_list, key=itemgetter('name'))
-        collection.extend(_list)
-
-    current = datetime.datetime.now().year
-    if collection:
-        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
-        for item in collection:
-            item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
-                else item['count'] > int(limit)
-
-    return [x for x in collection if x['show']]
-
-
-class Cached(object):
-    @cached_property(ttl=5)
-    def counters(self):
-        tmp = {}
-        for field in PHOTO_FILTER:
-            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-            tmp[field] = [counter for counter in query if counter.count > 0]
-
-        return tmp
-
-
-class Counters(RestHandler):
-    cached = Cached()
-
-    def get(self, set):
-        if set == 'values':
-            self.render(counters_values(Counters.cached.counters))
-        elif set == 'filters':
-            self.render({
-                'count': Photo.query().count(),
-                'filters': available_filters(Counters.cached.counters)
-            })
-
-
-class Notify(RestHandler):
-    def post(self):
-        token = self.request.json.get('token', None)
-        assert token is not None, 'Token cannot be null'
-        text = self.request.json.get('text', None)
-        push_message(token, text)
-
-
-class BackgroundRunner(RestHandler):
-    def post(self, verb=None, field=None):
-        token = self.request.json.get('token', None)
-        assert token is not None, 'Token cannot be null'
-
-        if field and verb == 'rebuild':
-            runner = Builder()
-            runner.VALUES = []
-            runner.FIELD = field
-        else:
-            if verb == 'reindex':
-                runner = Indexer()
-            elif verb == 'unbound':
-                runner = Unbound()
-            elif verb == 'missing':
-                runner = Missing()
-            elif verb == 'fix':
-                runner = Fixer()
-
-        runner.KIND = Photo
-        runner.TOKEN = token
-        push_message(runner.TOKEN, START_MSG)
-        deferred.defer(runner.run, _queue='background')
-
-
-class Crud(RestHandler):
-    def post(self):
-        resList = []
-        email = self.request.POST.get('email')
-        # {'photos', FieldStorage('photos', u'light-rain.jpg')}
-        for fs in self.request.POST.getall('photos'):
-            obj = Photo(headline=fs.filename, email=email)
-            res = obj.add(fs)
-            resList.append(res)
-        self.render(resList)
-
-    def put(self, safe_key):
-        key = ndb.Key(urlsafe=safe_key)
-        if key is None:
-            self.abort(404)
-        obj = key.get()
-
-        data = json.loads(self.request.body)  # TODO vue2
-        # fix tags
-        if 'tags' in data:
-            tags = data['tags']
-        else:
-            tags = []
-        data['tags'] = sorted(tags)
-
-        # fix empty values
-        values = map(lambda x: x if x != '' else None, data.values())
-        data = dict(zip(data.keys(), values))
-        # fix date
-        dt = data['date'].strip().split('.')[0]  # no millis
-        data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
-
-        if data['focal_length']:
-            data['focal_length'] = round(float(data['focal_length']), 1)
-        if data['aperture']:
-            data['aperture'] = float(data['aperture'])
-        if data['iso']:
-            data['iso'] = int(data['iso'])
-        res = obj.edit(data)
-        self.render(res)
-
-    def delete(self, safe_key):
-        key = ndb.Key(urlsafe=safe_key)
-        if key is None:
-            self.abort(404)
-        key.get().remove()
-
-
-class Download(webapp2.RequestHandler):
-    def get(self, safe_key):
-        key = ndb.Key(urlsafe=safe_key)
-        if key is None:
-            self.abort(404)
-        obj = key.get()
-        self.response.headers = {
-            'Content-Type': 'image/jpeg',
-            'Content-Disposition': 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
-        }
-        self.response.write(obj.buffer)

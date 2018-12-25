@@ -12,9 +12,7 @@ basic_scaling:
 libraries:
 - name: PIL
   version: latest
-- name: webapp2
-  version: latest
-- name: webob
+- name: ssl
   version: latest
 - name: numpy
   version: latest
@@ -33,8 +31,6 @@ inbound_services:
 
 builtins:
 - deferred: on
-#- appstats: on
-#- remote_api: on
 
 skip_files:
 - lib/PIL*
