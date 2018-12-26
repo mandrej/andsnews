@@ -35,10 +35,10 @@
 ### Linked libraries
 /
 - decorator.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/decorator.py
-- pylru.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/pylru.py
 - six.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/six.py
 
 /lib
+backports -> /home/milan/venv/andsnews/lib/python2.7/site-packages/backports
 click -> /home/milan/venv/andsnews/lib/python2.7/site-packages/click/
 cloudstorage -> /home/milan/venv/andsnews/lib/python2.7/site-packages/cloudstorage/
 colormath -> /home/milan/venv/andsnews/lib/python2.7/site-packages/colormath

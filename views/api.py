@@ -4,12 +4,12 @@ import time
 from operator import itemgetter
 
 import numpy as np
+from backports.functools_lru_cache import lru_cache
 from flask.json import JSONEncoder
 from google.appengine.api import users, search
 from google.appengine.ext import ndb
 from unidecode import unidecode
 
-import pylru
 from config import PERCENTILE
 from models import Counter, INDEX, PHOTO_FILTER
 
@@ -27,6 +27,7 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
+@lru_cache(maxsize=8)
 def counters():
     logging.error('HIT')
     tmp = {}
@@ -37,11 +38,8 @@ def counters():
     return tmp
 
 
-cached = pylru.FunctionCacheManager(counters, 10)
-
-
 def counters_values():
-    data = cached()
+    data = counters()
     result = {}
     for field in data.keys():
         _list = [counter.value for counter in data[field]]
@@ -53,7 +51,7 @@ def counters_values():
 
 
 def available_filters():
-    data = cached()
+    data = counters()
     collection = []
     for field in sorted(data.keys(), reverse=True):
         _list = [{
