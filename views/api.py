@@ -1,83 +1,68 @@
 import datetime
+import logging
 import time
 from operator import itemgetter
 
 import numpy as np
-from google.appengine.api import search
+from flask.json import JSONEncoder
+from google.appengine.api import users, search
 from google.appengine.ext import ndb
 from unidecode import unidecode
 
+import pylru
+from config import PERCENTILE
 from models import Counter, INDEX, PHOTO_FILTER
 
-PERCENTILE = 80
+
+class CustomJSONEncoder(JSONEncoder):
+    """ json mapper helper """
+
+    def default(self, obj):  # pylint: disable=E0202
+        if isinstance(obj, ndb.Model):
+            return obj.serialize()
+        elif isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        elif isinstance(obj, users.User):
+            return obj.email()
+        return JSONEncoder.default(self, obj)
 
 
-class cached_property(object):
-    """ Decorator for read-only properties evaluated only once within TTL period.
-        https://wiki.python.org/moin/PythonDecoratorLibrary#Cached_Properties """
-    def __init__(self, ttl=300):
-        self.ttl = ttl
+def counters():
+    logging.error('HIT')
+    tmp = {}
+    for field in PHOTO_FILTER:
+        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
+        tmp[field] = [counter for counter in query if counter.count > 0]
 
-    def __call__(self, fget, doc=None):
-        self.fget = fget
-        self.__doc__ = doc or fget.__doc__
-        self.__name__ = fget.__name__
-        self.__module__ = fget.__module__
-        return self
-
-    def __get__(self, inst, owner):
-        now = time.time()
-        try:
-            value, last_update = inst._cache[self.__name__]
-            if self.ttl > 0 and now - last_update > self.ttl:
-                raise AttributeError
-        except (KeyError, AttributeError):
-            value = self.fget(inst)
-            try:
-                cache = inst._cache
-            except AttributeError:
-                cache = inst._cache = {}
-            cache[self.__name__] = (value, now)
-        return value
+    return tmp
 
 
-class Cached(object):
-    @cached_property(ttl=5)
-    def counters(self):
-        tmp = {}
-        for field in PHOTO_FILTER:
-            query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-            tmp[field] = [counter for counter in query if counter.count > 0]
-
-        return tmp
-
-
-cached = Cached()
-DATA = cached.counters
+cached = pylru.FunctionCacheManager(counters, 10)
 
 
 def counters_values():
+    data = cached()
     result = {}
-    for field in DATA.keys():
-        _list = [counter.value for counter in DATA[field]]
+    for field in data.keys():
+        _list = [counter.value for counter in data[field]]
         if field == 'year':
             result[field] = sorted(_list, reverse=True)
         else:
             result[field] = sorted(_list)
-
     return result
 
 
 def available_filters():
+    data = cached()
     collection = []
-    for field in sorted(DATA.keys(), reverse=True):
+    for field in sorted(data.keys(), reverse=True):
         _list = [{
             'field_name': field,
             'count': counter.count,
             'name': counter.value,
             'serving_url': counter.repr_url,
             'repr_stamp': counter.repr_stamp
-        } for counter in DATA[field]]
+        } for counter in data[field]]
         if field == 'year':
             _list = sorted(_list, key=itemgetter('name'), reverse=True)
         else:

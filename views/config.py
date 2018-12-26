@@ -17,6 +17,9 @@ DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 START_MSG = '*** START ***'
 END_MSG = '*** END ***'
 
+LIMIT = 24
+PERCENTILE = 80
+
 COLOR_NAMES = (
     'red', 'orange', 'yellow', 'green', 'blue', 'violet', 'dark', 'medium', 'light'
 )

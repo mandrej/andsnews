@@ -35,14 +35,19 @@
 ### Linked libraries
 /
 - decorator.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/decorator.py
+- pylru.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/pylru.py
 - six.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/six.py
 
 /lib
-aeta -> /home/milan/venv/andsnews/lib/aeta/aeta/
+click -> /home/milan/venv/andsnews/lib/python2.7/site-packages/click/
 cloudstorage -> /home/milan/venv/andsnews/lib/python2.7/site-packages/cloudstorage/
 colormath -> /home/milan/venv/andsnews/lib/python2.7/site-packages/colormath
 exifread -> /home/milan/venv/andsnews/lib/python2.7/site-packages/exifread/
+flask -> /home/milan/venv/andsnews/lib/python2.7/site-packages/flask/
 httplib2 -> /home/milan/venv/andsnews/lib/python2.7/site-packages/httplib2
+itsdangerous -> /home/milan/venv/andsnews/lib/python2.7/site-packages/itsdangerous
+jinja2 -> /home/milan/venv/andsnews/lib/python2.7/site-packages/jinja2/
+markupsafe -> /home/milan/venv/andsnews/lib/python2.7/site-packages/markupsafe/
 networkx -> /home/milan/venv/andsnews/lib/python2.7/site-packages/networkx
 numpy -> /home/milan/venv/andsnews/lib/python2.7/site-packages/numpy
 unidecode -> /home/milan/venv/andsnews/lib/python2.7/site-packages/unidecode/

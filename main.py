@@ -1,36 +1,20 @@
 import datetime
-import logging
 
 from flask import Flask, abort, jsonify, request, make_response
-from flask.json import JSONEncoder
-
-from google.appengine.api import users
 from google.appengine.ext import ndb, deferred
-from views.api import SearchPaginator, counters_values, available_filters
-from views.config import START_MSG
-from views.models import Photo, slugify
+
+from views.api import CustomJSONEncoder, SearchPaginator, cached, counters_values, available_filters
+from views.config import DEVEL, LIMIT, START_MSG
 from views.mapper import push_message, Missing, Indexer, Builder, Unbound
-
-LIMIT = 24
-
-
-class CustomJSONEncoder(JSONEncoder):
-    """ json mapper helper """
-    def default(self, obj):  # pylint: disable=E0202
-        if isinstance(obj, ndb.Model):
-            return obj.serialize()
-        elif isinstance(obj, datetime.datetime):
-            return obj.isoformat()
-        elif isinstance(obj, users.User):
-            return obj.email()
-        return JSONEncoder.default(self, obj)
+from views.models import Photo, slugify
 
 app = Flask(__name__)
+app.debug = DEVEL
 app.json_encoder = CustomJSONEncoder
 
 
 @app.route('/api/counter/<col>', methods=['GET'])
-def counters(col):
+def collection(col):
     if col == 'values':
         return jsonify(counters_values())
     elif col == 'filters':
@@ -45,12 +29,11 @@ def search(find):
     page = request.args.get('_page', None)
     per_page = int(request.args.get('per_page', LIMIT))
     paginator = SearchPaginator(find, per_page=per_page)
-    objects, number_found, token, error = paginator.page(page)
+    objects, _, token, error = paginator.page(page)
 
     return jsonify({
         'objects': objects,
         'filter': {'field': 'search', 'value': find.strip()},
-        # 'number_found': number_found,
         '_page': page if page else 'FP',
         '_next': token,
         'error': error
@@ -62,6 +45,7 @@ def notify():
     token = request.json.get('token', None)
     text = request.json.get('text', None)
     push_message(token, text)
+    return jsonify(True)
 
 
 @app.route('/api/<verb>/<field>', methods=['POST'])
@@ -90,14 +74,15 @@ def background_runner(verb, field=None):
 
 @app.route('/api/add', methods=['POST'])
 def post():
+    """ ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ...]) """
     resList = []
     email = request.form.get('email')
-    files = request.files.getlist['photos']
-    # ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ('photos', <FileStorage: u'brdo.jpg' ('image/jpeg')>)])
+    files = request.files.getlist('photos')
     for fs in files:
         obj = Photo(headline=fs.filename, email=email)
         res = obj.add(fs)
         resList.append(res)
+    cached.clear()
     return jsonify(resList)
 
 
@@ -114,12 +99,7 @@ def put(safe_key=None):
         tags = data['tags']
     else:
         tags = []
-
     data['tags'] = sorted(tags)
-    # fix author
-    if 'author' in data:
-        email = data['author']
-        data['author'] = users.User(email=email)
 
     # fix empty values
     values = map(lambda x: x if x != '' else None, data.values())
@@ -144,6 +124,8 @@ def delete(safe_key):
     if key is None:
         abort(404)
     key.get().remove()
+    cached.clear()
+    return jsonify(True)
 
 
 @app.route('/api/download/<safe_key>', methods=['GET'])

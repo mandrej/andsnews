@@ -2,7 +2,7 @@ from __future__ import division
 
 import colorsys
 import datetime
-import logging
+import re
 import time
 import unicodedata
 import uuid
@@ -10,7 +10,6 @@ from cStringIO import StringIO
 from decimal import getcontext, Decimal
 
 import cloudstorage as gcs
-import re
 from PIL import Image
 from exifread import process_file
 from google.appengine.api import search, images
@@ -290,8 +289,10 @@ class Photo(ndb.Model):
     @property
     def buffer(self):
         """ Used for Download """
-        blob_reader = blobstore.BlobReader(self.blob_key, buffer_size=1024 * 1024)
-        return blob_reader.read(size=-1)
+        contents = ''
+        with gcs.open(self.filename, 'r') as f:
+            contents = f.read()
+        return contents
 
     def extra_properties(self):
         _buffer = self.buffer
@@ -317,7 +318,10 @@ class Photo(ndb.Model):
         self.put()
 
     def add(self, fs):
-        _buffer = fs.value
+        """
+        werkzeug.datastructures.FileStorage(stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
+        """
+        _buffer = fs.stream.getvalue()
         # Check GCS stat exist first
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         try:
@@ -328,7 +332,7 @@ class Photo(ndb.Model):
         try:
             # Write to GCS
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-            with gcs.open(object_name, 'w', content_type=fs.type, retry_params=write_retry_params) as f:
+            with gcs.open(object_name, 'w', content_type=fs.content_type, retry_params=write_retry_params) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
             # <class 'google.appengine.api.datastore_types.BlobKey'> or None
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
