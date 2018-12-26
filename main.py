@@ -4,12 +4,11 @@ from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
 from views.api import CustomJSONEncoder, SearchPaginator, counters, counters_values, available_filters
-from views.config import DEVEL, LIMIT, START_MSG
+from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Indexer, Builder, Unbound
 from views.models import Photo, slugify
 
 app = Flask(__name__)
-app.debug = DEVEL
 app.json_encoder = CustomJSONEncoder
 
 
@@ -87,34 +86,12 @@ def post():
 
 
 @app.route('/api/edit/<safe_key>', methods=['PUT'])
-def put(safe_key=None):
+def put(safe_key):
     key = ndb.Key(urlsafe=safe_key)
     if key is None:
         abort(404)
     obj = key.get()
-
-    data = request.json
-    # fix tags
-    if 'tags' in data:
-        tags = data['tags']
-    else:
-        tags = []
-    data['tags'] = sorted(tags)
-
-    # fix empty values
-    values = map(lambda x: x if x != '' else None, data.values())
-    data = dict(zip(data.keys(), values))
-    # fix date
-    dt = data['date'].strip().split('.')[0]  # no millis
-    data['date'] = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
-
-    if data['focal_length']:
-        data['focal_length'] = round(float(data['focal_length']), 1)
-    if data['aperture']:
-        data['aperture'] = float(data['aperture'])
-    if data['iso']:
-        data['iso'] = int(data['iso'])
-    res = obj.edit(data)
+    res = obj.edit(request.json)
     return jsonify(res)
 
 

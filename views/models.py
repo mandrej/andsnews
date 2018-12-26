@@ -16,11 +16,10 @@ from google.appengine.api import search, images
 from google.appengine.ext import ndb, deferred, blobstore
 from unidecode import unidecode
 
-from config import ASA, HUE, LUM, SAT, BUCKET
+from config import ASA, HUE, LUM, SAT, BUCKET, PHOTO_FILTER
 from palette import extract_colors, rgb_to_hex
 
 INDEX = search.Index(name='searchindex')
-PHOTO_FILTER = ['year', 'tags', 'model', 'color', 'email']
 
 
 def rounding(val, values):
@@ -355,19 +354,32 @@ class Photo(ndb.Model):
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
             return {'success': True, 'rec': self.serialize()}
 
-    def edit(self, data):
+    def edit(self, json):
         old_pairs = self.changed_pairs()
 
-        self.headline = data['headline']
-        self.email = data['email']
-        self.tags = data['tags']
-        self.model = data['model']
-        self.aperture = data['aperture']
-        self.shutter = data['shutter']
-        self.focal_length = data['focal_length']
-        self.lens = data['lens']
-        self.iso = data['iso']
-        self.date = data['date']
+        self.headline = json['headline']
+        self.email = json['email']
+        self.model = json['model']
+        self.shutter = json['shutter']
+        self.lens = json['lens']
+
+        values = map(lambda x: x if x != '' else None, json.values())
+        json = dict(zip(json.keys(), values))  # fix empty values
+        if 'tags' in json:
+            tags = json['tags']
+        else:
+            tags = []
+        self.tags = sorted(tags)  # fix tags
+        dt = json['date'].strip().split('.')[0]  # no millis
+        self.date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')  # fix date
+
+        if json['focal_length']:
+            self.focal_length = round(float(json['focal_length']), 1)
+        if json['aperture']:
+            self.aperture = float(json['aperture'])
+        if json['iso']:
+            self.iso = int(json['iso'])
+
         self.put()
 
         new_pairs = self.changed_pairs()
@@ -416,7 +428,6 @@ class Photo(ndb.Model):
             'kind': 'photo',
             'year': str(self.year),
             'safekey': self.key.urlsafe(),
-            'serving_url': self.serving_url,
-            # 'size': sizeof_fmt(self.size),
+            'serving_url': self.serving_url
         })
         return data

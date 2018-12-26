@@ -1,5 +1,4 @@
 import datetime
-import logging
 import time
 from operator import itemgetter
 
@@ -10,8 +9,8 @@ from google.appengine.api import users, search
 from google.appengine.ext import ndb
 from unidecode import unidecode
 
-from config import PERCENTILE
-from models import Counter, INDEX, PHOTO_FILTER
+from config import PERCENTILE, PHOTO_FILTER
+from models import Counter, INDEX
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -27,14 +26,12 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
-@lru_cache(maxsize=8)
-def counters():
-    logging.error('HIT')
+@lru_cache(maxsize=1)
+def counters(fields=PHOTO_FILTER):
     tmp = {}
-    for field in PHOTO_FILTER:
+    for field in fields:
         query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         tmp[field] = [counter for counter in query if counter.count > 0]
-
     return tmp
 
 
@@ -79,7 +76,7 @@ def available_filters():
 
 class SearchPaginator(object):
     def __init__(self, querystring, per_page):
-        self.querystring = unidecode(querystring.decode('utf-8'))
+        self.querystring = unidecode(unicode(querystring))
         self.per_page = per_page
 
         self.options = {
