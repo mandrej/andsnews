@@ -10,8 +10,6 @@
   "python.linting.pylintEnabled": true,
   "python.linting.pep8Args": ["--ignore=E501"],
   "files.exclude": {
-    "**/*.pyc": true,
-    "client/": true,
-    "p2/": true
+    "**/*.pyc": true
   }
 }

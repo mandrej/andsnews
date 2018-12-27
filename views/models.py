@@ -192,6 +192,14 @@ class Counter(ndb.Model):
     repr_stamp = ndb.DateTimeProperty()
     repr_url = ndb.StringProperty()
 
+    @classmethod
+    def all_photo_filter(cls):
+        tmp = {}
+        for field in PHOTO_FILTER:
+            query = cls.query(cls.forkind == 'Photo', Counter.field == field)
+            tmp[field] = [counter for counter in query if counter.count > 0]
+        return tmp
+
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)

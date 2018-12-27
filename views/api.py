@@ -8,7 +8,7 @@ from google.appengine.api import users, search
 from google.appengine.ext import ndb
 from unidecode import unidecode
 
-from config import PERCENTILE, PHOTO_FILTER
+from config import PERCENTILE
 from models import Counter, INDEX
 
 
@@ -25,16 +25,8 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
-def counters():
-    tmp = {}
-    for field in PHOTO_FILTER:
-        query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
-        tmp[field] = [counter for counter in query if counter.count > 0]
-    return tmp
-
-
 def counters_values():
-    data = counters()
+    data = Counter.all_photo_filter()
     result = {}
     for field in data.keys():
         _list = [counter.value for counter in data[field]]
@@ -46,7 +38,7 @@ def counters_values():
 
 
 def available_filters():
-    data = counters()
+    data = Counter.all_photo_filter()
     collection = []
     for field in sorted(data.keys(), reverse=True):
         _list = [{
