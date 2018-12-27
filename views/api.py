@@ -1,8 +1,9 @@
+from __future__ import division
+
 import datetime
 import time
 from operator import itemgetter
 
-import numpy as np
 from flask.json import JSONEncoder
 from google.appengine.api import users, search
 from google.appengine.ext import ndb
@@ -14,7 +15,6 @@ from models import Counter, INDEX
 
 class CustomJSONEncoder(JSONEncoder):
     """ json mapper helper """
-
     def default(self, obj):  # pylint: disable=E0202
         if isinstance(obj, ndb.Model):
             return obj.serialize()
@@ -56,10 +56,12 @@ def available_filters():
 
     current = datetime.datetime.now().year
     if collection:
-        limit = np.percentile([d['count'] for d in collection], PERCENTILE)
+        dataset = sorted([d['count'] for d in collection])
+        index = int(PERCENTILE * (len(dataset) + 1) / 100)
+        limit = dataset[index]
         for item in collection:
             item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
-                else item['count'] > int(limit)
+                else item['count'] > limit
 
     return [x for x in collection if x['show']]
 

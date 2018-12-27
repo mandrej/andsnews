@@ -137,12 +137,6 @@
                   label="Shutter [s]"
                   v-model="tmp.shutter"></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Color"
-                  v-model="tmp.color"
-                  disabled></v-text-field>
-              </v-flex>
             </v-layout>
           </v-form>
         </v-container>

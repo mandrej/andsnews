@@ -1,6 +1,5 @@
 from __future__ import division
 
-import colorsys
 import datetime
 import unicodedata
 from cStringIO import StringIO
@@ -9,7 +8,7 @@ from decimal import getcontext, Decimal
 from exifread import process_file
 from unidecode import unidecode
 
-from config import ASA, HUE, LUM, SAT
+from config import ASA
 
 
 def rounding(val, values):
@@ -133,26 +132,3 @@ def get_exif(buff):
     #     data['longitude'] = d + m / 60 + s / 3600
 
     return data
-
-
-def rgb_hls(rgb):
-    def intround(n):
-        return int(round(n))
-
-    rel_rgb = map(lambda x: x / 255.0, rgb)
-    h, l, s = colorsys.rgb_to_hls(*rel_rgb)
-    return map(intround, (h * 360, l * 100, s * 100))
-
-
-def range_names(rgb):
-    def in_range(value, component):
-        match = next((x for x in component if value in x['span']), None)
-        if match:
-            return match['name']
-        return 'none'
-
-    h, l, s = rgb_hls(rgb)
-    hue = in_range(h % 360, HUE)
-    lum = in_range(l, LUM)
-    sat = in_range(s, SAT)
-    return hue, lum, sat

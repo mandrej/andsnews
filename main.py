@@ -3,7 +3,7 @@ from google.appengine.ext import ndb, deferred
 
 from views.api import CustomJSONEncoder, SearchPaginator, counters_values, available_filters
 from views.config import LIMIT, START_MSG
-from views.mapper import push_message, Missing, Indexer, Builder, Unbound
+from views.mapper import push_message, Missing, Indexer, Builder, Unbound, Fixer
 from views.models import Photo, slugify
 
 app = Flask(__name__)
@@ -56,6 +56,8 @@ def background_runner(verb):
         runner = Unbound()
     elif verb == 'missing':
         runner = Missing()
+    elif verb == 'fix':
+        runner = Fixer()
     else:
         return jsonify(False)
 

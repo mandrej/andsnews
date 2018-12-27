@@ -145,9 +145,9 @@ const mutations = {
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
+    state.values.email = [...new Set([...state.values.email, 1 * obj.email])]
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
-    state.values.color = [...new Set([...state.values.color, obj.color])]
     if (obj.model) state.values.model = [...new Set([...state.values.model, obj.model])]
   },
   SET_VALUES (state, data) {

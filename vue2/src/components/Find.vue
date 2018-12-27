@@ -58,13 +58,6 @@
             v-model="tmp.email"
             clearable></v-autocomplete>
         </v-flex>
-        <v-flex xs12 class="hidden-xs-only">
-          <v-autocomplete
-            label="by color"
-            :items="values.color"
-            v-model="tmp.color"
-            clearable></v-autocomplete>
-        </v-flex>
       </v-layout>
     </v-card-text>
   </v-card>

@@ -241,11 +241,31 @@ class Fixer(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
+            hit = 0
             if 'author' in entity._properties:
-                if entity.email == entity.author.email():
-                    del entity._properties['author']
-                    entity.put()
-                    push_message(self.TOKEN, entity.slug)
+                hit += 1
+                del entity._properties['author']
+            if 'rgb' in entity._properties:
+                hit += 1
+                del entity._properties['rgb']
+            if 'hue' in entity._properties:
+                hit += 1
+                del entity._properties['hue']
+            if 'lum' in entity._properties:
+                hit += 1
+                del entity._properties['lum']
+            if 'sat' in entity._properties:
+                hit += 1
+                del entity._properties['sat']
+            if 'rgb' in entity._properties:
+                hit += 1
+                del entity._properties['color']
+            if 'crop_factor' in entity._properties:
+                hit += 1
+                del entity._properties['crop_factor']
+            if hit > 0:
+                entity.put()
+                push_message(self.TOKEN, entity.slug)
 
         self.to_put = []
 

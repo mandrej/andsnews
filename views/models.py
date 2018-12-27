@@ -10,8 +10,7 @@ from google.appengine.api import search, images
 from google.appengine.ext import ndb, deferred, blobstore
 
 from config import BUCKET, PHOTO_FILTER
-from helpers import slugify, tokenize, rgb_hls, range_names, get_exif
-from palette import extract_colors, rgb_to_hex
+from helpers import slugify, tokenize, get_exif
 
 INDEX = search.Index(name='searchindex')
 
@@ -65,20 +64,9 @@ class Photo(ndb.Model):
     year = ndb.ComputedProperty(lambda self: self.date.year)
     # added fields
     lens = ndb.StringProperty()
-    # calculated
-    # RGB [86, 102, 102]
-    rgb = ndb.IntegerProperty(repeated=True)
-    # HLS names
-    hue = ndb.StringProperty()
-    lum = ndb.StringProperty()
-    sat = ndb.StringProperty()
     # image dimension
     dim = ndb.IntegerProperty(repeated=True)  # width, height
     filename = ndb.StringProperty()  # /bucket/object
-
-    color = ndb.ComputedProperty(
-        lambda self: self.lum if self.lum in ('dark', 'light',) or self.sat == 'monochrome' else self.hue)
-
     slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
 
     def index_doc(self):
@@ -94,8 +82,7 @@ class Photo(ndb.Model):
                 search.NumberField(name='year', value=self.year),
                 search.NumberField(name='month', value=self.date.month),
                 search.TextField(name='model', value=self.model),
-                search.NumberField(name='stamp', value=time.mktime(self.date.timetuple())),
-                search.TextField(name='color', value=self.color),
+                search.NumberField(name='stamp', value=time.mktime(self.date.timetuple()))
             ]
         )
         INDEX.put(doc)
@@ -126,7 +113,7 @@ class Photo(ndb.Model):
     def changed_pairs(self):
         """
         List of changed field, value pairs
-        [('year', 2017), ('tags', 'new'), ('model', 'SIGMA dp2 Quattro'), ('color', 'blue')]
+        [('year', 2017), ('tags', 'new'), ('model', 'SIGMA dp2 Quattro')]
         """
         pairs = []
         for field in PHOTO_FILTER:
@@ -148,29 +135,6 @@ class Photo(ndb.Model):
         with gcs.open(self.filename, 'r') as f:
             contents = f.read()
         return contents
-
-    def extra_properties(self):
-        _buffer = self.buffer
-        image_from_buffer = Image.open(StringIO(_buffer))
-        self.dim = image_from_buffer.size
-
-        # Calculate Pallette
-        image_from_buffer.thumbnail((100, 100), Image.ANTIALIAS)
-        palette = extract_colors(image_from_buffer)
-        if palette.bgcolor:
-            colors = [palette.bgcolor] + palette.colors
-        else:
-            colors = palette.colors
-
-        _max = 0
-        for c in colors:
-            _, _, s = rgb_hls(c.value)
-            criteria = s * c.prominence
-            if criteria >= _max:  # saturation could be 0
-                _max = criteria
-                self.rgb = c.value
-        self.hue, self.lum, self.sat = range_names(self.rgb)
-        self.put()
 
     def add(self, fs):
         """
@@ -204,7 +168,6 @@ class Photo(ndb.Model):
             # SAVE EVERYTHING
             self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
-            deferred.defer(self.extra_properties, _queue='background')
 
             new_pairs = self.changed_pairs()
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
@@ -262,10 +225,6 @@ class Photo(ndb.Model):
     def serving_url(self):
         return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
 
-    @property
-    def hex(self):
-        return rgb_to_hex(tuple(self.rgb))
-
     @classmethod
     def query_for(cls, field, value):
         """[FilterNode('color', '=', 'pink')]"""
@@ -279,7 +238,9 @@ class Photo(ndb.Model):
         return query.get()
 
     def serialize(self):
-        data = self.to_dict(exclude=('blob_key', 'size', 'rgb', 'sat', 'lum', 'hue', 'year', 'author'))
+        data = self.to_dict(exclude=('blob_key', 'size', 'year',
+                                     'author',
+                                     'rgb', 'sat', 'lum', 'hue', 'color'))
         data.update({
             'kind': 'photo',
             'year': str(self.year),

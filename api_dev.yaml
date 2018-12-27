@@ -10,8 +10,6 @@ libraries:
   version: latest
 - name: ssl
   version: latest
-- name: numpy
-  version: latest
 
 handlers:
 - url: /.*
