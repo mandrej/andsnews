@@ -14,10 +14,6 @@ libraries:
   version: latest
 
 handlers:
-- url: /tests/.*
-  script: aeta.main.APP
-  secure: always
-
 - url: /.*
   script: main.app
   secure: always

@@ -18,10 +18,6 @@ libraries:
   version: latest
 
 handlers:
-- url: /tests/.*
-  script: aeta.main.APP
-  secure: always
-
 - url: /.*
   script: main.app
   secure: always
@@ -35,8 +31,6 @@ builtins:
 skip_files:
 - lib/PIL*
 - ^docs
-- ^client
-- ^p2
 - ^vue2
 - ^(.*/)?.*~$
 - ^(.*/)?\..*$

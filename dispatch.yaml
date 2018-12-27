@@ -2,8 +2,5 @@ dispatch:
 - url: "*/api/*"
   service: default
 
-- url: "*/tests/*"
-  service: default
-
 - url: "*/*"
   service: client

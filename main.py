@@ -1,5 +1,3 @@
-import datetime
-
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
