@@ -3,7 +3,7 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201812251530',
+    assetsVersion: '201812271142',
     workboxOptions: {
       runtimeCaching: [
         {
@@ -20,7 +20,7 @@ module.exports = {
             cacheName: 'data-cache',
             expiration: {
               maxEntries: 100,
-              maxAgeSeconds: 2 * 60 * 60
+              maxAgeSeconds: 3600
             },
             cacheableResponse: {
               statuses: [0, 200]

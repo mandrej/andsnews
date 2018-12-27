@@ -3,7 +3,7 @@ import datetime
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
-from views.api import CustomJSONEncoder, SearchPaginator, counters, counters_values, available_filters
+from views.api import CustomJSONEncoder, SearchPaginator, counters_values, available_filters
 from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Indexer, Builder, Unbound
 from views.models import Photo, slugify
@@ -81,7 +81,6 @@ def post():
         obj = Photo(headline=fs.filename, email=email)
         res = obj.add(fs)
         resList.append(res)
-    counters.cache_clear()
     return jsonify(resList)
 
 
@@ -101,7 +100,6 @@ def delete(safe_key):
     if key is None:
         abort(404)
     key.get().remove()
-    counters.cache_clear()
     return jsonify(True)
 
 

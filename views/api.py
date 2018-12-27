@@ -3,7 +3,6 @@ import time
 from operator import itemgetter
 
 import numpy as np
-from backports.functools_lru_cache import lru_cache
 from flask.json import JSONEncoder
 from google.appengine.api import users, search
 from google.appengine.ext import ndb
@@ -26,10 +25,9 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
-@lru_cache(maxsize=1)
-def counters(fields=PHOTO_FILTER):
+def counters():
     tmp = {}
-    for field in fields:
+    for field in PHOTO_FILTER:
         query = Counter.query(Counter.forkind == 'Photo', Counter.field == field)
         tmp[field] = [counter for counter in query if counter.count > 0]
     return tmp

@@ -38,7 +38,6 @@
 - six.py -> /home/milan/venv/andsnews/lib/python2.7/site-packages/six.py
 
 /lib
-backports -> /home/milan/venv/andsnews/lib/python2.7/site-packages/backports
 click -> /home/milan/venv/andsnews/lib/python2.7/site-packages/click/
 cloudstorage -> /home/milan/venv/andsnews/lib/python2.7/site-packages/cloudstorage/
 colormath -> /home/milan/venv/andsnews/lib/python2.7/site-packages/colormath
@@ -51,3 +50,4 @@ markupsafe -> /home/milan/venv/andsnews/lib/python2.7/site-packages/markupsafe/
 networkx -> /home/milan/venv/andsnews/lib/python2.7/site-packages/networkx
 numpy -> /home/milan/venv/andsnews/lib/python2.7/site-packages/numpy
 unidecode -> /home/milan/venv/andsnews/lib/python2.7/site-packages/unidecode/
+werkzeug -> /home/milan/venv/andsnews/lib/python2.7/site-packages/werkzeug/
