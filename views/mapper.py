@@ -10,8 +10,8 @@ from google.appengine.ext import ndb, deferred
 from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
-from models import Counter
-from views.models import Photo, sizeof_fmt
+from helpers import sizeof_fmt
+from models import Photo, Counter
 
 FCM = 'https://fcm.googleapis.com/fcm/send'
 HEADERS = {

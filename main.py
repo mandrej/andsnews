@@ -45,8 +45,29 @@ def notify():
     return jsonify(True)
 
 
+@app.route('/api/<verb>', methods=['POST'])
+def background_runner(verb):
+    token = request.json.get('token', None)
+    assert token is not None, 'Token cannot be null'
+
+    if verb == 'reindex':
+        runner = Indexer()
+    elif verb == 'unbound':
+        runner = Unbound()
+    elif verb == 'missing':
+        runner = Missing()
+    else:
+        return jsonify(False)
+
+    runner.KIND = Photo
+    runner.TOKEN = token
+    push_message(runner.TOKEN, START_MSG)
+    deferred.defer(runner.run, _queue='background')
+    return jsonify(True)
+
+
 @app.route('/api/<verb>/<field>', methods=['POST'])
-def background_runner(verb, field=None):
+def background_build(verb, field):
     token = request.json.get('token', None)
     assert token is not None, 'Token cannot be null'
 
@@ -55,12 +76,7 @@ def background_runner(verb, field=None):
         runner.VALUES = []
         runner.FIELD = field
     else:
-        if verb == 'reindex':
-            runner = Indexer()
-        elif verb == 'unbound':
-            runner = Unbound()
-        elif verb == 'missing':
-            runner = Missing()
+        return jsonify(False)
 
     runner.KIND = Photo
     runner.TOKEN = token
