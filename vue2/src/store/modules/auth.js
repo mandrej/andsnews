@@ -23,7 +23,7 @@ const initialState = {
 }
 const actions = {
   // reset: ({ commit }) => commit(RESET),
-  saveUser: ({ commit }, user) => {
+  saveUser: ({ commit, dispatch }, user) => {
     if (user && user.uid) {
       FB.database().ref('users').child(user.uid).set({
         email: user.email,
@@ -31,6 +31,7 @@ const actions = {
       })
     }
     commit('SAVE_USER', user)
+    dispatch('app/updateValuesEmail', user, { root: true })
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {

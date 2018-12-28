@@ -92,6 +92,9 @@ const actions = {
       .then(response => {
         commit('SET_VALUES', response.data)
       })
+  },
+  updateValuesEmail: ({ commit }, user) => {
+    commit('UPDATE_VALUES_EMAIL', user)
   }
 }
 const mutations = {
@@ -145,10 +148,12 @@ const mutations = {
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
-    state.values.email = [...new Set([...state.values.email, 1 * obj.email])]
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
     if (obj.model) state.values.model = [...new Set([...state.values.model, obj.model])]
+  },
+  UPDATE_VALUES_EMAIL (state, user) {
+    state.values.email = [...new Set([...state.values.email, user.email])]
   },
   SET_VALUES (state, data) {
     state.values = data
