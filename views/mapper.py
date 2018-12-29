@@ -257,7 +257,7 @@ class Fixer(Mapper):
             if 'sat' in entity._properties:
                 hit = True
                 del entity._properties['sat']
-            if 'rgb' in entity._properties:
+            if 'color' in entity._properties:
                 hit = True
                 del entity._properties['color']
             if 'crop_factor' in entity._properties:
