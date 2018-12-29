@@ -10,6 +10,9 @@
   "python.linting.pylintEnabled": true,
   "python.linting.pep8Args": ["--ignore=E501"],
   "files.exclude": {
-    "**/*.pyc": true
+    "**/*.pyc": true,
+    "docs": true,
+    "tests": true,
+    "graphql": true
   }
 }

@@ -50,24 +50,22 @@ class Counter(ndb.Model):
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)
+    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
     email = ndb.StringProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
     blob_key = ndb.BlobKeyProperty()
+    filename = ndb.StringProperty()  # /bucket/object
+
     size = ndb.IntegerProperty()
-    # EXIF data
+    dim = ndb.IntegerProperty(repeated=True)  # width, height
     model = ndb.StringProperty()
+    lens = ndb.StringProperty()
     aperture = ndb.FloatProperty()
     shutter = ndb.StringProperty()
     focal_length = ndb.FloatProperty()
     iso = ndb.IntegerProperty()
     date = ndb.DateTimeProperty()
     year = ndb.ComputedProperty(lambda self: self.date.year)
-    # added fields
-    lens = ndb.StringProperty()
-    # image dimension
-    dim = ndb.IntegerProperty(repeated=True)  # width, height
-    filename = ndb.StringProperty()  # /bucket/object
-    slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
 
     def index_doc(self):
         by_email = ''

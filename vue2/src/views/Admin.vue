@@ -40,7 +40,7 @@
 
           <h3 class="title">Counters</h3>
           <v-divider></v-divider>
-          <v-layout row v-for="field in keys(values)" :key="field">
+          <v-layout row v-for="field in Object.keys(values)" :key="field">
             <v-flex xs9>
               <v-layout align-center fill-height>
                 Rebuild for field {{field}}
@@ -167,9 +167,6 @@ export default {
     },
     send () {
       this.$store.dispatch('auth/sendNotifications', this.msg.default)
-    },
-    keys (values) {
-      return Object.keys(values)
     }
   }
 }

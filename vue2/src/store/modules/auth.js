@@ -31,7 +31,7 @@ const actions = {
       })
     }
     commit('SAVE_USER', user)
-    dispatch('app/updateValuesEmail', user, { root: true })
+    if (user.email) dispatch('app/updateValuesEmail', user, { root: true })
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
