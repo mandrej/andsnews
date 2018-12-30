@@ -2,6 +2,7 @@ import datetime
 import re
 import time
 import uuid
+import logging
 from cStringIO import StringIO
 
 import cloudstorage as gcs
@@ -11,6 +12,7 @@ from google.appengine.ext import ndb, deferred, blobstore
 
 from config import BUCKET, PHOTO_FILTER
 from helpers import slugify, tokenize, get_exif
+from werkzeug.utils import cached_property
 
 INDEX = search.Index(name='searchindex')
 
@@ -218,9 +220,16 @@ class Photo(ndb.Model):
         self.key.delete()
         return {'success': True}
 
-    @property
+    @cached_property
     def serving_url(self):
-        return images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        result = None
+        try:
+            gcs.stat(self.filename)
+            result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except gcs.NotFoundError:
+            logging.error('__NOTFOUND__,{},{}'.format(self.date.isoformat(), self.slug))
+
+        return result
 
     @classmethod
     def query_for(cls, field, value):
