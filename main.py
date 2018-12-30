@@ -95,8 +95,8 @@ def post():
     files = request.files.getlist('photos')
     for fs in files:
         obj = Photo(headline=fs.filename, email=email)
-        res = obj.add(fs)
-        resList.append(res)
+        response = obj.add(fs)
+        resList.append(response)
     return jsonify(resList)
 
 
@@ -106,8 +106,8 @@ def put(safe_key):
     if key is None:
         abort(404)
     obj = key.get()
-    res = obj.edit(request.json)
-    return jsonify(res)
+    response = obj.edit(request.json)
+    return jsonify(response)
 
 
 @app.route('/api/delete/<safe_key>', methods=['DELETE'])
@@ -115,8 +115,8 @@ def delete(safe_key):
     key = ndb.Key(urlsafe=safe_key)
     if key is None:
         abort(404)
-    res = key.get().remove()
-    return jsonify(res['success'])
+    response = key.get().remove()
+    return jsonify(response['success'])
 
 
 @app.route('/api/download/<safe_key>', methods=['GET'])
