@@ -1,11 +1,9 @@
 <template>
   <div>
-    <v-snackbar
+    <v-snackbar left bottom
       v-model="snackbar"
-      :timeout="timeout"
-      left
-      bottom>
-      {{ text }}
+      :timeout="timeout">
+      {{ message }}
       <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
@@ -116,21 +114,21 @@ export default {
   },
   mixins: [ common ],
   data: () => ({
-    text: '',
-    snackbar: false,
-    timeout: 6000,
     msg: {
       type: String,
       required: true,
       default: 'NEW IMAGES'
-    }
+    },
+    snackbar: false,
+    timeout: 6000,
+    message: ''
   }),
   created () {
     this.$store.dispatch('auth/fetchToken')
   },
   mounted () {
     messaging.onMessage(payload => {
-      this.text = payload.notification.body
+      this.message = payload.notification.body
       this.snackbar = true
     })
   },

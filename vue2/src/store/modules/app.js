@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 // export const RESET = 'RESET';
 import Vue from 'vue'
+import { EventBus } from '@/helpers/event-bus'
 
 const axios = Vue.axios
 const LIMIT = 24
@@ -49,10 +50,17 @@ const actions = {
       })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
-    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } }) // no response
-    commit('DELETE_RECORD', obj)
-    commit('DELETE_UPLOADED', obj)
-    dispatch('fetchMenu')
+    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } })
+      .then(response => {
+        if (response.data) {
+          EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
+          commit('DELETE_RECORD', obj)
+          commit('DELETE_UPLOADED', obj)
+          dispatch('fetchMenu')
+        } else {
+          EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
+        }
+      })
   },
   fetchMenu: ({ commit }) => {
     axios.get('counter/filters')
@@ -127,8 +135,10 @@ const mutations = {
     state.count = state.objects.length
   },
   UPDATE_RECORD (state, obj) {
-    const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
-    state.objects.splice(idx, 1, obj)
+    if (state.objects && state.objects.length) {
+      const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
+      state.objects.splice(idx, 1, obj)
+    }
   },
   RESET_RECORDS (state) {
     state.objects.length = 0

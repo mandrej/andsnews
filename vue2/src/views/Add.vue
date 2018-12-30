@@ -2,11 +2,10 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-snackbar
+    <v-snackbar left bottom
       v-model="snackbar"
-      :timeout="timeout"
-      left bottom>
-      Uploading {{fileCount}} images…
+      :timeout="timeout">
+      {{ message }}
       <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
@@ -84,6 +83,7 @@
 
 <script>
 import Vue from 'vue'
+import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
@@ -109,11 +109,17 @@ export default {
     uploadError: null,
     status: null,
     editForm: false,
+    value: 0,
     snackbar: false,
     timeout: 0,
-    value: 0
+    message: ''
   }),
   mounted () {
+    EventBus.$on('delete', message => {
+      this.message = message
+      this.timeout = 6000
+      this.snackbar = true
+    })
     this.reset()
   },
   computed: {
@@ -144,6 +150,8 @@ export default {
     },
     save (formData) {
       this.status = STATUS_SAVING
+      this.message = 'Uploading ' + this.fileCount + ' images…'
+      this.timeout = 0
       this.snackbar = true
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list

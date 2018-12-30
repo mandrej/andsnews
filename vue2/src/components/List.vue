@@ -2,6 +2,15 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
+    <v-snackbar left bottom
+      v-model="snackbar"
+      :timeout="timeout">
+      {{ message }}
+      <v-btn flat icon color="white" @click="snackbar = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
+
     <v-dialog v-model="confirm" max-width="300px" persistent lazy>
       <v-card>
         <v-card-title class="headline warning" primary-title>
@@ -61,6 +70,7 @@
 
 <script>
 import Vue from 'vue'
+import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import Photoswipe from 'vue-pswipe'
@@ -101,7 +111,10 @@ export default {
       duration: 300,
       offset: -144,
       easings: Object.keys(easings)
-    }
+    },
+    snackbar: false,
+    timeout: 6000,
+    message: ''
   }),
   computed: {
     ...mapState('auth', ['user']),
@@ -110,6 +123,12 @@ export default {
   created () {
     window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
+    })
+  },
+  mounted () {
+    EventBus.$on('delete', message => {
+      this.message = message
+      this.snackbar = true
     })
   },
   updated () {

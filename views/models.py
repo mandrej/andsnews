@@ -213,11 +213,10 @@ class Photo(ndb.Model):
         except gcs.NotFoundError:
             pass
 
-        time.sleep(3)
-
         deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
         self.key.delete()
+        return {'success': True}
 
     @property
     def serving_url(self):

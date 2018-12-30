@@ -115,8 +115,8 @@ def delete(safe_key):
     key = ndb.Key(urlsafe=safe_key)
     if key is None:
         abort(404)
-    key.get().remove()
-    return jsonify(True)
+    res = key.get().remove()
+    return jsonify(res['success'])
 
 
 @app.route('/api/download/<safe_key>', methods=['GET'])

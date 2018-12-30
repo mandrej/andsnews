@@ -1,11 +1,9 @@
 <template>
   <div>
-    <v-snackbar
+    <v-snackbar left bottom
       v-model="snackbar"
-      :timeout="timeout"
-      left
-      bottom>
-      {{ text }}
+      :timeout="timeout">
+      {{ message }}
       <v-btn flat icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
@@ -122,9 +120,6 @@ export default {
     isAuthorized: false,
     drawer: null,
     title: 'ANDрејевићи',
-    text: '',
-    snackbar: false,
-    timeout: 6000,
     empty: false,
     currentComponent: Menu,
     displayCount: 0,
@@ -133,7 +128,10 @@ export default {
       duration: 300,
       offset: -16,
       easings: Object.keys(easings)
-    }
+    },
+    snackbar: false,
+    timeout: 6000,
+    message: ''
   }),
   mounted () {
     this.isAuthorized = this.user && this.user.isAuthorized
@@ -143,7 +141,7 @@ export default {
       this.isAdmin = user && user.isAdmin
     })
     messaging.onMessage(payload => {
-      this.text = payload.notification.body
+      this.message = payload.notification.body
       this.snackbar = true
     })
     this.displayCount = this.count
