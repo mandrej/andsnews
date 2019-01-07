@@ -176,21 +176,26 @@ class Photo(ndb.Model):
     def edit(self, json):
         old_pairs = self.changed_pairs()
 
+        # fix empty values
+        values = map(lambda x: x if x != '' else None, json.values())
+        json = dict(zip(json.keys(), values))
+
         self.headline = json['headline']
         self.email = json['email']
         self.model = json['model']
         self.shutter = json['shutter']
         self.lens = json['lens']
 
-        values = map(lambda x: x if x != '' else None, json.values())
-        json = dict(zip(json.keys(), values))  # fix empty values
+        # fix tags
         if 'tags' in json:
             tags = json['tags']
         else:
             tags = []
-        self.tags = sorted(tags)  # fix tags
-        dt = json['date'].strip().split('.')[0]  # no millis
-        self.date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')  # fix date
+        self.tags = sorted(tags)
+
+        # fix date no millis
+        dt = json['date'].strip().split('.')[0]
+        self.date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
 
         if json['focal_length']:
             self.focal_length = round(float(json['focal_length']), 1)
