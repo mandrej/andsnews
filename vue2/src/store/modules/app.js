@@ -70,7 +70,7 @@ const actions = {
   },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
-    const filter = { ...state.filter }
+    const filter = state.filter
 
     if (filter && filter.field === 'search') {
       const url = [filter.field, filter.value].join('/')
