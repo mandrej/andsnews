@@ -29,7 +29,7 @@
       </v-card>
     </v-dialog>
 
-    <v-app>
+    <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column class="aperture" fill-height>
           <v-toolbar light class="aperture">
@@ -59,12 +59,12 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar app light class="aperture">
+      <v-toolbar v-if="filter.value" app light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-toolbar-title class="headline font-weight-light">{{title}}</v-toolbar-title>
         <v-layout slot="extension">
-          <v-toolbar-title v-if="filter.value" style="margin-left: -10px">
+          <v-toolbar-title style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
               <v-icon>close</v-icon>
             </v-btn>
@@ -74,6 +74,9 @@
           <v-progress-circular v-show="busy" color="secondary" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
+      <div v-else style="position: absolute; z-index: 2">
+        <v-toolbar-side-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-toolbar-side-icon>
+      </div>
 
       <v-content class="aperture" style="background-attachment: fixed">
         <transition name="fade" mode="out-in">
@@ -189,6 +192,9 @@ export default {
       if (this.currentComponent === List) {
         return this.displayCount
       }
+    },
+    onResize () {
+      EventBus.$emit('resize')
     }
   }
 }

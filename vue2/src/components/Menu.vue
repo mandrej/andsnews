@@ -1,14 +1,18 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-parallax :src="getImgSrc(menu[0])" height="440" light>
+  <div>
+    <v-parallax :src="getImgSrc(menu[0])" :height="height" light>
       <v-layout align-center column justify-center>
         <h1 class="display-2 font-weight-light mb-3">ANDрејевићи</h1>
         <h4 class="subheading text-xs-center">our photo album since 2007</h4>
+        <v-btn fab medium
+          color="white" class="mt-3 black--text" @click="$vuetify.goTo('#collection', options)">
+          <v-icon>keyboard_arrow_down</v-icon>
+        </v-btn>
       </v-layout>
     </v-parallax>
 
     <div style="position: relative">
-      <h1 class="headline font-weight-light text-xs-center mt-2">Filters</h1>
+      <h1 id="collection" class="headline font-weight-light text-xs-center mt-2">Collections</h1>
       <v-btn v-if="canAdd(user)"
         fab medium absolute bottom right
         style="bottom: 12px; z-index: 1"
@@ -16,40 +20,59 @@
         <v-icon>add</v-icon>
       </v-btn>
     </div>
-    <v-layout row wrap>
-      <v-flex xs12 sm6 md4 lg3 xl2
-        v-for="item in menu" :key="item.name">
-        <v-card light>
-          <v-img
-            cover
-            height="150px"
-            aspect-ratio="1"
-            style="cursor: pointer"
-            @click="showFilter(item)"
-            :src="getImgSrc(item, '400-c')">
-          </v-img>
-          <v-card-title @click="showFilter(item)" style="cursor: pointer">
-            <div>
-              <h3 class="title">{{justName(item)}}</h3>
-              <div>{{item.count}} photos</div>
-            </div>
-          </v-card-title>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+
+    <v-container fluid grid-list-lg>
+      <v-layout row wrap>
+        <v-flex xs12 sm6 md4 lg3 xl2
+          v-for="item in menu" :key="item.name">
+          <v-card light>
+            <v-img
+              cover
+              height="150px"
+              aspect-ratio="1"
+              style="cursor: pointer"
+              @click="showFilter(item)"
+              :src="getImgSrc(item, '400-c')">
+            </v-img>
+            <v-card-title @click="showFilter(item)" style="cursor: pointer">
+              <div>
+                <h3 class="title">{{justName(item)}}</h3>
+                <div>{{item.count}} photos</div>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
+import { EventBus } from '@/helpers/event-bus'
+import * as easings from 'vuetify/es5/util/easing-patterns'
 
 export default {
   name: 'Menu',
   mixins: [ common ],
+  data: () => ({
+    height: 0,
+    options: {
+      duration: 300,
+      offset: -16,
+      easings: Object.keys(easings)
+    }
+  }),
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['menu'])
+  },
+  mounted () {
+    this.height = document.documentElement.clientHeight - 104
+    EventBus.$on('resize', () => {
+      this.height = document.documentElement.clientHeight - 104
+    })
   },
   methods: {
     canAdd (user) {
