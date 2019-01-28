@@ -74,7 +74,7 @@
           <v-progress-circular v-show="busy" color="secondary" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
-      <div v-else style="position: absolute; z-index: 2">
+      <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">
         <v-toolbar-side-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-toolbar-side-icon>
       </div>
 

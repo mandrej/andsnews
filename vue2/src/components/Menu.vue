@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-parallax :src="getImgSrc(menu[0])" :height="height" light>
+    <v-parallax v-if="height" :src="getImgSrc(menu[0])" :height="height">
       <v-layout align-center column justify-center>
         <h1 class="display-2 font-weight-light mb-3">ANDрејевићи</h1>
         <h4 class="subheading text-xs-center">our photo album since 2007</h4>
-        <v-btn fab medium
-          color="white" class="mt-3 black--text" @click="$vuetify.goTo('#collection', options)">
-          <v-icon>keyboard_arrow_down</v-icon>
+        <v-btn dark icon class="mt-3"
+          @click="$vuetify.goTo('#collection', options)">
+          <v-icon large>arrow_downward</v-icon>
         </v-btn>
       </v-layout>
     </v-parallax>
@@ -57,7 +57,7 @@ export default {
   name: 'Menu',
   mixins: [ common ],
   data: () => ({
-    height: 0,
+    height: null,
     options: {
       duration: 300,
       offset: -16,
