@@ -75,8 +75,6 @@
 
         </v-container>
       </v-content>
-
-      <Footer/>
     </v-app>
   </div>
 </template>
@@ -98,8 +96,7 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
-    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
-    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
+    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [ common ],
   data: () => ({

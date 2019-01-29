@@ -19,17 +19,12 @@
         </v-responsive>
       </v-container>
     </v-content>
-
-    <Footer/>
   </v-app>
 </template>
 
 <script>
 export default {
   name: 'Err',
-  components: {
-    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
-  },
   props: ['title', 'text']
 }
 </script>

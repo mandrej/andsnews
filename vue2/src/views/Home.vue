@@ -45,6 +45,7 @@
 
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
+          <p class="caption text-xs-center px-3">ANDS &copy; 2007-{{version}}</p>
 
           <v-list v-if="isAdmin" light style="background: transparent">
             <v-list-tile @click="$router.push({ name: 'admin' })">
@@ -84,13 +85,15 @@
         </transition>
       </v-content>
 
-      <Footer>
-        <template slot="gotop">
-          <v-btn fab small flat @click="$vuetify.goTo(0, options)">
+      <v-footer height="auto" app inset>
+        <v-layout>
+          <v-spacer></v-spacer>
+           <v-btn fab flat small @click="$vuetify.goTo(0, options)">
             <v-icon>arrow_upward</v-icon>
           </v-btn>
-        </template>
-      </Footer>
+          <v-spacer></v-spacer>
+        </v-layout>
+      </v-footer>
    </v-app>
   </div>
 </template>
@@ -112,7 +115,6 @@ export default {
   name: 'Home',
   components: {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
-    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer'),
     Menu,
     List,
     Find
@@ -151,7 +153,10 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error'])
+    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error']),
+    version () {
+      return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+    }
   },
   watch: {
     count: function (val) {

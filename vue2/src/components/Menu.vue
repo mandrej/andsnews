@@ -1,13 +1,10 @@
 <template>
   <div>
     <v-parallax v-if="height" :src="getImgSrc(menu[0])" :height="height">
-      <v-layout align-center column justify-center>
-        <h1 class="display-2 font-weight-light mb-3">ANDрејевићи</h1>
-        <h4 class="subheading text-xs-center">our photo album since 2007</h4>
-        <v-btn dark icon class="mt-3"
-          @click="$vuetify.goTo('#collection', options)">
-          <v-icon large>arrow_downward</v-icon>
-        </v-btn>
+      <v-layout dark align-center column justify-center @click="$vuetify.goTo('#collection', options)">
+        <h1 class="display-2 font-weight-light">ANDрејевићи</h1>
+        <h4 class="subheading mb-3">our photo album since 2007</h4>
+        <v-icon dark large>arrow_downward</v-icon>
       </v-layout>
     </v-parallax>
 

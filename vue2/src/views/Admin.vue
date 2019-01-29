@@ -93,8 +93,6 @@
           </v-layout> -->
         </v-container>
       </v-content>
-
-      <Footer/>
     </v-app>
   </div>
 </template>
@@ -109,9 +107,6 @@ const messaging = firebase.messaging()
 
 export default {
   name: 'Admin',
-  components: {
-    'Footer': () => import(/* webpackChunkName: "footer" */ '@/components/Footer')
-  },
   mixins: [ common ],
   data: () => ({
     msg: {
