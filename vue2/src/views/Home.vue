@@ -45,16 +45,19 @@
 
           <Find class="mt-2" style="background: transparent"></Find>
           <v-spacer></v-spacer>
-          <p class="caption text-xs-center px-3">ANDS &copy; 2007-{{version}}</p>
 
-          <v-list v-if="isAdmin" light style="background: transparent">
-            <v-list-tile @click="$router.push({ name: 'admin' })">
+          <v-list light style="background: transparent">
+            <v-list-tile v-if="isAdmin" @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>Admin</v-list-tile-title>
               </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-action></v-list-tile-action>
+              <v-list-tile-content>2007-{{version}}</v-list-tile-content>
             </v-list-tile>
           </v-list>
         </v-layout>
