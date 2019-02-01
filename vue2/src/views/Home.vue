@@ -37,9 +37,8 @@
             <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
             <span v-else style="padding-right: 1em">sign-in</span>
             <SignIn></SignIn>
-            <v-layout slot="extension" row justify-space-between>
-              <v-toolbar-title class="headline">{{total}}</v-toolbar-title>
-              <v-toolbar-title class="headline">{{counter()}}</v-toolbar-title>
+            <v-layout slot="extension" justify-end row>
+              <v-toolbar-title class="subheading">{{counter()}}</v-toolbar-title>
             </v-layout>
           </v-toolbar>
 
@@ -54,10 +53,6 @@
               <v-list-tile-content>
                 <v-list-tile-title>Admin</v-list-tile-title>
               </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-action></v-list-tile-action>
-              <v-list-tile-content>2007-{{version}}</v-list-tile-content>
             </v-list-tile>
           </v-list>
         </v-layout>
@@ -198,7 +193,9 @@ export default {
     },
     counter () {
       if (this.currentComponent === List) {
-        return this.displayCount
+        return this.displayCount + '/' + this.total
+      } else {
+        return '2007-' + this.version
       }
     },
     onResize () {
