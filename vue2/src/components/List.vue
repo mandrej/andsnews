@@ -75,7 +75,6 @@ import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
-import * as easings from 'vuetify/es5/util/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1
@@ -107,11 +106,6 @@ export default {
     current: {},
     editForm: false,
     index: 0,
-    scrollOptions: {
-      duration: 300,
-      offset: -144,
-      easings: Object.keys(easings)
-    },
     snackbar: false,
     timeout: 6000,
     message: ''

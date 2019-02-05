@@ -105,7 +105,7 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from 'firebase/app'
 import 'firebase/messaging'
-import * as easings from 'vuetify/es5/util/easing-patterns'
+import * as easings from 'vuetify/es5/components/Vuetify/goTo/easing-patterns'
 
 const messaging = firebase.messaging()
 
@@ -129,7 +129,7 @@ export default {
     interval: false,
     options: {
       duration: 300,
-      offset: -16,
+      offset: 0,
       easings: Object.keys(easings)
     },
     snackbar: false,

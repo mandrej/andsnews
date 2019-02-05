@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-parallax v-if="height" :src="getImgSrc(menu[0])" :height="height">
-      <v-layout dark align-center column justify-center @click="$vuetify.goTo('#collection', options)">
+      <v-layout dark align-center column justify-center
+        @click="$vuetify.goTo('#collection', options)"
+        style="cursor: pointer">
         <h1 class="display-2 font-weight-light">ANDрејевићи</h1>
         <h4 class="subheading mb-3">{{total}} photos in our album since 2007</h4>
         <v-icon dark large>arrow_downward</v-icon>
@@ -48,7 +50,7 @@
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
-import * as easings from 'vuetify/es5/util/easing-patterns'
+import * as easings from 'vuetify/es5/components/Vuetify/goTo/easing-patterns'
 
 export default {
   name: 'Menu',
@@ -57,7 +59,7 @@ export default {
     height: null,
     options: {
       duration: 300,
-      offset: -16,
+      offset: 0,
       easings: Object.keys(easings)
     }
   }),

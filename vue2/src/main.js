@@ -12,6 +12,7 @@ import configureStore from './store'
 Vue.prototype.$admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
 
 Vue.config.productionTip = false
+Vue.config.performance = process.env.NODE_ENV !== 'production'
 
 new Vue({
   router,
