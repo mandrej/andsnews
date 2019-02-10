@@ -137,6 +137,12 @@ export default {
     message: ''
   }),
   mounted () {
+    window.addEventListener('online', this.updateOnlineStatus)
+    window.addEventListener('offline', this.updateOnlineStatus)
+    EventBus.$on('status', msg => {
+      this.message = msg
+      this.snackbar = true
+    })
     this.isAuthorized = this.user && this.user.isAuthorized
     this.isAdmin = this.user && this.user.isAdmin
     EventBus.$on('signin', user => {
@@ -188,6 +194,9 @@ export default {
     }
   },
   methods: {
+    updateOnlineStatus (event) {
+      EventBus.$emit('status', 'You are ' + event.type)
+    },
     clearFilter () {
       this.$router.push({ name: 'home' })
     },

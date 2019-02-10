@@ -36,17 +36,26 @@
                     <v-combobox
                       label="Tags"
                       :items="values.tags"
+                      :search-input.sync="search"
                       v-model="tmp.tags"
                       chips
                       multiple
+                      hide-selected
                       clearable>
                       <template slot="selection" slot-scope="data">
                         <v-chip
                           close
                           :selected="data.selected"
-                          @input="data.parent.selectItem(data.item)">
-                          <strong>{{ data.item }}</strong>&nbsp;
-                        </v-chip>
+                          @input="remove(data.item)">{{ data.item }}</v-chip>
+                      </template>
+                      <template slot="no-data">
+                        <v-list-tile>
+                          <v-list-tile-content>
+                            <v-list-tile-title>
+                              No results matching "<strong>{{ search }}</strong>". Press <kbd>enter</kbd> to create a new one
+                            </v-list-tile-title>
+                          </v-list-tile-content>
+                        </v-list-tile>
                       </template>
                     </v-combobox>
                   </v-flex>
@@ -161,7 +170,8 @@ export default {
     menuDate: false,
     menuTime: false,
     dateTime: {},
-    tmp: {}
+    tmp: {},
+    search: null
   }),
   computed: {
     ...mapState('auth', ['user']),

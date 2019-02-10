@@ -19,14 +19,13 @@
             v-model="tmp.tags"
             chips
             multiple
+            hide-selected
             clearable>
             <template slot="selection" slot-scope="data">
               <v-chip
                 close
                 :selected="data.selected"
-                @input="data.parent.selectItem(data.item)">
-                <strong>{{ data.item }}</strong>&nbsp;
-              </v-chip>
+                @input="remove(data.item)">{{ data.item }}</v-chip>
             </template>
           </v-autocomplete>
         </v-flex>
