@@ -24,8 +24,10 @@
             <template slot="selection" slot-scope="data">
               <v-chip
                 close
+                :key="data.item"
                 :selected="data.selected"
-                @input="remove(data.item)">{{ data.item }}</v-chip>
+                class="v-chip--select-multi"
+                @input="data.parent.selectItem(data.item)">{{ data.item }}</v-chip>
             </template>
           </v-autocomplete>
         </v-flex>
