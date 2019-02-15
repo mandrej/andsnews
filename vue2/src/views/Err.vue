@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar app dark class="aperture" color="error">
+    <v-toolbar app dark class="aperture" color="secondary">
       <v-btn icon @click="$router.push({ name: 'home' })">
         <v-icon>home</v-icon>
       </v-btn>
@@ -12,8 +12,8 @@
         <v-responsive height="200px">
           <v-container fill-height>
             <v-layout column justify-center align-center>
-              <v-icon x-large color="seconadry">error</v-icon>
-              <h3 class="title">{{text}}</h3>
+              <v-icon x-large color="error">error</v-icon>
+              <h3 class="title error--text">{{text}}</h3>
             </v-layout>
           </v-container>
         </v-responsive>
@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-responsive {
-  outline: 2px dashed #BDBDBD;
+  outline: 2px dashed #FF1744;
   & h3 {
     padding-top: 1em;
     text-align: center;

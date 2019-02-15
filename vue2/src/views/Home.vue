@@ -32,7 +32,7 @@
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column class="aperture" fill-height>
-          <v-toolbar light class="aperture">
+          <v-toolbar dark class="aperture" color="secondary">
             <v-spacer></v-spacer>
             <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
             <span v-else style="padding-right: 1em">sign-in</span>
@@ -42,7 +42,7 @@
             </v-layout>
           </v-toolbar>
 
-          <Find class="mt-2" style="background: transparent"></Find>
+          <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
           <v-list light style="background: transparent">
@@ -58,7 +58,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar v-if="filter.value" app light class="aperture">
+      <v-toolbar v-if="filter.value" app dark class="aperture" color="secondary">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-toolbar-title class="headline font-weight-light">{{title}}</v-toolbar-title>
@@ -70,7 +70,7 @@
             {{filter.value}}
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-progress-circular v-show="busy" color="secondary" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
+          <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         </v-layout>
       </v-toolbar>
       <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">

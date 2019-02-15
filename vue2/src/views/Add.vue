@@ -12,7 +12,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app light class="aperture">
+      <v-toolbar app dark class="aperture" color="secondary">
         <v-btn icon @click="$router.push({ name: 'home' })">
           <v-icon>arrow_back</v-icon>
         </v-btn>
@@ -200,7 +200,7 @@ export default {
 
 <style scoped>
 .v-responsive {
-  outline: 2px dashed #BDBDBD;
+  outline: 2px dashed #37474F;
   cursor: pointer;
 }
 .input-file {

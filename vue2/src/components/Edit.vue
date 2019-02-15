@@ -1,16 +1,16 @@
 <template>
   <v-dialog
     v-model="show"
-    lazy fullscreen hide-overlay scrollable
+    lazy scrollable
+    max-width="800"
     transition="dialog-bottom-transition">
     <v-card tile light>
-      <v-toolbar light class="aperture">
+      <v-toolbar dark color="secondary">
+        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Change</v-btn>
+        <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
-        <v-toolbar-title class="headline">Edit</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
       </v-toolbar>
       <v-card-text>
         <v-container grid-list-lg>

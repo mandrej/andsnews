@@ -10,7 +10,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app light class="aperture">
+      <v-toolbar app dark class="aperture" color="secondary">
         <v-btn icon @click="$router.push({ name: 'home' })">
           <v-icon>home</v-icon>
         </v-btn>
