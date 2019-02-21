@@ -61,7 +61,7 @@
       <v-toolbar v-if="filter.value" app dark class="aperture" color="secondary">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
-        <v-toolbar-title class="headline font-weight-light">{{title}}</v-toolbar-title>
+        <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-layout slot="extension">
           <v-toolbar-title style="margin-left: -10px">
             <v-btn icon @click="clearFilter">
@@ -122,7 +122,6 @@ export default {
     isAdmin: false,
     isAuthorized: false,
     drawer: null,
-    title: 'ANDрејевићи',
     empty: false,
     currentComponent: Menu,
     displayCount: 0,
