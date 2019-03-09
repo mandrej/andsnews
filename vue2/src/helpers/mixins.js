@@ -18,6 +18,9 @@ const common = {
     }
   },
   methods: {
+    formatDate (iso) {
+      return iso.replace('T', ' ').substring(0, 16)
+    },
     getImgSrc (rec, size) {
       // size: '400-c'
       const suffix = (size) ? '=s' + size : '=s0'

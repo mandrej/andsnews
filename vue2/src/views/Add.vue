@@ -61,7 +61,7 @@
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{item.date | moment('lll')}}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{formatDate(item.date)}}</v-list-tile-sub-title>
                 </v-list-tile-content>
                 <v-list-tile-action>
                   <v-layout row>
@@ -85,7 +85,6 @@ import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
-Vue.use(require('vue-moment'))
 const axios = Vue.axios
 
 const STATUS_INITIAL = 0
