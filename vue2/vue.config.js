@@ -17,7 +17,7 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201903092043',
+    assetsVersion: '201903101045',
     workboxOptions: {
       runtimeCaching: [
         {
@@ -79,7 +79,7 @@ function addStyleResource (rule) {
     .loader('style-resources-loader')
     .options({
       patterns: [
-        path.resolve(__dirname, './src/styles/imports.styl'),
+        path.resolve(__dirname, './src/styles/imports.styl')
       ]
     })
 }
