@@ -24,6 +24,8 @@ export default {
   background-repeat: no-repeat;
   background-position: -10px -60px;
   background-size: 500px;
+  background-attachment: fixed;
+  background-color: #f5f5f5;
 }
 /* Add, Edit, Admin back icon button */
 .v-toolbar__title:not(:first-child) {

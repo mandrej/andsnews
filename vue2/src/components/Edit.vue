@@ -5,14 +5,14 @@
     max-width="800"
     transition="dialog-bottom-transition">
     <v-card tile light>
-      <v-toolbar dark color="secondary">
-        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Change</v-btn>
+      <v-toolbar flat light>
+        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-card-text>
+      <v-card-text style="background-color: #f5f5f5">
         <v-container grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>

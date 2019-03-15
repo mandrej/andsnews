@@ -10,14 +10,14 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app dark class="aperture" color="secondary">
+      <v-toolbar app flat light class="aperture">
         <v-btn icon @click="$router.push({ name: 'home' })">
           <v-icon>home</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-toolbar>
 
-      <v-content>
+      <v-content class="aperture">
         <v-container mt-4>
           <h3 class="title">Messaging</h3>
           <v-layout row>

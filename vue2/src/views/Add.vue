@@ -12,14 +12,14 @@
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app dark class="aperture" color="secondary">
+      <v-toolbar app flat light class="aperture">
         <v-btn icon @click="$router.push({ name: 'home' })">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Add</v-toolbar-title>
       </v-toolbar>
 
-      <v-content>
+      <v-content class="aperture">
         <v-container>
           <v-responsive height="120px" class="mb-3">
             <input type="file" multiple
