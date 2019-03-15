@@ -23,7 +23,7 @@
       <v-layout row wrap>
         <v-flex xs12 sm6 md4 lg3 xl2
           v-for="item in menu" :key="item.name">
-          <v-card light>
+          <v-card flat light>
             <v-img
               cover
               height="150px"

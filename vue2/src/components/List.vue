@@ -34,7 +34,7 @@
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2
             v-for="item in objects" :key="item.safekey">
-            <v-card light class="card">
+            <v-card flat light class="card">
               <img
                 v-lazy="getImgSrc(item, '400-c')"
                 :title="caption(item)"
