@@ -32,7 +32,7 @@
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed floating style="background-color: #f5f5f5">
         <v-layout column class="aperture" fill-height>
-          <v-toolbar flat light class="aperture">
+          <v-toolbar flat light style="background: transparent">
             <v-spacer></v-spacer>
             <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
             <span v-else style="padding-right: 1em">sign-in</span>
