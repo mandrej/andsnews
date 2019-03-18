@@ -10,7 +10,7 @@
     </v-parallax>
 
     <div style="position: relative">
-      <h1 id="collection" class="headline font-weight-light text-xs-center mt-3">Collections</h1>
+      <h1 class="headline font-weight-light text-xs-center mt-3">Collections</h1>
       <v-btn v-if="canAdd(user)"
         fab medium absolute bottom right
         style="bottom: 20px; z-index: 1"
