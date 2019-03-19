@@ -163,6 +163,7 @@ export default {
           this.$store.dispatch('app/fetchRecords')
           this.currentComponent = List
         } else {
+          this.$store.dispatch('app/saveFindForm', {})
           this.$store.dispatch('app/changeFilter', {})
           this.$store.dispatch('app/fetchMenu')
           this.currentComponent = Menu
