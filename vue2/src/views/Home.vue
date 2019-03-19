@@ -37,15 +37,15 @@
             <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
             <span v-else style="padding-right: 1em">sign-in</span>
             <SignIn></SignIn>
-            <v-layout slot="extension" justify-end row>
-              <v-toolbar-title class="subheading">{{counter()}}</v-toolbar-title>
-            </v-layout>
           </v-toolbar>
 
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
           <v-list light style="background: transparent">
+            <v-list-tile>
+              <v-list-tile-content class="caption">© 2007-{{version}}</v-list-tile-content>
+            </v-list-tile>
             <v-list-tile v-if="isAdmin" @click="$router.push({ name: 'admin' })">
               <v-list-tile-action>
                 <v-icon>settings</v-icon>
@@ -61,17 +61,8 @@
       <v-toolbar v-if="filter.value" app flat light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
+        <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
-        <v-layout slot="extension">
-          <v-toolbar-title style="margin-left: -10px">
-            <v-btn icon @click="clearFilter">
-              <v-icon>close</v-icon>
-            </v-btn>
-            {{filter.value}}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
-        </v-layout>
       </v-toolbar>
       <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">
         <v-toolbar-side-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-toolbar-side-icon>
@@ -124,8 +115,6 @@ export default {
     drawer: null,
     empty: false,
     currentComponent: Menu,
-    displayCount: 0,
-    interval: false,
     options: {
       duration: 300,
       offset: 0,
@@ -152,11 +141,10 @@ export default {
       this.message = payload.notification.body
       this.snackbar = true
     })
-    this.displayCount = this.count
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'filter', 'count', 'total', 'error']),
+    ...mapState('app', ['busy', 'filter', 'count', 'error']),
     version () {
       return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
     }
@@ -164,15 +152,6 @@ export default {
   watch: {
     count: function (val) {
       this.empty = val === 0
-      // https://stackoverflow.com/questions/35531629/vuejs-animate-number-changes
-      clearInterval(this.interval)
-      this.interval = setInterval(() => {
-        if (this.displayCount !== val) {
-          let change = (val - this.displayCount) / 10
-          change = change >= 0 ? Math.ceil(change) : Math.floor(change)
-          this.displayCount += change
-        }
-      }, 20)
     },
     qs: {
       handler: function (val) {
@@ -198,13 +177,6 @@ export default {
     },
     clearFilter () {
       this.$router.push({ name: 'home' })
-    },
-    counter () {
-      if (this.currentComponent === List) {
-        return this.displayCount + '/' + this.total
-      } else {
-        return '2007-' + this.version
-      }
     },
     onResize () {
       EventBus.$emit('resize')

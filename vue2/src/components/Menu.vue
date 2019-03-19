@@ -72,10 +72,19 @@ export default {
     },
     showFilter (rec) {
       const sep = '"'
-      const value = (rec.field_name === 'email')
-        ? rec.field_name + ':' + sep + this.getName(rec.name) + sep
-        : rec.field_name + ':' + sep + rec.name + sep
-      this.$router.push({ name: 'list', params: { 'qs': value } })
+      const tmp = {}
+      switch (rec.field_name) {
+        case 'email':
+          tmp[rec.field_name] = this.getName(rec.name)
+          break
+        case 'tags':
+          tmp[rec.field_name] = [rec.name]
+          break
+        default:
+          tmp[rec.field_name] = rec.name
+      }
+      this.$store.dispatch('app/saveFindForm', tmp)
+      this.$router.push({ name: 'list', params: { 'qs': rec.field_name + ':' + sep + tmp[rec.field_name] + sep } })
     },
     justName (rec) {
       return (rec.field_name === 'email') ? 'by ' + this.getName(rec.name) : rec.name

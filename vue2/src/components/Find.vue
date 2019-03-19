@@ -1,15 +1,14 @@
 <template>
   <v-card tile light flat>
     <v-card-text>
-      <v-btn @click="submit" block flat>
-        Search photos
-        <v-icon right dark>search</v-icon>
-      </v-btn>
       <v-layout row wrap>
-        <v-flex xs12 class="hidden-xs-only">
+        <v-flex xs12>
           <v-text-field
             label="by text"
             v-model="tmp.text"
+            @keyup.native.enter="submit"
+            @change="submit"
+            @click:clear="submit"
             clearable></v-text-field>
         </v-flex>
         <v-flex xs12>
@@ -21,6 +20,8 @@
             multiple
             hide-selected
             deletable-chips
+            @change="submit"
+            @click:clear="submit"
             clearable>
           </v-autocomplete>
         </v-flex>
@@ -29,6 +30,8 @@
             label="by year"
             :items="values.year"
             v-model="tmp.year"
+            @change="submit"
+            @click:clear="submit"
             clearable></v-select>
         </v-flex>
         <v-flex xs12>
@@ -36,6 +39,8 @@
             label="by month"
             :items="months"
             v-model="tmp.month"
+            @change="submit"
+            @click:clear="submit"
             clearable></v-select>
         </v-flex>
         <v-flex xs12>
@@ -43,6 +48,8 @@
             label="by camera model"
             :items="values.model"
             v-model="tmp.model"
+            @change="submit"
+            @click:clear="submit"
             clearable></v-autocomplete>
         </v-flex>
         <v-flex xs12>
@@ -50,6 +57,8 @@
             label="by author"
             :items="names"
             v-model="tmp.email"
+            @change="submit"
+            @click:clear="submit"
             clearable></v-autocomplete>
         </v-flex>
       </v-layout>
