@@ -58,7 +58,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar v-if="filter.value" app flat light class="aperture">
+      <v-toolbar v-if="qs" app flat light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
@@ -144,7 +144,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'filter', 'count', 'error']),
+    ...mapState('app', ['busy', 'count', 'error']),
     version () {
       return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
     }

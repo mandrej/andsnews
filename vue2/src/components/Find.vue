@@ -118,7 +118,6 @@ export default {
           delete this.tmp[key]
         }
       })
-
       this.$store.dispatch('app/saveFindForm', this.tmp)
       const value = params.join(' AND ')
 
