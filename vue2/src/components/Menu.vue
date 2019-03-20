@@ -71,7 +71,6 @@ export default {
       return user.isAuthorized
     },
     showFilter (rec) {
-      const sep = '"'
       const tmp = {}
       switch (rec.field_name) {
         case 'email':
@@ -84,7 +83,7 @@ export default {
           tmp[rec.field_name] = rec.name
       }
       this.$store.dispatch('app/saveFindForm', tmp)
-      this.$router.push({ name: 'list', params: { 'qs': rec.field_name + ':' + sep + tmp[rec.field_name] + sep } })
+      this.$router.push({ name: 'list', params: { 'qs': this.query(tmp) } })
     },
     justName (rec) {
       return (rec.field_name === 'email') ? 'by ' + this.getName(rec.name) : rec.name

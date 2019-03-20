@@ -92,37 +92,17 @@ export default {
   },
   methods: {
     submit () {
-      let params = []
-      const sep = '"' // because of tags:b&w -> tags:"b&w"
-
-      function wrap (key, value) {
-        if (key === 'text') {
-          params.push(sep + value.toLowerCase() + sep)
-        } else {
-          params.push(key + ':' + sep + value + sep)
-        }
-      }
-
+      // remove undefined and empty list
       Object.keys(this.tmp).forEach(key => {
-        if (key === 'tags') {
-          this.tmp[key].forEach(tag => {
-            wrap(key, tag)
-          })
-        } else {
-          if (this.tmp[key]) {
-            wrap(key, this.tmp[key])
-          }
-        }
-        // remove undefined and empty list
         if (this.tmp[key] == null || this.tmp[key].length === 0) {
           delete this.tmp[key]
         }
       })
       this.$store.dispatch('app/saveFindForm', this.tmp)
-      const value = params.join(' AND ')
 
-      if (value) {
-        this.$router.push({ name: 'list', params: { 'qs': value } })
+      const qs = this.query(this.tmp)
+      if (qs) {
+        this.$router.push({ name: 'list', params: { 'qs': qs } })
       } else {
         this.$router.push({ name: 'home' })
       }

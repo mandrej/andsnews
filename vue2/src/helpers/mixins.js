@@ -18,6 +18,30 @@ const common = {
     }
   },
   methods: {
+    query (dict) {
+      let params = []
+      const sep = '"' // because of tags:b&w -> tags:"b&w"
+
+      function wrap (key, value) {
+        if (key === 'text') {
+          params.push(sep + value.toLowerCase() + sep)
+        } else {
+          params.push(key + ':' + sep + value + sep)
+        }
+      }
+      Object.keys(dict).forEach(key => {
+        if (key === 'tags') {
+          dict[key].forEach(tag => {
+            wrap(key, tag)
+          })
+        } else {
+          if (dict[key]) {
+            wrap(key, dict[key])
+          }
+        }
+      })
+      return params.join(' AND ')
+    },
     formatDate (iso) {
       return iso.replace('T', ' ').substring(0, 16)
     },
