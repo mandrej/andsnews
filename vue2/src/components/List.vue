@@ -30,6 +30,12 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg>
+      <v-btn v-if="canAdd(user)"
+        fab medium fixed bottom right
+        style="bottom: 25px; z-index: 3"
+        color="accent" class="black--text" @click="$router.push({ name: 'add' })">
+        <v-icon>add</v-icon>
+      </v-btn>
       <Photoswipe>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2
@@ -144,6 +150,9 @@ export default {
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
       return visible + scrollY + this.distance >= pageHeight
+    },
+    canAdd (user) {
+      return user.isAuthorized
     },
     canEdit (user) {
       return user.isAuthorized

@@ -13,7 +13,7 @@
 
     <v-app>
       <v-toolbar app flat light class="aperture">
-        <v-btn icon @click="$router.push({ name: 'home' })">
+        <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Add</v-toolbar-title>

@@ -13,7 +13,7 @@
       <h1 class="headline font-weight-light text-xs-center mt-3">Collections</h1>
       <v-btn v-if="canAdd(user)"
         fab medium absolute bottom right
-        style="bottom: 20px; z-index: 1"
+        style="bottom: 20px"
         color="accent" class="black--text" @click="$router.push({ name: 'add' })">
         <v-icon>add</v-icon>
       </v-btn>
