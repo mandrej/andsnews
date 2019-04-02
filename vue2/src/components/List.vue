@@ -29,7 +29,7 @@
       </v-card>
     </v-dialog>
 
-    <v-container fluid grid-list-lg>
+    <v-container fluid grid-list-lg class="pa-3">
       <v-btn v-if="canAdd(user)"
         fab medium fixed bottom right
         style="bottom: 25px; z-index: 3"
@@ -185,7 +185,6 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  margin-bottom: 16px;
   img {
     opacity: 0;
     display: block;

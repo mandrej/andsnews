@@ -19,7 +19,7 @@
       </v-btn>
     </div>
 
-    <v-container fluid grid-list-lg>
+    <v-container fluid grid-list-lg class="pa-3">
       <v-layout row wrap>
         <v-flex xs12 sm6 md4 lg3 xl2
           v-for="item in menu" :key="item.name">
