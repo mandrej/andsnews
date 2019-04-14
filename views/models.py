@@ -171,7 +171,12 @@ class Photo(ndb.Model):
 
             new_pairs = self.changed_pairs()
             deferred.defer(self.update_filters, new_pairs, [], _queue='background')
-            return {'success': True, 'rec': self.serialize()}
+
+            obj = self.serialize()
+            if obj:
+                return {'success': True, 'rec': obj}
+            else:
+                return {'success': False, 'message': 'Something went wrong'}
 
     def edit(self, json):
         old_pairs = self.changed_pairs()
@@ -209,7 +214,12 @@ class Photo(ndb.Model):
         new_pairs = self.changed_pairs()
         deferred.defer(self.index_doc, _queue='background')
         deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
-        return {'success': True, 'rec': self.serialize()}
+
+        obj = self.serialize()
+        if obj:
+            return {'success': True, 'rec': obj}
+        else:
+            return {'success': False, 'message': 'Something went wrong'}
 
     def remove(self):
         old_pairs = self.changed_pairs()
@@ -231,6 +241,8 @@ class Photo(ndb.Model):
         try:
             gcs.stat(self.filename)
             result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+        except images.TransformationError:
+            logging.error('__NO_IMAGE__,{},{}'.format(self.date.isoformat(), self.slug))
         except gcs.NotFoundError:
             logging.error('__NOTFOUND__,{},{}'.format(self.date.isoformat(), self.slug))
 
@@ -249,12 +261,14 @@ class Photo(ndb.Model):
         return query.get()
 
     def serialize(self):
-        data = self.to_dict(exclude=('blob_key', 'size', 'year',
-                                     'author', 'rgb', 'sat', 'lum', 'hue', 'color'))
-        data.update({
-            'kind': 'photo',
-            'year': str(self.year),
-            'safekey': self.key.urlsafe(),
-            'serving_url': self.serving_url
-        })
-        return data
+        if self.serving_url:
+            data = self.to_dict(exclude=('blob_key', 'size', 'year', 'author',
+                                         'rgb', 'sat', 'lum', 'hue', 'color'))
+            data.update({
+                'kind': 'photo',
+                'year': str(self.year),
+                'safekey': self.key.urlsafe(),
+                'serving_url': self.serving_url
+            })
+            return data
+        return None
