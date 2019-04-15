@@ -166,6 +166,8 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
             # SAVE EVERYTHING
+            image_from_buffer = Image.open(StringIO(_buffer))
+            self.dim = image_from_buffer.size
             self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 

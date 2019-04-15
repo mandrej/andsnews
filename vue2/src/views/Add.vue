@@ -84,6 +84,7 @@ import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
+// import { VList } from 'vuetify/lib/components/VList'
 
 const axios = Vue.axios
 
@@ -95,6 +96,7 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
+    // VList,
     'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [ common ],
