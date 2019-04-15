@@ -58,7 +58,7 @@
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout row>
+          <!-- <v-layout row>
             <v-flex xs9>
               <v-layout align-center fill-height>
                 Remove google.appengine.api.users
@@ -67,7 +67,7 @@
             <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
-          </v-layout>
+          </v-layout> -->
 
           <h3 class="title">Cloud</h3>
           <v-divider></v-divider>
@@ -81,7 +81,7 @@
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
-          <!-- <v-layout row>
+          <v-layout row>
             <v-flex xs9>
               <v-layout align-center fill-height>
                 Remove images in datastore that are missing in the Cloud
@@ -90,7 +90,7 @@
             <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="missing">Missing</v-btn>
             </v-flex>
-          </v-layout> -->
+          </v-layout>
         </v-container>
       </v-content>
     </v-app>
