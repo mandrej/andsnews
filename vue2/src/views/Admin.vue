@@ -58,16 +58,16 @@
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="reindex">Reindex</v-btn>
             </v-flex>
           </v-layout>
-          <!-- <v-layout row>
+          <v-layout row>
             <v-flex xs9>
               <v-layout align-center fill-height>
-                Remove google.appengine.api.users
+                Add picture dimension
               </v-layout>
             </v-flex>
             <v-flex xs3 class="text-xs-right">
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
-          </v-layout> -->
+          </v-layout>
 
           <h3 class="title">Cloud</h3>
           <v-divider></v-divider>

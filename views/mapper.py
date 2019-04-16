@@ -12,6 +12,8 @@ from google.appengine.runtime import DeadlineExceededError
 from config import BUCKET, END_MSG, FIREBASE
 from helpers import sizeof_fmt
 from models import Photo, Counter
+from cStringIO import StringIO
+from PIL import Image
 
 FCM = 'https://fcm.googleapis.com/fcm/send'
 HEADERS = {
@@ -241,29 +243,10 @@ class Fixer(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
-            hit = False
-            if 'author' in entity._properties:
-                hit = True
-                del entity._properties['author']
-            if 'rgb' in entity._properties:
-                hit = True
-                del entity._properties['rgb']
-            if 'hue' in entity._properties:
-                hit = True
-                del entity._properties['hue']
-            if 'lum' in entity._properties:
-                hit = True
-                del entity._properties['lum']
-            if 'sat' in entity._properties:
-                hit = True
-                del entity._properties['sat']
-            if 'color' in entity._properties:
-                hit = True
-                del entity._properties['color']
-            if 'crop_factor' in entity._properties:
-                hit = True
-                del entity._properties['crop_factor']
-            if hit:
+            if len(entity.dim) == 0:
+                _buffer = entity.buffer
+                image_from_buffer = Image.open(StringIO(_buffer))
+                entity.dim = image_from_buffer.size
                 entity.put()
                 push_message(self.TOKEN, entity.slug)
 

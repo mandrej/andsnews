@@ -1,8 +1,11 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import Vuetify, { VList } from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
 
 Vue.use(Vuetify, {
+  components: {
+    VList
+  },
   theme: {
     primary: '#BDBDBD', // grey lighten-1
     secondary: '#37474F', // blue-grey darken-3

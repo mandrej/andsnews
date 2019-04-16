@@ -55,7 +55,7 @@
           <v-slide-y-transition v-if="uploaded.length > 0" hide-on-leave group tag="v-list" two-line>
             <template v-for="(item, i) in uploaded">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-              <v-list-tile avatar :key="item.safekey">
+              <v-list-tile avatar :key="i">
                 <v-list-tile-avatar>
                   <img :src="getImgSrc(item, '400-c')" :alt="item.slug">
                 </v-list-tile-avatar>
@@ -84,7 +84,6 @@ import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
-// import { VList } from 'vuetify/lib/components/VList'
 
 const axios = Vue.axios
 
@@ -96,7 +95,6 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
-    // VList,
     'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [ common ],
