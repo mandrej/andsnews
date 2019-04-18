@@ -148,8 +148,9 @@ class Photo(ndb.Model):
             object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
+
+        # Write to GCS
         try:
-            # Write to GCS
             write_retry_params = gcs.RetryParams(backoff_factor=1.1)
             with gcs.open(object_name, 'w', content_type=fs.content_type, retry_params=write_retry_params) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
@@ -251,7 +252,6 @@ class Photo(ndb.Model):
     def serving_url(self):
         result = None
         try:
-            gcs.stat(self.filename)
             result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
         except images.TransformationError:
             logging.error('__NO_IMAGE__,{},{}'.format(self.date.isoformat(), self.slug))
