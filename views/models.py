@@ -178,7 +178,17 @@ class Photo(ndb.Model):
             if obj:
                 return {'success': True, 'rec': obj}
             else:
-                return {'success': False, 'message': 'Something went wrong'}
+                # remove file and record
+                try:
+                    gcs.delete(self.filename)
+                except gcs.NotFoundError:
+                    pass
+
+                old_pairs = self.changed_pairs()
+                deferred.defer(self.update_filters, [], old_pairs, _queue='background')
+                self.key.delete()
+
+                return {'success': False, 'message': 'Something went wrong. Picture not uploaded'}
 
     def edit(self, json):
         old_pairs = self.changed_pairs()

@@ -153,8 +153,13 @@ export default {
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
-            this.uploadedFiles.push(item.rec)
-            this.$store.dispatch('app/addRecord', item.rec)
+            if (item.success) {
+              // this.message = item.rec.filename + ' uploaded.'
+              this.uploadedFiles.push(item.rec)
+              this.$store.dispatch('app/addRecord', item.rec)
+            } else {
+              this.message = item.message
+            }
           }
         ))
         .then(() => {
