@@ -102,7 +102,6 @@ export default {
     current: {},
     uploadedFiles: [],
     fileCount: 0,
-    uploadError: null,
     status: null,
     editForm: false,
     value: 0,
@@ -138,7 +137,6 @@ export default {
     reset () {
       this.status = STATUS_INITIAL
       this.uploadedFiles = []
-      this.uploadError = null
       this.value = 0
     },
     progress (event) {
@@ -149,12 +147,13 @@ export default {
       this.message = 'Uploading ' + this.fileCount + ' images…'
       this.timeout = 0
       this.snackbar = true
+      let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
-            if (item.success) {
-              // this.message = item.rec.filename + ' uploaded.'
+            success = item.success
+            if (success) {
               this.uploadedFiles.push(item.rec)
               this.$store.dispatch('app/addRecord', item.rec)
             } else {
@@ -163,12 +162,12 @@ export default {
           }
         ))
         .then(() => {
-          this.snackbar = false
+          if (success) this.snackbar = false
           this.status = STATUS_SUCCESS
           this.reset()
         })
         .catch(err => {
-          this.uploadError = err.response
+          this.message = err.response
           this.status = STATUS_FAILED
         })
     },

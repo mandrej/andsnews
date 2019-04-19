@@ -255,8 +255,6 @@ class Photo(ndb.Model):
             result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
         except images.TransformationError:
             logging.error('__NO_IMAGE__,{},{}'.format(self.date.isoformat(), self.slug))
-        except gcs.NotFoundError:
-            logging.error('__NOTFOUND__,{},{}'.format(self.date.isoformat(), self.slug))
 
         return result
 
