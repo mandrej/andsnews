@@ -39,6 +39,7 @@ else
         api)
           sed -i -E "/target/s/[[:digit:]]{12}/$api_version/g" "queue.yaml"
           gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api.yaml index.yaml dos.yaml queue.yaml
+          # gcloud datastore indexes cleanup index.yaml
           exit ;;
         client)
           gcloud app deploy --project=$proj_id --version=$client_version vue2.yaml
