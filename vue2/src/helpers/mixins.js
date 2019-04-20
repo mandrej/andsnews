@@ -18,7 +18,7 @@ const common = {
     }
   },
   methods: {
-    query (dict) {
+    linearize (dict) {
       let params = []
       const sep = '"' // because of tags:b&w -> tags:"b&w"
 

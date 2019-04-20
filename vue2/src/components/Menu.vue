@@ -83,7 +83,7 @@ export default {
           tmp[rec.field_name] = rec.name
       }
       this.$store.dispatch('app/saveFindForm', tmp)
-      this.$router.push({ name: 'list', params: { 'qs': this.query(tmp) } })
+      this.$router.push({ name: 'list', params: { 'qs': this.linearize(tmp) } })
     },
     justName (rec) {
       return (rec.field_name === 'email') ? 'by ' + this.getName(rec.name) : rec.name
