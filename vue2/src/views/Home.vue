@@ -154,22 +154,16 @@ export default {
       this.empty = val === 0
     },
     qs: {
+      immediate: true,
       handler: function (val) {
         if (val) {
-          this.$store.dispatch('app/changeFilter', {
-            field: 'search',
-            value: val
-          })
-          this.$store.dispatch('app/fetchRecords')
+          this.$store.dispatch('app/changeFilter', { reset: true })
           this.currentComponent = List
         } else {
-          this.$store.dispatch('app/saveFindForm', {})
-          this.$store.dispatch('app/changeFilter', {})
-          this.$store.dispatch('app/fetchMenu')
+          this.$store.dispatch('app/changeFilter', { reset: false })
           this.currentComponent = Menu
         }
-      },
-      immediate: true
+      }
     }
   },
   methods: {

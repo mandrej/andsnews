@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 // export const RESET = 'RESET';
 import Vue from 'vue'
+import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
 
 const axios = Vue.axios
@@ -8,7 +9,6 @@ const LIMIT = 24
 
 const initialState = {
   find: {},
-  filter: {},
   uploaded: [],
 
   menu: [],
@@ -27,12 +27,15 @@ const initialState = {
 const actions = {
   // reset: ({ commit }) => commit(RESET),
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
-  changeFilter: ({ commit }, payload) => {
-    commit('CHANGE_FILTER', payload)
-    if (payload.field) {
+  changeFilter: ({ commit, dispatch }, payload) => {
+    if (payload.reset) {
       commit('SET_CLEAR', true)
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
+      dispatch('fetchRecords')
+    } else {
+      dispatch('saveFindForm', {})
+      dispatch('fetchMenu')
     }
   },
   addRecord: ({ commit }, obj) => {
@@ -70,10 +73,10 @@ const actions = {
   },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
-    const filter = state.filter
+    const search = common.methods.linearize(state.find)
 
-    if (filter && filter.field === 'search') {
-      const url = [filter.field, filter.value].join('/')
+    if (Object.keys(state.find).length) {
+      const url = ['search', search].join('/')
       const params = { per_page: LIMIT }
       if (state.next) params._page = state.next
 
@@ -109,9 +112,6 @@ const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_FIND_FORM (state, payload) {
     state.find = payload
-  },
-  CHANGE_FILTER (state, payload) {
-    state.filter = payload
   },
   UPDATE_MENU (state, data) {
     state.total = data.count
