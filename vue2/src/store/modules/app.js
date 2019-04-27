@@ -1,11 +1,30 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 // export const RESET = 'RESET';
 import Vue from 'vue'
-import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
 
 const axios = Vue.axios
 const LIMIT = 24
+
+function linearize (dict) {
+  let params = []
+
+  function wrap (key, value) {
+    params.push(key + '=' + encodeURIComponent(value))
+  }
+  Object.keys(dict).forEach(key => {
+    if (key === 'tags') {
+      dict[key].forEach(tag => {
+        wrap(key, tag)
+      })
+    } else {
+      if (dict[key]) {
+        wrap(key, dict[key])
+      }
+    }
+  })
+  return params.join('&')
+}
 
 const initialState = {
   find: {},
@@ -73,16 +92,14 @@ const actions = {
   },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
-    const search = common.methods.linearize(state.find)
-
     if (Object.keys(state.find).length) {
-      const url = ['search', search].join('/')
-      const params = { per_page: LIMIT }
+      let params = Object.assign({}, state.find, { per_page: LIMIT })
       if (state.next) params._page = state.next
+      const url = 'search?' + linearize(params)
 
       commit('SET_ERROR', '')
       commit('SET_BUSY', true)
-      axios.get(url, { params: params })
+      axios.get(url)
         .then(response => {
           if (state.clear) {
             commit('RESET_RECORDS')

@@ -21,16 +21,32 @@ def collection(col):
         })
 
 
-@app.route('/api/search/<find>', methods=['GET'])
-def search(find):
+@app.route('/api/search', methods=['GET'])
+def search():
+    params = []
     page = request.args.get('_page', None)
     per_page = int(request.args.get('per_page', LIMIT))
+
+    for key in ('text', 'tags', 'year', 'month', 'model', 'email'):
+        if key == 'text':
+            val = request.args.get(key, None)
+            if val:
+                params.append(val)
+        elif key == 'tags':
+            for tag in request.args.getlist('tags'):
+                params.append('{}:{}'.format(key, tag))
+        else:
+            val = request.args.get(key, None)
+            if val:
+                params.append('{}:{}'.format(key, val))
+
+    find = ' AND '.join(params)
     paginator = SearchPaginator(find, per_page=per_page)
     objects, _, token, error = paginator.page(page)
 
     return jsonify({
         'objects': objects,
-        'filter': {'field': 'search', 'value': find.strip()},
+        'filter': {'field': 'search', 'value': find},
         '_page': page if page else 'FP',
         '_next': token,
         'error': error

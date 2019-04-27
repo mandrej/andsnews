@@ -100,9 +100,8 @@ export default {
       })
       this.$store.dispatch('app/saveFindForm', this.tmp)
 
-      const qs = this.linearize(this.tmp)
-      if (qs) {
-        this.$router.push({ name: 'list', params: { 'qs': qs } })
+      if (Object.keys(this.tmp).length) {
+        this.$router.push({ name: 'list', query: this.tmp })
       } else {
         this.$router.push({ name: 'home' })
       }

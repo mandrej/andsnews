@@ -30,10 +30,17 @@ export default new Router({
       component: Home
     },
     {
-      path: '/list/:qs',
+      path: '/list',
       name: 'list',
       component: Home,
-      props: true
+      props: route => ({
+        text: route.query.text,
+        tags: route.query.tags,
+        year: route.query.year,
+        month: route.query.month,
+        model: route.query.model,
+        email: route.query.email
+      })
     },
     {
       path: '/add',

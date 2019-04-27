@@ -58,7 +58,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar v-if="qs" app flat light class="aperture">
+      <v-toolbar v-if="text || tags || year || month || model || email" app flat light class="aperture">
         <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
@@ -108,7 +108,7 @@ export default {
     List,
     Find
   },
-  props: ['qs'],
+  props: ['text', 'tags', 'year', 'month', 'model', 'email'],
   data: () => ({
     isAdmin: false,
     isAuthorized: false,
@@ -153,10 +153,10 @@ export default {
     count: function (val) {
       this.empty = val === 0
     },
-    qs: {
+    '$route.query': {
       immediate: true,
       handler: function (val) {
-        if (val) {
+        if (Object.keys(val).length) {
           this.$store.dispatch('app/changeFilter', { reset: true })
           this.currentComponent = List
         } else {
