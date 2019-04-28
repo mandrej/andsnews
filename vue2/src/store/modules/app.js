@@ -93,7 +93,7 @@ const actions = {
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
     if (Object.keys(state.find).length) {
-      let params = Object.assign({}, state.find, { per_page: LIMIT })
+      const params = Object.assign({}, state.find, { per_page: LIMIT })
       if (state.next) params._page = state.next
       const url = 'search?' + linearize(params)
 
