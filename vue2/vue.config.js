@@ -17,7 +17,14 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201904291044',
+    assetsVersion: '201904292016',
+    iconPaths: {
+      favicon32: 'static/img/icons/favicon-32x32.png',
+      favicon16: 'static/img/icons/favicon-16x16.png',
+      appleTouchIcon: 'static/img/icons/apple-touch-icon-152x152.png',
+      // maskIcon: 'static/img/icons/safari-pinned-tab.svg',
+      msTileImage: 'static/img/icons/msapplication-icon-144x144.png'
+    },
     workboxOptions: {
       runtimeCaching: [
         {
