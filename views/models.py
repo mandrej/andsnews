@@ -151,8 +151,7 @@ class Photo(ndb.Model):
 
         # Write to GCS
         try:
-            write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-            with gcs.open(object_name, 'w', content_type=fs.content_type, retry_params=write_retry_params) as f:
+            with gcs.open(object_name, 'w', content_type=fs.content_type) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
             # <class 'google.appengine.api.datastore_types.BlobKey'> or None
             self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
