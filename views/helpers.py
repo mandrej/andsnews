@@ -39,7 +39,7 @@ def tokenize(phrase):
     for word in phrase.split('-'):
         for i in range(3, len(word) + 1):
             res.append(word[:i])
-    return ' '.join(res)
+    return res
 
 
 def get_exif(buff):

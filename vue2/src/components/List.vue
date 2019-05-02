@@ -50,7 +50,7 @@
                 <div>
                   <h3 class="title">{{item.headline}}</h3>
                   <div>{{formatDate(item.date)}}</div>
-                  <div>by {{getName(item.email)}}</div>
+                  <div>by {{item.nick}}</div>
                 </div>
               </v-card-title>
               <v-card-actions class="pt-0 px-3 pb-3">

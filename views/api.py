@@ -5,8 +5,10 @@ import time
 from operator import itemgetter
 
 from flask.json import JSONEncoder
-from google.appengine.api import users, search
+from google.appengine.api import users, search, datastore_errors
+# TODO remove search api
 from google.appengine.ext import ndb
+from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
 
 from config import PERCENTILE
@@ -21,6 +23,7 @@ class CustomJSONEncoder(JSONEncoder):
         elif isinstance(obj, datetime.datetime):
             return obj.isoformat()
         elif isinstance(obj, users.User):
+            # TODO remove users api
             return obj.email()
         return JSONEncoder.default(self, obj)
 
@@ -66,47 +69,18 @@ def available_filters():
     return [x for x in collection if x['show']]
 
 
-class SearchPaginator(object):
-    def __init__(self, querystring, per_page):
-        self.querystring = unidecode(unicode(querystring))
+class Paginator(object):
+    def __init__(self, query, per_page):
+        self.query = query
         self.per_page = per_page
 
-        self.options = {
-            'limit': self.per_page,
-            'ids_only': True,
-            'sort_options': search.SortOptions(
-                expressions=[
-                    search.SortExpression(
-                        expression='stamp',
-                        direction=search.SortExpression.DESCENDING,
-                        default_value=time.mktime(datetime.datetime(1970, 1, 1).timetuple()))
-                ]
-            )
-        }
-
     def page(self, token=None):
-        objects, next_token, number_found, error = [], None, 0, None
-        if token is not None:
-            self.options['cursor'] = search.Cursor(web_safe_string=token)
-        else:
-            self.options['cursor'] = search.Cursor()
+        error = None
+        try:
+            cursor = Cursor(urlsafe=token)
+        except datastore_errors.BadValueError:
+            error = 'Bad token'
 
-        if self.querystring:
-            try:
-                query = search.Query(
-                    query_string=self.querystring,
-                    options=search.QueryOptions(**self.options)
-                )
-                found = INDEX.search(query)
-                results = found.results
-            except search.Error as e:
-                error = e.message
-            else:
-                number_found = found.number_found
-                keys = [ndb.Key(urlsafe=doc.doc_id) for doc in results]
-                objects = ndb.get_multi(keys)
-
-                if found.cursor is not None:
-                    next_token = found.cursor.web_safe_string
-
-        return objects, number_found, next_token, error
+        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+        next_token = cursor.urlsafe() if has_next else None
+        return objects, next_token, error

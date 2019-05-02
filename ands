@@ -26,7 +26,7 @@ else
   case $1 in
     devel)
       $python $dev_appserver --port=6060 --storage_path=$storage \
-      --support_datastore_emulator=True --enable_console=True $home/work/$proj_dir/api_dev.yaml
+      --support_datastore_emulator=true --enable_console=true $home/work/$proj_dir/api_dev.yaml
       # vue ui
       exit ;;
     build)

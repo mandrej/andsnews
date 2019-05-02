@@ -67,25 +67,11 @@ class Photo(ndb.Model):
     focal_length = ndb.FloatProperty()
     iso = ndb.IntegerProperty()
     date = ndb.DateTimeProperty()
-    year = ndb.ComputedProperty(lambda self: self.date.year)
 
-    def index_doc(self):
-        by_email = ''
-        if self.email:
-            by_email = ' '.join(re.match('([^@]+)', self.email).group().split('.'))
-        doc = search.Document(
-            doc_id=self.key.urlsafe(),
-            fields=[
-                search.TextField(name='slug', value=tokenize(self.slug)),
-                search.TextField(name='email', value=by_email),
-                search.TextField(name='tags', value=' '.join(self.tags)),
-                search.NumberField(name='year', value=self.year),
-                search.NumberField(name='month', value=self.date.month),
-                search.TextField(name='model', value=self.model),
-                search.NumberField(name='stamp', value=time.mktime(self.date.timetuple()))
-            ]
-        )
-        INDEX.put(doc)
+    year = ndb.ComputedProperty(lambda self: self.date.year)
+    month = ndb.ComputedProperty(lambda self: self.date.month)
+    nick = ndb.ComputedProperty(lambda self: re.match('([^@]+)', self.email).group().split('.')[0])
+    text = ndb.ComputedProperty(lambda self: tokenize(self.slug), repeated=True)
 
     def update_filters(self, new_pairs, old_pairs):
         futures = []
@@ -224,7 +210,6 @@ class Photo(ndb.Model):
         self.put()
 
         new_pairs = self.changed_pairs()
-        deferred.defer(self.index_doc, _queue='background')
         deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
 
         obj = self.serialize()
@@ -242,7 +227,6 @@ class Photo(ndb.Model):
         except gcs.NotFoundError:
             pass
 
-        deferred.defer(remove_doc, self.key.urlsafe(), _queue='background')
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
         self.key.delete()
         return {'success': True}
@@ -271,11 +255,9 @@ class Photo(ndb.Model):
 
     def serialize(self):
         if self.serving_url:
-            data = self.to_dict(exclude=('blob_key', 'size', 'year', 'author',
-                                         'rgb', 'sat', 'lum', 'hue', 'color'))
+            data = self.to_dict(exclude=('blob_key', 'size', 'year', 'month', 'text'))
             data.update({
                 'kind': 'photo',
-                'year': str(self.year),
                 'safekey': self.key.urlsafe(),
                 'serving_url': self.serving_url
             })

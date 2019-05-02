@@ -1,9 +1,9 @@
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
-from views.api import CustomJSONEncoder, SearchPaginator, counters_values, available_filters
+from views.api import CustomJSONEncoder, Paginator, counters_values, available_filters
 from views.config import LIMIT, START_MSG
-from views.mapper import push_message, Missing, Indexer, Builder, Unbound, Fixer
+from views.mapper import push_message, Missing, Builder, Unbound, Fixer
 from views.models import Photo, slugify
 
 app = Flask(__name__)
@@ -23,30 +23,29 @@ def collection(col):
 
 @app.route('/api/search', methods=['GET'])
 def search():
-    params = []
     page = request.args.get('_page', None)
     per_page = int(request.args.get('per_page', LIMIT))
+    query = Photo.query()
 
-    for key in ('text', 'tags', 'year', 'month', 'model', 'email'):
-        if key == 'text':
+    for key in ('text', 'tags', 'year', 'month', 'model', 'nick'):
+        if key == 'year' or key == 'month':
             val = request.args.get(key, None)
             if val:
-                params.append(val)
+                query = query.filter(Photo._properties[key] == int(val))
         elif key == 'tags':
             for tag in request.args.getlist('tags'):
-                params.append('{}:{}'.format(key, tag))
+                query = query.filter(Photo._properties[key] == tag)
         else:
             val = request.args.get(key, None)
             if val:
-                params.append('{}:{}'.format(key, val))
+                query = query.filter(Photo._properties[key] == val)
 
-    find = ' AND '.join(params)
-    paginator = SearchPaginator(find, per_page=per_page)
-    objects, _, token, error = paginator.page(page)
+    query = query.order(-Photo.date)
+    paginator = Paginator(query, per_page=per_page)
+    objects, token, error = paginator.page(page)
 
     return jsonify({
         'objects': objects,
-        'filter': {'field': 'search', 'value': find},
         '_page': page if page else 'FP',
         '_next': token,
         'error': error
@@ -66,9 +65,7 @@ def background_runner(verb):
     token = request.json.get('token', None)
     assert token is not None, 'Token cannot be null'
 
-    if verb == 'reindex':
-        runner = Indexer()
-    elif verb == 'unbound':
+    if verb == 'unbound':
         runner = Unbound()
     elif verb == 'missing':
         runner = Missing()

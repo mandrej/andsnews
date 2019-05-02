@@ -11,7 +11,7 @@ from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
 from helpers import sizeof_fmt
-from models import Photo, Counter
+from models import Photo, Counter, remove_doc
 from cStringIO import StringIO
 from PIL import Image
 
@@ -111,22 +111,6 @@ class Mapper(object):
             deferred.defer(self._continue, start_key, batch_size, _queue='background')
             return
         self.finish()
-
-
-class Indexer(Mapper):
-    TOKEN = None
-
-    def map(self, entity):
-        return [entity], []
-
-    def _batch_write(self):
-        for entity in self.to_put:
-            entity.index_doc()
-            push_message(self.TOKEN, entity.slug)
-        self.to_put = []
-
-    def finish(self):
-        push_message(self.TOKEN, END_MSG)
 
 
 class Missing(Mapper):
@@ -243,12 +227,12 @@ class Fixer(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
-            if len(entity.dim) == 0:
-                _buffer = entity.buffer
-                image_from_buffer = Image.open(StringIO(_buffer))
-                entity.dim = image_from_buffer.size
-                entity.put()
-                push_message(self.TOKEN, entity.slug)
+            # 0
+            remove_doc(entity.key.urlsafe())
+            # 1
+            entity.put()
+            # 2 rebuild nick
+            push_message(self.TOKEN, entity.slug)
 
         self.to_put = []
 

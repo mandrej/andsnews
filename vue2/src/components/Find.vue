@@ -55,8 +55,8 @@
         <v-flex xs12>
           <v-autocomplete
             label="by author"
-            :items="names"
-            v-model="tmp.email"
+            :items="values.nick"
+            v-model="tmp.nick"
             @change="submit"
             @click:clear="submit"
             clearable></v-autocomplete>
@@ -85,9 +85,6 @@ export default {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
       return arr
-    },
-    names () {
-      return this.values.email.map(email => this.getName(email))
     }
   },
   methods: {

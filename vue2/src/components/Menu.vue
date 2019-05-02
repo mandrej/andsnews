@@ -73,9 +73,6 @@ export default {
     showFilter (rec) {
       const tmp = {}
       switch (rec.field_name) {
-        case 'email':
-          tmp[rec.field_name] = this.getName(rec.name)
-          break
         case 'tags':
           tmp[rec.field_name] = [rec.name]
           break
@@ -86,7 +83,7 @@ export default {
       this.$router.push({ name: 'list', query: tmp })
     },
     justName (rec) {
-      return (rec.field_name === 'email') ? 'by ' + this.getName(rec.name) : rec.name
+      return (rec.field_name === 'nick') ? 'by ' + rec.name : rec.name
     }
   }
 }
