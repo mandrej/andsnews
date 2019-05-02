@@ -1,9 +1,5 @@
 indexes:
-- kind: "Photo"
-  properties:
-  - name: "year"
-  - name: "date"
-    direction: desc
+# 6,1 = 6 OK
 - kind: "Photo"
   properties:
   - name: "text"
@@ -12,244 +8,105 @@ indexes:
 - kind: "Photo"
   properties:
   - name: "tags"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "year"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "nick"
+  - name: "date"
+    direction: desc
+
+
+# 6,2 = 15 OK
+- kind: "Photo"
+  properties:
   - name: "text"
+  - name: "tags"
   - name: "date"
     direction: desc
 - kind: "Photo"
   properties:
   - name: "tags"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
   - name: "text"
-  - name: "year"
+  - name: "month"
   - name: "date"
     direction: desc
 - kind: "Photo"
   properties:
   - name: "month"
-  - name: "tags"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
   - name: "text"
-  - name: "year"
+  - name: "model"
   - name: "date"
     direction: desc
 - kind: "Photo"
   properties:
-  - name: "model"
-  - name: "month"
   - name: "tags"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
   - name: "text"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
   - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "tags"
-  - name: "text"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "text"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "nick"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "nick"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "nick"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "nick"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "nick"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "nick"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
   - name: "month"
   - name: "date"
     direction: desc
 - kind: "Photo"
   properties:
-  - name: "month"
-  - name: "text"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "nick"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "text"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "nick"
-  - name: "text"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "nick"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "month"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
-  - name: "tags"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "nick"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "nick"
-  - name: "tags"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "model"
   - name: "nick"
   - name: "year"
   - name: "date"
@@ -262,38 +119,331 @@ indexes:
     direction: desc
 - kind: "Photo"
   properties:
+  - name: "year"
   - name: "model"
-  - name: "month"
-  - name: "text"
   - name: "date"
     direction: desc
+
+
+# 6,3 = 20 OK
 - kind: "Photo"
   properties:
-  - name: "month"
+  - name: "text"
   - name: "tags"
-  - name: "text"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
-  - name: "month"
-  - name: "text"
   - name: "year"
   - name: "date"
     direction: desc
 - kind: "Photo"
   properties:
+  - name: "tags"
   - name: "model"
-  - name: "year"
-  - name: "date"
-    direction: desc
-- kind: "Photo"
-  properties:
   - name: "nick"
-  - name: "tags"
-  - name: "text"
   - name: "date"
     direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "year"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "year"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+
+
+# 6,4 = 15 missing 3
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "model"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+
+
+# 6,5 = 6 extra 1
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+
+
+# 6,6 = 1
+- kind: "Photo"
+  properties:
+  - name: "text"
+  - name: "tags"
+  - name: "year"
+  - name: "month"
+  - name: "model"
+  - name: "nick"
+  - name: "date"
+    direction: desc
+
 
 # AUTOGENERATED
 
@@ -301,3 +451,4 @@ indexes:
 # emulator detects that a new type of query is run. If you want to manage the
 # index.yaml file manually, remove the "# AUTOGENERATED" marker line above.
 # If you want to manage some indexes manually, move them above the marker line.
+
