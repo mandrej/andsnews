@@ -7,12 +7,12 @@ const axios = Vue.axios
 const LIMIT = 24
 
 function linearize (dict) {
-  let params = []
+  const params = []
 
   function wrap (key, value) {
     params.push(key + '=' + encodeURIComponent(value))
   }
-  Object.keys(dict).forEach(key => {
+  Object.keys(dict).sort().forEach(key => {
     if (key === 'tags') {
       dict[key].forEach(tag => {
         wrap(key, tag)

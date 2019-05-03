@@ -5,8 +5,7 @@ import time
 from operator import itemgetter
 
 from flask.json import JSONEncoder
-from google.appengine.api import users, search, datastore_errors
-# TODO remove search api
+from google.appengine.api import users, datastore_errors
 from google.appengine.ext import ndb
 from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
