@@ -12,7 +12,7 @@ from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
 
 from config import PERCENTILE
-from models import Counter, INDEX
+from models import Counter
 
 
 class CustomJSONEncoder(JSONEncoder):

@@ -11,9 +11,7 @@ from google.appengine.runtime import DeadlineExceededError
 
 from config import BUCKET, END_MSG, FIREBASE
 from helpers import sizeof_fmt
-from models import Photo, Counter, remove_doc
-from cStringIO import StringIO
-from PIL import Image
+from models import Photo, Counter
 
 FCM = 'https://fcm.googleapis.com/fcm/send'
 HEADERS = {
@@ -227,11 +225,7 @@ class Fixer(Mapper):
 
     def _batch_write(self):
         for entity in self.to_put:
-            # 0
-            remove_doc(entity.key.urlsafe())
-            # 1
-            entity.put()
-            # 2 rebuild nick
+            # entity.put()
             push_message(self.TOKEN, entity.slug)
 
         self.to_put = []

@@ -1,20 +1,17 @@
 import datetime
 import re
-import time
 import uuid
 import logging
 from cStringIO import StringIO
 
 import cloudstorage as gcs
 from PIL import Image
-from google.appengine.api import search, images
+from google.appengine.api import images
 from google.appengine.ext import ndb, deferred, blobstore
 
 from config import BUCKET, PHOTO_FILTER
 from helpers import slugify, tokenize, get_exif
 from werkzeug.utils import cached_property
-
-INDEX = search.Index(name='searchindex')
 
 
 def filter_param(field, value):
@@ -27,10 +24,6 @@ def filter_param(field, value):
         value = int(value)
 
     return {field: value}
-
-
-def remove_doc(safe_key):
-    INDEX.delete(safe_key)
 
 
 class Counter(ndb.Model):
