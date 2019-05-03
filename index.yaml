@@ -1,6 +1,11 @@
 indexes:
 - kind: "Photo"
   properties:
+  - name: "email"
+  - name: "date"
+    direction: desc
+- kind: "Photo"
+  properties:
   - name: "text"
   - name: "date"
     direction: desc
