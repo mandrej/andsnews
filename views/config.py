@@ -17,7 +17,7 @@ DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 START_MSG = '*** START ***'
 END_MSG = '*** END ***'
 
-PHOTO_FILTER = ['year', 'tags', 'model', 'email', 'nick']
+PHOTO_FILTER = ['year', 'tags', 'model', 'email']
 LIMIT = 24
 PERCENTILE = 80
 

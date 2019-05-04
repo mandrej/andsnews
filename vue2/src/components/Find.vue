@@ -55,7 +55,7 @@
         <v-flex xs12>
           <v-autocomplete
             label="by author"
-            :items="values.nick"
+            :items="nicks"
             v-model="tmp.nick"
             @change="submit"
             @click:clear="submit"
@@ -68,11 +68,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
 
 export default {
   name: 'Find',
-  mixins: [ common ],
   created () {
     this.$store.dispatch('app/fetchValues')
   },
@@ -85,6 +83,11 @@ export default {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
       return arr
+    },
+    nicks () {
+      return this.values.email.map(email => {
+        return email.match(/[^@]+/)[0].split('.')[0]
+      })
     }
   },
   methods: {
