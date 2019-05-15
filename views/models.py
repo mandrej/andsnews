@@ -119,7 +119,7 @@ class Photo(ndb.Model):
         """
         werkzeug.datastructures.FileStorage(stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
         """
-        _buffer = fs.stream.getvalue()
+        _buffer = fs.stream.read()
         # Check GCS stat exist first
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         try:
