@@ -63,16 +63,12 @@ export default new Router({
       }
     },
     {
-      path: '/404',
-      component: Err,
-      props: {
-        title: '404 Not found',
-        text: 'Requested page cannot be found'
-      }
-    },
-    {
       path: '*',
-      redirect: '/404'
+      component: Err,
+      props: route => ({
+        title: '404 Not found',
+        text: 'Requested ' + route.fullPath + ' cannot be found'
+      })
     }
   ]
 })

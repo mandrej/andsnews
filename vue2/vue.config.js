@@ -17,7 +17,7 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201905191140',
+    assetsVersion: '201905201144',
     iconPaths: {
       favicon32: 'static/img/icons/favicon-32x32.png',
       favicon16: 'static/img/icons/favicon-16x16.png',
@@ -29,7 +29,7 @@ module.exports = {
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts.(?:googleapis|gstatic).com\/(.*)/,
-          handler: 'cacheFirst',
+          handler: 'staleWhileRevalidate',
           options: {
             cacheName: 'google-fonts'
           }
