@@ -21,7 +21,12 @@ handlers:
   secure: always
   http_headers:
     Content-Type: application/javascript
-    Cache-Control: no-cache, no-store, must-revalidate
+    Cache-Control: max-age=0
+
+- url: /index.html
+  static_files: vue2/dist/index.html
+  upload: vue2/dist/index.html
+  secure: always
 
 - url: /.*
   static_files: vue2/dist/index.html
