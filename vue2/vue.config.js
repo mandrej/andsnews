@@ -71,14 +71,13 @@ module.exports = {
     }
   },
 
-  baseUrl: undefined,
+  publicPath: undefined,
   outputDir: undefined,
   assetsDir: 'static',
   runtimeCompiler: undefined,
   productionSourceMap: undefined,
   parallel: undefined,
-  css: undefined,
-  lintOnSave: undefined
+  css: undefined
 }
 
 function addStyleResource (rule) {
