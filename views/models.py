@@ -117,9 +117,8 @@ class Photo(ndb.Model):
 
     def add(self, fs):
         """
-        werkzeug.datastructures.FileStorage(stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
+        fs: werkzeug.datastructures.FileStorage(stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
         """
-        _buffer = fs.stream.read()
         # Check GCS stat exist first
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         try:
@@ -129,6 +128,7 @@ class Photo(ndb.Model):
             pass
 
         # Write to GCS
+        _buffer = fs.read()  # === fs.stream.read()
         try:
             with gcs.open(object_name, 'w', content_type=fs.content_type) as f:
                 f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
@@ -147,7 +147,7 @@ class Photo(ndb.Model):
             # SAVE EVERYTHING
             image_from_buffer = Image.open(StringIO(_buffer))
             self.dim = image_from_buffer.size
-            self.tags = ['new']  # ARTIFICIAL TAG
+            # self.tags = ['new']  # ARTIFICIAL TAG
             self.put()
 
             new_pairs = self.changed_pairs()
