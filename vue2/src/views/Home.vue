@@ -94,8 +94,8 @@ import List from '@/components/List'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
-import firebase from 'firebase/app'
-import 'firebase/messaging'
+import firebase from '@firebase/app'
+import '@firebase/messaging'
 import * as easings from 'vuetify/es5/components/Vuetify/goTo/easing-patterns'
 
 const messaging = firebase.messaging()
@@ -124,6 +124,9 @@ export default {
     timeout: 6000,
     message: ''
   }),
+  created () {
+    this.$store.dispatch('auth/fetchToken')
+  },
   mounted () {
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)

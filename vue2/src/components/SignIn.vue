@@ -15,9 +15,9 @@
 <script>
 import { mapState } from 'vuex'
 import { EventBus } from '@/helpers/event-bus'
-import { FB } from '@/helpers/fire'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import FIREBASEAPP from '@/helpers/fire'
+import firebase from '@firebase/app'
+import '@firebase/auth'
 
 const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 
@@ -38,13 +38,13 @@ export default {
   methods: {
     signHandler () {
       if (this.user && this.user.uid) {
-        FB.auth().signOut()
+        FIREBASEAPP.auth().signOut()
           .then(() => {
             this.$store.dispatch('auth/saveUser', {})
             this.$router.push({ name: 'home' })
           })
       } else {
-        FB.auth().signInWithPopup(provider)
+        FIREBASEAPP.auth().signInWithPopup(provider)
           .then(response => {
             this.$store.dispatch('auth/saveUser', {
               name: response.user.displayName,

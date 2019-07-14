@@ -2,12 +2,12 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
-import { FB } from '@/helpers/fire'
-import 'firebase/app'
-import 'firebase/database'
+import FIREBASEAPP from '@/helpers/fire'
+import '@firebase/app'
+import '@firebase/database'
 
 const axios = Vue.axios
-const messaging = FB.messaging()
+const messaging = FIREBASEAPP.messaging()
 
 function pushMessage (token, msg) {
   axios.post('message', { token: token, text: msg })
@@ -25,7 +25,7 @@ const actions = {
   // reset: ({ commit }) => commit(RESET),
   saveUser: ({ commit, dispatch }, user) => {
     if (user && user.uid) {
-      FB.database().ref('users').child(user.uid).set({
+      FIREBASEAPP.database().ref('users').child(user.uid).set({
         email: user.email,
         date: (new Date()).toISOString()
       })
@@ -40,14 +40,16 @@ const actions = {
           return messaging.getToken()
         })
         .then(token => {
-          commit('SET_TOKEN', token)
-          dispatch('addRegistration')
+          if (state.fcm_token !== token) {
+            commit('SET_TOKEN', token)
+            dispatch('addRegistration')
+          }
         })
         .catch(() => console.error('permission failed'))
     }
   },
   addRegistration: ({ state }) => {
-    const ref = FB.database().ref('registrations')
+    const ref = FIREBASEAPP.database().ref('registrations')
     ref.child(state.fcm_token).set({
       email: state.user.email,
       date: (new Date()).toISOString()
@@ -61,7 +63,7 @@ const actions = {
     })
   },
   sendNotifications: ({ state }, msg) => {
-    const ref = FB.database().ref('registrations')
+    const ref = FIREBASEAPP.database().ref('registrations')
     ref.once('value', (snapshot) => {
       snapshot.forEach(node => {
         if (node.key !== state.fcm_token) {

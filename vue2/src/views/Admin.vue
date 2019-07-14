@@ -91,7 +91,8 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
-import firebase from 'firebase/app'
+import firebase from '@firebase/app'
+import '@firebase/messaging'
 
 const messaging = firebase.messaging()
 
@@ -108,9 +109,6 @@ export default {
     timeout: 6000,
     message: ''
   }),
-  created () {
-    this.$store.dispatch('auth/fetchToken')
-  },
   mounted () {
     messaging.onMessage(payload => {
       this.message = payload.notification.body
