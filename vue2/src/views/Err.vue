@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar app flat light class="aperture">
+    <v-app-bar app flat light class="aperture">
       <v-btn icon @click="$router.push({ name: 'home' })">
         <v-icon>home</v-icon>
       </v-btn>
       <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
 
     <v-content class="aperture">
       <v-container>

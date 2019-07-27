@@ -9,21 +9,11 @@
       </v-layout>
     </v-parallax>
 
-    <div style="position: relative">
-      <h1 class="headline font-weight-light text-xs-center mt-3">Collections</h1>
-      <v-btn v-if="canAdd(user)"
-        fab medium absolute bottom right
-        style="bottom: 20px"
-        color="accent" class="black--text" @click="$router.push({ name: 'add' })">
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
-
-    <v-container fluid grid-list-lg class="pa-3">
+    <v-container fluid grid-list-lg>
       <v-layout row wrap>
         <v-flex xs12 sm6 md4 lg3 xl2
           v-for="item in menu" :key="item.name">
-          <v-card flat light>
+          <v-card text light>
             <v-img
               cover
               height="150px"
@@ -32,12 +22,10 @@
               @click="showFilter(item)"
               :src="getImgSrc(item, '400-c')">
             </v-img>
-            <v-card-title @click="showFilter(item)" style="cursor: pointer">
-              <div>
-                <h3 class="title">{{justName(item)}}</h3>
-                <div>{{item.count}} photos</div>
-              </div>
+            <v-card-title style="cursor: pointer" @click="showFilter(item)">
+                {{justName(item)}}
             </v-card-title>
+            <v-card-text>{{item.count}} photos</v-card-text>
           </v-card>
         </v-flex>
       </v-layout>
@@ -57,7 +45,6 @@ export default {
     height: null
   }),
   computed: {
-    ...mapState('auth', ['user']),
     ...mapState('app', ['menu', 'total'])
   },
   mounted () {
@@ -67,9 +54,6 @@ export default {
     })
   },
   methods: {
-    canAdd (user) {
-      return user.isAuthorized
-    },
     showFilter (rec) {
       const tmp = {}
       switch (rec.field_name) {

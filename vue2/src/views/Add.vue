@@ -6,18 +6,18 @@
       v-model="snackbar"
       :timeout="timeout">
       {{ message }}
-      <v-btn flat icon color="white" @click="snackbar = false">
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app flat light class="aperture">
+      <v-app-bar app flat light class="aperture">
         <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Add</v-toolbar-title>
-      </v-toolbar>
+      </v-app-bar>
 
       <v-content class="aperture">
         <v-container>
@@ -55,21 +55,21 @@
           <v-slide-y-transition v-if="uploaded.length > 0" hide-on-leave group tag="v-list" two-line>
             <template v-for="(item, i) in uploaded">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-              <v-list-tile avatar :key="i">
-                <v-list-tile-avatar>
+              <v-list-item :key="i">
+                <v-list-item-avatar>
                   <img :src="getImgSrc(item, '400-c')" :alt="item.slug">
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{item.headline}}</v-list-tile-title>
-                  <v-list-tile-sub-title>{{formatDate(item.date)}}</v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>{{item.headline}}</v-list-item-title>
+                  <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
                   <v-layout row>
                     <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
                     <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
-                </v-list-tile-action>
-              </v-list-tile>
+                </v-list-item-action>
+              </v-list-item>
             </template>
           </v-slide-y-transition>
 

@@ -6,12 +6,12 @@
       v-model="snackbar"
       :timeout="timeout">
       {{ message }}
-      <v-btn flat icon color="white" @click="snackbar = false">
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
-    <v-dialog v-model="confirm" max-width="300px" persistent lazy>
+    <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
         <v-card-title class="headline warning" primary-title>
           Are you sure?
@@ -19,23 +19,18 @@
         <v-card-text>
           you want to delete "{{current.headline}}"
         </v-card-text>
-        <v-divider></v-divider>
         <v-card-actions class="pa-3">
-          <v-layout justify-space-between row>
-            <v-btn color="error" @click="agree">Yes</v-btn>
-            <v-btn color="secondary" @click="confirm = false">No</v-btn>
-          </v-layout>
+          <v-container fluid>
+            <v-layout justify-space-between row>
+              <v-btn color="error" @click="agree">Yes</v-btn>
+              <v-btn color="secondary" @click="confirm = false">No</v-btn>
+            </v-layout>
+          </v-container>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-container fluid grid-list-lg class="pa-3">
-      <v-btn v-if="canAdd(user)"
-        fab medium fixed bottom right
-        style="bottom: 25px; z-index: 3"
-        color="accent" class="black--text" @click="$router.push({ name: 'add' })">
-        <v-icon>add</v-icon>
-      </v-btn>
       <Photoswipe>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2
@@ -46,22 +41,20 @@
                 :title="caption(item)"
                 :data-pswp-size="item.dim.join('x')"
                 :data-pswp-src="getImgSrc(item)">
-              <v-card-title>
-                <div>
-                  <h3 class="title">{{item.headline}}</h3>
+              <v-card-title>{{item.headline}}</v-card-title>
+              <v-card-text>
                   <div>{{formatDate(item.date)}}</div>
                   <div>by {{item.nick}}</div>
-                </div>
-              </v-card-title>
-              <v-card-actions class="pt-0 px-3 pb-3">
-                <v-layout justify-end row>
-                  <v-btn v-if="canDelete(user)" icon flat color="primary" @click="removeRecord(item)">
+             </v-card-text>
+              <v-card-actions>
+                <v-layout justify-end>
+                  <v-btn v-if="canDelete(user)" icon small text color="primary" @click="removeRecord(item)">
                     <v-icon>cancel</v-icon>
                   </v-btn>
-                  <v-btn v-if="canEdit(user)" icon flat color="primary" @click="showEditdForm(item)">
+                  <v-btn v-if="canEdit(user)" icon small text color="primary" @click="showEditdForm(item)">
                     <v-icon>edit</v-icon>
                   </v-btn>
-                  <v-btn icon flat color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                  <v-btn icon small text color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
                     <v-icon>file_download</v-icon>
                   </v-btn>
                 </v-layout>
@@ -150,9 +143,6 @@ export default {
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
       return visible + scrollY + this.distance >= pageHeight
-    },
-    canAdd (user) {
-      return user.isAuthorized
     },
     canEdit (user) {
       return user.isAuthorized

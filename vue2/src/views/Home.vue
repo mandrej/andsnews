@@ -4,12 +4,12 @@
       v-model="snackbar"
       :timeout="timeout">
       {{ message }}
-      <v-btn flat icon color="white" @click="snackbar = false">
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
-    <v-dialog v-model="empty" max-width="300px" lazy>
+    <v-dialog v-model="empty" max-width="300px">
       <v-card>
         <v-card-title v-if="error" class="headline warning error--text" primary-title>
           Error
@@ -30,42 +30,42 @@
     </v-dialog>
 
     <v-app v-resize="onResize">
-      <v-navigation-drawer v-model="drawer" app fixed floating style="background-color: #f5f5f5">
-        <v-layout column class="aperture" fill-height>
-          <v-toolbar flat light style="background: transparent">
-            <v-spacer></v-spacer>
-            <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
-            <span v-else style="padding-right: 1em">sign-in</span>
-            <SignIn></SignIn>
-          </v-toolbar>
+      <v-navigation-drawer v-model="drawer" app fixed floating>
+        <v-app-bar flat light class="aperture">
+          <v-spacer></v-spacer>
+          <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
+          <span v-else style="padding-right: 1em">sign-in</span>
+          <SignIn></SignIn>
+        </v-app-bar>
 
+        <v-layout class="aperture" column fill-height>
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
-          <v-list light style="background: transparent">
-            <v-list-tile>
-              <v-list-tile-content class="caption">© 2007-{{version}}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile v-if="isAdmin" @click="$router.push({ name: 'admin' })">
-              <v-list-tile-action>
+          <v-list>
+            <v-list-item>
+              <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
+            </v-list-item>
+            <v-list-item v-if="isAdmin" @click="$router.push({ name: 'admin' })">
+              <v-list-item-action>
                 <v-icon>settings</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>Admin</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Admin</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-layout>
       </v-navigation-drawer>
 
-      <v-toolbar v-if="text || tags || year || month || model || email" app flat light class="aperture">
-        <v-toolbar-side-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
+      <v-app-bar v-if="text || tags || year || month || model || email" app flat light class="aperture">
+        <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
-      </v-toolbar>
+      </v-app-bar>
       <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">
-        <v-toolbar-side-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-toolbar-side-icon>
+        <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
 
       <v-content class="aperture">
@@ -74,13 +74,18 @@
         </transition>
       </v-content>
 
-      <v-footer height="auto" app inset>
-        <v-layout>
-          <v-spacer></v-spacer>
-           <v-btn fab flat small @click="$vuetify.goTo(0, options)">
+      <v-footer style="background: transparent" app inset>
+        <v-layout row justify-space-between>
+          <v-btn fab medium
+            style="margin: 0 16px"
+            @click="$vuetify.goTo(0, options)">
             <v-icon>arrow_upward</v-icon>
           </v-btn>
-          <v-spacer></v-spacer>
+          <v-btn v-if="isAuthorized" fab medium
+            color="accent" class="black--text" style="margin: 0 16px"
+            @click="$router.push({ name: 'add' })">
+            <v-icon>add</v-icon>
+          </v-btn>
         </v-layout>
       </v-footer>
    </v-app>
@@ -96,7 +101,7 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // local firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
-import * as easings from 'vuetify/es5/components/Vuetify/goTo/easing-patterns'
+import * as easings from 'vuetify/es5/services/goto/easing-patterns'
 
 const messaging = firebase.messaging()
 
@@ -182,3 +187,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.fill-height {
+  height: calc(100% - 64px);
+}
+</style>

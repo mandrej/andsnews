@@ -1,67 +1,65 @@
 <template>
-  <v-card tile light flat>
+  <v-card flat>
     <v-card-text>
-      <v-layout row wrap>
-        <v-flex xs12>
-          <v-text-field
-            label="by text"
-            v-model="tmp.text"
-            @keyup.native.enter="submit"
-            @change="submit"
-            @click:clear="submit"
-            clearable></v-text-field>
-        </v-flex>
-        <v-flex xs12>
-          <v-autocomplete
-            label="by tags"
-            :items="values.tags"
-            v-model="tmp.tags"
-            chips
-            multiple
-            hide-selected
-            deletable-chips
-            @change="submit"
-            @click:clear="submit"
-            clearable>
-          </v-autocomplete>
-        </v-flex>
-        <v-flex xs12>
-          <v-select
-            label="by year"
-            :items="values.year"
-            v-model="tmp.year"
-            @change="submit"
-            @click:clear="submit"
-            clearable></v-select>
-        </v-flex>
-        <v-flex xs12>
-          <v-select
-            label="by month"
-            :items="months"
-            v-model="tmp.month"
-            @change="submit"
-            @click:clear="submit"
-            clearable></v-select>
-        </v-flex>
-        <v-flex xs12>
-          <v-autocomplete
-            label="by camera model"
-            :items="values.model"
-            v-model="tmp.model"
-            @change="submit"
-            @click:clear="submit"
-            clearable></v-autocomplete>
-        </v-flex>
-        <v-flex xs12>
-          <v-autocomplete
-            label="by author"
-            :items="nicks"
-            v-model="tmp.nick"
-            @change="submit"
-            @click:clear="submit"
-            clearable></v-autocomplete>
-        </v-flex>
-      </v-layout>
+      <v-flex xs12>
+        <v-text-field
+          label="by text"
+          v-model="tmp.text"
+          @keyup.native.enter="submit"
+          @change="submit"
+          @click:clear="submit"
+          clearable></v-text-field>
+      </v-flex>
+      <v-flex xs12>
+        <v-autocomplete
+          label="by tags"
+          :items="values.tags"
+          v-model="tmp.tags"
+          chips
+          multiple
+          hide-selected
+          deletable-chips
+          @change="submit"
+          @click:clear="submit"
+          clearable>
+        </v-autocomplete>
+      </v-flex>
+      <v-flex xs12>
+        <v-select
+          label="by year"
+          :items="values.year"
+          v-model="tmp.year"
+          @change="submit"
+          @click:clear="submit"
+          clearable></v-select>
+      </v-flex>
+      <v-flex xs12>
+        <v-select
+          label="by month"
+          :items="months"
+          v-model="tmp.month"
+          @change="submit"
+          @click:clear="submit"
+          clearable></v-select>
+      </v-flex>
+      <v-flex xs12>
+        <v-autocomplete
+          label="by camera model"
+          :items="values.model"
+          v-model="tmp.model"
+          @change="submit"
+          @click:clear="submit"
+          clearable></v-autocomplete>
+      </v-flex>
+      <v-flex xs12>
+        <v-autocomplete
+          label="by author"
+          :items="nicks"
+          v-model="tmp.nick"
+          @change="submit"
+          @click:clear="submit"
+          clearable></v-autocomplete>
+      </v-flex>
     </v-card-text>
   </v-card>
 </template>

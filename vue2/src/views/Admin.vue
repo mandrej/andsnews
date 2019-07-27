@@ -4,23 +4,23 @@
       v-model="snackbar"
       :timeout="timeout">
       {{ message }}
-      <v-btn flat icon color="white" @click="snackbar = false">
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-app>
-      <v-toolbar app flat light class="aperture">
+      <v-app-bar app flat light class="aperture">
         <v-btn icon @click="$router.push({ name: 'home' })">
           <v-icon>home</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
-      </v-toolbar>
+      </v-app-bar>
 
       <v-content class="aperture">
         <v-container mt-4>
           <h3 class="title">Messaging</h3>
-          <v-layout row>
+          <v-layout align-center>
             <v-flex xs9>
               <v-text-field
                 label="Send message"
@@ -31,53 +31,35 @@
                 :rules="requiredRule"
                 required></v-text-field>
             </v-flex>
-            <v-flex xs3 class="pt-3 text-xs-right">
+            <v-flex xs3 class="text-right">
               <v-btn color="secondary" @click="send">Send</v-btn>
             </v-flex>
           </v-layout>
 
           <h3 class="title">Counters</h3>
-          <v-divider></v-divider>
-          <v-layout row v-for="field in Object.keys(values)" :key="field">
-            <v-flex xs9>
-              <v-layout align-center fill-height>
-                Rebuild for field {{field}}
-              </v-layout>
-            </v-flex>
-            <v-flex xs3 class="text-xs-right">
+          <v-layout align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
+            <v-flex xs9>Rebuild for field {{field}}</v-flex>
+            <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="rebuild(field)">Rebuild</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout row>
-            <v-flex xs9>
-              <v-layout align-center fill-height>
-                Add new fields, remove index docs
-              </v-layout>
-            </v-flex>
-            <v-flex xs3 class="text-xs-right">
+          <v-layout align-center>
+            <v-flex xs9>Add new fields, remove index docs</v-flex>
+            <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
           </v-layout>
 
           <h3 class="title">Cloud</h3>
-          <v-divider></v-divider>
-          <v-layout row>
-            <v-flex xs9>
-              <v-layout align-center fill-height>
-                Remove images from the Cloud not referenced in datastore
-              </v-layout>
-            </v-flex>
-            <v-flex xs3 class="text-xs-right">
+          <v-layout class="py-1" align-center>
+            <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
+            <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout row>
-            <v-flex xs9>
-              <v-layout align-center fill-height>
-                Remove images in datastore that are missing in the Cloud
-              </v-layout>
-            </v-flex>
-            <v-flex xs3 class="text-xs-right">
+          <v-layout class="py-1" align-center>
+            <v-flex xs9>Remove images in datastore that are missing in the Cloud</v-flex>
+            <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="missing">Missing</v-btn>
             </v-flex>
           </v-layout>
@@ -154,7 +136,7 @@ export default {
 </script>
 
 <style scoped>
-.list__tile__action .btn {
+.v-btn {
   width: 100px;
 }
 </style>

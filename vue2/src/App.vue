@@ -25,11 +25,13 @@ export default {
   background-position: -10px -60px;
   background-size: 450px;
   background-attachment: fixed;
-  background-color: #f5f5f5;
+  background-color: transparent;
 }
-/* Add, Edit, Admin back icon button */
-.v-toolbar__title:not(:first-child) {
-  margin-left: 10px;
+.v-card__title {
+  font-size: 1.25rem !important;
+}
+.v-card__text + .v-card__actions {
+  margin-top: -1rem;
 }
 /* transition name="fade" */
 .fade-enter-active,

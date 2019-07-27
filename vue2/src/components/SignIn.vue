@@ -7,7 +7,7 @@
       <img
         v-if="photoUrl"
         :src="photoUrl">
-      <v-icon v-else flat>account_circle</v-icon>
+      <v-icon v-else>account_circle</v-icon>
     </v-avatar>
   </transition>
 </template>

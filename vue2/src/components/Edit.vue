@@ -1,17 +1,17 @@
 <template>
   <v-dialog
     v-model="show"
-    lazy scrollable
+    scrollable
     max-width="800"
     transition="dialog-bottom-transition">
     <v-card tile light>
-      <v-toolbar flat light>
+      <v-app-bar flat light>
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
-      </v-toolbar>
+      </v-app-bar>
       <v-card-text style="background-color: #f5f5f5">
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
@@ -44,13 +44,13 @@
                       deletable-chips
                       clearable>
                       <template slot="no-data">
-                        <v-list-tile>
-                          <v-list-tile-content>
-                            <v-list-tile-title>
+                        <v-list-item>
+                          <v-list-item-content>
+                            <v-list-item-title>
                               No results matching "<strong>{{ search }}</strong>". Press <kbd>enter</kbd> to create a new one
-                            </v-list-tile-title>
-                          </v-list-tile-content>
-                        </v-list-tile>
+                            </v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
                       </template>
                     </v-combobox>
                   </v-flex>
@@ -66,41 +66,56 @@
                       <v-flex xs6>
                         <v-menu
                           ref="dateRef"
-                          :close-on-content-click="false"
                           v-model="menuDate"
-                          :nudge-right="40"
+                          :close-on-content-click="false"
                           :return-value.sync="dateTime.date"
-                          lazy
-                          full-width
                           transition="scale-transition"
-                          max-width="290px"
-                          offset-y>
-                          <v-text-field
-                            slot="activator"
-                            v-model="dateTime.date"
-                            label="Date taken"
-                            readonly></v-text-field>
-                          <v-date-picker v-model="dateTime.date" @change="$refs.dateRef.save(dateTime.date)"></v-date-picker>
+                          offset-y
+                          full-width
+                          min-width="290px">
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="dateTime.date"
+                              label="Date taken"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on">
+                            </v-text-field>
+                          </template>
+                          <v-date-picker v-model="dateTime.date" no-title scrollable>
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="dateRef = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="$refs.dateRef.save(dateTime.date)">OK</v-btn>
+                          </v-date-picker>
                         </v-menu>
                       </v-flex>
                       <v-flex xs6>
                         <v-menu
                           ref="timeRef"
-                          :close-on-content-click="false"
                           v-model="menuTime"
+                          :close-on-content-click="false"
                           :nudge-right="40"
                           :return-value.sync="dateTime.time"
-                          lazy
-                          full-width
                           transition="scale-transition"
+                          offset-y
+                          full-width
                           max-width="290px"
-                          offset-y>
-                          <v-text-field
-                            slot="activator"
+                          min-width="290px">
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="dateTime.time"
+                              label="time taken"
+                              prepend-icon="access_time"
+                              readonly
+                              v-on="on">
+                            </v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-if="dateTime.time"
                             v-model="dateTime.time"
-                            label="time taken"
-                            readonly></v-text-field>
-                          <v-time-picker v-model="dateTime.time" format="24hr" @change="$refs.timeRef.save(dateTime.time)"></v-time-picker>
+                            full-width
+                            @click:minute="$refs.timeRef.save(dateTime.time)">
+                          </v-time-picker>
                         </v-menu>
                       </v-flex>
                     </v-layout>
