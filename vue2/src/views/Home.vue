@@ -43,8 +43,13 @@
           <v-spacer></v-spacer>
 
           <v-list>
-            <v-list-item>
-              <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
+            <v-list-item v-if="isAuthorized" @click="$router.push({ name: 'add' })">
+              <v-list-item-action>
+                <v-icon>add_circle</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Add</v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
             <v-list-item v-if="isAdmin" @click="$router.push({ name: 'admin' })">
               <v-list-item-action>
@@ -53,6 +58,9 @@
               <v-list-item-content>
                 <v-list-item-title>Admin</v-list-item-title>
               </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-layout>
@@ -74,21 +82,12 @@
         </transition>
       </v-content>
 
-      <v-footer style="background: transparent" app inset>
-        <v-layout row>
-          <v-btn v-if="isAuthorized" fab medium
-            color="accent" class="black--text" style="margin: 0 16px"
-            @click="$router.push({ name: 'add' })">
-            <v-icon>add</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn fab medium
-            style="margin: 0 16px"
-            @click="$vuetify.goTo(0, options)">
-            <v-icon>arrow_upward</v-icon>
-          </v-btn>
-        </v-layout>
-      </v-footer>
+      <v-btn fab large fixed bottom right
+        color="accent" class="black--text"
+        style="bottom: 16px; right: 22px"
+        @click="$vuetify.goTo(0, options)">
+        <v-icon>arrow_upward</v-icon>
+      </v-btn>
    </v-app>
   </div>
 </template>

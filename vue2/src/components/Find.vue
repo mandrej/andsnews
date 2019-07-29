@@ -66,9 +66,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import common from '@/helpers/mixins'
 
 export default {
   name: 'Find',
+  mixins: [ common ],
   created () {
     this.$store.dispatch('app/fetchValues')
   },
@@ -84,7 +86,7 @@ export default {
     },
     nicks () {
       return this.values.email.map(email => {
-        return email.match(/[^@]+/)[0].split('.')[0]
+        return this.email2nick(email)
       })
     }
   },

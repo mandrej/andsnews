@@ -45,7 +45,7 @@ export default {
     height: null
   }),
   computed: {
-    ...mapState('app', ['menu', 'total'])
+    ...mapState('app', ['menu', 'total', 'values'])
   },
   mounted () {
     this.height = document.documentElement.clientHeight - 104
@@ -60,6 +60,9 @@ export default {
         case 'tags':
           tmp[rec.field_name] = [rec.name]
           break
+        case 'email':
+          tmp['nick'] = this.email2nick(rec.name)
+          break
         default:
           tmp[rec.field_name] = rec.name
       }
@@ -67,7 +70,7 @@ export default {
       this.$router.push({ name: 'list', query: tmp })
     },
     justName (rec) {
-      return (rec.field_name === 'nick') ? 'by ' + rec.name : rec.name
+      return (rec.field_name === 'email') ? 'by ' + this.email2nick(rec.name) : rec.name
     }
   }
 }
