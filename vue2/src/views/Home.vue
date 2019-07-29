@@ -75,16 +75,17 @@
       </v-content>
 
       <v-footer style="background: transparent" app inset>
-        <v-layout row justify-space-between>
-          <v-btn fab medium
-            style="margin: 0 16px"
-            @click="$vuetify.goTo(0, options)">
-            <v-icon>arrow_upward</v-icon>
-          </v-btn>
+        <v-layout row>
           <v-btn v-if="isAuthorized" fab medium
             color="accent" class="black--text" style="margin: 0 16px"
             @click="$router.push({ name: 'add' })">
             <v-icon>add</v-icon>
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn fab medium
+            style="margin: 0 16px"
+            @click="$vuetify.goTo(0, options)">
+            <v-icon>arrow_upward</v-icon>
           </v-btn>
         </v-layout>
       </v-footer>
