@@ -33,6 +33,9 @@ export default {
 .v-card__text + .v-card__actions {
   margin-top: -1rem;
 }
+.v-navigation-drawer .v-list {
+  background: transparent;
+}
 /* transition name="fade" */
 .fade-enter-active,
 .fade-leave-active {

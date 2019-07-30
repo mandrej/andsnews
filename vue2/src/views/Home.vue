@@ -31,14 +31,14 @@
 
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed floating>
-        <v-app-bar flat light class="aperture">
-          <v-spacer></v-spacer>
-          <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
-          <span v-else style="padding-right: 1em">sign-in</span>
-          <SignIn></SignIn>
-        </v-app-bar>
+        <v-layout column fill-height class="aperture">
+          <v-app-bar flat grow-shrink-0 light style="background: transparent">
+            <v-spacer></v-spacer>
+            <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
+            <span v-else style="padding-right: 1em">sign-in</span>
+            <SignIn></SignIn>
+          </v-app-bar>
 
-        <v-layout class="aperture" column fill-height>
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
@@ -66,7 +66,8 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="text || tags || year || month || model || email" app flat light class="aperture">
+      <v-app-bar v-if="text || tags || year || month || model || email" app flat light
+        class="aperture" style="transform: none; /* FF bug */">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
@@ -187,9 +188,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fill-height {
-  height: calc(100% - 64px);
-}
-</style>
