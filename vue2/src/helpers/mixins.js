@@ -1,22 +1,9 @@
 const common = {
   data: () => ({
     requiredRule: [
-      v => !!v || 'Required Field'
+      value => !!value || 'Required.'
     ]
   }),
-  computed: {
-    // v-dialog v-model="show"
-    show: {
-      get () {
-        return this.visible
-      },
-      set (value) {
-        if (!value) {
-          this.$emit('close')
-        }
-      }
-    }
-  },
   methods: {
     formatDate (iso) {
       return iso.replace('T', ' ').substring(0, 16)

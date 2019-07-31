@@ -174,9 +174,6 @@ export default {
   props: ['visible', 'rec'],
   data: () => ({
     valid: true,
-    requiredRule: [
-      value => !!value || 'Required.'
-    ],
     menuDate: false,
     menuTime: false,
     dateTime: {},
@@ -185,7 +182,17 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['values'])
+    ...mapState('app', ['values']),
+    show: {
+      get () {
+        return this.visible
+      },
+      set (value) {
+        if (!value) {
+          this.$emit('close')
+        }
+      }
+    }
   },
   watch: {
     rec: function (val) {
