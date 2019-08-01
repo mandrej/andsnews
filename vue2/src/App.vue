@@ -25,7 +25,7 @@ export default {
   background-position: -10px -60px;
   background-size: 450px;
   background-attachment: fixed;
-  background-color: transparent;
+  background-color: #eee !important;
 }
 .v-card__title {
   font-size: 1.25rem !important;

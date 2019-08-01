@@ -66,16 +66,12 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="text || tags || year || month || model || email" app flat light
-        class="aperture" style="transform: none; /* FF bug */">
+      <v-app-bar app flat class="aperture" style="transform: none; /* FF bug */">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
       </v-app-bar>
-      <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">
-        <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
-      </div>
 
       <v-content class="aperture">
         <transition name="fade" mode="out-in">

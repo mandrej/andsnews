@@ -35,7 +35,7 @@
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2
             v-for="item in objects" :key="item.safekey">
-            <v-card flat light class="card">
+            <v-card light class="card">
               <img
                 v-lazy="getImgSrc(item, '400-c')"
                 :title="caption(item)"
@@ -186,6 +186,9 @@ export default {
     &[lazy=loaded] {
       opacity: 1;
     }
+  }
+  .v-card__title {
+    line-height: 120%;
   }
 }
 </style>
