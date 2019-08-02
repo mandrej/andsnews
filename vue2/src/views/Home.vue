@@ -66,7 +66,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="text || tags || year || month || model || email" app flat light
+      <v-app-bar v-if="!isFront" app flat light
         class="aperture" style="transform: none; /* FF bug */">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
@@ -83,7 +83,7 @@
         </transition>
       </v-content>
 
-      <v-btn fab large fixed bottom right
+      <v-btn v-if="!isFront" fab large fixed bottom right
         color="accent" class="black--text"
         style="bottom: 32px; right: 32px"
         @click="$vuetify.goTo(0, options)">
@@ -154,6 +154,9 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['busy', 'count', 'error']),
+    isFront () {
+      return this.currentComponent === Menu
+    },
     version () {
       return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
     }
