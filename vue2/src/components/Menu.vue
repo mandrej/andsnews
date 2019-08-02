@@ -1,37 +1,42 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <h4 class="title font-weight-regular text-right">{{total}} photos in our album since 2007</h4>
-    <v-layout row wrap>
-      <v-flex xs12 sm6 md4 lg3 xl2
-        v-for="item in menu" :key="item.name">
-        <v-card light>
-          <v-img
-            cover
-            height="150px"
-            aspect-ratio="1"
-            style="cursor: pointer"
-            @click="showFilter(item)"
-            :src="getImgSrc(item, '400-c')">
-          </v-img>
-          <v-card-title style="cursor: pointer" @click="showFilter(item)">
-              {{justName(item)}}
-          </v-card-title>
-          <v-card-text>{{item.count}} photos</v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <v-img :src="getImgSrc(menu[0])" :height="height">
+    <v-container>
+      <v-layout column fixed align-end class="pa-5">
+        <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
+        <h4 class="body-1 font-weight-light white--text">{{total}} photos since 2007 and counting …</h4>
+      </v-layout>
+    </v-container>
+    <v-container fill-height>
+      <v-layout row align-center justify-center>
+        <v-btn fab dark large outlined
+          class="big"
+          @click="showFilter(menu[0])">
+          <v-icon>arrow_downward</v-icon>
+        </v-btn>
+      </v-layout>
+    </v-container>
+  </v-img>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
+import { EventBus } from '@/helpers/event-bus'
 
 export default {
   name: 'Menu',
   mixins: [ common ],
+  data: () => ({
+    height: null
+  }),
   computed: {
     ...mapState('app', ['menu', 'total', 'values'])
+  },
+  mounted () {
+    this.height = document.documentElement.clientHeight
+    EventBus.$on('resize', () => {
+      this.height = document.documentElement.clientHeight
+    })
   },
   methods: {
     showFilter (rec) {
@@ -55,3 +60,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.big {
+  height: 150px;
+  width: 150px;
+  border: 2px solid currentColor;
+  .v-icon {
+    height: 65px;
+    font-size: 65px;
+    width: 65px;
+  }
+}
+</style>
