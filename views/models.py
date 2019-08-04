@@ -42,6 +42,13 @@ class Counter(ndb.Model):
             tmp[field] = [counter for counter in query if counter.count > 0]
         return tmp
 
+    def serialize(self):
+        return {
+            'name': self.value,
+            'field_name': self.field,
+            'serving_url': self.repr_url
+        }
+
 
 class Photo(ndb.Model):
     headline = ndb.StringProperty(required=True)

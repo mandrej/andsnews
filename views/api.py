@@ -39,6 +39,11 @@ def counters_values():
     return result
 
 
+def last_entry():
+    key_name = 'Photo||{}||{}'.format('year', datetime.datetime.now().year)
+    return Counter.get_by_id(key_name)
+
+
 def available_filters():
     data = Counter.all_photo_filter()
     collection = []
@@ -56,16 +61,23 @@ def available_filters():
             _list = sorted(_list, key=itemgetter('name'))
         collection.extend(_list)
 
-    current = datetime.datetime.now().year
-    if collection:
-        dataset = sorted([d['count'] for d in collection])
-        index = int(PERCENTILE * (len(dataset) + 1) / 100)
-        limit = dataset[index]
-        for item in collection:
-            item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
-                else item['count'] > limit
+    """
+    [{'repr_stamp': datetime.datetime(2019, 7, 17, 11, 15),
+      'name': 2019L,
+      'serving_url': u'...',
+      'count': 11,
+      'field_name': 'year'}, ...]
+    """
+    # current = datetime.datetime.now().year
+    # dataset = sorted([d['count'] for d in collection])
+    # index = int(PERCENTILE * (len(dataset) + 1) / 100)
+    # limit = dataset[index]
+    # for item in collection:
+    #     item['show'] = True if (item['field_name'] == 'year' and item['name'] == current) \
+    #         else item['count'] > limit
 
-    return [x for x in collection if x['show']]
+    # return [x for x in collection if x['show']]
+    return collection
 
 
 class Paginator(object):

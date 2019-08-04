@@ -1,5 +1,5 @@
 <template>
-  <v-img :src="getImgSrc(menu[0])" :height="height">
+  <v-img :src="getImgSrc(last)" :height="height">
     <v-container style="position: absolute; top: 0; left: 0">
       <v-layout column align-end class="pa-5">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
@@ -10,7 +10,7 @@
       <v-layout row align-center justify-center>
         <v-btn fab dark large outlined
           class="big"
-          @click="showFilter(menu[0])">
+          @click="showFilter(last)">
           <v-icon>arrow_downward</v-icon>
         </v-btn>
       </v-layout>
@@ -30,7 +30,7 @@ export default {
     height: null
   }),
   computed: {
-    ...mapState('app', ['menu', 'total', 'values'])
+    ...mapState('app', ['last', 'total', 'values'])
   },
   mounted () {
     this.height = document.documentElement.clientHeight
@@ -41,21 +41,9 @@ export default {
   methods: {
     showFilter (rec) {
       const tmp = {}
-      switch (rec.field_name) {
-        case 'tags':
-          tmp[rec.field_name] = [rec.name]
-          break
-        case 'email':
-          tmp['nick'] = this.email2nick(rec.name)
-          break
-        default:
-          tmp[rec.field_name] = rec.name
-      }
+      tmp[rec.field_name] = rec.name
       this.$store.dispatch('app/saveFindForm', tmp)
       this.$router.push({ name: 'list', query: tmp })
-    },
-    justName (rec) {
-      return (rec.field_name === 'email') ? 'by ' + this.email2nick(rec.name) : rec.name
     }
   }
 }

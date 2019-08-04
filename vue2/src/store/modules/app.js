@@ -30,14 +30,14 @@ const initialState = {
   find: {},
   uploaded: [],
 
-  menu: [],
+  last: {},
   objects: [],
   pages: [],
   next: null,
   error: '',
   values: {},
 
-  total: null, // menu
+  total: null,
   count: null,
 
   busy: false,
@@ -54,7 +54,7 @@ const actions = {
       dispatch('fetchRecords')
     } else {
       dispatch('saveFindForm', {})
-      dispatch('fetchMenu')
+      dispatch('fetchCountLast')
     }
   },
   addRecord: ({ commit }, obj) => {
@@ -68,7 +68,7 @@ const actions = {
         commit('UPDATE_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_VALUES', obj)
-        dispatch('fetchMenu')
+        dispatch('fetchCountLast')
       })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -78,16 +78,22 @@ const actions = {
           EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
-          dispatch('fetchMenu')
+          dispatch('fetchCountLast')
         } else {
           EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
         }
       })
   },
-  fetchMenu: ({ commit }) => {
-    axios.get('counter/filters')
+  fetchCountLast: ({ commit }) => {
+    axios.get('counter/front')
       .then(response => {
-        commit('UPDATE_MENU', response.data)
+        commit('UPDATE_COUNT_LAST', response.data)
+      })
+  },
+  fetchValues: ({ commit }) => {
+    axios.get('counter/values')
+      .then(response => {
+        commit('SET_VALUES', response.data)
       })
   },
   fetchRecords: ({ commit, state }) => {
@@ -115,12 +121,6 @@ const actions = {
         })
     }
   },
-  fetchValues: ({ commit }) => {
-    axios.get('counter/values')
-      .then(response => {
-        commit('SET_VALUES', response.data)
-      })
-  },
   updateValuesEmail: ({ commit }, user) => {
     commit('UPDATE_VALUES_EMAIL', user)
   }
@@ -130,9 +130,9 @@ const mutations = {
   SAVE_FIND_FORM (state, payload) {
     state.find = payload
   },
-  UPDATE_MENU (state, data) {
+  UPDATE_COUNT_LAST (state, data) {
     state.total = data.count
-    state.menu = [...data.filters]
+    state.last = data.last
   },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)

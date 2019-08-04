@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
-from views.api import CustomJSONEncoder, Paginator, counters_values, available_filters
+from views.api import CustomJSONEncoder, Paginator, counters_values, available_filters, last_entry
 from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Builder, Unbound, Fixer
 from views.models import Photo, slugify
@@ -14,10 +14,10 @@ app.json_encoder = CustomJSONEncoder
 def collection(col):
     if col == 'values':
         return jsonify(counters_values())
-    elif col == 'filters':
+    elif col == 'front':
         return jsonify({
             'count': Photo.query().count(),
-            'filters': available_filters()
+            'last': last_entry()
         })
 
 
