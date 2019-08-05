@@ -29,6 +29,10 @@ export default {
   data: () => ({
     height: null
   }),
+  created () {
+    this.$store.dispatch('app/fetchLast')
+    this.$store.dispatch('app/fetchTotal')
+  },
   computed: {
     ...mapState('app', ['last', 'total', 'values'])
   },

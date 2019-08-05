@@ -14,9 +14,12 @@ app.json_encoder = CustomJSONEncoder
 def collection(col):
     if col == 'values':
         return jsonify(counters_values())
-    elif col == 'front':
+    elif col == 'total':
         return jsonify({
-            'count': Photo.query().count(),
+            'total': Photo.query().count()
+        })
+    elif col == 'last':
+        return jsonify({
             'last': last_entry()
         })
 

@@ -52,9 +52,6 @@ const actions = {
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
       dispatch('fetchRecords')
-    } else {
-      dispatch('saveFindForm', {})
-      dispatch('fetchCountLast')
     }
   },
   addRecord: ({ commit }, obj) => {
@@ -68,7 +65,7 @@ const actions = {
         commit('UPDATE_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_VALUES', obj)
-        dispatch('fetchCountLast')
+        dispatch('fetchLast')
       })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -78,16 +75,22 @@ const actions = {
           EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
-          dispatch('fetchCountLast')
+          dispatch('fetchLast')
         } else {
           EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
         }
       })
   },
-  fetchCountLast: ({ commit }) => {
-    axios.get('counter/front')
+  fetchTotal: ({ commit }) => {
+    axios.get('counter/total')
       .then(response => {
-        commit('UPDATE_COUNT_LAST', response.data)
+        commit('SET_TOTAL', response.data)
+      })
+  },
+  fetchLast: ({ commit }) => {
+    axios.get('counter/last')
+      .then(response => {
+        commit('SET_LAST', response.data)
       })
   },
   fetchValues: ({ commit }) => {
@@ -130,8 +133,10 @@ const mutations = {
   SAVE_FIND_FORM (state, payload) {
     state.find = payload
   },
-  UPDATE_COUNT_LAST (state, data) {
-    state.total = data.count
+  SET_TOTAL (state, data) {
+    state.total = data.total
+  },
+  SET_LAST (state, data) {
     state.last = data.last
   },
   ADD_RECORD (state, obj) {
