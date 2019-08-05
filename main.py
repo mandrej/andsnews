@@ -22,6 +22,10 @@ def collection(col):
         return jsonify({
             'last': last_entry()
         })
+    elif col == 'stat':
+        return jsonify({
+            'stat': available_filters()
+        })
 
 
 @app.route('/api/search', methods=['GET'])

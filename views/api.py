@@ -11,7 +11,7 @@ from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
 
 from config import PERCENTILE
-from models import Counter
+from models import Photo, Counter
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -40,6 +40,7 @@ def counters_values():
 
 
 def last_entry():
+    # latest = Photo.latest_for('year', datetime.datetime.now().year)
     key_name = 'Photo||{}||{}'.format('year', datetime.datetime.now().year)
     return Counter.get_by_id(key_name)
 
@@ -52,8 +53,8 @@ def available_filters():
             'field_name': field,
             'count': counter.count,
             'name': counter.value,
-            'serving_url': counter.repr_url,
-            'repr_stamp': counter.repr_stamp
+            # 'serving_url': counter.repr_url,
+            # 'repr_stamp': counter.repr_stamp
         } for counter in data[field]]
         if field == 'year':
             _list = sorted(_list, key=itemgetter('name'), reverse=True)
