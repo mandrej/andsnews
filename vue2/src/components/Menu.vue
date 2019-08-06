@@ -30,7 +30,6 @@ export default {
     height: null
   }),
   created () {
-    this.$store.dispatch('app/fetchLast')
     this.$store.dispatch('app/fetchTotal')
   },
   computed: {

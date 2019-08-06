@@ -65,6 +65,7 @@ const actions = {
         commit('UPDATE_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_VALUES', obj)
+        dispatch('fetchLast')
       })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -74,6 +75,7 @@ const actions = {
           EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
+          dispatch('fetchLast')
         } else {
           EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
         }
