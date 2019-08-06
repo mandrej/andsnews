@@ -31,14 +31,15 @@ const initialState = {
   uploaded: [],
 
   last: {},
+  total: null,
+
   objects: [],
+  count: null,
   pages: [],
   next: null,
   error: '',
   values: {},
-
-  total: null,
-  count: null,
+  stat: {},
 
   busy: false,
   clear: false
@@ -97,6 +98,12 @@ const actions = {
     axios.get('counter/values')
       .then(response => {
         commit('SET_VALUES', response.data)
+      })
+  },
+  fetchStat: ({ commit }) => {
+    axios.get('counter/stat')
+      .then(response => {
+        commit('SET_STAT', response.data)
       })
   },
   fetchRecords: ({ commit, state }) => {
@@ -189,6 +196,9 @@ const mutations = {
   },
   SET_VALUES (state, data) {
     state.values = data
+  },
+  SET_STAT (state, data) {
+    state.stat = data.stat
   },
   SET_CLEAR (state, val) {
     state.clear = val

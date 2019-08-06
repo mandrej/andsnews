@@ -19,8 +19,10 @@
 
       <v-content class="aperture">
         <v-container mt-4>
-          <h3 class="title">Messaging</h3>
-          <v-layout align-center>
+          <v-layout row align-center>
+            <v-flex xs12>
+              <h3 class="title">Messaging</h3>
+            </v-flex>
             <v-flex xs9>
               <v-text-field
                 label="Send message"
@@ -36,28 +38,50 @@
             </v-flex>
           </v-layout>
 
-          <h3 class="title">Counters</h3>
-          <v-layout align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
+          <v-layout row align-center class="py-1">
+            <v-flex xs12>
+              <h3 class="title">Counters</h3>
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
             <v-flex xs9>Rebuild for field {{field}}</v-flex>
             <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="secondary" @click="rebuild(field)">Rebuild</v-btn>
             </v-flex>
+            <v-flex xs12 class="py-3 hidden-sm-and-down">
+              <v-simple-table dense>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-right">Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in stat[field]" :key="item.value">
+                    <td>{{ item.value }}</td>
+                    <td class="text-right">{{ item.count }}</td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-flex>
           </v-layout>
-          <v-layout align-center>
+          <v-layout row align-center>
             <v-flex xs9>Add new fields, remove index docs</v-flex>
             <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="accent" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
           </v-layout>
 
-          <h3 class="title">Cloud</h3>
-          <v-layout class="py-1" align-center>
+          <v-layout row class="py-1" align-center>
+            <v-flex xs12>
+              <h3 class="title">Cloud</h3>
+            </v-flex>
             <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
             <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout class="py-1" align-center>
+          <v-layout row class="py-1" align-center>
             <v-flex xs9>Remove images in datastore that are missing in the Cloud</v-flex>
             <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="error" @click="missing">Missing</v-btn>
@@ -91,6 +115,9 @@ export default {
     timeout: 6000,
     message: ''
   }),
+  created () {
+    this.$store.dispatch('app/fetchStat')
+  },
   mounted () {
     messaging.onMessage(payload => {
       this.message = payload.notification.body
@@ -99,7 +126,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['values'])
+    ...mapState('app', ['values', 'stat'])
   },
   methods: {
     canRun (token) {
@@ -107,7 +134,9 @@ export default {
     },
     callAjax (url) {
       Vue.axios.post(url, { token: this.fcm_token })
-        .then(x => x.data)
+        .then(
+          this.$store.dispatch('app/fetchStat')
+        )
         // .catch(err => console.log(err))
     },
     rebuild (name) {

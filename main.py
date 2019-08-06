@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
-from views.api import CustomJSONEncoder, Paginator, counters_values, available_filters, last_entry
+from views.api import CustomJSONEncoder, Paginator, counters_values, counters_counts, last_entry
 from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Builder, Unbound, Fixer
 from views.models import Photo, slugify
@@ -24,7 +24,7 @@ def collection(col):
         })
     elif col == 'stat':
         return jsonify({
-            'stat': available_filters()
+            'stat': counters_counts()
         })
 
 
