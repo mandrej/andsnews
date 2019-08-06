@@ -15,17 +15,11 @@ def collection(col):
     if col == 'values':
         return jsonify(counters_values())
     elif col == 'total':
-        return jsonify({
-            'total': Photo.query().count()
-        })
+        return jsonify(Photo.query().count())
     elif col == 'last':
-        return jsonify({
-            'last': last_entry()
-        })
+        return jsonify(last_entry())
     elif col == 'stat':
-        return jsonify({
-            'stat': counters_counts()
-        })
+        return jsonify(counters_counts())
 
 
 @app.route('/api/search', methods=['GET'])

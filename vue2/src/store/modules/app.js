@@ -140,12 +140,6 @@ const mutations = {
   SAVE_FIND_FORM (state, payload) {
     state.find = payload
   },
-  SET_TOTAL (state, data) {
-    state.total = data.total
-  },
-  SET_LAST (state, data) {
-    state.last = data.last
-  },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
@@ -194,11 +188,17 @@ const mutations = {
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
+  SET_TOTAL (state, data) {
+    state.total = data
+  },
+  SET_LAST (state, data) {
+    state.last = data
+  },
   SET_VALUES (state, data) {
     state.values = data
   },
   SET_STAT (state, data) {
-    state.stat = data.stat
+    state.stat = data
   },
   SET_CLEAR (state, val) {
     state.clear = val
