@@ -39,6 +39,7 @@ def counters_values():
 
 
 def counters_counts():
+    """ only for Admin in console """
     data = Counter.all_photo_filter()
     result = {}
     for field in data.keys():
