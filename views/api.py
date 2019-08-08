@@ -3,13 +3,13 @@ from __future__ import division
 import datetime
 import time
 
+from operator import itemgetter
 from flask.json import JSONEncoder
 from google.appengine.api import users, datastore_errors
 from google.appengine.ext import ndb
 from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
 
-from config import PERCENTILE
 from models import Photo, Counter
 
 
@@ -45,9 +45,9 @@ def counters_counts():
     for field in data.keys():
         _list = [{'value': counter.value, 'count': counter.count} for counter in data[field]]
         if field == 'year':
-            result[field] = sorted(_list, reverse=True)
+            result[field] = sorted(_list, key=itemgetter('value'), reverse=True)
         else:
-            result[field] = sorted(_list)
+            result[field] = sorted(_list, key=itemgetter('value'))
     return result
 
 

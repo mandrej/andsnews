@@ -101,7 +101,8 @@ export default {
       this.$store.dispatch('app/saveFindForm', this.tmp)
 
       if (Object.keys(this.tmp).length) {
-        this.$router.push({ name: 'list', query: this.tmp })
+        // https://github.com/vuejs/vue-router/issues/2872
+        this.$router.push({ name: 'list', query: this.tmp }).catch(err => {})
       } else {
         this.$router.push({ name: 'home' })
       }

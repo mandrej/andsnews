@@ -11,8 +11,8 @@
 
     <v-app>
       <v-app-bar app flat light class="aperture">
-        <v-btn icon @click="$router.push({ name: 'home' })">
-          <v-icon>home</v-icon>
+        <v-btn icon @click="$router.go(-1)">
+          <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-app-bar>
@@ -78,6 +78,7 @@ import firebase from '@firebase/app'
 import '@firebase/messaging'
 
 const messaging = firebase.messaging()
+const axios = Vue.axios
 
 export default {
   name: 'Admin',
@@ -90,10 +91,14 @@ export default {
     },
     snackbar: false,
     timeout: 6000,
-    message: ''
+    message: '',
+    stat: {}
   }),
   created () {
-    this.$store.dispatch('app/fetchStat')
+    axios.get('counter/stat')
+      .then(response => {
+        this.stat = response.data
+      })
   },
   mounted () {
     messaging.onMessage(payload => {
@@ -103,7 +108,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['values', 'stat'])
+    ...mapState('app', ['values'])
   },
   methods: {
     canRun (token) {
