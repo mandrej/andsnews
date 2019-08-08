@@ -102,6 +102,7 @@ export default {
 
       if (Object.keys(this.tmp).length) {
         // https://github.com/vuejs/vue-router/issues/2872
+        // eslint-disable-next-line
         this.$router.push({ name: 'list', query: this.tmp }).catch(err => {})
       } else {
         this.$router.push({ name: 'home' })
