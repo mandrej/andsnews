@@ -78,7 +78,7 @@
       </div>
 
       <v-content class="aperture">
-        <transition name="fade" mode="out-in">
+        <transition name="fade-transition" mode="out-in">
           <component v-bind:is="currentComponent"></component>
         </transition>
       </v-content>

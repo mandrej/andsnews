@@ -28,10 +28,10 @@
               @change="filesChange($event.target.name, $event.target.files)"
               accept="image/*"
               class="input-file">
-            <v-container fill-height>
+            <v-container>
               <v-layout column justify-center align-center>
                 <template v-if="isInitial">
-                  <h3 class="headline">Upload images <v-icon large>cloud_upload</v-icon></h3>
+                  <h3 class="headline">Upload images …</h3>
                   <span class="subheading text-xs-center">Drag your images here to upload, or click to browse.</span>
                 </template>
                 <template v-if="isSaving">
