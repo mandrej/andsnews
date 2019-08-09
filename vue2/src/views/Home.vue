@@ -182,9 +182,6 @@ export default {
     updateOnlineStatus (event) {
       EventBus.$emit('status', 'You are ' + event.type)
     },
-    clearFilter () {
-      this.$router.push({ name: 'home' })
-    },
     onResize () {
       EventBus.$emit('resize')
     }
