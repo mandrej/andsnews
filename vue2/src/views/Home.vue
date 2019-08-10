@@ -95,7 +95,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Menu from '@/components/Menu'
+import Front from '@/components/Front'
 import List from '@/components/List'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
@@ -110,17 +110,16 @@ export default {
   name: 'Home',
   components: {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
-    Menu,
+    Front,
     List,
     Find
   },
-  props: ['text', 'tags', 'year', 'month', 'model', 'email'],
   data: () => ({
     isAdmin: false,
     isAuthorized: false,
     drawer: null,
     empty: false,
-    currentComponent: Menu,
+    currentComponent: Front,
     options: {
       duration: 300,
       offset: 0,
@@ -155,7 +154,7 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('app', ['busy', 'count', 'error']),
     isFront () {
-      return this.currentComponent === Menu
+      return this.currentComponent === Front
     },
     version () {
       return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
@@ -168,12 +167,22 @@ export default {
     '$route.query': {
       immediate: true,
       handler: function (val) {
-        if (Object.keys(val).length) {
+        const tmp = {}
+        Object.keys(val).forEach(key => {
+          if (key === 'year' || key === 'month') {
+            if (val[key]) tmp[key] = Number(val[key])
+          } else {
+            if (val[key]) tmp[key] = val[key]
+          }
+        })
+        this.$store.dispatch('app/saveFindForm', tmp)
+
+        if (Object.keys(tmp).length) {
           this.$store.dispatch('app/changeFilter', { reset: true })
           this.currentComponent = List
         } else {
           this.$store.dispatch('app/changeFilter', { reset: false })
-          this.currentComponent = Menu
+          this.currentComponent = Front
         }
       }
     }

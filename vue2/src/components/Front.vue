@@ -24,7 +24,7 @@ import common from '@/helpers/mixins'
 import { EventBus } from '@/helpers/event-bus'
 
 export default {
-  name: 'Menu',
+  name: 'Front',
   mixins: [ common ],
   data: () => ({
     height: null
@@ -46,7 +46,6 @@ export default {
     showFilter (rec) {
       const tmp = {}
       tmp[rec.field_name] = rec.name
-      this.$store.dispatch('app/saveFindForm', tmp)
       this.$router.push({ name: 'list', query: tmp })
     }
   }

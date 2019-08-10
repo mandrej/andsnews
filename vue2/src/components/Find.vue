@@ -1,65 +1,53 @@
 <template>
-  <v-card flat>
+  <v-card flat light>
     <v-card-text>
-      <v-flex xs12>
-        <v-text-field
-          label="by text"
-          v-model="tmp.text"
-          @keyup.native.enter="submit"
-          @change="submit"
-          @click:clear="submit"
-          clearable></v-text-field>
-      </v-flex>
-      <v-flex xs12>
-        <v-autocomplete
-          label="by tags"
-          :items="values.tags"
-          v-model="tmp.tags"
-          chips
-          multiple
-          hide-selected
-          deletable-chips
-          @change="submit"
-          @click:clear="submit"
-          clearable>
-        </v-autocomplete>
-      </v-flex>
-      <v-flex xs12>
-        <v-select
-          label="by year"
-          :items="values.year"
-          v-model="tmp.year"
-          @change="submit"
-          @click:clear="submit"
-          clearable></v-select>
-      </v-flex>
-      <v-flex xs12>
-        <v-select
-          label="by month"
-          :items="months"
-          v-model="tmp.month"
-          @change="submit"
-          @click:clear="submit"
-          clearable></v-select>
-      </v-flex>
-      <v-flex xs12>
-        <v-autocomplete
-          label="by camera model"
-          :items="values.model"
-          v-model="tmp.model"
-          @change="submit"
-          @click:clear="submit"
-          clearable></v-autocomplete>
-      </v-flex>
-      <v-flex xs12>
-        <v-autocomplete
-          label="by author"
-          :items="nicks"
-          v-model="tmp.nick"
-          @change="submit"
-          @click:clear="submit"
-          clearable></v-autocomplete>
-      </v-flex>
+      <v-text-field
+        label="by text"
+        v-model="tmp.text"
+        @keyup.native.enter="submit"
+        @change="submit"
+        @click:clear="submit"
+        clearable></v-text-field>
+      <v-autocomplete
+        label="by tags"
+        :items="values.tags"
+        v-model="tmp.tags"
+        chips
+        multiple
+        hide-selected
+        deletable-chips
+        @change="submit"
+        @click:clear="submit"
+        clearable>
+      </v-autocomplete>
+      <v-select
+        label="by year"
+        :items="values.year"
+        v-model="tmp.year"
+        @change="submit"
+        @click:clear="submit"
+        clearable></v-select>
+      <v-select
+        label="by month"
+        :items="months"
+        v-model="tmp.month"
+        @change="submit"
+        @click:clear="submit"
+        clearable></v-select>
+      <v-autocomplete
+        label="by camera model"
+        :items="values.model"
+        v-model="tmp.model"
+        @change="submit"
+        @click:clear="submit"
+        clearable></v-autocomplete>
+      <v-autocomplete
+        label="by author"
+        :items="nicks"
+        v-model="tmp.nick"
+        @change="submit"
+        @click:clear="submit"
+        clearable></v-autocomplete>
     </v-card-text>
   </v-card>
 </template>
@@ -74,11 +62,11 @@ export default {
   created () {
     this.$store.dispatch('app/fetchValues')
   },
+  data: () => ({
+    tmp: {}
+  }),
   computed: {
     ...mapState('app', ['find', 'values']),
-    tmp () {
-      return { ...this.find }
-    },
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -90,6 +78,14 @@ export default {
       })
     }
   },
+  watch: {
+    find: {
+      immediate: true,
+      handler: function (val) {
+        this.tmp = { ...val }
+      }
+    }
+  },
   methods: {
     submit () {
       // remove undefined and empty list
@@ -98,8 +94,6 @@ export default {
           delete this.tmp[key]
         }
       })
-      this.$store.dispatch('app/saveFindForm', this.tmp)
-
       if (Object.keys(this.tmp).length) {
         // https://github.com/vuejs/vue-router/issues/2872
         // eslint-disable-next-line
