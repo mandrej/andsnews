@@ -32,12 +32,14 @@
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column fill-height class="aperture">
-          <v-app-bar flat grow-shrink-0 light style="background: transparent">
-            <v-spacer></v-spacer>
-            <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
-            <span v-else style="padding-right: 1em">sign-in</span>
-            <SignIn></SignIn>
-          </v-app-bar>
+          <div>
+            <v-app-bar light flat style="background: transparent">
+              <v-spacer></v-spacer>
+              <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
+              <span v-else style="padding-right: 1em">sign-in</span>
+              <SignIn></SignIn>
+            </v-app-bar>
+          </div>
 
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>

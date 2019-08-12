@@ -1,5 +1,6 @@
 <template>
   <v-card flat light>
+    <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
         label="by text"
