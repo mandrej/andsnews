@@ -6,20 +6,20 @@ import { EventBus } from '@/helpers/event-bus'
 const axios = Vue.axios
 const LIMIT = 24
 
-function linearize (dict) {
+function linearize (obj) {
   const params = []
 
   function wrap (key, value) {
     params.push(key + '=' + encodeURIComponent(value))
   }
-  Object.keys(dict).sort().forEach(key => {
-    if (key === 'tags') {
-      dict[key].forEach(tag => {
+  Object.keys(obj).sort().forEach(key => {
+    if (Array.isArray(obj[key])) {
+      obj[key].forEach(tag => {
         wrap(key, tag)
       })
     } else {
-      if (dict[key]) {
-        wrap(key, dict[key])
+      if (obj[key]) {
+        wrap(key, obj[key])
       }
     }
   })
@@ -131,7 +131,7 @@ const actions = {
 const mutations = {
   // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_FIND_FORM (state, payload) {
-    state.find = payload
+    state.find = Object.assign({}, payload)
   },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)

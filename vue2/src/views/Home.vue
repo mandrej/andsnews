@@ -169,10 +169,12 @@ export default {
       handler: function (val) {
         const tmp = {}
         Object.keys(val).forEach(key => {
-          if (key === 'year' || key === 'month') {
-            if (val[key]) tmp[key] = Number(val[key])
+          if (!isNaN(val[key])) {
+            tmp[key] = Number(val[key])
+          } else if (Array.isArray(val[key])) {
+            tmp[key] = [ ...val[key] ]
           } else {
-            if (val[key]) tmp[key] = val[key]
+            tmp[key] = val[key]
           }
         })
         this.$store.dispatch('app/saveFindForm', tmp)
