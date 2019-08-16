@@ -21,36 +21,35 @@
 
       <v-content class="aperture">
         <v-container>
-          <v-responsive height="120px" class="mb-3">
-            <input type="file" multiple
-              name="photos"
-              :disabled="isSaving"
-              @change="filesChange($event.target.name, $event.target.files)"
-              accept="image/*"
-              class="input-file">
-            <v-container>
-              <v-layout column justify-center align-center>
-                <template v-if="isInitial">
-                  <h3 class="headline">Upload images …</h3>
-                  <span class="subheading text-xs-center">Drag your images here to upload, or click to browse.</span>
-                </template>
-                <template v-if="isSaving">
-                  <v-progress-linear
-                    :active="true"
-                    :query="value < 100"
-                    :indeterminate="value === 100"
-                    color="secondary"
-                    v-model="value"></v-progress-linear>
-                  <span v-if="value < 100" class="subheading text-xs-center">Upload in progress {{value}}%.</span>
-                  <span v-if="value === 100" class="subheading text-xs-center">Processing images. Please wait</span>
-                </template>
-                <template v-if="isFailed">
-                  <h3 class="headline">Upload failed</h3>
-                  <span v-if="isFailed" class="subheading text-xs-center error--text">Something went wrong.</span>
-                </template>
-              </v-layout>
-            </v-container>
-          </v-responsive>
+          <div class="dotted mb-3">
+            <v-layout column justify-center align-center style="height: 120px">
+              <input type="file" multiple
+                name="photos"
+                :disabled="isSaving"
+                @change="filesChange($event.target.name, $event.target.files)"
+                accept="image/*"
+                class="input-file">
+              <template v-if="isInitial">
+                <h3 class="headline">Upload images …</h3>
+                <span class="subheading text-xs-center">Drag your images here to upload, or click to browse</span>
+              </template>
+              <template v-if="isSaving">
+                <h3 class="headline">Uploading and saving</h3>
+                <v-progress-linear
+                  :active="true"
+                  :query="value < 100"
+                  :indeterminate="value === 100"
+                  color="secondary"
+                  v-model="value"></v-progress-linear>
+                <span v-if="value < 100" class="subheading text-xs-center">Upload in progress {{value}}%</span>
+                <span v-if="value === 100" class="subheading text-xs-center">Processing images. Please wait</span>
+              </template>
+              <template v-if="isFailed">
+                <h3 class="headline">Upload failed</h3>
+                <span v-if="isFailed" class="subheading text-xs-center error--text">Something went wrong.</span>
+              </template>
+            </v-layout>
+          </div>
 
           <v-slide-y-transition v-if="uploaded.length > 0" hide-on-leave group tag="v-list" two-line>
             <template v-for="(item, i) in uploaded">
@@ -202,14 +201,14 @@ export default {
 </script>
 
 <style scoped>
-.v-responsive {
+.dotted {
   outline: 2px dashed #37474F;
   cursor: pointer;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 100%;
-  height: 100%;
+  height: inherit;
   position: absolute;
   cursor: pointer;
 }
