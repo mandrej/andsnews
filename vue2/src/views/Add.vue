@@ -21,32 +21,33 @@
 
       <v-content class="aperture">
         <v-container>
-          <div class="dotted mb-3">
+          <div class="dotted mb-3 pa-4">
             <v-layout column justify-center align-center style="height: 120px">
-              <input type="file" multiple
-                name="photos"
-                :disabled="isSaving"
-                @change="filesChange($event.target.name, $event.target.files)"
-                accept="image/*"
-                class="input-file">
               <template v-if="isInitial">
-                <h3 class="headline">Upload images …</h3>
-                <span class="subheading text-xs-center">Drag your images here to upload, or click to browse</span>
+                <input type="file" multiple
+                  name="photos"
+                  :disabled="isSaving"
+                  @change="filesChange($event.target.name, $event.target.files)"
+                  accept="image/*"
+                  class="input-file">
+                <h3 class="headline">Upload images</h3>
+                <div class="subheading text-center">Drag your images here to upload, or click to browse</div>
               </template>
               <template v-if="isSaving">
-                <h3 class="headline">Uploading and saving</h3>
                 <v-progress-linear
                   :active="true"
                   :query="value < 100"
                   :indeterminate="value === 100"
+                  height="16"
                   color="secondary"
+                  striped
                   v-model="value"></v-progress-linear>
-                <span v-if="value < 100" class="subheading text-xs-center">Upload in progress {{value}}%</span>
-                <span v-if="value === 100" class="subheading text-xs-center">Processing images. Please wait</span>
+                <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
+                <div v-else-if="value === 100" class="subheading text-center">Processing images. Please wait …</div>
               </template>
               <template v-if="isFailed">
                 <h3 class="headline">Upload failed</h3>
-                <span v-if="isFailed" class="subheading text-xs-center error--text">Something went wrong.</span>
+                <div class="subheading text-center error--text">Something went wrong.</div>
               </template>
             </v-layout>
           </div>
@@ -143,7 +144,7 @@ export default {
     },
     save (formData) {
       this.status = STATUS_SAVING
-      this.message = 'Uploading ' + this.fileCount + ' images…'
+      this.message = 'Uploading ' + this.fileCount + ' images …'
       this.timeout = 0
       this.snackbar = true
       let success = false
@@ -202,6 +203,7 @@ export default {
 
 <style scoped>
 .dotted {
+  position: relative;
   outline: 2px dashed #37474F;
   cursor: pointer;
 }

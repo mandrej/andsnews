@@ -35,8 +35,6 @@
           <div>
             <v-app-bar light flat style="background: transparent">
               <v-spacer></v-spacer>
-              <span v-if="isAuthorized" style="padding-right: 1em">{{user.name}}</span>
-              <span v-else style="padding-right: 1em">sign-in</span>
               <SignIn></SignIn>
             </v-app-bar>
           </div>
@@ -80,8 +78,8 @@
       </div>
 
       <v-content class="aperture">
-        <transition name="fade-transition" mode="out-in">
-          <component v-bind:is="currentComponent"></component>
+        <transition name="fade" mode="out-in">
+          <component :is="currentComponent"></component>
         </transition>
       </v-content>
 
