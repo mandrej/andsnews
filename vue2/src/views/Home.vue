@@ -73,7 +73,7 @@
         <v-progress-circular v-show="busy" :indeterminate="true" style="margin-right: 16px"></v-progress-circular>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
       </v-app-bar>
-      <div v-else style="position: absolute; top: 0; left: 0; z-index: 2">
+      <div v-else class="front">
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
 
@@ -199,3 +199,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 6px;
+  z-index: 2;
+}
+</style>

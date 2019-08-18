@@ -5,7 +5,7 @@
       @click="signHandler"
       style="cursor: pointer">
       <v-img v-if="photoUrl" :src="photoUrl"></v-img>
-      <v-icon v-else large>account_circle</v-icon>
+      <v-img v-else src="/static/img/Google__G__Logo.svg"></v-img>
     </v-avatar>
   </transition>
 </template>
