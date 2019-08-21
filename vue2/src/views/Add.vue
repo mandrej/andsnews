@@ -200,18 +200,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.dotted {
-  position: relative;
-  outline: 2px dashed #37474F;
-  cursor: pointer;
-}
-.input-file {
-  opacity: 0; /* invisible but it's there! */
-  width: 100%;
-  height: inherit;
-  position: absolute;
-  cursor: pointer;
-}
-</style>

@@ -27,6 +27,18 @@ export default {
   background-attachment: fixed;
   background-color: #eee !important;
 }
+.dotted {
+  position: relative;
+  outline: 2px dashed #37474F;
+  cursor: pointer;
+}
+.input-file {
+  opacity: 0; /* invisible but it's there! */
+  width: 100%;
+  height: inherit;
+  position: absolute;
+  cursor: pointer;
+}
 .v-card__title {
   font-size: 1.25rem !important;
 }

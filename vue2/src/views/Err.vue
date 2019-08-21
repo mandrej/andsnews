@@ -9,14 +9,11 @@
 
     <v-content class="aperture">
       <v-container>
-        <v-responsive height="200px">
-          <v-container fill-height>
-            <v-layout column justify-center align-center>
-              <v-icon x-large>error</v-icon>
-              <h3 class="title">{{text}}</h3>
-            </v-layout>
-          </v-container>
-        </v-responsive>
+        <div class="dotted mb-3 pa-4">
+          <v-layout column justify-center align-center style="height: 120px">
+            <h3 class="headline">{{text}}</h3>
+          </v-layout>
+        </div>
       </v-container>
     </v-content>
   </v-app>
@@ -28,13 +25,3 @@ export default {
   props: ['title', 'text']
 }
 </script>
-
-<style lang="scss" scoped>
-.v-responsive {
-  outline: 2px dashed #37474F;
-  & h3 {
-    padding-top: 1em;
-    text-align: center;
-  }
-}
-</style>
