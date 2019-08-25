@@ -43,21 +43,23 @@
                 :data-pswp-src="getImgSrc(item)">
               <v-card-title>{{item.headline}}</v-card-title>
               <v-card-text>
-                  <div>{{formatDate(item.date)}}</div>
-                  <div>by {{item.nick}}</div>
-             </v-card-text>
+                <div>{{formatDate(item.date)}}</div>
+                <div>by {{item.nick}}</div>
+              </v-card-text>
               <v-card-actions>
-                <v-layout justify-end>
-                  <v-btn v-if="canDelete(user)" icon small text color="primary" @click="removeRecord(item)">
-                    <v-icon>cancel</v-icon>
-                  </v-btn>
-                  <v-btn v-if="canEdit(user)" icon small text color="primary" @click="showEditdForm(item)">
-                    <v-icon>edit</v-icon>
-                  </v-btn>
-                  <v-btn icon small text color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
-                    <v-icon>file_download</v-icon>
-                  </v-btn>
-                </v-layout>
+                <v-container fluid>
+                  <v-layout justify-end>
+                    <v-btn v-if="canDelete(user)" icon small text color="primary" @click="removeRecord(item)">
+                      <v-icon>cancel</v-icon>
+                    </v-btn>
+                    <v-btn v-if="canEdit(user)" icon small text color="primary" @click="showEditdForm(item)">
+                      <v-icon>edit</v-icon>
+                    </v-btn>
+                    <v-btn icon small text color="primary" :href="`/api/download/${item.safekey}`" :download="`${item.slug}.jpg`" target="_blank">
+                      <v-icon>file_download</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </v-container>
               </v-card-actions>
             </v-card>
           </v-flex>
