@@ -26,10 +26,6 @@ export default {
     this.photoUrl = this.user && this.user.photo
     EventBus.$on('signin', user => {
       this.photoUrl = user && user.photo // url or undefined
-      if (!this.photoUrl) {
-        // eslint-disable-next-line
-        this.$router.push({ name: 'home' }).catch(err => {})
-      }
     })
   },
   methods: {
