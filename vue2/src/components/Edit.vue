@@ -3,6 +3,7 @@
     v-model="show"
     scrollable
     max-width="800"
+    :fullscreen="$vuetify.breakpoint.xsOnly"
     transition="dialog-bottom-transition">
     <v-card tile light>
       <v-app-bar flat light>
