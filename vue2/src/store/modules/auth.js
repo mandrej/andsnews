@@ -1,13 +1,16 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-// export const RESET = 'RESET';
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import FIREBASEAPP from '@/helpers/fire'
-import '@firebase/app'
+import firebase from '@firebase/app'
+import '@firebase/auth'
 import '@firebase/database'
 
 const axios = Vue.axios
 const messaging = FIREBASEAPP.messaging()
+const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
+const admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
+// user.uid for  milan.andrejevic@gmail.com      mihailo.genije@gmail.com
 
 function pushMessage (token, msg) {
   axios.post('message', { token: token, text: msg })
@@ -22,16 +25,34 @@ const initialState = {
   fcm_token: null
 }
 const actions = {
-  // reset: ({ commit }) => commit(RESET),
-  saveUser: ({ commit, dispatch }, user) => {
-    if (user && user.uid) {
-      FIREBASEAPP.database().ref('users').child(user.uid).set({
-        email: user.email,
-        date: (new Date()).toISOString()
-      })
+  signIn: ({ commit, dispatch, state }) => {
+    if (state.user && state.user.uid) {
+      FIREBASEAPP.auth().signOut()
+        .then(() => {
+          commit('SAVE_USER', {})
+        })
+    } else {
+      FIREBASEAPP.auth().signInWithPopup(provider)
+        .then(response => {
+          const payload = {
+            name: response.user.displayName,
+            email: response.user.email,
+            uid: response.user.uid,
+            photo: response.user.photoURL,
+            isAuthorized: true,
+            isAdmin: (admins.indexOf(response.user.uid) !== -1)
+          }
+          commit('SAVE_USER', payload)
+          dispatch('saveUser', payload)
+        })
     }
-    commit('SAVE_USER', user)
-    if (user.email) dispatch('app/updateValuesEmail', user, { root: true })
+  },
+  saveUser: ({ dispatch }, user) => {
+    FIREBASEAPP.database().ref('users').child(user.uid).set({
+      email: user.email,
+      date: (new Date()).toISOString()
+    })
+    dispatch('app/updateValuesEmail', user, { root: true })
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
@@ -74,7 +95,6 @@ const actions = {
   }
 }
 const mutations = {
-  // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
   SAVE_USER (state, payload) {
     state.user = payload
     EventBus.$emit('signin', state.user)

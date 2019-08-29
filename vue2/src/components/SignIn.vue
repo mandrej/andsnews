@@ -13,11 +13,6 @@
 <script>
 import { mapState } from 'vuex'
 import { EventBus } from '@/helpers/event-bus'
-import FIREBASEAPP from '@/helpers/fire'
-import firebase from '@firebase/app'
-import '@firebase/auth'
-
-const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 
 export default {
   name: 'SignIn',
@@ -30,30 +25,16 @@ export default {
   mounted () {
     this.photoUrl = this.user && this.user.photo
     EventBus.$on('signin', user => {
-      this.photoUrl = user && user.photo
+      this.photoUrl = user && user.photo // url or undefined
+      if (!this.photoUrl) {
+        // eslint-disable-next-line
+        this.$router.push({ name: 'home' }).catch(err => {})
+      }
     })
   },
   methods: {
     signHandler () {
-      if (this.user && this.user.uid) {
-        FIREBASEAPP.auth().signOut()
-          .then(() => {
-            this.$store.dispatch('auth/saveUser', {})
-            this.$router.push({ name: 'home' })
-          })
-      } else {
-        FIREBASEAPP.auth().signInWithPopup(provider)
-          .then(response => {
-            this.$store.dispatch('auth/saveUser', {
-              name: response.user.displayName,
-              email: response.user.email,
-              uid: response.user.uid,
-              photo: response.user.photoURL,
-              isAuthorized: true,
-              isAdmin: (this.$admins.indexOf(response.user.uid) !== -1)
-            })
-          })
-      }
+      this.$store.dispatch('auth/signIn')
     }
   }
 }
