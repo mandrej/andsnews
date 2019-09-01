@@ -31,7 +31,7 @@
     </v-dialog>
 
     <v-container fluid grid-list-lg class="pa-3">
-      <Photoswipe>
+      <Photoswipe :options="options">
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2
             v-for="item in objects" :key="item.safekey">
@@ -108,7 +108,10 @@ export default {
     index: 0,
     snackbar: false,
     timeout: 6000,
-    message: ''
+    message: '',
+    options: {
+      history: true
+    }
   }),
   computed: {
     ...mapState('auth', ['user']),
@@ -139,7 +142,6 @@ export default {
     }
   },
   methods: {
-    // console.log(this.$vuetify.breakpoint.xs)
     bottomVisible () {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
