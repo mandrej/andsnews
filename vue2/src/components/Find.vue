@@ -3,49 +3,49 @@
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
-        label="by text"
         v-model="tmp.text"
+        label="by text"
         @keyup.native.enter="submit"
         @change="submit"
         @click:clear="submit"
         clearable></v-text-field>
       <v-autocomplete
-        label="by tags"
-        :items="values.tags"
         v-model="tmp.tags"
+        :items="values.tags"
+        label="by tags"
+        @change="submit"
+        @click:clear="submit"
         chips
         multiple
         hide-selected
         deletable-chips
-        @change="submit"
-        @click:clear="submit"
         clearable>
       </v-autocomplete>
       <v-select
-        label="by year"
-        :items="values.year"
         v-model="tmp.year"
+        :items="values.year"
+        label="by year"
         @change="submit"
         @click:clear="submit"
         clearable></v-select>
       <v-select
-        label="by month"
-        :items="months"
         v-model="tmp.month"
+        :items="months"
+        label="by month"
         @change="submit"
         @click:clear="submit"
         clearable></v-select>
       <v-autocomplete
-        label="by camera model"
-        :items="values.model"
         v-model="tmp.model"
+        :items="values.model"
+        label="by camera model"
         @change="submit"
         @click:clear="submit"
         clearable></v-autocomplete>
       <v-autocomplete
-        label="by author"
-        :items="nicks"
         v-model="tmp.nick"
+        :items="nicks"
+        label="by author"
         @change="submit"
         @click:clear="submit"
         clearable></v-autocomplete>

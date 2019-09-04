@@ -28,17 +28,18 @@
                 <v-layout row wrap>
                   <v-flex xs12>
                     <v-text-field
-                      :label="`Headline for ${tmp.filename}`"
                       v-model="tmp.headline"
                       :rules="requiredRule"
+                      :label="`Headline for ${tmp.filename}`"
                       required></v-text-field>
                   </v-flex>
                   <v-flex xs12>
                     <v-combobox
-                      label="Tags"
-                      :items="values.tags"
-                      :search-input.sync="search"
                       v-model="tmp.tags"
+                      :items="values.tags"
+                      label="Tags"
+                      :search-input.sync="search"
+                      @change="search = null"
                       chips
                       multiple
                       hide-selected
@@ -57,17 +58,17 @@
                   </v-flex>
                   <v-flex xs12 sm12 md12>
                     <v-autocomplete
-                      label="Author"
-                      :items="values.email"
                       v-model="tmp.email"
+                      :items="values.email"
+                      label="Author"
                       single-line></v-autocomplete>
                   </v-flex>
                   <v-flex xs12 sm12 md12>
                     <v-layout row>
                       <v-flex xs6>
                         <v-menu
-                          ref="dateRef"
                           v-model="menuDate"
+                          ref="dateRef"
                           :close-on-content-click="false"
                           :return-value.sync="dateTime.date"
                           transition="scale-transition"
@@ -92,8 +93,8 @@
                       </v-flex>
                       <v-flex xs6>
                         <v-menu
-                          ref="timeRef"
                           v-model="menuTime"
+                          ref="timeRef"
                           :close-on-content-click="false"
                           :nudge-right="40"
                           :return-value.sync="dateTime.time"
