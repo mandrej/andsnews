@@ -13,7 +13,8 @@
         v-model="tmp.tags"
         :items="values.tags"
         label="by tags"
-        @change="submit"
+        :search-input.sync="search"
+        @change="clearSubmit"
         @click:clear="submit"
         chips
         multiple
@@ -64,7 +65,8 @@ export default {
     this.$store.dispatch('app/fetchValues')
   },
   data: () => ({
-    tmp: {}
+    tmp: {},
+    search: null
   }),
   computed: {
     ...mapState('app', ['find', 'values']),
@@ -88,6 +90,10 @@ export default {
     }
   },
   methods: {
+    clearSubmit () {
+      this.search = null
+      this.submit()
+    },
     submit () {
       // remove undefined and empty list
       Object.keys(this.tmp).forEach(key => {
