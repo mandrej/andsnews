@@ -8,6 +8,7 @@
         @keyup.native.enter="submit"
         @change="submit"
         @click:clear="submit"
+        :disabled="disabled"
         clearable></v-text-field>
       <v-autocomplete
         v-model="tmp.tags"
@@ -16,10 +17,12 @@
         :search-input.sync="search"
         @change="clearSubmit"
         @click:clear="submit"
+        :disabled="disabled"
         chips
         multiple
         hide-selected
         deletable-chips
+        autocomplete="off"
         clearable>
       </v-autocomplete>
       <v-select
@@ -28,6 +31,7 @@
         label="by year"
         @change="submit"
         @click:clear="submit"
+        :disabled="disabled"
         clearable></v-select>
       <v-select
         v-model="tmp.month"
@@ -35,6 +39,7 @@
         label="by month"
         @change="submit"
         @click:clear="submit"
+        :disabled="disabled"
         clearable></v-select>
       <v-autocomplete
         v-model="tmp.model"
@@ -42,6 +47,7 @@
         label="by camera model"
         @change="submit"
         @click:clear="submit"
+        :disabled="disabled"
         clearable></v-autocomplete>
       <v-autocomplete
         v-model="tmp.nick"
@@ -49,6 +55,7 @@
         label="by author"
         @change="submit"
         @click:clear="submit"
+        :disabled="disabled"
         clearable></v-autocomplete>
     </v-card-text>
   </v-card>
@@ -66,10 +73,11 @@ export default {
   },
   data: () => ({
     tmp: {},
+    disabled: false,
     search: null
   }),
   computed: {
-    ...mapState('app', ['find', 'values']),
+    ...mapState('app', ['busy', 'find', 'values']),
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -81,7 +89,10 @@ export default {
       })
     }
   },
-  watch: {
+  watch : {
+    busy: function (val) {
+      this.disabled = val
+    },
     find: {
       immediate: true,
       handler: function (val) {
