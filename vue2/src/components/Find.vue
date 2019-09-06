@@ -89,7 +89,7 @@ export default {
       })
     }
   },
-  watch : {
+  watch: {
     busy: function (val) {
       this.disabled = val
     },
