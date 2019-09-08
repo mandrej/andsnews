@@ -51,7 +51,7 @@
             </v-layout>
           </div>
 
-          <v-slide-y-transition v-if="uploaded.length > 0" hide-on-leave group tag="v-list" two-line>
+          <v-list v-if="uploaded.length > 0" two-line>
             <template v-for="(item, i) in uploaded">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
               <v-list-item :key="i">
@@ -70,7 +70,7 @@
                 </v-list-item-action>
               </v-list-item>
             </template>
-          </v-slide-y-transition>
+          </v-list>
 
         </v-container>
       </v-content>
