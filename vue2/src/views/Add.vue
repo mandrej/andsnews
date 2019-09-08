@@ -26,7 +26,6 @@
               <template v-if="isInitial">
                 <input type="file" multiple
                   name="photos"
-                  :disabled="isSaving"
                   @change="filesChange($event.target.name, $event.target.files)"
                   accept="image/*"
                   class="input-file">

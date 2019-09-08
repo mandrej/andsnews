@@ -45,7 +45,7 @@
                       hide-selected
                       deletable-chips
                       clearable>
-                      <template slot="no-data">
+                      <template v-slot:no-data>
                         <v-list-item>
                           <v-list-item-content>
                             <v-list-item-title>
@@ -73,7 +73,6 @@
                           :return-value.sync="dateTime.date"
                           transition="scale-transition"
                           offset-y
-                          full-width
                           min-width="290px">
                           <template v-slot:activator="{ on }">
                             <v-text-field
@@ -100,7 +99,6 @@
                           :return-value.sync="dateTime.time"
                           transition="scale-transition"
                           offset-y
-                          full-width
                           max-width="290px"
                           min-width="290px">
                           <template v-slot:activator="{ on }">
@@ -115,7 +113,6 @@
                           <v-time-picker
                             v-if="dateTime.time"
                             v-model="dateTime.time"
-                            full-width
                             @click:minute="$refs.timeRef.save(dateTime.time)">
                           </v-time-picker>
                         </v-menu>
