@@ -35,7 +35,7 @@ export default {
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 100%;
-  height: inherit;
+  height: 100%;
   position: absolute;
   cursor: pointer;
 }
