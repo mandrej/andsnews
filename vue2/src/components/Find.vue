@@ -1,5 +1,8 @@
 <template>
-  <v-card flat light>
+  <v-card
+    flat
+    light
+  >
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
@@ -9,7 +12,8 @@
         @change="submit"
         @click:clear="submit"
         :disabled="disabled"
-        clearable></v-text-field>
+        clearable
+      ></v-text-field>
       <v-autocomplete
         v-model="tmp.tags"
         :items="values.tags"
@@ -23,7 +27,8 @@
         hide-selected
         deletable-chips
         autocomplete="off"
-        clearable>
+        clearable
+      >
       </v-autocomplete>
       <v-select
         v-model="tmp.year"
@@ -32,7 +37,8 @@
         @change="submit"
         @click:clear="submit"
         :disabled="disabled"
-        clearable></v-select>
+        clearable
+      ></v-select>
       <v-select
         v-model="tmp.month"
         :items="months"
@@ -40,7 +46,8 @@
         @change="submit"
         @click:clear="submit"
         :disabled="disabled"
-        clearable></v-select>
+        clearable
+      ></v-select>
       <v-autocomplete
         v-model="tmp.model"
         :items="values.model"
@@ -48,7 +55,8 @@
         @change="submit"
         @click:clear="submit"
         :disabled="disabled"
-        clearable></v-autocomplete>
+        clearable
+      ></v-autocomplete>
       <v-autocomplete
         v-model="tmp.nick"
         :items="nicks"
@@ -56,7 +64,8 @@
         @change="submit"
         @click:clear="submit"
         :disabled="disabled"
-        clearable></v-autocomplete>
+        clearable
+      ></v-autocomplete>
     </v-card-text>
   </v-card>
 </template>
@@ -67,7 +76,7 @@ import common from '@/helpers/mixins'
 
 export default {
   name: 'Find',
-  mixins: [ common ],
+  mixins: [common],
   created () {
     this.$store.dispatch('app/fetchValues')
   },
@@ -115,7 +124,7 @@ export default {
       if (Object.keys(this.tmp).length) {
         // https://github.com/vuejs/vue-router/issues/2872
         // eslint-disable-next-line
-        this.$router.push({ name: 'list', query: this.tmp }).catch(err => {})
+        this.$router.push({ name: 'list', query: this.tmp }).catch(err => { })
       } else {
         this.$router.push({ name: 'home' })
       }

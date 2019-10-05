@@ -13,7 +13,8 @@ const admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
 // user.uid for  milan.andrejevic@gmail.com      mihailo.genije@gmail.com
 
 function pushMessage (token, msg) {
-  axios.post('message', { token: token, text: msg })
+  axios
+    .post('message', { token: token, text: msg })
     .then(response => {
       console.error(response)
     })
@@ -27,12 +28,14 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      FIREBASEAPP.auth().signOut()
+      FIREBASEAPP.auth()
+        .signOut()
         .then(() => {
           commit('SAVE_USER', {})
         })
     } else {
-      FIREBASEAPP.auth().signInWithPopup(provider)
+      FIREBASEAPP.auth()
+        .signInWithPopup(provider)
         .then(response => {
           const payload = {
             name: response.user.displayName,
@@ -40,7 +43,7 @@ const actions = {
             uid: response.user.uid,
             photo: response.user.photoURL,
             isAuthorized: true,
-            isAdmin: (admins.indexOf(response.user.uid) !== -1)
+            isAdmin: admins.indexOf(response.user.uid) !== -1
           }
           commit('SAVE_USER', payload)
           dispatch('saveUser', payload)
@@ -48,15 +51,19 @@ const actions = {
     }
   },
   saveUser: ({ dispatch }, user) => {
-    FIREBASEAPP.database().ref('users').child(user.uid).set({
-      email: user.email,
-      date: (new Date()).toISOString()
-    })
+    FIREBASEAPP.database()
+      .ref('users')
+      .child(user.uid)
+      .set({
+        email: user.email,
+        date: new Date().toISOString()
+      })
     dispatch('app/updateValuesEmail', user, { root: true })
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
-      messaging.requestPermission()
+      messaging
+        .requestPermission()
         .then(() => {
           return messaging.getToken()
         })
@@ -73,19 +80,22 @@ const actions = {
     const ref = FIREBASEAPP.database().ref('registrations')
     ref.child(state.fcm_token).set({
       email: state.user.email,
-      date: (new Date()).toISOString()
+      date: new Date().toISOString()
     })
-    ref.orderByChild('email').equalTo(state.user.email).on('value', function (snapshot) {
-      snapshot.forEach(function (data) {
-        if (data.key !== state.fcm_token) {
-          ref.child(data.key).remove()
-        }
+    ref
+      .orderByChild('email')
+      .equalTo(state.user.email)
+      .on('value', function (snapshot) {
+        snapshot.forEach(function (data) {
+          if (data.key !== state.fcm_token) {
+            ref.child(data.key).remove()
+          }
+        })
       })
-    })
   },
   sendNotifications: ({ state }, msg) => {
     const ref = FIREBASEAPP.database().ref('registrations')
-    ref.once('value', (snapshot) => {
+    ref.once('value', snapshot => {
       snapshot.forEach(node => {
         if (node.key !== state.fcm_token) {
           pushMessage(node.key, msg)

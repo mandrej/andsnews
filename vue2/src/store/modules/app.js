@@ -12,17 +12,19 @@ function linearize (obj) {
   function wrap (key, value) {
     params.push(key + '=' + encodeURIComponent(value))
   }
-  Object.keys(obj).sort().forEach(key => {
-    if (Array.isArray(obj[key])) {
-      obj[key].forEach(tag => {
-        wrap(key, tag)
-      })
-    } else {
-      if (obj[key]) {
-        wrap(key, obj[key])
+  Object.keys(obj)
+    .sort()
+    .forEach(key => {
+      if (Array.isArray(obj[key])) {
+        obj[key].forEach(tag => {
+          wrap(key, tag)
+        })
+      } else {
+        if (obj[key]) {
+          wrap(key, obj[key])
+        }
       }
-    }
-  })
+    })
   return params.join('&')
 }
 
@@ -59,17 +61,17 @@ const actions = {
     commit('ADD_RECORD', obj)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
-    axios.put('edit/' + obj.safekey, obj)
-      .then(response => {
-        const obj = response.data.rec
-        commit('UPDATE_RECORD', obj)
-        commit('DELETE_UPLOADED', obj)
-        commit('UPDATE_VALUES', obj)
-        dispatch('fetchLast')
-      })
+    axios.put('edit/' + obj.safekey, obj).then(response => {
+      const obj = response.data.rec
+      commit('UPDATE_RECORD', obj)
+      commit('DELETE_UPLOADED', obj)
+      commit('UPDATE_VALUES', obj)
+      dispatch('fetchLast')
+    })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
-    axios.delete('delete/' + obj.safekey, { parms: { foo: 'bar' } })
+    axios
+      .delete('delete/' + obj.safekey, { parms: { foo: 'bar' } })
       .then(response => {
         if (response.data) {
           EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
@@ -82,22 +84,19 @@ const actions = {
       })
   },
   fetchTotal: ({ commit }) => {
-    axios.get('counter/total')
-      .then(response => {
-        commit('SET_TOTAL', response.data)
-      })
+    axios.get('counter/total').then(response => {
+      commit('SET_TOTAL', response.data)
+    })
   },
   fetchLast: ({ commit }) => {
-    axios.get('counter/last')
-      .then(response => {
-        commit('SET_LAST', response.data)
-      })
+    axios.get('counter/last').then(response => {
+      commit('SET_LAST', response.data)
+    })
   },
   fetchValues: ({ commit }) => {
-    axios.get('counter/values')
-      .then(response => {
-        commit('SET_VALUES', response.data)
-      })
+    axios.get('counter/values').then(response => {
+      commit('SET_VALUES', response.data)
+    })
   },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
@@ -108,7 +107,8 @@ const actions = {
 
       commit('SET_ERROR', '')
       commit('SET_BUSY', true)
-      axios.get(url)
+      axios
+        .get(url)
         .then(response => {
           if (state.clear) {
             commit('RESET_RECORDS')
@@ -176,7 +176,7 @@ const mutations = {
   UPDATE_VALUES (state, obj) {
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
-    if (obj.model) state.values.model = [...new Set([...state.values.model, obj.model])]
+    if (obj.model) { state.values.model = [...new Set([...state.values.model, obj.model])] }
   },
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]

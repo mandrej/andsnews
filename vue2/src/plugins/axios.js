@@ -13,7 +13,7 @@ import axios from 'axios'
 let config = {
   baseURL: '/api/',
   headers: {
-    'client': 'vue2'
+    client: 'vue2'
   }
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout

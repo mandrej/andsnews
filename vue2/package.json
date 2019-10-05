@@ -65,12 +65,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "jshintConfig": {
-    "undef": true,
-    "unused": true,
-    "esversion": 6,
-    "asi": true,
-    "node": true
-  }
+  ]
 }

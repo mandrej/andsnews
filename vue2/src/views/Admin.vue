@@ -1,17 +1,33 @@
 <template>
   <div>
-    <v-snackbar left bottom
+    <v-snackbar
+      left
+      bottom
       v-model="snackbar"
-      :timeout="timeout">
+      :timeout="timeout"
+    >
       {{ message }}
-      <v-btn text icon color="white" @click="snackbar = false">
+      <v-btn
+        text
+        icon
+        color="white"
+        @click="snackbar = false"
+      >
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-app>
-      <v-app-bar app flat light class="aperture">
-        <v-btn icon @click="$router.go(-1)">
+      <v-app-bar
+        app
+        flat
+        light
+        class="aperture"
+      >
+        <v-btn
+          icon
+          @click="$router.go(-1)"
+        >
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
@@ -29,18 +45,40 @@
                 type="text"
                 @input="upper($event)"
                 :rules="requiredRule"
-                required></v-text-field>
+                required
+              ></v-text-field>
             </v-flex>
-            <v-flex xs3 class="text-right">
-              <v-btn color="secondary" width="100" @click="send">Send</v-btn>
+            <v-flex
+              xs3
+              class="text-right"
+            >
+              <v-btn
+                color="secondary"
+                width="100"
+                @click="send"
+              >Send</v-btn>
             </v-flex>
           </v-layout>
 
           <h3 class="title">Counters</h3>
-          <v-layout wrap align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
+          <v-layout
+            wrap
+            align-center
+            v-for="field in Object.keys(values)"
+            :key="field"
+            class="py-1"
+          >
             <v-flex xs9>Rebuild for field {{field}}</v-flex>
-            <v-flex xs3 class="text-right">
-              <v-btn :disabled="canRun(fcm_token)" color="secondary" width="100" @click="rebuild(field)">Rebuild</v-btn>
+            <v-flex
+              xs3
+              class="text-right"
+            >
+              <v-btn
+                :disabled="canRun(fcm_token)"
+                color="secondary"
+                width="100"
+                @click="rebuild(field)"
+              >Rebuild</v-btn>
             </v-flex>
           </v-layout>
 
@@ -52,16 +90,40 @@
           </v-layout> -->
 
           <h3 class="title">Cloud</h3>
-          <v-layout wrap class="py-1" align-center>
+          <v-layout
+            wrap
+            class="py-1"
+            align-center
+          >
             <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
-            <v-flex xs3 class="text-right">
-              <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
+            <v-flex
+              xs3
+              class="text-right"
+            >
+              <v-btn
+                :disabled="canRun(fcm_token)"
+                color="error"
+                width="100"
+                @click="unbound"
+              >Remove</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout wrap class="py-1" align-center>
+          <v-layout
+            wrap
+            class="py-1"
+            align-center
+          >
             <v-flex xs9>Remove images in datastore that are missing in the Cloud</v-flex>
-            <v-flex xs3 class="text-right">
-              <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="missing">Missing</v-btn>
+            <v-flex
+              xs3
+              class="text-right"
+            >
+              <v-btn
+                :disabled="canRun(fcm_token)"
+                color="error"
+                width="100"
+                @click="missing"
+              >Missing</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -82,7 +144,7 @@ const axios = Vue.axios
 
 export default {
   name: 'Admin',
-  mixins: [ common ],
+  mixins: [common],
   data: () => ({
     msg: {
       type: String,
@@ -117,7 +179,7 @@ export default {
     callAjax (url) {
       Vue.axios.post(url, { token: this.fcm_token })
         .then(x => x.data)
-        // .catch(err => console.log(err))
+      // .catch(err => console.log(err))
     },
     rebuild (name) {
       this.callAjax('rebuild/' + name)

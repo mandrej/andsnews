@@ -16,15 +16,19 @@ const createStore = () => {
     modules,
     strict: isNotProd,
     plugins: []
-      .concat(isNotTest ? [createPersistedState({ key: APP_KEY })] : ['user', 'fcm_token', 'find', 'last', 'uploaded'])
+      .concat(
+        isNotTest
+          ? [createPersistedState({ key: APP_KEY })]
+          : ['user', 'fcm_token', 'find', 'last', 'uploaded']
+      )
       .concat(isNotProd ? [createLogger()] : [])
   })
   if (module.hot) {
-  // accept actions and mutations as hot modules
+    // accept actions and mutations as hot modules
     module.hot.accept(['./modules'], () => {
       // require the updated modules
       // have to add .default here due to babel 6 module output
-      import('./modules').then((newModules) => {
+      import('./modules').then(newModules => {
         // swap in the new actions and mutations
         store.hotUpdate({
           modules: newModules.default
