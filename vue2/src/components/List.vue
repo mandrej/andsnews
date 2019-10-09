@@ -77,59 +77,64 @@
             v-for="item in objects"
             :key="item.safekey"
           >
-            <v-card
-              light
-              class="card"
+            <v-lazy
+              :options="lazy"
+              min-height="200"
             >
-              <img
-                v-lazy="getImgSrc(item, '400-c')"
-                :title="caption(item)"
-                :data-pswp-size="item.dim.join('x')"
-                :data-pswp-src="getImgSrc(item)"
+              <v-card
+                light
+                class="card"
               >
-              <v-card-title>{{item.headline}}</v-card-title>
-              <v-card-text>
-                <div>{{formatDate(item.date)}}</div>
-                <div>by {{item.nick}}</div>
-              </v-card-text>
-              <v-card-actions>
-                <v-container fluid>
-                  <v-layout justify-end>
-                    <v-btn
-                      v-if="canDelete(user)"
-                      icon
-                      small
-                      text
-                      color="primary"
-                      @click="removeRecord(item)"
-                    >
-                      <v-icon>cancel</v-icon>
-                    </v-btn>
-                    <v-btn
-                      v-if="canEdit(user)"
-                      icon
-                      small
-                      text
-                      color="primary"
-                      @click="showEditdForm(item)"
-                    >
-                      <v-icon>edit</v-icon>
-                    </v-btn>
-                    <v-btn
-                      icon
-                      small
-                      text
-                      color="primary"
-                      :href="`/api/download/${item.safekey}`"
-                      :download="`${item.slug}.jpg`"
-                      target="_blank"
-                    >
-                      <v-icon>file_download</v-icon>
-                    </v-btn>
-                  </v-layout>
-                </v-container>
-              </v-card-actions>
-            </v-card>
+                <img
+                  :src="getImgSrc(item, '400-c')"
+                  :title="caption(item)"
+                  :data-pswp-size="item.dim.join('x')"
+                  :data-pswp-src="getImgSrc(item)"
+                >
+                <v-card-title>{{item.headline}}</v-card-title>
+                <v-card-text>
+                  <div>{{formatDate(item.date)}}</div>
+                  <div>by {{item.nick}}</div>
+                </v-card-text>
+                <v-card-actions>
+                  <v-container fluid>
+                    <v-layout justify-end>
+                      <v-btn
+                        v-if="canDelete(user)"
+                        icon
+                        small
+                        text
+                        color="primary"
+                        @click="removeRecord(item)"
+                      >
+                        <v-icon>cancel</v-icon>
+                      </v-btn>
+                      <v-btn
+                        v-if="canEdit(user)"
+                        icon
+                        small
+                        text
+                        color="primary"
+                        @click="showEditdForm(item)"
+                      >
+                        <v-icon>edit</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        small
+                        text
+                        color="primary"
+                        :href="`/api/download/${item.safekey}`"
+                        :download="`${item.slug}.jpg`"
+                        target="_blank"
+                      >
+                        <v-icon>file_download</v-icon>
+                      </v-btn>
+                    </v-layout>
+                  </v-container>
+                </v-card-actions>
+              </v-card>
+            </v-lazy>
           </v-flex>
         </v-layout>
       </Photoswipe>
@@ -141,13 +146,9 @@
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
-import VueLazyload from 'vue-lazyload'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 
-Vue.use(VueLazyload, {
-  attempt: 1
-})
 Vue.use(Photoswipe, {
   preload: [1, 3],
   shareEl: false,
@@ -179,6 +180,9 @@ export default {
     message: '',
     options: {
       history: true
+    },
+    lazy: {
+      threshold: 0.5
     }
   }),
   computed: {
@@ -248,16 +252,11 @@ export default {
 <style lang="scss" scoped>
 .card {
   img {
-    opacity: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity 0.3s;
     cursor: pointer;
-    &[lazy="loaded"] {
-      opacity: 1;
-    }
   }
   .v-card__title {
     line-height: 120%;
