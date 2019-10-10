@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    flat
-    light
-  >
+  <v-card flat light>
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
@@ -28,8 +25,7 @@
         deletable-chips
         autocomplete="off"
         clearable
-      >
-      </v-autocomplete>
+      ></v-autocomplete>
       <v-select
         v-model="tmp.year"
         :items="values.year"

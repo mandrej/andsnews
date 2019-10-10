@@ -1,41 +1,16 @@
 <template>
   <div>
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
       {{ message }}
-      <v-btn
-        text
-        icon
-        color="white"
-        @click="snackbar = false"
-      >
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
-    <v-dialog
-      v-model="empty"
-      max-width="300px"
-    >
+    <v-dialog v-model="empty" max-width="300px">
       <v-card>
-        <v-card-title
-          v-if="error"
-          class="headline warning error--text"
-          primary-title
-        >
-          Error
-        </v-card-title>
-        <v-card-title
-          v-else
-          class="headline warning"
-          primary-title
-        >
-          No photos
-        </v-card-title>
+        <v-card-title v-if="error" class="headline warning error--text" primary-title>Error</v-card-title>
+        <v-card-title v-else class="headline warning" primary-title>No photos</v-card-title>
         <v-card-text>
           <template v-if="error">{{error}}</template>
           <template v-else>For current filter | search</template>
@@ -43,32 +18,16 @@
         <v-divider></v-divider>
         <v-card-actions class="pa-3">
           <v-spacer></v-spacer>
-          <v-btn
-            color="secondary"
-            @click="empty = false"
-          >Close</v-btn>
+          <v-btn color="secondary" @click="empty = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-app v-resize="onResize">
-      <v-navigation-drawer
-        v-model="drawer"
-        app
-        fixed
-        floating
-      >
-        <v-layout
-          column
-          fill-height
-          class="aperture"
-        >
+      <v-navigation-drawer v-model="drawer" app fixed floating>
+        <v-layout column fill-height class="aperture">
           <div>
-            <v-app-bar
-              light
-              flat
-              style="background: transparent"
-            >
+            <v-app-bar light flat style="background: transparent">
               <v-spacer></v-spacer>
               <SignIn></SignIn>
             </v-app-bar>
@@ -78,10 +37,7 @@
           <v-spacer></v-spacer>
 
           <v-list>
-            <v-list-item
-              v-if="isAuthorized"
-              @click="$router.push({ name: 'add' })"
-            >
+            <v-list-item v-if="isAuthorized" @click="$router.push({ name: 'add' })">
               <v-list-item-action>
                 <v-icon>add_circle</v-icon>
               </v-list-item-action>
@@ -89,10 +45,7 @@
                 <v-list-item-title>Add</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item
-              v-if="isAdmin"
-              @click="$router.push({ name: 'admin' })"
-            >
+            <v-list-item v-if="isAdmin" @click="$router.push({ name: 'admin' })">
               <v-list-item-action>
                 <v-icon>settings</v-icon>
               </v-list-item-action>
@@ -115,34 +68,17 @@
         class="aperture"
         style="transform: none; /* FF bug */"
       >
-        <v-app-bar-nav-icon
-          class="hidden-lg-and-up"
-          @click="drawer = !drawer"
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-progress-circular
-          v-show="busy"
-          color="primary"
-          :indeterminate="true"
-        ></v-progress-circular>
+        <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
       </v-app-bar>
-      <div
-        v-else
-        class="front"
-      >
-        <v-app-bar-nav-icon
-          dark
-          class="hidden-lg-and-up pa-2"
-          @click="drawer = !drawer"
-        ></v-app-bar-nav-icon>
+      <div v-else class="front">
+        <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
 
       <v-content class="aperture">
-        <transition
-          name="fade"
-          mode="out-in"
-        >
+        <transition name="fade" mode="out-in">
           <component :is="currentComponent"></component>
         </transition>
       </v-content>

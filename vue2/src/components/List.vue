@@ -1,96 +1,41 @@
 <template>
   <div>
-    <Edit
-      :visible="editForm"
-      :rec="current"
-      @close="editForm = false"
-    ></Edit>
+    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
       {{ message }}
-      <v-btn
-        text
-        icon
-        color="white"
-        @click="snackbar = false"
-      >
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
-    <v-dialog
-      v-model="confirm"
-      max-width="300px"
-      persistent
-    >
+    <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
-        <v-card-title
-          class="headline warning"
-          primary-title
-        >
-          Are you sure?
-        </v-card-title>
-        <v-card-text>
-          you want to delete "{{current.headline}}"
-        </v-card-text>
+        <v-card-title class="headline warning" primary-title>Are you sure?</v-card-title>
+        <v-card-text>you want to delete "{{current.headline}}"</v-card-text>
         <v-card-actions class="pa-3">
           <v-container fluid>
-            <v-layout
-              justify-space-between
-              row
-            >
-              <v-btn
-                color="error"
-                @click="agree"
-              >Yes</v-btn>
-              <v-btn
-                color="secondary"
-                @click="confirm = false"
-              >No</v-btn>
+            <v-layout justify-space-between row>
+              <v-btn color="error" @click="agree">Yes</v-btn>
+              <v-btn color="secondary" @click="confirm = false">No</v-btn>
             </v-layout>
           </v-container>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-container
-      fluid
-      grid-list-lg
-      class="pa-3"
-    >
+    <v-container fluid grid-list-lg class="pa-3">
       <Photoswipe :options="options">
-        <v-layout
-          row
-          wrap
-        >
-          <v-flex
-            xs12
-            sm6
-            md4
-            lg3
-            xl2
-            v-for="item in objects"
-            :key="item.safekey"
-          >
-            <v-lazy
-              :options="lazy"
-              min-height="200"
-            >
-              <v-card
-                light
-                class="card"
-              >
+        <v-layout row wrap>
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
+            <v-lazy :options="lazy" min-height="200">
+              <v-card light class="card">
                 <img
                   :src="getImgSrc(item, '400-c')"
                   :title="caption(item)"
                   :data-pswp-size="item.dim.join('x')"
                   :data-pswp-src="getImgSrc(item)"
-                >
+                />
                 <v-card-title>{{item.headline}}</v-card-title>
                 <v-card-text>
                   <div>{{formatDate(item.date)}}</div>

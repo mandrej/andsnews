@@ -1,32 +1,14 @@
 <template>
-  <v-img
-    :src="getImgSrc(last)"
-    :height="height"
-  >
+  <v-img :src="getImgSrc(last)" :height="height">
     <v-container style="position: absolute; top: 0; left: 0">
-      <v-layout
-        column
-        align-end
-        class="pa-5"
-      >
+      <v-layout column align-end class="pa-5">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
       </v-layout>
     </v-container>
     <v-container fill-height>
-      <v-layout
-        row
-        align-center
-        justify-center
-      >
-        <v-btn
-          fab
-          dark
-          large
-          outlined
-          class="big"
-          @click="showFilter(last)"
-        >
+      <v-layout row align-center justify-center>
+        <v-btn fab dark large outlined class="big" @click="showFilter(last)">
           <v-icon>arrow_downward</v-icon>
         </v-btn>
       </v-layout>

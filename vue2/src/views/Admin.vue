@@ -1,33 +1,15 @@
 <template>
   <div>
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
       {{ message }}
-      <v-btn
-        text
-        icon
-        color="white"
-        @click="snackbar = false"
-      >
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-app>
-      <v-app-bar
-        app
-        flat
-        light
-        class="aperture"
-      >
-        <v-btn
-          icon
-          @click="$router.go(-1)"
-        >
+      <v-app-bar app flat light class="aperture">
+        <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
@@ -48,15 +30,8 @@
                 required
               ></v-text-field>
             </v-flex>
-            <v-flex
-              xs3
-              class="text-right"
-            >
-              <v-btn
-                color="secondary"
-                width="100"
-                @click="send"
-              >Send</v-btn>
+            <v-flex xs3 class="text-right">
+              <v-btn color="secondary" width="100" @click="send">Send</v-btn>
             </v-flex>
           </v-layout>
 
@@ -69,10 +44,7 @@
             class="py-1"
           >
             <v-flex xs9>Rebuild for field {{field}}</v-flex>
-            <v-flex
-              xs3
-              class="text-right"
-            >
+            <v-flex xs3 class="text-right">
               <v-btn
                 :disabled="canRun(fcm_token)"
                 color="secondary"
@@ -87,37 +59,18 @@
             <v-flex xs3 class="text-right">
               <v-btn :disabled="canRun(fcm_token)" color="accent" width="100" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
-          </v-layout> -->
+          </v-layout>-->
 
           <h3 class="title">Cloud</h3>
-          <v-layout
-            wrap
-            class="py-1"
-            align-center
-          >
+          <v-layout wrap class="py-1" align-center>
             <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
-            <v-flex
-              xs3
-              class="text-right"
-            >
-              <v-btn
-                :disabled="canRun(fcm_token)"
-                color="error"
-                width="100"
-                @click="unbound"
-              >Remove</v-btn>
+            <v-flex xs3 class="text-right">
+              <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout
-            wrap
-            class="py-1"
-            align-center
-          >
+          <v-layout wrap class="py-1" align-center>
             <v-flex xs9>Remove images in datastore that are missing in the Cloud</v-flex>
-            <v-flex
-              xs3
-              class="text-right"
-            >
+            <v-flex xs3 class="text-right">
               <v-btn
                 :disabled="canRun(fcm_token)"
                 color="error"

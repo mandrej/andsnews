@@ -176,7 +176,9 @@ const mutations = {
   UPDATE_VALUES (state, obj) {
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
-    if (obj.model) { state.values.model = [...new Set([...state.values.model, obj.model])] }
+    if (obj.model) {
+      state.values.model = [...new Set([...state.values.model, obj.model])]
+    }
   },
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]

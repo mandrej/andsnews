@@ -1,39 +1,17 @@
 <template>
   <div>
-    <Edit
-      :visible="editForm"
-      :rec="current"
-      @close="editForm = false"
-    ></Edit>
+    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
       {{ message }}
-      <v-btn
-        text
-        icon
-        color="white"
-        @click="snackbar = false"
-      >
+      <v-btn text icon color="white" @click="snackbar = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <v-app>
-      <v-app-bar
-        app
-        flat
-        light
-        class="aperture"
-      >
-        <v-btn
-          icon
-          @click="$router.go(-1)"
-        >
+      <v-app-bar app flat light class="aperture">
+        <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <v-toolbar-title class="headline">Add</v-toolbar-title>
@@ -42,12 +20,7 @@
       <v-content class="aperture">
         <v-container>
           <div class="dotted mb-3 pa-4">
-            <v-layout
-              column
-              justify-center
-              align-center
-              style="height: 120px"
-            >
+            <v-layout column justify-center align-center style="height: 120px">
               <template v-if="isInitial">
                 <input
                   type="file"
@@ -56,9 +29,11 @@
                   @change="filesChange($event.target.name, $event.target.files)"
                   accept="image/*"
                   class="input-file"
-                >
+                />
                 <h3 class="headline">Upload images</h3>
-                <div class="subheading text-center">Drag your images here to upload, or click to browse</div>
+                <div
+                  class="subheading text-center"
+                >Drag your images here to upload, or click to browse</div>
               </template>
               <template v-if="isSaving">
                 <v-progress-linear
@@ -70,10 +45,7 @@
                   striped
                   v-model="value"
                 ></v-progress-linear>
-                <div
-                  v-if="value < 100"
-                  class="subheading text-center"
-                >Upload in progress {{value}}%</div>
+                <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
                 <div
                   v-else-if="value === 100"
                   class="subheading text-center"
@@ -86,21 +58,12 @@
             </v-layout>
           </div>
 
-          <v-list
-            v-if="uploaded.length > 0"
-            two-line
-          >
+          <v-list v-if="uploaded.length > 0" two-line>
             <template v-for="(item, i) in uploaded">
-              <v-divider
-                v-if="i !== 0"
-                :key="`${i}-divider`"
-              ></v-divider>
+              <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
               <v-list-item :key="i">
                 <v-list-item-avatar>
-                  <img
-                    :src="getImgSrc(item, '400-c')"
-                    :alt="item.slug"
-                  >
+                  <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{item.headline}}</v-list-item-title>
@@ -108,20 +71,13 @@
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-layout row>
-                    <v-btn
-                      color="error"
-                      @click="removeRecord(item)"
-                    >Delete</v-btn>&nbsp;
-                    <v-btn
-                      color="secondary"
-                      @click="showEditForm(item)"
-                    >Edit</v-btn>
+                    <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
+                    <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
                 </v-list-item-action>
               </v-list-item>
             </template>
           </v-list>
-
         </v-container>
       </v-content>
     </v-app>
