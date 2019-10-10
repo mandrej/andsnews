@@ -119,13 +119,13 @@
           class="hidden-lg-and-up"
           @click="drawer = !drawer"
         ></v-app-bar-nav-icon>
+        <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-progress-circular
           v-show="busy"
+          color="primary"
           :indeterminate="true"
-          style="margin-right: 16px"
         ></v-progress-circular>
-        <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
       </v-app-bar>
       <div
         v-else

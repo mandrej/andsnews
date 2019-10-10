@@ -51,6 +51,10 @@ export default {
 .v-navigation-drawer .v-list {
   background: transparent;
 }
+.v-toolbar__content > .v-btn.v-btn--icon:first-child + .v-toolbar__title,
+.v-toolbar__extension > .v-btn.v-btn--icon:first-child + .v-toolbar__title {
+  padding-left: 0;
+}
 /* transition name="fade" */
 .fade-enter-active,
 .fade-leave-active {
