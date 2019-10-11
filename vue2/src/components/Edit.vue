@@ -7,7 +7,7 @@
     transition="dialog-bottom-transition"
   >
     <v-card tile light>
-      <v-app-bar flat light>
+      <v-app-bar light>
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
@@ -15,7 +15,7 @@
         </v-btn>
       </v-app-bar>
       <v-card-text style="background-color: #f5f5f5">
-        <v-container fluid grid-list-lg>
+        <v-container fluid grid-list-lg mt-4>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>

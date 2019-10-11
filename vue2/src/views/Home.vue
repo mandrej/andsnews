@@ -27,7 +27,7 @@
       <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column fill-height class="aperture">
           <div>
-            <v-app-bar light style="background: transparent">
+            <v-app-bar light :flat="isFront" style="background: transparent">
               <v-spacer></v-spacer>
               <SignIn></SignIn>
             </v-app-bar>
