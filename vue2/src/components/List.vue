@@ -115,7 +115,6 @@ export default {
   mixins: [common],
   data: () => ({
     bottom: false,
-    distance: 1800,
     confirm: false,
     current: {},
     editForm: false,
@@ -152,7 +151,6 @@ export default {
   },
   watch: {
     bottom: function (val) {
-      // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
       if (val && this.next) {
         this.$store.dispatch('app/fetchRecords')
       }
@@ -160,10 +158,12 @@ export default {
   },
   methods: {
     bottomVisible () {
+      // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      return visible + scrollY + this.distance >= pageHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
     },
     canEdit (user) {
       return user.isAuthorized

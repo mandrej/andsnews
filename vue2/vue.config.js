@@ -11,7 +11,7 @@ module.exports = {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201910101232',
+    assetsVersion: '201910111208',
     iconPaths: {
       favicon32: 'static/img/icons/favicon-32x32.png',
       favicon16: 'static/img/icons/favicon-16x16.png',
