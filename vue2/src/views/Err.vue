@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app flat light class="aperture">
+    <v-app-bar app light class="aperture">
       <v-btn icon @click="$router.push({ name: 'home' })">
         <v-icon>home</v-icon>
       </v-btn>
@@ -8,7 +8,7 @@
     </v-app-bar>
 
     <v-content class="aperture">
-      <v-container>
+      <v-container mt-4>
         <div class="dotted mb-3 pa-4">
           <v-layout column justify-center align-center style="height: 120px">
             <h3 class="headline">{{text}}</h3>

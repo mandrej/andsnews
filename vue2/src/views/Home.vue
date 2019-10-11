@@ -27,7 +27,7 @@
       <v-navigation-drawer v-model="drawer" app fixed floating>
         <v-layout column fill-height class="aperture">
           <div>
-            <v-app-bar light flat style="background: transparent">
+            <v-app-bar light style="background: transparent">
               <v-spacer></v-spacer>
               <SignIn></SignIn>
             </v-app-bar>
@@ -60,14 +60,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar
-        v-if="!isFront"
-        app
-        flat
-        light
-        class="aperture"
-        style="transform: none; /* FF bug */"
-      >
+      <v-app-bar v-if="!isFront" app light class="aperture" style="transform: none; /* FF bug */">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>

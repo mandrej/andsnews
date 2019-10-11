@@ -24,7 +24,7 @@
       </v-card>
     </v-dialog>
 
-    <v-container fluid grid-list-lg class="pa-3">
+    <v-container fluid grid-list-lg mt-2 class="pa-3">
       <Photoswipe :options="options">
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
@@ -115,7 +115,7 @@ export default {
   mixins: [common],
   data: () => ({
     bottom: false,
-    distance: 1800,
+    distance: 2000,
     confirm: false,
     current: {},
     editForm: false,
@@ -163,8 +163,6 @@ export default {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      // const bottomOfPage = visible + scrollY >= pageHeight
-      // return bottomOfPage || pageHeight < visible
       return visible + scrollY + this.distance >= pageHeight
     },
     canEdit (user) {

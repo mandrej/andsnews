@@ -8,7 +8,7 @@
     </v-snackbar>
 
     <v-app>
-      <v-app-bar app flat light class="aperture">
+      <v-app-bar app light class="aperture">
         <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
