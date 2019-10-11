@@ -115,6 +115,7 @@ export default {
   mixins: [common],
   data: () => ({
     bottom: false,
+    distance: 1800,
     confirm: false,
     current: {},
     editForm: false,
@@ -162,8 +163,9 @@ export default {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      const bottomOfPage = visible + scrollY >= pageHeight
-      return bottomOfPage || pageHeight < visible
+      // const bottomOfPage = visible + scrollY >= pageHeight
+      // return bottomOfPage || pageHeight < visible
+      return visible + scrollY + this.distance >= pageHeight
     },
     canEdit (user) {
       return user.isAuthorized
