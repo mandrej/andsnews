@@ -24,15 +24,8 @@
     </v-dialog>
 
     <v-app v-resize="onResize">
-      <v-navigation-drawer v-model="drawer" app fixed floating>
-        <v-layout column fill-height class="aperture">
-          <div>
-            <v-app-bar light :flat="isFront" style="background: transparent">
-              <v-spacer></v-spacer>
-              <SignIn></SignIn>
-            </v-app-bar>
-          </div>
-
+      <v-navigation-drawer v-model="drawer" app fixed clipped class="aperture">
+        <v-layout column fill-height>
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
@@ -60,11 +53,12 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="!isFront" app light class="aperture" style="transform: none; /* FF bug */">
+      <v-app-bar v-if="!isFront" app light clipped-left class="aperture">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-progress-circular v-show="busy" color="primary" :indeterminate="true"></v-progress-circular>
+        <SignIn></SignIn>
+        <v-progress-linear v-show="busy" absolute top color="amber" :indeterminate="true"></v-progress-linear>
       </v-app-bar>
       <div v-else class="front">
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
