@@ -1,17 +1,9 @@
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-
 module.exports = {
-  configureWebpack: {
-    plugins: [
-      new VuetifyLoaderPlugin()
-    ]
-  },
-
   pwa: {
     name: 'Andрејевићи',
     themeColor: '#ffffff',
     msTileColor: '#ffffff',
-    assetsVersion: '201910141533',
+    assetsVersion: '201910171307',
     iconPaths: {
       favicon32: 'static/img/icons/favicon-32x32.png',
       favicon16: 'static/img/icons/favicon-16x16.png',

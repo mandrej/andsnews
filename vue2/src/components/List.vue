@@ -13,7 +13,7 @@
       <v-card>
         <v-card-title class="headline warning" primary-title>Are you sure?</v-card-title>
         <v-card-text>you want to delete "{{current.headline}}"</v-card-text>
-        <v-card-actions class="pa-3">
+        <v-card-actions class="px-6">
           <v-container fluid>
             <v-layout justify-space-between row>
               <v-btn color="error" @click="agree">Yes</v-btn>

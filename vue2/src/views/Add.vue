@@ -71,7 +71,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-layout row>
-                    <v-btn color="error" @click="removeRecord(item)">Delete</v-btn>&nbsp;
+                    <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
                     <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
                 </v-list-item-action>

@@ -3,7 +3,7 @@ import Vuetify from 'vuetify/lib'
 
 Vue.use(Vuetify)
 
-export default new Vuetify({
+const opts = {
   theme: {
     dark: false,
     themes: {
@@ -21,4 +21,6 @@ export default new Vuetify({
   icons: {
     iconfont: 'md'
   }
-})
+}
+
+export default new Vuetify(opts)
