@@ -1,10 +1,11 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
-import FIREBASEAPP from '@/helpers/fire'
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
+import '@firebase/messaging'
+import FIREBASEAPP from '@/helpers/fire'
 
 const axios = Vue.axios
 const messaging = FIREBASEAPP.messaging()
@@ -62,7 +63,7 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
-      messaging
+      Notification
         .requestPermission()
         .then(() => {
           return messaging.getToken()
@@ -73,7 +74,7 @@ const actions = {
             dispatch('addRegistration')
           }
         })
-        .catch(() => console.error('permission failed'))
+        .catch((err) => console.error(err))
     }
   },
   addRegistration: ({ state }) => {
