@@ -1,30 +1,30 @@
 module.exports = {
   pwa: {
-    name: 'Andрејевићи',
-    themeColor: '#ffffff',
-    msTileColor: '#ffffff',
-    assetsVersion: '201910211357',
+    name: "Andрејевићи",
+    themeColor: "#ffffff",
+    msTileColor: "#ffffff",
+    assetsVersion: "201910211538",
     iconPaths: {
-      favicon32: 'static/img/icons/favicon-32x32.png',
-      favicon16: 'static/img/icons/favicon-16x16.png',
-      appleTouchIcon: 'static/img/icons/apple-touch-icon-152x152.png',
+      favicon32: "static/img/icons/favicon-32x32.png",
+      favicon16: "static/img/icons/favicon-16x16.png",
+      appleTouchIcon: "static/img/icons/apple-touch-icon-152x152.png",
       // maskIcon: 'static/img/icons/safari-pinned-tab.svg',
-      msTileImage: 'static/img/icons/msapplication-icon-144x144.png'
+      msTileImage: "static/img/icons/msapplication-icon-144x144.png"
     },
     workboxOptions: {
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts.(?:googleapis|gstatic).com\/(.*)/,
-          handler: 'staleWhileRevalidate',
+          handler: "staleWhileRevalidate",
           options: {
-            cacheName: 'google-fonts'
+            cacheName: "google-fonts"
           }
         },
         {
           urlPattern: /api/,
-          handler: 'staleWhileRevalidate',
+          handler: "staleWhileRevalidate",
           options: {
-            cacheName: 'data-cache',
+            cacheName: "data-cache",
             expiration: {
               maxEntries: 100,
               maxAgeSeconds: 3600
@@ -40,28 +40,30 @@ module.exports = {
 
   devServer: {
     proxy: {
-      '/api': {
-        target: process.env.VUE_APP_PROXY + 'api',
+      "/api": {
+        target: process.env.VUE_APP_PROXY + "api",
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          "^/api": ""
         }
       },
-      '/_ah': {
-        target: process.env.VUE_APP_PROXY + '_ah',
+      "/_ah": {
+        target: process.env.VUE_APP_PROXY + "_ah",
         changeOrigin: true,
         pathRewrite: {
-          '^/_ah': ''
+          "^/_ah": ""
         }
       }
     }
   },
 
+  transpileDependencies: ["vuetify"],
+
   publicPath: undefined,
   outputDir: undefined,
-  assetsDir: 'static',
+  assetsDir: "static",
   runtimeCompiler: undefined,
   productionSourceMap: undefined,
   parallel: undefined,
   css: undefined
-}
+};
