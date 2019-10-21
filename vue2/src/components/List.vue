@@ -99,7 +99,8 @@ Vue.use(VueLazyload, {
 Vue.use(Photoswipe, {
   preload: [1, 3],
   shareEl: false,
-  addCaptionHTMLFn: function (item, captionEl, isFake) { /* eslint-disable-line no-unused-vars */
+  /* eslint-disable-next-line no-unused-vars */
+  addCaptionHTMLFn: function (item, captionEl, isFake) {
     if (!item.el.title) {
       captionEl.children[0].innerHTML = ''
       return false

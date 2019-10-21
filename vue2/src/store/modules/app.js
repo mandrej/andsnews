@@ -129,7 +129,7 @@ const actions = {
   }
 }
 const mutations = {
-  // [RESET]: state => ({ ...initialState }), // eslint-disable-line no-unused-vars
+  // [RESET]: state => ({ ...initialState }),
   SAVE_FIND_FORM (state, payload) {
     state.find = Object.assign({}, payload)
   },
