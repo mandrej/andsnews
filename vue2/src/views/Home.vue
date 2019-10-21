@@ -94,7 +94,7 @@ import Front from '@/components/Front'
 import List from '@/components/List'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
-import '@/helpers/fire' // local firebase instance
+import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
 import * as easings from 'vuetify/es5/services/goto/easing-patterns'

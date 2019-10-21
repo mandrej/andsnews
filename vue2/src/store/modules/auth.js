@@ -1,14 +1,14 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
+import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
 import '@firebase/messaging'
-import FIREBASEAPP from '@/helpers/fire'
 
 const axios = Vue.axios
-const messaging = FIREBASEAPP.messaging()
+const messaging = firebase.messaging()
 const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
 const admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
 // user.uid for  milan.andrejevic@gmail.com      mihailo.genije@gmail.com
@@ -29,13 +29,13 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      FIREBASEAPP.auth()
+      firebase.auth()
         .signOut()
         .then(() => {
           commit('SAVE_USER', {})
         })
     } else {
-      FIREBASEAPP.auth()
+      firebase.auth()
         .signInWithPopup(provider)
         .then(response => {
           const payload = {
@@ -52,7 +52,7 @@ const actions = {
     }
   },
   saveUser: ({ dispatch }, user) => {
-    FIREBASEAPP.database()
+    firebase.database()
       .ref('users')
       .child(user.uid)
       .set({
@@ -78,7 +78,7 @@ const actions = {
     }
   },
   addRegistration: ({ state }) => {
-    const ref = FIREBASEAPP.database().ref('registrations')
+    const ref = firebase.database().ref('registrations')
     ref.child(state.fcm_token).set({
       email: state.user.email,
       date: new Date().toISOString()
@@ -95,7 +95,7 @@ const actions = {
       })
   },
   sendNotifications: ({ state }, msg) => {
-    const ref = FIREBASEAPP.database().ref('registrations')
+    const ref = firebase.database().ref('registrations')
     ref.once('value', snapshot => {
       snapshot.forEach(node => {
         if (node.key !== state.fcm_token) {

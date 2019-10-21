@@ -89,6 +89,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
+import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
 
