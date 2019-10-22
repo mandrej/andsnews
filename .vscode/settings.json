@@ -5,13 +5,14 @@
     "~/google-cloud-sdk/platform/google_appengine"
   ],
   "python.autoComplete.addBrackets": true,
-  "python.linting.pep8Enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.linting.pep8Args": ["--ignore=E501"],
+  "python.linting.pycodestyleEnabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.pycodestyleArgs": ["--ignore=E501"],
   "files.exclude": {
     "**/*.pyc": true,
     "docs": true,
     "tests": true,
     "graphql": true
-  }
+  },
+  "python.linting.enabled": true
 }
