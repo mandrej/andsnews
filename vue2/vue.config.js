@@ -58,12 +58,5 @@ module.exports = {
   },
 
   transpileDependencies: ["vuetify"],
-
-  publicPath: undefined,
-  outputDir: undefined,
-  assetsDir: "static",
-  runtimeCompiler: undefined,
-  productionSourceMap: undefined,
-  parallel: undefined,
-  css: undefined
+  assetsDir: 'static'
 };
