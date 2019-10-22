@@ -70,8 +70,10 @@ class Photo(ndb.Model):
 
     year = ndb.ComputedProperty(lambda self: self.date.year)
     month = ndb.ComputedProperty(lambda self: self.date.month)
-    nick = ndb.ComputedProperty(lambda self: re.match('([^@]+)', self.email).group().split('.')[0])
-    text = ndb.ComputedProperty(lambda self: tokenize(self.slug), repeated=True)
+    nick = ndb.ComputedProperty(lambda self: re.match(
+        '([^@]+)', self.email).group().split('.')[0])
+    text = ndb.ComputedProperty(
+        lambda self: tokenize(self.slug), repeated=True)
 
     def update_filters(self, new_pairs, old_pairs):
         futures = []
@@ -81,7 +83,8 @@ class Photo(ndb.Model):
         counters = []
         for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
             key_name = 'Photo||{}||{}'.format(field, value)
-            counter = Counter.get_or_insert(key_name, forkind='Photo', field=field, value=value)
+            counter = Counter.get_or_insert(
+                key_name, forkind='Photo', field=field, value=value)
 
             if (field, value) in old_pairs:
                 counter.count -= 1
@@ -130,7 +133,8 @@ class Photo(ndb.Model):
         object_name = BUCKET + '/' + fs.filename  # format /bucket/object
         try:
             gcs.stat(object_name)
-            object_name = BUCKET + '/' + re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
+            object_name = BUCKET + '/' + \
+                re.sub(r'\.', '-%s.' % str(uuid.uuid4())[:8], fs.filename)
         except gcs.NotFoundError:
             pass
 
@@ -138,9 +142,11 @@ class Photo(ndb.Model):
         _buffer = fs.read()  # === fs.stream.read()
         try:
             with gcs.open(object_name, 'w', content_type=fs.content_type) as f:
-                f.write(_buffer)  # <class 'cloudstorage.storage_api.StreamingBuffer'>
+                # <class 'cloudstorage.storage_api.StreamingBuffer'>
+                f.write(_buffer)
             # <class 'google.appengine.api.datastore_types.BlobKey'> or None
-            self.blob_key = blobstore.BlobKey(blobstore.create_gs_key('/gs' + object_name))
+            self.blob_key = blobstore.BlobKey(
+                blobstore.create_gs_key('/gs' + object_name))
             self.filename = object_name
             self.size = f.tell()
         except gcs.errors as e:
@@ -158,7 +164,8 @@ class Photo(ndb.Model):
             self.put()
 
             new_pairs = self.changed_pairs()
-            deferred.defer(self.update_filters, new_pairs, [], _queue='background')
+            deferred.defer(self.update_filters, new_pairs,
+                           [], _queue='background')
 
             obj = self.serialize()
             if obj:
@@ -171,7 +178,8 @@ class Photo(ndb.Model):
                     pass
 
                 old_pairs = self.changed_pairs()
-                deferred.defer(self.update_filters, [], old_pairs, _queue='background')
+                deferred.defer(self.update_filters, [],
+                               old_pairs, _queue='background')
                 self.key.delete()
 
                 return {'success': False, 'message': 'Something went wrong. Picture not uploaded'}
@@ -210,7 +218,8 @@ class Photo(ndb.Model):
         self.put()
 
         new_pairs = self.changed_pairs()
-        deferred.defer(self.update_filters, new_pairs, old_pairs, _queue='background')
+        deferred.defer(self.update_filters, new_pairs,
+                       old_pairs, _queue='background')
 
         obj = self.serialize()
         if obj:
@@ -235,9 +244,11 @@ class Photo(ndb.Model):
     def serving_url(self):
         result = None
         try:
-            result = images.get_serving_url(self.blob_key, crop=False, secure_url=True)
+            result = images.get_serving_url(
+                self.blob_key, crop=False, secure_url=True)
         except images.TransformationError:
-            logging.error('__NO_IMAGE__,{},{}'.format(self.date.isoformat(), self.slug))
+            logging.error('__NO_IMAGE__,{},{}'.format(
+                self.date.isoformat(), self.slug))
 
         return result
 
@@ -255,7 +266,8 @@ class Photo(ndb.Model):
 
     def serialize(self):
         if self.serving_url:
-            data = self.to_dict(exclude=('blob_key', 'size', 'year', 'month', 'text'))
+            data = self.to_dict(
+                exclude=('blob_key', 'size', 'year', 'month', 'text'))
             data.update({
                 'kind': 'photo',
                 'safekey': self.key.urlsafe(),
