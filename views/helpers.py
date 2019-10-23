@@ -103,7 +103,8 @@ def get_exif(buff):
         data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
 
     if 'EXIF DateTimeOriginal' in tags:
-        data['date'] = datetime.datetime.strptime(tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
+        data['date'] = datetime.datetime.strptime(
+            tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
     else:
         data['date'] = datetime.datetime.now()
 
@@ -116,7 +117,8 @@ def get_exif(buff):
 
     if 'EXIF FocalLength' in tags:
         getcontext().prec = 2
-        data['focal_length'] = float(Decimal(eval(tags['EXIF FocalLength'].printable)))
+        data['focal_length'] = float(
+            Decimal(eval(tags['EXIF FocalLength'].printable)))
 
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2

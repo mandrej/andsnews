@@ -15,6 +15,7 @@ from models import Photo, Counter
 
 class CustomJSONEncoder(JSONEncoder):
     """ json mapper helper """
+
     def default(self, obj):  # pylint: disable=E0202
         if isinstance(obj, ndb.Model):
             return obj.serialize()
@@ -43,9 +44,11 @@ def counters_counts():
     data = Counter.all_photo_filter()
     result = {}
     for field in data.keys():
-        _list = [{'value': counter.value, 'count': counter.count} for counter in data[field]]
+        _list = [{'value': counter.value, 'count': counter.count}
+                 for counter in data[field]]
         if field == 'year':
-            result[field] = sorted(_list, key=itemgetter('value'), reverse=True)
+            result[field] = sorted(
+                _list, key=itemgetter('value'), reverse=True)
         else:
             result[field] = sorted(_list, key=itemgetter('value'))
     return result
@@ -68,6 +71,7 @@ class Paginator(object):
         except datastore_errors.BadValueError:
             error = 'Bad token'
 
-        objects, cursor, has_next = self.query.fetch_page(self.per_page, start_cursor=cursor)
+        objects, cursor, has_next = self.query.fetch_page(
+            self.per_page, start_cursor=cursor)
         next_token = cursor.urlsafe() if has_next else None
         return objects, next_token, error

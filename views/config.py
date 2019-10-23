@@ -12,7 +12,8 @@ FIREBASE = {
 
 SERVICE_ACCOUNT = 'andsnews@appspot.gserviceaccount.com'
 
-BUCKET = '/' + os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+BUCKET = '/' + os.environ.get('BUCKET_NAME',
+                              app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')
 START_MSG = '*** START ***'
 END_MSG = '*** END ***'

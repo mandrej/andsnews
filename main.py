@@ -141,5 +141,6 @@ def download(safe_key):
     obj = key.get()
     response = make_response(obj.buffer)
     response.headers['Content-Type'] = 'image/jpeg'
-    response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % str(slugify(obj.headline))
+    response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % str(
+        slugify(obj.headline))
     return response

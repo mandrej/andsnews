@@ -35,7 +35,8 @@ def push_message(token, message=''):
         }
     }
     http = httplib2.Http()
-    response, content = http.request(FCM, method='POST', body=json.dumps(payload), headers=HEADERS)
+    response, content = http.request(
+        FCM, method='POST', body=json.dumps(payload), headers=HEADERS)
     # logging.error(response.status)
     # logging.error(content)
 
@@ -106,7 +107,8 @@ class Mapper(object):
             # Write any unfinished updates to the datastore.
             self._batch_write()
             # Queue a new task to pick up where we left off.
-            deferred.defer(self._continue, start_key, batch_size, _queue='background')
+            deferred.defer(self._continue, start_key,
+                           batch_size, _queue='background')
             return
         self.finish()
 
@@ -126,7 +128,8 @@ class Missing(Mapper):
             try:
                 gcs.stat(entity.filename)
             except gcs.NotFoundError:
-                log = '__DEL__,{},{},{},{}'.format(entity.date.isoformat(), entity.slug, entity.filename, entity.model)
+                log = '__DEL__,{},{},{},{}'.format(
+                    entity.date.isoformat(), entity.slug, entity.filename, entity.model)
                 logging.info(log)
                 push_message(self.TOKEN, entity.slug)
                 # entity.remove()
@@ -170,7 +173,8 @@ class Unbound(Mapper):
             self._batch_write()
         except (Timeout, DeadlineExceededError):
             self._batch_write()
-            deferred.defer(self._continue, marker, batch_size, _queue='background')
+            deferred.defer(self._continue, marker,
+                           batch_size, _queue='background')
             return
         self.finish()
 
@@ -202,7 +206,8 @@ class Builder(Mapper):
         kind = self.KIND._class_name()
         for value, count in tally.items():
             key_name = '{}||{}||{}'.format(kind, self.FIELD, str(value))
-            obj = Counter.get_or_insert(key_name, forkind=kind, field=self.FIELD, value=value)
+            obj = Counter.get_or_insert(
+                key_name, forkind=kind, field=self.FIELD, value=value)
             obj.count = count
 
             latest = self.KIND.latest_for(self.FIELD, value)
