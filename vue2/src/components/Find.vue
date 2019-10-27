@@ -8,7 +8,7 @@
         @keyup.native.enter="submit"
         @change="submit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         clearable
       ></v-text-field>
       <v-autocomplete
@@ -18,7 +18,7 @@
         :search-input.sync="search"
         @change="clearSubmit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         chips
         multiple
         hide-selected
@@ -32,7 +32,7 @@
         label="by year"
         @change="submit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         clearable
       ></v-select>
       <v-select
@@ -41,7 +41,7 @@
         label="by month"
         @change="submit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         clearable
       ></v-select>
       <v-autocomplete
@@ -50,7 +50,7 @@
         label="by camera model"
         @change="submit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         clearable
       ></v-autocomplete>
       <v-autocomplete
@@ -59,7 +59,7 @@
         label="by author"
         @change="submit"
         @click:clear="submit"
-        :disabled="disabled"
+        :disabled="busy"
         clearable
       ></v-autocomplete>
     </v-card-text>
@@ -78,7 +78,6 @@ export default {
   },
   data: () => ({
     tmp: {},
-    disabled: true,
     search: null
   }),
   computed: {
@@ -95,9 +94,6 @@ export default {
     }
   },
   watch: {
-    busy: function (val) {
-      this.disabled = val
-    },
     find: {
       immediate: true,
       handler: function (val) {
