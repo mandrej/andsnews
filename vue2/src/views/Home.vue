@@ -69,21 +69,6 @@
           <component :is="currentComponent"></component>
         </transition>
       </v-content>
-
-      <v-btn
-        v-if="!isFront"
-        fab
-        large
-        fixed
-        bottom
-        right
-        color="accent"
-        class="black--text"
-        style="bottom: 32px; right: 32px"
-        @click="$vuetify.goTo(0, options)"
-      >
-        <v-icon>arrow_upward</v-icon>
-      </v-btn>
     </v-app>
   </div>
 </template>
@@ -97,7 +82,6 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
-import * as easings from 'vuetify/es5/services/goto/easing-patterns'
 
 const messaging = firebase.messaging()
 
@@ -115,11 +99,6 @@ export default {
     drawer: null,
     empty: false,
     currentComponent: Front,
-    options: {
-      duration: 300,
-      offset: 0,
-      easings: Object.keys(easings)
-    },
     snackbar: false,
     timeout: 6000,
     message: ''

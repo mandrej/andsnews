@@ -24,8 +24,22 @@
       </v-card>
     </v-dialog>
 
+    <v-btn
+      fab
+      large
+      fixed
+      bottom
+      right
+      color="accent"
+      class="black--text"
+      style="bottom: 64px; right: 32px"
+      @click="$vuetify.goTo(0, options)"
+    >
+      <v-icon>arrow_upward</v-icon>
+    </v-btn>
+
     <v-container fluid grid-list-lg mt-2 class="pa-3">
-      <Photoswipe :options="options">
+      <Photoswipe :options="{history: true}">
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
             <v-card light class="card">
@@ -92,6 +106,7 @@ import { mapState } from 'vuex'
 import VueLazyload from 'vue-lazyload'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
+import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 
 Vue.use(VueLazyload, {
   attempt: 1
@@ -127,22 +142,16 @@ export default {
     timeout: 6000,
     message: '',
     options: {
-      history: true
-    },
-    lazy: {
-      threshold: 0.5
+      duration: 300,
+      easings: Object.keys(easings)
     }
   }),
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['objects', 'next'])
   },
-  created () {
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
-    })
-  },
   mounted () {
+    window.addEventListener('scroll', this.bottomVisible)
     EventBus.$on('delete', message => {
       this.message = message
       this.snackbar = true
@@ -152,6 +161,9 @@ export default {
     this.$nextTick(() => {
       this.bottom = false
     })
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.bottomVisible)
   },
   watch: {
     bottom: function (val) {
@@ -166,7 +178,7 @@ export default {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      return visible + scrollY + this.distance >= pageHeight
+      this.bottom = visible + scrollY + this.distance >= pageHeight
     },
     canEdit (user) {
       return user.isAuthorized
