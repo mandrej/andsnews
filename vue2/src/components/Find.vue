@@ -78,7 +78,7 @@ export default {
   },
   data: () => ({
     tmp: {},
-    disabled: false,
+    disabled: true,
     search: null
   }),
   computed: {
