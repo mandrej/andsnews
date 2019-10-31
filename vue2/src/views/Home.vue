@@ -58,12 +58,11 @@
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>
+        <v-progress-linear v-show="busy" absolute top color="amber" :indeterminate="true"></v-progress-linear>
       </v-app-bar>
       <div v-else class="front">
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
-
-      <v-progress-linear v-show="busy" absolute top color="amber" :indeterminate="true"></v-progress-linear>
 
       <v-content class="aperture">
         <transition name="fade" mode="out-in">
