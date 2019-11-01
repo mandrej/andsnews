@@ -29,13 +29,15 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      firebase.auth()
+      firebase
+        .auth()
         .signOut()
         .then(() => {
           commit('SAVE_USER', {})
         })
     } else {
-      firebase.auth()
+      firebase
+        .auth()
         .signInWithPopup(provider)
         .then(response => {
           const payload = {
@@ -52,7 +54,8 @@ const actions = {
     }
   },
   saveUser: ({ dispatch }, user) => {
-    firebase.database()
+    firebase
+      .database()
       .ref('users')
       .child(user.uid)
       .set({
@@ -63,8 +66,7 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
-      Notification
-        .requestPermission()
+      Notification.requestPermission()
         .then(() => {
           return messaging.getToken()
         })
@@ -74,7 +76,7 @@ const actions = {
             dispatch('addRegistration')
           }
         })
-        .catch((err) => console.error(err))
+        .catch(err => console.error(err))
     }
   },
   addRegistration: ({ state }) => {

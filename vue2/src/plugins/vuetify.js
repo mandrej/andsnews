@@ -8,13 +8,13 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: '#BDBDBD', // grey lighten-1
-        secondary: '#37474F', // blue-grey darken-3
-        accent: '#FFC107', // amber
-        error: '#FF1744', // red-accent-3,
-        warning: '#E0E0E0', // grey-lighten-2
-        info: '#2196F3', // blue
-        success: '#4CAF50' // green
+        primary: '#bdbdbd', // grey lighten-1
+        secondary: '#37474f', // blue-grey darken-3
+        accent: '#ffc107', // amber
+        error: '#ff1744', // red-accent-3,
+        warning: '#e0e0e0', // grey-lighten-2
+        info: '#2196f3', // blue
+        success: '#4caf50' // green
       }
     }
   },

@@ -14,8 +14,8 @@
           <v-icon>close</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-card-text style="background-color: #f5f5f5">
-        <v-container fluid grid-list-lg mt-4>
+      <v-card-text class="pa-2" style="background-color: #f5f5f5">
+        <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
