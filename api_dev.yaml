@@ -6,20 +6,20 @@ threadsafe: true
 default_expiration: "0s"
 
 libraries:
-- name: PIL
-  version: latest
-- name: ssl
-  version: latest
+  - name: PIL
+    version: latest
+  - name: ssl
+    version: latest
 
 handlers:
-- url: /.*
-  script: main.app
-  secure: always
+  - url: /.*
+    script: main.app
+    secure: always
 
 inbound_services:
-- warmup
+  - warmup
 
 builtins:
-- deferred: on
+  - deferred: on
 #- appstats: on
 #- remote_api: on

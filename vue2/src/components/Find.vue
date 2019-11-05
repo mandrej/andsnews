@@ -3,16 +3,16 @@
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
-        v-model="tmp.text"
+        v-model.lazy="tmp.text"
         label="by text"
-        @keyup.native.enter="submit"
         @change="submit"
+        @keyup.native.enter="submit"
         @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-text-field>
       <v-autocomplete
-        v-model="tmp.tags"
+        v-model.lazy="tmp.tags"
         :items="values.tags"
         label="by tags"
         :search-input.sync="search"
@@ -27,7 +27,7 @@
         clearable
       ></v-autocomplete>
       <v-select
-        v-model="tmp.year"
+        v-model.lazy="tmp.year"
         :items="values.year"
         label="by year"
         @change="submit"
@@ -36,7 +36,7 @@
         clearable
       ></v-select>
       <v-select
-        v-model="tmp.month"
+        v-model.lazy="tmp.month"
         :items="months"
         label="by month"
         @change="submit"
@@ -45,7 +45,7 @@
         clearable
       ></v-select>
       <v-autocomplete
-        v-model="tmp.model"
+        v-model.lazy="tmp.model"
         :items="values.model"
         label="by camera model"
         @change="submit"
@@ -54,7 +54,7 @@
         clearable
       ></v-autocomplete>
       <v-autocomplete
-        v-model="tmp.nick"
+        v-model.lazy="tmp.nick"
         :items="nicks"
         label="by author"
         @change="submit"
@@ -68,20 +68,21 @@
 
 <script>
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
 
 export default {
   name: 'Find',
-  mixins: [common],
+
   created () {
     this.$store.dispatch('app/fetchValues')
   },
   data: () => ({
-    tmp: {},
     search: null
   }),
   computed: {
     ...mapState('app', ['busy', 'find', 'values']),
+    tmp () {
+      return { ...this.find }
+    },
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -89,16 +90,8 @@ export default {
     },
     nicks () {
       return this.values.email.map(email => {
-        return this.email2nick(email)
+        return email.match(/[^@]+/)[0].split('.')[0]
       })
-    }
-  },
-  watch: {
-    find: {
-      immediate: true,
-      handler: function (val) {
-        this.tmp = { ...val }
-      }
     }
   },
   methods: {

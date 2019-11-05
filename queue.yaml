@@ -1,13 +1,13 @@
 queue:
-- name: default
-  rate: 5/s
-  bucket_size: 5
+  - name: default
+    rate: 5/s
+    bucket_size: 5
 
-- name: background
-  target: 201908081505.default
-  rate: 10/m
-  bucket_size: 5
+  - name: background
+    target: 201908081505.default
+    rate: 10/m
+    bucket_size: 5
 
-- name: errors
-  rate: 1/m
-  bucket_size: 1
+  - name: errors
+    rate: 1/m
+    bucket_size: 1

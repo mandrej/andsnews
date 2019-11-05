@@ -6,9 +6,6 @@ const common = {
     formatDate (iso) {
       return iso.replace('T', ' ').substring(0, 16)
     },
-    email2nick (email) {
-      return email.match(/[^@]+/)[0].split('.')[0]
-    },
     getImgSrc (rec, size) {
       // size: '400-c'
       const suffix = size ? '=s' + size : '=s0'
