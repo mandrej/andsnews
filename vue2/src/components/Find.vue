@@ -7,7 +7,6 @@
         label="by text"
         @change="submit"
         @keyup.native.enter="submit"
-        @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-text-field>
@@ -17,7 +16,6 @@
         label="by tags"
         :search-input.sync="search"
         @change="clearSubmit"
-        @click:clear="submit"
         :disabled="busy"
         chips
         multiple
@@ -31,7 +29,6 @@
         :items="values.year"
         label="by year"
         @change="submit"
-        @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-select>
@@ -40,7 +37,6 @@
         :items="months"
         label="by month"
         @change="submit"
-        @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-select>
@@ -49,7 +45,6 @@
         :items="values.model"
         label="by camera model"
         @change="submit"
-        @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-autocomplete>
@@ -58,7 +53,6 @@
         :items="nicks"
         label="by author"
         @change="submit"
-        @click:clear="submit"
         :disabled="busy"
         clearable
       ></v-autocomplete>
@@ -76,13 +70,11 @@ export default {
     this.$store.dispatch('app/fetchValues')
   },
   data: () => ({
+    tmp: {},
     search: null
   }),
   computed: {
     ...mapState('app', ['busy', 'find', 'values']),
-    tmp () {
-      return { ...this.find }
-    },
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -92,6 +84,17 @@ export default {
       return this.values.email.map(email => {
         return email.match(/[^@]+/)[0].split('.')[0]
       })
+    }
+  },
+  watch: {
+    find: {
+      immediate: true,
+      handler: function (val) {
+        // eslint-disable-next-line no-console
+        console.log(val)
+
+        this.tmp = { ...val }
+      }
     }
   },
   methods: {
