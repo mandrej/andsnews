@@ -1,6 +1,5 @@
 .idea/
 lib/
-qsr/
 decorator.py
 six.py
 *.pyc

@@ -24,8 +24,8 @@
     </v-dialog>
 
     <v-app v-resize="onResize">
-      <v-navigation-drawer v-model="drawer" app fixed clipped class="aperture">
-        <v-layout column fill-height>
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
+        <v-layout column fill-height class="aperture">
           <Find style="background: transparent"></Find>
           <v-spacer></v-spacer>
 
