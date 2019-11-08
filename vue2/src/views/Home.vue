@@ -53,7 +53,7 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="!isFront" app dark clipped-left color="primary">
+      <v-app-bar v-if="!isFront" app light clipped-left>
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>

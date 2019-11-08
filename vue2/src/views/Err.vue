@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app dark color="primary">
+    <v-app-bar app light>
       <v-btn icon @click="$router.push({ name: 'home' })">
         <v-icon>home</v-icon>
       </v-btn>

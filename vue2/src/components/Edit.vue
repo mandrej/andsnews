@@ -7,7 +7,7 @@
     transition="dialog-bottom-transition"
   >
     <v-card>
-      <v-app-bar dark color="primary">
+      <v-app-bar light>
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
