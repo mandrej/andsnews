@@ -6,8 +6,8 @@
     :fullscreen="$vuetify.breakpoint.xsOnly"
     transition="dialog-bottom-transition"
   >
-    <v-card tile light>
-      <v-app-bar light>
+    <v-card>
+      <v-app-bar dark color="primary">
         <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
@@ -86,14 +86,10 @@
                               v-on="on"
                             ></v-text-field>
                           </template>
-                          <v-date-picker v-model="dateTime.date" no-title scrollable>
+                          <v-date-picker v-model="dateTime.date" scrollable>
                             <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="dateRef = false">Cancel</v-btn>
-                            <v-btn
-                              text
-                              color="primary"
-                              @click="$refs.dateRef.save(dateTime.date)"
-                            >OK</v-btn>
+                            <v-btn text @click="dateRef = false">Cancel</v-btn>
+                            <v-btn text @click="$refs.dateRef.save(dateTime.date)">OK</v-btn>
                           </v-date-picker>
                         </v-menu>
                       </v-flex>

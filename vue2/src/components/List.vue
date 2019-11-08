@@ -11,7 +11,7 @@
 
     <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
-        <v-card-title class="headline warning" primary-title>Are you sure?</v-card-title>
+        <v-card-title class="headline" primary-title>Are you sure?</v-card-title>
         <v-card-text>you want to delete "{{current.headline}}"</v-card-text>
         <v-card-actions class="px-6">
           <v-container fluid>
@@ -54,34 +54,19 @@
                 <div>{{formatDate(item.date)}}</div>
                 <div>by {{item.nick}}</div>
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions class="warning">
                 <v-container fluid>
                   <v-layout justify-end>
-                    <v-btn
-                      v-if="canDelete(user)"
-                      icon
-                      small
-                      text
-                      color="primary"
-                      @click="removeRecord(item)"
-                    >
+                    <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
                       <v-icon>cancel</v-icon>
                     </v-btn>
-                    <v-btn
-                      v-if="canEdit(user)"
-                      icon
-                      small
-                      text
-                      color="primary"
-                      @click="showEditdForm(item)"
-                    >
+                    <v-btn v-if="canEdit(user)" icon small text @click="showEditdForm(item)">
                       <v-icon>edit</v-icon>
                     </v-btn>
                     <v-btn
                       icon
                       small
                       text
-                      color="primary"
                       :href="`/api/download/${item.safekey}`"
                       :download="`${item.slug}.jpg`"
                       target="_blank"

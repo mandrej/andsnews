@@ -9,8 +9,8 @@
 
     <v-dialog v-model="empty" max-width="300px">
       <v-card>
-        <v-card-title v-if="error" class="headline warning error--text" primary-title>Error</v-card-title>
-        <v-card-title v-else class="headline warning" primary-title>No photos</v-card-title>
+        <v-card-title v-if="error" class="headline error--text" primary-title>Error</v-card-title>
+        <v-card-title v-else class="headline" primary-title>No photos</v-card-title>
         <v-card-text>
           <template v-if="error">{{error}}</template>
           <template v-else>For current filter | search</template>
@@ -25,8 +25,8 @@
 
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
-        <v-layout column fill-height class="aperture">
-          <Find style="background: transparent"></Find>
+        <v-layout column fill-height>
+          <Find></Find>
           <v-spacer></v-spacer>
 
           <v-list>
@@ -53,8 +53,9 @@
         </v-layout>
       </v-navigation-drawer>
 
-      <v-app-bar v-if="!isFront" app light clipped-left class="aperture">
+      <v-app-bar v-if="!isFront" app dark clipped-left color="primary">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>
@@ -64,7 +65,7 @@
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
 
-      <v-content class="aperture">
+      <v-content>
         <transition name="fade" mode="out-in">
           <component :is="currentComponent"></component>
         </transition>

@@ -8,14 +8,15 @@
     </v-snackbar>
 
     <v-app>
-      <v-app-bar app light class="aperture">
+      <v-app-bar app dark color="primary">
         <v-btn icon @click="$router.go(-1)">
           <v-icon>arrow_back</v-icon>
         </v-btn>
+        <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-app-bar>
 
-      <v-content class="aperture">
+      <v-content>
         <v-container mt-4>
           <h3 class="title">Messaging</h3>
           <v-layout align-center>
@@ -31,7 +32,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex xs3 class="text-right">
-              <v-btn color="secondary" width="100" @click="send">Send</v-btn>
+              <v-btn color="info" width="100" @click="send">Send</v-btn>
             </v-flex>
           </v-layout>
 
@@ -47,7 +48,7 @@
             <v-flex xs3 class="text-right">
               <v-btn
                 :disabled="canRun(fcm_token)"
-                color="secondary"
+                color="primary"
                 width="100"
                 @click="rebuild(field)"
               >Rebuild</v-btn>
