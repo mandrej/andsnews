@@ -54,9 +54,10 @@
                 <div>{{formatDate(item.date)}}</div>
                 <div>by {{item.nick}}</div>
               </v-card-text>
-              <v-card-actions class="warning">
+              <v-divider></v-divider>
+              <v-card-actions>
                 <v-container fluid>
-                  <v-layout justify-end>
+                  <v-layout :class="justify(user)">
                     <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
                       <v-icon>cancel</v-icon>
                     </v-btn>
@@ -189,6 +190,9 @@ export default {
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
       this.confirm = false
+    },
+    justify (user) {
+      return (user.isAuthorized) ? 'justify-space-between' : 'justify-end'
     }
   }
 }
