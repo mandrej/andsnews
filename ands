@@ -13,7 +13,7 @@ client_version=`date +%Y%m%d%H%M`
 
 function syntax {
   echo $"Usage:"
-  echo $"$0 devel  - Run development server"
+  echo $"$0 server  - Run development server"
   echo $"$0 build  - Build client"
   echo $"$0 deploy - Deploy api or client"
   exit 1
@@ -24,7 +24,7 @@ if [ $# -eq 0 ]
     syntax
 else
   case $1 in
-    devel)
+    server)
       $python $dev_appserver --port=6060 --storage_path=$storage \
       --support_datastore_emulator=true --enable_console=true $home/work/$proj_dir/api_dev.yaml
       # vue ui

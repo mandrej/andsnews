@@ -2,12 +2,7 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
-      {{ message }}
-      <v-btn text icon color="white" @click="snackbar = false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
+    <Message :model="snackbar" :message="message"></Message>
 
     <v-app>
       <v-app-bar app light>
@@ -73,7 +68,7 @@
                 <v-list-item-action>
                   <v-layout row>
                     <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                    <v-btn color="secondary" @click="showEditForm(item)">Edit</v-btn>
+                    <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
                   </v-layout>
                 </v-list-item-action>
               </v-list-item>
@@ -101,7 +96,8 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
-    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
+    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
+    'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   mixins: [common],
   data: () => ({
@@ -112,13 +108,11 @@ export default {
     editForm: false,
     value: 0,
     snackbar: false,
-    timeout: 0,
     message: ''
   }),
   mounted () {
     EventBus.$on('delete', message => {
       this.message = message
-      this.timeout = 6000
       this.snackbar = true
     })
     this.reset()
@@ -151,7 +145,6 @@ export default {
     save (formData) {
       this.status = STATUS_SAVING
       this.message = 'Uploading ' + this.fileCount + ' images …'
-      this.timeout = 0
       this.snackbar = true
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })

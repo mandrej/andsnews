@@ -1,27 +1,16 @@
 <template>
   <div>
-    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
-      {{ message }}
-      <v-btn text icon color="white" @click="snackbar = false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
+    <Message :model="snackbar" :message="message"></Message>
 
-    <v-dialog v-model="empty" max-width="300px">
-      <v-card>
-        <v-card-title v-if="error" class="headline error--text" primary-title>Error</v-card-title>
-        <v-card-title v-else class="headline" primary-title>No photos</v-card-title>
-        <v-card-text>
-          <template v-if="error">{{error}}</template>
-          <template v-else>For current filter | search</template>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions class="pa-3">
-          <v-spacer></v-spacer>
-          <v-btn color="secondary" @click="empty = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <Dialog
+      :model="empty"
+      :title="(error) ? 'Error' : 'No data'"
+      :text="(error) ? error : 'For current filter/ search'"
+    >
+      <v-layout justify-end row>
+        <v-btn color="primary" @click="empty = false">Ok</v-btn>
+      </v-layout>
+    </Dialog>
 
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
@@ -90,6 +79,8 @@ export default {
   name: 'Home',
   components: {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
+    'Dialog': () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog'),
+    'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message'),
     Front,
     List,
     Find
@@ -101,7 +92,6 @@ export default {
     empty: false,
     currentComponent: Front,
     snackbar: false,
-    timeout: 6000,
     message: ''
   }),
   created () {

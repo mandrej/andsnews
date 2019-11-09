@@ -1,11 +1,6 @@
 <template>
   <div>
-    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
-      {{ message }}
-      <v-btn text icon color="white" @click="snackbar = false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
+    <Message :model="snackbar" :message="message"></Message>
 
     <v-app>
       <v-app-bar app light>
@@ -99,6 +94,9 @@ const axios = Vue.axios
 
 export default {
   name: 'Admin',
+  components: {
+    'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message')
+  },
   mixins: [common],
   data: () => ({
     msg: {
@@ -107,7 +105,6 @@ export default {
       default: 'NEW IMAGES'
     },
     snackbar: false,
-    timeout: 6000,
     message: '',
     stat: {}
   }),

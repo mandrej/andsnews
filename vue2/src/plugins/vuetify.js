@@ -8,12 +8,12 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: '#455A64', // blue-grey darken-2
-        secondary: '#37474f', // blue-grey darken-3
+        primary: '#424242', // grey darken-3
+        secondary: '#bdbdbd', // grey lighten-1
         accent: '#ffc107', // amber
-        error: '#ff5252', // red accent-2
+        error: '#ff1744', // red accent-3
         warning: '#e0e0e0', // grey lighten-2
-        info: '#2196f3', // blue
+        info: '#2979ff', // blue accent-3
         success: '#4caf50' // green
       }
     }

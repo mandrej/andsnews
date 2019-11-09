@@ -90,9 +90,6 @@ export default {
     find: {
       immediate: true,
       handler: function (val) {
-        // eslint-disable-next-line no-console
-        console.log(val)
-
         this.tmp = { ...val }
       }
     }

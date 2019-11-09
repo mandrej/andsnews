@@ -4,6 +4,7 @@
     scrollable
     max-width="800"
     :fullscreen="$vuetify.breakpoint.xsOnly"
+    @keydown.esc="show = false"
     transition="dialog-bottom-transition"
   >
     <v-card>

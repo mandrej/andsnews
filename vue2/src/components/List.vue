@@ -2,27 +2,14 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-snackbar left bottom v-model="snackbar" :timeout="timeout">
-      {{ message }}
-      <v-btn text icon color="white" @click="snackbar = false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
+    <Message :model="snackbar" :message="message"></Message>
 
-    <v-dialog v-model="confirm" max-width="300px" persistent>
-      <v-card>
-        <v-card-title class="headline" primary-title>Are you sure?</v-card-title>
-        <v-card-text>you want to delete "{{current.headline}}"</v-card-text>
-        <v-card-actions class="px-6">
-          <v-container fluid>
-            <v-layout justify-space-between row>
-              <v-btn color="error" @click="agree">Yes</v-btn>
-              <v-btn color="secondary" @click="confirm = false">No</v-btn>
-            </v-layout>
-          </v-container>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <Dialog :model="confirm" title="Want to delete?" :text="current.headline">
+      <v-layout justify-space-between row>
+        <v-btn color="error" @click="agree">Yes</v-btn>
+        <v-btn color="primary" @click="confirm = false">No</v-btn>
+      </v-layout>
+    </Dialog>
 
     <v-btn
       fab
@@ -114,7 +101,9 @@ Vue.use(Photoswipe, {
 export default {
   name: 'List',
   components: {
-    'Edit': () => import(/* webpackChunkName: "edit" */ './Edit')
+    'Edit': () => import(/* webpackChunkName: "edit" */ './Edit'),
+    'Dialog': () => import(/* webpackChunkName: "dialog" */ './Dialog'),
+    'Message': () => import(/* webpackChunkName: "message" */ './Message')
   },
   mixins: [common],
   data: () => ({
@@ -125,7 +114,6 @@ export default {
     editForm: false,
     index: 0,
     snackbar: false,
-    timeout: 6000,
     message: '',
     options: {
       duration: 300,
