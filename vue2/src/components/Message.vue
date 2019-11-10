@@ -1,7 +1,7 @@
 <template>
-  <v-snackbar left bottom v-model="snackbarModel" :timeout="snackbarTimeout">
+  <v-snackbar left bottom :value="model" :timeout="timeout" @input="$emit('close')">
     {{ message }}
-    <v-btn text icon color="white" @click="snackbarModel = false">
+    <v-btn text icon color="white" @click="$emit('close')">
       <v-icon>close</v-icon>
     </v-btn>
   </v-snackbar>
@@ -10,13 +10,17 @@
 <script>
 export default {
   name: 'Message',
-  props: ['model', 'message', 'timeout'],
-  computed: {
-    snackbarModel () {
-      return this.model
-    },
-    snackbarTimeout () {
-      return (this.timeout) ? this.timeout : 6000
+  props: {
+    model: {
+      type: Boolean,
+      default: false,
+      required: true
+    }, message: {
+      type: String,
+      default: 'MESSAGE'
+    }, timeout: {
+      Type: Number,
+      default: 6000
     }
   }
 }

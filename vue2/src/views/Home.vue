@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Message :model="snackbar" :message="message"></Message>
+    <Message :model="snackbar" :message="message" :key="messageInstance"></Message>
 
     <Dialog
       :model="empty"
@@ -92,6 +92,7 @@ export default {
     empty: false,
     currentComponent: Front,
     snackbar: false,
+    messageInstance: 0,
     message: ''
   }),
   created () {
@@ -101,6 +102,7 @@ export default {
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
     EventBus.$on('status', msg => {
+      this.messageInstance++
       this.message = msg
       this.snackbar = true
     })

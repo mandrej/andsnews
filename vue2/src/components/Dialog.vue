@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogModel" max-width="300px" persistent>
+  <v-dialog :value="model" max-width="300px" persistent>
     <v-card>
       <v-card-title class="headline" primary-title>{{title}}</v-card-title>
       <v-card-text>{{text}}</v-card-text>
@@ -14,10 +14,17 @@
 <script>
 export default {
   name: 'Dialog',
-  props: ['model', 'title', 'text'],
-  computed: {
-    dialogModel () {
-      return this.model
+  props: {
+    model: {
+      type: Boolean,
+      default: false,
+      required: true
+    }, title: {
+      type: String,
+      default: 'TITLE'
+    }, text: {
+      type: String,
+      default: 'TEXT'
     }
   }
 }
