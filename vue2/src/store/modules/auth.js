@@ -50,6 +50,7 @@ const actions = {
           }
           commit('SAVE_USER', payload)
           dispatch('saveUser', payload)
+          dispatch('fetchToken')
         })
     }
   },
@@ -66,17 +67,21 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
-      Notification.requestPermission()
-        .then(() => {
-          return messaging.getToken()
-        })
-        .then(token => {
-          if (state.fcm_token !== token) {
-            commit('SET_TOKEN', token)
-            dispatch('addRegistration')
-          }
-        })
-        .catch(err => console.error(err))
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          return messaging
+            .getToken()
+            .then(token => {
+              if (state.fcm_token !== token) {
+                commit('SET_TOKEN', token)
+                dispatch('addRegistration')
+              }
+            })
+            .catch(err => console.error(err))
+        } else {
+          console.error('Unable to get permission')
+        }
+      })
     }
   },
   addRegistration: ({ state }) => {

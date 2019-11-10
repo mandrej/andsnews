@@ -3,6 +3,10 @@ const common = {
     requiredRule: [value => !!value || 'Required.']
   }),
   methods: {
+    updateSnackbar (val) {
+      // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
+      this.snackbar = val
+    },
     formatDate (iso) {
       return iso.replace('T', ' ').substring(0, 16)
     },

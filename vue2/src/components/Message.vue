@@ -1,7 +1,7 @@
 <template>
-  <v-snackbar left bottom :value="model" :timeout="timeout" @input="$emit('close')">
+  <v-snackbar left bottom :value="model" :timeout="timeout" @input="close">
     {{ message }}
-    <v-btn text icon color="white" @click="$emit('close')">
+    <v-btn text icon color="white" @click="close(false)">
       <v-icon>close</v-icon>
     </v-btn>
   </v-snackbar>
@@ -21,6 +21,12 @@ export default {
     }, timeout: {
       Type: Number,
       default: 6000
+    }
+  },
+  methods: {
+    close (val) {
+      // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
+      this.$emit('update-snackbar', val)
     }
   }
 }

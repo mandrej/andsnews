@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Message :model="snackbar" :message="message" :key="messageInstance"></Message>
+    <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <v-app>
       <v-app-bar app light>
@@ -105,7 +105,6 @@ export default {
       default: 'NEW IMAGES'
     },
     snackbar: false,
-    messageInstance: 0,
     message: '',
     stat: {}
   }),
@@ -126,11 +125,13 @@ export default {
     ...mapState('app', ['values'])
   },
   methods: {
+    updateSnackbar (val) {
+      this.snackbar = val
+    },
     canRun (token) {
       return Boolean(!token)
     },
     callAjax (url) {
-      this.messageInstance++ // create new Message instance
       Vue.axios.post(url, { token: this.fcm_token })
         .then(x => x.data)
       // .catch(err => console.log(err))

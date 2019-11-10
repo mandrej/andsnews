@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Message :model="snackbar" :message="message" :key="messageInstance"></Message>
+    <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <Dialog
       :model="empty"
@@ -69,6 +69,7 @@ import Front from '@/components/Front'
 import List from '@/components/List'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
+import common from '@/helpers/mixins'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
@@ -85,6 +86,7 @@ export default {
     List,
     Find
   },
+  mixins: [common],
   data: () => ({
     isAdmin: false,
     isAuthorized: false,
@@ -92,17 +94,12 @@ export default {
     empty: false,
     currentComponent: Front,
     snackbar: false,
-    messageInstance: 0,
     message: ''
   }),
-  created () {
-    this.$store.dispatch('auth/fetchToken')
-  },
   mounted () {
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
     EventBus.$on('status', msg => {
-      this.messageInstance++
       this.message = msg
       this.snackbar = true
     })

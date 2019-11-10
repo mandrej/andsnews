@@ -2,7 +2,7 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <Message :model="snackbar" :message="message"></Message>
+    <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <Dialog :model="confirm" title="Want to delete?" :text="current.headline">
       <v-layout justify-space-between row>
