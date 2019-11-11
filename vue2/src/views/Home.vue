@@ -2,16 +2,6 @@
   <div>
     <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
-    <Dialog
-      :model="empty"
-      :title="(error) ? 'Error' : 'No data'"
-      :text="(error) ? error : 'For current filter/ search'"
-    >
-      <v-layout justify-end row>
-        <v-btn color="primary" @click="empty = false">Ok</v-btn>
-      </v-layout>
-    </Dialog>
-
     <v-app v-resize="onResize">
       <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
         <v-layout column fill-height>
@@ -80,7 +70,6 @@ export default {
   name: 'Home',
   components: {
     'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
-    'Dialog': () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog'),
     'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message'),
     Front,
     List,
@@ -116,7 +105,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'count', 'error']),
+    ...mapState('app', ['busy']),
     isFront () {
       return this.currentComponent === Front
     },
@@ -125,9 +114,6 @@ export default {
     }
   },
   watch: {
-    count: function (val) {
-      this.empty = val === 0
-    },
     '$route.query': {
       immediate: true,
       handler: function (val) {

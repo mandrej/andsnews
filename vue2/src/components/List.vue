@@ -4,7 +4,7 @@
 
     <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
-    <Dialog :model="confirm" title="Want to delete?" :text="current.headline">
+    <Dialog :model="confirm" :persistent="true" title="Want to delete?" :text="current.headline">
       <v-layout justify-space-between row>
         <v-btn color="error" @click="agree">Yes</v-btn>
         <v-btn color="primary" @click="confirm = false">No</v-btn>
@@ -12,6 +12,7 @@
     </Dialog>
 
     <v-btn
+      v-if="count > 0"
       fab
       large
       fixed
@@ -65,6 +66,22 @@
                 </v-container>
               </v-card-actions>
             </v-card>
+          </v-flex>
+
+          <v-flex xs12 md8 offset-md-2 v-if="!objects.length">
+            <v-alert
+              v-if="error === ''"
+              type="warning"
+              transition="scale-transition"
+              color="info"
+              prominent
+              dark
+            >No data for current filter/ search</v-alert>
+            <v-alert v-else type="error" transition="scale-transition" color="error" prominent dark>
+              Something went wrong
+              <br />
+              {{error}}
+            </v-alert>
           </v-flex>
         </v-layout>
       </Photoswipe>
@@ -122,7 +139,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['objects', 'next'])
+    ...mapState('app', ['objects', 'count', 'error', 'next'])
   },
   mounted () {
     window.addEventListener('scroll', this.bottomVisible)
