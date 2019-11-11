@@ -71,13 +71,12 @@
           <v-flex xs12 md8 offset-md-2 v-if="!objects.length">
             <v-alert
               v-if="error === ''"
-              type="warning"
+              type="info"
               transition="scale-transition"
-              color="info"
               prominent
               dark
             >No data for current filter/ search</v-alert>
-            <v-alert v-else type="error" transition="scale-transition" color="error" prominent dark>
+            <v-alert v-else type="error" transition="scale-transition" prominent dark>
               Something went wrong
               <br />
               {{error}}
@@ -129,7 +128,6 @@ export default {
     confirm: false,
     current: {},
     editForm: false,
-    index: 0,
     snackbar: false,
     message: '',
     options: {
