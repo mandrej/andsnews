@@ -11,11 +11,11 @@ const opts = {
       light: {
         primary: colors.teal.lighten1,
         secondary: colors.grey.lighten1,
-        accent: colors.orange.lighten3,
+        accent: colors.orange.lighten4,
         error: colors.red.lighten1,
         warning: colors.orange.lighten3,
         info: colors.blue.lighten1,
-        success: colors.lighten2
+        success: colors.green.lighten1
       }
     }
   },

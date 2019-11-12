@@ -18,7 +18,7 @@
       fixed
       bottom
       right
-      color="accent"
+      color="warning"
       class="black--text"
       style="bottom: 64px; right: 32px"
       @click="$vuetify.goTo(0, options)"
