@@ -9,7 +9,7 @@
   >
     <v-card>
       <v-app-bar light>
-        <v-btn @click="submit" color="accent" class="black--text" :disabled="!valid">Submit</v-btn>
+        <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>

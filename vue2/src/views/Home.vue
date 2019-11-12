@@ -3,7 +3,7 @@
     <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <v-app v-resize="onResize">
-      <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
         <v-layout column fill-height>
           <Find></Find>
           <v-spacer></v-spacer>
@@ -38,7 +38,7 @@
         <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
         <v-spacer></v-spacer>
         <SignIn></SignIn>
-        <v-progress-linear v-show="busy" absolute top color="amber" :indeterminate="true"></v-progress-linear>
+        <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
       </v-app-bar>
       <div v-else class="front">
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
