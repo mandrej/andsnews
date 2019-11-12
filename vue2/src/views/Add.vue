@@ -13,67 +13,72 @@
         <v-toolbar-title class="headline">Add</v-toolbar-title>
       </v-app-bar>
 
-      <v-content>
+      <v-content class="accent">
         <v-container mt-4>
-          <div class="dotted mb-3 pa-4">
-            <v-layout column justify-center align-center style="height: 120px">
-              <template v-if="isInitial">
-                <input
-                  type="file"
-                  multiple
-                  name="photos"
-                  @change="filesChange($event.target.name, $event.target.files)"
-                  accept="image/*"
-                  class="input-file"
-                />
-                <h3 class="headline">Upload images</h3>
-                <div
-                  class="subheading text-center"
-                >Drag your images here to upload, or click to browse</div>
-              </template>
-              <template v-if="isSaving">
-                <v-progress-linear
-                  :active="true"
-                  :query="value < 100"
-                  :indeterminate="value === 100"
-                  height="16"
-                  color="secondary"
-                  striped
-                  v-model="value"
-                ></v-progress-linear>
-                <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
-                <div
-                  v-else-if="value === 100"
-                  class="subheading text-center"
-                >Processing images. Please wait …</div>
-              </template>
-              <template v-if="isFailed">
-                <h3 class="headline">Upload failed</h3>
-                <div class="subheading text-center error--text">Something went wrong.</div>
-              </template>
-            </v-layout>
-          </div>
+          <v-sheet>
+            <div class="area mb-3 pa-4">
+              <v-layout column justify-center align-center style="height: 120px">
+                <template v-if="isInitial">
+                  <input
+                    type="file"
+                    multiple
+                    name="photos"
+                    @change="filesChange($event.target.name, $event.target.files)"
+                    accept="image/*"
+                    class="input-file"
+                  />
+                  <h3 class="headline">Upload images</h3>
+                  <div
+                    class="subheading text-center"
+                  >Drag your images here to upload, or click to browse</div>
+                </template>
+                <template v-if="isSaving">
+                  <v-progress-linear
+                    :active="true"
+                    :query="value < 100"
+                    :indeterminate="value === 100"
+                    height="16"
+                    color="secondary"
+                    striped
+                    v-model="value"
+                  ></v-progress-linear>
+                  <div
+                    v-if="value < 100"
+                    class="subheading text-center"
+                  >Upload in progress {{value}}%</div>
+                  <div
+                    v-else-if="value === 100"
+                    class="subheading text-center"
+                  >Processing images. Please wait …</div>
+                </template>
+                <template v-if="isFailed">
+                  <h3 class="headline">Upload failed</h3>
+                  <div class="subheading text-center error--text">Something went wrong.</div>
+                </template>
+              </v-layout>
+            </div>
 
-          <v-list v-if="uploaded.length > 0" two-line>
-            <template v-for="(item, i) in uploaded">
-              <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-              <v-list-item :key="i">
-                <v-list-item-avatar>
-                  <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>{{item.headline}}</v-list-item-title>
-                  <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-layout row>
-                    <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                    <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
-                  </v-layout>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-          </v-list>
+            <v-list v-if="uploaded.length > 0" two-line>
+              <template v-for="(item, i) in uploaded">
+                <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+                <v-list-item :key="i">
+                  <v-list-item-avatar>
+                    <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>{{item.headline}}</v-list-item-title>
+                    <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-layout row>
+                      <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
+                      <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
+                    </v-layout>
+                  </v-list-item-action>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-sheet>
         </v-container>
       </v-content>
     </v-app>

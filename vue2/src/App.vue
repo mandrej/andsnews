@@ -18,9 +18,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.dotted {
+.area {
   position: relative;
-  outline: 2px dashed #37474f;
   cursor: pointer;
 }
 .input-file {

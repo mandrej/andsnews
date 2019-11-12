@@ -68,7 +68,7 @@
             </v-card>
           </v-flex>
 
-          <v-flex xs12 md8 offset-md-2 v-if="!objects.length">
+          <v-flex xs12 md8 offset-md-2 py-10 v-if="!objects.length">
             <v-alert
               v-if="error === ''"
               type="info"

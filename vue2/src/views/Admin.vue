@@ -11,7 +11,7 @@
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-app-bar>
 
-      <v-content>
+      <v-content class="accent">
         <v-container mt-4>
           <h3 class="title">Messaging</h3>
           <v-layout align-center>
