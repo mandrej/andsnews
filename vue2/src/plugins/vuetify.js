@@ -1,8 +1,12 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import Vuetify, { VList } from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  components: {
+    VList
+  }
+})
 
 const opts = {
   theme: {
