@@ -59,24 +59,26 @@
             </div>
 
             <v-list v-if="uploaded.length > 0" two-line>
-              <template v-for="(item, i) in uploaded">
-                <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-                <v-list-item :key="i">
-                  <v-list-item-avatar>
-                    <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title>{{item.headline}}</v-list-item-title>
-                    <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-layout row>
-                      <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                      <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
-                    </v-layout>
-                  </v-list-item-action>
-                </v-list-item>
-              </template>
+              <transition-group name="fade" mode="out-in">
+                <template v-for="(item, i) in uploaded">
+                  <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+                  <v-list-item :key="i" class="fade">
+                    <v-list-item-avatar>
+                      <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>{{item.headline}}</v-list-item-title>
+                      <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-layout row>
+                        <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
+                        <v-btn color="primary" @click="showEditForm(item)">Edit</v-btn>
+                      </v-layout>
+                    </v-list-item-action>
+                  </v-list-item>
+                </template>
+              </transition-group>
             </v-list>
           </v-sheet>
         </v-container>
