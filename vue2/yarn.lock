@@ -3999,8 +3999,8 @@ find-up@^4.0.0:
 
 firebase@^7.4.0:
   version "7.4.0"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.4.0.tgz#d14e4ecb40121ebf9499cb90dbf75c4172f581d8"
-  integrity sha512-wGUMmtzKSmmHP1P0wCQYutg6b19RuoqW7CLYoQu5YtaCOGR0OACA8VbHuPm88iQh/v/Qj3r/tHgmFEygnMkc/w==
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.4.0.tgz#d14e4ecb40121ebf9499cb90dbf75c4172f581d8"
+  integrity sha1-0U5Oy0ASHr+UmcuQ2/dcQXL1gdg=
   dependencies:
     "@firebase/analytics" "0.2.6"
     "@firebase/app" "0.4.24"
@@ -7584,10 +7584,10 @@ sass-loader@^8.0.0:
     schema-utils "^2.1.0"
     semver "^6.3.0"
 
-sass@^1.23.3:
-  version "1.23.3"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.23.3.tgz#f07503b9e8d2bcf06ef69e8beea5d085589b1620"
-  integrity sha512-1DKRZxJMOh4Bme16AbWTyYeJAjTlrvw2+fWshHHaepeJfGq2soFZTnt0YhWit+bohtDu4LdyPoEj6VFD4APHog==
+sass@^1.23.6:
+  version "1.23.6"
+  resolved "https://registry.npm.taobao.org/sass/download/sass-1.23.6.tgz#7cce6dbeac1b8caeb33301a817642ee2708f7d7e"
+  integrity sha1-fM5tvqwbjK6zMwGoF2Qu4nCPfX4=
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
