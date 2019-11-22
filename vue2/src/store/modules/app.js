@@ -2,6 +2,7 @@
 // export const RESET = 'RESET';
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
+import debounce from 'lodash/debounce'
 
 const axios = Vue.axios
 const LIMIT = 24
@@ -33,18 +34,19 @@ const initialState = {
   uploaded: [],
 
   last: {},
-  total: null,
+  total: 0,
+  values: {},
 
   objects: [],
-  count: null,
+  count: 0,
   pages: [],
   next: null,
   error: '',
-  values: {},
 
   busy: false,
   clear: false
 }
+
 const actions = {
   // reset: ({ commit }) => commit(RESET),
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
@@ -66,7 +68,7 @@ const actions = {
       commit('UPDATE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
       commit('UPDATE_VALUES', obj)
-      dispatch('fetchLast')
+      dispatch('_fetchLast')
     })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -77,7 +79,7 @@ const actions = {
           EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
-          dispatch('fetchLast')
+          dispatch('_fetchLast')
         } else {
           EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
         }
@@ -88,6 +90,9 @@ const actions = {
       commit('SET_TOTAL', response.data)
     })
   },
+  _fetchLast: debounce(({ dispatch }) => {
+    dispatch('fetchLast')
+  }, 200),
   fetchLast: ({ commit }) => {
     axios.get('counter/last').then(response => {
       commit('SET_LAST', response.data)
@@ -128,6 +133,7 @@ const actions = {
     commit('UPDATE_VALUES_EMAIL', user)
   }
 }
+
 const mutations = {
   // [RESET]: state => ({ ...initialState }),
   SAVE_FIND_FORM (state, payload) {

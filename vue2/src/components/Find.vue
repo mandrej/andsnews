@@ -65,12 +65,12 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Find',
-
   created () {
     this.$store.dispatch('app/fetchValues')
   },
   data: () => ({
     tmp: {},
+    nicks: [],
     search: null
   }),
   computed: {
@@ -79,14 +79,17 @@ export default {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
       return arr
-    },
-    nicks () {
-      return this.values.email.map(email => {
-        return email.match(/[^@]+/)[0].split('.')[0]
-      })
     }
   },
   watch: {
+    values: {
+      deep: true,
+      handler: function (val) {
+        this.nicks = val.email.map(email => {
+          return email.match(/[^@]+/)[0].split('.')[0]
+        })
+      }
+    },
     find: {
       immediate: true,
       handler: function (val) {

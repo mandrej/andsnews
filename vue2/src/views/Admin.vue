@@ -91,7 +91,6 @@ import firebase from '@firebase/app'
 import '@firebase/messaging'
 
 const messaging = firebase.messaging()
-const axios = Vue.axios
 
 export default {
   name: 'Admin',
@@ -106,15 +105,8 @@ export default {
       default: 'NEW IMAGES'
     },
     snackbar: false,
-    message: '',
-    stat: {}
+    message: ''
   }),
-  created () {
-    axios.get('counter/stat')
-      .then(response => {
-        this.stat = response.data
-      })
-  },
   mounted () {
     messaging.onMessage(payload => {
       this.message = payload.notification.body
