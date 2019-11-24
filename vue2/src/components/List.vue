@@ -58,7 +58,7 @@
                       text
                       :href="`/api/download/${item.safekey}`"
                       :download="`${item.slug}.jpg`"
-                      target="_blank"
+                      @click="download('Downloading ' + item.slug  + '.jpg')"
                     >
                       <v-icon>file_download</v-icon>
                     </v-btn>
@@ -196,6 +196,10 @@ export default {
     },
     justify (user) {
       return (user.isAuthorized) ? 'justify-space-between' : 'justify-end'
+    },
+    download (msg) {
+      this.message = msg
+      this.snackbar = true
     }
   }
 }
