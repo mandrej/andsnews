@@ -2783,8 +2783,8 @@ core-js@^3.3.2:
 
 core-js@^3.4.2:
   version "3.4.2"
-  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.4.2.tgz?cache=0&sync_timestamp=1574363170435&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.4.2.tgz#ee2b1a60b50388d8ddcda8cdb44a92c7a9ea76df"
-  integrity sha1-7isaYLUDiNjdzajNtEqSx6nqdt8=
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.2.tgz#ee2b1a60b50388d8ddcda8cdb44a92c7a9ea76df"
+  integrity sha512-bUTfqFWtNKWp73oNIfRkqwYZJeNT3lstzZcAkhhiuvDraRSgOH1/+F9ZklbpR4zpdKuo4cpXN8tKP7s61yjX+g==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -3999,8 +3999,8 @@ find-up@^4.0.0:
 
 firebase@^7.5.0:
   version "7.5.0"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.5.0.tgz#bd011eb37bd763896b001d9b72379f286ee1d351"
-  integrity sha1-vQEes3vXY4lrAB2bcjefKG7h01E=
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.5.0.tgz#bd011eb37bd763896b001d9b72379f286ee1d351"
+  integrity sha512-1ymVJ9Xq9xE9uoQIwFO7yZY/fzUmjOkhkfsQPiQFaG9Ue0EUjZF7HP0NWFdJuYvgf7bLCI6IHJPA6EHbjQoVGw==
   dependencies:
     "@firebase/analytics" "0.2.7"
     "@firebase/app" "0.4.25"
@@ -8796,17 +8796,17 @@ vue@^2.6.10:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
-vuetify-loader@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.4.1.tgz#af2c40214d802697d4d7d77344c2e88f5cc568df"
-  integrity sha1-ryxAIU2AJpfU19dzRMLoj1zFaN8=
+vuetify-loader@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/vuetify-loader/-/vuetify-loader-1.4.2.tgz#0fefbca906de29939cd74f707c6bbc70bf1fc866"
+  integrity sha512-lRB2niiiMOtkPyRbZRGl7GyDXAvBtHBDIV3LKwrgJwdMRvZEYmNTqMM4IxR+oGXHPGBBV/apu0XmCq7Mqomzng==
   dependencies:
     loader-utils "^1.2.0"
 
 vuetify@^2.1.11:
   version "2.1.11"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.1.11.tgz#cd9b6ce90763e69017932153aab39bc6861c7226"
-  integrity sha1-zZts6Qdj5pAXkyFTqrObxoYcciY=
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.1.11.tgz#cd9b6ce90763e69017932153aab39bc6861c7226"
+  integrity sha512-WkHtAeCQldbESC/wsUCXdBt3i+Wph56IWVvWNJO35tB4tFqqRLmbbCO/c5m+pdm5Byg36rs48+R+96Herxs+gA==
 
 vuex-persistedstate@^2.7.0:
   version "2.7.0"
