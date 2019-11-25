@@ -8798,8 +8798,8 @@ vue@^2.6.10:
 
 vuetify-loader@^1.4.2:
   version "1.4.2"
-  resolved "https://registry.yarnpkg.com/vuetify-loader/-/vuetify-loader-1.4.2.tgz#0fefbca906de29939cd74f707c6bbc70bf1fc866"
-  integrity sha512-lRB2niiiMOtkPyRbZRGl7GyDXAvBtHBDIV3LKwrgJwdMRvZEYmNTqMM4IxR+oGXHPGBBV/apu0XmCq7Mqomzng==
+  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.4.2.tgz#0fefbca906de29939cd74f707c6bbc70bf1fc866"
+  integrity sha1-D++8qQbeKZOc109wfGu8cL8fyGY=
   dependencies:
     loader-utils "^1.2.0"
 
