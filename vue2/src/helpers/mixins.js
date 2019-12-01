@@ -4,7 +4,8 @@ const common = {
   }),
   computed: {
     version () {
-      return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+      const ver = process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+      return '© 2007 - ' + ver
     }
   },
   methods: {

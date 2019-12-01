@@ -3,6 +3,11 @@
     <template v-slot:drawer="slotProps">
       <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
         <v-layout column fill-height>
+          <v-list>
+            <v-list-item>
+              <v-list-item-content>{{total}} photographs</v-list-item-content>
+            </v-list-item>
+          </v-list>
           <v-spacer></v-spacer>
           <v-list>
             <v-list-item @click="$router.push({ name: 'add' })">
@@ -13,16 +18,8 @@
                 <v-list-item-title>Add</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click="$router.push({ name: 'home' })">
-              <v-list-item-action>
-                <v-icon>home</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>Home</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
             <v-list-item>
-              <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
+              <v-list-item-content class="caption">{{version}}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-layout>
@@ -39,7 +36,7 @@
       </v-app-bar>
     </template>
 
-    <v-container mt-4>
+    <v-container mt-1>
       <h3 class="title">Messaging</h3>
       <v-layout align-center>
         <v-flex xs9>
@@ -118,7 +115,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['values'])
+    ...mapState('app', ['values', 'total'])
   },
   methods: {
     canRun (token) {

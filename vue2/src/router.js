@@ -8,21 +8,9 @@ import createStore from './store'
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
-function requireAuth (to, from, next) {
-  const store = createStore()
-  const user = store.state.auth.user
-  if (to.name === 'add' && user.isAuthorized) {
-    next()
-  } else if (to.name === 'admin' && user.isAdmin) {
-    next()
-  } else {
-    next('/401')
-  }
-}
-
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -40,13 +28,13 @@ export default new Router({
       path: '/add',
       name: 'add',
       component: Add,
-      beforeEnter: requireAuth
+      meta: { requiresAuth: true }
     },
     {
       path: '/admin',
       name: 'admin',
       component: Admin,
-      beforeEnter: requireAuth
+      meta: { requiresAuth: true }
     },
     {
       path: '/401',
@@ -66,3 +54,21 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const store = createStore()
+    const user = store.state.auth.user
+    if (to.name === 'add' && user.isAuthorized) {
+      next()
+    } else if (to.name === 'admin' && user.isAdmin) {
+      next()
+    } else {
+      next('/401')
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})
+
+export default router

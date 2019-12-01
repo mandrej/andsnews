@@ -17,7 +17,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item>
-      <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
+      <v-list-item-content class="caption">{{version}}</v-list-item-content>
     </v-list-item>
   </v-list>
 </template>
