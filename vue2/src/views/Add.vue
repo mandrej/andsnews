@@ -2,96 +2,92 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
+    <Layout>
+      <template v-slot:appbar>
+        <v-app-bar app light>
+          <v-btn icon @click="$router.go(-1)">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
+          <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
+          <v-toolbar-title class="headline">Add</v-toolbar-title>
+        </v-app-bar>
+      </template>
 
-    <v-app>
-      <v-app-bar app light>
-        <v-btn icon @click="$router.go(-1)">
-          <v-icon>arrow_back</v-icon>
-        </v-btn>
-        <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
-        <v-toolbar-title class="headline">Add</v-toolbar-title>
-      </v-app-bar>
+      <v-container mt-4>
+        <v-sheet>
+          <div class="area mb-3 pa-4">
+            <v-layout column justify-center align-center style="height: 120px">
+              <template v-if="isInitial">
+                <input
+                  type="file"
+                  multiple
+                  name="photos"
+                  @change="filesChange($event.target.name, $event.target.files)"
+                  accept="image/*"
+                  class="input-file"
+                />
+                <h3 class="headline">Upload images</h3>
+                <div
+                  class="subheading text-center"
+                >Drag your images here to upload, or click to browse</div>
+              </template>
+              <template v-if="isSaving">
+                <v-progress-linear
+                  :active="true"
+                  :query="value < 100"
+                  :indeterminate="value === 100"
+                  height="16"
+                  color="primary"
+                  striped
+                  v-model="value"
+                ></v-progress-linear>
+                <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
+                <div
+                  v-else-if="value === 100"
+                  class="subheading text-center"
+                >Processing images. Please wait …</div>
+              </template>
+              <template v-if="isFailed">
+                <h3 class="headline">Upload failed</h3>
+                <div class="subheading text-center error--text">Something went wrong.</div>
+              </template>
+            </v-layout>
+          </div>
 
-      <v-content class="accent">
-        <v-container mt-4>
-          <v-sheet>
-            <div class="area mb-3 pa-4">
-              <v-layout column justify-center align-center style="height: 120px">
-                <template v-if="isInitial">
-                  <input
-                    type="file"
-                    multiple
-                    name="photos"
-                    @change="filesChange($event.target.name, $event.target.files)"
-                    accept="image/*"
-                    class="input-file"
-                  />
-                  <h3 class="headline">Upload images</h3>
-                  <div
-                    class="subheading text-center"
-                  >Drag your images here to upload, or click to browse</div>
-                </template>
-                <template v-if="isSaving">
-                  <v-progress-linear
-                    :active="true"
-                    :query="value < 100"
-                    :indeterminate="value === 100"
-                    height="16"
-                    color="primary"
-                    striped
-                    v-model="value"
-                  ></v-progress-linear>
-                  <div
-                    v-if="value < 100"
-                    class="subheading text-center"
-                  >Upload in progress {{value}}%</div>
-                  <div
-                    v-else-if="value === 100"
-                    class="subheading text-center"
-                  >Processing images. Please wait …</div>
-                </template>
-                <template v-if="isFailed">
-                  <h3 class="headline">Upload failed</h3>
-                  <div class="subheading text-center error--text">Something went wrong.</div>
-                </template>
-              </v-layout>
-            </div>
+          <v-card v-if="uploaded.length > 0">
+            <v-slide-y-transition group tag="v-list">
+              <template v-for="(item, i) in uploaded">
+                <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
 
-            <v-card v-if="uploaded.length > 0">
-              <v-slide-y-transition group tag="v-list">
-                <template v-for="(item, i) in uploaded">
-                  <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+                <v-list-item :key="i" two-line>
+                  <v-list-item-avatar>
+                    <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
+                  </v-list-item-avatar>
 
-                  <v-list-item :key="i" two-line>
-                    <v-list-item-avatar>
-                      <img :src="getImgSrc(item, '400-c')" :alt="item.slug" />
-                    </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>{{item.headline}}</v-list-item-title>
+                    <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
+                  </v-list-item-content>
 
-                    <v-list-item-content>
-                      <v-list-item-title>{{item.headline}}</v-list-item-title>
-                      <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
-                    </v-list-item-content>
-
-                    <v-list-item-action>
-                      <v-layout row>
-                        <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                        <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Edit</v-btn>
-                      </v-layout>
-                    </v-list-item-action>
-                  </v-list-item>
-                </template>
-              </v-slide-y-transition>
-            </v-card>
-          </v-sheet>
-        </v-container>
-      </v-content>
-    </v-app>
+                  <v-list-item-action>
+                    <v-layout row>
+                      <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
+                      <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Edit</v-btn>
+                    </v-layout>
+                  </v-list-item-action>
+                </v-list-item>
+              </template>
+            </v-slide-y-transition>
+          </v-card>
+        </v-sheet>
+      </v-container>
+    </Layout>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import Layout from '@/components/Layout'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
@@ -106,8 +102,8 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
-    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
-    'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message')
+    Layout,
+    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [common],
   data: () => ({
@@ -117,14 +113,8 @@ export default {
     status: null,
     editForm: false,
     value: 0,
-    snackbar: false,
-    message: ''
   }),
   mounted () {
-    EventBus.$on('delete', message => {
-      this.message = message
-      this.snackbar = true
-    })
     this.reset()
   },
   computed: {
@@ -154,8 +144,7 @@ export default {
     },
     save (formData) {
       this.status = STATUS_SAVING
-      this.message = 'Uploading ' + this.fileCount + ' images …'
-      this.snackbar = true
+      EventBus.$emit('snackbar', 'Uploading ' + this.fileCount + ' images …')
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
@@ -171,7 +160,9 @@ export default {
           }
         ))
         .then(() => {
-          if (success) this.snackbar = false
+          if (success) {
+            EventBus.$emit('update-snackbar', false)
+          }
           this.status = STATUS_SUCCESS
           this.reset()
         })

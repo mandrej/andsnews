@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/helpers/event-bus'
+
 export default {
   name: 'Message',
   props: {
@@ -22,6 +24,11 @@ export default {
       Type: Number,
       default: 6000
     }
+  },
+  mounted () {
+    EventBus.$on('update-snackbar', val => {
+      this.close(val)
+    })
   },
   methods: {
     close (val) {

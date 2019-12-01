@@ -114,7 +114,8 @@ export default {
         // eslint-disable-next-line
         this.$router.push({ name: 'list', query: this.tmp }).catch(err => { })
       } else {
-        this.$router.push({ name: 'home' })
+        // eslint-disable-next-line
+        this.$router.replace({ name: 'home' }).catch(err => { })
       }
     }
   }

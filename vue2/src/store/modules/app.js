@@ -76,12 +76,12 @@ const actions = {
       .delete('delete/' + obj.safekey, { parms: { foo: 'bar' } })
       .then(response => {
         if (response.data) {
-          EventBus.$emit('delete', 'Successfully deleted ' + obj.headline)
+          EventBus.$emit('snackbar', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
           dispatch('_fetchLast')
         } else {
-          EventBus.$emit('delete', 'Deleting failed ' + obj.headline)
+          EventBus.$emit('snackbar', 'Deleting failed ' + obj.headline)
         }
       })
   },

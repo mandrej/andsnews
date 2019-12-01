@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
+import List from '@/views/List'
 import Add from '@/views/Add'
 import createStore from './store'
 
@@ -33,7 +34,7 @@ export default new Router({
     {
       path: '/list',
       name: 'list',
-      component: Home
+      component: List
     },
     {
       path: '/add',
