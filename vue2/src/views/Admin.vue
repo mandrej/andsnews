@@ -1,11 +1,40 @@
 <template>
   <Layout>
+    <template v-slot:drawer="slotProps">
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
+        <v-layout column fill-height>
+          <v-spacer></v-spacer>
+          <v-list>
+            <v-list-item @click="$router.push({ name: 'add' })">
+              <v-list-item-action>
+                <v-icon>add_circle</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Add</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click="$router.push({ name: 'home' })">
+              <v-list-item-action>
+                <v-icon>home</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Home</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-layout>
+      </v-navigation-drawer>
+    </template>
+
     <template v-slot:appbar>
-      <v-app-bar app light>
-        <v-btn icon @click="$router.go(-1)">
-          <v-icon>arrow_back</v-icon>
-        </v-btn>
-        <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
+      <v-app-bar app light clipped-left>
+        <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-avatar size="40px" @click="$router.go(-1)" style="cursor: pointer">
+          <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
+        </v-avatar>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
       </v-app-bar>
     </template>
@@ -80,6 +109,7 @@ export default {
   },
   mixins: [common],
   data: () => ({
+    drawer: null,
     msg: {
       type: String,
       required: true,

@@ -2,6 +2,11 @@ const common = {
   data: () => ({
     requiredRule: [value => !!value || 'Required.']
   }),
+  computed: {
+    version () {
+      return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
+    }
+  },
   methods: {
     updateSnackbar (val) {
       // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>

@@ -8,26 +8,14 @@
         <v-list-item-title>Add</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <template v-if="$route.name === 'admin'">
-      <v-list-item @click="$router.push({ name: 'home' })">
-        <v-list-item-action>
-          <v-icon>home</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Home</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
-    <template else>
-      <v-list-item v-if="admin" @click="$router.push({ name: 'admin' })">
-        <v-list-item-action>
-          <v-icon>settings</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Admin</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
+    <v-list-item v-if="admin" @click="$router.push({ name: 'admin' })">
+      <v-list-item-action>
+        <v-icon>settings</v-icon>
+      </v-list-item-action>
+      <v-list-item-content>
+        <v-list-item-title>Admin</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
     <v-list-item>
       <v-list-item-content class="caption">© 2007-{{version}}</v-list-item-content>
     </v-list-item>
@@ -35,13 +23,11 @@
 </template>
 
 <script>
+import common from '@/helpers/mixins'
+
 export default {
   name: 'Menu',
-  props: ['authorized', 'admin'],
-  computed: {
-    version () {
-      return process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
-    }
-  }
+  mixins: [common],
+  props: ['authorized', 'admin']
 }
 </script>

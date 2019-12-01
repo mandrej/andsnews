@@ -2,10 +2,9 @@
   <Layout>
     <template v-slot:appbar>
       <v-app-bar app light>
-        <v-btn icon @click="$router.push({ name: 'home' })">
-          <v-icon>home</v-icon>
-        </v-btn>
-        <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
+        <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
+          <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
+        </v-avatar>
         <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
       </v-app-bar>
     </template>

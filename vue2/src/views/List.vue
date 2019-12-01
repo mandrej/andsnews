@@ -38,7 +38,9 @@
       <template v-slot:appbar>
         <v-app-bar app light clipped-left>
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
+          <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
+            <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
+          </v-avatar>
           <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>

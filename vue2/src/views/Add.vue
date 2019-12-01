@@ -5,10 +5,9 @@
     <Layout>
       <template v-slot:appbar>
         <v-app-bar app light>
-          <v-btn icon @click="$router.go(-1)">
-            <v-icon>arrow_back</v-icon>
-          </v-btn>
-          <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
+          <v-avatar size="40px" @click="$router.go(-1)" style="cursor: pointer">
+            <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
+          </v-avatar>
           <v-toolbar-title class="headline">Add</v-toolbar-title>
         </v-app-bar>
       </template>
