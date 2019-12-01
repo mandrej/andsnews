@@ -1,7 +1,7 @@
 <template>
   <Layout v-resize="onResize">
     <template v-slot:drawer="slotProps">
-      <v-navigation-drawer v-model="slotProps.drawer" app fixed clipped width="300" color="accent">
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
         <v-layout column fill-height>
           <Find></Find>
           <v-spacer></v-spacer>
@@ -10,13 +10,9 @@
       </v-navigation-drawer>
     </template>
 
-    <template v-slot:appbar="slotProps">
+    <template v-slot:appbar>
       <div class="front">
-        <v-app-bar-nav-icon
-          dark
-          class="hidden-lg-and-up pa-2"
-          @click="slotProps.drawer = !slotProps.drawer"
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
     </template>
 
@@ -50,6 +46,7 @@ export default {
   },
   mixins: [common],
   data: () => ({
+    drawer: null,
     height: null
   }),
   created () {

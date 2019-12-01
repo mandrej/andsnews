@@ -3,9 +3,9 @@
     <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <v-app>
-      <slot name="drawer" v-bind:drawer="drawer" v-bind:user="user"></slot>
-      <slot name="appbar" v-bind:drawer="drawer"></slot>
-      <v-content>
+      <slot name="drawer" v-bind:user="user"></slot>
+      <slot name="appbar"></slot>
+      <v-content class="accent">
         <slot></slot>
       </v-content>
     </v-app>
@@ -28,7 +28,6 @@ export default {
     'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
-    drawer: null,
     snackbar: false,
     message: ''
   }),

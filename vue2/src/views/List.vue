@@ -26,14 +26,7 @@
 
     <Layout>
       <template v-slot:drawer="slotProps">
-        <v-navigation-drawer
-          v-model="slotProps.drawer"
-          app
-          fixed
-          clipped
-          width="300"
-          color="accent"
-        >
+        <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
           <v-layout column fill-height>
             <Find></Find>
             <v-spacer></v-spacer>
@@ -42,12 +35,9 @@
         </v-navigation-drawer>
       </template>
 
-      <template v-slot:appbar="slotProps">
+      <template v-slot:appbar>
         <v-app-bar app light clipped-left>
-          <v-app-bar-nav-icon
-            class="hidden-lg-and-up"
-            @click="slotProps.drawer = !slotProps.drawer"
-          ></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-img src="/static/img/aperture.svg" max-height="40" max-width="40" class="mr-3"></v-img>
           <v-toolbar-title class="headline font-weight-regular">ANDрејевићи</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -160,6 +150,7 @@ export default {
   },
   mixins: [common],
   data: () => ({
+    drawer: null,
     isAdmin: false,
     isAuthorized: false,
     bottom: false,
@@ -201,29 +192,6 @@ export default {
     bottom: function (val) {
       if (val && this.next) {
         this.$store.dispatch('app/fetchRecords')
-      }
-    },
-    '$route.query': {
-      immediate: true,
-      handler: function (val) {
-        const tmp = {}
-        Object.keys(val).forEach(key => {
-          if (!isNaN(val[key])) {
-            tmp[key] = Number(val[key])
-          } else if (Array.isArray(val[key])) {
-            tmp[key] = [...val[key]]
-          } else {
-            tmp[key] = val[key]
-          }
-        })
-        this.$store.dispatch('app/saveFindForm', tmp)
-
-        if (Object.keys(tmp).length) {
-          this.$store.dispatch('app/changeFilter', { reset: true })
-        } else {
-          // eslint-disable-next-line
-          this.$router.replace({ name: 'home' }).catch(err => { })
-        }
       }
     }
   },
