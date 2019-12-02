@@ -18,7 +18,6 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
-import common from '@/helpers/mixins'
 
 const messaging = firebase.messaging()
 
@@ -31,7 +30,6 @@ export default {
     snackbar: false,
     message: ''
   }),
-  mixins: [common],
   mounted () {
     EventBus.$on('snackbar', msg => {
       this.message = msg
@@ -52,6 +50,10 @@ export default {
   methods: {
     updateOnlineStatus (event) {
       EventBus.$emit('snackbar', 'You are ' + event.type)
+    },
+    updateSnackbar (val) {
+      // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
+      this.snackbar = val
     }
   }
 }

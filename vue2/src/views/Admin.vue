@@ -9,19 +9,7 @@
             </v-list-item>
           </v-list>
           <v-spacer></v-spacer>
-          <v-list>
-            <v-list-item @click="$router.push({ name: 'add' })">
-              <v-list-item-action>
-                <v-icon>add_circle</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>Add</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content class="caption">{{version}}</v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <Menu :authorized="slotProps.user.isAuthorized" :admin="slotProps.user.isAdmin"></Menu>
         </v-layout>
       </v-navigation-drawer>
     </template>
@@ -29,7 +17,7 @@
     <template v-slot:appbar>
       <v-app-bar app light clipped-left>
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-avatar size="40px" @click="$router.go(-1)" style="cursor: pointer">
+        <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
           <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
         </v-avatar>
         <v-toolbar-title class="headline">Admin</v-toolbar-title>
@@ -96,13 +84,15 @@
 <script>
 import Vue from 'vue'
 import Layout from '@/components/Layout'
+import Menu from '@/components/Menu'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
 export default {
   name: 'Admin',
   components: {
-    Layout
+    Layout,
+    Menu
   },
   mixins: [common],
   data: () => ({

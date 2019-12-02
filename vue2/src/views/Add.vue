@@ -3,18 +3,34 @@
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <Layout>
+      <template v-slot:drawer="slotProps">
+        <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
+          <v-layout column fill-height>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>{{total}} photographs</v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-spacer></v-spacer>
+            <Menu :authorized="slotProps.user.isAuthorized" :admin="slotProps.user.isAdmin"></Menu>
+          </v-layout>
+        </v-navigation-drawer>
+      </template>
+
       <template v-slot:appbar>
-        <v-app-bar app light>
+        <v-app-bar app light clipped-left>
+          <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-avatar size="40px" @click="$router.go(-1)" style="cursor: pointer">
             <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
           </v-avatar>
-          <v-toolbar-title class="headline">Add</v-toolbar-title>
+          <v-toolbar-title class="headline">Admin</v-toolbar-title>
         </v-app-bar>
       </template>
 
-      <v-container mt-4>
+      <v-container mt-1>
+        <h3 class="title">Upload images</h3>
         <v-sheet>
-          <div class="area mb-3 pa-4">
+          <div class="area my-3 pa-4">
             <v-layout column justify-center align-center style="height: 120px">
               <template v-if="isInitial">
                 <input
@@ -25,7 +41,6 @@
                   accept="image/*"
                   class="input-file"
                 />
-                <h3 class="headline">Upload images</h3>
                 <div
                   class="subheading text-center"
                 >Drag your images here to upload, or click to browse</div>
@@ -87,6 +102,7 @@
 <script>
 import Vue from 'vue'
 import Layout from '@/components/Layout'
+import Menu from '@/components/Menu'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
@@ -102,10 +118,12 @@ export default {
   name: 'Add',
   components: {
     Layout,
+    Menu,
     'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [common],
   data: () => ({
+    drawer: null,
     current: {},
     uploadedFiles: [],
     fileCount: 0,
@@ -118,7 +136,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['uploaded']),
+    ...mapState('app', ['uploaded', 'total']),
     isInitial () {
       return this.status === STATUS_INITIAL
     },
