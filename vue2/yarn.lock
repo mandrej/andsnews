@@ -1289,8 +1289,8 @@
 
 "@vue/cli-plugin-babel@^4.1.1":
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-4.1.1.tgz?cache=0&sync_timestamp=1574867837056&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-babel%2Fdownload%2F%40vue%2Fcli-plugin-babel-4.1.1.tgz#aa27100a25a385f54e2a7a2bc97af47dfdd57b25"
-  integrity sha1-qicQCiWjhfVOKnoryXr0ff3VeyU=
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-4.1.1.tgz#aa27100a25a385f54e2a7a2bc97af47dfdd57b25"
+  integrity sha512-1TyuKEFFlEQwXvVohhUTJEa85o29Z4F62p1nzR+EIMOudo9tHaO1WWPqShZ2Trehrl7cpIjul9dhRUuyhwKiaQ==
   dependencies:
     "@babel/core" "^7.7.4"
     "@vue/babel-preset-app" "^4.1.1"
@@ -1302,8 +1302,8 @@
 
 "@vue/cli-plugin-eslint@^4.1.1":
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-eslint/download/@vue/cli-plugin-eslint-4.1.1.tgz?cache=0&sync_timestamp=1574867851185&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-eslint%2Fdownload%2F%40vue%2Fcli-plugin-eslint-4.1.1.tgz#ad09b71f94dc7518a6c83debacd39e34f6d5a71e"
-  integrity sha1-rQm3H5TcdRimyD3rrNOeNPbVpx4=
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-4.1.1.tgz#ad09b71f94dc7518a6c83debacd39e34f6d5a71e"
+  integrity sha512-7bb5idaWcXREaxVYmQ9NK31gy26Qms6cQ9ENovXQurFpsSd29+Fmqc/EkAhHhWn82gModvypIoJyOhKt21jxKg==
   dependencies:
     "@vue/cli-shared-utils" "^4.1.1"
     eslint-loader "^2.1.2"
@@ -1313,8 +1313,8 @@
 
 "@vue/cli-plugin-pwa@^4.1.1":
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.1.1.tgz#1fde8743d8039cc655f96c9a81112ef46db109ca"
-  integrity sha1-H96HQ9gDnMZV+WyagREu9G2xCco=
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-pwa/-/cli-plugin-pwa-4.1.1.tgz#1fde8743d8039cc655f96c9a81112ef46db109ca"
+  integrity sha512-fmyMfW8S7/PjeCPHCQwoRI6JbzAdKIBczcUJkhoyfTZV4iqrCn7mpI0vRhdBYLKplloZxVKqjRUu5yKyiVerXg==
   dependencies:
     "@vue/cli-shared-utils" "^4.1.1"
     webpack "^4.0.0"
@@ -1322,8 +1322,8 @@
 
 "@vue/cli-plugin-router@^4.1.1":
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-router/download/@vue/cli-plugin-router-4.1.1.tgz?cache=0&sync_timestamp=1574867856622&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-router%2Fdownload%2F%40vue%2Fcli-plugin-router-4.1.1.tgz#85c7f2d34f9217ad70b49a71dae6bf7067042759"
-  integrity sha1-hcfy00+SF61wtJpx2ua/cGcEJ1k=
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-router/-/cli-plugin-router-4.1.1.tgz#85c7f2d34f9217ad70b49a71dae6bf7067042759"
+  integrity sha512-n2L2LPLnNcCeeVwJUrbRexi/coBnexIZorRTihinIkUzv3J+Qiw0KPsGjg1RF6UrieFlRhqcY3a5GloC+L0SBQ==
   dependencies:
     "@vue/cli-shared-utils" "^4.1.1"
 
@@ -1334,8 +1334,8 @@
 
 "@vue/cli-service@^4.1.1":
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@vue/cli-service/download/@vue/cli-service-4.1.1.tgz?cache=0&sync_timestamp=1574867856121&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-service%2Fdownload%2F%40vue%2Fcli-service-4.1.1.tgz#a14e9d455752f1a8e4e87ac436ebde88cad82276"
-  integrity sha1-oU6dRVdS8ajk6HrENuveiMrYInY=
+  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-4.1.1.tgz#a14e9d455752f1a8e4e87ac436ebde88cad82276"
+  integrity sha512-woEIXXc22DXKrSO+FAFnrzhnysJcAB1UTF2t0NIPrxnngm0O2YSO0idmy01a2H/q3auMCVNQdzggQ4JWUeV7Gg==
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
     "@soda/friendly-errors-webpack-plugin" "^1.7.1"
