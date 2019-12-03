@@ -3,7 +3,7 @@
     <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
 
     <v-app>
-      <slot name="drawer" v-bind:user="user"></slot>
+      <slot name="drawer"></slot>
       <slot name="appbar"></slot>
       <v-content class="accent">
         <slot></slot>
@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
@@ -43,9 +42,6 @@ export default {
 
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
-  },
-  computed: {
-    ...mapState('auth', ['user']),
   },
   methods: {
     updateOnlineStatus (event) {

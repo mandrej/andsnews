@@ -3,7 +3,7 @@
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <Layout>
-      <template v-slot:drawer="slotProps">
+      <template v-slot:drawer>
         <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
           <v-layout column fill-height>
             <v-list>
@@ -12,7 +12,7 @@
               </v-list-item>
             </v-list>
             <v-spacer></v-spacer>
-            <Menu :authorized="slotProps.user.isAuthorized" :admin="slotProps.user.isAdmin"></Menu>
+            <Menu></Menu>
           </v-layout>
         </v-navigation-drawer>
       </template>
