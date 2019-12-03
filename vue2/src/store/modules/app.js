@@ -3,31 +3,10 @@
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import debounce from 'lodash/debounce'
+import querystring from 'querystring'
 
 const axios = Vue.axios
 const LIMIT = 24
-
-function linearize (obj) {
-  const params = []
-
-  function wrap (key, value) {
-    params.push(key + '=' + encodeURIComponent(value))
-  }
-  Object.keys(obj)
-    .sort()
-    .forEach(key => {
-      if (Array.isArray(obj[key])) {
-        obj[key].forEach(tag => {
-          wrap(key, tag)
-        })
-      } else {
-        if (obj[key]) {
-          wrap(key, obj[key])
-        }
-      }
-    })
-  return params.join('&')
-}
 
 const initialState = {
   find: {},
@@ -108,7 +87,7 @@ const actions = {
     if (Object.keys(state.find).length) {
       const params = Object.assign({}, state.find, { per_page: LIMIT })
       if (state.next) params._page = state.next
-      const url = 'search?' + linearize(params)
+      const url = 'search?' + querystring.stringify(params)
 
       commit('SET_ERROR', '')
       commit('SET_BUSY', true)
