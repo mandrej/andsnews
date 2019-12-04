@@ -3,11 +3,7 @@
     <template v-slot:drawer>
       <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
         <v-layout column fill-height>
-          <v-list>
-            <v-list-item>
-              <v-list-item-content>{{total}} photographs</v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <Stat></Stat>
           <v-spacer></v-spacer>
           <Menu></Menu>
         </v-layout>
@@ -92,7 +88,8 @@ export default {
   name: 'Admin',
   components: {
     Layout,
-    Menu
+    Menu,
+    'Stat': () => import(/* webpackChunkName: "stat" */ '@/components/Stat')
   },
   mixins: [common],
   data: () => ({
