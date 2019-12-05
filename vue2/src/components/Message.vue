@@ -13,27 +13,30 @@ import { EventBus } from '@/helpers/event-bus'
 export default {
   name: 'Message',
   props: {
-    model: {
-      type: Boolean,
-      default: false,
-      required: true
-    }, message: {
-      type: String,
-      default: 'MESSAGE'
-    }, timeout: {
+    timeout: {
       Type: Number,
       default: 6000
     }
   },
+  data: () => ({
+    model: false,
+    message: ''
+  }),
   mounted () {
+    EventBus.$on('snackbar', msg => {
+      this.message = msg
+      this.model = true
+    })
     EventBus.$on('update-snackbar', val => {
-      this.close(val)
+      this.model = val
     })
   },
   methods: {
+    /**
+     * update snackbar from parent
+     */
     close (val) {
-      // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
-      this.$emit('update-snackbar', val)
+      this.model = val
     }
   }
 }

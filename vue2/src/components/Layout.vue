@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
-
+    <Message>></Message>
     <v-app>
       <slot name="drawer"></slot>
       <slot name="appbar"></slot>
@@ -25,19 +24,9 @@ export default {
   components: {
     'Message': () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
-  data: () => ({
-    snackbar: false,
-    message: ''
-  }),
   mounted () {
-    EventBus.$on('snackbar', msg => {
-      this.message = msg
-      this.snackbar = true
-    })
-
     messaging.onMessage(payload => {
-      this.message = payload.notification.body
-      this.snackbar = true
+      EventBus.$emit('snackbar', payload.notification.body)
     })
 
     window.addEventListener('online', this.updateOnlineStatus)
@@ -46,10 +35,6 @@ export default {
   methods: {
     updateOnlineStatus (event) {
       EventBus.$emit('snackbar', 'You are ' + event.type)
-    },
-    updateSnackbar (val) {
-      // <Message :model="snackbar" :message="message" @update-snackbar="updateSnackbar"></Message>
-      this.snackbar = val
     }
   }
 }
