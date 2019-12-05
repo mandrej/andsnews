@@ -8934,8 +8934,8 @@ vuetify-loader@^1.4.3:
 
 vuetify@^2.1.13:
   version "2.1.13"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.1.13.tgz#58610027b8014c640510eb76e02c5a94e56bef04"
-  integrity sha1-WGEAJ7gBTGQFEOt24CxalOVr7wQ=
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.1.13.tgz#58610027b8014c640510eb76e02c5a94e56bef04"
+  integrity sha512-wy7RfNmRW60sPNRxl0C7TwRcLRw2Yw+ofGlJTAcoQZnWDtDOriSq0p3Uk8X0jb6tzkeU5Ed0JY6zL0Rb0ZL3lw==
 
 vuex-persistedstate@^2.7.0:
   version "2.7.0"
