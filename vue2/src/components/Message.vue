@@ -9,6 +9,11 @@
 
 <script>
 import { EventBus } from '@/helpers/event-bus'
+import '@/helpers/fire' // initialized firebase instance
+import firebase from '@firebase/app'
+import '@firebase/messaging'
+
+const messaging = firebase.messaging()
 
 export default {
   name: 'Message',
@@ -28,16 +33,25 @@ export default {
       this.model = true
     })
     EventBus.$on('update-snackbar', val => {
+      // update snackbar from ouside
       this.model = val
     })
+    messaging.onMessage(payload => {
+      this.message = payload.notification.body
+      this.model = true
+    })
+    window.addEventListener('online', this.updateOnlineStatus)
+    window.addEventListener('offline', this.updateOnlineStatus)
   },
   methods: {
-    /**
-     * update snackbar from parent
-     */
+    updateOnlineStatus (event) {
+      this.message = 'You are ' + event.type
+      this.model = true
+    },
     close (val) {
+      // update snackbar from inside
       this.model = val
-    }
+    },
   }
 }
 </script>
