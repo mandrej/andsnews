@@ -184,7 +184,11 @@ export default {
   },
   watch: {
     rec: function (val) {
-      if (JSON.stringify(val) === '{}') return
+      if (JSON.stringify(val) === '{}') {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(val))
+        return
+      }
       const dt = val.date.split('T')
       this.tmp = { ...val }
       this.dateTime = {
