@@ -18,6 +18,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.aperture {
+  background-image: url(/static/img/aperture.svg);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 300px;
+  background-attachment: fixed;
+  background-color: #eee !important;
+}
 .area {
   position: relative;
   cursor: pointer;

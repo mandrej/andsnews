@@ -8,14 +8,14 @@
     transition="dialog-bottom-transition"
   >
     <v-card>
-      <v-app-bar>
+      <v-app-bar class="aperture">
         <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-card-text class="pa-2">
+      <v-card-text class="pa-2 aperture">
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
@@ -185,8 +185,7 @@ export default {
   watch: {
     rec: function (val) {
       if (JSON.stringify(val) === '{}') {
-        // eslint-disable-next-line no-console
-        console.log(JSON.stringify(val))
+        this.show = false
         return
       }
       const dt = val.date.split('T')

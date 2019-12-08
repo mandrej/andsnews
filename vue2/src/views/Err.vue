@@ -1,11 +1,12 @@
 <template>
   <Layout>
     <template v-slot:appbar>
-      <v-app-bar app dark color="primary">
-        <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
-          <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
-        </v-avatar>
-        <v-toolbar-title class="headline">{{title}}</v-toolbar-title>
+      <v-app-bar app dark color="primary" class="aperture">
+        <v-toolbar-title
+          class="headline"
+          @click="$router.push({ name: 'home' })"
+          style="cursor: pointer"
+        >{{title}}</v-toolbar-title>
       </v-app-bar>
     </template>
 

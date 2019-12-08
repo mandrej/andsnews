@@ -1,7 +1,7 @@
 <template>
   <Layout v-resize="onResize">
     <template v-slot:drawer>
-      <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300" class="aperture">
         <v-layout column fill-height>
           <Find></Find>
           <v-spacer></v-spacer>
