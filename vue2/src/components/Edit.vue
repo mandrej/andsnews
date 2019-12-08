@@ -8,14 +8,14 @@
     transition="dialog-bottom-transition"
   >
     <v-card>
-      <v-app-bar light>
+      <v-app-bar>
         <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-card-text class="pa-2 accent">
+      <v-card-text class="pa-2">
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>

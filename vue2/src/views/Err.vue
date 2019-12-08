@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template v-slot:appbar>
-      <v-app-bar app light>
+      <v-app-bar app dark color="primary">
         <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
           <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
         </v-avatar>
@@ -10,7 +10,7 @@
     </template>
 
     <v-container my-10>
-      <v-alert type="error" transition="scale-transition" prominent dark>{{text}}</v-alert>
+      <v-alert type="error" transition="scale-transition" prominent>{{text}}</v-alert>
     </v-container>
   </Layout>
 </template>

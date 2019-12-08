@@ -21,6 +21,7 @@ export default {
 .area {
   position: relative;
   cursor: pointer;
+  background-color: #ddd;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */

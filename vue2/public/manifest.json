@@ -3,8 +3,8 @@
   "short_name": "Andрејевићи",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fff",
-  "theme_color": "#474747",
+  "background_color": "#0d47a1",
+  "theme_color": "#fff",
   "icons": [
     {
       "src": "/static/img/icons/android-chrome-192x192.png",

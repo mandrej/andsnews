@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template v-slot:drawer>
-      <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
+      <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
         <v-layout column fill-height>
           <Stat></Stat>
           <v-spacer></v-spacer>
@@ -11,7 +11,7 @@
     </template>
 
     <template v-slot:appbar>
-      <v-app-bar app light clipped-left>
+      <v-app-bar app dark clipped-left color="primary">
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
           <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
@@ -35,7 +35,7 @@
           ></v-text-field>
         </v-flex>
         <v-flex xs3 class="text-right">
-          <v-btn color="info" width="100" @click="send">Send</v-btn>
+          <v-btn color="primary" width="100" @click="send">Send</v-btn>
         </v-flex>
       </v-layout>
 
@@ -56,7 +56,7 @@
       <!-- <v-layout wrap align-center>
             <v-flex xs9>Add new fields, remove index docs</v-flex>
             <v-flex xs3 class="text-right">
-              <v-btn :disabled="canRun(fcm_token)" color="accent" width="100" class="black--text" @click="fix">Fix</v-btn>
+              <v-btn :disabled="canRun(fcm_token)" color="success" width="100" class="black--text" @click="fix">Fix</v-btn>
             </v-flex>
       </v-layout>-->
 

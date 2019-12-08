@@ -26,7 +26,7 @@
 
     <Layout>
       <template v-slot:drawer>
-        <v-navigation-drawer v-model="drawer" app fixed clipped width="300" color="accent">
+        <v-navigation-drawer v-model="drawer" app fixed clipped width="300">
           <v-layout column fill-height>
             <Find></Find>
             <v-spacer></v-spacer>
@@ -36,7 +36,7 @@
       </template>
 
       <template v-slot:appbar>
-        <v-app-bar app light clipped-left>
+        <v-app-bar app dark clipped-left color="primary">
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-avatar size="40px" @click="$router.push({ name: 'home' })" style="cursor: pointer">
             <v-img src="/static/img/aperture.svg" class="mr-3"></v-img>
@@ -52,7 +52,7 @@
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
             <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
-              <v-card light class="card">
+              <v-card class="card">
                 <img
                   :data-src="getImgSrc(item, '400-c')"
                   :title="caption(item)"
@@ -96,9 +96,8 @@
                 type="info"
                 transition="scale-transition"
                 prominent
-                dark
               >No data for current filter/ search</v-alert>
-              <v-alert v-else type="error" transition="scale-transition" prominent dark>
+              <v-alert v-else type="error" transition="scale-transition" prominent>
                 Something went wrong
                 <br />
                 {{error}}

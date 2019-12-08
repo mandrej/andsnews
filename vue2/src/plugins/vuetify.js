@@ -13,13 +13,9 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: colors.teal.lighten1,
-        secondary: colors.grey.lighten1,
-        accent: colors.orange.lighten4,
-        error: colors.red.lighten1,
-        warning: colors.orange.lighten3,
-        info: colors.blue.lighten1,
-        success: colors.green.lighten1
+        primary: colors.blue.darken4,
+        secondary: colors.lime.darken1,
+        accent: colors.orange.lighten3
       }
     }
   },
