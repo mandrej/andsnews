@@ -1,5 +1,6 @@
 const common = {
   data: () => ({
+    drawerKey: 0,
     requiredRule: [value => !!value || 'Required.']
   }),
   computed: {
@@ -29,6 +30,9 @@ const common = {
       } else {
         return '/static/img/broken.svg'
       }
+    },
+    redrawDrawer () {
+      this.drawerKey++
     }
   }
 }

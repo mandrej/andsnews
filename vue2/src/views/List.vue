@@ -26,7 +26,15 @@
 
     <Layout>
       <template v-slot:drawer>
-        <v-navigation-drawer v-model="drawer" app fixed clipped width="300" class="aperture">
+        <v-navigation-drawer
+          v-model="drawer"
+          app
+          fixed
+          clipped
+          :width="300"
+          :key="drawerKey"
+          @transitionend="redrawDrawer"
+        >
           <v-layout column fill-height>
             <Find></Find>
             <v-spacer></v-spacer>
@@ -36,7 +44,7 @@
       </template>
 
       <template v-slot:appbar>
-        <v-app-bar app dark clipped-left color="primary" class="aperture">
+        <v-app-bar app clipped-left class="aperture">
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title
             class="headline font-weight-regular"

@@ -18,7 +18,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.aperture {
+.aperture,
+.v-app-bar,
+.v-navigation-drawer {
   background-image: url(/static/img/aperture.svg);
   background-repeat: no-repeat;
   background-position: 0 0;

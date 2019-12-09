@@ -2900,10 +2900,10 @@ core-js@^3.4.3:
   resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.4.5.tgz#3dda65611d95699b5eb7742ea451ea052d37aa65"
   integrity sha1-PdplYR2VaZtet3QupFHqBS03qmU=
 
-core-js@^3.4.7:
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.7.tgz#57c35937da80fe494fbc3adcf9cf3dc00eb86b34"
-  integrity sha512-qaPVGw30J1wQ0GR3GvoPqlGf9GZfKKF4kFC7kiHlcsPTqH3txrs9crCp3ZiMAXuSenhz89Jnl4GZs/67S5VOSg==
+core-js@^3.4.8:
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.8.tgz#e0fc0c61f2ef90cbc10c531dbffaa46dfb7152dd"
+  integrity sha512-b+BBmCZmVgho8KnBUOXpvlqEMguko+0P+kXCwD4vIprsXC6ht1qgPxtb1OK6XgSlrySF71wkwBQ0Hv695bk9gQ==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4109,8 +4109,8 @@ find-up@^4.0.0, find-up@^4.1.0:
 
 firebase@^7.5.2:
   version "7.5.2"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.5.2.tgz#6b711a09d5a880b37e5ce5b97eba4ef7ec408c0d"
-  integrity sha1-a3EaCdWogLN+XOW5frpO9+xAjA0=
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.5.2.tgz#6b711a09d5a880b37e5ce5b97eba4ef7ec408c0d"
+  integrity sha512-G1hJ59CoV/gdNulBAFKiGD8EIDKCeQS16tc3TQ/sBCb87urDuaYKv7/n/CgK8llSt+pWJjPc6U0F223zt0OdKA==
   dependencies:
     "@firebase/analytics" "0.2.8"
     "@firebase/app" "0.4.26"

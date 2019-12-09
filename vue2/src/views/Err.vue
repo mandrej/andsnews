@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template v-slot:appbar>
-      <v-app-bar app dark color="primary" class="aperture">
+      <v-app-bar app>
         <v-toolbar-title
           class="headline"
           @click="$router.push({ name: 'home' })"

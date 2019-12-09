@@ -4,7 +4,15 @@
 
     <Layout>
       <template v-slot:drawer>
-        <v-navigation-drawer v-model="drawer" app fixed clipped width="300" class="aperture">
+        <v-navigation-drawer
+          v-model="drawer"
+          app
+          fixed
+          clipped
+          :width="300"
+          :key="drawerKey"
+          @transitionend="redrawDrawer"
+        >
           <v-layout column fill-height>
             <Stat></Stat>
             <v-spacer></v-spacer>
@@ -14,9 +22,13 @@
       </template>
 
       <template v-slot:appbar>
-        <v-app-bar app dark clipped-left color="primary" class="aperture">
+        <v-app-bar app clipped-left>
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title class="headline" @click="$router.go(-1)" style="cursor: pointer">Add</v-toolbar-title>
+          <v-toolbar-title
+            class="headline"
+            @click="$router.push({ name: 'home' })"
+            style="cursor: pointer"
+          >Add</v-toolbar-title>
         </v-app-bar>
       </template>
 

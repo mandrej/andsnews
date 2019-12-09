@@ -8,7 +8,7 @@
     transition="dialog-bottom-transition"
   >
     <v-card>
-      <v-app-bar class="aperture">
+      <v-app-bar>
         <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
