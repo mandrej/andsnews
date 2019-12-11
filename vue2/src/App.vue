@@ -20,18 +20,22 @@ export default {
 }
 .aperture,
 .v-app-bar,
-.v-navigation-drawer {
+.theme--light.v-application {
   background-image: url(/static/img/aperture.svg);
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-size: 300px;
+  background-size: 33%;
   background-attachment: fixed;
   background-color: #eee !important;
+}
+.theme--light.v-sheet,
+.theme--light.v-navigation-drawer {
+  background-color: transparent;
 }
 .area {
   position: relative;
   cursor: pointer;
-  background-color: #ddd;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */

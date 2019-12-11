@@ -1,5 +1,5 @@
 <template>
-  <v-card flat style="background: transparent">
+  <v-card flat>
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field

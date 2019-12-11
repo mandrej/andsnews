@@ -4,15 +4,7 @@
 
     <Layout>
       <template v-slot:drawer>
-        <v-navigation-drawer
-          v-model="drawer"
-          app
-          fixed
-          clipped
-          :width="300"
-          :key="drawerKey"
-          @transitionend="redrawDrawer"
-        >
+        <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
           <v-layout column fill-height>
             <Stat></Stat>
             <v-spacer></v-spacer>

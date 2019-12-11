@@ -26,15 +26,7 @@
 
     <Layout>
       <template v-slot:drawer>
-        <v-navigation-drawer
-          v-model="drawer"
-          app
-          fixed
-          clipped
-          :width="300"
-          :key="drawerKey"
-          @transitionend="redrawDrawer"
-        >
+        <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
           <v-layout column fill-height>
             <Find></Find>
             <v-spacer></v-spacer>
@@ -44,7 +36,7 @@
       </template>
 
       <template v-slot:appbar>
-        <v-app-bar app clipped-left class="aperture">
+        <v-app-bar app clipped-left>
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title
             class="headline font-weight-regular"
@@ -61,7 +53,7 @@
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
             <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
-              <v-card class="card">
+              <v-card class="card" color="white">
                 <img
                   :data-src="getImgSrc(item, '400-c')"
                   :title="caption(item)"

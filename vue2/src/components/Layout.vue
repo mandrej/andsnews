@@ -4,7 +4,7 @@
     <v-app>
       <slot name="drawer"></slot>
       <slot name="appbar"></slot>
-      <v-content class="aperture">
+      <v-content>
         <slot></slot>
       </v-content>
     </v-app>

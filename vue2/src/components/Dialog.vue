@@ -1,6 +1,6 @@
 <template>
   <v-dialog :value="model" max-width="300px" :persistent="persistent">
-    <v-card>
+    <v-card color="white">
       <v-card-title class="headline" primary-title>{{title}}</v-card-title>
       <v-card-text>{{text}}</v-card-text>
       <v-divider></v-divider>
