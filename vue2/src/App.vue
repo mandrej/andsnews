@@ -20,16 +20,18 @@ export default {
 }
 .aperture,
 .v-app-bar,
-.theme--light.v-application {
+.v-navigation-drawer {
   background-image: url(/static/img/aperture.svg);
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-size: 33%;
+  background-size: 480px;
   background-attachment: fixed;
   background-color: #eee !important;
 }
-.theme--light.v-sheet,
-.theme--light.v-navigation-drawer {
+.v-app-bar {
+  background-color: #fff !important;
+}
+.theme--light.v-sheet {
   background-color: transparent;
 }
 .area {
