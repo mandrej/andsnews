@@ -10,8 +10,6 @@ FIREBASE = {
     "messagingServerKey": "AAAAp29R6Z0:APA91bEsmfN6-ZywxP05Xpw-Ooto5FwTyXjgxRcqDllaTo6Kay3y8wnB-1QcwBt1-iQvoPt2p8wwp0JmKz4xWHST-pAQyrAivyTT-RFXasRYGmT09rP6oMuW95XHEi-HANZgzljuA-4i4Gh44den43zooddq5uSjBA"
 }
 
-SERVICE_ACCOUNT = 'andsnews@appspot.gserviceaccount.com'
-
 BUCKET = '/' + os.environ.get('BUCKET_NAME',
                               app_identity.get_default_gcs_bucket_name())
 DEVEL = os.environ.get('SERVER_SOFTWARE', '').startswith('Devel')

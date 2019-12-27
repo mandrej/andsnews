@@ -4,7 +4,6 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/auth'
-import '@firebase/database'
 import '@firebase/messaging'
 
 const axios = Vue.axios
@@ -16,9 +15,7 @@ const admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
 function pushMessage (token, msg) {
   axios
     .post('message', { token: token, text: msg })
-    .then(response => {
-      console.error(response)
-    })
+    .then()
     .catch(() => console.error('push message failed'))
 }
 
@@ -49,21 +46,20 @@ const actions = {
             isAdmin: admins.indexOf(response.user.uid) !== -1
           }
           commit('SAVE_USER', payload)
-          dispatch('saveUser', payload)
-          dispatch('fetchToken')
+          dispatch('updateUser', payload)
         })
     }
   },
-  saveUser: ({ dispatch }, user) => {
-    firebase
-      .database()
-      .ref('users')
-      .child(user.uid)
-      .set({
-        email: user.email,
-        date: new Date().toISOString()
+  updateUser: ({ dispatch }, user) => {
+    axios
+      .post('user', { user: user })
+      .then(response => {
+        if (response.data.success) {
+          dispatch('fetchToken')
+          dispatch('app/updateValuesEmail', user, { root: true })
+        }
       })
-    dispatch('app/updateValuesEmail', user, { root: true })
+      .catch(() => console.error('update user failed'))
   },
   fetchToken: ({ commit, state, dispatch }) => {
     if (state.user && state.user.uid) {
@@ -85,28 +81,15 @@ const actions = {
     }
   },
   addRegistration: ({ state }) => {
-    const ref = firebase.database().ref('registrations')
-    ref.child(state.fcm_token).set({
-      email: state.user.email,
-      date: new Date().toISOString()
-    })
-    ref
-      .orderByChild('email')
-      .equalTo(state.user.email)
-      .on('value', function (snapshot) {
-        snapshot.forEach(function (data) {
-          if (data.key !== state.fcm_token) {
-            ref.child(data.key).remove()
-          }
-        })
-      })
+    axios.put('user/register', { uid: state.user.uid, token: state.fcm_token }).then().catch(err => console.error(err))
   },
   sendNotifications: ({ state }, msg) => {
-    const ref = firebase.database().ref('registrations')
-    ref.once('value', snapshot => {
-      snapshot.forEach(node => {
-        if (node.key !== state.fcm_token) {
-          pushMessage(node.key, msg)
+    axios.get('registrations').then(response => {
+      response.data.forEach(token => {
+        if (token === state.fcm_token) {
+          pushMessage(token, msg + ' sent successfully')
+        } else {
+          pushMessage(token, msg)
         }
       })
     })

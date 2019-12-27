@@ -1,10 +1,11 @@
+import datetime
 from flask import Flask, abort, jsonify, request, make_response
 from google.appengine.ext import ndb, deferred
 
 from views.api import CustomJSONEncoder, Paginator, counters_values, counters_counts, last_entry
 from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Builder, Unbound, Fixer
-from views.models import Photo, slugify
+from views.models import Photo, User, slugify
 
 app = Flask(__name__)
 app.json_encoder = CustomJSONEncoder
@@ -144,3 +145,26 @@ def download(safe_key):
     response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % str(
         slugify(obj.headline))
     return response
+
+
+@app.route('/api/registrations', methods=['GET'])
+def registrations():
+    return jsonify([x.token for x in User.query() if x.token])
+
+
+@app.route('/api/user/register', methods=['PUT'])
+def update_user():
+    uid = request.json.get('uid', None)
+    token = request.json.get('token', None)
+    obj = ndb.Key(User, uid).get()
+    obj.token = request.json.get('token', None)
+    obj.put()
+
+
+@app.route('/api/user', methods=['POST'])
+def user():
+    data = request.json.get('user', None)
+    obj = User.get_or_insert(data['uid'], email=data['email'],
+                             last_login=datetime.datetime.now())
+    obj.put()
+    return jsonify({"success": True})

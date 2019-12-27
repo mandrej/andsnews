@@ -275,3 +275,10 @@ class Photo(ndb.Model):
             })
             return data
         return None
+
+
+class User(ndb.Model):
+    # uid
+    email = ndb.StringProperty(required=True)
+    token = ndb.StringProperty()
+    last_login = ndb.DateTimeProperty()

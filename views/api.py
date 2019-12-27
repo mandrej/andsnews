@@ -5,7 +5,7 @@ import time
 
 from operator import itemgetter
 from flask.json import JSONEncoder
-from google.appengine.api import users, datastore_errors
+from google.appengine.api import datastore_errors
 from google.appengine.ext import ndb
 from google.appengine.datastore.datastore_query import Cursor
 from unidecode import unidecode
@@ -21,9 +21,6 @@ class CustomJSONEncoder(JSONEncoder):
             return obj.serialize()
         elif isinstance(obj, datetime.datetime):
             return obj.isoformat()
-        elif isinstance(obj, users.User):
-            # TODO remove users api
-            return obj.email()
         return JSONEncoder.default(self, obj)
 
 
