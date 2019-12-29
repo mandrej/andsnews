@@ -214,7 +214,7 @@ class Builder(Mapper):
             if latest is not None:
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
-                    obj.repr_url = latest.serving_url
+                    obj.repr_url = latest.filename
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))

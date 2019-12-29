@@ -6,8 +6,7 @@ from cStringIO import StringIO
 
 import cloudstorage as gcs
 from PIL import Image
-from google.appengine.api import images
-from google.appengine.ext import ndb, deferred, blobstore
+from google.appengine.ext import ndb, deferred
 
 from config import BUCKET, PHOTO_FILTER
 from helpers import slugify, tokenize, get_exif
@@ -46,7 +45,7 @@ class Counter(ndb.Model):
         return {
             'name': self.value,
             'field_name': self.field,
-            'serving_url': self.repr_url
+            'repr_url': self.repr_url
         }
 
 
@@ -55,7 +54,7 @@ class Photo(ndb.Model):
     slug = ndb.ComputedProperty(lambda self: slugify(self.headline))
     email = ndb.StringProperty(required=True)
     tags = ndb.StringProperty(repeated=True)
-    blob_key = ndb.BlobKeyProperty()
+    # blob_key = ndb.BlobKeyProperty() TODO REMOVE
     filename = ndb.StringProperty()  # /bucket/object
 
     size = ndb.IntegerProperty()
@@ -95,7 +94,7 @@ class Photo(ndb.Model):
             latest = futures[i].get_result()
             if latest:
                 counter.repr_stamp = latest.date
-                counter.repr_url = latest.serving_url
+                counter.repr_url = latest.filename
 
         ndb.put_multi(counters)
 
@@ -144,9 +143,6 @@ class Photo(ndb.Model):
             with gcs.open(object_name, 'w', content_type=fs.content_type) as f:
                 # <class 'cloudstorage.storage_api.StreamingBuffer'>
                 f.write(_buffer)
-            # <class 'google.appengine.api.datastore_types.BlobKey'> or None
-            self.blob_key = blobstore.BlobKey(
-                blobstore.create_gs_key('/gs' + object_name))
             self.filename = object_name
             self.size = f.tell()
         except gcs.errors as e:
@@ -230,7 +226,6 @@ class Photo(ndb.Model):
     def remove(self):
         old_pairs = self.changed_pairs()
 
-        images.delete_serving_url(self.blob_key)
         try:
             gcs.delete(self.filename)
         except gcs.NotFoundError:
@@ -239,18 +234,6 @@ class Photo(ndb.Model):
         deferred.defer(self.update_filters, [], old_pairs, _queue='background')
         self.key.delete()
         return {'success': True}
-
-    @cached_property
-    def serving_url(self):
-        result = None
-        try:
-            result = images.get_serving_url(
-                self.blob_key, crop=False, secure_url=True)
-        except images.TransformationError:
-            logging.error('__NO_IMAGE__,{},{}'.format(
-                self.date.isoformat(), self.slug))
-
-        return result
 
     @classmethod
     def query_for(cls, field, value):
@@ -265,16 +248,14 @@ class Photo(ndb.Model):
         return query.get()
 
     def serialize(self):
-        if self.serving_url:
-            data = self.to_dict(
-                exclude=('blob_key', 'size', 'year', 'month', 'text'))
-            data.update({
-                'kind': 'photo',
-                'safekey': self.key.urlsafe(),
-                'serving_url': self.serving_url
-            })
-            return data
-        return None
+        data = self.to_dict(
+            exclude=('blob_key', 'size', 'year', 'month', 'text'))
+        data.update({
+            'kind': 'photo',
+            'safekey': self.key.urlsafe(),
+            'repr_url': self.filename
+        })
+        return data
 
 
 class User(ndb.Model):

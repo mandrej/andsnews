@@ -246,7 +246,7 @@ export default {
     opacity: 0;
     display: block;
     width: 100%;
-    height: 100%;
+    height: 250px;
     object-fit: cover;
     transition: opacity 0.3s;
     cursor: pointer;
