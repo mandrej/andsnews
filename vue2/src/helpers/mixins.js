@@ -13,17 +13,22 @@ const common = {
       return iso.replace('T', ' ').substring(0, 16)
     },
     getImgSrc (rec, size) {
-      // size: '400-c'
-      const suffix = size ? '=s' + size : '=s0'
-      if (rec && rec.repr_url) {
+      /**
+       * Enter allUsers in Add Members. Then Select Role > Storage > Storage Object Viewer
+       * If you want users to download anonymously accessible objects without authenticating,
+       * use the storage.googleapis.com
+       */
+      if (!rec.repr_url) return '/static/img/broken.svg'
+      let serviceUrl = '/api/thumb/' + rec.safekey + '/' + size
+      const max = Math.max(...rec.dim)
+      if (!size || size > max) {
         if (process.env.NODE_ENV === 'development') {
-          return '/_ah/gcs' + rec.repr_url + '?' + suffix
+          serviceUrl = '/_ah/gcs' + rec.repr_url
         } else {
-          return 'https://storage.googleapis.com' + rec.repr_url + '?' + suffix
+          serviceUrl = 'https://storage.cloud.google.com' + rec.repr_url
         }
-      } else {
-        return '/static/img/broken.svg'
       }
+      return serviceUrl
     }
   }
 }

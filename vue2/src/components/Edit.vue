@@ -20,7 +20,7 @@
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
-                <v-img cover aspect-ratio="1" :src="getImgSrc(tmp, '400-c')"></v-img>
+                <v-img cover aspect-ratio="1" :src="getImgSrc(tmp, 400)"></v-img>
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>

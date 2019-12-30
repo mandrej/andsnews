@@ -118,7 +118,7 @@ class Photo(ndb.Model):
 
     @property
     def buffer(self):
-        """ Used for Download """
+        """ Used for download and thumbnails """
         contents = ''
         with gcs.open(self.filename, 'r') as f:
             contents = f.read()

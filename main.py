@@ -7,8 +7,42 @@ from views.config import LIMIT, START_MSG
 from views.mapper import push_message, Missing, Builder, Unbound, Fixer
 from views.models import Photo, User, slugify
 
+import cloudstorage as gcs
+from PIL import Image
+from cStringIO import StringIO
+from werkzeug.http import generate_etag
+
 app = Flask(__name__)
 app.json_encoder = CustomJSONEncoder
+
+
+@app.route('/api/thumb/<safe_key>/<size>', methods=['GET'])
+def thumbnail(safe_key, size):
+    key = ndb.Key(urlsafe=safe_key)
+    if key is None:
+        abort(404)
+    obj = key.get()
+
+    try:
+        gcs.stat(obj.filename)
+    except gcs.NotFoundError:
+        abort(404)
+
+    size = int(size)
+    box = (size, size)
+
+    out = StringIO()
+    image_from_buffer = Image.open(StringIO(obj.buffer))
+    image_from_buffer.thumbnail(box, Image.LANCZOS)
+    image_from_buffer.save(out, image_from_buffer.format)
+
+    data = out.getvalue()
+    response = make_response(data)
+    response.headers['Content-Type'] = 'image/jpeg'
+    response.headers['Cache-Control'] = 'max-age=3600'
+    response.headers['E-Tag'] = generate_etag(data)
+
+    return response
 
 
 @app.route('/api/counter/<col>', methods=['GET'])

@@ -55,7 +55,7 @@
             <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
               <v-card class="card" color="white">
                 <img
-                  :data-src="getImgSrc(item, '400-c')"
+                  :data-src="getImgSrc(item, 400)"
                   :title="caption(item)"
                   :data-pswp-size="item.dim.join('x')"
                   :data-pswp-src="getImgSrc(item)"
