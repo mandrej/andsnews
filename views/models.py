@@ -32,6 +32,7 @@ class Counter(ndb.Model):
     count = ndb.IntegerProperty(default=0)
     repr_stamp = ndb.DateTimeProperty()
     repr_url = ndb.StringProperty()
+    safekey = ndb.StringProperty()
 
     @classmethod
     def all_photo_filter(cls):
@@ -45,7 +46,8 @@ class Counter(ndb.Model):
         return {
             'name': self.value,
             'field_name': self.field,
-            'repr_url': self.repr_url
+            'repr_url': self.repr_url,
+            'safekey': self.safekey
         }
 
 

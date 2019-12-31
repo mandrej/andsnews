@@ -215,6 +215,7 @@ class Builder(Mapper):
                 obj.repr_stamp = latest.date
                 if kind == 'Photo':
                     obj.repr_url = latest.filename
+                    obj.safekey = latest.key.urlsafe()
 
             obj.put()
             push_message(self.TOKEN, '{} {}'.format(obj.value, obj.count))

@@ -15,17 +15,13 @@ const common = {
     getImgSrc (rec, size) {
       /**
        * Enter allUsers in Add Members. Then Select Role > Storage > Storage Object Viewer
-       * If you want users to download anonymously accessible objects without authenticating,
-       * use the storage.googleapis.com
        */
-      if (!rec.repr_url) return '/static/img/broken.svg'
-      let serviceUrl = '/api/thumb/' + rec.safekey + '/' + size
-      const max = Math.max(...rec.dim)
-      if (!size || size > max) {
-        if (process.env.NODE_ENV === 'development') {
-          serviceUrl = '/_ah/gcs' + rec.repr_url
+      let serviceUrl = '/static/img/broken.svg'
+      if (rec.repr_url && rec.safekey) {
+        if (size) {
+          serviceUrl = '/api/thumb/' + rec.safekey + '/' + size
         } else {
-          serviceUrl = 'https://storage.cloud.google.com' + rec.repr_url
+          serviceUrl = '/api/thumb/' + rec.safekey
         }
       }
       return serviceUrl
