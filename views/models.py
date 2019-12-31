@@ -97,6 +97,7 @@ class Photo(ndb.Model):
             if latest:
                 counter.repr_stamp = latest.date
                 counter.repr_url = latest.filename
+                counter.safekey = latest.key.urlsafe()
 
         ndb.put_multi(counters)
 
