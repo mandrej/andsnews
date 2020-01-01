@@ -52,8 +52,10 @@ def counters_counts():
 
 
 def last_entry():
-    key_name = 'Photo||{}||{}'.format('year', datetime.datetime.now().year)
-    return Counter.get_by_id(key_name)
+    year_counters = [counter for counter in Counter.query(
+        Counter.forkind == 'Photo', Counter.field == 'year').order(-Counter.value)]
+    last_year = year_counters[0]
+    return last_year.serialize()
 
 
 class Paginator(object):
