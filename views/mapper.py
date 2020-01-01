@@ -212,9 +212,7 @@ class Builder(Mapper):
 
             latest = self.KIND.latest_for(self.FIELD, value)
             if latest is not None:
-                obj.repr_stamp = latest.date
                 if kind == 'Photo':
-                    obj.repr_url = latest.filename
                     obj.safekey = latest.key.urlsafe()
 
             obj.put()

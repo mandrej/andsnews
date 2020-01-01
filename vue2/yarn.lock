@@ -8880,12 +8880,11 @@ vue-cli-plugin-axios@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-axios/-/vue-cli-plugin-axios-0.0.4.tgz#29d4eb48275c7fe15b92e1fd5d95fbe2a966436f"
 
-vue-cli-plugin-vuetify@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.0.2.tgz#160e573d59f2594b89531e95b0fdd74ca76ecd9d"
-  integrity sha512-OJ1YUSfDlQibj111QMGv4a44atmtWdrkynk4voiEuivUqLcZGCJyF/A8ae0VojpMU2jlvZydz0nXjmZmcg+Nqw==
+vue-cli-plugin-vuetify@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.0.3.tgz#a4bd1e7b92abadbd9cb64629fef8b139c9d3337b"
+  integrity sha1-pL0ee5Krrb2ctkYp/vixOcnTM3s=
   dependencies:
-    semver "^6.0.0"
     shelljs "^0.8.3"
 
 vue-eslint-parser@^5.0.0:
@@ -8967,10 +8966,10 @@ vuetify-loader@^1.4.3:
   dependencies:
     loader-utils "^1.2.0"
 
-vuetify@^2.1.15:
-  version "2.1.15"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.1.15.tgz#26386557c63ad700e6e8d8a330f8d2831fbef6ef"
-  integrity sha1-JjhlV8Y61wDm6NijMPjSgx++9u8=
+vuetify@^2.1.16:
+  version "2.1.16"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.1.16.tgz?cache=0&sync_timestamp=1577826900848&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.1.16.tgz#e460c1dd782516f334c6a8adaad32467aba9b5ab"
+  integrity sha1-5GDB3XglFvM0xqitqtMkZ6uptas=
 
 vuex-persistedstate@^2.7.0:
   version "2.7.0"

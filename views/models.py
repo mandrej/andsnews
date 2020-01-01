@@ -30,8 +30,8 @@ class Counter(ndb.Model):
     field = ndb.StringProperty(required=True)
     value = ndb.GenericProperty(required=True)
     count = ndb.IntegerProperty(default=0)
-    repr_stamp = ndb.DateTimeProperty()
-    repr_url = ndb.StringProperty()
+    # repr_stamp = ndb.DateTimeProperty() TODO REMOVE
+    # repr_url = ndb.StringProperty() TODO REMOVE
     safekey = ndb.StringProperty()
 
     @classmethod
@@ -46,7 +46,6 @@ class Counter(ndb.Model):
         return {
             'name': self.value,
             'field_name': self.field,
-            'repr_url': self.repr_url,
             'safekey': self.safekey
         }
 
@@ -95,8 +94,6 @@ class Photo(ndb.Model):
 
             latest = futures[i].get_result()
             if latest:
-                counter.repr_stamp = latest.date
-                counter.repr_url = latest.filename
                 counter.safekey = latest.key.urlsafe()
 
         ndb.put_multi(counters)
@@ -255,8 +252,7 @@ class Photo(ndb.Model):
             exclude=('blob_key', 'size', 'year', 'month', 'text'))
         data.update({
             'kind': 'photo',
-            'safekey': self.key.urlsafe(),
-            'repr_url': self.filename
+            'safekey': self.key.urlsafe()
         })
         return data
 
