@@ -2,7 +2,7 @@ import datetime
 import re
 import uuid
 import logging
-from cStringIO import StringIO
+from io import BytesIO
 
 import cloudstorage as gcs
 from PIL import Image
@@ -154,7 +154,7 @@ class Photo(ndb.Model):
                 setattr(self, field, value)
 
             # SAVE EVERYTHING
-            image_from_buffer = Image.open(StringIO(_buffer))
+            image_from_buffer = Image.open(BytesIO(_buffer))
             self.dim = image_from_buffer.size
             # self.tags = ['new']  # ARTIFICIAL TAG
             self.put()

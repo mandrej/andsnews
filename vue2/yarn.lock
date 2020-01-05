@@ -7718,10 +7718,10 @@ sass-loader@^8.0.0:
     schema-utils "^2.1.0"
     semver "^6.3.0"
 
-sass@^1.24.0:
-  version "1.24.0"
-  resolved "https://registry.npm.taobao.org/sass/download/sass-1.24.0.tgz?cache=0&sync_timestamp=1576868125988&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.24.0.tgz#e8b9931bc5d18a37d271749311ef2edc83102a77"
-  integrity sha1-6LmTG8XRijfScXSTEe8u3IMQKnc=
+sass@^1.24.2:
+  version "1.24.2"
+  resolved "https://registry.npm.taobao.org/sass/download/sass-1.24.2.tgz#0a0e0f00368be6808b2e94470172266ac45498fe"
+  integrity sha1-Cg4PADaL5oCLLpRHAXImasRUmP4=
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
@@ -8966,10 +8966,10 @@ vuetify-loader@^1.4.3:
   dependencies:
     loader-utils "^1.2.0"
 
-vuetify@^2.1.16:
-  version "2.1.16"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.1.16.tgz?cache=0&sync_timestamp=1577826900848&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.1.16.tgz#e460c1dd782516f334c6a8adaad32467aba9b5ab"
-  integrity sha1-5GDB3XglFvM0xqitqtMkZ6uptas=
+vuetify@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.1.tgz#ff09812ec3c439e379c8a717385a92678ce590ca"
+  integrity sha1-/wmBLsPEOeN5yKcXOFqSZ4zlkMo=
 
 vuex-persistedstate@^2.7.0:
   version "2.7.0"

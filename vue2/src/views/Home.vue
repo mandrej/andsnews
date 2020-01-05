@@ -16,7 +16,7 @@
       </div>
     </template>
 
-    <v-img :src="getImgSrc(last)" :height="height">
+    <v-img :lazy-src="getImgSrc(last, 400)" :src="getImgSrc(last)" :height="height">
       <div class="pa-5" style="position: absolute; top: 0; right: 0">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
