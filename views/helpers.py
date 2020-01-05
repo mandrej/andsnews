@@ -2,7 +2,7 @@ from __future__ import division
 
 import datetime
 import unicodedata
-from io import BytesIO
+from cStringIO import StringIO
 from decimal import getcontext, Decimal
 
 from exifread import process_file
@@ -83,7 +83,7 @@ def get_exif(buff):
     data = {}
     model = None
     make = None
-    tags = process_file(BytesIO(buff), details=False)
+    tags = process_file(StringIO(buff), details=False)
 
     if 'Image Model' in tags:
         model = tags['Image Model'].printable.replace('/', '')

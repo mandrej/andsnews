@@ -8,7 +8,7 @@ from views.mapper import push_message, Missing, Builder, Unbound, Fixer
 from views.models import Photo, User, slugify
 
 from PIL import Image
-from io import BytesIO
+from cStringIO import StringIO
 from werkzeug.http import generate_etag
 
 app = Flask(__name__)
@@ -23,8 +23,8 @@ def thumbnail(safe_key, size=None):
         abort(404)
     obj = key.get()
 
-    out = BytesIO()
-    image_from_buffer = Image.open(BytesIO(obj.buffer))
+    out = StringIO()
+    image_from_buffer = Image.open(StringIO(obj.buffer))
     if size:
         size = int(size)
         image_from_buffer.thumbnail((size, size), Image.BICUBIC)
