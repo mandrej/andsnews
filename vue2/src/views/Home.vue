@@ -66,7 +66,8 @@ export default {
     showFilter (rec) {
       const tmp = {}
       tmp[rec.field_name] = rec.name
-      this.$router.push({ name: 'list', query: tmp })
+      // eslint-disable-next-line
+      this.$router.push({ name: 'list', query: tmp })//.catch(err => { })
     },
     onResize () {
       this.$emit('resize')

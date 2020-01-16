@@ -1,7 +1,5 @@
 service: client
-runtime: python27
-api_version: 1
-threadsafe: true
+runtime: nodejs10
 default_expiration: "0s"
 
 instance_class: F1
@@ -44,5 +42,8 @@ handlers:
     upload: vue2/dist/index.html
     secure: always
 
-skip_files:
-  - (?!^(vue2($|/dist)))
+inbound_services:
+  - warmup
+
+# skip_files:
+#   - (?!^(vue2($|/dist)))

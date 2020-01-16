@@ -1,19 +1,17 @@
 {
-  "python.venvPath": "/home/milan/venv/andsnews",
-  "python.pythonPath": "/home/milan/venv/andsnews/bin/python",
+  "python.venvPath": "~/venv/andsnews3",
+  "python.pythonPath": "~/venv/andsnews3/bin/python",
   "python.autoComplete.extraPaths": [
-    "~/google-cloud-sdk/platform/google_appengine"
+    "~/venv/andsnews3/lib/python3.7/site-packages"
   ],
-  "python.autoComplete.addBrackets": true,
-  "python.linting.pycodestyleEnabled": true,
-  "python.linting.pylintEnabled": false,
-  "python.linting.pycodestyleArgs": ["--ignore=E501"],
+  "python.linting.enabled": true,
+  "python.formatting.provider": "autopep8",
+  "python.jediEnabled": false,
   "files.exclude": {
     "**/*.pyc": true,
     "docs": true,
+    "lib": true,
     "tests": true,
     "graphql": true
-  },
-  "python.linting.enabled": true,
-  "python.formatting.provider": "autopep8"
+  }
 }

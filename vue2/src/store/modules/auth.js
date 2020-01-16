@@ -47,6 +47,7 @@ const actions = {
           }
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
+          dispatch('fetchToken')
         })
     }
   },
@@ -55,7 +56,6 @@ const actions = {
       .post('user', { user: user })
       .then(response => {
         if (response.data.success) {
-          dispatch('fetchToken')
           dispatch('app/updateValuesEmail', user, { root: true })
         }
       })
@@ -68,7 +68,7 @@ const actions = {
           return messaging
             .getToken()
             .then(token => {
-              if (state.fcm_token !== token) {
+              if (token) {
                 commit('SET_TOKEN', token)
                 dispatch('addRegistration')
               }

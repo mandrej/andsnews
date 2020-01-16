@@ -1,36 +1,27 @@
-import datetime
 from flask import Flask, abort, jsonify, request, make_response
-from google.appengine.ext import ndb, deferred
-
-from views.api import CustomJSONEncoder, Paginator, counters_values, counters_counts, last_entry
-from views.config import LIMIT, START_MSG
-from views.mapper import push_message, Missing, Builder, Unbound, Fixer
-from views.models import Photo, User, slugify
-
-from PIL import Image
-from cStringIO import StringIO
 from werkzeug.http import generate_etag
+from io import BytesIO
+from PIL import Image
+from api import cloud, photo
+from api.helpers import slugify, push_message
+from api.config import LIMIT
 
 app = Flask(__name__)
-app.json_encoder = CustomJSONEncoder
 
 
-@app.route('/api/thumb/<safe_key>', methods=['GET'])
-@app.route('/api/thumb/<safe_key>/<size>', methods=['GET'])
-def thumbnail(safe_key, size=None):
-    key = ndb.Key(urlsafe=safe_key)
-    if key is None:
-        abort(404)
-    obj = key.get()
+@app.route('/api/thumb/<safekey>', methods=['GET'])
+@app.route('/api/thumb/<safekey>/<int:size>', methods=['GET'])
+def thumb(safekey, size=None):
+    obj, inp = photo.storage_download(safekey)
 
-    out = StringIO()
-    image_from_buffer = Image.open(StringIO(obj.buffer))
+    image_from_buffer = Image.open(inp)
     if size:
-        size = int(size)
         image_from_buffer.thumbnail((size, size), Image.BICUBIC)
 
+    out = BytesIO()
     image_from_buffer.save(out, image_from_buffer.format)
     data = out.getvalue()
+
     response = make_response(data)
     response.headers['Content-Type'] = 'image/jpeg'
     response.headers['Cache-Control'] = 'public, max-age=86400, no-transform'
@@ -38,41 +29,52 @@ def thumbnail(safe_key, size=None):
     return response
 
 
+@app.route('/api/download/<safekey>', methods=['GET'])
+def download(safekey):
+    obj, inp = photo.storage_download(safekey)
+
+    out = BytesIO()
+    image_from_buffer.save(out, image_from_buffer.format)
+    data = out.getvalue()
+
+    response = make_response(data)
+    response.headers['Content-Type'] = 'image/jpeg'
+    response.headers['Content-Disposition'] = 'attachment; filename={}.jpg'.format(
+        slugify(obj['headline']))
+    return response
+
+
 @app.route('/api/counter/<col>', methods=['GET'])
 def collection(col):
     if col == 'values':
-        return jsonify(counters_values())
+        return jsonify(cloud.counters_values())
     elif col == 'total':
-        return jsonify(Photo.query().count())
+        return jsonify(cloud.photo_count())
     elif col == 'last':
-        return jsonify(last_entry())
+        return jsonify(cloud.last_entry())
     elif col == 'stat':
-        return jsonify(counters_counts())
+        return jsonify(cloud.counters_counts())
 
 
 @app.route('/api/search', methods=['GET'])
 def search():
+    filters = []
     page = request.args.get('_page', None)
     per_page = int(request.args.get('per_page', LIMIT))
-    query = Photo.query()
-
     for key in ('text', 'tags', 'year', 'month', 'model', 'nick'):
         if key == 'year' or key == 'month':
             val = request.args.get(key, None)
             if val:
-                query = query.filter(Photo._properties[key] == int(val))
+                filters.append((key, '=', int(val)))
         elif key == 'tags':
             for tag in request.args.getlist('tags'):
-                query = query.filter(Photo._properties[key] == tag)
+                filters.append((key, '=', tag))
         else:
             val = request.args.get(key, None)
             if val:
-                query = query.filter(Photo._properties[key] == val)
+                filters.append((key, '=', val))
 
-    query = query.order(-Photo.date)
-    paginator = Paginator(query, per_page=per_page)
-    objects, token, error = paginator.page(page)
-
+    objects, token, error = cloud.results(filters, page, per_page)
     return jsonify({
         'objects': objects,
         '_page': page if page else 'FP',
@@ -81,52 +83,24 @@ def search():
     })
 
 
-@app.route('/api/message', methods=['POST'])
-def notify():
+@app.route('/api/user', methods=['POST'])
+def user():
+    data = request.json.get('user', None)
+    cloud.login_user(data)
+    return jsonify({"success": True})
+
+
+@app.route('/api/user/register', methods=['PUT'])
+def update_user():
+    uid = request.json.get('uid', None)
     token = request.json.get('token', None)
-    text = request.json.get('text', None)
-    push_message(token, text)
-    return jsonify(True)
+    cloud.register_user(uid, token)
+    return jsonify({"success": True})
 
 
-@app.route('/api/<verb>', methods=['POST'])
-def background_runner(verb):
-    token = request.json.get('token', None)
-    assert token is not None, 'Token cannot be null'
-
-    if verb == 'unbound':
-        runner = Unbound()
-    elif verb == 'missing':
-        runner = Missing()
-    elif verb == 'fix':
-        runner = Fixer()
-    else:
-        return jsonify(False)
-
-    runner.KIND = Photo
-    runner.TOKEN = token
-    push_message(runner.TOKEN, START_MSG)
-    deferred.defer(runner.run, _queue='background')
-    return jsonify(True)
-
-
-@app.route('/api/<verb>/<field>', methods=['POST'])
-def background_build(verb, field):
-    token = request.json.get('token', None)
-    assert token is not None, 'Token cannot be null'
-
-    if field and verb == 'rebuild':
-        runner = Builder()
-        runner.VALUES = []
-        runner.FIELD = field
-    else:
-        return jsonify(False)
-
-    runner.KIND = Photo
-    runner.TOKEN = token
-    push_message(runner.TOKEN, START_MSG)
-    deferred.defer(runner.run, _queue='background')
-    return jsonify(True)
+@app.route('/api/registrations', methods=['GET'])
+def registrations():
+    return jsonify(cloud.registrations())
 
 
 @app.route('/api/add', methods=['POST'])
@@ -136,62 +110,64 @@ def post():
     email = request.form.get('email')
     files = request.files.getlist('photos')
     for fs in files:
-        obj = Photo(headline=fs.filename, email=email)
-        response = obj.add(fs)
+        response = photo.add(fs, email)
         resList.append(response)
     return jsonify(resList)
 
 
-@app.route('/api/edit/<safe_key>', methods=['PUT'])
-def put(safe_key):
-    key = ndb.Key(urlsafe=safe_key)
-    if key is None:
-        abort(404)
-    obj = key.get()
-    response = obj.edit(request.json)
+@app.route('/api/edit/<safekey>', methods=['PUT'])
+def put(safekey):
+    response = photo.edit(safekey, request.json)
     return jsonify(response)
 
 
-@app.route('/api/delete/<safe_key>', methods=['DELETE'])
-def delete(safe_key):
-    key = ndb.Key(urlsafe=safe_key)
-    if key is None:
-        abort(404)
-    response = key.get().remove()
+@app.route('/api/delete/<safekey>', methods=['DELETE'])
+def delete(safekey):
+    response = photo.remove(safekey)
     return jsonify(response['success'])
 
 
-@app.route('/api/download/<safe_key>', methods=['GET'])
-def download(safe_key):
-    key = ndb.Key(urlsafe=safe_key)
-    if key is None:
-        abort(404)
-    obj = key.get()
-    response = make_response(obj.buffer)
-    response.headers['Content-Type'] = 'image/jpeg'
-    response.headers['Content-Disposition'] = 'attachment; filename=%s.jpg' % str(
-        slugify(obj.headline))
-    return response
-
-
-@app.route('/api/registrations', methods=['GET'])
-def registrations():
-    return jsonify([x.token for x in User.query() if x.token])
-
-
-@app.route('/api/user/register', methods=['PUT'])
-def update_user():
-    uid = request.json.get('uid', None)
+@app.route('/api/message', methods=['POST'])
+def notify():
     token = request.json.get('token', None)
-    obj = ndb.Key(User, uid).get()
-    obj.token = request.json.get('token', None)
-    obj.put()
+    text = request.json.get('text', None)
+    success = push_message(token, text)
+    return jsonify(success)
 
 
-@app.route('/api/user', methods=['POST'])
-def user():
-    data = request.json.get('user', None)
-    obj = User.get_or_insert(data['uid'], email=data['email'],
-                             last_login=datetime.datetime.now())
-    obj.put()
-    return jsonify({"success": True})
+# @app.route('/api/<verb>', methods=['POST'])
+# def background_runner(verb):
+#     token = request.json.get('token', None)
+#     assert token is not None, 'Token cannot be null'
+
+#     if verb == 'unbound':
+#         runner = Unbound()
+#     elif verb == 'missing':
+#         runner = Missing()
+#     elif verb == 'fix':
+#         runner = Fixer()
+#     else:
+#         return jsonify(False)
+
+#     runner.KIND = Photo
+#     runner.TOKEN = token
+#     deferred.defer(runner.run, _queue='background')
+#     return jsonify(True)
+
+
+@app.route('/api/<verb>/<field>', methods=['POST'])
+def background_build(verb, field):
+    token = request.json.get('token', None)
+    assert token is not None, 'Token cannot be null'
+    if field and verb == 'rebuild':
+        tally = cloud.rebuilder(field, token)
+        return jsonify(tally)
+    else:
+        return jsonify(False)
+
+
+if __name__ == '__main__':
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    app.run(host='127.0.0.1', port=6060, debug=True)
