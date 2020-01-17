@@ -22,4 +22,8 @@ __pycache__/
 lib
 docs
 graphql
-vue2
+views
+tests
+vue2/node_modules
+vue2/src
+vue2/public

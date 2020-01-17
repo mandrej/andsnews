@@ -1,5 +1,7 @@
 service: client
-runtime: nodejs10
+runtime: python27
+api_version: 1
+threadsafe: true
 default_expiration: "0s"
 
 instance_class: F1
@@ -7,40 +9,37 @@ automatic_scaling:
   max_idle_instances: 1
 
 handlers:
-  - url: /(robots\.txt|manifest\.json)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(robots\.txt|manifest\.json)$
-    secure: always
+- url: /(robots\.txt|manifest\.json)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(robots\.txt|manifest\.json)$
+  secure: always
 
-  - url: /static/
-    static_dir: vue2/dist/static
-    secure: always
+- url: /static/
+  static_dir: vue2/dist/static
+  secure: always
 
-  - url: /(precache-manifest\..*\.js)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(precache-manifest\..*\.js)$
-    secure: always
-    http_headers:
-      Content-Type: application/javascript
-      Cache-Control: max-age=0
+- url: /(precache-manifest\..*\.js)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(precache-manifest\..*\.js)$
+  secure: always
+  http_headers:
+    Content-Type: application/javascript
+    Cache-Control: max-age=0
 
-  - url: /(service-worker\.js|firebase-messaging-sw\.js)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(service-worker\.js|firebase-messaging-sw\.js)$
-    secure: always
-    http_headers:
-      Content-Type: application/javascript
-      Cache-Control: max-age=0
+- url: /(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: vue2/dist/\1
+  upload: vue2/dist/(service-worker\.js|firebase-messaging-sw\.js)$
+  secure: always
+  http_headers:
+    Content-Type: application/javascript
+    Cache-Control: max-age=0
 
-  - url: /index.html
-    static_files: vue2/dist/index.html
-    upload: vue2/dist/index.html
-    secure: always
+- url: /index.html
+  static_files: vue2/dist/index.html
+  upload: vue2/dist/index.html
+  secure: always
 
-  - url: /.*
-    static_files: vue2/dist/index.html
-    upload: vue2/dist/index.html
-    secure: always
-
-inbound_services:
-  - warmup
+- url: /.*
+  static_files: vue2/dist/index.html
+  upload: vue2/dist/index.html
+  secure: always
