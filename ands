@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 proj_id=andsnews
-proj_dir=andsnews
 venv_dir=/home/milan/venv/andsnews3
 
 api_version=`date +%Y%m%d%H%M`
@@ -21,7 +20,7 @@ else
   case $1 in
     server)
       source $venv_dir/bin/activate
-      python main.py
+      python api/main.py
       # vue ui
       exit ;;
     build)
@@ -32,11 +31,11 @@ else
     deploy)
       case $2 in
         api)
-          gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api.yaml index.yaml dos.yaml
+          gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api/api.yaml api/index.yaml api/dos.yaml
           # gcloud datastore indexes cleanup index.yaml
           exit ;;
         client)
-          gcloud app deploy --project=$proj_id --version=$client_version vue2.yaml
+          gcloud app deploy --project=$proj_id --version=$client_version vue2/vue2.yaml
           exit ;;
         *)
           echo

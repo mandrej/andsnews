@@ -10,8 +10,8 @@
   "files.exclude": {
     "**/*.pyc": true,
     "docs": true,
-    "lib": true,
     "tests": true,
-    "graphql": true
+    "graphql": true,
+    "views": true
   }
 }

@@ -4,8 +4,8 @@ import datetime
 import collections
 from operator import itemgetter
 from google.cloud import storage, datastore
-from .helpers import serialize, push_message
-from .config import PHOTO_FILTER, START_MSG, END_MSG
+from helpers import serialize, push_message
+from config import PHOTO_FILTER, START_MSG, END_MSG
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()

@@ -10,36 +10,36 @@ automatic_scaling:
 
 handlers:
 - url: /(robots\.txt|manifest\.json)$
-  static_files: vue2/dist/\1
-  upload: vue2/dist/(robots\.txt|manifest\.json)$
+  static_files: dist/\1
+  upload: dist/(robots\.txt|manifest\.json)$
   secure: always
 
 - url: /static/
-  static_dir: vue2/dist/static
+  static_dir: dist/static
   secure: always
 
 - url: /(precache-manifest\..*\.js)$
-  static_files: vue2/dist/\1
-  upload: vue2/dist/(precache-manifest\..*\.js)$
+  static_files: dist/\1
+  upload: dist/(precache-manifest\..*\.js)$
   secure: always
   http_headers:
     Content-Type: application/javascript
     Cache-Control: max-age=0
 
 - url: /(service-worker\.js|firebase-messaging-sw\.js)$
-  static_files: vue2/dist/\1
-  upload: vue2/dist/(service-worker\.js|firebase-messaging-sw\.js)$
+  static_files: dist/\1
+  upload: dist/(service-worker\.js|firebase-messaging-sw\.js)$
   secure: always
   http_headers:
     Content-Type: application/javascript
     Cache-Control: max-age=0
 
 - url: /index.html
-  static_files: vue2/dist/index.html
-  upload: vue2/dist/index.html
+  static_files: dist/index.html
+  upload: dist/index.html
   secure: always
 
 - url: /.*
-  static_files: vue2/dist/index.html
-  upload: vue2/dist/index.html
+  static_files: dist/index.html
+  upload: dist/index.html
   secure: always

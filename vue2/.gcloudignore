@@ -6,24 +6,17 @@
 # For more information, run:
 #   $ gcloud topic gcloudignore
 #
-.gcloudignore
-# If you would like to upload your .git directory, .gitignore file or files
-# from your .gitignore file, remove the corresponding line
-# below:
 .git
 .gitignore
+.gcloudignore
 
-# Python pycache:
-__pycache__/
-# Ignored by the build system
-/setup.cfg
+src
+.env*
+public
+node_modules
+package.json
+babel.config.js
+vue.config.js
+yarn.lock
 
-.vscode
-lib
-docs
-graphql
-views
-tests
-vue2/node_modules
-vue2/src
-vue2/public
+# gcloud meta list-files-for-upload

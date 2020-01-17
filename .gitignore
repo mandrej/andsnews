@@ -1,3 +1,10 @@
 .idea/
 lib/
 *.pyc
+
+vue2/dist
+vue2/node_modules
+
+vue2/npm-debug.log*
+vue2/yarn-debug.log*
+vue2/yarn-error.log*

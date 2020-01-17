@@ -8,7 +8,7 @@ from decimal import getcontext, Decimal
 
 from exifread import process_file
 from unidecode import unidecode
-from .config import FIREBASE, ASA
+from config import FIREBASE, ASA
 
 FCM = 'https://fcm.googleapis.com/fcm/send'
 HEADERS = {
