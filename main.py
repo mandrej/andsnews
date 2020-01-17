@@ -135,28 +135,27 @@ def notify():
     return jsonify(success)
 
 
-# @app.route('/api/<verb>', methods=['POST'])
-# def background_runner(verb):
-#     token = request.json.get('token', None)
-#     assert token is not None, 'Token cannot be null'
+@app.route('/api/<verb>', methods=['POST'])
+def runner(verb):
+    token = request.json.get('token', None)
+    assert token is not None, 'Token cannot be null'
 
-#     if verb == 'unbound':
-#         runner = Unbound()
-#     elif verb == 'missing':
-#         runner = Missing()
-#     elif verb == 'fix':
-#         runner = Fixer()
-#     else:
-#         return jsonify(False)
+    if verb == 'fix':
+        runner = cloud.Fixer()
+    # elif verb == 'unbound':
+    #     runner = Unbound()
+    # elif verb == 'missing':
+    #     runner = Missing()
+    else:
+        return jsonify(False)
 
-#     runner.KIND = Photo
-#     runner.TOKEN = token
-#     deferred.defer(runner.run, _queue='background')
-#     return jsonify(True)
+    runner.TOKEN = token
+    runner.run()
+    return jsonify(True)
 
 
 @app.route('/api/<verb>/<field>', methods=['POST'])
-def background_build(verb, field):
+def rebuilder(verb, field):
     token = request.json.get('token', None)
     assert token is not None, 'Token cannot be null'
     if field and verb == 'rebuild':

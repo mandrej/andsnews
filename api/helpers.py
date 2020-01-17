@@ -24,17 +24,25 @@ def serialize(ent):
             'safekey': ent.key.to_legacy_urlsafe().decode('utf-8'),
             'headline': ent['headline'],
             'slug': slugify(ent['headline']),
-            'email': ent['email'],
+            # 'text'
             'filename': ent['filename'].split('/')[-1],
-            'dim': ent['dim'],
+            'email': ent['email'],
+            'nick': re.match('([^@]+)', ent['email']).group().split('.')[0],
+            'tags': ent['tags'] if 'tags' in ent else None,
+
+            'date': ent['date'].isoformat(),
+            # 'year',
+            # 'month',
+
             'model': ent['model'] if 'model' in ent else None,
             'lens': ent['lens'] if 'lens' in ent else None,
             'aperture': ent['aperture'] if 'aperture' in ent else None,
             'shutter': ent['shutter'] if 'shutter' in ent else None,
             'focal_length': ent['focal_length'] if 'focal_length' in ent else None,
             'iso': ent['iso'] if 'iso' in ent else None,
-            'date': ent['date'].isoformat(),
-            'nick': re.match('([^@]+)', ent['email']).group().split('.')[0]
+
+            # 'size',
+            'dim': ent['dim'],
         }
     elif ent.kind == 'Counter':
         return {

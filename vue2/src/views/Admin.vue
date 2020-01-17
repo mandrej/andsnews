@@ -54,26 +54,26 @@
         </v-flex>
       </v-layout>
 
-      <!-- <v-layout wrap align-center>
-            <v-flex xs9>Add new fields, remove index docs</v-flex>
-            <v-flex xs3 class="text-right">
-              <v-btn :disabled="canRun(fcm_token)" color="success" width="100" class="black--text" @click="fix">Fix</v-btn>
-            </v-flex>
-      </v-layout>-->
+      <v-layout wrap align-center>
+        <v-flex xs9>Reverting filename</v-flex>
+        <v-flex xs3 class="text-right">
+          <v-btn :disabled="canRun(fcm_token)" color="success" width="100" @click="fix">Fix</v-btn>
+        </v-flex>
+      </v-layout>
 
-      <h3 class="title">Cloud</h3>
-      <v-layout wrap class="py-1" align-center>
+      <!-- <h3 class="title">Cloud</h3> -->
+      <!-- <v-layout wrap class="py-1" align-center>
         <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
         </v-flex>
-      </v-layout>
-      <v-layout wrap class="py-1" align-center>
+      </v-layout>-->
+      <!-- <v-layout wrap class="py-1" align-center>
         <v-flex xs9>Remove images in datastore that are missing in the Cloud</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="missing">Missing</v-btn>
         </v-flex>
-      </v-layout>
+      </v-layout>-->
     </v-container>
   </Layout>
 </template>

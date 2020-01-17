@@ -44,6 +44,3 @@ handlers:
 
 inbound_services:
   - warmup
-
-# skip_files:
-#   - (?!^(vue2($|/dist)))

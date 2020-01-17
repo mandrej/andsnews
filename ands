@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 proj_id=andsnews
 proj_dir=andsnews
-venv_dir=andsnews
-
-home=/home/milan
-storage=$home/work/${proj_id}_storage/
-python=$home/venv/$venv_dir/bin/python
-dev_appserver=$home/google-cloud-sdk/bin/dev_appserver.py
+venv_dir=/home/milan/venv/andsnews3
 
 api_version=`date +%Y%m%d%H%M`
 client_version=`date +%Y%m%d%H%M`
@@ -25,8 +20,8 @@ if [ $# -eq 0 ]
 else
   case $1 in
     server)
-      $python $dev_appserver --port=6060 --storage_path=$storage \
-      --support_datastore_emulator=true --enable_console=true $home/work/$proj_dir/api_dev.yaml
+      source $venv_dir/bin/activate
+      python main.py
       # vue ui
       exit ;;
     build)
@@ -37,8 +32,7 @@ else
     deploy)
       case $2 in
         api)
-          sed -i -E "/target/s/[[:digit:]]{12}/$api_version/g" "queue.yaml"
-          gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api.yaml index.yaml dos.yaml queue.yaml
+          gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api.yaml index.yaml dos.yaml
           # gcloud datastore indexes cleanup index.yaml
           exit ;;
         client)

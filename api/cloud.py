@@ -146,7 +146,38 @@ def rebuilder(field, token):
             counter['safekey'] = latest[0].key.to_legacy_urlsafe().decode('utf-8')
 
         counters.append(counter)
+        push_message(token, '{} {}'.format(value, count))
 
     datastore_client.put_multi(counters)
     push_message(token, END_MSG)
     return tally
+
+
+class Fixer(object):
+    TOKEN = None
+    QUERY = datastore_client.query(kind='Photo', order=['-date'])
+
+    def run(self, batch_size=100):
+        push_message(self.TOKEN, START_MSG)
+        self._continue(None, batch_size)
+
+    def _continue(self, cursor, batch_size):
+        _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
+        _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
+        changed = []
+        for ent in list(_page):
+            filename = ent['filename'].split('/')[-1]
+            ent['filename'] = '/andsnews.appspot.com/{}'.format(filename)
+            changed.append(ent)
+
+        datastore_client.put_multi(changed)
+        push_message(self.TOKEN, 'saving ...')
+
+        next_cursor = _iter.next_page_token
+        if next_cursor:
+            self._continue(next_cursor, batch_size)
+        else:
+            self.finish()
+
+    def finish(self):
+        push_message(self.TOKEN, END_MSG)

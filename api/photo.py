@@ -7,7 +7,7 @@ from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from .config import FIREBASE, PHOTO_FILTER
-from .helpers import serialize, get_exif, Timer
+from .helpers import serialize, slugify, tokenize, get_exif, Timer
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
@@ -107,16 +107,25 @@ def add(fs, email):
 
         exif = get_exif(_buffer)
         image_from_buffer = Image.open(BytesIO(_buffer))
-
         obj.update(exif)
+
+        date = obj['date']  # from exif
+        slug = slugify(filename)
         obj.update({
             'headline': filename,
+            'slug': slug,
+            'text': tokenize(slug),
             'filename': filename,
             'email': email,
+            'nick': re.match('([^@]+)', email).group().split('.')[0],
+            'tags': [],
+
+            'date': date,
+            'year': date.year,
+            'month': date.month,
+
             'size': len(_buffer),
-            'dim': list(image_from_buffer.size),
-            'year': obj['date'].year,  # from exif
-            'tags': []
+            'dim': list(image_from_buffer.size)
         })
         with Timer() as t:
             datastore_client.put(obj)
@@ -145,18 +154,27 @@ def edit(safekey, json):
 
     dt = json['date'].strip().split('.')[0]
     date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
+    headline = json['headline']
+    slug = slugify(headline)
+    email = json['email']
     obj.update({
-        'headline': json['headline'],
-        'email': json['email'],
+        'headline': headline,
+        'slug': slugify(headline),
+        'text': tokenize(slug),
+        'email': email,
+        'nick': re.match('([^@]+)', email).group().split('.')[0],
+        'tags': sorted(json['tags']) if 'tags' in json else [],
+
         'date': date,
         'year': date.year,
-        'model': json['model'],
-        'lens': json['lens'],
-        'shutter': json['shutter'],
-        'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
-        'aperture': float(json['aperture']) if json['aperture'] else None,
-        'iso': int(json['iso']) if json['iso'] else None,
-        'tags': sorted(json['tags']) if 'tags' in json else []
+        'month': date.month,
+
+        'model': json['model'] if 'model' in json else None,
+        'lens': json['lens'] if 'lens' in json else None,
+        'aperture': float(json['aperture']) if 'aperture' in json else None,
+        'shutter': json['shutter'] if 'shutter' in json else None,
+        'focal_length': round(float(json['focal_length']), 1) if 'focal_length' in json else None,
+        'iso': int(json['iso']) if 'iso' in json else None
     })
     datastore_client.put(obj)
 
