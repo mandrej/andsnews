@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 proj_id=andsnews
 venv_dir=/home/milan/venv/andsnews3
+version=`date +%Y%m%d%H%M`
 
-api_version=`date +%Y%m%d%H%M`
-client_version=`date +%Y%m%d%H%M`
 
 function syntax {
   echo $"Usage:"
@@ -24,18 +23,18 @@ else
       # vue ui
       exit ;;
     build)
-      sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$client_version/g" vue2/.env
-      sed -i -E "/assetsVersion/s/[[:digit:]]{12}/$client_version/g" vue2/vue.config.js
+      sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue2/.env
+      sed -i -E "/assetsVersion/s/[[:digit:]]{12}/$version/g" vue2/vue.config.js
       yarn --cwd vue2/ build
       exit ;;
     deploy)
       case $2 in
         api)
-          gcloud app deploy --project=$proj_id --version=$api_version dispatch.yaml api/api.yaml api/index.yaml api/dos.yaml
+          gcloud app deploy --project=$proj_id --version=$version dispatch.yaml api/app.yaml api/index.yaml api/dos.yaml
           # gcloud datastore indexes cleanup index.yaml
           exit ;;
         client)
-          gcloud app deploy --project=$proj_id --version=$client_version vue2/vue2.yaml
+          gcloud app deploy --project=$proj_id --version=$version vue2/app.yaml
           exit ;;
         *)
           echo
