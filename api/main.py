@@ -35,6 +35,7 @@ def download(safekey):
     obj, inp = photo.storage_download(safekey)
 
     out = BytesIO()
+    image_from_buffer = Image.open(inp)
     image_from_buffer.save(out, image_from_buffer.format)
     data = out.getvalue()
 
