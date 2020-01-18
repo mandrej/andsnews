@@ -7,7 +7,7 @@ from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from config import FIREBASE, PHOTO_FILTER
-from helpers import serialize, slugify, tokenize, get_exif, Timer
+from helpers import serialize, slugify, tokenize, get_exif
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
@@ -96,9 +96,7 @@ def add(fs, email):
     _buffer = fs.read()  # === fs.stream.read()
     # Upload to storage
     try:
-        with Timer() as t:
-            blob.upload_from_file(
-                BytesIO(_buffer), content_type=fs.content_type)
+        blob.upload_from_file(BytesIO(_buffer), content_type=fs.content_type)
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}
     else:
@@ -127,8 +125,7 @@ def add(fs, email):
             'size': len(_buffer),
             'dim': list(image_from_buffer.size)
         })
-        with Timer() as t:
-            datastore_client.put(obj)
+        datastore_client.put(obj)
 
         new_pairs = changed_pairs(obj)
         update_filters(new_pairs, [])

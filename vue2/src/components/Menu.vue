@@ -37,6 +37,6 @@ export default {
   mixins: [common],
   computed: {
     ...mapState('auth', ['user']),
-  },
+  }
 }
 </script>

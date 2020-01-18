@@ -65,7 +65,7 @@ export default {
   methods: {
     showFilter (rec) {
       const tmp = {}
-      tmp[rec.field_name] = rec.name
+      tmp[rec.field] = rec.value
       // eslint-disable-next-line
       this.$router.push({ name: 'list', query: tmp })//.catch(err => { })
     },

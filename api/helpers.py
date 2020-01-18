@@ -47,8 +47,8 @@ def serialize(ent):
     elif ent.kind == 'Counter':
         return {
             'safekey': ent['safekey'],
-            'name': ent['value'],
-            'field_name': ent['field']
+            'field': ent['field'],
+            'value': ent['value']
         }
 
 
@@ -162,7 +162,7 @@ def get_exif(buff):
         else:
             data['model'] = '%s %s' % (make, model)
     else:
-        data['model'] = 'Unknown'
+        data['model'] = None
 
     data['lens'] = tags['EXIF LensModel'].printable.replace(
         '/', '') if 'EXIF LensModel' in tags else None
@@ -207,6 +207,11 @@ def get_exif(buff):
 
 
 class Timer(object):
+    """
+    with Timer() as t:
+        datastore_client.put(obj)
+    """
+
     def __init__(self, verbose=True):
         self.verbose = verbose
         self.timer = default_timer

@@ -64,8 +64,8 @@ def last_entry():
     if len(year_counters) == 0:
         return {
             'safekey': None,
-            'field_name': 'year',
-            'name': datetime.datetime.now().year
+            'field': 'year',
+            'value': str(datetime.datetime.now().year)
         }
     return serialize(year_counters[0])
 
@@ -155,7 +155,7 @@ def rebuilder(field, token):
 
 class Fixer(object):
     TOKEN = None
-    QUERY = datastore_client.query(kind='Photo', order=['-date'])
+    QUERY = datastore_client.query(kind='Counter')
 
     def run(self, batch_size=100):
         push_message(self.TOKEN, START_MSG)
@@ -166,9 +166,16 @@ class Fixer(object):
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         changed = []
         for ent in list(_page):
-            filename = ent['filename'].split('/')[-1]
-            ent['filename'] = '/andsnews.appspot.com/{}'.format(filename)
-            changed.append(ent)
+            hit = 0
+            if 'repr_stamp' in ent:
+                hit += 1
+                del ent['repr_stamp']
+            if 'repr_url' in ent:
+                hit += 1
+                del ent['repr_url']
+
+            if hit > 0:
+                changed.append(ent)
 
         datastore_client.put_multi(changed)
         push_message(self.TOKEN, 'saving ...')

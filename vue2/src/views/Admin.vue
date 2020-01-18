@@ -55,7 +55,7 @@
       </v-layout>
 
       <!-- <v-layout wrap align-center>
-        <v-flex xs9>Reverting filename</v-flex>
+        <v-flex xs9>Removing Counter repr_url, repr_stamp</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="success" width="100" @click="fix">Fix</v-btn>
         </v-flex>
