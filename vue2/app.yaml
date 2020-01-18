@@ -9,37 +9,29 @@ automatic_scaling:
   max_idle_instances: 1
 
 handlers:
-- url: /(robots\.txt|manifest\.json)$
-  static_files: dist/\1
-  upload: dist/(robots\.txt|manifest\.json)$
-  secure: always
+  - url: /static/
+    static_dir: dist/static
+    secure: always
 
-- url: /static/
-  static_dir: dist/static
-  secure: always
+  - url: /(robots\.txt|manifest\.json)$
+    static_files: dist/\1
+    upload: dist/(robots\.txt|manifest\.json)$
+    secure: always
 
-- url: /(precache-manifest\..*\.js)$
-  static_files: dist/\1
-  upload: dist/(precache-manifest\..*\.js)$
-  secure: always
-  http_headers:
-    Content-Type: application/javascript
-    Cache-Control: max-age=0
+  - url: /(.*\.js)$
+    static_files: dist/\1
+    upload: dist/.*\.js$
+    secure: always
+    http_headers:
+      Content-Type: application/javascript
+      Cache-Control: max-age=0
 
-- url: /(service-worker\.js|firebase-messaging-sw\.js)$
-  static_files: dist/\1
-  upload: dist/(service-worker\.js|firebase-messaging-sw\.js)$
-  secure: always
-  http_headers:
-    Content-Type: application/javascript
-    Cache-Control: max-age=0
+  - url: /(.*)
+    static_files: dist/index.html
+    upload: dist/index.html
+    secure: always
 
-- url: /index.html
-  static_files: dist/index.html
-  upload: dist/index.html
-  secure: always
-
-- url: /.*
-  static_files: dist/index.html
-  upload: dist/index.html
-  secure: always
+  - url: /
+    static_files: dist/index.html
+    upload: dist/index.html
+    secure: always
