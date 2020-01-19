@@ -7,13 +7,9 @@ automatic_scaling:
   max_instances: 2
 
 handlers:
-  - url: /static/
-    static_dir: vue2/dist/static
-    secure: always
-
   - url: /(robots\.txt|manifest\.json)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(robots\.txt|manifest\.json)$
+    static_files: dist/\1
+    upload: dist/(robots\.txt|manifest\.json)$
     secure: always
 
   - url: /(.*\.js)$
@@ -24,18 +20,17 @@ handlers:
       Content-Type: application/javascript
       Cache-Control: max-age=0
 
-  - url: /.*
-    script: auto
-    secure: always
-
-  - url: /(.*)
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(.*)
-    secure: always
-
-  - url: /
+  - url: /index.html
     static_files: vue2/dist/index.html
     upload: vue2/dist/index.html
+    secure: always
+
+  - url: /static
+    static_dir: vue2/dist/static
+    secure: always
+
+  - url: /.*
+    script: auto
     secure: always
 
 inbound_services:
