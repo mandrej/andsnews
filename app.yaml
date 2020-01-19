@@ -29,8 +29,13 @@ handlers:
     static_dir: vue2/dist/static
     secure: always
 
-  - url: /.*
+  - url: /api/.*
     script: auto
+    secure: always
+
+  - url: /.*
+    static_files: vue2/dist/index.html
+    upload: vue2/dist/index.html
     secure: always
 
 inbound_services:

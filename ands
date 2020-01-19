@@ -27,7 +27,7 @@ else
       yarn --cwd vue2/ build
       exit ;;
     deploy)
-      gcloud app deploy --project=$proj_id --version=$version dispatch.yaml app.yaml index.yaml dos.yaml
+      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml dos.yaml
       # gcloud datastore indexes cleanup index.yaml
       exit ;;
     *)
