@@ -10,7 +10,8 @@
 .gitignore
 .gcloudignore
 .editorconfig
-.vscode
+.idea/
+.vscode/
 
 ands
 *.pyc
