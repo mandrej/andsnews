@@ -2,10 +2,9 @@ from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image
-import cloud
-import photo
-from helpers import slugify, push_message
-from config import LIMIT
+from api import cloud, photo
+from api.helpers import slugify, push_message
+from api.config import LIMIT
 
 app = Flask(__name__)
 

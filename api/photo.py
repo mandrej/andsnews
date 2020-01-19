@@ -6,8 +6,8 @@ from io import BytesIO
 from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
-from config import FIREBASE, PHOTO_FILTER
-from helpers import serialize, slugify, tokenize, get_exif
+from .config import FIREBASE, PHOTO_FILTER
+from .helpers import serialize, slugify, tokenize, get_exif
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
