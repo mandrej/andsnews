@@ -1,4 +1,3 @@
-import os
 FIREBASE = {
     "apiKey": "AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M",
     "authDomain": "andsnews.firebaseapp.com",
@@ -8,7 +7,6 @@ FIREBASE = {
     "messagingServerKey": "AAAAp29R6Z0:APA91bEsmfN6-ZywxP05Xpw-Ooto5FwTyXjgxRcqDllaTo6Kay3y8wnB-1QcwBt1-iQvoPt2p8wwp0JmKz4xWHST-pAQyrAivyTT-RFXasRYGmT09rP6oMuW95XHEi-HANZgzljuA-4i4Gh44den43zooddq5uSjBA"
 }
 
-DEVEL = os.environ.get('WERKZEUG_RUN_MAIN') == 'true'
 START_MSG = '*** START ***'
 END_MSG = '*** END ***'
 

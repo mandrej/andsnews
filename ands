@@ -3,12 +3,11 @@ proj_id=andsnews
 venv_dir=/home/milan/venv/andsnews3
 version=`date +%Y%m%d%H%M`
 
-
 function syntax {
   echo $"Usage:"
   echo $"$0 server  - Run development server"
   echo $"$0 build  - Build client"
-  echo $"$0 deploy - Deploy api or client"
+  echo $"$0 deploy - Deploy"
   exit 1
 }
 
@@ -19,7 +18,7 @@ else
   case $1 in
     server)
       source $venv_dir/bin/activate
-      python api/main.py
+      python main.py
       # vue ui
       exit ;;
     build)
@@ -28,19 +27,9 @@ else
       yarn --cwd vue2/ build
       exit ;;
     deploy)
-      case $2 in
-        api)
-          gcloud app deploy --project=$proj_id --version=$version dispatch.yaml api/app.yaml api/index.yaml api/dos.yaml
-          # gcloud datastore indexes cleanup index.yaml
-          exit ;;
-        client)
-          gcloud app deploy --project=$proj_id --version=$version vue2/app.yaml
-          exit ;;
-        *)
-          echo
-          echo $"Provide service to deploy: api | client"
-          exit 1
-      esac ;;
+      gcloud app deploy --project=$proj_id --version=$version dispatch.yaml app.yaml index.yaml dos.yaml
+      # gcloud datastore indexes cleanup index.yaml
+      exit ;;
     *)
       syntax
   esac
