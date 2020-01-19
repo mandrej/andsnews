@@ -27,8 +27,8 @@ handlers:
       Cache-Control: max-age=0
 
   - url: /(.*)
-    static_files: dist/index.html
-    upload: dist/index.html
+    static_files: dist/\1
+    upload: dist/(.*)
     secure: always
 
   - url: /
