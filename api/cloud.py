@@ -106,13 +106,18 @@ def login_user(data):
     obj['email'] = data['email']
     obj['last_login'] = datetime.datetime.now()
     datastore_client.put(obj)
+    return data['uid']
 
 
 def register_user(uid, token):
     key = datastore_client.key('User', uid)
     obj = datastore_client.get(key)
-    obj['token'] = token
-    datastore_client.put(obj)
+    if obj['token'] != token:
+        obj['token'] = token
+        datastore_client.put(obj)
+        return True
+    else:
+        return False
 
 
 def registrations():

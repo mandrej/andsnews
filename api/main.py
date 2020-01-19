@@ -88,16 +88,16 @@ def search():
 @app.route('/api/user', methods=['POST'])
 def user():
     data = request.json.get('user', None)
-    cloud.login_user(data)
-    return jsonify({"success": True})
+    uid = cloud.login_user(data)
+    return jsonify({"uid": uid})
 
 
 @app.route('/api/user/register', methods=['PUT'])
 def update_user():
     uid = request.json.get('uid', None)
     token = request.json.get('token', None)
-    cloud.register_user(uid, token)
-    return jsonify({"success": True})
+    changed = cloud.register_user(uid, token)
+    return jsonify({"changed": changed})
 
 
 @app.route('/api/registrations', methods=['GET'])

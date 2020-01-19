@@ -105,6 +105,9 @@ export default {
     ...mapState('auth', ['fcm_token']),
     ...mapState('app', ['values', 'total'])
   },
+  mounted () {
+    this.$store.dispatch('auth/fetchToken')
+  },
   methods: {
     canRun (token) {
       return Boolean(!token)
