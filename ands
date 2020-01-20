@@ -23,7 +23,6 @@ else
       exit ;;
     build)
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue2/.env
-      sed -i -E "/assetsVersion/s/[[:digit:]]{12}/$version/g" vue2/vue.config.js
       yarn --cwd vue2/ build
       exit ;;
     deploy)
