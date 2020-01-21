@@ -8,8 +8,8 @@ automatic_scaling:
 
 handlers:
   - url: /(robots\.txt|manifest\.json)$
-    static_files: dist/\1
-    upload: dist/(robots\.txt|manifest\.json)$
+    static_files: vue2/dist/\1
+    upload: vue2/dist/(robots\.txt|manifest\.json)$
     secure: always
 
   - url: /(.*\.js)$
