@@ -79,9 +79,9 @@
                         icon
                         small
                         text
-                        :href="`/api/download/${item.safekey}`"
-                        :download="`${item.slug}.jpg`"
-                        @click="download('Downloading ' + item.slug  + '.jpg')"
+                        :href="`/api/download/${item.filename}`"
+                        :download="item.filename"
+                        @click="download('Downloading ' + item.filename)"
                       >
                         <v-icon>file_download</v-icon>
                       </v-btn>

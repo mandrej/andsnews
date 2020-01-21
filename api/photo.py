@@ -48,7 +48,7 @@ def update_filters(new_pairs, old_pairs):
 
         latest = list(query.fetch(3))
         if len(latest) > 0:
-            counter['safekey'] = latest[0].key.to_legacy_urlsafe().decode('utf-8')
+            counter['filename'] = latest[0]['filename']
 
     datastore_client.put_multi(counters)
 
@@ -136,7 +136,6 @@ def add(fs, email):
 
 
 def edit(safekey, json):
-    print(json)
     key = datastore.key.Key.from_legacy_urlsafe(safekey)  # TODO use id
     obj = datastore_client.get(key)
 
