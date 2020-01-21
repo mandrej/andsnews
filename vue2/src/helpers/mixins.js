@@ -17,11 +17,11 @@ const common = {
        * Enter allUsers in Add Members. Then Select Role > Storage > Storage Object Viewer
        */
       let serviceUrl = '/static/img/broken.svg'
-      if (rec.safekey !== null) {
+      if (rec.filename !== null) {
         if (size) {
-          serviceUrl = '/api/thumb/' + rec.safekey + '/' + size
+          serviceUrl = '/api/thumb/' + rec.filename + '?size=' + size
         } else {
-          serviceUrl = '/api/thumb/' + rec.safekey
+          serviceUrl = '/api/thumb/' + rec.filename
         }
       }
       return serviceUrl

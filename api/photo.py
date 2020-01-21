@@ -13,19 +13,12 @@ datastore_client = datastore.Client()
 storage_client = storage.Client()
 
 
-def storage_download(safekey):
-    if safekey:
-        # key = datastore_client.key(kind, id)
-        key = datastore.key.Key.from_legacy_urlsafe(safekey)  # TODO use id
-        obj = datastore_client.get(key)
-        filename = obj['filename'].split('/')[-1]  # TODO store only filename
-
-        inp = BytesIO()
-        bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
-        blob = bucket.get_blob(filename)
-        blob.download_to_file(inp)
-
-        return obj, inp
+def storage_download(filename):
+    inp = BytesIO()
+    bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
+    blob = bucket.get_blob(filename)
+    blob.download_to_file(inp)
+    return inp
 
 
 def update_filters(new_pairs, old_pairs):
@@ -188,7 +181,7 @@ def remove(safekey):
     key = datastore.key.Key.from_legacy_urlsafe(safekey)  # TODO use id
     obj = datastore_client.get(key)
     bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
-    filename = obj['filename'].split('/')[-1]  # TODO store only filename
+    filename = obj['filename']
 
     try:
         blob = bucket.get_blob(filename)

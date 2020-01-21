@@ -9,13 +9,14 @@ from api.config import LIMIT
 app = Flask(__name__)
 
 
-@app.route('/api/thumb/<safekey>', methods=['GET'])
-@app.route('/api/thumb/<safekey>/<int:size>', methods=['GET'])
-def thumb(safekey, size=None):
-    obj, inp = photo.storage_download(safekey)
+@app.route('/api/thumb/<filename>', methods=['GET'])
+def thumb(filename):
+    inp = photo.storage_download(filename)
+    size = request.args.get('size', None)
 
     image_from_buffer = Image.open(inp)
     if size:
+        size = int(size)
         image_from_buffer.thumbnail((size, size), Image.BICUBIC)
 
     out = BytesIO()
@@ -29,9 +30,9 @@ def thumb(safekey, size=None):
     return response
 
 
-@app.route('/api/download/<safekey>', methods=['GET'])
-def download(safekey):
-    obj, inp = photo.storage_download(safekey)
+@app.route('/api/download/<filename>', methods=['GET'])
+def download(filename):
+    inp = photo.storage_download(filename)
 
     out = BytesIO()
     image_from_buffer = Image.open(inp)
@@ -40,8 +41,8 @@ def download(safekey):
 
     response = make_response(data)
     response.headers['Content-Type'] = 'image/jpeg'
-    response.headers['Content-Disposition'] = 'attachment; filename={}.jpg'.format(
-        slugify(obj['headline']))
+    response.headers['Content-Disposition'] = 'attachment; filename='.format(
+        filename)
     return response
 
 

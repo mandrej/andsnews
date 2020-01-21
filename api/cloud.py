@@ -63,9 +63,9 @@ def last_entry():
                      if counter['count'] > 0]
     if len(year_counters) == 0:
         return {
-            'safekey': None,
             'field': 'year',
-            'value': str(datetime.datetime.now().year)
+            'value': str(datetime.datetime.now().year),
+            'filename': None
         }
     return serialize(year_counters[0])
 
@@ -148,7 +148,7 @@ def rebuilder(field, token):
         query.add_filter(field, '=', value)
         latest = list(query.fetch(3))
         if len(latest) > 0:
-            counter['safekey'] = latest[0].key.to_legacy_urlsafe().decode('utf-8')
+            counter['filename'] = latest[0]['filename']
 
         counters.append(counter)
         push_message(token, '{} {}'.format(value, count))
@@ -171,15 +171,8 @@ class Fixer(object):
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         changed = []
         for ent in list(_page):
-            hit = 0
-            if 'repr_stamp' in ent:
-                hit += 1
-                del ent['repr_stamp']
-            if 'repr_url' in ent:
-                hit += 1
-                del ent['repr_url']
-
-            if hit > 0:
+            if 'safekey' in ent:
+                del ent['safekey']
                 changed.append(ent)
 
         datastore_client.put_multi(changed)

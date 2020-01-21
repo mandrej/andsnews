@@ -54,12 +54,12 @@
         </v-flex>
       </v-layout>
 
-      <!-- <v-layout wrap align-center>
-        <v-flex xs9>Removing Counter repr_url, repr_stamp</v-flex>
+      <v-layout wrap align-center>
+        <v-flex xs9>Removing Counter safekey</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="success" width="100" @click="fix">Fix</v-btn>
         </v-flex>
-      </v-layout>-->
+      </v-layout>
 
       <!-- <h3 class="title">Cloud</h3> -->
       <!-- <v-layout wrap class="py-1" align-center>

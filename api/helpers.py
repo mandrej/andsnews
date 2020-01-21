@@ -25,7 +25,7 @@ def serialize(ent):
             'headline': ent['headline'],
             'slug': slugify(ent['headline']),
             # 'text'
-            'filename': ent['filename'].split('/')[-1],
+            'filename': ent['filename'],
             'email': ent['email'],
             'nick': re.match('([^@]+)', ent['email']).group().split('.')[0],
             'tags': ent['tags'] if 'tags' in ent else None,
@@ -46,9 +46,9 @@ def serialize(ent):
         }
     elif ent.kind == 'Counter':
         return {
-            'safekey': ent['safekey'],
             'field': ent['field'],
-            'value': ent['value']
+            'value': ent['value'],
+            'filename': ent['filename']
         }
 
 
