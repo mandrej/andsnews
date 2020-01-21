@@ -21,7 +21,7 @@ def serialize(ent):
     """ google.cloud.datastore.entity """
     if ent.kind == 'Photo':
         return {
-            'safekey': ent.key.to_legacy_urlsafe().decode('utf-8'),
+            'id': ent.id,
             'headline': ent['headline'],
             'slug': slugify(ent['headline']),
             # 'text'

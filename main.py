@@ -117,15 +117,15 @@ def post():
     return jsonify(resList)
 
 
-@app.route('/api/edit/<safekey>', methods=['PUT'])
-def put(safekey):
-    response = photo.edit(safekey, request.json)
+@app.route('/api/edit/<int:id>', methods=['PUT'])
+def put(id):
+    response = photo.edit(id, request.json)
     return jsonify(response)
 
 
-@app.route('/api/delete/<safekey>', methods=['DELETE'])
-def delete(safekey):
-    response = photo.remove(safekey)
+@app.route('/api/delete/<int:id>', methods=['DELETE'])
+def delete(id):
+    response = photo.remove(id)
     return jsonify(response['success'])
 
 

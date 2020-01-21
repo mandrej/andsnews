@@ -52,7 +52,7 @@
       <v-container fluid grid-list-lg mt-2 class="pa-3">
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
-            <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.safekey">
+            <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
               <v-card class="card" color="white">
                 <img
                   :data-src="getImgSrc(item, 400)"

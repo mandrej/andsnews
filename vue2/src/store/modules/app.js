@@ -42,7 +42,7 @@ const actions = {
     commit('ADD_RECORD', obj)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
-    axios.put('edit/' + obj.safekey, obj).then(response => {
+    axios.put('edit/' + obj.id, obj).then(response => {
       const obj = response.data.rec
       commit('UPDATE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
@@ -52,7 +52,7 @@ const actions = {
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
     axios
-      .delete('delete/' + obj.safekey, { parms: { foo: 'bar' } })
+      .delete('delete/' + obj.id, { parms: { foo: 'bar' } })
       .then(response => {
         if (response.data) {
           EventBus.$emit('snackbar', 'Successfully deleted ' + obj.headline)
@@ -137,7 +137,7 @@ const mutations = {
   },
   UPDATE_RECORD (state, obj) {
     if (state.objects && state.objects.length) {
-      const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
+      const idx = state.objects.findIndex(item => item.id === obj.id)
       state.objects.splice(idx, 1, obj)
     }
   },
@@ -149,13 +149,13 @@ const mutations = {
     state.next = null
   },
   DELETE_RECORD (state, obj) {
-    const idx = state.objects.findIndex(item => item.safekey === obj.safekey)
+    const idx = state.objects.findIndex(item => item.id === obj.id)
     if (idx > -1) state.objects.splice(idx, 1)
     state.count--
     state.total--
   },
   DELETE_UPLOADED (state, obj) {
-    const idx = state.uploaded.findIndex(item => item.safekey === obj.safekey)
+    const idx = state.uploaded.findIndex(item => item.id === obj.id)
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {

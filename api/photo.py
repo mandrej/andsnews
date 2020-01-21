@@ -135,8 +135,8 @@ def add(fs, email):
             return {'success': False, 'message': 'Something went wrong. Picture not uploaded'}
 
 
-def edit(safekey, json):
-    key = datastore.key.Key.from_legacy_urlsafe(safekey)  # TODO use id
+def edit(id, json):
+    key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
 
     old_pairs = changed_pairs(obj)
@@ -176,14 +176,13 @@ def edit(safekey, json):
         return {'success': False, 'message': 'Something went wrong'}
 
 
-def remove(safekey):
-    key = datastore.key.Key.from_legacy_urlsafe(safekey)  # TODO use id
+def remove(id):
+    key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
     bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
-    filename = obj['filename']
 
     try:
-        blob = bucket.get_blob(filename)
+        blob = bucket.get_blob(obj['filename'])
         blob.delete()
     except NotFound:
         return {'success': False}
