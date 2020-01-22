@@ -1,3 +1,5 @@
+import CONFIG from './config'
+
 const common = {
   data: () => ({
     requiredRule: [value => !!value || 'Required.']
@@ -21,7 +23,7 @@ const common = {
         if (size) {
           serviceUrl = '/api/thumb/' + rec.filename + '?size=' + size
         } else {
-          serviceUrl = 'https://storage.googleapis.com/andsnews.appspot.com/' + rec.filename
+          serviceUrl = CONFIG.google_storage_url + rec.filename
         }
       }
       return serviceUrl

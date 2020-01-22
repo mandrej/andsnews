@@ -21,7 +21,23 @@
 - Go to vue2/
 - yarn install
 
+### Google Cloud storage
+
+#### make public access
+
+> Bucket, Edit bucket premission, ADD MEMBER:
+
+> allusers: Storage Object Viewer
+
+#### add cache-control
+```bash
+$> export BUCKET=andsnews.appspot.com
+$> gsutil -m setmeta -h "Cache-Control:public, max-age=86400" gs://$BUCKET/*.jpg
+```
+
 ### Deployment on Google infrastructure
-* $> ./ands devel
-* $> ./ands build
-* $> ./ands deploy
+```bash
+$> ./ands devel
+$> ./ands build
+$> ./ands deploy
+```

@@ -5,7 +5,7 @@ import collections
 from operator import itemgetter
 from google.cloud import storage, datastore
 from .helpers import serialize, push_message
-from .config import PHOTO_FILTER, START_MSG, END_MSG
+from .config import CONFIG
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
@@ -13,7 +13,7 @@ storage_client = storage.Client()
 
 def all_photo_filter():
     tmp = {}
-    for field in PHOTO_FILTER:
+    for field in CONFIG['photo_filter']:
         query = datastore_client.query(kind='Counter')
         query.add_filter('forkind', '=', 'Photo')
         query.add_filter('field', '=', field)
@@ -127,7 +127,7 @@ def registrations():
 
 def rebuilder(field, token):
     counters = []
-    push_message(token, START_MSG)
+    push_message(token, CONFIG['start_message'])
     query = datastore_client.query(kind='Photo', order=[field])
     iterator = query.fetch()
     if field == 'tags':
@@ -154,7 +154,7 @@ def rebuilder(field, token):
         push_message(token, '{} {}'.format(value, count))
 
     datastore_client.put_multi(counters)
-    push_message(token, END_MSG)
+    push_message(token, CONFIG['end_message'])
     return tally
 
 
@@ -163,7 +163,7 @@ class Fixer(object):
     QUERY = datastore_client.query(kind='Counter')
 
     def run(self, batch_size=100):
-        push_message(self.TOKEN, START_MSG)
+        push_message(self.TOKEN, CONFIG['start_message'])
         self._continue(None, batch_size)
 
     def _continue(self, cursor, batch_size):
@@ -185,4 +185,4 @@ class Fixer(object):
             self.finish()
 
     def finish(self):
-        push_message(self.TOKEN, END_MSG)
+        push_message(self.TOKEN, CONFIG['end_message'])

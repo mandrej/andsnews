@@ -4,9 +4,9 @@ import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import debounce from 'lodash/debounce'
 import querystring from 'querystring'
+import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
-const LIMIT = 24
 
 const initialState = {
   find: {},
@@ -85,7 +85,7 @@ const actions = {
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return
     if (Object.keys(state.find).length) {
-      const params = Object.assign({}, state.find, { per_page: LIMIT })
+      const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
       if (state.next) params._page = state.next
       const url = 'search?' + querystring.stringify(params)
 

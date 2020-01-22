@@ -6,13 +6,13 @@ from io import BytesIO
 from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
-from .config import FIREBASE, PHOTO_FILTER
+from .config import CONFIG
 from .helpers import serialize, slugify, tokenize, get_exif
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
 
-BUCKET = storage_client.get_bucket(FIREBASE['storageBucket'])
+BUCKET = storage_client.get_bucket(CONFIG['firebase']['storageBucket'])
 
 
 def storage_download(filename):
@@ -57,7 +57,7 @@ def changed_pairs(obj):
     [('year', 2017), ('tags', 'new'), ('model', 'SIGMA dp2 Quattro')]
     """
     pairs = []
-    for field in PHOTO_FILTER:
+    for field in CONFIG['photo_filter']:
         value = obj[field]
         if value:
             if isinstance(value, (list, tuple)):
@@ -87,7 +87,7 @@ def add(fs, email):
     # Upload to storage
     try:
         blob.upload_from_file(BytesIO(_buffer), content_type=fs.content_type)
-        blob.cache_control = 'public, max-age=86400'
+        blob.cache_control = CONFIG['cache_control']
         blob.update()
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}

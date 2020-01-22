@@ -8,11 +8,10 @@ from decimal import getcontext, Decimal
 
 from exifread import process_file
 from unidecode import unidecode
-from .config import FIREBASE, ASA
+from .config import CONFIG
 
-FCM = 'https://fcm.googleapis.com/fcm/send'
 HEADERS = {
-    'Authorization': 'key={}'.format(FIREBASE['messagingServerKey']),
+    'Authorization': 'key={}'.format(CONFIG['fcm_server_key']),
     'Content-Type': 'application/json',
 }
 
@@ -66,7 +65,7 @@ def push_message(token, message=''):
             "body": message
         }
     }
-    response = requests.post(FCM, json=payload, headers=HEADERS)
+    response = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
     j = response.json()
     if j['failure'] == 1:
         return j['results']
@@ -191,7 +190,7 @@ def get_exif(buff):
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
         value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
-        data['iso'] = rounding(value, ASA)
+        data['iso'] = rounding(value, CONFIG['asa'])
     else:
         data['iso'] = None
 

@@ -4,7 +4,7 @@ from io import BytesIO
 from PIL import Image
 from api import cloud, photo
 from api.helpers import slugify, push_message
-from api.config import LIMIT
+from api.config import CONFIG
 
 app = Flask(__name__)
 
@@ -28,7 +28,7 @@ def thumb(filename):
 
         response = make_response(data)
         response.headers['Content-Type'] = 'image/jpeg'
-        response.headers['Cache-Control'] = 'public, max-age=86400, no-transform'
+        response.headers['Cache-Control'] = CONFIG['cache_control']
         response.headers['E-Tag'] = generate_etag(data)
         return response
 
@@ -68,7 +68,7 @@ def collection(col):
 def search():
     filters = []
     page = request.args.get('_page', None)
-    per_page = int(request.args.get('per_page', LIMIT))
+    per_page = int(request.args.get('per_page'))
     for key in ('text', 'tags', 'year', 'month', 'model', 'nick'):
         if key == 'year' or key == 'month':
             val = request.args.get(key, None)
