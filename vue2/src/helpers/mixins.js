@@ -15,14 +15,13 @@ const common = {
     getImgSrc (rec, size) {
       /**
        * Enter allUsers in Add Members. Then Select Role > Storage > Storage Object Viewer
-       * https://storage.googleapis.com/andsnews.appspot.com/SDIM4276C679.jpg
        */
       let serviceUrl = '/static/img/broken.svg'
       if (rec.filename !== null) {
         if (size) {
           serviceUrl = '/api/thumb/' + rec.filename + '?size=' + size
         } else {
-          serviceUrl = '/api/thumb/' + rec.filename
+          serviceUrl = 'https://storage.googleapis.com/andsnews.appspot.com/' + rec.filename
         }
       }
       return serviceUrl

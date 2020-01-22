@@ -12,13 +12,11 @@ from .helpers import serialize, slugify, tokenize, get_exif
 datastore_client = datastore.Client()
 storage_client = storage.Client()
 
+BUCKET = storage_client.get_bucket(FIREBASE['storageBucket'])
+
 
 def storage_download(filename):
-    inp = BytesIO()
-    bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
-    blob = bucket.get_blob(filename)
-    blob.download_to_file(inp)
-    return inp
+    return BUCKET.get_blob(filename)
 
 
 def update_filters(new_pairs, old_pairs):
@@ -79,17 +77,18 @@ def add(fs, email):
     """
     # Check exist first
     filename = fs.filename
-    bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
-    blob = bucket.get_blob(filename)
+    blob = BUCKET.get_blob(filename)
     if blob:
         filename = re.sub(
             r'\.', '-{}.'.format(str(uuid.uuid4())[:8]), filename)
-    blob = bucket.blob(filename)
+    blob = BUCKET.blob(filename)
 
     _buffer = fs.read()  # === fs.stream.read()
     # Upload to storage
     try:
         blob.upload_from_file(BytesIO(_buffer), content_type=fs.content_type)
+        blob.cache_control = 'public, max-age=86400'
+        blob.update()
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}
     else:
@@ -179,10 +178,9 @@ def edit(id, json):
 def remove(id):
     key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
-    bucket = storage_client.get_bucket(FIREBASE['storageBucket'])
 
     try:
-        blob = bucket.get_blob(obj['filename'])
+        blob = BUCKET.get_blob(obj['filename'])
         blob.delete()
     except NotFound:
         return {'success': False}

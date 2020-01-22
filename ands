@@ -33,3 +33,6 @@ else
       syntax
   esac
 fi
+
+# BUCKET=andsnews.appspot.com
+# gsutil -m setmeta -h "Cache-Control:public, max-age=86400" gs://$BUCKET/*.jpg

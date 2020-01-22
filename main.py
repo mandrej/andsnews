@@ -11,39 +11,45 @@ app = Flask(__name__)
 
 @app.route('/api/thumb/<filename>', methods=['GET'])
 def thumb(filename):
-    inp = photo.storage_download(filename)
+    inp = BytesIO()
+    out = BytesIO()
     size = request.args.get('size', None)
 
-    image_from_buffer = Image.open(inp)
-    if size:
-        size = int(size)
-        image_from_buffer.thumbnail((size, size), Image.BICUBIC)
+    blob = photo.storage_download(filename)
+    if blob:
+        blob.download_to_file(inp)
+        image_from_buffer = Image.open(inp)
+        if size:
+            size = int(size)
+            image_from_buffer.thumbnail((size, size), Image.BICUBIC)
 
-    out = BytesIO()
-    image_from_buffer.save(out, image_from_buffer.format)
-    data = out.getvalue()
+        image_from_buffer.save(out, image_from_buffer.format)
+        data = out.getvalue()
 
-    response = make_response(data)
-    response.headers['Content-Type'] = 'image/jpeg'
-    response.headers['Cache-Control'] = 'public, max-age=86400, no-transform'
-    response.headers['E-Tag'] = generate_etag(data)
-    return response
+        response = make_response(data)
+        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Cache-Control'] = 'public, max-age=86400, no-transform'
+        response.headers['E-Tag'] = generate_etag(data)
+        return response
 
 
 @app.route('/api/download/<filename>', methods=['GET'])
 def download(filename):
-    inp = photo.storage_download(filename)
-
+    inp = BytesIO()
     out = BytesIO()
-    image_from_buffer = Image.open(inp)
-    image_from_buffer.save(out, image_from_buffer.format)
-    data = out.getvalue()
 
-    response = make_response(data)
-    response.headers['Content-Type'] = 'image/jpeg'
-    response.headers['Content-Disposition'] = 'attachment; filename='.format(
-        filename)
-    return response
+    blob = photo.storage_download(filename)
+    if blob:
+        blob.download_to_file(inp)
+        image_from_buffer = Image.open(inp)
+        image_from_buffer.save(out, image_from_buffer.format)
+        data = out.getvalue()
+
+        response = make_response(data)
+        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Content-Disposition'] = 'attachment; filename='.format(
+            filename)
+        return response
 
 
 @app.route('/api/counter/<col>', methods=['GET'])
