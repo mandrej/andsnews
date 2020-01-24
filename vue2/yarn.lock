@@ -8980,10 +8980,10 @@ vuetify-loader@^1.4.3:
   dependencies:
     loader-utils "^1.2.0"
 
-vuetify@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.5.tgz#894b2f0d8a1ced2477d7b665c5a8eb3c59c735b6"
-  integrity sha1-iUsvDYoc7SR317ZlxajrPFnHNbY=
+vuetify@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.6.tgz#f1ea54bbc0410b6038384de7abd410ab492187e9"
+  integrity sha1-8epUu8BBC2A4OE3nq9QQq0khh+k=
 
 vuex-persistedstate@^2.7.0:
   version "2.7.0"
