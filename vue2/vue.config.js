@@ -46,13 +46,6 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
-      },
-      '/_ah': {
-        target: process.env.VUE_APP_PROXY + '_ah',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/_ah': ''
-        }
       }
     }
   },
