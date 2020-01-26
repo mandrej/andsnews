@@ -53,8 +53,9 @@
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
             <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
-              <v-card class="card" color="white">
+              <v-card color="white">
                 <img
+                  class="lazy"
                   :data-src="getImgSrc(item, 400)"
                   :title="caption(item)"
                   :data-pswp-size="item.dim.join('x')"
@@ -118,14 +119,10 @@ import Menu from '@/components/Menu'
 import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
-import VueLazyload from 'vue-lazyload'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 
-Vue.use(VueLazyload, {
-  attempt: 1
-})
 Vue.use(Photoswipe, {
   preload: [1, 3],
   shareEl: false,
@@ -239,23 +236,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.card {
-  img {
-    opacity: 0;
-    display: block;
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    transition: opacity 0.3s;
-    cursor: pointer;
-    &[lazy="loaded"] {
-      opacity: 1;
-    }
-  }
-  .v-card__title {
-    line-height: 120%;
-  }
-}
-</style>

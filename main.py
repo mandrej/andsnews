@@ -31,6 +31,7 @@ def thumb(filename):
         response.headers['Cache-Control'] = CONFIG['cache_control']
         response.headers['E-Tag'] = generate_etag(data)
         return response
+    abort(404, description='Resource not found')
 
 
 @app.route('/api/download/<filename>', methods=['GET'])
@@ -50,6 +51,7 @@ def download(filename):
         response.headers['Content-Disposition'] = 'attachment; filename='.format(
             filename)
         return response
+    abort(404, description='Resource not found')
 
 
 @app.route('/api/counter/<col>', methods=['GET'])

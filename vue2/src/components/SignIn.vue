@@ -1,8 +1,8 @@
 <template>
   <v-fade-transition mode="out-in" hide-on-leave>
     <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
-      <v-img v-if="photoUrl" :src="photoUrl"></v-img>
-      <v-img v-else src="/static/img/Google__G__Logo.svg"></v-img>
+      <img v-if="photoUrl" :src="photoUrl" />
+      <img v-else src="/static/img/Google__G__Logo.svg" />
     </v-avatar>
   </v-fade-transition>
 </template>

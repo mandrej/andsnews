@@ -16,17 +16,16 @@
       </div>
     </template>
 
-    <v-img :lazy-src="getImgSrc(last, 400)" :src="getImgSrc(last)" :height="height">
+    <v-layout column fill-height align-center justify-center>
+      <img class="lazy" v-lazy="getImgSrc(last)" :style="`object-fit: cover; height: ${height}px`" />
       <div class="pa-5" style="position: absolute; top: 0; right: 0">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
       </div>
-      <v-layout column fill-height align-center justify-center>
-        <v-btn fab dark large outlined class="big" @click="showFilter(last)">
-          <v-icon>arrow_downward</v-icon>
-        </v-btn>
-      </v-layout>
-    </v-img>
+      <v-btn fab absolute dark large outlined class="big" @click="showFilter(last)">
+        <v-icon>arrow_downward</v-icon>
+      </v-btn>
+    </v-layout>
   </Layout>
 </template>
 

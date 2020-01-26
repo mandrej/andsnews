@@ -7,6 +7,14 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload, {
+  attempt: 1,
+  error: '/static/img/broken.svg'
+})
+
 export default {
   name: 'App'
 }
@@ -47,6 +55,7 @@ export default {
   cursor: pointer;
 }
 .v-card__title {
+  line-height: 120%;
   font-size: 1.25rem !important;
 }
 .v-toolbar__content > .v-btn.v-btn--icon:first-child + .v-toolbar__title,
@@ -63,6 +72,20 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+/* Lazy image */
+img.lazy {
+  opacity: 0;
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+img.lazy[lazy="loaded"],
+img.lazy[lazy="error"] {
+  opacity: 1;
 }
 /* Photoswipe */
 .pswp * {
