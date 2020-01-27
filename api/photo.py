@@ -151,7 +151,7 @@ def edit(id, json):
         'text': tokenize(slug),
         'email': email,
         'nick': re.match('([^@]+)', email).group().split('.')[0],
-        'tags': sorted(json['tags']) if 'tags' in json else [],
+        'tags': sorted(json['tags']),  # or []
 
         'date': date,
         'year': date.year,
