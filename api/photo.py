@@ -145,6 +145,7 @@ def edit(id, json):
     headline = json['headline']
     slug = slugify(headline)
     email = json['email']
+
     obj.update({
         'headline': headline,
         'slug': slugify(headline),
@@ -157,12 +158,12 @@ def edit(id, json):
         'year': date.year,
         'month': date.month,
 
-        'model': json['model'] if 'model' in json else None,
-        'lens': json['lens'] if 'lens' in json else None,
-        'aperture': float(json['aperture']) if 'aperture' in json else None,
-        'shutter': json['shutter'] if 'shutter' in json else None,
-        'focal_length': round(float(json['focal_length']), 1) if 'focal_length' in json else None,
-        'iso': int(json['iso']) if 'iso' in json else None
+        'model': json['model'] if json['model'] else None,
+        'lens': json['lens'] if json['lens'] else None,
+        'aperture': float(json['aperture']) if json['aperture'] else None,
+        'shutter': json['shutter'] if json['shutter'] else None,
+        'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
+        'iso': int(json['iso']) if json['iso'] else None
     })
     datastore_client.put(obj)
 
