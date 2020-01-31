@@ -105,54 +105,21 @@ def tokenize(phrase):
 
 
 def get_exif(buff):
-    """
-    tags(details=False):
-
-    'EXIF ApertureValue': (0x9202) Ratio=209759/62500 @ 544,
-    'EXIF DateTimeDigitized': (0x9004) ASCII=2015:09:13 07:48:59 @ 516,
-        'EXIF DateTimeOriginal': (0x9003) ASCII=2015:09:07 12:19:18 @ 496,
-    'EXIF ExifVersion': (0x9000) Undefined=0230 @ 268,
-    'EXIF ExposureBiasValue': (0x9204) Signed Ratio=-3/10 @ 552,
-    'EXIF ExposureMode': (0xA402) Short=Manual Exposure @ 424,
-    'EXIF ExposureProgram': (0x8822) Short=Program Normal @ 244,
-        'EXIF ExposureTime': (0x829A) Ratio=1/80 @ 480,
-    'EXIF Flash': (0x9209) Short=Flash did not fire @ 364,
-        'EXIF FNumber': (0x829D) Ratio=16/5 @ 488,
-        'EXIF FocalLength': (0x920A) Ratio=30 @ 568,
-        'EXIF FocalLengthIn35mmFilm': (0xA405) Short=45 @ 448,
-    'EXIF ImageUniqueID': (0xA420) ASCII=3030383036373531808E045635363034 @ 576,
-        'EXIF ISOSpeedRatings': (0x8827) Short=100 @ 256,
-    'EXIF MaxApertureValue': (0x9205) Ratio=97347/32767 @ 560,
-    'EXIF MeteringMode': (0x9207) Short=CenterWeightedAverage @ 352,
-    'EXIF SceneCaptureType': (0xA406) Short=Standard @ 460,
-    'EXIF SensingMethod': (0xA217) Short=One-chip color area @ 388,
-    'EXIF ShutterSpeedValue': (0x9201) Signed Ratio=790241/125000 @ 536,
-    'EXIF WhiteBalance': (0xA403) Short=Auto @ 436,
-    'Image DateTime': (0x0132) ASCII=2015:09:13 21:17:31 @ 190,
-    'Image ExifOffset': (0x8769) Long=210 @ 102,
-        'Image Make': (0x010F) ASCII=SIGMA @ 110,
-        'Image Model': (0x0110) ASCII=SIGMA dp2 Quattro @ 116,
-    'Image ResolutionUnit': (0x0128) Short=Pixels/Inch @ 66,
-    'Image XResolution': (0x011A) Ratio=240 @ 134,
-    'Image YResolution': (0x011B) Ratio=240 @ 142,
-    'Thumbnail Compression': (0x0103) Short=JPEG (old-style) @ 620,
-    'Thumbnail JPEGInterchangeFormat': (0x0201) Long=704 @ 668,
-    'Thumbnail JPEGInterchangeFormatLength': (0x0202) Long=9699 @ 680,
-    'Thumbnail ResolutionUnit': (0x0128) Short=Pixels/Inch @ 656,
-    'Thumbnail XResolution': (0x011A) Ratio=72 @ 688,
-    'Thumbnail YResolution': (0x011B) Ratio=72 @ 696
-    """
-    data = {}
-    model = None
-    make = None
+    data = {
+        'model': None,
+        'lens': None,
+        'date': datetime.datetime.now(),
+        'aperture': None,
+        'shutter': None,
+        'focal_length': None,
+        'iso': None
+    }
     tags = process_file(BytesIO(buff), details=False)
 
-    if 'Image Model' in tags:
-        model = tags['Image Model'].printable.replace('/', '')
-
-    if 'Image Make' in tags:
-        make = tags['Image Make'].printable.replace('/', '')
-
+    model = tags['Image Model'].printable.replace(
+        '/', '') if 'Image Model' in tags else None
+    make = tags['Image Make'].printable.replace(
+        '/', '') if 'Image Make' in tags else None
     if model and make:
         s1 = set(make.split())
         s2 = set(model.split())
@@ -160,48 +127,32 @@ def get_exif(buff):
             data['model'] = model
         else:
             data['model'] = '%s %s' % (make, model)
-    else:
-        data['model'] = None
 
-    data['lens'] = tags['EXIF LensModel'].printable.replace(
-        '/', '') if 'EXIF LensModel' in tags else None
-
+    if 'EXIF LensModel' in tags:
+        lens = tags['EXIF LensModel'].printable
+        if lens == '-- mm f/--':
+            data['lens'] = None
+        else:
+            data['lens'] = lens.replace('/', '')
     if 'EXIF DateTimeOriginal' in tags:
         data['date'] = datetime.datetime.strptime(
             tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
-    else:
-        data['date'] = datetime.datetime.now()
-
     if 'EXIF FNumber' in tags:
         getcontext().prec = 2
         data['aperture'] = float(Decimal(eval(tags['EXIF FNumber'].printable)))
-    else:
-        data['aperture'] = None
-
-    data['shutter'] = tags['EXIF ExposureTime'].printable if 'EXIF ExposureTime' in tags else None
-
+    if 'EXIF ExposureTime' in tags:
+        data['shutter'] = tags['EXIF ExposureTime'].printable
     if 'EXIF FocalLength' in tags:
         getcontext().prec = 2
         data['focal_length'] = float(
             Decimal(eval(tags['EXIF FocalLength'].printable)))
-    else:
-        data['focal_length'] = None
-
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
         value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
         data['iso'] = rounding(value, CONFIG['asa'])
-    else:
-        data['iso'] = None
 
-    # if 'GPS GPSLatitude' in tags:
-    # deg_min_sec = eval(tags['GPS GPSLatitude'].printable)  # [44, 47, 559597/10000]
-    # data['latitude'] = sum(map(divide60, enumerate(deg_min_sec)))  # [(0, 44), (1, 47), (2, 55.9597)]
-
-    # if 'GPS GPSLongitude' in tags:
-    #     d, m, s = eval(tags['GPS GPSLongitude'].printable)  # [20, 28, 508547/10000]
-    #     data['longitude'] = d + m / 60 + s / 3600
-
+    # for k, v in tags.items():
+    #     print(k, '\t', v.printable)
     return data
 
 

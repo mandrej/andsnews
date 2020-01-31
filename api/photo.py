@@ -15,7 +15,7 @@ storage_client = storage.Client()
 BUCKET = storage_client.get_bucket(CONFIG['firebase']['storageBucket'])
 
 
-def storage_download(filename):
+def storage_blob(filename):
     return BUCKET.get_blob(filename)
 
 

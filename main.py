@@ -13,21 +13,19 @@ app = Flask(__name__)
 def thumb(filename):
     inp = BytesIO()
     out = BytesIO()
-    size = request.args.get('size', None)
+    size = int(request.args.get('size', 0))
+    assert size > 0
 
-    blob = photo.storage_download(filename)
+    blob = photo.storage_blob(filename)
     if blob:
         blob.download_to_file(inp)
         image_from_buffer = Image.open(inp)
-        if size:
-            size = int(size)
-            image_from_buffer.thumbnail((size, size), Image.BICUBIC)
-
+        image_from_buffer.thumbnail((size, size), Image.BICUBIC)
         image_from_buffer.save(out, image_from_buffer.format)
         data = out.getvalue()
 
         response = make_response(data)
-        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Content-Type'] = blob.content_type
         response.headers['Cache-Control'] = CONFIG['cache_control']
         response.headers['E-Tag'] = generate_etag(data)
         return response
@@ -37,17 +35,14 @@ def thumb(filename):
 @app.route('/api/download/<filename>', methods=['GET'])
 def download(filename):
     inp = BytesIO()
-    out = BytesIO()
 
-    blob = photo.storage_download(filename)
+    blob = photo.storage_blob(filename)
     if blob:
         blob.download_to_file(inp)
-        image_from_buffer = Image.open(inp)
-        image_from_buffer.save(out, image_from_buffer.format)
-        data = out.getvalue()
+        data = inp.getvalue()
 
         response = make_response(data)
-        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Content-Type'] = blob.content_type
         response.headers['Content-Disposition'] = 'attachment; filename='.format(
             filename)
         return response
