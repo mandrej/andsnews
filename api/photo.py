@@ -1,5 +1,6 @@
 import re
 import uuid
+import logging
 import datetime
 from PIL import Image
 from io import BytesIO
@@ -96,13 +97,16 @@ def add(fs, email):
         obj = datastore.Entity(key)
 
         exif = get_exif(_buffer)
-        image_from_buffer = Image.open(BytesIO(_buffer))
+        if not exif['dim']:
+            logging.error(f'Fail dimension for {filename}')
+            image_from_buffer = Image.open(BytesIO(_buffer))
+            exif['dim'] = list(image_from_buffer.size)
         obj.update(exif)
 
         date = obj['date']  # from exif
         obj.update({
             'headline': filename,
-            'text': tokenize(filename),
+            'text': [filename.lower()],
             'filename': filename,
             'email': email,
             'nick': re.match('([^@]+)', email).group().split('.')[0],
@@ -112,8 +116,7 @@ def add(fs, email):
             'year': date.year,
             'month': date.month,
 
-            'size': len(_buffer),
-            'dim': list(image_from_buffer.size)
+            'size': len(_buffer)
         })
         datastore_client.put(obj)
 

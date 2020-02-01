@@ -175,8 +175,8 @@ class Fixer(object):
         changed = []
         for ent in list(_page):
             hit = 0
-            if ent['model'] is None:
-                ent['model'] = 'UNKNOWN'
+            if 'tags' not in ent:
+                ent['tags'] = []
                 hit += 1
             if hit > 0:
                 changed.append(ent)

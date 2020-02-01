@@ -106,7 +106,8 @@ def get_exif(buff):
         'aperture': None,
         'shutter': None,
         'focal_length': None,
-        'iso': None
+        'iso': None,
+        'dim': None
     }
     tags = process_file(BytesIO(buff), details=False)
 
@@ -144,6 +145,9 @@ def get_exif(buff):
         getcontext().prec = 2
         value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
         data['iso'] = rounding(value, CONFIG['asa'])
+    if all(['EXIF ExifImageWidth', 'EXIF ExifImageLength']) in tags:
+        data['dim'] = [tags['EXIF ExifImageWidth'].printable,
+                       tags['EXIF ExifImageLength'].printable]
 
     # for k, v in tags.items():
     #     print(k, '\t', v.printable)
