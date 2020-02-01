@@ -22,7 +22,6 @@ def serialize(ent):
         return {
             'id': ent.id,
             'headline': ent['headline'],
-            'slug': slugify(ent['headline']),
             # 'text'
             'filename': ent['filename'],
             'email': ent['email'],
@@ -85,18 +84,13 @@ def sizeof_fmt(num, suffix='B'):
     return "%.1f%s%s" % (num, 'Y', suffix)
 
 
-def strip_punctuation(text):
+def tokenize(text):
     punctuation = set(['Pc', 'Pd', 'Ps', 'Pe', 'Pi', 'Pf', 'Po'])
-    return ''.join(x for x in text if unicodedata.category(x) not in punctuation)
-
-
-def slugify(text):
-    text = strip_punctuation(text)
+    text = ''.join(x for x in text if unicodedata.category(x)
+                   not in punctuation)
     text = unidecode(text.lower())
-    return '-'.join(text.split())
+    phrase = '-'.join(text.split())
 
-
-def tokenize(phrase):
     res = []
     for word in phrase.split('-'):
         for i in range(3, len(word) + 1):
@@ -160,9 +154,10 @@ class Timer(object):
     """
     with Timer() as t:
         datastore_client.put(obj)
+    print(t.elapsed)
     """
 
-    def __init__(self, verbose=True):
+    def __init__(self, verbose=False):
         self.verbose = verbose
         self.timer = default_timer
 

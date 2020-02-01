@@ -160,7 +160,7 @@ def rebuilder(field, token):
 
 class Fixer(object):
     TOKEN = None
-    QUERY = datastore_client.query(kind='Counter')
+    QUERY = datastore_client.query(kind='Photo')
 
     def run(self, batch_size=100):
         push_message(self.TOKEN, CONFIG['start_message'])
@@ -171,10 +171,24 @@ class Fixer(object):
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         changed = []
         for ent in list(_page):
+            hit = 0
             if 'safekey' in ent:
                 del ent['safekey']
+                hit += 1
+            if 'slug' in ent:
+                del ent['slug']
+                hit += 1
+            if 'eqv' in ent:
+                del ent['eqv']
+                hit += 1
+            if 'program' in ent:
+                del ent['program']
+                hit += 1
+            if 'ratio' in ent:
+                del ent['ratio']
+                hit += 1
+            if hit > 0:
                 changed.append(ent)
-
         datastore_client.put_multi(changed)
         push_message(self.TOKEN, 'saving ...')
 

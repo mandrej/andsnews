@@ -3,7 +3,7 @@ from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image
 from api import cloud, photo
-from api.helpers import slugify, push_message
+from api.helpers import push_message
 from api.config import CONFIG
 
 app = Flask(__name__)

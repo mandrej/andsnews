@@ -72,7 +72,7 @@
 
                 <v-list-item :key="i" two-line>
                   <v-list-item-avatar>
-                    <img :src="getImgSrc(item, 400)" :alt="item.slug" />
+                    <img :src="getImgSrc(item, 400)" />
                   </v-list-item-avatar>
 
                   <v-list-item-content>

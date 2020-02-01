@@ -7,7 +7,7 @@ from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from .config import CONFIG
-from .helpers import serialize, slugify, tokenize, get_exif
+from .helpers import serialize, tokenize, get_exif
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
@@ -100,11 +100,9 @@ def add(fs, email):
         obj.update(exif)
 
         date = obj['date']  # from exif
-        slug = slugify(filename)
         obj.update({
             'headline': filename,
-            'slug': slug,
-            'text': tokenize(slug),
+            'text': tokenize(filename),
             'filename': filename,
             'email': email,
             'nick': re.match('([^@]+)', email).group().split('.')[0],
@@ -143,13 +141,11 @@ def edit(id, json):
     dt = json['date'].strip().split('.')[0]
     date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
     headline = json['headline']
-    slug = slugify(headline)
     email = json['email']
 
     obj.update({
         'headline': headline,
-        'slug': slugify(headline),
-        'text': tokenize(slug),
+        'text': tokenize(headline),
         'email': email,
         'nick': re.match('([^@]+)', email).group().split('.')[0],
         'tags': sorted(json['tags']),  # or []
