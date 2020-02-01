@@ -159,6 +159,9 @@ def rebuilder(field, token):
 
 
 class Fixer(object):
+    """
+    Removed from Photo safekey, slug, eqv, program, ratio
+    """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
 
@@ -172,25 +175,16 @@ class Fixer(object):
         changed = []
         for ent in list(_page):
             hit = 0
-            if 'safekey' in ent:
-                del ent['safekey']
-                hit += 1
-            if 'slug' in ent:
-                del ent['slug']
-                hit += 1
-            if 'eqv' in ent:
-                del ent['eqv']
-                hit += 1
-            if 'program' in ent:
-                del ent['program']
-                hit += 1
-            if 'ratio' in ent:
-                del ent['ratio']
+            if ent['model'] is None:
+                ent['model'] = 'UNKNOWN'
                 hit += 1
             if hit > 0:
                 changed.append(ent)
-        datastore_client.put_multi(changed)
-        push_message(self.TOKEN, 'saving ...')
+
+        count = len(changed)
+        if count > 0:
+            datastore_client.put_multi(changed)
+            push_message(self.TOKEN, 'saving {} ...'.format(count))
 
         next_cursor = _iter.next_page_token
         if next_cursor:

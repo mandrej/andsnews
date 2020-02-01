@@ -100,7 +100,7 @@ def tokenize(text):
 
 def get_exif(buff):
     data = {
-        'model': None,
+        'model': 'UNKNOWN',
         'lens': None,
         'date': datetime.datetime.now(),
         'aperture': None,

@@ -1,7 +1,7 @@
 <template>
   <v-snackbar left bottom :value="model" :timeout="timeout" @input="close">
     {{ message }}
-    <v-btn text icon color="white" @click="close(false)">
+    <v-btn dark text icon @click="close(false)">
       <v-icon>close</v-icon>
     </v-btn>
   </v-snackbar>
@@ -12,19 +12,15 @@ import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/messaging'
+import CONFIG from '@/helpers/config'
 
 const messaging = firebase.messaging()
 
 export default {
   name: 'Message',
-  props: {
-    timeout: {
-      Type: Number,
-      default: 6000
-    }
-  },
   data: () => ({
     model: false,
+    timeout: 6000,
     message: ''
   }),
   mounted () {
@@ -38,6 +34,11 @@ export default {
     })
     messaging.onMessage(payload => {
       this.message = payload.notification.body
+      if (this.message == CONFIG.end_message) {
+        this.timeout = 0
+      } else {
+        this.timeout = 6000
+      }
       this.model = true
     })
     window.addEventListener('online', this.updateOnlineStatus)
@@ -51,6 +52,7 @@ export default {
     close (val) {
       // update snackbar from inside
       this.model = val
+      this.timeout = 6000
     },
   }
 }
