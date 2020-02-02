@@ -49,7 +49,7 @@ export default {
     height: null
   }),
   created () {
-    this.$store.dispatch('app/_fetchLast')
+    this.$store.dispatch('app/fetchLast')
     this.$store.dispatch('app/fetchTotal')
   },
   mounted () {

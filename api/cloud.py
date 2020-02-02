@@ -142,6 +142,11 @@ def rebuilder(field, token):
         counter = datastore_client.get(key)
         if counter is None:
             counter = datastore.Entity(key)
+            counter.update({
+                'forkind': 'Photo',
+                'field': field,
+                'value': value
+            })
         counter['count'] = count
 
         query = datastore_client.query(kind='Photo', order=['-date'])

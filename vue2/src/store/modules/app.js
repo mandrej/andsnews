@@ -47,7 +47,7 @@ const actions = {
       commit('UPDATE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
       commit('UPDATE_VALUES', obj)
-      dispatch('_fetchLast')
+      dispatch('fetchLast')
     })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -58,7 +58,7 @@ const actions = {
           EventBus.$emit('snackbar', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
-          dispatch('_fetchLast')
+          dispatch('fetchLast')
         } else {
           EventBus.$emit('snackbar', 'Deleting failed ' + obj.headline)
         }
@@ -69,10 +69,10 @@ const actions = {
       commit('SET_TOTAL', response.data)
     })
   },
-  _fetchLast: debounce(({ dispatch }) => {
-    dispatch('fetchLast')
+  fetchLast: debounce(({ dispatch }) => {
+    dispatch('_fetchLast')
   }, 200),
-  fetchLast: ({ commit }) => {
+  _fetchLast: ({ commit }) => {
     axios.get('counter/last').then(response => {
       commit('SET_LAST', response.data)
     })
