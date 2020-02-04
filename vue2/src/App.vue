@@ -16,7 +16,10 @@ Vue.use(VueLazyload, {
 })
 
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    this.$store.dispatch('app/fetchStat')
+  },
 }
 </script>
 

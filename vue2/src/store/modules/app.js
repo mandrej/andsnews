@@ -12,7 +12,12 @@ const initialState = {
   find: {},
   uploaded: [],
 
-  last: {},
+  last: {
+    count: null,
+    filename: null,
+    date: new Date('1970-01-01').toISOString(),
+    value: null
+  },
   total: 0,
   values: {},
 
@@ -41,13 +46,12 @@ const actions = {
     commit('ADD_UPLOADED', obj)
     commit('ADD_RECORD', obj)
   },
-  saveRecord: ({ commit, dispatch }, obj) => {
+  saveRecord: ({ commit }, obj) => {
     axios.put('edit/' + obj.id, obj).then(response => {
       const obj = response.data.rec
       commit('UPDATE_RECORD', obj)
       commit('DELETE_UPLOADED', obj)
       commit('UPDATE_VALUES', obj)
-      dispatch('fetchLast')
     })
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
@@ -58,28 +62,18 @@ const actions = {
           EventBus.$emit('snackbar', 'Successfully deleted ' + obj.headline)
           commit('DELETE_RECORD', obj)
           commit('DELETE_UPLOADED', obj)
-          dispatch('fetchLast')
+          dispatch('fetchStat')
         } else {
           EventBus.$emit('snackbar', 'Deleting failed ' + obj.headline)
         }
       })
   },
-  fetchTotal: ({ commit }) => {
-    axios.get('counter/total').then(response => {
-      commit('SET_TOTAL', response.data)
-    })
-  },
-  fetchLast: debounce(({ dispatch }) => {
-    dispatch('_fetchLast')
+  fetchStat: debounce(({ dispatch }) => {
+    dispatch('_fetchStat')
   }, 200),
-  _fetchLast: ({ commit }) => {
-    axios.get('counter/last').then(response => {
-      commit('SET_LAST', response.data)
-    })
-  },
-  fetchValues: ({ commit }) => {
-    axios.get('counter/values').then(response => {
-      commit('SET_VALUES', response.data)
+  _fetchStat: ({ commit }) => {
+    axios.get('counters').then(response => {
+      commit('SET_COUNTERS', response.data)
     })
   },
   fetchRecords: ({ commit, state }) => {
@@ -159,6 +153,16 @@ const mutations = {
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
+    const last_stat_ts = new Date(state.last.date).getTime()
+    const last_obj_ts = new Date(obj.date).getTime()
+    if (last_obj_ts > last_stat_ts) {
+      state.last = {
+        count: null,
+        filename: obj.filename,
+        date: obj.date,
+        value: null
+      }
+    }
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     if (obj.tags) {
       state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
@@ -170,14 +174,34 @@ const mutations = {
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
-  SET_TOTAL (state, data) {
-    state.total = data
-  },
-  SET_LAST (state, data) {
-    state.last = data
-  },
-  SET_VALUES (state, data) {
-    state.values = data
+  SET_COUNTERS (state, data) {
+    /**
+     * state.last, state.total, state.values
+     * from cloud.counters_stat
+     */
+    const _data = JSON.stringify(data)
+    if (_data.indexOf('year') > 0) {
+      const last = data.year[0]
+      if (last) {
+        state.last = last
+      }
+      if (_data.indexOf('count') > 0) {
+        state.total = [...Array.from(data.year, c => {
+          return c.count
+        })].reduce((a, b) => a + b)
+      }
+    }
+
+    state.values = {}
+    CONFIG.photo_filter.forEach(field => {
+      if (_data.indexOf(field) * _data.indexOf('value') > 0) {
+        state.values[field] = [...Array.from(data[field], c => {
+          return c.value
+        })]
+      } else {
+        state.values[field] = []
+      }
+    })
   },
   SET_CLEAR (state, val) {
     state.clear = val

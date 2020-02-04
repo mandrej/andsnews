@@ -49,16 +49,9 @@ def download(filename):
     abort(404, description='Resource not found')
 
 
-@app.route('/api/counter/<col>', methods=['GET'])
-def collection(col):
-    if col == 'values':
-        return jsonify(cloud.counters_values())
-    elif col == 'total':
-        return jsonify(cloud.photo_count())
-    elif col == 'last':
-        return jsonify(cloud.last_entry())
-    elif col == 'stat':
-        return jsonify(cloud.counters_counts())
+@app.route('/api/counters', methods=['GET'])
+def collection():
+    return jsonify(cloud.counters_stat())
 
 
 @app.route('/api/search', methods=['GET'])

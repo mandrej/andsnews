@@ -11,63 +11,22 @@ datastore_client = datastore.Client()
 storage_client = storage.Client()
 
 
-def all_photo_filter():
-    tmp = {}
+def counters_stat():
+    result = {}
     for field in CONFIG['photo_filter']:
         query = datastore_client.query(kind='Counter')
         query.add_filter('forkind', '=', 'Photo')
         query.add_filter('field', '=', field)
         coll = query.fetch()
-        tmp[field] = [counter for counter in coll if counter['count'] > 0]
-    return tmp
 
-
-def counters_values():
-    result = {}
-    data = all_photo_filter()
-    for field in data.keys():
-        _list = [counter['value'] for counter in data[field]]
-        if field == 'year':
-            result[field] = sorted(_list, reverse=True)
-        else:
-            result[field] = sorted(_list)
-    return result
-
-
-def counters_counts():
-    """ only for Admin in console """
-    result = {}
-    data = all_photo_filter()
-    for field in data.keys():
-        _list = [{'value': counter['value'], 'count': counter['count']}
-                 for counter in data[field]]
+        _list = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
+                 for c in coll if c['count'] > 0)
         if field == 'year':
             result[field] = sorted(
                 _list, key=itemgetter('value'), reverse=True)
         else:
             result[field] = sorted(_list, key=itemgetter('value'))
     return result
-
-
-def photo_count():
-    query = datastore_client.query(kind='Photo')
-    query.keys_only()
-    return len(list(query.fetch()))
-
-
-def last_entry():
-    query = datastore_client.query(kind='Counter', order=['-value'])
-    query.add_filter('forkind', '=', 'Photo')
-    query.add_filter('field', '=', 'year')
-    year_counters = [counter for counter in query.fetch()
-                     if counter['count'] > 0]
-    if len(year_counters) == 0:
-        return {
-            'field': 'year',
-            'value': str(datetime.datetime.now().year),
-            'filename': None
-        }
-    return serialize(year_counters[0])
 
 
 def results(filters, page, per_page):
@@ -153,6 +112,7 @@ def rebuilder(field, token):
         query.add_filter(field, '=', value)
         latest = list(query.fetch(3))
         if len(latest) > 0:
+            counter['date'] = latest[0]['date'].isoformat()
             counter['filename'] = latest[0]['filename']
 
         counters.append(counter)

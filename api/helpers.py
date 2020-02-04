@@ -42,12 +42,6 @@ def serialize(ent):
             # 'size',
             'dim': ent['dim'],
         }
-    elif ent.kind == 'Counter':
-        return {
-            'field': ent['field'],
-            'value': ent['value'],
-            'filename': ent['filename']
-        }
 
 
 def push_message(token, message=''):

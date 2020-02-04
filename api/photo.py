@@ -47,6 +47,7 @@ def update_filters(new_pairs, old_pairs):
 
         latest = list(query.fetch(3))
         if len(latest) > 0:
+            counter['date'] = latest[0]['date'].isoformat()
             counter['filename'] = latest[0]['filename']
 
     datastore_client.put_multi(counters)

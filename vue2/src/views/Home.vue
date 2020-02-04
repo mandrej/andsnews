@@ -48,10 +48,6 @@ export default {
     drawer: null,
     height: null
   }),
-  created () {
-    this.$store.dispatch('app/fetchLast')
-    this.$store.dispatch('app/fetchTotal')
-  },
   mounted () {
     this.height = document.documentElement.clientHeight
     this.$on('resize', () => {
@@ -64,7 +60,7 @@ export default {
   methods: {
     showFilter (rec) {
       const tmp = {}
-      tmp[rec.field] = rec.value
+      tmp.year = rec.value
       // eslint-disable-next-line
       this.$router.push({ name: 'list', query: tmp })//.catch(err => { })
     },

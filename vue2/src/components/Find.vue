@@ -65,9 +65,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Find',
-  created () {
-    this.$store.dispatch('app/fetchValues')
-  },
   data: () => ({
     tmp: {},
     nicks: [],
