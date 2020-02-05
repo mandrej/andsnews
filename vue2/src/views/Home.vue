@@ -1,5 +1,5 @@
 <template>
-  <Layout v-resize="onResize">
+  <Layout>
     <template v-slot:drawer>
       <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
         <v-layout column fill-height>
@@ -16,8 +16,14 @@
       </div>
     </template>
 
-    <v-layout column fill-height align-center justify-center>
-      <img class="lazy" v-lazy="getImgSrc(last)" :style="`object-fit: cover; height: ${height}px`" />
+    <v-layout
+      column
+      fill-height
+      align-center
+      justify-center
+      v-lazy:background-image="getImgSrc(last)"
+      class="last"
+    >
       <div class="pa-5" style="position: absolute; top: 0; right: 0">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
@@ -45,15 +51,8 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    drawer: null,
-    height: null
+    drawer: null
   }),
-  mounted () {
-    this.height = document.documentElement.clientHeight
-    this.$on('resize', () => {
-      this.height = document.documentElement.clientHeight
-    })
-  },
   computed: {
     ...mapState('app', ['last', 'total'])
   },
@@ -63,9 +62,6 @@ export default {
       tmp.year = rec.value
       // eslint-disable-next-line
       this.$router.push({ name: 'list', query: tmp })//.catch(err => { })
-    },
-    onResize () {
-      this.$emit('resize')
     }
   }
 }
@@ -88,5 +84,9 @@ export default {
     font-size: 65px;
     width: 65px;
   }
+}
+.last {
+  background-size: cover;
+  background-position: center;
 }
 </style>

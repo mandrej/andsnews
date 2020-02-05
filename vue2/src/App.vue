@@ -30,8 +30,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 .aperture,
-.v-app-bar,
-.v-navigation-drawer {
+.v-app-bar {
   background-image: url(/static/img/aperture.svg);
   background-repeat: no-repeat;
   background-position: 0 0;
@@ -41,6 +40,9 @@ export default {
 }
 .v-app-bar {
   background-color: #fff !important;
+}
+.theme--light.v-navigation-drawer {
+  background-color: transparent;
 }
 .theme--light.v-sheet {
   background-color: transparent;
