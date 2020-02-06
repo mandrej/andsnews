@@ -2,7 +2,7 @@
   <div>
     <Message>></Message>
     <v-app>
-      <slot name="drawer" class="aperture"></slot>
+      <slot name="drawer"></slot>
       <slot name="appbar"></slot>
       <v-content class="aperture">
         <slot></slot>

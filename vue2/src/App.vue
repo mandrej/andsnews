@@ -34,15 +34,12 @@ export default {
   background-image: url(/static/img/aperture.svg);
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-size: 480px;
+  background-size: 300px;
   background-attachment: fixed;
   background-color: #eee !important;
 }
 .v-app-bar {
   background-color: #fff !important;
-}
-.theme--light.v-navigation-drawer {
-  background-color: transparent;
 }
 .theme--light.v-sheet {
   background-color: transparent;
