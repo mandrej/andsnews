@@ -1,5 +1,5 @@
 <template>
-  <v-list style="background: #eee">
+  <v-list>
     <v-list-item
       v-if="user.isAuthorized && $route.name !== 'add'"
       @click="$router.push({ name: 'add' })"

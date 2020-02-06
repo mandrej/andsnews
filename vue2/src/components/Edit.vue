@@ -15,7 +15,7 @@
           <v-icon>close</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-card-text class="pa-2 aperture">
+      <v-card-text class="pa-2">
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row wrap>

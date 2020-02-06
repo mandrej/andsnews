@@ -29,25 +29,13 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.aperture,
-.v-app-bar {
-  background-image: url(/static/img/aperture.svg);
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  background-size: 300px;
-  background-attachment: fixed;
-  background-color: #eee !important;
-}
-.v-app-bar {
-  background-color: #fff !important;
-}
-.theme--light.v-sheet {
-  background-color: transparent;
+.theme--light.v-app-bar.v-toolbar.v-sheet {
+  background-color: #fff;
 }
 .area {
   position: relative;
   cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */

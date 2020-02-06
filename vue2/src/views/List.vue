@@ -27,7 +27,7 @@
     <Layout>
       <template v-slot:drawer>
         <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
-          <v-layout column fill-height class="aperture">
+          <v-layout column fill-height>
             <Find></Find>
             <v-spacer></v-spacer>
             <Menu></Menu>
