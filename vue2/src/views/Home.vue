@@ -11,7 +11,7 @@
     </template>
 
     <template v-slot:appbar>
-      <div class="front">
+      <div class="hamburger">
         <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
     </template>
@@ -21,16 +21,16 @@
       fill-height
       align-center
       justify-center
-      v-lazy:background-image="getImgSrc(last)"
+      v-lazy:background-image="getImgSrc(tmp)"
       class="last"
     >
       <div class="pa-5" style="position: absolute; top: 0; right: 0">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
       </div>
-      <v-btn fab absolute dark large outlined class="big" @click="showFilter(last)">
-        <v-icon>arrow_downward</v-icon>
-      </v-btn>
+      <v-avatar absolute size="80%" @click="showFilter(tmp)">
+        <img src="/static/img/aperture.svg" />
+      </v-avatar>
     </v-layout>
   </Layout>
 </template>
@@ -51,39 +51,41 @@ export default {
   },
   mixins: [common],
   data: () => ({
+    tmp: {},
     drawer: null
   }),
   computed: {
     ...mapState('app', ['last', 'total'])
   },
+  mounted () {
+    this.tmp = { ...this.last }
+  },
+  watch: {
+    last: {
+      immediate: true,
+      handler: function (val) {
+        this.tmp = { ...val }
+      }
+    }
+  },
   methods: {
     showFilter (rec) {
-      const tmp = {}
-      tmp.year = rec.value
+      const query = {}
+      query.year = rec.value
       // eslint-disable-next-line
-      this.$router.push({ name: 'list', query: tmp })//.catch(err => { })
+      this.$router.push({ name: 'list', query: query })//.catch(err => { })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.front {
+.hamburger {
   position: absolute;
   top: 0;
   left: 0;
   padding: 6px;
   z-index: 2;
-}
-.big {
-  height: 150px;
-  width: 150px;
-  border: 2px solid currentColor;
-  .v-icon {
-    height: 65px;
-    font-size: 65px;
-    width: 65px;
-  }
 }
 .last {
   background-size: cover;
