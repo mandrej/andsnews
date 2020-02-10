@@ -21,14 +21,14 @@
       fill-height
       align-center
       justify-center
-      v-lazy:background-image="getImgSrc(tmp)"
+      v-lazy:background-image="getImgSrc(last)"
       class="last"
     >
       <div class="pa-5" style="position: absolute; top: 0; right: 0">
         <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
         <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
       </div>
-      <v-avatar absolute size="80%" @click="showFilter(tmp)">
+      <v-avatar absolute size="70%" @click="showFilter(last)">
         <img src="/static/img/aperture.svg" />
       </v-avatar>
     </v-layout>
@@ -51,29 +51,19 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    tmp: {},
     drawer: null
   }),
   computed: {
     ...mapState('app', ['last', 'total'])
   },
-  mounted () {
-    this.tmp = { ...this.last }
-  },
-  watch: {
-    last: {
-      immediate: true,
-      handler: function (val) {
-        this.tmp = { ...val }
-      }
-    }
-  },
   methods: {
     showFilter (rec) {
-      const query = {}
-      query.year = rec.value
-      // eslint-disable-next-line
-      this.$router.push({ name: 'list', query: query })//.catch(err => { })
+      this.$router.push({
+        name: 'list',
+        query: {
+          year: rec.value
+        }
+      })
     }
   }
 }

@@ -16,7 +16,7 @@ const initialState = {
     count: null,
     filename: null,
     date: new Date('1970-01-01').toISOString(),
-    value: null
+    value: 1970
   },
   total: 0,
   values: {},
@@ -153,14 +153,14 @@ const mutations = {
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
-    const last_stat_ts = new Date(state.last.date).getTime()
-    const last_obj_ts = new Date(obj.date).getTime()
-    if (last_obj_ts > last_stat_ts) {
+    const last_stat = new Date(state.last.date)
+    const last_obj = new Date(obj.date)
+    if (last_obj.getTime() > last_stat.getTime()) {
       state.last = {
-        count: null,
+        count: state.last.count + 1,
         filename: obj.filename,
         date: obj.date,
-        value: null
+        value: last_obj.getFullYear()
       }
     }
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
