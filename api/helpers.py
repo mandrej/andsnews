@@ -66,10 +66,6 @@ def push_message(token, message=''):
         return 'ok'
 
 
-def rounding(val, values):
-    return min(values, key=lambda x: abs(x - val))
-
-
 def sizeof_fmt(num, suffix='B'):
     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
         if abs(num) < 1024.0:
@@ -137,8 +133,7 @@ def get_exif(buff):
             Decimal(eval(tags['EXIF FocalLength'].printable)))
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
-        value = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
-        data['iso'] = rounding(value, CONFIG['asa'])
+        data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
     if all(['EXIF ExifImageWidth', 'EXIF ExifImageLength']) in tags:
         data['dim'] = [tags['EXIF ExifImageWidth'].printable,
                        tags['EXIF ExifImageLength'].printable]
