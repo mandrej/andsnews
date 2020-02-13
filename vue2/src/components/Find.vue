@@ -50,7 +50,7 @@
       ></v-autocomplete>
       <v-autocomplete
         v-model.lazy="tmp.nick"
-        :items="nicks"
+        :items="nickNames"
         label="by author"
         @change="submit"
         :disabled="busy"
@@ -61,17 +61,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'Find',
   data: () => ({
     tmp: {},
-    nicks: [],
     search: null
   }),
   computed: {
     ...mapState('app', ['busy', 'find', 'values']),
+    ...mapGetters('app', ['nickNames']),
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -79,14 +79,6 @@ export default {
     }
   },
   watch: {
-    values: {
-      deep: true,
-      handler: function (val) {
-        this.nicks = val.email.map(email => {
-          return email.match(/[^@]+/)[0].split('.')[0]
-        })
-      }
-    },
     find: {
       immediate: true,
       handler: function (val) {

@@ -8,6 +8,14 @@ import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
 
+const getters = {
+  nickNames: state => {
+    return state.values.email.map(email => {
+      return email.match(/[^@]+/)[0].split('.')[0]
+    })
+  }
+}
+
 const initialState = {
   find: {},
   uploaded: [],
@@ -218,5 +226,6 @@ export default {
   namespaced: true,
   state: initialState,
   mutations,
-  actions
+  actions,
+  getters
 }
