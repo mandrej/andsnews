@@ -160,13 +160,13 @@ def edit(id, json):
 
         'model': json['model'] if json['model'] else None,
         'lens': json['lens'] if json['lens'] else None,
-        'aperture': json['aperture'] if json['aperture'] else None,
+        'aperture': float(json['aperture']) if json['aperture'] else None,
         'shutter': json['shutter'] if json['shutter'] else None,
         'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
-        'iso': json['iso'] if json['iso'] else None,
+        'iso': int(json['iso']) if json['iso'] else None,
 
         # 'dim':
-        'loc': json['loc'] if json['loc'] else None
+        'loc': [float(x) for x in json['loc']] if json['loc'] else None
     })
     datastore_client.put(obj)
 
