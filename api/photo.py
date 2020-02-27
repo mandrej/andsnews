@@ -99,7 +99,7 @@ def add(fs, email):
 
         exif = get_exif(_buffer)
         if not exif['dim']:
-            logging.error(f'Fail dimension for {filename}')
+            logging.error(f'No EXIF dimension for {filename}')
             image_from_buffer = Image.open(BytesIO(_buffer))
             exif['dim'] = list(image_from_buffer.size)
         obj.update(exif)
@@ -160,10 +160,13 @@ def edit(id, json):
 
         'model': json['model'] if json['model'] else None,
         'lens': json['lens'] if json['lens'] else None,
-        'aperture': float(json['aperture']) if json['aperture'] else None,
+        'aperture': json['aperture'] if json['aperture'] else None,
         'shutter': json['shutter'] if json['shutter'] else None,
         'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
-        'iso': int(json['iso']) if json['iso'] else None
+        'iso': json['iso'] if json['iso'] else None,
+
+        # 'dim':
+        'loc': json['loc'] if json['loc'] else None
     })
     datastore_client.put(obj)
 

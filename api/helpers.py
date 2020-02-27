@@ -41,6 +41,7 @@ def serialize(ent):
 
             # 'size',
             'dim': ent['dim'],
+            'loc': ent['loc'] if 'loc' in ent else None
         }
 
 
@@ -88,6 +89,25 @@ def tokenize(text):
     return res
 
 
+def _convert_to_degress(value):
+    """
+    Helper function to convert the GPS coordinates stored in the EXIF to degress in float format
+    :param value:
+    :type value: exifread.utils.Ratio
+    :rtype: float
+
+    GPS GPSLatitudeRef 	 N
+    GPS GPSLatitude 	 [44, 239731/5000, 0]
+    GPS GPSLongitudeRef  E
+    GPS GPSLongitude 	 [20, 28887999/1000000, 0]
+    """
+    d = float(value.values[0].num) / float(value.values[0].den)
+    m = float(value.values[1].num) / float(value.values[1].den)
+    s = float(value.values[2].num) / float(value.values[2].den)
+
+    return d + (m / 60.0) + (s / 3600.0)
+
+
 def get_exif(buff):
     data = {
         'model': 'UNKNOWN',
@@ -97,7 +117,8 @@ def get_exif(buff):
         'shutter': None,
         'focal_length': None,
         'iso': None,
-        'dim': None
+        'dim': None,
+        'loc': None
     }
     tags = process_file(BytesIO(buff), details=False)
 
@@ -134,12 +155,35 @@ def get_exif(buff):
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 2
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
-    if all(['EXIF ExifImageWidth', 'EXIF ExifImageLength']) in tags:
-        data['dim'] = [tags['EXIF ExifImageWidth'].printable,
-                       tags['EXIF ExifImageLength'].printable]
+
+    width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
+    length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
+    if width and length:
+        data['dim'] = [int(x) for x in [width, length]]
+        print(data['dim'])
+
+    gps_latitude = tags.get('GPS GPSLatitude', None)
+    gps_latitude_ref = tags.get('GPS GPSLatitudeRef', None)
+    gps_longitude = tags.get('GPS GPSLongitude', None)
+    gps_longitude_ref = tags.get('GPS GPSLongitudeRef', None)
+    if gps_latitude and gps_latitude_ref and gps_longitude and gps_longitude_ref:
+        lat = _convert_to_degress(gps_latitude)
+        if gps_latitude_ref.values[0] != 'N':
+            lat = 0 - lat
+
+        lon = _convert_to_degress(gps_longitude)
+        if gps_longitude_ref.values[0] != 'E':
+            lon = 0 - lon
+
+        data['loc'] = [round(x, 5) for x in [lat, lon]]
+        # 'https://www.google.com/maps/search/?api=1&query={},{}'.fromat(lat, lon)
 
     # for k, v in tags.items():
-    #     print(k, '\t', v.printable)
+    #     try:
+    #         print(k, '\t', v.printable)
+    #     except AttributeError:
+    #         pass
+
     return data
 
 

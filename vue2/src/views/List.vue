@@ -63,7 +63,19 @@
                 />
                 <v-card-title>{{item.headline}}</v-card-title>
                 <v-card-text>
-                  <div>{{formatDate(item.date)}}</div>
+                  <v-layout row align-center justify-space-between class="px-2">
+                    {{formatDate(item.date)}}
+                    <v-btn
+                      v-if="item.loc"
+                      icon
+                      small
+                      text
+                      target="blank"
+                      :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+                    >
+                      <v-icon>my_location</v-icon>
+                    </v-btn>
+                  </v-layout>
                   <div>by {{item.nick}}</div>
                 </v-card-text>
                 <v-divider></v-divider>
