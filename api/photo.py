@@ -146,6 +146,8 @@ def edit(id, json):
     date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
     headline = json['headline']
     email = json['email']
+    loc = json['loc'] if isinstance(
+        json['loc'], list) else json['loc'].split(',')
 
     obj.update({
         'headline': headline,
@@ -166,7 +168,7 @@ def edit(id, json):
         'iso': int(json['iso']) if json['iso'] else None,
 
         # 'dim':
-        'loc': [float(x) for x in json['loc']] if json['loc'] else None
+        'loc': [float(x) for x in loc]
     })
     datastore_client.put(obj)
 
