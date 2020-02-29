@@ -106,7 +106,7 @@ def add(fs, email):
 
         date = obj['date']  # from exif
         obj.update({
-            'headline': filename,
+            'headline': 'No name',
             'text': [filename.lower()],
             'filename': filename,
             'email': email,
@@ -146,8 +146,15 @@ def edit(id, json):
     date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
     headline = json['headline']
     email = json['email']
-    loc = json['loc'] if isinstance(
-        json['loc'], list) else json['loc'].split(',')
+    loc = json['loc']
+    if loc:
+        if isinstance(loc, str):
+            if loc.strip() == '':
+                loc = None
+            else:
+                loc = [float(x) for x in loc.split(',')]
+        elif isinstance(loc, list):
+            loc = [float(x) for x in loc]
 
     obj.update({
         'headline': headline,
@@ -168,7 +175,7 @@ def edit(id, json):
         'iso': int(json['iso']) if json['iso'] else None,
 
         # 'dim':
-        'loc': [float(x) for x in loc]
+        'loc': loc
     })
     datastore_client.put(obj)
 
