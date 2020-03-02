@@ -136,9 +136,14 @@ def add(fs, email):
             return {'success': False, 'message': 'Something went wrong. Picture not uploaded'}
 
 
-def edit(id, json):
+def edit(id_or_name, json):
+    try:
+        id = int(id_or_name)
+    except ValueError:
+        id = id_or_name
     key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
+    assert obj is not None
 
     old_pairs = changed_pairs(obj)
 
@@ -174,7 +179,7 @@ def edit(id, json):
         'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
         'iso': int(json['iso']) if json['iso'] else None,
 
-        # 'dim':
+        'dim': json['dim'] if json['dim'] else None,
         'loc': loc
     })
     datastore_client.put(obj)
@@ -188,9 +193,14 @@ def edit(id, json):
         return {'success': False, 'message': 'Something went wrong'}
 
 
-def remove(id):
+def remove(id_or_name):
+    try:
+        id = int(id_or_name)
+    except ValueError:
+        id = id_or_name
     key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
+    assert obj is not None
 
     try:
         blob = BUCKET.get_blob(obj['filename'])

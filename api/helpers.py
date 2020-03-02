@@ -20,7 +20,7 @@ def serialize(ent):
     """ google.cloud.datastore.entity """
     if ent.kind == 'Photo':
         return {
-            'id': ent.id,
+            'id': ent.key.id_or_name,
             'headline': ent['headline'],
             # 'text'
             'filename': ent['filename'],
@@ -160,7 +160,6 @@ def get_exif(buff):
     length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
     if width and length:
         data['dim'] = [int(x) for x in [width, length]]
-        print(data['dim'])
 
     gps_latitude = tags.get('GPS GPSLatitude', None)
     gps_latitude_ref = tags.get('GPS GPSLatitudeRef', None)

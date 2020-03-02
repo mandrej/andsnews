@@ -21,6 +21,7 @@
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
                 <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
+                <v-btn if="user.isAdmin" text block @click="reread">Reread Exif</v-btn>
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
@@ -159,8 +160,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
+
+const axios = Vue.axios
 
 export default {
   name: 'Edit',
@@ -190,10 +194,6 @@ export default {
   },
   watch: {
     rec: function (val) {
-      if (JSON.stringify(val) === '{}') {
-        this.show = false
-        return
-      }
       const dt = val.date.split('T')
       this.tmp = { ...val }
       this.dateTime = {
@@ -205,7 +205,6 @@ export default {
   methods: {
     submit () {
       if (this.$refs.form.validate()) {
-
         if (this.dateTime.time.length === 5) {
           this.dateTime.time += ':00'
         }
@@ -215,6 +214,18 @@ export default {
         this.$store.dispatch('app/saveRecord', this.tmp)
         this.show = false
       }
+    },
+    reread () {
+      axios.get('exif/' + this.tmp.filename).then(response => {
+        const val = response.data
+
+        const dt = val.date.split('T')
+        this.tmp = { ...this.tmp, ...val }
+        this.dateTime = {
+          date: dt[0],
+          time: dt[1].substring(0, 5)
+        }
+      })
     }
   }
 }

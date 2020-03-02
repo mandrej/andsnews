@@ -3,7 +3,7 @@ from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image
 from api import cloud, photo
-from api.helpers import push_message
+from api.helpers import push_message, get_exif
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -46,6 +46,25 @@ def download(filename):
         response.headers['Content-Disposition'] = 'attachment; filename='.format(
             filename)
         return response
+    abort(404, description='Resource not found')
+
+
+@app.route('/api/exif/<filename>', methods=['GET'])
+def exif(filename):
+    inp = BytesIO()
+
+    blob = photo.storage_blob(filename)
+    if blob:
+        blob.download_to_file(inp)
+        _buffer = inp.getvalue()
+        out = get_exif(_buffer)
+        out['date'] = out['date'].isoformat()
+        if not out['dim']:
+            image_from_buffer = Image.open(BytesIO(_buffer))
+            out['dim'] = list(image_from_buffer.size)
+
+        return out
+
     abort(404, description='Resource not found')
 
 
@@ -113,15 +132,15 @@ def post():
     return jsonify(resList)
 
 
-@app.route('/api/edit/<int:id>', methods=['PUT'])
-def put(id):
-    response = photo.edit(id, request.json)
+@app.route('/api/edit/<id_or_name>', methods=['PUT'])
+def put(id_or_name):
+    response = photo.edit(id_or_name, request.json)
     return jsonify(response)
 
 
-@app.route('/api/delete/<int:id>', methods=['DELETE'])
-def delete(id):
-    response = photo.remove(id)
+@app.route('/api/delete/<id_or_name>', methods=['DELETE'])
+def delete(id_or_name):
+    response = photo.remove(id_or_name)
     return jsonify(response['success'])
 
 
