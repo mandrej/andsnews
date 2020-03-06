@@ -76,14 +76,14 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title>{{item.headline}}</v-list-item-title>
-                    <v-list-item-subtitle>{{formatDate(item.date)}}</v-list-item-subtitle>
+                    <v-list-item-title>{{item.filename}}</v-list-item-title>
+                    <v-list-item-subtitle>{{formatBytes(item.size)}}</v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-list-item-action>
                     <v-layout row>
                       <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                      <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Edit</v-btn>
+                      <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Publish</v-btn>
                     </v-layout>
                   </v-list-item-action>
                 </v-list-item>
@@ -168,7 +168,7 @@ export default {
             success = item.success
             if (success) {
               this.uploadedFiles.push(item.rec)
-              this.$store.dispatch('app/addRecord', item.rec)
+              this.$store.dispatch('app/addUploaded', item.rec)
             } else {
               this.message = item.message
             }
@@ -191,7 +191,6 @@ export default {
       this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
-      formData.append('email', this.user.email)
 
       // make formData from Array Iterator
       // Array.from(Array(5).keys()) = [0, 1, 2, 3, 4]
@@ -207,6 +206,8 @@ export default {
     },
     showEditForm (rec) {
       this.current = rec
+      this.current.email = this.user.email
+      this.current.headline = 'No name'
       this.editForm = true
     },
     removeRecord (rec) {

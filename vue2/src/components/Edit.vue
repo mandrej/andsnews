@@ -21,7 +21,7 @@
             <v-layout row wrap>
               <v-flex xs12 sm6 md4>
                 <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
-                <v-btn if="user.isAdmin" text block @click="reread">Reread Exif</v-btn>
+                <v-btn if="user.isAdmin" text block @click="readExif">Read Exif</v-btn>
               </v-flex>
               <v-flex xs12 sm6 md8>
                 <v-layout row wrap>
@@ -146,6 +146,9 @@
                 <v-text-field label="Shutter [s]" v-model="tmp.shutter"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
+                <v-text-field disabled label="File size [bytes]" v-model="tmp.size"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
                 <v-text-field disabled label="Dimension [width, height]" v-model="tmp.dim"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -171,7 +174,6 @@ export default {
   mixins: [common],
   props: ['visible', 'rec'],
   data: () => ({
-    valid: true,
     menuDate: false,
     menuTime: false,
     dateTime: {},
@@ -181,6 +183,14 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['values']),
+    valid: {
+      get () {
+        return Boolean(this.tmp.date)
+      },
+      set (newValue) {
+        return newValue
+      }
+    },
     show: {
       get () {
         return this.visible
@@ -194,8 +204,9 @@ export default {
   },
   watch: {
     rec: function (val) {
-      const dt = val.date.split('T')
       this.tmp = { ...val }
+      if (!val.date) return
+      const dt = val.date.split('T')
       this.dateTime = {
         date: dt[0],
         time: dt[1].substring(0, 5)
@@ -215,7 +226,7 @@ export default {
         this.show = false
       }
     },
-    reread () {
+    readExif () {
       axios.get('exif/' + this.tmp.filename).then(response => {
         const val = response.data
 

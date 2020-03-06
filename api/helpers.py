@@ -23,7 +23,7 @@ def serialize(ent):
             'id': ent.key.id_or_name,
             'headline': ent['headline'],
             # 'text'
-            'filename': ent['filename'],
+            'filename': ent['filename'] or '',
             'email': ent['email'],
             'nick': re.match('([^@]+)', ent['email']).group().split('.')[0],
             'tags': ent['tags'] if 'tags' in ent else None,
@@ -39,7 +39,7 @@ def serialize(ent):
             'focal_length': ent['focal_length'] if 'focal_length' in ent else None,
             'iso': ent['iso'] if 'iso' in ent else None,
 
-            # 'size',
+            'size': ent['size'],
             'dim': ent['dim'],
             'loc': ent['loc'] if 'loc' in ent else None
         }
@@ -65,14 +65,6 @@ def push_message(token, message=''):
         return j['results']
     else:
         return 'ok'
-
-
-def sizeof_fmt(num, suffix='B'):
-    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-        if abs(num) < 1024.0:
-            return "%3.1f%s%s" % (num, unit, suffix)
-        num /= 1024.0
-    return "%.1f%s%s" % (num, 'Y', suffix)
 
 
 def tokenize(text):

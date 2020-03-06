@@ -72,7 +72,7 @@ def changed_pairs(obj):
     return pairs
 
 
-def add(fs, email):
+def add(fs):
     """
     fs: werkzeug.datastructures.FileStorage(
         stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
@@ -94,61 +94,14 @@ def add(fs, email):
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}
     else:
-        key = datastore_client.key('Photo')
-        obj = datastore.Entity(key)
-
-        exif = get_exif(_buffer)
-        if not exif['dim']:
-            logging.error(f'No EXIF dimension for {filename}')
-            image_from_buffer = Image.open(BytesIO(_buffer))
-            exif['dim'] = list(image_from_buffer.size)
-        obj.update(exif)
-
-        date = obj['date']  # from exif
-        obj.update({
-            'headline': 'No name',
-            'text': [filename.lower()],
+        return {'success': True, 'rec': {
             'filename': filename,
-            'email': email,
-            'nick': re.match('([^@]+)', email).group().split('.')[0],
-            'tags': [],
-
-            'date': date,
-            'year': date.year,
-            'month': date.month,
-
-            'size': len(_buffer)
-        })
-        datastore_client.put(obj)
-
-        new_pairs = changed_pairs(obj)
-        update_filters(new_pairs, [])
-
-        if isinstance(obj, Entity):
-            return {'success': True, 'rec': serialize(obj)}
-        else:
-            # remove file and record
-            datastore_client.delete(key)
-
-            old_pairs = changed_pairs(obj)
-            update_filters([], old_pairs)
-
-            return {'success': False, 'message': 'Something went wrong. Picture not uploaded'}
+            'size': blob.size
+        }}
 
 
-def edit(id_or_name, json):
-    try:
-        id = int(id_or_name)
-    except ValueError:
-        id = id_or_name
-    key = datastore_client.key('Photo', id)
-    obj = datastore_client.get(key)
-    assert obj is not None
-
-    old_pairs = changed_pairs(obj)
-
-    dt = json['date'].strip().split('.')[0]
-    date = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
+def update(obj, json):
+    date = datetime.datetime.strptime(json['date'], '%Y-%m-%dT%H:%M:%S')
     headline = json['headline']
     email = json['email']
     loc = json['loc']
@@ -164,9 +117,10 @@ def edit(id_or_name, json):
     obj.update({
         'headline': headline,
         'text': tokenize(headline),
+        'filename': json['filename'],
         'email': email,
         'nick': re.match('([^@]+)', email).group().split('.')[0],
-        'tags': sorted(json['tags']),  # or []
+        'tags': sorted(json['tags']),
 
         'date': date,
         'year': date.year,
@@ -179,9 +133,41 @@ def edit(id_or_name, json):
         'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
         'iso': int(json['iso']) if json['iso'] else None,
 
+        'size': json['size'],
         'dim': json['dim'] if json['dim'] else None,
         'loc': loc
     })
+    return obj
+
+
+def publish(json):
+    key = datastore_client.key('Photo')
+    obj = datastore.Entity(key)
+
+    obj = update(obj, json)
+    datastore_client.put(obj)
+
+    new_pairs = changed_pairs(obj)
+    update_filters(new_pairs, [])
+
+    if isinstance(obj, Entity):
+        return {'success': True, 'rec': serialize(obj)}
+    else:
+        return {'success': False, 'message': 'Something went wrong'}
+
+
+def edit(id_or_name, json):
+    try:
+        id = int(id_or_name)
+    except ValueError:
+        id = id_or_name
+    key = datastore_client.key('Photo', id)
+    obj = datastore_client.get(key)
+    assert obj is not None
+
+    old_pairs = changed_pairs(obj)
+
+    obj = update(obj, json)
     datastore_client.put(obj)
 
     new_pairs = changed_pairs(obj)
@@ -193,6 +179,16 @@ def edit(id_or_name, json):
         return {'success': False, 'message': 'Something went wrong'}
 
 
+def removeFromBucket(filename):
+    try:
+        blob = BUCKET.get_blob(filename)
+        blob.delete()
+    except NotFound:
+        return {'success': False}
+    else:
+        return {'success': True}
+
+
 def remove(id_or_name):
     try:
         id = int(id_or_name)
@@ -202,14 +198,11 @@ def remove(id_or_name):
     obj = datastore_client.get(key)
     assert obj is not None
 
-    try:
-        blob = BUCKET.get_blob(obj['filename'])
-        blob.delete()
-    except NotFound:
-        return {'success': False}
-    else:
+    response = removeFromBucket(obj['filename'])
+    if response['success']:
         datastore_client.delete(key)
 
         old_pairs = changed_pairs(obj)
         update_filters([], old_pairs)
-        return {'success': True}
+
+    return response

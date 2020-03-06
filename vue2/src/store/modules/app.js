@@ -50,31 +50,50 @@ const actions = {
       dispatch('fetchRecords')
     }
   },
-  addRecord: ({ commit }, obj) => {
+  addUploaded: ({ commit }, obj) => {
     commit('ADD_UPLOADED', obj)
-    commit('ADD_RECORD', obj)
   },
   saveRecord: ({ commit }, obj) => {
-    axios.put('edit/' + obj.id, obj).then(response => {
-      const obj = response.data.rec
-      commit('UPDATE_RECORD', obj)
-      commit('DELETE_UPLOADED', obj)
-      commit('UPDATE_VALUES', obj)
-    })
+    if (obj.id) {
+      axios.put('edit/' + obj.id, obj).then(response => {
+        const obj = response.data.rec
+        commit('UPDATE_RECORD', obj)
+        commit('UPDATE_VALUES', obj)
+      })
+    } else {
+      axios.put('publish', obj).then(response => {
+        const obj = response.data.rec
+        commit('ADD_RECORD', obj)
+        commit('DELETE_UPLOADED', obj)
+        commit('UPDATE_VALUES', obj)
+      })
+    }
   },
   deleteRecord: ({ commit, dispatch }, obj) => {
-    axios
-      .delete('delete/' + obj.id, { parms: { foo: 'bar' } })
-      .then(response => {
-        if (response.data) {
-          EventBus.$emit('snackbar', 'Successfully deleted ' + obj.headline)
-          commit('DELETE_RECORD', obj)
-          commit('DELETE_UPLOADED', obj)
-          dispatch('fetchStat')
-        } else {
-          EventBus.$emit('snackbar', 'Deleting failed ' + obj.headline)
-        }
-      })
+    if (obj.id) {
+      axios
+        .delete('delete/' + obj.id, { parms: { foo: 'bar' } })
+        .then(response => {
+          if (response.data) {
+            EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)
+            commit('DELETE_RECORD', obj)
+            dispatch('fetchStat')
+          } else {
+            EventBus.$emit('snackbar', 'Deleting failed ' + obj.filename)
+          }
+        })
+    } else {
+      axios
+        .delete('remove/' + obj.filename, { parms: { foo: 'bar' } })
+        .then(response => {
+          if (response.data) {
+            EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)
+            commit('DELETE_UPLOADED', obj)
+          } else {
+            EventBus.$emit('snackbar', 'Deleting failed ' + obj.filename)
+          }
+        })
+    }
   },
   fetchStat: debounce(({ dispatch }) => {
     dispatch('_fetchStat')
@@ -157,7 +176,7 @@ const mutations = {
     state.total--
   },
   DELETE_UPLOADED (state, obj) {
-    const idx = state.uploaded.findIndex(item => item.id === obj.id)
+    const idx = state.uploaded.findIndex(item => item.filename === obj.filename)
     if (idx > -1) state.uploaded.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {

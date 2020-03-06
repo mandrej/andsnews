@@ -121,20 +121,31 @@ def registrations():
 
 
 @app.route('/api/add', methods=['POST'])
-def post():
+def add():
     """ ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ...]) """
     resList = []
-    email = request.form.get('email')
     files = request.files.getlist('photos')
     for fs in files:
-        response = photo.add(fs, email)
+        response = photo.add(fs)
         resList.append(response)
     return jsonify(resList)
 
 
+@app.route('/api/publish', methods=['PUT'])
+def publish():
+    response = photo.publish(request.json)
+    return jsonify(response)
+
+
 @app.route('/api/edit/<id_or_name>', methods=['PUT'])
-def put(id_or_name):
+def edit(id_or_name):
     response = photo.edit(id_or_name, request.json)
+    return jsonify(response)
+
+
+@app.route('/api/remove/<filename>', methods=['DELETE'])
+def remove(filename):
+    response = photo.removeFromBucket(filename)
     return jsonify(response)
 
 
