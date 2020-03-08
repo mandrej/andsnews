@@ -1,5 +1,6 @@
 import re
 import uuid
+import logging
 import datetime
 import collections
 from operator import itemgetter
@@ -9,6 +10,8 @@ from .config import CONFIG
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
+
+BUCKET = storage_client.get_bucket(CONFIG['firebase']['storageBucket'])
 
 
 def counters_stat():
@@ -121,6 +124,89 @@ def rebuilder(field, token):
     datastore_client.put_multi(counters)
     push_message(token, CONFIG['end_message'])
     return tally
+
+
+class Missing(object):
+    """
+    Remove datastore records with images missing in the Cloud
+    """
+    TOKEN = None
+    QUERY = datastore_client.query(kind='Photo')
+    COUNT = 0
+    DELETED = []
+
+    def run(self, batch_size=100):
+        push_message(self.TOKEN, CONFIG['start_message'])
+        self._continue(None, batch_size)
+
+    def _continue(self, cursor, batch_size):
+        _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
+        _page = next(_iter.pages)
+
+        for ent in list(_page):
+            self.COUNT += 1
+            blobs = storage_client.list_blobs(
+                BUCKET, prefix=ent['filename'], delimiter='/')
+            for prefix in blobs.prefixes:
+                if prefix == ent['filename']:
+                    key = ent.key.id_or_name()
+                    # datastore_client.delete(key)
+                    push_message(
+                        self.TOKEN, 'deleting {} ...'.format(prefix))
+                    self.DELETED.append(prefix)
+
+        next_cursor = _iter.next_page_token
+        if next_cursor:
+            push_message(self.TOKEN, 'checked {}, deleted {}'.format(
+                self.COUNT, len(self.DELETED)))
+            self._continue(next_cursor, batch_size)
+        else:
+            self.finish()
+
+    def finish(self):
+        logging.error(self.DELETED)
+        push_message(self.TOKEN, CONFIG['end_message'])
+
+
+class Unbound(object):
+    """
+    Remove unbound images from Google Cloud Storage
+    """
+    TOKEN = None
+    COUNT = 0
+    DELETED = []
+
+    def run(self, batch_size=100):
+        push_message(self.TOKEN, CONFIG['start_message'])
+        self._continue(None, batch_size)
+
+    def _continue(self, cursor, batch_size):
+        _iter = storage_client.list_blobs(
+            BUCKET, page_token=cursor, max_results=batch_size, delimiter='/')
+        _page = next(_iter.pages)
+
+        for blob in list(_page):
+            if blob.content_type == 'image/jpeg':
+                self.COUNT += 1
+                query = datastore_client.query(kind='Photo')
+                query.add_filter('filename', '=', blob.name)
+                if len(list(query.fetch(1))) == 0:
+                    blob.delete()
+                    push_message(
+                        self.TOKEN, 'deleting {} ...'.format(blob.name))
+                    self.DELETED.append(blob.name)
+
+        next_cursor = _iter.next_page_token
+        if next_cursor:
+            push_message(self.TOKEN, 'checked {}, deleted {}'.format(
+                self.COUNT, len(self.DELETED)))
+            self._continue(next_cursor, batch_size)
+        else:
+            self.finish()
+
+    def finish(self):
+        logging.error(self.DELETED)
+        push_message(self.TOKEN, CONFIG['end_message'])
 
 
 class Fixer(object):

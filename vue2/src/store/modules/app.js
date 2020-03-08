@@ -61,7 +61,8 @@ const actions = {
         commit('UPDATE_VALUES', obj)
       })
     } else {
-      axios.put('publish', obj).then(response => {
+      // publish
+      axios.put('edit', obj).then(response => {
         const obj = response.data.rec
         commit('ADD_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
@@ -72,7 +73,7 @@ const actions = {
   deleteRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
       axios
-        .delete('delete/' + obj.id, { parms: { foo: 'bar' } })
+        .delete('delete/' + obj.id, { data: { foo: 'bar' } })
         .then(response => {
           if (response.data) {
             EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)
@@ -84,7 +85,7 @@ const actions = {
         })
     } else {
       axios
-        .delete('remove/' + obj.filename, { parms: { foo: 'bar' } })
+        .delete('remove/' + obj.filename, { data: { foo: 'bar' } })
         .then(response => {
           if (response.data) {
             EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)

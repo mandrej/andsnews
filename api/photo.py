@@ -140,38 +140,32 @@ def update(obj, json):
     return obj
 
 
-def publish(json):
-    key = datastore_client.key('Photo')
-    obj = datastore.Entity(key)
-
-    obj = update(obj, json)
-    datastore_client.put(obj)
-
-    new_pairs = changed_pairs(obj)
-    update_filters(new_pairs, [])
-
-    if isinstance(obj, Entity):
-        return {'success': True, 'rec': serialize(obj)}
-    else:
-        return {'success': False, 'message': 'Something went wrong'}
-
-
 def edit(id_or_name, json):
-    try:
-        id = int(id_or_name)
-    except ValueError:
-        id = id_or_name
-    key = datastore_client.key('Photo', id)
-    obj = datastore_client.get(key)
-    assert obj is not None
+    if id_or_name:
+        try:
+            id = int(id_or_name)
+        except ValueError:
+            id = id_or_name
+        key = datastore_client.key('Photo', id)
+        obj = datastore_client.get(key)
+        assert obj is not None
 
-    old_pairs = changed_pairs(obj)
+        old_pairs = changed_pairs(obj)
 
-    obj = update(obj, json)
-    datastore_client.put(obj)
+        obj = update(obj, json)
+        datastore_client.put(obj)
 
-    new_pairs = changed_pairs(obj)
-    update_filters(new_pairs, old_pairs)
+        new_pairs = changed_pairs(obj)
+        update_filters(new_pairs, old_pairs)
+    else:
+        key = datastore_client.key('Photo')
+        obj = datastore.Entity(key)
+
+        obj = update(obj, json)
+        datastore_client.put(obj)
+
+        new_pairs = changed_pairs(obj)
+        update_filters(new_pairs, [])
 
     if isinstance(obj, Entity):
         return {'success': True, 'rec': serialize(obj)}

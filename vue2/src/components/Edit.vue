@@ -205,7 +205,10 @@ export default {
   watch: {
     rec: function (val) {
       this.tmp = { ...val }
-      if (!val.date) return
+      if (!val.date) {
+        this.readExif()
+        return
+      }
       const dt = val.date.split('T')
       this.dateTime = {
         date: dt[0],

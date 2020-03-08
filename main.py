@@ -131,12 +131,7 @@ def add():
     return jsonify(resList)
 
 
-@app.route('/api/publish', methods=['PUT'])
-def publish():
-    response = photo.publish(request.json)
-    return jsonify(response)
-
-
+@app.route('/api/edit', defaults={'id_or_name': None}, methods=['PUT'])
 @app.route('/api/edit/<id_or_name>', methods=['PUT'])
 def edit(id_or_name):
     response = photo.edit(id_or_name, request.json)
@@ -170,10 +165,10 @@ def runner(verb):
 
     if verb == 'fix':
         runner = cloud.Fixer()
-    # elif verb == 'unbound':
-    #     runner = Unbound()
-    # elif verb == 'missing':
-    #     runner = Missing()
+    elif verb == 'unbound':
+        runner = cloud.Unbound()
+    elif verb == 'missing':
+        runner = cloud.Missing()
     else:
         return jsonify(False)
 
