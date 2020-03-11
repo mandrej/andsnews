@@ -131,10 +131,10 @@ def add():
     return jsonify(resList)
 
 
-@app.route('/api/edit', defaults={'id_or_name': None}, methods=['PUT'])
-@app.route('/api/edit/<id_or_name>', methods=['PUT'])
-def edit(id_or_name):
-    response = photo.edit(id_or_name, request.json)
+@app.route('/api/edit', defaults={'id': None}, methods=['PUT'])
+@app.route('/api/edit/<int:id>', methods=['PUT'])
+def edit(id):
+    response = photo.edit(id, request.json)
     return jsonify(response)
 
 
@@ -144,9 +144,9 @@ def remove(filename):
     return jsonify(response)
 
 
-@app.route('/api/delete/<id_or_name>', methods=['DELETE'])
-def delete(id_or_name):
-    response = photo.remove(id_or_name)
+@app.route('/api/delete/<int:id>', methods=['DELETE'])
+def delete(id):
+    response = photo.remove(id)
     return jsonify(response['success'])
 
 

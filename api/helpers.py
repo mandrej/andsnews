@@ -20,7 +20,7 @@ def serialize(ent):
     """ google.cloud.datastore.entity """
     if ent.kind == 'Photo':
         return {
-            'id': ent.key.id_or_name,
+            'id': ent.id,
             'headline': ent['headline'],
             # 'text'
             'filename': ent['filename'] or '',

@@ -211,10 +211,11 @@ class Unbound(object):
 
 class Fixer(object):
     """
-    Removed from Photo safekey, slug, eqv, program, ratio
+    Save all records to use <int:id> instead of <str:id_or_name>
     """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
+    COUNT = 0
 
     def run(self, batch_size=100):
         push_message(self.TOKEN, CONFIG['start_message'])
@@ -223,19 +224,22 @@ class Fixer(object):
     def _continue(self, cursor, batch_size):
         _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
-        changed = []
+        batch = []
+        deleted = []
         for ent in list(_page):
-            hit = 0
-            if 'tags' not in ent:
-                ent['tags'] = []
-                hit += 1
-            if hit > 0:
-                changed.append(ent)
+            id_or_name = ent.key.id_or_name
+            if isinstance(id_or_name, str):
+                self.COUNT += 1
+                key = datastore_client.key('Photo')
+                obj = datastore.Entity(key)
+                obj.update(ent)
+                batch.append(obj)
+                deleted.append(ent/key)
 
-        count = len(changed)
-        if count > 0:
-            datastore_client.put_multi(changed)
-            push_message(self.TOKEN, 'saving {} ...'.format(count))
+        if len(batch) > 0:
+            datastore_client.put_multi(batch)
+            datastore_client.delete_multi(deleted)
+            push_message(self.TOKEN, 'saving {} ...'.format(self.COUNT))
 
         next_cursor = _iter.next_page_token
         if next_cursor:

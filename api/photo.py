@@ -140,12 +140,8 @@ def update(obj, json):
     return obj
 
 
-def edit(id_or_name, json):
-    if id_or_name:
-        try:
-            id = int(id_or_name)
-        except ValueError:
-            id = id_or_name
+def edit(id, json):
+    if id:
         key = datastore_client.key('Photo', id)
         obj = datastore_client.get(key)
         assert obj is not None
@@ -183,11 +179,7 @@ def removeFromBucket(filename):
         return {'success': True}
 
 
-def remove(id_or_name):
-    try:
-        id = int(id_or_name)
-    except ValueError:
-        id = id_or_name
+def remove(id):
     key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
     assert obj is not None

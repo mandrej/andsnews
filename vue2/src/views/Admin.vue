@@ -55,7 +55,7 @@
       </v-layout>
 
       <v-layout wrap align-center>
-        <v-flex xs9>Set no tags to []</v-flex>
+        <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="success" width="100" @click="fix">Fix</v-btn>
         </v-flex>
