@@ -59,7 +59,7 @@ def exif(filename):
         _buffer = inp.getvalue()
         out = get_exif(_buffer)
         out['date'] = out['date'].isoformat()
-        if not out['dim']:
+        if out.get('dim', None) is None:
             image_from_buffer = Image.open(BytesIO(_buffer))
             out['dim'] = list(image_from_buffer.size)
 

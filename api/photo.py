@@ -100,43 +100,23 @@ def add(fs):
         }}
 
 
-def update(obj, json):
-    date = datetime.datetime.strptime(json['date'], '%Y-%m-%dT%H:%M:%S')
-    headline = json['headline']
-    email = json['email']
-    loc = json['loc']
+def merge(obj, json):
+    obj.update(json)
+    obj['text'] = tokenize(obj['headline'])
+    obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
+    obj['tags'] = sorted(obj['tags'])
+    obj['date'] = datetime.datetime.strptime(obj['date'], '%Y-%m-%dT%H:%M:%S')
+    obj['year'] = obj['date'].year
+    obj['month'] = obj['date'].month
+    loc = obj.get('loc', None)
     if loc:
         if isinstance(loc, str):
             if loc.strip() == '':
-                loc = None
+                obj['loc'] = None
             else:
-                loc = [float(x) for x in loc.split(',')]
+                obj['loc'] = [float(x) for x in loc.split(',')]
         elif isinstance(loc, list):
-            loc = [float(x) for x in loc]
-
-    obj.update({
-        'headline': headline,
-        'text': tokenize(headline),
-        'filename': json['filename'],
-        'email': email,
-        'nick': re.match('([^@]+)', email).group().split('.')[0],
-        'tags': sorted(json['tags']),
-
-        'date': date,
-        'year': date.year,
-        'month': date.month,
-
-        'model': json['model'] if json['model'] else None,
-        'lens': json['lens'] if json['lens'] else None,
-        'aperture': float(json['aperture']) if json['aperture'] else None,
-        'shutter': json['shutter'] if json['shutter'] else None,
-        'focal_length': round(float(json['focal_length']), 1) if json['focal_length'] else None,
-        'iso': int(json['iso']) if json['iso'] else None,
-
-        'size': json['size'],
-        'dim': json['dim'] if json['dim'] else None,
-        'loc': loc
-    })
+            obj['loc'] = [float(x) for x in loc]
     return obj
 
 
@@ -148,7 +128,7 @@ def edit(id, json):
 
         old_pairs = changed_pairs(obj)
 
-        obj = update(obj, json)
+        obj = merge(obj, json)
         datastore_client.put(obj)
 
         new_pairs = changed_pairs(obj)
@@ -157,7 +137,7 @@ def edit(id, json):
         key = datastore_client.key('Photo')
         obj = datastore.Entity(key)
 
-        obj = update(obj, json)
+        obj = merge(obj, json)
         datastore_client.put(obj)
 
         new_pairs = changed_pairs(obj)

@@ -19,30 +19,10 @@ HEADERS = {
 def serialize(ent):
     """ google.cloud.datastore.entity """
     if ent.kind == 'Photo':
-        return {
-            'id': ent.id,
-            'headline': ent['headline'],
-            # 'text'
-            'filename': ent['filename'] or '',
-            'email': ent['email'],
-            'nick': re.match('([^@]+)', ent['email']).group().split('.')[0],
-            'tags': ent['tags'] if 'tags' in ent else None,
-
-            'date': ent['date'].isoformat(),
-            # 'year',
-            # 'month',
-
-            'model': ent['model'] if 'model' in ent else None,
-            'lens': ent['lens'] if 'lens' in ent else None,
-            'aperture': ent['aperture'] if 'aperture' in ent else None,
-            'shutter': ent['shutter'] if 'shutter' in ent else None,
-            'focal_length': ent['focal_length'] if 'focal_length' in ent else None,
-            'iso': ent['iso'] if 'iso' in ent else None,
-
-            'size': ent['size'],
-            'dim': ent['dim'],
-            'loc': ent['loc'] if 'loc' in ent else None
-        }
+        res = dict(ent)
+        res['id'] = ent.id
+        res['date'] = res['date'].isoformat()
+        return res
 
 
 def push_message(token, message=''):
@@ -103,14 +83,7 @@ def _convert_to_degress(value):
 def get_exif(buff):
     data = {
         'model': 'UNKNOWN',
-        'lens': None,
-        'date': datetime.datetime.now(),
-        'aperture': None,
-        'shutter': None,
-        'focal_length': None,
-        'iso': None,
-        'dim': None,
-        'loc': None
+        'date': datetime.datetime.now()
     }
     tags = process_file(BytesIO(buff), details=False)
 

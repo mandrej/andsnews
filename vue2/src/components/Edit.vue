@@ -152,7 +152,7 @@
                 <v-text-field disabled label="Dimension [width, height]" v-model="tmp.dim"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-text-field label="Location [latitude, logitude]" v-model="tmp.loc"></v-text-field>
+                <v-text-field label="Location [latitude, longitude]" v-model="tmp.loc"></v-text-field>
               </v-flex>
             </v-layout>
           </v-form>
