@@ -100,25 +100,21 @@ def get_exif(buff):
             data['model'] = '%s %s' % (make, model)
 
     if 'EXIF LensModel' in tags:
-        lens = tags['EXIF LensModel'].printable
-        if lens == '-- mm f/--':
-            data['lens'] = None
-        else:
-            data['lens'] = lens.replace('/', '')
+        data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
     if 'EXIF DateTimeOriginal' in tags:
         data['date'] = datetime.datetime.strptime(
             tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
     if 'EXIF FNumber' in tags:
-        getcontext().prec = 2
+        getcontext().prec = 3
         data['aperture'] = float(Decimal(eval(tags['EXIF FNumber'].printable)))
     if 'EXIF ExposureTime' in tags:
         data['shutter'] = tags['EXIF ExposureTime'].printable
     if 'EXIF FocalLength' in tags:
-        getcontext().prec = 2
+        getcontext().prec = 3
         data['focal_length'] = float(
             Decimal(eval(tags['EXIF FocalLength'].printable)))
     if 'EXIF ISOSpeedRatings' in tags:
-        getcontext().prec = 2
+        getcontext().prec = 3
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
 
     width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None

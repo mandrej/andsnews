@@ -114,9 +114,9 @@ def merge(obj, json):
             if loc.strip() == '':
                 obj['loc'] = None
             else:
-                obj['loc'] = [float(x) for x in loc.split(',')]
+                obj['loc'] = [round(float(x), 5) for x in loc.split(',')]
         elif isinstance(loc, list):
-            obj['loc'] = [float(x) for x in loc]
+            obj['loc'] = [round(float(x), 5) for x in loc]
     return obj
 
 

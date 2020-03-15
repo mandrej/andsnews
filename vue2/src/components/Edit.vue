@@ -146,10 +146,15 @@
                 <v-text-field label="Shutter [s]" v-model="tmp.shutter"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-text-field disabled label="File size [bytes]" v-model="tmp.size"></v-text-field>
+                <v-text-field color="error" readonly label="File size [bytes]" v-model="tmp.size"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-text-field disabled label="Dimension [width, height]" v-model="tmp.dim"></v-text-field>
+                <v-text-field
+                  color="error"
+                  readonly
+                  label="Dimension [width, height]"
+                  v-model="tmp.dim"
+                ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field label="Location [latitude, longitude]" v-model="tmp.loc"></v-text-field>
