@@ -5,7 +5,7 @@ version=`date +%Y%m%d%H%M`
 
 function syntax {
   echo $"Usage:"
-  echo $"$0 server  - Run development server"
+  echo $"$0 run    - Run development server"
   echo $"$0 build  - Build client"
   echo $"$0 deploy - Deploy"
   exit 1
@@ -16,7 +16,7 @@ if [ $# -eq 0 ]
     syntax
 else
   case $1 in
-    server)
+    run)
       source $venv_dir/bin/activate
       python main.py
       # vue ui

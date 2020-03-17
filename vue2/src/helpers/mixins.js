@@ -11,8 +11,15 @@ const common = {
     }
   },
   methods: {
-    formatDate (iso) {
-      return iso.replace('T', ' ').substring(0, 16)
+    splitDate (isoDate) {
+      if (isoDate) {
+        const dt = isoDate.split('T')
+        return {
+          date: dt[0],
+          time: dt[1].substring(0, 5)
+        }
+      }
+      return { date: '', time: '' }
     },
     formatBytes (bytes, decimals = 2) {
       if (bytes === 0) return '0 Bytes'

@@ -181,7 +181,6 @@ export default {
   data: () => ({
     menuDate: false,
     menuTime: false,
-    dateTime: {},
     tmp: {},
     search: null
   }),
@@ -205,6 +204,9 @@ export default {
           this.$emit('close')
         }
       }
+    },
+    dateTime () {
+      return this.splitDate(this.tmp.date)
     }
   },
   watch: {
@@ -213,11 +215,6 @@ export default {
       if (!val.date) {
         this.readExif()
         return
-      }
-      const dt = val.date.split('T')
-      this.dateTime = {
-        date: dt[0],
-        time: dt[1].substring(0, 5)
       }
     }
   },
@@ -237,13 +234,7 @@ export default {
     readExif () {
       axios.get('exif/' + this.tmp.filename).then(response => {
         const val = response.data
-
-        const dt = val.date.split('T')
         this.tmp = { ...this.tmp, ...val }
-        this.dateTime = {
-          date: dt[0],
-          time: dt[1].substring(0, 5)
-        }
       })
     }
   }
