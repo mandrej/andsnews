@@ -9000,10 +9000,10 @@ vuetify-loader@^1.4.3:
   dependencies:
     loader-utils "^1.2.0"
 
-vuetify@^2.2.17:
-  version "2.2.17"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.17.tgz?cache=0&sync_timestamp=1583949908247&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.2.17.tgz#76e0897beeaa19eda012094e416d6e29bbc5189d"
-  integrity sha1-duCJe+6qGe2gEglOQW1uKbvFGJ0=
+vuetify@^2.2.18:
+  version "2.2.18"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.18.tgz#5a43beaf7c8fc66dcfb5876e1619f7e44c7881da"
+  integrity sha1-WkO+r3yPxm3PtYduFhn35Ex4gdo=
 
 vuex-persistedstate@^2.7.1:
   version "2.7.1"
