@@ -21,7 +21,7 @@ def serialize(ent):
     if ent.kind == 'Photo':
         res = dict(ent)
         res['id'] = ent.id
-        res['date'] = res['date'].isoformat()
+        res['date'] = res['date'].strftime(CONFIG['date_time_format'])
         return res
 
 

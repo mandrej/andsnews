@@ -58,7 +58,7 @@ def exif(filename):
         blob.download_to_file(inp)
         _buffer = inp.getvalue()
         out = get_exif(_buffer)
-        out['date'] = out['date'].isoformat()
+        out['date'] = out['date'].strftime(CONFIG['date_time_format'])
         if out.get('dim', None) is None:
             image_from_buffer = Image.open(BytesIO(_buffer))
             out['dim'] = list(image_from_buffer.size)

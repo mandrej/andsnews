@@ -11,12 +11,12 @@ const common = {
     }
   },
   methods: {
-    splitDate (isoDate) {
-      if (isoDate) {
-        const dt = isoDate.split('T')
+    splitDate (dateTime) {
+      if (dateTime) {
+        const dt = dateTime.split(' ')
         return {
           date: dt[0],
-          time: dt[1].substring(0, 5)
+          time: dt[1]
         }
       }
       return { date: '', time: '' }

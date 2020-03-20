@@ -47,7 +47,8 @@ def update_filters(new_pairs, old_pairs):
 
         latest = list(query.fetch(3))
         if len(latest) > 0:
-            counter['date'] = latest[0]['date'].isoformat()
+            counter['date'] = latest[0]['date'].strftime(
+                CONFIG['date_time_format'])
             counter['filename'] = latest[0]['filename']
 
     datastore_client.put_multi(counters)
@@ -105,7 +106,8 @@ def merge(obj, json):
     obj['text'] = tokenize(obj['headline'])
     obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
     obj['tags'] = sorted(obj['tags'])
-    obj['date'] = datetime.datetime.strptime(obj['date'], '%Y-%m-%dT%H:%M:%S')
+    obj['date'] = datetime.datetime.strptime(
+        obj['date'], CONFIG['date_time_format'])
     obj['year'] = obj['date'].year
     obj['month'] = obj['date'].month
     loc = obj.get('loc', None)

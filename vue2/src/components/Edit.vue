@@ -221,10 +221,7 @@ export default {
   methods: {
     submit () {
       if (this.$refs.form.validate()) {
-        if (this.dateTime.time.length === 5) {
-          this.dateTime.time += ':00'
-        }
-        this.tmp.date = this.dateTime.date + 'T' + this.dateTime.time
+        this.tmp.date = this.dateTime.date + ' ' + this.dateTime.time
         this.tmp.tags = (this.tmp.tags) ? this.tmp.tags : []
 
         this.$store.dispatch('app/saveRecord', this.tmp)

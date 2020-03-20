@@ -115,7 +115,8 @@ def rebuilder(field, token):
         query.add_filter(field, '=', value)
         latest = list(query.fetch(3))
         if len(latest) > 0:
-            counter['date'] = latest[0]['date'].isoformat()
+            counter['date'] = latest[0]['date'].strftime(
+                CONFIG['date_time_format'])
             counter['filename'] = latest[0]['filename']
 
         counters.append(counter)

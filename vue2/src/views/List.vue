@@ -64,7 +64,7 @@
                 <v-card-title>{{item.headline}}</v-card-title>
                 <v-card-text>
                   <v-layout row align-center justify-space-between class="px-2">
-                    <span style="line-height: 28px">{{splitDate(item.date).date}}</span>
+                    <span style="line-height: 28px">{{item.date}}</span>
                     <v-btn
                       v-if="item.loc"
                       icon
