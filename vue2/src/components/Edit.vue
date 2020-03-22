@@ -19,11 +19,11 @@
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-row>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="4">
                 <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
                 <v-btn if="user.isAdmin" text block @click="readExif">Read Exif</v-btn>
               </v-col>
-              <v-col cols="8">
+              <v-col cols="12" md="8" sm="8">
                 <v-text-field
                   v-model="tmp.headline"
                   :rules="requiredRule"
@@ -61,7 +61,7 @@
                   </template>
                 </v-combobox>
                 <v-row>
-                  <v-col cols="6">
+                  <v-col cols="12" md="6" sm="6">
                     <v-menu
                       v-model="menuDate"
                       ref="dateRef"
@@ -87,7 +87,7 @@
                       </v-date-picker>
                     </v-menu>
                   </v-col>
-                  <v-col cols="6">
+                  <v-col cols="12" md="6" sm="6">
                     <v-menu
                       v-model="menuTime"
                       ref="timeRef"
@@ -119,28 +119,33 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="Camera Model" v-model="tmp.model"></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="Lens" v-model="tmp.lens"></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="Focal length" type="number" v-model="tmp.focal_length"></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="ISO [ASA]" type="number" v-model="tmp.iso"></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="Aperture" type="number" step="0.1" v-model="tmp.aperture"></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6">
                 <v-text-field label="Shutter [s]" v-model="tmp.shutter"></v-text-field>
               </v-col>
-              <v-col cols="4">
-                <v-text-field color="error" readonly label="File size [bytes]" v-model="tmp.size"></v-text-field>
+              <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
+                <v-text-field
+                  color="error"
+                  readonly
+                  :label="`File size [${formatBytes(tmp.size)}]`"
+                  v-model="tmp.size"
+                ></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
                 <v-text-field
                   color="error"
                   readonly
@@ -148,7 +153,7 @@
                   v-model="tmp.dim"
                 ></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
                 <v-text-field label="Location [latitude, longitude]" v-model="tmp.loc"></v-text-field>
               </v-col>
             </v-row>
