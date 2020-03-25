@@ -227,8 +227,7 @@ export default {
     },
     readExif () {
       axios.get('exif/' + this.tmp.filename).then(response => {
-        const val = response.data
-        this.tmp = { ...this.tmp, ...val }
+        this.tmp = { ...this.tmp, ...response.data }
       })
     }
   }
