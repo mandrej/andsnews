@@ -16,7 +16,11 @@
       <template v-slot:appbar>
         <v-app-bar app clipped-left>
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title class="headline" @click="$router.go(-1)" style="cursor: pointer">Add</v-toolbar-title>
+          <v-toolbar-title
+            class="headline"
+            @click="$router.go(-1)"
+            style="cursor: pointer; padding-left: 0"
+          >Add</v-toolbar-title>
         </v-app-bar>
       </template>
 

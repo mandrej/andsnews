@@ -24,11 +24,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: #fff;
 }
@@ -48,9 +43,8 @@ export default {
   line-height: 120%;
   font-size: 1.25rem !important;
 }
-.v-toolbar__content > .v-btn.v-btn--icon:first-child + .v-toolbar__title,
-.v-toolbar__extension > .v-btn.v-btn--icon:first-child + .v-toolbar__title {
-  padding-left: 0;
+.v-dialog > .v-card > .v-card__text {
+  padding: 0 20px 20px;
 }
 /* transition name="fade" */
 .fade-enter-active,

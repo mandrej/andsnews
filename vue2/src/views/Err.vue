@@ -5,7 +5,7 @@
         <v-toolbar-title
           class="headline"
           @click="$router.push({ name: 'home' })"
-          style="cursor: pointer"
+          style="cursor: pointer; padding-left: 0"
         >{{title}}</v-toolbar-title>
       </v-app-bar>
     </template>

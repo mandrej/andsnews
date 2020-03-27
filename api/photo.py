@@ -79,7 +79,7 @@ def add(fs):
         stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
     """
     # Check exist first
-    filename = fs.filename
+    filename = fs.filename.replace(' ', '')
     blob = BUCKET.get_blob(filename)
     if blob:
         filename = re.sub(

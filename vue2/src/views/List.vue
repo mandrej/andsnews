@@ -41,7 +41,7 @@
           <v-toolbar-title
             class="headline font-weight-regular"
             @click="$router.push({ name: 'home' })"
-            style="cursor: pointer"
+            style="cursor: pointer; padding-left: 0"
           >ANDрејевићи</v-toolbar-title>
           <v-spacer></v-spacer>
           <SignIn></SignIn>
