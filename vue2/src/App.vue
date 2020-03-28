@@ -24,6 +24,11 @@ export default {
 </script>
 
 <style>
+#app {
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: #fff;
 }
