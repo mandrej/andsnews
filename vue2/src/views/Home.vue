@@ -1,21 +1,5 @@
 <template>
-  <Layout>
-    <template v-slot:drawer>
-      <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
-        <v-layout column fill-height>
-          <Find></Find>
-          <v-spacer></v-spacer>
-          <Menu></Menu>
-        </v-layout>
-      </v-navigation-drawer>
-    </template>
-
-    <template v-slot:appbar>
-      <div class="hamburger">
-        <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
-      </div>
-    </template>
-
+  <Layout :find="find">
     <v-layout
       column
       fill-height
@@ -38,21 +22,15 @@
 <script>
 import { mapState } from 'vuex'
 import Layout from '@/components/Layout'
-import Menu from '@/components/Menu'
-import Find from '@/components/Find'
 import common from '@/helpers/mixins'
 
 export default {
   name: 'Home',
   components: {
-    Layout,
-    Find,
-    Menu
+    Layout
   },
+  props: ['find'],
   mixins: [common],
-  data: () => ({
-    drawer: null
-  }),
   computed: {
     ...mapState('app', ['last', 'total'])
   },

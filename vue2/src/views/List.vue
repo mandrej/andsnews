@@ -24,31 +24,7 @@
       </v-btn>
     </v-fab-transition>
 
-    <Layout>
-      <template v-slot:drawer>
-        <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
-          <v-layout column fill-height>
-            <Find></Find>
-            <v-spacer></v-spacer>
-            <Menu></Menu>
-          </v-layout>
-        </v-navigation-drawer>
-      </template>
-
-      <template v-slot:appbar>
-        <v-app-bar app clipped-left>
-          <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title
-            class="headline font-weight-regular"
-            @click="$router.push({ name: 'home' })"
-            style="cursor: pointer; padding-left: 0"
-          >ANDрејевићи</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <SignIn></SignIn>
-          <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
-        </v-app-bar>
-      </template>
-
+    <Layout :find="find">
       <v-container fluid grid-list-lg mt-2 class="pa-3">
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
@@ -127,8 +103,6 @@
 <script>
 import Vue from 'vue'
 import Layout from '@/components/Layout'
-import Menu from '@/components/Menu'
-import Find from '@/components/Find'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
@@ -152,16 +126,13 @@ Vue.use(Photoswipe, {
 export default {
   name: 'List',
   components: {
-    'SignIn': () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
-    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
-    'Dialog': () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog'),
     Layout,
-    Find,
-    Menu
+    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
+    Dialog: () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog')
   },
+  props: ['find'],
   mixins: [common],
   data: () => ({
-    drawer: null,
     isAdmin: false,
     isAuthorized: false,
     bottom: false,
@@ -176,7 +147,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['busy', 'objects', 'count', 'error', 'next'])
+    ...mapState('app', ['objects', 'count', 'error', 'next'])
   },
   mounted () {
     this.isAuthorized = this.user && this.user.isAuthorized

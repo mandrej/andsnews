@@ -36,7 +36,7 @@ export default {
   name: 'Menu',
   mixins: [common],
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('auth', ['user'])
   }
 }
 </script>

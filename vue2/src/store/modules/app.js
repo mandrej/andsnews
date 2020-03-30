@@ -1,5 +1,4 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-// export const RESET = 'RESET';
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import debounce from 'lodash/debounce'
@@ -40,7 +39,6 @@ const initialState = {
 }
 
 const actions = {
-  // reset: ({ commit }) => commit(RESET),
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
     if (payload.reset) {
@@ -136,7 +134,6 @@ const actions = {
 }
 
 const mutations = {
-  // [RESET]: state => ({ ...initialState }),
   SAVE_FIND_FORM (state, payload) {
     state.find = Object.assign({}, payload)
   },

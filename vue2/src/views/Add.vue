@@ -3,29 +3,8 @@
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <Layout>
-      <template v-slot:drawer>
-        <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
-          <v-layout column fill-height>
-            <Stat></Stat>
-            <v-spacer></v-spacer>
-            <Menu></Menu>
-          </v-layout>
-        </v-navigation-drawer>
-      </template>
-
-      <template v-slot:appbar>
-        <v-app-bar app clipped-left>
-          <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title
-            class="headline"
-            @click="$router.go(-1)"
-            style="cursor: pointer; padding-left: 0"
-          >Add</v-toolbar-title>
-        </v-app-bar>
-      </template>
-
       <v-container mt-1>
-        <h3 class="title">Upload images</h3>
+        <h1>{{title}}</h1>
         <v-sheet>
           <div class="area my-3 pa-4">
             <v-layout column justify-center align-center style="height: 120px">
@@ -99,7 +78,6 @@
 <script>
 import Vue from 'vue'
 import Layout from '@/components/Layout'
-import Menu from '@/components/Menu'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
@@ -115,13 +93,11 @@ export default {
   name: 'Add',
   components: {
     Layout,
-    Menu,
-    'Edit': () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
-    'Stat': () => import(/* webpackChunkName: "stat" */ '@/components/Stat')
+    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
+  props: ['title'],
   mixins: [common],
   data: () => ({
-    drawer: null,
     current: {},
     uploadedFiles: [],
     fileCount: 0,

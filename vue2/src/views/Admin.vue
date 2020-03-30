@@ -1,27 +1,7 @@
 <template>
   <Layout>
-    <template v-slot:drawer>
-      <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
-        <v-layout column fill-height>
-          <Stat></Stat>
-          <v-spacer></v-spacer>
-          <Menu></Menu>
-        </v-layout>
-      </v-navigation-drawer>
-    </template>
-
-    <template v-slot:appbar>
-      <v-app-bar app clipped-left>
-        <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title
-          class="headline"
-          @click="$router.push({ name: 'home' })"
-          style="cursor: pointer; padding-left: 0"
-        >Admin</v-toolbar-title>
-      </v-app-bar>
-    </template>
-
     <v-container mt-1>
+      <h1>{{title}}</h1>
       <h3 class="title">Messaging</h3>
       <v-layout align-center>
         <v-flex xs9>
@@ -57,21 +37,21 @@
       <v-layout wrap align-center>
         <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
         <v-flex xs3 class="text-right">
-          <v-btn :disabled="canRun(fcm_token)" color="success" width="100" @click="fix">Fix</v-btn>
+          <v-btn :disabled="true" color="success" width="100" @click="fix">Fix</v-btn>
         </v-flex>
       </v-layout>
 
       <h3 class="title">Google Cloud Storage</h3>
       <v-layout wrap class="py-1" align-center>
-        <v-flex xs9>Remove images from the Cloud not referenced in datastore</v-flex>
+        <v-flex xs9>Remove images from the Cloud not referenced in datastore (SLOW)</v-flex>
         <v-flex xs3 class="text-right">
           <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
         </v-flex>
       </v-layout>
       <v-layout wrap class="py-1" align-center>
-        <v-flex xs9>Remove datastore records with images missing in the Cloud</v-flex>
+        <v-flex xs9>Remove datastore records with images missing in the Cloud (404)</v-flex>
         <v-flex xs3 class="text-right">
-          <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="missing">Missing</v-btn>
+          <v-btn :disabled="true" color="error" width="100" @click="missing">Missing</v-btn>
         </v-flex>
       </v-layout>
     </v-container>
@@ -81,20 +61,17 @@
 <script>
 import Vue from 'vue'
 import Layout from '@/components/Layout'
-import Menu from '@/components/Menu'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
 export default {
   name: 'Admin',
   components: {
-    Layout,
-    Menu,
-    'Stat': () => import(/* webpackChunkName: "stat" */ '@/components/Stat')
+    Layout
   },
+  props: ['title'],
   mixins: [common],
   data: () => ({
-    drawer: null,
     msg: {
       type: String,
       required: true,

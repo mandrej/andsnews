@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
 import List from '@/views/List'
-import Add from '@/views/Add'
 import createStore from './store'
 
+const Add = () => import(/* webpackChunkName: "add" */ '@/views/Add')
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
 const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
 
@@ -16,24 +16,36 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
+      alias: '/index.html',
       component: Home,
-      alias: '/index.html'
+      props: {
+        find: true
+      },
     },
     {
       path: '/list',
       name: 'list',
-      component: List
+      component: List,
+      props: {
+        find: true
+      },
     },
     {
       path: '/add',
       name: 'add',
       component: Add,
+      props: {
+        title: 'Upload'
+      },
       meta: { requiresAuth: true }
     },
     {
       path: '/admin',
       name: 'admin',
       component: Admin,
+      props: {
+        title: 'Administration',
+      },
       meta: { requiresAuth: true }
     },
     {

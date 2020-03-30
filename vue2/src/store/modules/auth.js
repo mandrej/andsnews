@@ -5,6 +5,7 @@ import '@/helpers/fire' // initialized firebase instance
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/messaging'
+import router from '@/router'
 
 const axios = Vue.axios
 const messaging = firebase.messaging()
@@ -31,6 +32,10 @@ const actions = {
         .signOut()
         .then(() => {
           commit('SAVE_USER', {})
+          const routeName = router.currentRoute.name
+          if (routeName === 'add' || routeName === 'admin') {
+            router.replace({ name: 'home' })
+          }
         })
     } else {
       firebase

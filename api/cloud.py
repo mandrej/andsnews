@@ -129,7 +129,7 @@ def rebuilder(field, token):
 
 class Missing(object):
     """
-    Remove datastore records with images missing in the Cloud
+    Remove datastore records with images missing in the Cloud (404)
     """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
@@ -151,10 +151,10 @@ class Missing(object):
             for prefix in blobs.prefixes:
                 if prefix == ent['filename']:
                     key = ent.key.id_or_name()
-                    # datastore_client.delete(key)
                     push_message(
                         self.TOKEN, 'deleting {} ...'.format(prefix))
                     self.DELETED.append(prefix)
+                    datastore_client.delete(key)
 
         next_cursor = _iter.next_page_token
         if next_cursor:
@@ -171,7 +171,7 @@ class Missing(object):
 
 class Unbound(object):
     """
-    Remove unbound images from Google Cloud Storage
+    Remove images from the Cloud not referenced in datastore (SLOW)
     """
     TOKEN = None
     COUNT = 0
@@ -192,10 +192,10 @@ class Unbound(object):
                 query = datastore_client.query(kind='Photo')
                 query.add_filter('filename', '=', blob.name)
                 if len(list(query.fetch(1))) == 0:
-                    blob.delete()
                     push_message(
                         self.TOKEN, 'deleting {} ...'.format(blob.name))
                     self.DELETED.append(blob.name)
+                    blob.delete()
 
         next_cursor = _iter.next_page_token
         if next_cursor:
