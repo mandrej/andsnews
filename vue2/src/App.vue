@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Message>></Message>
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -17,6 +18,9 @@ Vue.use(VueLazyload, {
 
 export default {
   name: 'App',
+  components: {
+    Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
+  },
   created () {
     this.$store.dispatch('app/fetchStat')
   },
@@ -28,6 +32,13 @@ export default {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.hamburger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 6px;
+  z-index: 2;
 }
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: #fff;

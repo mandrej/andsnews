@@ -17,18 +17,12 @@ const router = new Router({
       path: '/',
       name: 'home',
       alias: '/index.html',
-      component: Home,
-      props: {
-        find: true
-      },
+      component: Home
     },
     {
       path: '/list',
       name: 'list',
-      component: List,
-      props: {
-        find: true
-      },
+      component: List
     },
     {
       path: '/add',

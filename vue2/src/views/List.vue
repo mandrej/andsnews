@@ -24,7 +24,7 @@
       </v-btn>
     </v-fab-transition>
 
-    <Layout :find="find">
+    <Layout>
       <v-container fluid grid-list-lg mt-2 class="pa-3">
         <Photoswipe :options="{history: true}">
           <v-layout row wrap v-lazy-container="{ selector: 'img' }">
@@ -130,7 +130,6 @@ export default {
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
     Dialog: () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog')
   },
-  props: ['find'],
   mixins: [common],
   data: () => ({
     isAdmin: false,

@@ -1,5 +1,5 @@
 <template>
-  <Layout :find="find">
+  <Layout>
     <v-layout
       column
       fill-height
@@ -29,7 +29,6 @@ export default {
   components: {
     Layout
   },
-  props: ['find'],
   mixins: [common],
   computed: {
     ...mapState('app', ['last', 'total'])
@@ -47,14 +46,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.hamburger {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 6px;
-  z-index: 2;
-}
+<style scoped>
 .last {
   background-size: cover;
   background-position: center;
