@@ -88,24 +88,9 @@ export default {
     '$route.query': {
       immediate: true,
       handler: function (val) {
-        const tmp = {}
-        Object.keys(val).forEach(key => {
-          if (!isNaN(val[key])) {
-            tmp[key] = Number(val[key])
-          } else if (Array.isArray(val[key])) {
-            tmp[key] = [...val[key]]
-          } else {
-            tmp[key] = val[key]
-          }
-        })
-        this.$store.dispatch('app/saveFindForm', tmp)
-
-        if (Object.keys(tmp).length) {
-          this.$store.dispatch('app/changeFilter', { reset: true })
-        } else {
-          // eslint-disable-next-line
-          this.$router.replace({ name: 'home' }).catch(err => { })
-        }
+        if (!Object.keys(val).length) return
+        this.$store.dispatch('app/saveFindForm', val)
+        this.$store.dispatch('app/changeFilter', { reset: true })
       }
     }
   },

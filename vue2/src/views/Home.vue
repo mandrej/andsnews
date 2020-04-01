@@ -1,34 +1,28 @@
 <template>
-  <Layout>
-    <v-layout
-      column
-      fill-height
-      align-center
-      justify-center
-      v-lazy:background-image="getImgSrc(last)"
-      class="last"
-    >
-      <div class="pa-5" style="position: absolute; top: 0; right: 0">
-        <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
-        <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
-      </div>
-      <v-avatar absolute size="70%" @click="showFilter(last)">
-        <img src="/static/img/aperture.svg" />
-      </v-avatar>
-    </v-layout>
-  </Layout>
+  <v-layout
+    column
+    fill-height
+    align-center
+    justify-center
+    v-lazy:background-image="getImgSrc(last)"
+    class="last"
+  >
+    <div class="pa-5" style="position: absolute; top: 0; right: 0">
+      <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
+      <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
+    </div>
+    <v-avatar absolute size="70%" @click="showFilter(last)">
+      <img src="/static/img/aperture.svg" />
+    </v-avatar>
+  </v-layout>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Layout from '@/components/Layout'
 import common from '@/helpers/mixins'
 
 export default {
   name: 'Home',
-  components: {
-    Layout
-  },
   mixins: [common],
   computed: {
     ...mapState('app', ['last', 'total'])

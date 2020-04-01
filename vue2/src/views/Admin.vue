@@ -1,74 +1,68 @@
 <template>
-  <Layout>
-    <v-container mt-1>
-      <h1>{{title}}</h1>
-      <h3 class="title">Messaging</h3>
-      <v-layout align-center>
-        <v-flex xs9>
-          <v-text-field
-            label="Send message"
-            hint="Send message to subscribers group"
-            v-model="msg.default"
-            type="text"
-            @input="upper($event)"
-            :rules="requiredRule"
-            required
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs3 class="text-right">
-          <v-btn color="primary" width="100" @click="send">Send</v-btn>
-        </v-flex>
-      </v-layout>
+  <v-container mt-1>
+    <h1>{{title}}</h1>
+    <h3 class="title">Messaging</h3>
+    <v-layout align-center>
+      <v-flex xs9>
+        <v-text-field
+          label="Send message"
+          hint="Send message to subscribers group"
+          v-model="msg.default"
+          type="text"
+          @input="upper($event)"
+          :rules="requiredRule"
+          required
+        ></v-text-field>
+      </v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn color="primary" width="100" @click="send">Send</v-btn>
+      </v-flex>
+    </v-layout>
 
-      <h3 class="title">Counters</h3>
-      <v-layout wrap align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
-        <v-flex xs9>Rebuild for field {{field}}</v-flex>
-        <v-flex xs3 class="text-right">
-          <v-btn
-            light
-            :disabled="canRun(fcm_token)"
-            color="primary"
-            width="100"
-            @click="rebuild(field)"
-          >Rebuild</v-btn>
-        </v-flex>
-      </v-layout>
+    <h3 class="title">Counters</h3>
+    <v-layout wrap align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
+      <v-flex xs9>Rebuild for field {{field}}</v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn
+          light
+          :disabled="canRun(fcm_token)"
+          color="primary"
+          width="100"
+          @click="rebuild(field)"
+        >Rebuild</v-btn>
+      </v-flex>
+    </v-layout>
 
-      <v-layout wrap align-center>
-        <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
-        <v-flex xs3 class="text-right">
-          <v-btn :disabled="true" color="success" width="100" @click="fix">Fix</v-btn>
-        </v-flex>
-      </v-layout>
+    <v-layout wrap align-center>
+      <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn :disabled="true" color="success" width="100" @click="fix">Fix</v-btn>
+      </v-flex>
+    </v-layout>
 
-      <h3 class="title">Google Cloud Storage</h3>
-      <v-layout wrap class="py-1" align-center>
-        <v-flex xs9>Remove images from the Cloud not referenced in datastore (SLOW)</v-flex>
-        <v-flex xs3 class="text-right">
-          <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
-        </v-flex>
-      </v-layout>
-      <v-layout wrap class="py-1" align-center>
-        <v-flex xs9>Remove datastore records with images missing in the Cloud (404)</v-flex>
-        <v-flex xs3 class="text-right">
-          <v-btn :disabled="true" color="error" width="100" @click="missing">Missing</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </Layout>
+    <h3 class="title">Google Cloud Storage</h3>
+    <v-layout wrap class="py-1" align-center>
+      <v-flex xs9>Remove images from the Cloud not referenced in datastore (SLOW)</v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
+      </v-flex>
+    </v-layout>
+    <v-layout wrap class="py-1" align-center>
+      <v-flex xs9>Remove datastore records with images missing in the Cloud (404)</v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn :disabled="true" color="error" width="100" @click="missing">Missing</v-btn>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import Vue from 'vue'
-import Layout from '@/components/Layout'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 
 export default {
   name: 'Admin',
-  components: {
-    Layout
-  },
   props: ['title'],
   mixins: [common],
   data: () => ({

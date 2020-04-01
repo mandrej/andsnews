@@ -24,85 +24,82 @@
       </v-btn>
     </v-fab-transition>
 
-    <Layout>
-      <v-container fluid grid-list-lg mt-2 class="pa-3">
-        <Photoswipe :options="{history: true}">
-          <v-layout row wrap v-lazy-container="{ selector: 'img' }">
-            <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
-              <v-card color="white">
-                <img
-                  class="lazy"
-                  :data-src="getImgSrc(item, 400)"
-                  :title="caption(item)"
-                  :data-pswp-size="item.dim.join('x')"
-                  :data-pswp-src="getImgSrc(item)"
-                />
-                <v-card-title>{{item.headline}}</v-card-title>
-                <v-card-text>
-                  <v-layout row align-center justify-space-between class="px-2">
-                    <span style="line-height: 28px">{{item.date}}</span>
+    <v-container fluid grid-list-lg mt-2 class="pa-3">
+      <Photoswipe :options="{history: true}">
+        <v-layout row wrap v-lazy-container="{ selector: 'img' }">
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
+            <v-card color="white">
+              <img
+                class="lazy"
+                :data-src="getImgSrc(item, 400)"
+                :title="caption(item)"
+                :data-pswp-size="item.dim.join('x')"
+                :data-pswp-src="getImgSrc(item)"
+              />
+              <v-card-title>{{item.headline}}</v-card-title>
+              <v-card-text>
+                <v-layout row align-center justify-space-between class="px-2">
+                  <span style="line-height: 28px">{{item.date}}</span>
+                  <v-btn
+                    v-if="item.loc"
+                    icon
+                    small
+                    text
+                    target="blank"
+                    :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+                  >
+                    <v-icon>my_location</v-icon>
+                  </v-btn>
+                </v-layout>
+                <div>by {{item.nick}}</div>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-container fluid>
+                  <v-layout :class="justify(user)">
+                    <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
+                      <v-icon>cancel</v-icon>
+                    </v-btn>
+                    <v-btn v-if="canEdit(user)" icon small text @click="showEditdForm(item)">
+                      <v-icon>edit</v-icon>
+                    </v-btn>
                     <v-btn
-                      v-if="item.loc"
                       icon
                       small
                       text
-                      target="blank"
-                      :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+                      :href="`/api/download/${item.filename}`"
+                      :download="item.filename"
+                      @click="download('Downloading ' + item.filename)"
                     >
-                      <v-icon>my_location</v-icon>
+                      <v-icon>file_download</v-icon>
                     </v-btn>
                   </v-layout>
-                  <div>by {{item.nick}}</div>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                  <v-container fluid>
-                    <v-layout :class="justify(user)">
-                      <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
-                        <v-icon>cancel</v-icon>
-                      </v-btn>
-                      <v-btn v-if="canEdit(user)" icon small text @click="showEditdForm(item)">
-                        <v-icon>edit</v-icon>
-                      </v-btn>
-                      <v-btn
-                        icon
-                        small
-                        text
-                        :href="`/api/download/${item.filename}`"
-                        :download="item.filename"
-                        @click="download('Downloading ' + item.filename)"
-                      >
-                        <v-icon>file_download</v-icon>
-                      </v-btn>
-                    </v-layout>
-                  </v-container>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
+                </v-container>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
 
-            <v-flex xs12 md8 offset-md-2 py-10 v-if="!objects.length">
-              <v-alert
-                v-if="error === ''"
-                type="info"
-                transition="scale-transition"
-                prominent
-              >No data for current filter/ search</v-alert>
-              <v-alert v-else type="error" transition="scale-transition" prominent>
-                Something went wrong
-                <br />
-                {{error}}
-              </v-alert>
-            </v-flex>
-          </v-layout>
-        </Photoswipe>
-      </v-container>
-    </Layout>
+          <v-flex xs12 md8 offset-md-2 py-10 v-if="!objects.length">
+            <v-alert
+              v-if="error === ''"
+              type="info"
+              transition="scale-transition"
+              prominent
+            >No data for current filter/ search</v-alert>
+            <v-alert v-else type="error" transition="scale-transition" prominent>
+              Something went wrong
+              <br />
+              {{error}}
+            </v-alert>
+          </v-flex>
+        </v-layout>
+      </Photoswipe>
+    </v-container>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import Layout from '@/components/Layout'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
@@ -126,7 +123,6 @@ Vue.use(Photoswipe, {
 export default {
   name: 'List',
   components: {
-    Layout,
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
     Dialog: () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog')
   },

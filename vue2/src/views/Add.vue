@@ -2,82 +2,79 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <Layout>
-      <v-container mt-1>
-        <h1>{{title}}</h1>
-        <v-sheet>
-          <div class="area my-3 pa-4">
-            <v-layout column justify-center align-center style="height: 120px">
-              <template v-if="isInitial">
-                <input
-                  type="file"
-                  multiple
-                  name="photos"
-                  @change="filesChange($event.target.name, $event.target.files)"
-                  accept="image/*"
-                  class="input-file"
-                />
-                <div
-                  class="subheading text-center"
-                >Drag your images here to upload, or click to browse</div>
-              </template>
-              <template v-if="isSaving">
-                <v-progress-linear
-                  :active="true"
-                  :query="value < 100"
-                  :indeterminate="value === 100"
-                  height="16"
-                  color="primary"
-                  striped
-                  v-model="value"
-                ></v-progress-linear>
-                <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
-                <div
-                  v-else-if="value === 100"
-                  class="subheading text-center"
-                >Processing images. Please wait …</div>
-              </template>
-              <template v-if="isFailed">
-                <h3 class="headline">Upload failed</h3>
-                <div class="subheading text-center error--text">Something went wrong.</div>
-              </template>
-            </v-layout>
-          </div>
+    <v-container mt-1>
+      <h1>{{title}}</h1>
+      <v-sheet>
+        <div class="area my-3 pa-4">
+          <v-layout column justify-center align-center style="height: 120px">
+            <template v-if="isInitial">
+              <input
+                type="file"
+                multiple
+                name="photos"
+                @change="filesChange($event.target.name, $event.target.files)"
+                accept="image/*"
+                class="input-file"
+              />
+              <div
+                class="subheading text-center"
+              >Drag your images here to upload, or click to browse</div>
+            </template>
+            <template v-if="isSaving">
+              <v-progress-linear
+                :active="true"
+                :query="value < 100"
+                :indeterminate="value === 100"
+                height="16"
+                color="primary"
+                striped
+                v-model="value"
+              ></v-progress-linear>
+              <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
+              <div
+                v-else-if="value === 100"
+                class="subheading text-center"
+              >Processing images. Please wait …</div>
+            </template>
+            <template v-if="isFailed">
+              <h3 class="headline">Upload failed</h3>
+              <div class="subheading text-center error--text">Something went wrong.</div>
+            </template>
+          </v-layout>
+        </div>
 
-          <v-card v-if="uploaded.length > 0">
-            <v-slide-y-transition group tag="v-list">
-              <template v-for="(item, i) in uploaded">
-                <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+        <v-card v-if="uploaded.length > 0">
+          <v-slide-y-transition group tag="v-list">
+            <template v-for="(item, i) in uploaded">
+              <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
 
-                <v-list-item :key="i" two-line>
-                  <v-list-item-avatar>
-                    <img :src="getImgSrc(item, 400)" />
-                  </v-list-item-avatar>
+              <v-list-item :key="i" two-line>
+                <v-list-item-avatar>
+                  <img :src="getImgSrc(item, 400)" />
+                </v-list-item-avatar>
 
-                  <v-list-item-content>
-                    <v-list-item-title>{{item.filename}}</v-list-item-title>
-                    <v-list-item-subtitle>{{formatBytes(item.size)}}</v-list-item-subtitle>
-                  </v-list-item-content>
+                <v-list-item-content>
+                  <v-list-item-title>{{item.filename}}</v-list-item-title>
+                  <v-list-item-subtitle>{{formatBytes(item.size)}}</v-list-item-subtitle>
+                </v-list-item-content>
 
-                  <v-list-item-action>
-                    <v-layout row>
-                      <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                      <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Publish</v-btn>
-                    </v-layout>
-                  </v-list-item-action>
-                </v-list-item>
-              </template>
-            </v-slide-y-transition>
-          </v-card>
-        </v-sheet>
-      </v-container>
-    </Layout>
+                <v-list-item-action>
+                  <v-layout row>
+                    <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
+                    <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Publish</v-btn>
+                  </v-layout>
+                </v-list-item-action>
+              </v-list-item>
+            </template>
+          </v-slide-y-transition>
+        </v-card>
+      </v-sheet>
+    </v-container>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import Layout from '@/components/Layout'
 import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
@@ -92,7 +89,6 @@ const STATUS_FAILED = 3
 export default {
   name: 'Add',
   components: {
-    Layout,
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   props: ['title'],
