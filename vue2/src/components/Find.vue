@@ -89,6 +89,14 @@ export default {
       immediate: true,
       handler: function (val) {
         if (!Object.keys(val).length) return
+        // adopt to match types in store
+        Object.keys(val).forEach(key => {
+          if (!isNaN(val[key])) {
+            val[key] = Number(val[key])
+          } else if (Array.isArray(val[key])) {
+            val[key] = [...val[key]]
+          }
+        })
         this.$store.dispatch('app/saveFindForm', val)
         this.$store.dispatch('app/changeFilter', { reset: true })
       }

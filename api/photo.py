@@ -152,13 +152,9 @@ def edit(id, json):
 
 
 def removeFromBucket(filename):
-    try:
-        blob = BUCKET.get_blob(filename)
+    blob = BUCKET.get_blob(filename)
+    if blob:
         blob.delete()
-    except NotFound:
-        return {'success': False}
-    else:
-        return {'success': True}
 
 
 def remove(id):
@@ -166,11 +162,10 @@ def remove(id):
     obj = datastore_client.get(key)
     assert obj is not None
 
-    response = removeFromBucket(obj['filename'])
-    if response['success']:
-        datastore_client.delete(key)
+    removeFromBucket(obj['filename'])
+    datastore_client.delete(key)
 
-        old_pairs = changed_pairs(obj)
-        update_filters([], old_pairs)
+    old_pairs = changed_pairs(obj)
+    update_filters([], old_pairs)
 
-    return response
+    return {'success': True}
