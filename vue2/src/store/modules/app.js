@@ -135,7 +135,7 @@ const actions = {
 
 const mutations = {
   SAVE_FIND_FORM (state, payload) {
-    state.find = Object.assign({}, payload)
+    state.find = { ...payload }
   },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)

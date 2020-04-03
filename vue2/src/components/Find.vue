@@ -79,25 +79,18 @@ export default {
     }
   },
   watch: {
-    find: {
-      immediate: true,
-      handler: function (val) {
-        this.tmp = { ...val }
-      }
+    find (val) {
+      this.tmp = { ...val }
     },
-    '$route.query': {
-      immediate: true,
-      handler: function (val) {
-        if (!Object.keys(val).length) return
-        // adopt to match types in store
-        Object.keys(val).forEach(key => {
-          if (!isNaN(val[key])) {
-            val[key] = Number(val[key])
-          } else if (Array.isArray(val[key])) {
-            val[key] = [...val[key]]
-          }
-        })
-        this.$store.dispatch('app/saveFindForm', val)
+    '$route.query' (val) {
+      // adopt to match types in store
+      if (val.hasOwnProperty('year')) val.year = 1 * val.year
+      if (val.hasOwnProperty('month')) val.month = 1 * val.month
+
+      this.$store.dispatch('app/saveFindForm', val)
+      if (!Object.keys(val).length) {
+        this.$store.dispatch('app/changeFilter', { reset: false }) // nothing
+      } else {
         this.$store.dispatch('app/changeFilter', { reset: true })
       }
     }
