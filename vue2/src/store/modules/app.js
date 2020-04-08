@@ -16,7 +16,6 @@ const getters = {
 }
 
 const initialState = {
-  find: {},
   uploaded: [],
 
   last: {
@@ -39,13 +38,12 @@ const initialState = {
 }
 
 const actions = {
-  saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
-    if (payload.reset) {
+    if (Object.keys(payload.find).length) {
       commit('SET_CLEAR', true)
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
-      dispatch('fetchRecords')
+      dispatch('fetchRecords', payload.find)
     }
   },
   addUploaded: ({ commit }, obj) => {
@@ -102,31 +100,29 @@ const actions = {
       commit('SET_COUNTERS', response.data)
     })
   },
-  fetchRecords: ({ commit, state }) => {
+  fetchRecords: ({ commit, state }, find) => {
     if (state.busy) return
-    if (Object.keys(state.find).length) {
-      const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
-      if (state.next) params._page = state.next
-      const url = 'search?' + querystring.stringify(params)
+    const params = Object.assign({}, find, { per_page: CONFIG.limit })
+    if (state.next) params._page = state.next
+    const url = 'search?' + querystring.stringify(params)
 
-      commit('SET_ERROR', '')
-      commit('SET_BUSY', true)
-      axios
-        .get(url)
-        .then(response => {
-          if (state.clear) {
-            commit('RESET_RECORDS')
-            commit('SET_CLEAR', false)
-          }
-          commit('UPDATE_RECORDS', response.data)
-          if (response.error) commit('SET_ERROR', response.error)
-          commit('SET_BUSY', false)
-        })
-        .catch(err => {
-          commit('SET_ERROR', err)
-          commit('SET_BUSY', false)
-        })
-    }
+    commit('SET_ERROR', '')
+    commit('SET_BUSY', true)
+    axios
+      .get(url)
+      .then(response => {
+        if (state.clear) {
+          commit('RESET_RECORDS')
+          commit('SET_CLEAR', false)
+        }
+        commit('UPDATE_RECORDS', response.data)
+        if (response.error) commit('SET_ERROR', response.error)
+        commit('SET_BUSY', false)
+      })
+      .catch(err => {
+        commit('SET_ERROR', err)
+        commit('SET_BUSY', false)
+      })
   },
   updateValuesEmail: ({ commit }, user) => {
     commit('UPDATE_VALUES_EMAIL', user)
@@ -134,9 +130,6 @@ const actions = {
 }
 
 const mutations = {
-  SAVE_FIND_FORM (state, payload) {
-    state.find = { ...payload }
-  },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)

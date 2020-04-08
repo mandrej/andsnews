@@ -155,6 +155,8 @@ def removeFromBucket(filename):
     blob = BUCKET.get_blob(filename)
     if blob:
         blob.delete()
+    # check response.data
+    return {'success': True}
 
 
 def remove(id):
@@ -167,5 +169,5 @@ def remove(id):
 
     old_pairs = changed_pairs(obj)
     update_filters([], old_pairs)
-
+    # check response.data
     return {'success': True}

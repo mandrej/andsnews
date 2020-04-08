@@ -11,7 +11,7 @@
       <h1 class="display-2 font-weight-light white--text">ANDрејевићи</h1>
       <h4 class="body-1 white--text">{{total}} photos since 2007 and counting …</h4>
     </div>
-    <v-avatar absolute size="70%" @click="showFilter(last)">
+    <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
       <img src="/static/img/aperture.svg" />
     </v-avatar>
   </v-layout>
@@ -25,16 +25,11 @@ export default {
   name: 'Home',
   mixins: [common],
   computed: {
-    ...mapState('app', ['last', 'total'])
-  },
-  methods: {
-    showFilter (rec) {
-      this.$router.push({
-        name: 'list',
-        query: {
-          year: rec.value
-        }
-      })
+    ...mapState('app', ['last', 'total']),
+    query () {
+      return {
+        year: this.last.value
+      }
     }
   }
 }

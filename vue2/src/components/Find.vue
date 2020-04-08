@@ -66,12 +66,17 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'Find',
   data: () => ({
-    tmp: {},
     search: null
   }),
   computed: {
-    ...mapState('app', ['busy', 'find', 'values']),
+    ...mapState('app', ['busy', 'values']),
     ...mapGetters('app', ['nickNames']),
+    tmp () {
+      const val = this.$route.query
+      if (val.hasOwnProperty('year')) val.year = 1 * val.year
+      if (val.hasOwnProperty('month')) val.month = 1 * val.month
+      return { ...val }
+    },
     months () {
       const arr = [...Array(12 + 1).keys()]
       arr.shift()
@@ -79,19 +84,14 @@ export default {
     }
   },
   watch: {
-    find (val) {
-      this.tmp = { ...val }
-    },
-    '$route.query' (val) {
-      // adopt to match types in store
-      if (val.hasOwnProperty('year')) val.year = 1 * val.year
-      if (val.hasOwnProperty('month')) val.month = 1 * val.month
-
-      this.$store.dispatch('app/saveFindForm', val)
-      if (!Object.keys(val).length) {
-        this.$store.dispatch('app/changeFilter', { reset: false }) // nothing
-      } else {
-        this.$store.dispatch('app/changeFilter', { reset: true })
+    '$route.query': {
+      deep: true,
+      immediate: true,
+      handler: function (val) {
+        // adopt to match types in store
+        if (val.hasOwnProperty('year')) val.year = 1 * val.year
+        if (val.hasOwnProperty('month')) val.month = 1 * val.month
+        this.$store.dispatch('app/changeFilter', { find: val })
       }
     }
   },
