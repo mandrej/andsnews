@@ -7,15 +7,8 @@ import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
 
-const getters = {
-  nickNames: state => {
-    return state.values.email.map(email => {
-      return email.match(/[^@]+/)[0].split('.')[0]
-    })
-  }
-}
-
 const initialState = {
+  find: {},
   uploaded: [],
 
   last: {
@@ -37,13 +30,22 @@ const initialState = {
   clear: false
 }
 
+const getters = {
+  nickNames: state => {
+    return state.values.email.map(email => {
+      return email.match(/[^@]+/)[0].split('.')[0]
+    })
+  }
+}
+
 const actions = {
+  saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
-    if (Object.keys(payload.find).length) {
+    if (payload.reset) {
       commit('SET_CLEAR', true)
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
-      dispatch('fetchRecords', payload.find)
+      dispatch('fetchRecords')
     }
   },
   addUploaded: ({ commit }, obj) => {
@@ -100,9 +102,9 @@ const actions = {
       commit('SET_COUNTERS', response.data)
     })
   },
-  fetchRecords: ({ commit, state }, find) => {
+  fetchRecords: ({ commit, state }) => {
     if (state.busy) return
-    const params = Object.assign({}, find, { per_page: CONFIG.limit })
+    const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
     if (state.next) params._page = state.next
     const url = 'search?' + querystring.stringify(params)
 
@@ -130,6 +132,9 @@ const actions = {
 }
 
 const mutations = {
+  SAVE_FIND_FORM (state, payload) {
+    state.find = { ...payload }
+  },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)

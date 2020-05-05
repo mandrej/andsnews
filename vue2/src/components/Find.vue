@@ -91,7 +91,12 @@ export default {
         // adopt to match types in store
         if (val.hasOwnProperty('year')) val.year = 1 * val.year
         if (val.hasOwnProperty('month')) val.month = 1 * val.month
-        this.$store.dispatch('app/changeFilter', { find: val })
+        this.$store.dispatch('app/saveFindForm', val)
+        if (!Object.keys(val).length) {
+          this.$store.dispatch('app/changeFilter', { reset: false }) // nothing
+        } else {
+          this.$store.dispatch('app/changeFilter', { reset: true })
+        }
       }
     }
   },
