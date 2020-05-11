@@ -50,8 +50,8 @@ const actions = {
             isAuthorized: true,
             isAdmin: admins.indexOf(response.user.uid) !== -1
           }
-          this.$gtag.event('event', 'login', {
-            value: response.user.email
+          this.$gtag.event('login', {
+            who: response.user.email
           })
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)

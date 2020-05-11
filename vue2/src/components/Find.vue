@@ -113,8 +113,8 @@ export default {
         }
       })
       if (Object.keys(this.tmp).length) {
-        this.$gtag.event('event', 'search', {
-          value: JSON.stringify(this.tmp)
+        this.$gtag.event('search', {
+          search_term: JSON.stringify(this.tmp)
         })
         // https://github.com/vuejs/vue-router/issues/2872
         // eslint-disable-next-line
