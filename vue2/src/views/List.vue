@@ -212,8 +212,8 @@ export default {
       EventBus.$emit('snackbar', msg)
       this.$gtag.event('download', {
         event_category: 'engagement',
-        event_label: 'download',
-        value: msg
+        event_label: msg,
+        non_interaction: true
       })
     }
   }

@@ -23,9 +23,9 @@ export default {
     this.photoUrl = this.user && this.user.photo
     EventBus.$on('signin', user => {
       this.photoUrl = user && user.photo // url or undefined
-      if (this.user && this.user.uid) {
+      if (this.photoUrl) {
         this.$gtag.event('login', {
-          value: this.user.uid
+          method: this.user.email
         })
       }
     })
