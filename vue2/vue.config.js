@@ -17,7 +17,14 @@ module.exports = {
           urlPattern: /^https:\/\/fonts.(?:googleapis|gstatic).com\/(.*)/,
           handler: 'StaleWhileRevalidate',
           options: {
-            cacheName: 'google-fonts'
+            cacheName: 'google'
+          }
+        },
+        {
+          urlPattern: /^https:\/\/lh3.googleusercontent.com\/(.*)/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'google'
           }
         },
         {

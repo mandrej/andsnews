@@ -20,9 +20,10 @@ export default {
     ...mapState('auth', ['user'])
   },
   mounted () {
+    // url or undefined
     this.photoUrl = this.user && this.user.photo
     EventBus.$on('signin', user => {
-      this.photoUrl = user && user.photo // url or undefined
+      this.photoUrl = user && user.photo
       if (this.photoUrl) {
         this.$gtag.event('login', {
           method: this.user.email

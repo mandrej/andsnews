@@ -161,6 +161,13 @@ export default {
     this.$nextTick(() => {
       this.bottom = false
     })
+    if (window.performance) {
+      const timeSincePageLoad = Math.round(performance.now())
+      this.$gtag.event('timing_complete', {
+        name: 'load',
+        value: timeSincePageLoad
+      })
+    }
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.bottomVisible)
@@ -213,7 +220,7 @@ export default {
       this.$gtag.event('download', {
         event_category: 'engagement',
         event_label: msg,
-        non_interaction: true
+        value: 1
       })
     }
   }
