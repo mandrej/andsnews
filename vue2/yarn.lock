@@ -881,10 +881,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-1.10.1.tgz#bf018f9c495f470592de745389474dc1c2960d3f"
   integrity sha512-vyKdm+AYUFT8XeUX62IOqaqPFCs/mAMoSEsqIz9HnSVsqCw/IocNjtjSa+3M80kRw4V8fI7JI+Xz6Wg5VJXLqA==
 
-"@firebase/firestore@1.14.3":
-  version "1.14.3"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.14.3.tgz#675e0c26db056eee140e06bb17ecc91f21cc4390"
-  integrity sha1-Z14MJtsFbu4UDga7F+zJHyHMQ5A=
+"@firebase/firestore@1.14.4":
+  version "1.14.4"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.14.4.tgz#091aa990dbd8bf1e90fdd29f21098f1ef80fddbd"
+  integrity sha1-CRqpkNvYvx6Q/dKfIQmPHvgP3b0=
   dependencies:
     "@firebase/component" "0.1.11"
     "@firebase/firestore-types" "1.10.1"
@@ -1300,8 +1300,8 @@
 
 "@vue/cli-plugin-babel@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-4.3.1.tgz#6e3a6aa18595b98ad5c52898a2850d452404712b"
-  integrity sha512-tBqu0v1l4LfWX8xuJmofpp+8xQzKddFNxdLmeVDOX/omDBQX0qaVDeMUtRxxSTazI06SKr605SnUQoa35qwbvw==
+  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-4.3.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-babel%2Fdownload%2F%40vue%2Fcli-plugin-babel-4.3.1.tgz#6e3a6aa18595b98ad5c52898a2850d452404712b"
+  integrity sha1-bjpqoYWVuYrVxSiYooUNRSQEcSs=
   dependencies:
     "@babel/core" "^7.9.0"
     "@vue/babel-preset-app" "^4.3.1"
@@ -1313,8 +1313,8 @@
 
 "@vue/cli-plugin-eslint@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-4.3.1.tgz#2f5e09bd7d1d8c494134b6c71af2b779938d289a"
-  integrity sha512-5UEP93b8C/JQs9Rnuldsu8jMz0XO4wNXG0lL/GdChYBEheKCyXJXzan7qzEbIuvUwG3I+qlUkGsiyNokIgXejg==
+  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-eslint/download/@vue/cli-plugin-eslint-4.3.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-eslint%2Fdownload%2F%40vue%2Fcli-plugin-eslint-4.3.1.tgz#2f5e09bd7d1d8c494134b6c71af2b779938d289a"
+  integrity sha1-L14JvX0djElBNLbHGvK3eZONKJo=
   dependencies:
     "@vue/cli-shared-utils" "^4.3.1"
     eslint-loader "^2.2.1"
@@ -1325,8 +1325,8 @@
 
 "@vue/cli-plugin-pwa@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-pwa/-/cli-plugin-pwa-4.3.1.tgz#aaa25696b40909c246bc72b700030c01a4bf7a72"
-  integrity sha512-44wOoe6WqVUo5M44ltIyT4pWGBzbFSi2OPmRRDrKS0NDq3UaQgIrt0gkaFLw6vYI2yL+0TCgqlgLeW7/592CxA==
+  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.3.1.tgz#aaa25696b40909c246bc72b700030c01a4bf7a72"
+  integrity sha1-qqJWlrQJCcJGvHK3AAMMAaS/enI=
   dependencies:
     "@vue/cli-shared-utils" "^4.3.1"
     webpack "^4.0.0"
@@ -1334,8 +1334,8 @@
 
 "@vue/cli-plugin-router@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-router/-/cli-plugin-router-4.3.1.tgz#0ba589f4e9a1f3e64a8ff6ccd92f7ce2845586bf"
-  integrity sha512-m0ntr5R6q62oNMODgoyHAVAd/sDtsH15GdBrScZsPNeyHxmzmNBDlsNM38yYGGY064zDRRWif15d1yaTREybrA==
+  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-router/download/@vue/cli-plugin-router-4.3.1.tgz?cache=0&sync_timestamp=1589901771626&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-router%2Fdownload%2F%40vue%2Fcli-plugin-router-4.3.1.tgz#0ba589f4e9a1f3e64a8ff6ccd92f7ce2845586bf"
+  integrity sha1-C6WJ9Omh8+ZKj/bM2S984oRVhr8=
   dependencies:
     "@vue/cli-shared-utils" "^4.3.1"
 
@@ -1346,8 +1346,8 @@
 
 "@vue/cli-service@^4.3.1":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-4.3.1.tgz#94b2121d08e343a55f7ecef260af5257a9ffe7e5"
-  integrity sha512-CsNGfHe+9oKZdRwJmweQ0KsMYM27ssg1eNQqRKL/t+IgDLO3Tu86uaOOCLn4ZAaU5oxxpq4aSFvz+A0YxQRSWw==
+  resolved "https://registry.npm.taobao.org/@vue/cli-service/download/@vue/cli-service-4.3.1.tgz#94b2121d08e343a55f7ecef260af5257a9ffe7e5"
+  integrity sha1-lLISHQjjQ6Vffs7yYK9SV6n/5+U=
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
     "@soda/friendly-errors-webpack-plugin" "^1.7.1"
@@ -4008,17 +4008,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^7.14.3:
-  version "7.14.3"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.14.3.tgz#dfe6fa3e5982a6d6d6d44bfc50dba23568a5a777"
-  integrity sha1-3+b6PlmCptbW1Ev8UNuiNWilp3c=
+firebase@^7.14.4:
+  version "7.14.4"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.14.4.tgz#c9256bc32e51ebcb93ef7542ef4ed6cc153c6f50"
+  integrity sha1-ySVrwy5R68uT73VC707WzBU8b1A=
   dependencies:
     "@firebase/analytics" "0.3.4"
     "@firebase/app" "0.6.3"
     "@firebase/app-types" "0.6.0"
     "@firebase/auth" "0.14.5"
     "@firebase/database" "0.6.2"
-    "@firebase/firestore" "1.14.3"
+    "@firebase/firestore" "1.14.4"
     "@firebase/functions" "0.4.43"
     "@firebase/installations" "0.4.9"
     "@firebase/messaging" "0.6.15"
@@ -8650,10 +8650,10 @@ vue-pswipe@^0.14.5:
     "@types/photoswipe" "^4.0.29"
     photoswipe "^4.1.3"
 
-vue-router@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.6.tgz#45f5a3a3843e31702c061dd829393554e4328f89"
-  integrity sha512-GYhn2ynaZlysZMkFE5oCHRUTqE8BWs/a9YbKpNLi0i7xD6KG1EzDqpHQmv1F5gXjr8kL5iIVS8EOtRaVUEXTqA==
+vue-router@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-3.2.0.tgz#da35195ffe37fdf0bec9f5f8f72781d2a7718815"
+  integrity sha1-2jUZX/43/fC+yfX49yeB0qdxiBU=
 
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
@@ -8688,10 +8688,10 @@ vuetify-loader@^1.4.3:
   dependencies:
     loader-utils "^1.2.0"
 
-vuetify@^2.2.27:
-  version "2.2.27"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.27.tgz#a28cb6773b7c55cd8e9cedcac06133b886c8eee4"
-  integrity sha1-ooy2dzt8Vc2OnO3KwGEzuIbI7uQ=
+vuetify@^2.2.29:
+  version "2.2.29"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.29.tgz#77fd26d8d143251445bed69d3fa0e5d418f25fd0"
+  integrity sha1-d/0m2NFDJRRFvtadP6Dl1BjyX9A=
 
 vuex-persistedstate@^2.7.1:
   version "2.7.1"
