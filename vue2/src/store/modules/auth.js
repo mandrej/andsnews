@@ -2,9 +2,9 @@
 import Vue from 'vue'
 import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
-import firebase from '@firebase/app'
-import '@firebase/auth'
-import '@firebase/messaging'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/messaging'
 import router from '@/router'
 
 const axios = Vue.axios

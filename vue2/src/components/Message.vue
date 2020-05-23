@@ -10,8 +10,8 @@
 <script>
 import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
-import firebase from '@firebase/app'
-import '@firebase/messaging'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 import CONFIG from '@/helpers/config'
 
 const messaging = firebase.messaging()
