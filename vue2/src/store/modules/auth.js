@@ -1,17 +1,15 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
-import { EventBus } from '@/helpers/event-bus'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/messaging'
 import router from '@/router'
+import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
 const messaging = firebase.messaging()
 const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
-const admins = ['j8ezW5PBwMMnzrUvDA9ucYOOmrD3', 'vlRwHqVZNfOpr3FRqQZGqT2M2HA2']
-// user.uid for  milan.andrejevic@gmail.com      mihailo.genije@gmail.com
 
 function pushMessage (token, msg) {
   axios
@@ -48,7 +46,7 @@ const actions = {
             uid: response.user.uid,
             photo: response.user.photoURL,
             isAuthorized: true,
-            isAdmin: admins.indexOf(response.user.uid) !== -1
+            isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1
           }
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
@@ -103,7 +101,6 @@ const actions = {
 const mutations = {
   SAVE_USER (state, payload) {
     state.user = payload
-    EventBus.$emit('signin', state.user)
   },
   SET_TOKEN (state, val) {
     state.fcm_token = val

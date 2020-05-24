@@ -27,8 +27,13 @@
               @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
               style="cursor: pointer; padding-left: 0"
             >ANDрејевићи</v-toolbar-title>
+
             <v-spacer></v-spacer>
-            <SignIn></SignIn>
+            <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
+              <img v-if="photoUrl" :src="photoUrl" />
+              <img v-else src="/static/img/Google__G__Logo.svg" />
+            </v-avatar>
+
             <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
           </v-app-bar>
         </template>
@@ -60,7 +65,6 @@ export default {
     Menu,
     Find,
     Stat: () => import(/* webpackChunkName: "stat" */ '@/components/Stat'),
-    SignIn: () => import(/* webpackChunkName: "sign-in" */ '@/components/SignIn'),
     Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
@@ -71,6 +75,10 @@ export default {
   },
   computed: {
     ...mapState('app', ['busy']),
+    ...mapState('auth', ['user']),
+    photoUrl () {
+      return this.user && this.user.photo
+    },
     dynamicComponent () {
       switch (this.$route.name) {
         case 'home':
@@ -79,6 +87,11 @@ export default {
         default:
           return Stat
       }
+    }
+  },
+  methods: {
+    signHandler () {
+      this.$store.dispatch('auth/signIn')
     }
   }
 }

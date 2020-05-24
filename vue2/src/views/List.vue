@@ -128,8 +128,6 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    isAdmin: false,
-    isAuthorized: false,
     bottom: false,
     distance: 2000,
     confirm: false,
@@ -142,16 +140,15 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['objects', 'count', 'error', 'next'])
+    ...mapState('app', ['objects', 'count', 'error', 'next']),
+    isAdmin () {
+      return this.user && this.user.isAdmin
+    },
+    isAuthorized () {
+      return this.user && this.user.isAuthorized
+    }
   },
   mounted () {
-    this.isAuthorized = this.user && this.user.isAuthorized
-    this.isAdmin = this.user && this.user.isAdmin
-    EventBus.$on('signin', user => {
-      this.isAuthorized = user && user.isAuthorized
-      this.isAdmin = user && user.isAdmin
-    })
-
     window.addEventListener('scroll', this.bottomVisible)
     EventBus.$on('delete', message => {
       EventBus.$emit('snackbar', message)
