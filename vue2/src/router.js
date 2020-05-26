@@ -76,4 +76,13 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to) => {
+  // eslint-disable-next-line no-undef
+  gtag('config', process.env.VUE_APP_GA, {
+    page_path: to.fullPath,
+    app_name: 'ANDS',
+    send_page_view: true,
+  })
+})
+
 export default router

@@ -69,7 +69,7 @@
                       text
                       :href="`/api/download/${item.filename}`"
                       :download="item.filename"
-                      @click="download('Downloading ' + item.filename)"
+                      @click="download(item.filename)"
                     >
                       <v-icon>file_download</v-icon>
                     </v-btn>
@@ -158,13 +158,6 @@ export default {
     this.$nextTick(() => {
       this.bottom = false
     })
-    if (window.performance) {
-      const timeSincePageLoad = Math.round(performance.now())
-      this.$gtag.event('timing_complete', {
-        name: 'load',
-        value: timeSincePageLoad
-      })
-    }
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.bottomVisible)
@@ -212,11 +205,12 @@ export default {
     justify (user) {
       return (user.isAuthorized) ? 'justify-space-between' : 'justify-end'
     },
-    download (msg) {
-      EventBus.$emit('snackbar', msg)
-      this.$gtag.event('download', {
+    download (filename) {
+      EventBus.$emit('snackbar', 'Downloading ' + filename)
+      // eslint-disable-next-line no-undef
+      gtag('event', 'download', {
         event_category: 'engagement',
-        event_label: msg,
+        event_label: filename,
         value: 1
       })
     }
