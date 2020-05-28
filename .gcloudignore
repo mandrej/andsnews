@@ -31,6 +31,6 @@ vue2/node_modules/
 vue2/package.json
 vue2/babel.config.js
 vue2/vue.config.js
-vue2/yarn.lock
+vue2/yarn*
 
 # gcloud meta list-files-for-upload
