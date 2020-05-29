@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import Vuetify, { VList } from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
+import LRU from 'lru-cache'
 
 Vue.use(Vuetify, {
   components: {
     VList
   }
+})
+const themeCache = new LRU({
+  max: 10,
+  maxAge: 1000 * 60 * 60, // 1 hour
 })
 
 const opts = {
@@ -13,21 +18,19 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: colors.teal,
+        primary: colors.indigo.darken2,
         secondary: colors.lime.darken1,
-        accent: colors.orange
+        accent: colors.orange.lighten2
       },
       dark: {
         primary: colors.teal,
         secondary: colors.lime.darken1,
-        accent: colors.orange
+        accent: colors.brown
       }
     },
     options: {
-      themeCache: {
-        get: key => localStorage.getItem(key),
-        set: (key, value) => localStorage.setItem(key, value)
-      }
+      customProperties: true,
+      themeCache
     }
   },
   icons: {

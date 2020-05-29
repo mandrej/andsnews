@@ -98,7 +98,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+$almost-black: rgba(0, 0, 0, 0.87);
+$almost-white: rgba(255, 255, 255, 0.7);
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -113,11 +115,11 @@ export default {
 }
 .theme--light.v-application {
   background: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: $almost-black;
 }
 .theme--dark.v-application {
   background: #444;
-  color: #fff;
+  color: $almost-white;
 }
 .theme--light.v-navigation-drawer {
   background-color: #eee;
@@ -126,28 +128,34 @@ export default {
   background-color: #333;
 }
 .theme--light.v-app-bar.v-toolbar.v-sheet {
-  background-color: #fff;
+  background-color: var(--v-accent-base);
 }
 .theme--dark.v-app-bar.v-toolbar.v-sheet {
-  background-color: #555;
+  background-color: var(--v-accent-base);
 }
 .theme--light.v-sheet {
   background-color: #eee;
   border-color: #eee;
-  color: rgba(0, 0, 0, 0.87);
+  color: $almost-black;
 }
 .theme--dark.v-sheet {
   background-color: #333;
   border-color: #333;
-  color: #fff;
+  color: $almost-white;
 }
 .theme--light.v-card {
-  background-color: #eee;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: #fff;
+  color: $almost-black;
 }
 .theme--dark.v-card {
-  background-color: #333;
-  color: #fff;
+  background-color: #444;
+  color: $almost-white;
+}
+.theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: var(--v-accent-base);
+}
+.theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: var(--v-accent-base);
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */

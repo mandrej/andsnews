@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .v-list-item .v-list-item__title {
   font-size: 1.6rem;
 }

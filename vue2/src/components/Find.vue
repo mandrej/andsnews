@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card flat class="transparent">
     <v-card-title class="hidden-xs-only">Filter</v-card-title>
     <v-card-text>
       <v-text-field
@@ -124,3 +124,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.transparent {
+  background-color: transparent;
+}
+</style>

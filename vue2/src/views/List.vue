@@ -9,21 +9,18 @@
       </v-layout>
     </Dialog>
 
-    <v-fab-transition>
-      <v-btn
-        v-show="count > 0"
-        fab
-        large
-        fixed
-        bottom
-        right
-        color="accent"
-        style="bottom: 64px; right: 64px"
-        @click="$vuetify.goTo(0, options)"
-      >
-        <v-icon>arrow_upward</v-icon>
-      </v-btn>
-    </v-fab-transition>
+    <v-btn
+      v-show="count > 0"
+      fab
+      large
+      fixed
+      bottom
+      right
+      style="bottom: 40px; right: 40px"
+      @click="$vuetify.goTo(0, options)"
+    >
+      <v-icon light>arrow_upward</v-icon>
+    </v-btn>
 
     <v-container fluid grid-list-lg mt-2 class="pa-3">
       <Photoswipe :options="{history: true}">
