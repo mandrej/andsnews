@@ -53,7 +53,7 @@ export default {
       // update snackbar from inside
       this.model = val
       this.timeout = 6000
-    },
+    }
   }
 }
 </script>

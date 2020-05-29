@@ -24,7 +24,6 @@
       <v-flex xs9>Rebuild for field {{field}}</v-flex>
       <v-flex xs3 class="text-right">
         <v-btn
-          light
           :disabled="canRun(fcm_token)"
           color="primary"
           width="100"

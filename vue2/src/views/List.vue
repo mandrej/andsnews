@@ -17,6 +17,7 @@
         fixed
         bottom
         right
+        color="accent"
         style="bottom: 64px; right: 64px"
         @click="$vuetify.goTo(0, options)"
       >
@@ -28,7 +29,7 @@
       <Photoswipe :options="{history: true}">
         <v-layout row wrap v-lazy-container="{ selector: 'img' }">
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
-            <v-card color="white">
+            <v-card>
               <img
                 class="lazy"
                 :data-src="getImgSrc(item, 400)"

@@ -5,7 +5,7 @@
     <v-container mt-1>
       <h1>{{title}}</h1>
       <v-sheet>
-        <div class="area my-3 pa-4">
+        <div class="my-3 pa-4">
           <v-layout column justify-center align-center style="height: 120px">
             <template v-if="isInitial">
               <input

@@ -13,9 +13,20 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: colors.blue.darken4,
+        primary: colors.teal,
         secondary: colors.lime.darken1,
-        accent: colors.orange.lighten3
+        accent: colors.orange
+      },
+      dark: {
+        primary: colors.teal,
+        secondary: colors.lime.darken1,
+        accent: colors.orange
+      }
+    },
+    options: {
+      themeCache: {
+        get: key => localStorage.getItem(key),
+        set: (key, value) => localStorage.setItem(key, value)
       }
     }
   },

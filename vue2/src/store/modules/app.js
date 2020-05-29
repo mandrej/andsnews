@@ -27,7 +27,8 @@ const initialState = {
   error: '',
 
   busy: false,
-  clear: false
+  clear: false,
+  dark: false
 }
 
 const getters = {
@@ -39,6 +40,7 @@ const getters = {
 }
 
 const actions = {
+  toggleTheme: ({ commit }, val) => commit('TOGGLE_THEME', val),
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
     if (payload.reset) {
@@ -132,6 +134,9 @@ const actions = {
 }
 
 const mutations = {
+  TOGGLE_THEME (state, val) {
+    state.dark = val
+  },
   SAVE_FIND_FORM (state, payload) {
     state.find = { ...payload }
   },

@@ -19,7 +19,7 @@ const createStore = () => {
       .concat(
         isNotTest
           ? [createPersistedState({ key: APP_KEY })]
-          : ['user', 'fcm_token', 'find', 'last', 'uploaded']
+          : ['user', 'fcm_token', 'find', 'last', 'dark', 'uploaded']
       )
       .concat(isNotProd ? [createLogger()] : [])
   })

@@ -72,9 +72,10 @@ export default {
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
+    this.$vuetify.theme.dark = this.dark
   },
   computed: {
-    ...mapState('app', ['busy']),
+    ...mapState('app', ['busy', 'dark']),
     ...mapState('auth', ['user']),
     photoUrl () {
       return this.user && this.user.photo
@@ -110,13 +111,43 @@ export default {
   padding: 6px;
   z-index: 2;
 }
+.theme--light.v-application {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.87);
+}
+.theme--dark.v-application {
+  background: #444;
+  color: #fff;
+}
+.theme--light.v-navigation-drawer {
+  background-color: #eee;
+}
+.theme--dark.v-navigation-drawer {
+  background-color: #333;
+}
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: #fff;
 }
-.area {
-  position: relative;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.05);
+.theme--dark.v-app-bar.v-toolbar.v-sheet {
+  background-color: #555;
+}
+.theme--light.v-sheet {
+  background-color: #eee;
+  border-color: #eee;
+  color: rgba(0, 0, 0, 0.87);
+}
+.theme--dark.v-sheet {
+  background-color: #333;
+  border-color: #333;
+  color: #fff;
+}
+.theme--light.v-card {
+  background-color: #eee;
+  color: rgba(0, 0, 0, 0.87);
+}
+.theme--dark.v-card {
+  background-color: #333;
+  color: #fff;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */

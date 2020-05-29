@@ -16,6 +16,14 @@
         <v-list-item-title>Admin</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
+    <v-list-item @click="switchTheme">
+      <v-list-item-action>
+        <v-icon>palette</v-icon>
+      </v-list-item-action>
+      <v-list-item-content>
+        <v-list-item-title>Theme</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
     <v-list-item>
       <v-list-item-content class="caption">{{version}}</v-list-item-content>
     </v-list-item>
@@ -31,6 +39,12 @@ export default {
   mixins: [common],
   computed: {
     ...mapState('auth', ['user'])
+  },
+  methods: {
+    switchTheme () {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.$store.dispatch('app/toggleTheme', this.$vuetify.theme.dark)
+    }
   }
 }
 </script>
