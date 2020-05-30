@@ -16,7 +16,7 @@
       fixed
       bottom
       right
-      style="bottom: 40px; right: 40px"
+      style="bottom: 32px; right: 32px"
       @click="$vuetify.goTo(0, options)"
     >
       <v-icon light>arrow_upward</v-icon>

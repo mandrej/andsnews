@@ -15,13 +15,13 @@
 
         <template v-if="$route.name === 'home'">
           <div class="hamburger">
-            <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           </div>
         </template>
 
         <template v-else>
           <v-app-bar app clipped-left>
-            <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title
               class="headline"
               @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
@@ -144,11 +144,11 @@ $almost-white: rgba(255, 255, 255, 0.7);
   color: $almost-white;
 }
 .theme--light.v-card {
-  background-color: #fff;
+  background-color: transparent;
   color: $almost-black;
 }
 .theme--dark.v-card {
-  background-color: #444;
+  background-color: transparent;
   color: $almost-white;
 }
 .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
