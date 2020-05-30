@@ -99,8 +99,12 @@ export default {
 </script>
 
 <style lang="scss">
+$dark: #444;
+$darker: #333;
+$lighter: #eee;
 $almost-black: rgba(0, 0, 0, 0.87);
 $almost-white: rgba(255, 255, 255, 0.7);
+
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -114,18 +118,18 @@ $almost-white: rgba(255, 255, 255, 0.7);
   z-index: 2;
 }
 .theme--light.v-application {
-  background: #fff;
+  background: white;
   color: $almost-black;
 }
 .theme--dark.v-application {
-  background: #444;
+  background: $dark;
   color: $almost-white;
 }
 .theme--light.v-navigation-drawer {
-  background-color: #eee;
+  background-color: $lighter;
 }
 .theme--dark.v-navigation-drawer {
-  background-color: #333;
+  background-color: $darker;
 }
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: var(--v-accent-base);
@@ -134,13 +138,13 @@ $almost-white: rgba(255, 255, 255, 0.7);
   background-color: var(--v-accent-base);
 }
 .theme--light.v-sheet {
-  background-color: #eee;
-  border-color: #eee;
+  background-color: $lighter;
+  border-color: $lighter;
   color: $almost-black;
 }
 .theme--dark.v-sheet {
-  background-color: #333;
-  border-color: #333;
+  background-color: $darker;
+  border-color: $darker;
   color: $almost-white;
 }
 .theme--light.v-card {
@@ -204,7 +208,7 @@ img.lazy[lazy="error"] {
   display: block !important;
 }
 .pswp__caption__center {
-  color: #fff !important;
+  color: white !important;
   font-size: 14px !important;
   text-align: center !important;
   opacity: 0.75 !important;

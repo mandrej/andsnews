@@ -1,63 +1,60 @@
 <template>
-  <v-card flat class="transparent">
-    <v-card-title class="hidden-xs-only">Filter</v-card-title>
-    <v-card-text>
-      <v-text-field
-        v-model.lazy="tmp.text"
-        label="by text"
-        @change="submit"
-        @keyup.native.enter="submit"
-        :disabled="busy"
-        clearable
-      ></v-text-field>
-      <v-autocomplete
-        v-model.lazy="tmp.tags"
-        :items="values.tags"
-        label="by tags"
-        :search-input.sync="search"
-        @change="clearSubmit"
-        :disabled="busy"
-        chips
-        multiple
-        hide-selected
-        deletable-chips
-        autocomplete="off"
-        clearable
-      ></v-autocomplete>
-      <v-select
-        v-model.lazy="tmp.year"
-        :items="values.year"
-        label="by year"
-        @change="submit"
-        :disabled="busy"
-        clearable
-      ></v-select>
-      <v-select
-        v-model.lazy="tmp.month"
-        :items="months"
-        label="by month"
-        @change="submit"
-        :disabled="busy"
-        clearable
-      ></v-select>
-      <v-autocomplete
-        v-model.lazy="tmp.model"
-        :items="values.model"
-        label="by camera model"
-        @change="submit"
-        :disabled="busy"
-        clearable
-      ></v-autocomplete>
-      <v-autocomplete
-        v-model.lazy="tmp.nick"
-        :items="nickNames"
-        label="by author"
-        @change="submit"
-        :disabled="busy"
-        clearable
-      ></v-autocomplete>
-    </v-card-text>
-  </v-card>
+  <v-sheet class="pa-4">
+    <v-text-field
+      v-model.lazy="tmp.text"
+      label="by text"
+      @change="submit"
+      @keyup.native.enter="submit"
+      :disabled="busy"
+      clearable
+    ></v-text-field>
+    <v-autocomplete
+      v-model.lazy="tmp.tags"
+      :items="values.tags"
+      label="by tags"
+      :search-input.sync="search"
+      @change="clearSubmit"
+      :disabled="busy"
+      chips
+      multiple
+      hide-selected
+      deletable-chips
+      autocomplete="off"
+      clearable
+    ></v-autocomplete>
+    <v-select
+      v-model.lazy="tmp.year"
+      :items="values.year"
+      label="by year"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-select>
+    <v-select
+      v-model.lazy="tmp.month"
+      :items="months"
+      label="by month"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-select>
+    <v-autocomplete
+      v-model.lazy="tmp.model"
+      :items="values.model"
+      label="by camera model"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-autocomplete>
+    <v-autocomplete
+      v-model.lazy="tmp.nick"
+      :items="nickNames"
+      label="by author"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-autocomplete>
+  </v-sheet>
 </template>
 
 <script>
@@ -124,9 +121,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.transparent {
-  background-color: transparent;
-}
-</style>
