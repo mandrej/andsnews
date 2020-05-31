@@ -148,11 +148,11 @@ $almost-white: rgba(255, 255, 255, 0.7);
   color: $almost-white;
 }
 .theme--light.v-card {
-  background-color: transparent;
+  background-color: white;
   color: $almost-black;
 }
 .theme--dark.v-card {
-  background-color: transparent;
+  background-color: $dark;
   color: $almost-white;
 }
 .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
