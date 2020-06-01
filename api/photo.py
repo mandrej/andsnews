@@ -1,6 +1,5 @@
 import re
 import uuid
-import logging
 import datetime
 from PIL import Image
 from io import BytesIO
@@ -97,11 +96,16 @@ def add(fs):
     else:
         return {'success': True, 'rec': {
             'filename': filename,
-            'size': blob.size
+            'size': blob.size,
+            'valid': fs.content_type == CONFIG['fileType']
         }}
 
 
 def merge(obj, json):
+    try:
+        del json['valid']  # not needed any more
+    except KeyError:
+        pass
     obj.update(json)
     obj['text'] = tokenize(obj['headline'])
     obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
@@ -137,6 +141,7 @@ def edit(id, json):
         update_filters(new_pairs, old_pairs)
     else:
         key = datastore_client.key('Photo')
+        # <Entity('Photo',) {}>
         obj = datastore.Entity(key)
 
         obj = merge(obj, json)

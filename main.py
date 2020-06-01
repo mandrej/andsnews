@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from io import BytesIO
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from api import cloud, photo
 from api.helpers import push_message, get_exif
 from api.config import CONFIG
@@ -19,16 +19,20 @@ def thumb(filename):
     blob = photo.storage_blob(filename)
     if blob:
         blob.download_to_file(inp)
-        image_from_buffer = Image.open(inp)
-        image_from_buffer.thumbnail((size, size), Image.BICUBIC)
-        image_from_buffer.save(out, image_from_buffer.format)
-        data = out.getvalue()
+        try:
+            image_from_buffer = Image.open(inp)
+        except UnidentifiedImageError as e:
+            return ('', 204)
+        else:
+            image_from_buffer.thumbnail((size, size), Image.BICUBIC)
+            image_from_buffer.save(out, image_from_buffer.format)
+            data = out.getvalue()
 
-        response = make_response(data)
-        response.headers['Content-Type'] = blob.content_type
-        response.headers['Cache-Control'] = CONFIG['cache_control']
-        response.headers['E-Tag'] = generate_etag(data)
-        return response
+            response = make_response(data)
+            response.headers['Content-Type'] = blob.content_type
+            response.headers['Cache-Control'] = CONFIG['cache_control']
+            response.headers['E-Tag'] = generate_etag(data)
+            return response
     abort(404, description='Resource not found')
 
 

@@ -34,7 +34,7 @@
               <img v-else src="/static/img/Google__G__Logo.svg" />
             </v-avatar>
 
-            <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
+            <v-progress-linear v-show="busy" absolute top color="error" :indeterminate="true"></v-progress-linear>
           </v-app-bar>
         </template>
 
@@ -53,10 +53,11 @@ import Menu from '@/components/Menu'
 import Find from '@/components/Find'
 import Stat from '@/components/Stat'
 import VueLazyload from 'vue-lazyload'
+import CONFIG from '@/helpers/config'
 
 Vue.use(VueLazyload, {
   attempt: 1,
-  error: '/static/img/broken.svg'
+  error: CONFIG.fileBroken
 })
 
 export default {
