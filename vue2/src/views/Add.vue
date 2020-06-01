@@ -16,7 +16,7 @@
             />
             <div class="subheading text-center">
               Drag your images here to upload, or click to browse.
-              <br />Accepts only jpg (jpeg) files less then 4Mb.
+              <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
             </div>
           </template>
           <template v-if="isSaving">
@@ -42,7 +42,7 @@
         </v-layout>
       </v-sheet>
 
-      <template v-if="uploaded.length > 0">
+      <v-sheet v-if="uploaded.length > 0">
         <v-slide-y-transition group tag="v-list">
           <template v-for="(item, i) in uploaded">
             <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
@@ -76,7 +76,12 @@
             </v-list-item>
           </template>
         </v-slide-y-transition>
-      </template>
+      </v-sheet>
+      <v-sheet v-else>
+        <v-list>
+          <v-list-item>No images uploaded</v-list-item>
+        </v-list>
+      </v-sheet>
     </v-container>
   </div>
 </template>
@@ -104,8 +109,6 @@ export default {
   mixins: [common],
   data: () => ({
     current: {},
-    uploadedFiles: [],
-    fileCount: 0,
     status: null,
     editForm: false,
     value: 0,
@@ -132,7 +135,6 @@ export default {
   methods: {
     reset () {
       this.status = STATUS_INITIAL
-      this.uploadedFiles = []
       this.value = 0
     },
     progress (event) {
@@ -140,7 +142,7 @@ export default {
     },
     save (formData) {
       this.status = STATUS_SAVING
-      EventBus.$emit('snackbar', 'Uploading ' + this.fileCount + ' images …')
+      EventBus.$emit('snackbar', 'Uploading images …')
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
@@ -148,7 +150,6 @@ export default {
           item => {
             success = item.success
             if (success) {
-              this.uploadedFiles.push(item.rec)
               this.$store.dispatch('app/addUploaded', item.rec)
             } else {
               this.message = item.message
@@ -169,7 +170,6 @@ export default {
     },
     filesChange (fieldName, fileList) {
       // https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
-      this.fileCount = fileList.length
       const formData = new FormData()
       if (!fileList.length) return
 
