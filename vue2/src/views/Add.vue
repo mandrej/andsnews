@@ -4,7 +4,7 @@
 
     <v-container mt-1>
       <h1>{{title}}</h1>
-      <v-sheet class="my-3">
+      <v-sheet class="my-3 pa-3">
         <v-layout column justify-center align-center style="position: relative; height: 120px">
           <template v-if="isInitial">
             <input
@@ -26,7 +26,7 @@
               :query="value < 100"
               :indeterminate="value === 100"
               height="16"
-              color="primary"
+              color="accent"
               striped
               v-model="value"
             ></v-progress-linear>
@@ -109,7 +109,6 @@ export default {
     editForm: false,
     value: 0,
     failed: [],
-    fileBroken: CONFIG.fileBroken,
     errors: {
       0: 'Wrong file type',
       1: 'File too big'
