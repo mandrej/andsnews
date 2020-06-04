@@ -4,14 +4,15 @@
 
     <v-container mt-1>
       <h1>{{title}}</h1>
-      <v-sheet class="my-3 pa-4">
-        <v-layout column justify-center align-center style="height: 120px">
+      <v-sheet class="my-3">
+        <v-layout column justify-center align-center style="position: relative; height: 120px">
           <template v-if="isInitial">
             <input
               type="file"
               multiple
               name="photos"
               @change="filesChange($event.target.name, $event.target.files)"
+              accept=".jpg, .jpeg, image/jpeg"
               class="input-file"
             />
             <div class="subheading text-center">
@@ -42,45 +43,40 @@
         </v-layout>
       </v-sheet>
 
+      <template v-for="(item, k) in failed">
+        <v-alert
+          dense
+          class="mb-3"
+          type="error"
+          border="left"
+          :key="k"
+        >{{item.filename}}, {{formatBytes(item.size)}}, {{errors[item.error]}}</v-alert>
+      </template>
+
       <v-sheet v-if="uploaded.length > 0">
         <v-slide-y-transition group tag="v-list">
-          <template v-for="(item, i) in uploaded">
-            <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+          <template v-for="(item, j) in uploaded">
+            <v-divider v-if="j !== 0" :key="`${j}-divider`"></v-divider>
 
-            <v-list-item :key="i" two-line>
+            <v-list-item :key="j" two-line>
               <v-list-item-avatar>
                 <img :src="getImgSrc(item, 400)" />
               </v-list-item-avatar>
 
               <v-list-item-content>
                 <v-list-item-title>{{item.filename}}</v-list-item-title>
-                <v-list-item-subtitle class="error--text" v-if="tooBig(item) || wrongType(item)">
-                  {{formatBytes(item.size)}},
-                  <span v-if="wrongType(item)">wrong type</span>
-                  <span v-else>file too big</span>
-                </v-list-item-subtitle>
-                <v-list-item-subtitle v-else>{{formatBytes(item.size)}}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{formatBytes(item.size)}}</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
                 <v-layout row>
                   <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                  <v-btn
-                    :disabled="tooBig(item) || wrongType(item)"
-                    class="mr-3"
-                    color="primary"
-                    @click="showEditForm(item)"
-                  >Publish</v-btn>
+                  <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Publish</v-btn>
                 </v-layout>
               </v-list-item-action>
             </v-list-item>
           </template>
         </v-slide-y-transition>
-      </v-sheet>
-      <v-sheet v-else>
-        <v-list>
-          <v-list-item>No images uploaded</v-list-item>
-        </v-list>
       </v-sheet>
     </v-container>
   </div>
@@ -112,6 +108,12 @@ export default {
     status: null,
     editForm: false,
     value: 0,
+    failed: [],
+    fileBroken: CONFIG.fileBroken,
+    errors: {
+      0: 'Wrong file type',
+      1: 'File too big'
+    }
   }),
   mounted () {
     this.reset()
@@ -172,33 +174,41 @@ export default {
       // https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
       const formData = new FormData()
       if (!fileList.length) return
-
-      // make formData from Array Iterator
       // Array.from(Array(5).keys()) = [0, 1, 2, 3, 4]
       // [...Array(5).keys()] = [0, 1, 2, 3, 4]
-      // eslint-disable-next-line
-      // File(531551) {name: "jutro2.jpg", lastModified: 1538385671886, lastModifiedDate: Mon Oct 01 2018 11..., size: 531551, type: "image/jpeg"
       Array
         .from(Array(fileList.length).keys())
         .map(x => {
-          formData.append(fieldName, fileList[x], fileList[x].name)
+          if (fileList[x].type !== CONFIG.fileType) {
+            this.addFailed(fileList[x], 0)
+          } else if (fileList[x].size > CONFIG.fileSize) {
+            this.addFailed(fileList[x], 1)
+          } else {
+            formData.append(fieldName, fileList[x], fileList[x].name)
+          }
         })
-      this.save(formData)
+      let i = 0
+      // eslint-disable-next-line no-unused-vars
+      for (let pair of formData.entries()) { i++ }
+      if (i > 0) this.save(formData)
     },
     showEditForm (rec) {
+      this.failed.length = 0
       this.current = rec
       this.current.email = this.user.email
       this.current.headline = 'No name'
       this.editForm = true
     },
     removeRecord (rec) {
+      this.failed.length = 0
       this.$store.dispatch('app/deleteRecord', rec)
     },
-    tooBig (rec) {
-      return rec.size > CONFIG.fileSize
-    },
-    wrongType (rec) {
-      return !rec.valid
+    addFailed (file, error) {
+      this.failed.push({
+        filename: file.name,
+        size: file.size,
+        error: error
+      })
     }
   }
 }

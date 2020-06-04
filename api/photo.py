@@ -96,16 +96,11 @@ def add(fs):
     else:
         return {'success': True, 'rec': {
             'filename': filename,
-            'size': blob.size,
-            'valid': fs.content_type == CONFIG['fileType']
+            'size': blob.size
         }}
 
 
 def merge(obj, json):
-    try:
-        del json['valid']  # not needed any more
-    except KeyError:
-        pass
     obj.update(json)
     obj['text'] = tokenize(obj['headline'])
     obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]

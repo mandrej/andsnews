@@ -36,7 +36,6 @@ const common = {
        * Enter allUsers in Add Members. Then Select Role > Storage > Storage Object Viewer
        */
       let serviceUrl = CONFIG.fileBroken
-      if (rec.valid === false) return serviceUrl
       if (rec.filename !== null) {
         if (size) {
           serviceUrl = '/api/thumb/' + rec.filename + '?size=' + size
