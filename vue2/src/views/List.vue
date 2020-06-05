@@ -20,7 +20,7 @@
       style="bottom: 32px; right: 32px"
       @click="$vuetify.goTo(0, options)"
     >
-      <v-icon light>arrow_upward</v-icon>
+      <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
     </v-btn>
 
     <v-container fluid grid-list-lg mt-2 class="pa-3">
