@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-4">
+  <v-sheet class="pa-4" color="transparent">
     <v-text-field
       v-model.lazy="tmp.text"
       label="by text"

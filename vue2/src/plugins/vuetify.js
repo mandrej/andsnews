@@ -18,18 +18,19 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: colors.indigo.darken2,
-        secondary: colors.lime.darken1,
-        accent: colors.orange.lighten2
+        primary: colors.blueGrey,
+        secondary: colors.blueGrey.darken2,
+        accent: colors.orange.lighten2,
+        error: colors.deepOrange
       },
       dark: {
-        primary: colors.teal,
-        secondary: colors.lime.darken1,
-        accent: colors.brown
+        primary: colors.blueGrey,
+        secondary: colors.blueGrey.darken2,
+        accent: colors.orange.lighten2,
+        error: colors.deepOrange
       }
     },
     options: {
-      customProperties: true,
       themeCache
     }
   },

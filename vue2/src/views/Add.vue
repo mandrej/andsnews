@@ -26,7 +26,6 @@
               :query="value < 100"
               :indeterminate="value === 100"
               height="16"
-              color="accent"
               striped
               v-model="value"
             ></v-progress-linear>

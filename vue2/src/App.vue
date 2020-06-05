@@ -3,7 +3,7 @@
     <Message>></Message>
     <transition name="fade" mode="out-in">
       <v-app>
-        <v-navigation-drawer v-model="drawer" app fixed clipped :width="300">
+        <v-navigation-drawer v-model="drawer" app fixed clipped dark color="secondary" :width="300">
           <v-layout column fill-height>
             <keep-alive>
               <component :is="dynamicComponent"></component>
@@ -13,30 +13,22 @@
           </v-layout>
         </v-navigation-drawer>
 
-        <template v-if="$route.name === 'home'">
-          <div class="hamburger">
-            <v-app-bar-nav-icon dark class="hidden-lg-and-up pa-2" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-          </div>
-        </template>
+        <v-app-bar app clipped-left color="accent">
+          <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-toolbar-title
+            class="headline"
+            @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
+            style="cursor: pointer; padding-left: 0"
+          >ANDрејевићи</v-toolbar-title>
 
-        <template v-else>
-          <v-app-bar app clipped-left>
-            <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title
-              class="headline"
-              @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
-              style="cursor: pointer; padding-left: 0"
-            >ANDрејевићи</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
+            <img v-if="photoUrl" :src="photoUrl" />
+            <img v-else src="/static/img/Google__G__Logo.svg" />
+          </v-avatar>
 
-            <v-spacer></v-spacer>
-            <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
-              <img v-if="photoUrl" :src="photoUrl" />
-              <img v-else src="/static/img/Google__G__Logo.svg" />
-            </v-avatar>
-
-            <v-progress-linear v-show="busy" absolute top color="error" :indeterminate="true"></v-progress-linear>
-          </v-app-bar>
-        </template>
+          <v-progress-linear v-show="busy" absolute top color="primary" :indeterminate="true"></v-progress-linear>
+        </v-app-bar>
 
         <v-content>
           <router-view></router-view>
@@ -100,11 +92,10 @@ export default {
 </script>
 
 <style lang="scss">
-$dark: #444;
-$darker: #333;
-$lighter: #eee;
+$darker: #2e2e2e;
+$lighter: #efefef;
 $almost-black: rgba(0, 0, 0, 0.87);
-$almost-white: rgba(255, 255, 255, 0.7);
+$almost-white: rgba(255, 255, 255, 0.87);
 
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
@@ -118,26 +109,6 @@ $almost-white: rgba(255, 255, 255, 0.7);
   padding: 6px;
   z-index: 2;
 }
-.theme--light.v-application {
-  background: white;
-  color: $almost-black;
-}
-.theme--dark.v-application {
-  background: $dark;
-  color: $almost-white;
-}
-.theme--light.v-navigation-drawer {
-  background-color: $lighter;
-}
-.theme--dark.v-navigation-drawer {
-  background-color: $darker;
-}
-.theme--light.v-app-bar.v-toolbar.v-sheet {
-  background-color: var(--v-accent-base);
-}
-.theme--dark.v-app-bar.v-toolbar.v-sheet {
-  background-color: var(--v-accent-base);
-}
 .theme--light.v-sheet {
   background-color: $lighter;
   border-color: $lighter;
@@ -148,19 +119,8 @@ $almost-white: rgba(255, 255, 255, 0.7);
   border-color: $darker;
   color: $almost-white;
 }
-.theme--light.v-card {
-  background-color: white;
-  color: $almost-black;
-}
-.theme--dark.v-card {
-  background-color: $dark;
-  color: $almost-white;
-}
-.theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-  background-color: var(--v-accent-base);
-}
-.theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-  background-color: var(--v-accent-base);
+.v-card__title {
+  line-height: 125%;
 }
 .input-file {
   opacity: 0; /* invisible but it's there! */
@@ -168,13 +128,6 @@ $almost-white: rgba(255, 255, 255, 0.7);
   height: 100%;
   position: absolute;
   cursor: pointer;
-}
-.v-card__title {
-  line-height: 120%;
-  font-size: 1.25rem !important;
-}
-.v-dialog > .v-card > .v-card__text {
-  padding: 0 20px 20px;
 }
 /* transition name="fade" */
 .fade-enter-active,
