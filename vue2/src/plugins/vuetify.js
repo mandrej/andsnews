@@ -19,14 +19,14 @@ const opts = {
     themes: {
       light: {
         primary: colors.blueGrey,
-        secondary: colors.blueGrey.darken2,
+        secondary: colors.blueGrey.lighten2,
         accent: colors.orange.lighten2,
         error: colors.deepOrange
       },
       dark: {
-        primary: colors.blueGrey,
-        secondary: colors.blueGrey.darken2,
-        accent: colors.orange.lighten2,
+        primary: colors.teal,
+        secondary: colors.teal.darken3,
+        accent: colors.brown.darken1,
         error: colors.deepOrange
       }
     },

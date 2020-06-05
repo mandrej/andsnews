@@ -3,7 +3,15 @@
     <Message>></Message>
     <transition name="fade" mode="out-in">
       <v-app>
-        <v-navigation-drawer v-model="drawer" app fixed clipped dark color="secondary" :width="300">
+        <v-navigation-drawer
+          v-model="drawer"
+          app
+          fixed
+          floating
+          clipped
+          color="secondary"
+          :width="300"
+        >
           <v-layout column fill-height>
             <keep-alive>
               <component :is="dynamicComponent"></component>
@@ -13,7 +21,7 @@
           </v-layout>
         </v-navigation-drawer>
 
-        <v-app-bar app clipped-left color="accent">
+        <v-app-bar app clipped-left flat color="accent">
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title
             class="headline"
@@ -92,6 +100,7 @@ export default {
 </script>
 
 <style lang="scss">
+$dark: #444;
 $darker: #2e2e2e;
 $lighter: #efefef;
 $almost-black: rgba(0, 0, 0, 0.87);
@@ -108,6 +117,14 @@ $almost-white: rgba(255, 255, 255, 0.87);
   left: 0;
   padding: 6px;
   z-index: 2;
+}
+.theme--light.v-application {
+  background: white;
+  color: $almost-black;
+}
+.theme--dark.v-application {
+  background: $dark;
+  color: $almost-white;
 }
 .theme--light.v-sheet {
   background-color: $lighter;

@@ -6,24 +6,28 @@
         <v-list-item-subtitle>photographs</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+    <v-divider></v-divider>
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title>{{values.tags.length}}</v-list-item-title>
         <v-list-item-subtitle>tags</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+    <v-divider></v-divider>
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title>{{values.model.length}}</v-list-item-title>
         <v-list-item-subtitle>cameras</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+    <v-divider></v-divider>
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title>{{values.email.length}}</v-list-item-title>
         <v-list-item-subtitle>authors</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+    <v-divider></v-divider>
   </v-list>
 </template>
 
