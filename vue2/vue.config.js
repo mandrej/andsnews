@@ -5,11 +5,11 @@ module.exports = {
     msTileColor: '#ffffff',
     assetsVersion: process.env.VUE_APP_VERSION,
     iconPaths: {
-      favicon32: 'static/img/icons/favicon-32x32.png',
-      favicon16: 'static/img/icons/favicon-16x16.png',
-      appleTouchIcon: 'static/img/icons/apple-touch-icon-152x152.png',
-      // maskIcon: 'static/img/icons/safari-pinned-tab.svg',
-      msTileImage: 'static/img/icons/msapplication-icon-144x144.png'
+      favicon32: 'static/icons/favicon-32x32.png',
+      favicon16: 'static/icons/favicon-16x16.png',
+      appleTouchIcon: 'static/icons/apple-touch-icon-152x152.png',
+      // maskIcon: 'static/icons/safari-pinned-tab.svg',
+      msTileImage: 'static/icons/msapplication-icon-144x144.png'
     },
     workboxOptions: {
       runtimeCaching: [

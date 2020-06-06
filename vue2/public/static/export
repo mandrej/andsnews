@@ -4,14 +4,14 @@ dest=icons
 sizes=(192 512)
 for i in ${sizes[@]}; do
   file=$dest/android-chrome-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i aperture.svg
+  inkscape --export-filename=$file -w $i -h $i aperture-light.svg
   echo $file
 done
 
 sizes=(60 76 120 152 180)
 for i in ${sizes[@]}; do
   file=$dest/apple-touch-icon-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i aperture.svg
+  inkscape --export-filename=$file -w $i -h $i aperture-light.svg
   echo $file
 done
 cp $dest/apple-touch-icon-180x180.png $dest/apple-touch-icon.png
@@ -19,21 +19,21 @@ cp $dest/apple-touch-icon-180x180.png $dest/apple-touch-icon.png
 sizes=(144)
 for i in ${sizes[@]}; do
   file=$dest/msapplication-icon-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i aperture.svg
+  inkscape --export-filename=$file -w $i -h $i aperture-light.svg
   echo $file
 done
 
 sizes=(150)
 for i in ${sizes[@]}; do
   file=$dest/mstile-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i aperture.svg
+  inkscape --export-filename=$file -w $i -h $i aperture-light.svg
   echo $file
 done
 
 sizes=(16 32)
 for i in ${sizes[@]}; do
   file=$dest/favicon-$i\x$i.png
-  inkscape -z -e $file -w $i -h $i aperture.svg
+  inkscape --export-filename=$file -w $i -h $i aperture-light.svg
   echo $file
 done
 

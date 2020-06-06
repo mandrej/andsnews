@@ -32,7 +32,7 @@
           <v-spacer></v-spacer>
           <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
             <img v-if="photoUrl" :src="photoUrl" />
-            <img v-else src="/static/img/Google__G__Logo.svg" />
+            <img v-else src="/static/Google__G__Logo.svg" />
           </v-avatar>
 
           <v-progress-linear v-show="busy" absolute top color="primary" :indeterminate="true"></v-progress-linear>
