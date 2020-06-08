@@ -15,8 +15,7 @@
       </h4>
     </div>
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
-      <img v-show="!$vuetify.theme.dark" src="/static/aperture-light.svg" />
-      <img v-show="$vuetify.theme.dark" src="/static/aperture-dark.svg" />
+      <img src="/static/aperture.svg" />
     </v-avatar>
   </v-layout>
 </template>
