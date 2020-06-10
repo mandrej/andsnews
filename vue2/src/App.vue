@@ -57,6 +57,7 @@ import CONFIG from '@/helpers/config'
 
 Vue.use(VueLazyload, {
   attempt: 1,
+  observer: true,
   error: CONFIG.fileBroken
 })
 

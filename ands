@@ -23,6 +23,10 @@ else
       exit ;;
     build)
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue2/.env
+      bucket=`gsutil du -s gs://andsnews.appspot.com | tee | grep -Eo '[[:digit:]]+'`
+      # bucket=4505868099
+      echo $bucket | awk '{ size =$1 /1024/1024**2 ; print "BUCKET SIZE " size " GB" }'
+      sed -i -E "/VUE_APP_BUCKET/s/[[:digit:]]+/$bucket/g" vue2/.env
       yarn --cwd vue2/ build
       exit ;;
     deploy)

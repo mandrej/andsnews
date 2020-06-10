@@ -8,10 +8,12 @@
     class="last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
-      <h4 class="body-1 white--text">
-        ANDрејевићи personal photo album.
+      <h4 class="body-1 white--text text-right">
+        ANDрејевићи personal photo album
         <br />
         {{total}} photos since 2007 and counting
+        <br />
+        occupying {{formatBytes(bucket)}} of cloud space
       </h4>
     </div>
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
