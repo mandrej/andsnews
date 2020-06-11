@@ -1,5 +1,5 @@
 <template>
-  <v-container mt-1>
+  <v-container>
     <h1>{{title}}</h1>
     <h3 class="title">Messaging</h3>
     <v-layout align-center>

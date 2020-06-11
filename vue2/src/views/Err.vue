@@ -1,5 +1,5 @@
 <template>
-  <v-container my-10>
+  <v-container>
     <h1>{{title}}</h1>
     <v-alert type="error" transition="scale-transition" prominent>{{text}}</v-alert>
   </v-container>

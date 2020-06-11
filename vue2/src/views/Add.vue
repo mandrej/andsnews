@@ -2,7 +2,7 @@
   <div>
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
-    <v-container mt-1>
+    <v-container>
       <h1>{{title}}</h1>
       <v-sheet class="my-3 pa-3">
         <v-layout column justify-center align-center style="position: relative; height: 120px">
