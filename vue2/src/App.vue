@@ -38,9 +38,9 @@
           <v-progress-linear v-show="busy" absolute top color="primary" :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
-        <v-content>
+        <v-main>
           <router-view></router-view>
-        </v-content>
+        </v-main>
       </v-app>
     </transition>
   </div>
