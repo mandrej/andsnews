@@ -191,6 +191,7 @@ export default {
       },
       set (value) {
         if (!value) {
+          // emit parent (List) event close
           this.$emit('close')
         }
       }

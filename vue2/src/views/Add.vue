@@ -158,7 +158,7 @@ export default {
         ))
         .then(() => {
           if (success) {
-            EventBus.$emit('update-snackbar', false)
+            EventBus.$emit('snackbar', null)
           }
           this.status = STATUS_SUCCESS
           this.reset()

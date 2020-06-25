@@ -25,12 +25,12 @@ export default {
   }),
   mounted () {
     EventBus.$on('snackbar', msg => {
-      this.message = msg
-      this.model = true
-    })
-    EventBus.$on('update-snackbar', val => {
-      // update snackbar from ouside
-      this.model = val
+      if (msg) {
+        this.message = msg
+        this.model = true
+      } else {
+        this.model = false
+      }
     })
     messaging.onMessage(payload => {
       this.message = payload.notification.body
