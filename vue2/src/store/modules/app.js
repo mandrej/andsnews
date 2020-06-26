@@ -1,6 +1,5 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
-import { EventBus } from '@/helpers/event-bus'
 import debounce from 'lodash/debounce'
 import querystring from 'querystring'
 import CONFIG from '@/helpers/config'
@@ -28,7 +27,9 @@ const initialState = {
 
   busy: false,
   clear: false,
-  dark: false
+  dark: false,
+
+  snackbar: null
 }
 
 const getters = {
@@ -40,6 +41,7 @@ const getters = {
 }
 
 const actions = {
+  setSnackbar: ({ commit }, val) => commit('SETSNACKBAR', val),
   toggleTheme: ({ commit }, val) => commit('TOGGLE_THEME', val),
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
@@ -76,11 +78,11 @@ const actions = {
         .delete('delete/' + obj.id, { data: { foo: 'bar' } })
         .then(response => {
           if (response.data) {
-            EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)
+            commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
             commit('DELETE_RECORD', obj)
             dispatch('fetchStat')
           } else {
-            EventBus.$emit('snackbar', 'Deleting failed ' + obj.filename)
+            commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
           }
         })
     } else {
@@ -88,10 +90,10 @@ const actions = {
         .delete('remove/' + obj.filename, { data: { foo: 'bar' } })
         .then(response => {
           if (response.data) {
-            EventBus.$emit('snackbar', 'Successfully deleted ' + obj.filename)
+            commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
             commit('DELETE_UPLOADED', obj)
           } else {
-            EventBus.$emit('snackbar', 'Deleting failed ' + obj.filename)
+            commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
           }
         })
     }
@@ -134,6 +136,9 @@ const actions = {
 }
 
 const mutations = {
+  SETSNACKBAR (state, val) {
+    state.snackbar = val
+  },
   TOGGLE_THEME (state, val) {
     state.dark = val
   },

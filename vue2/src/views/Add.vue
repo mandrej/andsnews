@@ -83,7 +83,6 @@
 
 <script>
 import Vue from 'vue'
-import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import common from '@/helpers/mixins'
 import CONFIG from '@/helpers/config'
@@ -142,7 +141,7 @@ export default {
     },
     save (formData) {
       this.status = STATUS_SAVING
-      EventBus.$emit('snackbar', 'Uploading images …')
+      this.$store.dispatch('app/setSnackbar', 'Uploading images …')
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
         .then(x => x.data) // list
@@ -158,7 +157,7 @@ export default {
         ))
         .then(() => {
           if (success) {
-            EventBus.$emit('snackbar', null)
+            this.$store.dispatch('app/setSnackbar', null)
           }
           this.status = STATUS_SUCCESS
           this.reset()

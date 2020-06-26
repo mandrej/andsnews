@@ -99,7 +99,6 @@
 
 <script>
 import Vue from 'vue'
-import { EventBus } from '@/helpers/event-bus'
 import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
@@ -149,9 +148,6 @@ export default {
   },
   mounted () {
     window.addEventListener('scroll', this.bottomVisible)
-    EventBus.$on('delete', message => {
-      EventBus.$emit('snackbar', message)
-    })
   },
   updated () {
     this.$nextTick(() => {
@@ -205,7 +201,7 @@ export default {
       return (user.isAuthorized) ? 'justify-space-between' : 'justify-end'
     },
     download (filename) {
-      EventBus.$emit('snackbar', 'Downloading ' + filename)
+      this.$store.dispatch('app/setSnackbar', 'Downloading ' + filename)
       // eslint-disable-next-line no-undef
       gtag('event', 'download', {
         event_category: 'engagement',

@@ -1,14 +1,16 @@
 <template>
   <v-snackbar left bottom :value="model" :timeout="timeout" @input="close">
     {{ message }}
-    <v-btn dark text icon @click="close(false)">
-      <v-icon>close</v-icon>
-    </v-btn>
+    <template v-slot:action="{ attrs }">
+      <v-btn dark text icon v-bind="attrs" @click="close(false)">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </template>
   </v-snackbar>
 </template>
 
 <script>
-import { EventBus } from '@/helpers/event-bus'
+import { mapState } from 'vuex'
 import '@/helpers/fire' // initialized firebase instance
 import firebase from 'firebase/app'
 import 'firebase/messaging'
@@ -23,15 +25,10 @@ export default {
     timeout: 6000,
     message: ''
   }),
+  computed: {
+    ...mapState('app', ['snackbar'])
+  },
   mounted () {
-    EventBus.$on('snackbar', msg => {
-      if (msg) {
-        this.message = msg
-        this.model = true
-      } else {
-        this.model = false
-      }
-    })
     messaging.onMessage(payload => {
       this.message = payload.notification.body
       if (this.message == CONFIG.end_message) {
@@ -43,6 +40,16 @@ export default {
     })
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
+  },
+  watch: {
+    snackbar: function (val) {
+      if (val) {
+        this.message = val
+        this.model = true
+      } else {
+        this.model = false
+      }
+    }
   },
   methods: {
     updateOnlineStatus (event) {
