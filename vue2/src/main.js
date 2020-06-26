@@ -6,7 +6,7 @@ import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
-import configureStore from './store'
+import store from './store'
 
 Vue.config.productionTip = false
 Vue.config.performance = process.env.NODE_ENV !== 'production'
@@ -14,6 +14,6 @@ Vue.config.performance = process.env.NODE_ENV !== 'production'
 new Vue({
   vuetify,
   router,
-  store: configureStore(),
+  store,
   render: h => h(App)
 }).$mount('#app')

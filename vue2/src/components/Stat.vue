@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item two-line>
       <v-list-item-content>
-        <v-list-item-title>{{formatBytes(bucket)}}</v-list-item-title>
+        <v-list-item-title>{{formatBytes(bucket + bytes)}}</v-list-item-title>
         <v-list-item-subtitle>storage bucket size</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -46,7 +46,7 @@ export default {
   name: 'Stat',
   mixins: [common],
   computed: {
-    ...mapState('app', ['values', 'total'])
+    ...mapState('app', ['values', 'total', 'bytes'])
   }
 }
 </script>

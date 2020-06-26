@@ -13,7 +13,7 @@
         <br />
         {{total}} photos since 2007 and counting
         <br />
-        occupying {{formatBytes(bucket)}} of cloud space
+        occupying {{formatBytes(bucket + bytes)}} of cloud space
       </h4>
     </div>
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
@@ -30,7 +30,7 @@ export default {
   name: 'Home',
   mixins: [common],
   computed: {
-    ...mapState('app', ['last', 'total']),
+    ...mapState('app', ['last', 'total', 'bytes']),
     query () {
       return {
         year: this.last.value
