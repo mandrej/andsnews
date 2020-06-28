@@ -2,13 +2,6 @@
   <v-list>
     <v-list-item two-line>
       <v-list-item-content>
-        <v-list-item-title>{{formatBytes(bucket + bytes)}}</v-list-item-title>
-        <v-list-item-subtitle>storage bucket size</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item two-line>
-      <v-list-item-content>
         <v-list-item-title>{{total}}</v-list-item-title>
         <v-list-item-subtitle>photographs</v-list-item-subtitle>
       </v-list-item-content>

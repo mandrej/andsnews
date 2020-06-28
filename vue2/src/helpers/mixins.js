@@ -8,9 +8,6 @@ const common = {
     version () {
       const ver = process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
       return '© 2007 - ' + ver
-    },
-    bucket () {
-      return +process.env.VUE_APP_BUCKET
     }
   },
   methods: {

@@ -29,8 +29,7 @@ const initialState = {
   clear: false,
   dark: false,
 
-  snackbar: null,
-  bytes: 0
+  snackbar: null
 }
 
 const getters = {
@@ -147,13 +146,11 @@ const mutations = {
     state.find = { ...payload }
   },
   ADD_RECORD (state, obj) {
-    const size = obj.size
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
     state.objects.splice(idx, 0, obj)
     state.count++
     state.total++
-    state.bytes += size
   },
   ADD_UPLOADED (state, data) {
     state.uploaded = [...state.uploaded, data]
@@ -179,12 +176,10 @@ const mutations = {
     state.next = null
   },
   DELETE_RECORD (state, obj) {
-    const size = obj.size
     const idx = state.objects.findIndex(item => item.id === obj.id)
     if (idx > -1) state.objects.splice(idx, 1)
     state.count--
     state.total--
-    state.bytes -= size
   },
   DELETE_UPLOADED (state, obj) {
     const idx = state.uploaded.findIndex(item => item.filename === obj.filename)

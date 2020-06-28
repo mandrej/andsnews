@@ -12,8 +12,6 @@
         ANDрејевићи personal photo album
         <br />
         {{total}} photos since 2007 and counting
-        <br />
-        occupying {{formatBytes(bucket + bytes)}} of cloud space
       </h4>
     </div>
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">

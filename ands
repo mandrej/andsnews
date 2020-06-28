@@ -8,6 +8,7 @@ function syntax {
   echo $"$0 run    - Run development server"
   echo $"$0 build  - Build client"
   echo $"$0 deploy - Deploy"
+  echo $"$0 size   - Bucket size"
   exit 1
 }
 
@@ -23,14 +24,16 @@ else
       exit ;;
     build)
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue2/.env
-      bucket=`gsutil du -s gs://andsnews.appspot.com | tee | grep -Eo '[[:digit:]]+'`
-      echo $bucket | awk '{ size =$1 /1024/1024**2 ; print "BUCKET SIZE " size " GB" }'
-      sed -i -E "/VUE_APP_BUCKET/s/[[:digit:]]+/$bucket/g" vue2/.env
       yarn --cwd vue2/ build
       exit ;;
     deploy)
       gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml dos.yaml
       # gcloud datastore indexes cleanup index.yaml
+      exit ;;
+    size)
+      bucket=`gsutil du -s gs://andsnews.appspot.com | tee | grep -Eo '[[:digit:]]+'`
+      echo $bucket | awk '{ size =$1 /1024/1024**2 ; print "BUCKET SIZE " size " GB" }'
+      # sed -i -E "/VUE_APP_BUCKET/s/[[:digit:]]+/$bucket/g" vue2/.env
       exit ;;
     *)
       syntax
