@@ -16,11 +16,13 @@ const initialState = {
     date: new Date('1970-01-01').toISOString(),
     value: 1970
   },
-  total: 0,
+  bucket: {
+    size: 0,
+    count: 0
+  },
   values: {},
 
   objects: [],
-  count: 0,
   pages: [],
   next: null,
   error: '',
@@ -132,6 +134,11 @@ const actions = {
   },
   updateValuesEmail: ({ commit }, user) => {
     commit('UPDATE_VALUES_EMAIL', user)
+  },
+  getBucketInfo: ({ commit }) => {
+    axios.get('get/bucket_info').then(response => {
+      commit('SET_BUCKET', response.data)
+    })
   }
 }
 
@@ -149,8 +156,6 @@ const mutations = {
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
     state.objects.splice(idx, 0, obj)
-    state.count++
-    state.total++
   },
   ADD_UPLOADED (state, data) {
     state.uploaded = [...state.uploaded, data]
@@ -160,7 +165,6 @@ const mutations = {
     state.objects = [...state.objects, ...data.objects]
     state.pages = [...state.pages, data._page]
     state.next = data._next
-    state.count = state.objects.length
   },
   UPDATE_RECORD (state, obj) {
     if (state.objects && state.objects.length) {
@@ -178,8 +182,6 @@ const mutations = {
   DELETE_RECORD (state, obj) {
     const idx = state.objects.findIndex(item => item.id === obj.id)
     if (idx > -1) state.objects.splice(idx, 1)
-    state.count--
-    state.total--
   },
   DELETE_UPLOADED (state, obj) {
     const idx = state.uploaded.findIndex(item => item.filename === obj.filename)
@@ -208,20 +210,11 @@ const mutations = {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
   SET_COUNTERS (state, data) {
-    /**
-     * state.last, state.total, state.values
-     * from cloud.counters_stat
-     */
     const _data = JSON.stringify(data)
     if (_data.indexOf('year') > 0) {
       const last = data.year[0]
       if (last) {
         state.last = last
-      }
-      if (_data.indexOf('count') > 0) {
-        state.total = [...Array.from(data.year, c => {
-          return c.count
-        })].reduce((a, b) => a + b)
       }
     }
 
@@ -244,6 +237,9 @@ const mutations = {
   },
   SET_ERROR (state, val) {
     state.error = val
+  },
+  SET_BUCKET (state, obj) {
+    state.bucket = { ...obj }
   }
 }
 

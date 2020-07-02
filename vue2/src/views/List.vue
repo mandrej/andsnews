@@ -10,7 +10,7 @@
     </Dialog>
 
     <v-btn
-      v-show="count > 0"
+      v-show="objects.length > 0"
       fab
       large
       fixed
@@ -138,7 +138,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['objects', 'count', 'error', 'next']),
+    ...mapState('app', ['objects', 'error', 'next']),
     isAdmin () {
       return this.user && this.user.isAdmin
     },

@@ -1,0 +1,4 @@
+cron:
+  - description: "weekly bucket info"
+    url: /api/set/bucket_info
+    schedule: every mon,wed,fri 00:00

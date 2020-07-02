@@ -8830,10 +8830,10 @@ vuetify-loader@^1.5.0:
     file-loader "^4.0.0"
     loader-utils "^1.2.0"
 
-vuetify@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.2.tgz#b06f6ffff4fe04e3dd41c9c1fc484df5e8a16ead"
-  integrity sha1-sG9v//T+BOPdQcnB/EhN9eihbq0=
+vuetify@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.3.tgz#b517e77c35f5f89d91b4d95b025131f1c5cdf35d"
+  integrity sha1-tRfnfDX1+J2RtNlbAlEx8cXN810=
 
 vuex-persistedstate@^2.7.1:
   version "2.7.1"
@@ -8843,10 +8843,10 @@ vuex-persistedstate@^2.7.1:
     deepmerge "^4.2.2"
     shvl "^2.0.0"
 
-vuex@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
-  integrity sha1-IMwIYGLXUHafzh/rs05/zurr3kU=
+vuex@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.5.1.tgz?cache=0&sync_timestamp=1593445037188&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"
+  integrity sha1-8bjc6mSbwlJUz09DWAgdv12hiz0=
 
 watchpack@^1.6.1:
   version "1.6.1"

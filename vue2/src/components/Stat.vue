@@ -2,8 +2,15 @@
   <v-list>
     <v-list-item two-line>
       <v-list-item-content>
-        <v-list-item-title>{{total}}</v-list-item-title>
+        <v-list-item-title>{{bucket.count}}</v-list-item-title>
         <v-list-item-subtitle>photographs</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    <v-divider></v-divider>
+    <v-list-item two-line>
+      <v-list-item-content>
+        <v-list-item-title>{{formatBytes(bucket.size)}}</v-list-item-title>
+        <v-list-item-subtitle>storage size</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
@@ -38,8 +45,11 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Stat',
   mixins: [common],
+  created () {
+    this.$store.dispatch('app/getBucketInfo')
+  },
   computed: {
-    ...mapState('app', ['values', 'total', 'bytes'])
+    ...mapState('app', ['values', 'bucket'])
   }
 }
 </script>

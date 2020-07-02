@@ -3,6 +3,7 @@ import uuid
 import datetime
 from PIL import Image
 from io import BytesIO
+from operator import itemgetter
 from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
 from google.cloud.exceptions import GoogleCloudError, NotFound
@@ -17,6 +18,51 @@ BUCKET = storage_client.get_bucket(CONFIG['firebase']['storageBucket'])
 
 def storage_blob(filename):
     return BUCKET.get_blob(filename)
+
+
+def counters_stat():
+    result = {}
+    for field in CONFIG['photo_filter']:
+        query = datastore_client.query(kind='Counter')
+        query.add_filter('forkind', '=', 'Photo')
+        query.add_filter('field', '=', field)
+        coll = query.fetch()
+
+        _list = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
+                 for c in coll if c['count'] > 0)
+        if field == 'year':
+            result[field] = sorted(
+                _list, key=itemgetter('value'), reverse=True)
+        else:
+            result[field] = sorted(_list, key=itemgetter('value'))
+    return result
+
+
+def results(filters, page, per_page):
+    query = datastore_client.query(kind='Photo', order=['-date'])
+    for pair in filters:
+        query.add_filter(*pair)
+
+    paginator = Paginator(query, per_page=per_page)
+    return paginator.page(page)
+
+
+class Paginator(object):
+    def __init__(self, query, per_page):
+        self.query = query
+        self.per_page = per_page
+
+    def page(self, token=None):
+        error = None
+        token = token.encode('utf-8') if token else None
+
+        _iter = self.query.fetch(limit=self.per_page, start_cursor=token)
+        _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
+        objects = [serialize(ent) for ent in list(_page)]
+
+        next_cursor = _iter.next_page_token
+        next_cursor = next_cursor.decode('utf-8') if next_cursor else None
+        return objects, next_cursor, error
 
 
 def update_filters(new_pairs, old_pairs):

@@ -117,7 +117,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['uploaded', 'total']),
+    ...mapState('app', ['uploaded']),
     isInitial () {
       return this.status === STATUS_INITIAL
     },

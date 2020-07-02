@@ -1,62 +1,10 @@
-import re
-import uuid
 import logging
 import datetime
 import collections
-from operator import itemgetter
-from google.cloud import storage, datastore
+from google.cloud import datastore
+from .photo import datastore, datastore_client, storage_client, BUCKET
 from .helpers import serialize, push_message
 from .config import CONFIG
-
-datastore_client = datastore.Client()
-storage_client = storage.Client()
-
-BUCKET = storage_client.get_bucket(CONFIG['firebase']['storageBucket'])
-
-
-def counters_stat():
-    result = {}
-    for field in CONFIG['photo_filter']:
-        query = datastore_client.query(kind='Counter')
-        query.add_filter('forkind', '=', 'Photo')
-        query.add_filter('field', '=', field)
-        coll = query.fetch()
-
-        _list = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
-                 for c in coll if c['count'] > 0)
-        if field == 'year':
-            result[field] = sorted(
-                _list, key=itemgetter('value'), reverse=True)
-        else:
-            result[field] = sorted(_list, key=itemgetter('value'))
-    return result
-
-
-def results(filters, page, per_page):
-    query = datastore_client.query(kind='Photo', order=['-date'])
-    for pair in filters:
-        query.add_filter(*pair)
-
-    paginator = Paginator(query, per_page=per_page)
-    return paginator.page(page)
-
-
-class Paginator(object):
-    def __init__(self, query, per_page):
-        self.query = query
-        self.per_page = per_page
-
-    def page(self, token=None):
-        error = None
-        token = token.encode('utf-8') if token else None
-
-        _iter = self.query.fetch(limit=self.per_page, start_cursor=token)
-        _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
-        objects = [serialize(ent) for ent in list(_page)]
-
-        next_cursor = _iter.next_page_token
-        next_cursor = next_cursor.decode('utf-8') if next_cursor else None
-        return objects, next_cursor, error
 
 
 def login_user(data):
@@ -125,6 +73,32 @@ def rebuilder(field, token):
     datastore_client.put_multi(counters)
     push_message(token, CONFIG['end_message'])
     return tally
+
+
+def bucketInfo(read=True):
+    count = 0
+    total = 0
+    key = datastore_client.key('Bucket', 'total')
+    obj = datastore_client.get(key)
+    if obj and read:
+        return dict(obj)
+    else:
+        _iter = storage_client.list_blobs(BUCKET, delimiter='/')
+        for blob in _iter:
+            if blob.content_type == 'image/jpeg':
+                total += blob.size
+                count += 1
+
+        if obj is None:
+            obj = datastore.Entity(key)
+        obj.update({
+            'size': total,
+            'count': count
+        })
+        datastore_client.put(obj)
+        return dict(obj)
+
+    return None
 
 
 class Missing(object):

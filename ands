@@ -27,11 +27,11 @@ else
       yarn --cwd vue2/ build
       exit ;;
     deploy)
-      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml dos.yaml
+      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml cron.yaml dos.yaml
       # gcloud datastore indexes cleanup index.yaml
       exit ;;
     size)
-      bucket=`gsutil du -s gs://andsnews.appspot.com | tee | grep -Eo '[[:digit:]]+'`
+      bucket=`gsutil du -s -e "*.json" gs://andsnews.appspot.com | tee | grep -Eo '[[:digit:]]+'`
       echo $bucket | awk '{ size =$1 /1024/1024**2 ; print "BUCKET SIZE " size " GB" }'
       # sed -i -E "/VUE_APP_BUCKET/s/[[:digit:]]+/$bucket/g" vue2/.env
       exit ;;

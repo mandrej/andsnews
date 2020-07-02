@@ -9,6 +9,13 @@ from api.config import CONFIG
 app = Flask(__name__)
 
 
+@app.route('/api/<method>/bucket_info', methods=['GET'])
+def bucket_info(method):
+    # method 'set' => cron job
+    read = method == 'get'
+    return jsonify(cloud.bucketInfo(read))
+
+
 @app.route('/api/thumb/<filename>', methods=['GET'])
 def thumb(filename):
     inp = BytesIO()
@@ -74,7 +81,7 @@ def exif(filename):
 
 @app.route('/api/counters', methods=['GET'])
 def collection():
-    return jsonify(cloud.counters_stat())
+    return jsonify(photo.counters_stat())
 
 
 @app.route('/api/search', methods=['GET'])
@@ -95,7 +102,7 @@ def search():
             if val:
                 filters.append((key, '=', val))
 
-    objects, token, error = cloud.results(filters, page, per_page)
+    objects, token, error = photo.results(filters, page, per_page)
     return jsonify({
         'objects': objects,
         '_page': page if page else 'FP',

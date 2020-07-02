@@ -73,7 +73,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['values', 'total'])
+    ...mapState('app', ['values'])
   },
   mounted () {
     this.$store.dispatch('auth/fetchToken')
