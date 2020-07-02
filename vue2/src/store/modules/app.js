@@ -103,9 +103,12 @@ const actions = {
   fetchStat: debounce(({ dispatch }) => {
     dispatch('_fetchStat')
   }, 200),
-  _fetchStat: ({ commit }) => {
+  _fetchStat: ({ commit, dispatch, state }) => {
     axios.get('counters').then(response => {
       commit('SET_COUNTERS', response.data)
+      if (state.bucket.count === 0) {
+        dispatch('getBucketInfo')
+      }
     })
   },
   fetchRecords: ({ commit, state }) => {
@@ -153,9 +156,12 @@ const mutations = {
     state.find = { ...payload }
   },
   ADD_RECORD (state, obj) {
+    const size = obj.size
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
     state.objects.splice(idx, 0, obj)
+    state.bucket.count += 1
+    state.bucket.size += size
   },
   ADD_UPLOADED (state, data) {
     state.uploaded = [...state.uploaded, data]
@@ -180,8 +186,11 @@ const mutations = {
     state.next = null
   },
   DELETE_RECORD (state, obj) {
+    const size = obj.size
     const idx = state.objects.findIndex(item => item.id === obj.id)
     if (idx > -1) state.objects.splice(idx, 1)
+    state.bucket.count -= 1
+    state.bucket.size -= size
   },
   DELETE_UPLOADED (state, obj) {
     const idx = state.uploaded.findIndex(item => item.filename === obj.filename)
@@ -217,7 +226,6 @@ const mutations = {
         state.last = last
       }
     }
-
     state.values = {}
     CONFIG.photo_filter.forEach(field => {
       if (_data.indexOf(field) * _data.indexOf('value') > 0) {
