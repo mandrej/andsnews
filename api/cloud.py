@@ -76,29 +76,31 @@ def rebuilder(field, token):
 
 
 def bucketInfo(read=True):
-    count = 0
-    total = 0
     key = datastore_client.key('Bucket', 'total')
     obj = datastore_client.get(key)
-    if obj and read:
-        return dict(obj)
-    else:
+
+    def run(count=0, size=0):
         _iter = storage_client.list_blobs(BUCKET, delimiter='/')
         for blob in _iter:
             if blob.content_type == 'image/jpeg':
-                total += blob.size
                 count += 1
+                size += blob.size
+        return dict(zip(('count', 'size'), (count, size)))
 
-        if obj is None:
-            obj = datastore.Entity(key)
-        obj.update({
-            'size': total,
-            'count': count
-        })
+    if obj:
+        if read:
+            return dict(obj)
+        else:
+            _new = run()
+            obj.update(_new)
+            datastore_client.put(obj)
+            return dict(obj)
+    else:
+        _new = run()
+        obj = datastore.Entity(key)
+        obj.update(_new)
         datastore_client.put(obj)
         return dict(obj)
-
-    return None
 
 
 class Missing(object):

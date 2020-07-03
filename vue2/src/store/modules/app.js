@@ -138,7 +138,10 @@ const actions = {
   updateValuesEmail: ({ commit }, user) => {
     commit('UPDATE_VALUES_EMAIL', user)
   },
-  getBucketInfo: ({ commit }) => {
+  getBucketInfo: debounce(({ dispatch }) => {
+    dispatch('_getBucketInfo')
+  }, 200),
+  _getBucketInfo: ({ commit }) => {
     axios.get('get/bucket_info').then(response => {
       commit('SET_BUCKET', response.data)
     })

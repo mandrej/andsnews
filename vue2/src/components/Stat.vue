@@ -45,9 +45,6 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Stat',
   mixins: [common],
-  created () {
-    this.$store.dispatch('app/getBucketInfo')
-  },
   computed: {
     ...mapState('app', ['values', 'bucket'])
   }

@@ -1,4 +1,4 @@
 cron:
-  - description: "weekly bucket info"
+  - description: "dailly bucket info"
     url: /api/set/bucket_info
-    schedule: every mon,wed,fri 00:00
+    schedule: every day 00:00

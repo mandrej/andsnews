@@ -74,6 +74,7 @@ export default {
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
+    this.$store.dispatch('app/getBucketInfo')
     this.$vuetify.theme.dark = this.dark
   },
   computed: {
