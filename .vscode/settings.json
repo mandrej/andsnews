@@ -2,7 +2,7 @@
   "python.venvPath": "~/venv/andsnews",
   "python.pythonPath": "/home/milan/venv/andsnews/bin/python",
   "python.autoComplete.extraPaths": [
-    "~/venv/andsnews/lib/python3.7/site-packages"
+    "~/venv/andsnews/lib/python3.8/site-packages"
   ],
   "python.linting.enabled": true,
   "python.formatting.provider": "autopep8",
@@ -13,6 +13,6 @@
     "tests": true,
     "graphql": true,
     "views": true
-},
-"python.languageServer": "Microsoft"
+  },
+  "python.languageServer": "Microsoft"
 }
