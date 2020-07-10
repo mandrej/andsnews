@@ -1021,15 +1021,15 @@
   resolved "https://registry.npm.taobao.org/@firebase/analytics-types/download/@firebase/analytics-types-0.3.1.tgz#3c5f5d71129c88295e17e914e34b391ffda1723c"
   integrity sha1-PF9dcRKciCleF+kU40s5H/2hcjw=
 
-"@firebase/analytics@0.3.8":
-  version "0.3.8"
-  resolved "https://registry.npm.taobao.org/@firebase/analytics/download/@firebase/analytics-0.3.8.tgz#4f2daea4462e06f4c106f9b1f1ce57f9929dd868"
-  integrity sha1-Ty2upEYuBvTBBvmx8c5X+ZKd2Gg=
+"@firebase/analytics@0.3.9":
+  version "0.3.9"
+  resolved "https://registry.npm.taobao.org/@firebase/analytics/download/@firebase/analytics-0.3.9.tgz#5755ac0f15ccf1fc6c811c99c4ca778985cdc237"
+  integrity sha1-V1WsDxXM8fxsgRyZxMp3iYXNwjc=
   dependencies:
     "@firebase/analytics-types" "0.3.1"
-    "@firebase/component" "0.1.15"
-    "@firebase/installations" "0.4.13"
-    "@firebase/logger" "0.2.5"
+    "@firebase/component" "0.1.16"
+    "@firebase/installations" "0.4.14"
+    "@firebase/logger" "0.2.6"
     "@firebase/util" "0.2.50"
     tslib "^1.11.1"
 
@@ -1038,14 +1038,14 @@
   resolved "https://registry.npm.taobao.org/@firebase/app-types/download/@firebase/app-types-0.6.1.tgz#dcbd23030a71c0c74fc95d4a3f75ba81653850e9"
   integrity sha1-3L0jAwpxwMdPyV1KP3W6gWU4UOk=
 
-"@firebase/app@0.6.7":
-  version "0.6.7"
-  resolved "https://registry.npm.taobao.org/@firebase/app/download/@firebase/app-0.6.7.tgz#f5b67c0a4cacfaa93d0c942dfbab1d10c4986b85"
-  integrity sha1-9bZ8Ckys+qk9DJQt+6sdEMSYa4U=
+"@firebase/app@0.6.8":
+  version "0.6.8"
+  resolved "https://registry.npm.taobao.org/@firebase/app/download/@firebase/app-0.6.8.tgz#e7ccf31cc1d01f16744d6d27c5f9ba8b64338f12"
+  integrity sha1-58zzHMHQHxZ0TW0nxfm6i2QzjxI=
   dependencies:
     "@firebase/app-types" "0.6.1"
-    "@firebase/component" "0.1.15"
-    "@firebase/logger" "0.2.5"
+    "@firebase/component" "0.1.16"
+    "@firebase/logger" "0.2.6"
     "@firebase/util" "0.2.50"
     dom-storage "2.1.0"
     tslib "^1.11.1"
@@ -1061,17 +1061,17 @@
   resolved "https://registry.npm.taobao.org/@firebase/auth-types/download/@firebase/auth-types-0.10.1.tgz#7815e71c9c6f072034415524b29ca8f1d1770660"
   integrity sha1-eBXnHJxvByA0QVUkspyo8dF3BmA=
 
-"@firebase/auth@0.14.7":
-  version "0.14.7"
-  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.14.7.tgz#9a46dd68efff7af7ec8c420b35f26d118c773cff"
-  integrity sha1-mkbdaO//evfsjEILNfJtEYx3PP8=
+"@firebase/auth@0.14.8":
+  version "0.14.8"
+  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.14.8.tgz#2547eda48c97041e48802058526d021aee6e3b7b"
+  integrity sha1-JUftpIyXBB5IgCBYUm0CGu5uO3s=
   dependencies:
     "@firebase/auth-types" "0.10.1"
 
-"@firebase/component@0.1.15":
-  version "0.1.15"
-  resolved "https://registry.npm.taobao.org/@firebase/component/download/@firebase/component-0.1.15.tgz#40f2a53da576818bc5c906650016cb7b96fc6a25"
-  integrity sha1-QPKlPaV2gYvFyQZlABbLe5b8aiU=
+"@firebase/component@0.1.16":
+  version "0.1.16"
+  resolved "https://registry.npm.taobao.org/@firebase/component/download/@firebase/component-0.1.16.tgz#7a0dbdfff1485d45b8485db87a982f053e68761a"
+  integrity sha1-eg29//FIXUW4SF24epgvBT5odho=
   dependencies:
     "@firebase/util" "0.2.50"
     tslib "^1.11.1"
@@ -1083,32 +1083,32 @@
   dependencies:
     "@firebase/app-types" "0.6.1"
 
-"@firebase/database@0.6.6":
-  version "0.6.6"
-  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.6.6.tgz#77b9bef3c38589975c1f9b3b79089916139e8212"
-  integrity sha1-d7m+88OFiZdcH5s7eQiZFhOeghI=
+"@firebase/database@0.6.7":
+  version "0.6.7"
+  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.6.7.tgz#93394cb449f9f9f250bcc097a5cc9d2d3b9e1f1b"
+  integrity sha1-kzlMtEn5+fJQvMCXpcydLTueHxs=
   dependencies:
     "@firebase/auth-interop-types" "0.1.5"
-    "@firebase/component" "0.1.15"
+    "@firebase/component" "0.1.16"
     "@firebase/database-types" "0.5.1"
-    "@firebase/logger" "0.2.5"
+    "@firebase/logger" "0.2.6"
     "@firebase/util" "0.2.50"
     faye-websocket "0.11.3"
     tslib "^1.11.1"
 
-"@firebase/firestore-types@1.11.0":
-  version "1.11.0"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-1.11.0.tgz#ccb734fd424b8b6c3aff3ad1921a89ee31be229b"
-  integrity sha1-zLc0/UJLi2w6/zrRkhqJ7jG+Ips=
+"@firebase/firestore-types@1.12.0":
+  version "1.12.0"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-1.12.0.tgz#511e572e946b07f5a603c90e078f0cd714923fac"
+  integrity sha1-UR5XLpRrB/WmA8kOB48M1xSSP6w=
 
-"@firebase/firestore@1.15.5":
-  version "1.15.5"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.15.5.tgz#6268fc69d9ac069c121f542bdd2f1f735a62a7a9"
-  integrity sha1-Ymj8admsBpwSH1Qr3S8fc1pip6k=
+"@firebase/firestore@1.16.0":
+  version "1.16.0"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.16.0.tgz#39e698d1e6d5c406d822537e29b7f350525247a8"
+  integrity sha1-OeaY0ebVxAbYIlN+KbfzUFJSR6g=
   dependencies:
-    "@firebase/component" "0.1.15"
-    "@firebase/firestore-types" "1.11.0"
-    "@firebase/logger" "0.2.5"
+    "@firebase/component" "0.1.16"
+    "@firebase/firestore-types" "1.12.0"
+    "@firebase/logger" "0.2.6"
     "@firebase/util" "0.2.50"
     "@firebase/webchannel-wrapper" "0.2.41"
     "@grpc/grpc-js" "^1.0.0"
@@ -1120,12 +1120,12 @@
   resolved "https://registry.npm.taobao.org/@firebase/functions-types/download/@firebase/functions-types-0.3.17.tgz#348bf5528b238eeeeeae1d52e8ca547b21d33a94"
   integrity sha1-NIv1Uosjju7urh1S6MpUeyHTOpQ=
 
-"@firebase/functions@0.4.47":
-  version "0.4.47"
-  resolved "https://registry.npm.taobao.org/@firebase/functions/download/@firebase/functions-0.4.47.tgz#31d722347719ccff7c3b3e25ef3b26f6423b5af3"
-  integrity sha1-MdciNHcZzP98Oz4l7zsm9kI7WvM=
+"@firebase/functions@0.4.48":
+  version "0.4.48"
+  resolved "https://registry.npm.taobao.org/@firebase/functions/download/@firebase/functions-0.4.48.tgz#aee8efeacbfdd74834db0c1b44297f59c5bdddaf"
+  integrity sha1-rujv6sv910g02wwbRCl/WcW93a8=
   dependencies:
-    "@firebase/component" "0.1.15"
+    "@firebase/component" "0.1.16"
     "@firebase/functions-types" "0.3.17"
     "@firebase/messaging-types" "0.4.5"
     isomorphic-fetch "2.2.1"
@@ -1136,34 +1136,34 @@
   resolved "https://registry.npm.taobao.org/@firebase/installations-types/download/@firebase/installations-types-0.3.4.tgz#589a941d713f4f64bf9f4feb7f463505bab1afa2"
   integrity sha1-WJqUHXE/T2S/n0/rf0Y1Bbqxr6I=
 
-"@firebase/installations@0.4.13":
-  version "0.4.13"
-  resolved "https://registry.npm.taobao.org/@firebase/installations/download/@firebase/installations-0.4.13.tgz#c0e594143730b6b7e1b3dbff6157dba5bd92ab57"
-  integrity sha1-wOWUFDcwtrfhs9v/YVfbpb2Sq1c=
+"@firebase/installations@0.4.14":
+  version "0.4.14"
+  resolved "https://registry.npm.taobao.org/@firebase/installations/download/@firebase/installations-0.4.14.tgz#e0c240869bed834d1b5cc696bec0020e8fcb5f7b"
+  integrity sha1-4MJAhpvtg00bXMaWvsACDo/LX3s=
   dependencies:
-    "@firebase/component" "0.1.15"
+    "@firebase/component" "0.1.16"
     "@firebase/installations-types" "0.3.4"
     "@firebase/util" "0.2.50"
     idb "3.0.2"
     tslib "^1.11.1"
 
-"@firebase/logger@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.npm.taobao.org/@firebase/logger/download/@firebase/logger-0.2.5.tgz#bac27bfef32b36e3ecc4b9a5018e9441cb4765e6"
-  integrity sha1-usJ7/vMrNuPsxLmlAY6UQctHZeY=
+"@firebase/logger@0.2.6":
+  version "0.2.6"
+  resolved "https://registry.npm.taobao.org/@firebase/logger/download/@firebase/logger-0.2.6.tgz#3aa2ca4fe10327cabf7808bd3994e88db26d7989"
+  integrity sha1-OqLKT+EDJ8q/eAi9OZTojbJteYk=
 
 "@firebase/messaging-types@0.4.5":
   version "0.4.5"
   resolved "https://registry.npm.taobao.org/@firebase/messaging-types/download/@firebase/messaging-types-0.4.5.tgz#452572d3c5b7fa83659fdb1884450477229f5dc4"
   integrity sha1-RSVy08W3+oNln9sYhEUEdyKfXcQ=
 
-"@firebase/messaging@0.6.19":
-  version "0.6.19"
-  resolved "https://registry.npm.taobao.org/@firebase/messaging/download/@firebase/messaging-0.6.19.tgz#f0da154dd9f1e7eb7d3b44edec15ccc0cfb701bf"
-  integrity sha1-8NoVTdnx5+t9O0Tt7BXMwM+3Ab8=
+"@firebase/messaging@0.6.20":
+  version "0.6.20"
+  resolved "https://registry.npm.taobao.org/@firebase/messaging/download/@firebase/messaging-0.6.20.tgz#c6139dad753185706196972629e9235cdda8c2d6"
+  integrity sha1-xhOdrXUxhXBhlpcmKekjXN2owtY=
   dependencies:
-    "@firebase/component" "0.1.15"
-    "@firebase/installations" "0.4.13"
+    "@firebase/component" "0.1.16"
+    "@firebase/installations" "0.4.14"
     "@firebase/messaging-types" "0.4.5"
     "@firebase/util" "0.2.50"
     idb "3.0.2"
@@ -1174,14 +1174,14 @@
   resolved "https://registry.npm.taobao.org/@firebase/performance-types/download/@firebase/performance-types-0.0.13.tgz#58ce5453f57e34b18186f74ef11550dfc558ede6"
   integrity sha1-WM5UU/V+NLGBhvdO8RVQ38VY7eY=
 
-"@firebase/performance@0.3.8":
-  version "0.3.8"
-  resolved "https://registry.npm.taobao.org/@firebase/performance/download/@firebase/performance-0.3.8.tgz#b28cef11004589465e8fea11d7902e202174ea4f"
-  integrity sha1-sozvEQBFiUZej+oR15AuICF06k8=
+"@firebase/performance@0.3.9":
+  version "0.3.9"
+  resolved "https://registry.npm.taobao.org/@firebase/performance/download/@firebase/performance-0.3.9.tgz#01e27616aca8486c7602e4f51c325c2e7caae6e8"
+  integrity sha1-AeJ2FqyoSGx2AuT1HDJcLnyq5ug=
   dependencies:
-    "@firebase/component" "0.1.15"
-    "@firebase/installations" "0.4.13"
-    "@firebase/logger" "0.2.5"
+    "@firebase/component" "0.1.16"
+    "@firebase/installations" "0.4.14"
+    "@firebase/logger" "0.2.6"
     "@firebase/performance-types" "0.0.13"
     "@firebase/util" "0.2.50"
     tslib "^1.11.1"
@@ -1200,14 +1200,14 @@
   resolved "https://registry.npm.taobao.org/@firebase/remote-config-types/download/@firebase/remote-config-types-0.1.9.tgz#fe6bbe4d08f3b6e92fce30e4b7a9f4d6a96d6965"
   integrity sha1-/mu+TQjztukvzjDkt6n01qltaWU=
 
-"@firebase/remote-config@0.1.24":
-  version "0.1.24"
-  resolved "https://registry.npm.taobao.org/@firebase/remote-config/download/@firebase/remote-config-0.1.24.tgz#fc3e0d7d4660aa8b8e2598561b889e47aff6afe1"
-  integrity sha1-/D4NfUZgqouOJZhWG4ieR6/2r+E=
+"@firebase/remote-config@0.1.25":
+  version "0.1.25"
+  resolved "https://registry.npm.taobao.org/@firebase/remote-config/download/@firebase/remote-config-0.1.25.tgz#93c5bda311d6c1302697d6148bdb33bb8dcb9e15"
+  integrity sha1-k8W9oxHWwTAml9YUi9szu43LnhU=
   dependencies:
-    "@firebase/component" "0.1.15"
-    "@firebase/installations" "0.4.13"
-    "@firebase/logger" "0.2.5"
+    "@firebase/component" "0.1.16"
+    "@firebase/installations" "0.4.14"
+    "@firebase/logger" "0.2.6"
     "@firebase/remote-config-types" "0.1.9"
     "@firebase/util" "0.2.50"
     tslib "^1.11.1"
@@ -1217,12 +1217,12 @@
   resolved "https://registry.npm.taobao.org/@firebase/storage-types/download/@firebase/storage-types-0.3.12.tgz#79540761fb3ad8d674c98712633284d81b268e0f"
   integrity sha1-eVQHYfs62NZ0yYcSYzKE2Bsmjg8=
 
-"@firebase/storage@0.3.37":
-  version "0.3.37"
-  resolved "https://registry.npm.taobao.org/@firebase/storage/download/@firebase/storage-0.3.37.tgz#b9d2204ac634606ec16644a62afac1eea98064c1"
-  integrity sha1-udIgSsY0YG7BZkSmKvrB7qmAZME=
+"@firebase/storage@0.3.38":
+  version "0.3.38"
+  resolved "https://registry.npm.taobao.org/@firebase/storage/download/@firebase/storage-0.3.38.tgz#ebe3423fc53b4966bb2324b12feddd79b9210a0c"
+  integrity sha1-6+NCP8U7SWa7IySxL+3debkhCgw=
   dependencies:
-    "@firebase/component" "0.1.15"
+    "@firebase/component" "0.1.16"
     "@firebase/storage-types" "0.3.12"
     "@firebase/util" "0.2.50"
     tslib "^1.11.1"
@@ -4233,24 +4233,24 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^7.15.5:
-  version "7.15.5"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.15.5.tgz#fcc6691da86c3949c158d21862329501800e9913"
-  integrity sha1-/MZpHahsOUnBWNIYYjKVAYAOmRM=
+firebase@^7.16.0:
+  version "7.16.0"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.16.0.tgz#2d891b19add296239d47e64a7927e599d359bdf4"
+  integrity sha1-LYkbGa3SliOdR+ZKeSflmdNZvfQ=
   dependencies:
-    "@firebase/analytics" "0.3.8"
-    "@firebase/app" "0.6.7"
+    "@firebase/analytics" "0.3.9"
+    "@firebase/app" "0.6.8"
     "@firebase/app-types" "0.6.1"
-    "@firebase/auth" "0.14.7"
-    "@firebase/database" "0.6.6"
-    "@firebase/firestore" "1.15.5"
-    "@firebase/functions" "0.4.47"
-    "@firebase/installations" "0.4.13"
-    "@firebase/messaging" "0.6.19"
-    "@firebase/performance" "0.3.8"
+    "@firebase/auth" "0.14.8"
+    "@firebase/database" "0.6.7"
+    "@firebase/firestore" "1.16.0"
+    "@firebase/functions" "0.4.48"
+    "@firebase/installations" "0.4.14"
+    "@firebase/messaging" "0.6.20"
+    "@firebase/performance" "0.3.9"
     "@firebase/polyfill" "0.3.36"
-    "@firebase/remote-config" "0.1.24"
-    "@firebase/storage" "0.3.37"
+    "@firebase/remote-config" "0.1.25"
+    "@firebase/storage" "0.3.38"
     "@firebase/util" "0.2.50"
 
 flat-cache@^2.0.1:
@@ -7589,10 +7589,10 @@ sass-loader@^8.0.2:
     schema-utils "^2.6.1"
     semver "^6.3.0"
 
-sass@^1.26.9:
-  version "1.26.9"
-  resolved "https://registry.npm.taobao.org/sass/download/sass-1.26.9.tgz#73c10cbb88c12b22a9e0107725bfd62296f4978f"
-  integrity sha1-c8EMu4jBKyKp4BB3Jb/WIpb0l48=
+sass@^1.26.10:
+  version "1.26.10"
+  resolved "https://registry.npm.taobao.org/sass/download/sass-1.26.10.tgz?cache=0&sync_timestamp=1594078514059&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.26.10.tgz#851d126021cdc93decbf201d1eca2a20ee434760"
+  integrity sha1-hR0SYCHNyT3svyAdHsoqIO5DR2A=
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
@@ -8830,10 +8830,10 @@ vuetify-loader@^1.5.0:
     file-loader "^4.0.0"
     loader-utils "^1.2.0"
 
-vuetify@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.3.tgz#b517e77c35f5f89d91b4d95b025131f1c5cdf35d"
-  integrity sha1-tRfnfDX1+J2RtNlbAlEx8cXN810=
+vuetify@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.4.tgz#fdb03b3281d40a8420b0295ea865843abdc69792"
+  integrity sha1-/bA7MoHUCoQgsCleqGWEOr3Gl5I=
 
 vuex-persistedstate@^2.7.1:
   version "2.7.1"
