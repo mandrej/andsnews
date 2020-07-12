@@ -11,7 +11,7 @@ from unidecode import unidecode
 from .config import CONFIG
 
 HEADERS = {
-    'Authorization': 'key={}'.format(CONFIG['fcm_server_key']),
+    'Authorization': F'key={CONFIG["fcm_server_key"]}',
     'Content-Type': 'application/json',
 }
 
@@ -97,7 +97,7 @@ def get_exif(buff):
         if s1 & s2:  # contain word in make and model
             data['model'] = model
         else:
-            data['model'] = '%s %s' % (make, model)
+            data['model'] = F'{make} {model}'
 
     if 'EXIF LensModel' in tags:
         data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
@@ -167,4 +167,4 @@ class Timer(object):
         self.elapsed_secs = end - self.start
         self.elapsed = self.elapsed_secs * 1000  # millisecs
         if self.verbose:
-            print('elapsed time: {0:.0f} ms'.format(self.elapsed))
+            print(F'elapsed time: {self.elapsed:.0f} ms')
