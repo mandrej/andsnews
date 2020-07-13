@@ -47,7 +47,7 @@ def rebuilder(field, token):
 
     tally = collections.Counter(values)
     for value, count in tally.items():
-        id = F'Photo||{field}||{value}'
+        id = f'Photo||{field}||{value}'
         key = datastore_client.key('Counter', id)
         counter = datastore_client.get(key)
         if counter is None:
@@ -68,7 +68,7 @@ def rebuilder(field, token):
             counter['filename'] = latest[0]['filename']
 
         counters.append(counter)
-        push_message(token, F'{value} {count}')
+        push_message(token, f'{value} {count}')
 
     datastore_client.put_multi(counters)
     push_message(token, CONFIG['end_message'])
@@ -128,14 +128,14 @@ class Missing(object):
                 if prefix == ent['filename']:
                     key = ent.key.id_or_name()
                     push_message(
-                        self.TOKEN, F'deleting {prefix} ...')
+                        self.TOKEN, f'deleting {prefix} ...')
                     self.DELETED.append(prefix)
                     datastore_client.delete(key)
 
         next_cursor = _iter.next_page_token
         if next_cursor:
             push_message(
-                self.TOKEN, F'checked {self.COUNT}, deleted {len(self.DELETED)}')
+                self.TOKEN, f'checked {self.COUNT}, deleted {len(self.DELETED)}')
             self._continue(next_cursor, batch_size)
         else:
             self.finish()
@@ -169,14 +169,14 @@ class Unbound(object):
                 query.add_filter('filename', '=', blob.name)
                 if len(list(query.fetch(1))) == 0:
                     push_message(
-                        self.TOKEN, F'deleting {blob.name} ...')
+                        self.TOKEN, f'deleting {blob.name} ...')
                     self.DELETED.append(blob.name)
                     blob.delete()
 
         next_cursor = _iter.next_page_token
         if next_cursor:
             push_message(
-                self.TOKEN, F'checked {self.COUNT}, deleted {len(self.DELETED)}')
+                self.TOKEN, f'checked {self.COUNT}, deleted {len(self.DELETED)}')
             self._continue(next_cursor, batch_size)
         else:
             self.finish()
@@ -216,7 +216,7 @@ class Fixer(object):
         if len(batch) > 0:
             datastore_client.put_multi(batch)
             datastore_client.delete_multi(deleted)
-            push_message(self.TOKEN, F'saving {self.COUNT} ...')
+            push_message(self.TOKEN, f'saving {self.COUNT} ...')
 
         next_cursor = _iter.next_page_token
         if next_cursor:

@@ -56,7 +56,7 @@ def download(filename):
 
         response = make_response(data)
         response.headers['Content-Type'] = blob.content_type
-        response.headers['Content-Disposition'] = F'attachment; filename={filename}'
+        response.headers['Content-Disposition'] = f'attachment; filename={filename}'
         return response
     abort(404, description='Resource not found')
 

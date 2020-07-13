@@ -68,7 +68,7 @@ class Paginator(object):
 def update_filters(new_pairs, old_pairs):
     counters = []
     for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
-        id = F'Photo||{field}||{value}'
+        id = f'Photo||{field}||{value}'
         key = datastore_client.key('Counter', id)
         counter = datastore_client.get(key)
         if counter is None:
@@ -127,7 +127,7 @@ def add(fs):
     filename = fs.filename.replace(' ', '')
     blob = BUCKET.get_blob(filename)
     if blob:
-        filename = re.sub(r'\.', F'-{str(uuid.uuid4())[:8]}.', filename)
+        filename = re.sub(r'\.', f'-{str(uuid.uuid4())[:8]}.', filename)
     blob = BUCKET.blob(filename)
 
     _buffer = fs.read()  # === fs.stream.read()
