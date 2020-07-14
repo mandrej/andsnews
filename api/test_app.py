@@ -21,7 +21,7 @@ class TestApp(unittest.TestCase):
         self.app = main.app.test_client()
 
     def test_main(self):
-        rv = self.app.get('/api/counter/values')
+        rv = self.app.get('/api/counters')
         assert rv.status == '200 OK'
 
-# python -m unittest test_app
+# (andsnews) $ python -m unittest api/test_app.py
