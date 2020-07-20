@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "firebase": "^7.16.0",
+    "firebase": "^7.16.1",
     "lru-cache": "^5.1.1",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
@@ -34,7 +34,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-axios": "^0.0.4",
-    "vue-cli-plugin-vuetify": "^2.0.6",
+    "vue-cli-plugin-vuetify": "^2.0.7",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.6.0"
   },

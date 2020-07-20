@@ -57,7 +57,7 @@ const actions = {
   addUploaded: ({ commit }, obj) => {
     commit('ADD_UPLOADED', obj)
   },
-  saveRecord: ({ commit }, obj) => {
+  saveRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
       axios.put('edit/' + obj.id, obj).then(response => {
         const obj = response.data.rec
@@ -71,6 +71,7 @@ const actions = {
         commit('ADD_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_VALUES', obj)
+        dispatch('bucketInfo', { verb: 'set' })
       })
     }
   },
@@ -83,6 +84,7 @@ const actions = {
             commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
             commit('DELETE_RECORD', obj)
             dispatch('fetchStat')
+            dispatch('bucketInfo', { verb: 'set' })
           } else {
             commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
           }
@@ -107,7 +109,7 @@ const actions = {
     axios.get('counters').then(response => {
       commit('SET_COUNTERS', response.data)
       if (state.bucket.count === 0) {
-        dispatch('getBucketInfo')
+        dispatch('bucketInfo', { verb: 'get' })
       }
     })
   },
@@ -138,11 +140,11 @@ const actions = {
   updateValuesEmail: ({ commit }, user) => {
     commit('UPDATE_VALUES_EMAIL', user)
   },
-  getBucketInfo: debounce(({ dispatch }) => {
-    dispatch('_getBucketInfo')
+  bucketInfo: debounce(({ dispatch }, param) => {
+    dispatch('_bucketInfo', param)
   }, 200),
-  _getBucketInfo: ({ commit }) => {
-    axios.get('get/bucket_info').then(response => {
+  _bucketInfo: ({ commit }, param) => {
+    axios.get(param.verb + '/bucket_info').then(response => {
       commit('SET_BUCKET', response.data)
     })
   }
@@ -159,12 +161,9 @@ const mutations = {
     state.find = { ...payload }
   },
   ADD_RECORD (state, obj) {
-    const size = obj.size
     const dates = state.objects.map(item => item.date)
     const idx = dates.findIndex(date => date < obj.date)
     state.objects.splice(idx, 0, obj)
-    state.bucket.count += 1
-    state.bucket.size += size
   },
   ADD_UPLOADED (state, data) {
     state.uploaded = [...state.uploaded, data]
@@ -189,11 +188,8 @@ const mutations = {
     state.next = null
   },
   DELETE_RECORD (state, obj) {
-    const size = obj.size
     const idx = state.objects.findIndex(item => item.id === obj.id)
     if (idx > -1) state.objects.splice(idx, 1)
-    state.bucket.count -= 1
-    state.bucket.size -= size
   },
   DELETE_UPLOADED (state, obj) {
     const idx = state.uploaded.findIndex(item => item.filename === obj.filename)

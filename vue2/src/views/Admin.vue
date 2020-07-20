@@ -32,14 +32,20 @@
       </v-flex>
     </v-layout>
 
-    <v-layout wrap align-center>
+    <!-- <v-layout wrap align-center>
       <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
       <v-flex xs3 class="text-right">
         <v-btn :disabled="true" color="primary" width="100" @click="fix">Fix</v-btn>
       </v-flex>
-    </v-layout>
+    </v-layout>-->
 
     <h3 class="title">Google Cloud Storage</h3>
+    <v-layout wrap class="py-1" align-center>
+      <v-flex xs9>Bucket count and size</v-flex>
+      <v-flex xs3 class="text-right">
+        <v-btn width="100" color="primary" @click="bucket">SET</v-btn>
+      </v-flex>
+    </v-layout>
     <v-layout wrap class="py-1" align-center>
       <v-flex xs9>Remove images from the Cloud not referenced in datastore (SLOW)</v-flex>
       <v-flex xs3 class="text-right">
@@ -107,6 +113,9 @@ export default {
     },
     send () {
       this.$store.dispatch('auth/sendNotifications', this.msg.default)
+    },
+    bucket () {
+      this.$store.dispatch('app/bucketInfo', { verb: 'set' })
     }
   }
 }
