@@ -68,10 +68,11 @@ const actions = {
       // publish
       axios.put('edit', obj).then(response => {
         const obj = response.data.rec
+        const diff = { verb: 'add', size: obj.size }
         commit('ADD_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
         commit('UPDATE_VALUES', obj)
-        dispatch('bucketInfo', { verb: 'set' })
+        dispatch('bucketInfo', diff)
       })
     }
   },
@@ -81,10 +82,11 @@ const actions = {
         .delete('delete/' + obj.id, { data: { foo: 'bar' } })
         .then(response => {
           if (response.data) {
+            const diff = { verb: 'del', size: obj.size }
             commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
             commit('DELETE_RECORD', obj)
             dispatch('fetchStat')
-            dispatch('bucketInfo', { verb: 'set' })
+            dispatch('bucketInfo', diff)
           } else {
             commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
           }
@@ -109,7 +111,7 @@ const actions = {
     axios.get('counters').then(response => {
       commit('SET_COUNTERS', response.data)
       if (state.bucket.count === 0) {
-        dispatch('bucketInfo', { verb: 'get' })
+        dispatch('bucketInfo', { verb: 'set' })
       }
     })
   },
@@ -144,9 +146,18 @@ const actions = {
     dispatch('_bucketInfo', param)
   }, 200),
   _bucketInfo: ({ commit }, param) => {
-    axios.get(param.verb + '/bucket_info').then(response => {
-      commit('SET_BUCKET', response.data)
-    })
+    /**
+     * param: { verb: 'add|del|get', [size: int] }
+     */
+    if (param.verb === 'get') {
+      axios.get(param.verb + '/bucket_info').then(response => {
+        commit('SET_BUCKET', response.data)
+      })
+    } else {
+      axios.put(param.verb + '/bucket_info', param).then(response => {
+        commit('SET_BUCKET', response.data)
+      })
+    }
   }
 }
 

@@ -9,13 +9,16 @@ from api.config import CONFIG
 app = Flask(__name__)
 
 
-@app.route('/api/<verb>/bucket_info', methods=['GET'])
+@app.route('/api/<verb>/bucket_info', methods=['GET', 'PUT'])
 def bucket_info(verb):
-    if verb == 'get':
-        return jsonify(cloud.bucketInfo(True))
+    """
+    verb: get|add|del|set
+    """
+    if request.method == 'GET':
+        param = {'verb': verb}  # get|set
     else:
-        # set cron job
-        return jsonify(cloud.bucketInfo(False))
+        param = request.json
+    return jsonify(cloud.bucketInfo(param))
 
 
 @app.route('/api/thumb/<filename>', methods=['GET'])

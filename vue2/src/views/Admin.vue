@@ -43,7 +43,7 @@
     <v-layout wrap class="py-1" align-center>
       <v-flex xs9>Bucket count and size</v-flex>
       <v-flex xs3 class="text-right">
-        <v-btn width="100" color="primary" @click="bucket">SET</v-btn>
+        <v-btn width="100" color="primary" @click="bucket">Rebuild</v-btn>
       </v-flex>
     </v-layout>
     <v-layout wrap class="py-1" align-center>

@@ -75,7 +75,7 @@ def rebuilder(field, token):
     return tally
 
 
-def bucketInfo(read=True):
+def bucketInfo(param):
     key = datastore_client.key('Bucket', 'total')
     obj = datastore_client.get(key)
 
@@ -87,20 +87,28 @@ def bucketInfo(read=True):
                 size += blob.size
         return dict(zip(('count', 'size'), (count, size)))
 
-    if obj:
-        if read:
-            return dict(obj)
-        else:
+    def update(obj, _new):
+        obj.update(_new)
+        datastore_client.put(obj)
+        return dict(obj)
+
+    if obj and param:
+        if param['verb'] == 'set':
             _new = run()
-            obj.update(_new)
-            datastore_client.put(obj)
+            return update(obj, _new)
+        elif param['verb'] in ['add', 'del'] and param['size']:
+            _sign = 1 if param['verb'] == 'add' else -1
+            _new = {
+                'count': obj['count'] + _sign,
+                'size': obj['size'] + _sign * param['size']
+            }
+            return update(obj, _new)
+        else:  # get
             return dict(obj)
     else:
         _new = run()
         obj = datastore.Entity(key)
-        obj.update(_new)
-        datastore_client.put(obj)
-        return dict(obj)
+        return update(obj, _new)
 
 
 class Missing(object):
