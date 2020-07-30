@@ -34,6 +34,7 @@
                 :title="caption(item)"
                 :data-pswp-size="item.dim.join('x')"
                 :data-pswp-src="getImgSrc(item)"
+                :data-pswp-pid="item.id"
               />
               <v-card-title>{{item.headline}}</v-card-title>
               <v-card-text>
@@ -105,6 +106,7 @@ import common from '@/helpers/mixins'
 import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 
 Vue.use(Photoswipe, {
+  galleryPIDs: true,
   preload: [1, 3],
   shareEl: false,
   /* eslint-disable-next-line no-unused-vars */
