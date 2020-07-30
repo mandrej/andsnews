@@ -10,7 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "firebase": "^7.16.1",
-    "lru-cache": "^5.1.1",
+    "lru-cache": "^6.0.0",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-lazyload": "^1.3.3",
