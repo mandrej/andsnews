@@ -11,7 +11,7 @@
       <h4 class="body-1 white--text text-right">
         ANDрејевићи personal photo album
         <br />
-        {{bucket.count}} photos since 2007 and counting
+        {{count}} photos since 2007 and counting
       </h4>
     </div>
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
@@ -29,6 +29,7 @@ export default {
   mixins: [common],
   computed: {
     ...mapState('app', ['last', 'bucket']),
+    count () { return this.bucket.count},
     query () {
       return {
         year: this.last.value
