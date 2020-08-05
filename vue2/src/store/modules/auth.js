@@ -9,7 +9,9 @@ import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
 const messaging = firebase.messaging()
-const provider = new firebase.auth.GoogleAuthProvider().addScope('email')
+const provider = new firebase.auth.GoogleAuthProvider()
+provider.addScope('profile')
+provider.addScope('email')
 
 function pushMessage (token, msg) {
   axios
@@ -25,9 +27,7 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      firebase
-        .auth()
-        .signOut()
+      firebase.auth().signOut()
         .then(() => {
           commit('SAVE_USER', {})
           const routeName = router.currentRoute.name
@@ -36,9 +36,7 @@ const actions = {
           }
         })
     } else {
-      firebase
-        .auth()
-        .signInWithPopup(provider)
+      firebase.auth().signInWithPopup(provider)
         .then(response => {
           const payload = {
             name: response.user.displayName,
@@ -51,6 +49,8 @@ const actions = {
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
           dispatch('fetchToken')
+        }).catch(error => {
+          console.error(error.message)
         })
     }
   },

@@ -70,8 +70,8 @@ export default {
     ...mapGetters('app', ['nickNames']),
     tmp () {
       const val = this.$route.query
-      if (val.hasOwnProperty('year')) val.year = 1 * val.year
-      if (val.hasOwnProperty('month')) val.month = 1 * val.month
+      if (Object.prototype.hasOwnProperty.call(val, 'year')) val.year = 1 * val.year
+      if (Object.prototype.hasOwnProperty.call(val, 'month')) val.month = 1 * val.month
       return { ...val }
     },
     months () {
@@ -86,8 +86,8 @@ export default {
       immediate: true,
       handler: function (val) {
         // adopt to match types in store
-        if (val.hasOwnProperty('year')) val.year = 1 * val.year
-        if (val.hasOwnProperty('month')) val.month = 1 * val.month
+        if (Object.prototype.hasOwnProperty.call(val, 'year')) val.year = 1 * val.year
+        if (Object.prototype.hasOwnProperty.call(val, 'month')) val.month = 1 * val.month
         this.$store.dispatch('app/saveFindForm', val)
         if (!Object.keys(val).length) {
           this.$store.dispatch('app/changeFilter', { reset: false }) // nothing
