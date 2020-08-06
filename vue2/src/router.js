@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
 import List from '@/views/List'
-import createStore from './store'
+import store from './store'
 
 const Add = () => import(/* webpackChunkName: "add" */ '@/views/Add')
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
@@ -62,7 +62,6 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const store = createStore()
     const user = store.state.auth.user
     if (to.name === 'add' && user.isAuthorized) {
       next()

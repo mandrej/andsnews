@@ -36,9 +36,13 @@ const initialState = {
 
 const getters = {
   nickNames: state => {
-    return state.values.email.map(email => {
-      return email.match(/[^@]+/)[0].split('.')[0]
-    })
+    try {
+      return state.values.email.map(email => {
+        return email.match(/[^@]+/)[0].split('.')[0]
+      })
+    } catch (err) {
+      return []
+    }
   }
 }
 

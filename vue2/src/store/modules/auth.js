@@ -49,8 +49,8 @@ const actions = {
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
           dispatch('fetchToken')
-        }).catch(error => {
-          console.error(error.message)
+        }).catch(err => {
+          console.error(err.message)
         })
     }
   },
