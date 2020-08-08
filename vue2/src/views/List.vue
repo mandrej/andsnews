@@ -78,21 +78,21 @@
               </v-card-actions>
             </v-card>
           </v-flex>
-
-          <v-flex xs12 md8 offset-md-2 py-10 v-if="!objects.length">
-            <v-alert
-              v-if="error === ''"
-              type="info"
-              transition="scale-transition"
-              prominent
-            >No data for current filter/ search</v-alert>
-            <v-alert v-else type="error" transition="scale-transition" prominent>
-              Something went wrong
-              <br />
-              {{error}}
-            </v-alert>
-          </v-flex>
         </v-layout>
+
+        <template v-if="error">
+          <v-alert
+            v-if="error === '0'"
+            type="info"
+            transition="scale-transition"
+            prominent
+          >No data for current filter/ search</v-alert>
+          <v-alert v-else type="error" transition="scale-transition" prominent>
+            Something went wrong
+            <br />
+            {{error}}
+          </v-alert>
+        </template>
       </Photoswipe>
     </v-container>
   </div>

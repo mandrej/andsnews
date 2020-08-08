@@ -25,7 +25,7 @@ const initialState = {
   objects: [],
   pages: [],
   next: null,
-  error: '',
+  error: false,
 
   busy: false,
   clear: false,
@@ -125,7 +125,7 @@ const actions = {
     if (state.next) params._page = state.next
     const url = 'search?' + querystring.stringify(params)
 
-    commit('SET_ERROR', '')
+    commit('SET_ERROR', false)
     commit('SET_BUSY', true)
     axios
       .get(url)
@@ -134,8 +134,11 @@ const actions = {
           commit('RESET_RECORDS')
           commit('SET_CLEAR', false)
         }
-        commit('UPDATE_RECORDS', response.data)
+        if (response.data.objects && response.data.objects.length === 0) {
+          commit('SET_ERROR', '0')
+        }
         if (response.error) commit('SET_ERROR', response.error)
+        commit('UPDATE_RECORDS', response.data)
         commit('SET_BUSY', false)
       })
       .catch(err => {
