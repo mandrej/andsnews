@@ -159,20 +159,6 @@ $almost-white: rgba(255, 255, 255, 0.87);
 .fade-leave-active {
   opacity: 0;
 }
-/* Lazy image */
-img.lazy {
-  opacity: 0;
-  display: block;
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  transition: opacity 0.3s;
-  cursor: pointer;
-}
-img.lazy[lazy="loaded"],
-img.lazy[lazy="error"] {
-  opacity: 1;
-}
 /* Photoswipe */
 .pswp * {
   font-family: "Roboto", Helvetica, Arial, sans-serif !important;
@@ -185,5 +171,28 @@ img.lazy[lazy="error"] {
   font-size: 14px !important;
   text-align: center !important;
   opacity: 0.75 !important;
+}
+/* Lazy image */
+img.lazy {
+  position: absolute;
+  opacity: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+img.lazy[lazy="loaded"],
+img.lazy[lazy="error"] {
+  opacity: 1;
+}
+img.lazy + p {
+  position: absolute;
+  bottom: 0;
+  color: white;
+  margin: 0;
+  padding: 16px;
+  line-height: 120% !important;
 }
 </style>

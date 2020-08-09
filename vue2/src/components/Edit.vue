@@ -19,7 +19,9 @@
         <v-form v-model="valid" ref="form">
           <v-row>
             <v-col cols="12" md="4" sm="4">
-              <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
+              <v-responsive :aspect-ratio="1">
+                <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
+              </v-responsive>
               <v-btn if="user.isAdmin" text block @click="readExif">Read Exif</v-btn>
             </v-col>
             <v-col cols="12" md="8" sm="8">

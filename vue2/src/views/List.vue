@@ -28,15 +28,17 @@
         <v-layout row wrap v-lazy-container="{ selector: 'img' }">
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
             <v-card flat>
-              <img
-                class="lazy"
-                :data-src="getImgSrc(item, 400)"
-                :title="caption(item)"
-                :data-pswp-size="item.dim.join('x')"
-                :data-pswp-src="getImgSrc(item)"
-                :data-pswp-pid="item.id"
-              />
-              <v-card-title>{{item.headline}}</v-card-title>
+              <v-responsive :aspect-ratio="4/3">
+                <img
+                  class="lazy"
+                  :data-src="getImgSrc(item, 400)"
+                  :title="caption(item)"
+                  :data-pswp-size="item.dim.join('x')"
+                  :data-pswp-src="getImgSrc(item)"
+                  :data-pswp-pid="item.id"
+                />
+                <p class="title">{{item.headline}}</p>
+              </v-responsive>
               <v-card-text>
                 <v-layout row align-center justify-space-between class="px-2">
                   <span style="line-height: 28px">{{item.date}}</span>
@@ -79,21 +81,21 @@
             </v-card>
           </v-flex>
         </v-layout>
-
-        <template v-if="error">
-          <v-alert
-            v-if="error === '0'"
-            type="info"
-            transition="scale-transition"
-            prominent
-          >No data for current filter/ search</v-alert>
-          <v-alert v-else type="error" transition="scale-transition" prominent>
-            Something went wrong
-            <br />
-            {{error}}
-          </v-alert>
-        </template>
       </Photoswipe>
+    </v-container>
+
+    <v-container v-if="error">
+      <v-alert
+        v-if="error === '0'"
+        type="info"
+        transition="scale-transition"
+        prominent
+      >No data for current filter/ search</v-alert>
+      <v-alert v-else type="error" transition="scale-transition" prominent>
+        Something went wrong
+        <br />
+        {{error}}
+      </v-alert>
     </v-container>
   </div>
 </template>
