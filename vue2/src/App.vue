@@ -21,7 +21,7 @@
           </v-layout>
         </v-navigation-drawer>
 
-        <v-app-bar app clipped-left flat color="accent">
+        <v-app-bar app clipped-left color="accent">
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title
             class="headline"
