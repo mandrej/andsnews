@@ -1,6 +1,14 @@
 <template>
   <div id="app">
     <Message>></Message>
+
+    <v-snackbar left bottom :value="updateExists" :timeout="-1">
+      An update is available
+      <template v-slot:action="{ attrs }">
+        <v-btn dark text v-bind="attrs" @click="refreshApp">Update</v-btn>
+      </template>
+    </v-snackbar>
+
     <transition name="fade" mode="out-in">
       <v-app>
         <v-navigation-drawer
@@ -53,6 +61,7 @@ import Menu from '@/components/Menu'
 import Find from '@/components/Find'
 import Stat from '@/components/Stat'
 import VueLazyload from 'vue-lazyload'
+import update from '@/helpers/update'
 import CONFIG from '@/helpers/config'
 
 Vue.use(VueLazyload, {
@@ -63,6 +72,7 @@ Vue.use(VueLazyload, {
 
 export default {
   name: 'App',
+  mixins: [update],
   components: {
     Menu,
     Find,

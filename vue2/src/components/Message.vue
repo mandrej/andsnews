@@ -28,18 +28,20 @@ export default {
   computed: {
     ...mapState('app', ['snackbar'])
   },
+  created () {
+    window.addEventListener('online', this.updateOnlineStatus)
+    window.addEventListener('offline', this.updateOnlineStatus)
+  },
   mounted () {
     messaging.onMessage(payload => {
       this.message = payload.notification.body
       if (this.message == CONFIG.end_message) {
-        this.timeout = 0
+        this.timeout = -1
       } else {
         this.timeout = 6000
       }
       this.model = true
     })
-    window.addEventListener('online', this.updateOnlineStatus)
-    window.addEventListener('offline', this.updateOnlineStatus)
   },
   watch: {
     snackbar: function (val) {
