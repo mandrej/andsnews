@@ -1,16 +1,11 @@
 import Vue from 'vue'
 import Vuetify, { VList } from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
-import LRU from 'lru-cache'
 
 Vue.use(Vuetify, {
   components: {
     VList
   }
-})
-const themeCache = new LRU({
-  max: 10,
-  maxAge: 24 * 60 * 60 * 1000, // 1 day
 })
 
 const opts = {
@@ -33,9 +28,6 @@ const opts = {
         success: colors.green.darken3,
         error: colors.red.darken4
       }
-    },
-    options: {
-      themeCache
     }
   },
   icons: {

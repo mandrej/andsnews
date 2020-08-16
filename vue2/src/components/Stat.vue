@@ -1,40 +1,14 @@
 <template>
   <v-list>
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>{{bucket.count}}</v-list-item-title>
-        <v-list-item-subtitle>photographs</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>{{formatBytes(bucket.size)}}</v-list-item-title>
-        <v-list-item-subtitle>storage size</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>{{values.tags.length}}</v-list-item-title>
-        <v-list-item-subtitle>tags</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>{{values.model.length}}</v-list-item-title>
-        <v-list-item-subtitle>cameras</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>{{values.email.length}}</v-list-item-title>
-        <v-list-item-subtitle>authors</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-    <v-divider></v-divider>
+    <template v-for="(item, index) in list">
+      <v-list-item :key="item.icon" two-line @click.prevent>
+        <v-list-item-content>
+          <v-list-item-title>{{item.value}}</v-list-item-title>
+          <v-list-item-subtitle>{{item.text}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider v-if="index + 1 < list.length" :key="index"></v-divider>
+    </template>
   </v-list>
 </template>
 
@@ -46,7 +20,31 @@ export default {
   name: 'Stat',
   mixins: [common],
   computed: {
-    ...mapState('app', ['values', 'bucket'])
+    ...mapState('app', ['values', 'bucket']),
+    list () {
+      return [
+        {
+          value: this.bucket.count,
+          text: 'photographs'
+        },
+        {
+          value: this.formatBytes(this.bucket.size),
+          text: 'storage size'
+        },
+        {
+          value: this.values.tags.length,
+          text: 'tags'
+        },
+        {
+          value: this.values.model.length,
+          text: 'cameras'
+        },
+        {
+          value: this.values.email.length,
+          text: 'authors'
+        }
+      ]
+    }
   }
 }
 </script>
