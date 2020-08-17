@@ -6,7 +6,7 @@
       <h1>{{title}}</h1>
       <v-sheet class="my-3 pa-3">
         <v-layout column justify-center align-center style="position: relative; height: 120px">
-          <template v-if="isInitial">
+          <template v-if="status === code.INITIAL">
             <input
               type="file"
               multiple
@@ -20,7 +20,7 @@
               <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
             </div>
           </template>
-          <template v-if="isSaving">
+          <template v-if="status === code.SAVING">
             <v-progress-linear
               :active="true"
               :query="value < 100"
@@ -35,7 +35,7 @@
               class="subheading text-center"
             >Processing images. Please wait …</div>
           </template>
-          <template v-if="isFailed">
+          <template v-if="status === code.FAILED">
             <h3 class="headline">Upload failed</h3>
             <div class="subheading text-center error--text">Something went wrong.</div>
           </template>
@@ -89,11 +89,6 @@ import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
 
-const STATUS_INITIAL = 0
-const STATUS_SAVING = 1
-const STATUS_SUCCESS = 2
-const STATUS_FAILED = 3
-
 export default {
   name: 'Add',
   components: {
@@ -104,6 +99,12 @@ export default {
   data: () => ({
     current: {},
     status: null,
+    code: {
+      INITIAL: 0,
+      SAVING: 1,
+      SUCCESS: 2,
+      FAILED: 3,
+    },
     editForm: false,
     value: 0,
     failed: [],
@@ -117,30 +118,18 @@ export default {
   },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['uploaded']),
-    isInitial () {
-      return this.status === STATUS_INITIAL
-    },
-    isSaving () {
-      return this.status === STATUS_SAVING
-    },
-    isSuccess () {
-      return this.status === STATUS_SUCCESS
-    },
-    isFailed () {
-      return this.status === STATUS_FAILED
-    }
+    ...mapState('app', ['uploaded'])
   },
   methods: {
     reset () {
-      this.status = STATUS_INITIAL
+      this.status = this.code.INITIAL
       this.value = 0
     },
     progress (event) {
       this.value = Math.round((event.loaded * 100) / event.total)
     },
     save (formData) {
-      this.status = STATUS_SAVING
+      this.status = this.code.SAVING
       this.$store.dispatch('app/setSnackbar', 'Uploading images …')
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
@@ -159,12 +148,12 @@ export default {
           if (success) {
             this.$store.dispatch('app/setSnackbar', null)
           }
-          this.status = STATUS_SUCCESS
+          this.status = this.code.SUCCESS
           this.reset()
         })
         .catch(err => {
           this.message = err.response
-          this.status = STATUS_FAILED
+          this.status = this.code.FAILED
         })
     },
     filesChange (fieldName, fileList) {
