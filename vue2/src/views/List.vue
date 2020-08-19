@@ -23,8 +23,8 @@
       <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
     </v-btn>
 
-    <v-container fluid grid-list-lg class="pa-3">
-      <Photoswipe :options="{history: true}">
+    <Photoswipe :options="{history: true}">
+      <v-container fluid grid-list-lg class="pa-3">
         <v-layout row wrap v-lazy-container="{ selector: 'img' }">
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
             <v-card flat>
@@ -81,8 +81,8 @@
             </v-card>
           </v-flex>
         </v-layout>
-      </Photoswipe>
-    </v-container>
+      </v-container>
+    </Photoswipe>
 
     <v-container v-if="error">
       <v-alert
