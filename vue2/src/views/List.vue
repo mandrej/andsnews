@@ -24,9 +24,16 @@
     </v-btn>
 
     <Photoswipe :options="{history: true}">
-      <v-container fluid grid-list-lg class="pa-3">
+      <v-container
+        fluid
+        grid-list-lg
+        class="pa-3"
+        v-for="(list, date) in objectsByDate"
+        :key="date"
+      >
+        <div class="text-h6">{{$date(date).format('ddd, MMM DD, YYYY')}}</div>
         <v-layout row wrap v-lazy-container="{ selector: 'img' }">
-          <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in objects" :key="item.id">
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in list" :key="item.id">
             <v-card flat>
               <v-responsive :aspect-ratio="4/3">
                 <img
@@ -41,7 +48,8 @@
               </v-responsive>
               <v-card-text>
                 <v-layout row align-center justify-space-between class="px-2">
-                  <span style="line-height: 28px">{{item.date}}</span>
+                  <div style="line-height: 28px">by {{item.nick}} at {{item.date.slice(11,)}}</div>
+                  <!-- <span style="line-height: 28px">{{item.date.slice(11,)}}</span> -->
                   <v-btn
                     v-if="item.loc"
                     icon
@@ -53,7 +61,6 @@
                     <v-icon>my_location</v-icon>
                   </v-btn>
                 </v-layout>
-                <div>by {{item.nick}}</div>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
@@ -102,7 +109,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 import * as easings from 'vuetify/lib/services/goto/easing-patterns'
@@ -143,6 +150,7 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['objects', 'error', 'next']),
+    ...mapGetters('app', ['objectsByDate']),
     isAdmin () {
       return this.user && this.user.isAdmin
     },
