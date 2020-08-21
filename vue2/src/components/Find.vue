@@ -33,6 +33,8 @@
     <v-select
       v-model.lazy="tmp.month"
       :items="months"
+      item-text="name"
+      item-value="value"
       label="by month"
       @change="submit"
       :disabled="busy"
@@ -75,9 +77,8 @@ export default {
       return { ...val }
     },
     months () {
-      const arr = [...Array(12 + 1).keys()]
-      arr.shift()
-      return arr
+      const locale = this.$date.months()
+      return locale.map((month, i) => ({ name: month, value: i + 1 }))
     }
   },
   watch: {

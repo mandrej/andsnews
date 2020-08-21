@@ -31,7 +31,8 @@
         v-for="(list, date) in objectsByDate"
         :key="date"
       >
-        <div class="text-h6">{{$date(date).format('ddd, MMM DD, YYYY')}}</div>
+        <div class="text-h6 font-weight-light">{{$date(date).format('dddd, MMMM DD, YYYY')}}</div>
+
         <v-layout row wrap v-lazy-container="{ selector: 'img' }">
           <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in list" :key="item.id">
             <v-card flat>
