@@ -27,9 +27,12 @@ import common from '@/helpers/mixins'
 export default {
   name: 'Home',
   mixins: [common],
+  mounted () {
+    this.$store.dispatch('app/bucketInfo', { verb: 'get' })
+  },
   computed: {
     ...mapState('app', ['last', 'bucket']),
-    count () { return this.bucket.count},
+    count () { return this.bucket.count },
     query () {
       return {
         year: this.last.value
