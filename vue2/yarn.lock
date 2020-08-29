@@ -962,18 +962,18 @@
     faye-websocket "0.11.3"
     tslib "^1.11.1"
 
-"@firebase/firestore-types@1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-1.12.0.tgz#511e572e946b07f5a603c90e078f0cd714923fac"
-  integrity sha512-OqNxVb63wPZdUc7YnpacAW1WNIMSKERSewCRi+unCQ0YI0KNfrDSypyGCyel+S3GdOtKMk9KnvDknaGbnaFX4g==
+"@firebase/firestore-types@1.12.1":
+  version "1.12.1"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-1.12.1.tgz#67e999798043d1b3156d0a2c52d4299a92345deb"
+  integrity sha1-Z+mZeYBD0bMVbQosUtQpmpI0Xes=
 
-"@firebase/firestore@1.16.5":
-  version "1.16.5"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.16.5.tgz#b80b63f18bd70cc101f66c5e0a79dce93f036384"
-  integrity sha1-uAtj8YvXDMEB9mxeCnnc6T8DY4Q=
+"@firebase/firestore@1.16.6":
+  version "1.16.6"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-1.16.6.tgz#a38d02b525cb19a12b28d580403c20cc215a2330"
+  integrity sha1-o40CtSXLGaErKNWAQDwgzCFaIzA=
   dependencies:
     "@firebase/component" "0.1.18"
-    "@firebase/firestore-types" "1.12.0"
+    "@firebase/firestore-types" "1.12.1"
     "@firebase/logger" "0.2.6"
     "@firebase/util" "0.3.1"
     "@firebase/webchannel-wrapper" "0.3.0"
@@ -4270,17 +4270,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^7.19.0:
-  version "7.19.0"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.19.0.tgz#cfa64ebc56f3ef095df31d20f1de4dc5fa80f793"
-  integrity sha1-z6ZOvFbz7wld8x0g8d5NxfqA95M=
+firebase@^7.19.1:
+  version "7.19.1"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-7.19.1.tgz#e77c778117c92206c4806c15a0513f33b625ad05"
+  integrity sha1-53x3gRfJIgbEgGwVoFE/M7YlrQU=
   dependencies:
     "@firebase/analytics" "0.4.2"
     "@firebase/app" "0.6.10"
     "@firebase/app-types" "0.6.1"
     "@firebase/auth" "0.14.9"
     "@firebase/database" "0.6.11"
-    "@firebase/firestore" "1.16.5"
+    "@firebase/firestore" "1.16.6"
     "@firebase/functions" "0.4.50"
     "@firebase/installations" "0.4.16"
     "@firebase/messaging" "0.7.0"
@@ -8837,10 +8837,10 @@ vuetify-loader@^1.6.0:
     file-loader "^4.0.0"
     loader-utils "^1.2.0"
 
-vuetify@^2.3.9:
-  version "2.3.9"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.9.tgz#6dcd1de647e1ce2c7cfaebb7068a0cf8929360b3"
-  integrity sha1-bc0d5kfhzix8+uu3BooM+JKTYLM=
+vuetify@^2.3.10:
+  version "2.3.10"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.10.tgz#c8cbc77ee1224b5a132f501a3762dee6d8c95a06"
+  integrity sha1-yMvHfuEiS1oTL1AaN2Le5tjJWgY=
 
 vuex-persistedstate@^3.1.0:
   version "3.1.0"

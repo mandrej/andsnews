@@ -23,7 +23,7 @@
       <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
     </v-btn>
 
-    <Photoswipe :options="{history: true}">
+    <Photoswipe :options="pswpOptions">
       <v-container
         fluid
         grid-list-lg
@@ -115,20 +115,7 @@ import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 
-Vue.use(Photoswipe, {
-  galleryPIDs: true,
-  preload: [1, 3],
-  shareEl: false,
-  /* eslint-disable-next-line no-unused-vars */
-  addCaptionHTMLFn: function (item, captionEl, isFake) {
-    if (!item.el.title) {
-      captionEl.children[0].innerHTML = ''
-      return false
-    }
-    captionEl.children[0].innerHTML = item.el.title
-    return true
-  }
-})
+Vue.use(Photoswipe)
 
 export default {
   name: 'List',
@@ -146,6 +133,22 @@ export default {
     options: {
       duration: 300,
       easings: Object.keys(easings)
+    },
+    pswpOptions: {
+      history: true,
+      galleryPIDs: true,
+      preload: [1, 3],
+      shareEl: false,
+      /* eslint-disable-next-line no-unused-vars */
+      addCaptionHTMLFn: function (item, captionEl, isFake) {
+        console.log(item)
+        if (!item.el.title) {
+          captionEl.children[0].innerHTML = ''
+          return false
+        }
+        captionEl.children[0].innerHTML = item.el.title
+        return true
+      }
     }
   }),
   computed: {
