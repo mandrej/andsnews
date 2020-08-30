@@ -13,17 +13,17 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: colors.blueGrey,
-        secondary: colors.blueGrey.lighten3,
-        accent: colors.orange.lighten2,
+        primary: colors.grey.darken3,
+        secondary: colors.grey.lighten2,
+        accent: colors.shades.white,
         info: colors.blue,
         success: colors.green,
-        error: colors.red.darken2
+        error: colors.red.darken1
       },
       dark: {
-        primary: colors.teal,
-        secondary: colors.teal.darken3,
-        accent: colors.brown,
+        primary: colors.shades.black,
+        secondary: colors.grey.daken4,
+        accent: colors.shades.black,
         info: colors.blue.darken3,
         success: colors.green.darken3,
         error: colors.red.darken4

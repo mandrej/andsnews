@@ -23,7 +23,7 @@
       <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
     </v-btn>
 
-    <Photoswipe :options="pswpOptions">
+    <Photoswipe :options="pswpOptions" :key="key">
       <v-container
         fluid
         grid-list-lg
@@ -125,6 +125,7 @@ export default {
   },
   mixins: [common],
   data: () => ({
+    key: null,
     bottom: false,
     distance: 2000,
     confirm: false,
@@ -141,7 +142,6 @@ export default {
       shareEl: false,
       /* eslint-disable-next-line no-unused-vars */
       addCaptionHTMLFn: function (item, captionEl, isFake) {
-        console.log(item)
         if (!item.el.title) {
           captionEl.children[0].innerHTML = ''
           return false
@@ -167,8 +167,11 @@ export default {
   },
   updated () {
     this.$nextTick(() => {
-      this.bottom = false
+      this.bottom = true
     })
+    if (this.$route.hash) {
+      this.key = 1 * this.$route.hash.match(/&pid=(.*)/)[1]
+    }
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.bottomVisible)
