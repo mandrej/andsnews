@@ -166,9 +166,7 @@ export default {
     window.addEventListener('scroll', this.bottomVisible)
   },
   updated () {
-    this.$nextTick(() => {
-      this.bottom = true
-    })
+    this.bottom = false
     if (this.$route.hash) {
       this.key = 1 * this.$route.hash.match(/&pid=(.*)/)[1]
     }
