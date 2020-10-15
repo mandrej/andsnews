@@ -99,7 +99,7 @@
                       <v-text-field
                         v-model="dateTime.time"
                         label="Time taken"
-                        prepend-icon="access_time"
+                        prepend-icon="schedule"
                         readonly
                         v-on="on"
                       ></v-text-field>

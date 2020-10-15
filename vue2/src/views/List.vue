@@ -68,7 +68,7 @@
                 <v-container fluid>
                   <v-layout :class="justify(user)">
                     <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
-                      <v-icon>cancel</v-icon>
+                      <v-icon>delete</v-icon>
                     </v-btn>
                     <v-btn v-if="canEdit(user)" icon small text @click="showEditdForm(item)">
                       <v-icon>edit</v-icon>
