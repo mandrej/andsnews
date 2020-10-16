@@ -69,8 +69,12 @@
 
               <v-list-item-action>
                 <v-layout row>
-                  <v-btn class="mr-3" color="error" @click="removeRecord(item)">Delete</v-btn>
-                  <v-btn class="mr-3" color="primary" @click="showEditForm(item)">Publish</v-btn>
+                  <v-btn class="mr-3" color="error" @click="removeRecord(item)">
+                    <v-icon left>delete</v-icon>Delete
+                  </v-btn>
+                  <v-btn class="mr-3" color="primary" @click="showEditForm(item)">
+                    <v-icon left>publish</v-icon>Publish
+                  </v-btn>
                 </v-layout>
               </v-list-item-action>
             </v-list-item>
