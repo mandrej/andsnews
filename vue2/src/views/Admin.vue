@@ -1,63 +1,85 @@
 <template>
   <v-container>
     <h1>{{title}}</h1>
-    <h3 class="title">Messaging</h3>
-    <v-layout align-center>
-      <v-flex xs9>
-        <v-text-field
-          label="Send message"
-          hint="Send message to subscribers group"
-          v-model="msg.default"
-          type="text"
-          @input="upper($event)"
-          :rules="requiredRule"
-          required
-        ></v-text-field>
-      </v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn color="primary" width="100" @click="send">Send</v-btn>
-      </v-flex>
-    </v-layout>
+    <v-list>
+      <h3>
+        <v-icon left>message</v-icon>Send message to subscribers
+      </h3>
+      <v-list-item>
+        <v-list-item-content>
+          <v-text-field
+            label="Message"
+            hint="Send message to subscribers group"
+            v-model="msg.default"
+            type="text"
+            @input="upper($event)"
+            :rules="requiredRule"
+            required
+          ></v-text-field>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn color="primary" @click="send">Send</v-btn>
+        </v-list-item-action>
+      </v-list-item>
 
-    <h3 class="title">Counters</h3>
-    <v-layout wrap align-center v-for="field in Object.keys(values)" :key="field" class="py-1">
-      <v-flex xs9>Rebuild for field {{field}}</v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn
-          :disabled="canRun(fcm_token)"
-          color="primary"
-          width="100"
-          @click="rebuild(field)"
-        >Rebuild</v-btn>
-      </v-flex>
-    </v-layout>
+      <h3>
+        <v-icon left>build</v-icon>Rebuild counters
+      </h3>
+      <v-list-item v-for="field in Object.keys(values)" :key="field">
+        <v-list-item-content>
+          <v-list-item-title>for {{field}}</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn
+            :disabled="canRun(fcm_token)"
+            color="primary"
+            width="100"
+            @click="rebuild(field)"
+          >Rebuild</v-btn>
+        </v-list-item-action>
+      </v-list-item>
 
-    <!-- <v-layout wrap align-center>
-      <v-flex xs9>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn :disabled="true" color="primary" width="100" @click="fix">Fix</v-btn>
-      </v-flex>
-    </v-layout>-->
+      <h3>
+        <v-icon left>bug_report</v-icon>
+        Bug fix on {{$date('2020-03-11').format('dddd, MMMM DD, YYYY')}}
+      </h3>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn :disabled="true" color="primary" @click="fix">Fix</v-btn>
+        </v-list-item-action>
+      </v-list-item>
 
-    <h3 class="title">Google Cloud Storage</h3>
-    <v-layout wrap class="py-1" align-center>
-      <v-flex xs9>Bucket count and size</v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn width="100" color="primary" @click="bucket">Rebuild</v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout wrap class="py-1" align-center>
-      <v-flex xs9>Remove images from the Cloud not referenced in datastore (SLOW)</v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn :disabled="canRun(fcm_token)" color="error" width="100" @click="unbound">Remove</v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout wrap class="py-1" align-center>
-      <v-flex xs9>Remove datastore records with images missing in the Cloud (404)</v-flex>
-      <v-flex xs3 class="text-right">
-        <v-btn :disabled="true" color="error" width="100" @click="missing">Missing</v-btn>
-      </v-flex>
-    </v-layout>
+      <h3>
+        <v-icon left>cloud_done</v-icon>Storage
+      </h3>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Bucket count and size</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn color="primary" @click="bucket">Rebuild</v-btn>
+        </v-list-item-action>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Remove images from the Cloud not referenced in datastore (SLOW)</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
+        </v-list-item-action>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Remove datastore records with images missing in the Cloud (404)</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn :disabled="true" color="error" @click="missing">Missing</v-btn>
+        </v-list-item-action>
+      </v-list-item>
+    </v-list>
   </v-container>
 </template>
 
@@ -96,9 +118,6 @@ export default {
     rebuild (name) {
       this.callAjax('rebuild/' + name)
     },
-    reindex () {
-      this.callAjax('reindex')
-    },
     unbound () {
       this.callAjax('unbound')
     },
@@ -120,3 +139,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-list {
+  background-color: transparent;
+}
+.v-btn {
+  width: 100px;
+}
+.v-list-item__action {
+  margin: 0;
+}
+</style>
