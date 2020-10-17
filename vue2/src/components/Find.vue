@@ -68,13 +68,10 @@ export default {
     search: null
   }),
   computed: {
-    ...mapState('app', ['busy', 'values']),
+    ...mapState('app', ['busy', 'values', 'find']),
     ...mapGetters('app', ['nickNames']),
     tmp () {
-      const val = this.$route.query
-      if (Object.prototype.hasOwnProperty.call(val, 'year')) val.year = 1 * val.year
-      if (Object.prototype.hasOwnProperty.call(val, 'month')) val.month = 1 * val.month
-      return { ...val }
+      return { ...this.find }
     },
     months () {
       const locale = this.$date.months()

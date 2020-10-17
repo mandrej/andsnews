@@ -11,7 +11,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const persisted = createPersistedState({
   key: 'ands',
   paths: [
-    'auth.user', 'auth.fcm_token', 'app.dark',
+    'auth.user', 'auth.fcm_token', 'app.dark', 'app.find',
     'app.last', 'app.bucket', 'app.values', 'app.uploaded'
   ]
 })
