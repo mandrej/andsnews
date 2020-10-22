@@ -2,9 +2,7 @@
   <v-container>
     <h1>{{title}}</h1>
     <v-list>
-      <h3>
-        <v-icon left>message</v-icon>Send message to subscribers
-      </h3>
+      <h3>Send message to subscribers</h3>
       <v-list-item>
         <v-list-item-content>
           <v-text-field
@@ -22,9 +20,7 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>
-        <v-icon left>build</v-icon>Rebuild counters
-      </h3>
+      <h3>Rebuild counters</h3>
       <v-list-item v-for="field in Object.keys(values)" :key="field">
         <v-list-item-content>
           <v-list-item-title>for {{field}}</v-list-item-title>
@@ -39,10 +35,7 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>
-        <v-icon left>bug_report</v-icon>
-        Bug fix on {{$date('2020-03-11').format('dddd, MMMM DD, YYYY')}}
-      </h3>
+      <h3>Bug fix on {{$date('2020-03-11').format('dddd, MMMM DD, YYYY')}}</h3>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-list-item-title>
@@ -52,9 +45,7 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>
-        <v-icon left>cloud_done</v-icon>Storage
-      </h3>
+      <h3>Storage</h3>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Bucket count and size</v-list-item-title>

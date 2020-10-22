@@ -63,29 +63,31 @@
                   </v-btn>
                 </v-layout>
               </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-container fluid>
-                  <v-layout :class="justify(user)">
-                    <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
-                      <v-icon>delete</v-icon>
-                    </v-btn>
-                    <v-btn v-if="canEdit(user)" icon small text @click="showEditdForm(item)">
-                      <v-icon>edit</v-icon>
-                    </v-btn>
-                    <v-btn
-                      icon
-                      small
-                      text
-                      :href="`/api/download/${item.filename}`"
-                      :download="item.filename"
-                      @click="download(item.filename)"
-                    >
-                      <v-icon>file_download</v-icon>
-                    </v-btn>
-                  </v-layout>
-                </v-container>
-              </v-card-actions>
+              <template v-if="loggedIn(user)">
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-container fluid>
+                    <v-layout class="justify-space-between">
+                      <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
+                        <v-icon>delete</v-icon>
+                      </v-btn>
+                      <v-btn icon small text @click="showEditdForm(item)">
+                        <v-icon>edit</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        small
+                        text
+                        :href="`/api/download/${item.filename}`"
+                        :download="item.filename"
+                        @click="download(item.filename)"
+                      >
+                        <v-icon>file_download</v-icon>
+                      </v-btn>
+                    </v-layout>
+                  </v-container>
+                </v-card-actions>
+              </template>
             </v-card>
           </v-flex>
         </v-layout>
@@ -189,7 +191,7 @@ export default {
       const pageHeight = document.documentElement.scrollHeight
       this.bottom = visible + scrollY + this.distance >= pageHeight
     },
-    canEdit (user) {
+    loggedIn (user) {
       return user.isAuthorized
     },
     caption (rec) {
@@ -213,9 +215,6 @@ export default {
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
       this.confirm = false
-    },
-    justify (user) {
-      return (user.isAuthorized) ? 'justify-space-between' : 'justify-end'
     },
     download (filename) {
       this.$store.dispatch('app/setSnackbar', 'Downloading ' + filename)
