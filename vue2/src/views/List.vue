@@ -80,7 +80,7 @@
                         text
                         :href="`/api/download/${item.filename}`"
                         :download="item.filename"
-                        @click.stop.prevent="download(item.filename)"
+                        @click.native="download(item.filename)"
                       >
                         <v-icon>file_download</v-icon>
                       </v-btn>
