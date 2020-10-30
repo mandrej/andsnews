@@ -7605,10 +7605,10 @@ sass-loader@^9.0.3:
     schema-utils "^2.7.0"
     semver "^7.3.2"
 
-sass@^1.27.1:
-  version "1.27.1"
-  resolved "https://registry.npm.taobao.org/sass/download/sass-1.27.1.tgz#fe4c730f2abfe1502ecff047798b35a7b792dc03"
-  integrity sha1-/kxzDyq/4VAuz/BHeYs1p7eS3AM=
+sass@^1.28.0:
+  version "1.28.0"
+  resolved "https://registry.npm.taobao.org/sass/download/sass-1.28.0.tgz?cache=0&sync_timestamp=1604012671698&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.28.0.tgz#546f1308ff74cc4ec2ad735fd35dc18bc3f51f72"
+  integrity sha1-VG8TCP90zE7CrXNf013Bi8P1H3I=
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
