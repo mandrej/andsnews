@@ -5,7 +5,7 @@
     <v-container>
       <h1>{{title}}</h1>
       <v-sheet class="my-3 pa-3">
-        <v-layout column justify-center align-center style="position: relative; height: 120px">
+        <div class="d-flex flex-column justify-center" style="position: relative; height: 120px">
           <template v-if="status === code.INITIAL">
             <input
               type="file"
@@ -39,7 +39,7 @@
             <h3 class="headline">Upload failed</h3>
             <div class="subheading text-center error--text">Something went wrong.</div>
           </template>
-        </v-layout>
+        </div>
       </v-sheet>
 
       <template v-for="(item, k) in failed">
@@ -67,15 +67,13 @@
                 <v-list-item-subtitle>{{formatBytes(item.size)}}</v-list-item-subtitle>
               </v-list-item-content>
 
-              <v-list-item-action>
-                <v-layout row>
-                  <v-btn class="mr-3" color="error" @click="removeRecord(item)">
-                    <v-icon left>delete</v-icon>Delete
-                  </v-btn>
-                  <v-btn class="mr-3" color="primary" @click="showEditForm(item)">
-                    <v-icon left>publish</v-icon>Publish
-                  </v-btn>
-                </v-layout>
+              <v-list-item-action class="d-flex flex-row">
+                <v-btn class="mr-3" color="error" @click="removeRecord(item)">
+                  <v-icon left>delete</v-icon>Delete
+                </v-btn>
+                <v-btn class="mr-3" color="primary" @click="showEditForm(item)">
+                  <v-icon left>publish</v-icon>Publish
+                </v-btn>
               </v-list-item-action>
             </v-list-item>
           </template>

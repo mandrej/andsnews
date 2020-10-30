@@ -27,7 +27,7 @@
       <v-container
         fluid
         grid-list-lg
-        class="pa-3"
+        class="pa-4"
         v-for="(list, date) in objectsByDate"
         :key="date"
       >
@@ -47,44 +47,37 @@
                 />
                 <p class="title">{{item.headline}}</p>
               </v-responsive>
-              <v-card-text>
-                <v-layout row align-center justify-space-between class="px-2">
-                  <div style="line-height: 28px">by {{item.nick}} at {{item.date.slice(11,)}}</div>
-                  <!-- <span style="line-height: 28px">{{item.date.slice(11,)}}</span> -->
-                  <v-btn
-                    v-if="item.loc"
-                    icon
-                    small
-                    text
-                    target="blank"
-                    :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
-                  >
-                    <v-icon>my_location</v-icon>
-                  </v-btn>
-                </v-layout>
+              <v-card-text class="d-flex justify-space-between py-2">
+                <div style="line-height: 28px">by {{item.nick}} at {{item.date.slice(11,)}}</div>
+                <v-btn
+                  v-if="item.loc"
+                  icon
+                  small
+                  text
+                  target="blank"
+                  :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+                >
+                  <v-icon>my_location</v-icon>
+                </v-btn>
               </v-card-text>
               <template v-if="loggedIn(user)">
                 <v-divider></v-divider>
-                <v-card-actions>
-                  <v-container fluid>
-                    <v-layout class="justify-space-between">
-                      <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
-                        <v-icon>delete</v-icon>
-                      </v-btn>
-                      <v-btn icon small text @click="showEditdForm(item)">
-                        <v-icon>edit</v-icon>
-                      </v-btn>
-                      <v-btn
-                        icon
-                        small
-                        text
-                        :href="`/api/download/${item.filename}`"
-                        :download="item.filename"
-                      >
-                        <v-icon>file_download</v-icon>
-                      </v-btn>
-                    </v-layout>
-                  </v-container>
+                <v-card-actions class="justify-space-between">
+                  <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                  <v-btn icon small text @click="showEditdForm(item)">
+                    <v-icon>edit</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    small
+                    text
+                    :href="`/api/download/${item.filename}`"
+                    :download="item.filename"
+                  >
+                    <v-icon>file_download</v-icon>
+                  </v-btn>
                 </v-card-actions>
               </template>
             </v-card>

@@ -1,11 +1,7 @@
 <template>
-  <v-layout
-    column
-    fill-height
-    align-center
-    justify-center
+  <div
     v-lazy:background-image="getImgSrc(last)"
-    class="last"
+    class="d-flex flex-column fill-height align-center justify-center last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
       <h4 class="body-1 white--text text-right">
@@ -17,7 +13,7 @@
     <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
       <img src="/static/aperture.svg" />
     </v-avatar>
-  </v-layout>
+  </div>
 </template>
 
 <script>

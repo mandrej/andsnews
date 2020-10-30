@@ -20,13 +20,13 @@
           color="secondary"
           :width="300"
         >
-          <v-layout column fill-height>
+          <div class="d-flex flex-column fill-height">
             <keep-alive>
               <component :is="dynamicComponent"></component>
             </keep-alive>
             <v-spacer></v-spacer>
             <Menu></Menu>
-          </v-layout>
+          </div>
         </v-navigation-drawer>
 
         <v-app-bar app clipped-left color="accent">
