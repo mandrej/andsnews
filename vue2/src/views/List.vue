@@ -3,10 +3,8 @@
     <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
 
     <Dialog :model="confirm" :persistent="true" title="Want to delete?" :text="current.headline">
-      <v-layout justify-space-between row>
-        <v-btn color="error" @click="agree">Yes</v-btn>
-        <v-btn color="primary" @click="confirm = false">No</v-btn>
-      </v-layout>
+      <v-btn color="error" @click="agree">Yes</v-btn>
+      <v-btn color="primary" @click="confirm = false">No</v-btn>
     </Dialog>
 
     <v-btn

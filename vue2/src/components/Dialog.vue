@@ -4,7 +4,7 @@
       <v-card-title class="headline" primary-title>{{title}}</v-card-title>
       <v-card-text>{{text}}</v-card-text>
       <v-divider></v-divider>
-      <v-card-actions class="px-8 py-4">
+      <v-card-actions class="flex-row justify-space-between px-6 py-4">
         <slot></slot>
       </v-card-actions>
     </v-card>
