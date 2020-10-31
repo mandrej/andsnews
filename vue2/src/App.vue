@@ -122,13 +122,6 @@ $almost-white: rgba(255, 255, 255, 0.87);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.hamburger {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 6px;
-  z-index: 2;
-}
 .theme--light.v-application {
   background: white;
   color: $almost-black;

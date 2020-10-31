@@ -22,17 +22,20 @@
     </v-btn>
 
     <Photoswipe :options="pswpOptions" :key="key">
-      <v-container
-        fluid
-        grid-list-lg
-        class="pa-4"
-        v-for="(list, date) in objectsByDate"
-        :key="date"
-      >
+      <v-container fluid class="pa-4" v-for="(list, date) in objectsByDate" :key="date">
         <div class="text-h6 font-weight-light">{{$date(date).format('dddd, MMMM DD, YYYY')}}</div>
 
-        <v-layout row wrap v-lazy-container="{ selector: 'img' }">
-          <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in list" :key="item.id">
+        <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+            xl="2"
+            v-for="item in list"
+            :key="item.id"
+            class="pa-2"
+          >
             <v-card flat>
               <v-responsive :aspect-ratio="4/3">
                 <img
@@ -79,8 +82,8 @@
                 </v-card-actions>
               </template>
             </v-card>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </Photoswipe>
 
