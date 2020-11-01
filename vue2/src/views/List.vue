@@ -21,9 +21,9 @@
       <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
     </v-btn>
 
-    <Photoswipe :options="pswpOptions" :key="key">
+    <Photoswipe :options="pswpOptions" :key="pid">
       <v-container fluid class="pa-4" v-for="(list, date) in objectsByDate" :key="date">
-        <div class="text-h6 font-weight-light">{{$date(date).format('dddd, MMMM DD, YYYY')}}</div>
+        <div class="text-h6 font-weight-regular">{{$date(date).format('dddd, MMMM DD, YYYY')}}</div>
 
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <v-col
@@ -120,7 +120,7 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    key: null,
+    pid: null,
     bottom: false,
     distance: 2000,
     confirm: false,
@@ -163,7 +163,9 @@ export default {
   updated () {
     this.bottom = false
     if (this.$route.hash) {
-      this.key = 1 * this.$route.hash.match(/&pid=(.*)/)[1]
+      this.$nextTick(() => {
+        this.pid = 1 * this.$route.hash.match(/&pid=(.*)/)[1]
+      })
     }
   },
   beforeDestroy () {
