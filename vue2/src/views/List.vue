@@ -22,9 +22,7 @@
     </v-btn>
 
     <Photoswipe :options="pswpOptions" :key="pid">
-      <v-container fluid class="pa-4" v-for="(list, date) in objectsByDate" :key="date">
-        <div class="text-h6 font-weight-regular">{{$date(date).format('dddd, MMMM DD, YYYY')}}</div>
-
+      <v-container fluid class="pa-4">
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <v-col
             cols="12"
@@ -32,7 +30,7 @@
             md="4"
             lg="3"
             xl="2"
-            v-for="item in list"
+            v-for="item in objects"
             :key="item.id"
             class="pa-2"
           >
@@ -49,7 +47,9 @@
                 <p class="title">{{item.headline}}</p>
               </v-responsive>
               <v-card-text class="d-flex justify-space-between py-2">
-                <div style="line-height: 28px">by {{item.nick}} at {{item.date.slice(11,)}}</div>
+                <div
+                  style="line-height: 28px"
+                >by {{item.nick}} at {{$date(item.date).format('ddd, MMM DD, YYYY')}}</div>
                 <v-btn
                   v-if="item.loc"
                   icon
@@ -105,7 +105,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
 import * as easings from 'vuetify/lib/services/goto/easing-patterns'
@@ -149,7 +149,6 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['objects', 'error', 'next']),
-    ...mapGetters('app', ['objectsByDate']),
     isAdmin () {
       return this.user && this.user.isAdmin
     },
@@ -190,7 +189,7 @@ export default {
       return user.isAuthorized
     },
     caption (rec) {
-      let tmp = rec.headline
+      let tmp = '<strong>' + rec.headline + '</strong>'
       tmp += (rec.aperture) ? ' f' + rec.aperture : ''
       tmp += (rec.shutter) ? ', ' + rec.shutter + 's' : ''
       tmp += (rec.iso) ? ', ' + rec.iso + ' ASA' : ''

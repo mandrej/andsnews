@@ -43,16 +43,6 @@ const getters = {
     } catch (err) {
       return []
     }
-  },
-  objectsByDate: state => {
-    return state.objects.reduce((groups, obj) => {
-      const date = obj.date.slice(0, 10)
-      if (!groups[date]) {
-        groups[date] = []
-      }
-      groups[date].push(obj)
-      return groups
-    }, {})
   }
 }
 
