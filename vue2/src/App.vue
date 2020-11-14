@@ -112,8 +112,8 @@ export default {
 
 <style lang="scss">
 $dark: #444;
-$darker: #2e2e2e;
-$lighter: #efefef;
+$darker: #363636;
+$lighter: #eee;
 $almost-black: rgba(0, 0, 0, 0.87);
 $almost-white: rgba(255, 255, 255, 0.87);
 

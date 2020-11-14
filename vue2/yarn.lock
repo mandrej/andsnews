@@ -8862,10 +8862,10 @@ vuetify-loader@^1.6.0:
     file-loader "^4.0.0"
     loader-utils "^1.2.0"
 
-vuetify@^2.3.16:
-  version "2.3.16"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.16.tgz?cache=0&sync_timestamp=1603835790836&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.3.16.tgz#fc60e54e8d5e7e15c845f8d1fd68cfba3877f22c"
-  integrity sha1-/GDlTo1efhXIRfjR/WjPujh38iw=
+vuetify@^2.3.17:
+  version "2.3.17"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.17.tgz#f27eefd52dbe8ba19cae8d62ba8a77b05184fdf6"
+  integrity sha1-8n7v1S2+i6Gcro1iuop3sFGE/fY=
 
 vuex-persistedstate@^3.1.0:
   version "3.1.0"

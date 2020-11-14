@@ -49,7 +49,7 @@
               <v-card-text class="d-flex justify-space-between py-2">
                 <div
                   style="line-height: 28px"
-                >by {{item.nick}} at {{$date(item.date).format('ddd, MMM DD, YYYY')}}</div>
+                >by {{item.nick}} at {{$date(item.date).format('ddd, MMM DD, YY HH:mm')}}</div>
                 <v-btn
                   v-if="item.loc"
                   icon
