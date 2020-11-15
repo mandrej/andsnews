@@ -15,11 +15,8 @@
       :search-input.sync="search"
       @change="clearSubmit"
       :disabled="busy"
-      chips
       multiple
       hide-selected
-      deletable-chips
-      autocomplete="off"
       clearable
     ></v-autocomplete>
     <v-select

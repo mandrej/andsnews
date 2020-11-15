@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <Dialog :model="confirm" :persistent="true" title="Want to delete?" :text="current.headline">
       <v-btn color="error" @click="agree">Yes</v-btn>
@@ -196,6 +196,7 @@ export default {
       return tmp
     },
     showEditdForm (rec) {
+      this.$store.dispatch('app/setCurrent', rec)
       this.current = rec
       this.editForm = true
     },

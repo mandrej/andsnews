@@ -38,7 +38,6 @@
                 label="Tags"
                 :search-input.sync="search"
                 @change="search = null"
-                chips
                 multiple
                 hide-selected
                 deletable-chips
@@ -169,7 +168,7 @@ const axios = Vue.axios
 export default {
   name: 'Edit',
   mixins: [common],
-  props: ['visible', 'rec'],
+  props: ['visible'],
   data: () => ({
     menuDate: false,
     menuTime: false,
@@ -178,7 +177,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['values']),
+    ...mapState('app', ['values', 'current']),
     valid: {
       get () {
         return Boolean(this.tmp.date)
@@ -203,11 +202,9 @@ export default {
     }
   },
   watch: {
-    rec: function (val) {
-      this.tmp = { ...val }
-      if (!val.date) {
-        this.readExif()
-        return
+    visible: function (val) {
+      if (val) {
+        this.tmp = { ...this.current }
       }
     }
   },

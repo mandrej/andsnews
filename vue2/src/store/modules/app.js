@@ -31,6 +31,7 @@ const initialState = {
   clear: false,
   dark: false,
 
+  current: {},
   snackbar: null
 }
 
@@ -60,6 +61,9 @@ const actions = {
   },
   addUploaded: ({ commit }, obj) => {
     commit('ADD_UPLOADED', obj)
+  },
+  setCurrent: ({ commit }, obj) => {
+    commit('SET_CURRENT', obj)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
@@ -185,6 +189,9 @@ const mutations = {
   },
   ADD_UPLOADED (state, data) {
     state.uploaded = [...state.uploaded, data]
+  },
+  SET_CURRENT (state, obj) {
+    state.current = obj
   },
   UPDATE_RECORDS (state, data) {
     if (state.pages[0] === 'FP' && data._page === 'FP') return
