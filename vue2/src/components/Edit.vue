@@ -205,6 +205,11 @@ export default {
     visible: function (val) {
       if (val) {
         this.tmp = { ...this.current }
+        // new image
+        if (!this.current.date) {
+          this.readExif()
+          return
+        }
       }
     }
   },

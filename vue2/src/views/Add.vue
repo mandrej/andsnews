@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" :rec="current" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" @close="editForm = false"></Edit>
 
     <v-container>
       <h1>{{title}}</h1>
@@ -181,6 +181,7 @@ export default {
       if (i > 0) this.save(formData)
     },
     showEditForm (rec) {
+      this.$store.dispatch('app/setCurrent', rec)
       this.failed.length = 0
       this.current = rec
       this.current.email = this.user.email
