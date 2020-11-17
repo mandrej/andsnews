@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="show"
-    scrollable
+    persistent
     max-width="800"
     :fullscreen="$vuetify.breakpoint.xsOnly"
     @keydown.esc="show = false"

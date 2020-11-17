@@ -2,10 +2,17 @@
   <div>
     <Edit :visible="editForm" @close="editForm = false"></Edit>
 
-    <Dialog :model="confirm" :persistent="true" title="Want to delete?" :text="current.headline">
-      <v-btn color="error" @click="agree">Yes</v-btn>
-      <v-btn color="primary" @click="confirm = false">No</v-btn>
-    </Dialog>
+    <v-dialog v-model="confirm" max-width="300px" persistent>
+      <v-card>
+        <v-card-title class="headline" primary-title>{{current.headline}}</v-card-title>
+        <v-card-text>Want to delete?</v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="flex-row justify-space-between px-6 py-4">
+          <v-btn color="error" @click="agree">Yes</v-btn>
+          <v-btn color="primary" @click="confirm = false">No</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-btn
       v-show="objects.length > 0"
@@ -64,10 +71,10 @@
               <template v-if="loggedIn(user)">
                 <v-divider></v-divider>
                 <v-card-actions class="justify-space-between">
-                  <v-btn v-if="canDelete(user)" icon small text @click="removeRecord(item)">
+                  <v-btn v-if="canDelete(user)" icon small text @click.stop="removeRecord(item)">
                     <v-icon>delete</v-icon>
                   </v-btn>
-                  <v-btn icon small text @click="showEditdForm(item)">
+                  <v-btn icon small text @click.stop="showEditdForm(item)">
                     <v-icon>edit</v-icon>
                   </v-btn>
                   <v-btn
@@ -115,8 +122,7 @@ Vue.use(Photoswipe)
 export default {
   name: 'List',
   components: {
-    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit'),
-    Dialog: () => import(/* webpackChunkName: "dialog" */ '@/components/Dialog')
+    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   mixins: [common],
   data: () => ({
