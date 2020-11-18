@@ -1,10 +1,10 @@
 {
   "name": "Andрејевићи",
   "short_name": "Andрејевићи",
-  "start_url": "/",
+  "start_url": "https://ands.appspot.com",
   "display": "standalone",
-  "background_color": "#e0e0e0",
-  "theme_color": "#222",
+  "background_color": "#222",
+  "theme_color": "#fff",
   "icons": [
     {
       "src": "/static/icons/android-chrome-192x192.png",
