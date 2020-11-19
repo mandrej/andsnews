@@ -195,7 +195,7 @@ export default {
       return user.isAuthorized
     },
     caption (rec) {
-      let tmp = '<strong>' + rec.headline + '</strong>'
+      let tmp = rec.headline
       tmp += (rec.aperture) ? ' f' + rec.aperture : ''
       tmp += (rec.shutter) ? ', ' + rec.shutter + 's' : ''
       tmp += (rec.iso) ? ', ' + rec.iso + ' ASA' : ''
