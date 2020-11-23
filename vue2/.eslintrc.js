@@ -4,7 +4,6 @@ module.exports = {
     'node': true
   },
   extends: [
-    // 'plugin:vue/base',
     'plugin:vue/essential',
     'eslint:recommended'
   ],
