@@ -4,7 +4,7 @@
       <img
         class="lazy"
         :data-src="getImgSrc(item, 400)"
-        :title="caption(item)"
+        :title="caption"
         :data-pswp-size="item.dim.join('x')"
         :data-pswp-src="getImgSrc(item)"
         :data-pswp-pid="item.id"
@@ -29,13 +29,20 @@
     <template v-if="user.isAuthorized">
       <v-divider></v-divider>
       <v-card-actions class="justify-space-between">
-        <v-btn v-if="user.isAdmin" icon small text @click.stop="removeRecord(item)">
+        <v-btn v-if="user.isAdmin" icon small text @click.stop="removeRecord">
           <v-icon>delete</v-icon>
         </v-btn>
-        <v-btn icon small text @click.stop="showEditdForm(item)">
+        <v-btn icon small text @click.stop="showEditdForm">
           <v-icon>edit</v-icon>
         </v-btn>
-        <v-btn icon small text :href="`/api/download/${item.filename}`" :download="item.filename">
+        <v-btn
+          icon
+          small
+          text
+          @click="register"
+          :href="`/api/download/${item.filename}`"
+          :download="item.filename"
+        >
           <v-icon>file_download</v-icon>
         </v-btn>
       </v-card-actions>
@@ -57,19 +64,28 @@ export default {
     ...mapState('auth', ['user'])
   },
   methods: {
-    showEditdForm (rec) {
-      this.$store.dispatch('app/setCurrent', rec)
+    showEditdForm () {
+      this.$store.dispatch('app/setCurrent', this.item)
       this.$eventBus.emit('show-edit')
     },
-    removeRecord (rec) {
-      this.$store.dispatch('app/setCurrent', rec)
+    removeRecord () {
+      this.$store.dispatch('app/setCurrent', this.item)
       this.$eventBus.emit('show-confirm')
     },
-    caption (rec) {
-      let tmp = rec.headline
-      tmp += (rec.aperture) ? ' f' + rec.aperture : ''
-      tmp += (rec.shutter) ? ', ' + rec.shutter + 's' : ''
-      tmp += (rec.iso) ? ', ' + rec.iso + ' ASA' : ''
+    register () {
+      // eslint-disable-next-line no-undef
+      gtag('event', 'download', {
+        event_category: 'engagement',
+        event_label: this.item.headline + ' (' + this.user.email + ')',
+        value: 1
+      })
+    },
+    caption () {
+      const { headline, aperture, shutter, iso } = this.item
+      let tmp = headline
+      tmp += (aperture) ? ' f' + aperture : ''
+      tmp += (shutter) ? ', ' + shutter + 's' : ''
+      tmp += (iso) ? ', ' + iso + ' ASA' : ''
       return tmp
     }
   }

@@ -142,16 +142,7 @@ export default {
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
       this.confirm = false
-    },
-    // download (filename) {
-    //   this.$store.dispatch('app/setSnackbar', 'Downloading ' + filename)
-    //   // eslint-disable-next-line no-undef
-    //   gtag('event', 'download', {
-    //     event_category: 'engagement',
-    //     event_label: filename,
-    //     value: 1
-    //   })
-    // }
+    }
   }
 }
 </script>
