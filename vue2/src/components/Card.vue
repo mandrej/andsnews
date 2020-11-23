@@ -4,7 +4,7 @@
       <img
         class="lazy"
         :data-src="getImgSrc(item, 400)"
-        :title="caption"
+        :title="caption(item)"
         :data-pswp-size="item.dim.join('x')"
         :data-pswp-src="getImgSrc(item)"
         :data-pswp-pid="item.id"
@@ -80,12 +80,11 @@ export default {
         value: 1
       })
     },
-    caption () {
-      const { headline, aperture, shutter, iso } = this.item
-      let tmp = headline
-      tmp += (aperture) ? ' f' + aperture : ''
-      tmp += (shutter) ? ', ' + shutter + 's' : ''
-      tmp += (iso) ? ', ' + iso + ' ASA' : ''
+    caption (rec) {
+      let tmp = rec.headline
+      tmp += (rec.aperture) ? ' f' + rec.aperture : ''
+      tmp += (rec.shutter) ? ', ' + rec.shutter + 's' : ''
+      tmp += (rec.iso) ? ', ' + rec.iso + ' ASA' : ''
       return tmp
     }
   }
