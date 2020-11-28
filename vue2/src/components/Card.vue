@@ -56,8 +56,6 @@ import common from '@/helpers/mixins'
 
 export default {
   name: 'Card',
-  components: {
-  },
   props: ['item'],
   mixins: [common],
   computed: {

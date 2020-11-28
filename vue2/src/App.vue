@@ -119,8 +119,6 @@ $almost-white: rgba(255, 255, 255, 0.87);
 
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 .theme--light.v-application {
   background: white;
