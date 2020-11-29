@@ -43,7 +43,7 @@
             <img v-else src="/static/Google__G__Logo.svg" />
           </v-avatar>
 
-          <v-progress-linear v-show="busy" absolute top color="error" :indeterminate="true"></v-progress-linear>
+          <v-progress-linear v-show="busy" absolute top color="primary" :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
         <v-main>
@@ -111,6 +111,9 @@ export default {
 </script>
 
 <style lang="scss">
+#app {
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
 .v-application {
   background-color: var(--v-background-base) !important;
 }
