@@ -4,7 +4,7 @@
 
     <v-container>
       <h1>{{title}}</h1>
-      <v-sheet class="my-3 pa-3">
+      <v-sheet class="my-3 pa-3" color="secondary">
         <div class="d-flex flex-column justify-center" style="position: relative; height: 120px">
           <template v-if="status === code.INITIAL">
             <input

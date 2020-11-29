@@ -7,7 +7,7 @@
     @keydown.esc="show = false"
     transition="dialog-bottom-transition"
   >
-    <v-card>
+    <v-card color="secondary">
       <v-app-bar color="accent">
         <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>

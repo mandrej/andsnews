@@ -111,32 +111,8 @@ export default {
 </script>
 
 <style lang="scss">
-$dark: #444;
-$darker: #363636;
-$lighter: #eee;
-$almost-black: rgba(0, 0, 0, 0.87);
-$almost-white: rgba(255, 255, 255, 0.87);
-
-#app {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
-}
-.theme--light.v-application {
-  background: white;
-  color: $almost-black;
-}
-.theme--dark.v-application {
-  background: $dark;
-  color: $almost-white;
-}
-.theme--light.v-sheet {
-  background-color: $lighter;
-  border-color: $lighter;
-  color: $almost-black;
-}
-.theme--dark.v-sheet {
-  background-color: $darker;
-  border-color: $darker;
-  color: $almost-white;
+.v-application {
+  background-color: var(--v-background-base) !important;
 }
 .v-card__title {
   line-height: 125%;

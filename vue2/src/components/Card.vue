@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card flat color="secondary">
     <v-responsive :aspect-ratio="4/3">
       <img
         class="lazy"

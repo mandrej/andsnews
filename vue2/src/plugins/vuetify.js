@@ -13,6 +13,7 @@ const opts = {
     dark: false,
     themes: {
       light: {
+        background: colors.shades.white,
         primary: colors.grey.darken3,
         secondary: colors.grey.lighten3,
         accent: colors.shades.white,
@@ -21,14 +22,18 @@ const opts = {
         error: colors.red.darken1
       },
       dark: {
-        primary: colors.shades.black,
-        secondary: colors.grey.daken4,
-        accent: colors.shades.black,
+        background: colors.grey.darken3,
+        primary: colors.grey.darken4,
+        secondary: '#363636',
+        accent: colors.grey.darken4,
         info: colors.blue.darken3,
         success: colors.green.darken3,
         error: colors.red.darken4
       }
-    }
+    },
+    options: {
+      customProperties: true
+    },
   },
   icons: {
     iconfont: 'md'
