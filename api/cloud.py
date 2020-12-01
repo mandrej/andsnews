@@ -32,7 +32,7 @@ def register_user(uid, token):
 
 def registrations():
     query = datastore_client.query(kind='User')
-    return [ent['token'] for ent in list(query.fetch()) if ent['token']]
+    return [ent['token'] for ent in list(query.fetch()) if 'token' in ent]
 
 
 def rebuilder(field, token):

@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import '@/helpers/fire' // initialized firebase instance
+import pushMessage from '@/helpers/push'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/messaging'
@@ -12,13 +13,6 @@ const messaging = firebase.messaging()
 const provider = new firebase.auth.GoogleAuthProvider()
 provider.addScope('profile')
 provider.addScope('email')
-
-function pushMessage (token, msg) {
-  axios
-    .post('message', { token: token, text: msg })
-    .then()
-    .catch(() => console.error('push message failed'))
-}
 
 const initialState = {
   user: {},
@@ -90,7 +84,7 @@ const actions = {
     axios.get('registrations').then(response => {
       response.data.forEach(token => {
         if (token === state.fcm_token) {
-          pushMessage(token, msg + ' sent successfully')
+          pushMessage(token, msg + ' SENT')
         } else {
           pushMessage(token, msg)
         }

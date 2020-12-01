@@ -3,7 +3,7 @@ from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 from api import cloud, photo
-from api.helpers import push_message, get_exif
+from api.helpers import get_exif
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -163,14 +163,6 @@ def remove(filename):
 def delete(id):
     response = photo.remove(id)
     return jsonify(response['success'])
-
-
-@app.route('/api/message', methods=['POST'])
-def notify():
-    token = request.json.get('token', None)
-    text = request.json.get('text', None)
-    success = push_message(token, text)
-    return jsonify(success)
 
 
 @app.route('/api/<verb>', methods=['POST'])

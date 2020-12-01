@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import debounce from 'lodash/debounce'
 import querystring from 'querystring'
+import pushMessage from '@/helpers/push'
 import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
@@ -156,7 +157,7 @@ const actions = {
   bucketInfo: debounce(({ dispatch }, param) => {
     dispatch('_bucketInfo', param)
   }, 200),
-  _bucketInfo: ({ commit }, param) => {
+  _bucketInfo: ({ commit, rootState }, param) => {
     /**
      * param: { verb: 'add|del|get', [size: int] }
      */
@@ -166,6 +167,9 @@ const actions = {
       })
     } else {
       axios.put(param.verb + '/bucket_info', param).then(response => {
+        if (param.verb === 'set') {
+          pushMessage(rootState.auth.fcm_token, 'DONE')
+        }
         commit('SET_BUCKET', response.data)
       })
     }
