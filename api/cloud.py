@@ -14,7 +14,7 @@ def login_user(data):
         obj = datastore.Entity(key=key)
 
     obj['email'] = data['email']
-    obj['last_login'] = datetime.datetime.now()
+    obj['last_login'] = datetime.datetime.fromtimestamp(data['lastLogin']/1000)
     datastore_client.put(obj)
     return data['uid']
 

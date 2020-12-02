@@ -38,7 +38,8 @@ const actions = {
             uid: response.user.uid,
             photo: response.user.photoURL,
             isAuthorized: true,
-            isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1
+            isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1,
+            lastLogin: Date.now() // millis
           }
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
