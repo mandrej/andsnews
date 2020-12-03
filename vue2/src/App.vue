@@ -84,14 +84,11 @@ export default {
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
+    this.$store.dispatch('auth/getPermission')
     this.$vuetify.theme.dark = this.dark
     // Session life time 7 days
-    if (this.user) {
-      if (this.user.lastLogin) {
-        if (Date.now() - this.user.lastLogin > CONFIG.lifeTime) { // millis
-          this.$store.dispatch('auth/signIn')
-        }
-      } else {
+    if (this.user && this.user.lastLogin) {
+      if (Date.now() - this.user.lastLogin > CONFIG.lifeTime) { // millis
         this.$store.dispatch('auth/signIn')
       }
     }

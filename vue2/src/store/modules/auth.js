@@ -43,7 +43,7 @@ const actions = {
           }
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
-          dispatch('fetchToken')
+          dispatch('getPermission')
         }).catch(err => {
           console.error(err.message)
         })
@@ -59,23 +59,36 @@ const actions = {
       })
       .catch(() => console.error('update user failed'))
   },
-  fetchToken: ({ commit, state, dispatch }) => {
-    if (state.user && state.user.uid) {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          return messaging
-            .getToken()
-            .then(token => {
-              if (token) {
-                commit('SET_TOKEN', token)
-                dispatch('addRegistration')
-              }
-            })
-            .catch(err => console.error(err))
-        } else {
-          console.error('Unable to get permission')
-        }
-      })
+  getPermission: ({ dispatch }) => {
+    try {
+      Notification.requestPermission().then(
+        permission => dispatch('fetchToken', permission)
+      )
+    } catch (error) {
+      // https://stackoverflow.com/questions/38114266
+      // Safari doesn't return a promise for requestPermissions and it
+      // throws a TypeError. It takes a callback as the first argument instead.
+      if (error instanceof TypeError) {
+        Notification.requestPermission(permission => {
+          dispatch('fetchToken', permission)
+        })
+      } else {
+        console.error(error.message)
+      }
+    }
+  },
+  fetchToken: ({ commit, state, dispatch }, permission) => {
+    if (permission === 'granted') {
+      return messaging
+        .getToken()
+        .then(token => {
+          if (token) {
+            commit('SET_TOKEN', token)
+            if (state.user && state.user.uid) {
+              dispatch('addRegistration')
+            }
+          }
+        })
     }
   },
   addRegistration: ({ state }) => {
