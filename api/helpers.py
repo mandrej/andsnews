@@ -100,10 +100,16 @@ def get_exif(buff):
             data['model'] = f'{make} {model}'
 
     if 'EXIF LensModel' in tags:
+        # 'EXIF LensModel': (0xA434) ASCII=Nikon NIKKOR Z 24-70mm f/4 S @ 838
         data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
     if 'EXIF DateTimeOriginal' in tags:
-        data['date'] = datetime.datetime.strptime(
-            tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
+        # 'EXIF DateTimeOriginal': (0x9003) ASCII=None @ 196
+        # 'EXIF DateTimeOriginal': (0x9003) ASCII=2020:12:03 11:28:19 @ 720
+        if tags['EXIF DateTimeOriginal'].printable == 'None':
+            data['date'] = datetime.datetime.now()
+        else:
+            data['date'] = datetime.datetime.strptime(
+                tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
     if 'EXIF FNumber' in tags:
         getcontext().prec = 3
         data['aperture'] = float(Decimal(eval(tags['EXIF FNumber'].printable)))
