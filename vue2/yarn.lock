@@ -924,10 +924,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.10.1.tgz#7815e71c9c6f072034415524b29ca8f1d1770660"
   integrity sha512-/+gBHb1O9x/YlG7inXfxff/6X3BPZt4zgBv4kql6HEmdzNQCodIRlEYnI+/da+lN+dha7PjaFH7C7ewMmfV7rw==
 
-"@firebase/auth@0.15.2":
-  version "0.15.2"
-  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.15.2.tgz#9ada3f37620d131a1c56994138a599b5c9f9ca2e"
-  integrity sha1-mto/N2INExocVplBOKWZtcn5yi4=
+"@firebase/auth@0.15.3":
+  version "0.15.3"
+  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.15.3.tgz#ba2c01993fdfd2a4d1a84344e005b8bc082497e1"
+  integrity sha1-uiwBmT/f0qTRqENE4AW4vAgkl+E=
   dependencies:
     "@firebase/auth-types" "0.10.1"
 
@@ -964,10 +964,10 @@
   resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-2.0.0.tgz#1f6212553b240f1a8905bb8dcf1f87769138c5c0"
   integrity sha1-H2ISVTskDxqJBbuNzx+HdpE4xcA=
 
-"@firebase/firestore@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.0.4.tgz#c4be6f3540f607fd8e200cfba83c4997c29447fe"
-  integrity sha1-xL5vNUD2B/2OIAz7qDxJl8KUR/4=
+"@firebase/firestore@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.0.5.tgz#bef5fafb49ac9872830efd07c2388634441c9699"
+  integrity sha1-vvX6+0msmHKDDv0HwjiGNEQclpk=
   dependencies:
     "@firebase/component" "0.1.21"
     "@firebase/firestore-types" "2.0.0"
@@ -3836,15 +3836,15 @@ eslint-plugin-vue@^6.2.2:
     semver "^5.6.0"
     vue-eslint-parser "^7.0.0"
 
-eslint-plugin-vue@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.1.0.tgz?cache=0&sync_timestamp=1603027254873&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.1.0.tgz#832d83e4e1e480c7285b2bc3ff1076cd0dca7a5b"
-  integrity sha1-gy2D5OHkgMcoWyvD/xB2zQ3Kels=
+eslint-plugin-vue@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.2.0.tgz?cache=0&sync_timestamp=1607056385189&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.2.0.tgz#dd8323fe7ca28fe9377ce3f5f6cf17afe2686f2a"
+  integrity sha1-3YMj/nyij+k3fOP19s8Xr+Jobyo=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
     semver "^7.3.2"
-    vue-eslint-parser "^7.1.1"
+    vue-eslint-parser "^7.2.0"
 
 eslint-plugin-vuetify@^1.0.0-beta.7:
   version "1.0.0-beta.7"
@@ -4334,17 +4334,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.1.1.tgz#379094b724053931fda1086e9020a17b578e50d5"
-  integrity sha1-N5CUtyQFOTH9oQhukCChe1eOUNU=
+firebase@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.1.2.tgz#fb9d3337a5e7efc32aac877a15aded786939f6c3"
+  integrity sha1-+50zN6Xn78MqrId6Fa3teGk59sM=
   dependencies:
     "@firebase/analytics" "0.6.2"
     "@firebase/app" "0.6.13"
     "@firebase/app-types" "0.6.1"
-    "@firebase/auth" "0.15.2"
+    "@firebase/auth" "0.15.3"
     "@firebase/database" "0.8.1"
-    "@firebase/firestore" "2.0.4"
+    "@firebase/firestore" "2.0.5"
     "@firebase/functions" "0.6.1"
     "@firebase/installations" "0.4.19"
     "@firebase/messaging" "0.7.3"
@@ -8815,10 +8815,10 @@ vue-eslint-parser@^7.0.0:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
-vue-eslint-parser@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.1.1.tgz?cache=0&sync_timestamp=1602499032728&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.1.1.tgz#c43c1c715ff50778b9a7e9a4e16921185f3425d3"
-  integrity sha1-xDwccV/1B3i5p+mk4WkhGF80JdM=
+vue-eslint-parser@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.2.0.tgz?cache=0&sync_timestamp=1606966106135&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.2.0.tgz#1e17ae94ca71e617025e05143c8ac5593aacb6ef"
+  integrity sha1-HheulMpx5hcCXgUUPIrFWTqstu8=
   dependencies:
     debug "^4.1.1"
     eslint-scope "^5.0.0"
