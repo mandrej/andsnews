@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>{{title}}</h1>
-    <v-list>
+    <v-list color="background">
       <h3>Send message to subscribers</h3>
       <v-list-item>
         <v-list-item-content>
@@ -129,9 +129,6 @@ export default {
 </script>
 
 <style scoped>
-.v-list {
-  background-color: transparent;
-}
 .v-btn {
   width: 100px;
 }

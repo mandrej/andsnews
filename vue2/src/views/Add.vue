@@ -22,12 +22,11 @@
           </template>
           <template v-if="status === code.SAVING">
             <v-progress-linear
-              :active="true"
-              :query="value < 100"
-              :indeterminate="value === 100"
-              height="16"
-              striped
               v-model="value"
+              :query="value < 100"
+              :indeterminate="value >= 100"
+              color="accent"
+              height="16"
             ></v-progress-linear>
             <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
             <div
@@ -202,3 +201,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-list {
+  background-color: var(--v-secondary-base);
+}
+</style>
