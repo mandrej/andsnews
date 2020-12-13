@@ -16,18 +16,18 @@ const opts = {
         background: colors.grey.lighten3,
         primary: colors.grey.darken3,
         secondary: colors.shades.white,
-        accent: colors.red.accent2,
-        info: colors.blue,
-        success: colors.green,
+        accent: colors.indigo.accent3,
+        // info: colors.blue,
+        // success: colors.green,
         error: colors.red.accent2
       },
       dark: {
         background: colors.grey.darken3,
         primary: colors.grey.darken4,
         secondary: colors.grey.darken2,
-        accent: colors.red.accent2,
-        info: colors.blue.darken2,
-        success: colors.green.darken2,
+        accent: colors.indigo.accent3,
+        // info: colors.blue.darken2,
+        // success: colors.green.darken2,
         error: colors.red.accent2
       }
     },
