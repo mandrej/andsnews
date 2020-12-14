@@ -76,18 +76,22 @@ export default {
     }
   },
   watch: {
-    '$route.query': {
+    '$route': {
       deep: true,
       immediate: true,
       handler: function (val) {
+        let pid = null
+        if (val.hash) {
+          pid = +val.hash.match(/&pid=(.*)/)[1]
+        }
         // adopt to match types in store
-        if (Object.prototype.hasOwnProperty.call(val, 'year')) val.year = 1 * val.year
-        if (Object.prototype.hasOwnProperty.call(val, 'month')) val.month = 1 * val.month
-        this.$store.dispatch('app/saveFindForm', val)
-        if (!Object.keys(val).length) {
-          this.$store.dispatch('app/changeFilter', { reset: false }) // nothing
+        if (Object.prototype.hasOwnProperty.call(val.query, 'year')) val.query.year = +val.query.year
+        if (Object.prototype.hasOwnProperty.call(val.query, 'month')) val.query.month = +val.query.month
+        this.$store.dispatch('app/saveFindForm', val.query)
+        if (!Object.keys(val.query).length) {
+          this.$store.dispatch('app/changeFilter', { reset: false, pid: pid }) // continue
         } else {
-          this.$store.dispatch('app/changeFilter', { reset: true })
+          this.$store.dispatch('app/changeFilter', { reset: true, pid: pid }) // new filter
         }
       }
     }

@@ -41,7 +41,7 @@
             :key="item.id"
             class="pa-2"
           >
-            <Card :item="item"></Card>
+            <Card :id="'card_' + item.id" :item="item"></Card>
           </v-col>
         </v-row>
       </v-container>
@@ -68,7 +68,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
-import * as easings from 'vuetify/lib/services/goto/easing-patterns'
+import * as easings from 'vuetify/es5/services/goto/easing-patterns'
 
 Vue.use(Photoswipe)
 
@@ -83,9 +83,10 @@ export default {
     pid: null,
     bottom: false,
     distance: 2000,
+    easings: Object.keys(easings),
     options: {
       duration: 300,
-      easings: Object.keys(easings)
+      easing: 'easeInOutCubic'
     },
     confirm: false,
     editForm: false,
@@ -116,8 +117,10 @@ export default {
   updated () {
     this.bottom = false
     if (this.$route.hash) {
+      const pid = +this.$route.hash.match(/&pid=(.*)/)[1]
       this.$nextTick(() => {
-        this.pid = 1 * this.$route.hash.match(/&pid=(.*)/)[1]
+        if (!this.pid) this.$vuetify.goTo('#card_' + pid, this.options)
+        this.pid = pid
       })
     }
   },

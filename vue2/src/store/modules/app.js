@@ -6,6 +6,7 @@ import pushMessage from '@/helpers/push'
 import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
+let trying = CONFIG.trying // fetchRecords for details
 
 const initialState = {
   find: {},
@@ -54,10 +55,11 @@ const actions = {
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
     if (payload.reset) {
+      trying = CONFIG.trying
       commit('SET_CLEAR', true)
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
-      dispatch('fetchRecords')
+      dispatch('fetchRecords', payload.pid)
     }
   },
   addUploaded: ({ commit }, obj) => {
@@ -124,7 +126,7 @@ const actions = {
       }
     })
   },
-  fetchRecords: ({ commit, state }) => {
+  fetchRecords: ({ commit, dispatch, state }, pid) => {
     if (state.busy) return
     const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
     if (state.next) params._page = state.next
@@ -145,6 +147,15 @@ const actions = {
         if (response.error) commit('SET_ERROR', response.error)
         commit('UPDATE_RECORDS', response.data)
         commit('SET_BUSY', false)
+        if (pid) {
+          const found = response.data.objects.filter(obj => {
+            return obj.id === pid
+          })
+          if (!found.length && trying) {
+            trying--
+            dispatch('fetchRecords', pid)
+          }
+        }
       })
       .catch(err => {
         commit('SET_ERROR', err)
