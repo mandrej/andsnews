@@ -6,7 +6,6 @@ import pushMessage from '@/helpers/push'
 import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
-let trying = CONFIG.trying // fetchRecords for details
 
 const initialState = {
   find: {},
@@ -55,7 +54,6 @@ const actions = {
   saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
   changeFilter: ({ commit, dispatch }, payload) => {
     if (payload.reset) {
-      trying = CONFIG.trying
       commit('SET_CLEAR', true)
       commit('SET_BUSY', false) // interupt loading
       commit('RESET_PAGINATOR')
@@ -126,7 +124,7 @@ const actions = {
       }
     })
   },
-  fetchRecords: ({ commit, dispatch, state }, pid) => {
+  fetchRecords: ({ commit, state }, pid) => {
     if (state.busy) return
     const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
     if (state.next) params._page = state.next
@@ -151,14 +149,13 @@ const actions = {
           const found = response.data.objects.filter(obj => {
             return obj.id === pid
           })
-          if (!found.length && trying) {
-            trying--
-            dispatch('fetchRecords', pid)
+          if (!found.length) {
+            commit('SETSNACKBAR', 'NOT FOUND ...')
           }
         }
       })
       .catch(err => {
-        commit('SET_ERROR', err)
+        commit('SETSNACKBAR', err)
         commit('SET_BUSY', false)
       })
   },

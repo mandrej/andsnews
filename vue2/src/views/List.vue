@@ -119,7 +119,7 @@ export default {
     if (this.$route.hash) {
       const pid = +this.$route.hash.match(/&pid=(.*)/)[1]
       this.$nextTick(() => {
-        if (!this.pid) this.$vuetify.goTo('#card_' + pid, this.options)
+        if (pid !== this.pid) this.$vuetify.goTo('#card_' + pid, this.options)
         this.pid = pid
       })
     }
