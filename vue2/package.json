@@ -10,7 +10,7 @@
   "dependencies": {
     "core-js": "^3.8.1",
     "dayjs": "^1.9.7",
-    "firebase": "^8.2.0",
+    "firebase": "^8.2.1",
     "mitt": "^2.1.0",
     "register-service-worker": "^1.7.2",
     "vue": "^2.6.12",
@@ -31,7 +31,7 @@
     "axios": "^0.21.0",
     "babel-eslint": "^10.1.0",
     "deepmerge": "^4.2.2",
-    "eslint": "^7.15.0",
+    "eslint": "^7.16.0",
     "eslint-plugin-vue": "^7.3.0",
     "eslint-plugin-vuetify": "^1.0.0-beta.7",
     "sass": "^1.30.0",
