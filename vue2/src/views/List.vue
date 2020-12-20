@@ -14,21 +14,24 @@
       </v-card>
     </v-dialog>
 
-    <v-btn
-      v-show="objects.length > 0"
-      fab
-      large
-      fixed
-      bottom
-      right
-      color="accent"
-      style="bottom: 32px; right: 32px"
-      @click="$vuetify.goTo(0, options)"
-    >
-      <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
-    </v-btn>
+    <v-fab-transition>
+      <v-btn
+        v-show="fab"
+        fab
+        large
+        fixed
+        bottom
+        right
+        color="accent"
+        style="bottom: 32px; right: 32px"
+        v-scroll="onScroll"
+        @click="$vuetify.goTo(0)"
+      >
+        <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
+      </v-btn>
+    </v-fab-transition>
 
-    <Photoswipe :options="pswpOptions" :key="pid">
+    <Photoswipe :options="options" :key="pid">
       <v-container fluid class="pa-4">
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <v-col
@@ -68,7 +71,6 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import Photoswipe from 'vue-pswipe'
 import common from '@/helpers/mixins'
-import * as easings from 'vuetify/es5/services/goto/easing-patterns'
 
 Vue.use(Photoswipe)
 
@@ -83,14 +85,10 @@ export default {
     pid: null,
     bottom: false,
     distance: 2000,
-    easings: Object.keys(easings),
-    options: {
-      duration: 300,
-      easing: 'easeInOutCubic'
-    },
+    fab: false,
     confirm: false,
     editForm: false,
-    pswpOptions: {
+    options: {
       history: true,
       galleryPIDs: true,
       preload: [1, 3],
@@ -110,7 +108,6 @@ export default {
     ...mapState('app', ['objects', 'error', 'next', 'current'])
   },
   mounted () {
-    window.addEventListener('scroll', this.bottomVisible)
     this.$eventBus.on('show-edit', () => { this.editForm = true })
     this.$eventBus.on('show-confirm', () => { this.confirm = true })
   },
@@ -119,13 +116,10 @@ export default {
     if (this.$route.hash) {
       const pid = +this.$route.hash.match(/&pid=(.*)/)[1]
       this.$nextTick(() => {
-        if (pid !== this.pid) this.$vuetify.goTo('#card_' + pid, this.options)
+        if (pid !== this.pid) this.$vuetify.goTo('#card_' + pid)
         this.pid = pid
       })
     }
-  },
-  beforeDestroy () {
-    window.removeEventListener('scroll', this.bottomVisible)
   },
   watch: {
     bottom: function (val) {
@@ -135,12 +129,16 @@ export default {
     }
   },
   methods: {
-    bottomVisible () {
-      // https://scotch.io/tutorials/simple-asynchronous-infinite-scroll-with-vue-watchers
-      const scrollY = window.scrollY
+    onScroll () {
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
-      this.bottom = visible + scrollY + this.distance >= pageHeight
+      const top = (
+        window.pageYOffset ||
+        document.documentElement.offsetTop ||
+        0
+      )
+      this.fab = top > 300
+      this.bottom = visible + top + this.distance >= pageHeight
     },
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
