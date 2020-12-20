@@ -14,6 +14,7 @@
       </v-card>
     </v-dialog>
 
+    <!-- vuetify/packages/docs/src/layouts/default/FabToTop.vue -->
     <v-fab-transition>
       <v-btn
         v-show="fab"
@@ -84,7 +85,6 @@ export default {
   data: () => ({
     pid: null,
     bottom: false,
-    distance: 2000,
     fab: false,
     confirm: false,
     editForm: false,
@@ -130,15 +130,15 @@ export default {
   },
   methods: {
     onScroll () {
-      const visible = document.documentElement.clientHeight
-      const pageHeight = document.documentElement.scrollHeight
-      const top = (
+      const clientHeight = document.documentElement.clientHeight
+      const scrollHeight = document.documentElement.scrollHeight
+      const topOffset = (
         window.pageYOffset ||
         document.documentElement.offsetTop ||
         0
       )
-      this.fab = top > 300
-      this.bottom = visible + top + this.distance >= pageHeight
+      this.fab = topOffset > 300
+      this.bottom = topOffset + clientHeight + 2000 >= scrollHeight
     },
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
