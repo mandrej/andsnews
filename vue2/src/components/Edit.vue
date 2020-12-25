@@ -9,7 +9,7 @@
   >
     <v-card color="secondary">
       <v-app-bar color="accent">
-        <v-btn @click="submit" color="primary" :disabled="!valid">Submit</v-btn>
+        <v-btn @click="submit" color="success" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
@@ -180,7 +180,7 @@ export default {
     ...mapState('app', ['values', 'current']),
     valid: {
       get () {
-        return Boolean(this.tmp.date)
+        return Boolean(this.tmp.date) && Boolean(this.tmp.headline !== '')
       },
       set (newValue) {
         return newValue

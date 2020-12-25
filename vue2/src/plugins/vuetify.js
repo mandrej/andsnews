@@ -14,11 +14,11 @@ const opts = {
     themes: {
       light: {
         background: colors.grey.lighten3,
-        primary: colors.grey.darken3,
+        primary: colors.grey.lighten1,
         secondary: colors.shades.white,
         accent: colors.indigo.accent2,
         // info: colors.blue,
-        // success: colors.green,
+        success: colors.indigo,
         error: colors.red.accent2
       },
       dark: {
@@ -27,8 +27,8 @@ const opts = {
         secondary: colors.grey.darken2,
         accent: colors.indigo.accent4,
         // info: colors.blue.darken2,
-        // success: colors.green.darken2,
-        error: colors.red.accent2
+        success: colors.indigo.darken2,
+        error: colors.red.accent4
       }
     },
     options: {

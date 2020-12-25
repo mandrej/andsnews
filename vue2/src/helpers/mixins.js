@@ -52,7 +52,7 @@ const common = {
     }
   },
   beforeRouteLeave (to, from, next) {
-    // close open popups instead of going back
+    // List -> close open popups instead of going back
     if (this.noBack) {
       this.editForm = false
       this.confirm = false

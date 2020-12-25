@@ -70,7 +70,7 @@
                 <v-btn class="mr-3" color="error" @click="removeRecord(item)">
                   <v-icon left>delete</v-icon>Delete
                 </v-btn>
-                <v-btn class="mr-3" color="primary" @click.stop="showEditForm(item)">
+                <v-btn class="mr-3" color="success" @click.stop="showEditForm(item)">
                   <v-icon left>publish</v-icon>Publish
                 </v-btn>
               </v-list-item-action>

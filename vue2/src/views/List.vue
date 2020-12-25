@@ -9,7 +9,7 @@
         <v-divider></v-divider>
         <v-card-actions class="flex-row justify-space-between px-6 py-4">
           <v-btn color="error" @click="agree">Yes</v-btn>
-          <v-btn color="primary" @click="confirm = false">No</v-btn>
+          <v-btn color="success" @click="confirm = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
