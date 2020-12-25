@@ -58,5 +58,6 @@ module.exports = {
   },
 
   transpileDependencies: ['vuetify'],
-  assetsDir: 'static'
+  assetsDir: 'static',
+  productionSourceMap: false
 }
