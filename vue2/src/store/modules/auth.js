@@ -82,7 +82,7 @@ const actions = {
       return messaging
         .getToken()
         .then(token => {
-          if (token) {
+          if (token && token !== state.fcm_token) {
             commit('SET_TOKEN', token)
             if (state.user && state.user.uid) {
               dispatch('addRegistration')

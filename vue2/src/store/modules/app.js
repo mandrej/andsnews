@@ -113,10 +113,7 @@ const actions = {
         })
     }
   },
-  fetchStat: debounce(({ dispatch }) => {
-    dispatch('_fetchStat')
-  }, 200),
-  _fetchStat: ({ commit, dispatch, state }) => {
+  fetchStat: ({ commit, dispatch, state }) => {
     axios.get('counters').then(response => {
       commit('SET_COUNTERS', response.data)
       if (state.bucket.count === 0) {
@@ -164,7 +161,7 @@ const actions = {
   },
   bucketInfo: debounce(({ dispatch }, param) => {
     dispatch('_bucketInfo', param)
-  }, 200),
+  }, 1000),
   _bucketInfo: ({ commit, rootState }, param) => {
     /**
      * param: { verb: 'add|del|get', [size: int] }
@@ -255,16 +252,15 @@ const mutations = {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
   SET_COUNTERS (state, data) {
-    const _data = JSON.stringify(data)
-    if (_data.indexOf('year') > 0) {
-      const last = data.year[0]
-      if (last) {
-        state.last = last
-      }
-    }
     state.values = {}
     CONFIG.photo_filter.forEach(field => {
-      if (_data.indexOf(field) * _data.indexOf('value') > 0) {
+      if (Object.prototype.hasOwnProperty.call(data, field)) {
+        if (field === 'year') {
+          const last = data.year[0]
+          if (last) {
+            state.last = last
+          }
+        }
         state.values[field] = [...Array.from(data[field], c => {
           return c.value
         })]
