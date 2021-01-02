@@ -1,4 +1,3 @@
-service: default
 runtime: python39
 default_expiration: "0s"
 
