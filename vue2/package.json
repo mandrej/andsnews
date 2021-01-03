@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.1",
-    "dayjs": "^1.9.8",
+    "dayjs": "^1.10.0",
     "firebase": "^8.2.1",
     "mitt": "^2.1.0",
     "register-service-worker": "^1.7.2",
