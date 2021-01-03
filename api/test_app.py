@@ -19,9 +19,22 @@ import unittest
 class TestApp(unittest.TestCase):
     def setUp(self):
         self.app = main.app.test_client()
+        self.test = [
+            # '/api/get/bucket_info',
+            # '/api/counters',
+            # '/api/exif/IMG_0284.jpg',
+            '/api/exif/DSC_6349_972_01.jpg',
+        ]
 
-    def test_main(self):
-        rv = self.app.get('/api/counters')
-        assert rv.status == '200 OK'
+    def test(self):
+        for url in self.test:
+            print('testing ', url)
+            response = self.app.get(url)
+            assert response.status_code == 200
+            if response.is_json:
+                print(response.get_json())
+            else:
+                print(response.data)
 
+# no need to run server!
 # (andsnews) $ python -m unittest api/test_app.py
