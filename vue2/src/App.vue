@@ -43,7 +43,7 @@
             <img v-else src="/static/Google__G__Logo.svg" />
           </v-avatar>
 
-          <v-progress-linear v-show="busy" absolute top color="primary" :indeterminate="true"></v-progress-linear>
+          <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
         <v-main>

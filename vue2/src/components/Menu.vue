@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item v-if="user.isAuthorized && $route.name !== 'add'" to="/add">
       <v-list-item-action>
-        <v-icon>add_circle</v-icon>
+        <v-icon color="info">add_circle</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Add</v-list-item-title>
@@ -10,7 +10,7 @@
     </v-list-item>
     <v-list-item v-if="user.isAdmin && $route.name !== 'admin'" to="/admin">
       <v-list-item-action>
-        <v-icon>settings</v-icon>
+        <v-icon color="info">settings</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Admin</v-list-item-title>
@@ -18,7 +18,7 @@
     </v-list-item>
     <v-list-item @click="switchTheme">
       <v-list-item-action>
-        <v-icon>palette</v-icon>
+        <v-icon color="info">palette</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title v-if="$vuetify.theme.dark">Light</v-list-item-title>

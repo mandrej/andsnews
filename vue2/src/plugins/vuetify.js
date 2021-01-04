@@ -14,20 +14,20 @@ const opts = {
     themes: {
       light: {
         background: colors.grey.lighten3,
-        primary: colors.grey.lighten1,
+        primary: colors.shades.white,
         secondary: colors.shades.white,
-        accent: colors.indigo.accent2,
-        // info: colors.blue,
-        success: colors.indigo,
+        accent: colors.teal.accent3,
+        info: colors.teal,
+        success: colors.teal,
         error: colors.red.accent2
       },
       dark: {
         background: colors.grey.darken3,
         primary: colors.grey.darken4,
         secondary: colors.grey.darken2,
-        accent: colors.indigo.accent4,
-        // info: colors.blue.darken2,
-        success: colors.indigo.darken2,
+        accent: colors.teal.accent4,
+        info: colors.teal,
+        success: colors.teal.darken2,
         error: colors.red.accent4
       }
     },
