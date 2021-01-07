@@ -75,7 +75,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="dateTime.date" scrollable>
+                    <v-date-picker v-model="dateTime.date" color="info" scrollable>
                       <v-spacer></v-spacer>
                       <v-btn text @click="dateRef = false">Cancel</v-btn>
                       <v-btn text @click="$refs.dateRef.save(dateTime.date)">OK</v-btn>
@@ -104,6 +104,7 @@
                       ></v-text-field>
                     </template>
                     <v-time-picker
+                      color="info"
                       v-if="dateTime.time"
                       v-model="dateTime.time"
                       @click:minute="$refs.timeRef.save(dateTime.time)"

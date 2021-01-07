@@ -15,20 +15,20 @@ const opts = {
       light: {
         background: colors.grey.lighten3,
         primary: colors.shades.white,
-        secondary: colors.shades.white,
+        secondary: colors.grey.lighten4,
         accent: colors.teal.accent3,
         info: colors.teal,
         success: colors.teal,
         error: colors.red.accent2
       },
       dark: {
-        background: colors.grey.darken3,
-        primary: colors.grey.darken4,
-        secondary: colors.grey.darken2,
-        accent: colors.teal.accent4,
-        info: colors.teal,
-        success: colors.teal.darken2,
-        error: colors.red.accent4
+        background: colors.grey.darken4,
+        primary: colors.grey.darken3,
+        secondary: '#333',
+        accent: colors.teal.darken2,
+        info: colors.teal.darken2,
+        success: colors.teal.darken3,
+        error: colors.red.darken3
       }
     },
     options: {

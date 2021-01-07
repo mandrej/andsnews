@@ -67,10 +67,10 @@
               </v-list-item-content>
 
               <v-list-item-action class="d-flex flex-row">
-                <v-btn class="mr-3" color="error" @click="removeRecord(item)">
+                <v-btn color="error" class="mr-3" @click="removeRecord(item)">
                   <v-icon left>delete</v-icon>Delete
                 </v-btn>
-                <v-btn class="mr-3" color="success" @click.stop="showEditForm(item)">
+                <v-btn color="success" class="mr-3" @click.stop="showEditForm(item)">
                   <v-icon left>publish</v-icon>Publish
                 </v-btn>
               </v-list-item-action>

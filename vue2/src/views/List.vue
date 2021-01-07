@@ -19,16 +19,17 @@
       <v-btn
         v-show="fab"
         fab
+        icon
         large
         fixed
         bottom
         right
-        color="accent"
+        :class="$vuetify.theme.dark ? 'accent elevation-2 white--text' : 'accent elevation-2 black--text'"
         style="bottom: 32px; right: 32px"
         v-scroll="onScroll"
         @click="$vuetify.goTo(0)"
       >
-        <v-icon :class="$vuetify.theme.dark ? 'white--text' : 'black--text'">arrow_upward</v-icon>
+        <v-icon>arrow_upward</v-icon>
       </v-btn>
     </v-fab-transition>
 
