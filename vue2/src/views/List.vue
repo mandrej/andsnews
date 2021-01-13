@@ -24,7 +24,7 @@
         fixed
         bottom
         right
-        :class="$vuetify.theme.dark ? 'accent elevation-2 white--text' : 'accent elevation-2 black--text'"
+        class="accent elevation-2"
         style="bottom: 32px; right: 32px"
         v-scroll="onScroll"
         @click="$vuetify.goTo(0)"
@@ -33,8 +33,8 @@
       </v-btn>
     </v-fab-transition>
 
-    <Photoswipe :options="options" :key="pid">
-      <v-container fluid class="pa-4">
+    <v-container fluid class="pa-4 py-5">
+      <Photoswipe v-if="error === null" :options="options" :key="pid">
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <v-col
             cols="12"
@@ -49,12 +49,9 @@
             <Card :id="'card_' + item.id" :item="item"></Card>
           </v-col>
         </v-row>
-      </v-container>
-    </Photoswipe>
-
-    <v-container v-if="error">
+      </Photoswipe>
       <v-alert
-        v-if="error === '0'"
+        v-else-if="error === 0"
         type="info"
         transition="scale-transition"
         prominent
