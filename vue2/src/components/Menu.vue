@@ -30,7 +30,7 @@
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Admin</v-list-item-title>
-        <v-list-item-subtitle>set various counters</v-list-item-subtitle>
+        <v-list-item-subtitle>rebuild various counters</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-list-item @click="switchTheme">

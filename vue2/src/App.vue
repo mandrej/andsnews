@@ -41,7 +41,9 @@
         </v-app-bar>
 
         <v-main>
-          <router-view></router-view>
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
         </v-main>
       </v-app>
     </transition>
