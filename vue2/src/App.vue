@@ -37,12 +37,6 @@
             style="cursor: pointer; padding-left: 0"
           >ANDрејевићи</v-toolbar-title>
 
-          <v-spacer></v-spacer>
-          <v-avatar size="40px" @click="signHandler" style="cursor: pointer">
-            <img v-if="photoUrl" :src="photoUrl" />
-            <img v-else src="/static/Google__G__Logo.svg" />
-          </v-avatar>
-
           <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
@@ -96,9 +90,6 @@ export default {
   computed: {
     ...mapState('app', ['busy', 'dark']),
     ...mapState('auth', ['user']),
-    photoUrl () {
-      return this.user && this.user.photo
-    },
     dynamicComponent () {
       switch (this.$route.name) {
         case 'home':
@@ -107,11 +98,6 @@ export default {
         default:
           return Stat
       }
-    }
-  },
-  methods: {
-    signHandler () {
-      this.$store.dispatch('auth/signIn')
     }
   }
 }

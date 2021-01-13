@@ -1,6 +1,7 @@
 <template>
   <v-sheet class="pa-4" color="transparent">
     <v-text-field
+      class="hidden-md-and-down"
       v-model.lazy="tmp.text"
       label="by text"
       @change="submit"
