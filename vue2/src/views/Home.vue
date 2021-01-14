@@ -10,8 +10,8 @@
         {{count}} photos since 2007 and counting
       </h4>
     </div>
-    <v-avatar absolute size="70%" @click="$router.push({name: 'list', query: query})">
-      <img src="/static/aperture.svg" />
+    <v-avatar absolute size="400" @click="$router.push({name: 'list', query: query})">
+      <v-icon size="200">launch</v-icon>
     </v-avatar>
   </div>
 </template>

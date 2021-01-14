@@ -8875,10 +8875,10 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-pswipe@^0.15.1:
-  version "0.15.1"
-  resolved "https://registry.npm.taobao.org/vue-pswipe/download/vue-pswipe-0.15.1.tgz#3644c54074ffa5040862a688c65796989fef97ed"
-  integrity sha1-NkTFQHT/pQQIYqaIxleWmJ/vl+0=
+vue-pswipe@^0.15.2:
+  version "0.15.2"
+  resolved "https://registry.npm.taobao.org/vue-pswipe/download/vue-pswipe-0.15.2.tgz#7023500c371f4f8471da6d9a8e5fdf6b82bda6a6"
+  integrity sha1-cCNQDDcfT4Rx2m2ajl/fa4K9pqY=
   dependencies:
     "@types/photoswipe" "^4.0.29"
     photoswipe "^4.1.3"

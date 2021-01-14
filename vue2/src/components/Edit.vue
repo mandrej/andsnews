@@ -7,9 +7,9 @@
     @keydown.esc="show = false"
     transition="dialog-bottom-transition"
   >
-    <v-card color="secondary">
-      <v-app-bar color="accent">
-        <v-btn @click="submit" color="success" :disabled="!valid">Submit</v-btn>
+    <v-card>
+      <v-app-bar>
+        <v-btn color="primary" @click="submit" :disabled="!valid">Submit</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
@@ -75,7 +75,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="dateTime.date" color="info" scrollable>
+                    <v-date-picker color="primary" v-model="dateTime.date" scrollable>
                       <v-spacer></v-spacer>
                       <v-btn text @click="dateRef = false">Cancel</v-btn>
                       <v-btn text @click="$refs.dateRef.save(dateTime.date)">OK</v-btn>
@@ -104,9 +104,9 @@
                       ></v-text-field>
                     </template>
                     <v-time-picker
-                      color="info"
                       v-if="dateTime.time"
                       v-model="dateTime.time"
+                      color="primary"
                       @click:minute="$refs.timeRef.save(dateTime.time)"
                     ></v-time-picker>
                   </v-menu>
@@ -135,19 +135,13 @@
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
               <v-text-field
-                color="error"
                 readonly
                 :label="`File size [${formatBytes(tmp.size)}]`"
                 v-model="tmp.size"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
-              <v-text-field
-                color="error"
-                readonly
-                label="Dimension [width, height]"
-                v-model="tmp.dim"
-              ></v-text-field>
+              <v-text-field readonly label="Dimension [width, height]" v-model="tmp.dim"></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
               <v-text-field label="Location [latitude, longitude]" v-model="tmp.loc"></v-text-field>

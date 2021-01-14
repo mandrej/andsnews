@@ -15,7 +15,7 @@
     "register-service-worker": "^1.7.2",
     "vue": "^2.6.12",
     "vue-lazyload": "^1.3.3",
-    "vue-pswipe": "^0.15.1",
+    "vue-pswipe": "^0.15.2",
     "vue-router": "^3.4.9",
     "vuetify": "^2.4.2",
     "vuex": "^3.6.0",

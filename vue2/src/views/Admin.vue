@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>{{title}}</h1>
-    <v-list color="background">
+    <v-list color="transparent">
       <h3>Send message to subscribers</h3>
       <v-list-item>
         <v-list-item-content>
@@ -16,7 +16,7 @@
           ></v-text-field>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn color="success" @click="send">Send</v-btn>
+          <v-btn color="primary" @click="send">Send</v-btn>
         </v-list-item-action>
       </v-list-item>
 
@@ -28,7 +28,7 @@
         <v-list-item-action>
           <v-btn
             :disabled="canRun(fcm_token)"
-            color="success"
+            color="primary"
             width="100"
             @click="rebuild(field)"
           >Rebuild</v-btn>
@@ -41,7 +41,7 @@
           <v-list-item-title>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn :disabled="true" color="success" @click="fix">Fix</v-btn>
+          <v-btn :disabled="true" color="primary" @click="fix">Fix</v-btn>
         </v-list-item-action>
       </v-list-item>
 
@@ -51,7 +51,7 @@
           <v-list-item-title>Bucket count and size</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn color="success" @click="bucket">Rebuild</v-btn>
+          <v-btn color="primary" @click="bucket">Rebuild</v-btn>
         </v-list-item-action>
       </v-list-item>
       <v-list-item>

@@ -11,15 +11,7 @@
 
     <transition name="fade" mode="out-in">
       <v-app>
-        <v-navigation-drawer
-          v-model="drawer"
-          app
-          fixed
-          floating
-          clipped
-          color="secondary"
-          :width="300"
-        >
+        <v-navigation-drawer v-model="drawer" app fixed floating clipped :width="300">
           <div class="d-flex flex-column fill-height">
             <keep-alive>
               <component :is="dynamicComponent"></component>
@@ -29,7 +21,7 @@
           </div>
         </v-navigation-drawer>
 
-        <v-app-bar app clipped-left color="primary">
+        <v-app-bar app clipped-left>
           <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title
             class="headline"
@@ -37,7 +29,7 @@
             style="cursor: pointer; padding-left: 0"
           >ANDрејевићи</v-toolbar-title>
 
-          <v-progress-linear v-show="busy" absolute top color="accent" :indeterminate="true"></v-progress-linear>
+          <v-progress-linear v-show="busy" absolute top :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
         <v-main>
@@ -108,9 +100,6 @@ export default {
 <style lang="scss">
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
-}
-.v-application {
-  background-color: var(--v-background-base) !important;
 }
 .v-card__title {
   line-height: 125%;

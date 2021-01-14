@@ -25,7 +25,6 @@
               v-model="value"
               :query="value < 100"
               :indeterminate="value >= 100"
-              color="accent"
               height="16"
             ></v-progress-linear>
             <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
@@ -56,7 +55,7 @@
           <template v-for="(item, j) in uploaded">
             <v-divider v-if="j !== 0" :key="`${j}-divider`"></v-divider>
 
-            <v-list-item :key="j" two-line>
+            <v-list-item :key="j">
               <v-list-item-avatar>
                 <img :src="getImgSrc(item, 400)" />
               </v-list-item-avatar>
@@ -70,7 +69,7 @@
                 <v-btn color="error" class="mr-3" @click="removeRecord(item)">
                   <v-icon left>delete</v-icon>Delete
                 </v-btn>
-                <v-btn color="success" class="mr-3" @click.stop="showEditForm(item)">
+                <v-btn color="primary" class="mr-3" @click.stop="showEditForm(item)">
                   <v-icon left>publish</v-icon>Publish
                 </v-btn>
               </v-list-item-action>
@@ -201,9 +200,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.v-list {
-  background-color: var(--v-secondary-base);
-}
-</style>
