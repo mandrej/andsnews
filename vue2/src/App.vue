@@ -27,7 +27,7 @@
             class="headline"
             @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
             style="cursor: pointer; padding-left: 0"
-          >ANDрејевићи</v-toolbar-title>
+          >{{title}}</v-toolbar-title>
 
           <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
         </v-app-bar>
@@ -84,6 +84,9 @@ export default {
   computed: {
     ...mapState('app', ['busy', 'dark']),
     ...mapState('auth', ['user']),
+    title () {
+      return this.$route.meta.title || 'ANDрејевићи'
+    },
     dynamicComponent () {
       switch (this.$route.name) {
         case 'home':

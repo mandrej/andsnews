@@ -34,33 +34,38 @@ const router = new Router({
       path: '/add',
       name: 'add',
       component: Add,
-      props: {
-        title: 'Upload'
-      },
-      meta: { requiresAuth: true }
+      meta: {
+        title: 'Upload',
+        requiresAuth: true
+      }
     },
     {
       path: '/admin',
       name: 'admin',
       component: Admin,
-      props: {
+      meta: {
         title: 'Administration',
-      },
-      meta: { requiresAuth: true }
+        requiresAuth: true
+      }
     },
     {
       path: '/401',
       component: Err,
-      props: {
+      meta: {
         title: '401 Insufficient credentials',
+        requiresAuth: true
+      },
+      props: {
         text: 'You cannot access this page'
       }
     },
     {
       path: '*',
       component: Err,
-      props: route => ({
+      meta: {
         title: '404 Not found',
+      },
+      props: route => ({
         text: 'Requested ' + route.fullPath + ' cannot be found'
       })
     }

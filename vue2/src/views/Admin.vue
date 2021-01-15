@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <h1>{{title}}</h1>
     <v-list color="transparent">
       <h3>Send message to subscribers</h3>
       <v-list-item>
@@ -81,7 +80,6 @@ import common from '@/helpers/mixins'
 
 export default {
   name: 'Admin',
-  props: ['title'],
   mixins: [common],
   data: () => ({
     msg: {
