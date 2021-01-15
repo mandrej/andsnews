@@ -29,7 +29,7 @@
             style="cursor: pointer; padding-left: 0"
           >ANDрејевићи</v-toolbar-title>
 
-          <v-progress-linear v-show="busy" absolute top :indeterminate="true"></v-progress-linear>
+          <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
         </v-app-bar>
 
         <v-main>
@@ -100,6 +100,9 @@ export default {
 <style lang="scss">
 #app {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+.v-application {
+  background-color: var(--v-background-base) !important;
 }
 .v-card__title {
   line-height: 125%;

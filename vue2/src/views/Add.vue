@@ -4,7 +4,7 @@
 
     <v-container>
       <h1>{{title}}</h1>
-      <v-sheet class="my-3 pa-3" color="secondary">
+      <v-sheet class="my-3 pa-3">
         <div class="d-flex flex-column justify-center" style="position: relative; height: 120px">
           <template v-if="status === code.INITIAL">
             <input
@@ -23,6 +23,7 @@
           <template v-if="status === code.SAVING">
             <v-progress-linear
               v-model="value"
+              color="secondary"
               :query="value < 100"
               :indeterminate="value >= 100"
               height="16"

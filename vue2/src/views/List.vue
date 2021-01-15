@@ -24,7 +24,7 @@
         fixed
         bottom
         right
-        class="accent elevation-2"
+        class="secondary elevation-2"
         style="bottom: 32px; right: 32px"
         v-scroll="onScroll"
         @click="$vuetify.goTo(0)"
