@@ -36,7 +36,14 @@ const router = new Router({
       component: Add,
       meta: {
         title: 'Upload',
-        requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        const user = store.state.auth.user
+        if (user.isAuthorized) {
+          next()
+        } else {
+          next('/401')
+        }
       }
     },
     {
@@ -45,7 +52,14 @@ const router = new Router({
       component: Admin,
       meta: {
         title: 'Administration',
-        requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        const user = store.state.auth.user
+        if (user.isAdmin) {
+          next()
+        } else {
+          next('/401')
+        }
       }
     },
     {
@@ -70,21 +84,6 @@ const router = new Router({
       })
     }
   ]
-})
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    const user = store.state.auth.user
-    if (to.name === 'add' && user.isAuthorized) {
-      next()
-    } else if (to.name === 'admin' && user.isAdmin) {
-      next()
-    } else {
-      next('/401')
-    }
-  } else {
-    next() // make sure to always call next()!
-  }
 })
 
 router.afterEach((to) => {

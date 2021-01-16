@@ -15,7 +15,7 @@
         </template>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item v-if="user.isAuthorized && $route.name !== 'add'" to="/add">
+    <v-list-item v-show="user.isAuthorized" to="/add">
       <v-list-item-action>
         <v-icon>add_circle</v-icon>
       </v-list-item-action>
@@ -24,7 +24,7 @@
         <v-list-item-subtitle>jpeg images less then 4 Mb</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item v-if="user.isAdmin && $route.name !== 'admin'" to="/admin">
+    <v-list-item v-show="user.isAdmin" to="/admin">
       <v-list-item-action>
         <v-icon>settings</v-icon>
       </v-list-item-action>

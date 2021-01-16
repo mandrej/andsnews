@@ -9,36 +9,34 @@
       </template>
     </v-snackbar>
 
-    <transition name="fade" mode="out-in">
-      <v-app>
-        <v-navigation-drawer v-model="drawer" app fixed floating clipped :width="300">
-          <div class="d-flex flex-column fill-height">
-            <keep-alive>
-              <component :is="dynamicComponent"></component>
-            </keep-alive>
-            <v-spacer></v-spacer>
-            <Menu></Menu>
-          </div>
-        </v-navigation-drawer>
+    <v-app>
+      <v-navigation-drawer v-model="drawer" app fixed floating clipped :width="300">
+        <div class="d-flex flex-column fill-height">
+          <keep-alive>
+            <component :is="dynamicComponent"></component>
+          </keep-alive>
+          <v-spacer></v-spacer>
+          <Menu></Menu>
+        </div>
+      </v-navigation-drawer>
 
-        <v-app-bar app clipped-left>
-          <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title
-            class="headline"
-            @click="($route.name === 'add') ? $router.go(-1) : $router.push({ name: 'home' })"
-            style="cursor: pointer; padding-left: 0"
-          >{{title}}</v-toolbar-title>
+      <v-app-bar app clipped-left>
+        <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title
+          class="headline"
+          @click="goBack"
+          style="cursor: pointer; padding-left: 0"
+        >{{title}}</v-toolbar-title>
 
-          <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
-        </v-app-bar>
+        <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
+      </v-app-bar>
 
-        <v-main>
-          <transition name="fade" mode="out-in">
-            <router-view></router-view>
-          </transition>
-        </v-main>
-      </v-app>
-    </transition>
+      <v-main>
+        <transition :name="transitionName">
+          <router-view></router-view>
+        </transition>
+      </v-main>
+    </v-app>
   </div>
 </template>
 
@@ -68,7 +66,8 @@ export default {
     Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
-    drawer: null
+    drawer: null,
+    transitionName: ''
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
@@ -96,6 +95,29 @@ export default {
           return Stat
       }
     }
+  },
+  watch: {
+    // eslint-disable-next-line no-unused-vars
+    $route (to, from) {
+      if (to.name === 'home') {
+        this.transitionName = 'slide-left'
+      } else if (to.name === 'list' && from.name === 'add') {
+        this.transitionName = 'slide-left'
+      } else if (to.name === 'list' && from.name === 'admin') {
+        this.transitionName = 'slide-left'
+      } else {
+        this.transitionName = 'slide-right'
+      }
+    }
+  },
+  methods: {
+    goBack () {
+      if (this.$route.name === 'add') {
+        this.$router.go(-1)
+      } else {
+        this.$router.push({ name: 'home' })
+      }
+    }
   }
 }
 </script>
@@ -117,15 +139,23 @@ export default {
   position: absolute;
   cursor: pointer;
 }
-/* transition name="fade" */
-.fade-enter-active,
-.fade-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
+/* transition :name="transitionName" */
+.slide-left-enter-active,
+.slide-right-enter-active {
+  transition: all 0.2s ease;
 }
-.fade-enter,
-.fade-leave-active {
+.slide-left-leave-active,
+.slide-right-leave-active {
+  transition: all 0.5 s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-right-enter,
+.slide-right-leave-to {
+  transform: translateX(100px);
+  opacity: 0;
+}
+.slide-left-enter,
+.slide-left-leave-to {
+  transform: translateX(-100px);
   opacity: 0;
 }
 /* Photoswipe */
