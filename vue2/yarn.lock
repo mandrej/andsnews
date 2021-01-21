@@ -3095,10 +3095,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.8.2.tgz?cache=0&sync_timestamp=1609682093261&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.8.2.tgz#0a1fd6709246da9ca8eff5bb0cbd15fba9ac7044"
-  integrity sha1-Ch/WcJJG2pyo7/W7DL0V+6mscEQ=
+core-js@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.8.3.tgz?cache=0&sync_timestamp=1611040749668&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.8.3.tgz#c21906e1f14f3689f93abcc6e26883550dd92dd0"
+  integrity sha1-whkG4fFPNon5OrzG4miDVQ3ZLdA=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -7662,10 +7662,10 @@ sass-loader@^10.1.1:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
-sass@^1.32.4:
-  version "1.32.4"
-  resolved "https://registry.npm.taobao.org/sass/download/sass-1.32.4.tgz?cache=0&sync_timestamp=1610415537087&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.32.4.tgz#308bf29dd7f53d44ae4f06580e9a910ad9aa411e"
-  integrity sha1-MIvyndf1PUSuTwZYDpqRCtmqQR4=
+sass@^1.32.5:
+  version "1.32.5"
+  resolved "https://registry.npm.taobao.org/sass/download/sass-1.32.5.tgz?cache=0&sync_timestamp=1611118710175&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.32.5.tgz#2882d22ad5748c05fa9bff6c3b0ffbc4f4b9e1dc"
+  integrity sha1-KILSKtV0jAX6m/9sOw/7xPS54dw=
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
@@ -8916,8 +8916,8 @@ vue@^2.6.12:
 
 vuetify-loader@^1.6.0:
   version "1.6.0"
-  resolved "https://registry.yarnpkg.com/vuetify-loader/-/vuetify-loader-1.6.0.tgz#05df0805b3ab2ff0de198109d34f9da3f69da667"
-  integrity sha512-1bx3YeZ712dT1+QMX+XSFlP0O5k5O5Ui9ysBBmUZ9bWkAEHWZJQI9soI+qG5qmeFxUC0L9QYMCIKP0hOL/pf3Q==
+  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.6.0.tgz#05df0805b3ab2ff0de198109d34f9da3f69da667"
+  integrity sha1-Bd8IBbOrL/DeGYEJ00+do/adpmc=
   dependencies:
     file-loader "^4.0.0"
     loader-utils "^1.2.0"
