@@ -187,7 +187,6 @@ export default {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s;
-  cursor: pointer;
 }
 .lazy[lazy="loaded"],
 .lazy[lazy="error"] {
