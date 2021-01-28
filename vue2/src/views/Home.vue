@@ -1,7 +1,7 @@
 <template>
   <div
     v-lazy:background-image="getImgSrc(last)"
-    class="d-flex flex-column fill-height align-center justify-center last"
+    class="d-flex flex-column fill-height align-center justify-center lazy last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
       <h4 class="body-1 white--text text-right">
@@ -10,7 +10,7 @@
         {{count}} photos since 2007 and counting
       </h4>
     </div>
-    <v-avatar absolute size="400" @click="$router.push({name: 'list', query: query})">
+    <v-avatar absolute size="300" @click="$router.push({name: 'list', query: query})">
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

@@ -16,7 +16,7 @@
         </v-btn>
       </v-app-bar>
       <v-card-text class="pt-3">
-        <v-form v-model="valid" ref="form">
+        <v-form>
           <v-row>
             <v-col cols="12" md="4" sm="4">
               <v-responsive :aspect-ratio="1">
@@ -168,14 +168,15 @@ export default {
     menuDate: false,
     menuTime: false,
     tmp: {},
-    search: null
+    search: null,
+    submitting: false
   }),
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['values', 'current']),
     valid: {
       get () {
-        return Boolean(this.tmp.date) && Boolean(this.tmp.headline !== '')
+        return Boolean(this.tmp.date) && Boolean(this.tmp.headline !== '') && !this.submitting
       },
       set (newValue) {
         return newValue
@@ -209,14 +210,17 @@ export default {
     }
   },
   methods: {
-    submit () {
-      if (this.$refs.form.validate()) {
-        this.tmp.date = this.dateTime.date + ' ' + this.dateTime.time
-        this.tmp.tags = (this.tmp.tags) ? this.tmp.tags : []
+    submit (event) {
+      event.preventDefault()
+      this.submitting = true
+      this.tmp.date = this.dateTime.date + ' ' + this.dateTime.time
+      this.tmp.tags = (this.tmp.tags) ? this.tmp.tags : []
+      this.$store.dispatch('app/saveRecord', this.tmp)
 
-        this.$store.dispatch('app/saveRecord', this.tmp)
+      setTimeout(() => {
+        this.submitting = false
         this.show = false
-      }
+      }, 1000)
     },
     readExif () {
       axios.get('exif/' + this.tmp.filename).then(response => {

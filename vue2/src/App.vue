@@ -51,7 +51,6 @@ import update from '@/helpers/update'
 import CONFIG from '@/helpers/config'
 
 Vue.use(VueLazyload, {
-  attempt: 1,
   observer: true,
   error: CONFIG.fileBroken
 })
@@ -180,7 +179,7 @@ export default {
   opacity: 0.75 !important;
 }
 /* Lazy image */
-img.lazy {
+.lazy {
   position: absolute;
   opacity: 0;
   display: block;
@@ -190,8 +189,8 @@ img.lazy {
   transition: opacity 0.3s;
   cursor: pointer;
 }
-img.lazy[lazy="loaded"],
-img.lazy[lazy="error"] {
+.lazy[lazy="loaded"],
+.lazy[lazy="error"] {
   opacity: 1;
 }
 img.lazy + p {
