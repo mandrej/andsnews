@@ -32,9 +32,7 @@
       </v-app-bar>
 
       <v-main>
-        <transition :name="transitionName">
-          <router-view></router-view>
-        </transition>
+        <router-view></router-view>
       </v-main>
     </v-app>
   </div>
@@ -65,8 +63,7 @@ export default {
     Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
-    drawer: null,
-    transitionName: ''
+    drawer: null
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
@@ -92,20 +89,6 @@ export default {
           return Find
         default:
           return Stat
-      }
-    }
-  },
-  watch: {
-    // eslint-disable-next-line no-unused-vars
-    $route (to, from) {
-      if (to.name === 'home') {
-        this.transitionName = 'slide-left'
-      } else if (to.name === 'list' && from.name === 'add') {
-        this.transitionName = 'slide-left'
-      } else if (to.name === 'list' && from.name === 'admin') {
-        this.transitionName = 'slide-left'
-      } else {
-        this.transitionName = 'slide-right'
       }
     }
   },
@@ -145,25 +128,6 @@ export default {
 .theme--dark path {
   fill: black;
   fill-opacity: 0.5;
-}
-/* transition :name="transitionName" */
-.slide-left-enter-active,
-.slide-right-enter-active {
-  transition: all 0.2s ease;
-}
-.slide-left-leave-active,
-.slide-right-leave-active {
-  transition: all 0.5 s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-right-enter,
-.slide-right-leave-to {
-  transform: translateX(100px);
-  opacity: 0;
-}
-.slide-left-enter,
-.slide-left-leave-to {
-  transform: translateX(-100px);
-  opacity: 0;
 }
 /* Photoswipe */
 .pswp * {
