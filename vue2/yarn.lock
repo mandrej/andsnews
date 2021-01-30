@@ -901,10 +901,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.6.1.tgz#dcbd23030a71c0c74fc95d4a3f75ba81653850e9"
   integrity sha512-L/ZnJRAq7F++utfuoTKX4CLBG5YR7tFO3PLzG1/oXXKEezJ0kRL3CMRoueBEmTCzVb/6SIs2Qlaw++uDgi5Xyg==
 
-"@firebase/app@0.6.13":
-  version "0.6.13"
-  resolved "https://registry.npm.taobao.org/@firebase/app/download/@firebase/app-0.6.13.tgz#f2e9fa9e75815e54161dc34659a60f1fffd9a450"
-  integrity sha1-8un6nnWBXlQWHcNGWaYPH//ZpFA=
+"@firebase/app@0.6.14":
+  version "0.6.14"
+  resolved "https://registry.npm.taobao.org/@firebase/app/download/@firebase/app-0.6.14.tgz#a93e0cd74f1d8232e74fde4daa8d95dd934753c8"
+  integrity sha1-qT4M108dgjLnT95Nqo2V3ZNHU8g=
   dependencies:
     "@firebase/app-types" "0.6.1"
     "@firebase/component" "0.1.21"
@@ -946,10 +946,10 @@
   dependencies:
     "@firebase/app-types" "0.6.1"
 
-"@firebase/database@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.9.0.tgz#eaf07dbaf3433be6cc27543c1823dc3c88c47572"
-  integrity sha1-6vB9uvNDO+bMJ1Q8GCPcPIjEdXI=
+"@firebase/database@0.9.1":
+  version "0.9.1"
+  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.9.1.tgz#a0f6a91bb21b746812b5848c1a9504dec524eab3"
+  integrity sha1-oPapG7IbdGgStYSMGpUE3sUk6rM=
   dependencies:
     "@firebase/auth-interop-types" "0.1.5"
     "@firebase/component" "0.1.21"
@@ -964,10 +964,10 @@
   resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-2.1.0.tgz#ad406c6fd7f0eae7ea52979f712daa0166aef665"
   integrity sha1-rUBsb9fw6ufqUpefcS2qAWau9mU=
 
-"@firebase/firestore@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.1.3.tgz#74b99c9365a26ea101045c0600641064621cb341"
-  integrity sha1-dLmck2WibqEBBFwGAGQQZGIcs0E=
+"@firebase/firestore@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.1.4.tgz#27b6efc8e3d2709fc080844a15a8e8cb92a0cc20"
+  integrity sha1-J7bvyOPScJ/AgIRKFajoy5KgzCA=
   dependencies:
     "@firebase/component" "0.1.21"
     "@firebase/firestore-types" "2.1.0"
@@ -4368,17 +4368,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^8.2.4:
-  version "8.2.4"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.2.4.tgz#f30fd723ccc51535a4ec97c671ab84d1919ea0d9"
-  integrity sha1-8w/XI8zFFTWk7JfGcauE0ZGeoNk=
+firebase@^8.2.5:
+  version "8.2.5"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.2.5.tgz#6d8ee2e243a0c20c53145fa80ae758af9c75b7dc"
+  integrity sha1-bY7i4kOgwgxTFF+oCudYr5x1t9w=
   dependencies:
     "@firebase/analytics" "0.6.2"
-    "@firebase/app" "0.6.13"
+    "@firebase/app" "0.6.14"
     "@firebase/app-types" "0.6.1"
     "@firebase/auth" "0.16.2"
-    "@firebase/database" "0.9.0"
-    "@firebase/firestore" "2.1.3"
+    "@firebase/database" "0.9.1"
+    "@firebase/firestore" "2.1.4"
     "@firebase/functions" "0.6.1"
     "@firebase/installations" "0.4.19"
     "@firebase/messaging" "0.7.3"
