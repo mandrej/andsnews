@@ -176,7 +176,7 @@ export default {
     ...mapState('app', ['values', 'current']),
     valid: {
       get () {
-        return Boolean(this.tmp.date) && Boolean(this.tmp.headline !== '') && !this.submitting
+        return Boolean(this.tmp.headline !== '') && !this.submitting
       },
       set (newValue) {
         return newValue
@@ -194,7 +194,11 @@ export default {
       }
     },
     dateTime () {
-      return this.splitDate(this.tmp.date)
+      const dt = this.tmp.date.split(' ')
+      return {
+        date: dt[0],
+        time: dt[1]
+      }
     }
   },
   watch: {

@@ -16,14 +16,6 @@ const common = {
     }
   },
   methods: {
-    splitDate (dateTime) {
-      // mandatory
-      const dt = dateTime.split(' ')
-      return {
-        date: dt[0],
-        time: dt[1]
-      }
-    },
     formatBytes (bytes, decimals = 2) {
       if (bytes === 0) return '0 Bytes'
 
