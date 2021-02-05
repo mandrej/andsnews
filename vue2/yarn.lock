@@ -924,10 +924,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.10.1.tgz#7815e71c9c6f072034415524b29ca8f1d1770660"
   integrity sha512-/+gBHb1O9x/YlG7inXfxff/6X3BPZt4zgBv4kql6HEmdzNQCodIRlEYnI+/da+lN+dha7PjaFH7C7ewMmfV7rw==
 
-"@firebase/auth@0.16.2":
-  version "0.16.2"
-  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.16.2.tgz#e8fdd65c7987276bc06676e9ed990346ebe2dc51"
-  integrity sha1-6P3WXHmHJ2vAZnbp7ZkDRuvi3FE=
+"@firebase/auth@0.16.3":
+  version "0.16.3"
+  resolved "https://registry.npm.taobao.org/@firebase/auth/download/@firebase/auth-0.16.3.tgz#8771d8ceb7cc3cfffa573edd7b1445799bc534fc"
+  integrity sha1-h3HYzrfMPP/6Vz7dexRFeZvFNPw=
   dependencies:
     "@firebase/auth-types" "0.10.1"
 
@@ -946,10 +946,10 @@
   dependencies:
     "@firebase/app-types" "0.6.1"
 
-"@firebase/database@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.9.1.tgz#a0f6a91bb21b746812b5848c1a9504dec524eab3"
-  integrity sha1-oPapG7IbdGgStYSMGpUE3sUk6rM=
+"@firebase/database@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.npm.taobao.org/@firebase/database/download/@firebase/database-0.9.2.tgz#197fc76882ea8f050ebd09cd5ff4c1ba9a6a1787"
+  integrity sha1-GX/HaILqjwUOvQnNX/TBuppqF4c=
   dependencies:
     "@firebase/auth-interop-types" "0.1.5"
     "@firebase/component" "0.1.21"
@@ -964,10 +964,10 @@
   resolved "https://registry.npm.taobao.org/@firebase/firestore-types/download/@firebase/firestore-types-2.1.0.tgz#ad406c6fd7f0eae7ea52979f712daa0166aef665"
   integrity sha1-rUBsb9fw6ufqUpefcS2qAWau9mU=
 
-"@firebase/firestore@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.1.4.tgz#27b6efc8e3d2709fc080844a15a8e8cb92a0cc20"
-  integrity sha1-J7bvyOPScJ/AgIRKFajoy5KgzCA=
+"@firebase/firestore@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.npm.taobao.org/@firebase/firestore/download/@firebase/firestore-2.1.5.tgz#1ffaa04e229a8e26e44884803fe74ee1a5e2af25"
+  integrity sha1-H/qgTiKajibkSISAP+dO4aXiryU=
   dependencies:
     "@firebase/component" "0.1.21"
     "@firebase/firestore-types" "2.1.0"
@@ -4368,17 +4368,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^8.2.5:
-  version "8.2.5"
-  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.2.5.tgz#6d8ee2e243a0c20c53145fa80ae758af9c75b7dc"
-  integrity sha1-bY7i4kOgwgxTFF+oCudYr5x1t9w=
+firebase@^8.2.6:
+  version "8.2.6"
+  resolved "https://registry.npm.taobao.org/firebase/download/firebase-8.2.6.tgz#6f02483a3468074495abdb992ed6c3c143dd9eac"
+  integrity sha1-bwJIOjRoB0SVq9uZLtbDwUPdnqw=
   dependencies:
     "@firebase/analytics" "0.6.2"
     "@firebase/app" "0.6.14"
     "@firebase/app-types" "0.6.1"
-    "@firebase/auth" "0.16.2"
-    "@firebase/database" "0.9.1"
-    "@firebase/firestore" "2.1.4"
+    "@firebase/auth" "0.16.3"
+    "@firebase/database" "0.9.2"
+    "@firebase/firestore" "2.1.5"
     "@firebase/functions" "0.6.1"
     "@firebase/installations" "0.4.19"
     "@firebase/messaging" "0.7.3"
@@ -8934,10 +8934,10 @@ vue@^2.6.12:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.12.tgz?cache=0&sync_timestamp=1597929245395&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha1-9evU+mvShpQD4pqJau1JBEVskSM=
 
-vuetify-loader@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.7.1.tgz#d2fb905ee7dbd1183ea210dbd31e52756fd622fc"
-  integrity sha1-0vuQXufb0Rg+ohDb0x5SdW/WIvw=
+vuetify-loader@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.7.2.tgz?cache=0&sync_timestamp=1612531418796&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify-loader%2Fdownload%2Fvuetify-loader-1.7.2.tgz#5cdc45309496cf3a5fe431fd7611706ffa4aa8c8"
+  integrity sha1-XNxFMJSWzzpf5DH9dhFwb/pKqMg=
   dependencies:
     decache "^4.6.0"
     file-loader "^6.2.0"
