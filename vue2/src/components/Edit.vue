@@ -10,6 +10,7 @@
     <v-card>
       <v-app-bar>
         <v-btn color="primary" @click="submit" :disabled="!valid">Submit</v-btn>
+        <v-btn color="ml-2" if="user.isAdmin" @click="readExif">Read Exif</v-btn>
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
@@ -19,10 +20,9 @@
         <v-form>
           <v-row>
             <v-col cols="12" md="4" sm="4">
-              <v-responsive :aspect-ratio="1">
+              <v-responsive :aspect-ratio="4/3" class="d-none d-sm-flex">
                 <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
               </v-responsive>
-              <v-btn if="user.isAdmin" text block @click="readExif">Read Exif</v-btn>
             </v-col>
             <v-col cols="12" md="8" sm="8">
               <v-text-field
@@ -32,31 +32,8 @@
                 required
               ></v-text-field>
               <v-autocomplete v-model="tmp.email" :items="values.email" label="Author" single-line></v-autocomplete>
-              <v-combobox
-                v-model="tmp.tags"
-                :items="values.tags"
-                label="Tags"
-                :search-input.sync="search"
-                @change="search = null"
-                multiple
-                hide-selected
-                deletable-chips
-                clearable
-              >
-                <template v-slot:no-data>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        No results matching "
-                        <strong>{{ search }}</strong>". Press
-                        <kbd>enter</kbd> to create a new one
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-              </v-combobox>
               <v-row>
-                <v-col cols="12" md="6" sm="6">
+                <v-col cols="6" md="6" sm="6">
                   <v-menu
                     v-model="menuDate"
                     ref="dateRef"
@@ -82,7 +59,7 @@
                     </v-date-picker>
                   </v-menu>
                 </v-col>
-                <v-col cols="12" md="6" sm="6">
+                <v-col cols="6" md="6" sm="6">
                   <v-menu
                     v-model="menuTime"
                     ref="timeRef"
@@ -115,22 +92,49 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col cols="12">
+              <v-combobox
+                v-model="tmp.tags"
+                :items="values.tags"
+                label="Tags"
+                :search-input.sync="search"
+                @change="search = null"
+                multiple
+                hide-selected
+                deletable-chips
+                clearable
+              >
+                <template v-slot:no-data>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        No results matching "
+                        <strong>{{ search }}</strong>". Press
+                        <kbd>enter</kbd> to create a new one
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-combobox>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="12" md="4" sm="6">
               <v-text-field label="Camera Model" v-model="tmp.model"></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6">
               <v-text-field label="Lens" v-model="tmp.lens"></v-text-field>
             </v-col>
-            <v-col cols="12" md="4" sm="6">
+            <v-col cols="6" md="4" sm="6">
               <v-text-field label="Focal length" type="number" v-model="tmp.focal_length"></v-text-field>
             </v-col>
-            <v-col cols="12" md="4" sm="6">
+            <v-col cols="6" md="4" sm="6">
               <v-text-field label="ISO [ASA]" type="number" v-model="tmp.iso"></v-text-field>
             </v-col>
-            <v-col cols="12" md="4" sm="6">
+            <v-col cols="6" md="4" sm="6">
               <v-text-field label="Aperture" type="number" step="0.1" v-model="tmp.aperture"></v-text-field>
             </v-col>
-            <v-col cols="12" md="4" sm="6">
+            <v-col cols="6" md="4" sm="6">
               <v-text-field label="Shutter [s]" v-model="tmp.shutter"></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
@@ -194,10 +198,11 @@ export default {
       }
     },
     dateTime () {
-      const dt = this.tmp.date.split(' ')
+      const dt = this.tmp.date || this.$date().format('YYYY-MM-DD HH:mm')
+      const [date, time] = dt.split(' ')
       return {
-        date: dt[0],
-        time: dt[1]
+        date: date,
+        time: time
       }
     }
   },
@@ -234,3 +239,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.row + .row {
+  margin-top: 0;
+}
+</style>
