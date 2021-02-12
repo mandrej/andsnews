@@ -16,7 +16,7 @@
           <v-icon>close</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-card-text class="pt-3">
+      <v-card-text class="pt-6">
         <v-form>
           <v-row>
             <v-col cols="12" md="4" sm="4">
