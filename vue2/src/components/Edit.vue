@@ -20,7 +20,7 @@
         <v-form>
           <v-row>
             <v-col cols="12" md="4" sm="4">
-              <v-responsive :aspect-ratio="4/3" class="d-none d-sm-flex">
+              <v-responsive :aspect-ratio="1" class="d-none d-sm-flex">
                 <img class="lazy" v-lazy="getImgSrc(tmp, 400)" />
               </v-responsive>
             </v-col>
@@ -29,9 +29,15 @@
                 v-model="tmp.headline"
                 :rules="requiredRule"
                 :label="`Headline for ${tmp.filename}`"
+                :dense="$vuetify.breakpoint.xsOnly"
                 required
               ></v-text-field>
-              <v-autocomplete v-model="tmp.email" :items="values.email" label="Author" single-line></v-autocomplete>
+              <v-autocomplete
+                v-model="tmp.email"
+                :items="values.email"
+                label="Author"
+                :dense="$vuetify.breakpoint.xsOnly"
+              ></v-autocomplete>
               <v-row>
                 <v-col cols="6" md="6" sm="6">
                   <v-menu
@@ -120,22 +126,22 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="4" sm="6">
-              <v-text-field label="Camera Model" v-model="tmp.model"></v-text-field>
+              <v-text-field label="Camera Model" v-model="tmp.model" dense></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6">
-              <v-text-field label="Lens" v-model="tmp.lens"></v-text-field>
+              <v-text-field label="Lens" v-model="tmp.lens" dense></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Focal length" type="number" v-model="tmp.focal_length"></v-text-field>
+              <v-text-field label="Focal length" type="number" v-model="tmp.focal_length" dense></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="ISO [ASA]" type="number" v-model="tmp.iso"></v-text-field>
+              <v-text-field label="ISO [ASA]" type="number" v-model="tmp.iso" dense></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Aperture" type="number" step="0.1" v-model="tmp.aperture"></v-text-field>
+              <v-text-field label="Aperture" type="number" step="0.1" v-model="tmp.aperture" dense></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Shutter [s]" v-model="tmp.shutter"></v-text-field>
+              <v-text-field label="Shutter [s]" v-model="tmp.shutter" dense></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
               <v-text-field
@@ -171,16 +177,23 @@ export default {
   data: () => ({
     menuDate: false,
     menuTime: false,
-    tmp: {},
     search: null,
     submitting: false
   }),
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['values', 'current']),
+    tmp: {
+      get () {
+        return this.current
+      },
+      set (newValue) {
+        return newValue
+      }
+    },
     valid: {
       get () {
-        return Boolean(this.tmp.headline !== '') && !this.submitting
+        return this.tmp.headline !== '' && !this.submitting
       },
       set (newValue) {
         return newValue
@@ -241,6 +254,9 @@ export default {
 </script>
 
 <style scoped>
+.v-dialog > .v-card > .v-card__text {
+  padding: 0 16px 20px;
+}
 .row + .row {
   margin-top: 0;
 }
