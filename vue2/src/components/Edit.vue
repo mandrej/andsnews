@@ -175,6 +175,7 @@ export default {
   mixins: [common],
   props: ['visible'],
   data: () => ({
+    tmp: {},
     menuDate: false,
     menuTime: false,
     search: null,
@@ -183,14 +184,6 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['values', 'current']),
-    tmp: {
-      get () {
-        return this.current
-      },
-      set (newValue) {
-        return newValue
-      }
-    },
     valid: {
       get () {
         return this.tmp.headline !== '' && !this.submitting
