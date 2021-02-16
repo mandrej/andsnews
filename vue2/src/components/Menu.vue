@@ -44,7 +44,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item>
-      <v-list-item-content class="caption">{{version}}</v-list-item-content>
+      <v-list-item-content class="text-caption">{{version}}</v-list-item-content>
     </v-list-item>
   </v-list>
 </template>

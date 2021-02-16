@@ -9,7 +9,7 @@
         :data-pswp-src="getImgSrc(item)"
         :data-pswp-pid="item.id"
       />
-      <p class="title">{{item.headline}}</p>
+      <p class="text-h6">{{item.headline}}</p>
     </v-responsive>
     <v-card-text class="d-flex justify-space-between py-2">
       <div

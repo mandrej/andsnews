@@ -34,7 +34,7 @@
             >Processing images. Please wait …</div>
           </template>
           <template v-if="status === code.FAILED">
-            <h3 class="headline">Upload failed</h3>
+            <h3 class="text-h5">Upload failed</h3>
             <div class="subheading text-center error--text">Something went wrong.</div>
           </template>
         </div>

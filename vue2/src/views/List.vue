@@ -4,7 +4,7 @@
 
     <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
-        <v-card-title class="headline" primary-title>{{current.headline}}</v-card-title>
+        <v-card-title class="text-h5" primary-title>{{current.headline}}</v-card-title>
         <v-card-text>Want to delete?</v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="flex-row justify-space-between px-6 py-4">

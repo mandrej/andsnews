@@ -23,7 +23,7 @@
       <v-app-bar app clipped-left>
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title
-          class="headline"
+          class="text-h5"
           @click="goBack"
           style="cursor: pointer; padding-left: 0"
         >{{title}}</v-toolbar-title>

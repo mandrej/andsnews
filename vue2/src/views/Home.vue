@@ -6,7 +6,7 @@
     style="cursor: pointer"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
-      <h4 class="body-1 white--text text-right">
+      <h4 class="text-body-1 white--text text-right">
         ANDрејевићи personal photo album
         <br />
         {{count}} photos since 2007 and counting

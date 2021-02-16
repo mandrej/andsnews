@@ -49,12 +49,13 @@
                     offset-y
                     min-width="290px"
                   >
-                    <template v-slot:activator="{ on }">
+                    <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         v-model="dateTime.date"
                         label="Date taken"
                         prepend-icon="event"
                         readonly
+                        v-bind="attrs"
                         v-on="on"
                       ></v-text-field>
                     </template>
@@ -77,12 +78,13 @@
                     max-width="290px"
                     min-width="290px"
                   >
-                    <template v-slot:activator="{ on }">
+                    <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         v-model="dateTime.time"
                         label="Time taken"
                         prepend-icon="schedule"
                         readonly
+                        v-bind="attrs"
                         v-on="on"
                       ></v-text-field>
                     </template>
@@ -217,7 +219,7 @@ export default {
       if (val) {
         this.tmp = { ...this.current }
         // new image
-        if (!this.current.date) {
+        if (!this.tmp.date) {
           this.readExif()
           return
         }
