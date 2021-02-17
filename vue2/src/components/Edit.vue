@@ -47,7 +47,7 @@
                     :return-value.sync="dateTime.date"
                     transition="scale-transition"
                     offset-y
-                    min-width="290px"
+                    min-width="auto"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
@@ -75,8 +75,7 @@
                     :return-value.sync="dateTime.time"
                     transition="scale-transition"
                     offset-y
-                    max-width="290px"
-                    min-width="290px"
+                    min-width="auto"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
