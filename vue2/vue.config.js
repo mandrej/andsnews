@@ -26,20 +26,6 @@ module.exports = {
           options: {
             cacheName: 'google'
           }
-        },
-        {
-          urlPattern: /api/,
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'data-cache',
-            expiration: {
-              maxEntries: 100,
-              maxAgeSeconds: 3600
-            },
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
         }
       ]
     }
