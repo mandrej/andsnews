@@ -12,7 +12,7 @@ const initialState = {
   uploaded: [],
 
   last: {
-    count: null,
+    count: 0,
     filename: null,
     date: new Date('1970-01-01').toISOString(),
     value: 1970
@@ -189,7 +189,10 @@ const mutations = {
     state.dark = val
   },
   SAVE_FIND_FORM (state, payload) {
-    state.find = { ...payload }
+    for (const prop of Object.getOwnPropertyNames(state.find)) {
+      delete state.find[prop]
+    }
+    state.find = { ...state.find, ...payload }
   },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
@@ -200,7 +203,10 @@ const mutations = {
     state.uploaded = [...state.uploaded, data]
   },
   SET_CURRENT (state, obj) {
-    state.current = obj
+    for (const prop of Object.getOwnPropertyNames(state.current)) {
+      delete state.current[prop]
+    }
+    state.current = { ...state.current, ...obj }
   },
   UPDATE_RECORDS (state, data) {
     if (state.pages[0] === 'FP' && data._page === 'FP') return
@@ -234,10 +240,12 @@ const mutations = {
     const last_obj = new Date(obj.date)
     if (last_obj.getTime() > last_stat.getTime()) {
       state.last = {
-        count: state.last.count + 1,
-        filename: obj.filename,
-        date: obj.date,
-        value: last_obj.getFullYear()
+        ...state.last, ...{
+          count: state.last.count + 1,
+          filename: obj.filename,
+          date: obj.date,
+          value: last_obj.getFullYear()
+        }
       }
     }
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
@@ -252,13 +260,14 @@ const mutations = {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
   SET_COUNTERS (state, data) {
-    state.values = {}
     CONFIG.photo_filter.forEach(field => {
       if (Object.prototype.hasOwnProperty.call(data, field)) {
         if (field === 'year') {
           const last = data.year[0]
           if (last) {
-            state.last = last
+            state.last = {
+              ...state.last, ...last
+            }
           }
         }
         state.values[field] = [...Array.from(data[field], c => {
@@ -279,7 +288,7 @@ const mutations = {
     state.error = val
   },
   SET_BUCKET (state, obj) {
-    state.bucket = { ...obj }
+    state.bucket = { ...state.bucket, ...obj }
   }
 }
 

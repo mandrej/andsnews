@@ -108,7 +108,10 @@ const actions = {
 }
 const mutations = {
   SAVE_USER (state, payload) {
-    state.user = payload
+    for (const prop of Object.getOwnPropertyNames(state.user)) {
+      delete state.user[prop]
+    }
+    state.user = { ...state.user, ...payload }
   },
   SET_TOKEN (state, val) {
     state.fcm_token = val
