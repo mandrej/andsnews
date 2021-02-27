@@ -96,7 +96,6 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    current: {},
     status: null,
     code: {
       INITIAL: 0,
@@ -178,11 +177,10 @@ export default {
       if (i > 0) this.save(formData)
     },
     showEditForm (rec) {
+      rec.email = this.user.email
+      rec.headline = 'No name'
       this.$store.dispatch('app/setCurrent', rec)
       this.failed.length = 0
-      this.current = rec
-      this.current.email = this.user.email
-      this.current.headline = 'No name'
       this.editForm = true
     },
     removeRecord (rec) {
