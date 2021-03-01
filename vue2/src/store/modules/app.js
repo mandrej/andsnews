@@ -189,10 +189,7 @@ const mutations = {
     state.dark = val
   },
   SAVE_FIND_FORM (state, payload) {
-    for (const prop of Object.getOwnPropertyNames(state.find)) {
-      delete state.find[prop]
-    }
-    state.find = { ...state.find, ...payload }
+    state.find = { ...payload }
   },
   ADD_RECORD (state, obj) {
     const dates = state.objects.map(item => item.date)
@@ -203,10 +200,7 @@ const mutations = {
     state.uploaded = [...state.uploaded, data]
   },
   SET_CURRENT (state, obj) {
-    for (const prop of Object.getOwnPropertyNames(state.current)) {
-      delete state.current[prop]
-    }
-    state.current = { ...state.current, ...obj }
+    state.current = { ...obj }
   },
   UPDATE_RECORDS (state, data) {
     if (state.pages[0] === 'FP' && data._page === 'FP') return
