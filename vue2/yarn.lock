@@ -1366,10 +1366,10 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
-"@types/photoswipe@^4.0.29":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@types/photoswipe/-/photoswipe-4.1.0.tgz#212ad2b05d67828b24d424a01cb6fbb0735d37db"
-  integrity sha512-SWcWlJH8exQ/yijUNQn5pJdSrcsfPwyBmksBPa4NLNaUr4rhaC7YOGcrNSoIAC9LByoEbTIKWQpFVtHjomTTLA==
+"@types/photoswipe@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.npm.taobao.org/@types/photoswipe/download/@types/photoswipe-4.1.1.tgz#3d76ed9698775ea17a1191578e4d0eeb331024a2"
+  integrity sha1-PXbtlph3XqF6EZFXjk0O6zMQJKI=
 
 "@types/q@^1.5.1":
   version "1.5.4"
@@ -3859,15 +3859,15 @@ eslint-plugin-vue@^6.2.2:
     semver "^5.6.0"
     vue-eslint-parser "^7.0.0"
 
-eslint-plugin-vue@^7.6.0:
-  version "7.6.0"
-  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.6.0.tgz?cache=0&sync_timestamp=1613350623049&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.6.0.tgz#ea616e6dfd45d545adb16cba628c5a992cc31f0b"
-  integrity sha1-6mFubf1F1UWtsWy6YoxamSzDHws=
+eslint-plugin-vue@^7.7.0:
+  version "7.7.0"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.7.0.tgz?cache=0&sync_timestamp=1614681261878&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.7.0.tgz#a90df4595e670821bf243bd2750ededdb74948b8"
+  integrity sha1-qQ30WV5nCCG/JDvSdQ7e3bdJSLg=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
     semver "^7.3.2"
-    vue-eslint-parser "^7.5.0"
+    vue-eslint-parser "^7.6.0"
 
 eslint-plugin-vuetify@^1.0.0-beta.8:
   version "1.0.0-beta.8"
@@ -8845,10 +8845,10 @@ vue-cli-plugin-axios@^0.0.4:
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-axios/-/vue-cli-plugin-axios-0.0.4.tgz#29d4eb48275c7fe15b92e1fd5d95fbe2a966436f"
   integrity sha512-p2b/fvPJuPBnvU8027PAAuU5DiOzUn2lku8XLG/f6c8FU0N+/MXWZAlOuHhqd9e7+KIZitwe/c8qlmv7TglbTg==
 
-vue-cli-plugin-vuetify@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.2.0.tgz#614405bb3a8224a080a3eb8f984ac4b64fbacaec"
-  integrity sha1-YUQFuzqCJKCAo+uPmErEtk+6yuw=
+vue-cli-plugin-vuetify@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.2.2.tgz#4b29854ad199d811941b8ca894ca34593127e0bf"
+  integrity sha1-SymFStGZ2BGUG4yolMo0WTEn4L8=
   dependencies:
     null-loader "^3.0.0"
     semver "^7.1.2"
@@ -8866,10 +8866,10 @@ vue-eslint-parser@^7.0.0:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
-vue-eslint-parser@^7.5.0:
-  version "7.5.0"
-  resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.5.0.tgz?cache=0&sync_timestamp=1613263212602&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.5.0.tgz#b68221c55fee061899afcfb4441ec74c1495285e"
-  integrity sha1-toIhxV/uBhiZr8+0RB7HTBSVKF4=
+vue-eslint-parser@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.6.0.tgz#01ea1a2932f581ff244336565d712801f8f72561"
+  integrity sha1-AeoaKTL1gf8kQzZWXXEoAfj3JWE=
   dependencies:
     debug "^4.1.1"
     eslint-scope "^5.0.0"
@@ -8908,12 +8908,12 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-pswipe@^0.15.2:
-  version "0.15.2"
-  resolved "https://registry.npm.taobao.org/vue-pswipe/download/vue-pswipe-0.15.2.tgz#7023500c371f4f8471da6d9a8e5fdf6b82bda6a6"
-  integrity sha1-cCNQDDcfT4Rx2m2ajl/fa4K9pqY=
+vue-pswipe@^0.15.3:
+  version "0.15.3"
+  resolved "https://registry.npm.taobao.org/vue-pswipe/download/vue-pswipe-0.15.3.tgz#66b2c5b615282287deb4706e035e6bcc12660189"
+  integrity sha1-ZrLFthUoIofetHBuA15rzBJmAYk=
   dependencies:
-    "@types/photoswipe" "^4.0.29"
+    "@types/photoswipe" "^4.1.1"
     photoswipe "^4.1.3"
 
 vue-router@^3.5.1:
