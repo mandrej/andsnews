@@ -34,13 +34,13 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>Bug fix on {{$date('2020-03-11').format('dddd, MMMM DD, YYYY')}}</h3>
+      <h3>Bug fix on {{$date('2021-03-07').format('dddd, MMMM DD, YYYY')}}</h3>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Save all records to use &lt;int:id&gt; instead of &lt;str:id_or_name&gt;</v-list-item-title>
+          <v-list-item-title>Datastore lens fix</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn :disabled="true" color="primary" @click="fix">Fix</v-btn>
+          <v-btn :disabled="canRun(fcm_token)" color="primary" @click="fix">Fix</v-btn>
         </v-list-item-action>
       </v-list-item>
 

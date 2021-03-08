@@ -47,6 +47,15 @@
       clearable
     ></v-autocomplete>
     <v-autocomplete
+      class="hidden-md-and-down"
+      v-model.lazy="tmp.lens"
+      :items="values.lens"
+      label="by lens"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-autocomplete>
+    <v-autocomplete
       v-model.lazy="tmp.nick"
       :items="nickNames"
       label="by author"

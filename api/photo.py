@@ -34,7 +34,10 @@ def counters_stat():
             result[field] = sorted(
                 _list, key=itemgetter('value'), reverse=True)
         else:
-            result[field] = sorted(_list, key=itemgetter('value'))
+            # most frequent
+            result[field] = sorted(
+                _list, key=itemgetter('count'), reverse=True)
+
     return result
 
 

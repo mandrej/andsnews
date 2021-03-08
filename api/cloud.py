@@ -43,7 +43,8 @@ def rebuilder(field, token):
     if field == 'tags':
         values = [item for ent in iterator for item in ent[field]]
     else:
-        values = [ent[field] for ent in iterator]
+        values = [ent[field]
+                  for ent in iterator if ent[field]]
 
     tally = collections.Counter(values)
     for value, count in tally.items():
@@ -196,10 +197,11 @@ class Unbound(object):
 
 class Fixer(object):
     """
-    Save all records to use <int:id> instead of <str:id_or_name>
+    Datastore lens fix
     """
     TOKEN = None
-    QUERY = datastore_client.query(kind='Photo')
+    QUERY = datastore_client.query(
+        kind='Photo').add_filter('lens', '=', '30mm F2.8')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -210,20 +212,13 @@ class Fixer(object):
         _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         batch = []
-        deleted = []
         for ent in list(_page):
-            id_or_name = ent.key.id_or_name
-            if isinstance(id_or_name, str):
-                self.COUNT += 1
-                key = datastore_client.key('Photo')
-                obj = datastore.Entity(key)
-                obj.update(ent)
-                batch.append(obj)
-                deleted.append(ent/key)
+            self.COUNT += 1
+            ent.update({'lens': ''})
+            batch.append(ent)
 
         if len(batch) > 0:
             datastore_client.put_multi(batch)
-            datastore_client.delete_multi(deleted)
             push_message(self.TOKEN, f'saving {self.COUNT} ...')
 
         next_cursor = _iter.next_page_token
