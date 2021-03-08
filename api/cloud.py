@@ -201,7 +201,7 @@ class Fixer(object):
     """
     TOKEN = None
     QUERY = datastore_client.query(
-        kind='Photo').add_filter('lens', '=', '30mm F2.8')
+        kind='Photo').add_filter('lens', '=', 'NIKKOR Z 24-70mm f4 S')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -214,7 +214,7 @@ class Fixer(object):
         batch = []
         for ent in list(_page):
             self.COUNT += 1
-            ent.update({'lens': ''})
+            ent.update({'lens': 'Nikon NIKKOR Z 24-70mm f4 S'})
             batch.append(ent)
 
         if len(batch) > 0:

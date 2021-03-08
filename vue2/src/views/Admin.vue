@@ -34,7 +34,7 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>Bug fix on {{$date('2021-03-07').format('dddd, MMMM DD, YYYY')}}</h3>
+      <h3>Bug fix on {{$date('2021-03-08').format('dddd, MMMM DD, YYYY')}}</h3>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Datastore lens fix</v-list-item-title>
