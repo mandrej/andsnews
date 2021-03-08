@@ -93,10 +93,7 @@ def search():
     filters = []
     page = request.args.get('_page', None)
     per_page = int(request.args.get('per_page'))
-    keys = CONFIG['photo_filter'].copy()
-    keys.remove('email')
-    keys.extend(['text', 'nick'])
-    for key in keys:
+    for key in ('text', 'tags', 'year', 'month', 'model', 'lens', 'nick'):
         if key == 'year' or key == 'month':
             val = request.args.get(key, None)
             if val:
