@@ -24,12 +24,16 @@ export default {
     list () {
       return [
         {
+          value: this.formatBytes(this.bucket.size),
+          text: 'storage size'
+        },
+        {
           value: this.bucket.count,
           text: 'photographs'
         },
         {
-          value: this.formatBytes(this.bucket.size),
-          text: 'storage size'
+          value: this.values.year.length,
+          text: 'years'
         },
         {
           value: this.values.tags.length,
@@ -38,6 +42,10 @@ export default {
         {
           value: this.values.model.length,
           text: 'cameras'
+        },
+        {
+          value: this.values.lens.length,
+          text: 'lenses'
         },
         {
           value: this.values.email.length,
