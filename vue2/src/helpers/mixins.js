@@ -8,11 +8,6 @@ const common = {
     version () {
       const ver = process.env.VUE_APP_VERSION.match(/.{1,4}/g).join('.')
       return '© 2007 - ' + ver
-    },
-    noBack () {
-      if (this.editForm) return true
-      if (this.confirm) return true
-      return false
     }
   },
   methods: {
@@ -39,16 +34,6 @@ const common = {
         }
       }
       return serviceUrl
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    // List -> close open popups instead of going back
-    if (this.noBack) {
-      this.editForm = false
-      this.confirm = false
-      next(false)
-    } else {
-      next()
     }
   }
 }

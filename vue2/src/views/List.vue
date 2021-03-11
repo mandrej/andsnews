@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" :current="current" @close="closEdit"></Edit>
 
     <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
@@ -9,7 +9,7 @@
         <v-divider></v-divider>
         <v-card-actions class="flex-row justify-space-between px-6 py-4">
           <v-btn color="primary" @click="agree">Yes</v-btn>
-          <v-btn color="error" @click="confirm = false">No</v-btn>
+          <v-btn color="error" @click="closeConfirm">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -46,7 +46,55 @@
             :key="item.id"
             class="pa-2"
           >
-            <Card :id="'card_' + item.id" :item="item"></Card>
+            <v-card :id="'card_' + item.id" flat>
+              <v-responsive :aspect-ratio="4/3">
+                <img
+                  class="lazy"
+                  :data-src="getImgSrc(item, 400)"
+                  :title="caption(item)"
+                  :data-pswp-size="item.dim.join('x')"
+                  :data-pswp-src="getImgSrc(item)"
+                  :data-pswp-pid="item.id"
+                />
+                <p class="text-h6">{{item.headline}}</p>
+              </v-responsive>
+              <v-card-text class="d-flex justify-space-between py-2">
+                <div
+                  style="line-height: 28px"
+                >{{item.nick}}, {{$date(item.date).format('ddd DD.MM.YYYY HH:mm')}}</div>
+                <v-btn
+                  v-if="item.loc"
+                  icon
+                  small
+                  text
+                  target="blank"
+                  :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+                >
+                  <v-icon>my_location</v-icon>
+                </v-btn>
+              </v-card-text>
+              <template v-if="user.isAuthorized">
+                <v-divider></v-divider>
+                <v-card-actions class="justify-space-between">
+                  <v-btn v-if="user.isAdmin" icon small text @click.stop="removeRecord(item)">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                  <v-btn icon small text @click.stop="showEditdForm(item)">
+                    <v-icon>edit</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    small
+                    text
+                    @click="register(item)"
+                    :href="`/api/download/${item.filename}`"
+                    :download="item.filename"
+                  >
+                    <v-icon>file_download</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </template>
+            </v-card>
           </v-col>
         </v-row>
       </Photoswipe>
@@ -77,13 +125,13 @@ export default {
   name: 'List',
   mixins: [common],
   components: {
-    Card: () => import(/* webpackChunkName: "card" */ '@/components/Card'),
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   data: () => ({
     pid: null,
     bottom: false,
     fab: false,
+    current: {},
     confirm: false,
     editForm: false,
     options: {
@@ -102,12 +150,16 @@ export default {
       }
     }
   }),
-  computed: {
-    ...mapState('app', ['objects', 'error', 'next', 'current'])
-  },
   mounted () {
-    this.$eventBus.on('show-edit', () => { this.editForm = true })
-    this.$eventBus.on('show-confirm', () => { this.confirm = true })
+    const self = this
+    window.onpopstate = function () {
+      if (self.editForm) self.editForm = false
+      if (self.confirm) self.confirm = false
+    }
+  },
+  computed: {
+    ...mapState('auth', ['user']),
+    ...mapState('app', ['objects', 'error', 'next'])
   },
   updated () {
     this.bottom = false
@@ -138,9 +190,44 @@ export default {
       this.fab = topOffset > 300
       this.bottom = topOffset + clientHeight + 2000 >= scrollHeight
     },
+    showEditdForm (item) {
+      this.current = { ...item }
+      window.history.pushState({}, '') // fake history
+      this.editForm = true
+    },
+    removeRecord (item) {
+      this.current = { ...item }
+      window.history.pushState({}, '')
+      this.confirm = true
+    },
+    closEdit () {
+      window.history.back() // consume fake history
+      this.editForm = false
+    },
+    closeConfirm () {
+      window.history.back()
+      this.confirm = false
+    },
     agree () {
       this.$store.dispatch('app/deleteRecord', this.current)
+      window.history.back()
       this.confirm = false
+    },
+    register (item) {
+      // eslint-disable-next-line no-undef
+      gtag('event', 'download', {
+        event_category: 'engagement',
+        event_label: item.headline + ' (' + this.user.email + ')',
+        value: 1
+      })
+    },
+    caption (item) {
+      const { headline, aperture, shutter, iso } = item
+      let tmp = headline
+      tmp += (aperture) ? ' f' + aperture : ''
+      tmp += (shutter) ? ', ' + shutter + 's' : ''
+      tmp += (iso) ? ', ' + iso + ' ASA' : ''
+      return tmp
     }
   }
 }

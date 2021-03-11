@@ -174,7 +174,7 @@ const axios = Vue.axios
 export default {
   name: 'Edit',
   mixins: [common],
-  props: ['visible'],
+  props: ['visible', 'current'],
   data: () => ({
     tmp: {},
     menuDate: false,
@@ -184,7 +184,7 @@ export default {
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['values', 'current']),
+    ...mapState('app', ['values']),
     valid: {
       get () {
         return this.tmp.headline !== '' && !this.submitting
