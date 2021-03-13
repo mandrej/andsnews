@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Edit :visible="editForm" @close="editForm = false"></Edit>
+    <Edit :visible="editForm" :current="current" @close="editForm = false"></Edit>
 
     <v-container>
       <v-sheet class="my-3 pa-3">
@@ -97,6 +97,7 @@ export default {
   mixins: [common],
   data: () => ({
     status: null,
+    current: {},
     code: {
       INITIAL: 0,
       SAVING: 1,
@@ -179,7 +180,7 @@ export default {
     showEditForm (rec) {
       rec.email = this.user.email
       rec.headline = 'No name'
-      this.$store.dispatch('app/setCurrent', rec)
+      this.current = { ...rec }
       this.failed.length = 0
       this.editForm = true
     },
