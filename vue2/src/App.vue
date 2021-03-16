@@ -141,6 +141,9 @@ export default {
   font-size: 14px !important;
   text-align: center !important;
   opacity: 0.75 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Lazy image */
 .lazy {

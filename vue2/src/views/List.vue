@@ -222,11 +222,13 @@ export default {
       })
     },
     caption (item) {
-      const { headline, aperture, shutter, iso } = item
+      const { headline, aperture, shutter, iso, model, lens } = item
       let tmp = headline
       tmp += (aperture) ? ' f' + aperture : ''
       tmp += (shutter) ? ', ' + shutter + 's' : ''
       tmp += (iso) ? ', ' + iso + ' ASA' : ''
+      tmp += (model) ? '<br>' + model : ''
+      tmp += (lens) ? ', ' + lens : ''
       return tmp
     }
   }
