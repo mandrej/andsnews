@@ -208,6 +208,9 @@ def removeFromBucket(filename):
 
 
 def remove(id):
+    """ key === obj.key
+        <class 'google.cloud.datastore.key.Key'>
+        <Key('Photo', 5635277129252864), project=andsnews> """
     key = datastore_client.key('Photo', id)
     obj = datastore_client.get(key)
     assert obj is not None

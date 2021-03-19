@@ -25,12 +25,14 @@
           <v-list-item-title>for {{field}}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn
-            :disabled="canRun(fcm_token)"
-            color="primary"
-            width="100"
-            @click="rebuild(field)"
-          >Rebuild</v-btn>
+          <v-btn-toggle v-model="key">
+            <v-btn
+              :disabled="canRun(fcm_token)"
+              color="primary"
+              width="100"
+              @click="rebuild(field)"
+            >Rebuild</v-btn>
+          </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
 
@@ -40,7 +42,9 @@
           <v-list-item-title>Datastore lens fix</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn :disabled="canRun(fcm_token)" color="primary" @click="fix">Fix</v-btn>
+          <v-btn-toggle v-model="toggleFix">
+            <v-btn :disabled="canRun(fcm_token)" color="primary" @click="fix">Fix</v-btn>
+          </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
 
@@ -50,23 +54,19 @@
           <v-list-item-title>Bucket count and size</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn color="primary" @click="bucket">Rebuild</v-btn>
+          <v-btn-toggle v-model="toggleBucket">
+            <v-btn color="primary" @click="bucket">Rebuild</v-btn>
+          </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Remove images from the Cloud not referenced in datastore (SLOW)</v-list-item-title>
+          <v-list-item-title>Synchronize datastore records and Cloud bucket</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn :disabled="canRun(fcm_token)" color="error" @click="unbound">Remove</v-btn>
-        </v-list-item-action>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Remove datastore records with images missing in the Cloud (404)</v-list-item-title>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-btn :disabled="true" color="error" @click="missing">Missing</v-btn>
+          <v-btn-toggle v-model="toggleMissing">
+            <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair">Repair</v-btn>
+          </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -82,6 +82,9 @@ export default {
   name: 'Admin',
   mixins: [common],
   data: () => ({
+    toggleFix: undefined,
+    toggleBucket: undefined,
+    toggleRepair: undefined,
     msg: {
       type: String,
       required: true,
@@ -104,11 +107,8 @@ export default {
     rebuild (name) {
       this.callAjax('rebuild/' + name)
     },
-    unbound () {
-      this.callAjax('unbound')
-    },
-    missing () {
-      this.callAjax('missing')
+    repair () {
+      this.callAjax('repair')
     },
     fix () {
       this.callAjax('fix')
@@ -127,6 +127,9 @@ export default {
 </script>
 
 <style scoped>
+.v-btn-toggle:not(.v-btn-toggle--dense) .v-btn.v-btn.v-size--default {
+  height: 36px;
+}
 .v-btn {
   width: 100px;
 }

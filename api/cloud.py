@@ -112,87 +112,71 @@ def bucketInfo(param):
         return update(obj, _new)
 
 
-class Missing(object):
+class Repair(object):
     """
-    Remove datastore records with images missing in the Cloud (404)
+    Synchronize datastore records and Cloud bucket
     """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
-    COUNT = 0
-    DELETED = []
+    DATA_NAMES = []
+    BLOB_NAMES = []
 
-    def run(self, batch_size=100):
+    def find(self, name):
+        query = datastore_client.query(kind='Photo')
+        query = query.add_filter('filename', '=', name)
+        return list(query.fetch())
+
+    def run(self, batch_size=1000):
         push_message(self.TOKEN, CONFIG['start_message'])
+
+        blobs = storage_client.list_blobs(BUCKET, delimiter='/')
+        self.BLOB_NAMES = [b.name for b in blobs]
         self._continue(None, batch_size)
 
     def _continue(self, cursor, batch_size):
         _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
         _page = next(_iter.pages)
+        self.DATA_NAMES.extend([ent['filename'] for ent in list(_page)])
+        push_message(self.TOKEN, len(self.DATA_NAMES))
 
-        for ent in list(_page):
-            self.COUNT += 1
+        next_cursor = _iter.next_page_token
+        if next_cursor:
+            self._continue(next_cursor, batch_size)
+        else:
+            self.finish()
+
+    def finish(self):
+        deleted = []
+        B = set(self.BLOB_NAMES)
+        D = set(self.DATA_NAMES)
+
+        for name in list(B - D):
+            res = self.find(name)
+            if len(res) == 0:
+                blob = BUCKET.get_blob(name)
+                if blob:
+                    deleted.append(name)
+                    print(name)
+                    # blob.delete()
+        if (len(deleted) > 0):
+            logging.error(f'{deleted} removed from bucket')
+            deleted = []
+
+        for name in list(D - B):
             blobs = storage_client.list_blobs(
-                BUCKET, prefix=ent['filename'], delimiter='/')
-            for prefix in blobs.prefixes:
-                if prefix == ent['filename']:
-                    key = ent.key.id_or_name()
-                    push_message(
-                        self.TOKEN, f'deleting {prefix} ...')
-                    self.DELETED.append(prefix)
-                    datastore_client.delete(key)
+                BUCKET, prefix=name, delimiter='/')
+            if len(blobs.prefixes) == 0:
+                res = find(name)
+                deleted.append(name)
+                for ent in res:
+                    print(type(ent.key))
+                    # datastore_client.delete(ent.key)
+        if (len(deleted) > 0):
+            logging.error(f'{deleted} removed from datastore')
+            deleted = []
 
-        next_cursor = _iter.next_page_token
-        if next_cursor:
-            push_message(
-                self.TOKEN, f'checked {self.COUNT}, deleted {len(self.DELETED)}')
-            self._continue(next_cursor, batch_size)
-        else:
-            self.finish()
-
-    def finish(self):
-        logging.error(self.DELETED)
-        push_message(self.TOKEN, CONFIG['end_message'])
-
-
-class Unbound(object):
-    """
-    Remove images from the Cloud not referenced in datastore (SLOW)
-    """
-    TOKEN = None
-    COUNT = 0
-    DELETED = []
-
-    def run(self, batch_size=100):
-        push_message(self.TOKEN, CONFIG['start_message'])
-        self._continue(None, batch_size)
-
-    def _continue(self, cursor, batch_size):
-        _iter = storage_client.list_blobs(
-            BUCKET, page_token=cursor, max_results=batch_size, delimiter='/')
-        _page = next(_iter.pages)
-
-        for blob in list(_page):
-            if blob.content_type == 'image/jpeg':
-                self.COUNT += 1
-                query = datastore_client.query(kind='Photo')
-                query.add_filter('filename', '=', blob.name)
-                if len(list(query.fetch(1))) == 0:
-                    push_message(
-                        self.TOKEN, f'deleting {blob.name} ...')
-                    self.DELETED.append(blob.name)
-                    blob.delete()
-
-        next_cursor = _iter.next_page_token
-        if next_cursor:
-            push_message(
-                self.TOKEN, f'checked {self.COUNT}, deleted {len(self.DELETED)}')
-            self._continue(next_cursor, batch_size)
-        else:
-            self.finish()
-
-    def finish(self):
-        logging.error(self.DELETED)
-        push_message(self.TOKEN, CONFIG['end_message'])
+        push_message(
+            self.TOKEN, f'{CONFIG["end_message"]} bucket {len(B)}, datastore {len(D)}')
 
 
 class Fixer(object):

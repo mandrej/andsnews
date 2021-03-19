@@ -155,6 +155,7 @@ def edit(id):
 
 @app.route('/api/remove/<filename>', methods=['DELETE'])
 def remove(filename):
+    """ Remove unpublished photo """
     response = photo.removeFromBucket(filename)
     return jsonify(response)
 
@@ -172,10 +173,8 @@ def runner(verb):
 
     if verb == 'fix':
         runner = cloud.Fixer()
-    elif verb == 'unbound':
-        runner = cloud.Unbound()
-    elif verb == 'missing':
-        runner = cloud.Missing()
+    elif verb == 'repair':
+        runner = cloud.Repair()
     else:
         return jsonify(False)
 

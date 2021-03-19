@@ -35,7 +35,7 @@ export default {
   mounted () {
     messaging.onMessage(payload => {
       this.message = payload.notification.body
-      if (this.message == CONFIG.end_message) {
+      if (this.message.startsWith(CONFIG.end_message)) {
         this.timeout = -1
       } else {
         this.timeout = 6000
