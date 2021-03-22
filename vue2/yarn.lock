@@ -3920,10 +3920,10 @@ eslint-plugin-vue@^6.2.2:
     semver "^5.6.0"
     vue-eslint-parser "^7.0.0"
 
-eslint-plugin-vue@^7.7.0:
-  version "7.7.0"
-  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.7.0.tgz?cache=0&sync_timestamp=1614681261878&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.7.0.tgz#a90df4595e670821bf243bd2750ededdb74948b8"
-  integrity sha1-qQ30WV5nCCG/JDvSdQ7e3bdJSLg=
+eslint-plugin-vue@^7.8.0:
+  version "7.8.0"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-vue/download/eslint-plugin-vue-7.8.0.tgz?cache=0&sync_timestamp=1616400241022&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.8.0.tgz#cb0e85d65b65fa8d15e783fbb03c049d2c4cfdae"
+  integrity sha1-yw6F1ltl+o0V54P7sDwEnSxM/a4=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
@@ -8923,10 +8923,10 @@ vue-cli-plugin-axios@^0.0.4:
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-axios/-/vue-cli-plugin-axios-0.0.4.tgz#29d4eb48275c7fe15b92e1fd5d95fbe2a966436f"
   integrity sha512-p2b/fvPJuPBnvU8027PAAuU5DiOzUn2lku8XLG/f6c8FU0N+/MXWZAlOuHhqd9e7+KIZitwe/c8qlmv7TglbTg==
 
-vue-cli-plugin-vuetify@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.3.0.tgz#97ae8679e709b023e51a3135797dab59c5505d89"
-  integrity sha1-l66GeecJsCPlGjE1eX2rWcVQXYk=
+vue-cli-plugin-vuetify@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.3.1.tgz?cache=0&sync_timestamp=1616184308897&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-cli-plugin-vuetify%2Fdownload%2Fvue-cli-plugin-vuetify-2.3.1.tgz#9e45a686902351320e876881d057eb69c646a22b"
+  integrity sha1-nkWmhpAjUTIOh2iB0FfracZGois=
   dependencies:
     null-loader "^3.0.0"
     semver "^7.1.2"
@@ -9034,10 +9034,10 @@ vuetify-loader@^1.7.2:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.4.7:
-  version "2.4.7"
-  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.4.7.tgz?cache=0&sync_timestamp=1615984701577&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.4.7.tgz#341f16950475466a7fa43f4cb507cc8c3ef170b9"
-  integrity sha1-NB8WlQR1Rmp/pD9MtQfMjD7xcLk=
+vuetify@^2.4.8:
+  version "2.4.8"
+  resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.4.8.tgz?cache=0&sync_timestamp=1616519403535&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify%2Fdownload%2Fvuetify-2.4.8.tgz#c6e883a9b2560f9906bd8b9f9eb58b001200aeef"
+  integrity sha1-xuiDqbJWD5kGvYufnrWLABIAru8=
 
 vuex-persistedstate@^4.0.0-beta.3:
   version "4.0.0-beta.3"
