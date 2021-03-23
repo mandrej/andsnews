@@ -20,7 +20,7 @@
         </div>
       </v-navigation-drawer>
 
-      <v-app-bar app clipped-left>
+      <v-app-bar app dense clipped-left>
         <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title
           class="text-h5"
@@ -110,6 +110,21 @@ export default {
 }
 .v-application {
   background-color: var(--v-background-base) !important;
+}
+.theme--light.v-navigation-drawer {
+  background-color: var(--v-appbar-lighten1);
+}
+.theme--dark.v-navigation-drawer {
+  background-color: var(--v-appbar-darken2);
+  color: #ccc;
+}
+.theme--light.v-app-bar.v-toolbar.v-sheet,
+.theme--light.v-card {
+  background-color: var(--v-appbar-base);
+}
+.theme--dark.v-app-bar.v-toolbar.v-sheet,
+.theme--dark.v-card {
+  background-color: var(--v-appbar-base);
 }
 .v-card__title {
   line-height: 125%;
