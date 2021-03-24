@@ -184,8 +184,7 @@ class Fixer(object):
     Datastore lens fix
     """
     TOKEN = None
-    QUERY = datastore_client.query(
-        kind='Photo').add_filter('lens', '=', 'NIKKOR Z 24-70mm f4 S')
+    QUERY = datastore_client.query(kind='Photo')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -197,12 +196,16 @@ class Fixer(object):
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            self.COUNT += 1
-            ent.update({'lens': 'Nikon NIKKOR Z 24-70mm f4 S'})
-            batch.append(ent)
+            if 'focal_length' in ent:
+                focal_length = ent['focal_length']
+                if type(focal_length) is str:
+                    print(float(focal_length))
+                    # ent.update({'focal_length': float(focal_length)})
+                    self.COUNT += 1
+                    batch.append(ent)
 
         if len(batch) > 0:
-            datastore_client.put_multi(batch)
+            # datastore_client.put_multi(batch)
             push_message(self.TOKEN, f'saving {self.COUNT} ...')
 
         next_cursor = _iter.next_page_token

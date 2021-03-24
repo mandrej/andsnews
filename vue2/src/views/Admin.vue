@@ -31,19 +31,20 @@
               color="primary"
               width="100"
               @click="rebuild(field)"
+              elevation="2"
             >Rebuild</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
 
-      <h3>Bug fix on {{$date('2021-03-08').format('dddd, MMMM DD, YYYY')}}</h3>
+      <h3>Bug fix on {{$date('2021-03-24').format('dddd, MMMM DD, YYYY')}}</h3>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Datastore lens fix</v-list-item-title>
+          <v-list-item-title>String focal_length fix</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleFix">
-            <v-btn :disabled="canRun(fcm_token)" color="primary" @click="fix">Fix</v-btn>
+            <v-btn :disabled="true" color="primary" @click="fix" elevation="2">Fix</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
@@ -55,7 +56,7 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleBucket">
-            <v-btn color="primary" @click="bucket">Rebuild</v-btn>
+            <v-btn color="primary" @click="bucket" elevation="2">Rebuild</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
@@ -65,7 +66,7 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleMissing">
-            <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair">Repair</v-btn>
+            <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair" elevation="2">Repair</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
