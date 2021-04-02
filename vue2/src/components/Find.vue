@@ -47,7 +47,6 @@
       clearable
     ></v-autocomplete>
     <v-autocomplete
-      class="hidden-md-and-down"
       v-model.lazy="tmp.lens"
       :items="values.lens"
       label="by lens"
