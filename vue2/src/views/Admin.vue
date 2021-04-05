@@ -37,10 +37,10 @@
         </v-list-item-action>
       </v-list-item>
 
-      <h3>Bug fix on {{$date('2021-03-24').format('dddd, MMMM DD, YYYY')}}</h3>
+      <h3>Bug fix on {{$date('2021-04-05').format('dddd, MMMM DD, YYYY')}}</h3>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>String focal_length fix</v-list-item-title>
+          <v-list-item-title>Tokenize latinized headlines for search by text</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleFix">

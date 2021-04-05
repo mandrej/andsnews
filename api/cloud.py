@@ -3,7 +3,7 @@ import datetime
 import collections
 from google.cloud import datastore
 from .photo import datastore, datastore_client, storage_client, BUCKET
-from .helpers import serialize, push_message
+from .helpers import serialize, push_message, tokenize
 from .config import CONFIG
 
 
@@ -196,16 +196,13 @@ class Fixer(object):
         _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if 'focal_length' in ent:
-                focal_length = ent['focal_length']
-                if type(focal_length) is str:
-                    print(float(focal_length))
-                    # ent.update({'focal_length': float(focal_length)})
-                    self.COUNT += 1
-                    batch.append(ent)
+            text = tokenize(ent['headline'])
+            ent.update({'text': text})
+            self.COUNT += 1
+            batch.append(ent)
 
         if len(batch) > 0:
-            # datastore_client.put_multi(batch)
+            datastore_client.put_multi(batch)
             push_message(self.TOKEN, f'saving {self.COUNT} ...')
 
         next_cursor = _iter.next_page_token

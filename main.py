@@ -3,7 +3,7 @@ from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 from api import cloud, photo
-from api.helpers import get_exif
+from api.helpers import get_exif, latinize
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -101,6 +101,10 @@ def search():
         elif key == 'tags':
             for tag in request.args.getlist('tags'):
                 filters.append((key, '=', tag))
+        elif key == 'text':
+            val = request.args.get(key, None)
+            if val:
+                filters.append((key, '=', latinize(val)))
         else:
             val = request.args.get(key, None)
             if val:

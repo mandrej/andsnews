@@ -1,13 +1,12 @@
 import re
+import string
 import requests
 import datetime
-import unicodedata
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
 
 from exifread import process_file
-from unidecode import unidecode
 from .config import CONFIG
 
 HEADERS = {
@@ -47,15 +46,52 @@ def push_message(token, message=''):
         return 'ok'
 
 
+def latinize(text):
+    azbuka = {
+        'а': 'a',
+        'б': 'b',
+        'в': 'v',
+        'г': 'g',
+        'д': 'd',
+        'ђ': 'dj',
+        'е': 'e',
+        'ж': 'ž',
+        'з': 'z',
+        'и': 'i',
+        'ј': 'j',
+        'к': 'k',
+        'л': 'l',
+        'љ': 'lj',
+        'м': 'm',
+        'н': 'n',
+        'њ': 'nj',
+        'о': 'o',
+        'п': 'p',
+        'р': 'r',
+        'с': 's',
+        'т': 't',
+        'ћ': 'ć',
+        'у': 'u',
+        'ф': 'f',
+        'х': 'h',
+        'ц': 'c',
+        'ч': 'č',
+        'џ': 'dž',
+        'ш': 'š'
+    }
+    # https://stackoverflow.com/a/43200929
+    translator = str.maketrans('', '', string.punctuation)
+    clean = text.translate(translator).lower()
+    translator = str.maketrans(azbuka)
+    return clean.translate(translator)
+
+
 def tokenize(text):
-    punctuation = set(['Pc', 'Pd', 'Ps', 'Pe', 'Pi', 'Pf', 'Po'])
-    text = ''.join(x for x in text if unicodedata.category(x)
-                   not in punctuation)
-    text = unidecode(text.lower())
-    phrase = '-'.join(text.split())
+    text = latinize(text)
+    slug = '-'.join(text.split())
 
     res = []
-    for word in phrase.split('-'):
+    for word in slug.split('-'):
         for i in range(3, len(word) + 1):
             res.append(word[:i])
     return res

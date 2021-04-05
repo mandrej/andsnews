@@ -26,15 +26,24 @@ class TestApp(unittest.TestCase):
             '/api/exif/DSC_6349_972_01.jpg',
         ]
 
-    def test(self):
-        for url in self.test:
-            print('testing ', url)
-            response = self.app.get(url)
-            assert response.status_code == 200
-            if response.is_json:
-                print(response.get_json())
-            else:
-                print(response.data)
+    # def test_exif(self):
+    #     for url in self.test:
+    #         print('testing ', url)
+    #         response = self.app.get(url)
+    #         assert response.status_code == 200
+    #         if response.is_json:
+    #             print(response.get_json())
+    #         else:
+    #             print(response.data)
+
+    def test_transliter(self):
+        from .helpers import latinize, tokenize
+        print(latinize('Џибутић Шимширић'))
+        print(latinize('Džibutić Šimširić'))
+
+        print(tokenize('Џибутић Шимширић'))
+        print(tokenize('Džibutić Šimširić'))
+
 
 # no need to run server!
 # (andsnews) $ python -m unittest api/test_app.py
