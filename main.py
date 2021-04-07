@@ -90,24 +90,22 @@ def collection():
 
 @app.route('/api/search', methods=['GET'])
 def search():
+    page = None
+    per_page = None
     filters = []
-    page = request.args.get('_page', None)
-    per_page = int(request.args.get('per_page'))
-    for key in ('text', 'tags', 'year', 'month', 'model', 'lens', 'nick'):
-        if key == 'year' or key == 'month':
-            val = request.args.get(key, None)
-            if val:
+    # Return an iterator of (key, value) pairs.
+    params = request.args.items(multi=True)
+    for key, val in params:
+        if key in ('_page', 'per_page', 'text', 'tags', 'year', 'month', 'model', 'lens', 'nick') and val:
+            if key == '_page':
+                page = val
+            elif key == 'per_page':
+                per_page = int(val)
+            elif key == 'year' or key == 'month':
                 filters.append((key, '=', int(val)))
-        elif key == 'tags':
-            for tag in request.args.getlist('tags'):
-                filters.append((key, '=', tag))
-        elif key == 'text':
-            val = request.args.get(key, None)
-            if val:
+            elif key == 'text':
                 filters.append((key, '=', latinize(val)))
-        else:
-            val = request.args.get(key, None)
-            if val:
+            else:
                 filters.append((key, '=', val))
 
     objects, token, error = photo.results(filters, page, per_page)
