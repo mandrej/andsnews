@@ -152,6 +152,7 @@ export default {
   display: block !important;
 }
 .pswp__caption__center {
+  max-width: 100% !important;
   color: white !important;
   font-size: 14px !important;
   text-align: center !important;

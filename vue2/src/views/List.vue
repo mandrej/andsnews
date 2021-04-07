@@ -224,11 +224,11 @@ export default {
     caption (item) {
       const { headline, aperture, shutter, iso, model, lens } = item
       let tmp = headline
+      tmp += (shutter) ? '\n' + shutter + 's' : ''
       tmp += (aperture) ? ' f' + aperture : ''
-      tmp += (shutter) ? ', ' + shutter + 's' : ''
-      tmp += (iso) ? ', ' + iso + ' ASA' : ''
-      tmp += (model) ? '<br>' + model : ''
-      tmp += (lens) ? ', ' + lens : ''
+      tmp += (iso) ? ' ' + iso + ' ASA' : ''
+      tmp += (model) ? '\n' + model : ''
+      tmp += (lens) ? '\n' + lens : ''
       return tmp
     }
   }
