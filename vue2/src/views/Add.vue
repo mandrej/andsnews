@@ -57,7 +57,7 @@
 
             <v-list-item :key="j">
               <v-list-item-avatar>
-                <img :src="getImgSrc(item, 400)" />
+                <img class="lazy" v-lazy="getImgSrc(item, 400)" />
               </v-list-item-avatar>
 
               <v-list-item-content>

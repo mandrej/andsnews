@@ -25,7 +25,7 @@
           <v-list-item-title>for {{field}}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle v-model="key">
+          <v-btn-toggle>
             <v-btn
               :disabled="canRun(fcm_token)"
               color="primary"
@@ -43,7 +43,7 @@
           <v-list-item-title>Tokenize latinized headlines for search by text</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle v-model="toggleFix">
+          <v-btn-toggle>
             <v-btn :disabled="true" color="primary" @click="fix" elevation="2">Fix</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
@@ -55,7 +55,7 @@
           <v-list-item-title>Bucket count and size</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle v-model="toggleBucket">
+          <v-btn-toggle>
             <v-btn color="primary" @click="bucket" elevation="2">Rebuild</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
@@ -65,7 +65,7 @@
           <v-list-item-title>Synchronize datastore records and Cloud bucket</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle v-model="toggleMissing">
+          <v-btn-toggle>
             <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair" elevation="2">Repair</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
