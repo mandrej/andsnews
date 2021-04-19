@@ -162,7 +162,7 @@ export default {
   text-overflow: ellipsis;
 }
 /* Lazy image */
-.lazy {
+img.lazy {
   position: absolute;
   opacity: 0;
   display: block;
@@ -170,17 +170,17 @@ export default {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s;
-}
-.lazy[lazy="loaded"],
-.lazy[lazy="error"] {
-  opacity: 1;
-}
-img.lazy + p {
-  position: absolute;
-  bottom: 0;
-  color: white;
-  margin: 0;
-  padding: 16px;
-  line-height: 120% !important;
+  &[lazy="loaded"],
+  &[lazy="error"] {
+    opacity: 1;
+  }
+  & + p {
+    position: absolute;
+    bottom: 0;
+    color: white;
+    margin: 0;
+    padding: 16px;
+    line-height: 120% !important;
+  }
 }
 </style>

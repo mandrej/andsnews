@@ -182,11 +182,7 @@ export default {
     onScroll () {
       const clientHeight = document.documentElement.clientHeight
       const scrollHeight = document.documentElement.scrollHeight
-      const topOffset = (
-        window.pageYOffset ||
-        document.documentElement.offsetTop ||
-        0
-      )
+      const topOffset = window.pageYOffset || 0
       this.fab = topOffset > 300
       this.bottom = topOffset + clientHeight + 2000 >= scrollHeight
     },
