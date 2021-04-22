@@ -27,7 +27,8 @@
           @click="goBack"
           style="cursor: pointer; padding-left: 0"
         >{{title}}</v-toolbar-title>
-
+        <v-spacer></v-spacer>
+        <span v-if="!busy">{{total}}</span>
         <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
       </v-app-bar>
 
@@ -77,10 +78,17 @@ export default {
     }
   },
   computed: {
-    ...mapState('app', ['busy', 'dark']),
+    ...mapState('app', ['busy', 'dark', 'objects', 'next']),
     ...mapState('auth', ['user']),
     title () {
       return this.$route.meta.title || 'ANDрејевићи'
+    },
+    total () {
+      if (this.$route.name === 'list') {
+        const prefix = (this.next) ? '+' : ''
+        return prefix + this.objects.length
+      }
+      return ''
     },
     dynamicComponent () {
       switch (this.$route.name) {

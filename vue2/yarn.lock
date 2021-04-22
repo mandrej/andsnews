@@ -3182,10 +3182,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.10.1:
-  version "3.10.1"
-  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.10.1.tgz#e683963978b6806dcc6c0a4a8bd4ab0bdaf3f21a"
-  integrity sha1-5oOWOXi2gG3MbApKi9SrC9rz8ho=
+core-js@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.11.0.tgz#05dac6aa70c0a4ad842261f8957b961d36eb8926"
+  integrity sha1-BdrGqnDApK2EImH4lXuWHTbriSY=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -7790,10 +7790,10 @@ sass-loader@^10.1.1:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
-sass@^1.32.10:
-  version "1.32.10"
-  resolved "https://registry.npm.taobao.org/sass/download/sass-1.32.10.tgz?cache=0&sync_timestamp=1618617843221&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsass%2Fdownload%2Fsass-1.32.10.tgz#d40da4e20031b450359ee1c7e69bc8cc89569241"
-  integrity sha1-1A2k4gAxtFA1nuHH5pvIzIlWkkE=
+sass@^1.32.11:
+  version "1.32.11"
+  resolved "https://registry.nlark.com/sass/download/sass-1.32.11.tgz?cache=0&sync_timestamp=1618862827877&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fsass%2Fdownload%2Fsass-1.32.11.tgz#b236b3ea55c76602c2ef2bd0445f0db581baa218"
+  integrity sha1-sjaz6lXHZgLC7yvQRF8NtYG6ohg=
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
@@ -9061,10 +9061,10 @@ vuetify-loader@^1.7.2:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.4.10:
-  version "2.4.10"
-  resolved "https://registry.nlark.com/vuetify/download/vuetify-2.4.10.tgz?cache=0&sync_timestamp=1618831586740&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvuetify%2Fdownload%2Fvuetify-2.4.10.tgz#e3989f3c3fa49dbb62534ba3aeca8dc890e43bab"
-  integrity sha1-45ifPD+knbtiU0ujrsqNyJDkO6s=
+vuetify@^2.4.11:
+  version "2.4.11"
+  resolved "https://registry.nlark.com/vuetify/download/vuetify-2.4.11.tgz#3aba19a32cd89c5dce523260f589cf95d90e2dce"
+  integrity sha1-OroZoyzYnF3OUjJg9YnPldkOLc4=
 
 vuex-persistedstate@^4.0.0-beta.3:
   version "4.0.0-beta.3"

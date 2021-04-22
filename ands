@@ -19,9 +19,9 @@ else
   case $1 in
     run)
       source $venv_dir/bin/activate
-      # gunicorn -b :6060 -w 2 main:app --reload \
-      # --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
-      python main.py
+      gunicorn -b :6060 -w 2 main:app --reload \
+      --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
+      # python main.py
       # vue ui
       exit ;;
     build)
