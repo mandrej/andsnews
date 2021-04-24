@@ -150,14 +150,6 @@ export default {
   position: absolute;
   cursor: pointer;
 }
-// .theme--light path {
-//   fill: white;
-//   fill-opacity: 0.5;
-// }
-// .theme--dark path {
-//   fill: black;
-//   fill-opacity: 0.5;
-// }
 /* Photoswipe */
 .pswp * {
   font-family: "Roboto", Helvetica, Arial, sans-serif !important;
