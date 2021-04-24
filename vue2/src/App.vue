@@ -28,7 +28,12 @@
           style="cursor: pointer; padding-left: 0"
         >{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <span v-if="!busy">{{total}}</span>
+        <animated-number
+          v-if="$route.name === 'list'"
+          :value="objects.length"
+          :round="true"
+          :formatValue="format"
+        ></animated-number>
         <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
       </v-app-bar>
 
@@ -45,6 +50,7 @@ import { mapState } from 'vuex'
 import Menu from '@/components/Menu'
 import Find from '@/components/Find'
 import Stat from '@/components/Stat'
+import AnimatedNumber from 'animated-number-vue'
 import VueLazyload from 'vue-lazyload'
 import update from '@/helpers/update'
 import CONFIG from '@/helpers/config'
@@ -60,6 +66,7 @@ export default {
   components: {
     Menu,
     Find,
+    AnimatedNumber,
     Stat: () => import(/* webpackChunkName: "stat" */ '@/components/Stat'),
     Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
@@ -83,13 +90,6 @@ export default {
     title () {
       return this.$route.meta.title || 'ANDрејевићи'
     },
-    total () {
-      if (this.$route.name === 'list') {
-        const prefix = (this.next) ? '+' : ''
-        return prefix + this.objects.length
-      }
-      return ''
-    },
     dynamicComponent () {
       switch (this.$route.name) {
         case 'home':
@@ -101,6 +101,12 @@ export default {
     }
   },
   methods: {
+    format (val) {
+      if (this.next) {
+        return val + '+'
+      }
+      return val
+    },
     goBack () {
       if (this.$route.name === 'add') {
         this.$router.go(-1)
@@ -144,14 +150,14 @@ export default {
   position: absolute;
   cursor: pointer;
 }
-.theme--light path {
-  fill: white;
-  fill-opacity: 0.5;
-}
-.theme--dark path {
-  fill: black;
-  fill-opacity: 0.5;
-}
+// .theme--light path {
+//   fill: white;
+//   fill-opacity: 0.5;
+// }
+// .theme--dark path {
+//   fill: black;
+//   fill-opacity: 0.5;
+// }
 /* Photoswipe */
 .pswp * {
   font-family: "Roboto", Helvetica, Arial, sans-serif !important;
