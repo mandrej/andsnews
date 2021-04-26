@@ -4,8 +4,7 @@
 import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
-  register('/service-worker.js', {
-    registrationOptions: { scope: './' },
+  register(`${process.env.BASE_URL}service-worker.js`, {
     ready (registration) {
       console.log('Service worker is active.')
     },

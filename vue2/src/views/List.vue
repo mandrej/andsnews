@@ -61,6 +61,7 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import Card from '@/components/Card'
 import Photoswipe from 'vue-pswipe'
 
 Vue.use(Photoswipe)
@@ -68,7 +69,7 @@ Vue.use(Photoswipe)
 export default {
   name: 'List',
   components: {
-    Card: () => import(/* webpackChunkName: "edit" */ '@/components/Card'),
+    Card,
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   data: () => ({
@@ -142,6 +143,15 @@ export default {
     closEdit () {
       window.history.back() // consume fake history
       this.editForm = false
+
+      this.$anime
+        .timeline({
+          targets: '#card_' + this.current.id,
+          duration: 200,
+          easing: 'easeInOutQuart'
+        })
+        .add({ scale: 1.05 })
+        .add({ scale: 1 })
     },
     closeConfirm () {
       window.history.back()
@@ -151,6 +161,14 @@ export default {
       this.$store.dispatch('app/deleteRecord', this.current)
       window.history.back()
       this.confirm = false
+
+      this.$anime({
+        targets: '#card_' + this.current.id,
+        opacity: 0,
+        easing: 'easeOutQuart',
+        delay: 2000,
+        duration: 2000
+      })
     }
   }
 }

@@ -28,12 +28,7 @@
           style="cursor: pointer; padding-left: 0"
         >{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <animated-number
-          v-if="$route.name === 'list'"
-          :value="objects.length"
-          :round="true"
-          :formatValue="format"
-        ></animated-number>
+        <span id="count" v-if="$route.name === 'list'"></span>
         <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
       </v-app-bar>
 
@@ -50,11 +45,12 @@ import { mapState } from 'vuex'
 import Menu from '@/components/Menu'
 import Find from '@/components/Find'
 import Stat from '@/components/Stat'
-import AnimatedNumber from 'animated-number-vue'
+import VueAnime from 'vue-animejs'
 import VueLazyload from 'vue-lazyload'
 import update from '@/helpers/update'
 import CONFIG from '@/helpers/config'
 
+Vue.use(VueAnime)
 Vue.use(VueLazyload, {
   observer: true,
   error: CONFIG.fileBroken
@@ -66,11 +62,11 @@ export default {
   components: {
     Menu,
     Find,
-    AnimatedNumber,
     Stat: () => import(/* webpackChunkName: "stat" */ '@/components/Stat'),
     Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
+    prev: 0,
     drawer: null
   }),
   created () {
@@ -100,12 +96,32 @@ export default {
       }
     }
   },
+  watch: {
+    objects (value) {
+      this.animate(value.length)
+    }
+  },
   methods: {
-    format (val) {
-      if (this.next) {
-        return val + '+'
-      }
-      return val
+    animate (num) {
+      const self = this
+      const sufix = (self.next) ? '+' : ''
+      this.$anime({
+        targets: '#count',
+        innerText: [self.prev, num + sufix],
+        round: true,
+        easing: 'linear',
+        duration: function () {
+          const diff = Math.abs(self.prev - num)
+          if (diff < 5) {
+            return 0
+          } else {
+            return 250 * Math.log10(10000 / diff)
+          }
+        },
+        complete: function () {
+          self.prev = num
+        }
+      })
     },
     goBack () {
       if (this.$route.name === 'add') {
