@@ -33,4 +33,7 @@ vue2/babel.config.js
 vue2/vue.config.js
 vue2/yarn*
 
+vue2/dist/static/export
+vue2/dist/static/aperture.svg
+
 # gcloud meta list-files-for-upload

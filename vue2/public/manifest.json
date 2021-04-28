@@ -1,7 +1,7 @@
 {
   "name": "Andрејевићи",
-  "short_name": "Andрејевићи",
-  "start_url": "https://ands.appspot.com",
+  "short_name": "ANDS",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#222",
   "theme_color": "#fff",
