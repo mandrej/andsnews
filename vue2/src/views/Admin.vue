@@ -25,7 +25,7 @@
           <v-list-item-title>for {{field}}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle>
+          <v-btn-toggle v-model="form.parent_id[field]">
             <v-btn
               :disabled="canRun(fcm_token)"
               color="primary"
@@ -43,7 +43,7 @@
           <v-list-item-title>Tokenize latinized headlines for search by text</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle>
+          <v-btn-toggle v-model="toggleFix">
             <v-btn :disabled="true" color="primary" @click="fix" elevation="2">Fix</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
@@ -55,7 +55,7 @@
           <v-list-item-title>Bucket count and size</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle>
+          <v-btn-toggle v-model="toggleBucket">
             <v-btn color="primary" @click="bucket" elevation="2">Rebuild</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
@@ -65,7 +65,7 @@
           <v-list-item-title>Synchronize datastore records and Cloud bucket</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn-toggle>
+          <v-btn-toggle v-model="toggleRepair">
             <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair" elevation="2">Repair</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
@@ -86,6 +86,9 @@ export default {
     toggleFix: undefined,
     toggleBucket: undefined,
     toggleRepair: undefined,
+    form: {
+      parent_id: []
+    },
     msg: {
       type: String,
       required: true,
