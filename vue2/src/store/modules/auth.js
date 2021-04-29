@@ -80,7 +80,7 @@ const actions = {
   fetchToken: ({ commit, state, dispatch }, permission) => {
     if (permission === 'granted') {
       return messaging
-        .getToken({ vapidKey: CONFIG.vapidKey })
+        .getToken({ vapidKey: CONFIG.firebase.vapidKey })
         .then(token => {
           if (token && token !== state.fcm_token) {
             commit('SET_TOKEN', token)

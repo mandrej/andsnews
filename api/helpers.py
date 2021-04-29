@@ -1,18 +1,22 @@
 import re
 import string
-import requests
+# import requests
 import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
+import firebase_admin
+from firebase_admin import initialize_app, messaging
+from oauth2client.service_account import ServiceAccountCredentials
 
 from exifread import process_file
-from .config import CONFIG
+from .config import CONFIG, CREDENTIALS
 
-HEADERS = {
-    'Authorization': f'key={CONFIG["fcm_server_key"]}',
-    'Content-Type': 'application/json',
-}
+default_app = initialize_app()
+
+FCM_ENDPOINT = CONFIG['fcm_send'] + \
+    CONFIG['firebase']['projectId'] + '/messages: send'
+SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 
 
 def serialize(ent):
@@ -24,26 +28,34 @@ def serialize(ent):
         return res
 
 
+def _get_access_token():
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        CREDENTIALS, SCOPES)
+    access_token_info = credentials.get_access_token()
+    print(access_token_info)
+    return access_token_info.access_token
+
+
 def push_message(token, message=''):
     """
-    b'{"multicast_id":5205029634985694535,"success":0,"failure":1,"canonical_ids":0,"results":[{"error":"MismatchSenderId"}]}'
-
-        content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
-            "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
     """
-    payload = {
-        "to": token,
-        "notification": {
-            "title": "ands",
-            "body": message
-        }
+    headers = {
+        'Authorization': 'Bearer ' + _get_access_token(),
+        'Content-Type': 'application/json; UTF-8',
     }
-    response = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
-    j = response.json()
-    if j['failure'] == 1:
-        return j['results']
-    else:
-        return 'ok'
+    message = messaging.Message(
+        notification=messaging.Notification(title="ands", body=message),
+        token=token
+    )
+    response = messaging.send(message)
+    print(response)
+    # response = requests.post(CONFIG['fcm_send'], json=payload, headers=headers)
+    # j = response.json()
+    # return 'ok'
+    # if j['failure'] == 1:
+    #     return j['results']
+    # else:
+    #     return 'ok'
 
 
 def latinize(text):
