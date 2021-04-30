@@ -5,18 +5,20 @@ import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
-import firebase_admin
+# import firebase_admin
 from firebase_admin import initialize_app, messaging
-from oauth2client.service_account import ServiceAccountCredentials
+# from oauth2client.service_account import ServiceAccountCredentials
 
 from exifread import process_file
 from .config import CONFIG, CREDENTIALS
 
 default_app = initialize_app()
+# credential = default_app.credential.get_credential()
+# print(dir(credential))
 
-FCM_ENDPOINT = CONFIG['fcm_send'] + \
-    CONFIG['firebase']['projectId'] + '/messages: send'
-SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
+# FCM_ENDPOINT = CONFIG['fcm_server'] + '/v1/projects/' + \
+#     CONFIG['firebase']['projectId'] + '/messages: send'
+# SCOPES = [CONFIG['messaging_scope']]
 
 
 def serialize(ent):
@@ -28,34 +30,30 @@ def serialize(ent):
         return res
 
 
-def _get_access_token():
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-        CREDENTIALS, SCOPES)
-    access_token_info = credentials.get_access_token()
-    print(access_token_info)
-    return access_token_info.access_token
+# def _get_access_token():
+#     """
+#     AccessTokenInfo(access_token='...', expires_in=3598)
+#     """
+#     credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+#         CREDENTIALS, SCOPES)
+#     access_token_info = credentials.get_access_token()
+#     print(access_token_info)
+#     return access_token_info.access_token
 
 
 def push_message(token, message=''):
     """
     """
-    headers = {
-        'Authorization': 'Bearer ' + _get_access_token(),
-        'Content-Type': 'application/json; UTF-8',
-    }
+    # headers = {
+    #     'Authorization': 'Bearer ' + _get_access_token(),
+    #     'Content-Type': 'application/json; UTF-8',
+    # }
     message = messaging.Message(
         notification=messaging.Notification(title="ands", body=message),
         token=token
     )
-    response = messaging.send(message)
+    response = messaging.send(message, app=default_app)
     print(response)
-    # response = requests.post(CONFIG['fcm_send'], json=payload, headers=headers)
-    # j = response.json()
-    # return 'ok'
-    # if j['failure'] == 1:
-    #     return j['results']
-    # else:
-    #     return 'ok'
 
 
 def latinize(text):

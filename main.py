@@ -3,7 +3,7 @@ from werkzeug.http import generate_etag
 from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 from api import cloud, photo
-from api.helpers import get_exif, latinize
+from api.helpers import get_exif, latinize, push_message
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -194,6 +194,14 @@ def rebuilder(verb, field):
         return jsonify(tally)
     else:
         return jsonify(False)
+
+
+@app.route('/api/message/send', methods=['POST'])
+def send(verb, field):
+    token = request.json.get('token', None)
+    assert token is not None, 'Token cannot be null'
+    message = request.json.get('message', None)
+    push_message(token, message)
 
 
 if __name__ == '__main__':
