@@ -26,10 +26,8 @@ def serialize(ent):
 
 def push_message(token, message=''):
     """
-    b'{"multicast_id":5205029634985694535,"success":0,"failure":1,"canonical_ids":0,"results":[{"error":"MismatchSenderId"}]}'
-
-        content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
-            "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
+    {'multicast_id': 3201153342671592689, 'success': 1, 'failure': 0, 'canonical_ids': 0,
+     'results': [{'message_id': '0:1619890380307587%2fd9afcdf9fd7ecd'}]}
     """
     payload = {
         "to": token,
