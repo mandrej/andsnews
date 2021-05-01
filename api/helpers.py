@@ -1,24 +1,14 @@
 import re
 import string
-# import requests
 import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
-# import firebase_admin
-from firebase_admin import initialize_app, messaging
-# from oauth2client.service_account import ServiceAccountCredentials
+import firebase_admin
+from firebase_admin import credentials, initialize_app, messaging
 
 from exifread import process_file
-from .config import CONFIG, CREDENTIALS
-
-default_app = initialize_app()
-# credential = default_app.credential.get_credential()
-# print(dir(credential))
-
-# FCM_ENDPOINT = CONFIG['fcm_server'] + '/v1/projects/' + \
-#     CONFIG['firebase']['projectId'] + '/messages: send'
-# SCOPES = [CONFIG['messaging_scope']]
+from .config import CONFIG
 
 
 def serialize(ent):
@@ -30,28 +20,19 @@ def serialize(ent):
         return res
 
 
-# def _get_access_token():
-#     """
-#     AccessTokenInfo(access_token='...', expires_in=3598)
-#     """
-#     credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-#         CREDENTIALS, SCOPES)
-#     access_token_info = credentials.get_access_token()
-#     print(access_token_info)
-#     return access_token_info.access_token
-
-
 def push_message(token, message=''):
-    """
-    """
-    # headers = {
-    #     'Authorization': 'Bearer ' + _get_access_token(),
-    #     'Content-Type': 'application/json; UTF-8',
-    # }
+    try:
+        default_app = firebase_admin.get_app()
+    except ValueError as e:
+        print('NEW INSTANCE')
+        cred = credentials.Certificate('credentials.json')
+        default_app = initialize_app(cred)
+
     message = messaging.Message(
         notification=messaging.Notification(title="ands", body=message),
         token=token
     )
+    print(message)
     response = messaging.send(message, app=default_app)
     print(response)
 

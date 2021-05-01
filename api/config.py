@@ -8,6 +8,6 @@ CONFIG = {}
 with open(os.path.join(parent_directory, 'config.json')) as file:
     CONFIG = json.load(file)
 
-CREDENTIALS = {}
-with open(os.path.join(parent_directory, 'andsnews-7c373307f6e8.json')) as file:
-    CREDENTIALS = json.load(file)
+# CREDENTIALS = {}
+# with open(os.path.join(parent_directory, 'credentials.json')) as file:
+#     CREDENTIALS = json.load(file)
