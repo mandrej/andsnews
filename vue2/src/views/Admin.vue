@@ -15,7 +15,7 @@
           ></v-text-field>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn color="primary" @click="send">Send</v-btn>
+          <v-btn :disabled="canRun(fcm_token)" color="primary" @click="send">Send</v-btn>
         </v-list-item-action>
       </v-list-item>
 
@@ -56,7 +56,12 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleBucket">
-            <v-btn color="primary" @click="bucket" elevation="2">Rebuild</v-btn>
+            <v-btn
+              :disabled="canRun(fcm_token)"
+              color="primary"
+              @click="bucket"
+              elevation="2"
+            >Rebuild</v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
