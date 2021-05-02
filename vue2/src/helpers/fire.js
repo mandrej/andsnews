@@ -1,4 +1,10 @@
 import CONFIG from './config'
 import firebase from 'firebase/app'
 
-export default firebase.initializeApp(CONFIG.firebase)
+let app = undefined
+if (!firebase.apps.length) {
+  app = firebase.initializeApp(CONFIG.firebase)
+} else {
+  app = firebase.app()
+}
+export default app
