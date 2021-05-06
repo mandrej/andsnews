@@ -11,12 +11,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import '@/helpers/fire' // initialized firebase instance
-import firebase from 'firebase/app'
-import 'firebase/messaging'
+import messaging from '@/helpers/fire'
 import CONFIG from '@/helpers/config'
-
-const messaging = firebase.messaging()
 
 export default {
   name: 'Message',

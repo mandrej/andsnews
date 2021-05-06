@@ -1,15 +1,13 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
-import '@/helpers/fire' // initialized firebase instance
-import pushMessage from '@/helpers/push'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/messaging'
+import messaging from '@/helpers/fire'
+import pushMessage from '@/helpers/push'
 import router from '@/router'
 import CONFIG from '@/helpers/config'
 
 const axios = Vue.axios
-const messaging = firebase.messaging()
 const provider = new firebase.auth.GoogleAuthProvider()
 provider.addScope('profile')
 provider.addScope('email')
@@ -65,22 +63,15 @@ const actions = {
         permission => dispatch('fetchToken', permission)
       )
     } catch (error) {
-      // https://stackoverflow.com/questions/38114266
-      // Safari doesn't return a promise for requestPermissions and it
-      // throws a TypeError. It takes a callback as the first argument instead.
-      if (error instanceof TypeError) {
-        Notification.requestPermission(permission => {
-          dispatch('fetchToken', permission)
-        })
-      } else {
-        console.error(error.message)
-      }
+      // https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
+      Notification.requestPermission(function (permission) {
+        dispatch('fetchToken', permission)
+      })
     }
   },
   fetchToken: ({ commit, state, dispatch }, permission) => {
     if (permission === 'granted') {
-      return messaging
-        .getToken({ vapidKey: CONFIG.vapidKey })
+      return messaging.getToken()
         .then(token => {
           if (token && token !== state.fcm_token) {
             commit('SET_TOKEN', token)
@@ -89,7 +80,26 @@ const actions = {
             }
           }
         })
+        .catch(function (err) {
+          console.error('Unable to retrieve token ', err)
+        })
     }
+  },
+  refreshToken: ({ commit, state, dispatch }) => {
+    messaging.onTokenRefresh(() => {
+      return messaging.getToken()
+        .then(token => {
+          if (token && token !== state.fcm_token) {
+            commit('SET_TOKEN', token)
+            if (state.user && state.user.uid) {
+              dispatch('addRegistration')
+            }
+          }
+        })
+        .catch(function (err) {
+          console.error('Unable to retrieve refreshed token ', err)
+        })
+    })
   },
   addRegistration: ({ state }) => {
     axios.put('user/register', { uid: state.user.uid, token: state.fcm_token }).then().catch(err => console.error(err))
