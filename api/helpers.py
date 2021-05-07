@@ -1,14 +1,18 @@
 import re
 import string
+import logging
 import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
 import firebase_admin
-from firebase_admin import credentials, initialize_app, messaging
+from firebase_admin import credentials, initialize_app, messaging, exceptions
 
 from exifread import process_file
 from .config import CONFIG
+
+cred = credentials.Certificate('credentials.json')
+DEFAULT_APP = initialize_app(cred)
 
 
 def serialize(ent):
@@ -21,20 +25,18 @@ def serialize(ent):
 
 
 def push_message(token, message=''):
-    try:
-        default_app = firebase_admin.get_app()
-    except ValueError as e:
-        print('NEW INSTANCE')
-        cred = credentials.Certificate('credentials.json')
-        default_app = initialize_app(cred)
-
+    """
+    projects/andsnews/messages/0:1620404962628202%2fd9afcdf9fd7ecd
+    """
     message = messaging.Message(
         notification=messaging.Notification(title="ands", body=message),
         token=token
     )
-    print(message)
-    response = messaging.send(message, app=default_app)
-    return response.json()
+    try:
+        return messaging.send(message, app=DEFAULT_APP)
+    except exceptions.FirebaseError as e:
+        logging.error(e)
+        return False
 
 
 def latinize(text):

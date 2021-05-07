@@ -200,7 +200,7 @@ def rebuilder(verb, field):
 def push():
     token = request.json.get('token', None)
     message = request.json.get('message', None)
-    return push_message(token, message)  # response.json()
+    return jsonify(push_message(token, message))
 
 
 if __name__ == '__main__':
