@@ -37,11 +37,7 @@ def push_message(token, message=''):
         }
     }
     response = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
-    j = response.json()
-    if j['failure'] == 1:
-        return j['results']
-    else:
-        return 'ok'
+    return response.json()
 
 
 def latinize(text):
