@@ -1,23 +1,9 @@
 module.exports = {
   pwa: {
     assetsVersion: process.env.VUE_APP_VERSION,
+    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      runtimeCaching: [
-        {
-          urlPattern: /^https:\/\/fonts.(?:googleapis|gstatic).com\/(.*)/,
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'google'
-          }
-        },
-        {
-          urlPattern: /^https:\/\/lh3.googleusercontent.com\/(.*)/,
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'google'
-          }
-        }
-      ]
+      swSrc: 'src/service-worker.js'
     }
   },
 

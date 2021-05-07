@@ -34,7 +34,7 @@ def push_message(token, message=''):
     )
     print(message)
     response = messaging.send(message, app=default_app)
-    print(response)
+    return response.json()
 
 
 def latinize(text):

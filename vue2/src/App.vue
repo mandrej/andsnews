@@ -71,7 +71,7 @@ export default {
   }),
   created () {
     this.$store.dispatch('app/fetchStat')
-    this.$store.dispatch('auth/getPermission')
+    this.$store.dispatch('app/bucketInfo', { verb: 'get' })
     this.$vuetify.theme.dark = this.dark
     // Session life time 7 days
     if (this.user && this.user.lastLogin) {

@@ -199,9 +199,8 @@ def rebuilder(verb, field):
 @app.route('/api/message/send', methods=['POST'])
 def push():
     token = request.json.get('token', None)
-    assert token is not None, 'Token cannot be null'
     message = request.json.get('message', None)
-    push_message(token, message)
+    return push_message(token, message)  # response.json()
 
 
 if __name__ == '__main__':
