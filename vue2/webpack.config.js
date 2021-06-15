@@ -13,10 +13,10 @@ module.exports = {
               sassOptions: {
                 indentedSyntax: true // optional
               }
-            },
-          },
-        ],
-      },
-    ],
+            }
+          }
+        ]
+      }
+    ]
   }
 }
