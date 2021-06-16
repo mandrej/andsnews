@@ -153,7 +153,6 @@ def add(fs):
 
 def merge(obj, json):
     obj.update(json)
-    print(obj)
     obj['text'] = tokenize(obj['headline'])
     obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
     obj['tags'] = sorted(obj['tags'])
