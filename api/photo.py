@@ -109,15 +109,18 @@ def changed_pairs(obj):
     """
     pairs = []
     for field in CONFIG['photo_filter']:
-        value = obj[field]
-        if value:
-            if isinstance(value, (list, tuple)):
-                for v in value:
-                    pairs.append((field, str(v)))
-            elif isinstance(value, int):
-                pairs.append((field, value))
-            else:
-                pairs.append((field, str(value)))  # stringify year
+        try:
+            value = obj[field]
+            if value:
+                if isinstance(value, (list, tuple)):
+                    for v in value:
+                        pairs.append((field, str(v)))
+                elif isinstance(value, int):
+                    pairs.append((field, value))
+                else:
+                    pairs.append((field, str(value)))  # stringify year
+        except KeyError:
+            pass
     return pairs
 
 
@@ -150,6 +153,7 @@ def add(fs):
 
 def merge(obj, json):
     obj.update(json)
+    print(obj)
     obj['text'] = tokenize(obj['headline'])
     obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
     obj['tags'] = sorted(obj['tags'])
@@ -184,7 +188,6 @@ def edit(id, json):
         update_filters(new_pairs, old_pairs)
     else:
         key = datastore_client.key('Photo')
-        # <Entity('Photo',) {}>
         obj = datastore.Entity(key)
 
         obj = merge(obj, json)
