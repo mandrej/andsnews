@@ -174,26 +174,21 @@ def merge(obj, json):
 
 def edit(id, json):
     if id:
-        key = datastore_client.key('Photo', id)
-        obj = datastore_client.get(key)
-        assert obj is not None
-
-        old_pairs = changed_pairs(obj)
-
-        obj = merge(obj, json)
-        datastore_client.put(obj)
-
-        new_pairs = changed_pairs(obj)
-        update_filters(new_pairs, old_pairs)
+        try:
+            key = datastore_client.key('Photo', id)
+            obj = datastore_client.get(key)
+            assert obj is not None, 'Entity Not Found'
+        except AssertionError as msg:
+            return {'success': False, 'message': msg}
     else:
         key = datastore_client.key('Photo')
         obj = datastore.Entity(key)
 
-        obj = merge(obj, json)
-        datastore_client.put(obj)
+    obj = merge(obj, json)
+    datastore_client.put(obj)
 
-        new_pairs = changed_pairs(obj)
-        update_filters(new_pairs, [])
+    new_pairs = changed_pairs(obj)
+    update_filters(new_pairs, [])
 
     if isinstance(obj, Entity):
         return {'success': True, 'rec': serialize(obj)}
