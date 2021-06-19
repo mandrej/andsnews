@@ -109,15 +109,18 @@ def changed_pairs(obj):
     """
     pairs = []
     for field in CONFIG['photo_filter']:
-        value = obj[field]
-        if value:
-            if isinstance(value, (list, tuple)):
-                for v in value:
-                    pairs.append((field, str(v)))
-            elif isinstance(value, int):
-                pairs.append((field, value))
-            else:
-                pairs.append((field, str(value)))  # stringify year
+        try:
+            value = obj[field]
+            if value:
+                if isinstance(value, (list, tuple)):
+                    for v in value:
+                        pairs.append((field, str(v)))
+                elif isinstance(value, int):
+                    pairs.append((field, value))
+                else:
+                    pairs.append((field, str(value)))  # stringify year
+        except KeyError:
+            pass
     return pairs
 
 
@@ -171,20 +174,22 @@ def merge(obj, json):
 
 def edit(id, json):
     if id:
-        key = datastore_client.key('Photo', id)
-        obj = datastore_client.get(key)
-        assert obj is not None
+        try:
+            key = datastore_client.key('Photo', id)
+            obj = datastore_client.get(key)
+            assert obj is not None, 'Entity Not Found'
+        except AssertionError as msg:
+            return {'success': False, 'message': msg}
+        else:
+            old_pairs = changed_pairs(obj)
 
-        old_pairs = changed_pairs(obj)
+            obj = merge(obj, json)
+            datastore_client.put(obj)
 
-        obj = merge(obj, json)
-        datastore_client.put(obj)
-
-        new_pairs = changed_pairs(obj)
-        update_filters(new_pairs, old_pairs)
+            new_pairs = changed_pairs(obj)
+            update_filters(new_pairs, old_pairs)
     else:
         key = datastore_client.key('Photo')
-        # <Entity('Photo',) {}>
         obj = datastore.Entity(key)
 
         obj = merge(obj, json)
