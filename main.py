@@ -37,9 +37,14 @@ def thumb(filename):
             return ('', 204)
         else:
             image_from_buffer.thumbnail((size, size), Image.BICUBIC)
-            image_from_buffer.save(out, image_from_buffer.format)
-            data = out.getvalue()
+            icc_profile = image_from_buffer.info.get('icc_profile')
+            if icc_profile:
+                image_from_buffer.save(
+                    out, image_from_buffer.format, icc_profile=icc_profile)
+            else:
+                image_from_buffer.save(out, image_from_buffer.format)
 
+            data = out.getvalue()
             response = make_response(data)
             response.headers['Content-Type'] = blob.content_type
             response.headers['Cache-Control'] = CONFIG['cache_control']
