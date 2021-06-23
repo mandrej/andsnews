@@ -33,23 +33,33 @@
       </v-btn>
     </v-fab-transition>
 
-    <v-container fluid class="pa-4 py-5">
-      <Photoswipe v-if="error === null" :options="options" :key="pid">
+    <Photoswipe v-if="error === null" :options="options" :key="refreshKey">
+      <v-container fluid v-for="(list, date) in objectsByDate" :key="date" class="pa-4">
+        <h2 class="pb-2 font-weight-light">{{$date(date).format('dddd, MMMM DD, YYYY')}}</h2>
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
-          <template v-for="item in objects">
+          <template v-for="item in list">
             <v-col :key="item.id" cols="12" sm="6" md="4" lg="3" xl="2" class="pa-2">
-              <Card :item="item" @remove-record="removeRecord" @edit-record="showEditdForm"></Card>
+              <Card
+                :id="'card_' + item.id"
+                :item="item"
+                @remove-record="removeRecord"
+                @edit-record="showEditdForm"
+              ></Card>
             </v-col>
           </template>
         </v-row>
-      </Photoswipe>
+      </v-container>
+    </Photoswipe>
+
+    <v-container v-else-if="error === 0" fluid class="pa-4">
       <v-alert
-        v-else-if="error === 0"
         type="info"
         transition="scale-transition"
         prominent
       >No data for current filter/ search</v-alert>
-      <v-alert v-else type="error" transition="scale-transition" prominent>
+    </v-container>
+    <v-container v-else fluid class="pa-4">
+      <v-alert type="error" transition="scale-transition" prominent>
         Something went wrong
         <br />
         {{error}}
@@ -60,7 +70,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Card from '@/components/Card'
 import Photoswipe from 'vue-pswipe'
 
@@ -73,7 +83,7 @@ export default {
     Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
   },
   data: () => ({
-    pid: null,
+    refreshKey: null,
     bottom: false,
     fab: false,
     current: {},
@@ -95,6 +105,10 @@ export default {
       }
     }
   }),
+  computed: {
+    ...mapState('app', ['error', 'next']),
+    ...mapGetters('app', ['objectsByDate']),
+  },
   mounted () {
     const self = this
     window.onpopstate = function () {
@@ -102,16 +116,13 @@ export default {
       if (self.confirm) self.confirm = false
     }
   },
-  computed: {
-    ...mapState('app', ['objects', 'error', 'next'])
-  },
   updated () {
-    this.bottom = false
-    if (this.$route.hash) {
-      const pid = +this.$route.hash.match(/&pid=(.*)/)[1]
+    if (!this.$route.hash) return
+    const pid = +this.$route.hash.match(/&pid=(.+)/)[1] || null
+    if (pid !== this.refreshKey) {
       this.$nextTick(() => {
-        if (pid !== this.pid) this.$vuetify.goTo('#card_' + pid)
-        this.pid = pid
+        this.$vuetify.goTo('#card_' + pid)
+        this.refreshKey = pid
       })
     }
   },

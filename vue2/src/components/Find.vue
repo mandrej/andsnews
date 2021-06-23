@@ -91,7 +91,7 @@ export default {
       handler: function (val) {
         let pid = null
         if (val.hash) {
-          pid = +val.hash.match(/&pid=(.*)/)[1]
+          pid = +val.hash.match(/&pid=(.+)/)[1]
         }
         // adopt to match types in store
         if (Object.prototype.hasOwnProperty.call(val.query, 'year')) val.query.year = +val.query.year
