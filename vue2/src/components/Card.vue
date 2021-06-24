@@ -1,5 +1,5 @@
 <template>
-  <v-card :id="'card_' + item.id" flat>
+  <v-card flat>
     <v-responsive :aspect-ratio="4/3">
       <img
         class="lazy"

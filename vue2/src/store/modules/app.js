@@ -44,6 +44,16 @@ const getters = {
     } catch (err) {
       return []
     }
+  },
+  objectsByDate: state => {
+    return state.objects.reduce((groups, obj) => {
+      const date = obj.date.slice(0, 10)
+      if (!groups[date]) {
+        groups[date] = []
+      }
+      groups[date].push(obj)
+      return groups
+    }, {})
   }
 }
 
@@ -119,7 +129,7 @@ const actions = {
   },
   fetchRecords: ({ commit, state }, pid) => {
     if (state.busy) return
-    const params = Object.assign({}, state.find, { per_page: CONFIG.limit })
+    const params = Object.assign({}, state.find, { per_page: pid ? 2 * CONFIG.limit : CONFIG.limit })
     if (state.next) params._page = state.next
     const url = 'search?' + querystring.stringify(params)
 
@@ -138,14 +148,6 @@ const actions = {
         if (response.error) commit('SET_ERROR', response.error)
         commit('UPDATE_RECORDS', response.data)
         commit('SET_BUSY', false)
-        if (pid) {
-          const found = response.data.objects.filter(obj => {
-            return obj.id === pid
-          })
-          if (!found.length) {
-            commit('SETSNACKBAR', 'NOT FOUND ...')
-          }
-        }
       })
       .catch(err => {
         commit('SETSNACKBAR', err)
