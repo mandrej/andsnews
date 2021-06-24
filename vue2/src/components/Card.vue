@@ -39,7 +39,7 @@
           icon
           small
           text
-          @click="register(item)"
+          @click.stop="registerDownload"
           :href="`/api/download/${item.filename}`"
           :download="item.filename"
         >
@@ -78,14 +78,14 @@ export default {
       tmp += (lens) ? '\n' + lens : ''
       return tmp
     },
-    register () {
+    registerDownload () {
       // eslint-disable-next-line no-undef
       gtag('event', 'download', {
         event_category: 'engagement',
         event_label: this.item.headline + ' (' + this.user.email + ')',
         value: 1
       })
-    },
+    }
   }
 }
 </script>
