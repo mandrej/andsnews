@@ -39,7 +39,7 @@
           icon
           small
           text
-          @click.stop="registerDownload"
+          @click.stop="download"
           :href="`/api/download/${item.filename}`"
           :download="item.filename"
         >
@@ -62,6 +62,9 @@ export default {
     ...mapState('auth', ['user'])
   },
   methods: {
+    download () {
+      this.$emit('register-download', { headline: this.item.headline, email: this.user.email })
+    },
     removeRecord () {
       this.$emit('remove-record', this.item)
     },
@@ -77,14 +80,6 @@ export default {
       tmp += (model) ? '\n' + model : ''
       tmp += (lens) ? '\n' + lens : ''
       return tmp
-    },
-    registerDownload () {
-      // eslint-disable-next-line no-undef
-      gtag('event', 'download', {
-        event_category: 'engagement',
-        event_label: this.item.headline + ' (' + this.user.email + ')',
-        value: 1
-      })
     }
   }
 }
