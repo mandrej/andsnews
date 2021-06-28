@@ -1,20 +1,19 @@
 /* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
 
 import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
-    ready (registration) {
+    ready () {
       console.log('Service worker is active.')
     },
-    registered (registration) {
+    registered () {
       console.log('Service worker has been registered.')
     },
-    cached (registration) {
+    cached () {
       console.log('Content has been cached for offline use.')
     },
-    updatefound (registration) {
+    updatefound () {
       console.log('New content is downloading.')
     },
     updated (registration) {

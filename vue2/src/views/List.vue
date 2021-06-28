@@ -44,6 +44,7 @@
                 :item="item"
                 @remove-record="removeRecord"
                 @edit-record="showEditdForm"
+                @register-download="registerDownload"
               ></Card>
             </v-col>
           </template>
@@ -179,6 +180,14 @@ export default {
         easing: 'easeOutQuart',
         delay: 2000,
         duration: 2000
+      })
+    },
+    registerDownload (data) {
+      // eslint-disable-next-line no-undef
+      gtag('event', 'download', {
+        event_category: 'engagement',
+        event_label: data.headline + ' (' + data.email + ')',
+        value: 1
       })
     }
   }

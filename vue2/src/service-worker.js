@@ -14,3 +14,9 @@ workbox.routing.registerRoute(
   /https:\/\/get\.geojs\.io\/v1\/ip\/country\.json/,
   new workbox.strategies.CacheFirst()
 )
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})

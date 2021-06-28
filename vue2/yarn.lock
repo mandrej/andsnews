@@ -3939,10 +3939,20 @@ eslint-loader@^2.2.1:
     object-hash "^1.1.4"
     rimraf "^2.6.1"
 
-eslint-plugin-vue@^7.0.0, eslint-plugin-vue@^7.11.1:
+eslint-plugin-vue@^7.0.0:
   version "7.11.1"
   resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.11.1.tgz?cache=0&sync_timestamp=1623570809147&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.11.1.tgz#77eb4b44032d5cca79f9af21d06991d8694a314a"
   integrity sha1-d+tLRAMtXMp5+a8h0GmR2GlKMUo=
+  dependencies:
+    eslint-utils "^2.1.0"
+    natural-compare "^1.4.0"
+    semver "^7.3.2"
+    vue-eslint-parser "^7.6.0"
+
+eslint-plugin-vue@^7.12.1:
+  version "7.12.1"
+  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.12.1.tgz?cache=0&sync_timestamp=1624613908830&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.12.1.tgz#ef6499ce4fe0566659c8e12c71713f5308630a76"
+  integrity sha1-72SZzk/gVmZZyOEscXE/UwhjCnY=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
