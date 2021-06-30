@@ -75,31 +75,15 @@ const actions = {
         .then(token => {
           if (token && token !== state.fcm_token) {
             commit('SET_TOKEN', token)
-            if (state.user && state.user.uid) {
-              dispatch('addRegistration')
-            }
+          }
+          if (state.user && state.user.uid) {
+            dispatch('addRegistration')
           }
         })
         .catch(function (err) {
           console.error('Unable to retrieve token ', err)
         })
     }
-  },
-  refreshToken: ({ commit, state, dispatch }) => {
-    messaging.onTokenRefresh(() => {
-      return messaging.getToken()
-        .then(token => {
-          if (token && token !== state.fcm_token) {
-            commit('SET_TOKEN', token)
-            if (state.user && state.user.uid) {
-              dispatch('addRegistration')
-            }
-          }
-        })
-        .catch(function (err) {
-          console.error('Unable to retrieve refreshed token ', err)
-        })
-    })
   },
   addRegistration: ({ state }) => {
     axios.put('user/register', { uid: state.user.uid, token: state.fcm_token }).then().catch(err => console.error(err))

@@ -33,9 +33,6 @@ export default {
   },
   mounted () {
     this.$store.dispatch('auth/getPermission')
-  },
-  updated () {
-    this.$store.dispatch('auth/refreshToken')
   }
 }
 </script>
