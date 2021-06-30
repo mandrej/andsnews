@@ -3190,10 +3190,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.15.1:
-  version "3.15.1"
-  resolved "https://registry.nlark.com/core-js/download/core-js-3.15.1.tgz#6c08ab88abdf56545045ccf5fd81f47f407e7f1a"
-  integrity sha1-bAiriKvfVlRQRcz1/YH0f0B+fxo=
+core-js@^3.15.2:
+  version "3.15.2"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.15.2.tgz?cache=0&sync_timestamp=1624966050136&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.15.2.tgz#740660d2ff55ef34ce664d7e2455119c5bdd3d61"
+  integrity sha1-dAZg0v9V7zTOZk1+JFURnFvdPWE=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -9043,10 +9043,10 @@ vuetify-loader@^1.7.2:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.5.5:
-  version "2.5.5"
-  resolved "https://registry.nlark.com/vuetify/download/vuetify-2.5.5.tgz#66d4058209e1d70e9c742d37384f3ae63add7b04"
-  integrity sha1-ZtQFggnh1w6cdC03OE865jrdewQ=
+vuetify@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.nlark.com/vuetify/download/vuetify-2.5.6.tgz?cache=0&sync_timestamp=1625025226770&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvuetify%2Fdownload%2Fvuetify-2.5.6.tgz#9cbb1eacece6c42028216312b9be23e35a7f5cf4"
+  integrity sha1-nLserOzmxCAoIWMSub4j41p/XPQ=
 
 vuex-persistedstate@^4.0.0-beta.3:
   version "4.0.0-beta.3"
