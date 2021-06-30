@@ -26,10 +26,8 @@ def serialize(ent):
 
 def push_message(token, message=''):
     """
-    b'{"multicast_id":5205029634985694535,"success":0,"failure":1,"canonical_ids":0,"results":[{"error":"MismatchSenderId"}]}'
-
-        content: {"multicast_id":6062741259302324809,"success":1,"failure":0,"canonical_ids":0,
-            "results":[{"message_id":"0:1481827534054930%2fd9afcdf9fd7ecd"}]}
+    {'multicast_id': 783139447567337237, 'success': 1, 'failure': 0, 'canonical_ids': 0,
+     'results': [{'message_id': '0:1625071641635527%2fd9afcdf9fd7ecd'}]}
     """
     payload = {
         "to": token,
@@ -38,12 +36,8 @@ def push_message(token, message=''):
             "body": message
         }
     }
-    response = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
-    j = response.json()
-    if j['failure'] == 1:
-        return j['results']
-    else:
-        return 'ok'
+    res = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
+    return {'success': res.json()['success'] == 1}
 
 
 def latinize(text):
