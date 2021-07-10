@@ -1018,10 +1018,10 @@
   dependencies:
     "@firebase/app-types" "0.6.2"
 
-"@firebase/database@0.10.6":
-  version "0.10.6"
-  resolved "https://registry.nlark.com/@firebase/database/download/@firebase/database-0.10.6.tgz?cache=0&sync_timestamp=1625276971498&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40firebase%2Fdatabase%2Fdownload%2F%40firebase%2Fdatabase-0.10.6.tgz#bec8edff424e16bff50376c7822e051997228332"
-  integrity sha1-vsjt/0JOFr/1A3bHgi4FGZcigzI=
+"@firebase/database@0.10.7":
+  version "0.10.7"
+  resolved "https://registry.nlark.com/@firebase/database/download/@firebase/database-0.10.7.tgz#6241b573741ccb45b71d03226c0bfef6d2dbafb8"
+  integrity sha1-YkG1c3Qcy0W3HQMibAv+9tLbr7g=
   dependencies:
     "@firebase/auth-interop-types" "0.1.6"
     "@firebase/component" "0.5.4"
@@ -1225,6 +1225,20 @@
   integrity sha512-tAag0jEcjwH+P2quUfipd7liWCNX2F8NvYjQp2wtInsZxnMlypdw0FtAOLxtvvkO+GSRRbmNi8m/5y42PQJYCQ==
   dependencies:
     "@hapi/hoek" "^8.3.0"
+
+"@humanwhocodes/config-array@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.nlark.com/@humanwhocodes/config-array/download/@humanwhocodes/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
+  integrity sha1-FAeWfUxu7Nc4j4Os8er00Mbljvk=
+  dependencies:
+    "@humanwhocodes/object-schema" "^1.2.0"
+    debug "^4.1.1"
+    minimatch "^3.0.4"
+
+"@humanwhocodes/object-schema@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.nlark.com/@humanwhocodes/object-schema/download/@humanwhocodes/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
+  integrity sha1-h956+cIxgm/daKxyWPd8Qp4OX88=
 
 "@intervolga/optimize-cssnano-plugin@^1.0.5":
   version "1.0.6"
@@ -4026,13 +4040,14 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://registry.npm.taobao.org/eslint-visitor-keys/download/eslint-visitor-keys-2.0.0.tgz?cache=0&sync_timestamp=1597435168678&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-visitor-keys%2Fdownload%2Feslint-visitor-keys-2.0.0.tgz#21fdc8fbcd9c795cc0321f0563702095751511a8"
   integrity sha1-If3I+82ceVzAMh8FY3AglXUVEag=
 
-eslint@^7.29.0:
-  version "7.29.0"
-  resolved "https://registry.nlark.com/eslint/download/eslint-7.29.0.tgz?cache=0&sync_timestamp=1624048046890&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint%2Fdownload%2Feslint-7.29.0.tgz#ee2a7648f2e729485e4d0bd6383ec1deabc8b3c0"
-  integrity sha1-7ip2SPLnKUheTQvWOD7B3qvIs8A=
+eslint@^7.30.0:
+  version "7.30.0"
+  resolved "https://registry.nlark.com/eslint/download/eslint-7.30.0.tgz?cache=0&sync_timestamp=1625263912208&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint%2Fdownload%2Feslint-7.30.0.tgz#6d34ab51aaa56112fd97166226c9a97f505474f8"
+  integrity sha1-bTSrUaqlYRL9lxZiJsmpf1BUdPg=
   dependencies:
     "@babel/code-frame" "7.12.11"
     "@eslint/eslintrc" "^0.4.2"
+    "@humanwhocodes/config-array" "^0.5.0"
     ajv "^6.10.0"
     chalk "^4.0.0"
     cross-spawn "^7.0.2"
@@ -4484,17 +4499,17 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^8.7.0:
-  version "8.7.0"
-  resolved "https://registry.nlark.com/firebase/download/firebase-8.7.0.tgz#5b8949f7649a29f2b0d544815d5915bf1657f9d2"
-  integrity sha1-W4lJ92SaKfKw1USBXVkVvxZX+dI=
+firebase@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.nlark.com/firebase/download/firebase-8.7.1.tgz#b22ce063c4df16d849c0160662e6fcf6bc396f32"
+  integrity sha1-sizgY8TfFthJwBYGYub89rw5bzI=
   dependencies:
     "@firebase/analytics" "0.6.14"
     "@firebase/app" "0.6.28"
     "@firebase/app-check" "0.2.0"
     "@firebase/app-types" "0.6.2"
     "@firebase/auth" "0.16.8"
-    "@firebase/database" "0.10.6"
+    "@firebase/database" "0.10.7"
     "@firebase/firestore" "2.3.8"
     "@firebase/functions" "0.6.13"
     "@firebase/installations" "0.4.30"
