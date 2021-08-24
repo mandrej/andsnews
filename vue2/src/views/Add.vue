@@ -46,6 +46,7 @@
       <template v-for="(item, k) in this.upload.failed">
         <v-alert
           dense
+          dismissible
           class="mb-3"
           type="error"
           border="left"
@@ -108,10 +109,10 @@ export default {
     },
     current: {},
     editForm: false,
-    message: null,
     errors: {
       0: 'Wrong file type',
-      1: 'File too big'
+      1: 'File too big',
+      2: 'File failed'
     }
   }),
   computed: {
@@ -135,11 +136,10 @@ export default {
         .then(x => x.data) // list
         .then(x => x.map(
           item => {
-            success = item.success
-            if (success) {
+            if (item.success) {
               this.$store.dispatch('app/addUploaded', item.rec)
             } else {
-              this.message = item.message
+              this.addFailed(item.rec, 2)
             }
           }
         ))
@@ -150,8 +150,7 @@ export default {
           this.$store.dispatch('app/changeUploadStatus', this.code.SUCCESS)
           this.reset()
         })
-        .catch(err => {
-          this.message = err.response
+        .catch(() => {
           this.$store.dispatch('app/changeUploadStatus', this.code.FAILED)
           this.reset()
         })
@@ -186,7 +185,6 @@ export default {
       this.editForm = true
     },
     removeRecord (rec) {
-      this.$store.dispatch('app/resetFailed')
       this.$store.dispatch('app/deleteRecord', rec)
     },
     addFailed (file, error) {
