@@ -12,7 +12,7 @@ const persisted = createPersistedState({
   key: 'ands',
   paths: [
     'auth.user', 'auth.fcm_token', 'app.dark', 'app.find',
-    'app.last', 'app.bucket', 'app.values', 'app.uploaded',
+    'app.last', 'app.bucket', 'app.values', 'app.upload.list',
     'app.objects', 'app.pages', 'app.next'
   ]
 })
