@@ -4,8 +4,12 @@
 
     <v-container>
       <v-sheet class="mb-3 pa-3">
-        <div class="d-flex flex-column justify-center" style="position: relative; height: 120px">
-          <template v-if="status === code.INITIAL">
+        <div
+          class="d-flex flex-column justify-center"
+          style="position: relative; height: 120px"
+          :key="this.upload.status"
+        >
+          <template v-if="this.upload.status === code.INITIAL">
             <input
               type="file"
               multiple
@@ -19,28 +23,27 @@
               <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
             </div>
           </template>
-          <template v-if="status === code.SAVING">
+          <template v-if="this.upload.status === code.SAVING">
             <v-progress-linear
-              v-model="value"
+              v-model="this.upload.value"
               color="secondary"
-              :query="value < 100"
-              :indeterminate="value >= 100"
               height="16"
+              key="saving"
             ></v-progress-linear>
-            <div v-if="value < 100" class="subheading text-center">Upload in progress {{value}}%</div>
-            <div
-              v-else-if="value === 100"
-              class="subheading text-center"
-            >Processing images. Please wait …</div>
+            <div class="subheading text-center">Upload in progress {{this.upload.value}}%</div>
           </template>
-          <template v-if="status === code.FAILED">
+          <template v-if="this.upload.status === code.PROCESSING">
+            <v-progress-linear color="secondary" indeterminate height="16" key="processing"></v-progress-linear>
+            <div class="subheading text-center">Processing images. Please wait …</div>
+          </template>
+          <template v-if="this.upload.status === code.FAILED">
             <h3 class="text-h5">Upload failed</h3>
             <div class="subheading text-center error--text">Something went wrong.</div>
           </template>
         </div>
       </v-sheet>
 
-      <template v-for="(item, k) in failed">
+      <template v-for="(item, k) in this.upload.failed">
         <v-alert
           dense
           class="mb-3"
@@ -50,9 +53,9 @@
         >{{item.filename}}, {{formatBytes(item.size)}}, {{errors[item.error]}}</v-alert>
       </template>
 
-      <v-sheet v-if="uploaded.length > 0">
+      <v-sheet v-if="upload.list.length > 0">
         <v-slide-y-transition group tag="v-list">
-          <template v-for="(item, j) in uploaded">
+          <template v-for="(item, j) in upload.list">
             <v-divider v-if="j !== 0" :key="`${j}-divider`"></v-divider>
 
             <v-list-item :key="j">
@@ -96,39 +99,36 @@ export default {
   },
   mixins: [common],
   data: () => ({
-    status: null,
-    current: {},
     code: {
       INITIAL: 0,
       SAVING: 1,
-      SUCCESS: 2,
-      FAILED: 3,
+      PROCESSING: 2,
+      SUCCESS: 3,
+      FAILED: 4,
     },
+    current: {},
     editForm: false,
-    value: 0,
-    failed: [],
+    message: null,
     errors: {
       0: 'Wrong file type',
       1: 'File too big'
     }
   }),
-  mounted () {
-    this.reset()
-  },
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['uploaded'])
+    ...mapState('app', ['upload'])
   },
   methods: {
     reset () {
-      this.status = this.code.INITIAL
-      this.value = 0
+      this.$store.dispatch('app/setSnackbar', null)
+      this.$store.dispatch('app/changeUploadStatus', this.code.INITIAL)
+      this.$store.dispatch('app/setUploadPercentage', 0)
     },
     progress (event) {
-      this.value = Math.round((event.loaded * 100) / event.total)
+      this.$store.dispatch('app/setUploadPercentage', Math.round((event.loaded * 100) / event.total))
     },
     save (formData) {
-      this.status = this.code.SAVING
+      this.$store.dispatch('app/changeUploadStatus', this.code.SAVING)
       this.$store.dispatch('app/setSnackbar', 'Uploading images …')
       let success = false
       axios.post('add', formData, { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: this.progress })
@@ -147,12 +147,13 @@ export default {
           if (success) {
             this.$store.dispatch('app/setSnackbar', null)
           }
-          this.status = this.code.SUCCESS
+          this.$store.dispatch('app/changeUploadStatus', this.code.SUCCESS)
           this.reset()
         })
         .catch(err => {
           this.message = err.response
-          this.status = this.code.FAILED
+          this.$store.dispatch('app/changeUploadStatus', this.code.FAILED)
+          this.reset()
         })
     },
     filesChange (fieldName, fileList) {
@@ -181,15 +182,15 @@ export default {
       rec.email = this.user.email
       rec.headline = 'No name'
       this.current = { ...rec }
-      this.failed.length = 0
+      this.$store.dispatch('app/resetFailed')
       this.editForm = true
     },
     removeRecord (rec) {
-      this.failed.length = 0
+      this.$store.dispatch('app/resetFailed')
       this.$store.dispatch('app/deleteRecord', rec)
     },
     addFailed (file, error) {
-      this.failed.push({
+      this.$store.dispatch('app/addFailed', {
         filename: file.name,
         size: file.size,
         error: error

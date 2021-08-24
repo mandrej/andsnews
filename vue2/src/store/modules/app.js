@@ -9,7 +9,13 @@ const axios = Vue.axios
 
 const initialState = {
   find: {},
-  uploaded: [],
+
+  upload: {
+    list: [],
+    failed: [],
+    status: 0,
+    value: 0
+  },
 
   last: {
     count: 0,
@@ -71,6 +77,21 @@ const actions = {
   },
   addUploaded: ({ commit }, obj) => {
     commit('ADD_UPLOADED', obj)
+  },
+  addFailed: ({ commit }, obj) => {
+    commit('ADD_FAILED', obj)
+  },
+  resetFailed: ({ commit }) => {
+    commit('RESET_FAILED')
+  },
+  setUploadPercentage: ({ commit, dispatch }, value) => {
+    if (value === 100) {
+      dispatch('changeUploadStatus', 2) // PROCESSING
+    }
+    commit('SET_UPLOAD_PERCENTAGE', value)
+  },
+  changeUploadStatus: ({ commit }, status) => {
+    commit('CHANGE_UPLOAD_STATUS', status)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
@@ -195,7 +216,19 @@ const mutations = {
     state.objects.splice(idx, 0, obj)
   },
   ADD_UPLOADED (state, data) {
-    state.uploaded = [...state.uploaded, data]
+    state.upload.list = [...state.upload.list, data]
+  },
+  ADD_FAILED (state, data) {
+    state.upload.failed = [...state.upload.failed, data]
+  },
+  RESET_FAILED (state) {
+    state.upload.failed = []
+  },
+  SET_UPLOAD_PERCENTAGE (state, value) {
+    state.upload.value = value
+  },
+  CHANGE_UPLOAD_STATUS (state, code) {
+    state.upload.status = code
   },
   UPDATE_RECORDS (state, data) {
     if (state.pages[0] === 'FP' && data._page === 'FP') return
@@ -221,8 +254,8 @@ const mutations = {
     if (idx > -1) state.objects.splice(idx, 1)
   },
   DELETE_UPLOADED (state, obj) {
-    const idx = state.uploaded.findIndex(item => item.filename === obj.filename)
-    if (idx > -1) state.uploaded.splice(idx, 1)
+    const idx = state.upload.list.findIndex(item => item.filename === obj.filename)
+    if (idx > -1) state.upload.list.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
     const last_stat = new Date(state.last.date)
