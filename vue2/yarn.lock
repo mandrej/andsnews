@@ -3982,10 +3982,10 @@ eslint-plugin-vue@^7.0.0:
     semver "^7.3.2"
     vue-eslint-parser "^7.6.0"
 
-eslint-plugin-vue@^7.16.0:
-  version "7.16.0"
-  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.16.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.16.0.tgz#7fe9fea039a190b108319c1380adf543ef57707d"
-  integrity sha1-f+n+oDmhkLEIMZwTgK31Q+9XcH0=
+eslint-plugin-vue@^7.17.0:
+  version "7.17.0"
+  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.17.0.tgz?cache=0&sync_timestamp=1630038500141&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.17.0.tgz#41e0bdb5effca5ee26f087f924be987eb41ef573"
+  integrity sha1-QeC9te/8pe4m8If5JL6YfrQe9XM=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
