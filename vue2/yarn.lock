@@ -2300,12 +2300,12 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.0.tgz#a17b3a8ea811060e74d47d306122400ad4497ae2"
   integrity sha512-3YDiu347mtVtjpyV3u5kVqQLP242c06zwDOgpeRnybmXlYYsLbtTrUBUm8i8srONt+FWobl5aibnU1030PeeuA==
 
-axios@^0.21.1:
-  version "0.21.1"
-  resolved "https://registry.npm.taobao.org/axios/download/axios-0.21.1.tgz?cache=0&sync_timestamp=1608611475093&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
-  integrity sha1-IlY0gZYvTWvemnbVFu8OXTwJsrg=
+axios@^0.21.3:
+  version "0.21.3"
+  resolved "https://registry.nlark.com/axios/download/axios-0.21.3.tgz?cache=0&sync_timestamp=1630783321264&other_urls=https%3A%2F%2Fregistry.nlark.com%2Faxios%2Fdownload%2Faxios-0.21.3.tgz#f85d9b747f9b66d59ca463605cedf1844872b82e"
+  integrity sha1-+F2bdH+bZtWcpGNgXO3xhEhyuC4=
   dependencies:
-    follow-redirects "^1.10.0"
+    follow-redirects "^1.14.0"
 
 babel-eslint@^10.1.0:
   version "10.1.0"
@@ -3218,10 +3218,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.16.2:
-  version "3.16.2"
-  resolved "https://registry.nlark.com/core-js/download/core-js-3.16.2.tgz?cache=0&sync_timestamp=1629206154953&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.16.2.tgz#3f485822889c7fc48ef463e35be5cc2a4a01a1f4"
-  integrity sha1-P0hYIoicf8SO9GPjW+XMKkoBofQ=
+core-js@^3.17.2:
+  version "3.17.2"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.17.2.tgz#f960eae710dc62c29cca93d5332e3660e289db10"
+  integrity sha1-+WDq5xDcYsKcypPVMy42YOKJ2xA=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4547,10 +4547,10 @@ follow-redirects@^1.0.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.12.1.tgz#de54a6205311b93d60398ebc01cf7015682312b6"
   integrity sha512-tmRv0AVuR7ZyouUHLeNSiO6pqulF7dYa3s19c6t+wz9LD69/uSzdMxJ2S91nTI9U3rt/IldxpzMOFejp6f0hjg==
 
-follow-redirects@^1.10.0:
-  version "1.13.0"
-  resolved "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.13.0.tgz?cache=0&sync_timestamp=1597058059404&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffollow-redirects%2Fdownload%2Ffollow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
-  integrity sha1-tC6Nk6Kn7qXtiGM2dtZZe8jjhNs=
+follow-redirects@^1.14.0:
+  version "1.14.3"
+  resolved "https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.3.tgz#6ada78118d8d24caee595595accdc0ac6abd022e"
+  integrity sha1-atp4EY2NJMruWVWVrM3ArGq9Ai4=
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -9086,10 +9086,10 @@ vue@^2.6.14:
   resolved "https://registry.nlark.com/vue/download/vue-2.6.14.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue%2Fdownload%2Fvue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=
 
-vuetify-loader@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.npm.taobao.org/vuetify-loader/download/vuetify-loader-1.7.2.tgz?cache=0&sync_timestamp=1612531418796&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuetify-loader%2Fdownload%2Fvuetify-loader-1.7.2.tgz#5cdc45309496cf3a5fe431fd7611706ffa4aa8c8"
-  integrity sha1-XNxFMJSWzzpf5DH9dhFwb/pKqMg=
+vuetify-loader@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.nlark.com/vuetify-loader/download/vuetify-loader-1.7.3.tgz#404657f4925c828f400fe3269003421d586835c6"
+  integrity sha1-QEZX9JJcgo9AD+MmkANCHVhoNcY=
   dependencies:
     decache "^4.6.0"
     file-loader "^6.2.0"
