@@ -9,6 +9,6 @@
     "tests": true,
     "graphql": true,
     "views": true
-  },
-  "python.languageServer": "Microsoft"
+},
+"python.languageServer": "Microsoft"
 }
