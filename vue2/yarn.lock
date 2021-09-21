@@ -3218,10 +3218,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.17.3:
-  version "3.17.3"
-  resolved "https://registry.nlark.com/core-js/download/core-js-3.17.3.tgz?cache=0&sync_timestamp=1631176996612&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.17.3.tgz#8e8bd20e91df9951e903cabe91f9af4a0895bc1e"
-  integrity sha1-jovSDpHfmVHpA8q+kfmvSgiVvB4=
+core-js@^3.18.0:
+  version "3.18.0"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.18.0.tgz?cache=0&sync_timestamp=1632078325888&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.18.0.tgz#9af3f4a6df9ba3428a3fb1b171f1503b3f40cc49"
+  integrity sha1-mvP0pt+bo0KKP7GxcfFQOz9AzEk=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -3982,10 +3982,10 @@ eslint-plugin-vue@^7.0.0:
     semver "^7.3.2"
     vue-eslint-parser "^7.6.0"
 
-eslint-plugin-vue@^7.17.0:
-  version "7.17.0"
-  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.17.0.tgz?cache=0&sync_timestamp=1630038500141&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.17.0.tgz#41e0bdb5effca5ee26f087f924be987eb41ef573"
-  integrity sha1-QeC9te/8pe4m8If5JL6YfrQe9XM=
+eslint-plugin-vue@^7.18.0:
+  version "7.18.0"
+  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-7.18.0.tgz#02a452142330c7f27c242db21a1b9e25238540f6"
+  integrity sha1-AqRSFCMwx/J8JC2yGhueJSOFQPY=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
@@ -9100,10 +9100,10 @@ vuetify@^2.5.8:
   resolved "https://registry.nlark.com/vuetify/download/vuetify-2.5.8.tgz#a23e6a7e77b77de0744b53cf1e7c9d40efac0635"
   integrity sha1-oj5qfne3feB0S1PPHnydQO+sBjU=
 
-vuex-persistedstate@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.nlark.com/vuex-persistedstate/download/vuex-persistedstate-4.0.0.tgz#ed82f266ca98c869a2aad9cb9880c2f608c05f3a"
-  integrity sha1-7YLyZsqYyGmiqtnLmIDC9gjAXzo=
+vuex-persistedstate@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.nlark.com/vuex-persistedstate/download/vuex-persistedstate-4.1.0.tgz?cache=0&sync_timestamp=1632225103074&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvuex-persistedstate%2Fdownload%2Fvuex-persistedstate-4.1.0.tgz#127165f85f5b4534fb3170a5d3a8be9811bd2a53"
+  integrity sha1-EnFl+F9bRTT7MXCl06i+mBG9KlM=
   dependencies:
     deepmerge "^4.2.2"
     shvl "^2.0.3"
