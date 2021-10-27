@@ -1,7 +1,6 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import debounce from 'lodash/debounce'
-import querystring from 'querystring'
 import pushMessage from '@/helpers/push'
 import CONFIG from '@/helpers/config'
 
@@ -152,7 +151,8 @@ const actions = {
     if (state.busy) return
     const params = Object.assign({}, state.find, { per_page: pid ? 2 * CONFIG.limit : CONFIG.limit })
     if (state.next) params._page = state.next
-    const url = 'search?' + querystring.stringify(params)
+    const searchParams = new URLSearchParams(params)
+    const url = 'search?' + searchParams.toString()
 
     commit('SET_ERROR', null)
     commit('SET_BUSY', true)
@@ -277,6 +277,10 @@ const mutations = {
     if (obj.model) {
       state.values.model = [...new Set([...state.values.model, obj.model])]
     }
+    if (obj.lens) {
+      state.values.lens = [...new Set([...state.values.lens, obj.lens])]
+    }
+    state.values.email = [...new Set([...state.values.email, obj.email])]
   },
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]

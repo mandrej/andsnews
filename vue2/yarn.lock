@@ -3218,10 +3218,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.18.3:
-  version "3.18.3"
-  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.18.3.tgz#86a0bba2d8ec3df860fefcc07a8d119779f01509"
-  integrity sha1-hqC7otjsPfhg/vzAeo0Rl3nwFQk=
+core-js@^3.19.0:
+  version "3.19.0"
+  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.19.0.tgz?cache=0&sync_timestamp=1635142915013&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcore-js%2Fdownload%2Fcore-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
+  integrity sha1-nkAJipvDJsfoG0hqu9XhK50nUXY=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -3982,20 +3982,20 @@ eslint-plugin-vue@^7.0.0:
     semver "^7.3.2"
     vue-eslint-parser "^7.6.0"
 
-eslint-plugin-vue@^7.19.1:
-  version "7.19.1"
-  resolved "https://registry.npmmirror.com/eslint-plugin-vue/download/eslint-plugin-vue-7.19.1.tgz?cache=0&sync_timestamp=1633510308150&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.19.1.tgz#435fb2ce712842a9530b28eacb883680e8eaa4f3"
-  integrity sha1-Q1+yznEoQqlTCyjqy4g2gOjqpPM=
+eslint-plugin-vue@^7.20.0:
+  version "7.20.0"
+  resolved "https://registry.npmmirror.com/eslint-plugin-vue/download/eslint-plugin-vue-7.20.0.tgz?cache=0&sync_timestamp=1634704316860&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.20.0.tgz#98c21885a6bfdf0713c3a92957a5afeaaeed9253"
+  integrity sha1-mMIYhaa/3wcTw6kpV6Wv6q7tklM=
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
     semver "^6.3.0"
     vue-eslint-parser "^7.10.0"
 
-eslint-plugin-vuetify@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.nlark.com/eslint-plugin-vuetify/download/eslint-plugin-vuetify-1.0.1.tgz#0eaa11b71aa3d03f27869ba190ab5383485d5b2d"
-  integrity sha1-DqoRtxqj0D8nhpuhkKtTg0hdWy0=
+eslint-plugin-vuetify@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/eslint-plugin-vuetify/download/eslint-plugin-vuetify-1.1.0.tgz#8853105e0ce18449e59c55f008a8b6359f15b320"
+  integrity sha1-iFMQXgzhhEnlnFXwCKi2NZ8VsyA=
   dependencies:
     eslint-plugin-vue "^7.0.0"
     requireindex "^1.2.0"
@@ -9055,10 +9055,10 @@ vue-pswipe@^0.15.3:
     "@types/photoswipe" "^4.1.1"
     photoswipe "^4.1.3"
 
-vue-router@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.nlark.com/vue-router/download/vue-router-3.5.2.tgz#5f55e3f251970e36c3e8d88a7cd2d67a350ade5c"
-  integrity sha1-X1Xj8lGXDjbD6NiKfNLWejUK3lw=
+vue-router@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.npmmirror.com/vue-router/download/vue-router-3.5.3.tgz#041048053e336829d05dafacf6a8fb669a2e7999"
+  integrity sha1-BBBIBT4zaCnQXa+s9qj7ZpoueZk=
 
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
