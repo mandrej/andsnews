@@ -41,3 +41,6 @@ handlers:
     static_files: vue2/dist/index.html
     upload: vue2/dist/index.html
     secure: always
+
+inbound_services:
+  - warmup
