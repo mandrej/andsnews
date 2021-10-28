@@ -9,6 +9,11 @@ from api.config import CONFIG
 app = Flask(__name__)
 
 
+@app.route('/_ah/warmup')
+def warmup():
+    return 'warmup', 200, {}
+
+
 @app.route('/api/<verb>/bucket_info', methods=['GET', 'PUT'])
 def bucket_info(verb):
     """
@@ -206,11 +211,6 @@ def push():
     token = request.json.get('token', None)
     message = request.json.get('message', None)
     return push_message(token, message)
-
-
-@app.route('/api/_ah/warmup')
-def warmup():
-    return 'warmup', 200, {}
 
 
 if __name__ == '__main__':
