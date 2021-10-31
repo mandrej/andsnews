@@ -13,14 +13,14 @@
     </div>
     <div class="pa-5" style="position: absolute; bottom: 0; left: 0">
       <p>
-        <router-link v-for="year in values.year" :key="year" :title="year"
+        <router-link v-for="nick in nickNames" :key="nick" :title="nick"
           class="d-inline-block pr-4 text-h4 white--text text-decoration-none"
-          :to="{name: 'list', query: {year: year}}">{{year}}</router-link>
+          :to="{name: 'list', query: {nick: nick}}">{{nick}}</router-link>
       </p>
       <p>
-        <router-link v-for="nick in nickNames" :key="nick" :title="nick"
+        <router-link v-for="year in values.year" :key="year" :title="year"
           class="d-inline-block pr-3 text-h5 white--text text-decoration-none"
-          :to="{name: 'list', query: {nick: nick}}">{{nick}}</router-link>
+          :to="{name: 'list', query: {year: year}}">{{year}}</router-link>
       </p>
       <p class="hidden-sm-and-down">
         <router-link v-for="tag in values.tags" :key="tag" :title="tag"
