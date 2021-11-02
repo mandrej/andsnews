@@ -1,8 +1,8 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import debounce from 'lodash/debounce'
-import pushMessage from '@/helpers/push'
-import CONFIG from '@/helpers/config'
+import pushMessage from '../../helpers/push'
+import CONFIG from '../../helpers/config'
 
 const axios = Vue.axios
 

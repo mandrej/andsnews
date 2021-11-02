@@ -48,7 +48,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import common from '@/helpers/mixins'
+import common from '../helpers/mixins'
 
 export default {
   name: 'Home',
@@ -61,13 +61,13 @@ export default {
     },
     query () {
       return {
-        year: this.last.value
+        year: this.last.value,
       }
-    }
+    },
   },
   mounted () {
     this.$store.dispatch('auth/getPermission')
-  }
+  },
 }
 </script>
 

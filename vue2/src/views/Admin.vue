@@ -100,7 +100,7 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
+import common from '../helpers/mixins'
 
 export default {
   name: 'Admin',
@@ -110,17 +110,17 @@ export default {
     toggleBucket: undefined,
     toggleRepair: undefined,
     form: {
-      parent_id: []
+      parent_id: [],
     },
     msg: {
       type: String,
       required: true,
-      default: 'NEW IMAGES'
-    }
+      default: 'NEW IMAGES',
+    },
   }),
   computed: {
     ...mapState('auth', ['fcm_token']),
-    ...mapState('app', ['values'])
+    ...mapState('app', ['values']),
   },
   methods: {
     canRun (token) {
@@ -147,8 +147,8 @@ export default {
     },
     bucket () {
       this.$store.dispatch('app/bucketInfo', { verb: 'set' })
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -111,15 +111,15 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
-import CONFIG from '@/helpers/config'
+import common from '../helpers/mixins'
+import CONFIG from '../helpers/config'
 
 const axios = Vue.axios
 
 export default {
   name: 'Add',
   components: {
-    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
+    Edit: () => import(/* webpackChunkName: "edit" */ '../components/Edit'),
   },
   mixins: [common],
   data: () => ({
@@ -128,19 +128,19 @@ export default {
       SAVING: 1,
       PROCESSING: 2,
       SUCCESS: 3,
-      FAILED: 4
+      FAILED: 4,
     },
     current: {},
     editForm: false,
     errors: {
       0: 'Wrong file type',
       1: 'File too big',
-      2: 'File failed'
-    }
+      2: 'File failed',
+    },
   }),
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['upload'])
+    ...mapState('app', ['upload']),
   },
   methods: {
     reset () {
@@ -161,7 +161,7 @@ export default {
       axios
         .post('add', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: this.progress
+          onUploadProgress: this.progress,
         })
         .then((x) => x.data) // list
         .then((x) =>
@@ -221,9 +221,9 @@ export default {
       this.$store.dispatch('app/addFailed', {
         filename: file.name,
         size: file.size,
-        error: error
+        error: error,
       })
-    }
-  }
+    },
+  },
 }
 </script>

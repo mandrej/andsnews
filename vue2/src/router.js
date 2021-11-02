@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home'
-import List from '@/views/List'
+import Home from './views/Home'
+import List from './views/List'
 import store from './store'
 
-const Add = () => import(/* webpackChunkName: "add" */ '@/views/Add')
-const Admin = () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
-const Err = () => import(/* webpackChunkName: "error" */ '@/views/Err')
+const Add = () => import(/* webpackChunkName: "add" */ './views/Add')
+const Admin = () => import(/* webpackChunkName: "admin" */ './views/Admin')
+const Err = () => import(/* webpackChunkName: "error" */ './views/Err')
 
 Vue.use(Router)
 

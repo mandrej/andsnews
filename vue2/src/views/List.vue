@@ -87,7 +87,7 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
-import Card from '@/components/Card'
+import Card from '../components/Card'
 import Photoswipe from 'vue-pswipe'
 
 Vue.use(Photoswipe)
@@ -96,7 +96,7 @@ export default {
   name: 'List',
   components: {
     Card,
-    Edit: () => import(/* webpackChunkName: "edit" */ '@/components/Edit')
+    Edit: () => import(/* webpackChunkName: "edit" */ '../components/Edit'),
   },
   data: () => ({
     refreshKey: null,
@@ -118,12 +118,12 @@ export default {
         }
         captionEl.children[0].innerHTML = item.el.title
         return true
-      }
-    }
+      },
+    },
   }),
   computed: {
     ...mapState('app', ['error', 'next']),
-    ...mapGetters('app', ['objectsByDate'])
+    ...mapGetters('app', ['objectsByDate']),
   },
   mounted () {
     const self = this
@@ -147,7 +147,7 @@ export default {
       if (val && this.next) {
         this.$store.dispatch('app/fetchRecords')
       }
-    }
+    },
   },
   methods: {
     onScroll () {
@@ -175,7 +175,7 @@ export default {
         .timeline({
           targets: '#card_' + this.current.id,
           duration: 200,
-          easing: 'easeInOutQuart'
+          easing: 'easeInOutQuart',
         })
         .add({ scale: 1.05 })
         .add({ scale: 1 })
@@ -194,7 +194,7 @@ export default {
         opacity: 0,
         easing: 'easeOutQuart',
         delay: 2000,
-        duration: 2000
+        duration: 2000,
       })
     },
     registerDownload (data) {
@@ -202,9 +202,9 @@ export default {
       gtag('event', 'download', {
         event_category: 'engagement',
         event_label: data.headline + ' (' + data.email + ')',
-        value: 1
+        value: 1,
       })
-    }
-  }
+    },
+  },
 }
 </script>

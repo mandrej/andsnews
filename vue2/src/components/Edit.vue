@@ -210,7 +210,7 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
+import common from '../helpers/mixins'
 
 const axios = Vue.axios
 

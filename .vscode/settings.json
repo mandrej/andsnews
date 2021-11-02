@@ -9,6 +9,7 @@
     "views": true
   },
   "python.languageServer": "Pylance",
+
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
     "editor.defaultFormatter": null
@@ -16,7 +17,10 @@
   "[python]": {
     "editor.defaultFormatter": null
   },
-  "editor.formatOnSave": true,
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "none",
+  
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true

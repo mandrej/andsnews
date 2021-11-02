@@ -56,7 +56,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import common from '@/helpers/mixins'
+import common from '../helpers/mixins'
 
 export default {
   name: 'Card',

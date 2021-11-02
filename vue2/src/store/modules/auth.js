@@ -2,10 +2,10 @@
 import Vue from 'vue'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import messaging from '@/helpers/fire'
-import pushMessage from '@/helpers/push'
-import router from '@/router'
-import CONFIG from '@/helpers/config'
+import messaging from '../../helpers/fire'
+import pushMessage from '../../helpers/push'
+import router from '../../router'
+import CONFIG from '../../helpers/config'
 
 const axios = Vue.axios
 const provider = new firebase.auth.GoogleAuthProvider()

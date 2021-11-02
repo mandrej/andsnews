@@ -66,13 +66,13 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import Menu from '@/components/Menu'
-import Find from '@/components/Find'
-import Stat from '@/components/Stat'
+import Menu from './components/Menu'
+import Find from './components/Find'
+import Stat from './components/Stat'
 import VueAnime from 'vue-animejs'
 import VueLazyload from 'vue-lazyload'
-import update from '@/helpers/update'
-import CONFIG from '@/helpers/config'
+import update from './helpers/update'
+import CONFIG from './helpers/config'
 
 Vue.use(VueAnime)
 Vue.use(VueLazyload, {
@@ -86,9 +86,9 @@ export default {
   components: {
     Menu,
     Find,
-    Stat: () => import(/* webpackChunkName: "stat" */ '@/components/Stat'),
+    Stat: () => import(/* webpackChunkName: "stat" */ './components/Stat'),
     Message: () =>
-      import(/* webpackChunkName: "message" */ '@/components/Message')
+      import(/* webpackChunkName: "message" */ './components/Message')
   },
   data: () => ({
     prev: 0,

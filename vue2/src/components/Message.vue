@@ -11,8 +11,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import messaging from '@/helpers/fire'
-import CONFIG from '@/helpers/config'
+import messaging from '../helpers/fire'
+import CONFIG from '../helpers/config'
 
 export default {
   name: 'Message',
