@@ -3,8 +3,8 @@
     <template v-for="(item, index) in list">
       <v-list-item :key="item.icon" two-line @click.prevent>
         <v-list-item-content>
-          <v-list-item-title>{{item.value}}</v-list-item-title>
-          <v-list-item-subtitle>{{item.text}}</v-list-item-subtitle>
+          <v-list-item-title>{{ item.value }}</v-list-item-title>
+          <v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider v-if="index + 1 < list.length" :key="index"></v-divider>

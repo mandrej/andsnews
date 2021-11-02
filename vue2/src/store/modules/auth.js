@@ -19,7 +19,9 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      firebase.auth().signOut()
+      firebase
+        .auth()
+        .signOut()
         .then(() => {
           commit('SAVE_USER', {})
           const routeName = router.currentRoute.name
@@ -28,7 +30,9 @@ const actions = {
           }
         })
     } else {
-      firebase.auth().signInWithPopup(provider)
+      firebase
+        .auth()
+        .signInWithPopup(provider)
         .then(response => {
           const payload = {
             name: response.user.displayName,
@@ -42,7 +46,8 @@ const actions = {
           commit('SAVE_USER', payload)
           dispatch('updateUser', payload)
           dispatch('getPermission')
-        }).catch(err => {
+        })
+        .catch(err => {
           console.error(err.message)
         })
     }
@@ -59,8 +64,8 @@ const actions = {
   },
   getPermission: ({ dispatch }) => {
     try {
-      Notification.requestPermission().then(
-        permission => dispatch('fetchToken', permission)
+      Notification.requestPermission().then(permission =>
+        dispatch('fetchToken', permission)
       )
     } catch (error) {
       // https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
@@ -71,7 +76,8 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }, permission) => {
     if (permission === 'granted') {
-      return messaging.getToken()
+      return messaging
+        .getToken()
         .then(token => {
           if (token && token !== state.fcm_token) {
             commit('SET_TOKEN', token)
@@ -86,7 +92,10 @@ const actions = {
     }
   },
   addRegistration: ({ state }) => {
-    axios.put('user/register', { uid: state.user.uid, token: state.fcm_token }).then().catch(err => console.error(err))
+    axios
+      .put('user/register', { uid: state.user.uid, token: state.fcm_token })
+      .then()
+      .catch(err => console.error(err))
   },
   sendNotifications: ({ state }, msg) => {
     axios.get('registrations').then(response => {

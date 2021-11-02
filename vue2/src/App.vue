@@ -5,12 +5,26 @@
     <v-snackbar left bottom :value="updateExists" :timeout="-1">
       An update is available
       <template v-slot:action="{ attrs }">
-        <v-btn dark text v-bind="attrs" @click="refreshApp" style="margin: 0 8px">Update</v-btn>
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="refreshApp"
+          style="margin: 0 8px"
+          >Update</v-btn
+        >
       </template>
     </v-snackbar>
 
     <v-app>
-      <v-navigation-drawer v-model="drawer" app fixed floating clipped :width="300">
+      <v-navigation-drawer
+        v-model="drawer"
+        app
+        fixed
+        floating
+        clipped
+        :width="300"
+      >
         <div class="d-flex flex-column fill-height">
           <keep-alive>
             <component :is="dynamicComponent"></component>
@@ -21,15 +35,25 @@
       </v-navigation-drawer>
 
       <v-app-bar app dense clipped-left>
-        <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          class="hidden-lg-and-up"
+          @click.stop="drawer = !drawer"
+        ></v-app-bar-nav-icon>
         <v-toolbar-title
           class="text-h5"
           @click="goBack"
           style="cursor: pointer; padding-left: 0"
-        >{{title}}</v-toolbar-title>
+          >{{ title }}</v-toolbar-title
+        >
         <v-spacer></v-spacer>
         <span id="count" v-if="$route.name === 'list'"></span>
-        <v-progress-linear v-show="busy" color="secondary" absolute top :indeterminate="true"></v-progress-linear>
+        <v-progress-linear
+          v-show="busy"
+          color="secondary"
+          absolute
+          top
+          :indeterminate="true"
+        ></v-progress-linear>
       </v-app-bar>
 
       <v-main>
@@ -63,7 +87,8 @@ export default {
     Menu,
     Find,
     Stat: () => import(/* webpackChunkName: "stat" */ '@/components/Stat'),
-    Message: () => import(/* webpackChunkName: "message" */ '@/components/Message')
+    Message: () =>
+      import(/* webpackChunkName: "message" */ '@/components/Message')
   },
   data: () => ({
     prev: 0,
@@ -75,7 +100,8 @@ export default {
     this.$vuetify.theme.dark = this.dark
     // Session life time 7 days
     if (this.user && this.user.lastLogin) {
-      if (Date.now() - this.user.lastLogin > CONFIG.lifeTime) { // millis
+      if (Date.now() - this.user.lastLogin > CONFIG.lifeTime) {
+        // millis
         this.$store.dispatch('auth/signIn')
       }
     }
@@ -104,7 +130,7 @@ export default {
   methods: {
     animate (num) {
       const self = this
-      const sufix = (self.next) ? '+' : ''
+      const sufix = self.next ? '+' : ''
       this.$anime({
         targets: '#count',
         innerText: [self.prev, num + sufix],
@@ -136,7 +162,7 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 .v-application {
   background-color: var(--v-background-base) !important;
@@ -168,7 +194,7 @@ export default {
 }
 /* Photoswipe */
 .pswp * {
-  font-family: "Roboto", Helvetica, Arial, sans-serif !important;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
 }
 .pswp__caption--empty {
   display: block !important;
@@ -192,8 +218,8 @@ img.lazy {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s;
-  &[lazy="loaded"],
-  &[lazy="error"] {
+  &[lazy='loaded'],
+  &[lazy='error'] {
     opacity: 1;
   }
   & + p {

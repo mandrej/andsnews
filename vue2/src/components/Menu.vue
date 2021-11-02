@@ -7,7 +7,7 @@
       <v-list-item-content>
         <template v-if="user.name">
           <v-list-item-title>Sign out</v-list-item-title>
-          <v-list-item-subtitle>{{user.name}}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ user.name }}</v-list-item-subtitle>
         </template>
         <template v-else>
           <v-list-item-title>Sign in</v-list-item-title>
@@ -44,7 +44,9 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item>
-      <v-list-item-content class="text-caption">{{version}}</v-list-item-content>
+      <v-list-item-content class="text-caption">{{
+        version
+      }}</v-list-item-content>
     </v-list-item>
   </v-list>
 </template>

@@ -15,14 +15,16 @@
           ></v-text-field>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn :disabled="canRun(fcm_token)" color="primary" @click="send">Send</v-btn>
+          <v-btn :disabled="canRun(fcm_token)" color="primary" @click="send"
+            >Send</v-btn
+          >
         </v-list-item-action>
       </v-list-item>
 
       <h3>Rebuild counters</h3>
       <v-list-item v-for="field in Object.keys(values)" :key="field">
         <v-list-item-content>
-          <v-list-item-title>for {{field}}</v-list-item-title>
+          <v-list-item-title>for {{ field }}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="form.parent_id[field]">
@@ -32,19 +34,26 @@
               width="100"
               @click="rebuild(field)"
               elevation="2"
-            >Rebuild</v-btn>
+              >Rebuild</v-btn
+            >
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
 
-      <h3>Bug fix on {{$date('2021-04-05').format('dddd, MMMM DD, YYYY')}}</h3>
+      <h3>
+        Bug fix on {{ $date('2021-04-05').format('dddd, MMMM DD, YYYY') }}
+      </h3>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Tokenize latinized headlines for search by text</v-list-item-title>
+          <v-list-item-title
+            >Tokenize latinized headlines for search by text</v-list-item-title
+          >
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleFix">
-            <v-btn :disabled="true" color="primary" @click="fix" elevation="2">Fix</v-btn>
+            <v-btn :disabled="true" color="primary" @click="fix" elevation="2"
+              >Fix</v-btn
+            >
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
@@ -61,17 +70,26 @@
               color="primary"
               @click="bucket"
               elevation="2"
-            >Rebuild</v-btn>
+              >Rebuild</v-btn
+            >
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>Synchronize datastore records and Cloud bucket</v-list-item-title>
+          <v-list-item-title
+            >Synchronize datastore records and Cloud bucket</v-list-item-title
+          >
         </v-list-item-content>
         <v-list-item-action>
           <v-btn-toggle v-model="toggleRepair">
-            <v-btn :disabled="canRun(fcm_token)" color="error" @click="repair" elevation="2">Repair</v-btn>
+            <v-btn
+              :disabled="canRun(fcm_token)"
+              color="error"
+              @click="repair"
+              elevation="2"
+              >Repair</v-btn
+            >
           </v-btn-toggle>
         </v-list-item-action>
       </v-list-item>
@@ -109,8 +127,7 @@ export default {
       return Boolean(!token)
     },
     callAjax (url) {
-      Vue.axios.post(url, { token: this.fcm_token })
-        .then(x => x.data)
+      Vue.axios.post(url, { token: this.fcm_token }).then((x) => x.data)
       // .catch(err => console.log(err))
     },
     rebuild (name) {

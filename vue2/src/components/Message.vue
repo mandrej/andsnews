@@ -29,7 +29,7 @@ export default {
     window.addEventListener('offline', this.updateOnlineStatus)
   },
   mounted () {
-    messaging.onMessage(payload => {
+    messaging.onMessage((payload) => {
       this.message = payload.notification.body
       if (this.message.startsWith(CONFIG.end_message)) {
         this.timeout = -1

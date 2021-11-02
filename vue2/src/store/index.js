@@ -11,9 +11,17 @@ const debug = process.env.NODE_ENV !== 'production'
 const persisted = createPersistedState({
   key: 'ands',
   paths: [
-    'auth.user', 'auth.fcm_token', 'app.dark', 'app.find',
-    'app.last', 'app.bucket', 'app.values', 'app.upload.list',
-    'app.objects', 'app.pages', 'app.next'
+    'auth.user',
+    'auth.fcm_token',
+    'app.dark',
+    'app.find',
+    'app.last',
+    'app.bucket',
+    'app.values',
+    'app.upload.list',
+    'app.objects',
+    'app.pages',
+    'app.next'
   ]
 })
 const plugins = [persisted]

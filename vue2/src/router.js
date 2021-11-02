@@ -35,7 +35,7 @@ const router = new Router({
       name: 'add',
       component: Add,
       meta: {
-        title: 'Upload',
+        title: 'Upload'
       },
       beforeEnter: (to, from, next) => {
         const user = store.state.auth.user
@@ -51,7 +51,7 @@ const router = new Router({
       name: 'admin',
       component: Admin,
       meta: {
-        title: 'Administration',
+        title: 'Administration'
       },
       beforeEnter: (to, from, next) => {
         const user = store.state.auth.user
@@ -77,7 +77,7 @@ const router = new Router({
       path: '*',
       component: Err,
       meta: {
-        title: '404 Not found',
+        title: '404 Not found'
       },
       props: route => ({
         text: 'Requested ' + route.fullPath + ' cannot be found'
@@ -86,12 +86,12 @@ const router = new Router({
   ]
 })
 
-router.afterEach((to) => {
+router.afterEach(to => {
   // eslint-disable-next-line no-undef
   gtag('config', process.env.VUE_APP_GA, {
     page_path: to.fullPath,
     app_name: 'ANDS',
-    send_page_view: true,
+    send_page_view: true
   })
 })
 

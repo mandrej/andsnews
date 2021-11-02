@@ -10,7 +10,9 @@
     <v-card>
       <v-app-bar>
         <v-btn color="primary" @click="submit" :disabled="!valid">Submit</v-btn>
-        <v-btn color="ml-2" if="user.isAdmin" @click="readExif">Read Exif</v-btn>
+        <v-btn color="ml-2" if="user.isAdmin" @click="readExif"
+          >Read Exif</v-btn
+        >
         <v-spacer></v-spacer>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
@@ -59,10 +61,16 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker color="primary" v-model="dateTime.date" scrollable>
+                    <v-date-picker
+                      color="primary"
+                      v-model="dateTime.date"
+                      scrollable
+                    >
                       <v-spacer></v-spacer>
                       <v-btn text @click="dateRef = false">Cancel</v-btn>
-                      <v-btn text @click="$refs.dateRef.save(dateTime.date)">OK</v-btn>
+                      <v-btn text @click="$refs.dateRef.save(dateTime.date)"
+                        >OK</v-btn
+                      >
                     </v-date-picker>
                   </v-menu>
                 </v-col>
@@ -116,8 +124,8 @@
                     <v-list-item-content>
                       <v-list-item-title>
                         No results matching "
-                        <strong>{{ search }}</strong>". Press
-                        <kbd>enter</kbd> to create a new one
+                        <strong>{{ search }}</strong
+                        >". Press <kbd>enter</kbd> to create a new one
                       </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
@@ -127,22 +135,50 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="4" sm="6">
-              <v-text-field label="Camera Model" v-model="tmp.model" dense></v-text-field>
+              <v-text-field
+                label="Camera Model"
+                v-model="tmp.model"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6">
-              <v-text-field label="Lens" v-model="tmp.lens" dense></v-text-field>
+              <v-text-field
+                label="Lens"
+                v-model="tmp.lens"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Focal length" type="number" v-model="tmp.focal_length" dense></v-text-field>
+              <v-text-field
+                label="Focal length"
+                type="number"
+                v-model="tmp.focal_length"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="ISO [ASA]" type="number" v-model="tmp.iso" dense></v-text-field>
+              <v-text-field
+                label="ISO [ASA]"
+                type="number"
+                v-model="tmp.iso"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Aperture" type="number" step="0.1" v-model="tmp.aperture" dense></v-text-field>
+              <v-text-field
+                label="Aperture"
+                type="number"
+                step="0.1"
+                v-model="tmp.aperture"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="6" md="4" sm="6">
-              <v-text-field label="Shutter [s]" v-model="tmp.shutter" dense></v-text-field>
+              <v-text-field
+                label="Shutter [s]"
+                v-model="tmp.shutter"
+                dense
+              ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
               <v-text-field
@@ -152,10 +188,17 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
-              <v-text-field readonly label="Dimension [width, height]" v-model="tmp.dim"></v-text-field>
+              <v-text-field
+                readonly
+                label="Dimension [width, height]"
+                v-model="tmp.dim"
+              ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
-              <v-text-field label="Location [latitude, longitude]" v-model="tmp.loc"></v-text-field>
+              <v-text-field
+                label="Location [latitude, longitude]"
+                v-model="tmp.loc"
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-form>
@@ -230,7 +273,7 @@ export default {
       event.preventDefault()
       this.submitting = true
       this.tmp.date = this.dateTime.date + ' ' + this.dateTime.time
-      this.tmp.tags = (this.tmp.tags) ? this.tmp.tags : []
+      this.tmp.tags = this.tmp.tags ? this.tmp.tags : []
       this.$store.dispatch('app/saveRecord', this.tmp)
 
       setTimeout(() => {
@@ -239,7 +282,7 @@ export default {
       }, 1000)
     },
     readExif () {
-      axios.get('exif/' + this.tmp.filename).then(response => {
+      axios.get('exif/' + this.tmp.filename).then((response) => {
         this.tmp = { ...this.tmp, ...response.data }
       })
     }

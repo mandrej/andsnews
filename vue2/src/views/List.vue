@@ -4,7 +4,9 @@
 
     <v-dialog v-model="confirm" max-width="300px" persistent>
       <v-card>
-        <v-card-title class="text-h5" primary-title>{{current.headline}}</v-card-title>
+        <v-card-title class="text-h5" primary-title>{{
+          current.headline
+        }}</v-card-title>
         <v-card-text>Want to delete?</v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="flex-row justify-space-between px-6 py-4">
@@ -34,11 +36,26 @@
     </v-fab-transition>
 
     <Photoswipe v-if="error === null" :options="options" :key="refreshKey">
-      <v-container fluid v-for="(list, date) in objectsByDate" :key="date" class="pa-4">
-        <h2 class="pb-2 font-weight-light">{{$date(date).format('dddd, MMMM DD, YYYY')}}</h2>
+      <v-container
+        fluid
+        v-for="(list, date) in objectsByDate"
+        :key="date"
+        class="pa-4"
+      >
+        <h2 class="pb-2 font-weight-light">
+          {{ $date(date).format('dddd, MMMM DD, YYYY') }}
+        </h2>
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <template v-for="item in list">
-            <v-col :key="item.id" cols="12" sm="6" md="4" lg="3" xl="2" class="pa-2">
+            <v-col
+              :key="item.id"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
+              class="pa-2"
+            >
               <Card
                 :id="'card_' + item.id"
                 :item="item"
@@ -53,17 +70,15 @@
     </Photoswipe>
 
     <v-container v-else-if="error === 0" fluid class="pa-4">
-      <v-alert
-        type="info"
-        transition="scale-transition"
-        prominent
-      >No data for current filter/ search</v-alert>
+      <v-alert type="info" transition="scale-transition" prominent
+        >No data for current filter/ search</v-alert
+      >
     </v-container>
     <v-container v-else fluid class="pa-4">
       <v-alert type="error" transition="scale-transition" prominent>
         Something went wrong
         <br />
-        {{error}}
+        {{ error }}
       </v-alert>
     </v-container>
   </div>
@@ -108,7 +123,7 @@ export default {
   }),
   computed: {
     ...mapState('app', ['error', 'next']),
-    ...mapGetters('app', ['objectsByDate']),
+    ...mapGetters('app', ['objectsByDate'])
   },
   mounted () {
     const self = this

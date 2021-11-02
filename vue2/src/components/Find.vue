@@ -85,7 +85,7 @@ export default {
     }
   },
   watch: {
-    '$route': {
+    $route: {
       deep: true,
       immediate: true,
       handler: function (val) {
@@ -94,8 +94,10 @@ export default {
           pid = +val.hash.match(/&pid=(.+)/)[1]
         }
         // adopt to match types in store
-        if (Object.prototype.hasOwnProperty.call(val.query, 'year')) val.query.year = +val.query.year
-        if (Object.prototype.hasOwnProperty.call(val.query, 'month')) val.query.month = +val.query.month
+        if (Object.prototype.hasOwnProperty.call(val.query, 'year'))
+          val.query.year = +val.query.year
+        if (Object.prototype.hasOwnProperty.call(val.query, 'month'))
+          val.query.month = +val.query.month
         this.$store.dispatch('app/saveFindForm', val.query)
         if (!Object.keys(val.query).length) {
           this.$store.dispatch('app/changeFilter', { reset: false, pid: pid }) // continue
@@ -112,7 +114,7 @@ export default {
     },
     submit () {
       // remove undefined and empty list
-      Object.keys(this.tmp).forEach(key => {
+      Object.keys(this.tmp).forEach((key) => {
         if (this.tmp[key] == null || this.tmp[key].length === 0) {
           delete this.tmp[key]
         }
@@ -120,10 +122,10 @@ export default {
       if (Object.keys(this.tmp).length) {
         // https://github.com/vuejs/vue-router/issues/2872
         // eslint-disable-next-line
-        this.$router.push({ name: 'list', query: this.tmp }).catch(err => { })
+        this.$router.push({ name: 'list', query: this.tmp }).catch((err) => {})
       } else {
         // eslint-disable-next-line
-        this.$router.replace({ name: 'home' }).catch(err => { })
+        this.$router.replace({ name: 'home' }).catch((err) => {})
       }
     }
   }

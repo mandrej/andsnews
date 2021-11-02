@@ -97,6 +97,7 @@ const actions = {
       axios.put('edit/' + obj.id, obj).then(response => {
         const obj = response.data.rec
         commit('UPDATE_RECORD', obj)
+        commit('UPDATE_LAST_BY_YEAR', obj)
         commit('UPDATE_VALUES', obj)
       })
     } else {
@@ -106,6 +107,7 @@ const actions = {
         const diff = { verb: 'add', size: obj.size }
         commit('ADD_RECORD', obj)
         commit('DELETE_UPLOADED', obj)
+        commit('UPDATE_LAST_BY_YEAR', obj)
         commit('UPDATE_VALUES', obj)
         dispatch('bucketInfo', diff)
       })
@@ -141,6 +143,7 @@ const actions = {
   },
   fetchStat: ({ commit, dispatch, state }) => {
     axios.get('counters').then(response => {
+      commit('SET_LAST_BY_YEAR', response.data)
       commit('SET_COUNTERS', response.data)
       if (state.bucket.count === 0) {
         dispatch('bucketInfo', { verb: 'set' })
@@ -149,7 +152,9 @@ const actions = {
   },
   fetchRecords: ({ commit, state }, pid) => {
     if (state.busy) return
-    const params = Object.assign({}, state.find, { per_page: pid ? 2 * CONFIG.limit : CONFIG.limit })
+    const params = Object.assign({}, state.find, {
+      per_page: pid ? 2 * CONFIG.limit : CONFIG.limit
+    })
     if (state.next) params._page = state.next
     const searchParams = new URLSearchParams(params)
     const url = 'search?' + searchParams.toString()
@@ -254,22 +259,12 @@ const mutations = {
     if (idx > -1) state.objects.splice(idx, 1)
   },
   DELETE_UPLOADED (state, obj) {
-    const idx = state.upload.list.findIndex(item => item.filename === obj.filename)
+    const idx = state.upload.list.findIndex(
+      item => item.filename === obj.filename
+    )
     if (idx > -1) state.upload.list.splice(idx, 1)
   },
   UPDATE_VALUES (state, obj) {
-    const last_stat = new Date(state.last.date)
-    const last_obj = new Date(obj.date)
-    if (last_obj.getTime() > last_stat.getTime()) {
-      state.last = {
-        ...state.last, ...{
-          count: state.last.count + 1,
-          filename: obj.filename,
-          date: obj.date,
-          value: last_obj.getFullYear()
-        }
-      }
-    }
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     if (obj.tags) {
       state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
@@ -285,24 +280,42 @@ const mutations = {
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]
   },
+  UPDATE_LAST_BY_YEAR (state, obj) {
+    const lastFromState = new Date(state.last.date)
+    const lastFromObject = new Date(obj.date)
+    if (lastFromObject.getTime() > lastFromState.getTime()) {
+      state.last = {
+        ...state.last,
+        ...{
+          count: state.last.count + 1,
+          filename: obj.filename,
+          date: obj.date,
+          value: lastFromObject.getFullYear()
+        }
+      }
+    }
+  },
   SET_COUNTERS (state, data) {
     CONFIG.photo_filter.forEach(field => {
       if (Object.prototype.hasOwnProperty.call(data, field)) {
-        if (field === 'year') {
-          const last = data.year[0]
-          if (last) {
-            state.last = {
-              ...state.last, ...last
-            }
-          }
-        }
-        state.values[field] = [...Array.from(data[field], c => {
-          return c.value
-        })]
+        state.values[field] = [
+          ...Array.from(data[field], c => {
+            return c.value
+          })
+        ]
       } else {
         state.values[field] = []
       }
     })
+  },
+  SET_LAST_BY_YEAR (state, data) {
+    const last = data.year[0]
+    if (last) {
+      state.last = {
+        ...state.last,
+        ...last
+      }
+    }
   },
   SET_CLEAR (state, val) {
     state.clear = val

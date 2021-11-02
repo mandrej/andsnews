@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-responsive :aspect-ratio="4/3">
+    <v-responsive :aspect-ratio="4 / 3">
       <img
         class="lazy"
         :data-src="getImgSrc(item, 400)"
@@ -9,19 +9,23 @@
         :data-pswp-src="getImgSrc(item)"
         :data-pswp-pid="item.id"
       />
-      <p class="text-h6 text-truncate" style="width: 100%">{{item.headline}}</p>
+      <p class="text-h6 text-truncate" style="width: 100%">
+        {{ item.headline }}
+      </p>
     </v-responsive>
     <v-card-text class="d-flex justify-space-between py-2">
-      <div
-        style="line-height: 28px"
-      >{{item.nick}}, {{$date(item.date).format('ddd DD.MM.YYYY HH:mm')}}</div>
+      <div style="line-height: 28px">
+        {{ item.nick }}, {{ $date(item.date).format('ddd DD.MM.YYYY HH:mm') }}
+      </div>
       <v-btn
         v-if="item.loc"
         icon
         small
         text
         target="blank"
-        :href="'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]"
+        :href="
+          'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]
+        "
       >
         <v-icon>my_location</v-icon>
       </v-btn>
@@ -63,7 +67,10 @@ export default {
   },
   methods: {
     download () {
-      this.$emit('register-download', { headline: this.item.headline, email: this.user.email })
+      this.$emit('register-download', {
+        headline: this.item.headline,
+        email: this.user.email
+      })
     },
     removeRecord () {
       this.$emit('remove-record', this.item)
@@ -74,16 +81,15 @@ export default {
     caption () {
       const { headline, aperture, shutter, iso, model, lens } = this.item
       let tmp = headline
-      tmp += (shutter) ? '\n' + shutter + 's' : ''
-      tmp += (aperture) ? ' f' + aperture : ''
-      tmp += (iso) ? ' ' + iso + ' ASA' : ''
-      tmp += (model) ? '\n' + model : ''
-      tmp += (lens) ? '\n' + lens : ''
+      tmp += shutter ? '\n' + shutter + 's' : ''
+      tmp += aperture ? ' f' + aperture : ''
+      tmp += iso ? ' ' + iso + ' ASA' : ''
+      tmp += model ? '\n' + model : ''
+      tmp += lens ? '\n' + lens : ''
       return tmp
     }
   }
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

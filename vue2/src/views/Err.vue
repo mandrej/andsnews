@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <v-alert type="error" transition="scale-transition" prominent>{{text}}</v-alert>
+    <v-alert type="error" transition="scale-transition" prominent>{{
+      text
+    }}</v-alert>
   </v-container>
 </template>
 

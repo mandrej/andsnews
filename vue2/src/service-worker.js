@@ -15,7 +15,7 @@ workbox.routing.registerRoute(
   new workbox.strategies.CacheFirst()
 )
 
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
