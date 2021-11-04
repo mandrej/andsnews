@@ -9095,10 +9095,10 @@ vuetify-loader@^1.7.3:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.5.10:
-  version "2.5.10"
-  resolved "https://registry.npmmirror.com/vuetify/download/vuetify-2.5.10.tgz#165cb3de9dbffbc94bc775aa2f698eb9fa89eabe"
-  integrity sha1-Flyz3p2/+8lLx3WqL2mOufqJ6r4=
+vuetify@^2.5.11:
+  version "2.5.11"
+  resolved "https://registry.npmmirror.com/vuetify/download/vuetify-2.5.11.tgz?cache=0&sync_timestamp=1636035008618&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvuetify%2Fdownload%2Fvuetify-2.5.11.tgz#46bef0b292315e32e7d97bceab24e0a297df4dc6"
+  integrity sha1-Rr7wspIxXjLn2XvOqyTgopffTcY=
 
 vuex-persistedstate@^4.1.0:
   version "4.1.0"
