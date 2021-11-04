@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import debounce from 'lodash/debounce'
+import querystring from 'querystring'
 import pushMessage from '../../helpers/push'
 import CONFIG from '../../helpers/config'
 
@@ -156,8 +157,7 @@ const actions = {
       per_page: pid ? 2 * CONFIG.limit : CONFIG.limit
     })
     if (state.next) params._page = state.next
-    const searchParams = new URLSearchParams(params)
-    const url = 'search?' + searchParams.toString()
+     const url = 'search?' + querystring.stringify(params)
 
     commit('SET_ERROR', null)
     commit('SET_BUSY', true)
