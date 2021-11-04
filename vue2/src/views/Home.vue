@@ -2,7 +2,6 @@
   <div
     v-lazy:background-image="getImgSrc(last)"
     class="d-flex flex-column fill-height align-center justify-center lazy last"
-    style="cursor: pointer"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
       <h4 class="text-body-1 white--text text-right">

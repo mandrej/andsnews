@@ -1680,12 +1680,12 @@
     webpack "^4.0.0"
     yorkie "^2.0.0"
 
-"@vue/cli-plugin-pwa@^4.5.14":
-  version "4.5.14"
-  resolved "https://registry.npmmirror.com/@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.5.14.tgz#55f58689f33109dfc001f45028c123c1097c66d3"
-  integrity sha1-VfWGifMxCd/AAfRQKMEjwQl8ZtM=
+"@vue/cli-plugin-pwa@^4.5.15":
+  version "4.5.15"
+  resolved "https://registry.npmmirror.com/@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.5.15.tgz#eb800c418d96b496deec9d063a1798fe6e9c2db8"
+  integrity sha1-64AMQY2WtJbe7J0GOheY/m6cLbg=
   dependencies:
-    "@vue/cli-shared-utils" "^4.5.14"
+    "@vue/cli-shared-utils" "^4.5.15"
     webpack "^4.0.0"
     workbox-webpack-plugin "^4.3.1"
 
@@ -1763,24 +1763,6 @@
     webpack-merge "^4.2.2"
   optionalDependencies:
     vue-loader-v16 "npm:vue-loader@^16.1.0"
-
-"@vue/cli-shared-utils@^4.5.14":
-  version "4.5.14"
-  resolved "https://registry.npmmirror.com/@vue/cli-shared-utils/download/@vue/cli-shared-utils-4.5.14.tgz?cache=0&sync_timestamp=1634195784598&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40vue%2Fcli-shared-utils%2Fdownload%2F%40vue%2Fcli-shared-utils-4.5.14.tgz#4cdc98544205795144fa1a712966a33450d9a4c7"
-  integrity sha1-TNyYVEIFeVFE+hpxKWajNFDZpMc=
-  dependencies:
-    "@hapi/joi" "^15.0.1"
-    chalk "^2.4.2"
-    execa "^1.0.0"
-    launch-editor "^2.2.1"
-    lru-cache "^5.1.1"
-    node-ipc "^9.1.1"
-    open "^6.3.0"
-    ora "^3.4.0"
-    read-pkg "^5.1.1"
-    request "^2.88.2"
-    semver "^6.1.0"
-    strip-ansi "^6.0.0"
 
 "@vue/cli-shared-utils@^4.5.15":
   version "4.5.15"
@@ -3236,10 +3218,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.19.0:
-  version "3.19.0"
-  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.19.0.tgz?cache=0&sync_timestamp=1635142915013&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcore-js%2Fdownload%2Fcore-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
-  integrity sha1-nkAJipvDJsfoG0hqu9XhK50nUXY=
+core-js@^3.19.1:
+  version "3.19.1"
+  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.19.1.tgz?cache=0&sync_timestamp=1635883214852&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcore-js%2Fdownload%2Fcore-js-3.19.1.tgz#f6f173cae23e73a7d88fa23b6e9da329276c6641"
+  integrity sha1-9vFzyuI+c6fYj6I7bp2jKSdsZkE=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
