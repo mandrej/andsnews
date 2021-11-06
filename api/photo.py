@@ -34,10 +34,12 @@ def counters_stat():
         list_ = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
                  for c in coll if c['count'] > 0)
         if field == 'year':
-            result[field] = sorted(list_, key=itemgetter('value'), reverse=True)
+            result[field] = sorted(
+                list_, key=itemgetter('value'), reverse=True)
         else:
             # most frequent
-            result[field] = sorted(list_, key=itemgetter('count'), reverse=True)
+            result[field] = sorted(
+                list_, key=itemgetter('count'), reverse=True)
 
     return result
 

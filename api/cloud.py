@@ -167,7 +167,8 @@ class Repair(object):
             deleted = []
 
         for name in list(D - B):
-            blobs = storage_client.list_blobs(BUCKET, prefix=name, delimiter='/')
+            blobs = storage_client.list_blobs(
+                BUCKET, prefix=name, delimiter='/')
             if len(list(blobs)) == 0:
                 res = self.find(name)
                 deleted.append(name)
