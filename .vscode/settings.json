@@ -18,15 +18,16 @@
   "[javascript]": {
     "editor.defaultFormatter": null
   },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
-  
+
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
-  }
+  "editor.formatOnSave": true
 }
