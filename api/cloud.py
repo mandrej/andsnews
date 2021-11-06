@@ -22,11 +22,14 @@ def login_user(data):
 def register_user(uid, token):
     key = datastore_client.key('User', uid)
     obj = datastore_client.get(key)
-    if obj['token'] != token:
-        obj['token'] = token
-        datastore_client.put(obj)
-        return True
-    else:
+    try:
+        assert obj is not None, 'Entity not found'
+        if obj['token'] != token:
+            obj['token'] = token
+            datastore_client.put(obj)
+            return True
+    except AssertionError:
+        raise
         return False
 
 
@@ -81,8 +84,8 @@ def bucketInfo(param):
     obj = datastore_client.get(key)
 
     def run(count=0, size=0):
-        _iter = storage_client.list_blobs(BUCKET, delimiter='/')
-        for blob in _iter:
+        iter_ = storage_client.list_blobs(BUCKET, delimiter='/')
+        for blob in iter_:
             if blob.content_type == 'image/jpeg':
                 count += 1
                 size += blob.size
@@ -114,6 +117,7 @@ def bucketInfo(param):
 
 class Repair(object):
     """
+    NOT USED
     Synchronize datastore records and Cloud bucket
     """
     TOKEN = None
@@ -134,12 +138,12 @@ class Repair(object):
         self._continue(None, batch_size)
 
     def _continue(self, cursor, batch_size):
-        _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
-        _page = next(_iter.pages)
+        iter_ = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
+        _page = next(iter_.pages)
         self.DATA_NAMES.extend([ent['filename'] for ent in list(_page)])
         push_message(self.TOKEN, len(self.DATA_NAMES))
 
-        next_cursor = _iter.next_page_token
+        next_cursor = iter_.next_page_token
         if next_cursor:
             self._continue(next_cursor, batch_size)
         else:
@@ -163,10 +167,9 @@ class Repair(object):
             deleted = []
 
         for name in list(D - B):
-            blobs = storage_client.list_blobs(
-                BUCKET, prefix=name, delimiter='/')
-            if len(blobs.prefixes) == 0:
-                res = find(name)
+            blobs = storage_client.list_blobs(BUCKET, prefix=name, delimiter='/')
+            if len(list(blobs)) == 0:
+                res = self.find(name)
                 deleted.append(name)
                 for ent in res:
                     print(type(ent.key))
@@ -192,8 +195,8 @@ class Fixer(object):
         self._continue(None, batch_size)
 
     def _continue(self, cursor, batch_size):
-        _iter = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
-        _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
+        iter_ = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
+        _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
             text = tokenize(ent['headline'])
@@ -205,7 +208,7 @@ class Fixer(object):
             datastore_client.put_multi(batch)
             push_message(self.TOKEN, f'saving {self.COUNT} ...')
 
-        next_cursor = _iter.next_page_token
+        next_cursor = iter_.next_page_token
         if next_cursor:
             self._continue(next_cursor, batch_size)
         else:

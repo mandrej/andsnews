@@ -1,10 +1,9 @@
-import re
 import string
-import requests
 import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
+import requests
 
 from exifread import process_file
 from .config import CONFIG

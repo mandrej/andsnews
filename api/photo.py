@@ -1,14 +1,13 @@
 import re
 import uuid
 import datetime
-from PIL import Image
 from io import BytesIO
 from operator import itemgetter
 from google.cloud import storage, datastore
 from google.cloud.datastore.entity import Entity
-from google.cloud.exceptions import GoogleCloudError, NotFound
+from google.cloud.exceptions import GoogleCloudError
 from .config import CONFIG
-from .helpers import serialize, tokenize, get_exif
+from .helpers import serialize, tokenize
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
@@ -21,6 +20,10 @@ def storage_blob(filename):
 
 
 def counters_stat():
+    """
+    {'year': [{'value': 2021, 'count': 1381, 'filename': 'DSC_5294-21-11-03-807.jpg', 'date': '2021-11-03 12:26'}, ...
+     'tags': [{'value': 'djordje', 'count': 1800, 'filename': 'IMG_4993.jpg', 'date': '2021-10-30 12:28'}, ... 
+    """
     result = {}
     for field in CONFIG['photo_filter']:
         query = datastore_client.query(kind='Counter')
@@ -28,15 +31,13 @@ def counters_stat():
         query.add_filter('field', '=', field)
         coll = query.fetch()
 
-        _list = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
+        list_ = ({'value': c['value'], 'count': c['count'], 'filename': c['filename'], 'date': c['date']}
                  for c in coll if c['count'] > 0)
         if field == 'year':
-            result[field] = sorted(
-                _list, key=itemgetter('value'), reverse=True)
+            result[field] = sorted(list_, key=itemgetter('value'), reverse=True)
         else:
             # most frequent
-            result[field] = sorted(
-                _list, key=itemgetter('count'), reverse=True)
+            result[field] = sorted(list_, key=itemgetter('count'), reverse=True)
 
     return result
 
@@ -59,20 +60,20 @@ class Paginator(object):
         error = None
         token = token.encode('utf-8') if token else None
 
-        _iter = self.query.fetch(limit=self.per_page, start_cursor=token)
-        _page = next(_iter.pages)  # google.api_core.page_iterator.Page object
+        iter_ = self.query.fetch(limit=self.per_page, start_cursor=token)
+        _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         objects = [serialize(ent) for ent in list(_page)]
 
-        next_cursor = _iter.next_page_token
+        next_cursor = iter_.next_page_token
         next_cursor = next_cursor.decode('utf-8') if next_cursor else None
         return objects, next_cursor, error
 
 
 def update_filters(new_pairs, old_pairs):
     counters = []
-    for i, (field, value) in enumerate(set(new_pairs) | set(old_pairs)):
-        id = f'Photo||{field}||{value}'
-        key = datastore_client.key('Counter', id)
+    for (field, value) in list(set(new_pairs) | set(old_pairs)):
+        id_ = f'Photo||{field}||{value}'
+        key = datastore_client.key('Counter', id_)
         counter = datastore_client.get(key)
         if counter is None:
             counter = datastore.Entity(key)
@@ -124,22 +125,22 @@ def changed_pairs(obj):
     return pairs
 
 
-def add(fs):
+def add(fs_):
     """
-    fs: werkzeug.datastructures.FileStorage(
+    fs_: werkzeug.datastructures.FileStorage(
         stream=None, filename=None, name=None, content_type=None, content_length=None, headers=None)
     """
     # Check exist first
-    filename = fs.filename.replace(' ', '')
+    filename = fs_.filename.replace(' ', '')
     blob = BUCKET.get_blob(filename)
     if blob:
         filename = re.sub(r'\.', f'-{str(uuid.uuid4())[:8]}.', filename)
     blob = BUCKET.blob(filename)
 
-    _buffer = fs.read()  # === fs.stream.read()
+    _buffer = fs_.read()  # === fs_.stream.read()
     # Upload to storage
     try:
-        blob.upload_from_file(BytesIO(_buffer), content_type=fs.content_type)
+        blob.upload_from_file(BytesIO(_buffer), content_type=fs_.content_type)
         blob.cache_control = CONFIG['cache_control']
         blob.update()
     except GoogleCloudError as e:
@@ -154,7 +155,9 @@ def add(fs):
 def merge(obj, json):
     obj.update(json)
     obj['text'] = tokenize(obj['headline'])
-    obj['nick'] = re.match('([^@]+)', obj['email']).group().split('.')[0]
+    name = re.match('([^@]+)', obj['email'])
+    assert name is not None, 'Cannot match email address'
+    obj['nick'] = name.group().split('.')[0]
     obj['tags'] = sorted(obj['tags'])
     obj['date'] = datetime.datetime.strptime(
         obj['date'], CONFIG['date_time_format'])
@@ -172,12 +175,12 @@ def merge(obj, json):
     return obj
 
 
-def edit(id, json):
-    if id:
+def edit(id_, json):
+    if id_:
         try:
-            key = datastore_client.key('Photo', id)
+            key = datastore_client.key('Photo', id_)
             obj = datastore_client.get(key)
-            assert obj is not None, 'Entity Not Found'
+            assert obj is not None, 'Entity not found'
         except AssertionError as msg:
             return {'success': False, 'message': msg}
         else:
@@ -204,7 +207,7 @@ def edit(id, json):
         return {'success': False, 'message': 'Something went wrong'}
 
 
-def removeFromBucket(filename):
+def remove_from_bucket(filename):
     blob = BUCKET.get_blob(filename)
     if blob:
         blob.delete()
@@ -212,15 +215,15 @@ def removeFromBucket(filename):
     return {'success': True}
 
 
-def remove(id):
+def remove(id_):
     """ key === obj.key
         <class 'google.cloud.datastore.key.Key'>
         <Key('Photo', 5635277129252864), project=andsnews> """
-    key = datastore_client.key('Photo', id)
+    key = datastore_client.key('Photo', id_)
     obj = datastore_client.get(key)
-    assert obj is not None
+    assert obj is not None, 'Entity not found'
 
-    removeFromBucket(obj['filename'])
+    remove_from_bucket(obj['filename'])
     datastore_client.delete(key)
 
     old_pairs = changed_pairs(obj)

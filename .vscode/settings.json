@@ -1,5 +1,10 @@
 {
   "python.linting.enabled": true,
+  "python.languageServer": "Pylance",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUnboundVariable": "information"
+  },
+  "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "autopep8",
   "files.exclude": {
     "**/*.pyc": true,
@@ -8,13 +13,9 @@
     "graphql": true,
     "views": true
   },
-  "python.languageServer": "Pylance",
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
-    "editor.defaultFormatter": null
-  },
-  "[python]": {
     "editor.defaultFormatter": null
   },
   "prettier.semi": false,

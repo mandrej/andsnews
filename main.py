@@ -1,6 +1,6 @@
+from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
-from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 from api import cloud, photo
 from api.helpers import get_exif, latinize, push_message
@@ -38,7 +38,7 @@ def thumb(filename):
         blob.download_to_file(inp)
         try:
             image_from_buffer = Image.open(inp)
-        except UnidentifiedImageError as e:
+        except UnidentifiedImageError:
             return ('', 204)
         else:
             image_from_buffer.thumbnail((size, size), Image.BICUBIC)
@@ -129,15 +129,18 @@ def search():
 
 @app.route('/api/user', methods=['POST'])
 def user():
-    data = request.json.get('user', None)
-    uid = cloud.login_user(data)
+    json_ = request.get_json()
+    assert json_ is not None, 'Cannot get user'
+    uid = cloud.login_user(json_['user'])
     return jsonify({"uid": uid})
 
 
 @app.route('/api/user/register', methods=['PUT'])
 def update_user():
-    uid = request.json.get('uid', None)
-    token = request.json.get('token', None)
+    json_ = request.get_json()
+    assert json_ is not None, 'Cannot get token'
+    uid = json_['uid']
+    token = json_['token']
     changed = cloud.register_user(uid, token)
     return jsonify({"changed": changed})
 
@@ -150,55 +153,60 @@ def registrations():
 @app.route('/api/add', methods=['POST'])
 def add():
     """ ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ...]) """
-    resList = []
+    response_list = []
     files = request.files.getlist('photos')
-    for fs in files:
-        response = photo.add(fs)
-        resList.append(response)
-    return jsonify(resList)
+    for fs_ in files:
+        response = photo.add(fs_)
+        response_list.append(response)
+    return jsonify(response_list)
 
 
-@app.route('/api/edit', defaults={'id': None}, methods=['PUT'])
-@app.route('/api/edit/<int:id>', methods=['PUT'])
-def edit(id):
-    response = photo.edit(id, request.json)
+@app.route('/api/edit', defaults={'id_': None}, methods=['PUT'])
+@app.route('/api/edit/<int:id_>', methods=['PUT'])
+def edit(id_):
+    response = photo.edit(id_, request.json)
     return jsonify(response)
 
 
 @app.route('/api/remove/<filename>', methods=['DELETE'])
 def remove(filename):
     """ Remove unpublished photo """
-    response = photo.removeFromBucket(filename)
+    response = photo.remove_from_bucket(filename)
     return jsonify(response)
 
 
-@app.route('/api/delete/<int:id>', methods=['DELETE'])
-def delete(id):
-    response = photo.remove(id)
+@app.route('/api/delete/<int:id_>', methods=['DELETE'])
+def delete(id_):
+    response = photo.remove(id_)
     return jsonify(response['success'])
 
 
 @app.route('/api/<verb>', methods=['POST'])
 def runner(verb):
-    token = request.json.get('token', None)
-    assert token is not None, 'Token cannot be null'
+    json_ = request.get_json()
+    assert json_ is not None, 'Cannot get token'
+    token = json_['token']
 
+    job = None
     if verb == 'fix':
-        runner = cloud.Fixer()
+        job = cloud.Fixer()
     elif verb == 'repair':
-        runner = cloud.Repair()
+        job = cloud.Repair()
+
+    if job:
+        job.TOKEN = token
+        job.run()
+        return jsonify(True)
     else:
         return jsonify(False)
 
-    runner.TOKEN = token
-    runner.run()
-    return jsonify(True)
 
 
 @app.route('/api/<verb>/<field>', methods=['POST'])
 def rebuilder(verb, field):
-    token = request.json.get('token', None)
-    assert token is not None, 'Token cannot be null'
+    json_ = request.get_json()
+    assert json_ is not None, 'Cannot get token'
+    token = json_['token']
     if field and verb == 'rebuild':
         tally = cloud.rebuilder(field, token)
         return jsonify(tally)
@@ -208,8 +216,10 @@ def rebuilder(verb, field):
 
 @app.route('/api/message/send', methods=['POST'])
 def push():
-    token = request.json.get('token', None)
-    message = request.json.get('message', None)
+    json_ = request.get_json()
+    assert json_ is not None, 'Cannot get token'
+    token = json_['token']
+    message = json_['message']
     return push_message(token, message)
 
 
