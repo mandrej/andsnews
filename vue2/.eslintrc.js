@@ -18,14 +18,7 @@ module.exports = {
         allowTemplateLiterals: true
       }
     ],
-    'space-before-function-paren': [
-      'error',
-      {
-        anonymous: 'always',
-        named: 'always',
-        asyncArrow: 'always'
-      }
-    ],
+    'space-before-function-paren': ['error', 'always'],
     'vue/no-unused-components': 1,
     'vue/no-unused-vars': 1,
     'vuetify/no-deprecated-classes': 'error',

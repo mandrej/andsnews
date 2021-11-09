@@ -15,21 +15,15 @@
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": null
-  },
   "[python]": {
     "editor.defaultFormatter": "ms-python.python"
   },
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
-  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
-  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
 
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  },
-  "editor.formatOnSave": true
+  }
 }
