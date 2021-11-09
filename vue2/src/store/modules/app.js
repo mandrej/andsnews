@@ -4,6 +4,9 @@ import debounce from 'lodash/debounce'
 import querystring from 'querystring'
 import pushMessage from '../../helpers/push'
 import CONFIG from '../../helpers/config'
+import { SET_SNACKBAR, TOGGLE_THEME, SAVE_FIND_FORM, ADD_RECORD, ADD_UPLOADED, ADD_FAILED, RESET_FAILED, SET_UPLOAD_PERCENTAGE,
+CHANGE_UPLOAD_STATUS, UPDATE_OBJECTS, UPDATE_RECORD, RESET_OBJECTS, RESET_PAGINATOR, DELETE_RECORD, DELETE_UPLOADED, UPDATE_VALUES, 
+UPDATE_VALUES_EMAIL, UPDATE_LAST_BY_YEAR, SET_COUNTERS, SET_LAST_BY_YEAR, SET_CLEAR, SET_BUSY, SET_ERROR, SET_BUCKET } from '../mutation-types'
 
 const axios = Vue.axios
 
@@ -64,52 +67,41 @@ const getters = {
 }
 
 const actions = {
-  setSnackbar: ({ commit }, val) => commit('SETSNACKBAR', val),
-  toggleTheme: ({ commit }, val) => commit('TOGGLE_THEME', val),
-  saveFindForm: ({ commit }, payload) => commit('SAVE_FIND_FORM', payload),
-  changeFilter: ({ commit, dispatch }, payload) => {
-    if (payload.reset) {
-      commit('SET_CLEAR', true)
-      commit('SET_BUSY', false) // interupt loading
-      commit('RESET_PAGINATOR')
-      dispatch('fetchRecords', payload.pid)
-    }
-  },
   addUploaded: ({ commit }, obj) => {
-    commit('ADD_UPLOADED', obj)
+    commit(ADD_UPLOADED, obj)
   },
   addFailed: ({ commit }, obj) => {
-    commit('ADD_FAILED', obj)
+    commit(ADD_FAILED, obj)
   },
   resetFailed: ({ commit }) => {
-    commit('RESET_FAILED')
+    commit(RESET_FAILED)
   },
   setUploadPercentage: ({ commit, dispatch }, value) => {
     if (value === 100) {
       dispatch('changeUploadStatus', 2) // PROCESSING
     }
-    commit('SET_UPLOAD_PERCENTAGE', value)
+    commit(SET_UPLOAD_PERCENTAGE, value)
   },
   changeUploadStatus: ({ commit }, status) => {
-    commit('CHANGE_UPLOAD_STATUS', status)
+    commit(CHANGE_UPLOAD_STATUS, status)
   },
   saveRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
       axios.put('edit/' + obj.id, obj).then(response => {
         const obj = response.data.rec
-        commit('UPDATE_RECORD', obj)
-        commit('UPDATE_LAST_BY_YEAR', obj)
-        commit('UPDATE_VALUES', obj)
+        commit(UPDATE_RECORD, obj)
+        commit(UPDATE_LAST_BY_YEAR, obj)
+        commit(UPDATE_VALUES, obj)
       })
     } else {
       // publish
       axios.put('edit', obj).then(response => {
         const obj = response.data.rec
         const diff = { verb: 'add', size: obj.size }
-        commit('ADD_RECORD', obj)
-        commit('DELETE_UPLOADED', obj)
-        commit('UPDATE_LAST_BY_YEAR', obj)
-        commit('UPDATE_VALUES', obj)
+        commit(ADD_RECORD, obj)
+        commit(DELETE_UPLOADED, obj)
+        commit(UPDATE_LAST_BY_YEAR, obj)
+        commit(UPDATE_VALUES, obj)
         dispatch('bucketInfo', diff)
       })
     }
@@ -117,39 +109,39 @@ const actions = {
   deleteRecord: ({ commit, dispatch }, obj) => {
     if (obj.id) {
       axios
-        .delete('delete/' + obj.id, { data: { foo: 'bar' } })
-        .then(response => {
-          if (response.data) {
-            const diff = { verb: 'del', size: obj.size }
-            commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
-            commit('DELETE_RECORD', obj)
-            dispatch('fetchStat')
-            dispatch('bucketInfo', diff)
-          } else {
-            commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
-          }
-        })
+      .delete('delete/' + obj.id, { data: { foo: 'bar' } })
+      .then(response => {
+        if (response.data) {
+          const diff = { verb: 'del', size: obj.size }
+          commit(SET_SNACKBAR, 'Successfully deleted ' + obj.filename)
+          commit(DELETE_RECORD, obj)
+          dispatch('fetchStat')
+          dispatch('bucketInfo', diff)
+        } else {
+          commit(SET_SNACKBAR, 'Deleting failed ' + obj.filename)
+        }
+      })
     } else {
       axios
-        .delete('remove/' + obj.filename, { data: { foo: 'bar' } })
-        .then(response => {
-          if (response.data) {
-            commit('SETSNACKBAR', 'Successfully deleted ' + obj.filename)
-            commit('DELETE_UPLOADED', obj)
-          } else {
-            commit('SETSNACKBAR', 'Deleting failed ' + obj.filename)
-          }
-        })
+      .delete('remove/' + obj.filename, { data: { foo: 'bar' } })
+      .then(response => {
+        if (response.data) {
+          commit(SET_SNACKBAR, 'Successfully deleted ' + obj.filename)
+          commit(DELETE_UPLOADED, obj)
+        } else {
+          commit(SET_SNACKBAR, 'Deleting failed ' + obj.filename)
+        }
+      })
     }
   },
-  fetchStat: ({ commit, dispatch, state }) => {
-    axios.get('counters').then(response => {
-      commit('SET_LAST_BY_YEAR', response.data)
-      commit('SET_COUNTERS', response.data)
-      if (state.bucket.count === 0) {
-        dispatch('bucketInfo', { verb: 'set' })
-      }
-    })
+  saveFindForm: ({ commit }, payload) => commit(SAVE_FIND_FORM, payload),
+  changeFilter: ({ commit, dispatch }, payload) => {
+    if (payload.reset) {
+      commit(SET_CLEAR, true)
+      commit(SET_BUSY, false) // interupt loading
+      commit(RESET_PAGINATOR)
+      dispatch('fetchRecords', payload.pid)
+    }
   },
   fetchRecords: ({ commit, state }, pid) => {
     if (state.busy) return
@@ -157,31 +149,37 @@ const actions = {
       per_page: pid ? 2 * CONFIG.limit : CONFIG.limit
     })
     if (state.next) params._page = state.next
-     const url = 'search?' + querystring.stringify(params)
-
-    commit('SET_ERROR', null)
-    commit('SET_BUSY', true)
+    const url = 'search?' + querystring.stringify(params)
+     
+    commit(SET_ERROR, null)
+    commit(SET_BUSY, true)
     axios
-      .get(url)
+    .get(url)
       .then(response => {
         if (state.clear) {
-          commit('RESET_RECORDS')
-          commit('SET_CLEAR', false)
+          commit(RESET_OBJECTS)
+          commit(SET_CLEAR, false)
         }
         if (response.data.objects && response.data.objects.length === 0) {
-          commit('SET_ERROR', 0)
+          commit(SET_ERROR, 0)
         }
-        if (response.error) commit('SET_ERROR', response.error)
-        commit('UPDATE_RECORDS', response.data)
-        commit('SET_BUSY', false)
+        if (response.error) commit(SET_ERROR, response.error)
+        commit(UPDATE_OBJECTS, response.data)
+        commit(SET_BUSY, false)
       })
       .catch(err => {
-        commit('SETSNACKBAR', err)
-        commit('SET_BUSY', false)
+        commit(SET_SNACKBAR, err)
+        commit(SET_BUSY, false)
       })
-  },
-  updateValuesEmail: ({ commit }, user) => {
-    commit('UPDATE_VALUES_EMAIL', user)
+    },
+  fetchStat: ({ commit, dispatch, state }) => {
+    axios.get('counters').then(response => {
+      commit(SET_LAST_BY_YEAR, response.data)
+      commit(SET_COUNTERS, response.data)
+      if (state.bucket.count === 0) {
+        dispatch('bucketInfo', { verb: 'set' })
+      }
+    })
   },
   bucketInfo: debounce(({ dispatch }, param) => {
     dispatch('_bucketInfo', param)
@@ -192,36 +190,33 @@ const actions = {
      */
     if (param.verb === 'get') {
       axios.get(param.verb + '/bucket_info').then(response => {
-        commit('SET_BUCKET', response.data)
+        commit(SET_BUCKET, response.data)
       })
     } else {
       axios.put(param.verb + '/bucket_info', param).then(response => {
         if (param.verb === 'set') {
           pushMessage(rootState.auth.fcm_token, 'DONE')
         }
-        commit('SET_BUCKET', response.data)
+        commit(SET_BUCKET, response.data)
       })
     }
-  }
+  },
+  updateValuesEmail: ({ commit }, user) => {
+    commit(UPDATE_VALUES_EMAIL, user)
+  },
+  toggleTheme: ({ commit }, val) => commit(TOGGLE_THEME, val),
+  setSnackbar: ({ commit }, val) => commit(SET_SNACKBAR, val),
 }
-
+  
 const mutations = {
-  SETSNACKBAR (state, val) {
-    state.snackbar = val
-  },
-  TOGGLE_THEME (state, val) {
-    state.dark = val
-  },
-  SAVE_FIND_FORM (state, payload) {
-    state.find = { ...payload }
-  },
-  ADD_RECORD (state, obj) {
-    const dates = state.objects.map(item => item.date)
-    const idx = dates.findIndex(date => date < obj.date)
-    state.objects.splice(idx, 0, obj)
-  },
   ADD_UPLOADED (state, data) {
     state.upload.list = [...state.upload.list, data]
+  },
+  DELETE_UPLOADED (state, obj) {
+    const idx = state.upload.list.findIndex(
+      item => item.filename === obj.filename
+    )
+    if (idx > -1) state.upload.list.splice(idx, 1)
   },
   ADD_FAILED (state, data) {
     state.upload.failed = [...state.upload.failed, data]
@@ -229,17 +224,16 @@ const mutations = {
   RESET_FAILED (state) {
     state.upload.failed = []
   },
-  SET_UPLOAD_PERCENTAGE (state, value) {
-    state.upload.value = value
-  },
   CHANGE_UPLOAD_STATUS (state, code) {
     state.upload.status = code
   },
-  UPDATE_RECORDS (state, data) {
-    if (state.pages[0] === 'FP' && data._page === 'FP') return
-    state.objects = [...state.objects, ...data.objects]
-    state.pages = [...state.pages, data._page]
-    state.next = data._next
+  SET_UPLOAD_PERCENTAGE (state, value) {
+    state.upload.value = value
+  },
+  ADD_RECORD (state, obj) {
+    const dates = state.objects.map(item => item.date)
+    const idx = dates.findIndex(date => date < obj.date)
+    state.objects.splice(idx, 0, obj)
   },
   UPDATE_RECORD (state, obj) {
     if (state.objects && state.objects.length) {
@@ -247,22 +241,53 @@ const mutations = {
       state.objects.splice(idx, 1, obj)
     }
   },
-  RESET_RECORDS (state) {
+  DELETE_RECORD (state, obj) {
+    const idx = state.objects.findIndex(item => item.id === obj.id)
+    if (idx > -1) state.objects.splice(idx, 1)
+  },
+  SAVE_FIND_FORM (state, payload) {
+    state.find = { ...payload }
+  },
+  UPDATE_OBJECTS (state, data) {
+    if (state.pages[0] === 'FP' && data._page === 'FP') return
+    state.objects = [...state.objects, ...data.objects]
+    state.pages = [...state.pages, data._page]
+    state.next = data._next
+  },
+  SET_CLEAR (state, val) {
+    state.clear = val
+  },
+  RESET_OBJECTS (state) {
     state.objects.length = 0
   },
   RESET_PAGINATOR (state) {
     state.pages.length = 0
     state.next = null
   },
-  DELETE_RECORD (state, obj) {
-    const idx = state.objects.findIndex(item => item.id === obj.id)
-    if (idx > -1) state.objects.splice(idx, 1)
+  SET_BUCKET (state, obj) {
+    state.bucket = { ...state.bucket, ...obj }
   },
-  DELETE_UPLOADED (state, obj) {
-    const idx = state.upload.list.findIndex(
-      item => item.filename === obj.filename
-    )
-    if (idx > -1) state.upload.list.splice(idx, 1)
+  SET_COUNTERS (state, data) {
+    CONFIG.photo_filter.forEach(field => {
+      if (Object.prototype.hasOwnProperty.call(data, field)) {
+        state.values[field] = [
+          ...Array.from(data[field], c => {
+            return c.value
+          })
+        ]
+      } else {
+        state.values[field] = []
+      }
+    })
+  },
+  SET_LAST_BY_YEAR (state, data) {
+    const last = data.year[0]
+    if (last) {
+      state.last = {
+        ...state.last,
+        ...last
+      }
+    }
   },
   UPDATE_VALUES (state, obj) {
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
@@ -295,40 +320,18 @@ const mutations = {
       }
     }
   },
-  SET_COUNTERS (state, data) {
-    CONFIG.photo_filter.forEach(field => {
-      if (Object.prototype.hasOwnProperty.call(data, field)) {
-        state.values[field] = [
-          ...Array.from(data[field], c => {
-            return c.value
-          })
-        ]
-      } else {
-        state.values[field] = []
-      }
-    })
-  },
-  SET_LAST_BY_YEAR (state, data) {
-    const last = data.year[0]
-    if (last) {
-      state.last = {
-        ...state.last,
-        ...last
-      }
-    }
-  },
-  SET_CLEAR (state, val) {
-    state.clear = val
-  },
   SET_BUSY (state, val) {
     state.busy = val
   },
   SET_ERROR (state, val) {
     state.error = val
   },
-  SET_BUCKET (state, obj) {
-    state.bucket = { ...state.bucket, ...obj }
-  }
+  SET_SNACKBAR (state, val) {
+    state.snackbar = val
+  },
+  TOGGLE_THEME (state, val) {
+    state.dark = val
+  },
 }
 
 export default {

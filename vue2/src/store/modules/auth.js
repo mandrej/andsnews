@@ -6,6 +6,7 @@ import messaging from '../../helpers/fire'
 import pushMessage from '../../helpers/push'
 import router from '../../router'
 import CONFIG from '../../helpers/config'
+import { SAVE_USER, SET_TOKEN } from '../mutation-types'
 
 const axios = Vue.axios
 const provider = new firebase.auth.GoogleAuthProvider()
@@ -23,7 +24,7 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
-          commit('SAVE_USER', {})
+          commit(SAVE_USER, {})
           const routeName = router.currentRoute.name
           if (routeName === 'add' || routeName === 'admin') {
             router.replace({ name: 'home' })
@@ -43,7 +44,7 @@ const actions = {
             isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1,
             lastLogin: Date.now() // millis
           }
-          commit('SAVE_USER', payload)
+          commit(SAVE_USER, payload)
           dispatch('updateUser', payload)
           dispatch('getPermission')
         })
@@ -80,7 +81,7 @@ const actions = {
         .getToken()
         .then(token => {
           if (token && token !== state.fcm_token) {
-            commit('SET_TOKEN', token)
+            commit(SET_TOKEN, token)
           }
           if (state.user && state.user.uid) {
             dispatch('addRegistration')

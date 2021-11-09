@@ -24,6 +24,8 @@
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
 
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
