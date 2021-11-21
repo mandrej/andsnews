@@ -20,11 +20,9 @@ export const RESET_OBJECTS = 'RESET_OBJECTS'
 export const RESET_PAGINATOR = 'RESET_PAGINATOR'
 
 export const SET_BUCKET = 'SET_BUCKET'
-export const SET_COUNTERS = 'SET_COUNTERS'
-export const SET_LAST_BY_YEAR = 'SET_LAST_BY_YEAR'
+export const SET_VALUES = 'SET_VALUES'
 export const UPDATE_VALUES = 'UPDATE_VALUES'
 export const UPDATE_VALUES_EMAIL = 'UPDATE_VALUES_EMAIL'
-export const UPDATE_LAST_BY_YEAR = 'UPDATE_LAST_BY_YEAR'
 
 export const SET_BUSY = 'SET_BUSY'
 export const SET_ERROR = 'SET_ERROR'

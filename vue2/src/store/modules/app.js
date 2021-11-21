@@ -6,7 +6,7 @@ import pushMessage from '../../helpers/push'
 import CONFIG from '../../helpers/config'
 import { SET_SNACKBAR, TOGGLE_THEME, SAVE_FIND_FORM, ADD_RECORD, ADD_UPLOADED, ADD_FAILED, RESET_FAILED, SET_UPLOAD_PERCENTAGE,
 CHANGE_UPLOAD_STATUS, UPDATE_OBJECTS, UPDATE_RECORD, RESET_OBJECTS, RESET_PAGINATOR, DELETE_RECORD, DELETE_UPLOADED, UPDATE_VALUES, 
-UPDATE_VALUES_EMAIL, UPDATE_LAST_BY_YEAR, SET_COUNTERS, SET_LAST_BY_YEAR, SET_CLEAR, SET_BUSY, SET_ERROR, SET_BUCKET } from '../mutation-types'
+UPDATE_VALUES_EMAIL, SET_VALUES, SET_CLEAR, SET_BUSY, SET_ERROR, SET_BUCKET } from '../mutation-types'
 
 const axios = Vue.axios
 
@@ -90,7 +90,6 @@ const actions = {
       axios.put('edit/' + obj.id, obj).then(response => {
         const obj = response.data.rec
         commit(UPDATE_RECORD, obj)
-        commit(UPDATE_LAST_BY_YEAR, obj)
         commit(UPDATE_VALUES, obj)
       })
     } else {
@@ -100,7 +99,6 @@ const actions = {
         const diff = { verb: 'add', size: obj.size }
         commit(ADD_RECORD, obj)
         commit(DELETE_UPLOADED, obj)
-        commit(UPDATE_LAST_BY_YEAR, obj)
         commit(UPDATE_VALUES, obj)
         dispatch('bucketInfo', diff)
       })
@@ -174,8 +172,7 @@ const actions = {
     },
   fetchStat: ({ commit, dispatch, state }) => {
     axios.get('counters').then(response => {
-      commit(SET_LAST_BY_YEAR, response.data)
-      commit(SET_COUNTERS, response.data)
+      commit(SET_VALUES, response.data)
       if (state.bucket.count === 0) {
         dispatch('bucketInfo', { verb: 'set' })
       }
@@ -267,9 +264,18 @@ const mutations = {
   SET_BUCKET (state, obj) {
     state.bucket = { ...state.bucket, ...obj }
   },
-  SET_COUNTERS (state, data) {
+  SET_VALUES (state, data) {
     CONFIG.photo_filter.forEach(field => {
       if (Object.prototype.hasOwnProperty.call(data, field)) {
+        if (field === 'year') {
+          const last = data.year[0]
+          if (last) {
+            state.last = {
+              ...state.last,
+              ...last
+            }
+          }
+        }
         state.values[field] = [
           ...Array.from(data[field], c => {
             return c.value
@@ -280,16 +286,20 @@ const mutations = {
       }
     })
   },
-  SET_LAST_BY_YEAR (state, data) {
-    const last = data.year[0]
-    if (last) {
+  UPDATE_VALUES (state, obj) {
+    const lastFromState = new Date(state.last.date)
+    const lastFromObject = new Date(obj.date)
+    if (lastFromObject.getTime() > lastFromState.getTime()) {
       state.last = {
         ...state.last,
-        ...last
+        ...{
+          count: state.last.count + 1,
+          filename: obj.filename,
+          date: obj.date,
+          value: lastFromObject.getFullYear()
+        }
       }
     }
-  },
-  UPDATE_VALUES (state, obj) {
     state.values.year = [...new Set([...state.values.year, 1 * obj.year])]
     if (obj.tags) {
       state.values.tags = [...new Set([...state.values.tags, ...obj.tags])]
@@ -304,21 +314,6 @@ const mutations = {
   },
   UPDATE_VALUES_EMAIL (state, user) {
     state.values.email = [...new Set([...state.values.email, user.email])]
-  },
-  UPDATE_LAST_BY_YEAR (state, obj) {
-    const lastFromState = new Date(state.last.date)
-    const lastFromObject = new Date(obj.date)
-    if (lastFromObject.getTime() > lastFromState.getTime()) {
-      state.last = {
-        ...state.last,
-        ...{
-          count: state.last.count + 1,
-          filename: obj.filename,
-          date: obj.date,
-          value: lastFromObject.getFullYear()
-        }
-      }
-    }
   },
   SET_BUSY (state, val) {
     state.busy = val
