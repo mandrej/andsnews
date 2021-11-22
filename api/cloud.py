@@ -117,7 +117,6 @@ def bucketInfo(param):
 
 class Repair(object):
     """
-    NOT USED
     Synchronize datastore records and Cloud bucket
     """
     TOKEN = None

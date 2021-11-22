@@ -30,7 +30,7 @@
     ></v-select>
     <v-select
       v-model.lazy="tmp.month"
-      :items="months"
+      :items="monthNames"
       item-text="name"
       item-value="value"
       label="by month"
@@ -79,7 +79,7 @@ export default {
     tmp () {
       return { ...this.find }
     },
-    months () {
+    monthNames () {
       const locale = this.$date.months()
       return locale.map((month, i) => ({ name: month, value: i + 1 }))
     }
