@@ -140,7 +140,7 @@ class Repair(object):
         iter_ = self.QUERY.fetch(limit=batch_size, start_cursor=cursor)
         _page = next(iter_.pages)
         self.DATA_NAMES.extend([ent['filename'] for ent in list(_page)])
-        push_message(self.TOKEN, len(self.DATA_NAMES))
+        push_message(self.TOKEN, f'examining {len(self.DATA_NAMES)} ...')
 
         next_cursor = iter_.next_page_token
         if next_cursor:
@@ -159,10 +159,10 @@ class Repair(object):
                 blob = BUCKET.get_blob(name)
                 if blob:
                     deleted.append(name)
-                    print(name)
-                    # blob.delete()
+                    # print(name)
+                    blob.delete()
         if (len(deleted) > 0):
-            logging.error(f'{deleted} removed from bucket')
+            push_message(self.TOKEN, f'{deleted} removed from bucket')
             deleted = []
 
         for name in list(D - B):
@@ -172,14 +172,13 @@ class Repair(object):
                 res = self.find(name)
                 deleted.append(name)
                 for ent in res:
-                    print(type(ent.key))
-                    # datastore_client.delete(ent.key)
+                    # print(name)
+                    datastore_client.delete(ent.key)
         if (len(deleted) > 0):
-            logging.error(f'{deleted} removed from datastore')
+            push_message(self.TOKEN, f'{deleted} removed from datastore')
             deleted = []
 
-        push_message(
-            self.TOKEN, f'{CONFIG["end_message"]} bucket {len(B)}, datastore {len(D)}')
+        push_message(self.TOKEN, CONFIG['end_message'])
 
 
 class Fixer(object):

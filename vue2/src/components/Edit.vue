@@ -283,8 +283,10 @@ export default {
       axios.get('exif/' + this.tmp.filename).then((response) => {
         this.tmp = { ...this.tmp, ...response.data }
         // add flash tag if exif flash true
-        if (this.tmp.flash && this.tmp.tags.indexOf('flash') === -1) {
-          this.tmp.tags.push('flash')
+        let tags = this.tmp.tags || []
+        if (response.data.flash && tags.indexOf('flash') === -1) {
+          tags.push('flash')
+          this.tmp = { ...this.tmp, ...{tags: tags} }
         }
       })
     }
