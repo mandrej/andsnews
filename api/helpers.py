@@ -150,9 +150,9 @@ def get_exif(buff):
     if 'EXIF ISOSpeedRatings' in tags:
         getcontext().prec = 3
         data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
-    # if 'EXIF Flash' in tags:
-    #     Flash fired / Flash did not fire
-    #     data['flash'] = tags['EXIF Flash'].printable == 'Flash fired'
+    if 'EXIF Flash' in tags:
+        # Flash fired, compulsory flash mode, return light detected / Flash did not fire
+        data['flash'] = tags['EXIF Flash'].printable.find('Flash fired') >= 0
 
     width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
     length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None

@@ -260,10 +260,8 @@ export default {
     visible: function (val) {
       if (val) {
         this.tmp = { ...this.current }
-        // new image
-        if (!this.tmp.date) {
+        if (!this.tmp.date) { // new image
           this.readExif()
-          return
         }
       }
     }
@@ -284,6 +282,10 @@ export default {
     readExif () {
       axios.get('exif/' + this.tmp.filename).then((response) => {
         this.tmp = { ...this.tmp, ...response.data }
+        // add flash tag if exif flash true
+        if (this.tmp.flash && this.tmp.tags.indexOf('flash') === -1) {
+          this.tmp.tags.push('flash')
+        }
       })
     }
   }

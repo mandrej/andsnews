@@ -87,6 +87,8 @@ def exif(filename):
         if out.get('dim', None) is None:
             image_from_buffer = Image.open(BytesIO(_buffer))
             out['dim'] = list(image_from_buffer.size)
+        if out.get('flash', None) is None:
+            out['flash'] = False
 
         return out
 
