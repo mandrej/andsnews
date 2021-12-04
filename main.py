@@ -1,7 +1,7 @@
 from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 from api import cloud, photo
 from api.helpers import get_exif, latinize, push_message
 from api.config import CONFIG
@@ -36,25 +36,22 @@ def thumb(filename):
     blob = photo.storage_blob(filename)
     if blob:
         blob.download_to_file(inp)
-        try:
-            image_from_buffer = Image.open(inp)
-        except UnidentifiedImageError:
-            return ('', 204)
-        else:
-            image_from_buffer.thumbnail((size, size), Image.BICUBIC)
-            icc_profile = image_from_buffer.info.get('icc_profile')
-            if icc_profile:
-                image_from_buffer.save(
-                    out, image_from_buffer.format, icc_profile=icc_profile)
-            else:
-                image_from_buffer.save(out, image_from_buffer.format)
+        im = Image.open(inp)
 
-            data = out.getvalue()
-            response = make_response(data)
-            response.headers['Content-Type'] = blob.content_type
-            response.headers['Cache-Control'] = CONFIG['cache_control']
-            response.headers['E-Tag'] = generate_etag(data)
-            return response
+        im.thumbnail((size, size), Image.BICUBIC)
+        icc_profile = im.info.get('icc_profile')
+        if icc_profile:
+            im.save(out, im.format, icc_profile=icc_profile)
+        else:
+            im.save(out, im.format)
+
+        data = out.getvalue()
+        response = make_response(data)
+        response.headers['Content-Type'] = blob.content_type
+        response.headers['Cache-Control'] = CONFIG['cache_control']
+        response.headers['E-Tag'] = generate_etag(data)
+        return response
+
     abort(404, description='Resource not found')
 
 
@@ -71,6 +68,7 @@ def download(filename):
         response.headers['Content-Type'] = blob.content_type
         response.headers['Content-Disposition'] = f'attachment; filename={filename}'
         return response
+
     abort(404, description='Resource not found')
 
 
@@ -81,15 +79,15 @@ def exif(filename):
     blob = photo.storage_blob(filename)
     if blob:
         blob.download_to_file(inp)
-        _buffer = inp.getvalue()
-        out = get_exif(_buffer)
+        data = inp.getvalue()
+
+        out = get_exif(data)
         out['date'] = out['date'].strftime(CONFIG['date_time_format'])
         if out.get('dim', None) is None:
-            image_from_buffer = Image.open(BytesIO(_buffer))
+            image_from_buffer = Image.open(BytesIO(data))
             out['dim'] = list(image_from_buffer.size)
         if out.get('flash', None) is None:
             out['flash'] = False
-
         return out
 
     abort(404, description='Resource not found')
