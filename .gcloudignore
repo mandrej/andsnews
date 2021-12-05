@@ -22,7 +22,8 @@ graphql/
 views/
 
 api/__pycache__/
-api/test_app.py
+api/test_*.py
+functions/
 
 vue2/src/
 vue2/.env*
