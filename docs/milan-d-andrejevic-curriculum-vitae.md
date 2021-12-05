@@ -1,4 +1,4 @@
-![Milan D. Andrejevic](https://storage.googleapis.com/andsnews.appspot.com/entry/milan-d-andrejevic-curriculum-vitae_0.jpg "Milan D. Andrejevic")
+![Milan D. Andrejevic](entry/milan-d-andrejevic-curriculum-vitae_0.jpg "Milan D. Andrejevic")
 
 ### Contact
 
