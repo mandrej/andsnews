@@ -22,8 +22,7 @@ def make(event, context):
     Function execution took cca 1000 ms
     '''
     file = event
-    size = int(os.environ.get(
-        'SIZE', 'Specified environment variable is not set.'))
+    size = 400
 
     # skip if already exists
     thumb = thumb_bucket.get_blob(file['name'])
@@ -50,12 +49,19 @@ def make(event, context):
         try:
             thumb.upload_from_file(
                 BytesIO(data), content_type=file['contentType'])
-            thumb.cache_control = 'public, max-age=604800'
-            thumb.update()
         except GoogleCloudError as e:
             pass
         else:
             return
+
+
+def update(event, context):
+    file = event
+    source_bucket = storage_client.get_bucket(file['bucket'])
+    blob = source_bucket.get_blob(file['name'])
+    if blob:
+        blob.cache_control = 'public, max-age=604800'
+        blob.update()
 
 
 def remove(event, context):
@@ -64,5 +70,6 @@ def remove(event, context):
     if thumb:
         thumb.delete()
 
-# gcloud functions deploy make --project=andsnews --region=europe-west3 --entry-point=make --set-env-vars SIZE=400 --runtime=python38 --trigger-resource=fullsized --trigger-event=google.storage.object.finalize
+# gcloud functions deploy make --project=andsnews --region=europe-west3 --entry-point=make --runtime=python38 --trigger-resource=fullsized --trigger-event=google.storage.object.finalize
 # gcloud functions deploy remove --project=andsnews --region=europe-west3 --entry-point=remove --runtime=python38 --trigger-resource=fullsized --trigger-event=google.storage.object.delete
+# gcloud functions deploy update --project=andsnews --region=europe-west3 --entry-point=update --runtime=python38 --trigger-resource=smallsized --trigger-event=google.storage.object.finalize
