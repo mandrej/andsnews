@@ -129,7 +129,7 @@ def search():
 
 @app.route('/api/user', methods=['POST'])
 def user():
-    json_ = request.get_json()
+    json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get user'
     uid = cloud.login_user(json_['user'])
     return jsonify({"uid": uid})
@@ -137,7 +137,7 @@ def user():
 
 @app.route('/api/user/register', methods=['PUT'])
 def update_user():
-    json_ = request.get_json()
+    json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get token'
     uid = json_['uid']
     token = json_['token']
@@ -183,7 +183,7 @@ def delete(id_):
 
 @app.route('/api/<verb>', methods=['POST'])
 def runner(verb):
-    json_ = request.get_json()
+    json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get token'
     token = json_['token']
 
@@ -203,7 +203,7 @@ def runner(verb):
 
 @app.route('/api/<verb>/<field>', methods=['POST'])
 def rebuilder(verb, field):
-    json_ = request.get_json()
+    json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get token'
     token = json_['token']
     if field and verb == 'rebuild':
@@ -215,7 +215,7 @@ def rebuilder(verb, field):
 
 @app.route('/api/message/send', methods=['POST'])
 def push():
-    json_ = request.get_json()
+    json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get token'
     token = json_['token']
     message = json_['message']
