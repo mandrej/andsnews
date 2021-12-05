@@ -24,7 +24,12 @@ def register_user(uid, token):
     obj = datastore_client.get(key)
     try:
         assert obj is not None, 'Entity not found'
-        if obj['token'] != token:
+        if 'token' in obj:
+            if obj['token'] != token:
+                obj['token'] = token
+                datastore_client.put(obj)
+                return True
+        else:
             obj['token'] = token
             datastore_client.put(obj)
             return True
