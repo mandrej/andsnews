@@ -6,6 +6,7 @@ from PIL import Image
 
 storage_client = storage.Client()
 thumb_bucket = storage_client.get_bucket('smallsized')
+cache_control = 'public, max-age=604800'
 
 
 def make(event, context):
@@ -34,6 +35,9 @@ def make(event, context):
     source_bucket = storage_client.get_bucket(file['bucket'])
     blob = source_bucket.get_blob(file['name'])
     if blob:
+        blob.cache_control = cache_control
+        blob.patch()
+
         blob.download_to_file(inp)
         im = Image.open(inp)
         im.thumbnail((size, size), Image.BICUBIC)
@@ -52,16 +56,8 @@ def make(event, context):
         except GoogleCloudError as e:
             pass
         else:
-            return
-
-
-def update(event, context):
-    file = event
-    source_bucket = storage_client.get_bucket(file['bucket'])
-    blob = source_bucket.get_blob(file['name'])
-    if blob:
-        blob.cache_control = 'public, max-age=604800'
-        blob.update()
+            thumb.cache_control = cache_control
+            thumb.patch()
 
 
 def remove(event, context):
@@ -72,4 +68,3 @@ def remove(event, context):
 
 # gcloud functions deploy make --project=andsnews --region=europe-west3 --entry-point=make --runtime=python38 --trigger-resource=fullsized --trigger-event=google.storage.object.finalize
 # gcloud functions deploy remove --project=andsnews --region=europe-west3 --entry-point=remove --runtime=python38 --trigger-resource=fullsized --trigger-event=google.storage.object.delete
-# gcloud functions deploy update --project=andsnews --region=europe-west3 --entry-point=update --runtime=python38 --trigger-resource=smallsized --trigger-event=google.storage.object.finalize
