@@ -1,6 +1,6 @@
 <template>
   <div
-    v-lazy:background-image="getImgSrc(last)"
+    v-lazy:background-image="fullsized + last.filename"
     class="d-flex flex-column fill-height align-center justify-center lazy last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
