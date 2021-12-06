@@ -77,6 +77,10 @@
             <v-divider v-if="j !== 0" :key="`${j}-divider`"></v-divider>
 
             <v-list-item :key="j">
+              <v-list-item-avatar>
+                <img class="lazy" v-lazy="smallsized + item.filename" />
+              </v-list-item-avatar>
+
               <v-list-item-content>
                 <v-list-item-title>{{ item.filename }}</v-list-item-title>
                 <v-list-item-subtitle>{{
