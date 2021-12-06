@@ -1,7 +1,7 @@
+import logging
 from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
-from PIL import Image
 from api import cloud, photo
 from api.helpers import get_exif, latinize, push_message
 from api.config import CONFIG
@@ -55,8 +55,8 @@ def exif(filename):
         out = get_exif(data)
         out['date'] = out['date'].strftime(CONFIG['date_time_format'])
         if out.get('dim', None) is None:
-            image_from_buffer = Image.open(BytesIO(data))
-            out['dim'] = list(image_from_buffer.size)
+            logging.error(f'{filename} has no dimension')
+            out['dim'] = [3000, 2000]
         if out.get('flash', None) is None:
             out['flash'] = False
         return out

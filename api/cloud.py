@@ -1,4 +1,3 @@
-import logging
 import datetime
 import collections
 from google.cloud import datastore

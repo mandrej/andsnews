@@ -193,13 +193,6 @@
                 v-model="tmp.size"
               ></v-text-field>
             </v-col>
-            <!-- <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
-              <v-text-field
-                readonly
-                label="Dimension [width, height]"
-                v-model="tmp.dim"
-              ></v-text-field>
-            </v-col> -->
             <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
               <v-text-field
                 label="Location [latitude, longitude]"
