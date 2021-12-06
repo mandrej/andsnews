@@ -28,9 +28,9 @@ const common = {
       let serviceUrl = CONFIG.fileBroken
       if (rec.filename !== null) {
         if (size) {
-          serviceUrl = '/api/thumb/' + rec.filename + '?size=' + size
+          serviceUrl = CONFIG.smallsized_storage_url + rec.filename
         } else {
-          serviceUrl = CONFIG.google_storage_url + rec.filename
+          serviceUrl = CONFIG.fullsized_storage_url + rec.filename
         }
       }
       return serviceUrl

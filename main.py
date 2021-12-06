@@ -26,35 +26,6 @@ def bucket_info(verb):
     return jsonify(cloud.bucketInfo(param))
 
 
-@app.route('/api/thumb/<filename>', methods=['GET'])
-def thumb(filename):
-    inp = BytesIO()
-    out = BytesIO()
-    size = int(request.args.get('size', 0))
-    assert size > 0
-
-    blob = photo.storage_blob(filename)
-    if blob:
-        blob.download_to_file(inp)
-        im = Image.open(inp)
-
-        im.thumbnail((size, size), Image.BICUBIC)
-        icc_profile = im.info.get('icc_profile')
-        if icc_profile:
-            im.save(out, im.format, icc_profile=icc_profile)
-        else:
-            im.save(out, im.format)
-
-        data = out.getvalue()
-        response = make_response(data)
-        response.headers['Content-Type'] = blob.content_type
-        response.headers['Cache-Control'] = CONFIG['cache_control']
-        response.headers['E-Tag'] = generate_etag(data)
-        return response
-
-    abort(404, description='Resource not found')
-
-
 @app.route('/api/download/<filename>', methods=['GET'])
 def download(filename):
     inp = BytesIO()
