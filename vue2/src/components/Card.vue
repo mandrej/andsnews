@@ -5,7 +5,6 @@
         class="lazy"
         :data-src="smallsized + item.filename"
         :title="caption(item)"
-        :data-pswp-size="item.dim.join('x')"
         :data-pswp-src="fullsized + item.filename"
         :data-pswp-pid="item.id"
       />

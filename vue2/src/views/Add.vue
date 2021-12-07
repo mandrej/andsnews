@@ -78,7 +78,7 @@
 
             <v-list-item :key="j">
               <v-list-item-avatar>
-                <img class="lazy" v-lazy="smallsized + item.filename" />
+                <img class="lazy" v-lazy="fullsized + item.filename" />
               </v-list-item-avatar>
 
               <v-list-item-content>

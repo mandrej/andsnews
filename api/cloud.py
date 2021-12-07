@@ -90,7 +90,7 @@ def bucketInfo(param):
     def run(count=0, size=0):
         iter_ = storage_client.list_blobs(BUCKET, delimiter='/')
         for blob in iter_:
-            if blob.content_type == 'image/jpeg':
+            if blob.content_type == CONFIG['fileType']:
                 count += 1
                 size += blob.size
         return dict(zip(('count', 'size'), (count, size)))

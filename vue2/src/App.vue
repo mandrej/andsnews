@@ -209,6 +209,12 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.pswp__ui--hidden .pswp__button--arrow--left, 
+.pswp__ui--hidden .pswp__button--arrow--right, 
+.pswp__ui--hidden .pswp__caption, 
+.pswp__ui--hidden .pswp__top-bar {
+    opacity: 1 !important;
+}
 /* Lazy image */
 img.lazy {
   position: absolute;
