@@ -1,7 +1,5 @@
-import os
 from io import BytesIO
 from google.cloud import storage
-from google.cloud.exceptions import GoogleCloudError
 from PIL import Image
 
 storage_client = storage.Client()
@@ -30,7 +28,6 @@ def make(event, context):
     if thumb:
         return
 
-    inp = BytesIO()
     out = BytesIO()
     source_bucket = storage_client.get_bucket(file['bucket'])
     blob = source_bucket.get_blob(file['name'])
@@ -38,8 +35,8 @@ def make(event, context):
         blob.cache_control = cache_control
         blob.patch()
 
-        blob.download_to_file(inp)
-        im = Image.open(inp)
+        bytes = blob.download_as_bytes()
+        im = Image.open(BytesIO(bytes))
         im.thumbnail((size, size), Image.BICUBIC)
         icc_profile = im.info.get('icc_profile')
         if icc_profile:
@@ -48,16 +45,11 @@ def make(event, context):
             im.save(out, im.format)
 
         # Upload to destination storage
-        data = out.getvalue()
         thumb = thumb_bucket.blob(file['name'])
-        try:
-            thumb.upload_from_file(
-                BytesIO(data), content_type=file['contentType'])
-        except GoogleCloudError as e:
-            pass
-        else:
-            thumb.cache_control = cache_control
-            thumb.patch()
+        thumb.upload_from_string(
+            out.getvalue(), content_type=file['contentType'])
+        thumb.cache_control = cache_control
+        thumb.patch()
 
 
 def remove(event, context):
