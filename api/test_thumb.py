@@ -34,7 +34,7 @@ class TestThumb(unittest.TestCase):
             else:
                 im.save(out, im.format)
 
-            # # Upload to destination storage
+            # Upload to destination storage
             thumb = thumb_bucket.blob('test_temp.jpg')
             thumb.upload_from_string(
                 out.getvalue(), content_type=self.file['contentType'])
@@ -47,6 +47,11 @@ class TestThumb(unittest.TestCase):
         if thumb:
             thumb.delete()
 
+# download      214.3776 ms
+# thumbnail      97.1321 ms
+# saved           4.8274 ms
+# upload        133.3275 ms
+# patch          83.4209 ms
 
 # no need to run server!
 # (andsnews) $ python -m unittest api/test_thumb.py
