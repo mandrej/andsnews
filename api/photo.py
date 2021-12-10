@@ -143,6 +143,8 @@ def add(fs_):
     # Upload to storage
     try:
         blob.upload_from_file(BytesIO(_buffer), content_type=fs_.content_type)
+        blob.cache_control = CONFIG['cache_control']
+        blob.patch()
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}
     else:

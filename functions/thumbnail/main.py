@@ -4,7 +4,6 @@ from PIL import Image
 
 storage_client = storage.Client()
 thumb_bucket = storage_client.get_bucket('smallsized')
-cache_control = 'public, max-age=604800'
 
 
 def make(event, context):
@@ -17,24 +16,18 @@ def make(event, context):
      'metageneration': '1', 'name': 'DSC_5696-21-11-29-153.jpg', 'selfLink': 'https://www.googleapis.com/storage/v1/b/fullsized/o/DSC_5696-21-11-29-153.jpg', 
      'size': '882556', 'storageClass': 'STANDARD', 'timeCreated': '2021-12-05T14:36:29.629Z', 'timeStorageClassUpdated': '2021-12-05T14:36:29.629Z', 
      'updated': '2021-12-05T14:36:29.629Z'}
-
-    Function execution took cca 1000 ms
     '''
-    file = event
     size = 400
 
     # skip if already exists
-    thumb = thumb_bucket.get_blob(file['name'])
+    thumb = thumb_bucket.get_blob(event['name'])
     if thumb:
         return
 
     out = BytesIO()
-    source_bucket = storage_client.get_bucket(file['bucket'])
-    blob = source_bucket.get_blob(file['name'])
+    source_bucket = storage_client.get_bucket(event['bucket'])
+    blob = source_bucket.get_blob(event['name'])
     if blob:
-        blob.cache_control = cache_control
-        blob.patch()
-
         bytes = blob.download_as_bytes()
         im = Image.open(BytesIO(bytes))
         im.thumbnail((size, size), Image.BICUBIC)
@@ -45,16 +38,15 @@ def make(event, context):
             im.save(out, im.format)
 
         # Upload to destination storage
-        thumb = thumb_bucket.blob(file['name'])
+        thumb = thumb_bucket.blob(event['name'])
         thumb.upload_from_string(
-            out.getvalue(), content_type=file['contentType'])
-        thumb.cache_control = cache_control
+            out.getvalue(), content_type=event['contentType'])
+        thumb.cache_control = blob.cache_control
         thumb.patch()
 
 
 def remove(event, context):
-    file = event
-    thumb = thumb_bucket.get_blob(file['name'])
+    thumb = thumb_bucket.get_blob(event['name'])
     if thumb:
         thumb.delete()
 
