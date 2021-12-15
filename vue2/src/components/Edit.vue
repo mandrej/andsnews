@@ -14,7 +14,7 @@
           >Read Exif</v-btn
         >
         <v-spacer></v-spacer>
-        <span class="pr-4 hidden-sm-and-down">{{formatBytes(tmp.size)}} {{tmp.dim}}</span>
+        <span class="pr-4 hidden-sm-and-down">{{formatBytes(tmp.size)}} {{linearDim}}</span>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
@@ -241,6 +241,10 @@ export default {
           this.$emit('close')
         }
       }
+    },
+    linearDim () {
+      const dimension = this.tmp.dim || []
+      return dimension.join('✕') || ''
     },
     dateTime () {
       const dt = this.tmp.date || this.$date().format('YYYY-MM-DD HH:mm')
