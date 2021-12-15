@@ -14,6 +14,7 @@
           >Read Exif</v-btn
         >
         <v-spacer></v-spacer>
+        <span class="pr-4 hidden-sm-and-down">{{formatBytes(tmp.size)}} {{tmp.dim}}</span>
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
@@ -186,18 +187,13 @@
                 v-model="tmp.flash"
               ></v-checkbox>
             </v-col>
-            <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
-              <v-text-field
-                readonly
-                :label="`File size [${formatBytes(tmp.size)}]`"
-                v-model="tmp.size"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="4" sm="6" class="hidden-md-and-down">
+            <v-col cols="12" md="4" sm="6" class="hidden-sm-and-down">
               <v-text-field
                 label="Location [latitude, longitude]"
                 v-model="tmp.loc"
               ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4" sm="6" class="hidden-sm-and-down">
             </v-col>
           </v-row>
         </v-form>
@@ -262,7 +258,7 @@ export default {
         if (!this.tmp.date) { // new image
           this.readExif()
         }
-      }
+      } 
     }
   },
   methods: {
