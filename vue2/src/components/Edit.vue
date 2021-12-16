@@ -60,6 +60,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :dense="$vuetify.breakpoint.xsOnly"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -94,6 +95,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :dense="$vuetify.breakpoint.xsOnly"
                       ></v-text-field>
                     </template>
                     <v-time-picker
@@ -118,6 +120,7 @@
                 multiple
                 hide-selected
                 deletable-chips
+                :dense="$vuetify.breakpoint.xsOnly"
                 clearable
               >
                 <template v-slot:no-data>
@@ -185,12 +188,14 @@
               <v-checkbox
                 label="Flash fired?"
                 v-model="tmp.flash"
+                dense
               ></v-checkbox>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-sm-and-down">
               <v-text-field
                 label="Location [latitude, longitude]"
                 v-model="tmp.loc"
+                dense
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6" class="hidden-sm-and-down">
