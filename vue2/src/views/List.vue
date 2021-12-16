@@ -43,7 +43,11 @@
         class="pa-4"
       >
         <h2 class="pb-2 font-weight-light">
-          {{ $date(date).format('dddd, MMMM DD, YYYY') }}
+          <router-link 
+            class="d-inline-block secondary--text text-decoration-none"
+            :to="{ name: 'list', query: { year: $date(date).format('YYYY'), month: $date(date).format('M'), day: $date(date).format('D') }}">
+            {{ $date(date).format('dddd, MMMM DD, YYYY') }}
+          </router-link>
         </h2>
         <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <template v-for="item in list">

@@ -187,7 +187,7 @@ class Repair(object):
 
 class Fixer(object):
     """
-    Datastore lens fix
+    Datastore add day
     """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
@@ -202,10 +202,10 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            text = tokenize(ent['headline'])
-            ent.update({'text': text})
-            self.COUNT += 1
-            batch.append(ent)
+            if not ent['day']:
+                ent['day'] = ent['date'].day
+                self.COUNT += 1
+                batch.append(ent)
 
         if len(batch) > 0:
             datastore_client.put_multi(batch)

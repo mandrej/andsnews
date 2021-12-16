@@ -38,6 +38,14 @@
       :disabled="busy"
       clearable
     ></v-select>
+    <v-select
+      v-model.lazy="tmp.day"
+      :items="days"
+      label="on day"
+      @change="submit"
+      :disabled="busy"
+      clearable
+    ></v-select>
     <v-autocomplete
       v-model.lazy="tmp.model"
       :items="values.model"
@@ -82,6 +90,10 @@ export default {
     monthNames () {
       const locale = this.$date.months()
       return locale.map((month, i) => ({ name: month, value: i + 1 }))
+    },
+    days () {
+      const N = 31, from = 1, step = 1
+      return [...Array(N)].map((_, i) => from + i * step)
     }
   },
   watch: {
@@ -98,6 +110,8 @@ export default {
           val.query.year = +val.query.year
         if (Object.prototype.hasOwnProperty.call(val.query, 'month'))
           val.query.month = +val.query.month
+        if (Object.prototype.hasOwnProperty.call(val.query, 'day'))
+          val.query.day = +val.query.day
         this.$store.dispatch('app/saveFindForm', val.query)
         if (!Object.keys(val.query).length) {
           this.$store.dispatch('app/changeFilter', { reset: false, pid: pid }) // continue

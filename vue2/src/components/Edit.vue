@@ -39,7 +39,6 @@
                 v-model="tmp.email"
                 :items="values.email"
                 label="Author"
-                :dense="$vuetify.breakpoint.xsOnly"
               ></v-autocomplete>
               <v-row>
                 <v-col cols="6" md="6" sm="6">
@@ -60,7 +59,6 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
-                        :dense="$vuetify.breakpoint.xsOnly"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -95,7 +93,6 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
-                        :dense="$vuetify.breakpoint.xsOnly"
                       ></v-text-field>
                     </template>
                     <v-time-picker

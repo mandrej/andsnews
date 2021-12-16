@@ -165,6 +165,7 @@ def merge(obj, json):
         obj['date'], CONFIG['date_time_format'])
     obj['year'] = obj['date'].year
     obj['month'] = obj['date'].month
+    obj['day'] = obj['date'].day
     loc = obj.get('loc', None)
     if loc:
         if isinstance(loc, str):

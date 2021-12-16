@@ -15,7 +15,12 @@
     </v-responsive>
     <v-card-text class="d-flex justify-space-between py-2">
       <div style="line-height: 28px">
-        {{ item.nick }}, {{ $date(item.date).format('ddd DD.MM.YYYY HH:mm') }}
+        {{ item.nick }}, 
+        <router-link 
+          class="d-inline-block secondary--text text-decoration-none"
+          :to="{ name: 'list', query: { year: item.year, month: item.month, day: item.day }}">
+          {{ $date(item.date).format('ddd DD.MM.YYYY') }}
+        </router-link> {{ $date(item.date).format('HH:mm') }}
       </div>
       <v-btn
         v-if="item.loc"

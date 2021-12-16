@@ -41,12 +41,12 @@
       </v-list-item>
 
       <h3>
-        Bug fix on {{ $date('2021-04-05').format('dddd, MMMM DD, YYYY') }}
+        Bug fix on {{ $date('2021-12-16').format('dddd, MMMM DD, YYYY') }}
       </h3>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title
-            >Tokenize latinized headlines for search by text</v-list-item-title
+            >Add day field to datastore</v-list-item-title
           >
         </v-list-item-content>
         <v-list-item-action>

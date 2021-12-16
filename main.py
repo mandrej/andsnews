@@ -73,12 +73,12 @@ def search():
     # Return an iterator of (key, value) pairs.
     params = request.args.items(multi=True)
     for key, val in params:
-        if key in ('_page', 'per_page', 'text', 'tags', 'year', 'month', 'model', 'lens', 'nick') and val:
+        if key in ('_page', 'per_page', 'text', 'tags', 'year', 'month', 'day', 'model', 'lens', 'nick') and val:
             if key == '_page':
                 page = val
             elif key == 'per_page':
                 per_page = int(val)
-            elif key == 'year' or key == 'month':
+            elif key == 'year' or key == 'month' or key == 'day':
                 filters.append((key, '=', int(val)))
             elif key == 'text':
                 filters.append((key, '=', latinize(val)))
