@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import dayjs from 'dayjs'
 // import 'dayjs/locale/sr-cyrl'
+// dayjs.locale('sr-cyrl')
 import localeData from 'dayjs/plugin/localeData'
 import updateLocale from 'dayjs/plugin/updateLocale'
 dayjs.extend(localeData)
@@ -21,7 +22,6 @@ dayjs.updateLocale('en', {
     'Dec'
   ]
 })
-// dayjs.locale('sr-cyrl')
 
 Object.defineProperties(Vue.prototype, {
   $date: {

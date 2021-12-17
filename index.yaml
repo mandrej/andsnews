@@ -188,7 +188,7 @@ indexes:
       - name: value
         direction: desc
 
-### new indexes ###
+### new day indexes ###
 
   - kind: Photo
     properties:

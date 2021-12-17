@@ -1,6 +1,7 @@
 <template>
-  <div
-    v-lazy:background-image="fullsized + last.filename"
+  <v-img
+    :src="fullsized + last.filename"
+    :lazy-src="smallsized + last.filename"
     class="d-flex flex-column fill-height align-center justify-center lazy last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
@@ -42,7 +43,7 @@
         >
       </p>
     </div>
-  </div>
+  </v-img>
 </template>
 
 <script>
@@ -60,13 +61,13 @@ export default {
     },
     query () {
       return {
-        year: this.last.value,
+        year: this.last.value
       }
-    },
+    }
   },
   mounted () {
     this.$store.dispatch('auth/getPermission')
-  },
+  }
 }
 </script>
 
