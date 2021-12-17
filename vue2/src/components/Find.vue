@@ -28,24 +28,30 @@
       :disabled="busy"
       clearable
     ></v-select>
-    <v-select
-      v-model.lazy="tmp.month"
-      :items="monthNames"
-      item-text="name"
-      item-value="value"
-      label="by month"
-      @change="submit"
-      :disabled="busy"
-      clearable
-    ></v-select>
-    <v-select
-      v-model.lazy="tmp.day"
-      :items="days"
-      label="on day"
-      @change="submit"
-      :disabled="busy"
-      clearable
-    ></v-select>
+    <v-row>
+      <v-col>
+        <v-select
+          v-model.lazy="tmp.month"
+          :items="monthNames"
+          item-text="name"
+          item-value="value"
+          label="by month"
+          @change="submit"
+          :disabled="busy"
+          clearable
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+          v-model.lazy="tmp.day"
+          :items="days"
+          label="by day"
+          @change="submit"
+          :disabled="busy"
+          clearable
+        ></v-select>
+      </v-col>
+    </v-row>
     <v-autocomplete
       v-model.lazy="tmp.model"
       :items="values.model"
@@ -88,11 +94,13 @@ export default {
       return { ...this.find }
     },
     monthNames () {
-      const locale = this.$date.months()
+      const locale = this.$date.monthsShort()
       return locale.map((month, i) => ({ name: month, value: i + 1 }))
     },
     days () {
-      const N = 31, from = 1, step = 1
+      const N = 31,
+        from = 1,
+        step = 1
       return [...Array(N)].map((_, i) => from + i * step)
     }
   },

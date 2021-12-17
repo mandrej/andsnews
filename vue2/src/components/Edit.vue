@@ -14,7 +14,9 @@
           >Read Exif</v-btn
         >
         <v-spacer></v-spacer>
-        <span class="pr-4 hidden-sm-and-down">{{formatBytes(tmp.size)}} {{linearDim}}</span>
+        <span class="pr-4 hidden-sm-and-down"
+          >{{ formatBytes(tmp.size) }} {{ linearDim }}</span
+        >
         <v-btn icon @click="show = false">
           <v-icon>close</v-icon>
         </v-btn>
@@ -23,9 +25,15 @@
         <v-form>
           <v-row>
             <v-col cols="12" md="4" sm="4">
-              <v-responsive :aspect-ratio="1" class="d-none d-sm-flex">
-                <img class="lazy" v-lazy="smallsized + tmp.filename" />
-              </v-responsive>
+              <v-img
+                aspect-ratio="1"
+                :src="
+                  !tmp.date
+                    ? fullsized + tmp.filename
+                    : smallsized + tmp.filename
+                "
+                class="d-none d-sm-flex"
+              ></v-img>
             </v-col>
             <v-col cols="12" md="8" sm="8">
               <v-text-field
@@ -195,8 +203,6 @@
                 dense
               ></v-text-field>
             </v-col>
-            <v-col cols="12" md="4" sm="6" class="hidden-sm-and-down">
-            </v-col>
           </v-row>
         </v-form>
       </v-card-text>
@@ -261,10 +267,11 @@ export default {
     visible: function (val) {
       if (val) {
         this.tmp = { ...this.current }
-        if (!this.tmp.date) { // new image
+        if (!this.tmp.date) {
+          // new image
           this.readExif()
         }
-      } 
+      }
     }
   },
   methods: {
@@ -287,7 +294,7 @@ export default {
         let tags = this.tmp.tags || []
         if (response.data.flash && tags.indexOf('flash') === -1) {
           tags.push('flash')
-          this.tmp = { ...this.tmp, ...{tags: tags} }
+          this.tmp = { ...this.tmp, ...{ tags: tags } }
         }
       })
     }
