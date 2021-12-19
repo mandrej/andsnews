@@ -2,7 +2,7 @@
   <v-img
     :src="fullsized + last.filename"
     :lazy-src="smallsized + last.filename"
-    class="d-flex flex-column fill-height align-center justify-center lazy last"
+    class="d-flex flex-column fill-height"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
       <h4 class="text-body-1 white--text text-right">
@@ -58,11 +58,6 @@ export default {
     ...mapGetters('app', ['nickNames']),
     count () {
       return this.bucket.count
-    },
-    query () {
-      return {
-        year: this.last.value
-      }
     }
   },
   mounted () {
@@ -70,10 +65,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.last {
-  background-size: cover;
-  background-position: center;
-}
-</style>
