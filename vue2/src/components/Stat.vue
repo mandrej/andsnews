@@ -59,6 +59,6 @@ export default {
 
 <style scoped>
 .v-list-item .v-list-item__title {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
 }
 </style>

@@ -1,12 +1,10 @@
 import Vue from 'vue'
-import Vuetify, { VList, Vrow, Vcol } from 'vuetify/lib'
+import Vuetify, { VList } from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
 
 Vue.use(Vuetify, {
   components: {
-    VList,
-    Vrow,
-    Vcol
+    VList
   }
 })
 
