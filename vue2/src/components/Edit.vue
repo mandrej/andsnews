@@ -27,11 +27,7 @@
             <v-col cols="12" md="4" sm="4">
               <v-img
                 aspect-ratio="1"
-                :src="
-                  !tmp.date
-                    ? fullsized + tmp.filename
-                    : smallsized + tmp.filename
-                "
+                :src="smallsized + tmp.filename"
                 class="d-none d-sm-flex"
               ></v-img>
             </v-col>
