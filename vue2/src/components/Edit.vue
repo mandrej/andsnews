@@ -27,7 +27,7 @@
             <v-col cols="12" md="4" sm="4">
               <v-img
                 aspect-ratio="1"
-                :src="smallsized + tmp.filename"
+                :src="fullsized + tmp.filename"
                 class="d-none d-sm-flex"
               ></v-img>
             </v-col>
