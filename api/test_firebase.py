@@ -3,7 +3,7 @@ import unittest
 import warnings
 import firebase_admin
 from datetime import datetime
-from firebase_admin import credentials, initialize_app, delete_app, messaging
+from firebase_admin import credentials, initialize_app, delete_app, messaging, exceptions
 
 
 class TestApp(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestApp(unittest.TestCase):
         try:
             self.app = firebase_admin.get_app()
         except ValueError as e:
-            print('22 NEW INSTANCE')
+            print('NEW INSTANCE')
             cred = credentials.Certificate('credentials.json')
             self.app = initialize_app(cred)
 
@@ -21,20 +21,24 @@ class TestApp(unittest.TestCase):
             action="ignore", message="unclosed", category=ResourceWarning)
         token, expiry = self.app.credential.get_access_token()
         diff = (datetime.now() - expiry).total_seconds()
-        print(f'{token}\n{diff}')
-        # print(self.app.name)
-        # print(self.app.project_id)
-        # print(credential.valid)
+        print(f'{token}\n\n{diff}')
+        print(self.app.name)  # '[DEFAULT]
+        print(self.app.project_id)  # andsnews
 
     def test_send(self):
         warnings.filterwarnings(
             action="ignore", message="unclosed", category=ResourceWarning)
         message = messaging.Message(
-            notification=messaging.Notification(title="ands", body='TEST'),
-            token="d8F8Ow6CS9xY-Uvj5_aaDO:APA91bHG-PPYJzrZxAZN0Dl-en4mBZebGKpwQEklknmi6di1D0fuwiG54P9HInn0j3J8XEsyLIR2nAzAdFuesfxHpgNhO7OlD8LczBmY6D6Hv2cOIgF9ZCEzfte9hb_NDdMRVEVYGtXw"
+            notification=messaging.Notification(title="ands", body='TEST FCM'),
+            token="ftvVMeat-bV2Q275MrGEAu:APA91bH8BH6bSBci-xurGKZFQ3OZZx2hLePg9E1518mr-cVkKbFqhOHir_-Rr1XyY0nGxSOixG3OzqjzRqKy2SsrUJuJgNjqw6yOg2Z9wJnonWDncN9QMjE5LxtNqzTnqusuZjjFZlkm"
         )
-        response = messaging.send(message, app=self.app)
+        try:
+            response = messaging.send(message, app=self.app)
+        except exceptions.FirebaseError as e:
+            response = e
+
         # projects/andsnews/messages/0:1620404962628202%2fd9afcdf9fd7ecd
+        # projects/andsnews/messages/1dd8b5ba-efdc-4d87-af7b-29f55cbf3082
         print(response)
 
     def tearDown(self):

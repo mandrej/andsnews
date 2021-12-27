@@ -1,17 +1,17 @@
 import string
+import logging
 import datetime
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
-import requests
+import firebase_admin
+from firebase_admin import credentials, initialize_app, messaging, exceptions
 
 from exifread import process_file
 from .config import CONFIG
 
-HEADERS = {
-    'Authorization': f'key={CONFIG["fcm_server_key"]}',
-    'Content-Type': 'application/json',
-}
+cred = credentials.Certificate('credentials.json')
+DEFAULT_APP = initialize_app(cred)
 
 
 def serialize(ent):
@@ -25,18 +25,16 @@ def serialize(ent):
 
 def push_message(token, message=''):
     """
-    {'multicast_id': 783139447567337237, 'success': 1, 'failure': 0, 'canonical_ids': 0,
-     'results': [{'message_id': '0:1625071641635527%2fd9afcdf9fd7ecd'}]}
+    projects/andsnews/messages/0:1620404962628202%2fd9afcdf9fd7ecd
     """
-    payload = {
-        "to": token,
-        "notification": {
-            "title": "ands",
-            "body": message
-        }
-    }
-    res = requests.post(CONFIG['fcm_send'], json=payload, headers=HEADERS)
-    return {'success': res.json()['success'] == 1}
+    message = messaging.Message(
+        notification=messaging.Notification(title="ands", body=message),
+        token=token
+    )
+    try:
+        return messaging.send(message, app=DEFAULT_APP)
+    except exceptions.FirebaseError as e:
+        return e
 
 
 def latinize(text):

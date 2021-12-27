@@ -3,8 +3,8 @@ import CONFIG from './config'
 const common = {
   data: () => ({
     requiredRule: [(value) => !!value || 'Required.'],
-    fullsized: CONFIG.fullsized_storage_url,
-    smallsized: CONFIG.smallsized_storage_url
+    fullsized: CONFIG.public_url + 'fullsized/',
+    smallsized: CONFIG.public_url + 'smallsized/'
   }),
   computed: {
     version () {
