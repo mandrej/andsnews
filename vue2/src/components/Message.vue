@@ -11,8 +11,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import messaging from '../helpers/fire'
+import { getMessaging, onMessage } from 'firebase/messaging'
 import CONFIG from '../helpers/config'
+
+const messaging = getMessaging()
 
 export default {
   name: 'Message',
@@ -29,7 +31,7 @@ export default {
     window.addEventListener('offline', this.updateOnlineStatus)
   },
   mounted () {
-    messaging.onMessage((payload) => {
+    onMessage(messaging, payload => {
       this.message = payload.notification.body
       if (this.message.startsWith(CONFIG.end_message)) {
         this.timeout = -1

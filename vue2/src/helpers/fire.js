@@ -1,8 +1,4 @@
 import CONFIG from './config'
-import firebase from 'firebase/app'
-import 'firebase/messaging'
+import { initializeApp } from 'firebase/app'
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(CONFIG.firebase)
-}
-export default firebase.messaging()
+export default initializeApp(CONFIG.firebase)

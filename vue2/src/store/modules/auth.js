@@ -1,15 +1,17 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import messaging from '../../helpers/fire'
+import firebaseApp from '../../helpers/fire'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { getMessaging, getToken } from 'firebase/messaging'
 import pushMessage from '../../helpers/push'
 import router from '../../router'
 import CONFIG from '../../helpers/config'
 import { SAVE_USER, SET_TOKEN } from '../mutation-types'
 
+const auth = getAuth(firebaseApp)
+const messaging = getMessaging()
 const axios = Vue.axios
-const provider = new firebase.auth.GoogleAuthProvider()
+const provider = new GoogleAuthProvider()
 provider.addScope('profile')
 provider.addScope('email')
 
@@ -20,8 +22,7 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      firebase
-        .auth()
+      auth
         .signOut()
         .then(() => {
           commit(SAVE_USER, {})
@@ -31,10 +32,8 @@ const actions = {
           }
         })
     } else {
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(response => {
+      signInWithPopup(auth, provider)
+        .then((response) => {
           const payload = {
             name: response.user.displayName,
             email: response.user.email,
@@ -77,9 +76,8 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }, permission) => {
     if (permission === 'granted') {
-      return messaging
-        .getToken()
-        .then(token => {
+      return getToken(messaging)
+        .then((token) => {
           if (token && token !== state.fcm_token) {
             commit(SET_TOKEN, token)
           }
