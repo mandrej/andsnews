@@ -1,9 +1,10 @@
 Flask==2.0.2
+# Pillow==8.3.2
 ExifRead==2.3.2
 google-cloud-datastore==2.1.6
 google-cloud-storage==1.42.3
-firebase-admin==5.0.1
-#autopep8==1.5.4
-#gunicorn==20.0.4
+# firebase-admin==5.0.1
+# autopep8==1.5.4
+# gunicorn==20.0.4
 
 # pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U

@@ -2,10 +2,10 @@ import Vue from 'vue'
 
 const axios = Vue.axios
 
-export default function (token, msg) {
+export default function (recipients, msg) {
   axios
     .post('message/send', {
-      token: token,
+      recipients: recipients,
       message: msg
     })
     .then()

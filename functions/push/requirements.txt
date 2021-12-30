@@ -1,0 +1,2 @@
+Flask
+firebase-admin==5.0.1

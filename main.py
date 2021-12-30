@@ -2,7 +2,7 @@ from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from api import cloud, photo
-from api.helpers import get_exif, latinize, push_message
+from api.helpers import get_exif, latinize
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -184,9 +184,9 @@ def rebuilder(verb, field):
 def push():
     json_ = request.get_json(silent=True)
     assert json_ is not None, 'Cannot get token'
-    token = json_['token']
+    recipients = json_['recipients']
     message = json_['message']
-    return push_message(token, message)
+    return cloud.push_message(recipients, message)
 
 
 if __name__ == '__main__':

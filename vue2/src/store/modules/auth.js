@@ -22,15 +22,13 @@ const initialState = {
 const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
-      auth
-        .signOut()
-        .then(() => {
-          commit(SAVE_USER, {})
-          const routeName = router.currentRoute.name
-          if (routeName === 'add' || routeName === 'admin') {
-            router.replace({ name: 'home' })
-          }
-        })
+      auth.signOut().then(() => {
+        commit(SAVE_USER, {})
+        const routeName = router.currentRoute.name
+        if (routeName === 'add' || routeName === 'admin') {
+          router.replace({ name: 'home' })
+        }
+      })
     } else {
       signInWithPopup(auth, provider)
         .then((response) => {
@@ -47,7 +45,7 @@ const actions = {
           dispatch('updateUser', payload)
           dispatch('getPermission')
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err.message)
         })
     }
@@ -55,7 +53,7 @@ const actions = {
   updateUser: ({ dispatch }, user) => {
     axios
       .post('user', { user: user })
-      .then(response => {
+      .then((response) => {
         if (response.data.success) {
           dispatch('app/updateValuesEmail', user, { root: true })
         }
@@ -64,7 +62,7 @@ const actions = {
   },
   getPermission: ({ dispatch }) => {
     try {
-      Notification.requestPermission().then(permission =>
+      Notification.requestPermission().then((permission) =>
         dispatch('fetchToken', permission)
       )
     } catch (error) {
@@ -76,7 +74,7 @@ const actions = {
   },
   fetchToken: ({ commit, state, dispatch }, permission) => {
     if (permission === 'granted') {
-      return getToken(messaging)
+      return getToken(messaging, { vapidKey: CONFIG.firebase.vapidKey })
         .then((token) => {
           if (token && token !== state.fcm_token) {
             commit(SET_TOKEN, token)
@@ -94,17 +92,12 @@ const actions = {
     axios
       .put('user/register', { uid: state.user.uid, token: state.fcm_token })
       .then()
-      .catch(err => console.error(err))
+      .catch((err) => console.error(err))
   },
+  // eslint-disable-next-line no-unused-vars
   sendNotifications: ({ state }, msg) => {
     axios.get('registrations').then(response => {
-      response.data.forEach(token => {
-        if (token === state.fcm_token) {
-          pushMessage(token, msg + ' SENT')
-        } else {
-          pushMessage(token, msg)
-        }
-      })
+      pushMessage(response.data, msg)
     })
   }
 }
