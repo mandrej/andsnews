@@ -6,7 +6,7 @@
         :data-src="smallsized + item.filename"
         :title="caption(item)"
         :data-pswp-src="fullsized + item.filename"
-        :data-pswp-size="item.dim.join('x')"
+        :data-pswp-size="item.dim ? item.dim.join('x') : null"
         :data-pswp-pid="item.id"
       />
       <p class="text-h6 text-truncate" style="width: 100%">
