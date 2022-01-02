@@ -1,5 +1,6 @@
 <template>
   <v-img
+    :aspect-ratio="4/3"
     :src="fullsized + last.filename"
     :lazy-src="smallsized + last.filename"
     class="d-flex flex-column fill-height"
