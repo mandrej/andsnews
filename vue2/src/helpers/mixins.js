@@ -3,6 +3,7 @@ import CONFIG from './config'
 const common = {
   data: () => ({
     requiredRule: [(value) => !!value || 'Required.'],
+    fileBroken: CONFIG.fileBroken,
     fullsized: CONFIG.public_url + 'fullsized/',
     smallsized: CONFIG.public_url + 'smallsized/'
   }),

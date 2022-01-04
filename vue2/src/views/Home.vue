@@ -1,9 +1,7 @@
 <template>
-  <v-img
-    :aspect-ratio="4/3"
-    :src="fullsized + last.filename"
-    :lazy-src="smallsized + last.filename"
-    class="d-flex flex-column fill-height"
+  <div
+    :style="styling"
+    class="d-flex flex-column fill-height align-center justify-center last"
   >
     <div class="pa-5" style="position: absolute; top: 0; right: 0">
       <h4 class="text-body-1 white--text text-right">
@@ -44,7 +42,7 @@
         >
       </p>
     </div>
-  </v-img>
+  </div>
 </template>
 
 <script>
@@ -57,6 +55,11 @@ export default {
   computed: {
     ...mapState('app', ['last', 'values', 'bucket']),
     ...mapGetters('app', ['nickNames']),
+    styling () {
+      const low = this.smallsized + this.last.filename
+      const high = this.fullsized + this.last.filename
+      return 'background-image: url(' + high + '), url(' + low + ')'
+    },
     count () {
       return this.bucket.count
     }
@@ -66,3 +69,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.last {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out;
+}
+</style>

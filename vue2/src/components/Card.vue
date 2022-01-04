@@ -3,13 +3,14 @@
     <v-responsive :aspect-ratio="4 / 3">
       <img
         class="lazy"
-        :data-src="smallsized + item.filename"
+        :src="smallsized + item.filename"
+        @error="broken"
         :title="caption(item)"
         :data-pswp-src="fullsized + item.filename"
         :data-pswp-size="item.dim ? item.dim.join('x') : null"
         :data-pswp-pid="item.id"
       />
-      <p class="text-h6 text-truncate" style="width: 100%">
+      <p class="light text-h6 text-truncate" style="width: 100%">
         {{ item.headline }}
       </p>
     </v-responsive>
@@ -76,6 +77,9 @@ export default {
     ...mapState('auth', ['user'])
   },
   methods: {
+    broken (event) {
+      event.target.src = this.fileBroken
+    },
     download () {
       this.$emit('register-download', {
         headline: this.item.headline,
@@ -102,4 +106,20 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+img.lazy {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  & + p {
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    color: white;
+    padding: 16px;
+    line-height: 120% !important;
+  }
+}
+</style>
