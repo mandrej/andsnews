@@ -56,7 +56,11 @@
               xl="2"
               class="pa-2"
             >
-              <v-lazy :options="{ threshold: 0.5 }" min-height="200" transition="fade-transition">
+              <v-lazy
+                :options="{ threshold: 0.5 }"
+                min-height="200"
+                transition="fade-transition"
+              >
                 <Card
                   :id="'card_' + item.id"
                   :item="item"

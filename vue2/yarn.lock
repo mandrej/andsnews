@@ -1565,9 +1565,9 @@
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
 "@types/photoswipe@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.npm.taobao.org/@types/photoswipe/download/@types/photoswipe-4.1.1.tgz#3d76ed9698775ea17a1191578e4d0eeb331024a2"
-  integrity sha1-PXbtlph3XqF6EZFXjk0O6zMQJKI=
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@types/photoswipe/-/photoswipe-4.1.2.tgz#3ddafb668bf6800f8dfab5bea2ba82dda879cd84"
+  integrity sha512-HA9TtCAQKToldgxRiyJ1DbsElg/cQV/SQ8COVjqIqghjy60Zxfh78E1WiFotthquqkS86nz13Za9wEbToe0svQ==
 
 "@types/q@^1.5.1":
   version "1.5.4"
@@ -9253,8 +9253,8 @@ vue-loader@^15.9.2:
 
 vue-pswipe@^0.15.3:
   version "0.15.3"
-  resolved "https://registry.npm.taobao.org/vue-pswipe/download/vue-pswipe-0.15.3.tgz#66b2c5b615282287deb4706e035e6bcc12660189"
-  integrity sha1-ZrLFthUoIofetHBuA15rzBJmAYk=
+  resolved "https://registry.yarnpkg.com/vue-pswipe/-/vue-pswipe-0.15.3.tgz#66b2c5b615282287deb4706e035e6bcc12660189"
+  integrity sha512-oAsBXZN/Y65vmVyIIc4FYSAVe63HhkuVuUFBKlrwnJYx0jWaUYRq2vrwcE5/DWCdjRg4buenCQnZZpRe6FfVjA==
   dependencies:
     "@types/photoswipe" "^4.1.1"
     photoswipe "^4.1.3"
