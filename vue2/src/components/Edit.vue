@@ -18,7 +18,7 @@
           >{{ formatBytes(tmp.size) }} {{ linearDim }}</span
         >
         <v-btn icon @click="show = false">
-          <v-icon>close</v-icon>
+          <v-icon>{{mdiClose}}</v-icon>
         </v-btn>
       </v-app-bar>
       <v-card-text class="pt-6">
@@ -59,7 +59,7 @@
                       <v-text-field
                         v-model="dateTime.date"
                         label="Date taken"
-                        prepend-icon="event"
+                        :prepend-icon="mdiCalendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
@@ -93,7 +93,7 @@
                       <v-text-field
                         v-model="dateTime.time"
                         label="Time taken"
-                        prepend-icon="schedule"
+                        :prepend-icon="mdiClockOutline"
                         readonly
                         v-bind="attrs"
                         v-on="on"

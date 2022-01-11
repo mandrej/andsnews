@@ -3,7 +3,7 @@
     {{ message }}
     <template v-slot:action="{ attrs }">
       <v-btn dark text icon v-bind="attrs" @click="close(false)">
-        <v-icon>close</v-icon>
+        <v-icon>{{mdiClose}}</v-icon>
       </v-btn>
     </template>
   </v-snackbar>
@@ -12,12 +12,14 @@
 <script>
 import { mapState } from 'vuex'
 import { getMessaging, onMessage } from 'firebase/messaging'
+import common from '../helpers/mixins'
 import CONFIG from '../helpers/config'
 
 const messaging = getMessaging()
 
 export default {
   name: 'Message',
+  mixins: [common],
   data: () => ({
     model: false,
     timeout: 6000,

@@ -31,7 +31,7 @@
         v-scroll="onScroll"
         @click="$vuetify.goTo(0)"
       >
-        <v-icon>arrow_upward</v-icon>
+        <v-icon>{{mdiArrowUp}}</v-icon>
       </v-btn>
     </v-fab-transition>
 
@@ -93,6 +93,7 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
+import common from '../helpers/mixins'
 import Card from '../components/Card'
 import Photoswipe from 'vue-pswipe'
 
@@ -100,6 +101,7 @@ Vue.use(Photoswipe)
 
 export default {
   name: 'List',
+  mixins: [common],
   components: {
     Card,
     Edit: () => import(/* webpackChunkName: "edit" */ '../components/Edit')

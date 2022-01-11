@@ -32,7 +32,7 @@ const opts = {
     }
   },
   icons: {
-    iconfont: 'md'
+    iconfont: 'mdiSvg'
   }
 }
 

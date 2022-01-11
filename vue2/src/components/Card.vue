@@ -38,17 +38,17 @@
           'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]
         "
       >
-        <v-icon>my_location</v-icon>
+        <v-icon>{{mdiCrosshairsGps}}</v-icon>
       </v-btn>
     </v-card-text>
     <template v-if="user.isAuthorized">
       <v-divider></v-divider>
       <v-card-actions class="justify-space-between">
         <v-btn v-if="user.isAdmin" icon small text @click.stop="removeRecord">
-          <v-icon>delete</v-icon>
+          <v-icon>{{mdiDelete}}</v-icon>
         </v-btn>
         <v-btn icon small text @click.stop="showEditdForm">
-          <v-icon>edit</v-icon>
+          <v-icon>{{mdiPencil}}</v-icon>
         </v-btn>
         <v-btn
           icon
@@ -58,7 +58,7 @@
           :href="`/api/download/${item.filename}`"
           :download="item.filename"
         >
-          <v-icon>file_download</v-icon>
+          <v-icon>{{mdiDownload}}</v-icon>
         </v-btn>
       </v-card-actions>
     </template>

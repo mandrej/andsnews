@@ -1,11 +1,36 @@
 import CONFIG from './config'
+import {
+  mdiCrosshairsGps,
+  mdiDelete,
+  mdiPencil,
+  mdiDownload,
+  mdiClose,
+  mdiCalendar,
+  mdiClockOutline,
+  mdiAccountCircle,
+  mdiPlusCircle,
+  mdiCog,
+  mdiPalette
+} from '@mdi/js'
 
 const common = {
   data: () => ({
     requiredRule: [(value) => !!value || 'Required.'],
     fileBroken: CONFIG.fileBroken,
     fullsized: CONFIG.public_url + 'fullsized/',
-    smallsized: CONFIG.public_url + 'smallsized/'
+    smallsized: CONFIG.public_url + 'smallsized/',
+    // icons //
+    mdiCrosshairsGps: mdiCrosshairsGps,
+    mdiDelete: mdiDelete,
+    mdiPencil: mdiPencil,
+    mdiDownload: mdiDownload,
+    mdiClose: mdiClose,
+    mdiCalendar: mdiCalendar,
+    mdiClockOutline: mdiClockOutline,
+    mdiAccountCircle: mdiAccountCircle,
+    mdiPlusCircle: mdiPlusCircle,
+    mdiCog: mdiCog,
+    mdiPalette: mdiPalette
   }),
   computed: {
     version () {

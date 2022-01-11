@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item @click="signHandler">
       <v-list-item-action>
-        <v-icon>account_circle</v-icon>
+        <v-icon>{{mdiAccountCircle}}</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <template v-if="user.name">
@@ -17,7 +17,7 @@
     </v-list-item>
     <v-list-item v-show="user.isAuthorized" to="/add">
       <v-list-item-action>
-        <v-icon>add_circle</v-icon>
+        <v-icon>{{mdiPlusCircle}}</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Add</v-list-item-title>
@@ -26,7 +26,7 @@
     </v-list-item>
     <v-list-item v-show="user.isAdmin" to="/admin">
       <v-list-item-action>
-        <v-icon>settings</v-icon>
+        <v-icon>{{mdiCog}}</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Admin</v-list-item-title>
@@ -35,7 +35,7 @@
     </v-list-item>
     <v-list-item @click="switchTheme">
       <v-list-item-action>
-        <v-icon>palette</v-icon>
+        <v-icon>{{mdiPalette}}</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title v-if="$vuetify.theme.dark">Light</v-list-item-title>
