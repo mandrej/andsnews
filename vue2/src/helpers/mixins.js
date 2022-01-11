@@ -1,5 +1,6 @@
 import CONFIG from './config'
 import {
+  mdiArrowUp,
   mdiCrosshairsGps,
   mdiDelete,
   mdiPencil,
@@ -20,6 +21,7 @@ const common = {
     fullsized: CONFIG.public_url + 'fullsized/',
     smallsized: CONFIG.public_url + 'smallsized/',
     // icons //
+    mdiArrowUp: mdiArrowUp,
     mdiCrosshairsGps: mdiCrosshairsGps,
     mdiDelete: mdiDelete,
     mdiPencil: mdiPencil,
