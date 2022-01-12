@@ -26,6 +26,8 @@
         fixed
         bottom
         right
+        :dark="dark ? null : true"
+        :light="dark ? true : null"
         class="secondary elevation-2"
         style="bottom: 32px; right: 32px"
         v-scroll="onScroll"
@@ -130,7 +132,7 @@ export default {
     }
   }),
   computed: {
-    ...mapState('app', ['error', 'next']),
+    ...mapState('app', ['dark', 'error', 'next']),
     ...mapGetters('app', ['objectsByDate'])
   },
   mounted () {
