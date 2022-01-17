@@ -7,7 +7,7 @@
     ></Edit>
 
     <v-container>
-      <v-sheet class="mb-3 pa-3">
+      <v-sheet class="mb-3 pa-3" color="card">
         <div
           class="d-flex flex-column justify-center"
           style="position: relative; height: 120px"

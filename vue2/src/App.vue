@@ -163,19 +163,19 @@ export default {
   background-color: var(--v-background-base) !important;
 }
 .theme--light.v-navigation-drawer {
-  background-color: var(--v-appbar-lighten1);
+  background-color: var(--v-drawer-base) !important;
 }
 .theme--dark.v-navigation-drawer {
-  background-color: var(--v-appbar-darken2);
+  background-color: var(--v-drawer-base) !important;
   color: #ccc;
 }
 .theme--light.v-app-bar.v-toolbar.v-sheet,
 .theme--light.v-card {
-  background-color: var(--v-appbar-base);
+  background-color: var(--v-card-base) !important;
 }
 .theme--dark.v-app-bar.v-toolbar.v-sheet,
 .theme--dark.v-card {
-  background-color: var(--v-appbar-base);
+  background-color: var(--v-card-base) !important;
 }
 .v-card__title {
   line-height: 125%;

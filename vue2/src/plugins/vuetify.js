@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuetify, { VList } from 'vuetify/lib/framework'
-import colors from 'vuetify/lib/util/colors'
 
 Vue.use(Vuetify, {
   components: {
@@ -13,18 +12,20 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        appbar: colors.shades.white,
-        background: colors.grey.lighten3,
-        primary: colors.teal,
-        secondary: colors.teal,
-        accent: colors.grey.lighten3
+        card: '#FFFFFF',
+        drawer: '#FFFFFF',
+        background: '#EEEEEE',
+        primary: '#045B62',
+        secondary: '#FFAB40',
+        error: '#A71C1C'
       },
       dark: {
-        appbar: colors.grey.darken2,
-        background: colors.grey.darken3,
-        primary: colors.teal.darken1,
-        secondary: colors.teal.accent3,
-        accent: colors.grey.darken3
+        card: '#383838',
+        drawer: '#555555',
+        background: '#424242',
+        primary: '#045B62',
+        secondary: '#FFAB40',
+        error: '#A71C1C'
       }
     },
     options: {
