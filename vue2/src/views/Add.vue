@@ -90,14 +90,16 @@
 
               <v-list-item-action class="d-flex flex-row">
                 <v-btn color="error" class="mr-3" @click="removeRecord(item)">
-                  <v-icon left>{{mdiDelete}}</v-icon>Delete
+                  <v-icon left>{{ mdiDelete }}</v-icon
+                  >Delete
                 </v-btn>
                 <v-btn
                   color="primary"
                   class="mr-3"
                   @click.stop="showEditForm(item)"
                 >
-                  <v-icon left>{{mdiPublish}}</v-icon>Publish
+                  <v-icon left>{{ mdiPublish }}</v-icon
+                  >Publish
                 </v-btn>
               </v-list-item-action>
             </v-list-item>

@@ -26,6 +26,5 @@
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  },
-  "svg.preview.background": "white"
+  }
 }
