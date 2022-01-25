@@ -26,5 +26,8 @@
   "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "svg.preview.mode": "img",
+  "svg.preview.background": "transparent"
 }

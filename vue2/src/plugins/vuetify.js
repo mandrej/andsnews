@@ -12,20 +12,20 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        card: '#FFFFFF',
-        drawer: '#FFFFFF',
-        background: '#EEEEEE',
-        primary: '#045B62',
-        secondary: '#FFAB40',
-        error: '#A71C1C'
+        card: '#ffffff',
+        drawer: '#ffffff',
+        background: '#eeeeee',
+        primary: '#07a0ab',
+        secondary: '#ffbd66',
+        error: '#da2525'
       },
       dark: {
         card: '#383838',
         drawer: '#555555',
         background: '#424242',
-        primary: '#045B62',
-        secondary: '#FFAB40',
-        error: '#A71C1C'
+        primary: '#05737a',
+        secondary: '#ffab40',
+        error: '#c42121'
       }
     },
     options: {
