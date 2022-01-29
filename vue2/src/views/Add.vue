@@ -146,8 +146,8 @@ export default {
   },
   methods: {
     reset () {
-      this.$store.dispatch('app/setSnackbar', null)
-      this.$store.dispatch('app/changeUploadStatus', this.code.INITIAL)
+      this.$store.commit('app/setSnackbar', null)
+      this.$store.commit('app/changeUploadStatus', this.code.INITIAL)
       this.$store.dispatch('app/setUploadPercentage', 0)
     },
     progress (event) {
@@ -157,8 +157,8 @@ export default {
       )
     },
     save (formData) {
-      this.$store.dispatch('app/changeUploadStatus', this.code.SAVING)
-      this.$store.dispatch('app/setSnackbar', 'Uploading images …')
+      this.$store.commit('app/changeUploadStatus', this.code.SAVING)
+      this.$store.commit('app/setSnackbar', 'Uploading images …')
       let success = false
       axios
         .post('add', formData, {
@@ -169,7 +169,7 @@ export default {
         .then((x) =>
           x.map((item) => {
             if (item.success) {
-              this.$store.dispatch('app/addUploaded', item.rec)
+              this.$store.commit('app/addUploaded', item.rec)
             } else {
               this.addFailed(item.rec, 2)
             }
@@ -177,13 +177,13 @@ export default {
         )
         .then(() => {
           if (success) {
-            this.$store.dispatch('app/setSnackbar', null)
+            this.$store.commit('app/setSnackbar', null)
           }
-          this.$store.dispatch('app/changeUploadStatus', this.code.SUCCESS)
+          this.$store.commit('app/changeUploadStatus', this.code.SUCCESS)
           this.reset()
         })
         .catch(() => {
-          this.$store.dispatch('app/changeUploadStatus', this.code.FAILED)
+          this.$store.commit('app/changeUploadStatus', this.code.FAILED)
           this.reset()
         })
     },
@@ -213,14 +213,14 @@ export default {
       rec.email = this.user.email
       rec.headline = 'No name'
       this.current = { ...rec }
-      this.$store.dispatch('app/resetFailed')
+      this.$store.commit('app/resetFailed')
       this.editForm = true
     },
     removeRecord (rec) {
       this.$store.dispatch('app/deleteRecord', rec)
     },
     addFailed (file, error) {
-      this.$store.dispatch('app/addFailed', {
+      this.$store.commit('app/addFailed', {
         filename: file.name,
         size: file.size,
         error: error

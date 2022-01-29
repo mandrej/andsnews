@@ -6,7 +6,6 @@ import { getMessaging, getToken } from 'firebase/messaging'
 import pushMessage from '../../helpers/push'
 import router from '../../router'
 import CONFIG from '../../helpers/config'
-import { SAVE_USER, SET_TOKEN } from '../mutation-types'
 
 const auth = getAuth(firebaseApp)
 const messaging = getMessaging()
@@ -15,7 +14,7 @@ const provider = new GoogleAuthProvider()
 provider.addScope('profile')
 provider.addScope('email')
 
-const initialState = {
+const state = {
   user: {},
   fcm_token: null
 }
@@ -23,7 +22,7 @@ const actions = {
   signIn: ({ commit, dispatch, state }) => {
     if (state.user && state.user.uid) {
       auth.signOut().then(() => {
-        commit(SAVE_USER, {})
+        commit('saveUser', {})
         const routeName = router.currentRoute.name
         if (routeName === 'add' || routeName === 'admin') {
           router.replace({ name: 'home' })
@@ -41,7 +40,7 @@ const actions = {
             isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1,
             lastLogin: Date.now() // millis
           }
-          commit(SAVE_USER, payload)
+          commit('saveUser', payload)
           dispatch('updateUser', payload)
           dispatch('getPermission')
         })
@@ -50,12 +49,12 @@ const actions = {
         })
     }
   },
-  updateUser: ({ dispatch }, user) => {
+  updateUser: ({ commit }, user) => {
     axios
       .post('user', { user: user })
       .then((response) => {
         if (response.data.success) {
-          dispatch('app/updateValuesEmail', user, { root: true })
+          commit('app/updateValuesEmail', user, { root: true })
         }
       })
       .catch(() => console.error('update user failed'))
@@ -77,7 +76,7 @@ const actions = {
       return getToken(messaging, { vapidKey: CONFIG.firebase.vapidKey })
         .then((token) => {
           if (token && token !== state.fcm_token) {
-            commit(SET_TOKEN, token)
+            commit('setToken', token)
           }
           if (state.user && state.user.uid) {
             dispatch('addRegistration')
@@ -102,17 +101,17 @@ const actions = {
   }
 }
 const mutations = {
-  SAVE_USER (state, payload) {
+  saveUser (state, payload) {
     state.user = { ...payload }
   },
-  SET_TOKEN (state, val) {
+  setToken (state, val) {
     state.fcm_token = val
   }
 }
 
 export default {
   namespaced: true,
-  state: initialState,
+  state,
   mutations,
   actions
 }

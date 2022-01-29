@@ -120,7 +120,7 @@ export default {
           val.query.month = +val.query.month
         if (Object.prototype.hasOwnProperty.call(val.query, 'day'))
           val.query.day = +val.query.day
-        this.$store.dispatch('app/saveFindForm', val.query)
+        this.$store.commit('app/saveFindForm', val.query)
         if (!Object.keys(val.query).length) {
           this.$store.dispatch('app/changeFilter', { reset: false, pid: pid }) // continue
         } else {

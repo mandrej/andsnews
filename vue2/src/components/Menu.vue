@@ -67,7 +67,7 @@ export default {
     },
     switchTheme () {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-      this.$store.dispatch('app/toggleTheme', this.$vuetify.theme.dark)
+      this.$store.commit('app/toggleTheme', this.$vuetify.theme.dark)
     }
   }
 }
