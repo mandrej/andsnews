@@ -1,5 +1,5 @@
 runtime: python38
-default_expiration: "0s"
+default_expiration: '0s'
 
 instance_class: F2
 automatic_scaling:
@@ -7,29 +7,29 @@ automatic_scaling:
   max_idle_instances: 1
 
 env_variables:
-  GOOGLE_APPLICATION_CREDENTIALS: "credentials.json"
+  GOOGLE_APPLICATION_CREDENTIALS: 'credentials.json'
 
 handlers:
   - url: /(robots\.txt|manifest\.json)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/(robots\.txt|manifest\.json)$
+    static_files: vue3/dist/\1
+    upload: vue3/dist/(robots\.txt|manifest\.json)$
     secure: always
 
   - url: /(.*\.js)$
-    static_files: vue2/dist/\1
-    upload: vue2/dist/.*\.js$
+    static_files: vue3/dist/\1
+    upload: vue3/dist/.*\.js$
     secure: always
     http_headers:
       Content-Type: application/javascript
       Cache-Control: max-age=0
 
   - url: /index.html
-    static_files: vue2/dist/index.html
-    upload: vue2/dist/index.html
+    static_files: vue3/dist/index.html
+    upload: vue3/dist/index.html
     secure: always
 
-  - url: /static
-    static_dir: vue2/dist/static
+  - url: /assets
+    static_dir: vue3/dist/assets
     secure: always
 
   - url: /api/.*
@@ -37,8 +37,8 @@ handlers:
     secure: always
 
   - url: /.*
-    static_files: vue2/dist/index.html
-    upload: vue2/dist/index.html
+    static_files: vue3/dist/index.html
+    upload: vue3/dist/index.html
     secure: always
 
 inbound_services:

@@ -1,0 +1,63 @@
+<template>
+  <q-list>
+    <q-item @click="signIn" clickable v-ripple>
+      <q-item-section avatar>
+        <q-icon name="person" />
+      </q-item-section>
+
+      <q-item-section v-if="user.name">
+        <q-item-label>Sign out</q-item-label>
+        <q-item-label caption>{{ user.name }}</q-item-label>
+      </q-item-section>
+      <q-item-section v-else>
+        <q-item-label>Sign in</q-item-label>
+        <q-item-label caption>using your Google account</q-item-label>
+      </q-item-section>
+    </q-item>
+
+    <q-item v-show="user.isAuthorized" to="/add">
+      <q-item-section avatar>
+        <q-icon name="add_circle" />
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label>Add</q-item-label>
+        <q-item-label caption> jpeg images less then 4 Mb </q-item-label>
+      </q-item-section>
+    </q-item>
+
+    <q-item v-show="user.isAdmin" to="/admin">
+      <q-item-section avatar>
+        <q-icon name="settings" />
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label>Admin</q-item-label>
+        <q-item-label caption> rebuild various counters </q-item-label>
+      </q-item-section>
+    </q-item>
+    <q-item></q-item>
+  </q-list>
+</template>
+
+<script>
+import { defineComponent, computed } from "vue";
+import { useStore } from "vuex";
+
+export default defineComponent({
+  name: "Menu",
+  props: {},
+  setup() {
+    const store = useStore();
+
+    function signIn() {
+      store.dispatch("auth/signIn");
+    }
+
+    return {
+      user: computed(() => store.state.auth.user),
+      signIn,
+    };
+  },
+});
+</script>

@@ -25,14 +25,15 @@ api/__pycache__/
 api/test_*.py
 functions/
 
-vue2/src/
-vue2/.env*
-vue2/public/
-vue2/node_modules/
-vue2/package.json
-vue2/babel.config.js
-vue2/vue.config.js
-vue2/yarn*
+**/src/
+**/.env*
+**/public/
+**/node_modules/
+**/package.json
+**/babel.config.js
+**/vue.config.js
+**/vite.config.js
+**/yarn*
 
 vue2/dist/static/export
 
