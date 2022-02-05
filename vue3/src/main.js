@@ -8,10 +8,15 @@ import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/material-icons/material-icons.css";
 // Import Quasar css
 import "quasar/src/css/index.sass";
+// https://vite-plugin-pwa.netlify.app/guide/auto-update.html
+import { registerSW } from "virtual:pwa-register";
 
 import App from "./App.vue";
 
 const app = createApp(App);
+const updateSW = registerSW({
+  onOfflineReady() {},
+});
 
 app.use(Quasar, {
   plugins: { Notify, Dialog }, // import Quasar plugins and add here

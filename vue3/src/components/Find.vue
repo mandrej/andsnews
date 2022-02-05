@@ -1,98 +1,135 @@
 <template>
-  <div class="q-pa-md">
-    <q-form :disable="busy" @submit="submit" class="q-gutter-md">
-      <q-btn label="Search" type="submit" color="primary"></q-btn>
-      <q-input v-model="tmp.text" label="by text">
+  <div class="q-pa-md q-gutter-md">
+    <q-input v-model="tmp.text" :disable="busy" @keyup.native.enter="submit" label="by text">
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.text !== ''"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.text = ''; submit()"
+        />
+      </template>
+    </q-input>
+    <q-select
+      v-model="tmp.tags"
+      :options="values.tags"
+      :disable="busy"
+      @update:model-value="submit"
+      multiple
+      label="by tag"
+    >
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.tags && tmp.tags.length !== 0"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.tags = []; submit()"
+        />
+      </template>
+    </q-select>
+    <q-select
+      v-model="tmp.year"
+      :options="values.year"
+      :disable="busy"
+      @update:model-value="submit"
+      label="by year"
+    >
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.year !== null"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.year = null; submit()"
+        />
+      </template>
+    </q-select>
+    <div class="row">
+      <q-select
+        class="col"
+        v-model="tmp.month"
+        :options="monthNames"
+        :disable="busy"
+        @update:model-value="submit"
+        emit-value
+        map-options
+        label="by month"
+      >
         <template v-slot:append>
           <q-icon
-            v-if="tmp.text !== ''"
+            v-if="tmp.month !== null"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.text = ''"
-          />
-        </template>
-      </q-input>
-      <q-select v-model="tmp.tags" :options="values.tags" multiple label="by tag">
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.tags && tmp.tags.length !== 0"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.tags = []"
-          />
-        </template>
-      </q-select>
-      <q-select v-model="tmp.year" :options="values.year" label="by year">
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.year !== null"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.year = null"
-          />
-        </template>
-      </q-select>
-      <div class="row">
-        <q-select
-          class="col"
-          v-model="tmp.month"
-          :options="monthNames"
-          emit-value
-          map-options
-          label="by month"
-        >
-          <template v-slot:append>
-            <q-icon
-              v-if="tmp.month !== null"
-              class="cursor-pointer"
-              name="clear"
-              @click.stop="tmp.month = null"
-            />
-          </template>
-        </q-select>
-        <div class="col-1"></div>
-        <q-select class="col" v-model="tmp.day" :options="days" label="by day">
-          <template v-slot:append>
-            <q-icon
-              v-if="tmp.day !== null"
-              class="cursor-pointer"
-              name="clear"
-              @click.stop="tmp.day = null"
-            />
-          </template>
-        </q-select>
-      </div>
-      <q-select v-model="tmp.model" :options="values.model" label="by model">
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.model !== null"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.model = null"
+            @click.stop="tmp.month = null; submit()"
           />
         </template>
       </q-select>
-      <q-select v-model="tmp.lens" :options="values.lens" label="by lens">
+      <div class="col-1"></div>
+      <q-select
+        class="col"
+        v-model="tmp.day"
+        :options="days"
+        :disable="busy"
+        @update:model-value="submit"
+        label="by day"
+      >
         <template v-slot:append>
           <q-icon
-            v-if="tmp.lens !== null"
+            v-if="tmp.day !== null"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.lens = null"
+            @click.stop="tmp.day = null; submit()"
           />
         </template>
       </q-select>
-      <q-select v-model="tmp.nick" :options="nickNames" label="by author">
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.nick !== null"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.nick = null"
-          />
-        </template>
-      </q-select>
-    </q-form>
+    </div>
+    <q-select
+      v-model="tmp.model"
+      :options="values.model"
+      :disable="busy"
+      @update:model-value="submit"
+      label="by model"
+    >
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.model !== null"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.model = null; submit()"
+        />
+      </template>
+    </q-select>
+    <q-select
+      v-model="tmp.lens"
+      :options="values.lens"
+      :disable="busy"
+      @update:model-value="submit"
+      label="by lens"
+    >
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.lens !== null"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.lens = null; submit()"
+        />
+      </template>
+    </q-select>
+    <q-select
+      v-model="tmp.nick"
+      :options="nickNames"
+      :disable="busy"
+      @update:model-value="submit"
+      label="by author"
+    >
+      <template v-slot:append>
+        <q-icon
+          v-if="tmp.nick !== null"
+          class="cursor-pointer"
+          name="clear"
+          @click.stop="tmp.nick = null; submit()"
+        />
+      </template>
+    </q-select>
   </div>
 </template>
 

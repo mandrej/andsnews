@@ -22,39 +22,7 @@ export default defineConfig({
       sassVariables: "src/quasar-variables.sass",
     }),
     VitePWA({
-      includeAssets: [
-        "favicon.ico",
-        "robots.txt",
-        "assets/icons/pwa-192x192.png",
-        "assets/icons/pwa-512x512.png",
-      ],
-      manifest: {
-        name: "Andрејевићи",
-        short_name: "ANDS",
-        start_url: ".",
-        display: "standalone",
-        background_color: "#222",
-        theme_color: "#fff",
-        icons: [
-          {
-            src: "assets/icons/pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "assets/icons/pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "assets/icons/pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
-        gcm_sender_id: "103953800507",
-      },
+      registerType: "autoUpdate",
     }),
   ],
   envPrefix: "VUE_",

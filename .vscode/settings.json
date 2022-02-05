@@ -11,7 +11,8 @@
     "docs": true,
     "tests": true,
     "graphql": true,
-    "views": true
+    "views": true,
+    "vue2": true
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
