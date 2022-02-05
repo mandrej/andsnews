@@ -6,8 +6,8 @@ import quasarIconSet from "quasar/icon-set/svg-material-icons";
 // Import icon libraries
 import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/material-icons/material-icons.css";
-// Import Quasar css
 import "quasar/src/css/index.sass";
+import "viewerjs/dist/viewer.css";
 // https://vite-plugin-pwa.netlify.app/guide/auto-update.html
 import { registerSW } from "virtual:pwa-register";
 

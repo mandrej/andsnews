@@ -3,18 +3,24 @@
     <div class="q-pa-md" v-for="(list, datum) in objectsByDate" :key="datum">
       <q-scroll-observer @scroll="scrollHandler" />
       <div class="text-h6">{{ datum }}</div>
-      <div class="row q-col-gutter-md">
+      <div v-viewer="options" class="row q-col-gutter-md">
         <div
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           v-for="item in list"
           :key="item.id"
         >
           <q-card>
-            <q-img :src="smallsized + item.filename" :ratio="4 / 3">
-              <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
-            </q-img>
-            <q-card-section class="row justify-between q-pb-none">
-              <div class="q-pl-sm" style="line-height: 42px;">{{ item.nick }}, {{ item.date }}</div>
+            <img
+              class="thumbnail"
+              :src="smallsized + item.filename"
+              :data-source="fullsized + item.filename"
+              :alt="item.headline"
+            />
+            <q-card-section class="q-pb-none">
+              <div class="text-subtitle1 ellipsis">{{ item.headline }}</div>
+            </q-card-section>
+            <q-card-section class="row justify-between q-py-none">
+              <div style="line-height: 42px;">{{ item.nick }}, {{ item.date }}</div>
               <q-btn v-if="item.loc" flat round color="grey" icon="map" />
             </q-card-section>
             <q-card-actions class="justify-between q-pt-none">
@@ -40,15 +46,19 @@
 
 <script>
 import { useQuasar } from 'quasar'
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { smallsized } from "../helpers";
+import { smallsized, fullsized } from "../helpers";
 import Edit from "../components/Edit.vue"
-import { RecaptchaVerifier } from 'firebase/auth';
+import VueViewer, { Viewer, directive } from "v-viewer"
 
 export default defineComponent({
   name: "List",
-
+  directives: {
+    viewer: directive({
+      debug: true,
+    }),
+  },
   setup() {
     const $q = useQuasar()
     const store = useStore();
@@ -97,6 +107,7 @@ export default defineComponent({
     return {
       error,
       smallsized,
+      fullsized,
       objectsByDate: computed(() => store.getters["app/objectsByDate"]),
       scrollHandler,
       showEditForm,
@@ -107,10 +118,21 @@ export default defineComponent({
         //   headline: this.item.headline,
         //   email: this.user.email
         // })
+      },
+      options: {
+        toolbar: false,
+        url: 'data-source',
       }
     };
   },
 });
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.thumbnail {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+</style>
