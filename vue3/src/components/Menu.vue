@@ -22,7 +22,7 @@
 
       <q-item-section>
         <q-item-label>Add</q-item-label>
-        <q-item-label caption> jpeg images less then 4 Mb </q-item-label>
+        <q-item-label caption>jpeg images less then 4 Mb</q-item-label>
       </q-item-section>
     </q-item>
 
@@ -33,7 +33,7 @@
 
       <q-item-section>
         <q-item-label>Admin</q-item-label>
-        <q-item-label caption> rebuild various counters </q-item-label>
+        <q-item-label caption>rebuild various counters</q-item-label>
       </q-item-section>
     </q-item>
     <q-item></q-item>
@@ -46,7 +46,6 @@ import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Menu",
-  props: {},
   setup() {
     const store = useStore();
 

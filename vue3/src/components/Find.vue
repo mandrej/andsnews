@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-input v-model="tmp.text" :disable="busy" @keyup.native.enter="submit" label="by text">
+    <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text">
       <template v-slot:append>
         <q-icon
           v-if="tmp.text !== ''"

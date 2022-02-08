@@ -32,7 +32,7 @@ import Menu from "../components/Menu.vue";
 import Stat from "../components/Stat.vue";
 import { useRoute } from "vue-router";
 
-import { defineComponent, computed, reactive, ref } from "vue";
+import { defineComponent, computed, ref } from "vue";
 
 export default defineComponent({
   name: "MainLayout",

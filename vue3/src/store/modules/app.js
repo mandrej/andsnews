@@ -139,7 +139,7 @@ const actions = {
         commit("setBusy", false);
       })
       .catch((err) => {
-        notify("negative", err);
+        notify("negative", `${err}`);
         commit("setBusy", false);
       });
   },

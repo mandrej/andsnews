@@ -2504,7 +2504,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@^4.17.20, lodash@^4.17.21:
+lodash@^4.17.20:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -3167,19 +3167,6 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
-
-v-viewer@^3.0.10:
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/v-viewer/-/v-viewer-3.0.10.tgz#7e87ccbfd972d229e65c58996b8daa103fc98727"
-  integrity sha512-ZT5sYYS+Cy4z2TP/PuhqPyiK4NonaZzhkDPfiY9bwa5EjGyusO8R7/k/4c1ptvTzx2nBSV9MvQHl2X3XzhANqw==
-  dependencies:
-    lodash "^4.17.21"
-    viewerjs "^1.9.0"
-
-viewerjs@^1.9.0:
-  version "1.10.3"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.10.3.tgz#b400c769aa22e3891962b65b0ae93399a92d8d69"
-  integrity sha512-X6dSO8aa6+Majmhx2GQcDSOzLClmj9zjsa89lGyG3cKGM2ca8rpGwL+iSRaAtRZalL5+VQ9osg+zfYVcAUyH8g==
 
 vite-plugin-pwa@^0.11.13:
   version "0.11.13"

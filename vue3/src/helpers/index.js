@@ -1,4 +1,4 @@
-import CONFIG from "../../../config.json"
+import CONFIG from "../../../config.json";
 import { Notify } from "quasar";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
@@ -13,9 +13,10 @@ const notify = function (type, message) {
   Notify.create({
     type: type,
     // color: "positive",
-    timeout: 2000,
-    position: "bottom-left",
+    timeout: 5000,
+    position: "bottom",
     message: message,
+    actions: [{ icon: "close", color: "white" }],
   });
 };
 const pushMessage = function (recipients, msg) {
