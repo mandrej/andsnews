@@ -1,5 +1,11 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent>
+  <q-dialog
+    ref="dialogRef"
+    @hide="onDialogHide"
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    persistent
+  >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">

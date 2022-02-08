@@ -10,7 +10,11 @@
           :key="item.id"
         >
           <q-card>
-            <q-img class="thumbnail" :src="smallsized + item.filename">
+            <q-img
+              class="thumbnail"
+              :src="smallsized + item.filename"
+              @click="showCarousel(item.idx)"
+            >
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
@@ -42,7 +46,8 @@
 import { useQuasar } from 'quasar'
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { smallsized, fullsized } from "../helpers";
+import { smallsized } from "../helpers";
+import Carousel from "../components/Carousel.vue"
 import Edit from "../components/Edit.vue"
 
 export default defineComponent({
@@ -52,6 +57,7 @@ export default defineComponent({
     const store = useStore();
     const next = computed(() => store.state.app.next);
     const error = computed(() => store.state.app.error);
+    const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
 
     const scrollHandler = (obj) => {
       const scrollHeight = document.documentElement.scrollHeight;
@@ -95,8 +101,7 @@ export default defineComponent({
     return {
       error,
       smallsized,
-      fullsized,
-      objectsByDate: computed(() => store.getters["app/objectsByDate"]),
+      objectsByDate,
       scrollHandler,
       showEditForm,
       showConfirm,
@@ -107,16 +112,28 @@ export default defineComponent({
         //   email: this.user.email
         // })
       },
+      showCarousel: (i) => {
+        $q.dialog({
+          component: Carousel,
+          componentProps: {
+            index: i
+          }
+        }).onOk(() => {
+          console.log('OK')
+        }).onCancel(() => {
+          console.log('Cancel')
+        })
+      },
     };
   },
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .thumbnail {
-  display: block;
-  width: 100%;
   height: 250px;
-  object-fit: cover;
+}
+.vel-modal {
+  background: rgba(0, 0, 0, 1);
 }
 </style>
