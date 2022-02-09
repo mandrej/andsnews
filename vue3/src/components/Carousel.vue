@@ -6,12 +6,9 @@
     transition-hide="slide-down"
   >
     <q-card class="column window-width">
-      <!-- <q-card-actions>
-        <q-btn icon="close" flat round @click="onCancelClick" />
-      </q-card-actions>-->
       <q-card-section>
         <q-carousel
-          class="bg-black"
+          class="bg-grey-10"
           v-model="slide"
           v-model:fullscreen="fullscreen"
           transition-prev="slide-right"
@@ -23,16 +20,16 @@
         >
           <q-carousel-slide
             :name="index"
+            :img-src="fullsized + obj.filename"
             v-for="(obj, index) in objects"
             :key="index"
-            :img-src="fullsized + obj.filename"
           >
-            <div class="bg-white absolute-top text-center">
-              <div class="text-h6">{{ obj.headline }}</div>
-              <div class="text-subtitle1">f{{ obj.aperture }} {{ obj.shutter }}s ISO {{ obj.iso }}</div>
+            <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm">
+              <div class="text-subtitle2">{{ obj.headline }}</div>
+              <div class="text-body2">{{ caption(obj) }}</div>
             </div>
             <q-btn
-              class="absolute-top-right q-pa-md"
+              class="absolute-top-right q-pa-md text-white"
               icon="close"
               flat
               round
@@ -66,6 +63,16 @@ export default defineComponent({
     const objects = computed(() => store.state.app.objects);
     const slide = ref(props.index);
 
+    const caption = (rec) => {
+      const { aperture, shutter, iso, model, lens } = rec
+      let tmp = ''
+      tmp += aperture ? ' f' + aperture : ''
+      tmp += shutter ? ' ' + shutter + 's' : ''
+      tmp += iso ? ' ' + iso + ' ASA' : ''
+      tmp += model ? ' ' + model : ''
+      tmp += lens ? ' ' + lens : ''
+      return tmp
+    }
 
     return {
       dialogRef,
@@ -74,6 +81,7 @@ export default defineComponent({
       objects,
       fullsized,
       slide,
+      caption,
       fullscreen: ref(true),
 
       onOKClick() {
