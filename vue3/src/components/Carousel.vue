@@ -2,43 +2,44 @@
   <q-dialog
     ref="dialogRef"
     @hide="onDialogHide"
+    :cssMode="true"
+    :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
   >
-    <q-card class="column window-width">
-      <q-card-section>
-        <q-carousel
-          class="bg-grey-10"
-          v-model="slide"
-          v-model:fullscreen="fullscreen"
-          transition-prev="slide-right"
-          transition-next="slide-left"
-          arrows
-          animated
-          swipeable
-          infinite
-        >
-          <q-carousel-slide
-            :name="index"
-            :img-src="fullsized + obj.filename"
-            v-for="(obj, index) in objects"
-            :key="index"
-          >
-            <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm">
-              <div class="text-subtitle2">{{ obj.headline }}</div>
-              <div class="text-body2">{{ caption(obj) }}</div>
-            </div>
-            <q-btn
-              class="absolute-top-right q-pa-md text-white"
-              icon="close"
-              flat
-              round
-              @click="onCancelClick"
-            />
-          </q-carousel-slide>
-        </q-carousel>
-      </q-card-section>
-    </q-card>
+    <swiper
+      class="bg-grey-10 text-white"
+      :keyboard="true"
+      :grabCursor="true"
+      :hashNavigation="{
+        watchState: true,
+        replaceState: true,
+      }"
+      :lazy="{
+        loadOnTransitionStart: true,
+        loadPrevNext: 2
+      }"
+      :zoom="{
+        maxRatio: 2
+      }"
+      :navigation="true"
+      :modules="modules"
+      :slides-per-view="1"
+      @swiper="onSwiper"
+      @hashChange="onHashChange"
+      @slideChange="onSlideChange"
+    >
+      <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
+        <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm">
+          <div class="text-subtitle2">{{ obj.headline }}</div>
+          <div class="text-body2">{{ caption(obj) }}</div>
+        </div>
+        <div class="swiper-zoom-container" :data-swiper-zoom="2">
+          <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
+          <div class="swiper-lazy-preloader"></div>
+        </div>
+      </swiper-slide>
+    </swiper>
   </q-dialog>
 </template>
 
@@ -47,11 +48,22 @@ import { defineComponent, computed, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized } from "../helpers";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Lazy, Navigation, Zoom, Keyboard } from "swiper";
+
+import "swiper/scss";
+import "swiper/scss/lazy";
+import "swiper/scss/zoom";
+import "swiper/scss/navigation";
 
 export default defineComponent({
   name: "Carousel",
   props: {
-    index: Number
+    pid: String
+  },
+  components: {
+    Swiper,
+    SwiperSlide,
   },
   emits: [
     ...useDialogPluginComponent.emits
@@ -61,7 +73,8 @@ export default defineComponent({
 
     const store = useStore();
     const objects = computed(() => store.state.app.objects);
-    const slide = ref(props.index);
+    const hashArray = objects.value.map(item => item.id)
+    const currentId = ref(props.pid);
 
     const caption = (rec) => {
       const { aperture, shutter, iso, model, lens } = rec
@@ -80,10 +93,10 @@ export default defineComponent({
 
       objects,
       fullsized,
-      slide,
-      caption,
-      fullscreen: ref(true),
 
+      currentId,
+      hashArray,
+      caption,
       onOKClick() {
         // on OK, it is REQUIRED to
         // call onDialogOK (with optional payload)
@@ -91,16 +104,43 @@ export default defineComponent({
         // or with payload: onDialogOK({ ... })
         // ...and it will also hide the dialog automatically
       },
-      onCancelClick: onDialogCancel
+      onCancelClick: onDialogCancel,
+      modules: [Lazy, Navigation, Zoom, Keyboard],
+      onSwiper: (sw) => {
+        const index = hashArray.indexOf(currentId.value)
+        console.log(index);
+        sw.slideTo(index)
+      },
+      onSlideChange: (sw) => {
+        const hash = sw.slides[sw.activeIndex].dataset.hash;
+        console.log('currentId ', hash);
+      },
+      onHashChange: (sw) => {
+        const hash = sw.slides[sw.activeIndex].dataset.hash;
+        console.log('hash ', hash);
+      }
     };
   },
 });
 </script>
 
 <style scoped>
-.q-carousel__slide {
-  background-size: contain;
-  background-position: 50%;
-  background-repeat: no-repeat;
+.swiper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* --swiper-navigation-color: "#fff"; */
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  object-fit: contain;
 }
 </style>

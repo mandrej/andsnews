@@ -175,7 +175,8 @@ export default defineComponent({
     function setForm(to) {
       let pid = null;
       if (to.hash) {
-        pid = +to.hash.match(/&pid=(.+)/)[1];
+        // https://ands.appspot.com/list?nick=milan#6201569452228608
+        pid = +to.hash.substring(1);
       }
       // adopt to match types in store
       if (Object.prototype.hasOwnProperty.call(to.query, "year"))

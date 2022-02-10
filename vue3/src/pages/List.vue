@@ -13,7 +13,7 @@
             <q-img
               class="thumbnail"
               :src="smallsized + item.filename"
-              @click="showCarousel(item.idx)"
+              @click="showCarousel(item.id)"
             >
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
@@ -112,11 +112,11 @@ export default defineComponent({
         //   email: this.user.email
         // })
       },
-      showCarousel: (i) => {
+      showCarousel: (id) => {
         $q.dialog({
           component: Carousel,
           componentProps: {
-            index: i
+            pid: id
           }
         }).onOk(() => {
           console.log('OK')

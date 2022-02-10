@@ -12,6 +12,7 @@
     "firebase": "^9.6.5",
     "quasar": "^2.4.13",
     "querystring-es3": "^0.2.1",
+    "swiper": "^8.0.3",
     "vue": "^3.2.25",
     "vue-router": "4",
     "vuex": "^4.0.2",
