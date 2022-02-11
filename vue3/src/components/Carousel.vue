@@ -2,7 +2,6 @@
   <q-dialog
     ref="dialogRef"
     @hide="onDialogHide"
-    :cssMode="true"
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
@@ -34,7 +33,7 @@
           <div class="text-subtitle2">{{ obj.headline }}</div>
           <div class="text-body2">{{ caption(obj) }}</div>
         </div>
-        <div class="swiper-zoom-container" :data-swiper-zoom="2">
+        <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
           <div class="swiper-lazy-preloader"></div>
         </div>
@@ -59,7 +58,7 @@ import "swiper/scss/navigation";
 export default defineComponent({
   name: "Carousel",
   props: {
-    pid: String
+    pid: Number
   },
   components: {
     Swiper,
@@ -75,6 +74,7 @@ export default defineComponent({
     const objects = computed(() => store.state.app.objects);
     const hashArray = objects.value.map(item => item.id)
     const currentId = ref(props.pid);
+    const swiperRef = ref(null)
 
     const caption = (rec) => {
       const { aperture, shutter, iso, model, lens } = rec
@@ -87,16 +87,30 @@ export default defineComponent({
       return tmp
     }
 
-    return {
-      dialogRef,
-      onDialogHide,
+    const zoomRatio = (dim) => {
+      let ratio = 1
+      if (swiperRef.value && dim) {
+        const DIM = [swiperRef.value.el.clientWidth, swiperRef.value.el.clientHeight]
+        if (dim[0] >= dim[1]) {
+          ratio = dim[0] / DIM[0]
+        } else {
+          ratio = dim[1] / DIM[1]
+        }
+        if (ratio < 1) ratio = 1
+        return ratio
+      }
+      return 2
+    }
 
+    return {
       objects,
       fullsized,
-
       currentId,
       hashArray,
       caption,
+
+      dialogRef,
+      onDialogHide,
       onOKClick() {
         // on OK, it is REQUIRED to
         // call onDialogOK (with optional payload)
@@ -104,13 +118,17 @@ export default defineComponent({
         // or with payload: onDialogOK({ ... })
         // ...and it will also hide the dialog automatically
       },
+
+      swiperRef,
       onCancelClick: onDialogCancel,
       modules: [Lazy, Navigation, Zoom, Keyboard],
       onSwiper: (sw) => {
+        swiperRef.value = sw
+        // swDim.value = [sw.el.clientWidth, sw.el.clientHeight]
         const index = hashArray.indexOf(currentId.value)
-        console.log(index);
         sw.slideTo(index)
       },
+      zoomRatio,
       onSlideChange: (sw) => {
         const hash = sw.slides[sw.activeIndex].dataset.hash;
         console.log('currentId ', hash);

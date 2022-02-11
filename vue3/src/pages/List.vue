@@ -11,7 +11,7 @@
         >
           <q-card>
             <q-img
-              class="thumbnail"
+              class="thumbnail cursor-pointer"
               :src="smallsized + item.filename"
               @click="showCarousel(item.id)"
             >
