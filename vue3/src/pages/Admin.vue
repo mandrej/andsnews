@@ -1,5 +1,17 @@
 <template>
-  <q-page>
+  <q-page class="q-pt-md">
+    <q-list separator>
+      <q-item>
+        <q-item-section>
+          <q-item-label>
+            <q-input v-model="message" label="Send message to subscribers" />
+          </q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn :disabled="!fcm_token" color="positive" @click="send" label="Send" />
+        </q-item-section>
+      </q-item>
+    </q-list>
     <q-item-label header>Recount existing field values</q-item-label>
     <q-list separator>
       <q-item v-for="field in Object.keys(values)" :key="field">
@@ -41,7 +53,7 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
 import { api } from "../helpers"
 
@@ -51,6 +63,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const fcm_token = computed(() => store.state.auth.fcm_token)
+    const message = ref('NEW IMAGES')
 
     const callApi = (url) => {
       api.post(url, { token: fcm_token.value }).then((x) => x.data)
@@ -70,6 +83,10 @@ export default defineComponent({
       },
       bucket() {
         store.dispatch('app/bucketInfo', { verb: 'set' })
+      },
+      message,
+      send() {
+        store.dispatch('auth/sendNotifications', message.value)
       },
     }
   },

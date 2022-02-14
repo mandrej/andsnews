@@ -19,7 +19,17 @@
             </q-img>
             <q-card-section class="row justify-between q-py-none">
               <div style="line-height: 42px;">{{ item.nick }}, {{ item.date }}</div>
-              <q-btn v-if="item.loc" flat round color="grey" icon="map" />
+              <q-btn
+                v-if="item.loc"
+                flat
+                round
+                color="grey"
+                icon="my_location"
+                target="blank"
+                :href="
+                  'https://www.google.com/maps/search/?api=1&query=' + [...item.loc]
+                "
+              />
             </q-card-section>
             <q-card-actions class="justify-between q-pt-none">
               <q-btn flat round color="grey" icon="delete" @click="showConfirm(item)" />
