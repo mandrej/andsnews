@@ -2,20 +2,33 @@ import CONFIG from "../../../config.json";
 import { Notify } from "quasar";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
+import { date, format } from "quasar";
 
 const api = axios.create({ baseURL: "/api", timeout: 60000 }); // 1 min
 const firebase = initializeApp(CONFIG.firebase);
+const { humanStorageSize } = format;
+const { extractDate, formatDate } = date;
 
-const notify = function (type, message) {
+const d = new Date("2022-02-12 16:33");
+console.log(d, formatDate(d, "DD MMM YYYY HH:mm"));
+
+Notify.registerType("external", {
+  color: "grey-8",
+});
+
+const notify = (type, message, timeout = 5000) => {
   /**
-   * type: 'positive', 'negative', 'warning', 'info', 'ongoing'
+   * type: 'positive', 'negative', 'warning', 'info', 'ongoing', 'external'
    */
+  if (message.startsWith(CONFIG.end_message)) {
+    timeout = 0;
+  }
   Notify.create({
     type: type,
-    // color: "positive",
-    timeout: 5000,
+    timeout: timeout,
     position: "bottom",
     message: message,
+    textColor: "white",
     actions: [{ icon: "close", color: "white" }],
   });
 };
@@ -32,15 +45,8 @@ const pushMessage = function (recipients, msg) {
 const fileBroken = CONFIG.fileBroken;
 const fullsized = CONFIG.public_url + "fullsized/";
 const smallsized = CONFIG.public_url + "smallsized/";
-const formatBytes = function (bytes, decimals = 2) {
-  if (bytes === 0) return "0 Bytes";
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+const formatBytes = (bytes, decimals = 2) => {
+  return humanStorageSize(bytes);
 };
 
 export {

@@ -8,6 +8,7 @@
   >
     <swiper
       class="bg-grey-10 text-white"
+      :spaceBetween="30"
       :keyboard="true"
       :grabCursor="true"
       :hashNavigation="{
@@ -90,7 +91,7 @@ export default defineComponent({
     const zoomRatio = (dim) => {
       let ratio = 1
       if (swiperRef.value && dim) {
-        const DIM = [swiperRef.value.el.clientWidth, swiperRef.value.el.clientHeight]
+        const DIM = [swiperRef.value.width, swiperRef.value.height]
         if (dim[0] >= dim[1]) {
           ratio = dim[0] / DIM[0]
         } else {
@@ -131,11 +132,11 @@ export default defineComponent({
       zoomRatio,
       onSlideChange: (sw) => {
         const hash = sw.slides[sw.activeIndex].dataset.hash;
-        console.log('currentId ', hash);
+        // console.log('currentId ', hash);
       },
       onHashChange: (sw) => {
         const hash = sw.slides[sw.activeIndex].dataset.hash;
-        console.log('hash ', hash);
+        // console.log('hash ', hash);
       }
     };
   },

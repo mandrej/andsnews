@@ -1,5 +1,12 @@
 <template>
   <q-page>
+    <q-banner v-if="error === 0" class="bg-warning q-ma-md q-pa-md" rounded>
+      <template v-slot:avatar>
+        <q-icon name="warning" color="primary" />
+      </template>
+      No data found for current filter/ search
+    </q-banner>
+
     <div class="q-pa-md" v-for="(list, datum) in objectsByDate" :key="datum">
       <q-scroll-observer @scroll="scrollHandler" />
       <div class="text-h6">{{ datum }}</div>

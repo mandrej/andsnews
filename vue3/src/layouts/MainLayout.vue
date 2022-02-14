@@ -3,6 +3,7 @@
     <q-header elevated>
       <q-toolbar class="bg-white text-black">
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-linear-progress v-show="busy" color="secondary" class="absolute-bottom" indeterminate />
 
         <q-toolbar-title>
           <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
@@ -30,6 +31,7 @@
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
 import Stat from "../components/Stat.vue";
+import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
 import { defineComponent, computed, ref } from "vue";
@@ -43,6 +45,9 @@ export default defineComponent({
   },
 
   setup() {
+    const store = useStore();
+    const busy = computed(() => store.state.app.busy)
+
     const leftDrawerOpen = ref(false);
     const version = computed(() => {
       const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
@@ -60,6 +65,7 @@ export default defineComponent({
     })
 
     return {
+      busy,
       dynamic,
       version,
       leftDrawerOpen,
