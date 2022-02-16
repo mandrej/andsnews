@@ -29,10 +29,22 @@
             <q-item-label>{{ rec.filename }}</q-item-label>
           </q-item-section>
           <q-item-section side>
-            <q-btn label="Remove" type="button" color="negative" @click="removeRecord(rec)" />
+            <q-btn
+              label="Remove"
+              type="button"
+              color="negative"
+              icon="delete"
+              @click="removeRecord(rec)"
+            />
           </q-item-section>
           <q-item-section side>
-            <q-btn label="Publish" type="button" color="primary" @click="showEditForm(rec)" />
+            <q-btn
+              label="Publish"
+              type="button"
+              color="primary"
+              icon="publish"
+              @click="showEditForm(rec)"
+            />
           </q-item-section>
         </q-item>
       </q-list>

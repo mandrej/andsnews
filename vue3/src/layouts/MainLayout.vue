@@ -6,10 +6,12 @@
         <q-linear-progress v-show="busy" color="secondary" class="absolute-bottom" indeterminate />
 
         <q-toolbar-title>
-          <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
+          <router-link
+            :to="{ path: '/', query: {} }"
+            class="text-black"
+            style="text-decoration: none"
+          >{{ title }}</router-link>
         </q-toolbar-title>
-
-        <div class="q-px-xs">{{ version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -49,11 +51,8 @@ export default defineComponent({
     const busy = computed(() => store.state.app.busy)
 
     const leftDrawerOpen = ref(false);
-    const version = computed(() => {
-      const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
-      return "© 2007 - " + ver;
-    });
     const route = useRoute();
+
     const dynamic = computed(() => {
       switch (route.name) {
         case 'home':
@@ -67,7 +66,6 @@ export default defineComponent({
     return {
       busy,
       dynamic,
-      version,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;

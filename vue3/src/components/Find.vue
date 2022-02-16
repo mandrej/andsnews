@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref, watch } from "vue";
+import { defineComponent, computed, reactive, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -147,18 +147,18 @@ export default defineComponent({
 
     const monthNames = computed(() => {
       const locale = [
-        "Jan.",
-        "Feb.",
-        "Mar.",
-        "Apr.",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
         "May",
-        "Jun.",
-        "Jul.",
-        "Aug.",
-        "Sep.",
-        "Oct.",
-        "Nov.",
-        "Dec.",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ];
       return locale.map((month, i) => ({ label: month, value: i + 1 }));
     });
@@ -170,7 +170,7 @@ export default defineComponent({
     });
 
     const find = computed(() => store.state.app.find)
-    const tmp = ref({ ...find.value });
+    const tmp = reactive(find);
 
     function setForm(to) {
       let pid = null;
@@ -185,6 +185,8 @@ export default defineComponent({
         to.query.month = +to.query.month;
       if (Object.prototype.hasOwnProperty.call(to.query, "day"))
         to.query.day = +to.query.day;
+
+      console.log(to.query);
 
       store.commit("app/saveFindForm", to.query);
       if (!Object.keys(to.query).length) {

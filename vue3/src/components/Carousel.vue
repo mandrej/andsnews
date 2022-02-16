@@ -28,9 +28,10 @@
       @swiper="onSwiper"
       @hashChange="onHashChange"
       @slideChange="onSlideChange"
+      @zoomChange="onZoomChange"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
-        <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm">
+        <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
           <div class="text-subtitle2">{{ obj.headline }}</div>
           <div class="text-body2">{{ caption(obj) }}</div>
         </div>
@@ -89,18 +90,16 @@ export default defineComponent({
     }
 
     const zoomRatio = (dim) => {
-      let ratio = 1
       if (swiperRef.value && dim) {
-        const DIM = [swiperRef.value.width, swiperRef.value.height]
-        if (dim[0] >= dim[1]) {
-          ratio = dim[0] / DIM[0]
-        } else {
-          ratio = dim[1] / DIM[1]
-        }
-        if (ratio < 1) ratio = 1
-        return ratio
+        const wRatio = dim[0] / swiperRef.value.width
+        const hRatio = dim[1] / swiperRef.value.height
+        return Math.max(wRatio, hRatio, 1)
       }
       return 2
+    }
+
+    const onZoomChange = (swiper, scale, imageEl, slideEl) => {
+      // console.log(scale);
     }
 
     return {
@@ -130,6 +129,7 @@ export default defineComponent({
         sw.slideTo(index)
       },
       zoomRatio,
+      onZoomChange,
       onSlideChange: (sw) => {
         const hash = sw.slides[sw.activeIndex].dataset.hash;
         // console.log('currentId ', hash);

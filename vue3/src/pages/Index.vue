@@ -1,12 +1,12 @@
 <template>
   <q-page class="full-height last" :style="styling">
-    <div class="text-h5 q-pa-md text-white text-right">
+    <div class="text-subtitle1 q-pa-md text-white text-right">
       ANDрејевићи personal photo album
       <br />
       {{ bucketInfo.count }} photos since 2007 and counting
     </div>
     <div class="absolute-bottom">
-      <div class="q-pa-sm text-h5">
+      <div class="q-pa-sm text-h4">
         <router-link
           v-for="nick in nickNames"
           :key="nick"
@@ -26,13 +26,13 @@
           style="display: inline-block; text-decoration: none"
         >{{ year }}</router-link>
       </div>
-      <div class="q-pa-sm text-subtitle1">
+      <div class="q-px-md text-subtitle1">
         <router-link
           v-for="tag in values.tags"
           :key="tag"
           :title="tag"
           :to="{ path: '/list', query: { tags: tag } }"
-          class="q-px-sm text-white"
+          class="q-pr-sm text-white"
           style="display: inline-block; text-decoration: none"
         >{{ tag }}</router-link>
       </div>

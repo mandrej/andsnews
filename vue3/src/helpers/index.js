@@ -7,10 +7,7 @@ import { date, format } from "quasar";
 const api = axios.create({ baseURL: "/api", timeout: 60000 }); // 1 min
 const firebase = initializeApp(CONFIG.firebase);
 const { humanStorageSize } = format;
-const { extractDate, formatDate } = date;
-
-const d = new Date("2022-02-12 16:33");
-console.log(d, formatDate(d, "DD MMM YYYY HH:mm"));
+const { formatDate } = date;
 
 Notify.registerType("external", {
   color: "grey-8",
@@ -48,6 +45,10 @@ const smallsized = CONFIG.public_url + "smallsized/";
 const formatBytes = (bytes, decimals = 2) => {
   return humanStorageSize(bytes);
 };
+const formatDatum = (str, format) => {
+  const date = new Date(str);
+  return formatDate(date, format);
+};
 
 export {
   CONFIG,
@@ -59,4 +60,5 @@ export {
   fullsized,
   smallsized,
   formatBytes,
+  formatDatum,
 };

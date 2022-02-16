@@ -22,7 +22,7 @@
           <q-btn :disabled="!fcm_token" color="primary" @click="rebuild(field)" label="Rebuild" />
         </q-item-section>
       </q-item>
-      <q-item-label header>Fix on 2021-12-16</q-item-label>
+      <q-item-label header>Fix on {{ formatDatum('2021-12-16', 'DD.MM.YYYY') }}</q-item-label>
       <q-item>
         <q-item-section>
           <q-item-label>Add day field to datastore</q-item-label>
@@ -55,7 +55,7 @@
 <script>
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { api } from "../helpers"
+import { api, formatDatum } from "../helpers"
 
 export default defineComponent({
   name: "Admin",
@@ -70,6 +70,7 @@ export default defineComponent({
     }
     return {
       fcm_token,
+      formatDatum,
       values: computed(() => store.state.app.values),
       callApi,
       rebuild: (name) => {

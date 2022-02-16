@@ -9,7 +9,7 @@
 
     <div class="q-pa-md" v-for="(list, datum) in objectsByDate" :key="datum">
       <q-scroll-observer @scroll="scrollHandler" />
-      <div class="text-h6">{{ datum }}</div>
+      <div class="text-h6 text-weight-light">{{ formatDatum(datum, 'dddd DD.MM.YYYY') }}</div>
       <div class="row q-col-gutter-md">
         <div
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
@@ -25,7 +25,9 @@
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
-              <div style="line-height: 42px;">{{ item.nick }}, {{ item.date }}</div>
+              <div
+                style="line-height: 42px;"
+              >{{ item.nick }}, {{ formatDatum(item.date, 'DD.MM.YYYY HH:mm') }}</div>
               <q-btn
                 v-if="item.loc"
                 flat
@@ -56,6 +58,10 @@
         </div>
       </div>
     </div>
+
+    <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
+      <q-btn fab icon="arrow_upward" color="secondary" />
+    </q-page-scroller>
   </q-page>
 </template>
 
@@ -63,7 +69,7 @@
 import { useQuasar } from 'quasar'
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { smallsized } from "../helpers";
+import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
 import Edit from "../components/Edit.vue"
 
@@ -99,9 +105,9 @@ export default defineComponent({
           rec: rec
         }
       }).onOk(() => {
-        console.log('OK')
+        // console.log('OK')
       }).onCancel(() => {
-        console.log('Cancel')
+        // console.log('Cancel')
       })
     }
     const showConfirm = (rec) => {
@@ -118,6 +124,7 @@ export default defineComponent({
     return {
       error,
       smallsized,
+      formatDatum,
       objectsByDate,
       scrollHandler,
       showEditForm,
@@ -136,9 +143,9 @@ export default defineComponent({
             pid: id
           }
         }).onOk(() => {
-          console.log('OK')
+          // console.log('OK')
         }).onCancel(() => {
-          console.log('Cancel')
+          // console.log('Cancel')
         })
       },
     };

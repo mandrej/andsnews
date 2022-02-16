@@ -36,7 +36,11 @@
         <q-item-label caption>rebuild various counters</q-item-label>
       </q-item-section>
     </q-item>
-    <q-item></q-item>
+    <q-item>
+      <q-item-section>
+        <q-item-label class="q-px-xs">{{ version }}</q-item-label>
+      </q-item-section>
+    </q-item>
   </q-list>
 </template>
 
@@ -48,14 +52,19 @@ export default defineComponent({
   name: "Menu",
   setup() {
     const store = useStore();
+    const version = computed(() => {
+      const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
+      return "© 2007 - " + ver;
+    });
 
     function signIn() {
       store.dispatch("auth/signIn");
     }
 
     return {
-      user: computed(() => store.state.auth.user),
       signIn,
+      version,
+      user: computed(() => store.state.auth.user),
     };
   },
 });
