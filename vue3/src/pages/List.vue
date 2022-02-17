@@ -25,9 +25,15 @@
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
-              <div
-                style="line-height: 42px;"
-              >{{ item.nick }}, {{ formatDatum(item.date, 'DD.MM.YYYY HH:mm') }}</div>
+              <div style="line-height: 42px;">
+                {{ item.nick }},
+                <router-link
+                  :to="{ path: '/list', query: { year: item.year, month: item.month, day: item.day } }"
+                  class="text-secondary"
+                  style="text-decoration: none;"
+                >{{ formatDatum(item.date, 'DD.MM.YYYY') }}</router-link>
+                {{ item.date.substring(11) }}
+              </div>
               <q-btn
                 v-if="item.loc"
                 flat
@@ -92,11 +98,6 @@ export default defineComponent({
         store.dispatch("app/fetchRecords");
       }
     }
-
-    // const format = (dateStr, from, to) => {
-    //   const dt = date.extractDate(item.date, from)
-    //   return date.formatDate(dt, to)
-    // }
 
     const showEditForm = (rec) => {
       $q.dialog({

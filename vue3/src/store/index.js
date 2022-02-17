@@ -6,7 +6,7 @@ import auth from "./modules/auth";
 
 const debug = import.meta.env.NODE_ENV !== "production";
 const persisted = createPersistedState({
-  key: "xxx",
+  key: "ands",
   paths: [
     "auth.user",
     "auth.fcm_token",

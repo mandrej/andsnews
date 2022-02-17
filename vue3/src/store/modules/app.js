@@ -27,8 +27,6 @@ const state = {
   busy: false,
   clear: false,
   dark: false,
-
-  snackbar: null,
 };
 
 const getters = {
@@ -199,12 +197,6 @@ const mutations = {
     if (idx > -1) state.objects.splice(idx, 1);
   },
   saveFindForm(state, payload) {
-    // if (Object.prototype.hasOwnProperty.call(payload, "year"))
-    //   payload.year = +payload.year;
-    // if (Object.prototype.hasOwnProperty.call(payload, "month"))
-    //   payload.month = +payload.month;
-    // if (Object.prototype.hasOwnProperty.call(payload, "day"))
-    //   payload.day = +payload.day;
     state.find = { ...payload };
   },
   updateObjects(state, data) {

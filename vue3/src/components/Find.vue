@@ -199,12 +199,9 @@ export default defineComponent({
     const submit = () => {
       // remove undefined and empty list
       Object.keys(tmp.value).forEach((key) => {
-        if (tmp.value[key] == null || tmp.value[key].length === 0) {
+        if (tmp.value[key] == undefined || tmp.value[key].length === 0) {
           delete tmp.value[key];
         }
-        // if (Object.prototype.hasOwnProperty.call(tmp.value, "month")) {
-        //   tmp.value.month = tmp.value.month.value
-        // }
       });
       if (Object.keys(tmp.value).length) {
         router.push({ path: "/list", query: tmp.value });
