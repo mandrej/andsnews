@@ -148,7 +148,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* --swiper-navigation-color: "#fff"; */
+  --swiper-navigation-color: "#1976D2";
 }
 
 .swiper-slide {

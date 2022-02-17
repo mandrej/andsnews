@@ -3,10 +3,10 @@
     <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text">
       <template v-slot:append>
         <q-icon
-          v-if="tmp.text !== ''"
+          v-if="tmp.text !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.text = ''; submit()"
+          @click.stop="tmp.text = undefined; submit()"
         />
       </template>
     </q-input>
@@ -36,10 +36,10 @@
     >
       <template v-slot:append>
         <q-icon
-          v-if="tmp.year !== null"
+          v-if="tmp.year !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.year = null; submit()"
+          @click.stop="tmp.year = undefined; submit()"
         />
       </template>
     </q-select>
@@ -56,10 +56,10 @@
       >
         <template v-slot:append>
           <q-icon
-            v-if="tmp.month !== null"
+            v-if="tmp.month !== undefined"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.month = null; submit()"
+            @click.stop="tmp.month = undefined; submit()"
           />
         </template>
       </q-select>
@@ -74,10 +74,10 @@
       >
         <template v-slot:append>
           <q-icon
-            v-if="tmp.day !== null"
+            v-if="tmp.day !== undefined"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.day = null; submit()"
+            @click.stop="tmp.day = undefined; submit()"
           />
         </template>
       </q-select>
@@ -91,10 +91,10 @@
     >
       <template v-slot:append>
         <q-icon
-          v-if="tmp.model !== null"
+          v-if="tmp.model !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.model = null; submit()"
+          @click.stop="tmp.model = undefined; submit()"
         />
       </template>
     </q-select>
@@ -107,10 +107,10 @@
     >
       <template v-slot:append>
         <q-icon
-          v-if="tmp.lens !== null"
+          v-if="tmp.lens !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.lens = null; submit()"
+          @click.stop="tmp.lens = undefined; submit()"
         />
       </template>
     </q-select>
@@ -123,10 +123,10 @@
     >
       <template v-slot:append>
         <q-icon
-          v-if="tmp.nick !== null"
+          v-if="tmp.nick !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.nick = null; submit()"
+          @click.stop="tmp.nick = undefined; submit()"
         />
       </template>
     </q-select>
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, reactive, watch } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -144,6 +144,11 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
+
+    const find = computed(() => store.state.app.find)
+    const tmp = computed(() => {
+      return { ...find.value }
+    })
 
     const monthNames = computed(() => {
       const locale = [
@@ -169,10 +174,7 @@ export default defineComponent({
       return [...Array(N)].map((_, i) => from + i * step);
     });
 
-    const find = computed(() => store.state.app.find)
-    const tmp = reactive(find);
-
-    function setForm(to) {
+    const setForm = (to) => {
       let pid = null;
       if (to.hash) {
         // https://ands.appspot.com/list?nick=milan#6201569452228608
@@ -186,8 +188,6 @@ export default defineComponent({
       if (Object.prototype.hasOwnProperty.call(to.query, "day"))
         to.query.day = +to.query.day;
 
-      console.log(to.query);
-
       store.commit("app/saveFindForm", to.query);
       if (!Object.keys(to.query).length) {
         store.dispatch("app/changeFilter", { reset: false, pid: pid }); // continue
@@ -196,7 +196,7 @@ export default defineComponent({
       }
     }
 
-    function submit() {
+    const submit = () => {
       // remove undefined and empty list
       Object.keys(tmp.value).forEach((key) => {
         if (tmp.value[key] == null || tmp.value[key].length === 0) {
@@ -216,13 +216,12 @@ export default defineComponent({
     watch(route, (to) => setForm(to));
 
     return {
+      tmp,
       busy: computed(() => store.state.app.busy),
-      find,
       values: computed(() => store.state.app.values),
       nickNames: computed(() => store.getters["app/nickNames"]),
       monthNames,
       days,
-      tmp,
       submit,
     };
   },

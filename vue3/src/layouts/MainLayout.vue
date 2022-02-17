@@ -6,11 +6,7 @@
         <q-linear-progress v-show="busy" color="secondary" class="absolute-bottom" indeterminate />
 
         <q-toolbar-title>
-          <router-link
-            :to="{ path: '/', query: {} }"
-            class="text-black"
-            style="text-decoration: none"
-          >{{ title }}</router-link>
+          <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
