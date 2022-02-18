@@ -16,7 +16,7 @@
           v-for="item in list"
           :key="item.id"
         >
-          <q-card>
+          <q-card flat bordered>
             <q-img
               class="thumbnail cursor-pointer"
               :src="smallsized + item.filename"
@@ -118,7 +118,14 @@ export default defineComponent({
       $q.dialog({
         title: 'Confirm Delete',
         message: `Would you like to delete ${rec.headline}?`,
-        cancel: true,
+        ok: {
+          color: 'negative',
+          flat: true
+        },
+        cancel: {
+          color: 'positive',
+          flat: true
+        },
         persistent: true
       }).onOk(() => {
         store.dispatch('app/deleteRecord', rec)

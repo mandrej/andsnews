@@ -33,6 +33,6 @@ app.use(Quasar, {
 });
 app.use(store);
 app.use(router);
-// app.config.devtools = true
+// app.config.devtools = true;
 // Assumes you have a <div id="app"></div> in your index.html
 app.mount("#app");
