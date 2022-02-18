@@ -22,6 +22,7 @@ export default defineConfig({
       sassVariables: "src/quasar-variables.sass",
     }),
     VitePWA({
+      strategies: "injectManifest",
       registerType: "autoUpdate",
     }),
   ],

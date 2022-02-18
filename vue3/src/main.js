@@ -14,7 +14,7 @@ import App from "./App.vue";
 
 const app = createApp(App);
 const updateSW = registerSW({
-  onOfflineReady(status) {},
+  onOfflineReady() {},
 });
 
 app.use(Quasar, {
