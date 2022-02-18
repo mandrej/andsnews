@@ -28,11 +28,13 @@
 <script>
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
-import Stat from "../components/Stat.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import { defineComponent, defineAsyncComponent, computed, ref } from "vue";
 
-import { defineComponent, computed, ref } from "vue";
+const Stat = defineAsyncComponent(() =>
+  import('../components/Stat.vue')
+)
 
 export default defineComponent({
   name: "MainLayout",
@@ -41,7 +43,6 @@ export default defineComponent({
     Menu,
     Stat
   },
-
   setup() {
     const store = useStore();
     const busy = computed(() => store.state.app.busy)

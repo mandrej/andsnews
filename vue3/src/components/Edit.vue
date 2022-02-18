@@ -130,8 +130,7 @@ export default defineComponent({
   emits: [
     ...useDialogPluginComponent.emits
   ],
-  setup(props, context) {
-    // console.log(context.root.$q);
+  setup(props) {
     const store = useStore();
     const tmp = ref({ ...props.rec });
     const values = computed(() => store.state.app.values)

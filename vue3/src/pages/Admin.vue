@@ -59,7 +59,6 @@ import { api, formatDatum } from "../helpers"
 
 export default defineComponent({
   name: "Admin",
-
   setup() {
     const store = useStore();
     const fcm_token = computed(() => store.state.auth.fcm_token)

@@ -47,10 +47,8 @@ import { fullsized, smallsized } from "../helpers";
 
 export default defineComponent({
   name: "Home",
-
   setup() {
     const store = useStore();
-    store.dispatch("app/fetchStat");
 
     const last = computed(() => store.state.app.last);
     const styling = computed(() => {

@@ -73,11 +73,14 @@
 
 <script>
 import { useQuasar } from 'quasar'
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, defineAsyncComponent, computed } from "vue";
 import { useStore } from "vuex";
 import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
-import Edit from "../components/Edit.vue"
+
+const Edit = defineAsyncComponent(() =>
+  import('../components/Edit.vue')
+)
 
 export default defineComponent({
   name: "List",
