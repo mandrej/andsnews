@@ -30,9 +30,8 @@ const state = {
 };
 
 const getters = {
-  count: (state) => {
-    const sufix = state.next ? "+" : "";
-    return state.objects.length + sufix;
+  counter: (state) => {
+    return { count: state.objects.length, more: state.next };
   },
   nickNames: (state) => {
     if (state.values && state.values.email) {

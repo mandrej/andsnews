@@ -152,7 +152,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     onMounted(() => {
-      if (!tmp.date) {
+      if (!tmp.value.date) {
         readExif()
       }
     })

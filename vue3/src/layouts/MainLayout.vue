@@ -9,7 +9,15 @@
           <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
 
-        <div class="q-px-xs">{{ count }}</div>
+        <vue3-autocounter
+          v-if="route.name === 'list'"
+          class="q-px-xs"
+          :startAmount="oldCount"
+          :endAmount="newCount"
+          :duration="1"
+          :suffix="sufixCount"
+          :autoinit="true"
+        />
       </q-toolbar>
     </q-header>
 
@@ -32,7 +40,8 @@ import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { defineComponent, defineAsyncComponent, computed, ref } from "vue";
+import { defineComponent, defineAsyncComponent, computed, ref, watch } from "vue";
+import Vue3Autocounter from 'vue3-autocounter';
 
 const Stat = defineAsyncComponent(() =>
   import('../components/Stat.vue')
@@ -43,7 +52,8 @@ export default defineComponent({
   components: {
     Find,
     Menu,
-    Stat
+    Stat,
+    Vue3Autocounter
   },
   setup() {
     const store = useStore();
@@ -51,6 +61,10 @@ export default defineComponent({
 
     const leftDrawerOpen = ref(false);
     const route = useRoute();
+    const counter = computed(() => store.getters["app/counter"])
+    const newCount = ref(0)
+    const oldCount = ref(0)
+    const sufixCount = ref('')
 
     const dynamic = computed(() => {
       switch (route.name) {
@@ -61,17 +75,19 @@ export default defineComponent({
           return Stat
       }
     })
-    const count = computed(() => {
-      if (route.name === 'list') {
-        return store.getters["app/count"] // 100+
-      } else {
-        return ''
-      }
+
+    watch(counter, (value, oldValue) => {
+      newCount.value = value.count
+      oldCount.value = oldValue.count || 0
+      sufixCount.value = value.more ? '+' : ''
     });
 
     return {
       busy,
-      count,
+      route,
+      newCount,
+      oldCount,
+      sufixCount,
       dynamic,
       leftDrawerOpen,
       toggleLeftDrawer() {
