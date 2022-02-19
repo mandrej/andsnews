@@ -9,15 +9,7 @@
           <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
 
-        <vue3-autocounter
-          v-if="route.name === 'list'"
-          class="q-px-xs"
-          :startAmount="oldCount"
-          :endAmount="newCount"
-          :duration="1"
-          :suffix="sufixCount"
-          :autoinit="true"
-        />
+        <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs"></div>
       </q-toolbar>
     </q-header>
 
@@ -36,12 +28,12 @@
 </template>
 
 <script>
-import Find from "../components/Find.vue";
-import Menu from "../components/Menu.vue";
+import { defineComponent, defineAsyncComponent, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { defineComponent, defineAsyncComponent, computed, ref, watch } from "vue";
-import Vue3Autocounter from 'vue3-autocounter';
+import Find from "../components/Find.vue";
+import Menu from "../components/Menu.vue";
+import gsap from 'gsap'
 
 const Stat = defineAsyncComponent(() =>
   import('../components/Stat.vue')
@@ -53,7 +45,6 @@ export default defineComponent({
     Find,
     Menu,
     Stat,
-    Vue3Autocounter
   },
   setup() {
     const store = useStore();
@@ -62,9 +53,7 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const route = useRoute();
     const counter = computed(() => store.getters["app/counter"])
-    const newCount = ref(0)
-    const oldCount = ref(0)
-    const sufixCount = ref('')
+    const countRef = ref(null)
 
     const dynamic = computed(() => {
       switch (route.name) {
@@ -77,17 +66,24 @@ export default defineComponent({
     })
 
     watch(counter, (value, oldValue) => {
-      newCount.value = value.count
-      oldCount.value = oldValue.count || 0
-      sufixCount.value = value.more ? '+' : ''
+      const div = countRef.value
+      const obj = { number: oldValue.count };
+      const sufix = value.more ? '+' : ''
+      gsap.to(obj, {
+        duration: 1,
+        number: value.count,
+        ease: "power1.in",
+        onUpdate() {
+          div.innerText = obj.number.toFixed(0) + sufix;
+        }
+      });
+
     });
 
     return {
       busy,
       route,
-      newCount,
-      oldCount,
-      sufixCount,
+      countRef,
       dynamic,
       leftDrawerOpen,
       toggleLeftDrawer() {
