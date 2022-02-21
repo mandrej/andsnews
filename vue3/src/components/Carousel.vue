@@ -8,12 +8,14 @@
   >
     <swiper
       class="bg-grey-10 text-white"
-      :spaceBetween="30"
       :keyboard="true"
       :grabCursor="true"
       :hashNavigation="{
         watchState: true,
         replaceState: true,
+      }"
+      :pagination="{
+        type: 'fraction',
       }"
       :lazy="{
         loadOnTransitionStart: true,
@@ -24,11 +26,7 @@
       }"
       :navigation="true"
       :modules="modules"
-      :slides-per-view="1"
       @swiper="onSwiper"
-      @hashChange="onHashChange"
-      @slideChange="onSlideChange"
-      @zoomChange="onZoomChange"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
@@ -50,11 +48,12 @@ import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Lazy, Navigation, Zoom, Keyboard } from "swiper";
+import { Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard } from "swiper";
 
 import "swiper/scss";
 import "swiper/scss/lazy";
 import "swiper/scss/zoom";
+import "swiper/scss/pagination";
 import "swiper/scss/navigation";
 
 export default defineComponent({
@@ -98,10 +97,6 @@ export default defineComponent({
       return 2
     }
 
-    const onZoomChange = (swiper, scale, imageEl, slideEl) => {
-      // console.log(scale);
-    }
-
     return {
       objects,
       fullsized,
@@ -121,23 +116,13 @@ export default defineComponent({
 
       swiperRef,
       onCancelClick: onDialogCancel,
-      modules: [Lazy, Navigation, Zoom, Keyboard],
+      modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],
       onSwiper: (sw) => {
         swiperRef.value = sw
-        // swDim.value = [sw.el.clientWidth, sw.el.clientHeight]
         const index = hashArray.indexOf(currentId.value)
         sw.slideTo(index)
       },
       zoomRatio,
-      onZoomChange,
-      onSlideChange: (sw) => {
-        const hash = sw.slides[sw.activeIndex].dataset.hash;
-        // console.log('currentId ', hash);
-      },
-      onHashChange: (sw) => {
-        const hash = sw.slides[sw.activeIndex].dataset.hash;
-        // console.log('hash ', hash);
-      }
     };
   },
 });

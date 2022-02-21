@@ -67,6 +67,7 @@ export default defineComponent({
 
     watch(counter, (value, oldValue) => {
       const div = countRef.value
+      if (!div) return
       const obj = { number: oldValue.count };
       const sufix = value.more ? '+' : ''
       gsap.to(obj, {

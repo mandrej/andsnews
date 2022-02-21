@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref, watch } from "vue";
+import { defineComponent, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -175,11 +175,13 @@ export default defineComponent({
     });
 
     const setForm = (to) => {
-      let pid = null;
-      if (to.hash) {
-        // https://ands.appspot.com/list?nick=milan#6201569452228608
-        pid = +to.hash.substring(1);
-      }
+      console.log(to);
+      // let pid = null;
+      // if (to.hash) {
+      //   // https://ands.appspot.com/list?nick=milan#6201569452228608
+      //   pid = +to.hash.substring(1);
+      //   // store.commit("app/setHash", pid);
+      // }
       // adopt to match types in store
       if (Object.prototype.hasOwnProperty.call(to.query, "year"))
         to.query.year = +to.query.year;
@@ -187,12 +189,12 @@ export default defineComponent({
         to.query.month = +to.query.month;
       if (Object.prototype.hasOwnProperty.call(to.query, "day"))
         to.query.day = +to.query.day;
-
       store.commit("app/saveFindForm", to.query);
+
       if (!Object.keys(to.query).length) {
-        store.dispatch("app/changeFilter", { reset: false, pid: pid }); // continue
+        store.dispatch("app/changeFilter", { reset: false }); // continue
       } else {
-        store.dispatch("app/changeFilter", { reset: true, pid: pid }); // new filter
+        store.dispatch("app/changeFilter", { reset: true }); // new filter
       }
     }
 

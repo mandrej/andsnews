@@ -26,7 +26,6 @@ const state = {
 
   busy: false,
   clear: false,
-  dark: false,
 };
 
 const getters = {
@@ -112,14 +111,12 @@ const actions = {
       commit("setClear", true);
       commit("setBusy", false); // interupt loading
       commit("resetPaginator");
-      dispatch("fetchRecords", payload.pid);
+      dispatch("fetchRecords");
     }
   },
-  fetchRecords: ({ commit, state }, pid) => {
+  fetchRecords: ({ commit, state }) => {
     if (state.busy) return;
-    const params = Object.assign({}, state.find, {
-      per_page: pid ? 2 * CONFIG.limit : CONFIG.limit,
-    });
+    const params = Object.assign({}, state.find, { per_page: CONFIG.limit });
     if (state.next) params._page = state.next;
     const url = "search?" + querystring.stringify(params);
 
@@ -277,9 +274,6 @@ const mutations = {
   },
   setError(state, val) {
     state.error = val;
-  },
-  toggleTheme(state, val) {
-    state.dark = val;
   },
 };
 

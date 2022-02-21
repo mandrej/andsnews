@@ -73,8 +73,9 @@
 
 <script>
 import { useQuasar } from 'quasar'
-import { defineComponent, defineAsyncComponent, computed } from "vue";
+import { defineComponent, defineAsyncComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
 
@@ -87,9 +88,17 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
     const store = useStore();
+    const route = useRoute();
     const next = computed(() => store.state.app.next);
     const error = computed(() => store.state.app.error);
     const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
+
+    onMounted(() => {
+      const hash = route.hash
+      if (hash) {
+        showCarousel(+hash.substring(1))
+      }
+    })
 
     const scrollHandler = (obj) => {
       const scrollHeight = document.documentElement.scrollHeight;
@@ -131,6 +140,18 @@ export default defineComponent({
         store.dispatch('app/deleteRecord', rec)
       })
     }
+    const showCarousel = (id) => {
+      $q.dialog({
+        component: Carousel,
+        componentProps: {
+          pid: id
+        }
+      }).onOk(() => {
+        // console.log('OK')
+      }).onCancel(() => {
+        // console.log('Cancel')
+      })
+    }
 
     return {
       error,
@@ -147,18 +168,7 @@ export default defineComponent({
         //   email: this.user.email
         // })
       },
-      showCarousel: (id) => {
-        $q.dialog({
-          component: Carousel,
-          componentProps: {
-            pid: id
-          }
-        }).onOk(() => {
-          // console.log('OK')
-        }).onCancel(() => {
-          // console.log('Cancel')
-        })
-      },
+      showCarousel,
     };
   },
 });
