@@ -35,6 +35,6 @@ functions/
 **/vite.config.js
 **/yarn*
 
-vue2/dist/static/export
+**/export
 
 # gcloud meta list-files-for-upload

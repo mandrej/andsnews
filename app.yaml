@@ -28,8 +28,8 @@ handlers:
     upload: vue3/dist/index.html
     secure: always
 
-  - url: /assets
-    static_dir: vue3/dist/assets
+  - url: /(assets|icons)
+    static_dir: vue3/dist/(assets|icons)
     secure: always
 
   - url: /api/.*

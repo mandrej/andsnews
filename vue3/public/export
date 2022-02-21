@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+dest=icons
+
+sizes=(192 512)
+for i in ${sizes[@]}; do
+  file=$dest/pwa-$i\x$i.png
+  inkscape --export-filename=$file -w $i -h $i aperture.svg
+  echo $file
+done
+
+sizes=(16)
+for i in ${sizes[@]}; do
+  file=favicon.png
+  inkscape --export-filename=$file -w $i -h $i aperture.svg
+  echo $file
+done
+
+
+exit 0
