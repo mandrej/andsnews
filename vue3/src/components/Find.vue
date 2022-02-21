@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, watch } from "vue";
+import { defineComponent, computed, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -148,6 +148,30 @@ export default defineComponent({
     const find = computed(() => store.state.app.find)
     const tmp = computed(() => {
       return { ...find.value }
+    })
+
+    // const adopt = (obj) => {
+    //   // adopt to match types in store
+    //   if (Object.prototype.hasOwnProperty.call(obj, "year"))
+    //     obj.year = +obj.year;
+    //   if (Object.prototype.hasOwnProperty.call(obj, "month"))
+    //     obj.month = +obj.month;
+    //   if (Object.prototype.hasOwnProperty.call(obj, "day"))
+    //     obj.day = +obj.day;
+    //   return obj
+    // }
+
+    onMounted(() => {
+      if (Object.keys(route.query).length === 0) {
+      } else {
+        if (Object.prototype.hasOwnProperty.call(route.query, "year"))
+          route.query.year = +route.query.year;
+        if (Object.prototype.hasOwnProperty.call(route.query, "month"))
+          route.query.month = +route.query.month;
+        if (Object.prototype.hasOwnProperty.call(route.query, "day"))
+          route.query.day = +route.query.day;
+      }
+      submit()
     })
 
     const monthNames = computed(() => {
@@ -175,14 +199,6 @@ export default defineComponent({
     });
 
     const setForm = (to) => {
-      console.log(to);
-      // let pid = null;
-      // if (to.hash) {
-      //   // https://ands.appspot.com/list?nick=milan#6201569452228608
-      //   pid = +to.hash.substring(1);
-      //   // store.commit("app/setHash", pid);
-      // }
-      // adopt to match types in store
       if (Object.prototype.hasOwnProperty.call(to.query, "year"))
         to.query.year = +to.query.year;
       if (Object.prototype.hasOwnProperty.call(to.query, "month"))
@@ -205,6 +221,14 @@ export default defineComponent({
           delete tmp.value[key];
         }
       });
+      console.log('submit ', tmp.value);
+      store.commit("app/saveFindForm", tmp.value);
+
+      if (!Object.keys(tmp.value).length) {
+        store.dispatch("app/changeFilter", { reset: false }); // continue
+      } else {
+        store.dispatch("app/changeFilter", { reset: true }); // new filter
+      }
       if (Object.keys(tmp.value).length) {
         router.push({ path: "/list", query: tmp.value });
       } else {

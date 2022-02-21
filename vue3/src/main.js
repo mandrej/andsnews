@@ -11,6 +11,7 @@ import "quasar/src/css/index.sass";
 import { registerSW } from "virtual:pwa-register";
 
 import App from "./App.vue";
+import VueGtag from "vue-gtag-next";
 
 const app = createApp(App);
 const updateSW = registerSW({
@@ -29,6 +30,14 @@ app.use(Quasar, {
     // loading: {...}, // default set of options for Loading Quasar plugin
     // loadingBar: { ... }, // settings for LoadingBar Quasar plugin
     // ..and many more (check Installation card on each Quasar component/directive/plugin)
+  },
+});
+app.use(VueGtag, {
+  property: {
+    isEnabled: import.meta.env.PROD,
+    id: import.meta.env.VUE_APP_GA,
+    app_name: "ANDS",
+    send_page_view: false,
   },
 });
 app.use(store);

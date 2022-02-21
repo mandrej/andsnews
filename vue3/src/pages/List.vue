@@ -55,7 +55,7 @@
                 round
                 color="grey"
                 icon="download"
-                @click.stop="download"
+                @click.stop="download(item.filename)"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
               />
@@ -78,6 +78,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
+import { useGtag } from "vue-gtag-next";
 
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
@@ -92,6 +93,9 @@ export default defineComponent({
     const next = computed(() => store.state.app.next);
     const error = computed(() => store.state.app.error);
     const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
+
+    const { event } = useGtag();
+    const user = computed(() => store.state.auth.user)
 
     onMounted(() => {
       const hash = route.hash
@@ -152,6 +156,13 @@ export default defineComponent({
         // console.log('Cancel')
       })
     }
+    const download = (filename) => {
+      event('download', {
+        event_category: 'engagement',
+        event_label: filename + ' (' + user.value.email + ')',
+        value: 1
+      })
+    }
 
     return {
       error,
@@ -161,13 +172,7 @@ export default defineComponent({
       scrollHandler,
       showEditForm,
       showConfirm,
-      download: () => {
-        return null
-        // this.$emit('register-download', {
-        //   headline: this.item.headline,
-        //   email: this.user.email
-        // })
-      },
+      download,
       showCarousel,
     };
   },
