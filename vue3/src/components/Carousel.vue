@@ -49,7 +49,7 @@
 import { defineComponent, computed, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
-import { fullsized } from "../helpers";
+import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard } from "swiper";
 
@@ -76,8 +76,6 @@ export default defineComponent({
 
     const store = useStore();
     const objects = computed(() => store.state.app.objects);
-    const hashArray = objects.value.map(item => item.id)
-    const currentId = ref(props.pid);
     const swiperRef = ref(null)
 
     const caption = (rec) => {
@@ -103,8 +101,6 @@ export default defineComponent({
     return {
       objects,
       fullsized,
-      currentId,
-      hashArray,
       caption,
 
       dialogRef,
@@ -122,8 +118,13 @@ export default defineComponent({
       modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],
       onSwiper: (sw) => {
         swiperRef.value = sw
-        const index = hashArray.indexOf(currentId.value)
-        sw.slideTo(index)
+        const index = objects.value.findIndex(x => x.id === props.pid)
+        console.log(props.pid, index);
+        if (index === -1) {
+          notify("negative", `${props.pid} couldn't be found`)
+        } else {
+          sw.slideTo(index)
+        }
       },
       zoomRatio,
     };

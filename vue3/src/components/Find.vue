@@ -6,7 +6,7 @@
           v-if="tmp.text !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.text = undefined; submit()"
+          @click.stop="tmp.text = null; submit()"
         />
       </template>
     </q-input>
@@ -39,7 +39,7 @@
           v-if="tmp.year !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.year = undefined; submit()"
+          @click.stop="tmp.year = null; submit()"
         />
       </template>
     </q-select>
@@ -59,7 +59,7 @@
             v-if="tmp.month !== undefined"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.month = undefined; submit()"
+            @click.stop="tmp.month = null; submit()"
           />
         </template>
       </q-select>
@@ -77,7 +77,7 @@
             v-if="tmp.day !== undefined"
             class="cursor-pointer"
             name="clear"
-            @click.stop="tmp.day = undefined; submit()"
+            @click.stop="tmp.day = null; submit()"
           />
         </template>
       </q-select>
@@ -94,7 +94,7 @@
           v-if="tmp.model !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.model = undefined; submit()"
+          @click.stop="tmp.model = null; submit()"
         />
       </template>
     </q-select>
@@ -110,7 +110,7 @@
           v-if="tmp.lens !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.lens = undefined; submit()"
+          @click.stop="tmp.lens = null; submit()"
         />
       </template>
     </q-select>
@@ -126,7 +126,7 @@
           v-if="tmp.nick !== undefined"
           class="cursor-pointer"
           name="clear"
-          @click.stop="tmp.nick = undefined; submit()"
+          @click.stop="tmp.nick = null; submit()"
         />
       </template>
     </q-select>
@@ -153,10 +153,20 @@ export default defineComponent({
     // execute stored values
     onMounted(() => {
       console.log('onMounted');
+      Object.keys(route.query).forEach((key) => {
+        // adopt to match types in store
+        if (['year', 'month', 'day'].includes(key)) {
+          route.query[key] = +route.query[key]
+        }
+      });
+      store.commit("app/saveFindForm", route.query);
+
       if (Object.keys(tmp.value).length) {
-        router.push({ path: "/list", query: tmp.value });
-      } else {
-        router.replace({ path: "/" }).catch((err) => { });
+        store.commit("app/setBusy", false); // interupt loading
+        store.commit("app/resetObjects");
+        store.commit("app/resetPaginator");
+        store.dispatch("app/fetchRecords"); // new filter
+        router.push({ path: "/list", query: tmp.value, hash: route.hash });
       }
     })
 
@@ -165,37 +175,43 @@ export default defineComponent({
 
     const setForm = (to) => {
       console.log('setForm');
-      for (const key in to.query) {
+      Object.keys(to.query).forEach((key) => {
+        // adopt to match types in store
         if (['year', 'month', 'day'].includes(key)) {
           to.query[key] = +to.query[key]
         }
-      }
+      });
       store.commit("app/saveFindForm", to.query);
 
-      if (!Object.keys(to.query).length) {
-        store.dispatch("app/changeFilter", { reset: false }); // continue
-      } else {
-        store.dispatch("app/changeFilter", { reset: true }); // new filter
-      }
       if (Object.keys(to.query).length) {
-        router.push({ path: "/list", query: to.query });
-      } else {
-        router.replace({ path: "/" }).catch((err) => { });
+        store.commit("app/setBusy", false); // interupt loading
+        store.commit("app/resetObjects");
+        store.commit("app/resetPaginator");
+        store.dispatch("app/fetchRecords"); // new filter
+        router.push({ path: "/list", query: tmp.value, hash: to.hash });
       }
     }
 
     // field changed
     const submit = () => {
       console.log('submit');
-      // remove undefined and empty list
       Object.keys(tmp.value).forEach((key) => {
-        if (tmp.value[key] == undefined || tmp.value[key].length === 0) {
+        // remove undefined and empty list
+        if (tmp.value[key] == null || tmp.value[key].length === 0) {
           delete tmp.value[key];
+        }
+        // adopt to match types in store
+        if (['year', 'month', 'day'].includes(key)) {
+          tmp.value[key] = +tmp.value[key]
         }
       });
       store.commit("app/saveFindForm", tmp.value);
 
       if (Object.keys(tmp.value).length) {
+        store.commit("app/setBusy", false); // interupt loading
+        store.commit("app/resetObjects");
+        store.commit("app/resetPaginator");
+        store.dispatch("app/fetchRecords"); // new filter
         router.push({ path: "/list", query: tmp.value });
       } else {
         router.replace({ path: "/" }).catch((err) => { });

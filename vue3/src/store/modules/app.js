@@ -106,14 +106,6 @@ const actions = {
         });
     }
   },
-  changeFilter: ({ commit, dispatch }, payload) => {
-    if (payload.reset) {
-      commit("setClear", true);
-      commit("setBusy", false); // interupt loading
-      commit("resetPaginator");
-      dispatch("fetchRecords");
-    }
-  },
   fetchRecords: ({ commit, state }) => {
     if (state.busy) return;
     const params = Object.assign({}, state.find, { per_page: CONFIG.limit });
@@ -125,10 +117,6 @@ const actions = {
     api
       .get(url)
       .then((response) => {
-        if (state.clear) {
-          commit("resetObjects");
-          commit("setClear", false);
-        }
         if (response.data.objects && response.data.objects.length === 0) {
           commit("setError", 0);
         }
@@ -204,9 +192,6 @@ const mutations = {
     state.objects = [...state.objects, ...data.objects];
     state.pages = [...state.pages, data._page];
     state.next = data._next;
-  },
-  setClear(state, val) {
-    state.clear = val;
   },
   resetObjects(state) {
     state.objects.length = 0;
