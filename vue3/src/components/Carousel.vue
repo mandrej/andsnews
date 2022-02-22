@@ -29,7 +29,10 @@
       @swiper="onSwiper"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
-        <div class="bg-grey-10 absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
+        <div
+          class="absolute-top text-white text-center q-pa-sm"
+          style="background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"
+        >
           <div class="text-subtitle2">{{ obj.headline }}</div>
           <div class="text-body2">{{ caption(obj) }}</div>
         </div>

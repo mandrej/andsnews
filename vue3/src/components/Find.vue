@@ -150,61 +150,26 @@ export default defineComponent({
       return { ...find.value }
     })
 
-    // const adopt = (obj) => {
-    //   // adopt to match types in store
-    //   if (Object.prototype.hasOwnProperty.call(obj, "year"))
-    //     obj.year = +obj.year;
-    //   if (Object.prototype.hasOwnProperty.call(obj, "month"))
-    //     obj.month = +obj.month;
-    //   if (Object.prototype.hasOwnProperty.call(obj, "day"))
-    //     obj.day = +obj.day;
-    //   return obj
-    // }
-
+    // execute stored values
     onMounted(() => {
-      if (Object.keys(route.query).length === 0) {
+      console.log('onMounted');
+      if (Object.keys(tmp.value).length) {
+        router.push({ path: "/list", query: tmp.value });
       } else {
-        if (Object.prototype.hasOwnProperty.call(route.query, "year"))
-          route.query.year = +route.query.year;
-        if (Object.prototype.hasOwnProperty.call(route.query, "month"))
-          route.query.month = +route.query.month;
-        if (Object.prototype.hasOwnProperty.call(route.query, "day"))
-          route.query.day = +route.query.day;
+        router.replace({ path: "/" }).catch((err) => { });
       }
-      submit()
     })
 
-    const monthNames = computed(() => {
-      const locale = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      return locale.map((month, i) => ({ label: month, value: i + 1 }));
-    });
-    const days = computed(() => {
-      const N = 31,
-        from = 1,
-        step = 1;
-      return [...Array(N)].map((_, i) => from + i * step);
-    });
+    // click on router-link
+    watch(route, (to) => setForm(to));
 
     const setForm = (to) => {
-      if (Object.prototype.hasOwnProperty.call(to.query, "year"))
-        to.query.year = +to.query.year;
-      if (Object.prototype.hasOwnProperty.call(to.query, "month"))
-        to.query.month = +to.query.month;
-      if (Object.prototype.hasOwnProperty.call(to.query, "day"))
-        to.query.day = +to.query.day;
+      console.log('setForm');
+      for (const key in to.query) {
+        if (['year', 'month', 'day'].includes(key)) {
+          to.query[key] = +to.query[key]
+        }
+      }
       store.commit("app/saveFindForm", to.query);
 
       if (!Object.keys(to.query).length) {
@@ -212,23 +177,24 @@ export default defineComponent({
       } else {
         store.dispatch("app/changeFilter", { reset: true }); // new filter
       }
+      if (Object.keys(to.query).length) {
+        router.push({ path: "/list", query: to.query });
+      } else {
+        router.replace({ path: "/" }).catch((err) => { });
+      }
     }
 
+    // field changed
     const submit = () => {
+      console.log('submit');
       // remove undefined and empty list
       Object.keys(tmp.value).forEach((key) => {
         if (tmp.value[key] == undefined || tmp.value[key].length === 0) {
           delete tmp.value[key];
         }
       });
-      console.log('submit ', tmp.value);
       store.commit("app/saveFindForm", tmp.value);
 
-      if (!Object.keys(tmp.value).length) {
-        store.dispatch("app/changeFilter", { reset: false }); // continue
-      } else {
-        store.dispatch("app/changeFilter", { reset: true }); // new filter
-      }
       if (Object.keys(tmp.value).length) {
         router.push({ path: "/list", query: tmp.value });
       } else {
@@ -236,15 +202,34 @@ export default defineComponent({
       }
     }
 
-    watch(route, (to) => setForm(to));
-
     return {
       tmp,
       busy: computed(() => store.state.app.busy),
       values: computed(() => store.state.app.values),
       nickNames: computed(() => store.getters["app/nickNames"]),
-      monthNames,
-      days,
+      monthNames: computed(() => {
+        const locale = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        return locale.map((month, i) => ({ label: month, value: i + 1 }));
+      }),
+      days: computed(() => {
+        const N = 31,
+          from = 1,
+          step = 1;
+        return [...Array(N)].map((_, i) => from + i * step);
+      }),
       submit,
     };
   },
