@@ -26,7 +26,7 @@
           style="display: inline-block; text-decoration: none"
         >{{ year }}</router-link>
       </div>
-      <div class="q-px-md text-subtitle1">
+      <div class="q-px-md text-subtitle1 gt-xs">
         <router-link
           v-for="tag in values.tags"
           :key="tag"

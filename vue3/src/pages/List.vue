@@ -100,7 +100,9 @@ export default defineComponent({
     onMounted(() => {
       const hash = route.hash
       if (hash) {
-        showCarousel(+hash.substring(1))
+        setTimeout(() => {
+          showCarousel(+hash.substring(1))
+        }, 1000)
       }
     })
 

@@ -195,8 +195,6 @@ const mutations = {
   },
   resetObjects(state) {
     state.objects.length = 0;
-  },
-  resetPaginator(state) {
     state.pages.length = 0;
     state.next = null;
   },

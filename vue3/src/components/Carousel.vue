@@ -29,12 +29,9 @@
       @swiper="onSwiper"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
-        <div
-          class="absolute-top text-white text-center q-pa-sm"
-          style="background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"
-        >
-          <div class="text-subtitle2">{{ obj.headline }}</div>
-          <div class="text-body2">{{ caption(obj) }}</div>
+        <div class="absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
+          <div class="text-subtitle2 ellipsis">{{ obj.headline }}</div>
+          <div class="text-body2 gt-xs ellipsis">{{ caption(obj) }}</div>
         </div>
         <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
@@ -77,6 +74,7 @@ export default defineComponent({
     const store = useStore();
     const objects = computed(() => store.state.app.objects);
     const swiperRef = ref(null)
+    const index = objects.value.findIndex(x => x.id === props.pid)
 
     const caption = (rec) => {
       const { aperture, shutter, iso, model, lens } = rec
@@ -99,6 +97,7 @@ export default defineComponent({
     }
 
     return {
+      index,
       objects,
       fullsized,
       caption,
@@ -112,14 +111,12 @@ export default defineComponent({
         // or with payload: onDialogOK({ ... })
         // ...and it will also hide the dialog automatically
       },
+      onCancelClick: onDialogCancel,
 
       swiperRef,
-      onCancelClick: onDialogCancel,
       modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],
       onSwiper: (sw) => {
         swiperRef.value = sw
-        const index = objects.value.findIndex(x => x.id === props.pid)
-        console.log(props.pid, index);
         if (index === -1) {
           notify("negative", `${props.pid} couldn't be found`)
         } else {
