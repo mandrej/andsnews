@@ -1,6 +1,7 @@
 <template>
   <q-dialog
     ref="dialogRef"
+    v-model="close"
     @hide="onDialogHide"
     :maximized="true"
     transition-show="slide-up"
@@ -43,7 +44,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized, notify } from "../helpers";
@@ -72,6 +73,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     const store = useStore();
+    const close = ref(null)
     const objects = computed(() => store.state.app.objects);
     const swiperRef = ref(null)
     const index = objects.value.findIndex(x => x.id === props.pid)
@@ -96,7 +98,14 @@ export default defineComponent({
       return 2
     }
 
+    onMounted(() => {
+      window.onpopstate = function () {
+        if (close.value) close.value = false
+      }
+    })
+
     return {
+      close,
       index,
       objects,
       fullsized,

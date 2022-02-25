@@ -175,9 +175,10 @@ export default defineComponent({
     })
 
     // click on router-link
-    watch(route, (to) => setForm(to));
+    watch(route, (to, old) => setForm(to, old));
 
-    const setForm = (to) => {
+    const setForm = (to, old) => {
+      if (JSON.stringify(to.query) === JSON.stringify(old.query)) return
       // remove undefined and empty list
       Object.keys(to.query).forEach((key) => {
         if (to.query[key] == null || to.query[key].length === 0) {

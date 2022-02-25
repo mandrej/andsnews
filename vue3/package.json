@@ -11,7 +11,7 @@
     "axios": "^0.26.0",
     "firebase": "^9.6.5",
     "gsap": "^3.9.1",
-    "quasar": "^2.4.13",
+    "quasar": "^2.5.5",
     "querystring-es3": "^0.2.1",
     "swiper": "^8.0.6",
     "vue": "^3.2.25",
@@ -21,7 +21,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@quasar/vite-plugin": "^1.0.4",
+    "@quasar/vite-plugin": "^1.0.5",
     "@vitejs/plugin-vue": "^2.0.0",
     "sass": "1.32.0",
     "vite": "^2.7.2",

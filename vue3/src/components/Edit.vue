@@ -1,9 +1,11 @@
 <template>
   <q-dialog
     ref="dialogRef"
+    v-model="close"
     @hide="onDialogHide"
     transition-show="slide-up"
     transition-hide="slide-down"
+    :maximized="$q.screen.lt.md"
     persistent
   >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
@@ -12,7 +14,7 @@
           <q-btn class="q-mr-md" color="primary" label="Submit" @click="onOKClick" />
           <q-btn v-if="user.isAdmin" flat label="Read Exif" @click="readExif" />
         </div>
-        <div class="col text-right">
+        <div class="col text-right" style="white-space: nowrap">
           <span class="q-pr-md">{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</span>
           <q-btn icon="close" flat round @click="onCancelClick" />
         </div>
@@ -117,7 +119,7 @@
 
 <script>
 import { format } from 'quasar'
-import { defineComponent, computed, ref, onMounted } from "vue";
+import { defineComponent, computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { api, smallsized } from "../helpers"
 import { useStore } from "vuex";
@@ -132,6 +134,7 @@ export default defineComponent({
   ],
   setup(props) {
     const store = useStore();
+    const close = ref(null)
     const tmp = ref({ ...props.rec });
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
@@ -151,14 +154,19 @@ export default defineComponent({
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
+
     onMounted(() => {
       if (!tmp.value.date) {
         readExif()
+      }
+      window.onpopstate = function () {
+        if (close.value) close.value = false
       }
     })
 
     return {
       tmp,
+      close,
       linearDim,
       humanStorageSize,
       readExif,

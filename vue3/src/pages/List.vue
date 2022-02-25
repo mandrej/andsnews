@@ -83,6 +83,9 @@ import { useGtag } from "vue-gtag-next";
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
 )
+const Confirm = defineAsyncComponent(() =>
+  import('../components/Confirm.vue')
+)
 
 export default defineComponent({
   name: "List",
@@ -118,6 +121,7 @@ export default defineComponent({
     }
 
     const showEditForm = (rec) => {
+      window.history.pushState({}, '') // fake history
       $q.dialog({
         component: Edit,
         componentProps: {
@@ -130,32 +134,23 @@ export default defineComponent({
       })
     }
     const showConfirm = (rec) => {
+      window.history.pushState({}, '') // fake history
       $q.dialog({
-        title: 'Confirm Delete',
-        message: `Would you like to delete ${rec.headline}?`,
-        ok: {
-          color: 'negative',
-          flat: true
-        },
-        cancel: {
-          color: 'positive',
-          flat: true
-        },
-        persistent: true
+        component: Confirm,
+        componentProps: {
+          headline: rec.headline
+        }
       }).onOk(() => {
         store.dispatch('app/deleteRecord', rec)
       })
     }
     const showCarousel = (id) => {
+      window.history.pushState({}, '') // fake history
       $q.dialog({
         component: Carousel,
         componentProps: {
           pid: id
         }
-      }).onOk(() => {
-        // console.log('OK')
-      }).onCancel(() => {
-        // console.log('Cancel')
       })
     }
     const download = (filename) => {
