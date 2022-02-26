@@ -40,36 +40,27 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, computed, onMounted } from "vue";
+<script setup>
+import { onMounted, computed } from 'vue'
 import { useStore } from "vuex";
 import { fullsized, smallsized } from "../helpers";
 
-export default defineComponent({
-  name: "Home",
-  setup() {
-    const store = useStore();
-
-    const last = computed(() => store.state.app.last);
-    const styling = computed(() => {
-      const low = smallsized + last.value.filename;
-      const high = fullsized + last.value.filename;
-      return "background-image: url(" + high + "), url(" + low + ")";
-    });
-
-    onMounted(() => {
-      store.dispatch('auth/getPermission')
-    })
-
-    return {
-      last,
-      styling,
-      values: computed(() => store.state.app.values),
-      nickNames: computed(() => store.getters["app/nickNames"]),
-      bucketInfo: computed(() => store.state.app.bucket),
-    };
-  },
+const store = useStore();
+const last = computed(() => store.state.app.last);
+const styling = computed(() => {
+  const low = smallsized + last.value.filename;
+  const high = fullsized + last.value.filename;
+  return "background-image: url(" + high + "), url(" + low + ")";
 });
+const values = computed(() => store.state.app.values)
+const nickNames = computed(() => store.getters["app/nickNames"])
+const bucketInfo = computed(() => store.state.app.bucket)
+
+onMounted(() => {
+  store.dispatch('auth/getPermission')
+})
+
+
 </script>
 
 <style scoped>

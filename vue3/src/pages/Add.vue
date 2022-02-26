@@ -52,9 +52,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from 'quasar'
-import { defineComponent, defineAsyncComponent, computed, ref } from 'vue'
+import { defineAsyncComponent, computed, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, notify } from '../helpers'
 
@@ -62,105 +62,87 @@ const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
 )
 
-export default defineComponent({
-  name: "Add",
-  setup() {
-    const $q = useQuasar()
-    const store = useStore();
-    const user = computed(() => store.state.auth.user)
-    const files = ref(null);
-    const percentage = ref(0);
-    const progress = (evt) => {
-      percentage.value = Math.round((evt.loaded * 100) / evt.total)
-    };
-    const submitResult = computed(() => store.state.app.uploaded);
+const $q = useQuasar()
+const store = useStore();
+const user = computed(() => store.state.auth.user)
+const files = ref(null);
+const percentage = ref(0);
+const progress = (evt) => {
+  percentage.value = Math.round((evt.loaded * 100) / evt.total)
+};
+const submitResult = computed(() => store.state.app.uploaded);
 
-    const filesChange = (fieldName, fileList) => {
-      const formData = new FormData()
-      if (!fileList.length) return
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        if (fileList[x].type !== CONFIG.fileType) {
-          notify("warning", `${fileList[x].name} is of unsupported file type`)
-        } else if (fileList[x].size > CONFIG.fileSize) {
-          notify("warning", `${fileList[x].name} is too big`)
-        } else {
-          formData.append(fieldName, fileList[x], fileList[x].name)
-        }
-      })
-      let i = 0
-      for (let pair of formData.entries()) {
-        i++
-      }
-      if (i > 0) submit(formData);
-    };
-
-    const submit = (formData) => {
-      const data = []
-      api
-        .post('add', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: progress
-        })
-        .then((x) => x.data) // list
-        .then((x) =>
-          x.map((item) => {
-            if (item.success) {
-              data.push(item.rec)
-              store.commit('app/addUploaded', item.rec)
-            } else {
-              notify('negative', `${item.rec.filename} failed to upload`)
-            }
-          })
-        )
-        .then(() => {
-          files.value = null
-          percentage.value = 0
-        })
-        .catch(err => {
-          if (err.code === 'ECONNABORTED') {
-            files.value = null
-            percentage.value = 0
-            notify('negative', 'Timeout error')
-          }
-        })
-    };
-
-    const showEditForm = (rec) => {
-      /**
-       * Add headline 'No name' and user email to new rec
-       */
-      $q.dialog({
-        component: Edit,
-        componentProps: {
-          rec: { ...rec, ...{ headline: 'No name', email: user.value.email } }
-        }
-      })
+const filesChange = (fieldName, fileList) => {
+  const formData = new FormData()
+  if (!fileList.length) return
+  Array.from(Array(fileList.length).keys()).map((x) => {
+    if (fileList[x].type !== CONFIG.fileType) {
+      notify("warning", `${fileList[x].name} is of unsupported file type`)
+    } else if (fileList[x].size > CONFIG.fileSize) {
+      notify("warning", `${fileList[x].name} is too big`)
+    } else {
+      formData.append(fieldName, fileList[x], fileList[x].name)
     }
-
-    return {
-      api,
-      files,
-      user,
-      percentage,
-      progress,
-      CONFIG,
-
-      submit,
-      filesChange,
-      submitResult,
-      showEditForm,
-
-      removeRecord(rec) {
-        store.dispatch('app/deleteRecord', rec)
-      },
-
-      onRejected(rejectedEntries) {
-        // console.log(rejectedEntries);
-        notify('negative', `${rejectedEntries.length} file(s) did not pass validation constraints`)
-      }
-    }
+  })
+  let i = 0
+  for (let pair of formData.entries()) {
+    i++
   }
-})
+  if (i > 0) submit(formData);
+};
+
+const submit = (formData) => {
+  const data = []
+  api
+    .post('add', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progress
+    })
+    .then((x) => x.data) // list
+    .then((x) =>
+      x.map((item) => {
+        if (item.success) {
+          data.push(item.rec)
+          store.commit('app/addUploaded', item.rec)
+        } else {
+          notify('negative', `${item.rec.filename} failed to upload`)
+        }
+      })
+    )
+    .then(() => {
+      files.value = null
+      percentage.value = 0
+    })
+    .catch(err => {
+      if (err.code === 'ECONNABORTED') {
+        files.value = null
+        percentage.value = 0
+        notify('negative', 'Timeout error')
+      }
+    })
+};
+
+const showEditForm = (rec) => {
+  /**
+   * Add headline 'No name' and user email to new rec
+   */
+  $q.dialog({
+    component: Edit,
+    componentProps: {
+      rec: { ...rec, ...{ headline: 'No name', email: user.value.email } }
+    }
+  })
+}
+
+const removeRecord = (rec) => {
+  store.dispatch('app/deleteRecord', rec)
+}
+
+const onRejected = (rejectedEntries) => {
+  // console.log(rejectedEntries);
+  notify('negative', `${rejectedEntries.length} file(s) did not pass validation constraints`)
+}
+
 </script>
 
 <style>

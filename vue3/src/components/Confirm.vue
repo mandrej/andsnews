@@ -3,8 +3,8 @@
     ref="dialogRef"
     v-model="close"
     @hide="onDialogHide"
-    transition-show="slide-up"
-    transition-hide="slide-down"
+    transition-show="slide-down"
+    transition-hide="slide-up"
     persistent
   >
     <q-card class="q-dialog-plugin">
@@ -12,7 +12,7 @@
         <div class="text-h6">Confirm Delete</div>
       </q-card-section>
       <q-separator />
-      <q-card-section>Would you like to delete {{ headline }}?</q-card-section>
+      <q-card-section>Would you like to delete {{ props.headline }}?</q-card-section>
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
           <q-btn color="primary" label="OK" @click="onOKClick" />
@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 
-export default defineComponent({
+export default {
   name: "Confirm",
   props: { headline: String },
   emits: [
@@ -37,7 +37,6 @@ export default defineComponent({
   ],
   setup(props) {
     const close = ref(null)
-    const headline = ref(props.headline)
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     onMounted(() => {
@@ -48,7 +47,7 @@ export default defineComponent({
 
     return {
       close,
-      headline,
+      props,
       dialogRef,
       onDialogHide,
       onOKClick() {
@@ -57,5 +56,5 @@ export default defineComponent({
       onCancelClick: onDialogCancel
     };
   },
-});
+};
 </script>

@@ -133,127 +133,125 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, computed, onMounted, watch } from "vue";
+<script setup>
+import { computed, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
-export default defineComponent({
-  name: "Find",
-  setup() {
-    const store = useStore();
-    const route = useRoute();
-    const router = useRouter();
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
 
-    const find = computed(() => store.state.app.find)
-    const tmp = computed(() => {
-      return { ...find.value }
-    })
+const find = computed(() => store.state.app.find)
+const tmp = computed(() => {
+  return { ...find.value }
+})
 
-    // execute stored values
-    onMounted(() => {
-      // remove undefined and empty list
-      Object.keys(route.query).forEach((key) => {
-        if (route.query[key] == undefined || route.query[key].length === 0) {
-          delete route.query[key];
-        }
-      });
-      // adopt to match types in store
-      Object.keys(route.query).forEach((key) => {
-        if (['year', 'month', 'day'].includes(key)) {
-          route.query[key] = +route.query[key]
-        }
-      });
-      store.commit("app/saveFindForm", route.query);
-
-      if (Object.keys(tmp.value).length) {
-        store.commit("app/setBusy", false); // interupt loading
-        store.commit("app/resetObjects");
-        store.dispatch("app/fetchRecords"); // new filter
-        router.push({ path: "/list", query: tmp.value, hash: route.hash });
-      }
-    })
-
-    // click on router-link
-    watch(route, (to, old) => setForm(to, old));
-
-    const setForm = (to, old) => {
-      if (JSON.stringify(to.query) === JSON.stringify(old.query)) return
-      // remove undefined and empty list
-      Object.keys(to.query).forEach((key) => {
-        if (to.query[key] == null || to.query[key].length === 0) {
-          delete to.query[key];
-        }
-      });
-      // adopt to match types in store
-      Object.keys(to.query).forEach((key) => {
-        if (['year', 'month', 'day'].includes(key)) {
-          to.query[key] = +to.query[key]
-        }
-      });
-      store.commit("app/saveFindForm", to.query);
-
-      if (Object.keys(to.query).length) {
-        store.commit("app/setBusy", false); // interupt loading
-        store.commit("app/resetObjects");
-        store.dispatch("app/fetchRecords"); // new filter
-        router.push({ path: "/list", query: tmp.value, hash: to.hash });
-      }
+// execute stored values
+onMounted(() => {
+  // remove undefined and empty list
+  Object.keys(route.query).forEach((key) => {
+    if (route.query[key] == undefined || route.query[key].length === 0) {
+      delete route.query[key];
     }
-
-    // field changed
-    const submit = () => {
-      // remove undefined and empty list
-      Object.keys(tmp.value).forEach((key) => {
-        if (tmp.value[key] == null || tmp.value[key].length === 0) {
-          delete tmp.value[key];
-        }
-      });
-      // adopt to match types in store
-      Object.keys(tmp.value).forEach((key) => {
-        if (['year', 'month', 'day'].includes(key)) {
-          tmp.value[key] = +tmp.value[key]
-        }
-      });
-      store.commit("app/saveFindForm", tmp.value);
-
-      if (Object.keys(tmp.value).length) {
-        router.push({ path: "/list", query: tmp.value });
-      } else {
-        router.replace({ path: "/" }).catch((err) => { });
-      }
+  });
+  // adopt to match types in store
+  Object.keys(route.query).forEach((key) => {
+    if (['year', 'month', 'day'].includes(key)) {
+      route.query[key] = +route.query[key]
     }
+  });
+  store.commit("app/saveFindForm", route.query);
 
-    return {
-      tmp,
-      busy: computed(() => store.state.app.busy),
-      values: computed(() => store.state.app.values),
-      nickNames: computed(() => store.getters["app/nickNames"]),
-      monthNames: computed(() => {
-        const locale = [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ];
-        return locale.map((month, i) => ({ label: month, value: i + 1 }));
-      }),
-      days: computed(() => {
-        const N = 31,
-          from = 1,
-          step = 1;
-        return [...Array(N)].map((_, i) => from + i * step);
-      }),
-      submit,
-    };
-  },
-});
+  if (Object.keys(tmp.value).length) {
+    store.commit("app/setBusy", false); // interupt loading
+    store.commit("app/resetObjects");
+    store.dispatch("app/fetchRecords"); // new filter
+    if (route.hash) {
+      router.push({ path: "/list", query: tmp.value, hash: route.hash });
+    } else {
+      router.push({ path: "/list", query: tmp.value });
+    }
+  }
+})
+
+// click on router-link
+watch(route, (to, old) => setForm(to, old));
+
+const setForm = (to, old) => {
+  // if (JSON.stringify(to.query) === JSON.stringify(old.query)) return
+  // remove undefined and empty list
+  Object.keys(to.query).forEach((key) => {
+    if (to.query[key] == null || to.query[key].length === 0) {
+      delete to.query[key];
+    }
+  });
+  // adopt to match types in store
+  Object.keys(to.query).forEach((key) => {
+    if (['year', 'month', 'day'].includes(key)) {
+      to.query[key] = +to.query[key]
+    }
+  });
+  store.commit("app/saveFindForm", to.query);
+
+  if (Object.keys(to.query).length) {
+    store.commit("app/setBusy", false); // interupt loading
+    store.commit("app/resetObjects");
+    store.dispatch("app/fetchRecords"); // new filter
+    if (to.hash) {
+      router.push({ path: "/list", query: tmp.value, hash: to.hash });
+    } else {
+      router.push({ path: "/list", query: tmp.value });
+    }
+  }
+}
+
+// field changed
+const submit = () => {
+  // remove undefined and empty list
+  Object.keys(tmp.value).forEach((key) => {
+    if (tmp.value[key] == null || tmp.value[key].length === 0) {
+      delete tmp.value[key];
+    }
+  });
+  // adopt to match types in store
+  Object.keys(tmp.value).forEach((key) => {
+    if (['year', 'month', 'day'].includes(key)) {
+      tmp.value[key] = +tmp.value[key]
+    }
+  });
+  store.commit("app/saveFindForm", tmp.value);
+
+  if (Object.keys(tmp.value).length) {
+    router.push({ path: "/list", query: tmp.value });
+  } else {
+    router.replace({ path: "/" }).catch((err) => { });
+  }
+}
+const busy = computed(() => store.state.app.busy)
+const values = computed(() => store.state.app.values)
+const nickNames = computed(() => store.getters["app/nickNames"])
+const monthNames = computed(() => {
+  const locale = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  return locale.map((month, i) => ({ label: month, value: i + 1 }));
+})
+const days = computed(() => {
+  const N = 31,
+    from = 1,
+    step = 1;
+  return [...Array(N)].map((_, i) => from + i * step);
+})
 </script>

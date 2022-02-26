@@ -52,45 +52,34 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, computed, ref } from "vue";
+<script setup>
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { api, formatDatum } from "../helpers"
 
-export default defineComponent({
-  name: "Admin",
-  setup() {
-    const store = useStore();
-    const fcm_token = computed(() => store.state.auth.fcm_token)
-    const message = ref('NEW IMAGES')
+const store = useStore();
+const fcm_token = computed(() => store.state.auth.fcm_token)
+const message = ref('NEW IMAGES')
 
-    const callApi = (url) => {
-      api.post(url, { token: fcm_token.value }).then((x) => x.data)
-    }
-    return {
-      fcm_token,
-      formatDatum,
-      values: computed(() => store.state.app.values),
-      callApi,
-      rebuild: (name) => {
-        callApi('rebuild/' + name)
-      },
-      repair: () => {
-        callApi('repair')
-      },
-      fix() {
-        callApi('fix')
-      },
-      bucket() {
-        store.dispatch('app/bucketInfo', { verb: 'set' })
-      },
-      message,
-      send() {
-        store.dispatch('auth/sendNotifications', message.value)
-      },
-    }
-  },
-});
+const callApi = (url) => {
+  api.post(url, { token: fcm_token.value }).then((x) => x.data)
+}
+const values = computed(() => store.state.app.values)
+const rebuild = (name) => {
+  callApi('rebuild/' + name)
+}
+const repair = () => {
+  callApi('repair')
+}
+const fix = () => {
+  callApi('fix')
+}
+const bucket = () => {
+  store.dispatch('app/bucketInfo', { verb: 'set' })
+}
+const send = () => {
+  store.dispatch('auth/sendNotifications', message.value)
+}
 </script>
 
 <style scoped>

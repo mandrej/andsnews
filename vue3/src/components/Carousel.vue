@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized, notify } from "../helpers";
@@ -57,7 +57,7 @@ import "swiper/scss/zoom";
 import "swiper/scss/pagination";
 import "swiper/scss/navigation";
 
-export default defineComponent({
+export default {
   name: "Carousel",
   props: {
     pid: Number
@@ -135,7 +135,7 @@ export default defineComponent({
       zoomRatio,
     };
   },
-});
+}
 </script>
 
 <style scoped>

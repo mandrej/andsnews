@@ -27,71 +27,53 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, defineAsyncComponent, computed, ref, watch } from "vue";
+<script setup>
+import { defineAsyncComponent, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import Find from "../components/Find.vue";
-import Menu from "../components/Menu.vue";
 import gsap from 'gsap'
 
+import Find from "../components/Find.vue";
+import Menu from "../components/Menu.vue";
 const Stat = defineAsyncComponent(() =>
   import('../components/Stat.vue')
 )
+const store = useStore();
+const busy = computed(() => store.state.app.busy)
 
-export default defineComponent({
-  name: "MainLayout",
-  components: {
-    Find,
-    Menu,
-    Stat,
-  },
-  setup() {
-    const store = useStore();
-    const busy = computed(() => store.state.app.busy)
+const leftDrawerOpen = ref(false);
+const route = useRoute();
+const counter = computed(() => store.getters["app/counter"])
+const countRef = ref(null)
 
-    const leftDrawerOpen = ref(false);
-    const route = useRoute();
-    const counter = computed(() => store.getters["app/counter"])
-    const countRef = ref(null)
+const dynamic = computed(() => {
+  switch (route.name) {
+    case 'home':
+    case 'list':
+      return Find
+    default:
+      return Stat
+  }
+})
 
-    const dynamic = computed(() => {
-      switch (route.name) {
-        case 'home':
-        case 'list':
-          return Find
-        default:
-          return Stat
-      }
-    })
+watch(counter, (value, oldValue) => {
+  const div = countRef.value
+  if (!div) return
+  const obj = { number: oldValue.count };
+  const sufix = value.more ? '+' : ''
+  gsap.to(obj, {
+    duration: 1,
+    number: value.count,
+    ease: "power1.in",
+    onUpdate() {
+      div.innerText = obj.number.toFixed(0) + sufix;
+    }
+  });
 
-    watch(counter, (value, oldValue) => {
-      const div = countRef.value
-      if (!div) return
-      const obj = { number: oldValue.count };
-      const sufix = value.more ? '+' : ''
-      gsap.to(obj, {
-        duration: 1,
-        number: value.count,
-        ease: "power1.in",
-        onUpdate() {
-          div.innerText = obj.number.toFixed(0) + sufix;
-        }
-      });
-
-    });
-
-    return {
-      busy,
-      route,
-      countRef,
-      dynamic,
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-      title: computed(() => route.meta.title || 'ANDрејевићи')
-    };
-  },
 });
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+const title = computed(() => route.meta.title || 'ANDрејевићи')
 </script>

@@ -44,28 +44,17 @@
   </q-list>
 </template>
 
-<script>
-import { defineComponent, computed } from "vue";
+<script setup>
+import { computed } from "vue";
 import { useStore } from "vuex";
 
-export default defineComponent({
-  name: "Menu",
-  setup() {
-    const store = useStore();
-    const version = computed(() => {
-      const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
-      return "© 2007 - " + ver;
-    });
-
-    function signIn() {
-      store.dispatch("auth/signIn");
-    }
-
-    return {
-      signIn,
-      version,
-      user: computed(() => store.state.auth.user),
-    };
-  },
+const store = useStore();
+const user = computed(() => store.state.auth.user)
+const version = computed(() => {
+  const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
+  return "© 2007 - " + ver;
 });
+function signIn() {
+  store.dispatch("auth/signIn");
+}
 </script>

@@ -3,8 +3,8 @@
     ref="dialogRef"
     v-model="close"
     @hide="onDialogHide"
-    transition-show="slide-up"
-    transition-hide="slide-down"
+    transition-show="slide-down"
+    transition-hide="slide-up"
     :maximized="$q.screen.lt.md"
     persistent
   >
@@ -119,14 +119,14 @@
 
 <script>
 import { format } from 'quasar'
-import { defineComponent, computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { api, smallsized } from "../helpers"
 import { useStore } from "vuex";
 
 const { humanStorageSize } = format
 
-export default defineComponent({
+export default {
   name: "Edit",
   props: { rec: Object },
   emits: [
@@ -184,5 +184,5 @@ export default defineComponent({
       onCancelClick: onDialogCancel
     };
   },
-});
+}
 </script>

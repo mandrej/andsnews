@@ -9,53 +9,44 @@
   </q-list>
 </template>
 
-<script>
-import { defineComponent, computed } from "vue";
+<script setup>
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { formatBytes } from "../helpers"
 
-export default defineComponent({
-  name: "Stat",
-  props: {},
-  setup() {
-    const store = useStore();
-    const values = computed(() => store.state.app.values)
-    const bucket = computed(() => store.state.app.bucket)
-
-    return {
-      list: [
-        {
-          value: formatBytes(bucket.value.size),
-          text: 'storage size'
-        },
-        {
-          value: bucket.value.count,
-          text: 'photographs'
-        },
-        {
-          value: values.value.year.length,
-          text: 'years'
-        },
-        {
-          value: values.value.tags.length,
-          text: 'tags'
-        },
-        {
-          value: values.value.model.length,
-          text: 'cameras'
-        },
-        {
-          value: values.value.lens.length,
-          text: 'lenses'
-        },
-        {
-          value: values.value.email.length,
-          text: 'authors'
-        }
-      ]
-    };
+const store = useStore();
+const values = computed(() => store.state.app.values)
+const bucket = computed(() => store.state.app.bucket)
+const list = [
+  {
+    value: formatBytes(bucket.value.size),
+    text: 'storage size'
   },
-});
+  {
+    value: bucket.value.count,
+    text: 'photographs'
+  },
+  {
+    value: values.value.year.length,
+    text: 'years'
+  },
+  {
+    value: values.value.tags.length,
+    text: 'tags'
+  },
+  {
+    value: values.value.model.length,
+    text: 'cameras'
+  },
+  {
+    value: values.value.lens.length,
+    text: 'lenses'
+  },
+  {
+    value: values.value.email.length,
+    text: 'authors'
+  }
+]
 </script>
 
 

@@ -71,15 +71,15 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from 'quasar'
-import { defineComponent, defineAsyncComponent, onMounted, computed } from "vue";
+import { defineAsyncComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum } from "../helpers";
-import Carousel from "../components/Carousel.vue"
 import { useGtag } from "vue-gtag-next";
 
+import Carousel from "../components/Carousel.vue"
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
 )
@@ -87,93 +87,76 @@ const Confirm = defineAsyncComponent(() =>
   import('../components/Confirm.vue')
 )
 
-export default defineComponent({
-  name: "List",
-  setup() {
-    const $q = useQuasar()
-    const store = useStore();
-    const route = useRoute();
-    const next = computed(() => store.state.app.next);
-    const error = computed(() => store.state.app.error);
-    const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
+const $q = useQuasar()
+const store = useStore();
+const route = useRoute();
+const next = computed(() => store.state.app.next);
+const error = computed(() => store.state.app.error);
+const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
 
-    const { event } = useGtag();
-    const user = computed(() => store.state.auth.user)
+const { event } = useGtag();
+const user = computed(() => store.state.auth.user)
 
-    onMounted(() => {
-      const hash = route.hash
-      if (hash) {
-        setTimeout(() => {
-          showCarousel(+hash.substring(1))
-        }, 1000)
-      }
-    })
+onMounted(() => {
+  const hash = route.hash
+  if (hash) {
+    setTimeout(() => {
+      showCarousel(+hash.substring(1))
+    }, 1000)
+  }
+})
 
-    const scrollHandler = (obj) => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      if (
-        scrollHeight - obj.position.top < 3000 &&
-        obj.direction === "down" &&
-        next
-      ) {
-        store.dispatch("app/fetchRecords");
-      }
-    }
+const scrollHandler = (obj) => {
+  const scrollHeight = document.documentElement.scrollHeight;
+  if (
+    scrollHeight - obj.position.top < 3000 &&
+    obj.direction === "down" &&
+    next
+  ) {
+    store.dispatch("app/fetchRecords");
+  }
+}
 
-    const showEditForm = (rec) => {
-      window.history.pushState({}, '') // fake history
-      $q.dialog({
-        component: Edit,
-        componentProps: {
-          rec: rec
-        }
-      }).onOk(() => {
-        // console.log('OK')
-      }).onCancel(() => {
-        // console.log('Cancel')
-      })
+const showEditForm = (rec) => {
+  window.history.pushState({}, '') // fake history
+  $q.dialog({
+    component: Edit,
+    componentProps: {
+      rec: rec
     }
-    const showConfirm = (rec) => {
-      window.history.pushState({}, '') // fake history
-      $q.dialog({
-        component: Confirm,
-        componentProps: {
-          headline: rec.headline
-        }
-      }).onOk(() => {
-        store.dispatch('app/deleteRecord', rec)
-      })
+  }).onOk(() => {
+    // console.log('OK')
+  }).onCancel(() => {
+    // console.log('Cancel')
+  })
+}
+const showConfirm = (rec) => {
+  window.history.pushState({}, '') // fake history
+  $q.dialog({
+    component: Confirm,
+    componentProps: {
+      headline: rec.headline
     }
-    const showCarousel = (id) => {
-      window.history.pushState({}, '') // fake history
-      $q.dialog({
-        component: Carousel,
-        componentProps: {
-          pid: id
-        }
-      })
+  }).onOk(() => {
+    store.dispatch('app/deleteRecord', rec)
+  })
+}
+const showCarousel = (id) => {
+  window.history.pushState({}, '') // fake history
+  $q.dialog({
+    component: Carousel,
+    componentProps: {
+      pid: id
     }
-    const download = (filename) => {
-      event('download', {
-        event_category: 'engagement',
-        event_label: filename + ' (' + user.value.email + ')',
-        value: 1
-      })
-    }
-
-    return {
-      error,
-      smallsized,
-      formatDatum,
-      objectsByDate,
-      scrollHandler,
-      showEditForm,
-      showConfirm,
-      download,
-      showCarousel,
-    };
-  },
-});
+  })
+}
+const download = (filename) => {
+  event('download', {
+    event_category: 'engagement',
+    event_label: filename + ' (' + user.value.email + ')',
+    value: 1
+  })
+}
 </script>
 
 <style scoped>
