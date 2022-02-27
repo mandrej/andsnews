@@ -11,11 +11,14 @@
       </template>
     </q-input>
     <q-select
-      v-model="tmp.tags"
-      :options="values.tags"
       :disable="busy"
+      v-model="tmp.tags"
+      :options="optionsTagsRef"
+      use-input
+      hide-selected
+      fill-input
+      @filter="filterTags"
       @update:model-value="submit"
-      multiple
       label="by tag"
     >
       <template v-slot:append>
@@ -28,9 +31,9 @@
       </template>
     </q-select>
     <q-select
+      :disable="busy"
       v-model="tmp.year"
       :options="values.year"
-      :disable="busy"
       @update:model-value="submit"
       label="by year"
     >
@@ -46,9 +49,9 @@
     <div class="row">
       <q-select
         class="col"
+        :disable="busy"
         v-model="tmp.month"
         :options="monthNames"
-        :disable="busy"
         @update:model-value="submit"
         emit-value
         map-options
@@ -66,9 +69,9 @@
       <div class="col-1"></div>
       <q-select
         class="col"
+        :disable="busy"
         v-model="tmp.day"
         :options="days"
-        :disable="busy"
         @update:model-value="submit"
         label="by day"
       >
@@ -83,9 +86,13 @@
       </q-select>
     </div>
     <q-select
-      v-model="tmp.model"
-      :options="values.model"
       :disable="busy"
+      v-model="tmp.model"
+      :options="optionsModelRef"
+      use-input
+      hide-selected
+      fill-input
+      @filter="filterModel"
       @update:model-value="submit"
       label="by model"
     >
@@ -99,9 +106,13 @@
       </template>
     </q-select>
     <q-select
-      v-model="tmp.lens"
-      :options="values.lens"
       :disable="busy"
+      v-model="tmp.lens"
+      :options="optionsLensRef"
+      use-input
+      hide-selected
+      fill-input
+      @filter="filterLens"
       @update:model-value="submit"
       label="by lens"
     >
@@ -115,9 +126,13 @@
       </template>
     </q-select>
     <q-select
-      v-model="tmp.nick"
-      :options="nickNames"
       :disable="busy"
+      v-model="tmp.nick"
+      :options="optionsNickRef"
+      use-input
+      hide-selected
+      fill-input
+      @filter="filterNick"
       @update:model-value="submit"
       label="by author"
     >
@@ -134,18 +149,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from "vue";
+import { computed, watch, ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
+const busy = computed(() => store.state.app.busy)
 
 const find = computed(() => store.state.app.find)
 const tmp = computed(() => {
   return { ...find.value }
 })
+const values = computed(() => store.state.app.values)
 
 // execute stored values
 onMounted(() => {
@@ -228,9 +245,7 @@ const submit = () => {
     router.replace({ path: "/" }).catch((err) => { });
   }
 }
-const busy = computed(() => store.state.app.busy)
-const values = computed(() => store.state.app.values)
-const nickNames = computed(() => store.getters["app/nickNames"])
+
 const monthNames = computed(() => {
   const locale = [
     "Jan",
@@ -254,4 +269,70 @@ const days = computed(() => {
     step = 1;
   return [...Array(N)].map((_, i) => from + i * step);
 })
+
+// autocmplete
+const optionsTags = [...values.value.tags]
+const optionsTagsRef = ref(optionsTags)
+function filterTags(val, update) {
+  if (val === '') {
+    update(() => {
+      optionsTagsRef.value = optionsTags
+    })
+    return
+  }
+  update(() => {
+    const needle = val.toLowerCase()
+    optionsTagsRef.value = optionsTags.filter(v => v.toLowerCase().indexOf(needle) > -1)
+  })
+}
+// function setTags(val) {
+//   @update:model-value="submit"
+//   console.log(val);
+//   console.log(tmp.tags);
+//   tmp.tags.value = val
+//   submit()
+// }
+const optionsModel = [...values.value.model]
+const optionsModelRef = ref(optionsModel)
+function filterModel(val, update) {
+  if (val === '') {
+    update(() => {
+      optionsModelRef.value = optionsModel
+    })
+    return
+  }
+  update(() => {
+    const needle = val.toLowerCase()
+    optionsModelRef.value = optionsModel.filter(v => v.toLowerCase().indexOf(needle) > -1)
+  })
+}
+const optionsLens = [...values.value.lens]
+const optionsLensRef = ref(optionsLens)
+function filterLens(val, update) {
+  if (val === '') {
+    update(() => {
+      optionsLensRef.value = optionsLens
+    })
+    return
+  }
+  update(() => {
+    const needle = val.toLowerCase()
+    optionsLensRef.value = optionsLens.filter(v => v.toLowerCase().indexOf(needle) > -1)
+  })
+}
+const nickNames = computed(() => store.getters["app/nickNames"])
+const optionsNick = [...nickNames.value]
+const optionsNickRef = ref(optionsNick)
+function filterNick(val, update) {
+  if (val === '') {
+    update(() => {
+      optionsNickRef.value = optionsNick
+    })
+    return
+  }
+  update(() => {
+    const needle = val.toLowerCase()
+    optionsNickRef.value = optionsNick.filter(v => v.toLowerCase().indexOf(needle) > -1)
+  })
+}
 </script>
