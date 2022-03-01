@@ -36,11 +36,7 @@
         <q-item-label caption>rebuild various counters</q-item-label>
       </q-item-section>
     </q-item>
-    <q-item>
-      <q-item-section>
-        <q-item-label class="q-px-xs">{{ version }}</q-item-label>
-      </q-item-section>
-    </q-item>
+    <q-item></q-item>
   </q-list>
 </template>
 
@@ -50,10 +46,6 @@ import { useStore } from "vuex";
 
 const store = useStore();
 const user = computed(() => store.state.auth.user)
-const version = computed(() => {
-  const ver = import.meta.env.VUE_APP_VERSION.match(/.{1,4}/g).join(".");
-  return "© 2007 - " + ver;
-});
 function signIn() {
   store.dispatch("auth/signIn");
 }

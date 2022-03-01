@@ -2,7 +2,7 @@
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-white text-black">
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="drawer = !drawer" />
         <q-linear-progress v-show="busy" color="secondary" class="absolute-bottom" indeterminate />
 
         <q-toolbar-title>
@@ -13,7 +13,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" class="column no-wrap" :width="320" show-if-above bordered>
+    <q-drawer v-model="drawer" class="column no-wrap" :width="320" show-if-above bordered>
       <keep-alive>
         <component :is="dynamic"></component>
       </keep-alive>
@@ -39,10 +39,10 @@ const Stat = defineAsyncComponent(() =>
   import('../components/Stat.vue')
 )
 const store = useStore();
+const route = useRoute();
 const busy = computed(() => store.state.app.busy)
 
-const leftDrawerOpen = ref(false);
-const route = useRoute();
+const drawer = ref(false);
 const counter = computed(() => store.getters["app/counter"])
 const countRef = ref(null)
 
@@ -69,11 +69,7 @@ watch(counter, (value, oldValue) => {
       div.innerText = obj.number.toFixed(0) + sufix;
     }
   });
-
 });
 
-const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
 const title = computed(() => route.meta.title || 'ANDрејевићи')
 </script>
