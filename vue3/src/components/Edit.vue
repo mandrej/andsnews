@@ -67,9 +67,9 @@
               v-model="tmp.tags"
               :options="values.tags"
               use-input
-              use-chips
+              hide-selected
+              fill-input
               multiple
-              hide-dropdown-icon
               input-debounce="0"
               new-value-mode="add-unique"
               label="Tags"

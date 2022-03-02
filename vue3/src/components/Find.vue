@@ -1,34 +1,27 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text">
-      <template v-slot:append>
-        <q-icon
-          v-if="tmp.text !== undefined"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.text = undefined; submit()"
-        />
-      </template>
-    </q-input>
+    <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text" clearable />
     <q-select
       :disable="busy"
       v-model="tmp.tags"
       :options="optionsTagsRef"
       use-input
-      hide-selected
+      clearable
       fill-input
+      hide-selected
+      input-debounce="0"
       @filter="filterTags"
       @update:model-value="submit"
       label="by tag"
     >
-      <template v-slot:append>
+      <!-- <template v-slot:append>
         <q-icon
           v-if="tmp.tags && tmp.tags.length !== 0"
           class="cursor-pointer"
           name="clear"
           @click.stop="tmp.tags = []; submit()"
         />
-      </template>
+      </template>-->
     </q-select>
     <q-select
       :disable="busy"
@@ -36,16 +29,8 @@
       :options="values.year"
       @update:model-value="submit"
       label="by year"
-    >
-      <template v-slot:append>
-        <q-icon
-          v-if="tmp.year !== undefined"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.year = undefined; submit()"
-        />
-      </template>
-    </q-select>
+      clearable
+    />
     <div class="row">
       <q-select
         class="col"
@@ -53,19 +38,11 @@
         v-model="tmp.month"
         :options="monthNames"
         @update:model-value="submit"
+        clearable
         emit-value
         map-options
         label="by month"
-      >
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.month !== undefined"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.month = undefined; submit()"
-          />
-        </template>
-      </q-select>
+      />
       <div class="col-1"></div>
       <q-select
         class="col"
@@ -74,82 +51,50 @@
         :options="days"
         @update:model-value="submit"
         label="by day"
-      >
-        <template v-slot:append>
-          <q-icon
-            v-if="tmp.day !== undefined"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="tmp.day = undefined; submit()"
-          />
-        </template>
-      </q-select>
+        clearable
+      />
     </div>
     <q-select
       :disable="busy"
       v-model="tmp.model"
       :options="optionsModelRef"
       use-input
-      hide-selected
+      clearable
       fill-input
+      hide-selected
       @filter="filterModel"
       @update:model-value="submit"
       label="by model"
-    >
-      <template v-slot:append>
-        <q-icon
-          v-if="tmp.model !== undefined"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.model = undefined; submit()"
-        />
-      </template>
-    </q-select>
+    />
     <q-select
       :disable="busy"
       v-model="tmp.lens"
       :options="optionsLensRef"
       use-input
-      hide-selected
+      clearable
       fill-input
+      hide-selected
       @filter="filterLens"
       @update:model-value="submit"
       label="by lens"
-    >
-      <template v-slot:append>
-        <q-icon
-          v-if="tmp.lens !== undefined"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.lens = undefined; submit()"
-        />
-      </template>
-    </q-select>
+    />
     <q-select
       :disable="busy"
       v-model="tmp.nick"
       :options="optionsNickRef"
       use-input
-      hide-selected
+      clearable
       fill-input
+      hide-selected
       @filter="filterNick"
       @update:model-value="submit"
       label="by author"
-    >
-      <template v-slot:append>
-        <q-icon
-          v-if="tmp.nick !== undefined"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.nick = undefined; submit()"
-        />
-      </template>
-    </q-select>
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, watch, ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -159,9 +104,7 @@ const router = useRouter();
 const busy = computed(() => store.state.app.busy)
 
 const find = computed(() => store.state.app.find)
-const tmp = computed(() => {
-  return { ...find.value }
-})
+const tmp = ref({ ...find.value })
 const values = computed(() => store.state.app.values)
 
 // execute stored values
@@ -191,37 +134,6 @@ onMounted(() => {
     }
   }
 })
-
-// click on router-link
-watch(route, (to, old) => setForm(to, old));
-
-const setForm = (to, old) => {
-  // if (JSON.stringify(to.query) === JSON.stringify(old.query)) return
-  // remove undefined and empty list
-  Object.keys(to.query).forEach((key) => {
-    if (to.query[key] == null || to.query[key].length === 0) {
-      delete to.query[key];
-    }
-  });
-  // adopt to match types in store
-  Object.keys(to.query).forEach((key) => {
-    if (['year', 'month', 'day'].includes(key)) {
-      to.query[key] = +to.query[key]
-    }
-  });
-  store.commit("app/saveFindForm", to.query);
-
-  if (Object.keys(to.query).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
-    if (to.hash) {
-      router.push({ path: "/list", query: tmp.value, hash: to.hash });
-    } else {
-      router.push({ path: "/list", query: tmp.value });
-    }
-  }
-}
 
 // field changed
 const submit = () => {
@@ -286,7 +198,7 @@ function filterTags(val, update) {
   })
 }
 // function setTags(val) {
-//   @update:model-value="submit"
+//   // @update:model-value="submit"
 //   console.log(val);
 //   console.log(tmp.tags);
 //   tmp.tags.value = val

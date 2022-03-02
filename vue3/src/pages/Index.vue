@@ -2,7 +2,7 @@
   <q-page class="row">
     <div class="col-xs-12 col-sm-6 last" :style="styling"></div>
     <div class="col-xs-12 col-sm-6">
-      <div class="q-pa-md">
+      <div class="bg-grey-2 q-pa-md">
         <div class="text-h4">{{ title }} personal photo album</div>
         <div class="text-h6">{{ bucketInfo.count }} photos since 2007 and counting</div>
       </div>

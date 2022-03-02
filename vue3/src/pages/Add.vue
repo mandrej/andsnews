@@ -1,6 +1,9 @@
 <template>
   <div class="q-pa-md">
-    <div class="column justify-center items-center position-relative" style="height: 150px;">
+    <div
+      class="bg-grey-2 column justify-center items-center"
+      style="position: relative; height: 150px;"
+    >
       <div class="text-body1">
         Drag your images here to upload, or click to browse.
         <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
@@ -23,8 +26,8 @@
       />
     </div>
     <div>
-      <q-list v-if="submitResult.length > 0" separator>
-        <q-item v-for="rec in submitResult" :key="rec.filename">
+      <q-list class="q-mt-md" v-if="submitResult.length > 0" separator>
+        <q-item class="bg-grey-2" v-for="rec in submitResult" :key="rec.filename">
           <q-item-section>
             <q-item-label>{{ rec.filename }}</q-item-label>
           </q-item-section>

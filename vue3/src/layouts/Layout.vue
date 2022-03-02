@@ -1,19 +1,17 @@
 <template>
   <q-layout view="hHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar class="bg-white text-black">
+    <q-header>
+      <q-toolbar class="bg-grey-2 text-black">
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="drawer = !drawer" />
-        <q-linear-progress v-show="busy" color="secondary" class="absolute-bottom" indeterminate />
-
         <q-toolbar-title>
-          <router-link to="/" class="text-black" style="text-decoration: none">{{ title }}</router-link>
+          <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
-
         <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs"></div>
+        <q-linear-progress v-show="busy" color="warning" class="absolute-bottom" indeterminate />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="drawer" class="column no-wrap" :width="320" show-if-above bordered>
+    <q-drawer v-model="drawer" class="column no-wrap" :width="320" show-if-above>
       <keep-alive>
         <component :is="dynamic"></component>
       </keep-alive>

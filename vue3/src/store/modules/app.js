@@ -4,7 +4,9 @@ import querystring from "querystring-es3";
 import { notify } from "../../helpers";
 
 const state = {
-  find: {},
+  find: {
+    tags: [],
+  },
   uploaded: [],
 
   last: {

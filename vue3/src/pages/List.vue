@@ -16,7 +16,7 @@
           v-for="item in list"
           :key="item.id"
         >
-          <q-card flat bordered>
+          <q-card class="bg-grey-2" flat>
             <q-img
               class="thumbnail cursor-pointer"
               :src="smallsized + item.filename"
@@ -66,7 +66,7 @@
     </div>
 
     <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
-      <q-btn fab icon="arrow_upward" color="secondary" />
+      <q-btn fab icon="arrow_upward" color="warning" />
     </q-page-scroller>
   </q-page>
 </template>
