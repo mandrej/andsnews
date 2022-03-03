@@ -152,6 +152,9 @@ const submit = () => {
   store.commit("app/saveFindForm", tmp.value);
 
   if (Object.keys(tmp.value).length) {
+    store.commit("app/setBusy", false); // interupt loading
+    store.commit("app/resetObjects");
+    store.dispatch("app/fetchRecords"); // new filter
     router.push({ path: "/list", query: tmp.value });
   } else {
     router.replace({ path: "/" }).catch((err) => { });
