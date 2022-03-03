@@ -54,41 +54,26 @@
         clearable
       />
     </div>
-    <q-select
-      :disable="busy"
-      v-model="tmp.model"
-      :options="optionsModelRef"
-      use-input
-      clearable
-      fill-input
-      hide-selected
-      @filter="filterModel"
-      @update:model-value="submit"
+    <Complete
+      :model="tmp.model"
+      :options="values.model"
       label="by model"
-    />
-    <q-select
       :disable="busy"
-      v-model="tmp.lens"
-      :options="optionsLensRef"
-      use-input
-      clearable
-      fill-input
-      hide-selected
-      @filter="filterLens"
-      @update:model-value="submit"
+      @update:model-value="newValue => { tmp.model = newValue; submit() }"
+    />
+    <Complete
+      :model="tmp.lens"
+      :options="values.lens"
       label="by lens"
-    />
-    <q-select
       :disable="busy"
-      v-model="tmp.nick"
-      :options="optionsNickRef"
-      use-input
-      clearable
-      fill-input
-      hide-selected
-      @filter="filterNick"
-      @update:model-value="submit"
+      @update:model-value="newValue => { tmp.lens = newValue; submit() }"
+    />
+    <Complete
+      :model="tmp.nick"
+      :options="nickNames"
       label="by author"
+      :disable="busy"
+      @update:model-value="newValue => { tmp.nick = newValue; submit() }"
     />
   </div>
 </template>
@@ -97,6 +82,7 @@
 import { computed, ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+import Complete from "./Complete.vue";
 
 const store = useStore();
 const route = useRoute();
@@ -106,6 +92,7 @@ const busy = computed(() => store.state.app.busy)
 const find = computed(() => store.state.app.find)
 const tmp = ref({ ...find.value })
 const values = computed(() => store.state.app.values)
+const nickNames = computed(() => store.getters["app/nickNames"])
 
 // execute stored values
 onMounted(() => {
@@ -207,47 +194,4 @@ function filterTags(val, update) {
 //   tmp.tags.value = val
 //   submit()
 // }
-const optionsModel = [...values.value.model]
-const optionsModelRef = ref(optionsModel)
-function filterModel(val, update) {
-  if (val === '') {
-    update(() => {
-      optionsModelRef.value = optionsModel
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    optionsModelRef.value = optionsModel.filter(v => v.toLowerCase().indexOf(needle) > -1)
-  })
-}
-const optionsLens = [...values.value.lens]
-const optionsLensRef = ref(optionsLens)
-function filterLens(val, update) {
-  if (val === '') {
-    update(() => {
-      optionsLensRef.value = optionsLens
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    optionsLensRef.value = optionsLens.filter(v => v.toLowerCase().indexOf(needle) > -1)
-  })
-}
-const nickNames = computed(() => store.getters["app/nickNames"])
-const optionsNick = [...nickNames.value]
-const optionsNickRef = ref(optionsNick)
-function filterNick(val, update) {
-  if (val === '') {
-    update(() => {
-      optionsNickRef.value = optionsNick
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    optionsNickRef.value = optionsNick.filter(v => v.toLowerCase().indexOf(needle) > -1)
-  })
-}
 </script>

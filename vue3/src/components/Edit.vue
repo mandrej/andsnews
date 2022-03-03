@@ -64,31 +64,43 @@
           <div class="col-12">
             <q-select
               v-model="tmp.tags"
-              :options="values.tags"
+              :options="optionsTagsRef"
               use-input
-              hide-selected
+              use-chips
+              clearable
               fill-input
-              multiple
+              hide-selected
               input-debounce="0"
+              @filter="filterTags"
               new-value-mode="add-unique"
               label="Tags"
             >
-              <template v-slot:append>
+              <!-- <template v-slot:append>
                 <q-icon
                   v-if="tmp.tags && tmp.tags.length !== 0"
                   class="cursor-pointer"
                   name="clear"
                   @click.stop="tmp.tags = []"
                 />
-              </template>
+              </template>-->
             </q-select>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <q-select v-model="tmp.model" :options="values.model" label="Camera Model" />
+            <Complete
+              :model="tmp.model"
+              :options="values.model"
+              label="Camera Model"
+              @update:modelValue="newValue => tmp.model = newValue"
+            />
           </div>
           <div class="col-xs-12 col-sm-6">
-            <q-select v-model="tmp.lens" :options="values.lens" label="Lens" />
+            <Complete
+              :model="tmp.lens"
+              :options="values.lens"
+              label="Camera Lens"
+              @update:modelValue="newValue => tmp.lens = newValue"
+            />
           </div>
           <div class="col-xs-6 col-sm-4">
             <q-input v-model="tmp.focal_length" type="number" label="Focal length" />
@@ -122,12 +134,16 @@ import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { api, smallsized } from "../helpers"
 import { useStore } from "vuex";
+import Complete from './Complete.vue';
 
 const { humanStorageSize } = format
 
 export default {
   name: "Edit",
   props: { rec: Object },
+  components: {
+    Complete
+  },
   emits: [
     ...useDialogPluginComponent.emits
   ],
@@ -166,6 +182,22 @@ export default {
       return onDialogCancel()
     }
 
+    // autocmplete
+    const optionsTags = [...values.value.tags]
+    const optionsTagsRef = ref(optionsTags)
+    function filterTags(val, update) {
+      if (val.length === 0) {
+        update(() => {
+          optionsTagsRef.value = optionsTags
+        })
+        return
+      }
+      update(() => {
+        const needle = val.toLowerCase()
+        optionsTagsRef.value = optionsTags.filter(v => v.toLowerCase().indexOf(needle) > -1)
+      })
+    }
+
     return {
       tmp,
       close,
@@ -174,6 +206,8 @@ export default {
       readExif,
       smallsized,
       values,
+      optionsTagsRef,
+      filterTags,
       dialogRef,
       onDialogHide,
       user: computed(() => store.state.auth.user),
