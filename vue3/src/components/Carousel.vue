@@ -1,7 +1,6 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    v-model="close"
     @hide="onDialogHide"
     :maximized="true"
     transition-show="slide-up"
@@ -31,8 +30,9 @@
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div class="absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
-          <div class="text-subtitle2 ellipsis">{{ obj.headline }}</div>
+          <div class="text-subtitle2 ellipsis q-mx-xl">{{ obj.headline }}</div>
           <div class="text-body2 gt-xs ellipsis">{{ caption(obj) }}</div>
+          <q-btn class="absolute-right" size="lg" icon="close" flat round @click="onCancelClick" />
         </div>
         <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
@@ -73,7 +73,6 @@ export default {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     const store = useStore();
-    const close = ref(null)
     const objects = computed(() => store.state.app.objects);
     const swiperRef = ref(null)
     const index = objects.value.findIndex(x => x.id === props.pid)
@@ -100,12 +99,15 @@ export default {
 
     onMounted(() => {
       window.onpopstate = function () {
-        if (close.value) close.value = false
+        onDialogCancel()
       }
     })
+    const onCancelClick = () => {
+      window.history.back()
+      return onDialogCancel()
+    }
 
     return {
-      close,
       index,
       objects,
       fullsized,
@@ -120,7 +122,7 @@ export default {
         // or with payload: onDialogOK({ ... })
         // ...and it will also hide the dialog automatically
       },
-      onCancelClick: onDialogCancel,
+      onCancelClick,
 
       swiperRef,
       modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],

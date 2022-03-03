@@ -94,8 +94,8 @@ const next = computed(() => store.state.app.next);
 const error = computed(() => store.state.app.error);
 const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
 
-const { event } = useGtag();
 const user = computed(() => store.state.auth.user)
+const { event } = useGtag();
 
 onMounted(() => {
   const hash = route.hash
@@ -142,7 +142,7 @@ const showConfirm = (rec) => {
   })
 }
 const showCarousel = (id) => {
-  window.history.pushState({}, '') // fake history
+  window.history.pushState({}, '', route.fullPath) // fake history
   $q.dialog({
     component: Carousel,
     componentProps: {

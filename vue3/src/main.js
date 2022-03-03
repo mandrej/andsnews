@@ -34,7 +34,6 @@ app.use(Quasar, {
 });
 app.use(VueGtag, {
   property: {
-    isEnabled: import.meta.env.PROD,
     id: import.meta.env.VUE_APP_GA,
     app_name: "ANDS",
     send_page_view: false,

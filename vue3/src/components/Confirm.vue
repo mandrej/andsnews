@@ -1,7 +1,6 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    v-model="close"
     @hide="onDialogHide"
     transition-show="slide-down"
     transition-hide="slide-up"
@@ -36,14 +35,17 @@ export default {
     ...useDialogPluginComponent.emits
   ],
   setup(props) {
-    const close = ref(null)
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     onMounted(() => {
       window.onpopstate = function () {
-        if (close.value) close.value = false
+        onDialogCancel()
       }
     })
+    const onCancelClick = () => {
+      window.history.back()
+      return onDialogCancel()
+    }
 
     return {
       close,
@@ -53,7 +55,7 @@ export default {
       onOKClick() {
         onDialogOK()
       },
-      onCancelClick: onDialogCancel
+      onCancelClick,
     };
   },
 };

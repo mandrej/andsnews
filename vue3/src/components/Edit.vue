@@ -1,7 +1,6 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    v-model="close"
     @hide="onDialogHide"
     transition-show="slide-down"
     transition-hide="slide-up"
@@ -134,7 +133,6 @@ export default {
   ],
   setup(props) {
     const store = useStore();
-    const close = ref(null)
     const tmp = ref({ ...props.rec });
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
@@ -160,9 +158,13 @@ export default {
         readExif()
       }
       window.onpopstate = function () {
-        if (close.value) close.value = false
+        onDialogCancel()
       }
     })
+    const onCancelClick = () => {
+      window.history.back()
+      return onDialogCancel()
+    }
 
     return {
       tmp,
@@ -181,7 +183,7 @@ export default {
         store.dispatch('app/saveRecord', tmp.value)
         onDialogOK()
       },
-      onCancelClick: onDialogCancel
+      onCancelClick,
     };
   },
 }
