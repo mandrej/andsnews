@@ -32,16 +32,14 @@
       clearable
     />
     <div class="row">
-      <q-select
+      <Complete
         class="col"
-        :disable="busy"
-        v-model="tmp.month"
+        :model="tmp.month"
         :options="monthNames"
-        @update:model-value="submit"
-        clearable
-        emit-value
-        map-options
+        autocomplete="label"
         label="by month"
+        :disable="busy"
+        @update:model-value="newValue => { tmp.month = newValue; submit() }"
       />
       <div class="col-1"></div>
       <q-select
