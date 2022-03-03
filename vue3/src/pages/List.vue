@@ -142,7 +142,7 @@ const showConfirm = (rec) => {
   })
 }
 const showCarousel = (id) => {
-  window.history.pushState({}, '', route.fullPath) // fake history
+  window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Carousel,
     componentProps: {
