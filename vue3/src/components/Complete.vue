@@ -10,7 +10,22 @@
     hide-selected
     emit-value
     map-options
-    input-debounce="0"
+    input-debounce="300"
+    @filter="filter"
+    :label="label"
+    @input="$emit('update:model', $event.target.value)"
+  />
+  <q-select
+    v-else-if="multiple"
+    :disable="disable"
+    v-model="modelRef"
+    :options="optionsRef"
+    multiple
+    use-input
+    clearable
+    :hide-dropdown-icon="canadd ? true : null"
+    :new-value-mode="canadd ? 'add-unique' : null"
+    input-debounce="300"
     @filter="filter"
     :label="label"
     @input="$emit('update:model', $event.target.value)"
@@ -24,7 +39,7 @@
     clearable
     fill-input
     hide-selected
-    input-debounce="0"
+    input-debounce="300"
     @filter="filter"
     :label="label"
     @input="$emit('update:model', $event.target.value)"
@@ -36,11 +51,20 @@ import { ref } from "vue";
 
 const props = defineProps({
   model: {
-    type: [String, Number],
+    type: [String, Number, Array],
     required: false
   },
   options: Array,
-  label: String,
+  // tagging
+  multiple: {
+    type: Boolean,
+    default: false
+  },
+  canadd: {
+    type: Boolean,
+    default: false,
+  },
+  // label and value
   autocomplete: {
     type: String,
     requered: false
@@ -49,6 +73,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  label: String,
 })
 const emit = defineEmits(['update:model'])
 

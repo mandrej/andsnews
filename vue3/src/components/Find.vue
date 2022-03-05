@@ -1,28 +1,14 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text" clearable />
-    <q-select
+    <Complete
+      :model="tmp.tags"
+      :options="values.tags"
+      multiple
+      label="by tags"
       :disable="busy"
-      v-model="tmp.tags"
-      :options="optionsTagsRef"
-      use-input
-      clearable
-      fill-input
-      hide-selected
-      input-debounce="0"
-      @filter="filterTags"
-      @update:model-value="submit"
-      label="by tag"
-    >
-      <!-- <template v-slot:append>
-        <q-icon
-          v-if="tmp.tags && tmp.tags.length !== 0"
-          class="cursor-pointer"
-          name="clear"
-          @click.stop="tmp.tags = []; submit()"
-        />
-      </template>-->
-    </q-select>
+      @update:model-value="newValue => { tmp.tags = newValue; submit() }"
+    />
     <Complete
       class="col"
       :model="tmp.year"
@@ -94,21 +80,26 @@ const tmp = ref({ ...find.value })
 const values = computed(() => store.state.app.values)
 const nickNames = computed(() => store.getters["app/nickNames"])
 
-// execute stored values
+// execute typed url
 onMounted(() => {
-  // remove undefined and empty list
+  tmp.value = { ...route.query }
   Object.keys(route.query).forEach((key) => {
-    if (route.query[key] == undefined || route.query[key].length === 0) {
-      delete route.query[key];
+    if (route.query[key] == null || route.query[key].length === 0) {
+      delete tmp.value[key];
     }
   });
-  // adopt to match types in store
+  // adopt to match types
   Object.keys(route.query).forEach((key) => {
-    if (['year', 'month', 'day'].includes(key)) {
-      route.query[key] = +route.query[key]
+    if (["year", "month", "day"].includes(key)) {
+      tmp.value[key] = +route.query[key];
+    } else if (key === "tags") {
+      if (typeof route.query[key] === "string" || route.query[key] instanceof String) {
+        tmp.value[key] = [route.query[key]];
+      }
     }
   });
-  store.commit("app/saveFindForm", route.query);
+  store.commit("app/saveFindForm", tmp.value);
+  console.log('Find onMounted');
 
   if (Object.keys(tmp.value).length) {
     store.commit("app/setBusy", false); // interupt loading
@@ -122,21 +113,25 @@ onMounted(() => {
   }
 })
 
-// field changed
+// find field changed
 const submit = () => {
-  // remove undefined and empty list
   Object.keys(tmp.value).forEach((key) => {
     if (tmp.value[key] == null || tmp.value[key].length === 0) {
       delete tmp.value[key];
     }
   });
-  // adopt to match types in store
+  // adopt to match types
   Object.keys(tmp.value).forEach((key) => {
-    if (['year', 'month', 'day'].includes(key)) {
-      tmp.value[key] = +tmp.value[key]
+    if (["year", "month", "day"].includes(key)) {
+      tmp.value[key] = +tmp.value[key];
+    } else if (key === "tags") {
+      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
+        tmp.value[key] = [tmp.value[key]];
+      }
     }
   });
   store.commit("app/saveFindForm", tmp.value);
+  console.log('Find submit');
 
   if (Object.keys(tmp.value).length) {
     store.commit("app/setBusy", false); // interupt loading
@@ -165,27 +160,4 @@ const optionsDay = computed(() => {
     return { label: '' + day, value: day }
   });
 })
-
-// autocmplete
-const optionsTags = [...values.value.tags]
-const optionsTagsRef = ref(optionsTags)
-function filterTags(val, update) {
-  if (val === '') {
-    update(() => {
-      optionsTagsRef.value = optionsTags
-    })
-    return
-  }
-  update(() => {
-    const needle = val.toLowerCase()
-    optionsTagsRef.value = optionsTags.filter(v => v.toLowerCase().indexOf(needle) > -1)
-  })
-}
-// function setTags(val) {
-//   // @update:model-value="submit"
-//   console.log(val);
-//   console.log(tmp.tags);
-//   tmp.tags.value = val
-//   submit()
-// }
 </script>

@@ -62,30 +62,8 @@
           </div>
 
           <div class="col-12">
-            <q-select
-              v-model="tmp.tags"
-              :options="optionsTagsRef"
-              use-input
-              use-chips
-              clearable
-              fill-input
-              hide-selected
-              input-debounce="0"
-              @filter="filterTags"
-              new-value-mode="add-unique"
-              label="Tags"
-            >
-              <!-- <template v-slot:append>
-                <q-icon
-                  v-if="tmp.tags && tmp.tags.length !== 0"
-                  class="cursor-pointer"
-                  name="clear"
-                  @click.stop="tmp.tags = []"
-                />
-              </template>-->
-            </q-select>
+            <Complete :model="tmp.tags" :options="values.tags" canadd multiple label="Tags" />
           </div>
-
           <div class="col-xs-12 col-sm-6">
             <Complete
               :model="tmp.model"
@@ -158,11 +136,13 @@ export default {
     const readExif = () => {
       api.get('exif/' + tmp.value.filename).then((response) => {
         tmp.value = { ...tmp.value, ...response.data }
+        console.log(tmp.value);
         // add flash tag if exif flash true
         let tags = tmp.value.tags || []
         if (response.data.flash && tags.indexOf('flash') === -1) {
           tags.push('flash')
-          tmp.value = { ...tmp.value, ...{ tags: tags } }
+          tmp.value.tags = tags
+          console.log(tmp.value);
         }
       })
     }
@@ -182,22 +162,6 @@ export default {
       return onDialogCancel()
     }
 
-    // autocmplete
-    const optionsTags = [...values.value.tags]
-    const optionsTagsRef = ref(optionsTags)
-    function filterTags(val, update) {
-      if (val.length === 0) {
-        update(() => {
-          optionsTagsRef.value = optionsTags
-        })
-        return
-      }
-      update(() => {
-        const needle = val.toLowerCase()
-        optionsTagsRef.value = optionsTags.filter(v => v.toLowerCase().indexOf(needle) > -1)
-      })
-    }
-
     return {
       tmp,
       close,
@@ -206,15 +170,14 @@ export default {
       readExif,
       smallsized,
       values,
-      optionsTagsRef,
-      filterTags,
       dialogRef,
       onDialogHide,
       user: computed(() => store.state.auth.user),
 
       onOKClick() {
-        tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
-        store.dispatch('app/saveRecord', tmp.value)
+        console.log(tmp.value.tags);
+        // tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
+        // store.dispatch('app/saveRecord', tmp.value)
         onDialogOK()
       },
       onCancelClick,
