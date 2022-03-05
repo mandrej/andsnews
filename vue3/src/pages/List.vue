@@ -46,8 +46,15 @@
                 "
               />
             </q-card-section>
-            <q-card-actions class="justify-between q-pt-none">
-              <q-btn flat round color="grey" icon="delete" @click="showConfirm(item)" />
+            <q-card-actions v-if="user.isAuthorized" class="justify-between q-pt-none">
+              <q-btn
+                v-if="user.isAdmin"
+                flat
+                round
+                color="grey"
+                icon="delete"
+                @click="showConfirm(item)"
+              />
               <q-btn flat round color="grey" icon="edit" @click="showEditForm(item)" />
               <!-- <q-btn flat round color="grey" icon="share" /> -->
               <q-btn
