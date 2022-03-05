@@ -57,7 +57,6 @@ const optionsRef = ref(props.options)
 const field = props.autocomplete // label
 
 function filter(val, update) {
-  console.log(val);
   if (val === '') {
     update(() => {
       optionsRef.value = props.options

@@ -23,33 +23,34 @@
         />
       </template>-->
     </q-select>
-    <q-select
-      :disable="busy"
-      v-model="tmp.year"
-      :options="values.year"
-      @update:model-value="submit"
+    <Complete
+      class="col"
+      :model="tmp.year"
+      :options="optionsYear"
+      autocomplete="label"
       label="by year"
-      clearable
+      :disable="busy"
+      @update:model-value="newValue => { tmp.year = newValue; submit() }"
     />
     <div class="row">
       <Complete
         class="col"
         :model="tmp.month"
-        :options="monthNames"
+        :options="optionsMonth"
         autocomplete="label"
         label="by month"
         :disable="busy"
         @update:model-value="newValue => { tmp.month = newValue; submit() }"
       />
       <div class="col-1"></div>
-      <q-select
+      <Complete
         class="col"
+        :model="tmp.day"
+        :options="optionsDay"
+        autocomplete="label"
+        label="by month"
         :disable="busy"
-        v-model="tmp.day"
-        :options="days"
-        @update:model-value="submit"
-        label="by day"
-        clearable
+        @update:model-value="newValue => { tmp.day = newValue; submit() }"
       />
     </div>
     <Complete
@@ -81,6 +82,7 @@ import { computed, ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import Complete from "./Complete.vue";
+import { months } from "../helpers";
 
 const store = useStore();
 const route = useRoute();
@@ -146,28 +148,22 @@ const submit = () => {
   }
 }
 
-const monthNames = computed(() => {
-  const locale = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return locale.map((month, i) => ({ label: month, value: i + 1 }));
+const optionsYear = computed(() => {
+  return values.value.year.map(year => {
+    return { label: '' + year, value: year }
+  })
 })
-const days = computed(() => {
+
+const optionsMonth = computed(() => {
+  return months.map((month, i) => ({ label: month, value: i + 1 }));
+})
+const optionsDay = computed(() => {
   const N = 31,
     from = 1,
     step = 1;
-  return [...Array(N)].map((_, i) => from + i * step);
+  return [...Array(N)].map((_, i) => from + i * step).map(day => {
+    return { label: '' + day, value: day }
+  });
 })
 
 // autocmplete

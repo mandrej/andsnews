@@ -74,3 +74,11 @@ const setForm = (to, old) => {
   }
 }
 </script>
+
+<style scoped>
+.last {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out;
+}
+</style>

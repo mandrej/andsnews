@@ -42,6 +42,20 @@ const pushMessage = function (recipients, msg) {
 const fileBroken = CONFIG.fileBroken;
 const fullsized = CONFIG.public_url + "fullsized/";
 const smallsized = CONFIG.public_url + "smallsized/";
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 const formatBytes = (bytes, decimals = 2) => {
   return humanStorageSize(bytes);
 };
@@ -59,6 +73,7 @@ export {
   fileBroken,
   fullsized,
   smallsized,
+  months,
   formatBytes,
   formatDatum,
 };
