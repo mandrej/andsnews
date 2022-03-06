@@ -33,7 +33,7 @@
           </q-item-section>
           <q-item-section side>
             <q-btn
-              label="Remove"
+              :label="$q.screen.gt.xs ? 'Remove' : null"
               type="button"
               color="negative"
               icon="delete"
@@ -42,7 +42,7 @@
           </q-item-section>
           <q-item-section side>
             <q-btn
-              label="Publish"
+              :label="$q.screen.gt.xs ? 'Publish' : null"
               type="button"
               color="primary"
               icon="publish"
@@ -129,6 +129,7 @@ const showEditForm = (rec) => {
   /**
    * Add headline 'No name' and user email to new rec
    */
+  window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
     componentProps: {

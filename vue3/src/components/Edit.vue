@@ -62,7 +62,14 @@
           </div>
 
           <div class="col-12">
-            <Complete :model="tmp.tags" :options="values.tags" canadd multiple label="Tags" />
+            <Complete
+              :model="tmp.tags"
+              :options="values.tags"
+              canadd
+              multiple
+              label="Tags"
+              @update:modelValue="newValue => tmp.tags = newValue"
+            />
           </div>
           <div class="col-xs-12 col-sm-6">
             <Complete
@@ -108,7 +115,7 @@
 
 <script>
 import { format } from 'quasar'
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, toRefs, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { api, smallsized } from "../helpers"
 import { useStore } from "vuex";
@@ -127,7 +134,7 @@ export default {
   ],
   setup(props) {
     const store = useStore();
-    const tmp = ref({ ...props.rec });
+    let tmp = ref({ ...props.rec });
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
       const dimension = rec.dim || []
@@ -135,22 +142,22 @@ export default {
     }
     const readExif = () => {
       api.get('exif/' + tmp.value.filename).then((response) => {
-        tmp.value = { ...tmp.value, ...response.data }
+        tmp = ref({ ...tmp.value, ...response.data })
         console.log(tmp.value);
         // add flash tag if exif flash true
         let tags = tmp.value.tags || []
-        if (response.data.flash && tags.indexOf('flash') === -1) {
+        if (tmp.value.flash && tags.indexOf('flash') === -1) {
           tags.push('flash')
-          tmp.value.tags = tags
-          console.log(tmp.value);
         }
+        tmp.value = { ...tmp.value, ...{ tags: tags } }
+        console.log(tmp.value);
       })
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
 
     onMounted(() => {
-      if (!tmp.value.date) {
+      if (!tmp.date) {
         readExif()
       }
       window.onpopstate = function () {
@@ -160,6 +167,12 @@ export default {
     const onCancelClick = () => {
       window.history.back()
       return onDialogCancel()
+    }
+    const onOKClick = () => {
+      tmp.tags = tmp.tags ? tmp.tags : []
+      // store.dispatch('app/saveRecord', tmp)
+      console.log(tmp);
+      onDialogOK()
     }
 
     return {
@@ -171,15 +184,10 @@ export default {
       smallsized,
       values,
       dialogRef,
-      onDialogHide,
       user: computed(() => store.state.auth.user),
 
-      onOKClick() {
-        console.log(tmp.value.tags);
-        // tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
-        // store.dispatch('app/saveRecord', tmp.value)
-        onDialogOK()
-      },
+      onDialogHide,
+      onOKClick,
       onCancelClick,
     };
   },
