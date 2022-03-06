@@ -4,7 +4,7 @@ import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { date, format } from "quasar";
 
-const api = axios.create({ baseURL: "/api", timeout: 10000 }); // 10 sec
+const api = axios.create({ baseURL: "/api", timeout: 20000 }); // 20 sec
 const firebase = initializeApp(CONFIG.firebase);
 const { humanStorageSize } = format;
 const { formatDate } = date;
