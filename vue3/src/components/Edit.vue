@@ -134,15 +134,15 @@ export default {
   ],
   setup(props) {
     const store = useStore();
-    let tmp = ref({ ...props.rec });
+    let tmp = ref(props.rec);
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
-      const dimension = rec.dim || []
-      return dimension.join('✕') || ''
+      const dim = rec.dim || []
+      return dim.join('✕') || ''
     }
     const readExif = () => {
       api.get('exif/' + tmp.value.filename).then((response) => {
-        tmp = ref({ ...tmp.value, ...response.data })
+        tmp.value = { ...tmp.value, ...response.data }
         console.log(tmp.value);
         // add flash tag if exif flash true
         let tags = tmp.value.tags || []
