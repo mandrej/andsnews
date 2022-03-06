@@ -1,45 +1,19 @@
 <template>
   <q-select
-    v-if="autocomplete"
     :disable="disable"
     v-model="modelRef"
     :options="optionsRef"
     use-input
     clearable
-    fill-input
-    hide-selected
-    emit-value
-    map-options
-    input-debounce="300"
-    @filter="filter"
-    :label="label"
-    @input="$emit('update:model', $event.target.value)"
-  />
-  <q-select
-    v-else-if="multiple"
-    :disable="disable"
-    v-model="modelRef"
-    :options="optionsRef"
-    multiple
-    use-input
-    clearable
-    :hide-dropdown-icon="canadd ? true : null"
-    :new-value-mode="canadd ? 'add-unique' : null"
-    input-debounce="300"
-    @filter="filter"
-    :label="label"
-    @input="$emit('update:model', $event.target.value)"
-  />
-  <q-select
-    v-else
-    :disable="disable"
-    v-model="modelRef"
-    :options="optionsRef"
-    use-input
-    clearable
-    fill-input
-    hide-selected
-    input-debounce="300"
+    clearIcon="clear"
+    :hide-selected="multiple ? false : true"
+    :multiple="multiple ? true : undefined"
+    :fill-input="multiple ? false : true"
+    :emit-value="autocomplete ? true : undefined"
+    :map-options="autocomplete ? true : undefined"
+    :hide-dropdown-icon="canadd ? true : undefined"
+    :new-value-mode="canadd ? 'add-unique' : undefined"
+    :input-debounce="debounce"
     @filter="filter"
     :label="label"
     @input="$emit('update:model', $event.target.value)"
@@ -66,8 +40,8 @@ const props = defineProps({
   },
   // label and value
   autocomplete: {
-    type: String,
-    requered: false
+    type: String, // 'label'
+    default: ''
   },
   disable: {
     type: Boolean,
@@ -80,6 +54,7 @@ const emit = defineEmits(['update:model'])
 const modelRef = ref(props.model)
 const optionsRef = ref(props.options)
 const field = props.autocomplete // label
+const debounce = 300
 
 function filter(val, update) {
   if (val === '') {
@@ -97,7 +72,4 @@ function filter(val, update) {
     }
   })
 }
-
 </script>
-
-

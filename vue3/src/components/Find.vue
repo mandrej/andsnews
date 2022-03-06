@@ -1,6 +1,13 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-input v-model="tmp.text" :disable="busy" @keyup.enter="submit" label="by text" clearable />
+    <q-input
+      v-model="tmp.text"
+      :disable="busy"
+      @keyup.enter="submit"
+      label="by text"
+      clearIcon="clear"
+      clearable
+    />
     <Complete
       :model="tmp.tags"
       :options="values.tags"
@@ -10,7 +17,7 @@
       @update:model-value="newValue => { tmp.tags = newValue; submit() }"
     />
     <Complete
-      class="col"
+      class="col hidden sm"
       :model="tmp.year"
       :options="optionsYear"
       autocomplete="label"
@@ -34,7 +41,7 @@
         :model="tmp.day"
         :options="optionsDay"
         autocomplete="label"
-        label="by month"
+        label="by day"
         :disable="busy"
         @update:model-value="newValue => { tmp.day = newValue; submit() }"
       />
@@ -54,6 +61,7 @@
       @update:model-value="newValue => { tmp.lens = newValue; submit() }"
     />
     <Complete
+      class="hidden sm"
       :model="tmp.nick"
       :options="nickNames"
       label="by author"

@@ -4,7 +4,7 @@
       class="bg-grey-2 column justify-center items-center"
       style="position: relative; height: 150px;"
     >
-      <div class="text-body1">
+      <div class="text-body1 text-center" style="width: 70%">
         Drag your images here to upload, or click to browse.
         <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
       </div>
