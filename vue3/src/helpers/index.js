@@ -63,6 +63,16 @@ const formatDatum = (str, format) => {
   const date = new Date(str);
   return formatDate(date, format);
 };
+const readExif = (filename) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get("exif/" + filename)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((err) => reject(err));
+  });
+};
 
 export {
   CONFIG,
@@ -76,4 +86,5 @@ export {
   months,
   formatBytes,
   formatDatum,
+  readExif,
 };

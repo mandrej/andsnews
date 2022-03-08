@@ -59,7 +59,7 @@
 import { useQuasar } from 'quasar'
 import { defineAsyncComponent, computed, ref } from 'vue'
 import { useStore } from "vuex";
-import { CONFIG, api, notify } from '../helpers'
+import { CONFIG, api, readExif, notify } from '../helpers'
 
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
@@ -129,13 +129,19 @@ const showEditForm = (rec) => {
   /**
    * Add headline 'No name' and user email to new rec
    */
-  window.history.pushState({}, '') // fake history
-  $q.dialog({
-    component: Edit,
-    componentProps: {
-      rec: { ...rec, ...{ headline: 'No name', email: user.value.email } }
+  readExif(rec.filename).then(exif => {
+    const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
+    if (record.flash) {
+      record.tags.push('flash')
     }
-  })
+    window.history.pushState({}, '') // fake history
+    $q.dialog({
+      component: Edit,
+      componentProps: {
+        rec: record
+      }
+    })
+  }).catch(err => console.log(err))
 }
 
 const removeRecord = (rec) => {

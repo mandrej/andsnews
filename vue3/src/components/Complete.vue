@@ -1,8 +1,8 @@
 <template>
   <q-select
     :disable="disable"
-    v-model="modelRef"
-    :options="optionsRef"
+    v-model="model"
+    :options="options"
     use-input
     clearable
     clearIcon="clear"
@@ -23,6 +23,7 @@
 <script setup>
 import { ref } from "vue";
 
+const emit = defineEmits(['update:model'])
 const props = defineProps({
   model: {
     type: [String, Number, Array],
@@ -49,26 +50,25 @@ const props = defineProps({
   },
   label: String,
 })
-const emit = defineEmits(['update:model'])
 
-const modelRef = ref(props.model)
-const optionsRef = ref(props.options)
+const model = ref(props.model)
+const options = ref(props.options)
 const field = props.autocomplete // label
 const debounce = 300
 
 function filter(val, update) {
   if (val === '') {
     update(() => {
-      optionsRef.value = props.options
+      options.value = props.options
     })
     return
   }
   update(() => {
     const needle = val.toLowerCase()
     if (field) {
-      optionsRef.value = props.options.filter(v => v[field].toLowerCase().indexOf(needle) > -1)
+      options.value = props.options.filter(v => v[field].toLowerCase().indexOf(needle) > -1)
     } else {
-      optionsRef.value = props.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
+      options.value = props.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
     }
   })
 }

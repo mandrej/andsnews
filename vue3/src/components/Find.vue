@@ -9,7 +9,7 @@
       clearable
     />
     <Complete
-      :model="tmp.tags"
+      :modelValue="tmp.tags"
       :options="values.tags"
       multiple
       label="by tags"
@@ -17,8 +17,8 @@
       @update:model-value="newValue => { tmp.tags = newValue; submit() }"
     />
     <Complete
-      class="col hidden sm"
-      :model="tmp.year"
+      class="col"
+      :modelValue="tmp.year"
       :options="optionsYear"
       autocomplete="label"
       label="by year"
@@ -28,7 +28,7 @@
     <div class="row">
       <Complete
         class="col"
-        :model="tmp.month"
+        :modelValue="tmp.month"
         :options="optionsMonth"
         autocomplete="label"
         label="by month"
@@ -38,7 +38,7 @@
       <div class="col-1"></div>
       <Complete
         class="col"
-        :model="tmp.day"
+        :modelValue="tmp.day"
         :options="optionsDay"
         autocomplete="label"
         label="by day"
@@ -47,22 +47,21 @@
       />
     </div>
     <Complete
-      :model="tmp.model"
+      :modelValue="tmp.model"
       :options="values.model"
       label="by model"
       :disable="busy"
       @update:model-value="newValue => { tmp.model = newValue; submit() }"
     />
     <Complete
-      :model="tmp.lens"
+      :modelValue="tmp.lens"
       :options="values.lens"
       label="by lens"
       :disable="busy"
       @update:model-value="newValue => { tmp.lens = newValue; submit() }"
     />
     <Complete
-      class="hidden sm"
-      :model="tmp.nick"
+      :modelValue="tmp.nick"
       :options="nickNames"
       label="by author"
       :disable="busy"
@@ -72,7 +71,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { onMounted, computed, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import Complete from "./Complete.vue";
@@ -120,6 +119,39 @@ onMounted(() => {
     }
   }
 })
+
+// click on router-link
+watch(route, (to) => setForm(to));
+
+const setForm = (to) => {
+  tmp.value = { ...to.query }
+  Object.keys(to.query).forEach((key) => {
+    if (tmp.value[key] == null || tmp.value[key].length === 0) {
+      delete tmp.value[key];
+    }
+  });
+  // adopt to match types
+  Object.keys(tmp.value).forEach((key) => {
+    if (["year", "month", "day"].includes(key)) {
+      tmp.value[key] = +to.query[key];;
+    } else if (key === "tags") {
+      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
+        tmp.value[key] = [to.query[key]];
+      }
+    }
+  });
+  store.commit("app/saveFindForm", tmp.value);
+  console.log('Watch route');
+
+  if (Object.keys(tmp.value).length) {
+    store.commit("app/setBusy", false); // interupt loading
+    store.commit("app/resetObjects");
+    store.dispatch("app/fetchRecords"); // new filter
+    router.push({ path: "/list", query: tmp.value });
+  } else {
+    router.replace({ path: "/" }).catch((err) => { });
+  }
+}
 
 // find field changed
 const submit = () => {

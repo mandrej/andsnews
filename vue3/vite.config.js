@@ -17,6 +17,8 @@ export default defineConfig({
   plugins: [
     vue({
       template: { transformAssetUrls },
+      // https://vuejs.org/guide/extras/reactivity-transform.html#explicit-opt-in
+      reactivityTransform: true,
     }),
     quasar({
       sassVariables: "src/quasar-variables.sass",

@@ -27,7 +27,12 @@
             <q-card-section class="row justify-between q-py-none">
               <div style="line-height: 42px;">
                 {{ item.nick }},
-                {{ formatDatum(item.date, 'DD.MM.YYYY HH:mm') }}
+                <router-link
+                  :to="{ path: '/list', query: { year: item.year, month: item.month, day: item.day } }"
+                  class="text-secondary"
+                  style="text-decoration: none;"
+                >{{ formatDatum(item.date, 'DD.MM.YYYY') }}</router-link>
+                {{ item.date.substring(11) }}
               </div>
               <q-btn
                 v-if="item.loc"

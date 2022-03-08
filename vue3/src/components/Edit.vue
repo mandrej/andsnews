@@ -11,7 +11,7 @@
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
           <q-btn class="q-mr-md" color="primary" label="Submit" @click="onOKClick" />
-          <q-btn v-if="user.isAdmin" flat label="Read Exif" @click="readExif" />
+          <q-btn v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
         </div>
         <div class="col text-right" style="white-space: nowrap">
           <span class="q-pr-md">{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</span>
@@ -63,28 +63,28 @@
 
           <div class="col-12">
             <Complete
-              :model="tmp.tags"
+              :modelValue="tmp.tags"
               :options="values.tags"
               canadd
               multiple
               label="Tags"
-              @update:modelValue="newValue => tmp.tags = newValue"
+              @update:model-value="newValue => tmp.tags = newValue"
             />
           </div>
           <div class="col-xs-12 col-sm-6">
             <Complete
-              :model="tmp.model"
+              :modelValue="tmp.model"
               :options="values.model"
               label="Camera Model"
-              @update:modelValue="newValue => tmp.model = newValue"
+              @update:model-value="newValue => tmp.model = newValue"
             />
           </div>
           <div class="col-xs-12 col-sm-6">
             <Complete
-              :model="tmp.lens"
+              :modelValue="tmp.lens"
               :options="values.lens"
               label="Camera Lens"
-              @update:modelValue="newValue => tmp.lens = newValue"
+              @update:model-value="newValue => tmp.lens = newValue"
             />
           </div>
           <div class="col-xs-6 col-sm-4">
@@ -115,9 +115,9 @@
 
 <script>
 import { format } from 'quasar'
-import { computed, onMounted, reactive, toRefs, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
-import { api, smallsized } from "../helpers"
+import { smallsized, readExif } from "../helpers"
 import { useStore } from "vuex";
 import Complete from './Complete.vue';
 
@@ -134,32 +134,31 @@ export default {
   ],
   setup(props) {
     const store = useStore();
-    let tmp = ref(props.rec);
+    let tmp = reactive({ ...props.rec });
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
       const dim = rec.dim || []
       return dim.join('✕') || ''
     }
-    const readExif = () => {
-      api.get('exif/' + tmp.value.filename).then((response) => {
-        tmp.value = { ...tmp.value, ...response.data }
-        console.log(tmp.value);
+    const getExif = () => {
+      readExif(tmp.filename).then(exif => {
+        Object.keys(exif).forEach(k => {
+          tmp[k] = exif[k]
+        })
+        tmp.headline = 'sdsdsdsdsd'
         // add flash tag if exif flash true
-        let tags = tmp.value.tags || []
-        if (tmp.value.flash && tags.indexOf('flash') === -1) {
+        let tags = tmp.tags || []
+        if (tmp.flash && tags.indexOf('flash') === -1) {
           tags.push('flash')
         }
-        tmp.value = { ...tmp.value, ...{ tags: tags } }
-        console.log(tmp.value);
-      })
+        tmp.tags = tags
+        console.log(tmp);
+      }).catch(err => console.log(err))
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
 
     onMounted(() => {
-      if (!tmp.date) {
-        readExif()
-      }
       window.onpopstate = function () {
         onDialogCancel()
       }
@@ -170,8 +169,7 @@ export default {
     }
     const onOKClick = () => {
       tmp.tags = tmp.tags ? tmp.tags : []
-      // store.dispatch('app/saveRecord', tmp)
-      console.log(tmp);
+      // TODO store.dispatch('app/saveRecord', tmp)
       onDialogOK()
     }
 
@@ -180,7 +178,7 @@ export default {
       close,
       linearDim,
       humanStorageSize,
-      readExif,
+      getExif,
       smallsized,
       values,
       dialogRef,
