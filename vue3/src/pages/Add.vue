@@ -127,7 +127,7 @@ const submit = (formData) => {
 
 const showEditForm = (rec) => {
   /**
-   * Add headline 'No name' and user email to new rec
+   * Add headline 'No name', user email and tags: [] to new rec; read exif
    */
   readExif(rec.filename).then(exif => {
     const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }

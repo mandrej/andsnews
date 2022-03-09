@@ -16,7 +16,7 @@
           v-for="item in list"
           :key="item.id"
         >
-          <q-card class="bg-grey-2" flat>
+          <q-card :id="'card' + item.id" class="bg-grey-2" flat>
             <q-img
               class="thumbnail cursor-pointer"
               :src="smallsized + item.filename"
@@ -25,9 +25,15 @@
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
-              <div
-                style="line-height: 42px;"
-              >{{ item.nick }}, {{ formatDatum(item.date, 'DD.MM.YYYY HH:mm') }}</div>
+              <div style="line-height: 42px;">
+                {{ item.nick }},
+                <router-link
+                  :to="{ path: '/list', query: { year: item.year, month: item.month, day: item.day } }"
+                  class="text-secondary"
+                  style="text-decoration: none;"
+                >{{ formatDatum(item.date, 'DD.MM.YYYY') }}</router-link>
+                {{ item.date.substring(11) }}
+              </div>
               <q-btn
                 v-if="item.loc"
                 flat
@@ -94,6 +100,7 @@ const route = useRoute();
 const next = computed(() => store.state.app.next);
 const error = computed(() => store.state.app.error);
 const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
+import gsap from 'gsap'
 
 const user = computed(() => store.state.auth.user)
 const { event } = useGtag();
@@ -147,7 +154,12 @@ const showConfirm = (rec) => {
       headline: rec.headline
     }
   }).onOk(() => {
-    store.dispatch('app/deleteRecord', rec)
+    const el = document.querySelector("#card" + rec.id)
+    gsap.to(el, {
+      opacity: 0, duration: 2, delay: 1, ease: "power3.in", onStart: () => {
+        store.dispatch('app/deleteRecord', rec)
+      }
+    })
   })
 }
 const showCarousel = (id) => {
