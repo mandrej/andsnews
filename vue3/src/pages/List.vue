@@ -143,7 +143,9 @@ const showEditForm = (rec) => {
   }).onOk(() => {
     // console.log('OK')
   }).onCancel(() => {
-    // console.log('Cancel')
+    const el = document.querySelector("#card" + rec.id)
+    gsap.to(el, { scale: 1.05, duration: 0.2 })
+    gsap.to(el, { scale: 1, duration: 0.2 })
   })
 }
 const showConfirm = (rec) => {
@@ -156,7 +158,7 @@ const showConfirm = (rec) => {
   }).onOk(() => {
     const el = document.querySelector("#card" + rec.id)
     gsap.to(el, {
-      opacity: 0, duration: 2, delay: 1, ease: "power3.in", onStart: () => {
+      opacity: 0, y: -250, duration: 2, ease: "power3.in", onStart: () => {
         store.dispatch('app/deleteRecord', rec)
       }
     })
