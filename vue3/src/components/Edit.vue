@@ -152,7 +152,6 @@ export default {
           tags.push('flash')
         }
         tmp.tags = tags
-        console.log(tmp);
       }).catch(err => console.log(err))
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
@@ -169,7 +168,7 @@ export default {
     }
     const onOKClick = () => {
       tmp.tags = tmp.tags ? tmp.tags : []
-      // TODO store.dispatch('app/saveRecord', tmp)
+      store.dispatch('app/saveRecord', { ...tmp })
       onDialogOK()
     }
 

@@ -25,15 +25,9 @@
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
-              <div style="line-height: 42px;">
-                {{ item.nick }},
-                <router-link
-                  :to="{ path: '/list', query: { year: item.year, month: item.month, day: item.day } }"
-                  class="text-secondary"
-                  style="text-decoration: none;"
-                >{{ formatDatum(item.date, 'DD.MM.YYYY') }}</router-link>
-                {{ item.date.substring(11) }}
-              </div>
+              <div
+                style="line-height: 42px;"
+              >{{ item.nick }}, {{ formatDatum(item.date, 'DD.MM.YYYY HH:mm') }}</div>
               <q-btn
                 v-if="item.loc"
                 flat
@@ -118,10 +112,18 @@ const scrollHandler = (obj) => {
   if (
     scrollHeight - obj.position.top < 3000 &&
     obj.direction === "down" &&
-    next
+    next.value
   ) {
     store.dispatch("app/fetchRecords");
   }
+}
+
+const download = (filename) => {
+  event('download', {
+    event_category: 'engagement',
+    event_label: filename + ' (' + user.value.email + ')',
+    value: 1
+  })
 }
 
 const showEditForm = (rec) => {
@@ -155,13 +157,6 @@ const showCarousel = (id) => {
     componentProps: {
       pid: id
     }
-  })
-}
-const download = (filename) => {
-  event('download', {
-    event_category: 'engagement',
-    event_label: filename + ' (' + user.value.email + ')',
-    value: 1
   })
 }
 </script>

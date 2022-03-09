@@ -8,7 +8,7 @@ const routes = [
     path: "/",
     component: Layout,
     children: [
-      { path: "", name: "home", component: Index },
+      { path: "", name: "home", component: Index, meta: { plain: true } },
       { path: "list", name: "list", component: List },
       {
         path: "add",
@@ -42,19 +42,21 @@ const routes = [
           }
         },
       },
+      // Always leave this as last one,
+      // but you can also remove it
+      {
+        path: "/:catchAll(.*)*",
+        name: "404",
+        component: () => import("../pages/Error404.vue"),
+        meta: { plain: true },
+      },
+      {
+        path: "/:catchAll(.*)*",
+        name: "401",
+        component: () => import("../pages/Error401.vue"),
+        meta: { plain: true },
+      },
     ],
-  },
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: "/:catchAll(.*)*",
-    name: "404",
-    component: () => import("../pages/Error404.vue"),
-  },
-  {
-    path: "/:catchAll(.*)*",
-    name: "401",
-    component: () => import("../pages/Error401.vue"),
   },
 ];
 

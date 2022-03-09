@@ -3,7 +3,13 @@ import routes from "./routes";
 import { trackRouter } from "vue-gtag-next";
 
 const router = createRouter({
-  scrollBehavior: () => ({ left: 0, top: 0 }),
+  scrollBehavior: (to, from, savedPosition) => {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
   routes,
   history: createWebHistory(),
 });

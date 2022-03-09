@@ -87,6 +87,44 @@ const tmp = ref({ ...find.value })
 const values = computed(() => store.state.app.values)
 const nickNames = computed(() => store.getters["app/nickNames"])
 
+watch(find, (query) => dispatch(query), { deep: true });
+const dispatch = (query) => {
+  if (Object.keys(query).length) {
+    store.commit("app/setBusy", false); // interupt loading
+    store.commit("app/resetObjects");
+    store.dispatch("app/fetchRecords"); // new filter
+    if (route.hash) {
+      router.push({ path: "/list", query: query, hash: route.hash });
+    } else {
+      router.push({ path: "/list", query: query });
+    }
+  } else {
+    router.push({ path: "/" }).catch((err) => { });
+  }
+}
+
+// click on router-link
+// watch(route, (to) => setForm(to), { deep: true });
+// const setForm = (to) => {
+//   tmp.value = { ...to.query }
+//   // Object.keys(to.query).forEach((key) => {
+//   //   if (tmp.value[key] == null || tmp.value[key].length === 0) {
+//   //     delete tmp.value[key];
+//   //   }
+//   // });
+//   // adopt to match types
+//   Object.keys(tmp.value).forEach((key) => {
+//     if (["year", "month", "day"].includes(key)) {
+//       tmp.value[key] = +to.query[key];;
+//     } else if (key === "tags") {
+//       if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
+//         tmp.value[key] = [to.query[key]];
+//       }
+//     }
+//   });
+//   store.commit("app/saveFindForm", tmp.value);
+// }
+
 // execute typed url
 onMounted(() => {
   tmp.value = { ...route.query }
@@ -106,57 +144,14 @@ onMounted(() => {
     }
   });
   store.commit("app/saveFindForm", tmp.value);
-  console.log('Find onMounted');
-
-  if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
-    if (route.hash) {
-      router.push({ path: "/list", query: tmp.value, hash: route.hash });
-    } else {
-      router.push({ path: "/list", query: tmp.value });
-    }
-  }
 })
 
-// click on router-link
-watch(route, (to) => setForm(to));
 
-const setForm = (to) => {
-  tmp.value = { ...to.query }
-  Object.keys(to.query).forEach((key) => {
-    if (tmp.value[key] == null || tmp.value[key].length === 0) {
-      delete tmp.value[key];
-    }
-  });
-  // adopt to match types
-  Object.keys(tmp.value).forEach((key) => {
-    if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +to.query[key];;
-    } else if (key === "tags") {
-      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
-        tmp.value[key] = [to.query[key]];
-      }
-    }
-  });
-  store.commit("app/saveFindForm", tmp.value);
-  console.log('Watch route');
-
-  if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
-    router.push({ path: "/list", query: tmp.value });
-  } else {
-    router.replace({ path: "/" }).catch((err) => { });
-  }
-}
 
 // find field changed
 const submit = () => {
   Object.keys(tmp.value).forEach((key) => {
-    if (tmp.value[key] == null || tmp.value[key].length === 0) {
+    if (tmp.value[key] == null) {
       delete tmp.value[key];
     }
   });
@@ -171,16 +166,6 @@ const submit = () => {
     }
   });
   store.commit("app/saveFindForm", tmp.value);
-  console.log('Find submit');
-
-  if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
-    router.push({ path: "/list", query: tmp.value });
-  } else {
-    router.replace({ path: "/" }).catch((err) => { });
-  }
 }
 
 const optionsYear = computed(() => {
@@ -188,7 +173,6 @@ const optionsYear = computed(() => {
     return { label: '' + year, value: year }
   })
 })
-
 const optionsMonth = computed(() => {
   return months.map((month, i) => ({ label: month, value: i + 1 }));
 })

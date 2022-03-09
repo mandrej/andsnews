@@ -1,5 +1,5 @@
 <template>
-  <q-layout v-if="route.name === 'home'" view="hHh lpR fFf">
+  <q-layout v-if="route.meta.plain" view="hHh lpR fFf">
     <q-page-container>
       <q-page class="row">
         <div class="col-xs-12 col-sm-6 last" :style="styling"></div>
