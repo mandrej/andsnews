@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed, watch, ref } from "vue";
+import { onMounted, computed, reactive, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import Complete from "./Complete.vue";
@@ -83,7 +83,7 @@ const router = useRouter();
 const busy = computed(() => store.state.app.busy)
 
 const find = computed(() => store.state.app.find)
-const tmp = ref({ ...find.value })
+let tmp = reactive({ ...find.value })
 const values = computed(() => store.state.app.values)
 const nickNames = computed(() => store.getters["app/nickNames"])
 
@@ -103,69 +103,47 @@ const dispatch = (query) => {
   }
 }
 
-// click on router-link
-// watch(route, (to) => setForm(to), { deep: true });
-// const setForm = (to) => {
-//   tmp.value = { ...to.query }
-//   // Object.keys(to.query).forEach((key) => {
-//   //   if (tmp.value[key] == null || tmp.value[key].length === 0) {
-//   //     delete tmp.value[key];
-//   //   }
-//   // });
-//   // adopt to match types
-//   Object.keys(tmp.value).forEach((key) => {
-//     if (["year", "month", "day"].includes(key)) {
-//       tmp.value[key] = +to.query[key];;
-//     } else if (key === "tags") {
-//       if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
-//         tmp.value[key] = [to.query[key]];
-//       }
-//     }
-//   });
-//   store.commit("app/saveFindForm", tmp.value);
-// }
-
 // execute typed url
 onMounted(() => {
-  tmp.value = { ...route.query }
+  tmp = route.query
   Object.keys(route.query).forEach((key) => {
     if (route.query[key] == null || route.query[key].length === 0) {
-      delete tmp.value[key];
+      delete tmp[key];
     }
   });
   // adopt to match types
   Object.keys(route.query).forEach((key) => {
     if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +route.query[key];
+      tmp[key] = +route.query[key];
     } else if (key === "tags") {
       if (typeof route.query[key] === "string" || route.query[key] instanceof String) {
-        tmp.value[key] = [route.query[key]];
+        tmp[key] = [route.query[key]];
       }
     }
   });
-  store.commit("app/saveFindForm", tmp.value);
+  store.commit("app/saveFindForm", { ...tmp });
 })
 
 
 
 // find field changed
 const submit = () => {
-  Object.keys(tmp.value).forEach((key) => {
-    if (tmp.value[key] == null) {
-      delete tmp.value[key];
+  Object.keys(tmp).forEach((key) => {
+    if (tmp[key] == null) {
+      delete tmp[key];
     }
   });
   // adopt to match types
-  Object.keys(tmp.value).forEach((key) => {
+  Object.keys(tmp).forEach((key) => {
     if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +tmp.value[key];
+      tmp[key] = +tmp[key];
     } else if (key === "tags") {
-      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
-        tmp.value[key] = [tmp.value[key]];
+      if (typeof tmp[key] === "string" || tmp[key] instanceof String) {
+        tmp[key] = [tmp[key]];
       }
     }
   });
-  store.commit("app/saveFindForm", tmp.value);
+  store.commit("app/saveFindForm", { ...tmp });
 }
 
 const optionsYear = computed(() => {
