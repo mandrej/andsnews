@@ -83,25 +83,13 @@ const router = useRouter();
 const busy = computed(() => store.state.app.busy)
 
 const find = computed(() => store.state.app.find)
-// const tmp = ref({ ...find.value })
-const tmp = ref({
-  text: '',
-  tags: [],
-  year: null,
-  month: null,
-  day: null,
-  model: '',
-  lens: '',
-  nick: ''
-})
+const tmp = ref({ ...find.value })
 const values = computed(() => store.state.app.values)
 const nickNames = computed(() => store.getters["app/nickNames"])
 
-// click on router-link
-watch(route, (to) => setForm(to), { deep: true });
-const setForm = (to) => {
-  tmp.value = { ...to.query }
-  Object.keys(to.query).forEach((key) => {
+const adopt = (query) => {
+  // delete keys without values
+  Object.keys(query).forEach((key) => {
     if (tmp.value[key] == null) {
       delete tmp.value[key];
     }
@@ -109,53 +97,28 @@ const setForm = (to) => {
   // adopt to match types
   Object.keys(tmp.value).forEach((key) => {
     if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +to.query[key];;
+      tmp.value[key] = +query[key];;
     } else if (key === "tags") {
       if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
-        tmp.value[key] = [to.query[key]];
+        tmp.value[key] = [query[key]];
       }
     }
   });
-  console.log('watch route ', tmp.value);
-  store.commit("app/saveFindForm", tmp.value);
-
-  if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
-    if (to.hash) {
-      router.push({ path: "/list", query: tmp.value, hash: to.hash });
-    } else {
-      router.push({ path: "/list", query: tmp.value });
-    }
-  }
+}
+const commits = () => {
+  store.commit("app/setBusy", false); // interupt loading
+  store.commit("app/resetObjects");
+  store.dispatch("app/fetchRecords"); // new filter
 }
 
-// execute typed url
 onMounted(() => {
   tmp.value = { ...route.query }
-  Object.keys(route.query).forEach((key) => {
-    if (route.query[key] == null) {
-      delete tmp.value[key];
-    }
-  });
-  // adopt to match types
-  Object.keys(route.query).forEach((key) => {
-    if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +route.query[key];
-    } else if (key === "tags") {
-      if (typeof route.query[key] === "string" || route.query[key] instanceof String) {
-        tmp.value[key] = [route.query[key]];
-      }
-    }
-  });
+  adopt(route.query)
   console.log('onMounted ', tmp.value);
   store.commit("app/saveFindForm", tmp.value);
 
   if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
+    commits()
     if (route.hash) {
       router.push({ path: "/list", query: tmp.value, hash: route.hash });
     } else {
@@ -164,30 +127,30 @@ onMounted(() => {
   }
 })
 
-// find field changed
-const submit = () => {
-  Object.keys(tmp.value).forEach((key) => {
-    if (tmp.value[key] == null) {
-      delete tmp.value[key];
-    }
-  });
-  // adopt to match types
-  Object.keys(tmp.value).forEach((key) => {
-    if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +tmp.value[key];
-    } else if (key === "tags") {
-      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
-        tmp.value[key] = [tmp.value[key]];
-      }
-    }
-  });
-  console.log('submit ', tmp.value);
+watch(route, (to) => setForm(to), { deep: true });
+const setForm = (to) => {
+  tmp.value = { ...to.query }
+  adopt(to.query)
+  console.log('watch route ', tmp.value);
   store.commit("app/saveFindForm", tmp.value);
 
   if (Object.keys(tmp.value).length) {
-    store.commit("app/setBusy", false); // interupt loading
-    store.commit("app/resetObjects");
-    store.dispatch("app/fetchRecords"); // new filter
+    commits()
+    if (to.hash) {
+      router.push({ path: "/list", query: tmp.value, hash: to.hash });
+    } else {
+      router.push({ path: "/list", query: tmp.value });
+    }
+  }
+}
+
+const submit = () => {
+  adopt(tmp.value)
+  console.log('submit ', tmp.value);
+  store.commit("app/saveFindForm", tmp.value);
+
+  // dispatch route change
+  if (Object.keys(tmp.value).length) {
     if (route.hash) {
       router.push({ path: "/list", query: tmp.value, hash: route.hash });
     } else {
