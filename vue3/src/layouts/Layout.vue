@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, computed, ref, watch } from "vue";
+import { defineAsyncComponent, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
@@ -91,9 +91,8 @@ watch(counter, (value, oldValue) => {
   const obj = { number: oldValue.count };
   const sufix = value.more ? '+' : ''
   gsap.to(obj, {
-    duration: 0.5,
+    duration: 0.3,
     number: value.count,
-    ease: "power1.in",
     onUpdate() {
       div.innerText = obj.number.toFixed(0) + sufix;
     }

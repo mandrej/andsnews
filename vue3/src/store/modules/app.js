@@ -1,5 +1,5 @@
-import { api, CONFIG, pushMessage } from "../../helpers";
 import { debounce } from "quasar";
+import { api, CONFIG, pushMessage } from "../../helpers";
 import querystring from "querystring-es3";
 import { notify } from "../../helpers";
 
@@ -25,7 +25,6 @@ const state = {
   error: null,
 
   busy: false,
-  clear: false,
 };
 
 const getters = {
@@ -117,10 +116,10 @@ const actions = {
     api
       .get(url)
       .then((response) => {
-        if (response.data.objects && response.data.objects.length === 0) {
-          commit("setError", 0);
+        if (response.error) {
+          commit("setError", response.error);
         }
-        if (response.error) commit("setError", response.error);
+        // if (state.next === null) commit("resetObjects");
         commit("updateObjects", response.data);
         commit("setBusy", false);
       })
@@ -151,7 +150,7 @@ const actions = {
     } else {
       api.put(param.verb + "/bucket_info", param).then((response) => {
         if (param.verb === "set") {
-          pushMessage(rootState.auth.fcm_token, "DONE");
+          pushMessage(rootState.auth.fcm_token, "Bucket info done");
         }
         commit("setBucket", response.data);
       });

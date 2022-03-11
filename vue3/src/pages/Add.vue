@@ -148,10 +148,10 @@ const removeRecord = (rec) => {
   store.dispatch('app/deleteRecord', rec)
 }
 
-const onRejected = (rejectedEntries) => {
-  // console.log(rejectedEntries);
-  notify('negative', `${rejectedEntries.length} file(s) did not pass validation constraints`)
-}
+// const onRejected = (rejectedEntries) => {
+//   // console.log(rejectedEntries);
+//   notify('negative', `${rejectedEntries.length} file(s) did not pass validation constraints`)
+// }
 
 </script>
 

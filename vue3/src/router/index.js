@@ -7,7 +7,7 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     } else {
-      return { top: 0 };
+      return { left: 0, top: 0 };
     }
   },
   routes,
