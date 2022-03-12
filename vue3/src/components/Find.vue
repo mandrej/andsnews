@@ -81,11 +81,11 @@ const store = useStore();
 const route = useRoute();
 const router = useRouter();
 const busy = computed(() => store.state.app.busy)
+const values = computed(() => store.state.app.values)
+const nickNames = computed(() => store.getters["app/nickNames"])
 
 const find = computed(() => store.state.app.find)
 const tmp = ref({ ...find.value })
-const values = computed(() => store.state.app.values)
-const nickNames = computed(() => store.getters["app/nickNames"])
 
 const queryDispatch = (query) => {
   // delete keys without values
@@ -127,6 +127,7 @@ const queryDispatch = (query) => {
 
 // front router-link, hash detailed carousel
 onMounted(() => {
+  if (route.name !== 'list') return
   tmp.value = { ...route.query }
   queryDispatch(route.query)
   console.log('onMounted ', tmp.value);
@@ -135,6 +136,7 @@ onMounted(() => {
 // back from carousel
 watch(route, (to) => setForm(to), { deep: true });
 const setForm = (to) => {
+  if (to.name !== 'list') return
   tmp.value = { ...to.query }
   queryDispatch(to.query)
   console.log('watch route ', tmp.value);

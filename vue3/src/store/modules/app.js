@@ -118,6 +118,11 @@ const actions = {
       .then((response) => {
         if (response.error) {
           commit("setError", response.error);
+        } else if (
+          response.data.objects &&
+          response.data.objects.length === 0
+        ) {
+          commit("setError", 0);
         }
         // if (state.next === null) commit("resetObjects");
         commit("updateObjects", response.data);

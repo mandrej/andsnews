@@ -4,11 +4,11 @@
       <template v-slot:avatar>
         <q-icon name="warning" color="primary" />
       </template>
-      Something went wrong
+      Something went wrong ...
       <br />
       {{ error }}
     </q-banner>
-    <q-banner v-if="objects.length === 0" class="bg-warning q-ma-md q-pa-md" rounded>
+    <q-banner v-else-if="error === 0" class="bg-warning q-ma-md q-pa-md" rounded>
       <template v-slot:avatar>
         <q-icon name="warning" color="primary" />
       </template>
@@ -90,7 +90,7 @@
 import { useQuasar } from 'quasar'
 import { defineAsyncComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
 import { useGtag } from "vue-gtag-next";
@@ -106,13 +106,11 @@ const Confirm = defineAsyncComponent(() =>
 const $q = useQuasar()
 const store = useStore();
 const route = useRoute();
-const router = useRouter();
 const next = computed(() => store.state.app.next);
 const error = computed(() => store.state.app.error);
-const objects = computed(() => store.state.app.objects);
 const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
-
 const user = computed(() => store.state.auth.user)
+
 const { event } = useGtag();
 
 onMounted(() => {
@@ -151,13 +149,11 @@ const showEditForm = (rec) => {
       rec: rec
     }
   }).onOk(() => {
-    router.push({ path: "/list", query: route.query });
   }).onCancel(() => {
     const el = document.querySelector("#card" + rec.id)
     const tr = gsap.timeline()
     tr.to(el, { scale: 1.05, duration: 0.1 })
     tr.to(el, { scale: 1, duration: 0.3 })
-    router.push({ path: "/list", query: route.query });
   })
 }
 const showConfirm = (rec) => {
@@ -174,9 +170,7 @@ const showConfirm = (rec) => {
         store.dispatch('app/deleteRecord', rec)
       }
     })
-    router.push({ path: "/list", query: route.query });
   }).onCancel(() => {
-    router.push({ path: "/list", query: route.query });
   })
 }
 const showCarousel = (id) => {
@@ -187,9 +181,7 @@ const showCarousel = (id) => {
       pid: id
     }
   }).onOk(() => {
-    router.push({ path: "/list", query: route.query });
   }).onCancel(() => {
-    router.push({ path: "/list", query: route.query });
   })
 }
 </script>
