@@ -105,10 +105,10 @@ const actions = {
         });
     }
   },
-  fetchRecords: ({ commit, state }) => {
+  fetchRecords: ({ commit, state }, reset = false) => {
     if (state.busy) return;
     const params = Object.assign({}, state.find, { per_page: CONFIG.limit });
-    if (state.next) params._page = state.next;
+    if (state.next && !reset) params._page = state.next;
     const url = "search?" + querystring.stringify(params);
 
     commit("setError", null);
@@ -124,7 +124,7 @@ const actions = {
         ) {
           commit("setError", 0);
         }
-        // if (state.next === null) commit("resetObjects");
+        if (reset) commit("resetObjects"); // late reset
         commit("updateObjects", response.data);
         commit("setBusy", false);
       })

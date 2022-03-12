@@ -149,11 +149,9 @@ const showEditForm = (rec) => {
       rec: rec
     }
   }).onOk(() => {
+    editAnimation(rec)
   }).onCancel(() => {
-    const el = document.querySelector("#card" + rec.id)
-    const tr = gsap.timeline()
-    tr.to(el, { scale: 1.05, duration: 0.1 })
-    tr.to(el, { scale: 1, duration: 0.3 })
+    editAnimation(rec)
   })
 }
 const showConfirm = (rec) => {
@@ -166,7 +164,7 @@ const showConfirm = (rec) => {
   }).onOk(() => {
     const el = document.querySelector("#card" + rec.id)
     gsap.to(el, {
-      opacity: 0, y: -250, duration: 2, ease: "power3.in", onStart: () => {
+      opacity: 0, delay: 1, duration: 2, onStart: () => {
         store.dispatch('app/deleteRecord', rec)
       }
     })
@@ -183,6 +181,13 @@ const showCarousel = (id) => {
   }).onOk(() => {
   }).onCancel(() => {
   })
+}
+
+const editAnimation = (rec) => {
+  const el = document.querySelector("#card" + rec.id)
+  const tr = gsap.timeline()
+  tr.to(el, { scale: 1.05, duration: 0.1 })
+  tr.to(el, { scale: 1, duration: 0.3 })
 }
 </script>
 

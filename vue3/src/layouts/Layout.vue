@@ -3,10 +3,10 @@
     <q-page-container>
       <q-page class="row">
         <div class="col-xs-12 col-sm-6 last" :style="styling"></div>
-        <div class="col-xs-12 col-sm-6" style="max-height: 232px;">
+        <div class="col-xs-12 col-sm-6" style="max-height: 180px;">
           <div class="bg-grey-2 q-pa-md">
             <div class="text-h4">{{ title }} personal photo album</div>
-            <div class="text-h6">{{ bucketInfo.count }} photos since 2007 and counting</div>
+            <div class="text-h6 xs-hide">{{ bucketInfo.count }} photos since 2007 and counting</div>
           </div>
           <router-view />
           <div class="absolute-bottom q-pa-md text-right">{{ version }}</div>
@@ -91,7 +91,7 @@ watch(counter, (value, oldValue) => {
   const obj = { number: oldValue.count };
   const sufix = value.more ? '+' : ''
   gsap.to(obj, {
-    duration: 0.3,
+    duration: 0.5,
     number: value.count,
     onUpdate() {
       div.innerText = obj.number.toFixed(0) + sufix;

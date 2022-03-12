@@ -22,7 +22,7 @@ const actions = {
         commit("saveUser", {});
         const routeName = router.currentRoute.name;
         if (routeName === "add" || routeName === "admin") {
-          router.replace({ name: "home" });
+          router.push({ name: "home" });
         }
       });
     } else {
