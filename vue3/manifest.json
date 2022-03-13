@@ -1,7 +1,8 @@
 {
-  "name": "Andрејевићи",
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "start_url": "https://ands.appspot.com/",
+  "name": "And\u0440\u0435\u0458\u0435\u0432\u0438\u045b\u0438",
   "short_name": "ANDS",
-  "start_url": "/",
   "display": "standalone",
   "background_color": "#222",
   "theme_color": "#fff",
@@ -47,7 +48,7 @@
       "type": "image/png"
     },
     {
-      "src": "/aperture.svg",
+      "src": "/icons/aperture.svg",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
