@@ -10,17 +10,9 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: 'credentials.json'
 
 handlers:
-  - url: /robots\.txt$
+  - url: /(robots\.txt|manifest\.webmanifest)$
     static_files: vue3/dist/\1
-    upload: vue3/dist/robots\.txt$
-    secure: always
-
-  - url: /manifest\.webmanifest$
-    static_files: vue3/dist/\1
-    upload: vue3/dist/manifest\.webmanifest$
-    http_headers:
-      Content-Type: application/manifest+json
-      Cache-Control: max-age=0
+    upload: vue3/dist/(robots\.txt|manifest\.webmanifest)$
     secure: always
 
   - url: /(.*\.js)$
