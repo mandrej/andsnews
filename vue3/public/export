@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+dest=icons
+
+sizes=(144 192 512)
+# android
+for i in ${sizes[@]}; do
+  file=$dest/ands-$i\x$i.png
+  inkscape --export-filename=$file -w $i -h $i $dest/aperture.svg
+  echo $file
+done
+
+sizes=(60 76 120 152 180)
+# apple
+for i in ${sizes[@]}; do
+  file=$dest/ands-$i\x$i.png
+  inkscape --export-filename=$file -w $i -h $i $dest/aperture.svg
+  echo $file
+done
+cp $dest/ands-180x180.png $dest/apple-touch-icon.png
+
+sizes=(32)
+# favicon
+for i in ${sizes[@]}; do
+  file=favicon.png
+  inkscape --export-filename=$file -w $i -h $i $dest/aperture.svg
+  echo $file
+done
+
+exit 0

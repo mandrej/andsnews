@@ -11,7 +11,8 @@
     "docs": true,
     "tests": true,
     "graphql": true,
-    "views": true
+    "views": true,
+    "vue2": true
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -19,14 +20,18 @@
     "editor.defaultFormatter": "ms-python.python",
     "editor.formatOnSave": true
   },
+  "[vue]": {
+    "editor.defaultFormatter": "johnsoncodehk.volar"
+  },
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
-
-  "editor.formatOnPaste": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+
   "emmet.triggerExpansionOnTab": true,
   "svg.preview.mode": "img",
   "svg.preview.background": "transparent"
