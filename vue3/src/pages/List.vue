@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar'
+import { useQuasar, scroll } from 'quasar'
 import { defineAsyncComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -102,6 +102,7 @@ const Edit = defineAsyncComponent(() =>
 const Confirm = defineAsyncComponent(() =>
   import('../components/Confirm.vue')
 )
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const $q = useQuasar()
 const store = useStore();
@@ -178,7 +179,12 @@ const showCarousel = (id) => {
     componentProps: {
       pid: id
     }
-  }).onOk(() => {
+  }).onOk((hash) => {
+    const el = document.querySelector('#card' + hash)
+    const target = getScrollTarget(el)
+    const offset = el.offsetTop
+    const duration = 500
+    setVerticalScrollPosition(target, offset, duration)
   }).onCancel(() => {
   })
 }
@@ -186,7 +192,7 @@ const showCarousel = (id) => {
 const editAnimation = (rec) => {
   const el = document.querySelector("#card" + rec.id)
   const tr = gsap.timeline()
-  tr.to(el, { scale: 1.05, duration: 0.1 })
+  tr.to(el, { scale: 1.05, duration: 0.2 })
   tr.to(el, { scale: 1, duration: 0.3 })
 }
 </script>

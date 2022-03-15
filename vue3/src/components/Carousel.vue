@@ -27,11 +27,12 @@
       :navigation="true"
       :modules="modules"
       @swiper="onSwiper"
+      @slideChange="onSlideChange"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div class="absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
           <div class="text-subtitle2 ellipsis q-mx-xl">{{ obj.headline }}</div>
-          <div class="text-body2 gt-xs ellipsis">{{ caption(obj) }}</div>
+          <div class="text-body2 ellipsis">{{ caption(obj) }}</div>
           <q-btn class="absolute-right" size="lg" icon="close" flat round @click="onCancelClick" />
         </div>
         <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
@@ -69,13 +70,21 @@ export default {
   emits: [
     ...useDialogPluginComponent.emits
   ],
-  setup(props) {
+  setup(props, context) {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     const store = useStore();
     const objects = computed(() => store.state.app.objects);
     const swiperRef = ref(null)
+    const hash = ref(props.pid)
     const index = objects.value.findIndex(x => x.id === props.pid)
+
+    onMounted(() => {
+      window.onpopstate = function () {
+        onDialogCancel()
+        context.emit('ok', hash.value)
+      }
+    })
 
     const caption = (rec) => {
       const { aperture, shutter, iso, model, lens } = rec
@@ -97,13 +106,13 @@ export default {
       return 2
     }
 
-    onMounted(() => {
-      window.onpopstate = function () {
-        onDialogCancel()
-      }
-    })
+    const onSlideChange = (sw) => {
+      const slide = sw.slides[sw.activeIndex]
+      hash.value = slide.dataset.hash
+    }
     const onCancelClick = () => {
       window.history.back()
+      context.emit('ok', hash.value)
       return onDialogCancel()
     }
 
@@ -135,6 +144,7 @@ export default {
         }
       },
       zoomRatio,
+      onSlideChange,
     };
   },
 }
