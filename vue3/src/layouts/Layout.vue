@@ -74,7 +74,6 @@ const drawer = ref(false);
 const counter = computed(() => store.getters["app/counter"])
 const countRef = ref(null)
 
-
 const dynamic = computed(() => {
   switch (route.name) {
     case 'home':

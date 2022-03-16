@@ -13,7 +13,7 @@ Notify.registerType("external", {
   color: "grey-8",
 });
 
-const notify = (type, message, timeout = 5000) => {
+const notify = (type, message, timeout = 5000, spinner = false) => {
   /**
    * type: 'positive', 'negative', 'warning', 'info', 'ongoing', 'external'
    */
@@ -26,6 +26,7 @@ const notify = (type, message, timeout = 5000) => {
     position: "bottom",
     message: message,
     textColor: "white",
+    spinner: spinner,
     actions: [{ icon: "close", color: "white" }],
   });
 };

@@ -150,9 +150,12 @@ const showEditForm = (rec) => {
       rec: rec
     }
   }).onOk(() => {
-    editAnimation(rec)
+    const el = document.querySelector("#card" + rec.id)
+    const tr = gsap.timeline()
+    tr.to(el, { scale: 1.05, duration: 0.2 })
+    tr.to(el, { scale: 1, duration: 0.5, ease: 'bounce' })
   }).onCancel(() => {
-    editAnimation(rec)
+
   })
 }
 const showConfirm = (rec) => {
@@ -188,20 +191,10 @@ const showCarousel = (id) => {
   }).onCancel(() => {
   })
 }
-
-const editAnimation = (rec) => {
-  const el = document.querySelector("#card" + rec.id)
-  const tr = gsap.timeline()
-  tr.to(el, { scale: 1.05, duration: 0.2 })
-  tr.to(el, { scale: 1, duration: 0.3 })
-}
 </script>
 
 <style scoped>
 .thumbnail {
   height: 250px;
-}
-.vel-modal {
-  background: rgba(0, 0, 0, 1);
 }
 </style>
