@@ -9,7 +9,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          gsap: ["gsap"],
           quasar: ["quasar"],
           swiper: ["swiper"],
           gtag: ["vue-gtag-next"],

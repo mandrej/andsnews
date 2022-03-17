@@ -26,7 +26,12 @@
       />
     </div>
     <div>
-      <q-list class="q-mt-md" v-if="submitResult.length > 0" separator>
+      <transition-group
+        tag="q-list"
+        class="q-mt-md q-list--separator"
+        v-if="submitResult.length > 0"
+        name="fade"
+      >
         <q-item class="bg-grey-2" v-for="rec in submitResult" :key="rec.filename">
           <q-item-section>
             <q-item-label>{{ rec.filename }}</q-item-label>
@@ -50,7 +55,7 @@
             />
           </q-item-section>
         </q-item>
-      </q-list>
+      </transition-group>
     </div>
   </div>
 </template>

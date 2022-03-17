@@ -21,7 +21,13 @@
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
-        <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs"></div>
+        <autocounter
+          v-if="route.name === 'list'"
+          :startAmount="from"
+          :endAmount="to"
+          :prefix="prefix"
+          :duration="1"
+        />
         <q-linear-progress v-show="busy" color="warning" class="absolute-bottom" indeterminate />
       </q-toolbar>
     </q-header>
@@ -45,7 +51,7 @@ import { defineAsyncComponent, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
-import gsap from 'gsap'
+import autocounter from 'vue3-autocounter';
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
@@ -58,6 +64,13 @@ const route = useRoute();
 const last = computed(() => store.state.app.last);
 const title = computed(() => route.meta.title || 'ANDрејевићи')
 const bucketInfo = computed(() => store.state.app.bucket)
+const busy = computed(() => store.state.app.busy)
+const drawer = ref(false);
+
+const counter = computed(() => store.getters["app/counter"])
+const from = ref(0)
+const to = ref(0)
+const prefix = ref('')
 
 const styling = computed(() => {
   const low = smallsized + last.value.filename;
@@ -69,10 +82,6 @@ const version = computed(() => {
   return "© 2007 - " + ver;
 });
 
-const busy = computed(() => store.state.app.busy)
-const drawer = ref(false);
-const counter = computed(() => store.getters["app/counter"])
-const countRef = ref(null)
 
 const dynamic = computed(() => {
   switch (route.name) {
@@ -85,17 +94,9 @@ const dynamic = computed(() => {
 })
 
 watch(counter, (value, oldValue) => {
-  const div = countRef.value
-  if (!div) return
-  const obj = { number: oldValue.count };
-  const sufix = value.more ? '+' : ''
-  gsap.to(obj, {
-    duration: 0.5,
-    number: value.count,
-    onUpdate() {
-      div.innerText = obj.number.toFixed(0) + sufix;
-    }
-  });
+  from.value = oldValue.count
+  to.value = value.count
+  prefix.value = value.more ? '+' : ''
 });
 </script>
 

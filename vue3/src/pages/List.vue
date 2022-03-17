@@ -18,7 +18,7 @@
     <div class="q-pa-md" v-for="(list, datum) in objectsByDate" :key="datum">
       <q-scroll-observer @scroll="scrollHandler" />
       <div class="text-h6 text-weight-light">{{ formatDatum(datum, 'dddd DD.MM.YYYY') }}</div>
-      <div class="row q-col-gutter-md">
+      <transition-group tag="div" class="row q-col-gutter-md" name="fade">
         <div
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           v-for="item in list"
@@ -77,7 +77,7 @@
             </q-card-actions>
           </q-card>
         </div>
-      </div>
+      </transition-group>
     </div>
 
     <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
@@ -94,7 +94,6 @@ import { useRoute } from "vue-router";
 import { smallsized, formatDatum } from "../helpers";
 import Carousel from "../components/Carousel.vue"
 import { useGtag } from "vue-gtag-next";
-import gsap from 'gsap'
 
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
@@ -151,9 +150,10 @@ const showEditForm = (rec) => {
     }
   }).onOk(() => {
     const el = document.querySelector("#card" + rec.id)
-    const tr = gsap.timeline()
-    tr.to(el, { scale: 1.05, duration: 0.2 })
-    tr.to(el, { scale: 1, duration: 0.5, ease: 'bounce' })
+    el.classList.add("bounce")
+    setTimeout(() => {
+      el.classList.remove("bounce")
+    }, 2000)
   }).onCancel(() => {
 
   })
@@ -166,14 +166,8 @@ const showConfirm = (rec) => {
       headline: rec.headline
     }
   }).onOk(() => {
-    const el = document.querySelector("#card" + rec.id)
-    gsap.to(el, {
-      opacity: 0, delay: 1, duration: 2, onStart: () => {
-        store.dispatch('app/deleteRecord', rec)
-      }
-    })
-  }).onCancel(() => {
-  })
+    store.dispatch('app/deleteRecord', rec)
+  }).onCancel(() => { })
 }
 const showCarousel = (id) => {
   window.history.pushState({}, '') // fake history
