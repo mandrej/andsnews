@@ -4,29 +4,32 @@ import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { date, format } from "quasar";
 
-const api = axios.create({ baseURL: "/api", timeout: 60000 }); // 60 sec
+const api = axios.create({ baseURL: "/api" });
 const firebase = initializeApp(CONFIG.firebase);
 const { humanStorageSize } = format;
 const { formatDate } = date;
 
-Notify.registerType("external", {
-  color: "grey-8",
-});
-
-const notify = (type, message, timeout = 5000, spinner = false) => {
+const notify = (options) => {
   /**
    * type: 'positive', 'negative', 'warning', 'info', 'ongoing', 'external'
    */
-  if (message.startsWith(CONFIG.end_message)) {
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+  let { type, message, timeout, spinner, group, position } = options;
+  if (
+    message.startsWith(CONFIG.start_message) ||
+    message.startsWith(CONFIG.end_message)
+  ) {
     timeout = 0;
+    spinner = true;
   }
   Notify.create({
-    type: type,
-    timeout: timeout,
-    position: "bottom",
+    type: type ? type : "info",
     message: message,
+    timeout: timeout ? timeout : 5000,
+    spinner: spinner ? true : false,
+    group: group ? group : false,
+    position: position ? position : "bottom",
     textColor: "white",
-    spinner: spinner,
     actions: [{ icon: "close", color: "white" }],
   });
 };

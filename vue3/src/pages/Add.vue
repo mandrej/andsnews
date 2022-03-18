@@ -58,7 +58,6 @@ import { useQuasar } from 'quasar'
 import { defineAsyncComponent, computed, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, readExif, notify } from '../helpers'
-// import { matCloudUpload } from '@quasar/extras/material-icons'
 
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
@@ -91,9 +90,9 @@ const filesChange = (evt) => {
   let i = 0
   Array.from(fileList).map(file => {
     if (file.type !== CONFIG.fileType) {
-      notify("warning", `${file.name} is of unsupported file type`)
+      notify({ type: "warning", message: `${file.name} is of unsupported file type` })
     } else if (file.size > CONFIG.fileSize) {
-      notify("warning", `${file.name} is too big`)
+      notify({ type: "warning", message: `${file.name} is too big` })
     } else {
       formData.append(fieldName, file, file.name)
       i++
@@ -116,7 +115,7 @@ const submit = (formData) => {
           data.push(item.rec)
           store.commit('app/addUploaded', item.rec)
         } else {
-          notify('negative', `${item.rec.filename} failed to upload`)
+          notify({ type: 'negative', message: `${item.rec.filename} failed to upload` })
         }
       })
     )
@@ -128,7 +127,7 @@ const submit = (formData) => {
       if (err.code === 'ECONNABORTED') {
         files.value = null
         percentage.value = 0
-        notify('negative', 'Timeout error')
+        notify({ type: 'negative', message: 'Timeout error' })
       }
     })
 };
@@ -155,12 +154,6 @@ const showEditForm = (rec) => {
 const removeRecord = (rec) => {
   store.dispatch('app/deleteRecord', rec)
 }
-
-// const onRejected = (rejectedEntries) => {
-//   // console.log(rejectedEntries);
-//   notify('negative', `${rejectedEntries.length} file(s) did not pass validation constraints`)
-// }
-
 </script>
 
 <style>

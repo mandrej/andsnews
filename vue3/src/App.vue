@@ -13,7 +13,7 @@ const messaging = getMessaging()
 onMounted(() => {
   store.dispatch("app/fetchStat");
   onMessage(messaging, payload => {
-    notify('external', payload.notification.body)
+    notify({ type: 'ongoing', message: payload.notification.body })
   })
 })
 </script>

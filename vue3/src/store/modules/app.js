@@ -78,7 +78,10 @@ const actions = {
         .then((response) => {
           if (response.data) {
             const diff = { verb: "del", size: obj.size };
-            notify("info", `Successfully deleted ${obj.filename}`);
+            notify({
+              type: "info",
+              message: `Successfully deleted ${obj.filename}`,
+            });
             commit("deleteRecord", obj);
             dispatch("fetchStat");
             dispatch("bucketInfo", diff);
@@ -86,7 +89,10 @@ const actions = {
         })
         .catch((err) => {
           if (err.code === "ECONNABORTED") {
-            notify("negative", "Fail to delete. Timeout error");
+            notify({
+              type: "negative",
+              message: "Fail to delete. Timeout error",
+            });
           }
         });
     } else {
@@ -94,13 +100,19 @@ const actions = {
         .delete("remove/" + obj.filename, { data: { foo: "bar" } })
         .then((response) => {
           if (response.data) {
-            notify("info", `Successfully deleted ${obj.filename}`);
+            notify({
+              type: "info",
+              message: `Successfully deleted ${obj.filename}`,
+            });
             commit("deleteUploaded", obj);
           }
         })
         .catch((err) => {
           if (err.code === "ECONNABORTED") {
-            notify("negative", "Fail to delete. Timeout error");
+            notify({
+              type: "negative",
+              message: "Fail to delete. Timeout error",
+            });
           }
         });
     }
@@ -129,7 +141,7 @@ const actions = {
         commit("setBusy", false);
       })
       .catch((err) => {
-        notify("negative", `${err}`);
+        notify({ type: "negative", message: `${err}` });
         commit("setBusy", false);
       });
   },

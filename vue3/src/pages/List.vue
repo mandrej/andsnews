@@ -91,7 +91,7 @@ import { useQuasar, scroll } from 'quasar'
 import { defineAsyncComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { smallsized, formatDatum } from "../helpers";
+import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue"
 import { useGtag } from "vue-gtag-next";
 
@@ -166,6 +166,7 @@ const showConfirm = (rec) => {
       headline: rec.headline
     }
   }).onOk(() => {
+    notify({ type: "warning", message: 'Please wait', timeout: 2000, spinner: true })
     store.dispatch('app/deleteRecord', rec)
   }).onCancel(() => { })
 }

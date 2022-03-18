@@ -138,7 +138,7 @@ export default {
       onSwiper: (sw) => {
         swiperRef.value = sw
         if (index === -1) {
-          notify("negative", `${props.pid} couldn't be found`)
+          notify({ type: "negative", message: `${props.pid} couldn't be found` })
         } else {
           sw.slideTo(index)
         }
