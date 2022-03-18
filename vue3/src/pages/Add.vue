@@ -8,14 +8,7 @@
         Drag your images here to upload, or click to browse.
         <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
       </div>
-      <input
-        type="file"
-        multiple
-        name="photos"
-        @change="filesChange($event.target.name, $event.target.files)"
-        accept=".jpg, .jpeg, image/jpeg"
-        class="input-file"
-      />
+      <input type="file" multiple name="photos" @change="filesChange" />
     </div>
     <div>
       <q-linear-progress
@@ -65,6 +58,7 @@ import { useQuasar } from 'quasar'
 import { defineAsyncComponent, computed, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, readExif, notify } from '../helpers'
+// import { matCloudUpload } from '@quasar/extras/material-icons'
 
 const Edit = defineAsyncComponent(() =>
   import('../components/Edit.vue')
@@ -74,28 +68,37 @@ const $q = useQuasar()
 const store = useStore();
 const user = computed(() => store.state.auth.user)
 const files = ref(null);
+
 const percentage = ref(0);
 const progress = (evt) => {
   percentage.value = Math.round((evt.loaded * 100) / evt.total)
 };
 const submitResult = computed(() => store.state.app.uploaded);
 
-const filesChange = (fieldName, fileList) => {
-  const formData = new FormData()
+const filesChange = (evt) => {
+  /**
+   * 0: File
+      lastModified: 1647531688220
+      lastModifiedDate: Thu Mar 17 2022 16:41:28 GMT+0100 (Central European Standard Time) {}
+      name: "DSC_8082-22-03-14-819.jpg"
+      size: 1858651
+      type: "image/jpeg"
+   */
+  const fileList = evt.target.files
+  const fieldName = evt.target.name
   if (!fileList.length) return
-  Array.from(Array(fileList.length).keys()).map((x) => {
-    if (fileList[x].type !== CONFIG.fileType) {
-      notify("warning", `${fileList[x].name} is of unsupported file type`)
-    } else if (fileList[x].size > CONFIG.fileSize) {
-      notify("warning", `${fileList[x].name} is too big`)
+  const formData = new FormData()
+  let i = 0
+  Array.from(fileList).map(file => {
+    if (file.type !== CONFIG.fileType) {
+      notify("warning", `${file.name} is of unsupported file type`)
+    } else if (file.size > CONFIG.fileSize) {
+      notify("warning", `${file.name} is too big`)
     } else {
-      formData.append(fieldName, fileList[x], fileList[x].name)
+      formData.append(fieldName, file, file.name)
+      i++
     }
   })
-  let i = 0
-  for (let pair of formData.entries()) {
-    i++
-  }
   if (i > 0) submit(formData);
 };
 
@@ -161,7 +164,7 @@ const removeRecord = (rec) => {
 </script>
 
 <style>
-.input-file {
+input {
   opacity: 0;
   width: 100%;
   height: inherit;

@@ -9,13 +9,13 @@
   >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
-        <div class="col">
-          <q-btn class="q-mr-md" color="primary" label="Submit" @click="onOKClick" />
-          <q-btn v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
-        </div>
-        <div class="col text-right" style="white-space: nowrap">
-          <span class="q-pr-md">{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</span>
+        <div class="col text-no-wrap">
           <q-btn icon="close" flat round @click="onCancelClick" />
+          <q-btn class="gt-sm" v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
+        </div>
+        <div class="col text-no-wrap">{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
+        <div class="col text-right" style="white-space: nowrap">
+          <q-btn color="primary" label="Submit" @click="onOKClick" />
         </div>
       </q-card-actions>
       <q-separator />
