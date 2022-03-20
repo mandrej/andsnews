@@ -8,17 +8,14 @@
     persistent
   >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
-      <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
-        <div class="col text-no-wrap">
-          <q-btn icon="close" flat round @click="onCancelClick" />
+      <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
+        <div>
+          <q-btn flat round dense icon="close" @click="onCancelClick" />
           <q-btn class="gt-sm" v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
         </div>
-        <div class="col text-no-wrap">{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
-        <div class="col text-right" style="white-space: nowrap">
-          <q-btn color="primary" label="Submit" @click="onOKClick" />
-        </div>
-      </q-card-actions>
-      <q-separator />
+        <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
+        <q-btn color="primary" label="Submit" @click="onOKClick" />
+      </q-toolbar>
       <q-card-section>
         <div class="row q-col-gutter-md">
           <div class="col-xs-12 col-sm-4 gt-xs">
@@ -115,7 +112,7 @@
 
 <script>
 import { format } from 'quasar'
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, toRefs } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { smallsized, readExif } from "../helpers"
 import { useStore } from "vuex";
@@ -133,26 +130,25 @@ export default {
     ...useDialogPluginComponent.emits
   ],
   setup(props) {
-    const store = useStore();
     let tmp = reactive({ ...props.rec });
+    console.log(tmp);
+    const store = useStore();
     const values = computed(() => store.state.app.values)
     const linearDim = (rec) => {
       const dim = rec.dim || []
       return dim.join('✕') || ''
     }
-    const getExif = () => {
-      readExif(tmp.filename).then(exif => {
-        Object.keys(exif).forEach(k => {
-          tmp[k] = exif[k]
-        })
-        tmp.headline = 'sdsdsdsdsd'
-        // add flash tag if exif flash true
-        let tags = tmp.tags || []
-        if (tmp.flash && tags.indexOf('flash') === -1) {
-          tags.push('flash')
-        }
-        tmp.tags = tags
-      }).catch(err => console.log(err))
+    const getExif = async () => {
+      const exif = await readExif(tmp.filename);
+      Object.keys(exif).forEach(k => {
+        tmp[k] = exif[k]
+      })
+      // add flash tag if exif flash true
+      let tags = tmp.tags || []
+      if (tmp.flash && tags.indexOf('flash') === -1) {
+        tags.push('flash')
+      }
+      tmp.tags = tags
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 

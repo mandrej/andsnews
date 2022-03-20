@@ -1,6 +1,7 @@
 {
   "name": "andsnews",
   "version": "3.2.0",
+  "license": "MIT",
   "scripts": {
     "dev": "vite -m pwa",
     "build": "vite build -m pwa",
@@ -10,10 +11,10 @@
     "@quasar/extras": "^1.13.1",
     "axios": "^0.26.0",
     "firebase": "^9.6.5",
-    "quasar": "^2.6.0",
+    "quasar": "^2.6.1",
     "querystring-es3": "^0.2.1",
-    "swiper": "^8.0.6",
-    "vue": "^3.2.25",
+    "swiper": "^8.0.7",
+    "vue": "^3.2.31",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.14",
     "vue3-autocounter": "^1.0.6",
@@ -26,6 +27,8 @@
     "sass": "1.32.0",
     "vite": "^2.8.6",
     "vite-plugin-pwa": "^0.11.13",
-    "workbox-core": "^6.4.2"
+    "workbox-build": "^6.4.0",
+    "workbox-core": "^6.4.2",
+    "workbox-window": "^6.4.0"
   }
 }

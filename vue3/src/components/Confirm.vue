@@ -7,10 +7,9 @@
     persistent
   >
     <q-card class="q-dialog-plugin">
-      <q-card-section>
-        <div class="text-h6">Confirm Delete</div>
-      </q-card-section>
-      <q-separator />
+      <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
+        <q-toolbar-title>Confirm Delete</q-toolbar-title>
+      </q-toolbar>
       <q-card-section>Would you like to delete {{ props.headline }}?</q-card-section>
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
@@ -30,7 +29,7 @@ import { useDialogPluginComponent } from 'quasar'
 
 export default {
   name: "Confirm",
-  props: { headline: String },
+  props: ['headline'],
   emits: [
     ...useDialogPluginComponent.emits
   ],

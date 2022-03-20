@@ -55,13 +55,10 @@
 
 <script setup>
 import { useQuasar } from 'quasar'
-import { defineAsyncComponent, computed, ref } from 'vue'
+import { defineAsyncComponent, computed, reactive, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, readExif, notify } from '../helpers'
-
-const Edit = defineAsyncComponent(() =>
-  import('../components/Edit.vue')
-)
+import Edit from '../components/Edit.vue'
 
 const $q = useQuasar()
 const store = useStore();
@@ -77,8 +74,6 @@ const submitResult = computed(() => store.state.app.uploaded);
 const filesChange = (evt) => {
   /**
    * 0: File
-      lastModified: 1647531688220
-      lastModifiedDate: Thu Mar 17 2022 16:41:28 GMT+0100 (Central European Standard Time) {}
       name: "DSC_8082-22-03-14-819.jpg"
       size: 1858651
       type: "image/jpeg"
@@ -132,23 +127,24 @@ const submit = (formData) => {
     })
 };
 
-const showEditForm = (rec) => {
+const showEditForm = async (rec) => {
   /**
    * Add headline 'No name', user email and tags: [] to new rec; read exif
    */
-  readExif(rec.filename).then(exif => {
-    const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
-    if (record.flash) {
-      record.tags.push('flash')
+  const t0 = +new Date
+  const exif = await readExif(rec.filename);
+  console.log('await ', +new Date - t0);
+  const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
+  if (record.flash) {
+    record.tags.push('flash')
+  }
+  window.history.pushState({}, '') // fake history
+  $q.dialog({
+    component: Edit,
+    componentProps: {
+      rec: record
     }
-    window.history.pushState({}, '') // fake history
-    $q.dialog({
-      component: Edit,
-      componentProps: {
-        rec: record
-      }
-    })
-  }).catch(err => console.log(err))
+  })
 }
 
 const removeRecord = (rec) => {

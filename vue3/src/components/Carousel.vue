@@ -8,6 +8,7 @@
   >
     <swiper
       class="bg-grey-10 text-white"
+      :cssMode="true"
       :keyboard="true"
       :grabCursor="true"
       :hashNavigation="{
@@ -24,7 +25,6 @@
       :zoom="{
         maxRatio: 2
       }"
-      :navigation="true"
       :modules="modules"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
@@ -32,7 +32,7 @@
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div class="absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
           <div class="text-subtitle2 ellipsis q-mx-xl">{{ obj.headline }}</div>
-          <div class="text-body2 ellipsis">{{ caption(obj) }}</div>
+          <div class="q-mx-xl text-body2 ellipsis">{{ caption(obj) }}</div>
           <q-btn class="absolute-right" size="lg" icon="close" flat round @click="onCancelClick" />
         </div>
         <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
@@ -60,9 +60,7 @@ import "swiper/scss/navigation";
 
 export default {
   name: "Carousel",
-  props: {
-    pid: Number
-  },
+  props: ['pid'],
   components: {
     Swiper,
     SwiperSlide,

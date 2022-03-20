@@ -154,9 +154,7 @@ const showEditForm = (rec) => {
     setTimeout(() => {
       el.classList.remove("bounce")
     }, 2000)
-  }).onCancel(() => {
-
-  })
+  }).onCancel(() => { })
 }
 const showConfirm = (rec) => {
   window.history.pushState({}, '') // fake history
