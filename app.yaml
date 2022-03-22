@@ -10,30 +10,26 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: 'credentials.json'
 
 handlers:
-  - url: /(robots\.txt|manifest\.webmanifest)$
-    static_files: vue3/dist/\1
-    upload: vue3/dist/(robots\.txt|manifest\.webmanifest)$
+  - url: /(robots\.txt|manifest\.json)$
+    static_files: vue2/dist/\1
+    upload: vue2/dist/(robots\.txt|manifest\.json)$
     secure: always
 
   - url: /(.*\.js)$
-    static_files: vue3/dist/\1
-    upload: vue3/dist/.*\.js$
+    static_files: vue2/dist/\1
+    upload: vue2/dist/.*\.js$
     http_headers:
       Content-Type: application/javascript
       Cache-Control: max-age=0
     secure: always
 
   - url: /index.html
-    static_files: vue3/dist/index.html
-    upload: vue3/dist/index.html
+    static_files: vue2/dist/index.html
+    upload: vue2/dist/index.html
     secure: always
 
-  - url: /assets
-    static_dir: vue3/dist/assets
-    secure: always
-
-  - url: /icons
-    static_dir: vue3/dist/icons
+  - url: /static
+    static_dir: vue2/dist/static
     secure: always
 
   - url: /api/.*
@@ -41,8 +37,8 @@ handlers:
     secure: always
 
   - url: /.*
-    static_files: vue3/dist/index.html
-    upload: vue3/dist/index.html
+    static_files: vue2/dist/index.html
+    upload: vue2/dist/index.html
     secure: always
 
 inbound_services:

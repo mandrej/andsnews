@@ -12,7 +12,7 @@
     "tests": true,
     "graphql": true,
     "views": true,
-    "vue2": true
+    "vue3": true
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
