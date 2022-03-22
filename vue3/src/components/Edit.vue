@@ -1,7 +1,6 @@
 <template>
   <q-dialog
-    ref="dialogRef"
-    @hide="onDialogHide"
+    v-model="show"
     transition-show="slide-down"
     transition-hide="slide-up"
     :maximized="$q.screen.lt.md"
@@ -10,7 +9,7 @@
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
-          <q-btn flat round dense icon="close" @click="onCancelClick" />
+          <q-btn flat round dense icon="close" v-close-popup />
           <q-btn class="gt-sm" v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
         </div>
         <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
@@ -110,79 +109,59 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import { format } from 'quasar'
-import { computed, onMounted, reactive, toRefs } from "vue";
-import { useDialogPluginComponent } from 'quasar'
+import { computed, onMounted, ref } from "vue";
 import { smallsized, readExif } from "../helpers"
 import { useStore } from "vuex";
 import Complete from './Complete.vue';
 
 const { humanStorageSize } = format
 
-export default {
-  name: "Edit",
-  props: { rec: Object },
-  components: {
-    Complete
-  },
-  emits: [
-    ...useDialogPluginComponent.emits
-  ],
-  setup(props) {
-    let tmp = reactive({ ...props.rec });
-    console.log(tmp);
-    const store = useStore();
-    const values = computed(() => store.state.app.values)
-    const linearDim = (rec) => {
-      const dim = rec.dim || []
-      return dim.join('✕') || ''
-    }
-    const getExif = async () => {
-      const exif = await readExif(tmp.filename);
-      Object.keys(exif).forEach(k => {
-        tmp[k] = exif[k]
-      })
-      // add flash tag if exif flash true
-      let tags = tmp.tags || []
-      if (tmp.flash && tags.indexOf('flash') === -1) {
-        tags.push('flash')
-      }
-      tmp.tags = tags
-    }
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+const props = defineProps({
+  record: Object
+})
+// const emit = defineEmits(['bounce'])
+
+const show = ref(false)
+const tmp = ref({ ...props.record });
+
+const t0 = +new Date
+console.log(tmp.value);
+const store = useStore();
+const values = computed(() => store.state.app.values)
+const user = computed(() => store.state.auth.user)
+
+onMounted(() => {
+  show.value = true
+  console.log('mount', +new Date - t0, tmp.value);
+  tmp.value.headline = 'sss'
+  window.onpopstate = function () {
+    show.value = false
+  }
+})
+
+const linearDim = (rec) => {
+  const dim = rec.dim || []
+  return dim.join('✕') || ''
+}
+const getExif = async () => {
+  const exif = await readExif(tmp.value.filename);
+  Object.keys(exif).forEach(k => {
+    tmp.value[k] = exif[k]
+  })
+  // add flash tag if exif flash true
+  let tags = tmp.value.tags || []
+  if (tmp.value.flash && tags.indexOf('flash') === -1) {
+    tags.push('flash')
+  }
+  tmp.value.tags = tags
+}
 
 
-    onMounted(() => {
-      window.onpopstate = function () {
-        onDialogCancel()
-      }
-    })
-    const onCancelClick = () => {
-      window.history.back()
-      return onDialogCancel()
-    }
-    const onOKClick = () => {
-      tmp.tags = tmp.tags ? tmp.tags : []
-      store.dispatch('app/saveRecord', { ...tmp })
-      onDialogOK()
-    }
-
-    return {
-      tmp,
-      close,
-      linearDim,
-      humanStorageSize,
-      getExif,
-      smallsized,
-      values,
-      dialogRef,
-      user: computed(() => store.state.auth.user),
-
-      onDialogHide,
-      onOKClick,
-      onCancelClick,
-    };
-  },
+const onOKClick = () => {
+  tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
+  store.dispatch('app/saveRecord', tmp.value)
+  show.value = false
 }
 </script>

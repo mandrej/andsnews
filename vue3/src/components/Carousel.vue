@@ -1,7 +1,6 @@
 <template>
   <q-dialog
-    ref="dialogRef"
-    @hide="onDialogHide"
+    v-model="show"
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
@@ -44,9 +43,8 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import { computed, onMounted, ref } from "vue";
-import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -58,93 +56,63 @@ import "swiper/scss/zoom";
 import "swiper/scss/pagination";
 import "swiper/scss/navigation";
 
-export default {
-  name: "Carousel",
-  props: ['pid'],
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
-  emits: [
-    ...useDialogPluginComponent.emits
-  ],
-  setup(props, context) {
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+const props = defineProps({
+  pid: Number
+})
 
-    const store = useStore();
-    const objects = computed(() => store.state.app.objects);
-    const swiperRef = ref(null)
-    const hash = ref(props.pid)
-    const index = objects.value.findIndex(x => x.id === props.pid)
 
-    onMounted(() => {
-      window.onpopstate = function () {
-        onDialogCancel()
-        context.emit('ok', hash.value)
-      }
-    })
+const show = ref(false)
+const store = useStore();
+const objects = computed(() => store.state.app.objects);
 
-    const caption = (rec) => {
-      const { aperture, shutter, iso, model, lens } = rec
-      let tmp = ''
-      tmp += aperture ? ' f' + aperture : ''
-      tmp += shutter ? ' ' + shutter + 's' : ''
-      tmp += iso ? ' ' + iso + ' ASA' : ''
-      tmp += model ? ' ' + model : ''
-      tmp += lens ? ' ' + lens : ''
-      return tmp
-    }
+const swiperRef = ref(null)
+const modules = [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard]
+const hash = ref(props.pid)
+const index = objects.value.findIndex(x => x.id === props.pid)
 
-    const zoomRatio = (dim) => {
-      if (swiperRef.value && dim) {
-        const wRatio = dim[0] / swiperRef.value.width
-        const hRatio = dim[1] / swiperRef.value.height
-        return Math.max(wRatio, hRatio, 1)
-      }
-      return 2
-    }
+onMounted(() => {
+  show.value = true
+  window.onpopstate = function () {
+    show.value = false
+  }
+})
 
-    const onSlideChange = (sw) => {
-      const slide = sw.slides[sw.activeIndex]
-      hash.value = slide.dataset.hash
-    }
-    const onCancelClick = () => {
-      window.history.back()
-      context.emit('ok', hash.value)
-      return onDialogCancel()
-    }
+const caption = (rec) => {
+  const { aperture, shutter, iso, model, lens } = rec
+  let tmp = ''
+  tmp += aperture ? ' f' + aperture : ''
+  tmp += shutter ? ' ' + shutter + 's' : ''
+  tmp += iso ? ' ' + iso + ' ASA' : ''
+  tmp += model ? ' ' + model : ''
+  tmp += lens ? ' ' + lens : ''
+  return tmp
+}
 
-    return {
-      index,
-      objects,
-      fullsized,
-      caption,
+const zoomRatio = (dim) => {
+  if (swiperRef.value && dim) {
+    const wRatio = dim[0] / swiperRef.value.width
+    const hRatio = dim[1] / swiperRef.value.height
+    return Math.max(wRatio, hRatio, 1)
+  }
+  return 2
+}
 
-      dialogRef,
-      onDialogHide,
-      onOKClick() {
-        // on OK, it is REQUIRED to
-        // call onDialogOK (with optional payload)
-        onDialogOK()
-        // or with payload: onDialogOK({ ... })
-        // ...and it will also hide the dialog automatically
-      },
-      onCancelClick,
+const onSwiper = (sw) => {
+  swiperRef.value = sw
+  if (index === -1) {
+    notify({ type: "negative", message: `${props.pid} couldn't be found` })
+  } else {
+    sw.slideTo(index)
+  }
+}
 
-      swiperRef,
-      modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],
-      onSwiper: (sw) => {
-        swiperRef.value = sw
-        if (index === -1) {
-          notify({ type: "negative", message: `${props.pid} couldn't be found` })
-        } else {
-          sw.slideTo(index)
-        }
-      },
-      zoomRatio,
-      onSlideChange,
-    };
-  },
+const onSlideChange = (sw) => {
+  const slide = sw.slides[sw.activeIndex]
+  hash.value = slide.dataset.hash
+}
+const onCancelClick = () => {
+  window.history.back()
+  show.value = false
 }
 </script>
 

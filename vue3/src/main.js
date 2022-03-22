@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { Quasar, Notify, Dialog } from "quasar";
+import { Quasar, Notify } from "quasar";
 import router from "./router";
 import store from "./store";
 import quasarIconSet from "quasar/icon-set/svg-material-icons";
@@ -19,7 +19,7 @@ const updateSW = registerSW({
 });
 
 app.use(Quasar, {
-  plugins: { Notify, Dialog }, // import Quasar plugins and add here
+  plugins: { Notify }, // import Quasar plugins and add here
   iconSet: quasarIconSet,
   config: {
     brand: {

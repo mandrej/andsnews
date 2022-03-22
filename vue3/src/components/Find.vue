@@ -85,7 +85,7 @@ const values = computed(() => store.state.app.values)
 const nickNames = computed(() => store.getters["app/nickNames"])
 
 const find = computed(() => store.state.app.find)
-const tmp = ref({ ...find.value })
+const tmp = ref(find.value)
 
 const queryDispatch = (query) => {
   // delete keys without values

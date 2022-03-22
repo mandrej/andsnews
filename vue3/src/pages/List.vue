@@ -1,4 +1,10 @@
 <template>
+  <Carousel v-if="showCarousel" :pid="pid" @hide="hideCarouselModal(pid)" />
+
+  <Edit v-if="showEdit" :record="record" @hide="hideEditForm(record)" />
+
+  <Confirm v-if="showConfirm" :record="record" @hide="showConfirm = false" />
+
   <q-page>
     <q-banner v-if="error" class="bg-warning q-ma-md q-pa-md" rounded>
       <template v-slot:avatar>
@@ -28,7 +34,7 @@
             <q-img
               class="thumbnail cursor-pointer"
               :src="smallsized + item.filename"
-              @click="showCarousel(item.id)"
+              @click="showCarouselModal(item.id)"
             >
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
@@ -61,7 +67,7 @@
                 round
                 color="grey"
                 icon="delete"
-                @click="showConfirm(item)"
+                @click="showConfirmModal(item)"
               />
               <q-btn flat round color="grey" icon="edit" @click="showEditForm(item)" />
               <!-- <q-btn flat round color="grey" icon="share" /> -->
@@ -88,7 +94,7 @@
 
 <script setup>
 import { useQuasar, scroll } from 'quasar'
-import { defineAsyncComponent, onMounted, computed } from "vue";
+import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
@@ -101,6 +107,13 @@ const Edit = defineAsyncComponent(() =>
 const Confirm = defineAsyncComponent(() =>
   import('../components/Confirm.vue')
 )
+
+const pid = ref(null)
+const record = ref(null)
+const showEdit = ref(false)
+const showConfirm = ref(false)
+const showCarousel = ref(false)
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const $q = useQuasar()
@@ -117,7 +130,7 @@ onMounted(() => {
   const hash = route.hash
   if (hash) {
     setTimeout(() => {
-      showCarousel(+hash.substring(1))
+      showCarouselModal(+hash.substring(1))
     }, 1000)
   }
 })
@@ -143,46 +156,35 @@ const download = (filename) => {
 
 const showEditForm = (rec) => {
   window.history.pushState({}, '') // fake history
-  $q.dialog({
-    component: Edit,
-    componentProps: {
-      rec: rec
-    }
-  }).onOk(() => {
-    const el = document.querySelector("#card" + rec.id)
-    el.classList.add("bounce")
-    setTimeout(() => {
-      el.classList.remove("bounce")
-    }, 2000)
-  }).onCancel(() => { })
+  record.value = { ...rec }
+  showEdit.value = true
 }
-const showConfirm = (rec) => {
-  window.history.pushState({}, '') // fake history
-  $q.dialog({
-    component: Confirm,
-    componentProps: {
-      headline: rec.headline
-    }
-  }).onOk(() => {
-    notify({ type: "warning", message: 'Please wait', timeout: 2000, spinner: true })
-    store.dispatch('app/deleteRecord', rec)
-  }).onCancel(() => { })
+const hideEditForm = (rec) => {
+  const el = document.querySelector("#card" + rec.id)
+  el.classList.add("bounce")
+  setTimeout(() => {
+    el.classList.remove("bounce")
+  }, 2000)
 }
-const showCarousel = (id) => {
+
+const showConfirmModal = (rec) => {
   window.history.pushState({}, '') // fake history
-  $q.dialog({
-    component: Carousel,
-    componentProps: {
-      pid: id
-    }
-  }).onOk((hash) => {
-    const el = document.querySelector('#card' + hash)
-    const target = getScrollTarget(el)
-    const offset = el.offsetTop
-    const duration = 500
-    setVerticalScrollPosition(target, offset, duration)
-  }).onCancel(() => {
-  })
+  record.value = { ...rec }
+  showConfirm.value = true
+}
+
+const showCarouselModal = (id) => {
+  window.history.pushState({}, '') // fake history
+  pid.value = id
+  showCarousel.value = true
+}
+const hideCarouselModal = (id) => {
+  showCarousel.value = false
+  const el = document.querySelector('#card' + id)
+  const target = getScrollTarget(el)
+  const offset = el.offsetTop
+  const duration = 500
+  setVerticalScrollPosition(target, offset, duration)
 }
 </script>
 
