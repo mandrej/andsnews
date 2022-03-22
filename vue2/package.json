@@ -10,13 +10,13 @@
   "dependencies": {
     "core-js": "^3.20.3",
     "dayjs": "^1.10.7",
-    "firebase": "^9.6.5",
+    "firebase": "^9.6.4",
     "register-service-worker": "^1.7.2",
     "vue": "^2.6.14",
     "vue-animejs": "^2.1.1",
     "vue-pswipe": "^0.15.3",
     "vue-router": "^3.5.3",
-    "vuetify": "^2.6.3",
+    "vuetify": "^2.6.2",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0"
   },
