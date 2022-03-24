@@ -72,7 +72,7 @@
       </template>
 
       <v-sheet v-if="upload.list.length > 0">
-        <v-slide-y-transition group tag="v-list">
+        <v-list>
           <template v-for="(item, j) in upload.list">
             <v-divider v-if="j !== 0" :key="`${j}-divider`"></v-divider>
 
@@ -104,7 +104,7 @@
               </v-list-item-action>
             </v-list-item>
           </template>
-        </v-slide-y-transition>
+        </v-list>
       </v-sheet>
     </v-container>
   </div>

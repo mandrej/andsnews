@@ -3,7 +3,7 @@
     <v-responsive :aspect-ratio="4 / 3">
       <img
         class="lazy"
-        :src="smallsized + item.filename"
+        :data-src="smallsized + item.filename"
         @error="broken"
         :title="caption(item)"
         :data-pswp-src="fullsized + item.filename"
@@ -105,21 +105,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-img.lazy {
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  & + p {
-    position: absolute;
-    bottom: 0;
-    margin: 0;
-    color: white;
-    padding: 16px;
-    line-height: 120% !important;
-  }
-}
-</style>

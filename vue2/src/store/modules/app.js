@@ -1,7 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import debounce from 'lodash/debounce'
-import querystring from 'querystring'
+import querystring from 'querystring-es3'
 import pushMessage from '../../helpers/push'
 import CONFIG from '../../helpers/config'
 

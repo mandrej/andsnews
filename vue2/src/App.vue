@@ -70,10 +70,15 @@ import Menu from './components/Menu'
 import Find from './components/Find'
 import Stat from './components/Stat'
 import VueAnime from 'vue-animejs'
+import VueLazyload from 'vue-lazyload'
 import update from './helpers/update'
 import CONFIG from './helpers/config'
 
 Vue.use(VueAnime)
+Vue.use(VueLazyload, {
+  observer: true,
+  error: CONFIG.fileBroken
+})
 
 export default {
   name: 'App',
@@ -203,5 +208,27 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+/* Lazy image */
+img.lazy {
+  position: absolute;
+  opacity: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s;
+  &[lazy='loaded'],
+  &[lazy='error'] {
+    opacity: 1;
+  }
+  & + p {
+    position: absolute;
+    bottom: 0;
+    color: white;
+    margin: 0;
+    padding: 16px;
+    line-height: 120% !important;
+  }
 }
 </style>

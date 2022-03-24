@@ -10,7 +10,7 @@
     <v-card>
       <v-app-bar>
         <v-btn color="primary" @click="submit" :disabled="!valid">Submit</v-btn>
-        <v-btn color="ml-2" if="user.isAdmin" @click="readExif"
+        <v-btn text color="ml-2" if="user.isAdmin" @click="readExif"
           >Read Exif</v-btn
         >
         <v-spacer></v-spacer>

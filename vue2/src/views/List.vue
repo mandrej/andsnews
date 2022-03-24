@@ -45,7 +45,7 @@
         <h2 class="pb-2 font-weight-light">
           {{ $date(date).format('dddd, MMMM DD, YYYY') }}
         </h2>
-        <v-row class="mx-n2">
+        <v-row v-lazy-container="{ selector: 'img' }" class="mx-n2">
           <template v-for="item in list">
             <v-col
               :key="item.id"
@@ -56,19 +56,13 @@
               xl="2"
               class="pa-2"
             >
-              <v-lazy
-                :options="{ threshold: 0.5 }"
-                min-height="200"
-                transition="fade-transition"
-              >
-                <Card
-                  :id="'card_' + item.id"
-                  :item="item"
-                  @remove-record="removeRecord"
-                  @edit-record="showEditdForm"
-                  @register-download="registerDownload"
-                ></Card>
-              </v-lazy>
+            <Card
+              :id="'card_' + item.id"
+              :item="item"
+              @remove-record="removeRecord"
+              @edit-record="showEditdForm"
+              @register-download="registerDownload"
+            ></Card>
             </v-col>
           </template>
         </v-row>
