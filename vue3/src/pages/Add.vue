@@ -1,6 +1,4 @@
 <template>
-  <Edit v-if="showEdit" :record="record" @hide="showEdit = false" />
-
   <div class="q-pa-md">
     <div
       class="bg-grey-2 column justify-center items-center"
@@ -60,18 +58,12 @@ import { useQuasar } from 'quasar'
 import { defineAsyncComponent, computed, reactive, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, readExif, notify } from '../helpers'
-
-const Edit = defineAsyncComponent(() =>
-  import('../components/Edit.vue')
-)
+import Edit from '../components/Edit.vue'
 
 const $q = useQuasar()
 const store = useStore();
 const user = computed(() => store.state.auth.user)
 const files = ref(null);
-
-const record = ref(null)
-const showEdit = ref(false)
 
 const percentage = ref(0);
 const progress = (evt) => {
@@ -142,15 +134,17 @@ const showEditForm = async (rec) => {
   const t0 = +new Date
   const exif = await readExif(rec.filename);
   console.log('await ', +new Date - t0);
-  const tmp = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
-  if (tmp.flash) {
-    tmp.tags.push('flash')
+  const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
+  if (record.flash) {
+    record.tags.push('flash')
   }
   window.history.pushState({}, '') // fake history
-  record.value = { ...tmp }
-  setTimeout(() => {
-    showEdit.value = true
-  }, 300)
+  $q.dialog({
+    component: Edit,
+    componentProps: {
+      rec: record
+    }
+  })
 }
 
 const removeRecord = (rec) => {
