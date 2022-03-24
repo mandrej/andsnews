@@ -1,6 +1,7 @@
 <template>
   <q-dialog
-    v-model="show"
+    ref="dialogRef"
+    @hide="onDialogHide"
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
@@ -43,8 +44,9 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script>
 import { computed, onMounted, ref } from "vue";
+import { useDialogPluginComponent } from 'quasar'
 import { useStore } from "vuex";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -56,63 +58,93 @@ import "swiper/scss/zoom";
 import "swiper/scss/pagination";
 import "swiper/scss/navigation";
 
-const props = defineProps({
-  pid: Number
-})
+export default {
+  name: "Carousel",
+  props: ['pid'],
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  emits: [
+    ...useDialogPluginComponent.emits
+  ],
+  setup(props, context) {
+    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
+    const store = useStore();
+    const objects = computed(() => store.state.app.objects);
+    const swiperRef = ref(null)
+    const hash = ref(props.pid)
+    const index = objects.value.findIndex(x => x.id === props.pid)
 
-const show = ref(false)
-const store = useStore();
-const objects = computed(() => store.state.app.objects);
+    onMounted(() => {
+      window.onpopstate = function () {
+        onDialogCancel()
+        context.emit('ok', hash.value)
+      }
+    })
 
-const swiperRef = ref(null)
-const modules = [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard]
-const hash = ref(props.pid)
-const index = objects.value.findIndex(x => x.id === props.pid)
+    const caption = (rec) => {
+      const { aperture, shutter, iso, model, lens } = rec
+      let tmp = ''
+      tmp += aperture ? ' f' + aperture : ''
+      tmp += shutter ? ' ' + shutter + 's' : ''
+      tmp += iso ? ' ' + iso + ' ASA' : ''
+      tmp += model ? ' ' + model : ''
+      tmp += lens ? ' ' + lens : ''
+      return tmp
+    }
 
-onMounted(() => {
-  show.value = true
-  window.onpopstate = function () {
-    show.value = false
-  }
-})
+    const zoomRatio = (dim) => {
+      if (swiperRef.value && dim) {
+        const wRatio = dim[0] / swiperRef.value.width
+        const hRatio = dim[1] / swiperRef.value.height
+        return Math.max(wRatio, hRatio, 1)
+      }
+      return 2
+    }
 
-const caption = (rec) => {
-  const { aperture, shutter, iso, model, lens } = rec
-  let tmp = ''
-  tmp += aperture ? ' f' + aperture : ''
-  tmp += shutter ? ' ' + shutter + 's' : ''
-  tmp += iso ? ' ' + iso + ' ASA' : ''
-  tmp += model ? ' ' + model : ''
-  tmp += lens ? ' ' + lens : ''
-  return tmp
-}
+    const onSlideChange = (sw) => {
+      const slide = sw.slides[sw.activeIndex]
+      hash.value = slide.dataset.hash
+    }
+    const onCancelClick = () => {
+      window.history.back()
+      context.emit('ok', hash.value)
+      return onDialogCancel()
+    }
 
-const zoomRatio = (dim) => {
-  if (swiperRef.value && dim) {
-    const wRatio = dim[0] / swiperRef.value.width
-    const hRatio = dim[1] / swiperRef.value.height
-    return Math.max(wRatio, hRatio, 1)
-  }
-  return 2
-}
+    return {
+      index,
+      objects,
+      fullsized,
+      caption,
 
-const onSwiper = (sw) => {
-  swiperRef.value = sw
-  if (index === -1) {
-    notify({ type: "negative", message: `${props.pid} couldn't be found` })
-  } else {
-    sw.slideTo(index)
-  }
-}
+      dialogRef,
+      onDialogHide,
+      onOKClick() {
+        // on OK, it is REQUIRED to
+        // call onDialogOK (with optional payload)
+        onDialogOK()
+        // or with payload: onDialogOK({ ... })
+        // ...and it will also hide the dialog automatically
+      },
+      onCancelClick,
 
-const onSlideChange = (sw) => {
-  const slide = sw.slides[sw.activeIndex]
-  hash.value = slide.dataset.hash
-}
-const onCancelClick = () => {
-  window.history.back()
-  show.value = false
+      swiperRef,
+      modules: [Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard],
+      onSwiper: (sw) => {
+        swiperRef.value = sw
+        if (index === -1) {
+          notify({ type: "negative", message: `${props.pid} couldn't be found` })
+        } else {
+          sw.slideTo(index)
+        }
+      },
+      zoomRatio,
+      onSlideChange,
+    };
+  },
 }
 </script>
 

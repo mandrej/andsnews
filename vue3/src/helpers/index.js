@@ -76,11 +76,10 @@ const readExif = (filename) => {
       })
       .catch((err) => {
         reject(err);
-        if (err.code === "ECONNABORTED") {
-          notify({ type: "negative", message: "Timeout error" });
-        } else {
-          notify({ type: "negative", message: err });
-        }
+        notify({
+          type: "negative",
+          message: err,
+        });
       });
   });
 };
