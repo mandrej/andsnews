@@ -55,10 +55,13 @@
 
 <script setup>
 import { useQuasar } from 'quasar'
-import { defineAsyncComponent, computed, reactive, ref } from 'vue'
+import { defineAsyncComponent, computed, ref } from 'vue'
 import { useStore } from "vuex";
 import { CONFIG, api, readExif, notify } from '../helpers'
-import Edit from '../components/Edit.vue'
+
+const Edit = defineAsyncComponent(() =>
+  import('../components/Edit.vue')
+)
 
 const $q = useQuasar()
 const store = useStore();
