@@ -161,7 +161,6 @@ export default {
     }
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-
     onMounted(() => {
       window.onpopstate = function () {
         onDialogCancel()

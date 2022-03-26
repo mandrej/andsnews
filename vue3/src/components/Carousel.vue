@@ -80,7 +80,6 @@ export default {
     onMounted(() => {
       window.onpopstate = function () {
         onDialogCancel()
-        context.emit('ok', hash.value)
       }
     })
 
