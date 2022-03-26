@@ -15,13 +15,14 @@ const notify = (options) => {
    */
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
   let { type, message, timeout, spinner, group, position } = options;
-  if (
-    message.startsWith(CONFIG.start_message) ||
-    message.startsWith(CONFIG.end_message)
-  ) {
-    timeout = 0;
-    spinner = true;
-  }
+  console.log(message);
+  // if (
+  //   message.startsWith(CONFIG.start_message) ||
+  //   message.startsWith(CONFIG.end_message)
+  // ) {
+  //   timeout = 0;
+  //   spinner = true;
+  // }
   Notify.create({
     type: type ? type : "info",
     message: message,
@@ -76,10 +77,9 @@ const readExif = (filename) => {
       })
       .catch((err) => {
         reject(err);
-        notify({
-          type: "negative",
-          message: err,
-        });
+        if (err.code === "ECONNABORTED") {
+          notify({ type: "negative", message: "Timeout error" });
+        }
       });
   });
 };
