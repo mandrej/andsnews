@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source=aperture.svg
-dest=icons
+source=AppIcon.svg
+dest=vue3/public/icons
 
 sizes=(16 32 96 128)
 #web
@@ -10,7 +10,7 @@ for i in ${sizes[@]}; do
   echo $file
 done
 # favicon
-convert $dest/favicon-16x16.png $dest/favicon-32x32.png $dest/favicon-48x48.png favicon.ico
+convert $dest/favicon-16x16.png $dest/favicon-32x32.png $dest/favicon-48x48.png vue3/public/favicon.ico
 
 sizes=(144 192 512)
 # android
@@ -27,6 +27,6 @@ for i in ${sizes[@]}; do
   inkscape --export-filename=$file -w $i -h $i $source
   echo $file
 done
-cp $dest/favicon-180x180.png $dest/apple-touch-icon.png
+# cp $dest/favicon-180x180.png $dest/apple-touch-icon.png
 
 exit 0
