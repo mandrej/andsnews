@@ -1,12 +1,5 @@
 <template>
-  <q-dialog
-    ref="dialogRef"
-    transition-show="slide-down"
-    transition-hide="slide-up"
-    :maximized="$q.screen.lt.md"
-    persistent
-    @hide="onDialogHide"
-  >
+  <q-dialog ref="dialogRef" :maximized="$q.screen.lt.md" persistent @hide="onDialogHide">
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
@@ -142,8 +135,6 @@ export default {
     const values = computed(() => store.state.app.values)
     const current = computed(() => store.state.app.current)
     const tmp = ref({ ...current.value })
-    console.log('2 ', +new Date);
-    console.log(tmp.value);
 
     const linearDim = (rec) => {
       const dim = rec.dim || []
@@ -164,7 +155,6 @@ export default {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     onMounted(() => {
-      console.log('3 ', +new Date, tmp.value);
       window.onpopstate = function () {
         onDialogCancel()
       }
@@ -175,7 +165,7 @@ export default {
     }
     const onOKClick = () => {
       tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
-      store.dispatch('app/saveRecord', tmp)
+      store.dispatch('app/saveRecord', tmp.value)
       onDialogOK()
     }
 

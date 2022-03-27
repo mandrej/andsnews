@@ -56,6 +56,7 @@ const nickNames = computed(() => store.getters["app/nickNames"])
 onMounted(() => {
   store.dispatch('auth/getPermission')
 })
+// eslint-disable-next-line no-unused-vars
 const onResize = (size) => {
   // console.log(size);
   if ($q.screen.xs) {

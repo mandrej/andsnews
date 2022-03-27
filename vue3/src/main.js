@@ -14,6 +14,7 @@ import App from "./App.vue";
 import VueGtag from "vue-gtag-next";
 
 const app = createApp(App);
+// eslint-disable-next-line no-unused-vars
 const updateSW = registerSW({
   onOfflineReady() {},
 });
@@ -42,5 +43,4 @@ app.use(VueGtag, {
 app.use(store);
 app.use(router);
 // app.config.devtools = true;
-// Assumes you have a <div id="app"></div> in your index.html
 app.mount("#app");
