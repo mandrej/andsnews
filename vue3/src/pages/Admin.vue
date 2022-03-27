@@ -8,7 +8,7 @@
           </q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="positive" @click="send" label="Send" />
+          <q-btn :disabled="!fcm_token" color="positive" label="Send" @click="send" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -19,7 +19,7 @@
           <q-item-label>for {{ field }}</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="primary" @click="rebuild(field)" label="Rebuild" />
+          <q-btn :disabled="!fcm_token" color="primary" label="Rebuild" @click="rebuild(field)" />
         </q-item-section>
       </q-item>
       <q-item-label header>Fix on {{ formatDatum('2021-12-16', 'DD.MM.YYYY') }}</q-item-label>
@@ -28,7 +28,7 @@
           <q-item-label>Add day field to datastore</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="primary" @click="fix" label="Fix" />
+          <q-btn :disabled="!fcm_token" color="primary" label="Fix" @click="fix" />
         </q-item-section>
       </q-item>
       <q-item-label header>Cloud storage related</q-item-label>
@@ -37,7 +37,7 @@
           <q-item-label>Bucket count and size</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="warning" @click="bucket" label="Recalc" />
+          <q-btn :disabled="!fcm_token" color="warning" label="Recalc" @click="bucket" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -45,7 +45,7 @@
           <q-item-label>Synchronize datastore records and Cloud bucket</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="negative" @click="repair" label="Repair" />
+          <q-btn :disabled="!fcm_token" color="negative" label="Repair" @click="repair" />
         </q-item-section>
       </q-item>
     </q-list>

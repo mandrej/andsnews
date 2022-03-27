@@ -1,17 +1,17 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    @hide="onDialogHide"
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
+    @hide="onDialogHide"
   >
     <swiper
       class="bg-grey-10 text-white"
-      :cssMode="true"
+      :css-mode="true"
       :keyboard="true"
-      :grabCursor="true"
-      :hashNavigation="{
+      :grab-cursor="true"
+      :hash-navigation="{
         watchState: true,
         replaceState: true,
       }"
@@ -27,7 +27,7 @@
       }"
       :modules="modules"
       @swiper="onSwiper"
-      @slideChange="onSlideChange"
+      @slide-change="onSlideChange"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div class="absolute-top text-white text-center q-pa-sm" style="z-index: 1000;">
@@ -37,7 +37,7 @@
         </div>
         <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj.dim)">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
-          <div class="swiper-lazy-preloader"></div>
+          <div class="swiper-lazy-preloader" />
         </div>
       </swiper-slide>
     </swiper>
@@ -59,11 +59,16 @@ import "swiper/scss/pagination";
 import "swiper/scss/navigation";
 
 export default {
-  name: "Carousel",
-  props: ['pid'],
+  name: "CarouselDialog",
   components: {
     Swiper,
     SwiperSlide,
+  },
+  props: {
+    pid: {
+      type: Number,
+      required: true
+    }
   },
   emits: [
     ...useDialogPluginComponent.emits

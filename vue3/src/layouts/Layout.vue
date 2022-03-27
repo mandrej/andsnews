@@ -2,7 +2,7 @@
   <q-layout v-if="route.meta.plain" view="hHh lpR fFf">
     <q-page-container>
       <q-page class="row">
-        <div class="col-xs-12 col-sm-6 last" :style="styling"></div>
+        <div class="col-xs-12 col-sm-6 last" :style="styling" />
         <div class="col-xs-12 col-sm-6" style="max-height: 180px;">
           <div class="bg-grey-2 q-pa-md">
             <div class="text-h4">{{ title }} personal photo album</div>
@@ -23,8 +23,8 @@
         </q-toolbar-title>
         <autocounter
           v-if="route.name === 'list'"
-          :startAmount="from"
-          :endAmount="to"
+          :start-amount="from"
+          :end-amount="to"
           :prefix="prefix"
           :duration="1"
         />
@@ -34,7 +34,7 @@
 
     <q-drawer v-model="drawer" class="column no-wrap" :width="320" show-if-above>
       <keep-alive>
-        <component :is="dynamic"></component>
+        <component :is="dynamic" />
       </keep-alive>
       <q-space />
       <Menu />

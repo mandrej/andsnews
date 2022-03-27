@@ -3,13 +3,13 @@
     <q-input
       v-model="tmp.text"
       :disable="busy"
-      @keyup.enter="submit"
       label="by text"
-      clearIcon="clear"
+      clear-icon="clear"
       clearable
+      @keyup.enter="submit"
     />
     <Complete
-      :modelValue="tmp.tags"
+      :model-value="tmp.tags"
       :options="values.tags"
       multiple
       label="by tags"
@@ -18,7 +18,7 @@
     />
     <Complete
       class="col"
-      :modelValue="tmp.year"
+      :model-value="tmp.year"
       :options="optionsYear"
       autocomplete="label"
       label="by year"
@@ -28,17 +28,17 @@
     <div class="row">
       <Complete
         class="col"
-        :modelValue="tmp.month"
+        :model-value="tmp.month"
         :options="optionsMonth"
         autocomplete="label"
         label="by month"
         :disable="busy"
         @update:model-value="newValue => { tmp.month = newValue; submit() }"
       />
-      <div class="col-1"></div>
+      <div class="col-1" />
       <Complete
         class="col"
-        :modelValue="tmp.day"
+        :model-value="tmp.day"
         :options="optionsDay"
         autocomplete="label"
         label="by day"
@@ -47,21 +47,21 @@
       />
     </div>
     <Complete
-      :modelValue="tmp.model"
+      :model-value="tmp.model"
       :options="values.model"
       label="by model"
       :disable="busy"
       @update:model-value="newValue => { tmp.model = newValue; submit() }"
     />
     <Complete
-      :modelValue="tmp.lens"
+      :model-value="tmp.lens"
       :options="values.lens"
       label="by lens"
       :disable="busy"
       @update:model-value="newValue => { tmp.lens = newValue; submit() }"
     />
     <Complete
-      :modelValue="tmp.nick"
+      :model-value="tmp.nick"
       :options="nickNames"
       label="by author"
       :disable="busy"
@@ -97,7 +97,7 @@ const queryDispatch = (query) => {
   // adopt to match types
   Object.keys(tmp.value).forEach((key) => {
     if (["year", "month", "day"].includes(key)) {
-      tmp.value[key] = +query[key];;
+      tmp.value[key] = +query[key];
     } else if (key === "tags") {
       if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
         tmp.value[key] = [query[key]];
