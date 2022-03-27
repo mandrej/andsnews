@@ -20,6 +20,7 @@ docs/
 tests/
 graphql/
 views/
+vue2/
 
 api/__pycache__/
 api/test_*.py
@@ -35,6 +36,7 @@ functions/
 **/vite.config.js
 **/yarn*
 
+**/*.svg
 **/export
 
 # gcloud meta list-files-for-upload
