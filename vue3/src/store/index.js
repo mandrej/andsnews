@@ -19,6 +19,7 @@ const persisted = createPersistedState({
     "app.objects",
     "app.pages",
     "app.next",
+    "app.current",
   ],
 });
 const plugins = [persisted];

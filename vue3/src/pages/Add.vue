@@ -141,12 +141,11 @@ const showEditForm = async (rec) => {
   if (record.flash) {
     record.tags.push('flash')
   }
+  store.commit('app/setCurrent', record)
+  console.log('1 ', +new Date);
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
-    componentProps: {
-      rec: record
-    }
   })
 }
 
