@@ -10,7 +10,7 @@
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <q-toolbar-title>Confirm Delete</q-toolbar-title>
       </q-toolbar>
-      <q-card-section>Would you like to delete {{ props.headline }}?</q-card-section>
+      <q-card-section>Would you like to delete {{ humanStorageSize(tmp.size) }} image named "{{ tmp.headline }}"?</q-card-section>
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
           <q-btn color="primary" label="OK" @click="onOKClick" />
@@ -24,17 +24,23 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { format } from 'quasar'
+import { onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import { useDialogPluginComponent } from 'quasar'
+
+const { humanStorageSize } = format
 
 export default {
   name: "ConfirmDialog",
-  props: { headline: { type: String, required: true } },
   emits: [
     ...useDialogPluginComponent.emits
   ],
-  setup(props) {
+  setup() {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+
+    const store = useStore();
+    const tmp = computed(() => store.state.app.current)
 
     onMounted(() => {
       window.onpopstate = function () {
@@ -47,8 +53,9 @@ export default {
     }
 
     return {
+      tmp,
+      humanStorageSize,
       close,
-      props,
       dialogRef,
       onDialogHide,
       onOKClick() {

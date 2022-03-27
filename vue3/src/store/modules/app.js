@@ -25,6 +25,7 @@ const state = {
   error: null,
 
   busy: false,
+  current: {},
 };
 
 const getters = {
@@ -273,6 +274,9 @@ const mutations = {
   },
   setError(state, val) {
     state.error = val;
+  },
+  setCurrent(state, obj) {
+    state.current = { ...obj };
   },
 };
 

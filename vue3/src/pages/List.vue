@@ -17,7 +17,9 @@
 
     <div v-for="(list, datum) in objectsByDate" :key="datum" class="q-pa-md">
       <q-scroll-observer @scroll="scrollHandler" />
-      <div class="text-h6 text-weight-light">{{ formatDatum(datum, 'dddd DD.MM.YYYY') }}</div>
+      <div class="text-h6 text-weight-light">
+        {{ formatDatum(datum, 'dddd DD.MM.YYYY') }}
+      </div>
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
         <div
           v-for="item in list"
@@ -30,7 +32,9 @@
               :src="smallsized + item.filename"
               @click="showCarousel(item.id)"
             >
-              <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
+              <div class="absolute-bottom text-subtitle2">
+                {{ item.headline }}
+              </div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">
               <div style="line-height: 42px;">
@@ -39,7 +43,9 @@
                   :to="{ path: '/list', query: { year: item.year, month: item.month, day: item.day } }"
                   class="text-secondary"
                   style="text-decoration: none;"
-                >{{ formatDatum(item.date, 'DD.MM.YYYY') }}</router-link>
+                >
+                  {{ formatDatum(item.date, 'DD.MM.YYYY') }}
+                </router-link>
                 {{ item.date.substring(11) }}
               </div>
               <q-btn
@@ -142,12 +148,10 @@ const download = (filename) => {
 }
 
 const showEditForm = (rec) => {
+  store.commit('app/setCurrent', rec)
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
-    componentProps: {
-      rec: rec
-    }
   }).onOk(() => {
     const el = document.querySelector("#card" + rec.id)
     el.classList.add("bounce")
@@ -157,12 +161,10 @@ const showEditForm = (rec) => {
   }).onCancel(() => { })
 }
 const showConfirm = (rec) => {
+  store.commit('app/setCurrent', rec)
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Confirm,
-    componentProps: {
-      headline: rec.headline
-    }
   }).onOk(() => {
     notify({ type: "warning", message: 'Please wait', timeout: 2000, spinner: true })
     store.dispatch('app/deleteRecord', rec)
