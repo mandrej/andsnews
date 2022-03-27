@@ -134,15 +134,12 @@ const showEditForm = async (rec) => {
   /**
    * Add headline 'No name', user email and tags: [] to new rec; read exif
    */
-  const t0 = +new Date
   const exif = await readExif(rec.filename);
-  console.log('await ', +new Date - t0);
   const record = { ...rec, ...{ headline: 'No name', email: user.value.email, tags: [] }, ...exif }
   if (record.flash) {
     record.tags.push('flash')
   }
   store.commit('app/setCurrent', record)
-  console.log('1 ', +new Date);
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
