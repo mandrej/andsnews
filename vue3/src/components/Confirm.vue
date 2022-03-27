@@ -1,10 +1,10 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    @hide="onDialogHide"
     transition-show="slide-down"
     transition-hide="slide-up"
     persistent
+    @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
@@ -28,8 +28,8 @@ import { onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 
 export default {
-  name: "Confirm",
-  props: ['headline'],
+  name: "ConfirmDialog",
+  props: { headline: { type: String, required: true } },
   emits: [
     ...useDialogPluginComponent.emits
   ],

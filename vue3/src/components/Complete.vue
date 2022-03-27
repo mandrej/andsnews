@@ -1,11 +1,11 @@
 <template>
   <q-select
-    :disable="disable"
     v-model="model"
+    :disable="disable"
     :options="options"
     use-input
     clearable
-    clearIcon="clear"
+    clear-icon="clear"
     :hide-selected="multiple ? false : true"
     :multiple="multiple ? true : undefined"
     :fill-input="multiple ? false : true"
@@ -14,46 +14,37 @@
     :hide-dropdown-icon="canadd ? true : undefined"
     :new-value-mode="canadd ? 'add-unique' : undefined"
     :input-debounce="debounce"
-    @filter="filter"
     :label="label"
-    @input="$emit('update:model', $event.target.value)"
+    @filter="filter"
   />
 </template>
 
 <script setup>
 import { ref } from "vue";
 
-const emit = defineEmits(['update:model'])
+// eslint-disable-next-line no-undef
 const props = defineProps({
   model: {
     type: [String, Number, Array],
-    required: false
+    required: false,
+    default: '',
   },
-  options: Array,
+  options: { type: Array, required: true },
   // tagging
-  multiple: {
-    type: Boolean,
-    default: false
-  },
-  canadd: {
-    type: Boolean,
-    default: false,
-  },
+  multiple: { type: Boolean, default: false },
+  canadd: { type: Boolean, default: false, },
   // label and value
   autocomplete: {
     type: String, // 'label'
     default: ''
   },
-  disable: {
-    type: Boolean,
-    default: false
-  },
-  label: String,
+  disable: { type: Boolean, default: false },
+  label: { type: String, required: true },
 })
 
 const model = ref(props.model)
 const options = ref(props.options)
-const field = props.autocomplete // label
+const field = ref(props.autocomplete) // label
 const debounce = 300
 
 function filter(val, update) {
@@ -65,8 +56,8 @@ function filter(val, update) {
   }
   update(() => {
     const needle = val.toLowerCase()
-    if (field) {
-      options.value = props.options.filter(v => v[field].toLowerCase().indexOf(needle) > -1)
+    if (field.value) {
+      options.value = props.options.filter(v => v[field.value].toLowerCase().indexOf(needle) > -1)
     } else {
       options.value = props.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
     }

@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-banner v-if="error" class="bg-warning q-ma-md q-pa-md" rounded>
-      <template v-slot:avatar>
+      <template #avatar>
         <q-icon name="warning" color="primary" />
       </template>
       Something went wrong ...
@@ -9,20 +9,20 @@
       {{ error }}
     </q-banner>
     <q-banner v-else-if="error === 0" class="bg-warning q-ma-md q-pa-md" rounded>
-      <template v-slot:avatar>
+      <template #avatar>
         <q-icon name="warning" color="primary" />
       </template>
       No data found for current filter/ search
     </q-banner>
 
-    <div class="q-pa-md" v-for="(list, datum) in objectsByDate" :key="datum">
+    <div v-for="(list, datum) in objectsByDate" :key="datum" class="q-pa-md">
       <q-scroll-observer @scroll="scrollHandler" />
       <div class="text-h6 text-weight-light">{{ formatDatum(datum, 'dddd DD.MM.YYYY') }}</div>
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
         <div
-          class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           v-for="item in list"
           :key="item.id"
+          class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
           <q-card :id="'card' + item.id" class="bg-grey-2" flat>
             <q-img
@@ -70,9 +70,9 @@
                 round
                 color="grey"
                 icon="download"
-                @click.stop="download(item.filename)"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
+                @click.stop="download(item.filename)"
               />
             </q-card-actions>
           </q-card>

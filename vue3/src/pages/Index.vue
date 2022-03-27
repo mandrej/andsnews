@@ -11,7 +11,7 @@
       >{{ nick }}</router-link>
     </div>
     <div class="q-pa-sm text-h5">
-      <span v-for="(year, index) in values.year">
+      <span v-for="(year, index) in values.year" :key="index">
         <template v-if="index <= limit">
           <router-link
             :key="year"

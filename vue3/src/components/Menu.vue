@@ -1,6 +1,6 @@
 <template>
   <q-list>
-    <q-item @click="signIn" clickable v-ripple>
+    <q-item v-ripple clickable @click="signIn">
       <q-item-section avatar>
         <q-icon name="person" />
       </q-item-section>
@@ -36,7 +36,7 @@
         <q-item-label caption>rebuild various counters</q-item-label>
       </q-item-section>
     </q-item>
-    <q-item></q-item>
+    <q-item />
   </q-list>
 </template>
 

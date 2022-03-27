@@ -1,17 +1,17 @@
 <template>
   <q-dialog
     ref="dialogRef"
-    @hide="onDialogHide"
     transition-show="slide-down"
     transition-hide="slide-up"
     :maximized="$q.screen.lt.md"
     persistent
+    @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
           <q-btn flat round dense icon="close" @click="onCancelClick" />
-          <q-btn class="gt-sm" v-if="user.isAdmin" flat label="Read Exif" @click="getExif" />
+          <q-btn v-if="user.isAdmin" class="gt-sm" flat label="Read Exif" @click="getExif" />
         </div>
         <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
         <q-btn color="primary" type="submit" label="Submit" @click="onOKClick" />
@@ -38,9 +38,9 @@
               lazy-rules
             />
             <q-input v-model="tmp.filename" label="Filename" readonly />
-            <q-select v-model="tmp.email" :options="values.email" label="Author"></q-select>
+            <q-select v-model="tmp.email" :options="values.email" label="Author" />
             <q-input v-model="tmp.date" label="Date taken">
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-date v-model="tmp.date" mask="YYYY-MM-DD HH:mm">
@@ -51,7 +51,7 @@
                   </q-popup-proxy>
                 </q-icon>
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-icon name="access_time" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-time v-model="tmp.date" mask="YYYY-MM-DD HH:mm" format24h>
@@ -67,7 +67,7 @@
 
           <div class="col-12">
             <Complete
-              :modelValue="tmp.tags"
+              :model-value="tmp.tags"
               :options="values.tags"
               canadd
               multiple
@@ -77,7 +77,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <Complete
-              :modelValue="tmp.model"
+              :model-value="tmp.model"
               :options="values.model"
               label="Camera Model"
               @update:model-value="newValue => tmp.model = newValue"
@@ -85,7 +85,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <Complete
-              :modelValue="tmp.lens"
+              :model-value="tmp.lens"
               :options="values.lens"
               label="Camera Lens"
               @update:model-value="newValue => tmp.lens = newValue"
@@ -130,10 +130,10 @@ const { humanStorageSize } = format
 
 export default {
   name: "Edit",
-  props: { rec: Object },
   components: {
     Complete
   },
+  props: { rec: Object },
   emits: [
     ...useDialogPluginComponent.emits
   ],

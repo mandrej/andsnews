@@ -34,7 +34,7 @@ const notify = (options) => {
     actions: [{ icon: "close", color: "white" }],
   });
 };
-const pushMessage = function (recipients, msg) {
+const pushMessage = (recipients, msg) => {
   api
     .post("message/send", {
       recipients: recipients,
@@ -61,6 +61,7 @@ const months = [
   "Nov",
   "Dec",
 ];
+// eslint-disable-next-line no-unused-vars
 const formatBytes = (bytes, decimals = 2) => {
   return humanStorageSize(bytes);
 };

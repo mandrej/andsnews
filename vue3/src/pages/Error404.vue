@@ -3,7 +3,7 @@
     <q-banner rounded inline-actions class="text-white bg-negative">
       <div class="text-h1">404</div>
       <div>Oops. Nothing here...</div>
-      <template v-slot:action>
+      <template #action>
         <q-btn flat color="white" size="xl" to="/">
           <q-icon left name="home" />
           <div>Go Home</div>
