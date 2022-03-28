@@ -8,7 +8,6 @@
   >
     <swiper
       class="bg-grey-10 text-white"
-      :css-mode="true"
       :keyboard="true"
       :grab-cursor="true"
       :hash-navigation="{
@@ -25,6 +24,7 @@
       :zoom="{
         maxRatio: 2
       }"
+      :navigation="true"
       :modules="modules"
       @swiper="onSwiper"
       @slide-change="onSlideChange"
