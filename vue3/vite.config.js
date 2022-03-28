@@ -40,8 +40,8 @@ export default defineConfig({
         name: "And\u0440\u0435\u0458\u0435\u0432\u0438\u045b\u0438",
         short_name: "ANDS",
         display: "standalone",
-        background_color: "#222",
-        theme_color: "#fff",
+        background_color: "#fff",
+        theme_color: "#000",
         icons: [
           {
             src: "./icons/favicon-60x60.png",
