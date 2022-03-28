@@ -23,6 +23,8 @@
   "[vue]": {
     "editor.defaultFormatter": "johnsoncodehk.volar"
   },
+  "volar.codeLens.scriptSetupTools": true,
+
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
