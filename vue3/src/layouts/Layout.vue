@@ -4,7 +4,7 @@
       <q-page class="row">
         <div class="col-xs-12 col-sm-6 last" :style="styling" />
         <div class="col-xs-12 col-sm-6" style="max-height: 180px;">
-          <div class="bg-grey-2 q-pa-md">
+          <div class="bg-grey-10 text-white q-pa-md">
             <div class="text-h4">{{ title }} personal photo album</div>
             <div class="text-h6">{{ bucketInfo.count }} photos since 2007 and counting</div>
           </div>
@@ -16,7 +16,7 @@
   </q-layout>
   <q-layout v-else view="hHh Lpr lFf">
     <q-header>
-      <q-toolbar class="bg-grey-2 text-black">
+      <q-toolbar class="bg-grey-10 text-white">
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="drawer = !drawer" />
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>

@@ -3,11 +3,13 @@
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
-          <q-btn flat round dense icon="close" @click="onCancelClick" />
-          <q-btn v-if="user.isAdmin" class="gt-sm" flat label="Read Exif" @click="getExif" />
+          <q-btn color="primary" type="submit" label="Submit" @click="onOKClick" />
+          <q-btn v-if="user.isAdmin" class="q-ml-sm gt-sm" flat label="Read Exif" @click="getExif" />
         </div>
         <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
-        <q-btn color="primary" type="submit" label="Submit" @click="onOKClick" />
+        <div>
+          <q-btn flat round dense icon="close" @click="onCancelClick" />
+        </div>
       </q-toolbar>
       <q-card-section>
         <q-form
