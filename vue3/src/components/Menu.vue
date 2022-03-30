@@ -1,6 +1,6 @@
 <template>
   <q-list>
-    <q-item v-ripple clickable @click="signIn">
+    <q-item v-ripple clickable @click="auth.signIn">
       <q-item-section avatar>
         <q-icon name="person" />
       </q-item-section>
@@ -15,7 +15,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-show="user.isAuthorized" to="/add">
+    <q-item v-show="isAuthorized" to="/add">
       <q-item-section avatar>
         <q-icon name="add_circle" />
       </q-item-section>
@@ -26,7 +26,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-show="user.isAdmin" to="/admin">
+    <q-item v-show="isAdmin" to="/admin">
       <q-item-section avatar>
         <q-icon name="settings" />
       </q-item-section>
@@ -42,11 +42,14 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useAuthStore } from "../store/auth";
 
-const store = useStore();
-const user = computed(() => store.state.auth.user)
-function signIn() {
-  store.dispatch("auth/signIn");
-}
+const auth = useAuthStore();
+const user = computed(() => auth.user)
+const isAdmin = auth.isAdmin
+const isAuthorized = auth.isAuthorized
+
+// const signIn = () => {
+//   auth.signIn
+// }
 </script>

@@ -73,18 +73,18 @@
 <script setup>
 import { onMounted, computed, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
 import Complete from "./Complete.vue";
 import { months } from "../helpers";
 
-const store = useStore();
+const app = useAppStore();
 const route = useRoute();
 const router = useRouter();
-const busy = computed(() => store.state.app.busy)
-const values = computed(() => store.state.app.values)
-const nickNames = computed(() => store.getters["app/nickNames"])
+const busy = computed(() => app.busy)
+const values = computed(() => app.values)
+const nickNames = computed(() => app.nickNames)
 
-const find = computed(() => store.state.app.find)
+const find = computed(() => app.find)
 const tmp = ref({ ...find.value })
 
 const queryDispatch = (query) => {
@@ -107,10 +107,10 @@ const queryDispatch = (query) => {
   const strFind = JSON.stringify(find.value)
   const strTmp = JSON.stringify(tmp.value)
   if (strFind !== strTmp) {
-    store.commit("app/saveFindForm", tmp.value);
+    app.saveFindForm(tmp.value)
     // new query
-    store.commit("app/setBusy", false); // interupt loading
-    store.dispatch("app/fetchRecords", true); // new filter with reset
+    app.busy = false; // interupt loading
+    app.fetchRecords(true); // new filter with reset
     // this dispatch route change
     if (Object.keys(tmp.value).length) {
       if (route.hash) {

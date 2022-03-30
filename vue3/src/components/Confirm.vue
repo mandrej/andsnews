@@ -26,7 +26,7 @@
 <script>
 import { format } from 'quasar'
 import { onMounted, computed } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
 import { useDialogPluginComponent } from 'quasar'
 
 const { humanStorageSize } = format
@@ -39,8 +39,8 @@ export default {
   setup() {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const store = useStore();
-    const tmp = computed(() => store.state.app.current)
+    const app = useAppStore();
+    const tmp = computed(() => app.current)
 
     onMounted(() => {
       window.onpopstate = function () {

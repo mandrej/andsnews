@@ -47,7 +47,7 @@
 <script>
 import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Lazy, Navigation, HashNavigation, Pagination, Zoom, Keyboard } from "swiper";
@@ -76,8 +76,8 @@ export default {
   setup(props, context) {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const store = useStore();
-    const objects = computed(() => store.state.app.objects);
+    const app = useAppStore();
+    const objects = computed(() => app.objects);
     const swiperRef = ref(null)
     const hash = ref(props.pid)
     const index = objects.value.findIndex(x => x.id === props.pid)

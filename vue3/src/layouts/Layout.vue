@@ -48,26 +48,27 @@
 
 <script setup>
 import { defineAsyncComponent, computed, watch, ref } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
 import autocounter from 'vue3-autocounter';
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
+
 const Stat = defineAsyncComponent(() =>
   import('../components/Stat.vue')
 )
-const store = useStore();
+const app = useAppStore();
 const route = useRoute();
 
-const last = computed(() => store.state.app.last);
+const last = computed(() => app.last);
 const title = computed(() => route.meta.title || 'ANDрејевићи')
-const bucketInfo = computed(() => store.state.app.bucket)
-const busy = computed(() => store.state.app.busy)
+const bucketInfo = computed(() => app.bucket)
+const busy = computed(() => app.busy)
 const drawer = ref(false);
 
-const counter = computed(() => store.getters["app/counter"])
+const counter = computed(() => app.counter)
 const from = ref(0)
 const to = ref(0)
 const prefix = ref('')

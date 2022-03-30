@@ -40,21 +40,23 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { onMounted, computed, ref } from 'vue'
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
+import { useAuthStore } from "../store/auth";
 
 const $q = useQuasar()
-const store = useStore();
+const app = useAppStore();
+const auth = useAuthStore();
 const report = ref(null)
 
-const values = computed(() => store.state.app.values)
+const values = computed(() => app.values)
 const limit = ref(99)
 if ($q.screen.xs) {
   limit.value = 9
 }
-const nickNames = computed(() => store.getters["app/nickNames"])
+const nickNames = computed(() => app.nickNames)
 
 onMounted(() => {
-  store.dispatch('auth/getPermission')
+  auth.getPermission()
 })
 // eslint-disable-next-line no-unused-vars
 const onResize = (size) => {

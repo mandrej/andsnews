@@ -1,7 +1,7 @@
 import Layout from "../layouts/Layout.vue";
 import Index from "../pages/Index.vue";
 import List from "../pages/List.vue";
-import store from "../store";
+import { useAuthStore } from "../store/auth";
 
 const routes = [
   {
@@ -18,8 +18,8 @@ const routes = [
           title: "Add",
         },
         beforeEnter: (to, from, next) => {
-          const user = store.state.auth.user;
-          if (user.isAuthorized) {
+          const auth = useAuthStore;
+          if (auth.isAuthorized) {
             next();
           } else {
             next({ name: "401" });
@@ -34,8 +34,8 @@ const routes = [
           title: "Administration",
         },
         beforeEnter: (to, from, next) => {
-          const user = store.state.auth.user;
-          if (user.isAdmin) {
+          const auth = useAuthStore;
+          if (auth.isAdmin) {
             next();
           } else {
             next({ name: "401" });

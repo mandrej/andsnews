@@ -3,15 +3,15 @@
 </template>
 <script setup>
 import { onMounted } from 'vue';
-import { useStore } from "vuex";
+import { useAppStore } from "./store/app";
 import { getMessaging, onMessage } from 'firebase/messaging'
 import { notify } from "./helpers";
 
-const store = useStore();
 const messaging = getMessaging()
+const app = useAppStore()
 
 onMounted(() => {
-  store.dispatch("app/fetchStat");
+  app.fetchStat();
   onMessage(messaging, payload => {
     notify({ type: 'ongoing', message: payload.notification.body })
   })

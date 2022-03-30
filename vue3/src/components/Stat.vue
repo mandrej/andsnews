@@ -11,12 +11,12 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
 import { formatBytes } from "../helpers"
 
-const store = useStore();
-const values = computed(() => store.state.app.values)
-const bucket = computed(() => store.state.app.bucket)
+const app = useAppStore();
+const values = computed(() => app.values)
+const bucket = computed(() => app.bucket)
 const list = [
   {
     value: formatBytes(bucket.value.size),

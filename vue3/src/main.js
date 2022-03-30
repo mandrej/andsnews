@@ -1,9 +1,10 @@
 import { createApp } from "vue";
 import { Quasar, Notify, Dialog } from "quasar";
 import router from "./router";
-import store from "./store";
-import quasarIconSet from "quasar/icon-set/svg-material-icons";
+import { createPinia } from "pinia";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 // Import icon libraries
+import quasarIconSet from "quasar/icon-set/svg-material-icons";
 import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/material-icons/material-icons.css";
 import "quasar/src/css/index.sass";
@@ -14,6 +15,8 @@ import App from "./App.vue";
 import VueGtag from "vue-gtag-next";
 
 const app = createApp(App);
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 // eslint-disable-next-line no-unused-vars
 const updateSW = registerSW({
   onOfflineReady() {},
@@ -30,7 +33,7 @@ app.use(VueGtag, {
     send_page_view: false,
   },
 });
-app.use(store);
+app.use(pinia);
 app.use(router);
 // app.config.devtools = true;
 app.mount("#app");

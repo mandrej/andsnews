@@ -11,15 +11,15 @@
     "@quasar/extras": "^1.13.1",
     "axios": "^0.26.0",
     "firebase": "^9.6.5",
+    "pinia": "^2.0.12",
+    "pinia-plugin-persistedstate": "^1.5.1",
     "quasar": "^2.6.1",
     "querystring-es3": "^0.2.1",
     "swiper": "^8.0.7",
     "vue": "^3.2.31",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.14",
-    "vue3-autocounter": "^1.0.6",
-    "vuex": "^4.0.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vue3-autocounter": "^1.0.6"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.0.6",

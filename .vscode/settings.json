@@ -1,11 +1,4 @@
 {
-  "python.linting.enabled": true,
-  "python.languageServer": "Pylance",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUnboundVariable": "information"
-  },
-  "python.analysis.typeCheckingMode": "basic",
-  "python.formatting.provider": "autopep8",
   "files.exclude": {
     "**/*.pyc": true,
     "docs": true,
@@ -15,14 +8,19 @@
     "vue2": true
   },
 
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": null
+  "python.linting.enabled": true,
+  "python.languageServer": "Pylance",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUnboundVariable": "information"
   },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.formatting.provider": "autopep8",
   "[python]": {
     "editor.defaultFormatter": "ms-python.python",
     "editor.formatOnSave": true
   },
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[vue]": {
     "editor.defaultFormatter": "johnsoncodehk.volar"
   },
@@ -32,6 +30,7 @@
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
   "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },

@@ -54,17 +54,19 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
+import { useAuthStore } from "../store/auth";
 import { api, formatDatum } from "../helpers"
 
-const store = useStore();
-const fcm_token = computed(() => store.state.auth.fcm_token)
+const app = useAppStore();
+const auth = useAuthStore();
+const fcm_token = computed(() => auth.fcm_token)
 const message = ref('NEW IMAGES')
 
 const callApi = (url) => {
   api.post(url, { token: fcm_token.value }).then((x) => x.data)
 }
-const values = computed(() => store.state.app.values)
+const values = computed(() => app.values)
 const rebuild = (name) => {
   callApi('rebuild/' + name)
 }
@@ -75,10 +77,10 @@ const fix = () => {
   callApi('fix')
 }
 const bucket = () => {
-  store.dispatch('app/bucketInfo', { verb: 'set' })
+  app.bucketInfo({ verb: 'set' })
 }
 const send = () => {
-  store.dispatch('auth/sendNotifications', message.value)
+  auth.sendNotifications(message.value)
 }
 </script>
 

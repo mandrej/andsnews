@@ -54,9 +54,9 @@
                 "
               />
             </q-card-section>
-            <q-card-actions v-if="user.isAuthorized" class="justify-between q-pt-none">
+            <q-card-actions v-if="isAuthorized" class="justify-between q-pt-none">
               <q-btn
-                v-if="user.isAdmin"
+                v-if="isAdmin"
                 flat
                 round
                 color="grey"
@@ -89,7 +89,8 @@
 <script setup>
 import { useQuasar, scroll, throttle } from 'quasar'
 import { defineAsyncComponent, onMounted, computed } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
+import { useAuthStore } from "../store/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue"
@@ -104,12 +105,14 @@ const Confirm = defineAsyncComponent(() =>
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const $q = useQuasar()
-const store = useStore();
+const app = useAppStore();
+const auth = useAuthStore();
 const route = useRoute();
-const next = computed(() => store.state.app.next);
-const error = computed(() => store.state.app.error);
-const objectsByDate = computed(() => store.getters["app/objectsByDate"]);
-const user = computed(() => store.state.auth.user)
+const next = computed(() => app.next)
+const error = computed(() => app.error);
+const objectsByDate = computed(() => app.objectsByDate);
+const isAdmin = auth.isAdmin
+const isAuthorized = auth.isAuthorized
 
 const { event } = useGtag();
 
@@ -130,7 +133,7 @@ const scrollHandler = throttle((obj) => {
     obj.direction === "down" &&
     next.value
   ) {
-    store.dispatch("app/fetchRecords");
+    app.fetchRecords();
   }
 }, 500)
 
@@ -143,7 +146,7 @@ const download = (filename) => {
 }
 
 const showEditForm = (rec) => {
-  store.commit('app/setCurrent', rec)
+  app.setCurrent(rec)
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
@@ -156,13 +159,13 @@ const showEditForm = (rec) => {
   }).onCancel(() => { })
 }
 const showConfirm = (rec) => {
-  store.commit('app/setCurrent', rec)
+  app.setCurrent(rec)
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Confirm,
   }).onOk(() => {
     notify({ type: "warning", message: 'Please wait', timeout: 2000, spinner: true })
-    store.dispatch('app/deleteRecord', rec)
+    app.deleteRecord(rec)
   }).onCancel(() => { })
 }
 const showCarousel = (id) => {

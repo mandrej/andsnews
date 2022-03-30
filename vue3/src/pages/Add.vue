@@ -56,7 +56,8 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { defineAsyncComponent, computed, ref } from 'vue'
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
+import { useAuthStore } from "../store/auth";
 import { CONFIG, api, readExif, notify } from '../helpers'
 
 const Edit = defineAsyncComponent(() =>
@@ -64,15 +65,16 @@ const Edit = defineAsyncComponent(() =>
 )
 
 const $q = useQuasar()
-const store = useStore();
-const user = computed(() => store.state.auth.user)
+const app = useAppStore();
+const auth = useAuthStore();
+const user = computed(() => auth.user)
 const files = ref(null);
 
 const percentage = ref(0);
 const progress = (evt) => {
   percentage.value = Math.round((evt.loaded * 100) / evt.total)
 };
-const submitResult = computed(() => store.state.app.uploaded);
+const submitResult = computed(() => app.uploaded);
 
 const filesChange = (evt) => {
   /**
@@ -111,7 +113,7 @@ const submit = (formData) => {
       x.map((item) => {
         if (item.success) {
           data.push(item.rec)
-          store.commit('app/addUploaded', item.rec)
+          app.addUploaded(item.rec)
         } else {
           notify({ type: 'negative', message: `${item.rec.filename} failed to upload` })
         }
@@ -139,7 +141,7 @@ const showEditForm = async (rec) => {
   if (record.flash) {
     record.tags.push('flash')
   }
-  store.commit('app/setCurrent', record)
+  app.setCurrent(record)
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
@@ -147,7 +149,7 @@ const showEditForm = async (rec) => {
 }
 
 const removeRecord = (rec) => {
-  store.dispatch('app/deleteRecord', rec)
+  app.deleteRecord(rec)
 }
 </script>
 

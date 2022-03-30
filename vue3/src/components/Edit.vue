@@ -4,7 +4,7 @@
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
           <q-btn color="primary" type="submit" label="Submit" @click="onOKClick" />
-          <q-btn v-if="user.isAdmin" class="q-ml-sm gt-sm" flat label="Read Exif" @click="getExif" />
+          <q-btn v-if="isAdmin" class="q-ml-sm gt-sm" flat label="Read Exif" @click="getExif" />
         </div>
         <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
         <div>
@@ -119,7 +119,8 @@ import { format } from 'quasar'
 import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
 import { smallsized, readExif } from "../helpers"
-import { useStore } from "vuex";
+import { useAppStore } from "../store/app";
+import { useAuthStore } from "../store/auth";
 import Complete from './Complete.vue';
 
 const { humanStorageSize } = format
@@ -133,9 +134,10 @@ export default {
     ...useDialogPluginComponent.emits
   ],
   setup() {
-    const store = useStore();
-    const values = computed(() => store.state.app.values)
-    const current = computed(() => store.state.app.current)
+    const app = useAppStore();
+    const auth = useAuthStore();
+    const values = computed(() => app.values)
+    const current = computed(() => app.current)
     const tmp = ref({ ...current.value })
 
     const linearDim = (rec) => {
@@ -167,7 +169,7 @@ export default {
     }
     const onOKClick = () => {
       tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
-      store.dispatch('app/saveRecord', tmp.value)
+      app.saveRecord(tmp.value)
       onDialogOK()
     }
 
@@ -180,7 +182,7 @@ export default {
       smallsized,
       values,
       dialogRef,
-      user: computed(() => store.state.auth.user),
+      user: computed(() => auth.user),
 
       onDialogHide,
       onOKClick,
