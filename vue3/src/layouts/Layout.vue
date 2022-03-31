@@ -3,7 +3,7 @@
     <q-page-container>
       <q-page class="row">
         <div class="col-xs-12 col-sm-6 last" :style="styling" />
-        <div class="col-xs-12 col-sm-6" style="max-height: 180px;">
+        <div class="col-xs-12 col-sm-6" style="height: 25vh;">
           <div class="bg-grey-10 text-white q-pa-md">
             <div class="text-h4">{{ title }} personal photo album</div>
             <div class="text-h6">{{ bucketInfo.count }} photos since 2007 and counting</div>
@@ -74,8 +74,8 @@ const to = ref(0)
 const prefix = ref('')
 
 const styling = computed(() => {
-  const low = smallsized + last.value.filename;
-  const high = fullsized + last.value.filename;
+  const low = smallsized + last.value;
+  const high = fullsized + last.value;
   return "background-image: url(" + high + "), url(" + low + ")";
 });
 const version = computed(() => {
@@ -106,5 +106,6 @@ watch(counter, (value, oldValue) => {
   background-size: cover;
   background-position: center;
   transition: background-image 0.5s ease-in-out;
+  height: 75vh;
 }
 </style>

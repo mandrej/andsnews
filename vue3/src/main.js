@@ -15,8 +15,11 @@ import App from "./App.vue";
 import VueGtag from "vue-gtag-next";
 
 const app = createApp(App);
+app.use(router);
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+app.use(pinia);
 // eslint-disable-next-line no-unused-vars
 const updateSW = registerSW({
   onOfflineReady() {},
@@ -33,7 +36,5 @@ app.use(VueGtag, {
     send_page_view: false,
   },
 });
-app.use(pinia);
-app.use(router);
 // app.config.devtools = true;
 app.mount("#app");

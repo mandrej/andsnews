@@ -17,20 +17,7 @@ export const useAuthStore = defineStore("auth", {
     user: {},
     fcm_token: null,
   }),
-  getters: {
-    isAdmin: (state) => {
-      if (state.user && state.user.isAdmin) {
-        return true;
-      }
-      return false;
-    },
-    isAuthorized: (state) => {
-      if (state.user && state.user.isAuthorized) {
-        return true;
-      }
-      return false;
-    },
-  },
+  getters: {},
   actions: {
     signIn() {
       if (this.user && this.user.uid) {
@@ -90,7 +77,6 @@ export const useAuthStore = defineStore("auth", {
         return getToken(messaging, { vapidKey: CONFIG.firebase.vapidKey })
           .then((token) => {
             if (token) {
-              console.log(token);
               if (this.fcm_token === null || token !== this.fcm_token) {
                 this.fcm_token = token;
                 if (this.user && this.user.uid) {
@@ -118,12 +104,13 @@ export const useAuthStore = defineStore("auth", {
     },
   },
   persist: {
+    key: "b",
     paths: ["user", "fcm_token"],
-    beforeRestore: (context) => {
-      console.log("Before hydration...", context);
-    },
-    afterRestore: (context) => {
-      console.log("After hydration...", context);
-    },
+    // beforeRestore: (context) => {
+    //   console.log("Before hydration...", context);
+    // },
+    // afterRestore: (context) => {
+    //   console.log("After hydration...", context);
+    // },
   },
 });

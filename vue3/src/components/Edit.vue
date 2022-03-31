@@ -4,7 +4,7 @@
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
           <q-btn color="primary" type="submit" label="Submit" @click="onOKClick" />
-          <q-btn v-if="isAdmin" class="q-ml-sm gt-sm" flat label="Read Exif" @click="getExif" />
+          <q-btn v-if="user.isAdmin" class="q-ml-sm gt-sm" flat label="Read Exif" @click="getExif" />
         </div>
         <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
         <div>

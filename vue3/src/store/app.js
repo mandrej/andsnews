@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import { debounce } from "quasar";
 import { api, CONFIG, pushMessage, notify } from "../helpers";
 import { useAuthStore } from "./auth";
 import querystring from "querystring-es3";
@@ -10,12 +9,7 @@ export const useAppStore = defineStore("app", {
     find: {},
     uploaded: [],
 
-    last: {
-      count: 0,
-      filename: null,
-      date: new Date("1970-01-01").toISOString(),
-      value: 1970,
-    },
+    last: null,
     bucket: {
       size: 0,
       count: 0,
@@ -34,6 +28,7 @@ export const useAppStore = defineStore("app", {
     counter: (state) => {
       return { count: state.objects.length, more: state.next };
     },
+
     nickNames: (state) => {
       if (state.values && state.values.email) {
         return state.values.email.map((email) => {
@@ -63,9 +58,6 @@ export const useAppStore = defineStore("app", {
       );
       if (idx > -1) this.uploaded.splice(idx, 1);
     },
-    // bucketInfo: debounce(({ dispatch }, param) => {
-    //   dispatch("_bucketInfo", param);
-    // }, 2000),
     async bucketInfo(param) {
       /**
        * param: { verb: 'add|del|get', [size: int] }
@@ -91,7 +83,7 @@ export const useAppStore = defineStore("app", {
             const idx = this.objects.findIndex((item) => item.id === obj.id);
             this.objects.splice(idx, 1, obj);
           }
-          this.updateValues(obj);
+          // this.updateValues(obj);
         });
       } else {
         // publish
@@ -104,7 +96,7 @@ export const useAppStore = defineStore("app", {
           this.objects.splice(idx, 0, obj);
 
           this.deleteUploaded(obj);
-          this.updateValues(obj);
+          // this.updateValues(obj);
           this.bucketInfo(diff);
         });
       }
@@ -200,13 +192,8 @@ export const useAppStore = defineStore("app", {
       CONFIG.photo_filter.forEach((field) => {
         if (Object.prototype.hasOwnProperty.call(data, field)) {
           if (field === "year") {
-            const last = data.year[0];
-            if (last) {
-              this.last = {
-                ...this.last,
-                ...last,
-              };
-            }
+            const obj = data.year[0];
+            this.last = obj.filename;
           }
           this.values[field] = [
             ...Array.from(data[field], (c) => {
@@ -222,15 +209,7 @@ export const useAppStore = defineStore("app", {
       const lastFromState = new Date(this.last.date);
       const lastFromObject = new Date(obj.date);
       if (lastFromObject.getTime() > lastFromState.getTime()) {
-        this.last = {
-          ...this.last,
-          ...{
-            count: this.last.count + 1,
-            filename: obj.filename,
-            date: obj.date,
-            value: lastFromObject.getFullYear(),
-          },
-        };
+        this.last = obj.filename;
       }
     },
     fetchStat() {
@@ -243,6 +222,7 @@ export const useAppStore = defineStore("app", {
     },
   },
   persist: {
+    key: "a",
     paths: [
       "find",
       "last",
@@ -254,11 +234,11 @@ export const useAppStore = defineStore("app", {
       "next",
       "current",
     ],
-    beforeRestore: (context) => {
-      console.log("Before hydration...", context);
-    },
-    afterRestore: (context) => {
-      console.log("After hydration...", context);
-    },
+    // beforeRestore: (context) => {
+    //   console.log("Before hydration...", context);
+    // },
+    // afterRestore: (context) => {
+    //   console.log("After hydration...", context);
+    // },
   },
 });

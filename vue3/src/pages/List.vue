@@ -54,9 +54,9 @@
                 "
               />
             </q-card-section>
-            <q-card-actions v-if="isAuthorized" class="justify-between q-pt-none">
+            <q-card-actions v-if="user.isAuthorized" class="justify-between q-pt-none">
               <q-btn
-                v-if="isAdmin"
+                v-if="user.isAdmin"
                 flat
                 round
                 color="grey"
@@ -111,8 +111,7 @@ const route = useRoute();
 const next = computed(() => app.next)
 const error = computed(() => app.error);
 const objectsByDate = computed(() => app.objectsByDate);
-const isAdmin = auth.isAdmin
-const isAuthorized = auth.isAuthorized
+const user = computed(() => auth.user)
 
 const { event } = useGtag();
 
@@ -146,7 +145,7 @@ const download = (filename) => {
 }
 
 const showEditForm = (rec) => {
-  app.setCurrent(rec)
+  app.current = rec
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Edit,
@@ -159,7 +158,7 @@ const showEditForm = (rec) => {
   }).onCancel(() => { })
 }
 const showConfirm = (rec) => {
-  app.setCurrent(rec)
+  app.current = rec
   window.history.pushState({}, '') // fake history
   $q.dialog({
     component: Confirm,
