@@ -18,14 +18,9 @@
         color="warning"
       />
     </div>
-    <div>
-      <transition-group
-        v-if="submitResult.length > 0"
-        tag="q-list"
-        class="q-mt-md q-list--separator"
-        name="fade"
-      >
-        <q-item v-for="rec in submitResult" :key="rec.filename" class="bg-grey-2">
+    <div v-if="uploaded.length > 0">
+      <transition-group tag="q-list" class="q-mt-md q-list--separator" name="fade">
+        <q-item v-for="rec in uploaded" :key="rec.filename" class="bg-grey-2">
           <q-item-section>
             <q-item-label>{{ rec.filename }}</q-item-label>
           </q-item-section>
@@ -74,7 +69,7 @@ const percentage = ref(0);
 const progress = (evt) => {
   percentage.value = Math.round((evt.loaded * 100) / evt.total)
 };
-const submitResult = computed(() => app.uploaded);
+const uploaded = computed(() => app.uploaded);
 
 const filesChange = (evt) => {
   /**
@@ -102,7 +97,6 @@ const filesChange = (evt) => {
 };
 
 const submit = (formData) => {
-  const data = []
   api
     .post('add', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -112,8 +106,7 @@ const submit = (formData) => {
     .then((x) =>
       x.map((item) => {
         if (item.success) {
-          data.push(item.rec)
-          app.addUploaded(item.rec)
+          app.uploaded.push(item.rec)
         } else {
           notify({ type: 'negative', message: `${item.rec.filename} failed to upload` })
         }

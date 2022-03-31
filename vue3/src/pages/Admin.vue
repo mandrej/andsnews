@@ -28,7 +28,7 @@
           <q-item-label>Add day field to datastore</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="!fcm_token" color="primary" label="Fix" @click="fix" />
+          <q-btn :disabled="true" color="primary" label="Fix" @click="fix" />
         </q-item-section>
       </q-item>
       <q-item-label header>Cloud storage related</q-item-label>
