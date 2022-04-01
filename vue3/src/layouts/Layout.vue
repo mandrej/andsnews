@@ -27,13 +27,15 @@
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
-        <autocounter
-          v-if="route.name === 'list'"
-          :start-amount="from"
-          :end-amount="to"
-          :prefix="prefix"
-          :duration="1"
-        />
+        <div class="text-right" style="width: 40px">
+          <autocounter
+            v-if="route.name === 'list'"
+            :start-amount="from"
+            :end-amount="to"
+            :prefix="prefix"
+            :duration="1"
+          />
+        </div>
         <q-linear-progress v-show="busy" color="warning" class="absolute-bottom" indeterminate />
       </q-toolbar>
     </q-header>

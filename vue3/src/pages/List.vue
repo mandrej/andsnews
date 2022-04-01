@@ -182,6 +182,7 @@ const showCarousel = (id) => {
     const duration = 500
     setVerticalScrollPosition(target, offset, duration)
   }).onCancel(() => {
+    // never happens
   })
 }
 </script>

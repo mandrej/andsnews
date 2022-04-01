@@ -24,7 +24,6 @@
       :zoom="{
         maxRatio: 2
       }"
-      :navigation="true"
       :modules="modules"
       @swiper="onSwiper"
       @slide-change="onSlideChange"
@@ -84,6 +83,7 @@ export default {
 
     onMounted(() => {
       window.onpopstate = function () {
+        context.emit('ok', hash.value)
         onDialogCancel()
       }
     })
@@ -115,7 +115,7 @@ export default {
     const onCancelClick = () => {
       if (window.history.length) window.history.back()
       context.emit('ok', hash.value)
-      return onDialogCancel()
+      onDialogCancel()
     }
 
     return {
