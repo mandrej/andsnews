@@ -2,11 +2,17 @@
   <q-layout v-if="route.meta.plain" view="hHh lpR fFf">
     <q-page-container>
       <q-page class="row">
-        <div class="col-xs-12 col-sm-6 last" :style="styling" />
-        <div class="col-xs-12 col-sm-6" style="height: 25vh;">
-          <div class="bg-grey-10 text-white q-pa-md">
-            <div class="text-h4">{{ title }} personal photo album</div>
-            <div class="text-h6">{{ bucketInfo.count }} photos since 2007 and counting</div>
+        <q-responsive :ratio="1.75" class="col-xs-12 col-sm-6 last" :style="styling" />
+        <div class="col-xs-12 col-sm-6">
+          <div
+            class="text-white q-pa-md"
+            style="background: #212121 url('/icons/favicon-60x60.png') no-repeat right 16px center"
+          >
+            <div class="text-h4">
+              {{ title }}
+              <br />
+              <span class="text-body1">{{ bucketInfo.count }} photos since 2007 and counting</span>
+            </div>
           </div>
           <router-view />
           <div class="absolute-bottom q-pa-md text-right">{{ version }}</div>
@@ -106,6 +112,5 @@ watch(counter, (value, oldValue) => {
   background-size: cover;
   background-position: center;
   transition: background-image 0.5s ease-in-out;
-  height: 75vh;
 }
 </style>

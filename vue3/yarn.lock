@@ -1408,10 +1408,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@quasar/extras@^1.13.4":
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.13.4.tgz#a06d3e14844ea1271ef69ed237db50d1c79312ea"
-  integrity sha512-cM1Vc2ju5p9hShssyTgy0jWLvit0diUTvH1mTcuzEo6omDB/8GzIbt7N4aer8m4tSTyfjP6/ejyu4N17mVoeMQ==
+"@quasar/extras@^1.13.5":
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.13.5.tgz#5be677a800566192ea1bac8b9a796b5b66acd0f5"
+  integrity sha512-H4X3jwqOJpDrn1Pof1mJIpoHdBrZQSR9ZpnQ7RCkJsJccpTyQzs8Q6ehVXfIZrco2kd3UPitRQqEiW7k45ckLg==
 
 "@quasar/vite-plugin@^1.0.7":
   version "1.0.7"
@@ -1732,7 +1732,7 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browserslist@^4.17.5, browserslist@^4.19.1, browserslist@^4.20.2:
+browserslist@^4.17.5, browserslist@^4.19.1:
   version "4.20.2"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.20.2.tgz#567b41508757ecd904dab4d1c646c612cd3d4f88"
   integrity sha512-CQOBCqp/9pDvDbx3xfMi+86pr4KXIf2FDkTTdeuYw8OxS9t898LA1Khq57gtufFILXpfgsSx5woNgsBgvGjpsA==
@@ -3049,10 +3049,10 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-quasar@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.6.3.tgz#337957b02be596bd7b429de3c5873462aed8f357"
-  integrity sha512-eSQ1l0T2CXSbQ936aj8+NgyIrWt92YSs8xO7FD9ZUoC+wtY9trk0+LBHxcjJqr2p7mNxqaHoXJrvHZdN/VBUdg==
+quasar@^2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.6.4.tgz#f9924e77cc5b8dfe102d6e1fb5286134fcfb5dd2"
+  integrity sha512-cSfqUoCBVaGn52Wfe8LlCVxTbmW/4TVg2nlaoFKXK8b1EtiZgG1BsqHqyogkTKfgI70IVXuEiDjz3/jk5N6C5g==
 
 querystring-es3@^0.2.1:
   version "0.2.1"
@@ -3746,7 +3746,7 @@ workbox-broadcast-update@6.5.2:
   dependencies:
     workbox-core "6.5.2"
 
-workbox-build@^6.4.0, workbox-build@^6.4.2:
+workbox-build@^6.4.2, workbox-build@^6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/workbox-build/-/workbox-build-6.5.2.tgz#774faafd84b1dc94b74739ceb5d8ff367748523b"
   integrity sha512-TVi4Otf6fgwikBeMpXF9n0awHfZTMNu/nwlMIT9W+c13yvxkmDFMPb7vHYK6RUmbcxwPnz4I/R+uL76+JxG4JQ==
@@ -3881,7 +3881,7 @@ workbox-sw@6.5.2:
   resolved "https://registry.yarnpkg.com/workbox-sw/-/workbox-sw-6.5.2.tgz#2f5dca0e96c61a450fccf0405095ddf1b6f43bc7"
   integrity sha512-2KhlYqtkoqlnPdllj2ujXUKRuEFsRDIp6rdE4l1PsxiFHRAFaRTisRQpGvRem5yxgXEr+fcEKiuZUW2r70KZaw==
 
-workbox-window@6.5.2, workbox-window@^6.4.0, workbox-window@^6.4.2:
+workbox-window@6.5.2, workbox-window@^6.4.2, workbox-window@^6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/workbox-window/-/workbox-window-6.5.2.tgz#46d6412cd57039bdf3d5dd914ad21fb3f98fe980"
   integrity sha512-2kZH37r9Wx8swjEOL4B8uGM53lakMxsKkQ7mOKzGA/QAn/DQTEZGrdHWtypk2tbhKY5S0jvPS+sYDnb2Z3378A==
