@@ -113,7 +113,7 @@ export default {
       hash.value = slide.dataset.hash
     }
     const onCancelClick = () => {
-      window.history.back()
+      if (window.history.length) window.history.back()
       context.emit('ok', hash.value)
       return onDialogCancel()
     }

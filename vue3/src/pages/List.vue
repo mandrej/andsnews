@@ -26,7 +26,8 @@
         >
           <q-card :id="'card' + item.id" class="bg-grey-2" flat>
             <q-img
-              class="thumbnail cursor-pointer"
+              class="cursor-pointer"
+              :ratio="5 / 4"
               :src="smallsized + item.filename"
               @click="showCarousel(item.id)"
             >
@@ -184,9 +185,3 @@ const showCarousel = (id) => {
   })
 }
 </script>
-
-<style scoped>
-.thumbnail {
-  height: 250px;
-}
-</style>

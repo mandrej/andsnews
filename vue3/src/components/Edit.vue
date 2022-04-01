@@ -164,7 +164,7 @@ export default {
       }
     })
     const onCancelClick = () => {
-      window.history.back()
+      if (window.history.length) window.history.back()
       return onDialogCancel()
     }
     const onOKClick = () => {
