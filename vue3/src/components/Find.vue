@@ -9,7 +9,7 @@
       @keyup.enter="submit"
     />
     <Complete
-      :model-value="tmp.tags"
+      v-model="tmp.tags"
       :options="values.tags"
       multiple
       label="by tags"
@@ -17,8 +17,8 @@
       @update:model-value="newValue => { tmp.tags = newValue; submit() }"
     />
     <Complete
+      v-model="tmp.year"
       class="col"
-      :model-value="tmp.year"
       :options="optionsYear"
       autocomplete="label"
       label="by year"
@@ -27,8 +27,8 @@
     />
     <div class="row">
       <Complete
+        v-model="tmp.month"
         class="col"
-        :model-value="tmp.month"
         :options="optionsMonth"
         autocomplete="label"
         label="by month"
@@ -37,8 +37,8 @@
       />
       <div class="col-1" />
       <Complete
+        v-model="tmp.day"
         class="col"
-        :model-value="tmp.day"
         :options="optionsDay"
         autocomplete="label"
         label="by day"
@@ -47,21 +47,21 @@
       />
     </div>
     <Complete
-      :model-value="tmp.model"
+      v-model="tmp.model"
       :options="values.model"
       label="by model"
       :disable="busy"
       @update:model-value="newValue => { tmp.model = newValue; submit() }"
     />
     <Complete
-      :model-value="tmp.lens"
+      v-model="tmp.lens"
       :options="values.lens"
       label="by lens"
       :disable="busy"
       @update:model-value="newValue => { tmp.lens = newValue; submit() }"
     />
     <Complete
-      :model-value="tmp.nick"
+      v-model="tmp.nick"
       :options="nickNames"
       label="by author"
       :disable="busy"

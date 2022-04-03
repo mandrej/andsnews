@@ -23,7 +23,7 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import { format } from 'quasar'
 import { onMounted, computed } from "vue";
 import { useAppStore } from "../store/app";
@@ -31,38 +31,23 @@ import { useDialogPluginComponent } from 'quasar'
 
 const { humanStorageSize } = format
 
-export default {
-  name: "ConfirmDialog",
-  emits: [
-    ...useDialogPluginComponent.emits
-  ],
-  setup() {
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+// eslint-disable-next-line no-undef
+defineEmits([...useDialogPluginComponent.emits])
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const app = useAppStore();
-    const tmp = computed(() => app.current)
+const app = useAppStore();
+const tmp = computed(() => app.current)
 
-    onMounted(() => {
-      window.onpopstate = function () {
-        onDialogCancel()
-      }
-    })
-    const onCancelClick = () => {
-      if (window.history.length) window.history.back()
-      return onDialogCancel()
-    }
-
-    return {
-      tmp,
-      humanStorageSize,
-      close,
-      dialogRef,
-      onDialogHide,
-      onOKClick() {
-        onDialogOK()
-      },
-      onCancelClick,
-    };
-  },
-};
+onMounted(() => {
+  window.onpopstate = function () {
+    onDialogCancel()
+  }
+})
+const onCancelClick = () => {
+  if (window.history.length) window.history.back()
+  return onDialogCancel()
+}
+const onOKClick = () => {
+  onDialogOK()
+}
 </script>

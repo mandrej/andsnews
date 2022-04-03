@@ -1,5 +1,12 @@
 <template>
-  <q-dialog ref="dialogRef" :maximized="$q.screen.lt.md" persistent @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    :maximized="$q.screen.lt.md"
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    persistent
+    @hide="onDialogHide"
+  >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <div>
@@ -63,7 +70,7 @@
 
             <div class="col-12">
               <Complete
-                :model-value="tmp.tags"
+                v-model="tmp.tags"
                 :options="values.tags"
                 canadd
                 multiple
@@ -73,7 +80,7 @@
             </div>
             <div class="col-xs-12 col-sm-6">
               <Complete
-                :model-value="tmp.model"
+                v-model="tmp.model"
                 :options="values.model"
                 label="Camera Model"
                 @update:model-value="newValue => tmp.model = newValue"
@@ -81,14 +88,14 @@
             </div>
             <div class="col-xs-12 col-sm-6">
               <Complete
-                :model-value="tmp.lens"
+                v-model="tmp.lens"
                 :options="values.lens"
                 label="Camera Lens"
                 @update:model-value="newValue => tmp.lens = newValue"
               />
             </div>
             <div class="col-xs-6 col-sm-4">
-              <q-input :model-value="tmp.focal_length" type="number" label="Focal length" />
+              <q-input v-model="tmp.focal_length" type="number" label="Focal length" />
             </div>
 
             <div class="col-xs-6 col-sm-4">
@@ -114,10 +121,10 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import { format } from 'quasar'
-import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
+import { computed, onMounted, ref } from "vue";
 import { smallsized, readExif } from "../helpers"
 import { useAppStore } from "../store/app";
 import { useAuthStore } from "../store/auth";
@@ -125,69 +132,47 @@ import Complete from './Complete.vue';
 
 const { humanStorageSize } = format
 
-export default {
-  name: "EditDialog",
-  components: {
-    Complete
-  },
-  emits: [
-    ...useDialogPluginComponent.emits
-  ],
-  setup() {
-    const app = useAppStore();
-    const auth = useAuthStore();
-    const values = computed(() => app.values)
-    const current = computed(() => app.current)
-    const tmp = ref({ ...current.value })
+// eslint-disable-next-line no-undef
+defineEmits([...useDialogPluginComponent.emits])
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const linearDim = (rec) => {
-      const dim = rec.dim || []
-      return dim.join('✕') || ''
-    }
-    const getExif = async () => {
-      const exif = await readExif(tmp.value.filename);
-      Object.keys(exif).forEach(k => {
-        tmp.value[k] = exif[k]
-      })
-      // add flash tag if exif flash true
-      let tags = tmp.value.tags || []
-      if (tmp.value.flash && tags.indexOf('flash') === -1) {
-        tags.push('flash')
-      }
-      tmp.value.tags = tags
-    }
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+const app = useAppStore();
+const auth = useAuthStore();
+const values = computed(() => app.values)
+const current = computed(() => app.current)
+const tmp = ref({ ...current.value })
+const user = computed(() => auth.user)
 
-    onMounted(() => {
-      window.onpopstate = function () {
-        onDialogCancel()
-      }
-    })
-    const onCancelClick = () => {
-      if (window.history.length) window.history.back()
-      return onDialogCancel()
-    }
-    const onOKClick = () => {
-      tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
-      app.saveRecord(tmp.value)
-      onDialogOK()
-    }
+const getExif = async () => {
+  const exif = await readExif(tmp.value.filename);
+  Object.keys(exif).forEach(k => {
+    tmp.value[k] = exif[k]
+  })
+  // add flash tag if exif flash true
+  let tags = tmp.value.tags || []
+  if (tmp.value.flash && tags.indexOf('flash') === -1) {
+    tags.push('flash')
+  }
+  tmp.value.tags = tags
+}
 
-    return {
-      tmp,
-      close,
-      linearDim,
-      humanStorageSize,
-      getExif,
-      smallsized,
-      values,
-      dialogRef,
-      user: computed(() => auth.user),
+const linearDim = (rec) => {
+  const dim = rec.dim || []
+  return dim.join('✕') || ''
+}
 
-      onDialogHide,
-      onOKClick,
-      onCancelClick,
-    };
-  },
+onMounted(() => {
+  window.onpopstate = function () {
+    onDialogCancel()
+  }
+})
+const onCancelClick = () => {
+  if (window.history.length) window.history.back()
+  onDialogCancel()
+}
+const onOKClick = () => {
+  tmp.value.tags = tmp.value.tags ? tmp.value.tags : []
+  app.saveRecord(tmp.value)
+  onDialogOK()
 }
 </script>

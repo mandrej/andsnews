@@ -89,20 +89,15 @@
 
 <script setup>
 import { useQuasar, scroll, throttle } from 'quasar'
-import { defineAsyncComponent, onMounted, computed } from "vue";
+import { onMounted, computed } from "vue";
 import { useAppStore } from "../store/app";
 import { useAuthStore } from "../store/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue"
+import Edit from "../components/Edit.vue"
+import Confirm from "../components/Confirm.vue"
 import { useGtag } from "vue-gtag-next";
-
-const Edit = defineAsyncComponent(() =>
-  import('../components/Edit.vue')
-)
-const Confirm = defineAsyncComponent(() =>
-  import('../components/Confirm.vue')
-)
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const $q = useQuasar()
