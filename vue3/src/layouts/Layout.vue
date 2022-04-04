@@ -27,15 +27,7 @@
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>
         </q-toolbar-title>
-        <div class="text-right" style="width: 40px">
-          <autocounter
-            v-if="route.name === 'list'"
-            :start-amount="from"
-            :end-amount="to"
-            :prefix="prefix"
-            :duration="1"
-          />
-        </div>
+        <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs" />
         <q-linear-progress v-show="busy" color="warning" class="absolute-bottom" indeterminate />
       </q-toolbar>
     </q-header>
@@ -59,7 +51,7 @@ import { defineAsyncComponent, computed, watch, ref } from "vue";
 import { useAppStore } from "../store/app";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
-import autocounter from 'vue3-autocounter';
+import gsap from 'gsap'
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
@@ -77,9 +69,7 @@ const busy = computed(() => app.busy)
 const drawer = ref(false);
 
 const counter = computed(() => app.counter)
-const from = ref(0)
-const to = ref(0)
-const prefix = ref('')
+const countRef = ref(null)
 
 const styling = computed(() => {
   const low = smallsized + last.value;
@@ -103,9 +93,17 @@ const dynamic = computed(() => {
 })
 
 watch(counter, (value, oldValue) => {
-  from.value = oldValue.count
-  to.value = value.count
-  prefix.value = value.more ? '+' : ''
+  const div = countRef.value
+  if (!div) return
+  const obj = { number: oldValue.count };
+  const prefix = value.more ? '+' : ''
+  gsap.to(obj, {
+    duration: 0.8,
+    number: value.count,
+    onUpdate() {
+      div.innerText = prefix + obj.number.toFixed(0)
+    }
+  });
 });
 </script>
 
