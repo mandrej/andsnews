@@ -62,11 +62,19 @@ const auth = useAuthStore();
 const user = computed(() => auth.user)
 const files = ref(null);
 
-const percentage = ref(0);
+const uploaded = computed(() => app.uploaded);
+const percentage = computed({
+  get() {
+    return app.percentage
+  },
+  set(newValue) {
+    app.percentage = newValue
+  }
+})
+
 const progress = (evt) => {
   percentage.value = Math.round((evt.loaded * 100) / evt.total)
 };
-const uploaded = computed(() => app.uploaded);
 
 const filesChange = (evt) => {
   /**

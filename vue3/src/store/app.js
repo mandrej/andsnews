@@ -7,7 +7,9 @@ import querystring from "querystring-es3";
 export const useAppStore = defineStore("app", {
   state: () => ({
     find: {},
+
     uploaded: [],
+    percentage: 0,
 
     last: null,
     bucket: {
