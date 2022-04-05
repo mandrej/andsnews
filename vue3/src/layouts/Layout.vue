@@ -5,8 +5,8 @@
         <q-responsive :ratio="1.75" class="col-xs-12 col-sm-6 last" :style="styling" />
         <div class="col-xs-12 col-sm-6">
           <div
-            class="text-white q-pa-md"
-            style="background: #212121 url('/icons/favicon-60x60.png') no-repeat right 16px center"
+            class="text-black q-pa-md"
+            style="background: #0000001a url('/icons/favicon-60x60.png') no-repeat right 16px center"
           >
             <div class="text-h4">
               {{ title }}
@@ -21,8 +21,8 @@
     </q-page-container>
   </q-layout>
   <q-layout v-else view="hHh Lpr lFf">
-    <q-header>
-      <q-toolbar class="bg-grey-10 text-white">
+    <q-header class="header fixed-top">
+      <q-toolbar class="text-black">
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="drawer = !drawer" />
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{ title }}</router-link>
@@ -108,6 +108,12 @@ watch(counter, (value, oldValue) => {
 </script>
 
 <style scoped>
+.header {
+  background-color: #0000001a;
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+}
+
 .last {
   background-size: cover;
   background-position: center;
