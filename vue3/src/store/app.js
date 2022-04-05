@@ -72,7 +72,7 @@ export const useAppStore = defineStore("app", {
         const auth = useAuthStore();
         response = await api.put(param.verb + "/bucket_info", param);
         if (param.verb === "set") {
-          pushMessage(auth.fcm_token, "Bucket info done");
+          pushMessage(auth.fcm_token, "Cloud Bucket Info done");
         }
         this.bucket = { ...this.bucket, ...response.data };
       }
