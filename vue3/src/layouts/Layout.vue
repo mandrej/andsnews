@@ -81,7 +81,6 @@ const version = computed(() => {
   return "© 2007 - " + ver;
 });
 
-
 const dynamic = computed(() => {
   switch (route.name) {
     case 'home':

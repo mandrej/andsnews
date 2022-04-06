@@ -219,6 +219,8 @@ export const useAppStore = defineStore("app", {
         this.setValues(response.data);
         if (this.bucket.count === 0) {
           this.bucketInfo({ verb: "set" });
+        } else {
+          this.bucketInfo({ verb: "get" });
         }
       });
     },
