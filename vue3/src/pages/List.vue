@@ -31,6 +31,9 @@
               :src="smallsized + item.filename"
               @click="showCarousel(item.id)"
             >
+              <template #error>
+                <img src="/broken.svg" />
+              </template>
               <div class="absolute-bottom text-subtitle2">{{ item.headline }}</div>
             </q-img>
             <q-card-section class="row justify-between q-py-none">

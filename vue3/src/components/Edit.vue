@@ -29,7 +29,11 @@
         >
           <div class="row q-col-gutter-md">
             <div class="col-xs-12 col-sm-4 gt-xs">
-              <q-img :src="smallsized + tmp.filename" :ratio="1" />
+              <q-img :ratio="1" :src="smallsized + tmp.filename">
+                <template #error>
+                  <img src="/broken.svg" />
+                </template>
+              </q-img>
             </div>
             <div class="col-xs-12 col-sm-8 col-8">
               <q-input

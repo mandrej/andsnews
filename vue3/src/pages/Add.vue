@@ -26,7 +26,11 @@
           class="col-xs-6 col-sm-4 col-md-4 col-lg-3 col-xl-2"
         >
           <q-card class="bg-grey-2" flat>
-            <q-img :ratio="5 / 4" :src="fullsized + rec.filename" />
+            <q-img :ratio="5 / 4" :src="fullsized + rec.filename">
+              <template #error>
+                <img src="/broken.svg" />
+              </template>
+            </q-img>
             <q-card-actions class="justify-between">
               <q-btn flat round color="grey" icon="delete" @click="removeRecord(rec)" />
               <q-btn flat round color="grey" icon="publish" @click="showEditForm(rec)" />
