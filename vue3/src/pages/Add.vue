@@ -1,48 +1,38 @@
 <template>
   <div class="q-pa-md">
     <div
-      class="bg-grey-2 column justify-center items-center"
-      style="position: relative; height: 150px;"
+      class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
+      style="height: 150px;"
     >
       <div class="text-body1 text-center" style="width: 70%">
         Drag your images here to upload, or click to browse.
         <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
       </div>
       <input type="file" multiple name="photos" @change="filesChange" />
-    </div>
-    <div>
       <q-linear-progress
+        class="absolute-bottom"
         size="10px"
         :value="percentage"
         :indeterminate="percentage === 100"
         color="warning"
       />
     </div>
-    <div v-if="uploaded.length > 0">
-      <transition-group tag="q-list" class="q-mt-md q-list--separator" name="fade">
-        <q-item v-for="rec in uploaded" :key="rec.filename" class="bg-grey-2">
-          <q-item-section>
-            <q-item-label>{{ rec.filename }}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn
-              :label="$q.screen.gt.xs ? 'Remove' : null"
-              type="button"
-              color="negative"
-              icon="delete"
-              @click="removeRecord(rec)"
-            />
-          </q-item-section>
-          <q-item-section side>
-            <q-btn
-              :label="$q.screen.gt.xs ? 'Publish' : null"
-              type="button"
-              color="primary"
-              icon="publish"
-              @click="showEditForm(rec)"
-            />
-          </q-item-section>
-        </q-item>
+
+    <div class="q-mt-md">
+      <transition-group tag="div" class="row q-col-gutter-md" name="fade">
+        <div
+          v-for="rec in uploaded"
+          :key="rec.filename"
+          class="col-xs-6 col-sm-4 col-md-4 col-lg-3 col-xl-2"
+        >
+          <q-card class="bg-grey-2" flat>
+            <q-img :ratio="5 / 4" :src="fullsized + rec.filename" />
+            <q-card-actions class="justify-between">
+              <q-btn flat round color="grey" icon="delete" @click="removeRecord(rec)" />
+              <q-btn flat round color="grey" icon="publish" @click="showEditForm(rec)" />
+            </q-card-actions>
+          </q-card>
+        </div>
       </transition-group>
     </div>
   </div>
@@ -54,7 +44,7 @@ import { computed, ref } from 'vue'
 import { useAppStore } from "../store/app";
 import { useAuthStore } from "../store/auth";
 import Edit from "../components/Edit.vue"
-import { CONFIG, api, readExif, notify } from '../helpers'
+import { CONFIG, api, fullsized, readExif, notify } from '../helpers'
 
 const $q = useQuasar()
 const app = useAppStore();
@@ -71,7 +61,6 @@ const percentage = computed({
     app.percentage = newValue
   }
 })
-
 const progress = (evt) => {
   percentage.value = Math.round((evt.loaded * 100) / evt.total)
 };
@@ -151,7 +140,7 @@ const removeRecord = (rec) => {
 }
 </script>
 
-<style>
+<style scoped>
 input {
   opacity: 0;
   width: 100%;
