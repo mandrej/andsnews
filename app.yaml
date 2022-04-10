@@ -10,9 +10,9 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: "credentials.json"
 
 handlers:
-  - url: /(robots\.txt|manifest\.webmanifest)$
+  - url: /(robots\.txt|manifest\.json)$
     static_files: vue3/dist/pwa/\1
-    upload: vue3/dist/pwa/(robots\.txt|manifest\.webmanifest)$
+    upload: vue3/dist/pwa/(robots\.txt|manifest\.json)$
     secure: always
 
   - url: /(.*\.js)$
