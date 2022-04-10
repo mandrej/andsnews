@@ -54,7 +54,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from 'quasar'
-import { useAppStore } from "../store/app";
+import { useAppStore } from "../stores/app";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Lazy, Navigation, HashNavigation, Zoom, Keyboard } from "swiper";

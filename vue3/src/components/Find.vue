@@ -14,7 +14,12 @@
       multiple
       label="by tags"
       :disable="busy"
-      @update:model-value="newValue => { tmp.tags = newValue; submit() }"
+      @update:model-value="
+        (newValue) => {
+          tmp.tags = newValue;
+          submit();
+        }
+      "
     />
     <Complete
       v-model="tmp.year"
@@ -23,7 +28,12 @@
       autocomplete="label"
       label="by year"
       :disable="busy"
-      @update:model-value="newValue => { tmp.year = newValue; submit() }"
+      @update:model-value="
+        (newValue) => {
+          tmp.year = newValue;
+          submit();
+        }
+      "
     />
     <div class="row">
       <Complete
@@ -33,7 +43,12 @@
         autocomplete="label"
         label="by month"
         :disable="busy"
-        @update:model-value="newValue => { tmp.month = newValue; submit() }"
+        @update:model-value="
+          (newValue) => {
+            tmp.month = newValue;
+            submit();
+          }
+        "
       />
       <div class="col-1" />
       <Complete
@@ -43,7 +58,12 @@
         autocomplete="label"
         label="by day"
         :disable="busy"
-        @update:model-value="newValue => { tmp.day = newValue; submit() }"
+        @update:model-value="
+          (newValue) => {
+            tmp.day = newValue;
+            submit();
+          }
+        "
       />
     </div>
     <Complete
@@ -51,21 +71,36 @@
       :options="values.model"
       label="by model"
       :disable="busy"
-      @update:model-value="newValue => { tmp.model = newValue; submit() }"
+      @update:model-value="
+        (newValue) => {
+          tmp.model = newValue;
+          submit();
+        }
+      "
     />
     <Complete
       v-model="tmp.lens"
       :options="values.lens"
       label="by lens"
       :disable="busy"
-      @update:model-value="newValue => { tmp.lens = newValue; submit() }"
+      @update:model-value="
+        (newValue) => {
+          tmp.lens = newValue;
+          submit();
+        }
+      "
     />
     <Complete
       v-model="tmp.nick"
       :options="nickNames"
       label="by author"
       :disable="busy"
-      @update:model-value="newValue => { tmp.nick = newValue; submit() }"
+      @update:model-value="
+        (newValue) => {
+          tmp.nick = newValue;
+          submit();
+        }
+      "
     />
   </div>
 </template>
@@ -73,19 +108,19 @@
 <script setup>
 import { onMounted, computed, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useAppStore } from "../store/app";
+import { useAppStore } from "../stores/app";
 import Complete from "./Complete.vue";
 import { months } from "../helpers";
 
 const app = useAppStore();
 const route = useRoute();
 const router = useRouter();
-const busy = computed(() => app.busy)
-const values = computed(() => app.values)
-const nickNames = computed(() => app.nickNames)
+const busy = computed(() => app.busy);
+const values = computed(() => app.values);
+const nickNames = computed(() => app.nickNames);
 
-const find = computed(() => app.find)
-const tmp = ref({ ...find.value })
+const find = computed(() => app.find);
+const tmp = ref({ ...find.value });
 
 const queryDispatch = (query) => {
   // delete keys without values
@@ -99,15 +134,18 @@ const queryDispatch = (query) => {
     if (["year", "month", "day"].includes(key)) {
       tmp.value[key] = +query[key];
     } else if (key === "tags") {
-      if (typeof tmp.value[key] === "string" || tmp.value[key] instanceof String) {
+      if (
+        typeof tmp.value[key] === "string" ||
+        tmp.value[key] instanceof String
+      ) {
         tmp.value[key] = [query[key]];
       }
     }
   });
-  const strFind = JSON.stringify(find.value)
-  const strTmp = JSON.stringify(tmp.value)
+  const strFind = JSON.stringify(find.value);
+  const strTmp = JSON.stringify(tmp.value);
   if (strFind !== strTmp) {
-    app.saveFindForm(tmp.value)
+    app.saveFindForm(tmp.value);
     // new query
     app.busy = false; // interupt loading
     app.fetchRecords(true); // new filter with reset
@@ -118,48 +156,50 @@ const queryDispatch = (query) => {
       } else {
         router.push({ path: "/list", query: tmp.value });
       }
-    } else if (route.name === 'list') {
+    } else if (route.name === "list") {
       router.push({ path: "/" });
     }
   }
-}
+};
 
 // front router-link, hash detailed carousel
 onMounted(() => {
-  if (route.name !== 'list') return
-  tmp.value = { ...route.query }
-  queryDispatch(route.query)
+  if (route.name !== "list") return;
+  tmp.value = { ...route.query };
+  queryDispatch(route.query);
   // console.log('onMounted ', tmp.value);
-})
+});
 
 // back from carousel
 watch(route, (to) => setForm(to), { deep: true });
 const setForm = (to) => {
-  if (to.name !== 'list') return
-  tmp.value = { ...to.query }
-  queryDispatch(to.query)
+  if (to.name !== "list") return;
+  tmp.value = { ...to.query };
+  queryDispatch(to.query);
   // console.log('watch route ', tmp.value);
-}
+};
 
 const submit = () => {
-  queryDispatch(tmp.value)
+  queryDispatch(tmp.value);
   // console.log('submit ', tmp.value);
-}
+};
 
 const optionsYear = computed(() => {
-  return values.value.year.map(year => {
-    return { label: '' + year, value: year }
-  })
-})
+  return values.value.year.map((year) => {
+    return { label: "" + year, value: year };
+  });
+});
 const optionsMonth = computed(() => {
   return months.map((month, i) => ({ label: month, value: i + 1 }));
-})
+});
 const optionsDay = computed(() => {
   const N = 31,
     from = 1,
     step = 1;
-  return [...Array(N)].map((_, i) => from + i * step).map(day => {
-    return { label: '' + day, value: day }
-  });
-})
+  return [...Array(N)]
+    .map((_, i) => from + i * step)
+    .map((day) => {
+      return { label: "" + day, value: day };
+    });
+});
 </script>

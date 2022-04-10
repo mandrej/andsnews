@@ -22,13 +22,13 @@ else
       # --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
       python main.py
       # cd vue3/
-      # npx vite -m pwa
+      # quasar dev -m pwa
       # cd ..
       exit ;;
     build)
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue3/.env
       cd vue3/
-      npx vite build -m pwa
+      quasar build -m pwa
       cd ..
       exit ;;
     deploy)

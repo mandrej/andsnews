@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <div
       class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
-      style="height: 150px;"
+      style="height: 150px"
     >
       <div class="text-body1 text-center" style="width: 70%">
         Drag your images here to upload, or click to browse.
@@ -32,8 +32,20 @@
               </template>
             </q-img>
             <q-card-actions class="justify-between">
-              <q-btn flat round color="grey" icon="delete" @click="removeRecord(rec)" />
-              <q-btn flat round color="grey" icon="publish" @click="showEditForm(rec)" />
+              <q-btn
+                flat
+                round
+                color="grey"
+                icon="delete"
+                @click="removeRecord(rec)"
+              />
+              <q-btn
+                flat
+                round
+                color="grey"
+                icon="publish"
+                @click="showEditForm(rec)"
+              />
             </q-card-actions>
           </q-card>
         </div>
@@ -43,30 +55,30 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar'
-import { computed, ref } from 'vue'
-import { useAppStore } from "../store/app";
-import { useAuthStore } from "../store/auth";
-import Edit from "../components/Edit.vue"
-import { CONFIG, api, fullsized, readExif, notify } from '../helpers'
+import { useQuasar } from "quasar";
+import { computed, ref } from "vue";
+import { useAppStore } from "../stores/app";
+import { useAuthStore } from "../stores/auth";
+import Edit from "../components/Edit.vue";
+import { CONFIG, api, fullsized, readExif, notify } from "../helpers";
 
-const $q = useQuasar()
+const $q = useQuasar();
 const app = useAppStore();
 const auth = useAuthStore();
-const user = computed(() => auth.user)
+const user = computed(() => auth.user);
 const files = ref(null);
 
 const uploaded = computed(() => app.uploaded);
 const percentage = computed({
   get() {
-    return app.percentage
+    return app.percentage;
   },
   set(newValue) {
-    app.percentage = newValue
-  }
-})
+    app.percentage = newValue;
+  },
+});
 const progress = (evt) => {
-  percentage.value = Math.round((evt.loaded * 100) / evt.total)
+  percentage.value = Math.round((evt.loaded * 100) / evt.total);
 };
 
 const filesChange = (evt) => {
@@ -76,51 +88,57 @@ const filesChange = (evt) => {
       size: 1858651
       type: "image/jpeg"
    */
-  const fileList = evt.target.files
-  const fieldName = evt.target.name
-  if (!fileList.length) return
-  const formData = new FormData()
-  let i = 0
-  Array.from(fileList).map(file => {
+  const fileList = evt.target.files;
+  const fieldName = evt.target.name;
+  if (!fileList.length) return;
+  const formData = new FormData();
+  let i = 0;
+  Array.from(fileList).map((file) => {
     if (file.type !== CONFIG.fileType) {
-      notify({ type: "warning", message: `${file.name} is of unsupported file type` })
+      notify({
+        type: "warning",
+        message: `${file.name} is of unsupported file type`,
+      });
     } else if (file.size > CONFIG.fileSize) {
-      notify({ type: "warning", message: `${file.name} is too big` })
+      notify({ type: "warning", message: `${file.name} is too big` });
     } else {
-      formData.append(fieldName, file, file.name)
-      i++
+      formData.append(fieldName, file, file.name);
+      i++;
     }
-  })
+  });
   if (i > 0) submit(formData);
 };
 
 const submit = (formData) => {
   api
-    .post('add', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: progress
+    .post("add", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress: progress,
     })
     .then((x) => x.data) // list
     .then((x) =>
       x.map((item) => {
         if (item.success) {
-          app.uploaded.push(item.rec)
+          app.uploaded.push(item.rec);
         } else {
-          notify({ type: 'negative', message: `${item.rec.filename} failed to upload` })
+          notify({
+            type: "negative",
+            message: `${item.rec.filename} failed to upload`,
+          });
         }
       })
     )
     .then(() => {
-      files.value = null
-      percentage.value = 0
+      files.value = null;
+      percentage.value = 0;
     })
-    .catch(err => {
-      if (err.code === 'ECONNABORTED') {
-        files.value = null
-        percentage.value = 0
-        notify({ type: 'negative', message: 'Timeout error' })
+    .catch((err) => {
+      if (err.code === "ECONNABORTED") {
+        files.value = null;
+        percentage.value = 0;
+        notify({ type: "negative", message: "Timeout error" });
       }
-    })
+    });
 };
 
 const showEditForm = async (rec) => {
@@ -128,20 +146,24 @@ const showEditForm = async (rec) => {
    * Add headline 'No name', user email and tags: [] to new rec; read exif
    */
   const exif = await readExif(rec.filename);
-  const record = Object.assign({ headline: 'No name', email: user.value.email, tags: [] }, rec, exif)
+  const record = Object.assign(
+    { headline: "No name", email: user.value.email, tags: [] },
+    rec,
+    exif
+  );
   if (record.flash) {
-    record.tags.push('flash')
+    record.tags.push("flash");
   }
-  app.current = ref(record)
-  window.history.pushState({}, '') // fake history
+  app.current = ref(record);
+  window.history.pushState({}, ""); // fake history
   $q.dialog({
     component: Edit,
-  })
-}
+  });
+};
 
 const removeRecord = (rec) => {
-  app.deleteRecord(rec)
-}
+  app.deleteRecord(rec);
+};
 </script>
 
 <style scoped>

@@ -1,11 +1,15 @@
 {
   "name": "andsnews",
-  "version": "3.2.0",
+  "version": "3.2.2",
+	"description": "Personal photo album",
+	"author": "Milan Andrejevic <milan.andrejevic@gmail.com>",
   "license": "MIT",
+	"private": true,
   "scripts": {
-    "dev": "vite -m pwa",
-    "build": "vite build -m pwa",
-    "preview": "vite preview -m pwa"
+    "lint": "eslint --ext .js,.vue ./",
+    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0",
+    "icons": "icongenie g -i AppIcon.png --skip-trim"
   },
   "dependencies": {
     "@quasar/extras": "^1.13.5",
@@ -22,20 +26,30 @@
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "@quasar/vite-plugin": "^1.0.7",
-    "@vitejs/plugin-vue": "^2.3.1",
-    "eslint": "^8.12.0",
+    "@babel/eslint-parser": "^7.13.14",
+    "@quasar/app-webpack": "^3.0.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^8.5.0",
-    "sass": "1.32.0",
-    "vite": "^2.9.1",
-    "vite-plugin-pwa": "^0.11.13",
-    "workbox-build": "^6.5.2",
-    "workbox-core": "^6.5.2",
-    "workbox-window": "^6.5.2"
+    "eslint-webpack-plugin": "^3.1.1",
+    "prettier": "^2.5.1",
+    "workbox-webpack-plugin": "^6.0.0"
   },
   "browserslist": [
-    "defaults",
-    "not IE 11",
-    "maintained node versions"
-  ]
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 12.22.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
 }
