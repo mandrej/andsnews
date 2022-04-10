@@ -22,21 +22,26 @@ graphql/
 views/
 vue2/
 
+vue3/README.md
+vue3/AppIcon.png
+
 api/__pycache__/
 api/test_*.py
 functions/
 
+**/.*
 **/src/
-**/.env*
+**/src-pwa/
 **/public/
 **/node_modules/
 **/package.json
 **/babel.config.js
+vue3/jsconfig.json
 **/vue.config.js
 **/vite.config.js
+**/quasar.config.js
 **/yarn*
 
-*.svg
 export
 
 # gcloud meta list-files-for-upload

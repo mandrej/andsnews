@@ -3,6 +3,7 @@ lib/
 *.pyc
 
 **/dist
+**/.quasar
 **/node_modules
 
 **/npm-debug.log*

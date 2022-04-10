@@ -1,5 +1,5 @@
 runtime: python38
-default_expiration: '0s'
+default_expiration: "0s"
 
 instance_class: F2
 automatic_scaling:
@@ -7,33 +7,41 @@ automatic_scaling:
   max_idle_instances: 1
 
 env_variables:
-  GOOGLE_APPLICATION_CREDENTIALS: 'credentials.json'
+  GOOGLE_APPLICATION_CREDENTIALS: "credentials.json"
 
 handlers:
   - url: /(robots\.txt|manifest\.webmanifest)$
-    static_files: vue3/dist/\1
-    upload: vue3/dist/(robots\.txt|manifest\.webmanifest)$
+    static_files: vue3/dist/pwa/\1
+    upload: vue3/dist/pwa/(robots\.txt|manifest\.webmanifest)$
     secure: always
 
   - url: /(.*\.js)$
-    static_files: vue3/dist/\1
-    upload: vue3/dist/.*\.js$
+    static_files: vue3/dist/pwa/\1
+    upload: vue3/dist/pwa/.*\.js$
     http_headers:
       Content-Type: application/javascript
       Cache-Control: max-age=0
     secure: always
 
   - url: /index.html
-    static_files: vue3/dist/index.html
-    upload: vue3/dist/index.html
+    static_files: vue3/dist/pwa/index.html
+    upload: vue3/dist/pwa/index.html
     secure: always
 
-  - url: /assets
-    static_dir: vue3/dist/assets
+  - url: /css
+    static_dir: vue3/dist/pwa/css
+    secure: always
+
+  - url: /fonts
+    static_dir: vue3/dist/pwa/fonts
     secure: always
 
   - url: /icons
-    static_dir: vue3/dist/icons
+    static_dir: vue3/dist/pwa/icons
+    secure: always
+
+  - url: /js
+    static_dir: vue3/dist/pwa/js
     secure: always
 
   - url: /api/.*
@@ -41,8 +49,8 @@ handlers:
     secure: always
 
   - url: /.*
-    static_files: vue3/dist/index.html
-    upload: vue3/dist/index.html
+    static_files: vue3/dist/pwa/index.html
+    upload: vue3/dist/pwa/index.html
     secure: always
 
 inbound_services:
