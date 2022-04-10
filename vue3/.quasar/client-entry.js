@@ -45,9 +45,6 @@ import 'app/src-pwa/register-service-worker'
 
 
 
-console.info('[Quasar] Running PWA.')
-console.info('[Quasar] PWA: Use devtools > Application > "Bypass for network" to not break Hot Module Replacement while developing.')
-
 
 
 // Needed only for iOS PWAs

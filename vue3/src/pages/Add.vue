@@ -4,16 +4,22 @@
       class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
       style="height: 150px"
     >
-      <div class="text-body1 text-center" style="width: 70%">
+      <div
+        v-if="percentage === 0"
+        class="text-body1 text-center"
+        style="width: 70%"
+      >
         Drag your images here to upload, or click to browse.
         <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
       </div>
+      <div v-else-if="percentage < 1">Plase wait ...</div>
+      <div v-else-if="percentage === 1">Processing images ...</div>
       <input type="file" multiple name="photos" @change="filesChange" />
       <q-linear-progress
         class="absolute-bottom"
         size="10px"
         :value="percentage"
-        :indeterminate="percentage === 100"
+        :indeterminate="percentage === 1"
         color="warning"
       />
     </div>
@@ -78,7 +84,7 @@ const percentage = computed({
   },
 });
 const progress = (evt) => {
-  percentage.value = Math.round((evt.loaded * 100) / evt.total);
+  percentage.value = evt.loaded / evt.total;
 };
 
 const filesChange = (evt) => {
@@ -133,9 +139,9 @@ const submit = (formData) => {
       percentage.value = 0;
     })
     .catch((err) => {
+      files.value = null;
+      percentage.value = 0;
       if (err.code === "ECONNABORTED") {
-        files.value = null;
-        percentage.value = 0;
         notify({ type: "negative", message: "Timeout error" });
       }
     });

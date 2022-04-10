@@ -6,6 +6,7 @@ version=`date +%Y%m%d%H%M`
 function syntax {
   echo $"Usage:"
   echo $"$0 run    - Run development server"
+  echo $"$0 icons  - Build icons"
   echo $"$0 build  - Build client"
   echo $"$0 deploy - Deploy"
   exit 1
@@ -24,6 +25,12 @@ else
       # cd vue3/
       # quasar dev -m pwa
       # cd ..
+      exit ;;
+    icons)
+      cd vue3/
+      inkscape --export-filename=AppIcon.png -w 2048 -h 2048 AppIcon.svg
+      icongenie g -i AppIcon.png --skip-trim
+      cd ..
       exit ;;
     build)
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue3/.env

@@ -23,7 +23,7 @@ views/
 vue2/
 
 vue3/README.md
-vue3/AppIcon.png
+vue3/AppIcon.*
 
 api/__pycache__/
 api/test_*.py
@@ -41,7 +41,5 @@ vue3/jsconfig.json
 **/vite.config.js
 **/quasar.config.js
 **/yarn*
-
-export
 
 # gcloud meta list-files-for-upload

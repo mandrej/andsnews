@@ -7,17 +7,19 @@
           class="col-xs-12 col-sm-6 last"
           :style="styling"
         />
+        <!-- <div
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 192px;
+            height: 192px;
+            background-image: url('icons/icon-192x192.png');
+            filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.2));
+          "
+        ></div> -->
         <div class="col-xs-12 col-sm-6">
-          <div
-            class="text-black q-pa-md"
-            style="
-              background-image: url('icons/icon-192x192.png');
-              background-color: #0000001a;
-              background-repeat: no-repeat;
-              background-position: right center;
-              background-size: contain;
-            "
-          >
+          <div class="text-black q-pa-md header">
             <div class="text-h4">
               {{ title }}
               <br />
@@ -144,6 +146,7 @@ watch(counter, (value, oldValue) => {
 }
 
 .last {
+  position: relative;
   background-size: cover;
   background-position: center;
   transition: background-image 0.5s ease-in-out;
