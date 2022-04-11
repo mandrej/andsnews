@@ -8,9 +8,9 @@ import { clientsClaim } from "workbox-core";
 import {
   precacheAndRoute,
   cleanupOutdatedCaches,
-  createHandlerBoundToURL,
+  // createHandlerBoundToURL,
 } from "workbox-precaching";
-import { registerRoute, NavigationRoute } from "workbox-routing";
+// import { registerRoute, NavigationRoute } from "workbox-routing";
 
 self.skipWaiting();
 clientsClaim();
@@ -22,11 +22,11 @@ cleanupOutdatedCaches();
 
 // Non-SSR fallback to index.html
 // Production SSR fallback to offline.html (except for dev)
-if (process.env.MODE !== "ssr" || process.env.PROD) {
-  registerRoute(
-    new NavigationRoute(
-      createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
-      { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
-    )
-  );
-}
+// if (process.env.MODE !== "ssr" || process.env.PROD) {
+//   registerRoute(
+//     new NavigationRoute(
+//       createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
+//       { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
+//     )
+//   );
+// }

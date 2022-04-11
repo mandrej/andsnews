@@ -167,21 +167,21 @@ onMounted(() => {
   if (route.name !== "list") return;
   tmp.value = { ...route.query };
   queryDispatch(route.query);
-  // console.log('onMounted ', tmp.value);
+  // console.log("onMounted ", tmp.value);
 });
 
 // back from carousel
-watch(route, (to) => setForm(to), { deep: true });
+watch(route, (to) => setForm(to));
 const setForm = (to) => {
   if (to.name !== "list") return;
   tmp.value = { ...to.query };
   queryDispatch(to.query);
-  // console.log('watch route ', tmp.value);
+  // console.log("watch route ", tmp.value);
 };
 
 const submit = () => {
   queryDispatch(tmp.value);
-  // console.log('submit ', tmp.value);
+  // console.log("submit ", tmp.value);
 };
 
 const optionsYear = computed(() => {

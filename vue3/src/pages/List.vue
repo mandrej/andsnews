@@ -19,7 +19,11 @@
       No data found for current filter/ search
     </q-banner>
 
-    <q-scroll-observer @scroll="scrollHandler" />
+    <q-scroll-observer
+      @scroll="scrollHandler"
+      axis="vertical"
+      :debounce="500"
+    />
     <div v-for="(list, datum) in objectsByDate" :key="datum" class="q-pa-md">
       <div class="text-h6 text-weight-light">
         {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
@@ -94,7 +98,13 @@
                 icon="edit"
                 @click="showEditForm(item)"
               />
-              <!-- <q-btn flat round color="grey" icon="share" /> -->
+              <q-btn
+                flat
+                round
+                color="grey"
+                icon="share"
+                @click="onShare(item.id)"
+              />
               <q-btn
                 flat
                 round
@@ -121,7 +131,7 @@
 </template>
 
 <script setup>
-import { useQuasar, scroll, throttle } from "quasar";
+import { useQuasar, copyToClipboard, scroll, throttle } from "quasar";
 import { onMounted, computed } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
@@ -206,7 +216,7 @@ const showConfirm = (rec) => {
     .onCancel(() => {});
 };
 const showCarousel = (id) => {
-  window.history.pushState({}, ""); // fake history
+  window.history.pushState({}, ""); // fake history route.fullPath
   $q.dialog({
     component: Carousel,
     componentProps: {
@@ -215,13 +225,24 @@ const showCarousel = (id) => {
   })
     .onOk((hash) => {
       const el = document.querySelector("#card" + hash);
+      if (!el) return;
       const target = getScrollTarget(el);
       const offset = el.offsetTop;
-      const duration = 1500;
+      const duration = 750;
       setVerticalScrollPosition(target, offset, duration);
     })
     .onCancel(() => {
       // never happens
+    });
+};
+const onShare = (id) => {
+  const url = window.location.href + "#" + id;
+  copyToClipboard(url)
+    .then(() => {
+      notify({ type: "info", message: "URL copied to clipboard" });
+    })
+    .catch(() => {
+      // fail
     });
 };
 </script>

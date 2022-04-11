@@ -37,9 +37,3 @@
   animation-duration: 0.75s;
   animation-fill-mode: both;
 }
-
-/* bug ? (in dialog plugin opacity: 0) */
-.q-field__native,
-.q-field__input {
-  opacity: 1 !important;
-}

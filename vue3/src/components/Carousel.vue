@@ -9,10 +9,6 @@
     <swiper
       :keyboard="true"
       :grab-cursor="true"
-      :hash-navigation="{
-        watchState: true,
-        replaceState: false,
-      }"
       :lazy="{
         loadOnTransitionStart: true,
         loadPrevNext: 3,
@@ -60,7 +56,7 @@ import { useDialogPluginComponent } from "quasar";
 import { useAppStore } from "../stores/app";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Lazy, HashNavigation, Zoom, Keyboard } from "swiper";
+import { Lazy, Zoom, Keyboard } from "swiper";
 
 import "swiper/scss";
 import "swiper/scss/lazy";
@@ -85,7 +81,7 @@ const swiperRef = ref(null);
 const hash = ref(props.pid);
 const index = objects.value.findIndex((x) => x.id === props.pid);
 
-const modules = [Lazy, HashNavigation, Zoom, Keyboard];
+const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
   swiperRef.value = sw;
@@ -128,6 +124,9 @@ const onCancelClick = () => {
   if (window.history.length) window.history.back();
   emit("ok", hash.value);
   onDialogCancel();
+};
+const onOKClick = () => {
+  onDialogOK();
 };
 </script>
 
