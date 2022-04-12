@@ -24,6 +24,7 @@
   "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "volar.codeLens.scriptSetupTools": true,
 
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],

@@ -227,9 +227,7 @@ const showCarousel = (id) => {
       const el = document.querySelector("#card" + hash);
       if (!el) return;
       const target = getScrollTarget(el);
-      const offset = el.offsetTop;
-      const duration = 750;
-      setVerticalScrollPosition(target, offset, duration);
+      setVerticalScrollPosition(target, el.offsetTop, 500);
     })
     .onCancel(() => {
       // never happens
