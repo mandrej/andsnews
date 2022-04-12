@@ -242,7 +242,7 @@ const onShare = (id) => {
       notify({ type: "info", message: "URL copied to clipboard" });
     })
     .catch(() => {
-      // fail
+      notify({ type: "warning", message: "Unable to copy URL to clipboard" });
     });
 };
 </script>

@@ -4,6 +4,7 @@
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
+    persistent
     @hide="onDialogHide"
   >
     <swiper
@@ -54,6 +55,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useDialogPluginComponent } from "quasar";
 import { useAppStore } from "../stores/app";
+import { useRoute } from "vue-router";
 import { fullsized, notify } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
@@ -76,10 +78,12 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent();
 
 const app = useAppStore();
+const route = useRoute();
 const objects = computed(() => app.objects);
 const swiperRef = ref(null);
 const hash = ref(props.pid);
 const index = objects.value.findIndex((x) => x.id === props.pid);
+const href = window.location.href;
 
 const modules = [Lazy, Zoom, Keyboard];
 
@@ -94,6 +98,7 @@ const onSwiper = (sw) => {
 const onSlideChange = (sw) => {
   const slide = sw.slides[sw.activeIndex];
   hash.value = slide.dataset.hash;
+  window.history.replaceState({}, null, route.fullPath + "#" + hash.value);
 };
 const zoomRatio = (dim) => {
   if (swiperRef.value && dim) {
