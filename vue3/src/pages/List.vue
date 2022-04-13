@@ -185,7 +185,7 @@ const download = (filename) => {
 
 const showEditForm = (rec) => {
   app.current = rec;
-  window.history.pushState({}, ""); // fake history
+  window.history.pushState({}, null, route.fullPath); // fake history
   $q.dialog({
     component: Edit,
   })
@@ -200,7 +200,7 @@ const showEditForm = (rec) => {
 };
 const showConfirm = (rec) => {
   app.current = rec;
-  window.history.pushState({}, ""); // fake history
+  window.history.pushState({}, null, route.fullPath); // fake history
   $q.dialog({
     component: Confirm,
   })
@@ -216,7 +216,7 @@ const showConfirm = (rec) => {
     .onCancel(() => {});
 };
 const showCarousel = (id) => {
-  window.history.pushState({}, ""); // fake history route.fullPath
+  window.history.pushState({}, null, route.fullPath); // fake history
   $q.dialog({
     component: Carousel,
     componentProps: {

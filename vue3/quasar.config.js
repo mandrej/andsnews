@@ -155,7 +155,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: `andsnews`,
         short_name: `ANDS`,
-        description: `A Quasar Project`,
+        description: `ANDрејевићи photo album`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#212121",

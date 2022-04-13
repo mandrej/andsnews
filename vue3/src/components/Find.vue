@@ -145,7 +145,7 @@ const queryDispatch = (query) => {
   const strFind = JSON.stringify(find.value);
   const strTmp = JSON.stringify(tmp.value);
   if (strFind !== strTmp) {
-    app.saveFindForm(tmp.value);
+    app.find = tmp.value;
     // new query
     app.busy = false; // interupt loading
     app.fetchRecords(true); // new filter with reset
@@ -167,7 +167,7 @@ onMounted(() => {
   if (route.name !== "list") return;
   tmp.value = { ...route.query };
   queryDispatch(route.query);
-  // console.log("onMounted ", tmp.value);
+  if (process.env.DEV) console.log("onMounted ", tmp.value);
 });
 
 // back from carousel
@@ -176,12 +176,12 @@ const setForm = (to) => {
   if (to.name !== "list") return;
   tmp.value = { ...to.query };
   queryDispatch(to.query);
-  // console.log("watch route ", tmp.value);
+  if (process.env.DEV) console.log("watch route ", tmp.value);
 };
 
 const submit = () => {
   queryDispatch(tmp.value);
-  // console.log("submit ", tmp.value);
+  if (process.env.DEV) console.log("submit ", tmp.value);
 };
 
 const optionsYear = computed(() => {

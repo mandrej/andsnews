@@ -1,9 +1,9 @@
 {
   "name": "andsnews",
+  "productName": "ANDрејевићи",
   "version": "3.2.2",
-  "description": "Personal photo album",
+  "description": "ANDрејевићи photo album",
   "author": "Milan Andrejevic <milan.andrejevic@gmail.com>",
-  "license": "MIT",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",

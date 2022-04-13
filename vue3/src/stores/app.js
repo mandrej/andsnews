@@ -51,9 +51,6 @@ export const useAppStore = defineStore("app", {
     },
   },
   actions: {
-    saveFindForm(payload) {
-      this.find = { ...payload };
-    },
     deleteUploaded(obj) {
       const idx = this.uploaded.findIndex(
         (item) => item.filename === obj.filename

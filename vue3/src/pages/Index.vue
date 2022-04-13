@@ -63,7 +63,6 @@ onMounted(() => {
 });
 // eslint-disable-next-line no-unused-vars
 const onResize = (size) => {
-  // console.log(size);
   if ($q.screen.xs) {
     limit.value = 9;
   } else {
