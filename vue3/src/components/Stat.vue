@@ -1,6 +1,6 @@
 <template>
   <q-list class="q-py-sm">
-    <q-item v-for="item in list" :key="item.text" v-ripple clickable>
+    <q-item v-for="item in list" :key="item.text" clickable>
       <q-item-section>
         <q-item-label class="text-h5 text-weight-light">{{
           item.value
