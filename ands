@@ -8,6 +8,7 @@ function syntax {
   echo $"$0 run    - Run development server"
   echo $"$0 icons  - Build icons"
   echo $"$0 build  - Build client"
+  echo $"$0 serve  - Serve client"
   echo $"$0 deploy - Deploy"
   exit 1
 }
@@ -36,6 +37,11 @@ else
       sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue3/.env
       cd vue3/
       quasar build -m pwa
+      cd ..
+      exit ;;
+    serve)
+      cd vue3/
+      quasar serve dist/pwa --hostname localhost --cors --proxy proxy.js
       cd ..
       exit ;;
     deploy)
