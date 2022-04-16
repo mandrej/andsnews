@@ -142,23 +142,19 @@ const queryDispatch = (query) => {
       }
     }
   });
-  const strFind = JSON.stringify(find.value);
-  const strTmp = JSON.stringify(tmp.value);
-  if (strFind !== strTmp) {
-    app.find = tmp.value;
-    // new query
-    app.busy = false; // interupt loading
-    app.fetchRecords(true); // new filter with reset
-    // this dispatch route change
-    if (Object.keys(tmp.value).length) {
-      if (route.hash) {
-        router.push({ path: "/list", query: tmp.value, hash: route.hash });
-      } else {
-        router.push({ path: "/list", query: tmp.value });
-      }
-    } else if (route.name === "list") {
-      router.push({ path: "/" });
+  app.find = tmp.value;
+  // new query
+  app.busy = false; // interupt loading
+  app.fetchRecords(true); // new filter with reset
+  // this dispatch route change
+  if (Object.keys(tmp.value).length) {
+    if (route.hash) {
+      router.push({ path: "/list", query: tmp.value, hash: route.hash });
+    } else {
+      router.push({ path: "/list", query: tmp.value });
     }
+  } else if (route.name === "list") {
+    router.push({ path: "/" });
   }
 };
 
