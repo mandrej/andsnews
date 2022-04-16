@@ -120,13 +120,12 @@ const caption = (rec) => {
 };
 
 onMounted(() => {
-  window.onpopstate = function (e) {
+  window.onpopstate = function () {
     emit("ok", hash.value);
     onDialogCancel();
   };
 });
 const onCancelClick = () => {
-  if (window.history.length) window.history.back();
   emit("ok", hash.value);
   onDialogCancel();
 };
