@@ -48,7 +48,6 @@ onMounted(() => {
   };
 });
 const onCancelClick = () => {
-  if (window.history.length) window.history.back();
   return onDialogCancel();
 };
 const onOKClick = () => {

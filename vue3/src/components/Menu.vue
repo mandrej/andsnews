@@ -1,6 +1,6 @@
 <template>
   <q-list>
-    <q-item v-ripple clickable @click="auth.signIn">
+    <q-item clickable @click="auth.signIn">
       <q-item-section avatar>
         <q-icon name="person" />
       </q-item-section>
