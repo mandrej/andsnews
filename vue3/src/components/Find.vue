@@ -142,10 +142,9 @@ const queryDispatch = (query) => {
       }
     }
   });
-
+  // store query
   app.find = tmp.value;
   // new query
-  app.busy = false; // interupt loading
   app.fetchRecords(true); // new filter with reset
   // this dispatch route change
   if (Object.keys(tmp.value).length) {
