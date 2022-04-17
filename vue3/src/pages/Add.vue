@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <q-page class="q-pa-md">
     <div
       class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
       style="height: 150px"
@@ -57,7 +57,7 @@
         </div>
       </transition-group>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script setup>

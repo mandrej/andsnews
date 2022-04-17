@@ -1,22 +1,22 @@
 <template>
   <q-page>
-    <q-banner v-if="error" class="bg-warning q-ma-md q-pa-md" rounded>
-      <template #avatar>
-        <q-icon name="warning" color="primary" />
-      </template>
-      Something went wrong ...
-      <br />
-      {{ error }}
+    <q-banner
+      v-if="error"
+      class="absolute-center text-center bg-warning q-pa-md"
+      rounded
+    >
+      <q-icon name="error_outline" size="4em" />
+      <div class="text-h6">Something went wrong ...</div>
+      <div>{{ error }}</div>
     </q-banner>
     <q-banner
       v-else-if="error === 0"
-      class="bg-warning q-ma-md q-pa-md"
+      class="absolute-center text-center bg-warning q-pa-md"
       rounded
     >
-      <template #avatar>
-        <q-icon name="warning" color="primary" />
-      </template>
-      No data found for current filter/ search
+      <q-icon name="error_outline" size="4em" />
+      <div class="text-h6">No data found</div>
+      <div>for current filter/ search</div>
     </q-banner>
 
     <q-scroll-observer

@@ -1,12 +1,14 @@
 <template>
-  <div class="row justify-center text-center q-pa-xl">
-    <q-banner rounded class="text-white q-px-xl bg-negative">
-      <div class="text-h1">{{ props.code }}</div>
-      <div>{{ text }}</div>
-      <q-btn flat color="white" size="lg" to="/">
-        <q-icon left name="home" />
-        <div>Go Home</div>
-      </q-btn>
+  <div class="absolute-center text-center">
+    <q-banner rounded class="text-white q-pa-md bg-negative">
+      <div class="text-h3">{{ props.code }}</div>
+      {{ text }}
+      <template v-slot:action>
+        <q-btn flat color="white" size="lg" to="/">
+          <q-icon left name="home" />
+          <div>Go Home</div>
+        </q-btn>
+      </template>
     </q-banner>
   </div>
 </template>
@@ -17,13 +19,12 @@ import { ref } from "vue";
 const props = defineProps({
   code: {
     type: Number,
-    default: 404
-  }
-})
+    default: 404,
+  },
+});
 const errors = {
   404: "Oops. Nothing here...",
-  401: "Insufficient credentials..."
-}
-const text = ref(errors[props.code])
-
+  401: "Insufficient credentials...",
+};
+const text = ref(errors[props.code]);
 </script>
