@@ -50,7 +50,16 @@
             title
           }}</router-link>
         </q-toolbar-title>
+
         <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs" />
+        <q-btn
+          v-else
+          flat
+          round
+          icon="grid_view"
+          :to="{ name: 'list', query: app.find }"
+        >
+        </q-btn>
         <q-linear-progress
           v-show="busy"
           color="warning"
