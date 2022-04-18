@@ -11,8 +11,9 @@
         <q-toolbar-title>Confirm Delete</q-toolbar-title>
       </q-toolbar>
       <q-card-section
-        >Would you like to delete {{ humanStorageSize(tmp.size) }} image named
-        "{{ tmp.headline }}"?</q-card-section
+        >Would you like to delete {{ formatBytes(tmp.size) }} image named "{{
+          tmp.headline
+        }}"?</q-card-section
       >
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
@@ -27,12 +28,10 @@
 </template>
 
 <script setup>
-import { format } from "quasar";
 import { onMounted, computed } from "vue";
 import { useAppStore } from "../stores/app";
 import { useDialogPluginComponent } from "quasar";
-
-const { humanStorageSize } = format;
+import { formatBytes } from "../helpers";
 
 // eslint-disable-next-line no-undef
 defineEmits([...useDialogPluginComponent.emits]);

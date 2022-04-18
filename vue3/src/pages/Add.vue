@@ -9,8 +9,8 @@
         class="text-body1 text-center"
         style="width: 70%"
       >
-        Drag your images here to upload, or click to browse.
-        <br />Accepts only jpg (jpeg) files less then 4 Mb in size.
+        Drag your images here to upload, or click to browse. Accepts only jpg
+        (jpeg) files less then 4 Mb in size.
       </div>
       <div v-else-if="percentage < 1">Plase wait ...</div>
       <div v-else-if="percentage === 1">Processing images ...</div>
@@ -32,27 +32,34 @@
           class="col-xs-6 col-sm-4 col-md-4 col-lg-3 col-xl-2"
         >
           <q-card class="bg-grey-2" flat>
-            <q-img :ratio="5 / 4" :src="fullsized + rec.filename">
-              <template #error>
-                <img src="/broken.svg" />
-              </template>
-            </q-img>
-            <q-card-actions class="justify-between">
-              <q-btn
-                flat
-                round
-                color="grey"
-                icon="delete"
-                @click="removeRecord(rec)"
-              />
-              <q-btn
-                flat
-                round
-                color="grey"
-                icon="publish"
-                @click="showEditForm(rec)"
-              />
-            </q-card-actions>
+            <q-card-section class="justify-between" horizontal>
+              <q-avatar rounded size="72px">
+                <q-img :src="fullsized + rec.filename">
+                  <template #error>
+                    <img src="/broken.svg" />
+                  </template>
+                </q-img>
+                <q-badge floating color="primary">{{
+                  formatBytes(rec.size)
+                }}</q-badge>
+              </q-avatar>
+              <q-card-actions>
+                <q-btn
+                  flat
+                  round
+                  color="grey"
+                  icon="delete"
+                  @click="removeRecord(rec)"
+                />
+                <q-btn
+                  flat
+                  round
+                  color="grey"
+                  icon="publish"
+                  @click="showEditForm(rec)"
+                />
+              </q-card-actions>
+            </q-card-section>
           </q-card>
         </div>
       </transition-group>
@@ -66,7 +73,14 @@ import { computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Edit from "../components/Edit.vue";
-import { CONFIG, api, fullsized, readExif, notify } from "../helpers";
+import {
+  CONFIG,
+  api,
+  fullsized,
+  readExif,
+  formatBytes,
+  notify,
+} from "../helpers";
 
 const $q = useQuasar();
 const app = useAppStore();

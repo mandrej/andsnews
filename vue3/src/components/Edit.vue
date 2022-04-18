@@ -24,7 +24,7 @@
             @click="getExif"
           />
         </div>
-        <div>{{ humanStorageSize(tmp.size) }} {{ linearDim(tmp) }}</div>
+        <div>{{ formatBytes(tmp.size) }} {{ linearDim(tmp) }}</div>
         <div>
           <q-btn flat round dense icon="close" @click="onCancelClick" />
         </div>
@@ -173,15 +173,12 @@
 </template>
 
 <script setup>
-import { format } from "quasar";
 import { useDialogPluginComponent } from "quasar";
 import { computed, onMounted, ref } from "vue";
-import { smallsized, readExif } from "../helpers";
+import { smallsized, readExif, formatBytes } from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";
-
-const { humanStorageSize } = format;
 
 // eslint-disable-next-line no-undef
 defineEmits([...useDialogPluginComponent.emits]);

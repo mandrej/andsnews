@@ -84,7 +84,7 @@
               class="justify-between q-pt-none"
             >
               <q-btn
-                v-if="user.isAdmin"
+                v-if="isAuthorOrAdmin(item)"
                 flat
                 round
                 color="grey"
@@ -92,6 +92,7 @@
                 @click="showConfirm(item)"
               />
               <q-btn
+                v-if="isAuthorOrAdmin(item)"
                 flat
                 round
                 color="grey"
@@ -99,6 +100,7 @@
                 @click="showEditForm(item)"
               />
               <q-btn
+                v-if="isAuthorOrAdmin(item)"
                 flat
                 round
                 color="grey"
@@ -162,6 +164,10 @@ onMounted(() => {
     }, 1000);
   }
 });
+
+const isAuthorOrAdmin = (rec) => {
+  return user.value.isAdmin || user.value.email === rec.email;
+};
 
 const scrollHandler = throttle((obj) => {
   // trottle until busy: true
