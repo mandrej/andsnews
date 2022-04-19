@@ -10,47 +10,18 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: "credentials.json"
 
 handlers:
-  - url: /(robots\.txt|manifest\.json)$
-    static_files: vue3/dist/pwa/\1
-    upload: vue3/dist/pwa/(robots\.txt|manifest\.json)$
-    secure: always
-
-  - url: /(.*\.js)$
-    static_files: vue3/dist/pwa/\1
-    upload: vue3/dist/pwa/.*\.js$
-    http_headers:
-      Content-Type: application/javascript
-      Cache-Control: max-age=0
-    secure: always
-
-  - url: /index.html
-    static_files: vue3/dist/pwa/index.html
-    upload: vue3/dist/pwa/index.html
-    secure: always
-
-  - url: /css
-    static_dir: vue3/dist/pwa/css
-    secure: always
-
-  - url: /fonts
-    static_dir: vue3/dist/pwa/fonts
-    secure: always
-
-  - url: /icons
-    static_dir: vue3/dist/pwa/icons
-    secure: always
-
-  - url: /js
-    static_dir: vue3/dist/pwa/js
-    secure: always
-
   - url: /api/.*
     script: auto
     secure: always
 
-  - url: /.*
+  - url: /
     static_files: vue3/dist/pwa/index.html
     upload: vue3/dist/pwa/index.html
+    secure: always
+
+  - url: /(.*)
+    static_files: vue3/dist/pwa/\1
+    upload: vue3/dist/pwa/(.*)
     secure: always
 
 inbound_services:

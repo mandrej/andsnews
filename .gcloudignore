@@ -24,6 +24,8 @@ vue2/
 
 vue3/README.md
 vue3/AppIcon.*
+vue3/jsconfig.json
+vue3/proxy.js
 
 api/__pycache__/
 api/test_*.py
@@ -36,7 +38,6 @@ functions/
 **/node_modules/
 **/package.json
 **/babel.config.js
-vue3/jsconfig.json
 **/vue.config.js
 **/vite.config.js
 **/quasar.config.js

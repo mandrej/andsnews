@@ -7,19 +7,8 @@
           class="col-xs-12 col-sm-6 last"
           :style="styling"
         />
-        <!-- <div
-          style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 192px;
-            height: 192px;
-            background-image: url('icons/icon-192x192.png');
-            filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.2));
-          "
-        ></div> -->
         <div class="col-xs-12 col-sm-6">
-          <div class="text-black q-pa-md header">
+          <div class="bg-grey-3 text-black q-pa-md">
             <div class="text-h4">
               {{ title }}
               <br />
@@ -35,7 +24,7 @@
     </q-page-container>
   </q-layout>
   <q-layout v-else view="hHh Lpr lFf">
-    <q-header class="header fixed-top">
+    <q-header class="bg-grey-3 fixed-top">
       <q-toolbar class="text-black">
         <q-btn
           flat
@@ -148,12 +137,6 @@ watch(counter, (value, oldValue) => {
 </script>
 
 <style scoped>
-.header {
-  background-color: #0000001a;
-  -webkit-backdrop-filter: blur(7px);
-  backdrop-filter: blur(7px);
-}
-
 .last {
   position: relative;
   background-size: cover;

@@ -19,8 +19,7 @@ else
   case $1 in
     run)
       source $venv_dir/bin/activate
-      # gunicorn -b :6060 -w 2 main:app --reload \
-      # --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
+      # gunicorn -b :6060 -w 2 main:app --reload --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
       python main.py
       # cd vue3/
       # quasar dev -m pwa
@@ -38,8 +37,13 @@ else
       quasar build -m pwa
       cd ..
       exit ;;
+    serve)
+      cd vue3/
+      quasar serve dist/pwa --hostname localhost --cors --proxy proxy.js
+      cd ..
+      exit ;;
     deploy)
-      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml cron.yaml
+      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml cron.yaml # --no-promote
       # gcloud datastore indexes cleanup index.yaml
       exit ;;
     *)
