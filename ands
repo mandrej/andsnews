@@ -8,6 +8,7 @@ function syntax {
   echo $"$0 run    - Run development server"
   echo $"$0 icons  - Build icons"
   echo $"$0 build  - Build client"
+  echo $"$0 serve  - Serve built client"
   echo $"$0 deploy - Deploy"
   exit 1
 }
