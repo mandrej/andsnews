@@ -1,4 +1,6 @@
 <template>
+  <Edit v-if="app.showEdit" :rec="current.obj" />
+
   <q-page class="q-pa-md">
     <div
       class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
@@ -56,7 +58,7 @@
                   round
                   color="grey"
                   icon="publish"
-                  @click="showEditForm(rec)"
+                  @click="edit(rec)"
                 />
               </q-card-actions>
             </q-card-section>
@@ -68,8 +70,7 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Edit from "../components/Edit.vue";
@@ -82,11 +83,11 @@ import {
   notify,
 } from "../helpers";
 
-const $q = useQuasar();
 const app = useAppStore();
 const auth = useAuthStore();
 const user = computed(() => auth.user);
 const files = ref(null);
+const current = reactive({ obj: null });
 
 const uploaded = computed(() => app.uploaded);
 const percentage = computed({
@@ -161,7 +162,7 @@ const submit = (formData) => {
     });
 };
 
-const showEditForm = async (rec) => {
+const edit = async (rec) => {
   /**
    * Add headline 'No name', user email and tags: [] to new rec; read exif
    */
@@ -174,11 +175,9 @@ const showEditForm = async (rec) => {
   if (record.flash) {
     record.tags.push("flash");
   }
-  app.current = ref(record);
+  current.obj = ref(record);
   window.history.pushState({}, ""); // fake history
-  $q.dialog({
-    component: Edit,
-  });
+  app.showEdit = true;
 };
 
 const removeRecord = (rec) => {

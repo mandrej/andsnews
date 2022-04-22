@@ -1,11 +1,10 @@
 <template>
   <q-dialog
-    ref="dialogRef"
+    v-model="app.showCarousel"
     :maximized="true"
     transition-show="slide-up"
     transition-hide="slide-down"
     persistent
-    @hide="onDialogHide"
   >
     <swiper
       :keyboard="true"
@@ -36,7 +35,7 @@
             icon="close"
             flat
             round
-            @click="onCancelClick"
+            @click="onCancel"
           />
         </div>
         <div
@@ -52,8 +51,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { useDialogPluginComponent } from "quasar";
+import { computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
 import { fullsized, notify } from "../helpers";
@@ -64,31 +62,22 @@ import "swiper/scss";
 import "swiper/scss/lazy";
 import "swiper/scss/zoom";
 
-// eslint-disable-next-line no-undef
+const emit = defineEmits(["carousel-cancel"]);
 const props = defineProps({
-  pid: {
-    type: Number,
-    required: true,
-  },
+  pid: Number,
 });
-// eslint-disable-next-line no-undef
-const emit = defineEmits([...useDialogPluginComponent.emits]);
-// eslint-disable-next-line no-unused-vars
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent();
 
 const app = useAppStore();
 const route = useRoute();
 const objects = computed(() => app.objects);
 const swiperRef = ref(null);
-const hash = ref(props.pid);
-const index = objects.value.findIndex((x) => x.id === props.pid);
-const href = window.location.href;
+const hash = ref(null);
 
 const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
   swiperRef.value = sw;
+  const index = objects.value.findIndex((x) => x.id === props.pid);
   if (index === -1) {
     notify({ type: "negative", message: `${props.pid} couldn't be found` });
   } else {
@@ -98,7 +87,11 @@ const onSwiper = (sw) => {
 const onSlideChange = (sw) => {
   const slide = sw.slides[sw.activeIndex];
   hash.value = slide.dataset.hash;
-  window.history.replaceState({}, null, route.fullPath + "#" + hash.value);
+  window.history.replaceState(
+    history.state,
+    null,
+    route.fullPath + "#" + hash.value
+  );
 };
 const zoomRatio = (dim) => {
   if (swiperRef.value && dim) {
@@ -119,18 +112,14 @@ const caption = (rec) => {
   return tmp;
 };
 
-onMounted(() => {
-  window.onpopstate = function () {
-    emit("ok", hash.value);
-    onDialogCancel();
-  };
-});
-const onCancelClick = () => {
-  emit("ok", hash.value);
-  onDialogCancel();
+window.onpopstate = function () {
+  emit("carousel-cancel", hash.value);
+  app.showCarousel = false;
 };
-const onOKClick = () => {
-  onDialogOK();
+const onCancel = () => {
+  window.history.replaceState(history.state, null, route.fullPath);
+  emit("carousel-cancel", hash.value);
+  app.showCarousel = false;
 };
 </script>
 

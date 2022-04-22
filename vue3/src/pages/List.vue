@@ -1,4 +1,12 @@
 <template>
+  <Edit v-if="app.showEdit" :rec="current.obj" @editOk="editOk" />
+  <Confirm v-if="app.showConfirm" :rec="current.obj" />
+  <Carousel
+    v-if="app.showCarousel"
+    :pid="current.pid"
+    @carouselCancel="carouselCancel"
+  />
+
   <q-page>
     <q-banner
       v-if="error"
@@ -39,7 +47,7 @@
               class="cursor-pointer"
               :ratio="5 / 4"
               :src="smallsized + item.filename"
-              @click="showCarousel(item.id)"
+              @click="carousel(item.id)"
             >
               <template #error>
                 <img src="/broken.svg" />
@@ -89,7 +97,7 @@
                 round
                 color="grey"
                 icon="delete"
-                @click="showConfirm(item)"
+                @click="confirm(item)"
               />
               <q-btn
                 v-if="isAuthorOrAdmin(item)"
@@ -97,7 +105,7 @@
                 round
                 color="grey"
                 icon="edit"
-                @click="showEditForm(item)"
+                @click="edit(item)"
               />
               <q-btn
                 v-if="isAuthorOrAdmin(item)"
@@ -133,19 +141,19 @@
 </template>
 
 <script setup>
-import { useQuasar, copyToClipboard, scroll, throttle } from "quasar";
-import { onMounted, computed } from "vue";
+import { copyToClipboard, scroll, throttle } from "quasar";
+import { onMounted, computed, reactive } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
+import { useGtag } from "vue-gtag-next";
 import Carousel from "../components/Carousel.vue";
 import Edit from "../components/Edit.vue";
 import Confirm from "../components/Confirm.vue";
-import { useGtag } from "vue-gtag-next";
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
-const $q = useQuasar();
 const app = useAppStore();
 const auth = useAuthStore();
 const route = useRoute();
@@ -154,13 +162,15 @@ const error = computed(() => app.error);
 const objectsByDate = computed(() => app.objectsByDate);
 const user = computed(() => auth.user);
 
+const current = reactive({ obj: null, pid: 0 });
+
 const { event } = useGtag();
 
 onMounted(() => {
   const hash = route.hash;
   if (hash) {
     setTimeout(() => {
-      showCarousel(+hash.substring(1));
+      carousel(+hash.substring(1));
     }, 1000);
   }
 });
@@ -189,55 +199,34 @@ const download = (filename) => {
   });
 };
 
-const showEditForm = (rec) => {
-  app.current = rec;
+const edit = (rec) => {
+  current.obj = rec;
   window.history.pushState({}, null, route.fullPath); // fake history
-  $q.dialog({
-    component: Edit,
-  })
-    .onOk(() => {
-      const el = document.querySelector("#card" + rec.id);
-      el.classList.add("bounce");
-      setTimeout(() => {
-        el.classList.remove("bounce");
-      }, 2000);
-    })
-    .onCancel(() => {});
+  app.showEdit = true;
 };
-const showConfirm = (rec) => {
-  app.current = rec;
-  window.history.pushState({}, null, route.fullPath); // fake history
-  $q.dialog({
-    component: Confirm,
-  })
-    .onOk(() => {
-      notify({
-        type: "warning",
-        message: "Please wait",
-        timeout: 2000,
-        spinner: true,
-      });
-      app.deleteRecord(rec);
-    })
-    .onCancel(() => {});
+const editOk = (id) => {
+  const el = document.querySelector("#card" + id);
+  if (!el) return;
+  el.classList.add("bounce");
+  setTimeout(() => {
+    el.classList.remove("bounce");
+  }, 2000);
 };
-const showCarousel = (id) => {
+const confirm = (rec) => {
+  current.obj = rec;
   window.history.pushState({}, null, route.fullPath); // fake history
-  $q.dialog({
-    component: Carousel,
-    componentProps: {
-      pid: id,
-    },
-  })
-    .onOk((hash) => {
-      const el = document.querySelector("#card" + hash);
-      if (!el) return;
-      const target = getScrollTarget(el);
-      setVerticalScrollPosition(target, el.offsetTop, 500);
-    })
-    .onCancel(() => {
-      // never happens
-    });
+  app.showConfirm = true;
+};
+const carousel = (id) => {
+  current.pid = id;
+  window.history.pushState({}, null, route.fullPath); // fake history
+  app.showCarousel = true;
+};
+const carouselCancel = (hash) => {
+  const el = document.querySelector("#card" + hash);
+  if (!el) return;
+  const target = getScrollTarget(el);
+  setVerticalScrollPosition(target, el.offsetTop, 500);
 };
 const onShare = (id) => {
   const url = window.location.href + "#" + id;

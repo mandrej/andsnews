@@ -1,11 +1,10 @@
 <template>
   <q-dialog
-    ref="dialogRef"
+    v-model="app.showEdit"
     :maximized="$q.screen.lt.md"
     transition-show="slide-up"
     transition-hide="slide-down"
     persistent
-    @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin full-width" style="max-width: 800px">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
@@ -14,7 +13,7 @@
             color="primary"
             type="submit"
             label="Submit"
-            @click="onOKClick"
+            @click="onSubmit"
           />
           <q-btn
             v-if="user.isAdmin"
@@ -26,7 +25,7 @@
         </div>
         <div>{{ formatBytes(tmp.size) }} {{ linearDim(tmp) }}</div>
         <div>
-          <q-btn flat round dense icon="close" @click="onCancelClick" />
+          <q-btn flat round dense icon="close" @click="onCancel" />
         </div>
       </q-toolbar>
       <q-card-section>
@@ -36,7 +35,7 @@
           autocapitalize="off"
           autocomplete="off"
           spellcheck="false"
-          @submit="onOKClick"
+          @submit="onSubmit"
         >
           <div class="row q-col-gutter-md">
             <div class="col-xs-12 col-sm-4 gt-xs">
@@ -173,23 +172,21 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent } from "quasar";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { smallsized, readExif, formatBytes } from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";
 
-// eslint-disable-next-line no-undef
-defineEmits([...useDialogPluginComponent.emits]);
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent();
+const emit = defineEmits(["edit-ok"]);
+const props = defineProps({
+  rec: Object,
+});
 
 const app = useAppStore();
 const auth = useAuthStore();
 const values = computed(() => app.values);
-const current = computed(() => app.current);
-const tmp = ref({ ...current.value });
+const tmp = ref({ ...props.rec });
 const user = computed(() => auth.user);
 
 const getExif = async () => {
@@ -210,18 +207,16 @@ const linearDim = (rec) => {
   return dim.join("✕") || "";
 };
 
-onMounted(() => {
-  window.onpopstate = function () {
-    onDialogCancel();
-  };
-});
-const onCancelClick = () => {
-  if (window.history.length) window.history.back();
-  onDialogCancel();
+window.onpopstate = function () {
+  app.showEdit = false;
 };
-const onOKClick = () => {
+const onCancel = () => {
+  app.showEdit = false;
+};
+const onSubmit = () => {
   tmp.value.tags = tmp.value.tags ? tmp.value.tags : [];
   app.saveRecord(tmp.value);
-  onDialogOK();
+  emit("edit-ok", tmp.value.id);
+  app.showEdit = false;
 };
 </script>

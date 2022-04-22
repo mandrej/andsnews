@@ -24,7 +24,9 @@ export const useAppStore = defineStore("app", {
     error: null,
 
     busy: false,
-    current: {},
+    showEdit: false,
+    showConfirm: false,
+    showCarousel: false,
   }),
   getters: {
     counter: (state) => {
@@ -233,7 +235,6 @@ export const useAppStore = defineStore("app", {
       "objects",
       "pages",
       "next",
-      "current",
     ],
     // beforeRestore: (context) => {
     //   console.log("Before hydration...", context);

@@ -1,26 +1,25 @@
 <template>
   <q-dialog
-    ref="dialogRef"
+    v-model="app.showConfirm"
     transition-show="slide-down"
     transition-hide="slide-up"
     persistent
-    @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>
         <q-toolbar-title>Confirm Delete</q-toolbar-title>
       </q-toolbar>
       <q-card-section
-        >Would you like to delete {{ formatBytes(tmp.size) }} image named "{{
-          tmp.headline
+        >Would you like to delete {{ formatBytes(rec.size) }} image named "{{
+          rec.headline
         }}"?</q-card-section
       >
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
-          <q-btn color="primary" label="OK" @click="onOKClick" />
+          <q-btn color="primary" label="OK" @click="onOK" />
         </div>
         <div class="col text-right">
-          <q-btn flat label="Close" @click="onCancelClick" />
+          <q-btn flat label="Close" @click="onCancel" />
         </div>
       </q-card-actions>
     </q-card>
@@ -28,28 +27,31 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from "vue";
+import { ref } from "vue";
 import { useAppStore } from "../stores/app";
-import { useDialogPluginComponent } from "quasar";
-import { formatBytes } from "../helpers";
+import { formatBytes, notify } from "../helpers";
 
-// eslint-disable-next-line no-undef
-defineEmits([...useDialogPluginComponent.emits]);
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent();
+const emit = defineEmits(["close-confirm"]);
+const props = defineProps({
+  rec: Object,
+});
 
 const app = useAppStore();
-const tmp = computed(() => app.current);
 
-onMounted(() => {
-  window.onpopstate = function () {
-    onDialogCancel();
-  };
-});
-const onCancelClick = () => {
-  return onDialogCancel();
+window.onpopstate = function () {
+  app.showConfirm = false;
 };
-const onOKClick = () => {
-  onDialogOK();
+const onCancel = () => {
+  app.showConfirm = false;
+};
+const onOK = () => {
+  notify({
+    type: "warning",
+    message: "Please wait",
+    timeout: 0,
+    spinner: true,
+  });
+  app.deleteRecord({ ...props.rec });
+  app.showConfirm = false;
 };
 </script>
