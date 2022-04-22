@@ -40,7 +40,9 @@
           }}</router-link>
         </q-toolbar-title>
 
-        <div v-if="route.name === 'list'" ref="countRef" class="q-px-xs" />
+        <div v-if="route.name === 'list'">
+          {{ counter.more ? "+" : "" }}{{ counter.count }}
+        </div>
         <q-btn
           v-else
           flat
@@ -78,11 +80,10 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, computed, watch, ref } from "vue";
+import { defineAsyncComponent, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
-import gsap from "gsap";
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
@@ -97,9 +98,7 @@ const title = computed(() => route.meta.title || "ANDрејевићи");
 const bucketInfo = computed(() => app.bucket);
 const busy = computed(() => app.busy);
 const drawer = ref(false);
-
 const counter = computed(() => app.counter);
-const countRef = ref(null);
 
 const styling = computed(() => {
   const low = smallsized + last.value;
@@ -119,20 +118,6 @@ const dynamic = computed(() => {
     default:
       return Stat;
   }
-});
-
-watch(counter, (value, oldValue) => {
-  const div = countRef.value;
-  if (!div) return;
-  const obj = { number: oldValue.count };
-  const prefix = value.more ? "+" : "";
-  gsap.to(obj, {
-    duration: 0.8,
-    number: value.count,
-    onUpdate() {
-      div.innerText = prefix + obj.number.toFixed(0);
-    },
-  });
 });
 </script>
 
