@@ -15,6 +15,7 @@
 
 ands
 *.pyc
+__pycache__/
 
 docs/
 tests/

@@ -32,5 +32,6 @@
 
   "emmet.triggerExpansionOnTab": true,
   "svg.preview.mode": "img",
-  "svg.preview.background": "transparent"
+  "svg.preview.background": "transparent",
+  "editor.rulers": [80, 120]
 }

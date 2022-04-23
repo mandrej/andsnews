@@ -36,7 +36,6 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    if (process.env.DEV) console.log(history.state);
     const auth = useAuthStore();
     const user = auth.user;
     if (to.meta.requiresAuth && !user.isAuthorized) {
@@ -47,6 +46,9 @@ export default route(function (/* { store, ssrContext } */) {
       next();
     }
   });
+  // Router.afterEach((to, from) => {
+  //   console.log(history.state);
+  // });
   trackRouter(Router);
 
   return Router;

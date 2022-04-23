@@ -163,7 +163,7 @@ onMounted(() => {
   if (route.name !== "list") return;
   tmp.value = { ...route.query };
   queryDispatch(route.query);
-  if (process.env.DEV) console.log("onMounted ", tmp.value);
+  // if (process.env.DEV) console.log("onMounted ", tmp.value);
 });
 
 // back from carousel
@@ -172,12 +172,12 @@ const setForm = (to) => {
   if (to.name !== "list") return;
   tmp.value = { ...to.query };
   queryDispatch(to.query);
-  if (process.env.DEV) console.log("watch route ", tmp.value);
+  // if (process.env.DEV) console.log("watch route ", tmp.value);
 };
 
 const submit = () => {
   queryDispatch(tmp.value);
-  if (process.env.DEV) console.log("submit ", tmp.value);
+  // if (process.env.DEV) console.log("submit ", tmp.value);
 };
 
 const optionsYear = computed(() => {
