@@ -70,10 +70,9 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
-import Edit from "../components/Edit.vue";
 import {
   CONFIG,
   api,
@@ -82,6 +81,8 @@ import {
   formatBytes,
   notify,
 } from "../helpers";
+
+const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 
 const app = useAppStore();
 const auth = useAuthStore();

@@ -142,15 +142,16 @@
 
 <script setup>
 import { copyToClipboard, scroll, throttle } from "quasar";
-import { onMounted, computed, reactive } from "vue";
+import { defineAsyncComponent, onMounted, computed, reactive } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import { useGtag } from "vue-gtag-next";
 import Carousel from "../components/Carousel.vue";
-import Edit from "../components/Edit.vue";
-import Confirm from "../components/Confirm.vue";
+
+const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
+const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
