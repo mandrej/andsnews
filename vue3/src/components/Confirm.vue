@@ -3,6 +3,7 @@
     v-model="app.showConfirm"
     transition-show="slide-down"
     transition-hide="slide-up"
+    persistent
   >
     <q-card class="q-dialog-plugin">
       <q-toolbar class="bg-grey-2 text-black row justify-between" bordered>

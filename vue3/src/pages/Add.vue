@@ -177,7 +177,7 @@ const edit = async (rec) => {
     record.tags.push("flash");
   }
   current.obj = ref(record);
-  window.history.pushState({}, ""); // fake history
+  window.history.pushState(history.state, ""); // fake history
   app.showEdit = true;
 };
 

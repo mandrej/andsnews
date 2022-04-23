@@ -202,7 +202,7 @@ const download = (filename) => {
 
 const edit = (rec) => {
   current.obj = rec;
-  window.history.pushState({}, null, route.fullPath); // fake history
+  window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showEdit = true;
 };
 const editOk = (id) => {
@@ -215,12 +215,12 @@ const editOk = (id) => {
 };
 const confirm = (rec) => {
   current.obj = rec;
-  window.history.pushState({}, null, route.fullPath); // fake history
+  window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showConfirm = true;
 };
 const carousel = (id) => {
   current.pid = id;
-  window.history.pushState({}, null, route.fullPath); // fake history
+  window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {
