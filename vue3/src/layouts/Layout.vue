@@ -8,14 +8,22 @@
           :style="styling"
         />
         <div class="col-xs-12 col-sm-6">
-          <div class="bg-grey-3 text-black q-pa-md">
-            <div class="text-h4">
+          <div class="row bg-grey-3 text-black q-pa-md">
+            <div class="col text-h4">
               {{ title }}
               <br />
               <span class="text-body1"
                 >{{ bucketInfo.count }} photos since 2007 and counting</span
               >
             </div>
+            <q-btn
+              v-if="app.find && Object.keys(app.find).length"
+              class="col-1"
+              flat
+              round
+              icon="grid_view"
+              :to="{ name: 'list', query: app.find }"
+            />
           </div>
           <router-view />
           <div class="absolute-bottom q-pa-md text-right">{{ version }}</div>
