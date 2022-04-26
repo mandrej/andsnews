@@ -50,7 +50,12 @@
                 v-model="tmp.headline"
                 label="Headline"
                 :placeholder="CONFIG.noTitle"
-                @blur="tmp.headline = CONFIG.noTitle"
+                :hint="`Image without name is called '${CONFIG.noTitle}'. Required`"
+                @blur="
+                  tmp.headline === undefined || tmp.headline === ''
+                    ? (tmp.headline = CONFIG.noTitle)
+                    : tmp.headline
+                "
                 autofocus
               />
               <q-input v-model="tmp.filename" label="Filename" readonly />
