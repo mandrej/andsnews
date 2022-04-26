@@ -49,8 +49,9 @@
               <q-input
                 v-model="tmp.headline"
                 label="Headline"
-                :rules="[(val) => !!val || '* Required']"
-                lazy-rules
+                :placeholder="CONFIG.noTitle"
+                @blur="tmp.headline = CONFIG.noTitle"
+                autofocus
               />
               <q-input v-model="tmp.filename" label="Filename" readonly />
               <q-select
@@ -173,7 +174,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { smallsized, readExif, formatBytes } from "../helpers";
+import { CONFIG, smallsized, readExif, formatBytes } from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";

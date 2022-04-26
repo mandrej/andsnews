@@ -165,11 +165,11 @@ const submit = (formData) => {
 
 const edit = async (rec) => {
   /**
-   * Add headline 'No name', user email and tags: [] to new rec; read exif
+   * Add user email and tags: [] to new rec; read exif
    */
   const exif = await readExif(rec.filename);
   const record = Object.assign(
-    { headline: "No name", email: user.value.email, tags: [] },
+    { email: user.value.email, tags: [] },
     rec,
     exif
   );
