@@ -194,10 +194,11 @@ class Repair(object):
 
 class Fixer(object):
     """
-    Datastore add day
+    Add Lens `30mm F2.8` for SIGMA dp2 Quattro
     """
     TOKEN = None
-    QUERY = datastore_client.query(kind='Photo')
+    QUERY = datastore_client.query(kind='Photo').add_filter(
+        'model', '=', 'SIGMA dp2 Quattro')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -209,8 +210,8 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if not ent['day']:
-                ent['day'] = ent['date'].day
+            if ent['lens'] != '30mm F2.8':
+                ent['lens'] = '30mm F2.8'
                 self.COUNT += 1
                 batch.append(ent)
 
