@@ -22,7 +22,7 @@ def storage_blob(filename):
 def counters_stat():
     """
     {'year': [{'value': 2021, 'count': 1381, 'filename': 'DSC_5294-21-11-03-807.jpg', 'date': '2021-11-03 12:26'}, ...
-     'tags': [{'value': 'djordje', 'count': 1800, 'filename': 'IMG_4993.jpg', 'date': '2021-10-30 12:28'}, ... 
+     'tags': [{'value': 'djordje', 'count': 1800, 'filename': 'IMG_4993.jpg', 'date': '2021-10-30 12:28'}, ...
     """
     result = {}
     for field in CONFIG['photo_filter']:
@@ -150,7 +150,8 @@ def add(fs_):
     else:
         return {'success': True, 'rec': {
             'filename': filename,
-            'size': blob.size
+            'size': blob.size,
+            'sec': 0
         }}
 
 

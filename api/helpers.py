@@ -1,11 +1,21 @@
 import string
 import datetime
+import requests
 from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
 
 from exifread import process_file
 from .config import CONFIG
+
+
+def push_message(recipients, message=''):
+    """
+    Cloud function send
+    """
+    response = requests.post(CONFIG['message_url'], json={
+        "recipients": recipients, "message": message}, headers={'Content-Type': 'application/json'})
+    return response.content
 
 
 def serialize(ent):

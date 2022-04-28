@@ -14,8 +14,7 @@
         Drag your images here to upload, or click to browse. Accepts only jpg
         (jpeg) files less then 4 Mb in size.
       </div>
-      <div v-else-if="percentage < 1">Plase wait ...</div>
-      <div v-else-if="percentage === 1">Processing images ...</div>
+      <div v-else-if="percentage > 0">Upload in progress. Plase wait ...</div>
       <input type="file" multiple name="photos" @change="filesChange" />
       <q-linear-progress
         class="absolute-bottom"
@@ -34,34 +33,36 @@
           class="col-xs-6 col-sm-4 col-md-4 col-lg-3 col-xl-2"
         >
           <q-card class="bg-grey-2" flat>
-            <q-card-section class="justify-between" horizontal>
-              <q-avatar rounded size="72px">
-                <q-img :src="fullsized + rec.filename">
-                  <template #error>
-                    <img src="/broken.svg" />
-                  </template>
-                </q-img>
-                <q-badge floating color="primary">{{
-                  formatBytes(rec.size)
-                }}</q-badge>
-              </q-avatar>
-              <q-card-actions>
-                <q-btn
-                  flat
-                  round
-                  color="grey"
-                  icon="delete"
-                  @click="removeRecord(rec)"
-                />
-                <q-btn
-                  flat
-                  round
-                  color="grey"
-                  icon="publish"
-                  @click="edit(rec)"
-                />
-              </q-card-actions>
-            </q-card-section>
+            <q-img :src="fullsized + rec.filename" :ratio="3 / 2">
+              <template #error>
+                <img src="/broken.svg" />
+              </template>
+              <q-badge
+                floating
+                multi-line
+                class="text-right text-black"
+                color="warning"
+              >
+                {{ formatBytes(rec.size) }}<br />uploaded<br />
+                in {{ rec.sec }} sec
+              </q-badge>
+            </q-img>
+            <q-card-actions class="q-py-sm justify-between">
+              <q-btn
+                flat
+                round
+                color="grey"
+                icon="delete"
+                @click="removeRecord(rec)"
+              />
+              <q-btn
+                flat
+                round
+                color="grey"
+                icon="publish"
+                @click="edit(rec)"
+              />
+            </q-card-actions>
           </q-card>
         </div>
       </transition-group>
@@ -87,6 +88,7 @@ const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 const app = useAppStore();
 const auth = useAuthStore();
 const user = computed(() => auth.user);
+// const fcm_token = computed(() => auth.fcm_token);
 const files = ref(null);
 const current = reactive({ obj: null });
 
@@ -111,7 +113,7 @@ const filesChange = (evt) => {
       type: "image/jpeg"
    */
   const fileList = evt.target.files;
-  const fieldName = evt.target.name;
+  const fieldName = evt.target.name; // photos
   if (!fileList.length) return;
   const formData = new FormData();
   let i = 0;
@@ -128,10 +130,16 @@ const filesChange = (evt) => {
       i++;
     }
   });
-  if (i > 0) submit(formData);
+  if (i > 0) {
+    // formData.append("token", fcm_token.value);
+    submit(formData);
+  }
 };
 
 const submit = (formData) => {
+  // for (var pair of formData.entries()) {
+  //   console.log(pair[0] + ", " + pair[1]);
+  // }
   api
     .post("add", formData, {
       headers: { "Content-Type": "multipart/form-data" },

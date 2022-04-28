@@ -2,7 +2,7 @@ from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from api import cloud, photo
-from api.helpers import get_exif, latinize
+from api.helpers import get_exif, latinize, push_message, Timer
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -121,9 +121,12 @@ def registrations():
 def add():
     """ ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ...]) """
     response_list = []
+    # token = request.form.get('token')
     files = request.files.getlist('photos')
     for fs_ in files:
-        response = photo.add(fs_)
+        with Timer() as t:
+            response = photo.add(fs_)
+        response['rec']['sec'] = round(t.elapsed/1000, 1)
         response_list.append(response)
     return jsonify(response_list)
 
@@ -186,7 +189,7 @@ def push():
     assert json_ is not None, 'Cannot get token'
     recipients = json_['recipients']
     message = json_['message']
-    return cloud.push_message(recipients, message)
+    return push_message(recipients, message)
 
 
 if __name__ == '__main__':

@@ -1,16 +1,9 @@
 import datetime
-import requests
 import collections
 from google.cloud import datastore
 from .photo import datastore, datastore_client, storage_client, BUCKET
-from .helpers import serialize, tokenize
+from .helpers import serialize, tokenize, push_message
 from .config import CONFIG
-
-
-def push_message(recipients, message=''):
-    response = requests.post(CONFIG['message_url'], json={
-        "recipients": recipients, "message": message}, headers={'Content-Type': 'application/json'})
-    return response.content
 
 
 def login_user(data):
