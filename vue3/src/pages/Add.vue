@@ -37,14 +37,8 @@
               <template #error>
                 <img src="/broken.svg" />
               </template>
-              <q-badge
-                floating
-                multi-line
-                class="text-right text-black"
-                color="warning"
-              >
-                {{ formatBytes(rec.size) }}<br />uploaded<br />
-                in {{ rec.sec }} sec
+              <q-badge floating class="text-black" color="warning">
+                {{ formatBytes(rec.size) }}
               </q-badge>
             </q-img>
             <q-card-actions class="q-py-sm justify-between">

@@ -150,8 +150,7 @@ def add(fs_):
     else:
         return {'success': True, 'rec': {
             'filename': filename,
-            'size': blob.size,
-            'sec': 0
+            'size': blob.size
         }}
 
 

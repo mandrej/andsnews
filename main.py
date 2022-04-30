@@ -1,8 +1,9 @@
+import os
 from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from api import cloud, photo
-from api.helpers import get_exif, latinize, push_message, Timer
+from api.helpers import get_exif, latinize, push_message
 from api.config import CONFIG
 
 app = Flask(__name__)
@@ -124,9 +125,7 @@ def add():
     # token = request.form.get('token')
     files = request.files.getlist('photos')
     for fs_ in files:
-        with Timer() as t:
-            response = photo.add(fs_)
-        response['rec']['sec'] = round(t.elapsed/1000, 1)
+        response = photo.add(fs_)
         response_list.append(response)
     return jsonify(response_list)
 
