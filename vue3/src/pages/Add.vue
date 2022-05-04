@@ -6,23 +6,31 @@
       class="rounded-borders relative-position bg-grey-2 column justify-center items-center"
       style="height: 150px"
     >
-      <div
-        v-if="percentage === 0"
-        class="text-body1 text-center"
-        style="width: 70%"
-      >
+      <div v-if="progressInfos.length > 0">
+        Upload in progress. Plase wait ...
+      </div>
+      <div v-else class="text-body1 text-center" style="width: 70%">
         Drag your images here to upload, or click to browse. Accepts only jpg
         (jpeg) files less then 4 Mb in size.
       </div>
-      <div v-else-if="percentage > 0">Upload in progress. Plase wait ...</div>
-      <input type="file" multiple name="photos" @change="filesChange" />
-      <q-linear-progress
-        class="absolute-bottom"
-        size="10px"
-        :value="percentage"
-        :indeterminate="percentage === 1"
-        color="warning"
+      <input
+        type="file"
+        multiple
+        name="photos"
+        @change="filesChange"
+        :disabled="inProgress"
       />
+      <div class="row absolute-bottom">
+        <q-linear-progress
+          v-for="(progress, index) in progressInfos"
+          :key="index"
+          size="10px"
+          :value="progress"
+          :indeterminate="progress === 1"
+          color="warning"
+          :style="{ width: 100 / progressInfos.length + '%' }"
+        />
+      </div>
     </div>
 
     <div class="q-mt-md">
@@ -83,21 +91,12 @@ const app = useAppStore();
 const auth = useAuthStore();
 const user = computed(() => auth.user);
 // const fcm_token = computed(() => auth.fcm_token);
-const files = ref(null);
 const current = reactive({ obj: null });
+let files = reactive([]);
 
 const uploaded = computed(() => app.uploaded);
-const percentage = computed({
-  get() {
-    return app.percentage;
-  },
-  set(newValue) {
-    app.percentage = newValue;
-  },
-});
-const progress = (evt) => {
-  percentage.value = evt.loaded / evt.total;
-};
+const inProgress = ref(false);
+let progressInfos = reactive([]);
 
 const filesChange = (evt) => {
   /**
@@ -106,11 +105,11 @@ const filesChange = (evt) => {
       size: 1858651
       type: "image/jpeg"
    */
-  const fileList = evt.target.files;
-  const fieldName = evt.target.name; // photos
+  let fileList = evt.target.files;
+  let fieldName = evt.target.name; // photos
   if (!fileList.length) return;
-  const formData = new FormData();
-  let i = 0;
+
+  inProgress.value = true;
   Array.from(fileList).map((file) => {
     if (file.type !== CONFIG.fileType) {
       notify({
@@ -120,49 +119,55 @@ const filesChange = (evt) => {
     } else if (file.size > CONFIG.fileSize) {
       notify({ type: "warning", message: `${file.name} is too big` });
     } else {
-      formData.append(fieldName, file, file.name);
-      i++;
+      files.push(file);
     }
   });
-  if (i > 0) {
-    // formData.append("token", fcm_token.value);
-    submit(formData);
-  }
+
+  upload(fieldName, files);
 };
 
-const submit = (formData) => {
-  // for (var pair of formData.entries()) {
-  //   console.log(pair[0] + ", " + pair[1]);
-  // }
-  api
-    .post("add", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      onUploadProgress: progress,
-    })
-    .then((x) => x.data) // list
-    .then((x) =>
-      x.map((item) => {
-        if (item.success) {
-          app.uploaded.push(item.rec);
-        } else {
-          notify({
-            type: "negative",
-            message: `${item.rec.filename} failed to upload`,
-          });
-        }
-      })
-    )
-    .then(() => {
-      files.value = null;
-      percentage.value = 0;
-    })
-    .catch((err) => {
-      files.value = null;
-      percentage.value = 0;
-      if (err.code === "ECONNABORTED") {
-        notify({ type: "negative", message: "Timeout error" });
-      }
-    });
+const upload = async (name, batch) => {
+  let formData;
+  // formData.append("token", fcm_token.value);
+
+  let promises = [];
+  for (let i = 0; i < batch.length; i++) {
+    formData = new FormData();
+    formData.append(name, batch[i]);
+    progressInfos[i] = 0;
+
+    promises.push(
+      api
+        .post("add", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (evt) => {
+            progressInfos[i] = evt.loaded / evt.total;
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            app.uploaded.push(res.data.rec);
+          } else {
+            notify({
+              type: "negative",
+              message: `${res.data.rec.filename} failed to upload`,
+            });
+          }
+        })
+        .catch((err) => {
+          notify({ type: "negative", message: err.message });
+        })
+        .finally(() => {
+          progressInfos[i] = 0;
+          files.splice(i, 1);
+        })
+    );
+  }
+
+  const result = await Promise.allSettled(promises).finally(() => {
+    inProgress.value = false;
+  });
+  console.log(result.map((promise) => promise.status));
 };
 
 const edit = async (rec) => {
@@ -195,5 +200,9 @@ input {
   height: inherit;
   position: absolute;
   cursor: pointer;
+}
+.disabled,
+[disabled] {
+  opacity: 0 !important;
 }
 </style>

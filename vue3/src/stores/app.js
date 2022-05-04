@@ -9,7 +9,6 @@ export const useAppStore = defineStore("app", {
     find: {},
 
     uploaded: [],
-    percentage: 0,
 
     last: null,
     bucket: {
@@ -185,7 +184,7 @@ export const useAppStore = defineStore("app", {
           this.busy = false;
         })
         .catch((err) => {
-          notify({ type: "negative", message: `${err}` });
+          notify({ type: "negative", message: err.message });
           this.busy = false;
         });
     },

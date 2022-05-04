@@ -121,13 +121,11 @@ def registrations():
 @app.route('/api/add', methods=['POST'])
 def add():
     """ ImmutableMultiDict([('photos', <FileStorage: u'selo.jpg' ('image/jpeg')>), ...]) """
-    response_list = []
     # token = request.form.get('token')
-    files = request.files.getlist('photos')
-    for fs_ in files:
-        response = photo.add(fs_)
-        response_list.append(response)
-    return jsonify(response_list)
+    # files = request.files.getlist('photos')
+    file = request.files.get('photos')
+    response = photo.add(file)
+    return jsonify(response)
 
 
 @app.route('/api/edit', defaults={'id_': None}, methods=['PUT'])

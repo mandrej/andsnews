@@ -19,9 +19,13 @@ if [ $# -eq 0 ]
 else
   case $1 in
     run)
+      # python2 ~/google-cloud-sdk/platform/google_appengine/dev_appserver.py \
+      # --runtime_python_path=/home/milan/venv/andsnews/bin/python3 \
+      # --storage_path=/home/milan/tmp \
+      # --application=andsnews --port=6060 app.yaml
       source $venv_dir/bin/activate
-      # gunicorn -b :6060 -w 2 main:app --reload --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
       python main.py
+      # gunicorn -b :6060 -w 2 main:app --reload --access-logfile='-' --access-logformat='%(r)s %(s)s %(b)s %(f)s'
       # cd vue3/
       # quasar dev -m pwa
       # cd ..

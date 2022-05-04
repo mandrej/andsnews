@@ -4,7 +4,7 @@ import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { date, format } from "quasar";
 
-const api = axios.create({ baseURL: "/api", timeout: 60000 }); // 60 sec
+const api = axios.create({ baseURL: "/api", timeout: 60000 }); // GAE timeout 60 sec
 const firebase = initializeApp(CONFIG.firebase);
 const { humanStorageSize } = format;
 const { formatDate } = date;
@@ -77,9 +77,7 @@ const readExif = (filename) => {
       })
       .catch((err) => {
         reject(err);
-        if (err.code === "ECONNABORTED") {
-          notify({ type: "negative", message: "Timeout error" });
-        }
+        notify({ type: "negative", message: err.message });
       });
   });
 };
