@@ -149,8 +149,8 @@ const upload = async (name, batch) => {
 
   const results = await Promise.all(promises);
   results.map((result, i) => {
-    if (result && result.data.success) {
-      app.uploaded.push(result.data.rec);
+    if (result && result.status === 200) {
+      app.uploaded.push(result.data);
     }
     progressInfos[i] = 0;
   });

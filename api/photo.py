@@ -146,12 +146,12 @@ def add(fs_):
         blob.cache_control = CONFIG['cache_control']
         blob.patch()
     except GoogleCloudError as e:
-        return {'success': False, 'message': e.message}
+        pass  # return e.message
     else:
-        return {'success': True, 'rec': {
+        return {
             'filename': filename,
             'size': blob.size
-        }}
+        }
 
 
 def merge(obj, json):
