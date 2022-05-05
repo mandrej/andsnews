@@ -26,10 +26,9 @@
           :key="index"
           size="10px"
           :value="progress"
-          :indeterminate="progress === 1"
-          stripe
           color="warning"
           :style="{ width: 100 / progressInfos.length + '%' }"
+          stripe
         />
       </div>
     </div>
@@ -150,8 +149,8 @@ const upload = async (name, batch) => {
 
   const results = await Promise.all(promises);
   results.map((result, i) => {
-    if (result.status === 200) {
-      app.uploaded.push(result.data);
+    if (result && result.data.success) {
+      app.uploaded.push(result.data.rec);
     }
     progressInfos[i] = 0;
   });
