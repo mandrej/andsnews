@@ -148,10 +148,10 @@ def add(fs_):
     except GoogleCloudError as e:
         return {'success': False, 'message': e.message}
     else:
-        return {'success': True, 'rec': {
+        return {
             'filename': filename,
             'size': blob.size
-        }}
+        }
 
 
 def merge(obj, json):

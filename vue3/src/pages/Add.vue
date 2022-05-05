@@ -27,6 +27,7 @@
           size="10px"
           :value="progress"
           :indeterminate="progress === 1"
+          stripe
           color="warning"
           :style="{ width: 100 / progressInfos.length + '%' }"
         />
@@ -109,7 +110,6 @@ const filesChange = (evt) => {
   let fieldName = evt.target.name; // photos
   if (!fileList.length) return;
 
-  inProgress.value = true;
   Array.from(fileList).map((file) => {
     if (file.type !== CONFIG.fileType) {
       notify({
@@ -123,49 +123,42 @@ const filesChange = (evt) => {
     }
   });
 
-  for (let i = 0; i < files.length; i++) {
-    upload(i, fieldName, files[i]);
-  }
-
-  // setTimeout(() => {
-  //   files = [];
-  //   progressInfos = [];
-  //   inProgress.value = false;
-  // }, 60000);
+  upload(fieldName, files);
 };
 
-const upload = async (idx, name, file) => {
-  const formData = new FormData();
-  formData.append(name, file);
-  // formData.append("token", fcm_token.value);
-  progressInfos[idx] = 0;
+const upload = async (name, batch) => {
+  const promises = [];
+  inProgress.value = true;
 
-  api
-    .post("add", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      onUploadProgress: (evt) => {
-        progressInfos[idx] = evt.loaded / evt.total;
-      },
-    })
-    .then((res) => {
-      // progressInfos[idx] = 0;
-      if (res.data.success) {
-        app.uploaded.push(res.data.rec);
-      } else {
-        notify({
-          type: "negative",
-          message: `${res.data.rec.filename} failed to upload`,
-        });
-      }
-      progressInfos.splice(idx, 1);
-      files.splice(idx, 1);
-    })
-    .catch((err) => {
-      progressInfos.splice(idx, 1);
-      files.splice(idx, 1);
-      notify({ type: "negative", message: err.message });
-    })
-    .finally(() => {});
+  for (let i = 0; i < batch.length; i++) {
+    let formData = new FormData();
+    formData.append(name, batch[i]);
+    // formData.append("token", fcm_token.value);
+    progressInfos[i] = 0;
+    const result = api
+      .post("add", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (evt) => {
+          progressInfos[i] = evt.loaded / evt.total;
+        },
+      })
+      .catch((err) => {
+        notify({ type: "negative", message: err.message });
+      });
+    promises.push(result);
+  }
+
+  const results = await Promise.all(promises);
+  results.map((result, i) => {
+    if (result.status === 200) {
+      app.uploaded.push(result.data);
+    }
+    progressInfos[i] = 0;
+  });
+
+  files.length = 0;
+  progressInfos.length = 0;
+  inProgress.value = false;
 };
 
 const edit = async (rec) => {
