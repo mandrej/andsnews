@@ -15,6 +15,7 @@ const notify = (options) => {
    */
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
   let { type, message, timeout, spinner, group, position } = options;
+  if (!message) return;
   if (
     message.startsWith(CONFIG.start_message) ||
     message.startsWith(CONFIG.end_message)

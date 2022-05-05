@@ -91,12 +91,12 @@ const app = useAppStore();
 const auth = useAuthStore();
 const user = computed(() => auth.user);
 // const fcm_token = computed(() => auth.fcm_token);
-const current = reactive({ obj: null });
 let files = reactive([]);
+let progressInfos = reactive([]);
+const inProgress = ref(false);
 
 const uploaded = computed(() => app.uploaded);
-const inProgress = ref(false);
-let progressInfos = reactive([]);
+const current = reactive({ obj: null });
 
 const filesChange = (evt) => {
   /**
@@ -123,51 +123,49 @@ const filesChange = (evt) => {
     }
   });
 
-  upload(fieldName, files);
-};
-
-const upload = async (name, batch) => {
-  let formData;
-  // formData.append("token", fcm_token.value);
-
-  let promises = [];
-  for (let i = 0; i < batch.length; i++) {
-    formData = new FormData();
-    formData.append(name, batch[i]);
-    progressInfos[i] = 0;
-
-    promises.push(
-      api
-        .post("add", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: (evt) => {
-            progressInfos[i] = evt.loaded / evt.total;
-          },
-        })
-        .then((res) => {
-          if (res.data.success) {
-            app.uploaded.push(res.data.rec);
-          } else {
-            notify({
-              type: "negative",
-              message: `${res.data.rec.filename} failed to upload`,
-            });
-          }
-        })
-        .catch((err) => {
-          notify({ type: "negative", message: err.message });
-        })
-        .finally(() => {
-          progressInfos[i] = 0;
-          files.splice(i, 1);
-        })
-    );
+  for (let i = 0; i < files.length; i++) {
+    upload(i, fieldName, files[i]);
   }
 
-  const result = await Promise.allSettled(promises).finally(() => {
-    inProgress.value = false;
-  });
-  console.log(result.map((promise) => promise.status));
+  // setTimeout(() => {
+  //   files = [];
+  //   progressInfos = [];
+  //   inProgress.value = false;
+  // }, 60000);
+};
+
+const upload = async (idx, name, file) => {
+  const formData = new FormData();
+  formData.append(name, file);
+  // formData.append("token", fcm_token.value);
+  progressInfos[idx] = 0;
+
+  api
+    .post("add", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress: (evt) => {
+        progressInfos[idx] = evt.loaded / evt.total;
+      },
+    })
+    .then((res) => {
+      // progressInfos[idx] = 0;
+      if (res.data.success) {
+        app.uploaded.push(res.data.rec);
+      } else {
+        notify({
+          type: "negative",
+          message: `${res.data.rec.filename} failed to upload`,
+        });
+      }
+      progressInfos.splice(idx, 1);
+      files.splice(idx, 1);
+    })
+    .catch((err) => {
+      progressInfos.splice(idx, 1);
+      files.splice(idx, 1);
+      notify({ type: "negative", message: err.message });
+    })
+    .finally(() => {});
 };
 
 const edit = async (rec) => {
