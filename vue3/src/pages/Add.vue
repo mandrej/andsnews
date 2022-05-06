@@ -122,6 +122,13 @@ const filesChange = (evt) => {
     }
   });
 
+  if (files.length > CONFIG.fileMax) {
+    notify({
+      type: "warning",
+      message: `Max ${CONFIG.fileMax} files allowed at the time`,
+    });
+    files.splice(CONFIG.fileMax);
+  }
   upload(fieldName, files);
 };
 
