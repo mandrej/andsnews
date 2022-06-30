@@ -33,16 +33,21 @@
         </q-item-section>
       </q-item>
       <q-item-label header
-        >Fix on {{ formatDatum("2022-04-27", "DD.MM.YYYY") }}</q-item-label
+        >Fix on {{ formatDatum("2022-06-29", "DD.MM.YYYY") }}</q-item-label
       >
       <q-item>
         <q-item-section>
           <q-item-label
-            >Add Lens `30mm F2.8` for SIGMA dp2 Quattro</q-item-label
+            >No need for photo width, height. Remove dim property</q-item-label
           >
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="true" color="primary" label="Fix" @click="fix" />
+          <q-btn
+            :disabled="!fcm_token"
+            color="primary"
+            label="Fix"
+            @click="fix"
+          />
         </q-item-section>
       </q-item>
       <q-item-label header>Cloud storage related</q-item-label>

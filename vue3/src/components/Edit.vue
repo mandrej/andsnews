@@ -23,7 +23,7 @@
             @click="getExif"
           />
         </div>
-        <div>{{ formatBytes(tmp.size) }} {{ linearDim(tmp) }}</div>
+        <div>{{ formatBytes(tmp.size) }}</div>
         <div>
           <q-btn flat round dense icon="close" @click="onCancel" />
         </div>
@@ -206,11 +206,6 @@ const getExif = async () => {
     tags.push("flash");
   }
   tmp.value.tags = tags;
-};
-
-const linearDim = (rec) => {
-  const dim = rec.dim || [];
-  return dim.join("✕") || "";
 };
 
 window.onpopstate = function () {

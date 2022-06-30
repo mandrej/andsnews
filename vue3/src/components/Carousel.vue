@@ -19,6 +19,7 @@
       :modules="modules"
       @swiper="onSwiper"
       @slide-change="onSlideChange"
+      @lazy-image-ready="onImgReady"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div
@@ -38,10 +39,7 @@
             @click="onCancel"
           />
         </div>
-        <div
-          class="swiper-zoom-container"
-          :data-swiper-zoom="zoomRatio(obj.dim)"
-        >
+        <div class="swiper-zoom-container">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
           <div class="swiper-lazy-preloader" />
         </div>
@@ -70,13 +68,11 @@ const props = defineProps({
 const app = useAppStore();
 const route = useRoute();
 const objects = computed(() => app.objects);
-const swiperRef = ref(null);
 const hash = ref(null);
 
 const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
-  swiperRef.value = sw;
   const index = objects.value.findIndex((x) => x.id === props.pid);
   if (index === -1) {
     notify({ type: "negative", message: `${props.pid} couldn't be found` });
@@ -93,13 +89,15 @@ const onSlideChange = (sw) => {
     route.fullPath + "#" + hash.value
   );
 };
-const zoomRatio = (dim) => {
-  if (swiperRef.value && dim) {
-    const wRatio = dim[0] / swiperRef.value.width;
-    const hRatio = dim[1] / swiperRef.value.height;
-    return Math.max(wRatio, hRatio, 1);
-  }
-  return 2;
+const onImgReady = (sw, slideEl, imageEl) => {
+  const img = new Image();
+  img.src = imageEl.src;
+
+  const container = slideEl.querySelector(".swiper-zoom-container");
+  const wRatio = img.width / sw.width;
+  const hRatio = img.height / sw.height;
+  const zoom = Math.max(wRatio, hRatio, 1);
+  container.setAttribute("data-swiper-zoom", zoom);
 };
 const caption = (rec) => {
   const { aperture, shutter, iso, model, lens } = rec;

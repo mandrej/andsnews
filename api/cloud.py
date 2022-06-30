@@ -1,6 +1,7 @@
 import datetime
 import collections
 from google.cloud import datastore
+
 from .photo import datastore, datastore_client, storage_client, BUCKET
 from .helpers import serialize, tokenize, push_message
 from .config import CONFIG
@@ -187,11 +188,11 @@ class Repair(object):
 
 class Fixer(object):
     """
-    Add Lens `30mm F2.8` for SIGMA dp2 Quattro
+    No need for photo width, height. Remove dim property
     """
     TOKEN = None
-    QUERY = datastore_client.query(kind='Photo').add_filter(
-        'model', '=', 'SIGMA dp2 Quattro')
+    QUERY = datastore_client.query(kind='Photo')
+    # .add_filter('model', '=', 'SIGMA dp2 Quattro')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -203,8 +204,8 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if ent['lens'] != '30mm F2.8':
-                ent['lens'] = '30mm F2.8'
+            if ent['dim']:
+                del ent['dim']
                 self.COUNT += 1
                 batch.append(ent)
 

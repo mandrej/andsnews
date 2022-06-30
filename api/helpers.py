@@ -104,6 +104,13 @@ def get_exif(buff):
     }
     tags = process_file(BytesIO(buff), details=False)
 
+    # for k, v in tags.items():
+    #     try:
+    #         print(k, '\t', v.printable)
+    #     except AttributeError:
+    #         pass
+    # print('--------------------------------------------------------')
+
     model = tags['Image Model'].printable.replace(
         '/', '') if 'Image Model' in tags else None
     make = tags['Image Make'].printable.replace(
@@ -142,10 +149,11 @@ def get_exif(buff):
         # Flash fired, compulsory flash mode, return light detected / Flash did not fire
         data['flash'] = tags['EXIF Flash'].printable.find('Flash fired') >= 0
 
-    width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
-    length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
-    if width and length:
-        data['dim'] = [int(x) for x in [width, length]]
+    # TODO LightRoom NO data
+    # width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
+    # length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
+    # if width and length:
+    #     data['dim'] = [int(x) for x in [width, length]]
 
     gps_latitude = tags.get('GPS GPSLatitude', None)
     gps_latitude_ref = tags.get('GPS GPSLatitudeRef', None)
@@ -162,12 +170,6 @@ def get_exif(buff):
 
         data['loc'] = [round(x, 5) for x in [lat, lon]]
         # 'https://www.google.com/maps/search/?api=1&query={},{}'.fromat(lat, lon)
-
-    # for k, v in tags.items():
-    #     try:
-    #         print(k, '\t', v.printable)
-    #     except AttributeError:
-    #         pass
 
     return data
 
