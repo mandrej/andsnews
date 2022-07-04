@@ -42,12 +42,7 @@
           >
         </q-item-section>
         <q-item-section side>
-          <q-btn
-            :disabled="!fcm_token"
-            color="primary"
-            label="Fix"
-            @click="fix"
-          />
+          <q-btn :disabled="true" color="primary" label="Fix" @click="fix" />
         </q-item-section>
       </q-item>
       <q-item-label header>Cloud storage related</q-item-label>
@@ -95,6 +90,7 @@ const fcm_token = computed(() => auth.fcm_token);
 const message = ref("NEW IMAGES");
 
 const callApi = (url) => {
+  // TODO timeout 60s
   api.post(url, { token: fcm_token.value }).then((x) => x.data);
 };
 const values = computed(() => app.values);

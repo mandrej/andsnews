@@ -204,7 +204,7 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if ent['dim']:
+            if 'dim' in ent:
                 del ent['dim']
                 self.COUNT += 1
                 batch.append(ent)

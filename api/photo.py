@@ -166,15 +166,17 @@ def merge(obj, json):
     obj['year'] = obj['date'].year
     obj['month'] = obj['date'].month
     obj['day'] = obj['date'].day
-    loc = obj.get('loc', None)
+    loc = 'loc' in obj and obj['loc']
     if loc:
         if isinstance(loc, str):
             if loc.strip() == '':
-                obj['loc'] = None
+                del obj['loc']
             else:
                 obj['loc'] = [round(float(x), 5) for x in loc.split(',')]
         elif isinstance(loc, list):
             obj['loc'] = [round(float(x), 5) for x in loc]
+    else:
+        del obj['loc']
     return obj
 
 
