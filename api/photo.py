@@ -166,8 +166,8 @@ def merge(obj, json):
     obj['year'] = obj['date'].year
     obj['month'] = obj['date'].month
     obj['day'] = obj['date'].day
-    loc = 'loc' in obj and obj['loc']
-    if loc:
+    if 'loc' in obj:
+        loc = obj['loc']
         if isinstance(loc, str):
             if loc.strip() == '':
                 del obj['loc']
@@ -175,8 +175,9 @@ def merge(obj, json):
                 obj['loc'] = [round(float(x), 5) for x in loc.split(',')]
         elif isinstance(loc, list):
             obj['loc'] = [round(float(x), 5) for x in loc]
-    else:
-        del obj['loc']
+        else:
+            del obj['loc']
+
     return obj
 
 
