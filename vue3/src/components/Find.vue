@@ -7,6 +7,7 @@
       clear-icon="clear"
       clearable
       @keyup.enter="submit"
+      dark
     />
     <Complete
       v-model="tmp.tags"
@@ -14,6 +15,8 @@
       multiple
       label="by tags"
       :disable="busy"
+      behavior="menu"
+      dark
       @update:model-value="
         (newValue) => {
           tmp.tags = newValue;
@@ -28,6 +31,8 @@
       autocomplete="label"
       label="by year"
       :disable="busy"
+      behavior="menu"
+      dark
       @update:model-value="
         (newValue) => {
           tmp.year = newValue;
@@ -43,6 +48,8 @@
         autocomplete="label"
         label="by month"
         :disable="busy"
+        behavior="menu"
+        dark
         @update:model-value="
           (newValue) => {
             tmp.month = newValue;
@@ -58,6 +65,8 @@
         autocomplete="label"
         label="by day"
         :disable="busy"
+        behavior="menu"
+        dark
         @update:model-value="
           (newValue) => {
             tmp.day = newValue;
@@ -71,6 +80,8 @@
       :options="values.model"
       label="by model"
       :disable="busy"
+      behavior="menu"
+      dark
       @update:model-value="
         (newValue) => {
           tmp.model = newValue;
@@ -83,6 +94,8 @@
       :options="values.lens"
       label="by lens"
       :disable="busy"
+      behavior="menu"
+      dark
       @update:model-value="
         (newValue) => {
           tmp.lens = newValue;
@@ -95,6 +108,8 @@
       :options="nickNames"
       label="by author"
       :disable="busy"
+      behavior="menu"
+      dark
       @update:model-value="
         (newValue) => {
           tmp.nick = newValue;

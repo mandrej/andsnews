@@ -8,7 +8,7 @@
           :style="styling"
         />
         <div class="col-xs-12 col-sm-6">
-          <div class="row bg-grey-3 text-black q-pa-md">
+          <div class="row bg-grey-10 text-white q-pa-md">
             <div class="col text-h4">
               {{ title }}
               <br />
@@ -33,7 +33,7 @@
   </q-layout>
   <q-layout v-else view="hHh Lpr lFf">
     <q-header class="bg-grey-3 fixed-top">
-      <q-toolbar class="text-black">
+      <q-toolbar class="bg-grey text-black">
         <q-btn
           flat
           dense
@@ -73,6 +73,7 @@
       class="column no-wrap"
       :width="320"
       show-if-above
+      dark
     >
       <keep-alive>
         <component :is="dynamic" />

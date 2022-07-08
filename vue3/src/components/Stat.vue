@@ -1,11 +1,22 @@
 <template>
-  <q-list class="q-py-sm">
-    <q-item v-for="item in list" :key="item.text" clickable>
+  <q-list class="q-py-md">
+    <q-item>
       <q-item-section>
-        <q-item-label class="text-h5 text-weight-light">{{
-          item.value
-        }}</q-item-label>
-        <q-item-label class="text-body2">{{ item.text }}</q-item-label>
+        <q-item-label class="text-white" overline>SITE STATISTICS</q-item-label>
+        <q-item-label>https://ands.appspot.com/</q-item-label>
+      </q-item-section>
+    </q-item>
+    <q-item
+      v-for="item in list"
+      :key="item.value"
+      class="text-h6 text-white text-weight-light"
+      clickable
+    >
+      <q-item-section>
+        {{ item.value }}
+      </q-item-section>
+      <q-item-section side>
+        {{ item.text }}
       </q-item-section>
     </q-item>
   </q-list>
@@ -21,32 +32,32 @@ const values = computed(() => app.values);
 const bucket = computed(() => app.bucket);
 const list = [
   {
+    text: "storage",
     value: formatBytes(bucket.value.size),
-    text: "storage size",
   },
   {
-    value: bucket.value.count,
     text: "photographs",
+    value: bucket.value.count,
   },
   {
-    value: values.value.year.length,
     text: "years",
+    value: values.value.year.length,
   },
   {
-    value: values.value.tags.length,
     text: "tags",
+    value: values.value.tags.length,
   },
   {
-    value: values.value.model.length,
     text: "cameras",
+    value: values.value.model.length,
   },
   {
-    value: values.value.lens.length,
     text: "lenses",
+    value: values.value.lens.length,
   },
   {
-    value: values.value.email.length,
     text: "authors",
+    value: values.value.email.length,
   },
 ];
 </script>

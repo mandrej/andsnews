@@ -1,5 +1,5 @@
 <template>
-  <q-list>
+  <q-list dark>
     <q-item clickable @click="auth.signIn">
       <q-item-section avatar>
         <q-icon name="person" />
