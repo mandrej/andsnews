@@ -3,7 +3,6 @@
     <q-item>
       <q-item-section>
         <q-item-label class="text-white" overline>SITE STATISTICS</q-item-label>
-        <q-item-label>https://ands.appspot.com/</q-item-label>
       </q-item-section>
     </q-item>
     <q-item

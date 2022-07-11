@@ -28,6 +28,7 @@
         >
           <div class="q-mr-xl text-white text-center ellipsis">
             {{ obj.headline }}
+            <span v-if="$q.screen.gt.sm">{{ dimension[obj.filename] }}</span>
             <br />
             {{ caption(obj) }}
           </div>
@@ -49,7 +50,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { useQuasar } from "quasar";
+import { computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
 import { fullsized, notify } from "../helpers";
@@ -65,10 +67,12 @@ const props = defineProps({
   pid: Number,
 });
 
+const $q = useQuasar();
 const app = useAppStore();
 const route = useRoute();
 const objects = computed(() => app.objects);
 const hash = ref(null);
+const dimension = reactive({});
 
 const modules = [Lazy, Zoom, Keyboard];
 
@@ -96,8 +100,9 @@ const onImgReady = (sw, slideEl, imageEl) => {
   const container = slideEl.querySelector(".swiper-zoom-container");
   const wRatio = img.width / sw.width;
   const hRatio = img.height / sw.height;
-  const zoom = Math.max(wRatio, hRatio, 1);
-  container.setAttribute("data-swiper-zoom", zoom);
+  const filename = img.src.replace(fullsized, "");
+  container.dataset.swiperZoom = Math.max(wRatio, hRatio, 1);
+  dimension[filename] = img.width + "x" + img.height;
 };
 const caption = (rec) => {
   const { aperture, shutter, iso, model, lens } = rec;
@@ -105,8 +110,10 @@ const caption = (rec) => {
   tmp += aperture ? " f" + aperture : "";
   tmp += shutter ? " " + shutter + "s" : "";
   tmp += iso ? " " + iso + " ASA" : "";
-  tmp += model ? " " + model : "";
-  tmp += lens ? " " + lens : "";
+  if ($q.screen.gt.sm) {
+    tmp += model ? " " + model : "";
+    tmp += lens ? " " + lens : "";
+  }
   return tmp;
 };
 
