@@ -37,7 +37,7 @@ else
       cd ..
       exit ;;
     build)
-      sed -i -E "/VUE_APP_VERSION/s/[[:digit:]]{12}/$version/g" vue3/.env
+      sed -i -E "/ANDS_VERSION/s/[[:digit:]]{12}/$version/g" vue3/.env
       cd vue3/
       quasar build -m pwa
       cd ..

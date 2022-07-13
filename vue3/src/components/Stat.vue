@@ -8,7 +8,7 @@
     <q-item
       v-for="item in list"
       :key="item.value"
-      class="text-h6 text-white text-weight-light"
+      class="text-h6 text-warning text-weight-light"
       clickable
     >
       <q-item-section>
