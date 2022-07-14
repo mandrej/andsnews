@@ -120,6 +120,7 @@
                 multiple
                 label="Tags"
                 @update:model-value="(newValue) => (tmp.tags = newValue)"
+                @new-value="addNewValue"
               />
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -208,6 +209,13 @@ const getExif = async () => {
     tags.push("flash");
   }
   tmp.value.tags = tags;
+};
+const addNewValue = (inputValue) => {
+  doneFn(inputValue);
+};
+const doneFn = (item) => {
+  tmp.value.tags.push(item);
+  app.values.tags.push(item);
 };
 
 window.onpopstate = function () {

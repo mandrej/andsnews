@@ -27,40 +27,55 @@ const props = defineProps({
   model: {
     type: [String, Number, Array],
     required: false,
-    default: '',
+    default: "",
   },
   options: { type: Array, required: true },
   // tagging
   multiple: { type: Boolean, default: false },
-  canadd: { type: Boolean, default: false, },
+  canadd: { type: Boolean, default: false },
   // label and value
   autocomplete: {
     type: String, // 'label'
-    default: ''
+    default: "",
   },
   disable: { type: Boolean, default: false },
   label: { type: String, required: true },
-})
+});
 
-const model = ref(props.model)
-const options = ref(props.options)
-const field = ref(props.autocomplete) // label
-const debounce = 300
+const model = ref(props.model);
+const options = ref(props.options);
+const field = ref(props.autocomplete); // label
+const debounce = 300;
 
 function filter(val, update) {
-  if (val === '') {
+  if (val === "") {
     update(() => {
-      options.value = props.options
-    })
-    return
+      options.value = props.options;
+    });
+    return;
   }
   update(() => {
-    const needle = val.toLowerCase()
+    const needle = val.toLowerCase();
     if (field.value) {
-      options.value = props.options.filter(v => v[field.value].toLowerCase().indexOf(needle) > -1)
+      options.value = props.options.filter(
+        (v) => v[field.value].toLowerCase().indexOf(needle) > -1
+      );
     } else {
-      options.value = props.options.filter(v => v.toLowerCase().indexOf(needle) > -1)
+      options.value = props.options.filter(
+        (v) => v.toLowerCase().indexOf(needle) > -1
+      );
     }
-  })
+  });
 }
+// const newValue = (inputValue, doneFn) => {
+//   if (props.canadd === undefined) return;
+//   console.log(inputValue);
+//   doneFn(inputValue);
+// };
+// const doneFn = (item) => {
+//   console.log(item, model.value);
+//   if (model.value.length) {
+//     model.value.push(item);
+//   }
+// };
 </script>
