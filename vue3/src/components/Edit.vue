@@ -211,11 +211,8 @@ const getExif = async () => {
   tmp.value.tags = tags;
 };
 const addNewValue = (inputValue) => {
-  doneFn(inputValue);
-};
-const doneFn = (item) => {
-  tmp.value.tags.push(item);
-  app.values.tags.push(item);
+  tmp.value.tags.push(inputValue);
+  app.values.tags.push(inputValue);
 };
 
 window.onpopstate = function () {

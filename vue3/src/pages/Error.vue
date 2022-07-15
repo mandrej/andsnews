@@ -18,7 +18,7 @@ import { ref } from "vue";
 // eslint-disable-next-line no-undef
 const props = defineProps({
   code: {
-    type: Number,
+    type: [String, Number],
     default: 404,
   },
 });

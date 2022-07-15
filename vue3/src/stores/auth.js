@@ -23,7 +23,7 @@ export const useAuthStore = defineStore("auth", {
       if (this.user && this.user.uid) {
         auth.signOut().then(() => {
           this.user = {};
-          const routeName = router.currentRoute.name;
+          const routeName = router.currentRoute.value.name;
           if (routeName === "add" || routeName === "admin") {
             router.push({ name: "home" });
           }
@@ -41,7 +41,7 @@ export const useAuthStore = defineStore("auth", {
               lastLogin: Date.now(), // millis
             };
             this.user = { ...payload };
-            this.updateUser(payload);
+            this.updateUser(this.user);
             this.getPermission();
           })
           .catch((err) => {
@@ -50,14 +50,13 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     async updateUser(user) {
-      try {
-        const response = await api.post("user", { user: user });
-        if (response.data.success) {
-          const app = useAppStore();
-          app.updateValuesEmail(user);
-        }
-      } catch (err) {
-        console.error("update user failed");
+      const response = await api.post("user", { user: user });
+      if (response.data.success) {
+        const app = useAppStore();
+        if (app.values.email.indexOf(user.email) === -1)
+          app.values.email.push(user.email);
+      } else {
+        console.error("User has no uid");
       }
     },
     getPermission() {
