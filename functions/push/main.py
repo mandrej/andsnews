@@ -6,7 +6,7 @@ DEFAULT_APP = initialize_app(cred)
 HOSTS = 'https://ands.appspot.com, http://localhost:8080'
 
 
-def send(request):
+def sendUS(request):
     """
     projects/andsnews/messages/0:1620404962628202%2fd9afcdf9fd7ecd
     """
@@ -53,4 +53,4 @@ def send(request):
         return (f'{resp} sent', 200, headers)
 
 
-# gcloud functions deploy send --project=andsnews --region=europe-west3 --runtime=python38 --trigger-http --allow-unauthenticated
+# gcloud functions deploy sendUS --project=andsnews --region=us-central1 --runtime=python310 --trigger-http --allow-unauthenticated

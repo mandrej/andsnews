@@ -45,8 +45,8 @@ const pushMessage = (recipients, msg) => {
 };
 
 const fileBroken = CONFIG.fileBroken;
-const fullsized = CONFIG.public_url + "fullsized/";
-const smallsized = CONFIG.public_url + "smallsized/";
+const fullsized = CONFIG.public_url + "andsnews.appspot.com/";
+const smallsized = CONFIG.public_url + "thumbnails400/";
 const months = [
   "Jan",
   "Feb",

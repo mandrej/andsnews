@@ -6,8 +6,8 @@ from google.cloud import storage
 from PIL import Image
 
 storage_client = storage.Client()
-# source_bucket = storage_client.get_bucket('fullsized')
-thumb_bucket = storage_client.get_bucket('smallsized')
+# source_bucket = storage_client.get_bucket('andsnews.appspot.com')
+thumb_bucket = storage_client.get_bucket('thumbnails400')
 cache_control = 'public, max-age=604800'
 
 
@@ -15,7 +15,7 @@ class TestThumb(unittest.TestCase):
     def setUp(self):
         self.size = 400
         self.file = {
-            'bucket': 'fullsized',
+            'bucket': 'thumbnails400',
             'name': 'DSC_5839-21-12-08-198.jpg',
             'contentType': 'image/jpeg'
         }

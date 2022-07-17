@@ -13,7 +13,7 @@ firebase.initializeApp({
   authDomain: "andsnews.firebaseapp.com",
   databaseURL: "https://andsnews.firebaseio.com",
   projectId: "andsnews",
-  storageBucket: "fullsized",
+  storageBucket: "andsnews.appspot.com",
   messagingSenderId: "719127177629",
   appId: "1:719127177629:web:5e1335058fa70551186774",
 });
