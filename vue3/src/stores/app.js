@@ -102,6 +102,11 @@ export const useAppStore = defineStore("app", {
       }
     },
     deleteRecord(obj) {
+      notify({
+        group: `${obj.filename}`,
+        type: "info",
+        message: `About to delete`,
+      });
       if (obj.id) {
         api
           .delete("delete/" + obj.id, { data: { foo: "bar" } })
@@ -109,6 +114,7 @@ export const useAppStore = defineStore("app", {
             if (response.data) {
               const diff = { verb: "del", size: obj.size };
               notify({
+                group: `${obj.filename}`,
                 type: "info",
                 message: `Successfully deleted ${obj.filename}`,
               });
@@ -120,12 +126,11 @@ export const useAppStore = defineStore("app", {
             }
           })
           .catch((err) => {
-            if (err.code === "ECONNABORTED") {
-              notify({
-                type: "negative",
-                message: "Fail to delete. Timeout error",
-              });
-            }
+            notify({
+              group: `${obj.filename}`,
+              type: "negative",
+              message: "Failed to delete.",
+            });
           });
       } else {
         api
@@ -133,6 +138,7 @@ export const useAppStore = defineStore("app", {
           .then((response) => {
             if (response.data) {
               notify({
+                group: `${obj.filename}`,
                 type: "info",
                 message: `Successfully deleted ${obj.filename}`,
               });
@@ -140,12 +146,11 @@ export const useAppStore = defineStore("app", {
             }
           })
           .catch((err) => {
-            if (err.code === "ECONNABORTED") {
-              notify({
-                type: "negative",
-                message: "Fail to delete. Timeout error",
-              });
-            }
+            notify({
+              group: `${obj.filename}`,
+              type: "negative",
+              message: "Failed to delete.",
+            });
           });
       }
     },

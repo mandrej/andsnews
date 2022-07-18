@@ -45,13 +45,7 @@ const onCancel = () => {
   app.showConfirm = false;
 };
 const onOK = () => {
-  notify({
-    type: "warning",
-    message: "Please wait",
-    timeout: 0,
-    spinner: true,
-  });
-  app.deleteRecord({ ...props.rec });
   app.showConfirm = false;
+  app.deleteRecord({ ...props.rec });
 };
 </script>
