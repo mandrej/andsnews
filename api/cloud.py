@@ -77,7 +77,7 @@ def rebuilder(field, token):
             counter['filename'] = latest[0]['filename']
 
         counters.append(counter)
-        push_message(token, f'{value} {count}')
+        push_message(token, f'{value} {count}', group=field)
 
     datastore_client.put_multi(counters)
     push_message(token, CONFIG['end_message'])

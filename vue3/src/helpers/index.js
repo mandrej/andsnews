@@ -21,7 +21,6 @@ const notify = (options) => {
     message.startsWith(CONFIG.end_message)
   ) {
     timeout = 0;
-    spinner = true;
   }
   Notify.create({
     type: type ? type : "info",
@@ -36,11 +35,17 @@ const notify = (options) => {
 };
 const pushMessage = (recipients, msg) => {
   api
-    .post("message/send", {
-      recipients: recipients,
-      message: msg,
+    .post(
+      "message/send",
+      {
+        recipients: recipients,
+        message: msg,
+      },
+      { timeout: 0 }
+    )
+    .then((resp) => {
+      if (process.env.DEV) console.log("pushMessage ", resp);
     })
-    .then()
     .catch(() => console.error("push message failed"));
 };
 

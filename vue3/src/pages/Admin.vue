@@ -90,8 +90,7 @@ const fcm_token = computed(() => auth.fcm_token);
 const message = ref("NEW IMAGES");
 
 const callApi = (url) => {
-  // TODO timeout 60s
-  api.post(url, { token: fcm_token.value }).then((x) => x.data);
+  api.post(url, { token: fcm_token.value }, { timeout: 0 }).then((x) => x.data);
 };
 const values = computed(() => app.values);
 const rebuild = (name) => {

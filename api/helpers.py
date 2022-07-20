@@ -9,12 +9,16 @@ from exifread import process_file
 from .config import CONFIG
 
 
-def push_message(recipients, message=''):
+def push_message(recipients, message='', **data):
     """
     Cloud function send
     """
-    response = requests.post(CONFIG['message_url'], json={
-        "recipients": recipients, "message": message}, headers={'Content-Type': 'application/json'})
+    body = {"recipients": recipients, "message": message}
+    if data:
+        body["data"] = data
+
+    response = requests.post(CONFIG['message_url'], json=body, headers={
+                             'Content-Type': 'application/json'})
     return response.content
 
 

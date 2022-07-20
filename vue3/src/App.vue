@@ -13,7 +13,14 @@ const app = useAppStore();
 onMounted(() => {
   app.fetchStat();
   onMessage(messaging, (payload) => {
-    notify({ type: "ongoing", message: payload.notification.body });
+    const params = {
+      type: "ongoing",
+      message: payload.notification.body,
+    };
+    if (payload.data && payload.data.group) {
+      params.group = payload.data.group;
+    }
+    notify(params);
   });
 });
 </script>
