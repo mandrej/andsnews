@@ -3,7 +3,7 @@ from firebase_admin import credentials, initialize_app, messaging
 
 cred = credentials.Certificate('credentials.json')
 DEFAULT_APP = initialize_app(cred)
-HOSTS = 'https://ands.appspot.com, http://localhost'
+HOSTS = 'https://ands.appspot.com, http://localhost:9000, http://localhost:9200'
 
 
 def send(request):
