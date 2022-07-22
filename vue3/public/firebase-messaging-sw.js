@@ -1,10 +1,14 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging/sw";
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.9.0/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging-compat.js"
+);
 
-const firebaseApp = initializeApp({
+firebase.initializeApp({
   apiKey: "AIzaSyBj5uKo0P_mir_ChQ_syx_kUQ_g7nkNy6M",
   authDomain: "andsnews.firebaseapp.com",
   databaseURL: "https://andsnews.firebaseio.com",
@@ -13,4 +17,4 @@ const firebaseApp = initializeApp({
   messagingSenderId: "719127177629",
   appId: "1:719127177629:web:5e1335058fa70551186774",
 });
-const messaging = getMessaging(firebaseApp);
+const messaging = firebase.messaging();
