@@ -13,6 +13,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
   const user = auth.user;
+  // Unlog user after 7 days
   if (user && user.uid) {
     if (+new Date() - +new Date(user.lastLogin) > CONFIG.lifeSpan) {
       auth.signIn();

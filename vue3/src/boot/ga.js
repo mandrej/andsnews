@@ -4,10 +4,14 @@ import { CONFIG } from "../helpers";
 
 export default boot(({ app }) => {
   app.use(VueGtag, {
+    isEnabled: false,
+    useDebugger: process.env.DEV ? true : false,
     property: {
       id: CONFIG.analytics,
       app_name: "ANDS",
-      send_page_view: false,
+      params: {
+        send_page_view: false,
+      },
     },
   });
 });

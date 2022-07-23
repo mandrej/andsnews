@@ -147,7 +147,7 @@ import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
-import { useGtag } from "vue-gtag-next";
+import { useState, useGtag } from "vue-gtag-next";
 import Carousel from "../components/Carousel.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
@@ -165,9 +165,16 @@ const user = computed(() => auth.user);
 
 const current = reactive({ obj: null, pid: 0 });
 
+const { set } = useGtag();
 const { event } = useGtag();
+const { isEnabled } = useState();
 
 onMounted(() => {
+  // sameSite cookie fix
+  if (!isEnabled.value) {
+    isEnabled.value = true;
+    set({ cookie_flags: "max-age=7200;secure;samesite=none" });
+  }
   const hash = route.hash;
   if (hash) {
     setTimeout(() => {

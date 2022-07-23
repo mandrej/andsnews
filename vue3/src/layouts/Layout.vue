@@ -32,8 +32,8 @@
     </q-page-container>
   </q-layout>
   <q-layout v-else view="hHh Lpr lFf">
-    <q-header class="bg-grey-3 fixed-top">
-      <q-toolbar class="bg-grey text-black">
+    <q-header class="fixed-top">
+      <q-toolbar class="bg-grey-8 text-white">
         <q-btn
           flat
           dense
