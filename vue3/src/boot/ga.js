@@ -5,12 +5,15 @@ import { CONFIG } from "../helpers";
 
 export default boot(({ app }) => {
   app.use(VueGtag, {
+    appName: "ANDS",
     useDebugger: process.env.DEV ? true : false,
     property: {
       id: CONFIG.analytics,
-      app_name: "ANDS",
     },
   });
   const { set } = useGtag();
-  set({ cookie_flags: "max-age=7200;secure;samesite=none" });
+  set({
+    cookie_flags:
+      "max-age=7200;secure;samesite=none;domain=" + process.env.ANDS_HOST,
+  });
 });
