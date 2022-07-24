@@ -122,7 +122,6 @@
                 icon="download"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
-                @click.stop="download(item.filename)"
               />
             </q-card-actions>
           </q-card>
@@ -147,7 +146,6 @@ import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
-import { useState, useGtag } from "vue-gtag-next";
 import Carousel from "../components/Carousel.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
@@ -165,16 +163,7 @@ const user = computed(() => auth.user);
 
 const current = reactive({ obj: null, pid: 0 });
 
-const { set } = useGtag();
-const { event } = useGtag();
-const { isEnabled } = useState();
-
 onMounted(() => {
-  // sameSite cookie fix
-  if (!isEnabled.value) {
-    isEnabled.value = true;
-    set({ cookie_flags: "max-age=7200;secure;samesite=none" });
-  }
   const hash = route.hash;
   if (hash) {
     setTimeout(() => {
@@ -199,13 +188,14 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-const download = (filename) => {
-  event("download", {
-    event_category: "engagement",
-    event_label: filename + " (" + user.value.email + ")",
-    value: 1,
-  });
-};
+// const download = (filename) => {
+//   // @click.stop="download(item.filename)"
+//   event("download", {
+//     event_category: "engagement",
+//     event_label: filename + " (" + user.value.email + ")",
+//     value: 1,
+//   });
+// };
 
 const edit = (rec) => {
   current.obj = rec;
