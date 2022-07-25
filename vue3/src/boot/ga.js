@@ -13,7 +13,6 @@ export default boot(({ app }) => {
   });
   const { set } = useGtag();
   set({
-    cookie_flags:
-      "max-age=7200;secure;samesite=none;domain=" + process.env.ANDS_HOST,
+    cookie_flags: "max-age=7200;secure;samesite=none",
   });
 });

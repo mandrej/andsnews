@@ -122,6 +122,7 @@
                 icon="download"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
+                @click.stop="download(item.filename)"
               />
             </q-card-actions>
           </q-card>
@@ -147,11 +148,13 @@ import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue";
+import { useGtag } from "vue-gtag-next";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
+const { event } = useGtag();
 
 const app = useAppStore();
 const auth = useAuthStore();
@@ -188,14 +191,14 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-// const download = (filename) => {
-//   // @click.stop="download(item.filename)"
-//   event("download", {
-//     event_category: "engagement",
-//     event_label: filename + " (" + user.value.email + ")",
-//     value: 1,
-//   });
-// };
+const download = (filename) => {
+  event("download-picture", {
+    // TODO event name
+    event_category: "engagement",
+    event_label: filename + " (" + user.value.email + ")",
+    value: 1,
+  });
+};
 
 const edit = (rec) => {
   current.obj = rec;
