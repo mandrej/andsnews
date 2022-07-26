@@ -1,14 +1,14 @@
 import { boot } from "quasar/wrappers";
 import VueGtag from "vue-gtag-next";
 import { useGtag } from "vue-gtag-next";
-import { CONFIG } from "../helpers";
 
 export default boot(({ app }) => {
   app.use(VueGtag, {
     appName: "ANDS",
     useDebugger: process.env.DEV ? true : false,
     property: {
-      id: CONFIG.analytics,
+      id: process.env.UA,
+      id: process.env.GA,
     },
   });
   const { set } = useGtag();
