@@ -47,7 +47,10 @@
               class="cursor-pointer"
               :ratio="5 / 4"
               :src="smallsized + item.filename"
-              @click="carousel(item.id)"
+              @click="
+                carousel(item.id);
+                analytics('popular-picture', item.filename);
+              "
             >
               <template #error>
                 <img src="/broken.svg" />
@@ -122,7 +125,7 @@
                 icon="download"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
-                @click.stop="download(item.filename)"
+                @click.stop="analytics('download-picture', item.filename)"
               />
             </q-card-actions>
           </q-card>
@@ -191,12 +194,16 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-const download = (filename) => {
-  event("download-picture", {
-    // TODO event name
-    event_category: "engagement",
-    event_label: filename + " (" + user.value.email + ")",
-    value: 1,
+const analytics = (event_name, file_name) => {
+  /**
+   * popular-picture
+   * download-picture
+   *
+   */
+  event(event_name, {
+    filename: file_name,
+    user: user.value.email,
+    count: 1,
   });
 };
 
