@@ -151,13 +151,13 @@ import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue";
-import { useGtag } from "vue-gtag-next";
+// import { useGtag } from "vue-gtag-next";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
-const { event } = useGtag();
+// const { event } = useGtag();
 
 const app = useAppStore();
 const auth = useAuthStore();
@@ -200,9 +200,9 @@ const analytics = (event_name, file_name) => {
    * download-picture
    *
    */
-  event(event_name, {
+  gtag("event", event_name, {
     filename: file_name,
-    user: user.value.email,
+    user: user.value && user.value.email ? user.value.email : "anonymous",
     count: 1,
   });
 };

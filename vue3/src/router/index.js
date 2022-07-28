@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/auth";
-import { trackRouter } from "vue-gtag-next";
 import { CONFIG } from "../helpers";
 import routes from "./routes";
 
@@ -27,6 +26,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-trackRouter(router);
 
 export default router;
