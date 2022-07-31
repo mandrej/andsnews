@@ -46,13 +46,11 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-NC001RP7PG"
     ></script>
     <script>
-      console.log(process.env.UA);
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      // gtag("config", "UA-8994922-1");
       gtag("config", "G-NC001RP7PG", { debug_mode: true });
       gtag("set", {
         cookie_flags: "SameSite=None;Secure",
