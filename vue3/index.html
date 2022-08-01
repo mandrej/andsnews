@@ -41,6 +41,11 @@
       href="icons/favicon-16x16.png"
     />
     <link rel="icon" type="image/ico" href="favicon.ico" />
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-8994922-1"
+    ></script>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-NC001RP7PG"
@@ -51,11 +56,13 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
+      gtag("config", "UA-8994922-1");
       gtag("config", "G-NC001RP7PG", { debug_mode: true });
       gtag("set", {
         cookie_flags: "SameSite=None;Secure",
       });
     </script>
+    <!-- Google Analytics -->
   </head>
   <body>
     <!-- quasar:entry-point -->
