@@ -1,3 +1,4 @@
+import { nextTick } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 import { CONFIG } from "../helpers";
@@ -25,6 +26,13 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+router.afterEach((to, from) => {
+  // Use next tick to handle router history correctly
+  // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+  nextTick(() => {
+    document.title = to.meta.title;
+  });
 });
 
 export default router;

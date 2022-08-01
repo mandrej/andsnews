@@ -103,7 +103,7 @@ const app = useAppStore();
 const route = useRoute();
 
 const last = computed(() => app.last);
-const title = computed(() => route.meta.title || "ANDрејевићи");
+const title = computed(() => route.meta.title);
 const bucketInfo = computed(() => app.bucket);
 const busy = computed(() => app.busy);
 const drawer = ref(false);
