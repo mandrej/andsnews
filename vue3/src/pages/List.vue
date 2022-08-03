@@ -151,7 +151,6 @@ import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { smallsized, formatDatum, notify } from "../helpers";
 import Carousel from "../components/Carousel.vue";
-// import { useGtag } from "vue-gtag-next";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
