@@ -38,7 +38,10 @@
       :key="datum"
       class="q-pa-md scroll overflow-hidden"
     >
-      <div class="text-h6 text-weight-light">
+      <div
+        class="text-h6 text-weight-light"
+        :class="busy && start ? 'blur' : ''"
+      >
         {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
       </div>
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
@@ -47,7 +50,12 @@
           :key="item.id"
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card :id="'card' + item.id" class="bg-grey-2" flat>
+          <q-card
+            :id="'card' + item.id"
+            class="bg-grey-2"
+            :class="busy && start ? 'blur' : ''"
+            flat
+          >
             <q-img
               class="cursor-pointer"
               :ratio="5 / 4"
@@ -150,7 +158,14 @@
 
 <script setup>
 import { copyToClipboard, scroll, throttle } from "quasar";
-import { defineAsyncComponent, onMounted, computed, reactive } from "vue";
+import {
+  defineAsyncComponent,
+  onMounted,
+  onUpdated,
+  computed,
+  reactive,
+  ref,
+} from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -170,6 +185,8 @@ const error = computed(() => app.error);
 const objectsByDate = computed(() => app.objectsByDate);
 const user = computed(() => auth.user);
 
+const busy = computed(() => app.busy);
+const start = ref(true);
 const current = reactive({ obj: null, pid: 0 });
 
 onMounted(() => {
@@ -181,12 +198,18 @@ onMounted(() => {
   }
 });
 
+onUpdated(() => {
+  start.value = true;
+  console.log("onUpdated ", busy.value);
+});
+
 const isAuthorOrAdmin = (rec) => {
   return user.value.isAdmin || user.value.email === rec.email;
 };
 
 const scrollHandler = throttle((obj) => {
   // trottle until busy: true
+  start.value = false;
   const scrollHeight = document.documentElement.scrollHeight;
   if (
     scrollHeight - obj.position.top < 3000 &&
@@ -250,3 +273,9 @@ const onShare = (id) => {
     });
 };
 </script>
+
+<style scoped>
+.blur {
+  filter: blur(1rem);
+}
+</style>
