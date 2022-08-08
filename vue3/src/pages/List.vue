@@ -239,6 +239,7 @@ const edit = (rec) => {
   app.showEdit = true;
 };
 const editOk = (id) => {
+  start.value = false;
   const el = document.querySelector("#card" + id);
   if (!el) return;
   el.classList.add("bounce");
@@ -257,6 +258,7 @@ const carousel = (id) => {
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {
+  start.value = false;
   const el = document.querySelector("#card" + hash);
   if (!el) return;
   const target = getScrollTarget(el);
