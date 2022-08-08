@@ -32,7 +32,12 @@
       axis="vertical"
       :debounce="500"
     />
-    <div v-for="(list, datum) in objectsByDate" :key="datum" class="q-pa-md">
+
+    <div
+      v-for="(list, datum) in objectsByDate"
+      :key="datum"
+      class="q-pa-md scroll overflow-hidden"
+    >
       <div class="text-h6 text-weight-light">
         {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
       </div>
@@ -156,7 +161,6 @@ const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
-// const { event } = useGtag();
 
 const app = useAppStore();
 const auth = useAuthStore();
