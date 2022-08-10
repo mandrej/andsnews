@@ -21,6 +21,7 @@ export const useAppStore = defineStore("app", {
     pages: [],
     next: null,
     error: null,
+    current: null,
 
     busy: false,
     showEdit: false,

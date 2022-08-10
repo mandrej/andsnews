@@ -1,9 +1,9 @@
 <template>
-  <Edit v-if="app.showEdit" :rec="current.obj" @editOk="editOk" />
-  <Confirm v-if="app.showConfirm" :rec="current.obj" />
+  <Edit v-if="app.showEdit" :rec="current" @editOk="editOk" />
+  <Confirm v-if="app.showConfirm" :rec="current" />
   <Carousel
     v-if="app.showCarousel"
-    :pid="current.pid"
+    :pid="current.id"
     @carouselCancel="carouselCancel"
   />
 
@@ -61,8 +61,8 @@
               :ratio="5 / 4"
               :src="smallsized + item.filename"
               @click="
-                carousel(item.id);
-                analytics('popular-picture', item.filename);
+                carouselShow(item);
+                analytics('popular-picture', item);
               "
             >
               <template #error>
@@ -129,7 +129,7 @@
                 round
                 color="grey"
                 icon="share"
-                @click="onShare(item.id)"
+                @click="onShare(item)"
               />
               <q-btn
                 flat
@@ -138,7 +138,7 @@
                 icon="download"
                 :href="`/api/download/${item.filename}`"
                 :download="item.filename"
-                @click.stop="analytics('download-picture', item.filename)"
+                @click.stop="analytics('download-picture', item)"
               />
             </q-card-actions>
           </q-card>
@@ -187,13 +187,13 @@ const user = computed(() => auth.user);
 
 const busy = computed(() => app.busy);
 const start = ref(true);
-const current = reactive({ obj: null, pid: 0 });
+const current = computed(() => app.current);
 
 onMounted(() => {
   const hash = route.hash;
   if (hash) {
     setTimeout(() => {
-      carousel(+hash.substring(1));
+      carouselShow(+hash.substring(1));
     }, 1000);
   }
 });
@@ -220,21 +220,8 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-const analytics = (event_name, file_name) => {
-  /**
-   * popular-picture
-   * download-picture
-   *
-   */
-  gtag("event", event_name, {
-    filename: file_name,
-    user: user.value && user.value.email ? user.value.email : "anonymous",
-    count: 1,
-  });
-};
-
 const edit = (rec) => {
-  current.obj = rec;
+  app.current = rec;
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showEdit = true;
 };
@@ -248,12 +235,12 @@ const editOk = (id) => {
   }, 2000);
 };
 const confirm = (rec) => {
-  current.obj = rec;
+  app.current = rec;
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showConfirm = true;
 };
-const carousel = (id) => {
-  current.pid = id;
+const carouselShow = (rec) => {
+  app.current = rec;
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showCarousel = true;
 };
@@ -264,8 +251,8 @@ const carouselCancel = (hash) => {
   const target = getScrollTarget(el);
   setVerticalScrollPosition(target, el.offsetTop, 500);
 };
-const onShare = (id) => {
-  const url = window.location.href + "#" + id;
+const onShare = (rec) => {
+  const url = window.location.href + "#" + rec.id;
   copyToClipboard(url)
     .then(() => {
       notify({ type: "info", message: "URL copied to clipboard" });
@@ -273,6 +260,18 @@ const onShare = (id) => {
     .catch(() => {
       notify({ type: "warning", message: "Unable to copy URL to clipboard" });
     });
+};
+const analytics = (event_name, rec) => {
+  /**
+   * popular-picture
+   * download-picture
+   *
+   */
+  gtag("event", event_name, {
+    filename: rec.filename,
+    user: user.value && user.value.email ? user.value.email : "anonymous",
+    count: 1,
+  });
 };
 </script>
 
