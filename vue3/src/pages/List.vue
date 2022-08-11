@@ -38,10 +38,7 @@
       :key="datum"
       class="q-pa-md scroll overflow-hidden"
     >
-      <div
-        class="text-h6 text-weight-light"
-        :class="busy && start ? 'blur' : ''"
-      >
+      <div class="text-h6 text-weight-light">
         {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
       </div>
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
@@ -50,12 +47,7 @@
           :key="item.id"
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card
-            :id="'card' + item.id"
-            class="bg-grey-2"
-            :class="busy && start ? 'blur' : ''"
-            flat
-          >
+          <q-card :id="'card' + item.id" class="bg-grey-2" flat>
             <q-img
               class="cursor-pointer"
               :ratio="5 / 4"
@@ -158,14 +150,7 @@
 
 <script setup>
 import { copyToClipboard, scroll, throttle } from "quasar";
-import {
-  defineAsyncComponent,
-  onMounted,
-  onUpdated,
-  computed,
-  reactive,
-  ref,
-} from "vue";
+import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -184,9 +169,6 @@ const next = computed(() => app.next);
 const error = computed(() => app.error);
 const objectsByDate = computed(() => app.objectsByDate);
 const user = computed(() => auth.user);
-
-const busy = computed(() => app.busy);
-const start = ref(true);
 const current = computed(() => app.current);
 
 onMounted(() => {
@@ -198,18 +180,12 @@ onMounted(() => {
   }
 });
 
-onUpdated(() => {
-  start.value = true;
-  console.log("onUpdated ", busy.value);
-});
-
 const isAuthorOrAdmin = (rec) => {
   return user.value.isAdmin || user.value.email === rec.email;
 };
 
 const scrollHandler = throttle((obj) => {
   // trottle until busy: true
-  start.value = false;
   const scrollHeight = document.documentElement.scrollHeight;
   if (
     scrollHeight - obj.position.top < 3000 &&
@@ -226,7 +202,6 @@ const edit = (rec) => {
   app.showEdit = true;
 };
 const editOk = (id) => {
-  start.value = false;
   const el = document.querySelector("#card" + id);
   if (!el) return;
   el.classList.add("bounce");
@@ -245,7 +220,6 @@ const carouselShow = (rec) => {
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {
-  start.value = false;
   const el = document.querySelector("#card" + hash);
   if (!el) return;
   const target = getScrollTarget(el);
@@ -274,9 +248,3 @@ const analytics = (event_name, rec) => {
   });
 };
 </script>
-
-<style scoped>
-.blur {
-  filter: blur(1rem);
-}
-</style>
