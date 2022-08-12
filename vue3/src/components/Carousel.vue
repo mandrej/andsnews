@@ -54,7 +54,7 @@ import { useQuasar } from "quasar";
 import { computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
-import { fullsized, notify } from "../helpers";
+import { fullsized, notify, CONFIG } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 
@@ -73,25 +73,33 @@ const route = useRoute();
 const objects = computed(() => app.objects);
 const hash = ref(null);
 const dimension = reactive({});
+const r = new RegExp(/#(\d+)/); // matching hash
 
 const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
   const index = objects.value.findIndex((x) => x.id === props.pid);
   if (index === -1) {
-    notify({ type: "negative", message: `${props.pid} couldn't be found` });
+    notify({
+      type: "negative",
+      message: `${props.pid} couldn't be found in first ${CONFIG.limit} records`,
+    });
   } else {
     sw.slideTo(index);
   }
 };
 const onSlideChange = (sw) => {
+  let url = route.fullPath;
   const slide = sw.slides[sw.activeIndex];
-  hash.value = slide.dataset.hash;
-  window.history.replaceState(
-    history.state,
-    null,
-    route.fullPath + "#" + hash.value
-  );
+  const hash = "#" + slide.dataset.hash;
+  if (r.test(url)) {
+    url = url.replace(r, hash);
+  } else {
+    url += hash;
+  }
+  // hash.value = slide.dataset.hash;
+  console.log(hash, url);
+  window.history.replaceState(history.state, null, url);
 };
 const onImgReady = (sw, slideEl, imageEl) => {
   const img = new Image();
@@ -122,7 +130,11 @@ window.onpopstate = function () {
   app.showCarousel = false;
 };
 const onCancel = () => {
-  window.history.replaceState(history.state, null, route.fullPath);
+  window.history.replaceState(
+    history.state,
+    null,
+    route.fullPath.replace(r, "")
+  );
   emit("carousel-cancel", hash.value);
   app.showCarousel = false;
 };

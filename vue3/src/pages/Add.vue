@@ -1,5 +1,5 @@
 <template>
-  <Edit v-if="app.showEdit" :rec="current.obj" />
+  <Edit v-if="app.showEdit" :rec="current" />
 
   <q-page class="q-pa-md">
     <div
@@ -96,7 +96,7 @@ let progressInfos = reactive([]);
 const inProgress = ref(false);
 
 const uploaded = computed(() => app.uploaded);
-const current = reactive({ obj: null });
+const current = computed(() => app.current);
 
 const filesChange = (evt) => {
   /**
@@ -180,7 +180,7 @@ const edit = async (rec) => {
   if (record.flash) {
     record.tags.push("flash");
   }
-  current.obj = ref(record);
+  app.current = record;
   window.history.pushState(history.state, ""); // fake history
   app.showEdit = true;
 };

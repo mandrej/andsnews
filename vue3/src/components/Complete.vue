@@ -67,15 +67,4 @@ function filter(val, update) {
     }
   });
 }
-// const newValue = (inputValue, doneFn) => {
-//   if (props.canadd === undefined) return;
-//   console.log(inputValue);
-//   doneFn(inputValue);
-// };
-// const doneFn = (item) => {
-//   console.log(item, model.value);
-//   if (model.value.length) {
-//     model.value.push(item);
-//   }
-// };
 </script>

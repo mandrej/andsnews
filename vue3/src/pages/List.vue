@@ -3,7 +3,7 @@
   <Confirm v-if="app.showConfirm" :rec="current" />
   <Carousel
     v-if="app.showCarousel"
-    :pid="current.id"
+    :pid="pid"
     @carouselCancel="carouselCancel"
   />
 
@@ -53,7 +53,7 @@
               :ratio="5 / 4"
               :src="smallsized + item.filename"
               @click="
-                carouselShow(item);
+                carouselShow(item.id);
                 analytics('popular-picture', item);
               "
             >
@@ -170,6 +170,7 @@ const error = computed(() => app.error);
 const objectsByDate = computed(() => app.objectsByDate);
 const user = computed(() => auth.user);
 const current = computed(() => app.current);
+const pid = ref(null);
 
 onMounted(() => {
   const hash = route.hash;
@@ -214,8 +215,8 @@ const confirm = (rec) => {
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showConfirm = true;
 };
-const carouselShow = (rec) => {
-  app.current = rec;
+const carouselShow = (id) => {
+  pid.value = id;
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showCarousel = true;
 };
