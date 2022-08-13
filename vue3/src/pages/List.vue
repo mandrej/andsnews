@@ -33,109 +33,108 @@
       :debounce="500"
     />
 
-    <div
-      v-for="(list, datum) in objectsByDate"
-      :key="datum"
-      class="q-pa-md scroll overflow-hidden"
-    >
-      <div class="text-h6 text-weight-light">
-        {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
-      </div>
-      <transition-group tag="div" class="row q-col-gutter-md" name="fade">
-        <div
-          v-for="item in list"
-          :key="item.id"
-          class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
-        >
-          <q-card :id="'card' + item.id" class="bg-grey-2" flat>
-            <q-img
-              class="cursor-pointer"
-              :ratio="5 / 4"
-              :src="smallsized + item.filename"
-              @click="
-                carouselShow(item.id);
-                analytics('popular-picture', item);
-              "
-            >
-              <template #error>
-                <img src="/broken.svg" />
-              </template>
-              <div class="absolute-bottom text-subtitle2">
-                {{ item.headline }}
-              </div>
-            </q-img>
-            <q-card-section class="row justify-between q-py-none">
-              <div style="line-height: 42px">
-                {{ item.nick }},
-                <router-link
-                  :to="{
-                    path: '/list',
-                    query: {
-                      year: item.year,
-                      month: item.month,
-                      day: item.day,
-                    },
-                  }"
-                  class="text-secondary"
-                  style="text-decoration: none"
-                  >{{ formatDatum(item.date, "DD.MM.YYYY") }}</router-link
-                >
-                {{ item.date.substring(11) }}
-              </div>
-              <q-btn
-                v-if="item.loc"
-                flat
-                round
-                color="grey"
-                icon="my_location"
-                target="blank"
-                :href="
-                  'https://www.google.com/maps/search/?api=1&query=' +
-                  [...item.loc]
-                "
-              />
-            </q-card-section>
-            <q-card-actions
-              v-if="user.isAuthorized"
-              class="justify-between q-pt-none"
-            >
-              <q-btn
-                v-if="isAuthorOrAdmin(item)"
-                flat
-                round
-                color="grey"
-                icon="delete"
-                @click="confirm(item)"
-              />
-              <q-btn
-                v-if="isAuthorOrAdmin(item)"
-                flat
-                round
-                color="grey"
-                icon="edit"
-                @click="edit(item)"
-              />
-              <q-btn
-                v-if="isAuthorOrAdmin(item)"
-                flat
-                round
-                color="grey"
-                icon="share"
-                @click="onShare(item)"
-              />
-              <q-btn
-                flat
-                round
-                color="grey"
-                icon="download"
-                :href="`/api/download/${item.filename}`"
-                :download="item.filename"
-                @click.stop="analytics('download-picture', item)"
-              />
-            </q-card-actions>
-          </q-card>
+    <div class="q-pa-md scroll overflow-hidden">
+      <div v-for="(list, datum) in objectsByDate" :key="datum">
+        <div class="text-h6 text-weight-light">
+          {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
         </div>
-      </transition-group>
+        <transition-group tag="div" class="row q-col-gutter-md" name="fade">
+          <div
+            v-for="item in list"
+            :key="item.id"
+            class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
+          >
+            <q-card :id="'card' + item.id" class="bg-grey-2" flat>
+              <q-img
+                class="cursor-pointer"
+                loading="lazy"
+                :ratio="5 / 4"
+                :src="smallsized + item.filename"
+                @click="
+                  carouselShow(item.id);
+                  analytics('popular-picture', item);
+                "
+              >
+                <template #error>
+                  <img src="/broken.svg" />
+                </template>
+                <div class="absolute-bottom text-subtitle2">
+                  {{ item.headline }}
+                </div>
+              </q-img>
+              <q-card-section class="row justify-between q-py-none">
+                <div style="line-height: 42px">
+                  {{ item.nick }},
+                  <router-link
+                    :to="{
+                      path: '/list',
+                      query: {
+                        year: item.year,
+                        month: item.month,
+                        day: item.day,
+                      },
+                    }"
+                    class="text-secondary"
+                    style="text-decoration: none"
+                    >{{ formatDatum(item.date, "DD.MM.YYYY") }}</router-link
+                  >
+                  {{ item.date.substring(11) }}
+                </div>
+                <q-btn
+                  v-if="item.loc"
+                  flat
+                  round
+                  color="grey"
+                  icon="my_location"
+                  target="blank"
+                  :href="
+                    'https://www.google.com/maps/search/?api=1&query=' +
+                    [...item.loc]
+                  "
+                />
+              </q-card-section>
+              <q-card-actions
+                v-if="user.isAuthorized"
+                class="justify-between q-pt-none"
+              >
+                <q-btn
+                  v-if="isAuthorOrAdmin(item)"
+                  flat
+                  round
+                  color="grey"
+                  icon="delete"
+                  @click="confirm(item)"
+                />
+                <q-btn
+                  v-if="isAuthorOrAdmin(item)"
+                  flat
+                  round
+                  color="grey"
+                  icon="edit"
+                  @click="edit(item)"
+                />
+                <q-btn
+                  v-if="isAuthorOrAdmin(item)"
+                  flat
+                  round
+                  color="grey"
+                  icon="share"
+                  @click="onShare(item)"
+                />
+                <q-btn
+                  flat
+                  round
+                  color="grey"
+                  icon="download"
+                  :href="`/api/download/${item.filename}`"
+                  :download="item.filename"
+                  @click.stop="analytics('download-picture', item)"
+                />
+              </q-card-actions>
+            </q-card>
+          </div>
+        </transition-group>
+      </div>
     </div>
 
     <q-page-scroller
