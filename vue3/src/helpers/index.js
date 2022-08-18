@@ -87,6 +87,9 @@ const readExif = (filename) => {
       });
   });
 };
+const emailNick = (email) => {
+  return email.match(/[^.@]+/)[0];
+};
 
 export {
   CONFIG,
@@ -101,4 +104,5 @@ export {
   formatBytes,
   formatDatum,
   readExif,
+  emailNick,
 };

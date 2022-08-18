@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import { CONFIG, api, pushMessage, notify } from "../helpers";
+import { CONFIG, api, emailNick, pushMessage, notify } from "../helpers";
 import { useAuthStore } from "./auth";
 import querystring from "querystring-es3";
 
@@ -10,7 +10,6 @@ export const useAppStore = defineStore("app", {
 
     uploaded: [],
 
-    last: null,
     bucket: {
       size: 0,
       count: 0,
@@ -29,14 +28,52 @@ export const useAppStore = defineStore("app", {
     showCarousel: false,
   }),
   getters: {
+    last: (state) => {
+      if (state.values && state.values.year) {
+        return state.values.year[0];
+      }
+      return null;
+    },
     counter: (state) => {
       return { count: state.objects.length, more: state.next };
     },
-
-    nickNames: (state) => {
+    // values getters
+    tagValues: (state) => {
+      if (state.values && state.values.tags) {
+        return state.values.tags.map((obj) => obj.value);
+      }
+      return [];
+    },
+    modelValues: (state) => {
+      if (state.values && state.values.model) {
+        return state.values.model.map((obj) => obj.value);
+      }
+      return [];
+    },
+    lensValues: (state) => {
+      if (state.values && state.values.lens) {
+        return state.values.lens.map((obj) => obj.value);
+      }
+      return [];
+    },
+    nickValues: (state) => {
       if (state.values && state.values.email) {
-        return state.values.email.map((email) => {
-          return email.match(/[^@]+/)[0].split(".")[0];
+        return state.values.email.map((obj) => emailNick(obj.value));
+      }
+      return [];
+    },
+    nickCountValues: (state) => {
+      if (state.values && state.values.email) {
+        return state.values.email.map((obj) => {
+          return { value: emailNick(obj.value), count: obj.count };
+        });
+      }
+      return [];
+    },
+    yearValues: (state) => {
+      if (state.values && state.values.year) {
+        return state.values.year.map((obj) => {
+          return { label: "" + obj.value, value: obj.value };
         });
       }
       return [];
@@ -83,8 +120,8 @@ export const useAppStore = defineStore("app", {
           if (this.objects && this.objects.length) {
             const idx = this.objects.findIndex((item) => item.id === obj.id);
             this.objects.splice(idx, 1, obj);
+            notify({ message: `Successfully updated ${obj.filename}` });
           }
-          // this.updateValues(obj);
         });
       } else {
         // publish
@@ -97,7 +134,6 @@ export const useAppStore = defineStore("app", {
           this.objects.splice(idx, 0, obj);
 
           this.deleteUploaded(obj);
-          // this.updateValues(obj);
           this.bucketInfo(diff);
         });
       }
@@ -105,7 +141,6 @@ export const useAppStore = defineStore("app", {
     deleteRecord(obj) {
       notify({
         group: `${obj.filename}`,
-        type: "info",
         message: `About to delete`,
       });
       if (obj.id) {
@@ -116,7 +151,6 @@ export const useAppStore = defineStore("app", {
               const diff = { verb: "del", size: obj.size };
               notify({
                 group: `${obj.filename}`,
-                type: "info",
                 message: `Successfully deleted ${obj.filename}`,
               });
               const idx = this.objects.findIndex((item) => item.id === obj.id);
@@ -140,7 +174,6 @@ export const useAppStore = defineStore("app", {
             if (response.data) {
               notify({
                 group: `${obj.filename}`,
-                type: "info",
                 message: `Successfully deleted ${obj.filename}`,
               });
               this.deleteUploaded(obj);
@@ -194,33 +227,10 @@ export const useAppStore = defineStore("app", {
           this.busy = false;
         });
     },
-    setValues(data) {
-      CONFIG.photo_filter.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(data, field)) {
-          if (field === "year") {
-            const obj = data.year[0];
-            this.last = obj.filename;
-          }
-          this.values[field] = [
-            ...Array.from(data[field], (c) => {
-              return c.value;
-            }),
-          ];
-        } else {
-          this.values[field] = [];
-        }
-      });
-    },
-    updateValues(obj) {
-      const lastFromState = new Date(this.last.date);
-      const lastFromObject = new Date(obj.date);
-      if (lastFromObject.getTime() > lastFromState.getTime()) {
-        this.last = obj.filename;
-      }
-    },
     fetchStat() {
       api.get("counters").then((response) => {
-        this.setValues(response.data);
+        this.values = response.data;
+        // dispatch bucketInfo
         if (this.bucket.count === 0) {
           this.bucketInfo({ verb: "set" });
         } else {
@@ -231,21 +241,12 @@ export const useAppStore = defineStore("app", {
   },
   persist: {
     key: "a",
-    paths: [
-      "find",
-      "last",
-      "bucket",
-      "values",
-      "uploaded",
-      "objects",
-      "pages",
-      "next",
-    ],
+    paths: ["find", "bucket", "values", "uploaded", "objects", "pages", "next"],
     // beforeRestore: (context) => {
     //   console.log("Before hydration...", context);
     // },
-    // afterRestore: (context) => {
-    //   console.log("After hydration...", context);
-    // },
+    afterRestore: (context) => {
+      console.log("After hydration...", context);
+    },
   },
 });

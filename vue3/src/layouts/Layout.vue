@@ -110,8 +110,8 @@ const drawer = ref(false);
 const counter = computed(() => app.counter);
 
 const styling = computed(() => {
-  const low = smallsized + last.value;
-  const high = fullsized + last.value;
+  const low = smallsized + last.value.filename;
+  const high = fullsized + last.value.filename;
   return "background-image: url(" + high + "), url(" + low + ")";
 });
 const version = computed(() => {

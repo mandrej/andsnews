@@ -53,8 +53,16 @@ export const useAuthStore = defineStore("auth", {
       const response = await api.post("user", { user: user });
       if (response.data.success) {
         const app = useAppStore();
-        if (app.values.email.indexOf(user.email) === -1)
-          app.values.email.push(user.email);
+        const found = app.values.find((obj) => obj.value === user.email);
+        if (found) {
+          found.count++;
+        } else {
+          // TODO new value
+          app.values.email.push({
+            count: 1,
+            value: user.email,
+          });
+        }
       } else {
         console.error("User has no uid");
       }

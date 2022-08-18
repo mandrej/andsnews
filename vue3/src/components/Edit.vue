@@ -62,6 +62,10 @@
               <q-select
                 v-model="tmp.email"
                 :options="values.email"
+                option-value="value"
+                option-label="value"
+                emit-value
+                map-options
                 label="Author"
               />
               <q-input v-model="tmp.date" label="Date taken">
@@ -115,7 +119,7 @@
             <div class="col-12">
               <Complete
                 v-model="tmp.tags"
-                :options="values.tags"
+                :options="tagValues"
                 canadd
                 multiple
                 label="Tags"
@@ -126,7 +130,7 @@
             <div class="col-xs-12 col-sm-6">
               <Complete
                 v-model="tmp.model"
-                :options="values.model"
+                :options="modelValues"
                 label="Camera Model"
                 @update:model-value="(newValue) => (tmp.model = newValue)"
               />
@@ -134,7 +138,7 @@
             <div class="col-xs-12 col-sm-6">
               <Complete
                 v-model="tmp.lens"
-                :options="values.lens"
+                :options="lensValues"
                 label="Camera Lens"
                 @update:model-value="(newValue) => (tmp.lens = newValue)"
               />
@@ -181,7 +185,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, reactive } from "vue";
 import { CONFIG, smallsized, readExif, formatBytes } from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
@@ -195,24 +199,31 @@ const props = defineProps({
 const app = useAppStore();
 const auth = useAuthStore();
 const values = computed(() => app.values);
-const tmp = ref({ ...props.rec });
+const tagValues = computed(() => app.tagValues);
+const modelValues = computed(() => app.modelValues);
+const lensValues = computed(() => app.lensValues);
+const tmp = reactive({ ...props.rec });
 const user = computed(() => auth.user);
 
 const getExif = async () => {
-  const exif = await readExif(tmp.value.filename);
+  const exif = await readExif(tmp.filename);
   Object.keys(exif).forEach((k) => {
-    tmp.value[k] = exif[k];
+    tmp[k] = exif[k];
   });
   // add flash tag if exif flash true
-  let tags = tmp.value.tags || [];
-  if (tmp.value.flash && tags.indexOf("flash") === -1) {
+  let tags = tmp.tags || [];
+  if (tmp.flash && tags.indexOf("flash") === -1) {
     tags.push("flash");
   }
-  tmp.value.tags = tags;
+  tmp.tags = tags;
 };
 const addNewValue = (inputValue) => {
-  tmp.value.tags.push(inputValue);
-  app.values.tags.push(inputValue);
+  tmp.tags.push(inputValue);
+  // TODO new value
+  app.values.tags.push({
+    count: 1,
+    value: inputValue,
+  });
 };
 
 window.onpopstate = function () {
@@ -222,9 +233,9 @@ const onCancel = () => {
   app.showEdit = false;
 };
 const onSubmit = () => {
-  tmp.value.tags = tmp.value.tags ? tmp.value.tags : [];
-  app.saveRecord(tmp.value);
-  emit("edit-ok", tmp.value.id);
+  tmp.tags = tmp.tags ? tmp.tags : [];
+  app.saveRecord(tmp);
+  emit("edit-ok", tmp.id);
   app.showEdit = false;
 };
 </script>

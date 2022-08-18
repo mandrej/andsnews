@@ -11,7 +11,7 @@
     />
     <Complete
       v-model="tmp.tags"
-      :options="values.tags"
+      :options="tagValues"
       multiple
       label="by tags"
       :disable="busy"
@@ -27,7 +27,7 @@
     <Complete
       v-model="tmp.year"
       class="col"
-      :options="optionsYear"
+      :options="yearValues"
       autocomplete="label"
       label="by year"
       :disable="busy"
@@ -77,7 +77,7 @@
     </div>
     <Complete
       v-model="tmp.model"
-      :options="values.model"
+      :options="modelValues"
       label="by model"
       :disable="busy"
       behavior="menu"
@@ -91,7 +91,7 @@
     />
     <Complete
       v-model="tmp.lens"
-      :options="values.lens"
+      :options="lensValues"
       label="by lens"
       :disable="busy"
       behavior="menu"
@@ -105,7 +105,7 @@
     />
     <Complete
       v-model="tmp.nick"
-      :options="nickNames"
+      :options="nickValues"
       label="by author"
       :disable="busy"
       behavior="menu"
@@ -131,8 +131,11 @@ const app = useAppStore();
 const route = useRoute();
 const router = useRouter();
 const busy = computed(() => app.busy);
-const values = computed(() => app.values);
-const nickNames = computed(() => app.nickNames);
+const tagValues = computed(() => app.tagValues);
+const modelValues = computed(() => app.modelValues);
+const lensValues = computed(() => app.lensValues);
+const nickValues = computed(() => app.nickValues);
+const yearValues = computed(() => app.yearValues);
 
 const find = computed(() => app.find);
 const tmp = ref({ ...find.value });
@@ -195,11 +198,6 @@ const submit = () => {
   if (process.env.DEV) console.log("submit ", tmp.value);
 };
 
-const optionsYear = computed(() => {
-  return values.value.year.map((year) => {
-    return { label: "" + year, value: year };
-  });
-});
 const optionsMonth = computed(() => {
   return months.map((month, i) => ({ label: month, value: i + 1 }));
 });
