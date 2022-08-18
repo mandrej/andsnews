@@ -14,7 +14,7 @@ const notify = (options) => {
    * type: 'positive', 'negative', 'warning', 'info', 'ongoing', 'external'
    */
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-  let { type, message, timeout, spinner, group, position } = options;
+  let { type, message, multiLine, timeout, spinner, group, position } = options;
   if (!message) return;
   if (
     message.startsWith(CONFIG.start_message) ||
@@ -25,6 +25,7 @@ const notify = (options) => {
   Notify.create({
     type: type ? type : "info",
     message: message,
+    multiLine: multiLine ? true : false,
     timeout: timeout ? timeout : 5000,
     spinner: spinner ? true : false,
     group: group ? group : false,

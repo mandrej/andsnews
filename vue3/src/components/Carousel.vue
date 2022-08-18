@@ -82,6 +82,7 @@ const onSwiper = (sw) => {
   if (index === -1) {
     notify({
       type: "negative",
+      timeout: 10000,
       message: `${props.pid} couldn't be found in first ${CONFIG.limit} records`,
     });
   } else {
@@ -98,7 +99,6 @@ const onSlideChange = (sw) => {
     url += hash;
   }
   // hash.value = slide.dataset.hash;
-  console.log(hash, url);
   window.history.replaceState(history.state, null, url);
 };
 const onImgReady = (sw, slideEl, imageEl) => {

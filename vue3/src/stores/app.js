@@ -120,7 +120,7 @@ export const useAppStore = defineStore("app", {
           if (this.objects && this.objects.length) {
             const idx = this.objects.findIndex((item) => item.id === obj.id);
             this.objects.splice(idx, 1, obj);
-            notify({ message: `Successfully updated ${obj.filename}` });
+            notify({ message: `${obj.filename} updated` });
           }
         });
       } else {
@@ -151,7 +151,7 @@ export const useAppStore = defineStore("app", {
               const diff = { verb: "del", size: obj.size };
               notify({
                 group: `${obj.filename}`,
-                message: `Successfully deleted ${obj.filename}`,
+                message: `${obj.filename} deleted`,
               });
               const idx = this.objects.findIndex((item) => item.id === obj.id);
               if (idx > -1) this.objects.splice(idx, 1);
@@ -174,7 +174,7 @@ export const useAppStore = defineStore("app", {
             if (response.data) {
               notify({
                 group: `${obj.filename}`,
-                message: `Successfully deleted ${obj.filename}`,
+                message: `${obj.filename} deleted`,
               });
               this.deleteUploaded(obj);
             }
