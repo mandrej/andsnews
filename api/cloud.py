@@ -46,13 +46,12 @@ def registrations():
 def rebuilder(field, token):
     counters = []
     push_message(token, CONFIG['start_message'])
-    query = datastore_client.query(kind='Photo', order=[field])
+    query = datastore_client.query(kind='Photo')
     iterator = query.fetch()
     if field == 'tags':
         values = [item for ent in iterator for item in ent[field]]
     else:
-        values = [ent[field]
-                  for ent in iterator if ent[field]]
+        values = [ent[field] for ent in iterator if ent[field]]
 
     tally = collections.Counter(values)
     for value, count in tally.items():
