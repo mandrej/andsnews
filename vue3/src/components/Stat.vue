@@ -29,7 +29,7 @@ import { formatBytes } from "../helpers";
 const app = useAppStore();
 const values = computed(() => app.values);
 const bucket = computed(() => app.bucket);
-const list = [
+const list = computed(() => [
   {
     text: "storage",
     value: formatBytes(bucket.value.size),
@@ -58,5 +58,5 @@ const list = [
     text: "authors",
     value: values.value.email.length,
   },
-];
+]);
 </script>
