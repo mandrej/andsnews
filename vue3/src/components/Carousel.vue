@@ -92,13 +92,13 @@ const onSwiper = (sw) => {
 const onSlideChange = (sw) => {
   let url = route.fullPath;
   const slide = sw.slides[sw.activeIndex];
-  const hash = "#" + slide.dataset.hash;
+  hash.value = slide.dataset.hash;
+  const sufix = "#" + hash.value;
   if (r.test(url)) {
-    url = url.replace(r, hash);
+    url = url.replace(r, sufix);
   } else {
-    url += hash;
+    url += sufix;
   }
-  // hash.value = slide.dataset.hash;
   window.history.replaceState(history.state, null, url);
 };
 const onImgReady = (sw, slideEl, imageEl) => {

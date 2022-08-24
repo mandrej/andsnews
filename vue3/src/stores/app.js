@@ -246,8 +246,8 @@ export const useAppStore = defineStore("app", {
     // beforeRestore: (context) => {
     //   console.log("Before hydration...", context);
     // },
-    afterRestore: (context) => {
-      console.log("After hydration...", context);
-    },
+    // afterRestore: (context) => {
+    //   console.log("After hydration...", context);
+    // },
   },
 });

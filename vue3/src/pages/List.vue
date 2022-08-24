@@ -33,7 +33,7 @@
       :debounce="500"
     />
 
-    <div class="q-pa-md scroll overflow-hidden">
+    <div class="q-pa-md">
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
         <div
           v-for="item in objects"
