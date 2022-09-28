@@ -20,7 +20,6 @@
       @swiper="onSwiper"
       @slide-change="onSlideChange"
       @lazy-image-ready="onImgReady"
-      @orientationchange="onOrientationchange"
     >
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div
@@ -52,7 +51,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { computed, reactive, ref, nextTick } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
 import { fullsized, notify, CONFIG } from "../helpers";
@@ -101,11 +100,6 @@ const onSlideChange = (sw) => {
     url += sufix;
   }
   window.history.replaceState(history.state, null, url);
-};
-const onOrientationchange = (sw) => {
-  nextTick(() => {
-    sw.update();
-  });
 };
 const onImgReady = (sw, slideEl, imageEl) => {
   const img = new Image();
