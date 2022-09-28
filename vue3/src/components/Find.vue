@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <q-input
+      class="desktop-only"
       v-model="tmp.text"
       :disable="busy"
       label="by text"
