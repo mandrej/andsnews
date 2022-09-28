@@ -3,7 +3,7 @@
   "short_name": "ANDS",
   "description": "ANDрејевићи photo album",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#212121",
   "theme_color": "#fff",
   "icons": [
