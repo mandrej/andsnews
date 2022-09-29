@@ -5,7 +5,7 @@
         <q-responsive
           :ratio="1.75"
           class="col-xs-12 col-sm-6 last"
-          :style="styling"
+          :style="styling()"
         />
         <div class="col-xs-12 col-sm-6">
           <div class="row bg-grey-10 text-white q-pa-md">
@@ -109,11 +109,11 @@ const busy = computed(() => app.busy);
 const drawer = ref(false);
 const counter = computed(() => app.counter);
 
-const styling = computed(() => {
+const styling = () => {
   const low = smallsized + last.value.filename;
   const high = fullsized + last.value.filename;
   return "background-image: url(" + high + "), url(" + low + ")";
-});
+};
 const version = computed(() => {
   const ver = process.env.ANDS_VERSION.match(/.{1,4}/g).join(".");
   return "© 2007 - " + ver;
