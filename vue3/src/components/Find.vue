@@ -1,13 +1,13 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <q-input
-      class="desktop-only"
       v-model="tmp.text"
       :disable="busy"
       label="by text"
       clear-icon="clear"
       clearable
-      @keyup.enter="submit"
+      @blur="submit"
+      :dense="$q.screen.xs"
       dark
     />
     <Complete
@@ -17,6 +17,7 @@
       label="by tags"
       :disable="busy"
       behavior="menu"
+      :dense="$q.screen.xs"
       dark
       @update:model-value="
         (newValue) => {
@@ -33,6 +34,7 @@
       label="by year"
       :disable="busy"
       behavior="menu"
+      :dense="$q.screen.xs"
       dark
       @update:model-value="
         (newValue) => {
@@ -50,6 +52,7 @@
         label="by month"
         :disable="busy"
         behavior="menu"
+        :dense="$q.screen.xs"
         dark
         @update:model-value="
           (newValue) => {
@@ -67,6 +70,7 @@
         label="by day"
         :disable="busy"
         behavior="menu"
+        :dense="$q.screen.xs"
         dark
         @update:model-value="
           (newValue) => {
@@ -82,6 +86,7 @@
       label="by model"
       :disable="busy"
       behavior="menu"
+      :dense="$q.screen.xs"
       dark
       @update:model-value="
         (newValue) => {
@@ -96,6 +101,7 @@
       label="by lens"
       :disable="busy"
       behavior="menu"
+      :dense="$q.screen.xs"
       dark
       @update:model-value="
         (newValue) => {
@@ -110,6 +116,7 @@
       label="by author"
       :disable="busy"
       behavior="menu"
+      :dense="$q.screen.xs"
       dark
       @update:model-value="
         (newValue) => {
