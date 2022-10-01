@@ -1,2 +1,2 @@
-Flask
+Flask==2.2.2
 firebase-admin==5.0.1
