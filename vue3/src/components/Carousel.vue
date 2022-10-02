@@ -24,7 +24,7 @@
       <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
         <div
           class="absolute-top q-pa-md"
-          style="background-color: rgba(0, 0, 0, 0.5); z-index: 1000"
+          style="background-color: rgba(0, 0, 0, 0.3); z-index: 1000"
         >
           <div class="q-mr-xl text-white text-center ellipsis">
             {{ obj.headline }}

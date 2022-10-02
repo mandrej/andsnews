@@ -6,7 +6,10 @@
           :ratio="1.75"
           class="col-xs-12 col-sm-6 last"
           :style="styling"
-        />
+        >
+          <a :href="`/list?year=${last.value}`" style="display: block" />
+        </q-responsive>
+
         <div class="col-xs-12 col-sm-6">
           <div class="row bg-grey-10 text-white q-pa-md">
             <div class="col text-h4">
