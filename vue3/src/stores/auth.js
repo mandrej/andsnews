@@ -57,17 +57,8 @@ export const useAuthStore = defineStore("auth", {
     },
     async updateUser(user) {
       const response = await api.post("user", { user: user });
-      if (response.data.success) {
-        const found = familyMember(user.email);
-        if (!found) {
-          // new user added by admin
-          app.values.email.push({
-            count: 1,
-            value: user.email,
-          });
-        }
-      } else {
-        console.error("User has no uid");
+      if (!response.data.success) {
+        console.error("Cannot save user");
       }
     },
     getPermission() {

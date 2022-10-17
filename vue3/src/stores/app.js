@@ -62,6 +62,12 @@ export const useAppStore = defineStore("app", {
       }
       return [];
     },
+    emailValues: (state) => {
+      if (state.values && state.values.email) {
+        return state.values.email.map((obj) => obj.value);
+      }
+      return [];
+    },
     nickCountValues: (state) => {
       if (state.values && state.values.email) {
         return state.values.email.map((obj) => {

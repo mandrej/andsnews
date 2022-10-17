@@ -59,14 +59,18 @@
                 autofocus
               />
               <q-input v-model="tmp.filename" label="Filename" readonly />
-              <q-select
+              <Complete
                 v-model="tmp.email"
-                :options="values.email"
-                option-value="value"
-                option-label="value"
-                emit-value
-                map-options
+                :options="emailValues"
+                canadd
                 label="Author"
+                hint="Existing member can add freind's photo and email"
+                :rules="[
+                  (val) => !!val || 'Email is missing',
+                  (val) => isValidEmail(val),
+                ]"
+                @update:model-value="(newValue) => (tmp.email = newValue)"
+                @new-value="addNewEmail"
               />
               <q-input v-model="tmp.date" label="Date taken">
                 <template #prepend>
@@ -124,7 +128,7 @@
                 multiple
                 label="Tags"
                 @update:model-value="(newValue) => (tmp.tags = newValue)"
-                @new-value="addNewValue"
+                @new-value="addNewTag"
               />
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -198,8 +202,8 @@ const props = defineProps({
 
 const app = useAppStore();
 const auth = useAuthStore();
-const values = computed(() => app.values);
 const tagValues = computed(() => app.tagValues);
+const emailValues = computed(() => app.emailValues);
 const modelValues = computed(() => app.modelValues);
 const lensValues = computed(() => app.lensValues);
 const tmp = reactive({ ...props.rec });
@@ -217,9 +221,22 @@ const getExif = async () => {
   }
   tmp.tags = tags;
 };
-const addNewValue = (inputValue) => {
+const isValidEmail = (val) => {
+  const emailPattern =
+    /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+  return emailPattern.test(val) || "Invalid email";
+};
+const addNewEmail = (inputValue) => {
+  // new value
+  tmp.email = inputValue;
+  app.values.email.push({
+    count: 1,
+    value: inputValue,
+  });
+};
+const addNewTag = (inputValue) => {
+  // new value
   tmp.tags.push(inputValue);
-  // TODO new value
   app.values.tags.push({
     count: 1,
     value: inputValue,
