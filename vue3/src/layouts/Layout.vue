@@ -18,7 +18,7 @@
         </q-responsive>
 
         <div class="col-xs-12 col-sm-6">
-          <div class="row bg-grey-10 text-white q-pa-md">
+          <div class="row items-center bg-grey-10 text-white q-pa-md">
             <div class="col text-h4">
               {{ title }}
               <br />
@@ -26,14 +26,16 @@
                 >{{ bucketInfo.count }} photos since 2007 and counting</span
               >
             </div>
-            <q-btn
-              v-if="app.find && Object.keys(app.find).length"
-              class="col-1"
-              flat
-              round
-              icon="grid_view"
-              :to="{ name: 'list', query: app.find }"
-            />
+            <div class="col-1">
+              <q-btn
+                v-if="app.find && Object.keys(app.find).length"
+                padding="md"
+                flat
+                round
+                icon="grid_view"
+                :to="{ name: 'list', query: app.find }"
+              />
+            </div>
           </div>
           <router-view />
           <div class="absolute-bottom q-pa-md text-right">{{ version }}</div>
