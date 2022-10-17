@@ -12,6 +12,11 @@ const provider = new GoogleAuthProvider();
 provider.addScope("profile");
 provider.addScope("email");
 
+const familyMember = (email) => {
+  const app = useAppStore();
+  return app.values.email.find((obj) => obj.value === email);
+};
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: {},
@@ -31,12 +36,13 @@ export const useAuthStore = defineStore("auth", {
       } else {
         signInWithPopup(auth, provider)
           .then((response) => {
+            const found = familyMember(response.user.email);
             const payload = {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,
               photo: response.user.photoURL,
-              isAuthorized: true,
+              isAuthorized: Boolean(found), // only family members
               isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1,
               lastLogin: Date.now(), // millis
             };
@@ -52,12 +58,9 @@ export const useAuthStore = defineStore("auth", {
     async updateUser(user) {
       const response = await api.post("user", { user: user });
       if (response.data.success) {
-        const app = useAppStore();
-        const found = app.values.find((obj) => obj.value === user.email);
-        if (found) {
-          found.count++;
-        } else {
-          // TODO new value
+        const found = familyMember(user.email);
+        if (!found) {
+          // new user added by admin
           app.values.email.push({
             count: 1,
             value: user.email,

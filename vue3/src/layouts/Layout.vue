@@ -2,6 +2,13 @@
   <q-layout v-if="route.meta.plain" view="hHh lpR fFf">
     <q-page-container>
       <q-page class="row">
+        <q-page-sticky
+          v-show="user.isAuthorized || user.isAdmin"
+          position="bottom-right"
+          :offset="[18, 54]"
+        >
+          <q-btn fab icon="add" color="warning" to="/add" />
+        </q-page-sticky>
         <q-responsive
           :ratio="1.75"
           class="col-xs-12 col-sm-6 last"
@@ -94,6 +101,7 @@
 <script setup>
 import { defineAsyncComponent, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
+import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { fullsized, smallsized } from "../helpers";
 
@@ -103,8 +111,10 @@ import Menu from "../components/Menu.vue";
 const Stat = defineAsyncComponent(() => import("../components/Stat.vue"));
 
 const app = useAppStore();
+const auth = useAuthStore();
 const route = useRoute();
 
+const user = computed(() => auth.user);
 const last = computed(() => app.last);
 const title = computed(() => route.meta.title);
 const bucketInfo = computed(() => app.bucket);

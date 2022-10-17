@@ -94,7 +94,7 @@
                 />
               </q-card-section>
               <q-card-actions
-                v-if="user.isAuthorized"
+                v-if="user.isAuthorized || user.isAdmin"
                 class="justify-between q-pt-none"
               >
                 <q-btn
