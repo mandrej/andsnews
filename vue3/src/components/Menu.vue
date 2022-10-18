@@ -15,7 +15,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-show="user.isAuthorized || user.isAdmin" to="/add">
+    <q-item v-show="user.isAuthorized" to="/add">
       <q-item-section avatar>
         <q-icon name="add_circle" />
       </q-item-section>

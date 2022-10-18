@@ -3,7 +3,7 @@
     <q-page-container>
       <q-page class="row">
         <q-page-sticky
-          v-show="user.isAuthorized || user.isAdmin"
+          v-show="user.isAuthorized"
           position="bottom-right"
           :offset="[18, 54]"
         >
