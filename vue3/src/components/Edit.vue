@@ -248,14 +248,14 @@ const addNewTag = (inputValue) => {
   });
 };
 const addNewModel = (inputValue) => {
-  tmp.model.push(inputValue);
+  tmp.model = inputValue;
   app.values.model.push({
     count: 1,
     value: inputValue,
   });
 };
 const addNewLens = (inputValue) => {
-  tmp.lens.push(inputValue);
+  tmp.lens = inputValue;
   app.values.lens.push({
     count: 1,
     value: inputValue,
