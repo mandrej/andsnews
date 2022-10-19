@@ -14,6 +14,7 @@
         (jpeg) files less then 4 Mb in size.
       </div>
       <input
+        id="files"
         type="file"
         multiple
         name="photos"
@@ -32,6 +33,17 @@
         />
       </div>
     </div>
+
+    <Complete
+      v-model="tagsToApply"
+      :options="tagValues"
+      canadd
+      multiple
+      label="Tags to apply in next upload"
+      hint="You can add / remove tag later"
+      @update:model-value="(newValue) => (tagsToApply = newValue)"
+      @new-value="addNewTag"
+    />
 
     <div class="q-mt-md">
       <transition-group tag="div" class="row q-col-gutter-md" name="fade">
@@ -84,11 +96,21 @@ import {
   formatBytes,
   notify,
 } from "../helpers";
+import Complete from "../components/Complete.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 
 const app = useAppStore();
 const auth = useAuthStore();
+const tagValues = computed(() => app.tagValues);
+const tagsToApply = computed({
+  get() {
+    return app.tagsToApply;
+  },
+  set(newValue) {
+    app.tagsToApply = newValue;
+  },
+});
 const user = computed(() => auth.user);
 // const fcm_token = computed(() => auth.fcm_token);
 let files = reactive([]);
@@ -167,13 +189,21 @@ const upload = async (name, batch) => {
   inProgress.value = false;
 };
 
+const addNewTag = (inputValue) => {
+  // new value
+  tagsToApply.value.push(inputValue);
+  app.values.tags.push({
+    count: 1,
+    value: inputValue,
+  });
+};
 const edit = async (rec) => {
   /**
    * Add user email and tags: [] to new rec; read exif
    */
   const exif = await readExif(rec.filename);
   const record = Object.assign(
-    { email: user.value.email, tags: [] },
+    { email: user.value.email, tags: tagsToApply.value },
     rec,
     exif
   );
@@ -191,7 +221,7 @@ const removeRecord = (rec) => {
 </script>
 
 <style scoped>
-input {
+input#files {
   opacity: 0;
   width: 100%;
   height: inherit;

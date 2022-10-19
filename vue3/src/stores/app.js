@@ -26,6 +26,7 @@ export const useAppStore = defineStore("app", {
     showEdit: false,
     showConfirm: false,
     showCarousel: false,
+    tagsToApply: [],
   }),
   getters: {
     last: (state) => {
@@ -248,7 +249,16 @@ export const useAppStore = defineStore("app", {
   },
   persist: {
     key: "a",
-    paths: ["find", "bucket", "values", "uploaded", "objects", "pages", "next"],
+    paths: [
+      "find",
+      "bucket",
+      "values",
+      "uploaded",
+      "objects",
+      "pages",
+      "next",
+      "tagsToApply",
+    ],
     // beforeRestore: (context) => {
     //   console.log("Before hydration...", context);
     // },
