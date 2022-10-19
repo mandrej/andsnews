@@ -135,16 +135,20 @@
               <Complete
                 v-model="tmp.model"
                 :options="modelValues"
+                canadd
                 label="Camera Model"
                 @update:model-value="(newValue) => (tmp.model = newValue)"
+                @new-value="addNewModel"
               />
             </div>
             <div class="col-xs-12 col-sm-6">
               <Complete
                 v-model="tmp.lens"
                 :options="lensValues"
+                canadd
                 label="Camera Lens"
                 @update:model-value="(newValue) => (tmp.lens = newValue)"
+                @new-value="addNewLens"
               />
             </div>
             <div class="col-xs-6 col-sm-4">
@@ -220,14 +224,16 @@ const getExif = async () => {
     tags.push("flash");
   }
   tmp.tags = tags;
+  tmp.email = user.value.email;
 };
 const isValidEmail = (val) => {
   const emailPattern =
     /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
   return emailPattern.test(val) || "Invalid email";
 };
+
+// new values
 const addNewEmail = (inputValue) => {
-  // new value
   tmp.email = inputValue;
   app.values.email.push({
     count: 1,
@@ -235,9 +241,22 @@ const addNewEmail = (inputValue) => {
   });
 };
 const addNewTag = (inputValue) => {
-  // new value
   tmp.tags.push(inputValue);
   app.values.tags.push({
+    count: 1,
+    value: inputValue,
+  });
+};
+const addNewModel = (inputValue) => {
+  tmp.model.push(inputValue);
+  app.values.model.push({
+    count: 1,
+    value: inputValue,
+  });
+};
+const addNewLens = (inputValue) => {
+  tmp.lens.push(inputValue);
+  app.values.lens.push({
     count: 1,
     value: inputValue,
   });
