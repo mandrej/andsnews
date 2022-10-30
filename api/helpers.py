@@ -82,23 +82,11 @@ def tokenize(text):
     return res
 
 
-def _convert_to_degress(value):
-    """
-    Helper function to convert the GPS coordinates stored in the EXIF to degress in float format
-    :param value:
-    :type value: exifread.utils.Ratio
-    :rtype: float
+def ratio_to_dms(dms_ratio):
+    def frac_to_dec(ratio):
+        return float(ratio.num) / float(ratio.den)
 
-    GPS GPSLatitudeRef 	 N
-    GPS GPSLatitude 	 [44, 239731/5000, 0]
-    GPS GPSLongitudeRef  E
-    GPS GPSLongitude 	 [20, 28887999/1000000, 0]
-    """
-    d = float(value.values[0].num) / float(value.values[0].den)
-    m = float(value.values[1].num) / float(value.values[1].den)
-    s = float(value.values[2].num) / float(value.values[2].den)
-
-    return d + (m / 60.0) + (s / 3600.0)
+    return frac_to_dec(dms_ratio[0]) + (frac_to_dec(dms_ratio[1])/60.0) + (frac_to_dec(dms_ratio[2])/3600.0)
 
 
 def get_exif(buff):
@@ -153,27 +141,30 @@ def get_exif(buff):
         # Flash fired, compulsory flash mode, return light detected / Flash did not fire
         data['flash'] = tags['EXIF Flash'].printable.find('Flash fired') >= 0
 
-    # TODO LightRoom NO data
+    # FIXME LightRoom NO EXIF ExifImageWidth, EXIF ExifImageLength
     # width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
     # length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
     # if width and length:
     #     data['dim'] = [int(x) for x in [width, length]]
 
-    gps_latitude = tags.get('GPS GPSLatitude', None)
-    gps_latitude_ref = tags.get('GPS GPSLatitudeRef', None)
-    gps_longitude = tags.get('GPS GPSLongitude', None)
-    gps_longitude_ref = tags.get('GPS GPSLongitudeRef', None)
-    if gps_latitude and gps_latitude_ref and gps_longitude and gps_longitude_ref:
-        lat = _convert_to_degress(gps_latitude)
-        if gps_latitude_ref.values[0] != 'N':
-            lat = 0 - lat
+    # https://www.programcreek.com/python/?code=Sotera%2Fpst-extraction%2Fpst-extraction-master%2Fspark%2Fimage_exif_processing.py
+    # 'https://www.google.com/maps/search/?api=1&query={},{}'.fromat(lat, lon)
+    gps = {'lat': 0.0, 'lon': 0.0}
+    if 'GPS GPSLatitudeRef' in tags:
+        gps["latref"] = tags['GPS GPSLatitudeRef'].printable  # N
+    if 'GPS GPSLongitudeRef' in tags:
+        gps["lonref"] = tags['GPS GPSLongitudeRef'].printable  # E
+    if 'GPS GPSLatitude' in tags and gps["latref"] != '':
+        gps["lat"] = (1 if "latref" in gps and gps["latref"] == "N" else -1) * \
+            ratio_to_dms(
+                tags["GPS GPSLatitude"].values)  # [44, 239731/5000, 0]
+    if "GPS GPSLongitude" in tags and gps["lonref"] != '':
+        gps["lon"] = (1 if "lonref" in gps and gps["lonref"] == "E" else -1) * \
+            ratio_to_dms(
+                tags["GPS GPSLongitude"].values)  # [20, 28887999/1000000, 0]
 
-        lon = _convert_to_degress(gps_longitude)
-        if gps_longitude_ref.values[0] != 'E':
-            lon = 0 - lon
-
-        data['loc'] = [round(x, 5) for x in [lat, lon]]
-        # 'https://www.google.com/maps/search/?api=1&query={},{}'.fromat(lat, lon)
+    if gps["lat"] != 0.0 or gps["lon"] != 0.0:
+        data['loc'] = [round(x, 5) for x in [gps["lat"], gps["lon"]]]
 
     return data
 
