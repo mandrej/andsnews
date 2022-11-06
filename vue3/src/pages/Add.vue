@@ -10,8 +10,8 @@
         Upload in progress. Plase wait ...
       </div>
       <div v-else class="text-body1 text-center" style="width: 70%">
-        Drag your images here to upload, or click to browse. Accepts only jpg
-        (jpeg) files less then 4 Mb in size.
+        Drag your images here to upload, or click to browse. Then publish image
+        on site. Accepts only jpg (jpeg) files less then 4 Mb in size.
       </div>
       <input
         id="files"
@@ -39,7 +39,7 @@
       :options="tagValues"
       canadd
       multiple
-      label="Tags to apply in next upload"
+      label="Tags to apply for next publish"
       hint="You can add / remove tag later"
       @update:model-value="(newValue) => (tagsToApply = newValue)"
       @new-value="addNewTag"
@@ -202,14 +202,11 @@ const edit = async (rec) => {
    * Add user email and tags: [] to new rec; read exif
    */
   const exif = await readExif(rec.filename);
-  const record = Object.assign(
-    { email: user.value.email, tags: tagsToApply.value },
-    rec,
-    exif
-  );
-  if (record.flash) {
-    record.tags.push("flash");
-  }
+  const record = Object.assign({}, rec, exif, {
+    email: user.value.email,
+    tags: [...(tagsToApply.value || ""), exif.flash ? "flash" : ""],
+  });
+  delete record.exif;
   app.current = record;
   window.history.pushState(history.state, ""); // fake history
   app.showEdit = true;
