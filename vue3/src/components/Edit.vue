@@ -214,12 +214,16 @@ const tmp = reactive({ ...props.rec });
 const user = computed(() => auth.user);
 
 const getExif = async () => {
+  /**
+   * Reread exif
+   * See Add edit
+   */
   const exif = await readExif(tmp.filename);
+  const tags = tmp.tags || [];
   Object.keys(exif).forEach((k) => {
     tmp[k] = exif[k];
   });
   // add flash tag if exif flash true
-  let tags = tmp.tags || [];
   if (tmp.flash && tags.indexOf("flash") === -1) {
     tags.push("flash");
   }

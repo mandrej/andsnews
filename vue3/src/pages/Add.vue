@@ -200,14 +200,21 @@ const addNewTag = (inputValue) => {
 const edit = async (rec) => {
   /**
    * Add user email and tags: [] to new rec; read exif
+   * See Edit getExif
    */
   const exif = await readExif(rec.filename);
-  const record = Object.assign({}, rec, exif, {
-    email: user.value.email,
-    tags: [...(tagsToApply.value || ""), exif.flash ? "flash" : ""],
+  const tags = [...(tagsToApply.value || "")];
+  Object.keys(exif).forEach((k) => {
+    rec[k] = exif[k];
   });
-  delete record.exif;
-  app.current = record;
+  // add flash tag if exif flash true
+  if (rec.flash && tags.indexOf("flash") === -1) {
+    tags.push("flash");
+  }
+  rec.tags = tags;
+  rec.email = user.value.email;
+
+  app.current = rec;
   window.history.pushState(history.state, ""); // fake history
   app.showEdit = true;
 };
