@@ -20,8 +20,8 @@ else
   case $1 in
     run)
       source $venv_dir/bin/activate
-      dev_appserver.py --application=andsnews --port=6060 app.yaml # --dev_appserver_log_level=debug
-      # python main.py
+      # dev_appserver.py --application=andsnews --port=6060 app.yaml # --dev_appserver_log_level=debug
+      python main.py
       # cd vue3/
       # quasar dev -m pwa
       # cd ..
