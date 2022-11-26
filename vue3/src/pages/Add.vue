@@ -1,5 +1,11 @@
 <template>
   <Edit v-if="app.showEdit" :rec="current" />
+  <Carousel
+    v-if="app.showCarousel"
+    :filename="currentFileName"
+    :list="uploaded"
+    @carouselCancel="carouselCancel"
+  />
 
   <q-page class="q-pa-md">
     <div
@@ -50,10 +56,15 @@
         <div
           v-for="rec in uploaded"
           :key="rec.filename"
-          class="col-xs-6 col-sm-4 col-md-4 col-lg-3 col-xl-2"
+          class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card class="bg-grey-2" flat>
-            <q-img :src="fullsized + rec.filename" :ratio="3 / 2">
+          <q-card :id="'card' + rec.filename" class="bg-grey-2" flat>
+            <q-img
+              class="cursor-pointer"
+              :src="fullsized + rec.filename"
+              :ratio="3 / 2"
+              @click="carouselShow(rec.filename)"
+            >
               <template #error>
                 <img src="/broken.svg" />
               </template>
@@ -88,6 +99,7 @@
 import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
+import { useRoute } from "vue-router";
 import {
   CONFIG,
   api,
@@ -97,11 +109,13 @@ import {
   notify,
 } from "../helpers";
 import Complete from "../components/Complete.vue";
+import Carousel from "../components/Carousel.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
 
 const app = useAppStore();
 const auth = useAuthStore();
+const route = useRoute();
 const tagValues = computed(() => app.tagValues);
 const tagsToApply = computed({
   get() {
@@ -119,6 +133,7 @@ const inProgress = ref(false);
 
 const uploaded = computed(() => app.uploaded);
 const current = computed(() => app.current);
+const currentFileName = ref(null);
 
 const filesChange = (evt) => {
   /**
@@ -221,6 +236,18 @@ const edit = async (rec) => {
 
 const removeRecord = (rec) => {
   app.deleteRecord(rec);
+};
+
+const carouselShow = (filename) => {
+  currentFileName.value = filename;
+  window.history.pushState(history.state, null, route.fullPath); // fake history
+  app.showCarousel = true;
+};
+const carouselCancel = (hash) => {
+  const el = document.querySelector("#card" + hash);
+  if (!el) return;
+  const target = getScrollTarget(el);
+  setVerticalScrollPosition(target, el.offsetTop, 500);
 };
 </script>
 

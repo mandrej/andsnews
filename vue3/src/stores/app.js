@@ -112,7 +112,6 @@ export const useAppStore = defineStore("app", {
         response = await api.get(param.verb + "/bucket_info");
         this.bucket = { ...this.bucket, ...response.data };
       } else {
-        console.log(param);
         response = await api.put(param.verb + "/bucket_info", param);
         if (param.verb === "set") {
           const auth = useAuthStore();

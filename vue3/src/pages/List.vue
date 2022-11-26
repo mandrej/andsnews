@@ -3,7 +3,8 @@
   <Confirm v-if="app.showConfirm" :rec="current" />
   <Carousel
     v-if="app.showCarousel"
-    :pid="pid"
+    :filename="currentFileName"
+    :list="objects"
     @carouselCancel="carouselCancel"
   />
 
@@ -44,14 +45,14 @@
             :key="item.id"
             class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           >
-            <q-card :id="'card' + item.id" class="bg-grey-2" flat>
+            <q-card :id="'card' + item.filename" class="bg-grey-2" flat>
               <q-img
                 class="cursor-pointer"
                 :ratio="5 / 4"
                 :src="smallsized + item.filename"
                 no-spinner
                 @click="
-                  carouselShow(item.id);
+                  carouselShow(item.filename);
                   analytics('popular-picture', item);
                 "
               >
@@ -166,16 +167,17 @@ const auth = useAuthStore();
 const route = useRoute();
 const next = computed(() => app.next);
 const error = computed(() => app.error);
+const objects = computed(() => app.objects);
 const objectsByDate = computed(() => app.objectsByDate);
 const user = computed(() => auth.user);
 const current = computed(() => app.current);
-const pid = ref(null);
+const currentFileName = ref(null);
 
 onMounted(() => {
   const hash = route.hash;
   if (hash) {
     setTimeout(() => {
-      carouselShow(+hash.substring(1));
+      carouselShow(hash.substring(1));
     }, 1000);
   }
 });
@@ -214,8 +216,8 @@ const confirm = (rec) => {
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showConfirm = true;
 };
-const carouselShow = (id) => {
-  pid.value = id;
+const carouselShow = (filename) => {
+  currentFileName.value = filename;
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showCarousel = true;
 };

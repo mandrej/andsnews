@@ -21,14 +21,17 @@
       @slide-change="onSlideChange"
       @lazy-image-ready="onImgReady"
     >
-      <swiper-slide v-for="obj in objects" :key="obj.id" :data-hash="obj.id">
+      <swiper-slide
+        v-for="obj in list"
+        :key="obj.filename"
+        :data-hash="obj.filename"
+      >
         <div
           class="absolute-top q-pa-md"
           style="background-color: rgba(0, 0, 0, 0.3); z-index: 1000"
         >
           <div class="q-mr-xl text-white text-center ellipsis">
             {{ obj.headline }}
-            <span v-if="$q.screen.gt.sm">{{ dimension[obj.filename] }}</span>
             <br />
             {{ caption(obj) }}
           </div>
@@ -51,7 +54,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { computed, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
 import { fullsized, notify, CONFIG } from "../helpers";
@@ -64,29 +67,33 @@ import "swiper/scss/zoom";
 
 const emit = defineEmits(["carousel-cancel"]);
 const props = defineProps({
-  pid: Number,
+  filename: String,
+  list: Array,
 });
 
 const $q = useQuasar();
 const app = useAppStore();
 const route = useRoute();
-const objects = computed(() => app.objects);
 const hash = ref(null);
 const dimension = reactive({});
-const r = new RegExp(/#(\d+)/); // matching hash
+const r = new RegExp(/#(.*)?/); // matching string hash
 
 const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
-  const index = objects.value.findIndex((x) => x.id === props.pid);
+  const index = props.list.findIndex((x) => x.filename === props.filename);
   if (index === -1) {
     notify({
       type: "negative",
       timeout: 10000,
-      message: `${props.pid} couldn't be found in first ${CONFIG.limit} records`,
+      message: `${props.filename} couldn't be found in first ${CONFIG.limit} records`,
     });
   } else {
-    sw.slideTo(index);
+    if (index === 0) {
+      onSlideChange(sw);
+    } else {
+      sw.slideTo(index);
+    }
   }
 };
 const onSlideChange = (sw) => {
@@ -121,6 +128,8 @@ const caption = (rec) => {
   if ($q.screen.gt.sm) {
     tmp += model ? " " + model : "";
     tmp += lens ? " " + lens : "";
+    tmp += rec.id ? ", " : "";
+    tmp += dimension[rec.filename];
   }
   return tmp;
 };
