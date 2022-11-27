@@ -58,7 +58,7 @@
           :key="rec.filename"
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card :id="'card' + rec.filename" class="bg-grey-2" flat>
+          <q-card :id="namePart(rec.filename)" class="bg-grey-2" flat>
             <q-img
               class="cursor-pointer"
               :src="fullsized + rec.filename"
@@ -96,6 +96,7 @@
 </template>
 
 <script setup>
+import { scroll } from "quasar";
 import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
@@ -107,11 +108,14 @@ import {
   readExif,
   formatBytes,
   notify,
+  namePart,
 } from "../helpers";
 import Complete from "../components/Complete.vue";
 import Carousel from "../components/Carousel.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
+
+const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 const app = useAppStore();
 const auth = useAuthStore();
@@ -244,7 +248,7 @@ const carouselShow = (filename) => {
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {
-  const el = document.querySelector("#card" + hash);
+  const el = document.querySelector("#" + hash);
   if (!el) return;
   const target = getScrollTarget(el);
   setVerticalScrollPosition(target, el.offsetTop, 500);

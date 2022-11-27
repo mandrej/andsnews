@@ -24,7 +24,7 @@
       <swiper-slide
         v-for="obj in list"
         :key="obj.filename"
-        :data-hash="obj.filename"
+        :data-hash="namePart(obj.filename)"
       >
         <div
           class="absolute-top q-pa-md"
@@ -57,7 +57,7 @@ import { useQuasar } from "quasar";
 import { reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
-import { fullsized, notify, CONFIG } from "../helpers";
+import { fullsized, notify, namePart, CONFIG } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 
