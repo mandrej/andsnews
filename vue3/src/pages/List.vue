@@ -228,7 +228,7 @@ const carouselCancel = (hash) => {
   setVerticalScrollPosition(target, el.offsetTop, 500);
 };
 const onShare = (rec) => {
-  const url = window.location.href + "#" + rec.id;
+  const url = window.location.href + "#" + rec.filename;
   copyToClipboard(url)
     .then(() => {
       notify({ type: "info", message: "URL copied to clipboard" });
