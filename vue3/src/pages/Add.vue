@@ -58,7 +58,7 @@
           :key="rec.filename"
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card :id="namePart(rec.filename)" class="bg-grey-2" flat>
+          <q-card v-bind="cardAttributes(rec.filename)" flat>
             <q-img
               class="cursor-pointer"
               :src="fullsized + rec.filename"
@@ -108,7 +108,7 @@ import {
   readExif,
   formatBytes,
   notify,
-  namePart,
+  cardAttributes,
 } from "../helpers";
 import Complete from "../components/Complete.vue";
 import Carousel from "../components/Carousel.vue";

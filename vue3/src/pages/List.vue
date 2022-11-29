@@ -45,7 +45,7 @@
             :key="item.id"
             class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
           >
-            <q-card :id="namePart(item.filename)" class="bg-grey-2" flat>
+            <q-card v-bind="cardAttributes(item.filename)" flat>
               <q-img
                 class="cursor-pointer"
                 :ratio="5 / 4"
@@ -154,7 +154,7 @@ import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { smallsized, formatDatum, notify, namePart } from "../helpers";
+import { smallsized, formatDatum, notify, U, cardAttributes } from "../helpers";
 import Carousel from "../components/Carousel.vue";
 
 const Edit = defineAsyncComponent(() => import("../components/Edit.vue"));
@@ -176,8 +176,7 @@ const currentFileName = ref(null);
 onMounted(() => {
   const hash = route.hash;
   if (hash) {
-    // TODO not all files are jpg
-    const filename = hash.substring(1) + ".jpg";
+    const filename = hash.substring(2);
     setTimeout(() => {
       carouselShow(filename);
     }, 1000);
@@ -205,8 +204,8 @@ const edit = (rec) => {
   window.history.pushState(history.state, null, route.fullPath); // fake history
   app.showEdit = true;
 };
-const editOk = (namePart) => {
-  const el = document.querySelector("#" + namePart);
+const editOk = (hash) => {
+  const el = document.querySelector("#" + hash);
   if (!el) return;
   el.classList.add("bounce");
   setTimeout(() => {
@@ -230,8 +229,7 @@ const carouselCancel = (hash) => {
   setVerticalScrollPosition(target, el.offsetTop, 500);
 };
 const onShare = (rec) => {
-  const name = namePart(rec.filename);
-  const url = window.location.href + "#" + name;
+  const url = window.location.href + "#" + U + rec.filename;
   copyToClipboard(url)
     .then(() => {
       notify({ type: "info", message: "URL copied to clipboard" });

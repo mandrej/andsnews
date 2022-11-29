@@ -194,13 +194,7 @@
 
 <script setup>
 import { computed, reactive } from "vue";
-import {
-  CONFIG,
-  smallsized,
-  readExif,
-  formatBytes,
-  namePart,
-} from "../helpers";
+import { CONFIG, smallsized, readExif, formatBytes, U } from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";
@@ -281,7 +275,7 @@ const onCancel = () => {
 const onSubmit = () => {
   tmp.tags = tmp.tags ? tmp.tags : [];
   app.saveRecord(tmp);
-  emit("edit-ok", namePart(tmp.filename));
+  emit("edit-ok", U + tmp.filename);
   app.showEdit = false;
 };
 </script>

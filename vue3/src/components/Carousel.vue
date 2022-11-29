@@ -24,7 +24,7 @@
       <swiper-slide
         v-for="obj in list"
         :key="obj.filename"
-        :data-hash="namePart(obj.filename)"
+        :data-hash="U + obj.filename"
       >
         <div
           class="absolute-top q-pa-md"
@@ -57,7 +57,7 @@ import { useQuasar } from "quasar";
 import { reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
-import { fullsized, notify, namePart, CONFIG } from "../helpers";
+import { fullsized, notify, CONFIG, U } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 
@@ -76,7 +76,7 @@ const app = useAppStore();
 const route = useRoute();
 const hash = ref(null);
 const dimension = reactive({});
-const r = new RegExp(/#(.*)?/); // matching string hash
+const urlHash = new RegExp(/#(.*)?/); // matching string hash
 
 const modules = [Lazy, Zoom, Keyboard];
 
@@ -101,8 +101,8 @@ const onSlideChange = (sw) => {
   const slide = sw.slides[sw.activeIndex];
   hash.value = slide.dataset.hash;
   const sufix = "#" + hash.value;
-  if (r.test(url)) {
-    url = url.replace(r, sufix);
+  if (urlHash.test(url)) {
+    url = url.replace(urlHash, sufix);
   } else {
     url += sufix;
   }
@@ -142,7 +142,7 @@ const onCancel = () => {
   window.history.replaceState(
     history.state,
     null,
-    route.fullPath.replace(r, "")
+    route.fullPath.replace(urlHash, "")
   );
   emit("carousel-cancel", hash.value);
   app.showCarousel = false;

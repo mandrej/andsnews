@@ -91,12 +91,13 @@ const readExif = (filename) => {
 const emailNick = (email) => {
   return email.match(/[^.@]+/)[0];
 };
-const namePart = (filename) => {
-  /**
-   * hash '#' + namePart(filename)
-   */
+const U = "_";
+const cardAttributes = (filename) => {
   const [name, ext] = filename.split(".");
-  return name;
+  return {
+    id: U + name,
+    class: ext + " bg-grey-2",
+  };
 };
 
 export {
@@ -113,5 +114,6 @@ export {
   formatDatum,
   readExif,
   emailNick,
-  namePart,
+  U,
+  cardAttributes,
 };
