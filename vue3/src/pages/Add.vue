@@ -61,8 +61,8 @@
           <q-card v-bind="cardAttributes(rec.filename)" flat>
             <q-img
               class="cursor-pointer"
+              :ratio="5 / 4"
               :src="fullsized + rec.filename"
-              :ratio="3 / 2"
               @click="carouselShow(rec.filename)"
             >
               <template #error>
