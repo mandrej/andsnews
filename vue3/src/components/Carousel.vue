@@ -30,11 +30,10 @@
           class="absolute-top q-pa-md"
           style="background-color: rgba(0, 0, 0, 0.3); z-index: 1000"
         >
-          <div class="q-mr-xl text-white text-center ellipsis">
-            {{ obj.headline }}
-            <br />
-            {{ caption(obj) }}
-          </div>
+          <div
+            v-html="caption(obj)"
+            class="q-mx-xl text-white text-center ellipsis"
+          ></div>
           <q-btn
             class="absolute-top-right text-white q-pa-md"
             icon="close"
@@ -57,7 +56,7 @@ import { useQuasar } from "quasar";
 import { reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
-import { fullsized, notify, CONFIG, U } from "../helpers";
+import { fullsized, formatBytes, notify, CONFIG, U } from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 
@@ -120,15 +119,19 @@ const onImgReady = (sw, slideEl, imageEl) => {
   dimension[filename] = img.width + "x" + img.height;
 };
 const caption = (rec) => {
-  const { aperture, shutter, iso, model, lens } = rec;
   let tmp = "";
-  tmp += aperture ? " f" + aperture : "";
-  tmp += shutter ? " " + shutter + "s" : "";
-  tmp += iso ? " " + iso + " ASA" : "";
-  if ($q.screen.gt.sm) {
-    tmp += model ? " " + model : "";
-    tmp += lens ? " " + lens : "";
-    tmp += rec.id ? ", " : "";
+  if (rec.id) {
+    const { headline, aperture, shutter, iso, model, lens } = rec;
+    tmp += headline + "<br/>";
+    tmp += aperture ? " f" + aperture : "";
+    tmp += shutter ? " " + shutter + "s" : "";
+    tmp += iso ? " " + iso + " ASA" : "";
+    if ($q.screen.gt.sm) {
+      tmp += model ? " " + model : "";
+      tmp += lens ? " " + lens : "";
+    }
+  } else {
+    tmp += formatBytes(rec.size) + "<br/>";
     tmp += dimension[rec.filename];
   }
   return tmp;

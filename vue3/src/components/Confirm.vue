@@ -16,7 +16,11 @@
       >
       <q-card-actions class="row justify-between q-pa-md q-col-gutter-md">
         <div class="col">
-          <q-btn color="primary" label="OK" @click="onOK" />
+          <q-btn
+            color="primary"
+            label="OK"
+            @click="emit('close-confirm', rec)"
+          />
         </div>
         <div class="col text-right">
           <q-btn flat label="Close" @click="onCancel" />
@@ -27,9 +31,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useAppStore } from "../stores/app";
-import { formatBytes, notify } from "../helpers";
+import { formatBytes } from "../helpers";
 
 const emit = defineEmits(["close-confirm"]);
 const props = defineProps({
@@ -43,9 +46,5 @@ window.onpopstate = function () {
 };
 const onCancel = () => {
   app.showConfirm = false;
-};
-const onOK = () => {
-  app.showConfirm = false;
-  app.deleteRecord({ ...props.rec });
 };
 </script>

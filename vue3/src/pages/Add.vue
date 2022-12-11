@@ -58,37 +58,12 @@
           :key="rec.filename"
           class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2"
         >
-          <q-card v-bind="cardAttributes(rec.filename)" flat>
-            <q-img
-              class="cursor-pointer"
-              :ratio="5 / 4"
-              :src="fullsized + rec.filename"
-              @click="carouselShow(rec.filename)"
-            >
-              <template #error>
-                <img src="/broken.svg" />
-              </template>
-              <q-badge floating class="text-black" color="warning">
-                {{ formatBytes(rec.size) }}
-              </q-badge>
-            </q-img>
-            <q-card-actions class="q-py-sm justify-between">
-              <q-btn
-                flat
-                round
-                color="grey"
-                icon="delete"
-                @click="removeRecord(rec)"
-              />
-              <q-btn
-                flat
-                round
-                color="grey"
-                icon="publish"
-                @click="edit(rec)"
-              />
-            </q-card-actions>
-          </q-card>
+          <Card
+            :rec="rec"
+            @invokeCarousel="carouselShow"
+            @removeRecord="app.deleteRecord"
+            @publishRecord="edit"
+          />
         </div>
       </transition-group>
     </div>
@@ -101,15 +76,8 @@ import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import {
-  CONFIG,
-  api,
-  fullsized,
-  readExif,
-  formatBytes,
-  notify,
-  cardAttributes,
-} from "../helpers";
+import { CONFIG, api, readExif, notify } from "../helpers";
+import Card from "../components/Card.vue";
 import Complete from "../components/Complete.vue";
 import Carousel from "../components/Carousel.vue";
 
@@ -130,7 +98,6 @@ const tagsToApply = computed({
   },
 });
 const user = computed(() => auth.user);
-// const fcm_token = computed(() => auth.fcm_token);
 let files = reactive([]);
 let progressInfos = reactive([]);
 const inProgress = ref(false);
@@ -180,7 +147,6 @@ const upload = async (name, batch) => {
   for (let i = 0; i < batch.length; i++) {
     let formData = new FormData();
     formData.append(name, batch[i]);
-    // formData.append("token", fcm_token.value);
     progressInfos[i] = 0;
     const result = api
       .post("add", formData, {
@@ -236,10 +202,6 @@ const edit = async (rec) => {
   app.current = rec;
   window.history.pushState(history.state, ""); // fake history
   app.showEdit = true;
-};
-
-const removeRecord = (rec) => {
-  app.deleteRecord(rec);
 };
 
 const carouselShow = (filename) => {
