@@ -5,6 +5,7 @@
     :filename="currentFileName"
     :list="uploaded"
     @carouselCancel="carouselCancel"
+    @removeRecord="app.deleteRecord"
   />
 
   <q-page class="q-pa-md">
@@ -76,7 +77,7 @@ import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { CONFIG, api, readExif, notify } from "../helpers";
+import { CONFIG, api, readExif, fakeHistory, notify } from "../helpers";
 import Card from "../components/Card.vue";
 import Complete from "../components/Complete.vue";
 import Carousel from "../components/Carousel.vue";
@@ -200,16 +201,17 @@ const edit = async (rec) => {
   rec.email = user.value.email;
 
   app.current = rec;
-  window.history.pushState(history.state, ""); // fake history
+  fakeHistory();
   app.showEdit = true;
 };
 
 const carouselShow = (filename) => {
   currentFileName.value = filename;
-  window.history.pushState(history.state, null, route.fullPath); // fake history
+  fakeHistory();
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {
+  app.showCarousel = false;
   const el = document.querySelector("#" + hash);
   if (!el) return;
   const target = getScrollTarget(el);

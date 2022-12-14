@@ -1,6 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import { CONFIG, api, emailNick, pushMessage, notify } from "../helpers";
+import {
+  CONFIG,
+  api,
+  emailNick,
+  pushMessage,
+  removeHash,
+  notify,
+} from "../helpers";
 import { useAuthStore } from "./auth";
 import querystring from "querystring-es3";
 
@@ -102,6 +109,10 @@ export const useAppStore = defineStore("app", {
         (item) => item.filename === obj.filename
       );
       if (idx > -1) this.uploaded.splice(idx, 1);
+      if (this.uploaded.length === 0 && this.showCarousel) {
+        this.showCarousel = false;
+        removeHash();
+      }
     },
     async bucketInfo(param) {
       /**

@@ -6,6 +6,8 @@
     :filename="currentFileName"
     :list="objects"
     @carouselCancel="carouselCancel"
+    @confirmDelete="confirm"
+    @removeRecord="app.deleteRecord"
   />
 
   <q-page>
@@ -48,8 +50,9 @@
             <Card
               :rec="item"
               @invokeCarousel="carouselShow"
-              @confirmDelete="confirm"
               @editRecord="edit"
+              @confirmDelete="confirm"
+              @removeRecord="app.deleteRecord"
             />
           </div>
         </transition-group>
@@ -71,7 +74,7 @@ import { scroll, throttle } from "quasar";
 import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useRoute } from "vue-router";
-import { formatDatum } from "../helpers";
+import { formatDatum, fakeHistory } from "../helpers";
 
 import Card from "../components/Card.vue";
 import Carousel from "../components/Carousel.vue";
@@ -115,7 +118,7 @@ const scrollHandler = throttle((obj) => {
 
 const edit = (rec) => {
   app.current = rec;
-  window.history.pushState(history.state, null, route.fullPath); // fake history
+  fakeHistory();
   app.showEdit = true;
 };
 const editOk = (hash) => {
@@ -128,7 +131,7 @@ const editOk = (hash) => {
 };
 const confirm = (rec) => {
   app.current = rec;
-  window.history.pushState(history.state, null, route.fullPath); // fake history
+  fakeHistory();
   app.showConfirm = true;
 };
 const confirmOk = (rec) => {
@@ -137,7 +140,7 @@ const confirmOk = (rec) => {
 };
 const carouselShow = (filename) => {
   currentFileName.value = filename;
-  window.history.pushState(history.state, null, route.fullPath); // fake history
+  fakeHistory();
   app.showCarousel = true;
 };
 const carouselCancel = (hash) => {

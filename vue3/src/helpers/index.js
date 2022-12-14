@@ -99,6 +99,16 @@ const cardAttributes = (filename) => {
     class: ext + " bg-grey-2",
   };
 };
+const fakeHistory = () => {
+  window.history.pushState(history.state, null, history.state.current);
+};
+const removeHash = () => {
+  window.history.replaceState(
+    history.state,
+    null,
+    history.state.current.replace(/#(.*)?/, "")
+  );
+};
 
 export {
   CONFIG,
@@ -116,4 +126,6 @@ export {
   emailNick,
   U,
   cardAttributes,
+  fakeHistory,
+  removeHash,
 };

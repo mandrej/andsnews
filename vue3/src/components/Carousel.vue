@@ -30,15 +30,25 @@
           class="absolute-top q-pa-md"
           style="background-color: rgba(0, 0, 0, 0.3); z-index: 1000"
         >
+          <q-btn
+            v-if="user.isAdmin"
+            flat
+            round
+            class="absolute-top-left text-white q-pa-md"
+            icon="delete"
+            @click="
+              obj.id ? emit('confirm-delete', obj) : emit('remove-record', obj)
+            "
+          />
           <div
             v-html="caption(obj)"
             class="q-mx-xl text-white text-center ellipsis"
           ></div>
           <q-btn
-            class="absolute-top-right text-white q-pa-md"
-            icon="close"
             flat
             round
+            class="absolute-top-right text-white q-pa-md"
+            icon="close"
             @click="onCancel"
           />
         </div>
@@ -53,10 +63,18 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { reactive, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
+import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { fullsized, formatBytes, notify, CONFIG, U } from "../helpers";
+import {
+  fullsized,
+  formatBytes,
+  removeHash,
+  notify,
+  CONFIG,
+  U,
+} from "../helpers";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 
@@ -64,7 +82,11 @@ import "swiper/scss";
 import "swiper/scss/lazy";
 import "swiper/scss/zoom";
 
-const emit = defineEmits(["carousel-cancel"]);
+const emit = defineEmits([
+  "carousel-cancel",
+  "confirm-delete",
+  "remove-record",
+]);
 const props = defineProps({
   filename: String,
   list: Array,
@@ -72,6 +94,8 @@ const props = defineProps({
 
 const $q = useQuasar();
 const app = useAppStore();
+const auth = useAuthStore();
+const user = computed(() => auth.user);
 const route = useRoute();
 const hash = ref(null);
 const dimension = reactive({});
@@ -142,11 +166,7 @@ window.onpopstate = function () {
   app.showCarousel = false;
 };
 const onCancel = () => {
-  window.history.replaceState(
-    history.state,
-    null,
-    route.fullPath.replace(urlHash, "")
-  );
+  removeHash();
   emit("carousel-cancel", hash.value);
   app.showCarousel = false;
 };
