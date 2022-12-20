@@ -20,7 +20,10 @@
         :key="obj.filename"
         :data-hash="U + obj.filename"
       >
-        <div class="q-pa-md" style="z-index: 1000">
+        <div
+          class="absolute-top q-pa-md"
+          style="background-color: rgba(0, 0, 0, 0.2); z-index: 1000"
+        >
           <q-btn
             v-if="user.isAdmin"
             flat
