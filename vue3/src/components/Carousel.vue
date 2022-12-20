@@ -1,11 +1,5 @@
 <template>
-  <q-dialog
-    v-model="app.showCarousel"
-    :maximized="true"
-    transition-show="slide-up"
-    transition-hide="slide-down"
-    persistent
-  >
+  <q-dialog v-model="app.showCarousel" :maximized="true" persistent>
     <swiper
       :keyboard="true"
       :grab-cursor="true"
@@ -26,10 +20,7 @@
         :key="obj.filename"
         :data-hash="U + obj.filename"
       >
-        <div
-          class="absolute-top q-pa-md"
-          style="background-color: rgba(0, 0, 0, 0.3); z-index: 1000"
-        >
+        <div class="q-pa-md" style="z-index: 1000">
           <q-btn
             v-if="user.isAdmin"
             flat
