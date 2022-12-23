@@ -31,7 +31,7 @@
             class="absolute-top-left text-white q-pa-md"
             icon="delete"
             @click="
-              obj.id ? emit('confirm-delete', obj) : emit('remove-record', obj)
+              obj.id ? emit('confirmDelete', obj) : emit('deleteRecord', obj)
             "
           />
           <div
@@ -76,11 +76,7 @@ import "swiper/scss";
 import "swiper/scss/lazy";
 import "swiper/scss/zoom";
 
-const emit = defineEmits([
-  "carousel-cancel",
-  "confirm-delete",
-  "remove-record",
-]);
+const emit = defineEmits(["carouselCancel", "confirmDelete", "deleteRecord"]);
 const props = defineProps({
   filename: String,
   list: Array,
@@ -156,12 +152,12 @@ const caption = (rec) => {
 };
 
 window.onpopstate = function () {
-  emit("carousel-cancel", hash.value);
+  emit("carouselCancel", hash.value);
   app.showCarousel = false;
 };
 const onCancel = () => {
   removeHash();
-  emit("carousel-cancel", hash.value);
+  emit("carouselCancel", hash.value);
   app.showCarousel = false;
 };
 </script>

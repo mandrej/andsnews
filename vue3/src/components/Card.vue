@@ -6,7 +6,7 @@
       :src="rec.id ? smallsized + rec.filename : fullsized + rec.filename"
       no-spinner
       @click="
-        emit('invoke-carousel', rec.filename);
+        emit('carouselShow', rec.filename);
         analytics('popular-picture');
       "
     >
@@ -60,25 +60,14 @@
         round
         color="grey"
         icon="delete"
-        @click="
-          rec.id ? emit('confirm-delete', rec) : emit('remove-record', rec)
-        "
+        @click="rec.id ? emit('confirmDelete', rec) : emit('deleteRecord', rec)"
       />
       <q-btn
-        v-if="rec.id"
         flat
         round
         color="grey"
-        icon="edit"
-        @click="emit('edit-record', rec)"
-      />
-      <q-btn
-        v-else
-        flat
-        round
-        color="grey"
-        icon="publish"
-        @click="emit('publish-record', rec)"
+        :icon="rec.id ? 'edit' : 'publish'"
+        @click="emit('editRecord', rec)"
       />
       <q-btn
         v-if="rec.id"
@@ -117,11 +106,10 @@ import {
 } from "../helpers";
 
 const emit = defineEmits([
-  "invoke-carousel",
-  "confirm-delete",
-  "edit-record",
-  "remove-record",
-  "publish-record",
+  "carouselShow",
+  "confirmDelete",
+  "editRecord",
+  "deleteRecord",
 ]);
 const props = defineProps({
   rec: Object,

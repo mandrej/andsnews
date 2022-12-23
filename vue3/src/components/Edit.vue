@@ -199,7 +199,7 @@ import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";
 
-const emit = defineEmits(["edit-ok"]);
+const emit = defineEmits(["editOk"]);
 const props = defineProps({
   rec: Object,
 });
@@ -275,7 +275,7 @@ const onCancel = () => {
 const onSubmit = () => {
   tmp.tags = tmp.tags ? tmp.tags : [];
   app.saveRecord(tmp);
-  emit("edit-ok", U + tmp.filename);
+  emit("editOk", U + tmp.filename);
   app.showEdit = false;
 };
 </script>

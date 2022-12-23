@@ -1,13 +1,13 @@
 <template>
-  <Edit v-if="app.showEdit" :rec="current" @editOk="editOk" />
-  <Confirm v-if="app.showConfirm" :rec="current" @confirmOk="confirmOk" />
+  <Edit v-if="app.showEdit" :rec="current" @edit-ok="editOk" />
+  <Confirm v-if="app.showConfirm" :rec="current" @confirm-ok="confirmOk" />
   <Carousel
     v-if="app.showCarousel"
     :filename="currentFileName"
     :list="objects"
-    @carouselCancel="carouselCancel"
-    @confirmDelete="confirmShow"
-    @removeRecord="app.deleteRecord"
+    @carousel-cancel="carouselCancel"
+    @confirm-delete="confirmShow"
+    @delete-record="app.deleteRecord"
   />
 
   <q-page>
@@ -49,10 +49,10 @@
           >
             <Card
               :rec="item"
-              @invokeCarousel="carouselShow"
-              @editRecord="editShow"
-              @confirmDelete="confirmShow"
-              @removeRecord="app.deleteRecord"
+              @carousel-show="carouselShow"
+              @edit-record="editRecord"
+              @confirm-delete="confirmShow"
+              @delete-record="app.deleteRecord"
             />
           </div>
         </transition-group>
@@ -116,7 +116,7 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-const editShow = (rec) => {
+const editRecord = (rec) => {
   app.current = rec;
   fakeHistory();
   app.showEdit = true;

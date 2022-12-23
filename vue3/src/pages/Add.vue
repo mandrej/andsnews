@@ -4,8 +4,8 @@
     v-if="app.showCarousel"
     :filename="currentFileName"
     :list="uploaded"
-    @carouselCancel="carouselCancel"
-    @removeRecord="app.deleteRecord"
+    @carousel-cancel="carouselCancel"
+    @delete-record="app.deleteRecord"
   />
 
   <q-page class="q-pa-md">
@@ -61,9 +61,9 @@
         >
           <Card
             :rec="rec"
-            @invokeCarousel="carouselShow"
-            @removeRecord="app.deleteRecord"
-            @publishRecord="editShow"
+            @carousel-show="carouselShow"
+            @delete-record="app.deleteRecord"
+            @edit-record="editRecord"
           />
         </div>
       </transition-group>
@@ -183,8 +183,9 @@ const addNewTag = (inputValue) => {
     value: inputValue,
   });
 };
-const editShow = async (rec) => {
+const editRecord = async (rec) => {
   /**
+   * PUBLISH RECORD
    * Add user email and tags: [] to new rec; read exif
    * See Edit getExif
    */
