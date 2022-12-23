@@ -63,7 +63,7 @@
             :rec="rec"
             @invokeCarousel="carouselShow"
             @removeRecord="app.deleteRecord"
-            @publishRecord="edit"
+            @publishRecord="editShow"
           />
         </div>
       </transition-group>
@@ -183,7 +183,7 @@ const addNewTag = (inputValue) => {
     value: inputValue,
   });
 };
-const edit = async (rec) => {
+const editShow = async (rec) => {
   /**
    * Add user email and tags: [] to new rec; read exif
    * See Edit getExif

@@ -1,12 +1,12 @@
 <template>
   <Edit v-if="app.showEdit" :rec="current" @editOk="editOk" />
-  <Confirm v-if="app.showConfirm" :rec="current" @closeConfirm="confirmOk" />
+  <Confirm v-if="app.showConfirm" :rec="current" @confirmOk="confirmOk" />
   <Carousel
     v-if="app.showCarousel"
     :filename="currentFileName"
     :list="objects"
     @carouselCancel="carouselCancel"
-    @confirmDelete="confirm"
+    @confirmDelete="confirmShow"
     @removeRecord="app.deleteRecord"
   />
 
@@ -50,8 +50,8 @@
             <Card
               :rec="item"
               @invokeCarousel="carouselShow"
-              @editRecord="edit"
-              @confirmDelete="confirm"
+              @editRecord="editShow"
+              @confirmDelete="confirmShow"
               @removeRecord="app.deleteRecord"
             />
           </div>
@@ -116,7 +116,7 @@ const scrollHandler = throttle((obj) => {
   }
 }, 500);
 
-const edit = (rec) => {
+const editShow = (rec) => {
   app.current = rec;
   fakeHistory();
   app.showEdit = true;
@@ -129,7 +129,7 @@ const editOk = (hash) => {
     el.classList.remove("bounce");
   }, 2000);
 };
-const confirm = (rec) => {
+const confirmShow = (rec) => {
   app.current = rec;
   fakeHistory();
   app.showConfirm = true;
