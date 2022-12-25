@@ -61,6 +61,7 @@
         >
           <Card
             :rec="rec"
+            :canManage="true"
             @carousel-show="carouselShow"
             @delete-record="app.deleteRecord"
             @edit-record="editRecord"

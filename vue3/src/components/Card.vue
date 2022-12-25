@@ -7,7 +7,7 @@
       no-spinner
       @click="
         emit('carouselShow', rec.filename);
-        analytics('popular-picture');
+        emit('googleAnalytics', 'popular-picture', rec);
       "
     >
       <template #error>
@@ -51,7 +51,7 @@
       />
     </q-card-section>
     <q-card-actions
-      v-if="isAuthorOrAdmin"
+      v-if="canManage"
       class="justify-between"
       :class="{ 'q-pt-none': Boolean(rec.id) }"
     >
@@ -85,7 +85,7 @@
         icon="download"
         :href="`/api/download/${props.rec.filename}`"
         :download="rec.filename"
-        @click.stop="analytics('download-picture')"
+        @click="emit('googleAnalytics', 'download-picture', rec)"
       />
     </q-card-actions>
   </q-card>
@@ -93,8 +93,6 @@
 
 <script setup>
 import { copyToClipboard } from "quasar";
-import { computed } from "vue";
-import { useAuthStore } from "../stores/auth";
 import {
   smallsized,
   fullsized,
@@ -110,17 +108,12 @@ const emit = defineEmits([
   "confirmDelete",
   "editRecord",
   "deleteRecord",
+  "googleAnalytics",
 ]);
 const props = defineProps({
   rec: Object,
+  canManage: Boolean,
 });
-
-const auth = useAuthStore();
-const user = computed(() => auth.user);
-
-const isAuthorOrAdmin = () => {
-  return user.value.isAdmin || user.value.email === props.rec.email;
-};
 
 const onShare = () => {
   const url = window.location.href + "#" + U + props.rec.filename;
@@ -131,17 +124,5 @@ const onShare = () => {
     .catch(() => {
       notify({ type: "warning", message: "Unable to copy URL to clipboard" });
     });
-};
-const analytics = (event_name) => {
-  /**
-   * popular-picture
-   * download-picture
-   *
-   */
-  gtag("event", event_name, {
-    filename: props.rec.filename,
-    user: user.value && user.value.email ? user.value.email : "anonymous",
-    count: 1,
-  });
 };
 </script>

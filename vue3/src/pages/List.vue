@@ -49,10 +49,12 @@
           >
             <Card
               :rec="item"
+              :canManage="isAuthorOrAdmin(item)"
               @carousel-show="carouselShow"
               @edit-record="editRecord"
               @confirm-delete="confirmShow"
               @delete-record="app.deleteRecord"
+              @google-analytics="ga"
             />
           </div>
         </transition-group>
@@ -73,6 +75,7 @@
 import { scroll, throttle } from "quasar";
 import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
+import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
 import { formatDatum, fakeHistory } from "../helpers";
 
@@ -85,6 +88,8 @@ const Confirm = defineAsyncComponent(() => import("../components/Confirm.vue"));
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 const app = useAppStore();
+const auth = useAuthStore();
+const user = computed(() => auth.user);
 const route = useRoute();
 const next = computed(() => app.next);
 const error = computed(() => app.error);
@@ -115,6 +120,10 @@ const scrollHandler = throttle((obj) => {
     app.fetchRecords();
   }
 }, 500);
+
+const isAuthorOrAdmin = (rec) => {
+  return user.value.isAdmin || user.value.email === rec.email;
+};
 
 const editRecord = (rec) => {
   app.current = rec;
@@ -148,5 +157,17 @@ const carouselCancel = (hash) => {
   if (!el) return;
   const target = getScrollTarget(el);
   setVerticalScrollPosition(target, el.offsetTop, 500);
+};
+const ga = (event_name, rec) => {
+  /**
+   * popular-picture
+   * download-picture
+   *
+   */
+  gtag("event", event_name, {
+    filename: rec.filename,
+    user: user.value && user.value.email ? user.value.email : "anonymous",
+    count: 1,
+  });
 };
 </script>
