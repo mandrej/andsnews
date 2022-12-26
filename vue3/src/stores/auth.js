@@ -2,7 +2,6 @@
 import { defineStore } from "pinia";
 import { CONFIG, api, firebase, pushMessage } from "../helpers";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useAppStore } from "./app";
 import { getMessaging, getToken } from "firebase/messaging";
 import router from "../router";
 
@@ -13,8 +12,10 @@ provider.addScope("profile");
 provider.addScope("email");
 
 const familyMember = (email) => {
-  const app = useAppStore();
-  return app.values.email.find((obj) => obj.value === email);
+  return CONFIG.family.find((el) => el === email);
+};
+const adminMember = (email) => {
+  return CONFIG.admins.find((el) => el === email);
 };
 
 export const useAuthStore = defineStore("auth", {
@@ -36,14 +37,13 @@ export const useAuthStore = defineStore("auth", {
       } else {
         signInWithPopup(auth, provider)
           .then((response) => {
-            const found = familyMember(response.user.email);
             const payload = {
               name: response.user.displayName,
               email: response.user.email,
               uid: response.user.uid,
               photo: response.user.photoURL,
-              isAuthorized: Boolean(found), // only family members
-              isAdmin: CONFIG.admins.indexOf(response.user.uid) !== -1,
+              isAuthorized: Boolean(familyMember(response.user.email)), // only family members
+              isAdmin: Boolean(adminMember(response.user.email)),
               lastLogin: Date.now(), // millis
             };
             this.user = { ...payload };
