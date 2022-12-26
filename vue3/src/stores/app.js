@@ -37,8 +37,20 @@ export const useAppStore = defineStore("app", {
   }),
   getters: {
     last: (state) => {
-      if (state.values && state.values.year) {
-        return state.values.year[0];
+      if (state.values && state.values.year && state.values.email) {
+        let last = state.values.year[0];
+        last.href = "/list?year=" + last.value;
+        const auth = useAuthStore();
+        if (auth.user.email) {
+          const find = state.values.email.filter(
+            (el) => el.value === auth.user.email
+          );
+          if (find.length === 1) {
+            last = find[0];
+            last.href = "/list?nick=" + emailNick(last.value);
+          }
+        }
+        return last;
       }
       return null;
     },

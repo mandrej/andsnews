@@ -11,7 +11,7 @@
       "
     >
       <template #error>
-        <img src="/broken.svg" />
+        <img :src="fileBroken" />
       </template>
       <div v-if="rec.id" class="absolute-bottom text-subtitle2">
         {{ rec.headline }}
@@ -96,6 +96,7 @@ import { copyToClipboard } from "quasar";
 import {
   smallsized,
   fullsized,
+  fileBroken,
   formatDatum,
   formatBytes,
   cardAttributes,

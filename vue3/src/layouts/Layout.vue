@@ -14,7 +14,7 @@
           class="col-xs-12 col-sm-6 last"
           :style="styling"
         >
-          <a :href="`/list?year=${last.value}`" style="display: block" />
+          <a v-if="last" :href="last.href" style="display: block" />
         </q-responsive>
 
         <div class="col-xs-12 col-sm-6">
@@ -105,7 +105,7 @@ import { defineAsyncComponent, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { fullsized, smallsized } from "../helpers";
+import { fullsized, smallsized, fileBroken } from "../helpers";
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
@@ -125,9 +125,12 @@ const drawer = ref(false);
 const counter = computed(() => app.counter);
 
 const styling = computed(() => {
-  const low = smallsized + last.value.filename;
-  const high = fullsized + last.value.filename;
-  return "background-image: url(" + high + "), url(" + low + ")";
+  if (last.value) {
+    const low = smallsized + last.value.filename;
+    const high = fullsized + last.value.filename;
+    return "background-image: url(" + high + "), url(" + low + ")";
+  }
+  return "background-image: url(" + fileBroken + ")";
 });
 const version = computed(() => {
   const ver = process.env.ANDS_VERSION.match(/.{1,4}/g).join(".");

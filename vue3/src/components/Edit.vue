@@ -41,7 +41,7 @@
             <div class="col-xs-12 col-sm-4 gt-xs">
               <q-img :ratio="1" :src="smallsized + tmp.filename">
                 <template #error>
-                  <img src="/broken.svg" />
+                  <img :src="fileBroken" />
                 </template>
               </q-img>
             </div>
@@ -194,7 +194,14 @@
 
 <script setup>
 import { computed, reactive } from "vue";
-import { CONFIG, smallsized, readExif, formatBytes, U } from "../helpers";
+import {
+  CONFIG,
+  smallsized,
+  fileBroken,
+  readExif,
+  formatBytes,
+  U,
+} from "../helpers";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";
