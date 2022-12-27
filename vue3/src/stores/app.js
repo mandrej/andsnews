@@ -42,11 +42,11 @@ export const useAppStore = defineStore("app", {
         last.href = "/list?year=" + last.value;
         const auth = useAuthStore();
         if (auth.user.email) {
-          const find = state.values.email.filter(
+          const find = state.values.email.find(
             (el) => el.value === auth.user.email
           );
-          if (find.length === 1) {
-            last = find[0];
+          if (find) {
+            last = find;
             last.href = "/list?nick=" + emailNick(last.value);
           }
         }
