@@ -13,12 +13,12 @@
     "serve": "quasar serve dist/pwa --hostname localhost --cors --proxy proxy.js"
   },
   "dependencies": {
-    "@quasar/extras": "^1.15.8",
+    "@quasar/extras": "^1.15.9",
     "axios": "^0.27.2",
     "firebase": "^9.10.0",
     "pinia": "^2.0.22",
     "pinia-plugin-persistedstate": "^2.2.0",
-    "quasar": "^2.11.1",
+    "quasar": "^2.11.3",
     "querystring-es3": "^0.2.1",
     "swiper": "^8.4.2",
     "vue": "^3.2.39",
