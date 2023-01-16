@@ -52,9 +52,9 @@
                 :placeholder="CONFIG.noTitle"
                 :hint="`Image without name is called '${CONFIG.noTitle}'. Required`"
                 @blur="
-                  tmp.headline === undefined || tmp.headline === ''
+                  tmp.headline === undefined || tmp.headline.trim() === ''
                     ? (tmp.headline = CONFIG.noTitle)
-                    : tmp.headline
+                    : (tmp.headline = tmp.headline.trim())
                 "
                 autofocus
               />
