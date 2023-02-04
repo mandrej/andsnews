@@ -1,3 +1,4 @@
+import functions_framework
 from io import BytesIO
 from google.cloud import storage
 from PIL import Image
@@ -6,27 +7,26 @@ storage_client = storage.Client()
 thumb_bucket = storage_client.get_bucket('thumbnails400')
 
 
-def makeUS(event, context):
-    '''
-    event:
-    {'bucket': 'andsnews.appspot.com', 'contentLanguage': 'en', 'contentType': 'image/jpeg', 'crc32c': '5roF/g==',
-     'etag': 'CIHo4IbxzPQCEAE=', 'generation': '1638714989622273', 'id': 'andsnews.appspot.com/DSC_5696-21-11-29-153.jpg/1638714989622273',
-     'kind': 'storage#object', 'md5Hash': 'XhQvXbqrmnC69onKbbabcg==',
-     'mediaLink': 'https://www.googleapis.com/download/storage/v1/b/andsnews.appspot.com/o/DSC_5696-21-11-29-153.jpg?generation=1638714989622273&alt=media',
-     'metageneration': '1', 'name': 'DSC_5696-21-11-29-153.jpg', 'selfLink': 'https://www.googleapis.com/storage/v1/b/andsnews.appspot.com/o/DSC_5696-21-11-29-153.jpg',
-     'size': '882556', 'storageClass': 'STANDARD', 'timeCreated': '2021-12-05T14:36:29.629Z', 'timeStorageClassUpdated': '2021-12-05T14:36:29.629Z',
-     'updated': '2021-12-05T14:36:29.629Z'}
-    '''
+@functions_framework.cloud_event
+def make2(cloud_event):
+    event_id = cloud_event["id"]
+    event_type = cloud_event["type"]
+    print(f"Event ID: {event_id}")
+    print(f"Event type: {event_type}")
+
+    data = cloud_event.data
+    print(data)
+
     size = 400
 
     # skip if already exists
-    thumb = thumb_bucket.get_blob(event['name'])
+    thumb = thumb_bucket.get_blob(data['name'])
     if thumb:
         return
 
     out = BytesIO()
-    source_bucket = storage_client.get_bucket(event['bucket'])
-    blob = source_bucket.get_blob(event['name'])
+    source_bucket = storage_client.get_bucket(data['bucket'])
+    blob = source_bucket.get_blob(data['name'])
     if blob:
         bytes = blob.download_as_bytes()
         im = Image.open(BytesIO(bytes))
@@ -38,17 +38,46 @@ def makeUS(event, context):
             im.save(out, im.format)
 
         # Upload to destination storage
-        thumb = thumb_bucket.blob(event['name'])
+        thumb = thumb_bucket.blob(data['name'])
         thumb.upload_from_string(
-            out.getvalue(), content_type=event['contentType'])
+            out.getvalue(), content_type=data['contentType'])
         thumb.cache_control = blob.cache_control
         thumb.patch()
 
 
-def removeUS(event, context):
-    thumb = thumb_bucket.get_blob(event['name'])
+@functions_framework.cloud_event
+def remove2(cloud_event):
+    event_id = cloud_event["id"]
+    event_type = cloud_event["type"]
+    print(f"Event ID: {event_id}")
+    print(f"Event type: {event_type}")
+
+    data = cloud_event.data
+    print(data)
+
+    thumb = thumb_bucket.get_blob(data['name'])
     if thumb:
         thumb.delete()
 
-# gcloud functions deploy makeUS --project=andsnews --region=us-central1 --entry-point=makeUS --runtime=python310 --trigger-resource=andsnews.appspot.com --trigger-event=google.storage.object.finalize
-# gcloud functions deploy removeUS --project=andsnews --region=us-central1 --entry-point=removeUS --runtime=python310 --trigger-resource=andsnews.appspot.com --trigger-event=google.storage.object.delete
+
+"""
+cd ~/work/andsnews/functions/thumbnail
+
+gcloud functions deploy make2 \
+--gen2 \
+--runtime=python310 \
+--entry-point="make2" \
+--trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+--trigger-event-filters="bucket=andsnews.appspot.com" \
+--trigger-location="us" \
+--region="us-central1"
+
+gcloud functions deploy remove2 \
+--gen2 \
+--runtime=python310 \
+--entry-point="remove2" \
+--trigger-event-filters="type=google.cloud.storage.object.v1.deleted" \
+--trigger-event-filters="bucket=andsnews.appspot.com" \
+--trigger-location="us" \
+--region="us-central1"
+"""
