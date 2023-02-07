@@ -1,3 +1,4 @@
+import functions_framework
 from flask import abort
 from firebase_admin import credentials, initialize_app, messaging
 
@@ -6,7 +7,8 @@ DEFAULT_APP = initialize_app(cred)
 HOSTS = 'https://ands.appspot.com, http://localhost:9000, http://localhost:9200'
 
 
-def send(request):
+@functions_framework.http
+def send2(request):
     """
     projects/andsnews/messages/0:1620404962628202%2fd9afcdf9fd7ecd
     """
@@ -43,6 +45,7 @@ def send(request):
     if data:
         payload["data"] = data
 
+    print(payload)
     if isinstance(recipients, list):
         payload["tokens"] = recipients  # type: ignore
         resp = messaging.send_multicast(
@@ -54,4 +57,14 @@ def send(request):
         return (f'{resp} sent', 200, headers)
 
 
-# gcloud functions deploy send --project=andsnews --region=us-central1 --runtime=python310 --trigger-http --allow-unauthenticated
+"""
+cd ~/work/andsnews/functions/push
+
+gcloud functions deploy send2 \
+--gen2 \
+--runtime=python310 \
+--entry-point="send2" \
+--trigger-http \
+--allow-unauthenticated \
+--region="us-central1"
+"""
