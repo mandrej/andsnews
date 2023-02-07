@@ -1,12 +1,7 @@
-import logging
-import google.cloud.logging
 import functions_framework
 from io import BytesIO
 from google.cloud import storage
 from PIL import Image
-
-client = google.cloud.logging.Client()
-client.setup_logging()
 
 storage_client = storage.Client()
 thumb_bucket = storage_client.get_bucket('thumbnails400')
@@ -16,7 +11,7 @@ thumb_bucket = storage_client.get_bucket('thumbnails400')
 def make2(cloud_event):
     data = cloud_event.data
     name = data["name"]
-    logging.info(f"File finalized: {name}")
+    print(f"File finalized: {name}")
 
     size = 400
     # skip if already exists
@@ -49,7 +44,7 @@ def make2(cloud_event):
 def remove2(cloud_event):
     data = cloud_event.data
     name = data["name"]
-    logging.info(f"File deleted: {name}")
+    print(f"File deleted: {name}")
 
     thumb = thumb_bucket.get_blob(data['name'])
     if thumb:
