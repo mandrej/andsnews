@@ -1,3 +1,6 @@
 functions-framework==3.2.0
 Pillow==9.2.0
 google-cloud-storage==2.5.0
+google-cloud-logging==3.5.0
+
+# service-719127177629@serverless-robot-prod.iam.gserviceaccount.com
