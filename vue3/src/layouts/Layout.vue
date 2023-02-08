@@ -14,7 +14,12 @@
           class="col-xs-12 col-sm-6 last"
           :style="styling"
         >
-          <a v-if="last" :href="last.href" style="display: block" />
+          <a
+            v-if="last"
+            :href="last.href"
+            v-ripple.early="{ color: 'purple' }"
+            style="display: block"
+          />
         </q-responsive>
 
         <div class="col-xs-12 col-sm-6">
