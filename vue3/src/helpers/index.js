@@ -45,7 +45,11 @@ const pushMessage = (recipients, msg) => {
       { timeout: 0 }
     )
     .then((resp) => {
-      notify({ type: "external", message: resp.data });
+      /**
+       * on message send: pushMessage  2 successfully sent, 1 failed
+       * recalc bycket: pushMessage  projects/andsnews/messages/dbc730ff-9e70-4f37-b907-50644f489565 sent
+       */
+      if (process.env.DEV) console.log("pushMessage ", resp.data);
     })
     .catch((err) => {
       console.error(err);
