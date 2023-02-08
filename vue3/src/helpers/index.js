@@ -45,9 +45,12 @@ const pushMessage = (recipients, msg) => {
       { timeout: 0 }
     )
     .then((resp) => {
-      if (process.env.DEV) console.log("pushMessage ", resp);
+      notify({ type: "external", message: resp.data });
     })
-    .catch(() => console.error("push message failed"));
+    .catch((err) => {
+      console.error(err);
+      notify({ type: "negative", message: "Push message failed" });
+    });
 };
 
 const fileBroken = CONFIG.fileBroken;
