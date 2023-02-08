@@ -4,6 +4,7 @@
       class="cursor-pointer"
       :ratio="5 / 4"
       :src="rec.id ? smallsized + rec.filename : fullsized + rec.filename"
+      v-ripple.early="{ color: 'purple' }"
       no-spinner
       @click="
         emit('carouselShow', rec.filename);
