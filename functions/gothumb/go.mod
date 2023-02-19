@@ -1,11 +1,10 @@
-module gothumb
+module example.com/gothumb
 
 go 1.19
 
 require (
 	cloud.google.com/go/storage v1.28.1
 	github.com/cloudevents/sdk-go/v2 v2.13.0
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 )
 
 require (
