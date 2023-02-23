@@ -20,6 +20,10 @@
     "editor.defaultFormatter": "ms-python.python",
     "editor.formatOnSave": true
   },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true
+  },
 
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": true,
