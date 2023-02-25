@@ -1,8 +1,7 @@
-package gothumb
+package main
 
 import (
 	"context"
-	"fmt"
 	"image"
 	"image/jpeg"
 	"log"
@@ -13,14 +12,14 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/cloudevents/sdk-go/v2/event"
-	"github.com/nfnt/resize"
+	"github.com/disintegration/imaging"
 	"google.golang.org/api/googleapi"
 )
 
 const quality = 85
 
 var client *storage.Client
-var maxSize uint64
+var maxSize int
 var destination string
 
 type StorageObjectData struct {
@@ -43,7 +42,7 @@ func init() {
 	if size, ok := os.LookupEnv("MAX_SIZE"); !ok {
 		log.Fatalf("No MAX_SIZE given")
 	} else {
-		maxSize, _ = strconv.ParseUint(size, 10, 64)
+		maxSize, _ = strconv.Atoi(size)
 	}
 	if destination, ok = os.LookupEnv("THUMBNAILS"); !ok {
 		log.Fatalf("No THUMBNAILS given")
@@ -66,6 +65,7 @@ func eventData(e event.Event) StorageObjectData {
 	return data
 }
 
+//lint:ignore U1000 dont know
 func make2(ctx context.Context, e event.Event) error {
 	data := eventData(e)
 	inputBlob := client.Bucket(data.Bucket).Object(data.Name)
@@ -73,7 +73,7 @@ func make2(ctx context.Context, e event.Event) error {
 
 	attr, err := inputBlob.Attrs(ctx)
 	if err != nil {
-		return fmt.Errorf("inputBlob attribute error: %v", err)
+		log.Printf("inputBlob attribute error: %v", err)
 	}
 	_, err = outputBlob.Attrs(ctx)
 	if err != nil {
@@ -81,42 +81,42 @@ func make2(ctx context.Context, e event.Event) error {
 		switch ee := err.(type) {
 		case *googleapi.Error:
 			if ee.Code == http.StatusPreconditionFailed {
-				return fmt.Errorf("Precondition failed, outputBlob exists %v\n", ee.Code)
+				log.Printf("Precondition failed, outputBlob exists %v\n", ee.Code)
 				os.Exit(0)
 			}
 		default:
-			fmt.Printf("default error %v\n", ee)
+			log.Printf("continue %v\n", ee)
 		}
 	}
 
 	r, err := inputBlob.NewReader(ctx)
 	if err != nil {
-		return fmt.Errorf("Bucket reader error: %v", err)
+		log.Printf("Bucket reader error: %v", err)
 	}
 	defer r.Close()
 
 	im, _, err := image.DecodeConfig(r)
 	if err != nil {
-		return fmt.Errorf("DecodeConfig image: %v", err)
+		log.Printf("DecodeConfig image: %v", err)
 	}
-	log.Printf("Width, Height: %v, %v", im.Width, im.Height)
+	// log.Printf("Width, Height: %v, %v", im.Width, im.Height)
 
 	r, err = inputBlob.NewReader(ctx)
 	if err != nil {
-		fmt.Printf("Bucket reader error: %v", err)
+		log.Printf("Bucket reader error: %v", err)
 	}
 	defer r.Close()
 
 	img, _, err := image.Decode(r)
 	if err != nil {
-		return fmt.Errorf("Decode image: %v", err)
+		log.Printf("Decode image: %v", err)
 	}
 
 	var newImage image.Image
 	if im.Width >= im.Height {
-		newImage = resize.Resize(uint(maxSize), 0, img, resize.Lanczos3)
+		newImage = imaging.Resize(img, maxSize, 0, imaging.Lanczos)
 	} else {
-		newImage = resize.Resize(0, uint(maxSize), img, resize.Lanczos3)
+		newImage = imaging.Resize(img, 0, maxSize, imaging.Lanczos)
 	}
 
 	var opts jpeg.Options
@@ -125,7 +125,7 @@ func make2(ctx context.Context, e event.Event) error {
 	w := outputBlob.NewWriter(ctx)
 	err = jpeg.Encode(w, newImage, &opts)
 	if err != nil {
-		return fmt.Errorf("outputBlob writer error %v", err)
+		log.Printf("outputBlob writer error %v", err)
 	}
 
 	objectAttrsToUpdate := storage.ObjectAttrsToUpdate{
@@ -135,28 +135,29 @@ func make2(ctx context.Context, e event.Event) error {
 		},
 	}
 	if _, err := outputBlob.Update(ctx, objectAttrsToUpdate); err != nil {
-		return fmt.Errorf("outputBlob attributes update error:", err)
+		log.Printf("outputBlob attributes update error: %v", err)
 	}
 	if err := w.Close(); err != nil {
-		return fmt.Errorf("Writer close error: %v", err)
+		log.Printf("Writer close error: %v", err)
 	}
 
 	return nil
 }
 
-func remove(ctx context.Context, e event.Event) error {
+//lint:ignore U1000 dont know
+func remove2(ctx context.Context, e event.Event) error {
 	data := eventData(e)
 	blob := client.Bucket(destination).Object(data.Name).If(storage.Conditions{DoesNotExist: false})
 	if err := blob.Delete(ctx); err != nil {
 		switch ee := err.(type) {
 		case *googleapi.Error:
 			if ee.Code == http.StatusPreconditionFailed {
-				return fmt.Errorf("Precondition failed, outputBlob does not exists %v\n", ee.Code)
+				log.Printf("Precondition failed, outputBlob does not exists %v\n", ee.Code)
 				os.Exit(0)
 			}
 		default:
-			fmt.Printf("default error %v\n", ee)
-			return fmt.Errorf("Bucket delete error: %v", err)
+			// log.Printf("continue %v\n", ee)
+			log.Printf("outputBlob delete error: %v", err)
 		}
 	}
 	return nil
