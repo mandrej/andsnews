@@ -1,4 +1,4 @@
-module example.com/gothumb
+module github.com/gothumb
 
 go 1.19
 

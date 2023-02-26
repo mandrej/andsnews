@@ -1,4 +1,4 @@
-package main
+package gothumb
 
 import (
 	"context"
@@ -65,7 +65,6 @@ func eventData(e event.Event) StorageObjectData {
 	return data
 }
 
-//lint:ignore U1000 dont know
 func make2(ctx context.Context, e event.Event) error {
 	data := eventData(e)
 	inputBlob := client.Bucket(data.Bucket).Object(data.Name)
@@ -144,8 +143,7 @@ func make2(ctx context.Context, e event.Event) error {
 	return nil
 }
 
-//lint:ignore U1000 dont know
-func remove2(ctx context.Context, e event.Event) error {
+func remove2go(ctx context.Context, e event.Event) error {
 	data := eventData(e)
 	blob := client.Bucket(destination).Object(data.Name).If(storage.Conditions{DoesNotExist: false})
 	if err := blob.Delete(ctx); err != nil {
@@ -166,10 +164,10 @@ func remove2(ctx context.Context, e event.Event) error {
 /*
 cd ~/work/andsnews/functions/thumbnail
 
-gcloud functions deploy make2 \
+gcloud functions deploy make2go \
 --gen2 \
 --runtime=go119 \
---entry-point="make2" \
+--entry-point="make2go" \
 --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
 --trigger-event-filters="bucket=andsnews.appspot.com" \
 --set-env-vars="MAX_SIZE=400" \
@@ -177,10 +175,10 @@ gcloud functions deploy make2 \
 --trigger-location="us" \
 --region="us-central1"
 
-gcloud functions deploy remove2 \
+gcloud functions deploy remove2go \
 --gen2 \
 --runtime=go119 \
---entry-point="remove2" \
+--entry-point="remove2go" \
 --trigger-event-filters="type=google.cloud.storage.object.v1.deleted" \
 --trigger-event-filters="bucket=andsnews.appspot.com" \
 --set-env-vars="THUMBNAILS=thumbnails400" \
