@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/cloudevents/sdk-go/v2/event"
 	"github.com/disintegration/imaging"
 	"google.golang.org/api/googleapi"
@@ -48,6 +49,8 @@ func init() {
 		log.Fatalf("No THUMBNAILS given")
 		os.Exit(1)
 	}
+	functions.CloudEvent("Make", make2)
+	functions.CloudEvent("Remove", remove2go)
 }
 
 func eventData(e event.Event) StorageObjectData {
