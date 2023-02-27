@@ -39,9 +39,14 @@
         >
           <div class="row q-col-gutter-md">
             <div class="col-xs-12 col-sm-4 gt-xs">
-              <q-img :ratio="1" :src="smallsized + tmp.filename">
+              <q-img
+                :ratio="1"
+                :src="smallsized + tmp.filename"
+                loading="lazy"
+                spinner-color="warning"
+              >
                 <template #error>
-                  <img :src="fullsized + tmp.filename" />
+                  <img :src="fileBroken" />
                 </template>
               </q-img>
             </div>
@@ -196,7 +201,6 @@
 import { computed, reactive } from "vue";
 import {
   CONFIG,
-  fullsized,
   smallsized,
   fileBroken,
   readExif,
