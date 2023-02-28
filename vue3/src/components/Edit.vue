@@ -41,9 +41,9 @@
             <div class="col-xs-12 col-sm-4 gt-xs">
               <q-img
                 :ratio="1"
-                :src="smallsized + tmp.filename"
-                loading="lazy"
-                spinner-color="warning"
+                :src="
+                  tmp.id ? smallsized + tmp.filename : fullsized + tmp.filename
+                "
               >
                 <template #error>
                   <img :src="fileBroken" />
@@ -201,6 +201,7 @@
 import { computed, reactive } from "vue";
 import {
   CONFIG,
+  fullsized,
   smallsized,
   fileBroken,
   readExif,
