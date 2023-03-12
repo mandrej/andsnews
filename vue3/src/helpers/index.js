@@ -5,7 +5,7 @@ import { initializeApp } from "firebase/app";
 import { date, format } from "quasar";
 
 const api = axios.create({ baseURL: "/api", timeout: 60000 }); // GAE timeout 60 sec
-const firebase = initializeApp(CONFIG.firebase);
+const firebaseApp = initializeApp(CONFIG.firebase);
 const { humanStorageSize } = format;
 const { formatDate } = date;
 
@@ -120,7 +120,7 @@ const removeHash = () => {
 export {
   CONFIG,
   api,
-  firebase,
+  firebaseApp,
   notify,
   pushMessage,
   fileBroken,

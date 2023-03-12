@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import { CONFIG, api, firebase, pushMessage } from "../helpers";
+import { CONFIG, api, firebaseApp, pushMessage } from "../helpers";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getMessaging, getToken } from "firebase/messaging";
 import router from "../router";
 
-const auth = getAuth(firebase);
+const auth = getAuth(firebaseApp);
 const messaging = getMessaging();
 const provider = new GoogleAuthProvider();
 provider.addScope("profile");
