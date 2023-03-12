@@ -100,10 +100,9 @@ import {
   fileBroken,
   formatDatum,
   formatBytes,
-  cardAttributes,
-  notify,
   U,
 } from "../helpers";
+import notify from "../helpers/notify";
 
 const emit = defineEmits([
   "carouselShow",
@@ -116,6 +115,14 @@ const props = defineProps({
   rec: Object,
   canManage: Boolean,
 });
+
+const cardAttributes = (filename) => {
+  const [name, ext] = filename.split(".");
+  return {
+    id: U + name,
+    class: ext + " bg-grey-2",
+  };
+};
 
 const onShare = () => {
   const url = window.location.href + "#" + U + props.rec.filename;

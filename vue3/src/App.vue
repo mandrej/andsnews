@@ -5,7 +5,7 @@
 import { onMounted } from "vue";
 import { useAppStore } from "./stores/app";
 import { getMessaging, onMessage } from "firebase/messaging";
-import { notify } from "./helpers";
+import notify from "./helpers/notify";
 
 const messaging = getMessaging();
 const app = useAppStore();

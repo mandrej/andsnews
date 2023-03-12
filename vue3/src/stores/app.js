@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import {
-  CONFIG,
-  api,
-  emailNick,
-  pushMessage,
-  removeHash,
-  notify,
-} from "../helpers";
+import { CONFIG, emailNick, removeHash } from "../helpers";
+import api from "../helpers/api";
+import notify from "../helpers/notify";
+import pushMessage from "../helpers/push";
 import { useAuthStore } from "./auth";
 import querystring from "querystring-es3";
 

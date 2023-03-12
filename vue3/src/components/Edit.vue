@@ -204,10 +204,10 @@ import {
   fullsized,
   smallsized,
   fileBroken,
-  readExif,
   formatBytes,
   U,
 } from "../helpers";
+import readExif from "../helpers/exif";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import Complete from "./Complete.vue";

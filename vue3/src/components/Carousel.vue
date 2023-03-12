@@ -61,14 +61,8 @@ import { reactive, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import {
-  fullsized,
-  formatBytes,
-  removeHash,
-  notify,
-  CONFIG,
-  U,
-} from "../helpers";
+import { fullsized, formatBytes, removeHash, CONFIG, U } from "../helpers";
+import notify from "../helpers/notify";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Lazy, Zoom, Keyboard } from "swiper";
 

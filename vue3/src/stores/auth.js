@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { defineStore } from "pinia";
-import { CONFIG, api, firebaseApp, pushMessage } from "../helpers";
+import { CONFIG } from "../helpers";
+import api from "../helpers/api";
+import firebaseApp from "../helpers/fire";
+import pushMessage from "../helpers/push";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getMessaging, getToken } from "firebase/messaging";
 import router from "../router";

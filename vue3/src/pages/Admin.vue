@@ -82,7 +82,8 @@
 import { computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
-import { api, formatDatum } from "../helpers";
+import api from "../helpers/api";
+import { formatDatum } from "../helpers";
 
 const app = useAppStore();
 const auth = useAuthStore();
