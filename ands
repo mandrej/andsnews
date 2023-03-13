@@ -44,7 +44,7 @@ else
       cd ..
       exit ;;
     deploy)
-      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml cron.yaml # --no-promote
+      gcloud app deploy --project=$proj_id --version=$version app.yaml index.yaml cron.yaml # --no-promote --no-cache
       # gcloud datastore indexes cleanup index.yaml
       exit ;;
     *)
