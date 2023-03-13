@@ -2,12 +2,13 @@
 import { defineStore } from "pinia";
 import { CONFIG } from "../helpers";
 import api from "../helpers/api";
-import firebaseApp from "../helpers/fire";
 import pushMessage from "../helpers/push";
+import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getMessaging, getToken } from "firebase/messaging";
 import router from "../router";
 
+const firebaseApp = initializeApp(CONFIG.firebase);
 const auth = getAuth(firebaseApp);
 const messaging = getMessaging();
 const provider = new GoogleAuthProvider();
