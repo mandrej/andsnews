@@ -51,7 +51,7 @@ def rebuilder(field, token):
     if field == 'tags':
         values = [item for ent in iterator for item in ent[field]]
     else:
-        values = [ent[field] for ent in iterator if ent[field]]
+        values = [ent[field] for ent in iterator if field in ent and ent[field] is not None]
 
     tally = collections.Counter(values)
     for value, count in tally.items():
@@ -187,11 +187,11 @@ class Repair(object):
 
 class Fixer(object):
     """
-    No need for photo width, height. Remove dim property
+    Unify lens names
     """
     TOKEN = None
     QUERY = datastore_client.query(kind='Photo')
-    # .add_filter('model', '=', 'SIGMA dp2 Quattro')
+    # .add_filter('lens', '=', 'Canon EF 50mm f1.8 STM')
     COUNT = 0
 
     def run(self, batch_size=100):
@@ -203,8 +203,8 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if 'dim' in ent:
-                del ent['dim']
+            if 'lens' in ent and ent['lens'] is None:
+                del ent['lens']
                 self.COUNT += 1
                 batch.append(ent)
 

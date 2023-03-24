@@ -33,13 +33,11 @@
         </q-item-section>
       </q-item>
       <q-item-label header
-        >Fix on {{ formatDatum("2022-06-29", "DD.MM.YYYY") }}</q-item-label
+        >Fix on {{ formatDatum("2023-04-24", "DD.MM.YYYY") }}</q-item-label
       >
       <q-item>
         <q-item-section>
-          <q-item-label
-            >No need for photo width, height. Remove dim property</q-item-label
-          >
+          <q-item-label>Unify lens names</q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-btn :disabled="true" color="primary" label="Fix" @click="fix" />
