@@ -1,7 +1,6 @@
 import string
 import datetime
 import requests
-from io import BytesIO
 from timeit import default_timer
 from decimal import getcontext, Decimal
 
@@ -94,7 +93,7 @@ def get_exif(buff):
         'model': 'UNKNOWN',
         'date': datetime.datetime.now()
     }
-    tags = process_file(BytesIO(buff), details=False)
+    tags = process_file(buff, details=False)
 
     # for k, v in tags.items():
     #     try:

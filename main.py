@@ -28,12 +28,9 @@ def bucket_info(verb):
 
 @app.route('/api/download/<filename>', methods=['GET'])
 def download(filename):
-    inp = BytesIO()
-
     blob = photo.storage_blob(filename)
     if blob:
-        blob.download_to_file(inp)
-        data = inp.getvalue()
+        data = blob.download_as_bytes()
 
         response = make_response(data)
         response.headers['Content-Type'] = blob.content_type
@@ -45,14 +42,13 @@ def download(filename):
 
 @app.route('/api/exif/<filename>', methods=['GET'])
 def exif(filename):
-    inp = BytesIO()
+    buff = BytesIO()
 
     blob = photo.storage_blob(filename)
     if blob:
-        blob.download_to_file(inp)
-        data = inp.getvalue()
+        blob.download_to_file(buff)
 
-        out = get_exif(data)
+        out = get_exif(buff)
         out['date'] = out['date'].strftime(CONFIG['date_time_format'])
         if out.get('flash', None) is None:
             out['flash'] = False

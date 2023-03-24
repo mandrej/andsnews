@@ -18,7 +18,7 @@
     "firebase": "^9.17.1",
     "pinia": "^2.0.22",
     "pinia-plugin-persistedstate": "^2.2.0",
-    "quasar": "^2.11.7",
+    "quasar": "^2.11.9",
     "querystring-es3": "^0.2.1",
     "swiper": "^8.4.2",
     "vue": "^3.2.39",
