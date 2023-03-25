@@ -7,6 +7,14 @@ from decimal import getcontext, Decimal
 from exifread import process_file
 from .config import CONFIG
 
+LENSES = {
+    "Nikon NIKKOR Z 24-70mm f4 S": "NIKKOR Z 24-70mm f4 S",
+    "70-300 mm f4.5-5.6": "70.0-300.0 mm f4.5-5.6",
+    "Canon EF-S 17-55mm f2.8 IS USM": "EF-S17-55mm f2.8 IS USM",
+    "Canon EF 100mm f2.8 Macro USM": "EF100mm f2.8 Macro USM",
+    "Canon EF 50mm f1.8 STM": "EF50mm f1.8 STM"
+}
+
 
 def push_message(recipients, message='', **data):
     """
@@ -115,8 +123,12 @@ def get_exif(buff):
             data['model'] = f'{make} {model}'
 
     if 'EXIF LensModel' in tags:
-        # 'EXIF LensModel': (0xA434) ASCII=Nikon NIKKOR Z 24-70mm f/4 S @ 838
-        data['lens'] = tags['EXIF LensModel'].printable.replace('/', '')
+        # Unify lens names
+        lens = tags['EXIF LensModel'].printable.replace('/', '')
+        try:
+            data['lens'] = LENSES[lens]
+        except KeyError:
+            data['lens'] = lens
     if 'EXIF DateTimeOriginal' in tags:
         # 'EXIF DateTimeOriginal': (0x9003) ASCII=2020:12:03 11:28:19 @ 720
         try:
