@@ -51,7 +51,7 @@ def rebuilder(field, token):
     if field == 'tags':
         values = [item for ent in iterator for item in ent[field]]
     else:
-        values = [ent[field] for ent in iterator if field in ent and ent[field] is not None]
+        values = [ent[field] for ent in iterator if field in ent]
 
     tally = collections.Counter(values)
     for value, count in tally.items():
