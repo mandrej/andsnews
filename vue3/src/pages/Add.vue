@@ -77,7 +77,6 @@ import { scroll } from "quasar";
 import { defineAsyncComponent, computed, reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
-import { useRoute } from "vue-router";
 import { CONFIG, fakeHistory } from "../helpers";
 import api from "../helpers/api";
 import notify from "../helpers/notify";
@@ -92,7 +91,6 @@ const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 const app = useAppStore();
 const auth = useAuthStore();
-const route = useRoute();
 const tagValues = computed(() => app.tagValues);
 const tagsToApply = computed({
   get() {

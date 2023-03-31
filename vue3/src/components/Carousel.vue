@@ -56,7 +56,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { reactive, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";

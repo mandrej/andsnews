@@ -10,6 +10,7 @@
         >
           <q-btn fab icon="add" color="warning" to="/add" />
         </q-page-sticky>
+
         <q-responsive
           :ratio="1"
           class="col-xs-12 col-sm-6 last"
@@ -25,16 +26,22 @@
 
         <div class="col-xs-12 col-sm-6">
           <q-toolbar class="bg-grey-8 text-white q-pa-md">
-            <q-toolbar-title class="text-h4">
+            <q-toolbar-title class="text-h4" style="line-height: 100%">
               {{ title }}
               <br />
+              <q-badge
+                floating
+                class="text-white bg-transparent"
+                style="top: 4px; right: 2px"
+                >{{ version }}</q-badge
+              >
               <span class="text-body1"
                 >{{ bucketInfo.count }} photos since 2007 and counting</span
               >
             </q-toolbar-title>
             <q-btn
               v-if="app.find && Object.keys(app.find).length"
-              size="xl"
+              size="2em"
               flat
               round
               icon="history"
@@ -43,13 +50,11 @@
           </q-toolbar>
 
           <router-view />
-          <div class="q-pa-md text-right">
-            {{ version }}
-          </div>
         </div>
       </q-page>
     </q-page-container>
   </q-layout>
+  <!--  -->
   <q-layout v-else view="hHh Lpr lFf">
     <q-header class="fixed-top">
       <q-toolbar class="bg-grey-8 text-white">
@@ -74,7 +79,7 @@
           v-else
           flat
           round
-          icon="grid_view"
+          icon="history"
           :to="{ name: 'list', query: app.find }"
         >
         </q-btn>
