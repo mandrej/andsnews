@@ -1,13 +1,12 @@
 <template>
   <div class="absolute-center text-center">
-    <q-banner rounded class="text-white q-pa-md bg-negative">
+    <q-banner rounded class="text-white q-pa-md q-gutter-sm bg-negative">
       <div class="text-h3">{{ props.code }}</div>
       {{ text }}
       <template v-slot:action>
-        <q-btn flat color="white" size="lg" to="/">
-          <q-icon left name="home" />
-          <div>Go Home</div>
-        </q-btn>
+        <q-btn class="full-width" flat color="white" size="lg" to="/"
+          >Go Home</q-btn
+        >
       </template>
     </q-banner>
   </div>
@@ -15,10 +14,9 @@
 
 <script setup>
 import { ref } from "vue";
-// eslint-disable-next-line no-undef
 const props = defineProps({
   code: {
-    type: [String, Number],
+    type: Number,
     default: 404,
   },
 });

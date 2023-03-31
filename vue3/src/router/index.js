@@ -10,7 +10,7 @@ const router = createRouter({
   history: createWebHistory(process.env.VUE_ROUTER_BASE),
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   const auth = useAuthStore();
   const user = auth.user;
   // Unlog user after 7 days
@@ -20,11 +20,9 @@ router.beforeEach((to, from, next) => {
     }
   }
   if (to.meta.requiresAuth && !user.isAuthorized) {
-    next({ name: "error", params: { code: 401 } });
+    return { name: "401", replace: true };
   } else if (to.meta.requiresAdmin && !user.isAdmin) {
-    next({ name: "error", params: { code: 401 } });
-  } else {
-    next();
+    return { name: "401", replace: true };
   }
 });
 router.afterEach((to, from) => {
