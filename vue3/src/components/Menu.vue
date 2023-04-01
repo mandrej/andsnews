@@ -38,11 +38,13 @@
     </q-item>
     <q-item />
   </q-list>
+  <q-badge class="text-white bg-transparent q-pa-md">{{ version }}</q-badge>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { useAuthStore } from "../stores/auth";
+import { version } from "../helpers";
 
 const auth = useAuthStore();
 const user = computed(() => auth.user);

@@ -1,5 +1,6 @@
 import CONFIG from "../../../config.json";
 import { date, format } from "quasar";
+import { computed } from "vue";
 
 const { humanStorageSize } = format;
 const { formatDate } = date;
@@ -39,6 +40,10 @@ const removeHash = () => {
     history.state.current.replace(/#(.*)?/, "")
   );
 };
+const version = computed(() => {
+  const ver = process.env.ANDS_VERSION.match(/.{1,4}/g).join(".");
+  return "© 2007 - " + ver;
+});
 
 export const U = "_";
 export const fileBroken = CONFIG.fileBroken;
@@ -52,4 +57,5 @@ export {
   emailNick,
   fakeHistory,
   removeHash,
+  version,
 };

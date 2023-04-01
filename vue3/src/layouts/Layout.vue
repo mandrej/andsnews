@@ -29,12 +29,6 @@
             <q-toolbar-title class="text-h4" style="line-height: 100%">
               {{ title }}
               <br />
-              <q-badge
-                floating
-                class="text-white bg-transparent"
-                style="top: 4px; right: 2px"
-                >{{ version }}</q-badge
-              >
               <span class="text-body1"
                 >{{ bucketInfo.count }} photos since 2007 and counting</span
               >
@@ -117,7 +111,7 @@ import { defineAsyncComponent, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { fullsized, smallsized, fileBroken } from "../helpers";
+import { fullsized, smallsized, fileBroken, version } from "../helpers";
 
 import Find from "../components/Find.vue";
 import Menu from "../components/Menu.vue";
@@ -143,10 +137,6 @@ const styling = computed(() => {
     return "background-image: url(" + high + "), url(" + low + ")";
   }
   return "background-image: url(" + fileBroken + ")";
-});
-const version = computed(() => {
-  const ver = process.env.ANDS_VERSION.match(/.{1,4}/g).join(".");
-  return "© 2007 - " + ver;
 });
 
 const dynamic = computed(() => {

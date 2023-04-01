@@ -10,7 +10,7 @@ const router = createRouter({
   history: createWebHistory(process.env.VUE_ROUTER_BASE),
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach((to, from) => {
   const auth = useAuthStore();
   const user = auth.user;
   // Unlog user after 7 days
