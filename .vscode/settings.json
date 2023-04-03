@@ -2,8 +2,7 @@
   "files.exclude": {
     "**/*.pyc": true,
     "docs": true,
-    "tests": true,
-    "graphql": true
+    "tests": true
   },
 
   "python.linting.enabled": true,
