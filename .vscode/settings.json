@@ -1,7 +1,6 @@
 {
   "files.exclude": {
     "**/*.pyc": true,
-    "docs": true,
     "tests": true
   },
 
