@@ -3,8 +3,7 @@
     "**/*.pyc": true,
     "docs": true,
     "tests": true,
-    "graphql": true,
-    "views": true
+    "graphql": true
   },
 
   "python.linting.enabled": true,
