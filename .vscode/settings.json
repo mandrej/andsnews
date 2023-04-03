@@ -4,8 +4,7 @@
     "docs": true,
     "tests": true,
     "graphql": true,
-    "views": true,
-    "vue2": true
+    "views": true
   },
 
   "python.linting.enabled": true,
