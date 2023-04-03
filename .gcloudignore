@@ -1,40 +1,42 @@
-# This file specifies files that are *not* uploaded to Google Cloud Platform
+# This file specifies files that are _not_ uploaded to Google Cloud Platform
+
 # using gcloud. It follows the same syntax as .gitignore, with the addition of
+
 # "#!include" directives (which insert the entries of the given .gitignore-style
+
 # file at that point).
+
 #
+
 # For more information, run:
-#   $ gcloud topic gcloudignore
+
+# $ gcloud topic gcloudignore
+
 #
+
 .git
 .gitignore
 .gcloudignore
 .editorconfig
-.idea/
 .vscode/
 
 ands
-*.pyc
-__pycache__/
-
-docs/
+\*.pyc
+**pycache**/
 tests/
-graphql/
-views/
-vue2/
 
 vue3/README.md
 vue3/index.html
-vue3/AppIcon.*
+vue3/AppIcon.\*
 vue3/jsconfig.json
 vue3/postcss.config.js
 vue3/proxy.js
 
-api/__pycache__/
-api/test_*.py
+api/**pycache**/
+api/test\_\*.py
 functions/
 
-**/.*
+**/.\*
 **/src/
 **/src-pwa/
 **/public/
@@ -43,7 +45,6 @@ functions/
 **/babel.config.js
 **/vue.config.js
 **/vite.config.js
-**/quasar.config.js
-**/yarn*
+**/quasar.config.js \*_/yarn_
 
 # gcloud meta list-files-for-upload
