@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed, watch, ref } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppStore } from "../stores/app";
 import Complete from "./Complete.vue";
@@ -149,6 +149,7 @@ const find = computed(() => app.find);
 const tmp = ref({ ...find.value });
 
 const queryDispatch = (query) => {
+  tmp.value = { ...query };
   // delete keys without values
   Object.keys(query).forEach((key) => {
     if (tmp.value[key] == null) {
@@ -187,23 +188,13 @@ const queryDispatch = (query) => {
 // front router-link, hash detailed carousel
 onMounted(() => {
   if (route.name !== "list") return;
-  tmp.value = { ...route.query };
   queryDispatch(route.query);
-  if (process.env.DEV) console.log("onMounted ", tmp.value);
+  if (process.env.DEV) console.log("onMounted ", JSON.stringify(route.query));
 });
-
-// back from carousel
-watch(route, (to) => setForm(to));
-const setForm = (to) => {
-  if (to.name !== "list") return;
-  tmp.value = { ...to.query };
-  queryDispatch(to.query);
-  if (process.env.DEV) console.log("watch route ", tmp.value);
-};
 
 const submit = () => {
   queryDispatch(tmp.value);
-  if (process.env.DEV) console.log("submit ", tmp.value);
+  if (process.env.DEV) console.log("submit ", JSON.stringify(tmp.value));
 };
 
 const optionsMonth = computed(() => {
