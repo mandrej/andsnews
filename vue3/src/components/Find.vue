@@ -129,11 +129,12 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppStore } from "../stores/app";
 import Complete from "./Complete.vue";
 import { months } from "../helpers";
+import { isEqual } from "lodash/lang";
 
 const app = useAppStore();
 const route = useRoute();
@@ -169,9 +170,16 @@ const queryDispatch = (query) => {
       }
     }
   });
+  if (process.env.DEV)
+    console.log(
+      JSON.stringify(app.find),
+      JSON.stringify(tmp.value),
+      isEqual(JSON.stringify(app.find), JSON.stringify(tmp.value))
+    );
+  if (isEqual(JSON.stringify(app.find), JSON.stringify(tmp.value))) return;
   // store query
   app.find = tmp.value;
-  // new query
+  // fetch new query
   app.fetchRecords(true); // new filter with reset
   // this dispatch route change
   if (Object.keys(tmp.value).length) {
@@ -185,16 +193,25 @@ const queryDispatch = (query) => {
   }
 };
 
-// front router-link, hash detailed carousel
 onMounted(() => {
   if (route.name !== "list") return;
   queryDispatch(route.query);
-  if (process.env.DEV) console.log("onMounted ", JSON.stringify(route.query));
+  if (process.env.DEV) console.log("mounted ");
 });
+
+watch(
+  route,
+  (to) => {
+    if (to.name !== "list") return;
+    queryDispatch(to.query);
+    if (process.env.DEV) console.log("route ");
+  },
+  { deep: true, immediate: true }
+);
 
 const submit = () => {
   queryDispatch(tmp.value);
-  if (process.env.DEV) console.log("submit ", JSON.stringify(tmp.value));
+  if (process.env.DEV) console.log("submit");
 };
 
 const optionsMonth = computed(() => {
