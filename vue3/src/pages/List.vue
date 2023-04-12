@@ -37,10 +37,7 @@
     />
 
     <div class="q-pa-md">
-      <div v-for="(list, datum) in objectsByDate" :key="datum" class="q-mb-md">
-        <div class="gt-xs text-h6 text-weight-light text-secondary">
-          {{ formatDatum(datum, "dddd DD.MM.YYYY") }}
-        </div>
+      <div v-for="(list, index) in groupObjects" :key="index" class="q-mb-md">
         <transition-group tag="div" class="row q-col-gutter-md" name="fade">
           <div
             v-for="item in list"
@@ -77,7 +74,7 @@ import { defineAsyncComponent, onMounted, computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
-import { formatDatum, fakeHistory } from "../helpers";
+import { fakeHistory } from "../helpers";
 
 import Card from "../components/Card.vue";
 import Carousel from "../components/Carousel.vue";
@@ -94,7 +91,7 @@ const route = useRoute();
 const next = computed(() => app.next);
 const error = computed(() => app.error);
 const objects = computed(() => app.objects);
-const objectsByDate = computed(() => app.objectsByDate);
+const groupObjects = computed(() => app.groupObjects);
 
 const current = computed(() => app.current);
 const currentFileName = ref(null);
