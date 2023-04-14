@@ -149,7 +149,7 @@ const yearValues = computed(() => app.yearValues);
 const find = computed(() => app.find);
 const tmp = ref({ ...find.value });
 
-const queryDispatch = (query) => {
+const queryDispatch = (query, invoked = "") => {
   tmp.value = { ...query };
   // delete keys without values
   Object.keys(query).forEach((key) => {
@@ -170,17 +170,19 @@ const queryDispatch = (query) => {
       }
     }
   });
-  if (process.env.DEV)
-    console.log(
-      JSON.stringify(app.find),
-      JSON.stringify(tmp.value),
-      isEqual(JSON.stringify(app.find), JSON.stringify(tmp.value))
-    );
-  if (isEqual(JSON.stringify(app.find), JSON.stringify(tmp.value))) return;
+  const oldQuery = JSON.parse(JSON.stringify(app.find));
+  const newQuery = JSON.parse(JSON.stringify(tmp.value));
+  if (isEqual(oldQuery, newQuery)) {
+    if (process.env.DEV)
+      console.log("SKIPPED", invoked, JSON.stringify(oldQuery));
+    return;
+  }
   // store query
   app.find = tmp.value;
   // fetch new query
   app.fetchRecords(true); // new filter with reset
+  if (process.env.DEV)
+    console.log("FETCHED", invoked, JSON.stringify(newQuery));
   // this dispatch route change
   if (Object.keys(tmp.value).length) {
     if (route.hash) {
@@ -188,30 +190,27 @@ const queryDispatch = (query) => {
     } else {
       router.push({ path: "/list", query: tmp.value });
     }
-  } else if (route.name === "list") {
+  } else {
     router.push({ path: "/" });
   }
 };
 
 onMounted(() => {
   if (route.name !== "list") return;
-  queryDispatch(route.query);
-  if (process.env.DEV) console.log("mounted ");
+  queryDispatch(route.query, "mounted");
 });
 
 watch(
   route,
   (to) => {
     if (to.name !== "list") return;
-    queryDispatch(to.query);
-    if (process.env.DEV) console.log("route ");
+    queryDispatch(to.query, "route");
   },
   { deep: true, immediate: true }
 );
 
 const submit = () => {
-  queryDispatch(tmp.value);
-  if (process.env.DEV) console.log("submit");
+  queryDispatch(tmp.value, "submit");
 };
 
 const optionsMonth = computed(() => {
