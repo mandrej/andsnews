@@ -20,14 +20,14 @@
         :data-hash="U + obj.filename"
       >
         <div
-          class="absolute-top q-pa-md"
-          style="background-color: rgba(0, 0, 0, 0.2); z-index: 1000"
+          class="absolute-top row no-wrap justify-between"
+          style="z-index: 1000"
         >
           <q-btn
             v-if="user.isAdmin"
             flat
             round
-            class="absolute-top-left text-white q-pa-md"
+            class="text-white q-pa-md"
             icon="delete"
             @click="
               obj.id ? emit('confirmDelete', obj) : emit('deleteRecord', obj)
@@ -35,23 +35,28 @@
           />
           <div
             v-html="caption(obj)"
-            class="q-mx-xl text-white text-center ellipsis"
+            class="col q-my-md text-white text-center ellipsis"
           ></div>
-          <div class="absolute-top-right text-white">
-            <q-btn
-              flat
-              round
-              class="q-pa-md"
-              @click="$q.fullscreen.toggle()"
-              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
-            />
-            <q-btn flat round class="q-pa-md" icon="close" @click="onCancel" />
-          </div>
+
+          <q-btn
+            flat
+            round
+            class="text-white q-pa-md"
+            icon="close"
+            @click="onCancel"
+          />
         </div>
         <div class="swiper-zoom-container">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
           <div class="swiper-lazy-preloader" />
         </div>
+        <q-btn
+          flat
+          round
+          class="absolute-bottom-right text-white q-pa-md"
+          @click="$q.fullscreen.toggle()"
+          :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+        />
       </swiper-slide>
     </swiper>
   </q-dialog>
