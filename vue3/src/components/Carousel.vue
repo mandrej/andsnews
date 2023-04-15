@@ -37,13 +37,16 @@
             v-html="caption(obj)"
             class="q-mx-xl text-white text-center ellipsis"
           ></div>
-          <q-btn
-            flat
-            round
-            class="absolute-top-right text-white q-pa-md"
-            icon="close"
-            @click="onCancel"
-          />
+          <div class="absolute-top-right text-white">
+            <q-btn
+              flat
+              round
+              class="q-pa-md"
+              @click="$q.fullscreen.toggle()"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+            />
+            <q-btn flat round class="q-pa-md" icon="close" @click="onCancel" />
+          </div>
         </div>
         <div class="swiper-zoom-container">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
