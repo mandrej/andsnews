@@ -56,12 +56,25 @@
                 label="Headline"
                 :placeholder="CONFIG.noTitle"
                 :hint="`Image without name is called '${CONFIG.noTitle}'. Required`"
+                @update:model-value="
+                  (val) => {
+                    tmp.headline =
+                      val && val.charAt(0).toUpperCase() + val.slice(1);
+                  }
+                "
                 @blur="
                   tmp.headline === undefined || tmp.headline.trim() === ''
                     ? (tmp.headline = CONFIG.noTitle)
                     : (tmp.headline = tmp.headline.trim())
                 "
                 autofocus
+                clearable
+                clear-icon="clear"
+                @clear="
+                  (val) => {
+                    tmp.headline = CONFIG.noTitle;
+                  }
+                "
               />
               <q-input v-model="tmp.filename" label="Filename" readonly />
               <Complete
