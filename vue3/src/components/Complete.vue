@@ -5,7 +5,6 @@
     :options="options"
     use-input
     clearable
-    clear-icon="clear"
     :hide-selected="multiple ? false : true"
     :multiple="multiple ? true : undefined"
     :fill-input="multiple ? false : true"

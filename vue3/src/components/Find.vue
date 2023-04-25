@@ -4,7 +4,6 @@
       v-model="tmp.text"
       :disable="busy"
       label="by text"
-      clear-icon="clear"
       clearable
       @blur="submit"
       :dense="$q.screen.xs"

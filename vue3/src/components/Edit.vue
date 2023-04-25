@@ -69,7 +69,6 @@
                 "
                 autofocus
                 clearable
-                clear-icon="clear"
                 @clear="
                   (val) => {
                     tmp.headline = CONFIG.noTitle;
@@ -197,7 +196,6 @@
                 v-model="tmp.loc"
                 label="Location [latitude, longitude]"
                 clearable
-                clear-icon="clear"
               />
             </div>
             <div class="col-xs-6 col-sm-4 col-4 q-mt-sm">
