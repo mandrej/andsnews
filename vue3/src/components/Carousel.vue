@@ -13,6 +13,7 @@
       :modules="modules"
       @swiper="onSwiper"
       @slide-change="onSlideChange"
+      @lazy-image-ready="onImgReady"
     >
       <swiper-slide
         v-for="obj in list"
@@ -64,7 +65,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -88,6 +89,7 @@ const app = useAppStore();
 const auth = useAuthStore();
 const route = useRoute();
 const hash = ref(null);
+const dimension = reactive({});
 const urlHash = new RegExp(/#(.*)?/); // matching string hash
 
 const modules = [Lazy, Zoom, Keyboard];
@@ -119,6 +121,17 @@ const onSlideChange = (sw) => {
     url += sufix;
   }
   window.history.replaceState(history.state, null, url);
+};
+const onImgReady = (sw, slideEl, imageEl) => {
+  const img = new Image();
+  img.src = imageEl.src;
+
+  const container = slideEl.querySelector(".swiper-zoom-container");
+  const wRatio = img.width / sw.width;
+  const hRatio = img.height / sw.height;
+  const filename = img.src.replace(fullsized, "");
+  container.dataset.swiperZoom = Math.max(wRatio, hRatio, 1);
+  dimension[filename] = img.width + "x" + img.height;
 };
 const caption = (rec) => {
   let tmp = "";
