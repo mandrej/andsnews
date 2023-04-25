@@ -27,36 +27,34 @@ import { useAppStore } from "../stores/app";
 import { formatBytes } from "../helpers";
 
 const app = useAppStore();
-const values = computed(() => app.values);
-const bucket = computed(() => app.bucket);
 const list = computed(() => [
   {
     text: "storage",
-    value: formatBytes(bucket.value.size),
+    value: formatBytes(app.bucket.size),
   },
   {
     text: "photographs",
-    value: bucket.value.count,
+    value: app.bucket.count,
   },
   {
     text: "years",
-    value: values.value.year.length,
+    value: app.values.year.length,
   },
   {
     text: "tags",
-    value: values.value.tags.length,
+    value: app.values.tags.length,
   },
   {
     text: "cameras",
-    value: values.value.model.length,
+    value: app.values.model.length,
   },
   {
     text: "lenses",
-    value: values.value.lens.length,
+    value: app.values.lens.length,
   },
   {
     text: "authors",
-    value: values.value.email.length,
+    value: app.values.email.length,
   },
 ]);
 </script>

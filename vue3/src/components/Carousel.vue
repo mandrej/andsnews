@@ -24,7 +24,7 @@
           style="z-index: 1000"
         >
           <q-btn
-            v-if="user.isAdmin"
+            v-if="auth.user.isAdmin"
             flat
             round
             class="text-white q-pa-md"
@@ -64,7 +64,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -86,7 +86,6 @@ const props = defineProps({
 const $q = useQuasar();
 const app = useAppStore();
 const auth = useAuthStore();
-const user = computed(() => auth.user);
 const route = useRoute();
 const hash = ref(null);
 const urlHash = new RegExp(/#(.*)?/); // matching string hash

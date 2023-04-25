@@ -1,10 +1,10 @@
 <template>
-  <Edit v-if="app.showEdit" :rec="current" @edit-ok="editOk" />
-  <Confirm v-if="app.showConfirm" :rec="current" @confirm-ok="confirmOk" />
+  <Edit v-if="app.showEdit" :rec="app.current" @edit-ok="editOk" />
+  <Confirm v-if="app.showConfirm" :rec="app.current" @confirm-ok="confirmOk" />
   <Carousel
     v-if="app.showCarousel"
     :filename="currentFileName"
-    :list="objects"
+    :list="app.objects"
     @carousel-cancel="carouselCancel"
     @confirm-delete="confirmShow"
     @delete-record="app.deleteRecord"
@@ -12,16 +12,16 @@
 
   <q-page>
     <q-banner
-      v-if="error"
+      v-if="app.error"
       class="absolute-center text-center bg-warning q-pa-md"
       rounded
     >
       <q-icon name="error_outline" size="4em" />
       <div class="text-h6">Something went wrong ...</div>
-      <div>{{ error }}</div>
+      <div>{{ app.error }}</div>
     </q-banner>
     <q-banner
-      v-else-if="error === 0"
+      v-else-if="app.error === 0"
       class="absolute-center text-center bg-warning q-pa-md"
       rounded
     >
@@ -37,7 +37,11 @@
     />
 
     <div class="q-pa-md">
-      <div v-for="(list, index) in groupObjects" :key="index" class="q-mb-md">
+      <div
+        v-for="(list, index) in app.groupObjects"
+        :key="index"
+        class="q-mb-md"
+      >
         <transition-group tag="div" class="row q-col-gutter-md" name="fade">
           <div
             v-for="item in list"
@@ -70,7 +74,7 @@
 
 <script setup>
 import { scroll, throttle } from "quasar";
-import { defineAsyncComponent, onMounted, computed, ref } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -86,14 +90,7 @@ const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 const app = useAppStore();
 const auth = useAuthStore();
-const user = computed(() => auth.user);
 const route = useRoute();
-const next = computed(() => app.next);
-const error = computed(() => app.error);
-const objects = computed(() => app.objects);
-const groupObjects = computed(() => app.groupObjects);
-
-const current = computed(() => app.current);
 const currentFileName = ref(null);
 
 onMounted(() => {
@@ -112,14 +109,14 @@ const scrollHandler = throttle((obj) => {
   if (
     scrollHeight - obj.position.top < 3000 &&
     obj.direction === "down" &&
-    next.value
+    app.next
   ) {
     app.fetchRecords();
   }
 }, 500);
 
 const isAuthorOrAdmin = (rec) => {
-  return user.value.isAdmin || user.value.email === rec.email;
+  return auth.user.isAdmin || auth.user.email === rec.email;
 };
 
 const editRecord = (rec) => {
@@ -163,7 +160,7 @@ const ga = (event_name, rec) => {
    */
   gtag("event", event_name, {
     filename: rec.filename,
-    user: user.value && user.value.email ? user.value.email : "anonymous",
+    user: auth.user && auth.user.email ? auth.user.email : "anonymous",
     count: 1,
   });
 };

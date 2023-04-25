@@ -9,7 +9,7 @@
         </q-item-section>
         <q-item-section side>
           <q-btn
-            :disabled="!fcm_token"
+            :disabled="!auth.fcm_token"
             color="positive"
             label="Send"
             @click="send"
@@ -25,7 +25,7 @@
         </q-item-section>
         <q-item-section side>
           <q-btn
-            :disabled="!fcm_token"
+            :disabled="!auth.fcm_token"
             color="primary"
             label="Rebuild"
             @click="rebuild(field)"
@@ -50,7 +50,7 @@
         </q-item-section>
         <q-item-section side>
           <q-btn
-            :disabled="!fcm_token"
+            :disabled="!auth.fcm_token"
             color="warning"
             label="Recalc"
             @click="bucket"
@@ -65,7 +65,7 @@
         </q-item-section>
         <q-item-section side>
           <q-btn
-            :disabled="!fcm_token"
+            :disabled="!auth.fcm_token"
             color="negative"
             label="Repair"
             @click="repair"
@@ -85,11 +85,10 @@ import { formatDatum } from "../helpers";
 
 const app = useAppStore();
 const auth = useAuthStore();
-const fcm_token = computed(() => auth.fcm_token);
 const message = ref("NEW IMAGES");
 
 const callApi = (url) => {
-  api.post(url, { token: fcm_token.value }, { timeout: 0 }).then((x) => x.data);
+  api.post(url, { token: auth.fcm_token }, { timeout: 0 }).then((x) => x.data);
 };
 const values = computed(() => app.values);
 const rebuild = (name) => {

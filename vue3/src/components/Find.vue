@@ -2,7 +2,7 @@
   <div class="q-pa-md q-gutter-md">
     <q-input
       v-model="tmp.text"
-      :disable="busy"
+      :disable="app.busy"
       label="by text"
       clearable
       @blur="submit"
@@ -11,10 +11,10 @@
     />
     <Complete
       v-model="tmp.tags"
-      :options="tagValues"
+      :options="app.tagValues"
       multiple
       label="by tags"
-      :disable="busy"
+      :disable="app.busy"
       behavior="menu"
       :dense="$q.screen.xs"
       dark
@@ -28,10 +28,10 @@
     <Complete
       v-model="tmp.year"
       class="col"
-      :options="yearValues"
+      :options="app.yearValues"
       autocomplete="label"
       label="by year"
-      :disable="busy"
+      :disable="app.busy"
       behavior="menu"
       :dense="$q.screen.xs"
       dark
@@ -49,7 +49,7 @@
         :options="optionsMonth"
         autocomplete="label"
         label="by month"
-        :disable="busy"
+        :disable="app.busy"
         behavior="menu"
         :dense="$q.screen.xs"
         dark
@@ -67,7 +67,7 @@
         :options="optionsDay"
         autocomplete="label"
         label="by day"
-        :disable="busy"
+        :disable="app.busy"
         behavior="menu"
         :dense="$q.screen.xs"
         dark
@@ -81,9 +81,9 @@
     </div>
     <Complete
       v-model="tmp.model"
-      :options="modelValues"
+      :options="app.modelValues"
       label="by model"
-      :disable="busy"
+      :disable="app.busy"
       behavior="menu"
       :dense="$q.screen.xs"
       dark
@@ -96,9 +96,9 @@
     />
     <Complete
       v-model="tmp.lens"
-      :options="lensValues"
+      :options="app.lensValues"
       label="by lens"
-      :disable="busy"
+      :disable="app.busy"
       behavior="menu"
       :dense="$q.screen.xs"
       dark
@@ -111,9 +111,9 @@
     />
     <Complete
       v-model="tmp.nick"
-      :options="nickValues"
+      :options="app.nickValues"
       label="by author"
-      :disable="busy"
+      :disable="app.busy"
       behavior="menu"
       :dense="$q.screen.xs"
       dark
@@ -138,15 +138,7 @@ import { isEqual } from "lodash/lang";
 const app = useAppStore();
 const route = useRoute();
 const router = useRouter();
-const busy = computed(() => app.busy);
-const tagValues = computed(() => app.tagValues);
-const modelValues = computed(() => app.modelValues);
-const lensValues = computed(() => app.lensValues);
-const nickValues = computed(() => app.nickValues);
-const yearValues = computed(() => app.yearValues);
-
-const find = computed(() => app.find);
-const tmp = ref({ ...find.value });
+const tmp = ref({ ...app.find });
 
 const queryDispatch = (query, invoked = "") => {
   tmp.value = { ...query };

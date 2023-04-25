@@ -5,9 +5,9 @@
         <q-icon name="person" />
       </q-item-section>
 
-      <q-item-section v-if="user.name">
+      <q-item-section v-if="auth.user.name">
         <q-item-label>Sign out</q-item-label>
-        <q-item-label caption>{{ user.name }}</q-item-label>
+        <q-item-label caption>{{ auth.user.name }}</q-item-label>
       </q-item-section>
       <q-item-section v-else>
         <q-item-label>Sign in</q-item-label>
@@ -15,7 +15,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-show="user.isAuthorized" to="/add">
+    <q-item v-show="auth.user.isAuthorized" to="/add">
       <q-item-section avatar>
         <q-icon name="add_circle" />
       </q-item-section>
@@ -26,7 +26,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-show="user.isAdmin" to="/admin">
+    <q-item v-show="auth.user.isAdmin" to="/admin">
       <q-item-section avatar>
         <q-icon name="settings" />
       </q-item-section>
@@ -42,10 +42,8 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { version } from "../helpers";
 
 const auth = useAuthStore();
-const user = computed(() => auth.user);
 </script>

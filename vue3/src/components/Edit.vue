@@ -16,7 +16,7 @@
             @click="onSubmit"
           />
           <q-btn
-            v-if="user.isAdmin"
+            v-if="auth.user.isAdmin"
             class="q-ml-sm gt-sm"
             flat
             label="Read Exif"
@@ -78,7 +78,7 @@
               <q-input v-model="tmp.filename" label="Filename" readonly />
               <Complete
                 v-model="tmp.email"
-                :options="emailValues"
+                :options="app.emailValues"
                 canadd
                 label="Author"
                 hint="Existing member can add freind's photo and email"
@@ -140,7 +140,7 @@
             <div class="col-12">
               <Complete
                 v-model="tmp.tags"
-                :options="tagValues"
+                :options="app.tagValues"
                 canadd
                 multiple
                 label="Tags"
@@ -151,7 +151,7 @@
             <div class="col-xs-12 col-sm-6">
               <Complete
                 v-model="tmp.model"
-                :options="modelValues"
+                :options="app.modelValues"
                 canadd
                 label="Camera Model"
                 @update:model-value="(newValue) => (tmp.model = newValue)"
@@ -161,7 +161,7 @@
             <div class="col-xs-12 col-sm-6">
               <Complete
                 v-model="tmp.lens"
-                :options="lensValues"
+                :options="app.lensValues"
                 canadd
                 label="Camera Lens"
                 @update:model-value="(newValue) => (tmp.lens = newValue)"
@@ -209,7 +209,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import {
   CONFIG,
   fullsized,
@@ -230,12 +230,7 @@ const props = defineProps({
 
 const app = useAppStore();
 const auth = useAuthStore();
-const tagValues = computed(() => app.tagValues);
-const emailValues = computed(() => app.emailValues);
-const modelValues = computed(() => app.modelValues);
-const lensValues = computed(() => app.lensValues);
 const tmp = reactive({ ...props.rec });
-const user = computed(() => auth.user);
 
 const getExif = async () => {
   /**
@@ -252,7 +247,7 @@ const getExif = async () => {
     tags.push("flash");
   }
   tmp.tags = tags;
-  tmp.email = user.value.email;
+  tmp.email = auth.user.email;
 };
 const isValidEmail = (val) => {
   const emailPattern =

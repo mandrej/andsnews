@@ -48,7 +48,9 @@ export const useAppStore = defineStore("app", {
         }
         return last;
       }
-      return null;
+      return {
+        href: "/",
+      };
     },
     counter: (state) => {
       return { count: state.objects.length, more: state.next };

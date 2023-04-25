@@ -43,7 +43,7 @@
 
     <Complete
       v-model="tagsToApply"
-      :options="tagValues"
+      :options="app.tagValues"
       canadd
       multiple
       label="Tags to apply for next publish"
@@ -91,7 +91,7 @@ const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 const app = useAppStore();
 const auth = useAuthStore();
-const tagValues = computed(() => app.tagValues);
+
 const tagsToApply = computed({
   get() {
     return app.tagsToApply;
@@ -100,7 +100,7 @@ const tagsToApply = computed({
     app.tagsToApply = newValue;
   },
 });
-const user = computed(() => auth.user);
+
 let files = reactive([]);
 let progressInfos = reactive([]);
 const inProgress = ref(false);
@@ -201,7 +201,7 @@ const editRecord = async (rec) => {
     tags.push("flash");
   }
   rec.tags = tags;
-  rec.email = user.value.email;
+  rec.email = auth.user.email;
 
   app.current = rec;
   fakeHistory();

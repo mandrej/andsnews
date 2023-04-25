@@ -3,7 +3,7 @@
     <q-page-container>
       <q-page class="row">
         <q-page-sticky
-          v-show="user.isAuthorized"
+          v-show="auth.user.isAuthorized"
           position="top-left"
           :offset="[16, 16]"
           style="z-index: 1000"
@@ -17,8 +17,8 @@
           :style="styling"
         >
           <a
-            v-if="last"
-            :href="last.href"
+            v-if="app.last.href"
+            :href="app.last.href"
             v-ripple.early="{ color: 'purple' }"
             style="display: block"
           />
@@ -27,10 +27,10 @@
         <div class="col-xs-12 col-sm-6">
           <q-toolbar class="bg-grey-8 text-white q-pa-md">
             <q-toolbar-title class="text-h4" style="line-height: 100%">
-              {{ title }}
+              {{ route.meta.title }}
               <br />
               <span class="text-body1"
-                >{{ bucketInfo.count }} photos since 2007 and counting</span
+                >{{ app.bucket.count }} photos since 2007 and counting</span
               >
             </q-toolbar-title>
             <q-btn
@@ -62,12 +62,12 @@
         />
         <q-toolbar-title>
           <router-link to="/" style="color: inherit; text-decoration: none">{{
-            title
+            route.meta.title
           }}</router-link>
         </q-toolbar-title>
 
         <div v-if="route.name === 'list'">
-          {{ counter.more ? "+" : "" }}{{ counter.count }}
+          {{ app.counter.more ? "+" : "" }}{{ app.counter.count }}
         </div>
         <q-btn
           v-else
@@ -78,7 +78,7 @@
         >
         </q-btn>
         <q-linear-progress
-          v-show="busy"
+          v-show="app.busy"
           color="warning"
           class="absolute-bottom"
           indeterminate
@@ -121,19 +121,12 @@ const Stat = defineAsyncComponent(() => import("../components/Stat.vue"));
 const app = useAppStore();
 const auth = useAuthStore();
 const route = useRoute();
-
-const user = computed(() => auth.user);
-const last = computed(() => app.last);
-const title = computed(() => route.meta.title);
-const bucketInfo = computed(() => app.bucket);
-const busy = computed(() => app.busy);
 const drawer = ref(false);
-const counter = computed(() => app.counter);
 
 const styling = computed(() => {
-  if (last.value) {
-    const low = smallsized + last.value.filename;
-    const high = fullsized + last.value.filename;
+  if (app.last.filename) {
+    const low = smallsized + app.last.filename;
+    const high = fullsized + app.last.filename;
     return "background-image: url(" + high + "), url(" + low + ")";
   }
   return "background-image: url(" + fileBroken + ")";
