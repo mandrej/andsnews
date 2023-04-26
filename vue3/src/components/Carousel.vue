@@ -65,7 +65,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { useRoute } from "vue-router";
@@ -89,7 +89,6 @@ const app = useAppStore();
 const auth = useAuthStore();
 const route = useRoute();
 const hash = ref(null);
-const dimension = reactive({});
 const urlHash = new RegExp(/#(.*)?/); // matching string hash
 
 const modules = [Lazy, Zoom, Keyboard];
@@ -125,13 +124,11 @@ const onSlideChange = (sw) => {
 const onImgReady = (sw, slideEl, imageEl) => {
   const img = new Image();
   img.src = imageEl.src;
-
+  // const filename = img.src.replace(fullsized, "");
   const container = slideEl.querySelector(".swiper-zoom-container");
-  const wRatio = img.width / sw.width;
-  const hRatio = img.height / sw.height;
-  const filename = img.src.replace(fullsized, "");
+  const wRatio = img.width / sw.width,
+    hRatio = img.height / sw.height;
   container.dataset.swiperZoom = Math.max(wRatio, hRatio, 1);
-  dimension[filename] = img.width + "x" + img.height;
 };
 const caption = (rec) => {
   let tmp = "";
