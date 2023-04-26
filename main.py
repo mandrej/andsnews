@@ -42,16 +42,11 @@ def download(filename):
 
 @app.route('/api/exif/<filename>', methods=['GET'])
 def exif(filename):
-    buff = BytesIO()
-
     blob = photo.storage_blob(filename)
     if blob:
-        blob.download_to_file(buff)
-
+        buff = blob.download_as_bytes()
         out = get_exif(buff)
         out['date'] = out['date'].strftime(CONFIG['date_time_format'])
-        if out.get('flash', None) is None:
-            out['flash'] = False
         return out
 
     abort(404, description='Resource not found')

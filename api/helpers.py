@@ -2,9 +2,8 @@ import string
 import datetime
 import requests
 from timeit import default_timer
-from decimal import getcontext, Decimal
 
-from exifread import process_file
+from exif import Image
 from .config import CONFIG
 
 LENSES = {
@@ -89,32 +88,54 @@ def tokenize(text):
     return res
 
 
-def ratio_to_dms(dms_ratio):
-    def frac_to_dec(ratio):
-        return float(ratio.num) / float(ratio.den)
-
-    return frac_to_dec(dms_ratio[0]) + (frac_to_dec(dms_ratio[1])/60.0) + (frac_to_dec(dms_ratio[2])/3600.0)
+def decimal_coords(coords, ref):
+    decimal_degrees = coords[0] + \
+        coords[1] / 60 + \
+        coords[2] / 3600
+    if ref == "S" or ref == "W":
+        decimal_degrees = -decimal_degrees
+    return decimal_degrees
 
 
 def get_exif(buff):
+    """
+    '_segments', 'delete', 'delete_all', 'get', 'get_all', 'get_file', 'get_thumbnail', 'has_exif', 'list_all'
+
+    'make', 'model', 'x_resolution', 'y_resolution', 'resolution_unit', 'software', 'artist', 'copyright',
+    '_exif_ifd_pointer', '_gps_ifd_pointer', 'compression', 'jpeg_interchange_format', 'jpeg_interchange_format_length',
+    'exposure_time', 'f_number', 'exposure_program', 'photographic_sensitivity', 'sensitivity_type',
+    'recommended_exposure_index', 'exif_version', 'datetime_original', 'datetime_digitized', 'shutter_speed_value',
+    'aperture_value', 'exposure_bias_value', 'metering_mode', 'light_source', 'flash', 'focal_length',
+    'subsec_time_original', 'subsec_time_digitized', 'pixel_x_dimension', 'pixel_y_dimension', 'sensing_method',
+    'file_source', 'scene_type', 'custom_rendered', 'exposure_mode', 'white_balance', 'focal_length_in_35mm_film',
+    'scene_capture_type', 'gain_control', 'contrast', 'saturation', 'sharpness', 'subject_distance_range',
+    'body_serial_number', 'lens_specification', 'lens_make', 'lens_model', 'lens_serial_number', 'gps_version_id',
+    'gps_latitude_ref', 'gps_latitude', 'gps_longitude_ref', 'gps_longitude', 'gps_altitude_ref', 'gps_altitude',
+    'gps_timestamp', 'gps_satellites', 'gps_map_datum', 'gps_datestamp'
+
+    Flash(flash_fired=False, flash_return=FlashReturn.NO_STROBE_RETURN_DETECTION_FUNCTION,
+    flash_mode=FlashMode.COMPULSORY_FLASH_FIRING, flash_function_not_present=True, red_eye_reduction_supported=True, reserved=1)
+    """
     data = {
         'model': 'UNKNOWN',
         'date': datetime.datetime.now()
     }
-    tags = process_file(buff, details=False)
+    img = Image(buff)
+    if not img.has_exif:
+        return data
 
-    # for k, v in tags.items():
+    exif = img.get_all()
+    # for k, v in exif.items():
     #     try:
-    #         print(k, '\t', v.printable)
+    #         print(k, '\t', v)
     #     except AttributeError:
     #         pass
     # print('--------------------------------------------------------')
 
-    model = tags['Image Model'].printable.replace(
-        '/', '') if 'Image Model' in tags else None
-    make = tags['Image Make'].printable.replace(
-        '/', '') if 'Image Make' in tags else None
-    if model and make:
+    tags = img.list_all()
+    if all(key in tags for key in ['model', 'make']):
+        model = exif['model'].replace('/', '')
+        make = exif['make'].replace('/', '')
         s1 = set(make.split())
         s2 = set(model.split())
         if s1 & s2:  # contain word in make and model
@@ -122,60 +143,42 @@ def get_exif(buff):
         else:
             data['model'] = f'{make} {model}'
 
-    if 'EXIF LensModel' in tags:
+    if 'lens_model' in tags:
         # Unify lens names
-        lens = tags['EXIF LensModel'].printable.replace('/', '')
+        lens = exif['lens_model'].replace('/', '')
         try:
             data['lens'] = LENSES[lens]
         except KeyError:
             data['lens'] = lens
-    if 'EXIF DateTimeOriginal' in tags:
-        # 'EXIF DateTimeOriginal': (0x9003) ASCII=2020:12:03 11:28:19 @ 720
+    if 'datetime_original' in tags:
+        # '2023:04:24 10:13:02
         try:
             data['date'] = datetime.datetime.strptime(
-                tags['EXIF DateTimeOriginal'].printable, '%Y:%m:%d %H:%M:%S')
+                exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
         except ValueError:
             pass
-    if 'EXIF FNumber' in tags:
-        getcontext().prec = 3
-        data['aperture'] = float(Decimal(eval(tags['EXIF FNumber'].printable)))
-    if 'EXIF ExposureTime' in tags:
-        data['shutter'] = tags['EXIF ExposureTime'].printable
-    if 'EXIF FocalLength' in tags:
-        getcontext().prec = 3
-        data['focal_length'] = float(
-            Decimal(eval(tags['EXIF FocalLength'].printable)))
-    if 'EXIF ISOSpeedRatings' in tags:
-        getcontext().prec = 3
-        data['iso'] = int(Decimal(tags['EXIF ISOSpeedRatings'].printable) / 1)
-    if 'EXIF Flash' in tags:
-        # Flash fired, compulsory flash mode, return light detected / Flash did not fire
-        data['flash'] = tags['EXIF Flash'].printable.find('Flash fired') >= 0
+    if 'f_number' in tags:
+        data['aperture'] = exif['f_number']
+    if 'exposure_time' in tags:
+        shutter = exif['exposure_time']
+        if shutter <= 0.1:
+            data['shutter'] = f'1/{int(1/shutter)}'
+        else:
+            data['shutter'] = f'{shutter}'
+    if 'focal_length' in tags:
+        data['focal_length'] = int(exif['focal_length'])
+    if 'photographic_sensitivity' in tags:
+        data['iso'] = int(exif['photographic_sensitivity'])
+    if 'flash' in tags:
+        flash = exif['flash'].flash_mode == 1
+        if flash:
+            data['flash'] = flash
 
-    # FIXME LightRoom NO EXIF ExifImageWidth, EXIF ExifImageLength
-    # width = tags['EXIF ExifImageWidth'].printable if 'EXIF ExifImageWidth' in tags else None
-    # length = tags['EXIF ExifImageLength'].printable if 'EXIF ExifImageLength' in tags else None
-    # if width and length:
-    #     data['dim'] = [int(x) for x in [width, length]]
+    # TODO LightRoom NO image_width: 256, image_height: 257
 
-    # https://www.programcreek.com/python/?code=Sotera%2Fpst-extraction%2Fpst-extraction-master%2Fspark%2Fimage_exif_processing.py
-    # 'https://www.google.com/maps/search/?api=1&query={},{}'.fromat(lat, lon)
-    gps = {'lat': 0.0, 'lon': 0.0}
-    if 'GPS GPSLatitudeRef' in tags:
-        gps["latref"] = tags['GPS GPSLatitudeRef'].printable  # N
-    if 'GPS GPSLongitudeRef' in tags:
-        gps["lonref"] = tags['GPS GPSLongitudeRef'].printable  # E
-    if 'GPS GPSLatitude' in tags and gps["latref"] != '':
-        gps["lat"] = (1 if "latref" in gps and gps["latref"] == "N" else -1) * \
-            ratio_to_dms(
-                tags["GPS GPSLatitude"].values)  # [44, 239731/5000, 0]
-    if "GPS GPSLongitude" in tags and gps["lonref"] != '':
-        gps["lon"] = (1 if "lonref" in gps and gps["lonref"] == "E" else -1) * \
-            ratio_to_dms(
-                tags["GPS GPSLongitude"].values)  # [20, 28887999/1000000, 0]
-
-    if gps["lat"] != 0.0 or gps["lon"] != 0.0:
-        data['loc'] = [round(x, 5) for x in [gps["lat"], gps["lon"]]]
+    if all(key in tags for key in ['gps_latitude', 'gps_latitude_ref', 'gps_longitude', 'gps_longitude_ref']):
+        data['loc'] = (decimal_coords(exif['gps_latitude'], exif['gps_latitude_ref']),
+                       decimal_coords(exif['gps_longitude'], exif['gps_longitude_ref']))
 
     return data
 
