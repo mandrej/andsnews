@@ -2,9 +2,12 @@ import datetime
 import collections
 from google.cloud import datastore
 
-from .photo import datastore, datastore_client, storage_client, BUCKET
+from .photo import datastore, datastore_client, storage_client, storage_blob, BUCKET
 from .helpers import serialize, tokenize, push_message
 from .config import CONFIG
+
+from io import BytesIO
+from imagesize import get as get_size
 
 
 def login_user(data):
@@ -193,6 +196,7 @@ class Fixer(object):
     QUERY = datastore_client.query(kind='Photo')
     # .add_filter('lens', '=', 'Canon EF 50mm f1.8 STM')
     COUNT = 0
+    FAIL = 0
 
     def run(self, batch_size=100):
         push_message(self.TOKEN, CONFIG['start_message'])
@@ -203,14 +207,22 @@ class Fixer(object):
         _page = next(iter_.pages)  # google.api_core.page_iterator.Page object
         batch = []
         for ent in list(_page):
-            if 'lens' in ent and ent['lens'] is None:
-                del ent['lens']
-                self.COUNT += 1
-                batch.append(ent)
+            if 'dim' in ent:
+                continue
+            blob = storage_blob(ent['filename'])
+            if blob:
+                buff = blob.download_as_bytes()
+                try:
+                    ent['dim'] = list(get_size(BytesIO(buff)))
+                except:
+                    self.FAIL += 1
+                    pass
+            self.COUNT += 1
+            batch.append(ent)
 
         if len(batch) > 0:
             datastore_client.put_multi(batch)
-            push_message(self.TOKEN, f'saving {self.COUNT} ...')
+            push_message(self.TOKEN, f'saving {self.COUNT}, failed {self.FAIL}')
 
         next_cursor = iter_.next_page_token
         if next_cursor:

@@ -33,14 +33,19 @@
         </q-item-section>
       </q-item>
       <q-item-label header
-        >Fix on {{ formatDatum("2023-04-24", "DD.MM.YYYY") }}</q-item-label
+        >Fix on {{ formatDatum("2023-04-27", "DD.MM.YYYY") }}</q-item-label
       >
       <q-item>
         <q-item-section>
-          <q-item-label>Unify lens names</q-item-label>
+          <q-item-label>Add dimension to all images</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn :disabled="true" color="primary" label="Fix" @click="fix" />
+          <q-btn
+            :disabled="!auth.fcm_token"
+            color="primary"
+            label="Fix"
+            @click="fix"
+          />
         </q-item-section>
       </q-item>
       <q-item-label header>Cloud storage related</q-item-label>

@@ -98,24 +98,6 @@ def decimal_coords(coords, ref):
 
 
 def get_exif(buff):
-    """
-    '_segments', 'delete', 'delete_all', 'get', 'get_all', 'get_file', 'get_thumbnail', 'has_exif', 'list_all'
-
-    'make', 'model', 'x_resolution', 'y_resolution', 'resolution_unit', 'software', 'artist', 'copyright',
-    '_exif_ifd_pointer', '_gps_ifd_pointer', 'compression', 'jpeg_interchange_format', 'jpeg_interchange_format_length',
-    'exposure_time', 'f_number', 'exposure_program', 'photographic_sensitivity', 'sensitivity_type',
-    'recommended_exposure_index', 'exif_version', 'datetime_original', 'datetime_digitized', 'shutter_speed_value',
-    'aperture_value', 'exposure_bias_value', 'metering_mode', 'light_source', 'flash', 'focal_length',
-    'subsec_time_original', 'subsec_time_digitized', 'pixel_x_dimension', 'pixel_y_dimension', 'sensing_method',
-    'file_source', 'scene_type', 'custom_rendered', 'exposure_mode', 'white_balance', 'focal_length_in_35mm_film',
-    'scene_capture_type', 'gain_control', 'contrast', 'saturation', 'sharpness', 'subject_distance_range',
-    'body_serial_number', 'lens_specification', 'lens_make', 'lens_model', 'lens_serial_number', 'gps_version_id',
-    'gps_latitude_ref', 'gps_latitude', 'gps_longitude_ref', 'gps_longitude', 'gps_altitude_ref', 'gps_altitude',
-    'gps_timestamp', 'gps_satellites', 'gps_map_datum', 'gps_datestamp'
-
-    Flash(flash_fired=False, flash_return=FlashReturn.NO_STROBE_RETURN_DETECTION_FUNCTION,
-    flash_mode=FlashMode.COMPULSORY_FLASH_FIRING, flash_function_not_present=True, red_eye_reduction_supported=True, reserved=1)
-    """
     data = {
         'model': 'UNKNOWN',
         'date': datetime.datetime.now()
@@ -150,8 +132,7 @@ def get_exif(buff):
             data['lens'] = LENSES[lens]
         except KeyError:
             data['lens'] = lens
-    if 'datetime_original' in tags:
-        # '2023:04:24 10:13:02
+    if 'datetime_original' in tags:  # '2023:04:24 10:13:02
         try:
             data['date'] = datetime.datetime.strptime(
                 exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
@@ -170,12 +151,7 @@ def get_exif(buff):
     if 'photographic_sensitivity' in tags:
         data['iso'] = int(exif['photographic_sensitivity'])
     if 'flash' in tags:
-        flash = exif['flash'].flash_mode == 1
-        if flash:
-            data['flash'] = flash
-
-    # TODO LightRoom NO image_width: 256, image_height: 257
-
+        data['flash'] = exif['flash'].flash_mode == 1
     if all(key in tags for key in ['gps_latitude', 'gps_latitude_ref', 'gps_longitude', 'gps_longitude_ref']):
         data['loc'] = (decimal_coords(exif['gps_latitude'], exif['gps_latitude_ref']),
                        decimal_coords(exif['gps_longitude'], exif['gps_longitude_ref']))

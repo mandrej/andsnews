@@ -3,6 +3,7 @@ from io import BytesIO
 from flask import Flask, abort, jsonify, request, make_response
 from werkzeug.http import generate_etag
 from api import cloud, photo
+from imagesize import get as get_size
 from api.helpers import get_exif, latinize, push_message
 from api.config import CONFIG
 
@@ -47,6 +48,10 @@ def exif(filename):
         buff = blob.download_as_bytes()
         out = get_exif(buff)
         out['date'] = out['date'].strftime(CONFIG['date_time_format'])
+        try:
+            out['dim'] = list(get_size(BytesIO(buff)))
+        except:
+            pass
         return out
 
     abort(404, description='Resource not found')
