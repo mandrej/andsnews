@@ -13,7 +13,6 @@
       :modules="modules"
       @swiper="onSwiper"
       @slide-change="onSlideChange"
-      @lazy-image-ready="onImgReady"
     >
       <swiper-slide
         v-for="obj in list"
@@ -47,7 +46,7 @@
             @click="onCancel"
           />
         </div>
-        <div class="swiper-zoom-container">
+        <div class="swiper-zoom-container" :data-swiper-zoom="zoomRatio(obj)">
           <img class="swiper-lazy" :data-src="fullsized + obj.filename" />
           <div class="swiper-lazy-preloader" />
         </div>
@@ -90,10 +89,12 @@ const auth = useAuthStore();
 const route = useRoute();
 const hash = ref(null);
 const urlHash = new RegExp(/#(.*)?/); // matching string hash
+const swiperRef = ref(null);
 
 const modules = [Lazy, Zoom, Keyboard];
 
 const onSwiper = (sw) => {
+  swiperRef.value = sw;
   const index = props.list.findIndex((x) => x.filename === props.filename);
   if (index === -1) {
     notify({
@@ -121,14 +122,13 @@ const onSlideChange = (sw) => {
   }
   window.history.replaceState(history.state, null, url);
 };
-const onImgReady = (sw, slideEl, imageEl) => {
-  const img = new Image();
-  img.src = imageEl.src;
-  // const filename = img.src.replace(fullsized, "");
-  const container = slideEl.querySelector(".swiper-zoom-container");
-  const wRatio = img.width / sw.width,
-    hRatio = img.height / sw.height;
-  container.dataset.swiperZoom = Math.max(wRatio, hRatio, 1);
+const zoomRatio = (rec) => {
+  if (swiperRef.value && rec.dim) {
+    const wRatio = rec.dim[0] / swiperRef.value.width;
+    const hRatio = rec.dim[1] / swiperRef.value.height;
+    return Math.max(wRatio, hRatio, 1);
+  }
+  return 2;
 };
 const caption = (rec) => {
   let tmp = "";
