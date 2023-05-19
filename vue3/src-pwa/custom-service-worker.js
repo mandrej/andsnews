@@ -10,7 +10,11 @@ import {
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
 } from "workbox-precaching";
-import { registerRoute, NavigationRoute } from "workbox-routing";
+import {
+  registerRoute,
+  NavigationRoute,
+  setDefaultHandler,
+} from "workbox-routing";
 import { StaleWhileRevalidate } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 
@@ -35,26 +39,17 @@ cleanupOutdatedCaches();
 // }
 
 registerRoute(
-  ({ url }) => {
-    if (url.pathname.startsWith("/api")) {
-      return true;
-    } else {
-      return false;
-    }
-  },
+  ({ url }) => url.pathname.startsWith("/api"),
   new StaleWhileRevalidate({
     cacheName: "api-cache",
     plugins: [
       new ExpirationPlugin({
-        // maxEntries: 100,
         maxAgeSeconds: 3600,
       }),
     ],
   })
 );
-registerRoute(({ url }) => {
-  if (url.pathname.endsWith(".jpg")) {
-    return false;
-  }
-  return true;
-}, new StaleWhileRevalidate());
+registerRoute(
+  ({ url }) => !url.pathname.endsWith(".jpg"),
+  new StaleWhileRevalidate()
+);

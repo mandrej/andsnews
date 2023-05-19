@@ -16,12 +16,12 @@
           class="col-xs-12 col-sm-6 last"
           :style="styling"
         >
-          <a
+          <router-link
             v-if="app.last.href"
-            :href="app.last.href"
-            v-ripple.early="{ color: 'purple' }"
+            :to="app.last.href"
             style="display: block"
-          />
+            v-ripple.early="{ color: 'purple' }"
+          ></router-link>
         </q-responsive>
 
         <div class="col-xs-12 col-sm-6">
