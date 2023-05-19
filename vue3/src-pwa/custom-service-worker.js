@@ -12,6 +12,7 @@ import {
 } from "workbox-precaching";
 import { registerRoute, NavigationRoute } from "workbox-routing";
 import { StaleWhileRevalidate } from "workbox-strategies";
+import { ExpirationPlugin } from "workbox-expiration";
 
 self.skipWaiting();
 clientsClaim();
@@ -23,12 +24,37 @@ cleanupOutdatedCaches();
 
 // Non-SSR fallback to index.html
 // Production SSR fallback to offline.html (except for dev)
-if (process.env.MODE !== "ssr" || process.env.PROD) {
-  registerRoute(
-    new NavigationRoute(
-      createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
-      { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
-    )
-  );
-  registerRoute(new RegExp("^http"), new StaleWhileRevalidate());
-}
+// if (process.env.MODE !== "ssr" || process.env.PROD) {
+//   registerRoute(
+//     new NavigationRoute(
+//       createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
+//       { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
+//     )
+//   );
+//   registerRoute(new RegExp("^http"), new StaleWhileRevalidate());
+// }
+
+registerRoute(
+  ({ url }) => {
+    if (url.pathname.startsWith("/api")) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  new StaleWhileRevalidate({
+    cacheName: "api-cache",
+    plugins: [
+      new ExpirationPlugin({
+        // maxEntries: 100,
+        maxAgeSeconds: 3600,
+      }),
+    ],
+  })
+);
+registerRoute(({ url }) => {
+  if (url.pathname.endsWith(".jpg")) {
+    return false;
+  }
+  return true;
+}, new StaleWhileRevalidate());
