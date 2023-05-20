@@ -37,7 +37,19 @@ cleanupOutdatedCaches();
 //   );
 //   registerRoute(new RegExp("^http"), new StaleWhileRevalidate());
 // }
-
+setDefaultHandler(new StaleWhileRevalidate());
+registerRoute(
+  new RegExp("^https://storage.googleapis.com"),
+  new StaleWhileRevalidate({
+    cacheName: "img-cache",
+    plugins: [
+      new ExpirationPlugin({
+        maxAgeSeconds: 604800, // 7 days
+        maxEntries: 500,
+      }),
+    ],
+  })
+);
 registerRoute(
   ({ url }) => url.pathname.startsWith("/api"),
   new StaleWhileRevalidate({
@@ -48,8 +60,4 @@ registerRoute(
       }),
     ],
   })
-);
-registerRoute(
-  ({ url }) => !url.pathname.endsWith(".jpg"),
-  new StaleWhileRevalidate()
 );
