@@ -133,7 +133,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useAppStore } from "../stores/app";
 import Complete from "./Complete.vue";
 import { months } from "../helpers";
-import { isEqual } from "lodash/lang";
+// import { isEqual } from "lodash/lang";
 
 const app = useAppStore();
 const route = useRoute();
@@ -161,19 +161,19 @@ const queryDispatch = (query, invoked = "") => {
       }
     }
   });
-  const oldQuery = JSON.parse(JSON.stringify(app.find));
-  const newQuery = JSON.parse(JSON.stringify(tmp.value));
-  if (isEqual(oldQuery, newQuery)) {
-    if (process.env.DEV)
-      console.log("SKIPPED", invoked, JSON.stringify(oldQuery));
-    return;
-  }
+  // const oldQuery = JSON.parse(JSON.stringify(app.find));
+  // const newQuery = JSON.parse(JSON.stringify(tmp.value));
+  // if (isEqual(oldQuery, newQuery)) {
+  //   if (process.env.DEV)
+  //     console.log("SKIPPED", invoked, JSON.stringify(oldQuery));
+  //   return;
+  // }
   // store query
   app.find = tmp.value;
   // fetch new query
   app.fetchRecords(true); // new filter with reset
   if (process.env.DEV)
-    console.log("FETCHED", invoked, JSON.stringify(newQuery));
+    console.log("FETCHED", invoked, JSON.stringify(app.find));
   // this dispatch route change
   if (Object.keys(tmp.value).length) {
     if (route.hash) {
