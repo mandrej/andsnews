@@ -171,9 +171,7 @@ const queryDispatch = (query, invoked = "") => {
   // store query
   app.find = tmp.value;
   // fetch new query
-  app.fetchRecords(true); // new filter with reset
-  if (process.env.DEV)
-    console.log("FETCHED", invoked, JSON.stringify(app.find));
+  app.fetchRecords(true, invoked); // new filter with reset
   // this dispatch route change
   if (Object.keys(tmp.value).length) {
     if (route.hash) {

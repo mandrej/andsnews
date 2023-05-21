@@ -224,8 +224,11 @@ export const useAppStore = defineStore("app", {
       this.pages = [...this.pages, data._page];
       this.next = data._next;
     },
-    fetchRecords(reset = false) {
-      if (this.busy) return;
+    fetchRecords(reset = false, invoked = "") {
+      if (this.busy) {
+        if (process.env.DEV) console.log("SKIPPED FOR " + invoked);
+        return;
+      }
       const params = Object.assign({}, this.find, { per_page: CONFIG.limit });
       if (this.next && !reset) params._page = this.next;
       const url = "search?" + querystring.stringify(params);
@@ -246,6 +249,10 @@ export const useAppStore = defineStore("app", {
           if (reset) this.resetObjects(); // late reset
           this.updateObjects(response.data);
           this.busy = false;
+          if (process.env.DEV)
+            console.log(
+              "FETCHED FOR " + invoked + " " + JSON.stringify(this.find)
+            );
         })
         .catch((err) => {
           notify({ type: "negative", message: err.message });

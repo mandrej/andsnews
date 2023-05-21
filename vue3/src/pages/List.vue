@@ -111,7 +111,7 @@ const scrollHandler = throttle((obj) => {
     obj.direction === "down" &&
     app.next
   ) {
-    app.fetchRecords();
+    app.fetchRecords(false, "scroll");
   }
 }, 500);
 
