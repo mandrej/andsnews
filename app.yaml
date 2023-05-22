@@ -19,6 +19,13 @@ handlers:
     upload: vue3/dist/pwa/index.html
     secure: always
 
+  - url: /sw.js
+    static_files: vue3/dist/pwa/sw.js
+    upload: vue3/dist/pwa/sw.js
+    secure: always
+    http_headers:
+      Cache-Control: no-cache
+
   - url: /(.*)
     static_files: vue3/dist/pwa/\1
     upload: vue3/dist/pwa/(.*)

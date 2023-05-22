@@ -86,7 +86,7 @@ module.exports = configure(function (/* ctx */) {
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
-      // https: true
+      https: true,
       open: true, // opens browser window automatically
     },
 
