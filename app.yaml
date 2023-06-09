@@ -1,4 +1,4 @@
-runtime: python310
+runtime: python311
 default_expiration: "0s"
 
 instance_class: F2
