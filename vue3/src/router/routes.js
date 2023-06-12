@@ -1,10 +1,12 @@
+import { defineAsyncComponent } from "vue";
 import Plain from "../layouts/Plain.vue";
-import Layout from "../layouts/Layout.vue";
+import Default from "../layouts/Default.vue";
 import Find from "../components/Find.vue";
-import Stat from "../components/Stat.vue";
 import Index from "../pages/Index.vue";
 import List from "../pages/List.vue";
 import { CONFIG } from "../helpers";
+
+const Stat = defineAsyncComponent(() => import("../components/Stat.vue"));
 
 const routes = [
   {
@@ -17,13 +19,13 @@ const routes = [
     path: "/list",
     name: "list",
     component: List,
-    meta: { title: CONFIG.title, layout: Layout, sidebar: Find },
+    meta: { title: CONFIG.title, layout: Default, sidebar: Find },
   },
   {
     path: "/add",
     name: "add",
     component: () => import("../pages/Add.vue"),
-    meta: { title: "Add", requiresAuth: true, layout: Layout, sidebar: Stat },
+    meta: { title: "Add", requiresAuth: true, layout: Default, sidebar: Stat },
   },
   {
     path: "/admin",
@@ -32,7 +34,7 @@ const routes = [
     meta: {
       title: "Administration",
       requiresAdmin: true,
-      layout: Layout,
+      layout: Default,
       sidebar: Stat,
     },
   },

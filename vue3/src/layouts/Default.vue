@@ -25,8 +25,7 @@
           round
           icon="history"
           :to="{ name: 'list', query: app.find }"
-        >
-        </q-btn>
+        />
         <q-linear-progress
           v-show="app.busy"
           color="warning"
