@@ -15,7 +15,7 @@ import {
   NavigationRoute,
   setDefaultHandler,
 } from "workbox-routing";
-import { StaleWhileRevalidate } from "workbox-strategies";
+import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 
 self.skipWaiting();
@@ -30,21 +30,24 @@ cleanupOutdatedCaches();
 // Production SSR fallback to offline.html (except for dev)
 // if (process.env.MODE !== "ssr" || process.env.PROD) {
 //   registerRoute(
-//     new NavigationRoute(
-//       createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
-//       { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
-//     )
+//     new NavigationRoute(createHandlerBoundToURL("index.html"), {
+//       denylist: [/sw\.js$/, /workbox-(.)*\.js$/],
+//     })
 //   );
-//   registerRoute(new RegExp("^http"), new StaleWhileRevalidate());
+//   // registerRoute(new RegExp("^http"), new StaleWhileRevalidate());
 // }
 setDefaultHandler(new StaleWhileRevalidate());
+// registerRoute(
+//   ({ request }) => request.destination === "assets",
+//   new CacheFirst()
+// );
 registerRoute(
   new RegExp("^https://storage.googleapis.com"),
   new StaleWhileRevalidate({
     cacheName: "img-cache",
     plugins: [
       new ExpirationPlugin({
-        maxAgeSeconds: 604800, // 7 days
+        maxAgeSeconds: 3600 * 4,
         maxEntries: 500,
       }),
     ],
