@@ -21,7 +21,11 @@
             :to="app.last.href"
             style="display: block"
             v-ripple.early="{ color: 'purple' }"
-          ></router-link>
+          >
+            <div class="absolute-bottom-right text-white q-pa-sm">
+              {{ version }}
+            </div>
+          </router-link>
         </q-responsive>
 
         <div class="col-xs-12 col-sm-6">
@@ -54,7 +58,7 @@
 import { computed } from "vue";
 import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
-import { fullsized, smallsized, fileBroken } from "../helpers";
+import { fullsized, smallsized, fileBroken, version } from "../helpers";
 
 const app = useAppStore();
 const auth = useAuthStore();
