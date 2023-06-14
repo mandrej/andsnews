@@ -1,7 +1,5 @@
 <template>
-  <component :is="$route.meta.layout || 'div'">
-    <router-view />
-  </component>
+  <router-view />
 </template>
 <script setup>
 import { onMounted } from "vue";
