@@ -47,7 +47,8 @@ const version = computed(() => {
 
 export const U = "_";
 export const fileBroken = CONFIG.fileBroken;
-export const fullsized = CONFIG.public_url + "andsnews.appspot.com/";
+export const fullsized =
+  CONFIG.public_url + CONFIG.firebase.storageBucket + "/";
 export const smallsized = CONFIG.public_url + "thumbnails400/";
 export {
   CONFIG,
